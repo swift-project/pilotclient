@@ -151,6 +151,9 @@ namespace BlackCore
         //! Driver will be unloaded
         virtual void unload() = 0;
 
+        //! Is overall (swift) application shutting down
+        virtual bool isShuttingDown() const = 0;
+
         //! Set interpolation mode, empty callsign applies to all know callsigns
         virtual bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode, const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
@@ -252,6 +255,9 @@ namespace BlackCore
 
         //! Info about the backend system (if available)
         virtual QString backendInfo() const;
+
+        //! Overall (swift) application shutting down
+        virtual bool isShuttingDown() const;
 
     public slots:
         //! Start listening for the simulator to start.

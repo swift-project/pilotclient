@@ -1356,7 +1356,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommonListener::checkConnection()
         {
-            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
+            if (this->isShuttingDown()) { return; }
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
             HANDLE hSimConnect;
             HRESULT result = SimConnect_Open(&hSimConnect, sApp->swiftVersionChar(), nullptr, 0, 0, 0);

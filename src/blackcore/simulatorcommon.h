@@ -83,6 +83,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
         virtual void setWeatherActivated(bool activated) override;
         virtual void unload() override;
+        virtual bool isShuttingDown() const override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
 
         //! \addtogroup swiftdotcommands

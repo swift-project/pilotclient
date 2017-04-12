@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/simulator.h"
+#include "blackcore/application.h"
 
 #include <QFlag>
 #include <Qt>
@@ -83,6 +84,11 @@ namespace BlackCore
         return m_info.toQString();
     }
 
+    bool ISimulatorListener::isShuttingDown() const
+    {
+        return (!sApp || sApp->isShuttingDown());
+    }
+
     void ISimulatorListener::start()
     {
         if (m_isRunning) { return; }
@@ -92,7 +98,7 @@ namespace BlackCore
 
     void ISimulatorListener::stop()
     {
-        if(!m_isRunning) { return; }
+        if (!m_isRunning) { return; }
         stopImpl();
         m_isRunning = false;
     }

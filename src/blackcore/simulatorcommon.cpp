@@ -291,6 +291,11 @@ namespace BlackCore
         this->m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
     }
 
+    bool CSimulatorCommon::isShuttingDown() const
+    {
+        return (!sApp || sApp->isShuttingDown());
+    }
+
     void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
     {
         {
