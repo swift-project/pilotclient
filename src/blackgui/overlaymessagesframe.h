@@ -55,9 +55,6 @@ namespace BlackGui
         //! Show kill button
         void showKillButton(bool killButton);
 
-        //! Hide the inner frame
-        void hideStatusMessagesFrame();
-
         //! Inner frame factors 0..1
         //! \remarks can also be restricted by maximumHeight() / maximumWidth()
         void setInnerFrameFactor(double xFactor, double yFactor);
@@ -90,6 +87,9 @@ namespace BlackGui
     protected:
         //! \copydoc QFrame::keyPressEvent
         virtual void keyPressEvent(QKeyEvent *event) override;
+
+        //! \copydoc QFrame::resizeEvent
+        virtual void resizeEvent(QResizeEvent *event) override;
 
         COverlayMessages *m_overlayMessages = nullptr; //!< embedded QFrame with Status messages
 

@@ -201,7 +201,6 @@ bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
     return ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
 }
 
-
 void SwiftGuiStd::ps_loginRequested()
 {
     if (ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
@@ -403,6 +402,7 @@ void SwiftGuiStd::ps_verifyDataAvailability()
 void SwiftGuiStd::ps_sharedFilesHeadersLoaded()
 {
     Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
+    Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread");
     const CEntityFlags::Entity newEntities = sGui->getWebDataServices()->getEntitiesWithNewerHeaderTimestamp(CEntityFlags::AllDbEntities);
     if (newEntities == CEntityFlags::NoEntity) { return; }
     CStatusMessage sm = CStatusMessage(this).info("New data for shared files:");
@@ -413,11 +413,18 @@ void SwiftGuiStd::ps_sharedFilesHeadersLoaded()
         sm = CStatusMessage(this).info("Load data for '%1'?") << CEntityFlags::flagToString(newSingleEntity);
         sms.push_back(sm);
     }
-    auto lambda = [newEntities]()
+
+    // allow to init GUI completely
+    const int delay = 2500;
+    QTimer::singleShot(delay, this, [ = ]
     {
-        sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(newEntities, false);
-    };
-    ui->fr_CentralFrameInside->showOverlayMessagesWithConfirmation(sms, "Load data?", lambda);
+        // delayed call
+        auto lambda = [newEntities]()
+        {
+            sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(newEntities, false);
+        };
+        ui->fr_CentralFrameInside->showOverlayMessagesWithConfirmation(sms, "Load data?", lambda);
+    });
 }
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const

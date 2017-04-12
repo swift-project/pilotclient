@@ -12,21 +12,25 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/network/textmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QKeyEvent>
 #include <QPoint>
 #include <QRect>
 #include <QStyle>
 #include <Qt>
+#include <algorithm>
 
 namespace BlackGui
 {
     COverlayMessagesFrame::COverlayMessagesFrame(QWidget *parent) :
         QFrame(parent)
-    { }
+    {
+        // void
+    }
 
     COverlayMessagesFrame::~COverlayMessagesFrame()
-    {}
+    { }
 
     void COverlayMessagesFrame::showStatusMessagesFrame()
     {
@@ -40,11 +44,6 @@ namespace BlackGui
         {
             m_overlayMessages->showKillButton(killButton);
         }
-    }
-
-    void COverlayMessagesFrame::hideStatusMessagesFrame()
-    {
-        if (!m_overlayMessages) { return; }
     }
 
     void COverlayMessagesFrame::showOverlayMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
@@ -106,10 +105,21 @@ namespace BlackGui
         }
     }
 
+    void COverlayMessagesFrame::resizeEvent(QResizeEvent *event)
+    {
+        QFrame::resizeEvent(event);
+        if (this->m_overlayMessages && this->m_overlayMessages->isVisible())
+        {
+            this->initInnerFrame();
+        }
+    }
+
     QSize COverlayMessagesFrame::innerFrameSize() const
     {
-        const int w = this->width();
-        const int h = this->height();
+        // check against minimum if widget is initialized, but not yet resized
+        const int w = std::max(this->width(), this->minimumWidth());
+        const int h = std::max(this->height(), this->minimumHeight());
+
         int wInner = this->m_widthFactor * w;
         int hInner = this->m_heightFactor * h;
         if (wInner > this->maximumWidth()) wInner = this->maximumWidth();
@@ -122,6 +132,7 @@ namespace BlackGui
         const QSize inner(innerFrameSize());
         if (!this->m_overlayMessages)
         {
+            // lazy init
             this->m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
             this->m_overlayMessages->addShadow();
             this->m_overlayMessages->showKillButton(m_showKillButton);
