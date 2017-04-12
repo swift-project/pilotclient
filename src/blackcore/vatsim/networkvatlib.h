@@ -16,6 +16,8 @@
 #include "blackcore/network.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/tokenbucket.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -25,8 +27,6 @@
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/settingscache.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
 
 #include <stdbool.h>
 #include <vatlib/vatlib.h>
@@ -61,6 +61,9 @@ namespace BlackCore
             Q_OBJECT
 
         public:
+            //! Log. categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             CNetworkVatlib(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr);
 

@@ -27,6 +27,12 @@ namespace BlackCore
 {
     namespace Vatsim
     {
+        const CLogCategoryList &CVoiceVatlib::getLogCategories()
+        {
+            static const CLogCategoryList cats({ CLogCategory::vatsimSpecific(), CLogCategory::network() });
+            return cats;
+        }
+
         CVoiceVatlib::CVoiceVatlib(QObject *parent) :
             IVoice(parent),
             m_audioService(Vat_CreateAudioService()),

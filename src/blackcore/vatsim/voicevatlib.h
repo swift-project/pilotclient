@@ -15,7 +15,7 @@
 #include "blackcore/audiomixer.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/voice.h"
-
+#include "blackmisc/logcategorylist.h"
 #include <vatlib/vatlib.h>
 #include <QObject>
 #include <QScopedPointer>
@@ -48,6 +48,8 @@ namespace BlackCore
             Q_OBJECT
 
         public:
+            //! Log. categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Default constructor
             CVoiceVatlib(QObject *parent = nullptr);

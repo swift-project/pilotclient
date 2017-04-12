@@ -12,6 +12,8 @@
 #include "blackconfig/buildconfig.h"
 #include "blackcore/application.h"
 #include "blackcore/vatsim/networkvatlib.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -20,12 +22,9 @@
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/compare.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/json.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/network/network.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/user.h"
@@ -35,8 +34,10 @@
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/json.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/statusmessage.h"
 #include "vatlib/vatlib.h"
 
@@ -73,6 +74,12 @@ namespace BlackCore
 {
     namespace Vatsim
     {
+        const CLogCategoryList &CNetworkVatlib::getLogCategories()
+        {
+            static const CLogCategoryList cats({ CLogCategory::vatsimSpecific(), CLogCategory::network() });
+            return cats;
+        }
+
         CNetworkVatlib::CNetworkVatlib(IOwnAircraftProvider *ownAircraft, QObject *parent)
             : INetwork(parent), COwnAircraftAware(ownAircraft),
               m_loginMode(LoginNormal),
