@@ -32,6 +32,7 @@ namespace BlackMisc
             { "cache",                       exactMatch(CLogCategory::cache()) },
             { "driver",                      exactMatch(CLogCategory::driver()) },
             { "plugin",                      exactMatch(CLogCategory::plugin()) },
+            { "wizard",                      exactMatch(CLogCategory::wizard()) },
             { "background task",             exactMatch(CLogCategory::worker()) },
             { "model mapping",               exactMatch(CLogCategory::mapping()) },
             { "model matching",              exactMatch(CLogCategory::matching()) },

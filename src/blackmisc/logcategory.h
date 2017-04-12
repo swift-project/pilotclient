@@ -166,6 +166,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Wizard
+        static const CLogCategory &wizard()
+        {
+            static const CLogCategory cat { "swift.wizard" };
+            return cat;
+        }
+
         //! Background task
         static const CLogCategory &worker()
         {
@@ -254,6 +261,7 @@ namespace BlackMisc
                 vatsimSpecific(),
                 verification(),
                 webservice(),
+                wizard(),
                 worker()
             };
             return cats;
