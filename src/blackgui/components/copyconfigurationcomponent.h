@@ -33,6 +33,9 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Log.categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             explicit CCopyConfigurationComponent(QWidget *parent = nullptr);
 
@@ -56,6 +59,9 @@ namespace BlackGui
 
             //! Allow to toggle cache and settings
             void allowToggleCacheSettings(bool allow);
+
+            //! Log copied files
+            void logCopiedFiles(bool log) { m_logCopiedFiles = log; }
 
         protected:
             //! \copydoc QWidget::resizeEvent
@@ -84,13 +90,14 @@ namespace BlackGui
             //! Get the selected files
             QStringList getSelectedFiles() const;
 
-            //! Init model caches if required
+            //! Init model caches if required (create .rev entries with high level functions)
             void initModelCaches(const QStringList &files);
 
             QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
             QString m_initializedSourceDir;
             QString m_initializedDestinationDir;
+            bool m_logCopiedFiles = true;
             BlackMisc::Simulation::Data::CModelCaches m_modelCaches{false, this};
             BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches{false, this};
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_modelSetCurrentSimulator { this };
@@ -107,6 +114,9 @@ namespace BlackGui
         public:
             //! Constructors
             using QWizardPage::QWizardPage;
+
+            //! Log.categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Set config
             void setConfigComponent(CCopyConfigurationComponent *config) { m_config = config; }

@@ -29,6 +29,12 @@ namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CCopyConfigurationComponent::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats { CLogCategory::guiComponent() };
+            return cats;
+        }
+
         CCopyConfigurationComponent::CCopyConfigurationComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CCopyConfigurationComponent)
@@ -81,10 +87,12 @@ namespace BlackGui
             const QDir destination(destinationDir);
             if (!destination.exists()) { return 0; }
 
-            // init model caches if applicable
+            // init model caches if applicable (.rev file entries)
             this->initModelCaches(files);
 
             int c = 0;
+            QStringList copied;
+            QStringList skipped;
             for (const QString &file : files)
             {
                 const QString relativePath = source.relativeFilePath(file);
@@ -97,7 +105,27 @@ namespace BlackGui
                 }
                 QFile::remove(target); // copy does not overwrite
                 const bool s = QFile::copy(file, target);
-                if (s) { c++; }
+                if (s)
+                {
+                    c++;
+                    copied << target;
+                }
+                else
+                {
+                    skipped << target;
+                }
+            }
+
+            if (m_logCopiedFiles)
+            {
+                if (!copied.isEmpty())
+                {
+                    CLogMessage(this).info("Copied %1 files, list: '%2'") << copied.size() << copied.join(", ");
+                }
+                if (!skipped.isEmpty())
+                {
+                    CLogMessage(this).info("Skipped %1 files, list: '%2'") << skipped.size() << skipped.join(", ");
+                }
             }
 
             // bye
@@ -316,6 +344,12 @@ namespace BlackGui
                     CLogMessage(this).preformatted(msg);
                 }
             }
+        }
+
+        const CLogCategoryList &CCopyConfigurationWizardPage::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats { CLogCategory::wizard(), CLogCategory::guiComponent() };
+            return cats;
         }
 
         void CCopyConfigurationWizardPage::initializePage()
