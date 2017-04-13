@@ -17,6 +17,7 @@
 #include "blackcore/setupreader.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
@@ -259,8 +260,13 @@ void CSwiftLauncher::startSwiftCore()
     // I set this for debug purpose only
     m_executableArgs = args;
     m_executable.clear();
-    if (CBuildConfig::isRunningOnUnixPlatform()) { m_executable += "./"; }
-    m_executable += CBuildConfig::swiftCoreExecutableName();
+    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::applicationDirectoryPath(), CBuildConfig::swiftCoreExecutableName());
+    if (CBuildConfig::isRunningOnMacOSXPlatform())
+    {
+        m_executable += QLatin1String(".app/Contents/MacOS/");
+        m_executable += CBuildConfig::swiftCoreExecutableName();
+    }
+
     CLogMessage(this).info(this->getCmdLine());
 
     // start
@@ -270,16 +276,25 @@ void CSwiftLauncher::startSwiftCore()
 void CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable.clear();
-    if (CBuildConfig::isRunningOnUnixPlatform()) { m_executable += "./"; }
-    m_executable += CBuildConfig::swiftDataExecutableName();
+    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::applicationDirectoryPath(), CBuildConfig::swiftDataExecutableName());
+    if (CBuildConfig::isRunningOnMacOSXPlatform())
+    {
+        m_executable += QLatin1String(".app/Contents/MacOS/");
+        m_executable += CBuildConfig::swiftDataExecutableName();
+    }
     m_executableArgs.clear();
 }
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
     m_executable.clear();
-    if (CBuildConfig::isRunningOnUnixPlatform()) { m_executable += "./"; }
-    m_executable += CBuildConfig::swiftGuiExecutableName();
+    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::applicationDirectoryPath(), CBuildConfig::swiftGuiExecutableName());
+    if (CBuildConfig::isRunningOnMacOSXPlatform())
+    {
+        m_executable += QLatin1String(".app/Contents/MacOS/");
+        m_executable += CBuildConfig::swiftGuiExecutableName();
+    }
+
     QStringList args
     {
         "--core", CoreModes::coreModeToString(getCoreMode()),
