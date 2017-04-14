@@ -188,71 +188,75 @@ namespace BlackCore
 
         QString CGlobalSetup::convertToQString(const QString &separator, bool i18n) const
         {
-            return "timestamp: "
-                   % this->getFormattedUtcTimestampYmdhms()
-                   % separator
-                   % "Global setup loaded: "
-                   % boolToYesNo(this->wasLoaded())
-                   % separator
+            QString s =
+                "timestamp: "
+                % this->getFormattedUtcTimestampYmdhms()
+                % separator
+                % "Global setup loaded: "
+                % boolToYesNo(this->wasLoaded())
+                % separator
 
-                   % "For development: "
-                   % boolToYesNo(isDevelopment())
-                   % separator
+                % "For development: "
+                % boolToYesNo(isDevelopment())
+                % separator
 
-                   % "Distribution URLs: "
-                   % getDistributionUrls().toQString(i18n)
-                   % separator
-                   % "Bootstrap URLs: "
-                   % getBootstrapFileUrls().toQString(i18n)
-                   % separator
-                   % "News URLs: "
-                   % getSwiftLatestNewsUrls().toQString(i18n)
-                   % separator
-                   % "Help URLs: "
-                   % getOnlineHelpUrls().toQString(i18n)
-                   % separator
-                   % "swift map URLs: "
-                   % getSwiftMapUrls().toQString(i18n)
-                   % separator
+                % "Distribution URLs: "
+                % getDistributionUrls().toQString(i18n)
+                % separator
+                % "Bootstrap URLs: "
+                % getBootstrapFileUrls().toQString(i18n)
+                % separator
+                % "News URLs: "
+                % getSwiftLatestNewsUrls().toQString(i18n)
+                % separator
+                % "Help URLs: "
+                % getOnlineHelpUrls().toQString(i18n)
+                % separator
+                % "swift map URLs: "
+                % getSwiftMapUrls().toQString(i18n)
+                % separator;
+            s +=
+                "DB root directory: "
+                % getDbRootDirectoryUrl().toQString(i18n)
+                % separator
+                % "ICAO DB reader: "
+                % getDbIcaoReaderUrl().toQString(i18n)
+                % separator
+                % "Model DB reader: "
+                % getDbModelReaderUrl().toQString(i18n)
+                % separator
+                % "Airport DB reader: "
+                % getDbAirportReaderUrl().toQString(i18n)
+                % separator
+                % "DB home page: "
+                % getDbHomePageUrl().toQString(i18n)
+                % separator
+                % "DB login service: "
+                % getDbLoginServiceUrl().toQString(i18n)
+                % separator
+                % "swift DB datafile locations: "
+                % getSwiftDbDataFileLocationUrls().toQString(i18n)
+                % separator;
 
-                   % "DB root directory: "
-                   % getDbRootDirectoryUrl().toQString(i18n)
-                   % separator
-                   % "ICAO DB reader: "
-                   % getDbIcaoReaderUrl().toQString(i18n)
-                   % separator
-                   % "Model DB reader: "
-                   % getDbModelReaderUrl().toQString(i18n)
-                   % separator
-                   % "Airport DB reader: "
-                   % getDbAirportReaderUrl().toQString(i18n)
-                   % separator
-                   % "DB home page: "
-                   % getDbHomePageUrl().toQString(i18n)
-                   % separator
-                   % "DB login service: "
-                   % getDbLoginServiceUrl().toQString(i18n)
-                   % separator
-                   % "swift DB datafile locations: "
-                   % getSwiftDbDataFileLocationUrls().toQString(i18n)
-                   % separator
+            s +=
+                "VATSIM bookings: "
+                % getVatsimBookingsUrl().toQString(i18n)
+                % separator
+                % "VATSIM METARs: "
+                % getVatsimMetarsUrls().toQString(i18n)
+                % separator
+                % "VATSIM data file: "
+                % getVatsimDataFileUrls().toQString(i18n)
+                % separator
 
-                   % "VATSIM bookings: "
-                   % getVatsimBookingsUrl().toQString(i18n)
-                   % separator
-                   % "VATSIM METARs: "
-                   % getVatsimMetarsUrls().toQString(i18n)
-                   % separator
-                   % "VATSIM data file: "
-                   % getVatsimDataFileUrls().toQString(i18n)
-                   % separator
+                % "FSD test servers: "
+                % getFsdTestServers().toQString(i18n)
+                % separator
 
-                   % "FSD test servers: "
-                   % getFsdTestServers().toQString(i18n)
-                   % separator
+                % "Crash report server: "
+                % getCrashReportServerUrl().toQString(i18n);
 
-                   % "Crash report server: "
-                   % getCrashReportServerUrl().toQString(i18n);
+            return s;
         }
 
         CVariant CGlobalSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
