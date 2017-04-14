@@ -8,7 +8,6 @@
  */
 
 #include "swiftdata.h"
-#include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"

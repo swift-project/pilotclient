@@ -20,7 +20,6 @@
 
 namespace BlackCore
 {
-
     /*!
      * Interface to weather data
      */

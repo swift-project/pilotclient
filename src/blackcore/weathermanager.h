@@ -77,7 +77,6 @@ namespace BlackCore
         BlackMisc::Weather::CWeatherGrid m_weatherGrid;
         bool m_isWeatherClear = false;
     };
-
 } // ns
 
 #endif // guard

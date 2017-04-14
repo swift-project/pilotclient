@@ -27,7 +27,6 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
 {
-
     CWeatherManager::CWeatherManager(QObject *parent) : QObject(parent)
     {
         m_pluginManagerWeatherData.collectPlugins();
@@ -132,5 +131,4 @@ namespace BlackCore
         // In case there are pending requests, start over again
         if (m_pendingRequests.size() > 0) { fetchNextWeatherData(); }
     }
-
 }
