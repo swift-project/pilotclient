@@ -183,6 +183,9 @@ private slots:
 
     //! Start the configuration wizard
     void ps_startWizard();
+
+    //! Style sheet has been changed
+    void ps_onStyleSheetsChanged();
 };
 
 #endif // guard

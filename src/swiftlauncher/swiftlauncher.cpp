@@ -56,6 +56,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::ps_startWizard);
     connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::ps_tabChanged);
     connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::distributionInfoAvailable, this, &CSwiftLauncher::ps_distributionInfoAvailable);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::ps_onStyleSheetsChanged);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
     ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
@@ -528,4 +529,9 @@ void CSwiftLauncher::ps_startWizard()
         m_wizard.reset(new CConfigurationWizard(this));
     }
     m_wizard->show();
+}
+
+void CSwiftLauncher::ps_onStyleSheetsChanged()
+{
+    this->initStyleSheet();
 }
