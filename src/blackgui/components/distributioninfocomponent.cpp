@@ -165,8 +165,8 @@ namespace BlackGui
                 if (!downloadUrl.isEmpty())
                 {
                     const QString urlStr(downloadUrl.toQString());
-                    const QString hl("<a href=\"%1\"><img src=\":/own/icons/own/drophere16.png\"></a> %2 %3");
-                    ui->lbl_NewVersionUrl->setText(hl.arg(urlStr, latestVersionStr, currentPlatform));
+                    const QString hl("<a href=\"%1\"><img src=\":/own/icons/own/drophere16.png\"></a> %2");
+                    ui->lbl_NewVersionUrl->setText(hl.arg(urlStr, currentPlatform));
                     ui->lbl_NewVersionUrl->setToolTip("Download '" + latestVersionStr + "' " + m_currentDistribution.getFilename(currentPlatform));
                 }
             }

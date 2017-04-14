@@ -409,12 +409,18 @@ namespace BlackConfig
     {
         if (buildTimestamp.isValid())
         {
-            static const qint64 dt2017 = QDateTime::fromString("20170101000000", "yyyyMMddHHmmss").toMSecsSinceEpoch();
-            const qint64 msSinceEpoch = buildTimestamp.toMSecsSinceEpoch();
-            const qint64 msSinceSwiftEpoch = msSinceEpoch - dt2017;
-            return msSinceSwiftEpoch / 1000; // accuraccy second should be enough, and is shorter
+            const QString bts = buildTimestamp.toString("yyyyMMddHHmm");
+            bool ok;
+            const long long btsll = bts.toLongLong(&ok); // at least 64bit
+            if (!ok) { return 0; }
+            // now we have to converto int
+            // max 2147483647 (2^31 - 1)
+            //      1MMddHHmm (years since 2010)
+            const long long yearOffset = 201000000000;
+            const int btsInt = btsll - yearOffset;
+            return btsInt;
         }
-        return 0; // intentionally 0 and not zero => 0.7.3.0 <-
+        return 0; // intentionally 0 => 0.7.3.0 <-
     }
 } // ns
 
