@@ -424,7 +424,7 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessageList startHookIn() { return BlackMisc::CStatusMessageList(); }
 
         //! Flag set or explicitly set to true
-        bool isSetOrTrue(const QCommandLineOption &option) const;
+        bool isSet(const QCommandLineOption &option) const;
 
         //! Severe issue during startup, most likely it does not make sense to continue
         //! \note call this here if the parsing stage is over and reaction to a runtime issue is needed
@@ -445,18 +445,19 @@ namespace BlackCore
         static void registerMetadata();
 
         // cmd parsing
-        QCommandLineParser m_parser;                       //!< cmd parser
-        QCommandLineOption m_cmdHelp {"help"};             //!< help option
-        QCommandLineOption m_cmdVersion {"version"};       //!< version option
-        QCommandLineOption m_cmdDBusAddress {"empty"};     //!< DBus address
-        QCommandLineOption m_cmdDevelopment {"dev"};       //!< Development flag
-        QCommandLineOption m_cmdSharedDir {"shared"};      //!< Shared directory
-        QCommandLineOption m_cmdClearCache {"clearcache"}; //!< Clear cache
-        bool               m_parsed  = false;              //!< Parsing accomplished?
-        bool               m_started = false;              //!< started with success?
-        bool               m_startSetupReader = false;     //!< start the setup reader
-        bool               m_singleApplication = true;     //!< only one instance of that application
-        bool               m_alreadyRunning = false;       //!< Application already running
+        QCommandLineParser m_parser;                           //!< cmd parser
+        QCommandLineOption m_cmdHelp {"help"};                 //!< help option
+        QCommandLineOption m_cmdVersion {"version"};           //!< version option
+        QCommandLineOption m_cmdDBusAddress {"empty"};         //!< DBus address
+        QCommandLineOption m_cmdDevelopment {"dev"};           //!< Development flag
+        QCommandLineOption m_cmdSharedDir {"shared"};          //!< Shared directory
+        QCommandLineOption m_cmdClearCache {"clearcache"};     //!< Clear cache
+        QCommandLineOption m_cmdTestCrashpad {"testcrashpad"}; //!< Test a crasphpad upload
+        bool               m_parsed  = false;                  //!< Parsing accomplished?
+        bool               m_started = false;                  //!< started with success?
+        bool               m_startSetupReader = false;         //!< start the setup reader
+        bool               m_singleApplication = true;         //!< only one instance of that application
+        bool               m_alreadyRunning = false;           //!< Application already running
 
     private:
         //! init logging system

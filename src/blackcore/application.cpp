@@ -63,6 +63,7 @@
 #include "crashpad/client/crashpad_client.h"
 #include "crashpad/client/crash_report_database.h"
 #include "crashpad/client/settings.h"
+#include "crashpad/client/simulate_crash.h"
 #endif
 
 using namespace BlackConfig;
@@ -311,7 +312,7 @@ namespace BlackCore
         do
         {
             // clear cache?
-            if (this->isSetOrTrue(this->m_cmdClearCache))
+            if (this->isSet(this->m_cmdClearCache))
             {
                 const QStringList files(CApplication::clearCaches());
                 msgs.push_back(
@@ -319,6 +320,20 @@ namespace BlackCore
                 );
             }
 
+            // crashpad dump
+            if (this->isSet(this->m_cmdTestCrashpad))
+            {
+                QTimer::singleShot(10 * 1000, [ = ]
+                {
+                #ifdef BLACK_USE_CRASHPAD
+                    CRASHPAD_SIMULATE_CRASH();
+                #else
+                    CLogMessage(this).warning("This compiler or platform does not support crashpad. Cannot simulate crash dump!");
+                #endif
+                });
+            }
+
+            // load setup
             if (this->m_startSetupReader && !this->m_setupReader->isSetupAvailable())
             {
                 msgs = this->requestReloadOfSetupAndVersion();
@@ -459,11 +474,8 @@ namespace BlackCore
     {
         if (!CBuildConfig::canRunInDeveloperEnvironment()) { return false; }
         if (this->m_unitTest) { return true; }
-        if (this->m_parser.isSet(this->m_cmdDevelopment))
-        {
-            return this->isSetOrTrue(this->m_cmdDevelopment);
-        }
-        else if (this->isSetupAvailable())
+        if (this->isSet(this->m_cmdDevelopment)) { return true; }
+        if (this->isSetupAvailable())
         {
             // assume value from setup
             return this->getGlobalSetup().isDevelopment();
@@ -722,11 +734,10 @@ namespace BlackCore
 
         // dev. system
         this->m_cmdDevelopment = QCommandLineOption({ "dev", "development" },
-                                 QCoreApplication::translate("application", "Dev. system features?"),
-                                 "development");
+                                 QCoreApplication::translate("application", "Dev. system features?"));
         this->addParserOption(this->m_cmdDevelopment);
 
-        // can read a local bootsrap file
+        // can read a local bootstrap file
         this->m_cmdSharedDir = QCommandLineOption({ "shared", "shareddir" },
                                QCoreApplication::translate("application", "Local shared directory."),
                                "shared");
@@ -734,20 +745,18 @@ namespace BlackCore
 
         // reset caches upfront
         this->m_cmdClearCache = QCommandLineOption({ "ccache", "clearcache" },
-                                QCoreApplication::translate("application", "Clear (reset) the caches."),
-                                "clearcache");
+                                QCoreApplication::translate("application", "Clear (reset) the caches."));
         this->addParserOption(this->m_cmdClearCache);
+
+        // test crashpad upload
+        this->m_cmdTestCrashpad = QCommandLineOption({ "testcp", "testcrashpad" },
+                                  QCoreApplication::translate("application", "Simulate crashpad situation."));
+        this->addParserOption(this->m_cmdTestCrashpad);
     }
 
-    bool CApplication::isSetOrTrue(const QCommandLineOption &option) const
+    bool CApplication::isSet(const QCommandLineOption &option) const
     {
-        if (!this->m_parser.isSet(option)) { return false; }
-
-        // explicit value
-        const QString v(this->m_parser.value(option).trimmed());
-        if (v.isEmpty()) { return true; } // just flag
-        if (v.startsWith("-")) { return true; } // just flag, because value is already next parameter
-        return stringToBool(v);
+        return (this->m_parser.isSet(option));
     }
 
     void CApplication::registerMetadata()
