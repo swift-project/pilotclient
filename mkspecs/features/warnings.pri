@@ -2,7 +2,7 @@ msvc:DEFINES *= _SCL_SECURE_NO_WARNINGS
 
 # swift standard warnings
 msvc:QMAKE_CXXFLAGS_WARN_ON *= /wd4351 /wd4661
-clang_cl:QMAKE_CXXFLAGS_WARN_ON *= -Wall -Wextra -Wno-unknown-pragmas
+clang_cl:QMAKE_CXXFLAGS_WARN_ON *= -Wall -Wextra -Wno-unknown-pragmas -Wno-undefined-inline
 gcc:QMAKE_CXXFLAGS_WARN_ON *= -Woverloaded-virtual
 gcc:QMAKE_CXXFLAGS_USE_PRECOMPILE = -Winvalid-pch $$QMAKE_CXXFLAGS_USE_PRECOMPILE
 
@@ -35,4 +35,16 @@ gcc {
     greaterThan(GCC_MAJOR, 4):contains(BLACK_CONFIG, AllowNoisyWarnings) {
         QMAKE_CXXFLAGS_WARN_ON *= -Wsuggest-override
     }
+}
+
+# clazy - Qt-aware linter
+equals(QMAKE_CXX, clazy)|equals(QMAKE_CXX, clazy-cl) {
+    CLAZY_WARNINGS *= level3 no-reserve-candidates
+
+    # TODO: gradually fix issues so we can re-enable some of these warnings
+    CLAZY_WARNINGS *= no-inefficient-qlist-soft no-qstring-allocations
+    CLAZY_WARNINGS *= no-missing-qobject-macro no-ctor-missing-parent-argument
+    CLAZY_WARNINGS *= no-copyable-polymorphic no-function-args-by-value
+
+    QMAKE_CXXFLAGS_WARN_ON += -Xclang -plugin-arg-clang-lazy -Xclang $$join(CLAZY_WARNINGS, ",")
 }

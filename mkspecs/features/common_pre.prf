@@ -203,8 +203,16 @@ clang_cl {
 
     # QtCreator ships with a version of clang-cl,
     # but we want to use the one in PATH instead.
-    system($$(SYSTEMROOT)\system32\where /q clang-cl) {
-        QMAKE_CC = $$system($$(SYSTEMROOT)\system32\where clang-cl)
+    system($$(SYSTEMROOT)\system32\where /q $$QMAKE_CXX) {
+        QMAKE_CC = $$system($$(SYSTEMROOT)\system32\where $$QMAKE_CXX)
         QMAKE_CXX = $$QMAKE_CC
     }
+
+    # Suppress warnings in Qt headers
+    QMAKE_RUN_CC            = $(CC) -c $(CFLAGS) $(INCPATH:-I$$system_path($$[QT_HOST_PREFIX])=/imsvc $$system_path($$[QT_HOST_PREFIX])) -Fo$obj $src
+    QMAKE_RUN_CC_IMP        = $(CC) -c $(CFLAGS) $(INCPATH:-I$$system_path($$[QT_HOST_PREFIX])=/imsvc $$system_path($$[QT_HOST_PREFIX])) -Fo$@ $<
+    QMAKE_RUN_CC_IMP_BATCH  = $(CC) -c $(CFLAGS) $(INCPATH:-I$$system_path($$[QT_HOST_PREFIX])=/imsvc $$system_path($$[QT_HOST_PREFIX])) -Fo$@ @<<
+    QMAKE_RUN_CXX           = $(CXX) -c $(CXXFLAGS) $(INCPATH:-I$$system_path($$[QT_HOST_PREFIX])=/imsvc $$system_path($$[QT_HOST_PREFIX])) -Fo$obj $src
+    QMAKE_RUN_CXX_IMP       = $(CXX) -c $(CXXFLAGS) $(INCPATH:-I$$system_path($$[QT_HOST_PREFIX])=/imsvc $$system_path($$[QT_HOST_PREFIX])) -Fo$@ $<
+    QMAKE_RUN_CXX_IMP_BATCH = $(CXX) -c $(CXXFLAGS) $(INCPATH:-I$$system_path($$[QT_HOST_PREFIX])=/imsvc $$system_path($$[QT_HOST_PREFIX])) -Fo$@ @<<
 }
