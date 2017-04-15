@@ -106,7 +106,7 @@ void CSwiftData::init()
         this->setWindowTitle(t);
     }
 
-    sGui->startUpCompleted(true);
+    emit sGui->startUpCompleted(true);
 }
 
 void CSwiftData::initLogDisplay()

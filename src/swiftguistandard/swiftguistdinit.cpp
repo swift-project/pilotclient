@@ -152,7 +152,7 @@ void SwiftGuiStd::init()
     // whether init has been completed
     this->setVisible(true);
 
-    sGui->startUpCompleted(true);
+    emit sGui->startUpCompleted(true);
     this->m_init = true;
     QTimer::singleShot(2500, this, &SwiftGuiStd::ps_verifyDataAvailability);
 
