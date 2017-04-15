@@ -226,7 +226,7 @@ namespace BlackMisc
         qSwap(m_queue, queue);
         lock.unlock();
 
-        for (const auto &pair : queue)
+        for (const auto &pair : BlackMisc::as_const(queue))
         {
             m_page->setValuesFromCache(pair.first, pair.second);
         }
@@ -299,7 +299,7 @@ namespace BlackMisc
             auto msg = m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues, m_cache->m_revision.timestampsAsString());
             newValues.setTimestamps(m_cache->m_revision.newerTimestamps());
 
-            auto missingKeys = m_cache->m_revision.keysWithNewerTimestamps().subtract(newValues.keys());
+            auto missingKeys = m_cache->m_revision.keysWithNewerTimestamps() - newValues.keys();
             if (! missingKeys.isEmpty()) { m_cache->m_revision.writeNewRevision({}, missingKeys); }
 
             msg.setCategories(this);

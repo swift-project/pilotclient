@@ -90,7 +90,7 @@ namespace BlackMisc
                 QStringList remove(toUpper(modelsToBeRemoved));
                 remove.sort();
 
-                QSet<QString> removeSet(knownModels.toSet().intersect(remove.toSet()));
+                QSet<QString> removeSet(knownModels.toSet() & remove.toSet());
                 int c = 0;
                 for (const QString &model : removeSet)
                 {

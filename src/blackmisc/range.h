@@ -289,23 +289,53 @@ namespace BlackMisc
 
     /*!
      * Returns a CRange constructed from the begin and end iterators of the given container.
-     *
-     * The returned CRange may or may not be const, depending on the constness of the container.
      */
+    //! @{
     template <class T>
-    auto makeRange(T &&container) -> CRange<decltype(container.begin())>
+    auto makeRange(T &container) -> CRange<decltype(container.begin())>
     {
         return { container.begin(), container.end() };
     }
+    template <class T>
+    auto makeRange(const T &container) -> CRange<decltype(container.begin())>
+    {
+        return { container.begin(), container.end() };
+    }
+    //! @}
 
     /*!
      * Returns a const CRange constructed from the cbegin and cend iterators of the given container.
      */
     template <class T>
-    auto makeConstRange(T &&container) -> CRange<decltype(container.cbegin())>
+    auto makeConstRange(const T &container) -> CRange<decltype(container.cbegin())>
     {
         return { container.cbegin(), container.cend() };
     }
+
+    /*!
+     * Returns a const CRange for iterating over the keys of an associative container.
+     *
+     * This is more efficient than the keys() method of the container, as it doesn't allocate memory.
+     */
+    template <class T>
+    auto makeKeysRange(const T &container)
+    {
+        return makeRange(Iterators::makeKeyIterator(container.cbegin()), container.cend());
+    }
+
+    /*!
+     * Keys range for a non-const lvalue would be unsafe due to iterator invalidation on detach().
+     *
+     * \see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
+     */
+    template <class T>
+    void makeKeysRange(T &container) = delete;
+
+    /*!
+     * Keys range for a temporary would be unsafe.
+     */
+    template <class T>
+    void makeKeysRange(const T &&container) = delete;
 
     /*
      * Member functions of CRangeBase template defined out of line, because they depend on CRange etc.

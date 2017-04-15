@@ -61,7 +61,7 @@ namespace BlackCoreTest
         ConnectGuard &operator+= (const QMetaObject::Connection &conn) { m_conns += conn; return *this; }
 
         //! Disconnect and remove all stored connections.
-        void cleanup() { for (auto i = m_conns.begin(); i != m_conns.end(); ++i) QObject::disconnect(*i); m_conns.clear(); }
+        void cleanup() { for (auto i = m_conns.cbegin(); i != m_conns.cend(); ++i) QObject::disconnect(*i); m_conns.clear(); }
 
         //! Copying is only allowed when there are no connections stored.
         //! @{

@@ -552,7 +552,7 @@ namespace BlackCore
         QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)
         {
             QSharedPointer<IVoiceChannel> voiceChannel;
-            for (const auto &channel : m_voiceChannelMapping.values())
+            for (const auto &channel : as_const(m_voiceChannelMapping))
             {
                 if (channel->getVoiceRoom().getVoiceRoomUrl() == voiceRoom.getVoiceRoomUrl()) voiceChannel = channel;
             }

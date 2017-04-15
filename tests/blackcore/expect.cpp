@@ -15,6 +15,7 @@
  */
 
 #include "expect.h"
+#include "blackmisc/range.h"
 
 #include <QCoreApplication>
 #include <QEventLoop>
@@ -81,7 +82,8 @@ void Expect::wait(const SourceLocation& srcloc, int timeout)
     {
         i->onDone([&](const ExpectUnit* u){ unitsCopy.remove(u); });
     }
-    for (auto i : unitsCopy.toList()) // toList is an easy way to make a temporary copy, needed because init might invalidate iterators
+    // toList is an easy way to make a temporary copy, needed because init might invalidate iterators
+    for (auto i : unitsCopy.toList()) // clazy:exclude=container-anti-pattern,range-loop
     {
         i->init();
     }
@@ -90,7 +92,7 @@ void Expect::wait(const SourceLocation& srcloc, int timeout)
     timer.setSingleShot(true);
     QObject::connect(&timer, &QTimer::timeout, [=, &unitsCopy]{
         reportTimeout(srcloc, unitsCopy);
-        for (auto i : unitsCopy)
+        for (auto i : BlackMisc::as_const(unitsCopy))
         {
             i->onDone(nullptr); //paranoia
         }

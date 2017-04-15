@@ -134,10 +134,11 @@ namespace BlackSound
             while (chunks)
             {
                 // periodSize-> Returns the period size in bytes.
+                //! \todo looks wrong: read() will memcpy from m_buffer.constData() to m_buffer.data()
                 const qint64 len = this->read(m_buffer.data(), this->m_audioOutput->periodSize());
                 if (len >= 0)
                 {
-                    this->m_pushModeIODevice->write(m_buffer.data(), len);
+                    this->m_pushModeIODevice->write(m_buffer.constData(), len);
                 }
                 if (len != this->m_audioOutput->periodSize())
                 {
@@ -176,7 +177,7 @@ namespace BlackSound
         Q_UNUSED(bytesForAllChannels) // suppress warning in release builds
 
         m_buffer.resize(totalLength);
-        unsigned char *bufferPointer = reinterpret_cast<unsigned char *>(m_buffer.data());
+        unsigned char *bufferPointer = reinterpret_cast<unsigned char *>(m_buffer.data()); // clazy:exclude=detaching-member
 
         foreach(Tone t, this->m_tones)
         {

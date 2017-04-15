@@ -64,7 +64,7 @@ namespace BlackMisc
             {
                 // further reduce by VATSIM flag
                 QStringList furtherReduced;
-                for (const QString &p : reduced)
+                for (const QString &p : as_const(reduced))
                 {
                     if (CBuildConfig::isVatsimVersion())
                     {
@@ -203,7 +203,7 @@ namespace BlackMisc
             const QJsonObject platforms = json.value("platforms").toObject();
             const QStringList platformsKeys = platforms.keys();
             if (platformsKeys.isEmpty()) { return CDistribution(); } // no platforms, then the whole distribution is useless
-            for (const QString platformKey : platformsKeys)
+            for (const QString platformKey : as_const(platformsKeys))
             {
                 QStringList platformFileNames;
                 QJsonArray platformFiles = platforms.value(platformKey).toArray();

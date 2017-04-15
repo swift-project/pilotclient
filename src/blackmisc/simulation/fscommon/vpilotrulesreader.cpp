@@ -132,10 +132,11 @@ namespace BlackMisc
 
             const QString &CVPilotRulesReader::standardMappingsDirectory()
             {
+                //! \fixme not threadsafe
                 static QString directory;
                 if (directory.isEmpty())
                 {
-                    directory = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first();
+                    directory = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).constFirst();
                     if (!directory.endsWith('/')) { directory.append('/'); }
                     directory.append("vPilot Files/Model Matching Rule Sets");
                 }

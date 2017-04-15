@@ -183,7 +183,7 @@ namespace BlackMisc
         m_connections.insert(connection.name(), connection);
         CLogMessage(this).debug() << "New Connection from:" << connection.name();
         bool success = true;
-        for (auto i = m_objects.begin(); i != m_objects.end(); ++i)
+        for (auto i = m_objects.cbegin(); i != m_objects.cend(); ++i)
         {
             CLogMessage(this).debug() << "Adding" << i.key() << getDBusInterfaceFromClassInfo(i.value()) << "to the new connection.";
             bool ok = connection.registerObject(i.key(), i.value(), registerOptions());
@@ -228,7 +228,7 @@ namespace BlackMisc
             break;
         case SERVERMODE_P2P:
             {
-                for (QDBusConnection connection : m_connections)
+                for (QDBusConnection connection : as_const(m_connections))
                 {
                     if (connection.registerObject(path, object, registerOptions()))
                     {
@@ -277,7 +277,7 @@ namespace BlackMisc
                 break;
             case SERVERMODE_P2P:
                 {
-                    for (QDBusConnection connection : m_connections)
+                    for (QDBusConnection connection : as_const(m_connections))
                     {
                         connection.unregisterObject(path);
                     }

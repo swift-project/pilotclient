@@ -130,7 +130,7 @@ namespace BlackMisc
 
     void CLogHandler::logMessage(const CStatusMessage &statusMessage)
     {
-        auto handlers = handlersForMessage(statusMessage);
+        const auto handlers = handlersForMessage(statusMessage);
 
         if (isFallThroughEnabled(handlers))
         {

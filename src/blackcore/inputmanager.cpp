@@ -16,6 +16,8 @@
 #include <limits.h>
 #include <QtGlobal>
 
+// clazy:excludeall=detaching-member
+
 using namespace BlackInput;
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
@@ -107,7 +109,7 @@ namespace BlackCore
         if (action.isEmpty()) { return; }
         if (m_actionRelayingEnabled) emit remoteActionFromLocal(action, isKeyDown);
 
-        for (const auto &boundAction : m_boundActions)
+        for (const auto &boundAction : as_const(m_boundActions))
         {
             if (boundAction.m_action == action)
             {

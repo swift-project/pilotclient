@@ -38,11 +38,11 @@ namespace BlackMisc
             this->m_splitParts = m_cleanedLine.split(' ');
             if (!this->m_splitParts.isEmpty())
             {
-                const QString first = this->m_splitParts.first();
+                const QString &first = this->m_splitParts.constFirst();
                 const QString formatted = formatCommand(first);
                 if (isCommand(first))
                 {
-                    this->m_commandPart = formatCommand(first);
+                    this->m_commandPart = formatted;
                     this->m_knownCommand = this->m_knownCommands.contains(formatted);
                 }
             }

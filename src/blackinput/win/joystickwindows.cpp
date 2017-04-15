@@ -105,7 +105,7 @@ namespace BlackInput
         // FIXME: Take the first device for the time being
         // For the future, the user should be able to choose which device
         // he wants to use.
-        CJoystickDeviceData deviceData = m_availableJoystickDevices.first();
+        const CJoystickDeviceData &deviceData = m_availableJoystickDevices.constFirst();
 
         // Create device
         if (FAILED(hr = m_directInput->CreateDevice(deviceData.guidDevice, &m_directInputDevice, nullptr)))

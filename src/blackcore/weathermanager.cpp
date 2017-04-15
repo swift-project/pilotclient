@@ -97,10 +97,10 @@ namespace BlackCore
 
     void CWeatherManager::fetchNextWeatherData()
     {
-        const WeatherRequest weatherRequest = m_pendingRequests.first();
+        const WeatherRequest weatherRequest = m_pendingRequests.constFirst();
         PhysicalQuantities::CLength maxDistance(100.0, CLengthUnit::km());
 
-        for (IWeatherData *plugin : m_weatherDataPlugins)
+        for (IWeatherData *plugin : as_const(m_weatherDataPlugins))
         {
             plugin->fetchWeatherData(weatherRequest.weatherGrid, maxDistance);
         }
@@ -114,7 +114,7 @@ namespace BlackCore
         Q_ASSERT(weatherDataPlugin);
         auto fetchedWeatherGrid = weatherDataPlugin->getWeatherData();
 
-        const WeatherRequest weatherRequest = m_pendingRequests.first();
+        const WeatherRequest weatherRequest = m_pendingRequests.constFirst();
         CWeatherGrid requestedWeatherGrid = weatherRequest.weatherGrid;
 
         // Interpolation. So far it just picks the closest point without interpolation.

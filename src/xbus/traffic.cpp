@@ -25,6 +25,8 @@
 #include <cstring>
 #include <cmath>
 
+// clazy:excludeall=reserve-candidates
+
 namespace XBus
 {
 
@@ -246,7 +248,7 @@ namespace XBus
 
     void CTraffic::removeAllPlanes()
     {
-        for (auto plane : m_planesByCallsign)
+        for (auto plane : BlackMisc::as_const(m_planesByCallsign))
         {
             XPMPDestroyPlane(plane->id);
             delete plane;
@@ -334,7 +336,10 @@ namespace XBus
         }
         else if (callsign.isEmpty())
         {
-            for (const auto &callsign : m_planesByCallsign.keys()) { setInterpolatorMode(callsign, spline); }
+            for (const auto &callsign : BlackMisc::makeKeysRange(BlackMisc::as_const(m_planesByCallsign)))
+            {
+                setInterpolatorMode(callsign, spline);
+            }
         }
     }
 
@@ -379,10 +384,10 @@ namespace XBus
             if (plane->hasSurfaces)
             {
                 const auto currentTime = QDateTime::currentMSecsSinceEpoch();
-                while (! plane->pendingSurfaces.isEmpty() && plane->pendingSurfaces.front().first <= currentTime)
+                while (! plane->pendingSurfaces.isEmpty() && plane->pendingSurfaces.constFirst().first <= currentTime)
                 {
                     //! \todo if gear is currently retracted, look ahead and pull gear position from pendingSurfaces up to 5 seconds in the future
-                    plane->pendingSurfaces.front().second(plane);
+                    plane->pendingSurfaces.constFirst().second(plane);
                     plane->pendingSurfaces.pop_front();
                 }
                 if (plane->surfaces.gearPosition != plane->targetGearPosition)

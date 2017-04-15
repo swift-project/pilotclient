@@ -162,22 +162,22 @@ namespace BlackSample
         QString containsStr("aaa");
         number = 0;
         timer.start();
-        for (const auto &str : strList1) { if (newRegex.match(str).hasMatch()) number++; }
+        for (const auto &str : as_const(strList1)) { if (newRegex.match(str).hasMatch()) number++; }
         ms = timer.elapsed();
         out << "new regex matched " << number << " of" << strList1.size() << " strings in " << ms << "ms"  << endl;
         number = 0;
         timer.start();
-        for (const auto &str : strList2) { if (fullRegex.exactMatch(str)) number++; }
+        for (const auto &str : as_const(strList2)) { if (fullRegex.exactMatch(str)) number++; }
         ms = timer.elapsed();
         out << "full regex matched " << number << " of" << strList2.size() << " strings in " << ms << "ms"  << endl;
         number = 0;
         timer.start();
-        for (const auto &str : strList3) { if (wildcardRegex.exactMatch(str)) number++; }
+        for (const auto &str : as_const(strList3)) { if (wildcardRegex.exactMatch(str)) number++; }
         ms = timer.elapsed();
         out << "wildcard matched " << number << " of " << strList3.size() << " strings in " << ms << "ms"  << endl;
         number = 0;
         timer.start();
-        for (const auto &str : strList4) { if (str.contains(containsStr)) number++; }
+        for (const auto &str : as_const(strList4)) { if (str.contains(containsStr)) number++; }
         ms = timer.elapsed();
         out << "contains matched " << number << " of " << strList4.size() << " strings in " << ms << "ms" << endl;
 
@@ -241,7 +241,7 @@ namespace BlackSample
         out << "Reads by times / callsigns: " << timer.elapsed() << "ms" << endl;
 
         timer.start();
-        QHash<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
+        const QHash<CCallsign, CAircraftSituationList> splitList = situations.splitPerCallsign();
         Q_ASSERT(splitList.size() == numberOfCallsigns);
         for (int t = 0; t < numberOfTimes; t++)
         {
@@ -318,7 +318,7 @@ namespace BlackSample
         Q_UNUSED(b);
 
         timer.start();
-        QHash<CCallsign, CAircraftSituationList> csSituations = situations.splitPerCallsign();
+        const QHash<CCallsign, CAircraftSituationList> csSituations = situations.splitPerCallsign();
         out << "Split by " << csSituations.size() << " callsigns, " << timer.elapsed() << "ms" << endl;
 
         timer.start();
@@ -422,7 +422,7 @@ namespace BlackSample
         upperRegex.optimize();
 
         timer.start();
-        for (const QString &s : strings)
+        for (const QString &s : as_const(strings))
         {
             auto c = containsChar(s, [](QChar c) { return c.isUpper(); });
             Q_UNUSED(c);
@@ -430,7 +430,7 @@ namespace BlackSample
         out << "Check 100,000 strings for containing uppercase letter: (utility)     " << timer.elapsed() << "ms" << endl;
 
         timer.start();
-        for (const QString &s : strings)
+        for (const QString &s : as_const(strings))
         {
             auto c = s.contains(upperRegex);
             Q_UNUSED(c);
@@ -438,7 +438,7 @@ namespace BlackSample
         out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms" << endl << endl;
 
         timer.start();
-        for (const QString &s : strings)
+        for (const QString &s : as_const(strings))
         {
             auto i = indexOfChar(s, [](QChar c) { return c.isUpper(); });
             Q_UNUSED(i);
@@ -446,7 +446,7 @@ namespace BlackSample
         out << "Check 100,000 strings for index of first uppercase letter: (utility) " << timer.elapsed() << "ms" << endl;
 
         timer.start();
-        for (const QString &s : strings)
+        for (const QString &s : as_const(strings))
         {
             auto i = s.indexOf(upperRegex);
             Q_UNUSED(i);

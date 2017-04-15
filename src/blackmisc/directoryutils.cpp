@@ -11,6 +11,7 @@
 
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/range.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QUrl>
@@ -176,8 +177,8 @@ namespace BlackMisc
         comp.sameNameInTarget = CDirectoryUtils::filesToCanonicalNames(sameNames, sTargetCanonicalFiles);
 
         Q_ASSERT_X(comp.sameNameInSource.size() == comp.sameNameInTarget.size(), Q_FUNC_INFO, "Same sets require same size");
-        QSet<QString>::const_iterator targetIt = comp.sameNameInTarget.begin();
-        for (const QString &sourceFile : comp.sameNameInSource)
+        QSet<QString>::const_iterator targetIt = comp.sameNameInTarget.cbegin();
+        for (const QString &sourceFile : as_const(comp.sameNameInSource))
         {
             const QFileInfo source(sourceFile);
             const QFileInfo target(*targetIt++);

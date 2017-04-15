@@ -134,8 +134,8 @@ namespace BlackSample
         stream >> cmd;
         stream.skipWhiteSpace();
 
-        auto found = m_commands.find(cmd);
-        if (found == m_commands.end())
+        auto found = m_commands.constFind(cmd);
+        if (found == m_commands.constEnd())
         {
             std::cout << "No such command" << std::endl;
         }

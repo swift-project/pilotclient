@@ -262,7 +262,7 @@ namespace BlackMisc
                     file.close();
                     parseFullPackage(content, package);
 
-                    for (const auto &plane : package.planes)
+                    for (const auto &plane : as_const(package.planes))
                     {
                         if (installedModels.containsModelString(plane.getModelName()))
                         {
@@ -295,7 +295,7 @@ namespace BlackMisc
 
             bool CAircraftModelLoaderXPlane::doPackageSub(QString &ioPath)
             {
-                for (auto i = m_cslPackages.begin(); i != m_cslPackages.end(); ++i)
+                for (auto i = m_cslPackages.cbegin(); i != m_cslPackages.cend(); ++i)
                 {
                     if (strncmp(qPrintable(i->name), qPrintable(ioPath), i->name.size()) == 0)
                     {
@@ -315,8 +315,8 @@ namespace BlackMisc
                     return false;
                 }
 
-                auto p = std::find_if(m_cslPackages.begin(), m_cslPackages.end(), [&tokens](CSLPackage p) { return p.name == tokens[1]; });
-                if (p == m_cslPackages.end())
+                auto p = std::find_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage &p) { return p.name == tokens[1]; });
+                if (p == m_cslPackages.cend())
                 {
                     package.path = path;
                     package.name = tokens[1];
@@ -338,7 +338,7 @@ namespace BlackMisc
                     return false;
                 }
 
-                if (std::count_if(m_cslPackages.begin(), m_cslPackages.end(), [&tokens](CSLPackage p) { return p.name == tokens[1]; }) == 0)
+                if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage &p) { return p.name == tokens[1]; }) == 0)
                 {
                     CLogMessage(this).warning("WARNING: required package %1 not found. Aborting processing of this package.") << tokens[1];
                     return false;

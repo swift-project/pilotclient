@@ -257,7 +257,7 @@ namespace BlackWxPlugin
             }
             CLogMessage(this).debug() << "Parsed" << messageNo << "GRIB messages.";
 
-            for (const GfsGridPoint &gfsGridPoint : m_gfsWeatherGrid)
+            for (const GfsGridPoint &gfsGridPoint : as_const(m_gfsWeatherGrid))
             {
                 if(QThread::currentThread()->isInterruptionRequested()) { return; }
 

@@ -163,6 +163,6 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, BlackCore::Context::C
 {
     QList<CLogSubscriptionPair> listOfPairs;
     arg >> listOfPairs;
-    for (const auto &pair : listOfPairs) { hash.insert(pair.first, pair.second); }
+    for (const auto &pair : as_const(listOfPairs)) { hash.insert(pair.first, pair.second); }
     return arg;
 }
