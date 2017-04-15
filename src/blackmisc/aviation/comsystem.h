@@ -103,13 +103,13 @@ namespace BlackMisc
             static CComSystem getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1);
 
             //! COM1 unit
-            static CComSystem getCom1System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet());
+            static CComSystem getCom1System(const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet());
 
             //! COM2 unit
             static CComSystem getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1);
 
             //! COM2 unit
-            static CComSystem getCom2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet());
+            static CComSystem getCom2System(const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet());
 
             //! Valid civil aviation frequency?
             static bool isValidCivilAviationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f);

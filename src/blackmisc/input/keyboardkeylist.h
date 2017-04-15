@@ -38,7 +38,7 @@ namespace BlackMisc
             CKeyboardKeyList();
 
             //! Init by single key
-            CKeyboardKeyList(const CKeyboardKey &key);
+            CKeyboardKeyList(CKeyboardKey key);
 
             //! Construct from a base class object.
             CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);

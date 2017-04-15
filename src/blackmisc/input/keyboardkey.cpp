@@ -34,7 +34,7 @@ namespace BlackMisc
             return getKeyAsString();
         }
 
-        void CKeyboardKey::setKeyObject(const CKeyboardKey &key)
+        void CKeyboardKey::setKeyObject(CKeyboardKey key)
         {
             this->m_keyCode = key.m_keyCode;
         }

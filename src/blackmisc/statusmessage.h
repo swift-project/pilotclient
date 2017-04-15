@@ -68,22 +68,22 @@ namespace BlackMisc
         Derived &debug() { return setSeverityAndMessage(SeverityDebug, ""); }
 
         //! Set the severity to info, providing a format string.
-        Derived &info(QString format) { return setSeverityAndMessage(SeverityInfo, format); }
+        Derived &info(const QString &format) { return setSeverityAndMessage(SeverityInfo, format); }
 
         //! Set the severity to warning, providing a format string.
-        Derived &warning(QString format) { return setSeverityAndMessage(SeverityWarning, format); }
+        Derived &warning(const QString &format) { return setSeverityAndMessage(SeverityWarning, format); }
 
         //! Set the severity to error, providing a format string.
-        Derived &error(QString format) { return setSeverityAndMessage(SeverityError, format); }
+        Derived &error(const QString &format) { return setSeverityAndMessage(SeverityError, format); }
 
         //! Set the severity to info, providing a format string, and adding the validation category.
-        Derived &validationInfo(QString format) { setValidation(); return setSeverityAndMessage(SeverityInfo, format); }
+        Derived &validationInfo(const QString &format) { setValidation(); return setSeverityAndMessage(SeverityInfo, format); }
 
         //! Set the severity to warning, providing a format string, and adding the validation category.
-        Derived &validationWarning(QString format) { setValidation(); return setSeverityAndMessage(SeverityWarning, format); }
+        Derived &validationWarning(const QString &format) { setValidation(); return setSeverityAndMessage(SeverityWarning, format); }
 
         //! Set the severity to error, providing a format string, and adding the validation category.
-        Derived &validationError(QString format) { setValidation(); return setSeverityAndMessage(SeverityError, format); }
+        Derived &validationError(const QString &format) { setValidation(); return setSeverityAndMessage(SeverityError, format); }
 
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
@@ -109,7 +109,7 @@ namespace BlackMisc
     private:
         void setValidation() { m_categories.remove(CLogCategory::uncategorized()); m_categories.push_back(CLogCategory::validation()); }
         Derived &setSeverityAndMessage(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
-        Derived &arg(QString value) { m_args.push_back(value); return derived(); }
+        Derived &arg(const QString &value) { m_args.push_back(value); return derived(); }
         Derived &derived() { return static_cast<Derived &>(*this); }
 
     protected:

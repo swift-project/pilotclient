@@ -35,7 +35,7 @@ namespace BlackMisc
             CHotkeyCombination() = default;
 
             //! Init with key
-            CHotkeyCombination(const CKeyboardKey &key);
+            CHotkeyCombination(CKeyboardKey key);
 
             //! Init with list of keys
             CHotkeyCombination(const CKeyboardKeyList &keys);
@@ -53,22 +53,22 @@ namespace BlackMisc
             CJoystickButtonList getJoystickButtons() const { return m_joystickButtons; }
 
             //! Add keyboard key
-            void addKeyboardKey(const CKeyboardKey &key);
+            void addKeyboardKey(CKeyboardKey key);
 
             //! Add joystick button
-            void addJoystickButton(const CJoystickButton &button);
+            void addJoystickButton(CJoystickButton button);
 
             //! Replace oldKey with newKey
-            void replaceKey(const CKeyboardKey &oldKey, const CKeyboardKey &newKey);
+            void replaceKey(CKeyboardKey oldKey, CKeyboardKey newKey);
 
             //! Replace oldButton with newButton
-            void replaceButton(const CJoystickButton &oldButton, const CJoystickButton &newButton);
+            void replaceButton(CJoystickButton oldButton, CJoystickButton newButton);
 
             //! Remove keyboard key
-            void removeKeyboardKey(const CKeyboardKey &key);
+            void removeKeyboardKey(CKeyboardKey key);
 
             //! Remove joystick button
-            void removeJoystickButton(const CJoystickButton &button);
+            void removeJoystickButton(CJoystickButton button);
 
             //! Is sequence empty?
             bool isEmpty() const { return m_keyboardKeys.isEmpty() && m_joystickButtons.isEmpty(); }

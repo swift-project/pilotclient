@@ -178,7 +178,7 @@ namespace BlackMisc
             static const CSimulatorInfo &guessDefaultSimulator();
 
             //! From database JSON
-            static CSimulatorInfo fromDatabaseJson(const QJsonObject &json, const QString prefix);
+            static CSimulatorInfo fromDatabaseJson(const QJsonObject &json, const QString &prefix);
 
         private:
             int m_simulator = static_cast<int>(None);

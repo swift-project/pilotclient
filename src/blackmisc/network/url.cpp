@@ -166,7 +166,7 @@ namespace BlackMisc
             return url;
         }
 
-        bool CUrl::pathEndsWith(const QString ending, Qt::CaseSensitivity cs) const
+        bool CUrl::pathEndsWith(const QString &ending, Qt::CaseSensitivity cs) const
         {
             return m_path.endsWith(ending, cs);
         }
@@ -220,7 +220,7 @@ namespace BlackMisc
             return QUrl::fromLocalFile(localFile);
         }
 
-        QString CUrl::stripQueryString(const QString query)
+        QString CUrl::stripQueryString(const QString &query)
         {
             QString q(query.trimmed());
             if (q.startsWith("?") || q.startsWith("&"))

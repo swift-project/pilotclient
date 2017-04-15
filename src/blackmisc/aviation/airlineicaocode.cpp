@@ -338,7 +338,7 @@ namespace BlackMisc
             return valid;
         }
 
-        QString CAirlineIcaoCode::normalizeDesignator(const QString candidate)
+        QString CAirlineIcaoCode::normalizeDesignator(const QString &candidate)
         {
             QString n(candidate.trimmed().toUpper());
             n = n.left(indexOfChar(n, [](QChar c) { return c.isSpace(); }));

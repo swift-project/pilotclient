@@ -318,7 +318,7 @@ namespace BlackCore
             return m_sharedFileResponses[entity].getLastModifiedTimestamp();
         }
 
-        bool CDatabaseReader::requestHeadersOfSharedFiles(const CEntityFlags::Entity &entities)
+        bool CDatabaseReader::requestHeadersOfSharedFiles(CEntityFlags::Entity entities)
         {
             if (!this->isNetworkAccessible())
             {

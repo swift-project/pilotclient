@@ -75,7 +75,7 @@ namespace BlackMisc
             CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
-            CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : CAngle(track), m_north(north) {}
+            CTrack(const BlackMisc::PhysicalQuantities::CAngle &track, ReferenceNorth north) : CAngle(track), m_north(north) {}
 
             //! \brief Magnetic Track?
             bool isMagneticTrack() const

@@ -78,13 +78,13 @@ namespace BlackMisc
             CCloudLayer() = default;
 
             //! Constructor
-            CCloudLayer(BlackMisc::Aviation::CAltitude base,
-                        BlackMisc::Aviation::CAltitude top,
+            CCloudLayer(const BlackMisc::Aviation::CAltitude &base,
+                        const BlackMisc::Aviation::CAltitude &top,
                         Coverage coverage);
 
             //! Constructor
-            CCloudLayer(BlackMisc::Aviation::CAltitude base,
-                        BlackMisc::Aviation::CAltitude top,
+            CCloudLayer(const BlackMisc::Aviation::CAltitude &base,
+                        const BlackMisc::Aviation::CAltitude &top,
                         double precipitationRate,
                         Precipitation precipitation,
                         Clouds clouds,
@@ -97,7 +97,7 @@ namespace BlackMisc
             BlackMisc::Aviation::CAltitude getBase() const { return m_base; }
 
             //! Set layer top
-            void setTop(BlackMisc::Aviation::CAltitude top) { m_top = top; }
+            void setTop(const BlackMisc::Aviation::CAltitude &top) { m_top = top; }
 
             //! Get layer top
             BlackMisc::Aviation::CAltitude getTop() const { return m_top; }

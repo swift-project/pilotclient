@@ -188,21 +188,21 @@ namespace BlackMisc
                 return asyncCallWithArgumentList(QLatin1String("pingAircraftModelList"), argumentList);
             }
 
-            QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraft> pingSimulatedAircraft(BlackMisc::Simulation::CSimulatedAircraft aircraft)
+            QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraft> pingSimulatedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(aircraft);
                 return asyncCallWithArgumentList(QLatin1String("pingSimulatedAircraft"), argumentList);
             }
 
-            QDBusPendingReply<BlackMisc::Simulation::CSimulatorPluginInfo> pingPluginInfo(BlackMisc::Simulation::CSimulatorPluginInfo info)
+            QDBusPendingReply<BlackMisc::Simulation::CSimulatorPluginInfo> pingPluginInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &info)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(info);
                 return asyncCallWithArgumentList(QLatin1String("pingPluginInfo"), argumentList);
             }
 
-            QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> pingAtcStationList(BlackMisc::Aviation::CAtcStationList atcStationList)
+            QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> pingAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(atcStationList);
@@ -258,7 +258,7 @@ namespace BlackMisc
                 return asyncCallWithArgumentList(QLatin1String("pingPropertyIndex"), argumentList);
             }
 
-            QDBusPendingReply<BlackMisc::CPropertyIndexVariantMap> pingIndexVariantMap(BlackMisc::CPropertyIndexVariantMap indexVariantMap)
+            QDBusPendingReply<BlackMisc::CPropertyIndexVariantMap> pingIndexVariantMap(const BlackMisc::CPropertyIndexVariantMap &indexVariantMap)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(indexVariantMap);
@@ -342,7 +342,7 @@ namespace BlackMisc
                 return asyncCallWithArgumentList(QLatin1String("receiveStringMessage"), argumentList);
             }
 
-            QDBusPendingReply<> receiveTrack(BlackMisc::Aviation::CTrack track)
+            QDBusPendingReply<> receiveTrack(const BlackMisc::Aviation::CTrack &track)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(track);

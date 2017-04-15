@@ -64,13 +64,13 @@ namespace BlackMisc
             CTransponder(int transponderCode, TransponderMode transponderMode);
 
             //! Constructor with transponder mode as string
-            CTransponder(int transponderCode, QString transponderMode);
+            CTransponder(int transponderCode, const QString &transponderMode);
 
             //! Constructor, code as string
-            CTransponder(QString transponderCode, TransponderMode transponderMode);
+            CTransponder(const QString &transponderCode, TransponderMode transponderMode);
 
             //! Constructor
-            CTransponder(QString transponderCode, QString transponderMode);
+            CTransponder(const QString &transponderCode, const QString &transponderMode);
 
             //! Are set values valid?
             bool validValues() const;

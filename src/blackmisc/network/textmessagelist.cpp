@@ -53,7 +53,7 @@ namespace BlackMisc
         CTextMessageList::CTextMessageList(const QString &message, const QList<CFrequency> &frequencies, const BlackMisc::Aviation::CCallsign &fromCallsign)
         {
             if (frequencies.isEmpty()) return;
-            foreach(CFrequency frequency, frequencies)
+            for (const CFrequency &frequency : frequencies)
             {
                 CTextMessage pm(message, frequency, fromCallsign);
                 this->push_back(pm);

@@ -353,7 +353,7 @@ namespace BlackMisc
         return pm;
     }
 
-    QPixmap transparentPixmapImpl(const QSize &size)
+    QPixmap transparentPixmapImpl(QSize size)
     {
         // http://curtis.humphreyonline.us/code/qt-code/making-a-qpixmap-transparent-wrong-way-right-way
         QPixmap pix(size);
@@ -1195,7 +1195,7 @@ namespace BlackMisc
         return QPixmap::fromImage(destBackgroundImg);
     }
 
-    QIcon CIcons::changeIconBackgroundColor(const QIcon &icon, Qt::GlobalColor backgroundColor, const QSize &targetsize)
+    QIcon CIcons::changeIconBackgroundColor(const QIcon &icon, Qt::GlobalColor backgroundColor, QSize targetsize)
     {
         QImage imgSource(icon.pixmap(targetsize).toImage());
         QImage destBackgroundImg(changeImageBackgroundColor(imgSource, backgroundColor));

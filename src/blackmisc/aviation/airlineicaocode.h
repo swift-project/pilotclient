@@ -231,7 +231,7 @@ namespace BlackMisc
             static QSet<QString> specialValidDesignators();
 
             //! Normalize string as airline designator
-            static QString normalizeDesignator(const QString candidate);
+            static QString normalizeDesignator(const QString &candidate);
 
             //! From our DB JSON
             static CAirlineIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());

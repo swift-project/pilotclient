@@ -20,16 +20,16 @@ namespace BlackMisc
     namespace Weather
     {
 
-        CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
-                                 BlackMisc::Aviation::CAltitude top,
+        CCloudLayer::CCloudLayer(const BlackMisc::Aviation::CAltitude &base,
+                                 const BlackMisc::Aviation::CAltitude &top,
                                  Coverage coverage) :
             m_base(base), m_top(top)
         {
             setCoverage(coverage);
         }
 
-        CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
-                                 BlackMisc::Aviation::CAltitude top,
+        CCloudLayer::CCloudLayer(const BlackMisc::Aviation::CAltitude &base,
+                                 const BlackMisc::Aviation::CAltitude &top,
                                  double precipitationRate,
                                  Precipitation precipitation,
                                  Clouds clouds,

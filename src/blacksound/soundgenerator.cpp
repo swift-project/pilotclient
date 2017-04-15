@@ -401,7 +401,7 @@ namespace BlackSound
         QAudioDeviceInfo qtDevice = QAudioDeviceInfo::defaultOutputDevice();
         if (lookFor.startsWith("default")) { return qtDevice; }
         int score = 0;
-        foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+        for (const QAudioDeviceInfo &qd : QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
         {
             const QString cn = qd.deviceName().toLower();
             if (lookFor == cn) { return qd;  } // exact match
@@ -425,7 +425,7 @@ namespace BlackSound
         return qtDevice;
     }
 
-    CSoundGenerator *CSoundGenerator::playSignal(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    CSoundGenerator *CSoundGenerator::playSignal(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device)
     {
         CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
         if (tones.isEmpty()) { return generator; } // that was easy
@@ -437,7 +437,7 @@ namespace BlackSound
         return generator;
     }
 
-    CSoundGenerator *CSoundGenerator::playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    CSoundGenerator *CSoundGenerator::playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device)
     {
         CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
         if (tones.isEmpty()) { return generator; } // that was easy
@@ -449,7 +449,7 @@ namespace BlackSound
         return generator;
     }
 
-    void CSoundGenerator::playSignalRecorded(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    void CSoundGenerator::playSignalRecorded(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device)
     {
         if (tones.isEmpty()) { return; } // that was easy
         if (volume < 1) { return; }
@@ -467,7 +467,7 @@ namespace BlackSound
         generator->deleteLater();
     }
 
-    void CSoundGenerator::playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
+    void CSoundGenerator::playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, const QAudioDeviceInfo &device)
     {
         QList<CSoundGenerator::Tone> tones;
         if (selcal.isValid())
@@ -535,13 +535,13 @@ namespace BlackSound
     void CSoundGenerator::printAllQtSoundDevices(QTextStream &out)
     {
         out << "output:" << endl;
-        foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+        for (const QAudioDeviceInfo &qd : QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
         {
             out << qd.deviceName() << endl;
         }
 
         out << "input:" << endl;
-        foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioInput))
+        for (const QAudioDeviceInfo &qd : QAudioDeviceInfo::availableDevices(QAudio::AudioInput))
         {
             out << qd.deviceName() << endl;
         }

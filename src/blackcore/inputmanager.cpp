@@ -72,7 +72,7 @@ namespace BlackCore
     void CInputManager::ps_changeHotkeySettings()
     {
         m_configuredActions.clear();
-        for (CActionHotkey actionHotkey : m_actionHotkeys.getThreadLocal())
+        for (const CActionHotkey &actionHotkey : m_actionHotkeys.getThreadLocal())
         {
             if (!actionHotkey.getApplicableMachine().isFromLocalMachine()) { continue; }
             CHotkeyCombination combination = actionHotkey.getCombination();

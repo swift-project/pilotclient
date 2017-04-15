@@ -27,7 +27,7 @@ namespace BlackCore
     {
     public:
         //! Constructor for given replenishment policy
-        CTokenBucket(int capacity, BlackMisc::PhysicalQuantities::CTime interval, int numTokensToRefill);
+        CTokenBucket(int capacity, const BlackMisc::PhysicalQuantities::CTime &interval, int numTokensToRefill);
 
         //! Try to consume a number of tokens
         bool tryConsume(int numTokens = 1);

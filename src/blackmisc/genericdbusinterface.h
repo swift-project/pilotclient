@@ -64,7 +64,7 @@ namespace BlackMisc
 
         //! Call DBus, no return value
         template <typename... Args>
-        void callDBus(const QLatin1String &method, Args&&... args)
+        void callDBus(QLatin1String method, Args&&... args)
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             this->asyncCallWithArgumentList(method, argumentList);
@@ -72,7 +72,7 @@ namespace BlackMisc
 
         //! Call DBus with synchronous return value
         template <typename Ret, typename... Args>
-        Ret callDBusRet(const QLatin1String &method, Args&&... args)
+        Ret callDBusRet(QLatin1String method, Args&&... args)
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             QDBusPendingReply<Ret> pr = this->asyncCallWithArgumentList(method, argumentList);
@@ -82,7 +82,7 @@ namespace BlackMisc
         //! Call DBus with asynchronous return value
         //! Callback can be any callable object taking a single argument of type QDBusPendingCallWatcher*.
         template <typename Func, typename... Args>
-        void callDBusAsync(const QLatin1String &method, Func callback, Args&&... args)
+        void callDBusAsync(QLatin1String method, Func callback, Args&&... args)
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             QDBusPendingCall pc = this->asyncCallWithArgumentList(method, argumentList);

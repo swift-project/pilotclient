@@ -76,7 +76,7 @@ namespace BlackCoreTest
 
         EXPECT_UNIT(e)
         .send(&INetwork::sendPing, "server")
-        .expect(&INetwork::pongReceived, [](CCallsign callsign, PhysicalQuantities::CTime elapsedTime)
+        .expect(&INetwork::pongReceived, [](const CCallsign &callsign, const PhysicalQuantities::CTime &elapsedTime)
         {
             qDebug() << "PONG" << callsign << elapsedTime;
         })

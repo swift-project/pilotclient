@@ -72,13 +72,13 @@ namespace BlackMisc
             QString getSimulatorVersion() const;
 
             //! Simulator version info, something like "10.3.2"
-            void setSimulatorVersion(const QString versionInfo);
+            void setSimulatorVersion(const QString &versionInfo);
 
             //! Path where simulator is installed
             QString getSimulatorInstallationDirectory() const;
 
             //! Path where simulator is installed
-            void setSimulatorInstallationDirectory(const QString fullFilePath);
+            void setSimulatorInstallationDirectory(const QString &fullFilePath);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

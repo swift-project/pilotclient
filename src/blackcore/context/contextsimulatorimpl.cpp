@@ -183,7 +183,7 @@ namespace BlackCore
             return getModelSet().size();
         }
 
-        CAircraftModelList CContextSimulator::getModelSetModelsStartingWith(const QString modelString) const
+        CAircraftModelList CContextSimulator::getModelSetModelsStartingWith(const QString &modelString) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
             if (m_simulatorPlugin.first.isUnspecified())

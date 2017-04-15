@@ -68,16 +68,16 @@ namespace XBus
         static CMenu mainMenu();
 
         //! Appends an item to the menu and returns it.
-        CMenuItem item(std::string name, std::function<void()> callback);
+        CMenuItem item(const std::string &name, std::function<void()> callback);
 
         //! Appends a checkbox item to the menu and returns it.
-        CMenuItem checkableItem(std::string name, bool checked, std::function<void(bool)> callback);
+        CMenuItem checkableItem(const std::string &name, bool checked, std::function<void(bool)> callback);
 
         //! Appends a separator to the menu.
         void sep();
 
         //! Appends an item to the menu which opens a sub-menu, and returns it.
-        CMenu subMenu(std::string name);
+        CMenu subMenu(const std::string &name);
 
     private:
         typedef std::vector<std::pair<CMenuItem, std::function<void(bool)>>> ItemList;

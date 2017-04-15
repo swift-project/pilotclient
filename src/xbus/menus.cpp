@@ -49,7 +49,7 @@ namespace XBus
         return { XPLMFindPluginsMenu(), true, nullptr };
     }
 
-    CMenuItem CMenu::item(std::string name, std::function<void()> callback)
+    CMenuItem CMenu::item(const std::string &name, std::function<void()> callback)
     {
         assert(! name.empty());
         m_data->items->emplace_back(
@@ -59,7 +59,7 @@ namespace XBus
         return m_data->items->back().first;
     }
 
-    CMenuItem CMenu::checkableItem(std::string name, bool checked, std::function<void(bool)> callback)
+    CMenuItem CMenu::checkableItem(const std::string &name, bool checked, std::function<void(bool)> callback)
     {
         assert(! name.empty());
         m_data->items->emplace_back(
@@ -74,7 +74,7 @@ namespace XBus
         XPLMAppendMenuSeparator(m_data->id);
     }
 
-    CMenu CMenu::subMenu(std::string name)
+    CMenu CMenu::subMenu(const std::string &name)
     {
         assert(! name.empty());
         auto items = std::make_unique<ItemList>();

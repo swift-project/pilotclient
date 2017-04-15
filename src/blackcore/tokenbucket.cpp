@@ -14,7 +14,7 @@
 
 namespace BlackCore
 {
-    CTokenBucket::CTokenBucket(int capacity, BlackMisc::PhysicalQuantities::CTime interval, int numTokensToRefill)
+    CTokenBucket::CTokenBucket(int capacity, const BlackMisc::PhysicalQuantities::CTime &interval, int numTokensToRefill)
         : m_capacity(capacity), m_interval(interval), m_numTokensToRefill(numTokensToRefill) {}
 
     bool CTokenBucket::tryConsume(int numTokens)

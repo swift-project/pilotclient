@@ -202,7 +202,7 @@ namespace BlackMisc
             const QStringList relativeSubdirs = CDirectoryUtils::getSubDirectories(dirSource);
             if (!relativeSubdirs.isEmpty())
             {
-                for (const QString relativeSubdir : relativeSubdirs)
+                for (const QString &relativeSubdir : relativeSubdirs)
                 {
                     const QString sourceSubdir = CFileUtils::appendFilePaths(dirSource, relativeSubdir);
                     const QString targetSubdir = CFileUtils::appendFilePaths(dirTarget, relativeSubdir);

@@ -207,7 +207,7 @@ namespace BlackMisc
 
         //! Recurse into one of the submembers of T, comparing members of that member.
         template <typename T, std::enable_if_t<THasMetaClass<T>::value, int> = 0>
-        QList<QPair<QString, bool>> operator ()(const T &a, const T &b, QStringList memberNames) const
+        QList<QPair<QString, bool>> operator ()(const T &a, const T &b, QStringList memberNames) const // clazy:exclude=function-args-by-ref
         {
             if (memberNames.isEmpty()) { return CMetaMemberComparator()(a, b); }
             auto meta = introspect<T>().without(MetaFlags<DisabledForComparison>());
@@ -227,7 +227,7 @@ namespace BlackMisc
 
         //! Return empty list if T doesn't have a metaclass.
         template <typename T, std::enable_if_t<!THasMetaClass<T>::value, int> = 0>
-        QList<QPair<QString, bool>> operator ()(const T &, const T &, QStringList) const { return {}; }
+        QList<QPair<QString, bool>> operator ()(const T &, const T &, QStringList) const { return {}; } // clazy:exclude=function-args-by-ref
 
     private:
         template <typename T> static auto baseEquals(const T *a, const T *b) { return CMetaMemberComparator()(*a, *b); }

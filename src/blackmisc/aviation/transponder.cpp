@@ -29,13 +29,13 @@ namespace BlackMisc
             m_transponderCode(transponderCode), m_transponderMode(transponderMode)
         {  }
 
-        CTransponder::CTransponder(int transponderCode, QString transponderMode) :
+        CTransponder::CTransponder(int transponderCode, const QString &transponderMode) :
             m_transponderCode(transponderCode), m_transponderMode(StateStandby)
         {
             this->setModeAsString(transponderMode);
         }
 
-        CTransponder::CTransponder(QString transponderCode, CTransponder::TransponderMode transponderMode) :
+        CTransponder::CTransponder(const QString &transponderCode, CTransponder::TransponderMode transponderMode) :
             m_transponderCode(0), m_transponderMode(transponderMode)
         {
             bool ok = false;
@@ -43,7 +43,7 @@ namespace BlackMisc
             if (!ok) this->m_transponderCode = -1; // will cause assert / exception
         }
 
-        CTransponder::CTransponder(QString transponderCode, QString transponderMode) :
+        CTransponder::CTransponder(const QString &transponderCode, const QString &transponderMode) :
             m_transponderCode(0), m_transponderMode(StateStandby)
         {
             bool ok = false;

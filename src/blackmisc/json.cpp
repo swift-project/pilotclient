@@ -92,74 +92,74 @@ const QJsonValue &operator >>(const QJsonValue &json, QByteArray &value)
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, int &value)
+QJsonValueRef operator >>(QJsonValueRef json, int &value)
 {
     value = json.toInt();
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, qlonglong &value)
+QJsonValueRef operator >>(QJsonValueRef json, qlonglong &value)
 {
     value = static_cast<qlonglong>(json.toDouble());
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, qulonglong &value)
+QJsonValueRef operator >>(QJsonValueRef json, qulonglong &value)
 {
     value = static_cast<qulonglong>(json.toDouble());
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, uint &value)
+QJsonValueRef operator >>(QJsonValueRef json, uint &value)
 {
     value = static_cast<uint>(json.toInt());
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, qint16 &value)
+QJsonValueRef operator >>(QJsonValueRef json, qint16 &value)
 {
     value = static_cast<qint16>(json.toInt());
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, QString &value)
+QJsonValueRef operator >>(QJsonValueRef json, QString &value)
 {
     value = json.toString();
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, QStringList &value)
+QJsonValueRef operator >>(QJsonValueRef json, QStringList &value)
 {
     for (auto && element : json.toArray()) { value << element.toString(); }
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, double &value)
+QJsonValueRef operator >>(QJsonValueRef json, double &value)
 {
     value = json.toDouble();
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, bool &value)
+QJsonValueRef operator >>(QJsonValueRef json, bool &value)
 {
     value = json.toBool();
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, QDateTime &value)
+QJsonValueRef operator >>(QJsonValueRef json, QDateTime &value)
 {
     value = QDateTime::fromString(json.toString());
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, QPixmap &value)
+QJsonValueRef operator >>(QJsonValueRef json, QPixmap &value)
 {
     const QString hex(json.toString());
     BlackMisc::pngHexStringToPixmapRef(hex, value);
     return json;
 }
 
-const QJsonValueRef &operator >>(const QJsonValueRef &json, QByteArray &value)
+QJsonValueRef operator >>(QJsonValueRef json, QByteArray &value)
 {
     const QString hex(json.toString());
     value = BlackMisc::byteArrayFromHexString(hex);

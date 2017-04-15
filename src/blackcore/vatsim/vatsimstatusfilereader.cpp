@@ -111,7 +111,7 @@ namespace BlackCore
                 CUrlList metarFileUrls;
 
                 QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
-                for (QStringRef clRef : lines)
+                for (const QStringRef &clRef : lines)
                 {
                     if (this->isAbandoned())
                     {

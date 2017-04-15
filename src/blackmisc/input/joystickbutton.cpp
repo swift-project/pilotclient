@@ -24,7 +24,7 @@ namespace BlackMisc
             m_buttonIndex = buttonIndex;
         }
 
-        void CJoystickButton::setButtonObject(const CJoystickButton &button)
+        void CJoystickButton::setButtonObject(CJoystickButton button)
         {
             this->m_buttonIndex = button.m_buttonIndex;
         }

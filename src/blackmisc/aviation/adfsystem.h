@@ -45,7 +45,7 @@ namespace BlackMisc
             { }
 
             //! Valid aviation frequency?
-            static bool isValidFrequency(PhysicalQuantities::CFrequency f)
+            static bool isValidFrequency(const PhysicalQuantities::CFrequency &f)
             {
                 double fr = f.valueRounded(PhysicalQuantities::CFrequencyUnit::kHz(), 3);
                 return fr >= 190.0 && fr <= 1750.0;
@@ -58,7 +58,7 @@ namespace BlackMisc
             }
 
             //! ADF1 unit
-            static CAdfSystem GetAdf1System(PhysicalQuantities::CFrequency activeFrequency, PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+            static CAdfSystem GetAdf1System(const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet())
             {
                 return CAdfSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }
@@ -70,7 +70,7 @@ namespace BlackMisc
             }
 
             //! ADF2 unit
-            static CAdfSystem GetAdf2System(PhysicalQuantities::CFrequency activeFrequency, PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+            static CAdfSystem GetAdf2System(const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet())
             {
                 return CAdfSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }

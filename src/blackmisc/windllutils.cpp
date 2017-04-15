@@ -29,7 +29,7 @@ namespace BlackMisc
             WORD wCodePage;
         };
 
-        QString languageToIsoCode(const LanguageCodePage &codePage)
+        QString languageToIsoCode(LanguageCodePage codePage)
         {
             const LCID locale = codePage.wLanguage;
             const int nchars = GetLocaleInfo(locale, LOCALE_SISO639LANGNAME, NULL, 0);
@@ -39,7 +39,7 @@ namespace BlackMisc
             return iso;
         }
 
-        QString queryStringFileInfo(BYTE *pbVersionInfo, const LanguageCodePage &codePage, const QString &stringName)
+        QString queryStringFileInfo(BYTE *pbVersionInfo, LanguageCodePage codePage, const QString &stringName)
         {
             constexpr int fieldWidth = 4;
             constexpr int base = 16;

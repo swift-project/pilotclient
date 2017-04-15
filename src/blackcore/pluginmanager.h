@@ -79,7 +79,7 @@ namespace BlackCore
 
     private:
         //! Tries to load the given plugin.
-        bool tryLoad(QString path);
+        bool tryLoad(const QString &path);
 
         //! Loads the given plugin (if necessary) and returns its instance.
         //! Returns `nullptr` on failure.

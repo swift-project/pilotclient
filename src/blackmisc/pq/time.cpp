@@ -38,7 +38,7 @@ namespace BlackMisc
             }
         }
 
-        CTime::CTime(const QTime &time, bool negative) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
+        CTime::CTime(QTime time, bool negative) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
         {
             CTime converted(time.hour(), time.minute(), time.second());
             (*this) = converted;

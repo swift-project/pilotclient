@@ -151,7 +151,7 @@ namespace BlackCore
             virtual int getModelSetCount() const = 0;
 
             //! Models for model string
-            virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString modelString) const = 0;
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const = 0;
 
             //! Model strings
             virtual QStringList getModelSetStrings() const = 0;

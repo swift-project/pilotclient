@@ -278,7 +278,7 @@ namespace BlackCore
             }
         }
 
-        QByteArray CNetworkVatlib::toFSD(QString qstr) const
+        QByteArray CNetworkVatlib::toFSD(const QString &qstr) const
         {
             Q_ASSERT_X(m_fsdTextCodec, Q_FUNC_INFO, "Missing codec");
             return m_fsdTextCodec->fromUnicode(qstr);
@@ -289,7 +289,7 @@ namespace BlackCore
             return toFSD(callsign.getStringAsSet());
         }
 
-        std::function<const char **()> CNetworkVatlib::toFSD(QStringList qstrList) const
+        std::function<const char **()> CNetworkVatlib::toFSD(const QStringList &qstrList) const
         {
             QVector<QByteArray> bytesVec;
             for (auto i = qstrList.cbegin(); i != qstrList.cend(); ++i)

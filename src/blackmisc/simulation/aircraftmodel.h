@@ -399,7 +399,7 @@ namespace BlackMisc
             static const QString &modelModeToString(ModelMode mode);
 
             //! From swift DB JSON
-            static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString prefix = QString("mod_"));
+            static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("mod_"));
 
             //! Split swift network string "DLH._STD [modelname]"
             //! \return QStringList [0] livery code , [1] model string

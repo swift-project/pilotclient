@@ -91,7 +91,7 @@ namespace BlackCore
         return m_instanceIds.value(instance, QString());
     }
 
-    bool IPluginManager::tryLoad(QString path)
+    bool IPluginManager::tryLoad(const QString &path)
     {
         if (!QLibrary::isLibrary(path))
         {

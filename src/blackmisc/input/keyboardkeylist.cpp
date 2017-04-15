@@ -16,7 +16,7 @@ namespace BlackMisc
     {
         CKeyboardKeyList::CKeyboardKeyList() { }
 
-        CKeyboardKeyList::CKeyboardKeyList(const CKeyboardKey &key)
+        CKeyboardKeyList::CKeyboardKeyList(CKeyboardKey key)
         {
             this->push_back(key);
         }

@@ -85,7 +85,7 @@ namespace BlackMisc
             CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode = BlackMisc::PhysicalQuantities::CPqString::SeparatorsLocale);
 
             //! Constructor by CLength
-            CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : CLength(altitude), m_datum(datum) {}
+            CAltitude(const BlackMisc::PhysicalQuantities::CLength &altitude, ReferenceDatum datum) : CLength(altitude), m_datum(datum) {}
 
             //! AGL Above ground level?
             bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }

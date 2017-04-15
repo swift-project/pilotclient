@@ -52,7 +52,7 @@ namespace BlackMisc
             QString getKeyAsString() const;
 
             //! Set key code
-            void setKey(const KeyCode key) { this->m_keyCode = key; }
+            void setKey(KeyCode key) { this->m_keyCode = key; }
 
             //! Set key code
             void setKey(int key) { this->m_keyCode = static_cast<KeyCode>(key); }
@@ -76,7 +76,7 @@ namespace BlackMisc
             }
 
             //! Set key object
-            void setKeyObject(const CKeyboardKey &key);
+            void setKeyObject(CKeyboardKey key);
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);

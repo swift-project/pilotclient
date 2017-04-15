@@ -74,7 +74,7 @@ namespace BlackMisc
             CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
-            CHeading(CAngle heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
+            CHeading(const CAngle &heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
 
             //! \brief Magnetic heading?
             bool isMagneticHeading() const { return Magnetic == this->m_north; }

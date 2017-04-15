@@ -320,7 +320,7 @@ namespace BlackMisc
             CAircraftIcaoCodeList grouped;
             QString designator;
             QString manufacturer;
-            for (const CAircraftIcaoCode code : as_const(copy))
+            for (const CAircraftIcaoCode &code : as_const(copy))
             {
                 if (code.getDesignator() != designator ||  code.getManufacturer() != manufacturer)
                 {

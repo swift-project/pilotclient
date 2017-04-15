@@ -204,7 +204,7 @@ namespace BlackCore
             BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! Request header of shared file
-            bool requestHeadersOfSharedFiles(const BlackMisc::Network::CEntityFlags::Entity &entities);
+            bool requestHeadersOfSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities);
 
             //! Count from info objects
             //! \sa BlackCore::Db::CInfoDataReader

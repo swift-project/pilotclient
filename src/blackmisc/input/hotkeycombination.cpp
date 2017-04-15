@@ -20,27 +20,27 @@ namespace BlackMisc
 {
     namespace Input
     {
-        CHotkeyCombination::CHotkeyCombination(const CKeyboardKey &key) : CHotkeyCombination(CKeyboardKeyList(key))
+        CHotkeyCombination::CHotkeyCombination(CKeyboardKey key) : CHotkeyCombination(CKeyboardKeyList(key))
         { }
 
         CHotkeyCombination::CHotkeyCombination(const CKeyboardKeyList &keys) : m_keyboardKeys(keys)
         { }
 
-        void CHotkeyCombination::addKeyboardKey(const CKeyboardKey &key)
+        void CHotkeyCombination::addKeyboardKey(CKeyboardKey key)
         {
             if (m_keyboardKeys.contains(key)) { return; }
             m_keyboardKeys.push_back(key);
             m_keyboardKeys.sortBy(&CKeyboardKey::getKey);
         }
 
-        void CHotkeyCombination::addJoystickButton(const CJoystickButton &button)
+        void CHotkeyCombination::addJoystickButton(CJoystickButton button)
         {
             if (m_joystickButtons.contains(button)) { return; }
             m_joystickButtons.push_back(button);
             m_joystickButtons.sortBy(&CJoystickButton::getButtonIndex);
         }
 
-        void CHotkeyCombination::replaceKey(const CKeyboardKey &oldKey, const CKeyboardKey &newKey)
+        void CHotkeyCombination::replaceKey(CKeyboardKey oldKey, CKeyboardKey newKey)
         {
             Q_ASSERT(!oldKey.isUnknown());
             m_keyboardKeys.remove(oldKey);
@@ -48,19 +48,19 @@ namespace BlackMisc
             m_keyboardKeys.sortBy(&CKeyboardKey::getKey);
         }
 
-        void CHotkeyCombination::replaceButton(const CJoystickButton &oldButton, const CJoystickButton &newButton)
+        void CHotkeyCombination::replaceButton(CJoystickButton oldButton, CJoystickButton newButton)
         {
             m_joystickButtons.remove(oldButton);
             if (newButton.isValid()) { m_joystickButtons.push_back(newButton); }
             m_joystickButtons.sortBy(&CJoystickButton::getButtonIndex);
         }
 
-        void CHotkeyCombination::removeKeyboardKey(const CKeyboardKey &key)
+        void CHotkeyCombination::removeKeyboardKey(CKeyboardKey key)
         {
             replaceKey(key, CKeyboardKey());
         }
 
-        void CHotkeyCombination::removeJoystickButton(const CJoystickButton &button)
+        void CHotkeyCombination::removeJoystickButton(CJoystickButton button)
         {
             replaceButton(button, CJoystickButton());
         }
@@ -75,6 +75,7 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             QStringList sl;
+            sl.reserve(m_keyboardKeys.size() + m_joystickButtons.size());
             for (const auto &key : m_keyboardKeys)
             {
                 sl << key.toQString();

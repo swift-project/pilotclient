@@ -55,14 +55,14 @@ namespace BlackMisc
             }
 
             //! Valid civil aviation frequency?
-            static bool isValidCivilNavigationFrequency(BlackMisc::PhysicalQuantities::CFrequency f)
+            static bool isValidCivilNavigationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 108.0 && fr <= 117.95;
             }
 
             //! Valid military aviation frequency?
-            static bool isValidMilitaryNavigationFrequency(BlackMisc::PhysicalQuantities::CFrequency f)
+            static bool isValidMilitaryNavigationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 960.0 && fr <= 1215.0; // valid TACAN frequency
@@ -75,7 +75,7 @@ namespace BlackMisc
             }
 
             //! NAV1 unit
-            static CNavSystem getNav1System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+            static CNavSystem getNav1System(const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet())
             {
                 return CNavSystem(CModulator::NameNav1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }
@@ -87,7 +87,7 @@ namespace BlackMisc
             }
 
             //! NAV2 unit
-            static CNavSystem getNav2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+            static CNavSystem getNav2System(const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet())
             {
                 return CNavSystem(CModulator::NameNav2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }

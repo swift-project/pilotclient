@@ -52,7 +52,7 @@ namespace BlackMisc
             CTime(int hours, int minutes, int seconds = 0);
 
             //! By Qt time
-            CTime(const QTime &time, bool negative = false);
+            CTime(QTime time, bool negative = false);
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CTime(const QString &unitString) : CPhysicalQuantity(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }

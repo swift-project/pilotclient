@@ -163,9 +163,9 @@ namespace BlackCore
             static void onCustomPacketReceived(VatSessionID, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar);
             //! @}
 
-            QByteArray toFSD(QString qstr) const;
+            QByteArray toFSD(const QString &qstr) const;
             QByteArray toFSD(const BlackMisc::Aviation::CCallsign &callsign) const;
-            std::function<const char **()> toFSD(QStringList qstrList) const;
+            std::function<const char **()> toFSD(const QStringList &qstrList) const;
             QString fromFSD(const char *cstr) const;
             QStringList fromFSD(const char **cstrArray, int size) const;
             bool isInterimPositionUpdateEnabledForServer() const;

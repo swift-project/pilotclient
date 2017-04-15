@@ -694,7 +694,7 @@ namespace BlackMisc
         static QPixmap changeResourceBackgroundColor(const QString &resource, Qt::GlobalColor backgroundColor);
 
         //! Change color of icon
-        static QIcon changeIconBackgroundColor(const QIcon &icon, Qt::GlobalColor backgroundColor, const QSize &targetsize);
+        static QIcon changeIconBackgroundColor(const QIcon &icon, Qt::GlobalColor backgroundColor, QSize targetsize);
 
         //! Change image background color
         static QImage changeImageBackgroundColor(const QImage &imgSource, Qt::GlobalColor backgroundColor);

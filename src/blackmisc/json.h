@@ -73,18 +73,18 @@ BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, bool &val
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QPixmap &value);
 BLACKMISC_EXPORT const QJsonValue &operator >>(const QJsonValue &json, QByteArray &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, int &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, qlonglong &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, qulonglong &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, uint &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, qint16 &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QString &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QStringList &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, double &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, bool &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QDateTime &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QPixmap &value);
-BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QByteArray &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, int &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, qlonglong &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, qulonglong &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, uint &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, qint16 &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QString &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QStringList &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, double &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, bool &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QDateTime &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QPixmap &value);
+BLACKMISC_EXPORT QJsonValueRef operator >>(QJsonValueRef json, QByteArray &value);
 
 //! @}
 
@@ -146,9 +146,8 @@ const QJsonValue &operator>>(const QJsonValue &json, QFlags<ENUM> &value)
 
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
-template<class ENUM>
-std::enable_if_t<std::is_enum<ENUM>::value, QJsonValueRef>
-const &operator>>(const QJsonValueRef &json, ENUM &value)
+template<class ENUM, typename = std::enable_if_t<std::is_enum<ENUM>::value>>
+QJsonValueRef operator>>(QJsonValueRef json, ENUM &value)
 {
     value = static_cast<ENUM>(json.toInt());
     return json;
@@ -157,7 +156,7 @@ const &operator>>(const QJsonValueRef &json, ENUM &value)
 //! \brief Specialized JSON deserialization for QFlags enum
 //! \ingroup JSON
 template<class ENUM>
-const QJsonValueRef &operator>>(const QJsonValueRef &json, QFlags<ENUM> &value)
+QJsonValueRef operator>>(QJsonValueRef json, QFlags<ENUM> &value)
 {
     value = static_cast<QFlags<ENUM>>(json.toInt());
     return json;
@@ -166,7 +165,7 @@ const QJsonValueRef &operator>>(const QJsonValueRef &json, QFlags<ENUM> &value)
 //! \brief Specialized JSON deserialization for pair
 //! \ingroup JSON
 template<class FIRST, class SECOND>
-const QJsonValueRef &operator>>(const QJsonValueRef &json, std::pair<FIRST, SECOND> &pair)
+QJsonValueRef operator>>(QJsonValueRef json, std::pair<FIRST, SECOND> &pair)
 {
     json.toArray() >> pair.first >> pair.second;
     return json;
@@ -308,7 +307,7 @@ namespace BlackMisc
             }
 
             //! operator >> for JSON
-            friend const QJsonValueRef &operator>>(const QJsonValueRef &json, Derived &obj)
+            friend QJsonValueRef operator>>(QJsonValueRef json, Derived &obj)
             {
                 obj.convertFromJson(json.toObject());
                 return json;

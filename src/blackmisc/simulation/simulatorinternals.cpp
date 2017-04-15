@@ -37,12 +37,12 @@ namespace BlackMisc
             return m_data.getNames(true);
         }
 
-        void CSimulatorInternals::setSimulatorVersion(const QString versionInfo)
+        void CSimulatorInternals::setSimulatorVersion(const QString &versionInfo)
         {
             this->setValue("all/versionInfo", versionInfo);
         }
 
-        void CSimulatorInternals::setSimulatorInstallationDirectory(const QString fullFilePath)
+        void CSimulatorInternals::setSimulatorInstallationDirectory(const QString &fullFilePath)
         {
             this->setValue("all/installDir", fullFilePath);
         }

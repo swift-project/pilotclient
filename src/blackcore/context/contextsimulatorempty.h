@@ -103,7 +103,7 @@ namespace BlackCore
             }
 
             //! \copydoc IContextSimulator::getModelSetModelsStartingWith
-            virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString modelString) const override
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const override
             {
                 Q_UNUSED(modelString);
                 logEmptyContextWarning(Q_FUNC_INFO);

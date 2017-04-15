@@ -53,7 +53,7 @@ namespace BlackMisc
 
             //! Constructor
             CFlightPlan(const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao,
-                        QDateTime takeoffTimePlanned, QDateTime takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
+                        const QDateTime &takeoffTimePlanned, const QDateTime &takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
                         const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks);
 
             //! Set ICAO aircraft equipment code string (e.g. "T/A320/F")
@@ -78,16 +78,16 @@ namespace BlackMisc
             void setAlternateAirportIcao(const CAirportIcaoCode &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
 
             //! Set planned takeoff time
-            void setTakeoffTimePlanned(QDateTime takeoffTimePlanned) { m_takeoffTimePlanned = takeoffTimePlanned; }
+            void setTakeoffTimePlanned(const QDateTime &takeoffTimePlanned) { m_takeoffTimePlanned = takeoffTimePlanned; }
 
             //! Set planned takeoff time hh:mm
-            void setTakeoffTimePlanned(QString time) { m_takeoffTimePlanned = QDateTime::currentDateTimeUtc(); m_takeoffTimePlanned.setTime(QTime::fromString(time, "hh:mm"));}
+            void setTakeoffTimePlanned(const QString &time) { m_takeoffTimePlanned = QDateTime::currentDateTimeUtc(); m_takeoffTimePlanned.setTime(QTime::fromString(time, "hh:mm"));}
 
             //! Set actual takeoff time (reserved for ATC use)
-            void setTakeoffTimeActual(QDateTime takeoffTimeActual) { m_takeoffTimeActual = takeoffTimeActual; }
+            void setTakeoffTimeActual(const QDateTime &takeoffTimeActual) { m_takeoffTimeActual = takeoffTimeActual; }
 
             //! Set actual takeoff time hh:mm
-            void setTakeoffTimeActual(QString time) { m_takeoffTimeActual = QDateTime::currentDateTimeUtc(); m_takeoffTimeActual.setTime(QTime::fromString(time, "hh:mm"));}
+            void setTakeoffTimeActual(const QString &time) { m_takeoffTimeActual = QDateTime::currentDateTimeUtc(); m_takeoffTimeActual.setTime(QTime::fromString(time, "hh:mm"));}
 
             //! Set planned enroute flight time
             void setEnrouteTime(const PhysicalQuantities::CTime &enrouteTime) { m_enrouteTime = enrouteTime; m_enrouteTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());}

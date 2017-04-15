@@ -466,7 +466,7 @@ namespace BlackSimPlugin
                 if (package.isEmpty()) { continue; }
                 packages.insert(it, { package.append('/') });
             }
-            for (auto package : packages)
+            for (auto &package : packages)
             {
                 Q_ASSERT(package.s.endsWith('/'));
                 package.s.chop(1);

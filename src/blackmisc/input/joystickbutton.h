@@ -57,7 +57,7 @@ namespace BlackMisc
             bool isValid() const { return m_buttonIndex >= 0 ? true : false; }
 
             //! Set button object
-            void setButtonObject(const CJoystickButton &button);
+            void setButtonObject(CJoystickButton button);
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);

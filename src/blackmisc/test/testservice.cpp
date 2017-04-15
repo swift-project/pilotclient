@@ -170,7 +170,7 @@ namespace BlackMisc
         void CTestService::receiveVariantList(const CVariantList &variantList) const
         {
             if (m_verbose) out() << "Pid: " << CTestService::getPid() << " " << variantList.size() << endl;
-            for (CVariant lv : variantList)
+            for (const CVariant &lv : variantList)
             {
                 if (m_verbose) out() << "    Received variant: " << lv.toQString() << endl;
             }

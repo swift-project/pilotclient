@@ -125,27 +125,27 @@ namespace BlackSound
         //! \param tones     list of tones
         //! \param device    device to be used
         //! \return generator used, important with SingleWithAutomaticDeletion automatically deleted
-        static CSoundGenerator *playSignal(int volume, const QList<Tone> &tones, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+        static CSoundGenerator *playSignal(int volume, const QList<Tone> &tones, const QAudioDeviceInfo &device = QAudioDeviceInfo::defaultOutputDevice());
 
         //! Play signal of tones once
         //! \param volume    0-100
         //! \param tones     list of tones
         //! \param device    device to be used
         //! \return generator used, important with SingleWithAutomaticDeletion automatically deleted
-        static CSoundGenerator *playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
+        static CSoundGenerator *playSignalInBackground(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device);
 
         //! Record the tones to a wav file, then play the wav file
         //! \param volume    0-100
         //! \param tones     list of tones
         //! \param device    device to be used
-        static void playSignalRecorded(int volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
+        static void playSignalRecorded(int volume, const QList<CSoundGenerator::Tone> &tones, const QAudioDeviceInfo &device);
 
         //! Play SELCAL tone
         //! \param volume    0-100
         //! \param selcal
         //! \param device    device to be used
         //! \see BlackMisc::Aviation::CSelcal
-        static void playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+        static void playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, const QAudioDeviceInfo &device = QAudioDeviceInfo::defaultOutputDevice());
 
         //! Play SELCAL tone
         //! \param volume    0-100

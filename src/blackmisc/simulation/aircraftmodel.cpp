@@ -691,7 +691,7 @@ namespace BlackMisc
             return i; // default
         }
 
-        CAircraftModel CAircraftModel::fromDatabaseJson(const QJsonObject &json, const QString prefix)
+        CAircraftModel CAircraftModel::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             const QString modelString(json.value(prefix + "modelstring").toString());
             const QString modelDescription(json.value(prefix + "description").toString());

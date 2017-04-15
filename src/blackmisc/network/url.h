@@ -137,7 +137,7 @@ namespace BlackMisc
             CUrl withSwitchedScheme(const QString &protocol, int port) const;
 
             //! Path ending with?
-            bool pathEndsWith(const QString ending, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
+            bool pathEndsWith(const QString &ending, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -173,7 +173,7 @@ namespace BlackMisc
             QString m_path;
             QString m_query;
 
-            static QString stripQueryString(const QString query);
+            static QString stripQueryString(const QString &query);
 
             BLACK_METACLASS(
                 CUrl,
