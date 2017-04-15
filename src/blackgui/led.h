@@ -36,16 +36,16 @@ namespace BlackGui
     class BLACKGUI_EXPORT CLedWidget : public QWidget
     {
         Q_OBJECT
-        Q_ENUMS(LedColor)
-        Q_ENUMS(LedShape)
 
     public:
         //! Colors
         //! \remarks NoColor has to be last entry
         enum LedColor { Red = 0, Green, Yellow, Grey, Orange, Purple, Blue, Black, NoColor};
+        Q_ENUM(LedColor)
 
         //! Shapes
         enum LedShape { Circle = 0, Square, Triangle, Rounded};
+        Q_ENUM(LedShape)
 
         //! States
         enum State { On, Off, TriState };

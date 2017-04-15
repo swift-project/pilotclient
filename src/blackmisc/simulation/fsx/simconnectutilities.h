@@ -45,8 +45,6 @@ namespace BlackMisc
             class BLACKMISC_EXPORT CSimConnectUtilities : public QObject
             {
                 Q_OBJECT
-                Q_ENUMS(SIMCONNECT_EXCEPTION)
-                Q_ENUMS(SIMCONNECT_SURFACE)
 
             public:
                 //! Filename of the file
@@ -121,6 +119,7 @@ namespace BlackMisc
                     Tarmac,
                     Wright_flyer_track
                 };
+                Q_ENUM(SIMCONNECT_SURFACE)
 
                 //! SimConnect exceptions.
                 enum SIMCONNECT_EXCEPTION
@@ -164,6 +163,7 @@ namespace BlackMisc
                     SIMCONNECT_EXCEPTION_OBJECT_ATC,
                     SIMCONNECT_EXCEPTION_OBJECT_SCHEDULE
                 };
+                Q_ENUM(SIMCONNECT_EXCEPTION)
 
                 //! Lights for FSX/P3D "LIGHT ON STATES"
                 //! \sa http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/simulation_variables.html

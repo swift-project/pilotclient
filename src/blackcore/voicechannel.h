@@ -26,7 +26,6 @@ namespace BlackCore
     class BLACKCORE_EXPORT IVoiceChannel : public QObject
     {
         Q_OBJECT
-        Q_ENUMS(ConnectionStatus)
 
     public:
         //! Com status
@@ -39,6 +38,7 @@ namespace BlackCore
             Connected,          //!< Connection established
             ConnectingFailed    //!< Failed to connect
         };
+        Q_ENUM(ConnectionStatus)
 
         //! Constructor
         IVoiceChannel(QObject *parent = nullptr) : QObject(parent) {}

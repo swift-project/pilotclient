@@ -55,7 +55,6 @@ namespace BlackCore
     class BLACKCORE_EXPORT INetwork : public QObject
     {
         Q_OBJECT
-        Q_ENUMS(ConnectionStatus)
 
     protected:
         /*!
@@ -103,6 +102,7 @@ namespace BlackCore
             Connecting,         //!< Connection initiated but not established
             Connected           //!< Connection established
         };
+        Q_ENUM(ConnectionStatus)
 
         /*!
          * Convert a ConnectionStatus to a string.
