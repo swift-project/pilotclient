@@ -411,6 +411,26 @@ namespace BlackGui
         return s1;
     }
 
+    void CStyleSheetUtility::setQSysInfoProperties(QWidget *widget, bool withChildWidgets)
+    {
+        Q_ASSERT_X(widget, Q_FUNC_INFO, "Missing widget");
+        if (!widget->property("qsysKernelType").isValid())
+        {
+            widget->setProperty("qsysKernelType", QSysInfo::kernelType());
+            widget->setProperty("qsysCurrentCpuArchitecture", QSysInfo::currentCpuArchitecture());
+            widget->setProperty("qsysBuildCpuArchitecture", QSysInfo::buildCpuArchitecture());
+            widget->setProperty("qsysProductType", QSysInfo::productType());
+        }
+
+        if (withChildWidgets)
+        {
+            for (QWidget *w : widget->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly))
+            {
+                CStyleSheetUtility::setQSysInfoProperties(w, true);
+            }
+        }
+    }
+
     void CStyleSheetUtility::ps_qssDirectoryChanged(const QString &file)
     {
         Q_UNUSED(file);

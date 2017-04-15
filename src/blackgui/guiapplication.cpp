@@ -43,6 +43,7 @@
 #include <QStyleFactory>
 #include <QStringList>
 #include <QStyle>
+#include <QSysInfo>
 #include <QUrl>
 #include <QWidget>
 #include <QMainWindow>
@@ -181,6 +182,7 @@ namespace BlackGui
         mainWindow->setWindowTitle(name);
         mainWindow->setWindowIcon(m_windowIcon);
         mainWindow->setWindowIconText(name);
+        CStyleSheetUtility::setQSysInfoProperties(CGuiApplication::mainApplicationWindow(), true);
         emit uiObjectTreeReady();
     }
 

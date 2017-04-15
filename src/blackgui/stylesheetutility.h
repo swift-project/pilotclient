@@ -138,6 +138,9 @@ namespace BlackGui
         //! Concatenate 2 styles
         static QString concatStyles(const QString &style1, const QString &style2);
 
+        //! Set QSysInfo properties for given widget (which can be used in stylesheet)
+        static void setQSysInfoProperties(QWidget *widget, bool withChildWidgets);
+
     signals:
         //! Sheets have been changed
         //! \deprecated use BlackGui::CGuiApplication::styleSheetsChanged
