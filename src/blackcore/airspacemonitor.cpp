@@ -834,8 +834,7 @@ namespace BlackCore
             CStatusMessageList reverseLookupMessages;
             CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
             CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
-                                                arg(aircraftIcaoDesignator).arg(airlineIcaoDesignator).
-                                                arg(modelString).arg(combinedAircraftType));
+                                                arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
 
             this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", modelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
             this->addReverseLookupMessages(callsign, reverseLookupMessages);
@@ -853,7 +852,7 @@ namespace BlackCore
         CStatusMessageList reverseLookupMessages;
         CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
         CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("Data from network: aircraft '%1', airline '%2', livery '%3'").
-                                            arg(aircraftIcaoDesignator).arg(airlineIcaoDesignator).arg(livery),
+                                            arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
                                             getLogCategories());
 
         const CClient client = this->getOtherClientOrDefaultForCallsign(callsign);

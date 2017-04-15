@@ -28,7 +28,7 @@ namespace BlackMisc
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
             QString s = "Geodetic: {%1, %2, %3}";
-            return s.arg(this->latitude().valueRoundedWithUnit(6, i18n)).arg(this->longitude().valueRoundedWithUnit(6, i18n)).arg(this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
+            return s.arg(this->latitude().valueRoundedWithUnit(6, i18n), this->longitude().valueRoundedWithUnit(6, i18n), this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
         }
 
         CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CAltitude &geodeticHeight)

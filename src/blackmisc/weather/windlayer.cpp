@@ -80,7 +80,7 @@ namespace BlackMisc
 
             if (m_directionFrom != CAngle() && m_directionTo != CAngle())
             {
-                windAsString += QString("variable between %1 and %2 ").arg(m_directionFrom.toQString()).arg(m_directionTo.toQString());
+                windAsString += QString("variable between %1 and %2 ").arg(m_directionFrom.toQString(), m_directionTo.toQString());
             }
 
             windAsString += QString("at %2").arg(m_speed.toQString());

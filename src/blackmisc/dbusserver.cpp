@@ -380,7 +380,7 @@ namespace BlackMisc
 
         // todo: Replace assert with input validation
         Q_ASSERT_X(CNetworkUtils::isValidIPv4Address(p), "CDBusServer::p2pAddress", "Wrong IP in String");
-        return QString("tcp:host=%1,port=%2").arg(h).arg(p);
+        return QString("tcp:host=%1,port=%2").arg(h, p);
     }
 
     const QString &CDBusServer::p2pConnectionName()

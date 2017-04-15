@@ -114,7 +114,7 @@ namespace BlackMisc
             QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
             QString s = QString("00%1").arg(QString::number(parts.at(2))).right(2);
 
-            QString fs = QString("%1:%2:%3").arg(h).arg(m).arg(s);
+            QString fs = QString("%1:%2:%3").arg(h, m, s);
             if (this->isNegativeWithEpsilonConsidered())
             {
                 return QString("-").append(fs);
@@ -142,7 +142,7 @@ namespace BlackMisc
             QList<int> parts = getHrsMinSecParts();
             QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
             QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
-            QString fs = QString("%1:%2").arg(h).arg(m);
+            QString fs = QString("%1:%2").arg(h, m);
             if (this->isNegativeWithEpsilonConsidered())
             {
                 return QString("-").append(fs);
