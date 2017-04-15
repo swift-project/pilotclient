@@ -58,6 +58,9 @@ namespace BlackMisc
                 return *new (this) OutputIterator(other);
             }
 
+            //! Destructor.
+            ~OutputIterator() = default;
+
         private:
             F m_func;
         };
@@ -389,6 +392,9 @@ namespace BlackMisc
             //! Move assignment.
             ConstForwardIterator &operator =(ConstForwardIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
+            //! Destructor.
+            ~ConstForwardIterator() = default;
+
             //! Create a new iterator with a specific implementation type.
             //! \tparam I Becomes the iterator's implementation type.
             //! \param i Initial value for the iterator. The value is copied.
@@ -512,6 +518,9 @@ namespace BlackMisc
 
             //! Move assignment.
             ConstRandomAccessIterator &operator =(ConstRandomAccessIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+
+            //! Destructor.
+            ~ConstRandomAccessIterator() = default;
 
             //! Create a new iterator with a specific implementation type.
             //! \tparam I Becomes the iterator's implementation type.
@@ -692,6 +701,9 @@ namespace BlackMisc
 
             //! Move assignment.
             RandomAccessIterator &operator =(RandomAccessIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+
+            //! Destructor.
+            ~RandomAccessIterator() = default;
 
             //! Create a new iterator with a specific implementation type.
             //! \tparam I Becomes the iterator's implementation type.

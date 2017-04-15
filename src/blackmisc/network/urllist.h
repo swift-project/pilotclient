@@ -37,9 +37,6 @@ namespace BlackMisc
             //! Default constructor.
             CUrlList();
 
-            //! Copy constructor (because of mutex)
-            CUrlList(const CUrlList &other);
-
             //! Construct from a base class object.
             CUrlList(const CSequence<CUrl> &other);
 

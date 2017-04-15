@@ -43,6 +43,9 @@ namespace BlackMisc
         //! Copy assignment (because of mutex)
         CPixmap &operator =(const CPixmap &other);
 
+        //! Destructor.
+        ~CPixmap() = default;
+
         //! Corresponding pixmap
         const QPixmap &pixmap() const;
 

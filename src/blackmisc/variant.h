@@ -132,7 +132,7 @@ namespace BlackMisc
         CVariant(const CVariant &) = default;
 
         //! Move constructor.
-        CVariant(CVariant &&other) noexcept : m_v(std::move(other.m_v)) {}
+        CVariant(CVariant &&other) noexcept = default;
 
         //! Construct from a QVariant.
         CVariant(const QVariant &var) : m_v(var) {}
@@ -165,10 +165,10 @@ namespace BlackMisc
         void reset(QVariant &&var) { m_v = std::move(var); }
 
         //! Copy assignment operator.
-        CVariant &operator =(const CVariant &other) { m_v = other.m_v; return *this; }
+        CVariant &operator =(const CVariant &other) = default;
 
         //! Move assignment operatior.
-        CVariant &operator =(CVariant && other) noexcept { m_v = std::move(other.m_v); return *this; }
+        CVariant &operator =(CVariant && other) noexcept = default;
 
         //! Change the internal QVariant
         CVariant &operator =(const QVariant &var) { m_v = var; return *this; }

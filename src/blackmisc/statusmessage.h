@@ -175,6 +175,9 @@ namespace BlackMisc
         //! Copy assignment (because of mutex)
         CStatusMessage &operator =(const CStatusMessage &other);
 
+        //! Destructor.
+        ~CStatusMessage() = default;
+
         //! Constructor
         CStatusMessage(const QString &message);
 

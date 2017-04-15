@@ -22,9 +22,6 @@ namespace BlackMisc
     {
         CUrlList::CUrlList() { }
 
-        CUrlList::CUrlList(const CUrlList &other) : CSequence<CUrl>(other)
-        { }
-
         CUrlList::CUrlList(const CSequence<CUrl> &other) :
             CSequence<CUrl>(other)
         { }

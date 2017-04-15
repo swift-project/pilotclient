@@ -82,7 +82,7 @@ namespace BlackMisc
             template <typename T, std::enable_if_t<TIsOneOf<T, Ts...>::value, int> = 0>
             auto maybeUnmemoize(T &member) const
             {
-                struct Memo
+                struct Memo // clazy:exclude=rule-of-three
                 {
                     int index;
                     T &member;

@@ -95,6 +95,8 @@ namespace XBus
             std::unique_ptr<ItemList> items;
             std::vector<CMenu> subMenus;
             ~Data();
+            Data(const Data &) = delete;
+            Data &operator =(const Data &) = delete;
         };
         std::shared_ptr<Data> m_data;
     };

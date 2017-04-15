@@ -43,6 +43,12 @@ namespace BlackMisc
         //! Delete files
         void deleteFiles();
 
+        //! Not copyable.
+        //! @{
+        CFileDeleter(const CFileDeleter &) = delete;
+        CFileDeleter &operator =(const CFileDeleter &) = delete;
+        //! @}
+
     private:
         QStringList m_fileNames;
     };

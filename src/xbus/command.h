@@ -37,6 +37,12 @@ namespace XBus
             XPLMUnregisterCommandHandler(m_command, callback, false, static_cast<void*>(this));
         }
 
+        //! Not copyable.
+        //! @{
+        CCommand(const CCommand &) = delete;
+        CCommand &operator =(const CCommand &) = delete;
+        //! @}
+
     private:
         static int callback(XPLMCommandRef, XPLMCommandPhase phase, void *refcon)
         {

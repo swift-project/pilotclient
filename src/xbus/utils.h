@@ -30,9 +30,6 @@
  */
 class QXPlaneMessageHandler
 {
-    QXPlaneMessageHandler();
-    QXPlaneMessageHandler(const QXPlaneMessageHandler &);
-
     static void handler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
     {
         QByteArray localMsg = msg.toLocal8Bit();
@@ -76,6 +73,12 @@ public:
     {
         qInstallMessageHandler(handler);
     }
+
+    //! Not copyable.
+    //! @{
+    QXPlaneMessageHandler(const QXPlaneMessageHandler &) = delete;
+    QXPlaneMessageHandler &operator =(const QXPlaneMessageHandler &) = delete;
+    //! @}
 };
 
 /*!

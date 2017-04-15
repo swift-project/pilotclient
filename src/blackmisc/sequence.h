@@ -84,6 +84,9 @@ namespace BlackMisc
         //! Move assignment.
         CSequence &operator =(CSequence && other) noexcept(std::is_nothrow_move_assignable<T>::value) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
+        //! Destructor.
+        ~CSequence() = default;
+
         //! Create a new sequence with a specific implementation type.
         //! \tparam C Becomes the sequence's implementation type.
         //! \param c Initial value for the sequence; default is empty, but it could contain elements if desired. The value is copied.

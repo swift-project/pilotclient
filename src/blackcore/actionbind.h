@@ -42,6 +42,12 @@ namespace BlackCore
         //! Signature just to set an icon for an action
         CActionBind(const QString &action, const QPixmap &icon);
 
+        //! Not copyable
+        //! @{
+        CActionBind(const CActionBind &) = delete;
+        CActionBind &operator =(const CActionBind &) = delete;
+        //! @}
+
         //! Destructor
         ~CActionBind();
 
