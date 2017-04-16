@@ -8,6 +8,7 @@
  */
 
 #include "configurationwizard.h"
+#include "blackgui/guiapplication.h"
 #include "ui_configurationwizard.h"
 
 namespace BlackGui
@@ -40,6 +41,11 @@ namespace BlackGui
 
             connect(this, &QWizard::currentIdChanged, this, &CConfigurationWizard::wizardCurrentIdChanged);
             connect(this, &QWizard::customButtonClicked, this, &CConfigurationWizard::clickedCustomButton);
+            connect(this, &QWizard::rejected, this, &CConfigurationWizard::ended);
+            connect(this, &QWizard::accepted, this, &CConfigurationWizard::ended);
+
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
+            connect(this, &QWizard::helpRequested, sGui, &CGuiApplication::showHelp);
         }
 
         CConfigurationWizard::~CConfigurationWizard()
@@ -65,6 +71,7 @@ namespace BlackGui
             m_skipped = false; // reset
             Q_UNUSED(skipped);
 
+            this->setParentOpacity(0.5);
             const QWizardPage *page = this->currentPage();
             if (backward && page == ui->wp_CopyCaches)
             {
@@ -91,6 +98,19 @@ namespace BlackGui
             {
                 this->m_skipped = false;
             }
+        }
+
+        void CConfigurationWizard::ended()
+        {
+            this->setParentOpacity(1.0);
+        }
+
+        void CConfigurationWizard::setParentOpacity(qreal opacity)
+        {
+            QWidget *parent = this->parentWidget();
+            if (!parent) { return; }
+            if (parent->windowOpacity() == opacity) { return; }
+            parent->setWindowOpacity(opacity);
         }
     } // ns
 } // ns

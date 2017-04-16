@@ -58,6 +58,12 @@ namespace BlackGui
             //! Custom button was clicked
             void clickedCustomButton(int which);
 
+            //! Accepted or rejected
+            void ended();
+
+            //! Set the parent's window opacity
+            void setParentOpacity(qreal opacity);
+
             QScopedPointer<Ui::CConfigurationWizard> ui;
             int m_previousId = -1;
             int m_minId = -1;
