@@ -97,7 +97,7 @@ namespace BlackMisc
 
             //! Elevation
             //! \sa setGeodeticHeight
-            void setElevation(const BlackMisc::Aviation::CAltitude &elevation) { return this->m_position.setGeodeticHeight(elevation); }
+            void setElevation(const BlackMisc::Aviation::CAltitude &elevation) { this->m_position.setGeodeticHeight(elevation); }
 
             //! Is the airport still active?
             bool isOperating() const { return m_operating; }

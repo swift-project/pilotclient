@@ -39,7 +39,7 @@ namespace BlackMisc
         QStringList list;
         for (const auto scope : BlackMisc::as_const(jsonStack()))
         {
-            list.push_back(scope->m_string ? *scope->m_string : scope->m_latin1);
+            list.push_back(scope->m_string ? *scope->m_string : scope->m_latin1); // clazy:exclude=reserve-candidates
             if (scope->m_index >= 0) { list.back() += "[" % QString::number(scope->m_index) % "]"; }
         }
         return list.isEmpty() ? QStringLiteral("<document root>") : list.join('.');

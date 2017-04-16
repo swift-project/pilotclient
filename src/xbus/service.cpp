@@ -13,6 +13,8 @@
 #include <QDebug>
 #include <QTimer>
 
+// clazy:excludeall=reserve-candidates
+
 namespace XBus
 {
 

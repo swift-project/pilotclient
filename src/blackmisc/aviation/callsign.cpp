@@ -181,7 +181,7 @@ namespace BlackMisc
                 this->m_telephonyDesignator = variant.toQString();
                 break;
             default:
-                return CValueObject::setPropertyByIndex(index, variant);
+                CValueObject::setPropertyByIndex(index, variant);
             }
         }
 

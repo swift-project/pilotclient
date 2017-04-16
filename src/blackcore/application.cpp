@@ -1022,9 +1022,9 @@ namespace BlackCore
     {
         if (msgs.isEmpty()) { return; }
         if (!msgs.hasErrorMessages())  { return; }
-        return CApplication::cmdLineErrorMessage(
-                   msgs.toFormattedQString(true)
-               );
+        CApplication::cmdLineErrorMessage(
+            msgs.toFormattedQString(true)
+        );
     }
 
     void CApplication::cmdLineHelpMessage()

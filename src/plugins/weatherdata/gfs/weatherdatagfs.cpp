@@ -181,6 +181,7 @@ namespace BlackWxPlugin
             directory = directory.arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'));
 
             QStringList params;
+            params.reserve(grib2Levels.size() + grib2Variables.size() + 6);
             params.append("file=" + filename);
             for (const auto &level : grib2Levels)
             {

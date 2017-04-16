@@ -20,7 +20,7 @@ namespace BlackMisc
                                                    const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback)
         {
             Q_ASSERT_X(this->m_weatherGridProvider, Q_FUNC_INFO, "No object available");
-            return this->m_weatherGridProvider->requestWeatherGrid(weatherGrid, callback);
+            this->m_weatherGridProvider->requestWeatherGrid(weatherGrid, callback);
         }
 
     } // namespace

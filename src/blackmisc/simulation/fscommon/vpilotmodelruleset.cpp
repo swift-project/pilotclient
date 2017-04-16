@@ -51,6 +51,7 @@ namespace BlackMisc
             QStringList CVPilotModelRuleSet::toUpper(const QStringList &stringList)
             {
                 QStringList upper;
+                upper.reserve(stringList.size());
                 for (const QString &s : stringList)
                 {
                     upper.append(s.toUpper());
@@ -61,6 +62,7 @@ namespace BlackMisc
             QStringList CVPilotModelRuleSet::getSortedModelNames() const
             {
                 QStringList ms;
+                ms.reserve(size());
                 for (const CVPilotModelRule &rule : (*this))
                 {
                     ms.append(rule.getModelName());

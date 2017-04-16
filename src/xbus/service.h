@@ -215,6 +215,7 @@ namespace XBus
         QList<double> getEngineN1Percentage() const
         {
             QList<double> list;
+            list.reserve(getNumberOfEngines());
             for (int engineNumber = 0; engineNumber < getNumberOfEngines(); ++engineNumber)
                 list.append(m_enginesN1Percentage.getAt(engineNumber));
 

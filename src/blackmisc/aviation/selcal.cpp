@@ -40,6 +40,7 @@ namespace BlackMisc
         {
             QList<CFrequency> f;
             if (!CSelcal::isValidCode(this->m_code)) return f;
+            f.reserve(this->m_code.length());
             for (int pos = 0; pos < this->m_code.length(); pos++)
             {
                 f.append(CSelcal::audioFrequencyEquivalent(this->m_code.at(pos)));

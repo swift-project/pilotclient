@@ -44,7 +44,7 @@ namespace BlackMisc
                 while (!ts.atEnd())
                 {
                     QString pathToCheck = ts.readLine();
-                    if (QFileInfo(pathToCheck).exists()) { lastLine = pathToCheck; }
+                    if (QFileInfo::exists(pathToCheck)) { lastLine = pathToCheck; }
                 }
                 return lastLine;
             }

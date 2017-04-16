@@ -15,6 +15,7 @@ namespace BlackMisc
     {
         CTestBase::CTestBase(int argc, const char *const *argv)
         {
+            m_arguments.reserve(argc);
             for (int i = 0; i < argc; ++i)
             {
                 m_arguments.append(argv[i]);

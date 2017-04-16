@@ -292,6 +292,7 @@ namespace BlackCore
         std::function<const char **()> CNetworkVatlib::toFSD(const QStringList &qstrList) const
         {
             QVector<QByteArray> bytesVec;
+            bytesVec.reserve(qstrList.size());
             for (auto i = qstrList.cbegin(); i != qstrList.cend(); ++i)
             {
                 bytesVec.push_back(toFSD(*i));
@@ -299,7 +300,7 @@ namespace BlackCore
 
             return [ cstrVec = QVector<const char *>(), bytesVec = std::move(bytesVec) ]() mutable
             {
-                Q_ASSERT(cstrVec.isEmpty());
+                Q_ASSERT_X(cstrVec.isEmpty(), Q_FUNC_INFO, "toFSD lambda called twice");
                 for (auto i = bytesVec.cbegin(); i != bytesVec.cend(); ++i)
                 {
                     cstrVec.push_back(i->constData());
@@ -317,6 +318,7 @@ namespace BlackCore
         QStringList CNetworkVatlib::fromFSD(const char **cstrArray, int size) const
         {
             QStringList qstrList;
+            qstrList.reserve(size);
             for (int i = 0; i < size; ++i)
             {
                 qstrList.push_back(fromFSD(cstrArray[i]));

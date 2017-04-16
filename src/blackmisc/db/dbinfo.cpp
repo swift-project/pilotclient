@@ -107,9 +107,14 @@ namespace BlackMisc
                 this->setEntity(static_cast<CEntityFlags::Entity>(variant.toInt()));
                 break;
             default:
-                return (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) ?
-                       IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant) :
-                       CValueObject::setPropertyByIndex(index, variant);
+                if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+                {
+                    IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
+                }
+                else
+                {
+                    CValueObject::setPropertyByIndex(index, variant);
+                }
                 break;
             }
         }

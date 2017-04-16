@@ -344,6 +344,7 @@ namespace BlackMisc
         {
             if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getObjectPaths" << endl;
             QList<QDBusObjectPath> paths;
+            paths.reserve(n);
             for (int i = 0; i < n; i++)
             {
                 paths.append(QDBusObjectPath(ObjectPath()));

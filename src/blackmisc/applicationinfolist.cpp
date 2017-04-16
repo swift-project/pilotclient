@@ -30,6 +30,7 @@ namespace BlackMisc
     QStringList CApplicationInfoList::processNames() const
     {
         QStringList names;
+        names.reserve(size());
         for (const CApplicationInfo &info : *this)
         {
             names.append(info.processInfo().processName());

@@ -605,6 +605,7 @@ namespace BlackMisc
         QStringList CAircraftModelList::toCompleterStrings(bool sorted) const
         {
             QStringList c;
+            c.reserve(size());
             for (const CAircraftModel &model : *this)
             {
                 c.append(model.getModelString());

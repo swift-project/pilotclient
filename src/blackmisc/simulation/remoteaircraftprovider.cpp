@@ -103,7 +103,7 @@ namespace BlackMisc
         void CRemoteAircraftAware::updateMarkAllAsNotRendered()
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->updateMarkAllAsNotRendered();
+            this->m_remoteAircraftProvider->updateMarkAllAsNotRendered();
         }
 
         bool CRemoteAircraftAware::isRemoteAircraftSupportingParts(const CCallsign &callsign) const

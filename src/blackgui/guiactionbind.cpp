@@ -49,7 +49,7 @@ namespace BlackGui
 
             const bool hasIcon = !action->icon().isNull();
             CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(action);
-            CActionBinding actionBinding(new CActionBind(pathNew, hasIcon ? action->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+            CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ? action->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
             bindHandler->m_index = actionBinding->getIndex();
             boundActions.append(actionBinding); // takes ownership
         }
@@ -64,7 +64,7 @@ namespace BlackGui
                                 CGuiActionBindHandler::appendPath(path, button->text()).remove('&'); // remove E&xit key codes
         CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(button);
         const bool hasIcon = !button->icon().isNull();
-        CActionBinding actionBinding(new CActionBind(pathNew, hasIcon ? button->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+        CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ? button->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
         bindHandler->m_index = actionBinding->getIndex();
         return actionBinding;
     }

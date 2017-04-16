@@ -389,6 +389,7 @@ namespace BlackCore
 
         //! Startup has been completed
         //! \remark needs to be triggered by application when it think it is done
+        //! \fixme http://doc.qt.io/qt-5/signalsandslots.html#signals recommends signals be only emitted by their own class
         void startUpCompleted(bool success);
 
         //! Facade started

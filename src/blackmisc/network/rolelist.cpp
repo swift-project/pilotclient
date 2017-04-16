@@ -46,6 +46,7 @@ namespace BlackMisc
         QString CRoleList::namesAsString(const QString &separator) const
         {
             QStringList rolesString;
+            rolesString.reserve(size());
             for (const CRole &role : (*this))
             {
                 rolesString.append(role.getName());

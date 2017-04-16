@@ -144,7 +144,7 @@ namespace BlackCore
 
         void CContextAudioProxy::setMute(bool muted)
         {
-            return this->m_dBusInterface->callDBus(QLatin1String("setMute"), muted);
+            this->m_dBusInterface->callDBus(QLatin1String("setMute"), muted);
         }
 
         bool CContextAudioProxy::isMuted() const
