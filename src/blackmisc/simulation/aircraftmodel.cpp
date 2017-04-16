@@ -75,7 +75,7 @@ namespace BlackMisc
             obj.insert("name", this->getName());
             obj.insert("modelstring", QJsonValue(this->m_modelString));
             obj.insert("description", QJsonValue(this->m_description));
-            obj.insert("mode", QJsonValue(getModelModeAsString().left(1).toUpper()));
+            obj.insert("mode", QJsonValue(getModelModeAsString().left(1).toUpper())); // clazy:exclude=qstring-left
 
             // sims
             const CSimulatorInfo sim(getSimulator());

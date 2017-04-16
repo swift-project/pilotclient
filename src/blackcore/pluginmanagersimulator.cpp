@@ -73,7 +73,7 @@ namespace BlackCore
     CSimulatorPluginInfoList CPluginManagerSimulator::getAvailableSimulatorPlugins() const
     {
         CSimulatorPluginInfoList list;
-        for (const auto &i : m_plugins.values())
+        for (const auto &i : m_plugins)
         {
             list.push_back(i.info);
         }

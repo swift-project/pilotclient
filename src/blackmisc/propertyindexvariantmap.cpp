@@ -53,7 +53,7 @@ namespace BlackMisc
     {
         if (this->isEmpty()) return QString("{wildcard: %1}").arg(this->m_wildcard ? "true" : "false");
         QString s;
-        foreach (CPropertyIndex index, this->m_values.keys())
+        for (const CPropertyIndex &index : makeKeysRange(this->m_values))
         {
             CVariant v = this->m_values.value(index);
 

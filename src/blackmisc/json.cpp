@@ -414,7 +414,7 @@ namespace BlackMisc
         QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject)
         {
             QJsonObject incrementalObject = currentObject;
-            for (const auto &key : previousObject.keys())
+            for (const auto &key : previousObject.keys()) // clazy:exclude=range-loop
             {
                 if (previousObject.value(key).isObject())
                 {
@@ -434,7 +434,7 @@ namespace BlackMisc
         QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject)
         {
             QJsonObject currentObject = previousObject;
-            for (const auto &key : incrementalObject.keys())
+            for (const auto &key : incrementalObject.keys()) // clazy:exclude=range-loop
             {
                 // If it is not an object, just insert the value
                 if (!incrementalObject.value(key).isObject())

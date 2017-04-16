@@ -458,7 +458,7 @@ namespace BlackMisc
             CVariantMap temp;
             if (keysOnly)
             {
-                for (const auto &key : json.object().keys()) { temp.insert(key, {}); }
+                for (const auto &key : json.object().keys()) { temp.insert(key, {}); } // clazy:exclude=range-loop
             }
             else
             {

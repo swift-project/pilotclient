@@ -245,7 +245,7 @@ namespace BlackSample
         Q_ASSERT(splitList.size() == numberOfCallsigns);
         for (int t = 0; t < numberOfTimes; t++)
         {
-            for (const CAircraftSituationList &slcs : splitList.values())
+            for (const CAircraftSituationList &slcs : splitList)
             {
                 CAircraftSituationList r = slcs.findBefore(baseTimeEpoch + 1 + (DeltaTime * t));
                 Q_UNUSED(r);
@@ -322,7 +322,7 @@ namespace BlackSample
         out << "Split by " << csSituations.size() << " callsigns, " << timer.elapsed() << "ms" << endl;
 
         timer.start();
-        for (const CAircraftSituationList &csl : csSituations.values())
+        for (const CAircraftSituationList &csl : csSituations)
         {
             CAircraftSituationList csSituationsBefore = csl.findBefore(halfTime);
             CAircraftSituationList csSituationsAfter = csl.findAfter(halfTime - 1);

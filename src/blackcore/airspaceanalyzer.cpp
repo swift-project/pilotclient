@@ -165,7 +165,7 @@ namespace BlackCore
         qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
         qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs;
 
-        for (const CCallsign &callsign : m_aircraftCallsignTimestamps.keys())
+        for (const CCallsign &callsign : m_aircraftCallsignTimestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
         {
             if (m_aircraftCallsignTimestamps.value(callsign) > timeoutAircraftEpochMs) { continue; }
             CLogMessage(this).debug() << "Aircraft " << callsign.toQString() << "timed out!";
@@ -173,7 +173,7 @@ namespace BlackCore
             emit timeoutAircraft(callsign);
         }
 
-        for (const CCallsign &callsign : m_atcCallsignTimestamps.keys())
+        for (const CCallsign &callsign : m_atcCallsignTimestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
         {
             if (m_atcCallsignTimestamps.value(callsign) > timeoutAtcEpochMs) { continue; }
             CLogMessage(this).debug() << "ATC " << callsign.toQString() << "timed out!";

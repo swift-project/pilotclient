@@ -111,7 +111,7 @@ namespace BlackCore
 
             if (this->m_shutdown) { return; }
             QString urlString(nwReply->url().toString());
-            if (urlString.toLower().contains("logoff"))
+            if (urlString.contains("logoff", Qt::CaseInsensitive))
             {
                 sApp->deleteAllCookies();
                 emit logoffFinished();

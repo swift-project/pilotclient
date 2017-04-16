@@ -47,9 +47,9 @@ namespace BlackMisc
 
         QString s(yyyyMMddhhmmsszzz);
         s.remove(':').remove(' ').remove('-').remove('.'); // plain vanilla string
-        int year(s.left(4).toInt());
-        int month(s.mid(4, 2).toInt());
-        int day(s.mid(6, 2).toInt());
+        int year(s.leftRef(4).toInt());
+        int month(s.midRef(4, 2).toInt());
+        int day(s.midRef(6, 2).toInt());
         QDate date;
         date.setDate(year, month, day);
         QDateTime dt;
@@ -62,10 +62,10 @@ namespace BlackMisc
         }
 
         QTime t;
-        int hour(s.mid(8, 2).toInt());
-        int minute(s.mid(10, 2).toInt());
-        int second(s.length() < 14 ? 0 : s.mid(12, 2).toInt());
-        int ms(s.length() < 17 ? 0 : s.right(3).toInt());
+        int hour(s.midRef(8, 2).toInt());
+        int minute(s.midRef(10, 2).toInt());
+        int second(s.length() < 14 ? 0 : s.midRef(12, 2).toInt());
+        int ms(s.length() < 17 ? 0 : s.rightRef(3).toInt());
 
         t.setHMS(hour, minute, second, ms);
         dt.setTime(t);

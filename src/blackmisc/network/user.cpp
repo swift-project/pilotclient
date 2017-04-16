@@ -102,7 +102,7 @@ namespace BlackMisc
                 {
                     int pos = match.capturedStart(0);
                     QString icao = match.captured(0).trimmed().right(4);
-                    rn = rn.left(pos).trimmed();
+                    rn = rn.leftRef(pos).trimmed().toString();
                     this->setHomeBase(CAirportIcaoCode(icao));
                 }
             }

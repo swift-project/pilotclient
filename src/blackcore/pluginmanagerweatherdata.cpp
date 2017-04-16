@@ -33,7 +33,7 @@ namespace BlackCore
     Weather::CWeatherDataPluginInfoList CPluginManagerWeatherData::getAvailableWeatherDataPlugins() const
     {
         BlackMisc::Weather::CWeatherDataPluginInfoList list;
-        for (const auto &i : m_plugins.values())
+        for (const auto &i : m_plugins)
         {
             list.push_back(i.info);
         }

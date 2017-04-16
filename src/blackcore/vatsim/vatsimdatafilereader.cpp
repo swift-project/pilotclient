@@ -263,8 +263,8 @@ namespace BlackCore
                         {
                             // ; !CLIENTS section
                             int i = currentLine.lastIndexOf(' ');
-                            const QString attributes = currentLine.mid(i).trimmed();
-                            clientSectionAttributes = attributes.split(':', QString::SkipEmptyParts);
+                            const QVector<QStringRef> attributes = currentLine.midRef(i).trimmed().split(':', QString::SkipEmptyParts);
+                            for (const QStringRef &attr : attributes) { clientSectionAttributes.push_back(attr.toString()); }
                             section = SectionNone; // reset
                         }
                         continue;

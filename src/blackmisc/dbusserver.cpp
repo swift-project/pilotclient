@@ -127,12 +127,12 @@ namespace BlackMisc
             {
                 if (part.startsWith("host="))
                 {
-                    host = part.mid(part.lastIndexOf("=") + 1).trimmed();
+                    host = part.midRef(part.lastIndexOf("=") + 1).trimmed().toString();
                 }
                 else if (part.startsWith("port="))
                 {
                     bool ok;
-                    port = part.mid(part.lastIndexOf("=") + 1).trimmed().toInt(&ok);
+                    port = part.midRef(part.lastIndexOf("=") + 1).trimmed().toInt(&ok);
                     if (! ok) { port = -1; }
                 }
             }
@@ -265,7 +265,7 @@ namespace BlackMisc
     void CDBusServer::removeAllObjects()
     {
         if (m_objects.isEmpty()) { return; }
-        for (const QString &path : m_objects.keys())
+        for (const QString &path : makeKeysRange(as_const(m_objects)))
         {
             switch (m_serverMode)
             {

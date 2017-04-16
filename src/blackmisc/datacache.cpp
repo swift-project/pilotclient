@@ -408,7 +408,7 @@ namespace BlackMisc
                 if (pinsOnly)
                 {
                     auto pins = fromJson(json.value("pins").toArray());
-                    for (const auto &key : m_timestamps.keys())
+                    for (const auto &key : m_timestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
                     {
                         if (! pins.contains(key)) { m_timestamps.remove(key); }
                     }

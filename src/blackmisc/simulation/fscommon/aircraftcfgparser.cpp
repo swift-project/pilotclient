@@ -219,7 +219,7 @@ namespace BlackMisc
                         QString fltSection("[FLTSIM.0]");
                         int fltsimCounter = 0;
                         FileSection currentSection = Unknown;
-                        bool isRotorcraftPath = fileName.toLower().contains("rotorcraft");
+                        bool isRotorcraftPath = fileName.contains("rotorcraft", Qt::CaseInsensitive);
 
                         while (!in.atEnd())
                         {
@@ -391,7 +391,7 @@ namespace BlackMisc
                 if (index < 0) { return ""; }
                 if (line.length() < index  + 1) { return ""; }
 
-                QString content(line.mid(index + 1).trimmed());
+                QString content(line.midRef(index + 1).trimmed().toString());
 
                 // fix "" strings, some are malformed and just contain " at beginning, not at the end
                 if (content.endsWith('"')) { content.remove(content.size() - 1 , 1); }

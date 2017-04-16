@@ -310,7 +310,7 @@ namespace BlackMisc
     {
         Q_UNUSED(i18n);
         QString strategy;
-        QString categories = QStringList(m_strings.toList()).join("|");
+        QString categories = QStringList(m_strings.toList()).join("|"); // clazy:exclude=container-anti-pattern
         switch (m_strategy)
         {
         case Everything: strategy = "none"; break;

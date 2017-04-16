@@ -309,7 +309,7 @@ namespace BlackCore
                     m_voiceChannelMapping.remove(BlackMisc::Aviation::CComSystem::Com1);
 
                     // If the voice channel is not used by anybody else
-                    if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
+                    if (!m_voiceChannelMapping.key(oldVoiceChannel))
                     {
                         oldVoiceChannel->leaveVoiceRoom();
                         m_unusedVoiceChannels.push_back(oldVoiceChannel);
@@ -324,7 +324,7 @@ namespace BlackCore
                 {
                     auto newVoiceChannel = getVoiceChannelBy(newRoomCom1);
                     newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
-                    bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
+                    bool inUse = m_voiceChannelMapping.key(newVoiceChannel);
                     m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com1, newVoiceChannel);
 
                     // If the voice channel is not used by anybody else
@@ -349,7 +349,7 @@ namespace BlackCore
                     m_voiceChannelMapping.remove(BlackMisc::Aviation::CComSystem::Com2);
 
                     // If the voice channel is not used by anybody else
-                    if (!m_voiceChannelMapping.values().contains(oldVoiceChannel))
+                    if (!m_voiceChannelMapping.key(oldVoiceChannel))
                     {
                         oldVoiceChannel->leaveVoiceRoom();
                         m_unusedVoiceChannels.push_back(oldVoiceChannel);
@@ -364,7 +364,7 @@ namespace BlackCore
                 {
                     auto newVoiceChannel = getVoiceChannelBy(newRoomCom2);
                     newVoiceChannel->setOwnAircraftCallsign(ownCallsign);
-                    bool inUse = m_voiceChannelMapping.values().contains(newVoiceChannel);
+                    bool inUse = m_voiceChannelMapping.key(newVoiceChannel);
                     m_voiceChannelMapping.insert(BlackMisc::Aviation::CComSystem::Com2, newVoiceChannel);
 
                     // If the voice channel is not used by anybody else

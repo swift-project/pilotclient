@@ -790,9 +790,9 @@ namespace BlackCore
         {
             // Logic to set logoff time
             bool ok;
-            const int h = zuluTime.left(2).toInt(&ok);
+            const int h = zuluTime.leftRef(2).toInt(&ok);
             if (!ok) { return; }
-            const int m = zuluTime.right(2).toInt(&ok);
+            const int m = zuluTime.rightRef(2).toInt(&ok);
             if (!ok) { return; }
             QDateTime logoffDateTime = QDateTime::currentDateTimeUtc();
             logoffDateTime.setTime(QTime(h, m));

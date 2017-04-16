@@ -138,7 +138,7 @@ namespace BlackMisc
         }
         else
         {
-            f = this->m_indexString.left(p).toInt(&ok);
+            f = this->m_indexString.leftRef(p).toInt(&ok);
         }
         Q_ASSERT_X(ok && f >= 0, Q_FUNC_INFO, "Invalid index");
         return f;

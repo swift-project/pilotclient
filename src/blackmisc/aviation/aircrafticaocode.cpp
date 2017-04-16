@@ -219,7 +219,7 @@ namespace BlackMisc
         QString CAircraftIcaoCode::getAircraftType() const
         {
             if (this->m_combinedType.length() < 1) { return ""; }
-            QString c(this->m_combinedType.left(1));
+            QString c(this->m_combinedType.at(0));
             if (c == "-") { return ""; }
             return c;
         }
@@ -587,10 +587,10 @@ namespace BlackMisc
             }
 
             // turn E to P engine
-            if (combinedCode.endsWith("E")) { return QStringList({ combinedCode.left(2) + "P"}); }
+            if (combinedCode.endsWith("E")) { return QStringList({ combinedCode.leftRef(2) + "P"}); }
 
             // turn T to H plane (tilt wing to helicopter
-            if (combinedCode.startsWith("T")) { return QStringList({ "H" + combinedCode.right(2)}); }
+            if (combinedCode.startsWith("T")) { return QStringList({ "H" + combinedCode.rightRef(2)}); }
 
             // based on engine count
             QStringList codes;
@@ -600,7 +600,7 @@ namespace BlackMisc
                 for (int c = 2; c < 5; c++)
                 {
                     if (c == engineCount) { continue; }
-                    const QString code(combinedCode.left(1) + QString::number(c) + combinedCode.right(1));
+                    const QString code(combinedCode.at(0) + QString::number(c) + combinedCode.at(2));
                     codes.push_back(code);
                 }
             }
@@ -667,7 +667,7 @@ namespace BlackMisc
             }
             else
             {
-                c.append(engine.left(1));
+                c.append(engine.at(0));
             }
             Q_ASSERT_X(c.length() == 3, Q_FUNC_INFO, "Wrong combined length");
             return c;

@@ -52,7 +52,7 @@ namespace BlackSample
             QStringLiteral("C:/Flight Simulator 9/Aircraft")
         }, streamOut, streamIn);
 
-        const CSimulatorInfo sim = fsDir.toLower().contains("simobjects") ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
+        const CSimulatorInfo sim = fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
         CMultiSimulatorSettings multiSettings;
         const CSimulatorSettings originalSettings = multiSettings.getSettings(sim);
         CSimulatorSettings newSettings(originalSettings);

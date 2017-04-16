@@ -488,12 +488,13 @@ namespace BlackCore
 
             CTextMessageList radioMessages = messages.getRadioMessages();
             radioMessages.markAsSent();
+            QVector<int> freqsVec;
             for (const auto &message : radioMessages)
             {
                 // I could send the same message to n frequencies in one step
                 // if this is really required, I need to group by message
                 // currently I send individual messages
-                QVector<int> freqsVec;
+                freqsVec.clear();
                 freqsVec.push_back(message.getFrequency().valueRounded(CFrequencyUnit::kHz(), 0));
                 Vat_SendRadioMessage(m_net.data(), freqsVec.data(), freqsVec.size(), toFSD(message.getMessage()));
                 emit textMessageSent(message);

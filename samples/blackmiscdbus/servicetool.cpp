@@ -72,7 +72,7 @@ namespace BlackSample
     void ServiceTool::dataTransferTestClient(const QString &address)
     {
         // send data as P2P to server (this can be session bus, too, but usually is P2P)
-        const bool sb = (address.toLower().startsWith("session"));
+        const bool sb = address.startsWith("session", Qt::CaseInsensitive);
         QDBusConnection connection = sb ?
                                      QDBusConnection::sessionBus() :
                                      QDBusConnection::connectToPeer(address, "p2pConnection");
@@ -90,6 +90,8 @@ namespace BlackSample
         ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(), connection);
         QTextStream qtin(stdin);
         QTextStream qtout(stdout);
+
+        const QList<double> list { 1.0, 2.0, 3.0 };
 
         while (true)
         {
@@ -115,8 +117,6 @@ namespace BlackSample
             qtout << "Send string via interface " << msg << endl;
 
             // a list
-            QList<double> list;
-            list << 1.0 << 2.0 << 3.0;
             testServiceInterface.receiveList(list);
             qtout << "Send list via interface " << list.size() << endl;
 
