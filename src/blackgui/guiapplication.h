@@ -133,6 +133,9 @@ namespace BlackGui
         //! Help operations
         void addMenuHelp(QMenu &menu);
 
+        //! Show help page (online help)
+        void showHelp();
+
         //! Style sheet handling
         const CStyleSheetUtility &getStyleSheetUtility() const;
 

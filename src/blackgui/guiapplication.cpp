@@ -518,19 +518,23 @@ namespace BlackGui
 
     void CGuiApplication::addMenuHelp(QMenu &menu)
     {
-        QWidget *w = mainApplicationWindow();
+        const QWidget *w = mainApplicationWindow();
         if (!w) { return; }
-
-        const CGlobalSetup gs = this->getGlobalSetup();
-        const CUrl helpPage = gs.getHelpPageUrl();
-        if (helpPage.isEmpty()) { return; }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
-        bool c = connect(a, &QAction::triggered, this, [helpPage]()
+        const bool c = connect(a, &QAction::triggered, this, [this]()
         {
-            QDesktopServices::openUrl(helpPage);
+            this->showHelp();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
+    }
+
+    void CGuiApplication::showHelp()
+    {
+        const CGlobalSetup gs = this->getGlobalSetup();
+        const CUrl helpPage = gs.getHelpPageUrl();
+        if (helpPage.isEmpty()) { return; }
+        QDesktopServices::openUrl(helpPage);
     }
 
     const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const
