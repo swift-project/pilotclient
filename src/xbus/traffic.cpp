@@ -130,6 +130,10 @@ namespace XBus
         {
             return g_maxPlanes;
         }
+        else if (strcmp(section, "debug") == 0 && strcmp(name, "allow_obj8_async_load") == 0)
+        {
+            return true;
+        }
         return def;
     }
 
