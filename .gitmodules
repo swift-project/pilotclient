@@ -1,6 +1,6 @@
 [submodule "externals"]
 	path = externals
-	url = git@dev.vatsim-germany.org:vatpilotclient/externals.git
+	url = ssh://git@dev.swift-project.org/source/externals.git
 [submodule "src/xbus/libxplanemp"]
 	path = src/xbus/libxplanemp
-	url = git@dev.vatsim-germany.org:vatpilotclient/libxplanemp.git
+	url = ssh://git@dev.swift-project.org/source/libxplanemp.git
