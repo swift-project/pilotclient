@@ -107,17 +107,20 @@ namespace BlackCore
         //! Metar reader
         Vatsim::CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
 
-        //! Info data reader
+        //! DB info data reader
         BlackCore::Db::CInfoDataReader *getDbInfoDataReader() const { return m_dbInfoDataReader; }
 
-        //! Currently used URL for shared DB data
-        BlackMisc::Network::CUrl getDbReaderCurrentSharedDbDataUrl() const;
+        //! Shared info data reader
+        BlackCore::Db::CInfoDataReader *getSharedInfoDataReader() const { return m_sharedInfoDataReader; }
 
         //! DB writer class
         Db::CDatabaseWriter *getDatabaseWriter() const { return m_databaseWriter; }
 
         //! Reader flags
         CWebReaderFlags::WebReader getReaderFlags() const { return m_readers; }
+
+        //! Currently used URL for shared DB data
+        BlackMisc::Network::CUrl getDbReaderCurrentSharedDbDataUrl() const;
 
         //! All DB entities for those readers used and not ignored
         BlackMisc::Network::CEntityFlags::Entity allDbEntitiesForUsedReaders() const;
@@ -321,8 +324,11 @@ namespace BlackCore
         //! Publish models to database
         BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
 
-        //! Trigger read of info objects
-        void triggerReadOfInfoObjects();
+        //! Trigger read of DB info objects
+        void triggerReadOfDbInfoObjects();
+
+        //! Trigger read of shared info objects
+        void triggerReadOfSharedInfoObjects();
 
         //! Trigger read of new data
         //! \note requires info objects loaded upfront and uses the full cache logic
@@ -334,10 +340,6 @@ namespace BlackCore
         //! Trigger reload from shared files, only loads the data and bypasses caches
         BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(BlackMisc::Network::CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront);
 
-        //! Trigger loading of the HTTP headers for the shared files
-        //! \note allows to obtain the timestamps
-        bool triggerLoadingOfSharedFilesHeaders(BlackMisc::Network::CEntityFlags::Entity requestedEntities = BlackMisc::Network::CEntityFlags::AllDbEntities);
-
         //! Corresponding cache timestamp if applicable
         //! \threadsafe
         QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
@@ -346,25 +348,25 @@ namespace BlackCore
         //! \threadsafe
         QDateTime getDbLatestEntityTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
-        //! Corresponding shared file timestamp
-        QDateTime getSharedFileTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        //! Shared info object timestamp
+        //! \threadsafe
+        QDateTime getSharedInfoObjectTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
-        //! Request (updated) HTTP header for shared file of entity
-        bool requestHeaderOfSharedFile(BlackMisc::Network::CEntityFlags::Entity entity);
-
-        //! Are the shared headers for the given entities loaded
-        bool areSharedHeadersLoaded(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllDbEntities) const;
-
-        //! Those entities where the timestamp of header is newer than the cache timestamp
-        BlackMisc::Network::CEntityFlags::Entity getEntitiesWithNewerHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const;
+        //! Entities with newer shared file (from DB Info object)
+        //! \threadsafe
+        BlackMisc::Network::CEntityFlags::Entity getEntitiesWithNewerSharedFile(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
         //! Cache count for entity
         //! \threadsafe
         int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
-        //! Count for entity from entity objects
+        //! Count for entity from DB entity objects
         //! \threadsafe
-        int getDbInfoCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        int getDbInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+        //! Count for entity from shared entity objects
+        //! \threadsafe
+        int getSharedInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
         //! Can connect to swift DB?
         bool canConnectSwiftDb() const;
@@ -388,21 +390,17 @@ namespace BlackCore
         //! Combined read signal
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
-        //! Header of shared file read
-        //! \deprecated shared file headers will be replaced by dbinfo.json
-        void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
-
         // simplified signals follow
         // 1) simple signature
-        // 2) fired direct after read, no need to wait for other entities
+        // 2) fired directly after read, no need to wait for other entities
 
         //! \name Simplified read signals
         //! @{
         //! All swift DB data have been read
         void allSwiftDbDataRead();
 
-        //! All headers received
-        void allSwiftSharedAllHeadersReceived();
+        //! Shared info objects read
+        void sharedInfoObjectsRead();
 
         //! All models read
         void swiftDbModelsRead();
@@ -442,10 +440,7 @@ namespace BlackCore
         void ps_vatsimDataFileRead(int lines);
 
         //! Read finished from reader
-        void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-
-        //! A shared file header has been received
-        void ps_sharedFileHeaderReceived(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
+        void ps_readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     private:
         //! Init the readers
@@ -454,6 +449,9 @@ namespace BlackCore
         //! Init the info objects reader (DB web service)
         void initDbInfoObjectReaderAndTriggerRead();
 
+        //! Init the info objects reader (shared dbinfo.json)
+        void initSharedInfoObjectReaderAndTriggerRead();
+
         //! DB reader for given entity
         Db::CDatabaseReader *getDbReader(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
@@ -461,23 +459,29 @@ namespace BlackCore
         void initWriters();
 
         //! Remember this entity/those enties already have been signaled
-        bool signalEntitiesRead(BlackMisc::Network::CEntityFlags::Entity entities);
+        bool signalEntitiesAlreadyRead(BlackMisc::Network::CEntityFlags::Entity entities);
 
-        //! Wait for info objects to be read
+        //! Info object count from shared/DB info objects
+        int getInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity, BlackCore::Db::CInfoDataReader *reader) const;
+
+        //! Wait for DB info objects to be read
         bool waitForDbInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities);
 
-        //! Wait for shared headers to be read
-        bool waitForSharedHeaders(BlackMisc::Network::CEntityFlags::Entity entities);
+        //! Wait for shared info objects to be read
+        bool waitForSharedInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities);
+
+        //! Wait for info objects to be read
+        bool waitForInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *reader, int &trials);
 
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
         BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead      = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
-        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;           //!< how to read DB data
-        bool                                     m_initialRead = false;      //!< Initial read started
-        bool                                     m_signalledHeaders = false; //!< headers loading has been signalled
-        int                                      m_dbInfoObjectTrials = 0;   //!< Tried to read info objects
-        int                                      m_sharedHeadersTrials = 0;  //!< Tried to read shared file headers
-        QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;  //!< remember signalled entites
+        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;              //!< how to read DB data
+        bool                                     m_initialRead = false;         //!< Initial read started
+        bool                                     m_signalledHeaders = false;    //!< headers loading has been signalled
+        int                                      m_dbInfoObjectTrials = 0;      //!< Tried to read info objects
+        int                                      m_sharedInfoObjectsTrials = 0; //!< Tried to read shared file headers
+        QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;     //!< remember signalled entites
 
         // for reading XML and VATSIM data files
         Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;
@@ -488,6 +492,7 @@ namespace BlackCore
         Db::CModelDataReader            *m_modelDataReader      = nullptr;
         Db::CAirportDataReader          *m_airportDataReader    = nullptr;
         Db::CInfoDataReader             *m_dbInfoDataReader     = nullptr;
+        Db::CInfoDataReader             *m_sharedInfoDataReader = nullptr;
 
         // writing objects directly into DB
         Db::CDatabaseWriter *m_databaseWriter = nullptr;
