@@ -83,20 +83,23 @@ namespace BlackGui
             //! Timestamp
             static QString formattedTimestamp(const QDateTime &dateTime);
 
-            //! Formatted ts for entity
+            //! Formatted ts for entity (cache)
             static QString cacheTimestampForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
 
-            //! Formatted ts for entity
-            static QString dbTimestampForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
-
-            //! Formatted count for entity
+            //! Formatted count for entity (cache)
             static QString cacheCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
 
-            //! Formatted ts for entity
+            //! Formatted ts for entity (DB)
+            static QString dbTimestampForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+
+            //! Formatted count for entity (DB)
+            static QString dbCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+
+            //! Formatted ts for entity (shared)
             static QString sharedFileTimestampForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
 
-            //! Formatted count for entity
-            static QString dbCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+            //! Formatted count for entity (shared)
+            static QString sharedCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
 
             //! Admit caches
             static void admitCaches();
@@ -113,6 +116,9 @@ namespace BlackGui
 
             //! Data have been loaded
             void ps_dataLoaded(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+
+            //! Load info objects if not already loaded
+            void ps_loadInfoObjects();
         };
     } // ns
 } // ns

@@ -11,6 +11,7 @@
 #include "ui_dbloadoverviewcomponent.h"
 
 #include "blackcore/webdataservices.h"
+#include "blackcore/db/infodatareader.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/network/networkutils.h"
 
@@ -62,6 +63,7 @@ namespace BlackGui
             if (sGui->hasWebDataServices())
             {
                 connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
+                QTimer::singleShot(10 * 1000, this, &CDbLoadOverviewComponent::ps_loadInfoObjects);
             }
         }
 
@@ -130,22 +132,6 @@ namespace BlackGui
             if (!sGui) { return; }
             if (!sGui->hasWebDataServices()) { return; }
 
-            ui->le_AircraftIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
-            ui->le_AirlinesIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
-            ui->le_AirportsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirportEntity));
-            ui->le_LiveriesCacheTs->setText(cacheTimestampForEntity(CEntityFlags::LiveryEntity));
-            ui->le_ModelsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::ModelEntity));
-            ui->le_CountriesCacheTs->setText(cacheTimestampForEntity(CEntityFlags::CountryEntity));
-            ui->le_DistributorsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::DistributorEntity));
-
-            ui->le_AircraftIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
-            ui->le_AirlinesIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
-            ui->le_AirportsDbTs->setText(dbTimestampForEntity(CEntityFlags::AirportEntity));
-            ui->le_LiveriesDbTs->setText(dbTimestampForEntity(CEntityFlags::LiveryEntity));
-            ui->le_ModelsDbTs->setText(dbTimestampForEntity(CEntityFlags::ModelEntity));
-            ui->le_CountriesDbTs->setText(dbTimestampForEntity(CEntityFlags::CountryEntity));
-            ui->le_DistributorsDbTs->setText(dbTimestampForEntity(CEntityFlags::DistributorEntity));
-
             ui->le_AircraftIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AirlineIcaoEntity));
             ui->le_AirportsCacheCount->setText(cacheCountForEntity(CEntityFlags::AirportEntity));
@@ -162,8 +148,32 @@ namespace BlackGui
             ui->le_CountriesDbCount->setText(dbCountForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsDbCount->setText(dbCountForEntity(CEntityFlags::DistributorEntity));
 
-            ui->le_AircraftSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
-            ui->le_AirlinesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AircraftIcaoSharedCount->setText(sharedCountForEntity(CEntityFlags::AircraftIcaoEntity));
+            ui->le_AirlinesIcaoSharedCount->setText(sharedCountForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirportsSharedCount->setText(sharedCountForEntity(CEntityFlags::AirportEntity));
+            ui->le_LiveriesSharedCount->setText(sharedCountForEntity(CEntityFlags::LiveryEntity));
+            ui->le_ModelsSharedCount->setText(sharedCountForEntity(CEntityFlags::ModelEntity));
+            ui->le_CountriesSharedCount->setText(sharedCountForEntity(CEntityFlags::CountryEntity));
+            ui->le_DistributorsSharedCount->setText(sharedCountForEntity(CEntityFlags::DistributorEntity));
+
+            ui->le_AircraftIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
+            ui->le_AirlinesIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirportsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirportEntity));
+            ui->le_LiveriesCacheTs->setText(cacheTimestampForEntity(CEntityFlags::LiveryEntity));
+            ui->le_ModelsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::ModelEntity));
+            ui->le_CountriesCacheTs->setText(cacheTimestampForEntity(CEntityFlags::CountryEntity));
+            ui->le_DistributorsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::DistributorEntity));
+
+            ui->le_AircraftIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
+            ui->le_AirlinesIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirportsDbTs->setText(dbTimestampForEntity(CEntityFlags::AirportEntity));
+            ui->le_LiveriesDbTs->setText(dbTimestampForEntity(CEntityFlags::LiveryEntity));
+            ui->le_ModelsDbTs->setText(dbTimestampForEntity(CEntityFlags::ModelEntity));
+            ui->le_CountriesDbTs->setText(dbTimestampForEntity(CEntityFlags::CountryEntity));
+            ui->le_DistributorsDbTs->setText(dbTimestampForEntity(CEntityFlags::DistributorEntity));
+
+            ui->le_AircraftIcaoSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
+            ui->le_AirlinesIcaoSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
             ui->le_AirportsSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AirportEntity));
             ui->le_LiveriesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::LiveryEntity));
             ui->le_ModelsSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::ModelEntity));
@@ -231,13 +241,19 @@ namespace BlackGui
 
         QString CDbLoadOverviewComponent::sharedFileTimestampForEntity(CEntityFlags::Entity entity)
         {
-            const QDateTime ts = sGui->getWebDataServices()->getSharedFileTimestamp(entity);
+            const QDateTime ts = sGui->getWebDataServices()->getSharedInfoObjectTimestamp(entity);
             return formattedTimestamp(ts);
+        }
+
+        QString CDbLoadOverviewComponent::sharedCountForEntity(CEntityFlags::Entity entity)
+        {
+            const int c = sGui->getWebDataServices()->getSharedInfoObjectCount(entity);
+            return c < 0 ? "-" : QString::number(c);
         }
 
         QString CDbLoadOverviewComponent::dbCountForEntity(CEntityFlags::Entity entity)
         {
-            const int c = sGui->getWebDataServices()->getDbInfoCount(entity);
+            const int c = sGui->getWebDataServices()->getDbInfoObjectCount(entity);
             return c < 0 ? "-" : QString::number(c);
         }
 
@@ -266,8 +282,8 @@ namespace BlackGui
             this->showLoading();
 
             // shared files ts
-            sGui->getWebDataServices()->triggerLoadingOfSharedFilesHeaders(entities);
-            sGui->getWebDataServices()->triggerReadOfInfoObjects();
+            sGui->getWebDataServices()->triggerReadOfSharedInfoObjects();
+            sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
         }
 
         void CDbLoadOverviewComponent::ps_refreshSharedPressed()
@@ -289,17 +305,47 @@ namespace BlackGui
             this->showLoading();
 
             // shared files ts
-            sGui->getWebDataServices()->triggerReadOfInfoObjects();
+            sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
         }
 
         void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
         {
             Q_UNUSED(number);
-            if (!entities.testFlag(CEntityFlags::InfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
+            if (!entities.testFlag(CEntityFlags::SharedInfoObjectEntity) && !entities.testFlag(CEntityFlags::DbInfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
             if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
             {
                 this->m_loadInProgress = false;
                 emit this->ps_triggerDigestGuiUpdate();
+            }
+        }
+
+        void CDbLoadOverviewComponent::ps_loadInfoObjects()
+        {
+            if (this->m_loadInProgress) { return; }
+            if (!sGui || !sGui->hasWebDataServices()) { return; }
+            bool direct = false;
+
+            if (sGui->getWebDataServices()->getDbInfoDataReader() && sGui->getWebDataServices()->getDbInfoDataReader()->getInfoObjectCount() > 0)
+            {
+                direct = true;
+            }
+            else
+            {
+                sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
+            }
+
+            if (sGui->getWebDataServices()->getSharedInfoDataReader() && sGui->getWebDataServices()->getSharedInfoDataReader()->getInfoObjectCount() > 0)
+            {
+                direct = true;
+            }
+            else
+            {
+                sGui->getWebDataServices()->triggerReadOfSharedInfoObjects();
+            }
+
+            if (direct)
+            {
+                this->m_dsTriggerGuiUpdate.inputSignal();
             }
         }
     } // ns

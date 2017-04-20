@@ -47,7 +47,7 @@ namespace BlackMisc
     {
         int CNetworkUtils::getTimeoutMs()
         {
-            return 2000;
+            return 3000;
         }
 
         bool CNetworkUtils::canPing(const QString &hostAddress)
@@ -341,4 +341,4 @@ namespace BlackMisc
             return phpError.remove(regEx);
         }
     } // namespace
-} // namespacee
+} // namespace
