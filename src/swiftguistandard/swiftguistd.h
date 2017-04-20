@@ -251,7 +251,7 @@ private slots:
     void ps_verifyDataAvailability();
 
     //! The shared headers have been loaded
-    void ps_sharedFilesHeadersLoaded();
+    void ps_sharedInfoObjectsLoaded();
 };
 
 #pragma pop_macro("interface")

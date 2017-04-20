@@ -121,7 +121,7 @@ void SwiftGuiStd::init()
     this->initGuiSignals();
 
     // signal / slots contexts / timers
-    connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftSharedAllHeadersReceived, this, &SwiftGuiStd::ps_sharedFilesHeadersLoaded);
+    connect(sGui->getWebDataServices(), &CWebDataServices::sharedInfoObjectsRead, this, &SwiftGuiStd::ps_sharedInfoObjectsLoaded);
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::ps_onConnectionTerminated);
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
     connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);

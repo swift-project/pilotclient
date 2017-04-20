@@ -399,11 +399,11 @@ void SwiftGuiStd::ps_verifyDataAvailability()
     }
 }
 
-void SwiftGuiStd::ps_sharedFilesHeadersLoaded()
+void SwiftGuiStd::ps_sharedInfoObjectsLoaded()
 {
     Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
     Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread");
-    const CEntityFlags::Entity newEntities = sGui->getWebDataServices()->getEntitiesWithNewerHeaderTimestamp(CEntityFlags::AllDbEntities);
+    const CEntityFlags::Entity newEntities = sGui->getWebDataServices()->getEntitiesWithNewerSharedFile(CEntityFlags::AllDbEntities);
     if (newEntities == CEntityFlags::NoEntity) { return; }
     CStatusMessage sm = CStatusMessage(this).info("New data for shared files:");
     CStatusMessageList sms({sm});
@@ -414,7 +414,7 @@ void SwiftGuiStd::ps_sharedFilesHeadersLoaded()
         sms.push_back(sm);
     }
 
-    // allow to init GUI completely
+    // allow to init GUI completely before showing overlays
     const int delay = 2500;
     QTimer::singleShot(delay, this, [ = ]
     {
