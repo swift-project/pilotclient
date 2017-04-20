@@ -26,17 +26,19 @@ namespace BlackCore
 {
     namespace Db
     {
-        CInfoDataReader::CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config) :
-            CDatabaseReader(owner, config, "CInfoDataReader")
-        { }
+        CInfoDataReader::CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config, CDbFlags::DataRetrievalModeFlag mode) :
+            CDatabaseReader(owner, config, "CInfoDataReader"), m_mode(mode)
+        {
+            Q_ASSERT_X(mode == CDbFlags::DbReading || mode == CDbFlags::Shared, Q_FUNC_INFO, "Wrong mode");
+        }
 
-        CDbInfoList CInfoDataReader::getDbInfoObjects() const
+        CDbInfoList CInfoDataReader::getInfoObjects() const
         {
             QReadLocker l(&m_lockInfoObjects);
             return m_infoObjects;
         }
 
-        int CInfoDataReader::getDbInfoObjectCount() const
+        int CInfoDataReader::getInfoObjectCount() const
         {
             QReadLocker l(&m_lockInfoObjects);
             return m_infoObjects.size();
@@ -44,7 +46,7 @@ namespace BlackCore
 
         bool CInfoDataReader::areAllDataRead() const
         {
-            return getDbInfoObjectCount() > 4;
+            return getInfoObjectCount() > 4;
         }
 
         void CInfoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
@@ -93,15 +95,15 @@ namespace BlackCore
 
         void CInfoDataReader::read()
         {
-            const CUrl url(getDbInfoObjectsUrl());
+            const CUrl url(this->getInfoObjectsUrl());
             if (!url.isEmpty())
             {
                 sApp->getFromNetwork(url, { this, &CInfoDataReader::ps_parseInfoObjectsData});
-                emit dataRead(CEntityFlags::InfoObjectEntity, CEntityFlags::StartRead, 0);
+                emit dataRead(this->getEntityForMode(), CEntityFlags::StartRead, 0);
             }
             else
             {
-                CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::InfoObjectEntity);
+                CLogMessage(this).error("No URL for '%1'") << CEntityFlags::flagToString(this->getEntityForMode());
             }
         }
 
@@ -112,11 +114,11 @@ namespace BlackCore
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isShuttingDown()) { return; }
 
-            CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit dataRead(CEntityFlags::InfoObjectEntity, CEntityFlags::ReadFailed, 0);
+                emit dataRead(this->getEntityForMode(), CEntityFlags::ReadFailed, 0);
                 return;
             }
 
@@ -130,7 +132,7 @@ namespace BlackCore
                 this->m_infoObjects = infoObjects;
             }
 
-            this->emitAndLogDataRead(CEntityFlags::InfoObjectEntity, n, res);
+            this->emitAndLogDataRead(this->getEntityForMode(), n, res);
         }
 
         CUrl CInfoDataReader::getDbInfoObjectsUrl() const
@@ -138,9 +140,34 @@ namespace BlackCore
             return getBaseUrl(CDbFlags::DbReading).withAppendedPath("jsondbinfo.php");
         }
 
+        CUrl CInfoDataReader::getSharedInfoObjectsUrl() const
+        {
+            return getBaseUrl(CDbFlags::Shared).withAppendedPath(CDbInfo::sharedInfoFileName());
+        }
+
+        CEntityFlags::EntityFlag CInfoDataReader::getEntityForMode() const
+        {
+            if (this->m_mode == CDbFlags::DbReading) return CEntityFlags::DbInfoObjectEntity;
+            if (this->m_mode == CDbFlags::Shared) return CEntityFlags::SharedInfoObjectEntity;
+            qFatal("Wrong mode");
+            return CEntityFlags::NoEntity;
+        }
+
+        CUrl CInfoDataReader::getInfoObjectsUrl() const
+        {
+            switch (m_mode)
+            {
+            case CDbFlags::DbReading: return getDbInfoObjectsUrl();
+            case CDbFlags::Shared: return getSharedInfoObjectsUrl();
+            default:
+                qFatal("Wrong mode");
+            }
+            return CUrl();
+        }
+
         CEntityFlags::Entity CInfoDataReader::getSupportedEntities() const
         {
-            return CEntityFlags::InfoObjectEntity;
+            return this->getEntityForMode();
         }
     } // namespace
 } // namespace

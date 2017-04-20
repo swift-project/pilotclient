@@ -24,32 +24,32 @@ namespace BlackCore
 {
     namespace Db
     {
-        //! Read information about data from Database
+        //! Read information about data from Database or shared file
         class BLACKCORE_EXPORT CInfoDataReader : public CDatabaseReader
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            explicit CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config);
+            explicit CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode);
 
-            //! Get info list
+            //! Get info list (either shared or from DB)
             //! \threadsafe
-            BlackMisc::Db::CDbInfoList getDbInfoObjects() const;
+            BlackMisc::Db::CDbInfoList getInfoObjects() const;
 
-            //! Get info list size
+            //! Get info list size (either shared or from DB)
             //! \threadsafe
-            int getDbInfoObjectCount() const;
+            int getInfoObjectCount() const;
 
             //! All data read?
             //! \threadsafe
             bool areAllDataRead() const;
 
-            //! URL info objects web service
-            BlackMisc::Network::CUrl getDbInfoObjectsUrl() const;
-
             //! Allow to call directly, special for info objects reader
             void read();
+
+            //! URL depending on mode
+            BlackMisc::Network::CUrl getInfoObjectsUrl() const;
 
             // cache handling for base class: no cache handling here in that case
             virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
@@ -69,6 +69,16 @@ namespace BlackCore
             void ps_parseInfoObjectsData(QNetworkReply *nwReply);
 
         private:
+            //! URL info objects web service
+            BlackMisc::Network::CUrl getDbInfoObjectsUrl() const;
+
+            //! URL shared info objects
+            BlackMisc::Network::CUrl getSharedInfoObjectsUrl() const;
+
+            //! Entity for mode
+            BlackMisc::Network::CEntityFlags::EntityFlag getEntityForMode() const;
+
+            BlackMisc::Db::CDbFlags::DataRetrievalModeFlag m_mode; //!< shared or DB web service?
             BlackMisc::Db::CDbInfoList m_infoObjects;
             BlackMisc::Network::CUrl   m_urlInfoObjects;
             mutable QReadWriteLock     m_lockInfoObjects;

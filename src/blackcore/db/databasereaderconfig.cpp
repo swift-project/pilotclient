@@ -74,14 +74,14 @@ namespace BlackCore
             return (this->getRetrievalMode().testFlag(CDbFlags::DbReading));
         }
 
-        bool CDatabaseReaderConfig::needsSharedHeader() const
+        bool CDatabaseReaderConfig::needsSharedInfoFile() const
         {
             if (!this->isValid()) { return false; }
             if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
-            return (this->getRetrievalMode().testFlag(CDbFlags::Shared) || this->getRetrievalMode().testFlag(CDbFlags::SharedHeadersOnly));
+            return (this->getRetrievalMode().testFlag(CDbFlags::Shared) || this->getRetrievalMode().testFlag(CDbFlags::SharedInfoOnly));
         }
 
-        bool CDatabaseReaderConfig::needsSharedHeaderLoaded() const
+        bool CDatabaseReaderConfig::needsSharedInfoFileLoaded() const
         {
             if (!this->isValid()) { return false; }
             if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
@@ -162,22 +162,22 @@ namespace BlackCore
             return false;
         }
 
-        bool CDatabaseReaderConfigList::needsSharedHeaders(CEntityFlags::Entity entities) const
+        bool CDatabaseReaderConfigList::needsSharedInfoObjects(CEntityFlags::Entity entities) const
         {
             for (const CDatabaseReaderConfig &config : *this)
             {
                 if (!config.supportsEntities(entities)) { continue; }
-                if (config.needsSharedHeader()) { return true; }
+                if (config.needsSharedInfoFile()) { return true; }
             }
             return false;
         }
 
-        bool CDatabaseReaderConfigList::needsSharedHeadersLoaded(CEntityFlags::Entity entities) const
+        bool CDatabaseReaderConfigList::needsSharedInfoFileLoaded(CEntityFlags::Entity entities) const
         {
             for (const CDatabaseReaderConfig &config : *this)
             {
                 if (!config.supportsEntities(entities)) { continue; }
-                if (config.needsSharedHeaderLoaded()) { return true; }
+                if (config.needsSharedInfoFileLoaded()) { return true; }
             }
             return false;
         }

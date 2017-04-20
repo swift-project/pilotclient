@@ -66,10 +66,10 @@ namespace BlackCore
             bool possiblyReadsFromSwiftDb() const;
 
             //! Needs the shared header
-            bool needsSharedHeader() const;
+            bool needsSharedInfoFile() const;
 
             //! Needs the shared header loaded before it can be continued
-            bool needsSharedHeaderLoaded() const;
+            bool needsSharedInfoFileLoaded() const;
 
             //! Will write to swift DB
             bool possiblyWritesToSwiftDb() const;
@@ -122,10 +122,10 @@ namespace BlackCore
             bool possiblyWritesToSwiftDb() const;
 
             //! Needs any shared header
-            bool needsSharedHeaders(BlackMisc::Network::CEntityFlags::Entity entities) const;
+            bool needsSharedInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! Needs any shared header loaded before continued
-            bool needsSharedHeadersLoaded(BlackMisc::Network::CEntityFlags::Entity entities) const;
+            bool needsSharedInfoFileLoaded(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! Entities which will use cache or DB, so no canceled or ignored ones
             BlackMisc::Network::CEntityFlags::Entity getEntitesCachedOrReadFromDB() const;

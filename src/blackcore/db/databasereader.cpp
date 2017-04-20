@@ -52,8 +52,8 @@ namespace BlackCore
             if (this->isShuttingDown()) { return; }
 
             // we accept cached cached data
-            Q_ASSERT_X(!entities.testFlag(CEntityFlags::InfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
-            const bool hasInfoObjects = this->hasInfoObjects(); // no info objects is not necessarily error, but indicates a) either data not available (DB down) or b) only caches are used
+            Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
+            const bool hasInfoObjects = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
             CEntityFlags::Entity allEntities    = entities;
             CEntityFlags::Entity cachedEntities = CEntityFlags::NoEntity;
             CEntityFlags::Entity dbEntities     = CEntityFlags::NoEntity;
@@ -74,7 +74,7 @@ namespace BlackCore
                     {
                         const bool changedUrl = this->hasChangedUrl(currentEntity);
                         const QDateTime cacheTs(this->getCacheTimestamp(currentEntity));
-                        const QDateTime latestEntityTs(this->getLatestEntityTimestampFromInfoObjects(currentEntity));
+                        const QDateTime latestEntityTs(this->getLatestEntityTimestampFromDbInfoObjects(currentEntity));
                         const qint64 cacheTimestamp = cacheTs.isValid() ? cacheTs.toMSecsSinceEpoch() : -1;
                         const qint64 latestEntityTimestamp = latestEntityTs.isValid() ? latestEntityTs.toMSecsSinceEpoch() : -1;
                         Q_ASSERT_X(latestEntityTimestamp >= 0, Q_FUNC_INFO, "Missing timestamp");
@@ -265,17 +265,30 @@ namespace BlackCore
             return dsr;
         }
 
-        CDbInfoList CDatabaseReader::infoList() const
+        CDbInfoList CDatabaseReader::getDbInfoObjects() const
         {
             static const CDbInfoList e;
             if (!sApp->hasWebDataServices()) { return e; }
             if (!sApp->getWebDataServices()->getDbInfoDataReader()) { return e; }
-            return sApp->getWebDataServices()->getDbInfoDataReader()->getDbInfoObjects();
+            return sApp->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
         }
 
-        bool CDatabaseReader::hasInfoObjects() const
+        CDbInfoList CDatabaseReader::getSharedInfoObjects() const
         {
-            return infoList().size() > 0;
+            static const CDbInfoList e;
+            if (!sApp->hasWebDataServices()) { return e; }
+            if (!sApp->getWebDataServices()->getSharedInfoDataReader()) { return e; }
+            return sApp->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
+        }
+
+        bool CDatabaseReader::hasDbInfoObjects() const
+        {
+            return getDbInfoObjects().size() > 0;
+        }
+
+        bool CDatabaseReader::hasSharedInfoObjects() const
+        {
+            return getSharedInfoObjects().size() > 0;
         }
 
         bool CDatabaseReader::hasSharedFileHeader(const CEntityFlags::Entity entity) const
@@ -296,15 +309,27 @@ namespace BlackCore
             return true;
         }
 
-        QDateTime CDatabaseReader::getLatestEntityTimestampFromInfoObjects(CEntityFlags::Entity entity) const
+        QDateTime CDatabaseReader::getLatestEntityTimestampFromDbInfoObjects(CEntityFlags::Entity entity) const
         {
             Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
             static const QDateTime e;
-            const CDbInfoList il(infoList());
+            const CDbInfoList il(getDbInfoObjects());
             if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return e; }
 
             // for some entities there can be more than one entry because of the
             // raw tables (see DB view last updates)
+            const CDbInfo info = il.findFirstByEntityOrDefault(entity);
+            if (!info.isValid()) { return e; }
+            return info.getUtcTimestamp();
+        }
+
+        QDateTime CDatabaseReader::getLatestEntityTimestampFromSharedInfoObjects(CEntityFlags::Entity entity) const
+        {
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
+            static const QDateTime e;
+            const CDbInfoList il(getSharedInfoObjects());
+            if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return e; }
+
             const CDbInfo info = il.findFirstByEntityOrDefault(entity);
             if (!info.isValid()) { return e; }
             return info.getUtcTimestamp();
@@ -355,15 +380,18 @@ namespace BlackCore
 
             const QDateTime headerTimestamp(this->getLatestSharedFileHeaderTimestamp(entity));
             if (!headerTimestamp.isValid()) { return false; }
-
-            // we restrict by latest entity from info objects (if available)
-            // a header ts shall be never newer than the info object, if it is it is an issue with shared file sync
-            const QDateTime infoObjectTs = this->getLatestEntityTimestampFromInfoObjects(entity);
-            if (infoObjectTs.isValid() && infoObjectTs < headerTimestamp)
-            {
-                return infoObjectTs > cacheTs;
-            }
             return headerTimestamp > cacheTs;
+        }
+
+        bool CDatabaseReader::isSharedInfoObjectNewerThanCacheTimestamp(CEntityFlags::Entity entity) const
+        {
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
+            const QDateTime cacheTs(this->getCacheTimestamp(entity));
+            if (!cacheTs.isValid()) { return true; } // we have no cache ts
+
+            const QDateTime sharedInfoTimestamp(this->getLatestSharedFileHeaderTimestamp(entity));
+            if (!sharedInfoTimestamp.isValid()) { return false; }
+            return sharedInfoTimestamp > cacheTs;
         }
 
         CEntityFlags::Entity CDatabaseReader::getEntitesWithNewerHeaderTimestamp(CEntityFlags::Entity entities) const
@@ -382,14 +410,20 @@ namespace BlackCore
             return newerEntities;
         }
 
-        int CDatabaseReader::getCountFromInfoObjects(CEntityFlags::Entity entity) const
+        CEntityFlags::Entity CDatabaseReader::getEntitesWithNewerSharedInfoObject(CEntityFlags::Entity entities) const
         {
-            static const QDateTime e;
-            const CDbInfoList il(infoList());
-            if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return -1; }
-            CDbInfo info = il.findFirstByEntityOrDefault(entity);
-            if (!info.isValid()) { return -1; }
-            return info.getEntries();
+            entities = this->maskBySupportedEntities(entities); // handled by this reader
+            CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(entities);
+            CEntityFlags::Entity newerEntities = CEntityFlags::NoEntity;
+            while (currentEntity != CEntityFlags::NoEntity)
+            {
+                if (this->isSharedInfoObjectNewerThanCacheTimestamp(currentEntity))
+                {
+                    newerEntities |= currentEntity;
+                }
+                currentEntity = CEntityFlags::iterateDbEntities(entities);
+            }
+            return newerEntities;
         }
 
         CDatabaseReaderConfig CDatabaseReader::getConfigForEntity(CEntityFlags::Entity entity) const
@@ -411,7 +445,7 @@ namespace BlackCore
                     emit dataRead(currentCachedEntity, CEntityFlags::ReadFinished, c);
                     emitted |= currentCachedEntity;
                 }
-                currentCachedEntity  = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
+                currentCachedEntity = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
             }
             return emitted;
         }
@@ -431,7 +465,7 @@ namespace BlackCore
             {
             case CDbFlags::DbReading:
                 return this->getDbServiceBaseUrl().withAppendedPath("/service");
-            case CDbFlags::SharedHeadersOnly:
+            case CDbFlags::SharedInfoOnly:
             case CDbFlags::Shared:
                 return CDatabaseReader::getWorkingDbDataFileLocationUrl();
             default:
@@ -531,8 +565,9 @@ namespace BlackCore
             switch (mode)
             {
             case CDbFlags::Shared:
-            case CDbFlags::SharedHeadersOnly:
                 return CDbInfo::entityToSharedName(entity);
+            case CDbFlags::SharedInfoOnly:
+                return CDbInfo::sharedInfoFileName();
             default:
             case CDbFlags::DbReading:
                 return CDbInfo::entityToServiceName(entity);

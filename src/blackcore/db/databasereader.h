@@ -181,8 +181,11 @@ namespace BlackCore
             //! Cache`s number of entities
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
 
-            //! Info objects available?
-            bool hasInfoObjects() const;
+            //! DB info objects available?
+            bool hasDbInfoObjects() const;
+
+            //! Shared info objects available?
+            bool hasSharedInfoObjects() const;
 
             //! Header of shared file read (for single entity)?
             bool hasSharedFileHeader(const BlackMisc::Network::CEntityFlags::Entity entity) const;
@@ -190,25 +193,33 @@ namespace BlackCore
             //! Headers of shared file read (for single entity)?
             bool hasSharedFileHeaders(const BlackMisc::Network::CEntityFlags::Entity entities) const;
 
-            //! Obtain latest object timestamp from info objects
+            //! Obtain latest object timestamp from DB info objects
             //! \sa BlackCore::Db::CInfoDataReader
-            QDateTime getLatestEntityTimestampFromInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
+            QDateTime getLatestEntityTimestampFromDbInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+            //! Obtain latest object timestamp from shared info objects
+            //! \sa BlackCore::Db::CInfoDataReader
+            QDateTime getLatestEntityTimestampFromSharedInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
             //! Header timestamp (last-modified) for shared file
+            //! \deprecated use getLatestEntityTimestampFromSharedInfoObjects
             QDateTime getLatestSharedFileHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
-            //! Is the file timestamp neer than cache timestamp?
+            //! Is the file timestamp newer than cache timestamp?
+            //! \deprecated use isSharedInfoNewerThanCacheTimestamp
             bool isSharedHeaderNewerThanCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+            //! Is the shared info timestamp newer than cache timestamp?
+            bool isSharedInfoObjectNewerThanCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
             //! Those entities where the timestamp of header is newer than the cache timestamp
             BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
+            //! Those entities where the timestamp of shared info obejct is newer than the cache timestamp
+            BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerSharedInfoObject(BlackMisc::Network::CEntityFlags::Entity entities) const;
+
             //! Request header of shared file
             bool requestHeadersOfSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities);
-
-            //! Count from info objects
-            //! \sa BlackCore::Db::CInfoDataReader
-            int getCountFromInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
             //! Status message (error message)
             const QString &getStatusMessage() const;
@@ -256,9 +267,13 @@ namespace BlackCore
             //! Check if terminated or error, otherwise split into array of objects
             CDatabaseReader::JsonDatastoreResponse setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply);
 
-            //! Info list (latest data timestamp)
+            //! DB Info list (latest data timestamps from DB web service)
             //! \sa BlackCore::Db::CInfoDataReader
-            BlackMisc::Db::CDbInfoList infoList() const;
+            BlackMisc::Db::CDbInfoList getDbInfoObjects() const;
+
+            //! Shared info list (latest data timestamps from DB web service)
+            //! \sa BlackCore::Db::CInfoDataReader
+            BlackMisc::Db::CDbInfoList getSharedInfoObjects() const;
 
             //! Config for given entity
             CDatabaseReaderConfig getConfigForEntity(BlackMisc::Network::CEntityFlags::Entity entity) const;
@@ -307,7 +322,7 @@ namespace BlackCore
             //! @}
 
         private:
-            static BlackMisc::Network::CUrl s_workingSharedDbData; //!< one chhosen URL for all DB reader objects
+            static BlackMisc::Network::CUrl s_workingSharedDbData; //!< one choosen URL for all DB reader objects
 
             //! Start reading in own thread (without config/caching)
             //! \remarks can handle DB or shared file reads
