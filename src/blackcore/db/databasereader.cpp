@@ -269,8 +269,8 @@ namespace BlackCore
         {
             static const CDbInfoList e;
             if (!sApp->hasWebDataServices()) { return e; }
-            if (!sApp->getWebDataServices()->getInfoDataReader()) { return e; }
-            return sApp->getWebDataServices()->getInfoDataReader()->getDbInfoObjects();
+            if (!sApp->getWebDataServices()->getDbInfoDataReader()) { return e; }
+            return sApp->getWebDataServices()->getDbInfoDataReader()->getDbInfoObjects();
         }
 
         bool CDatabaseReader::hasInfoObjects() const

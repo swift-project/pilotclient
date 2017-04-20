@@ -46,18 +46,17 @@ namespace BlackCore
             bool areAllDataRead() const;
 
             //! URL info objects web service
-            BlackMisc::Network::CUrl getInfoObjectsUrl() const;
+            BlackMisc::Network::CUrl getDbInfoObjectsUrl() const;
 
-            // cache handling for base class
+            //! Allow to call directly, special for info objects reader
+            void read();
+
+            // cache handling for base class: no cache handling here in that case
             virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual void admitCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-
-        public slots:
-            //! Allow to call CInfoDataReader::ps_read directly, special for info objects
-            void read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::InfoObjectEntity, const QDateTime &newerThan = QDateTime());
 
         protected:
             // cache handling for base class
@@ -68,10 +67,6 @@ namespace BlackCore
         private slots:
             //! Info objects have been read
             void ps_parseInfoObjectsData(QNetworkReply *nwReply);
-
-            //! Read / re-read data file
-            void ps_read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::InfoObjectEntity,
-                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
 
         private:
             BlackMisc::Db::CDbInfoList m_infoObjects;

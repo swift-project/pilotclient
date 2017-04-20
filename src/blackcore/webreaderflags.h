@@ -37,9 +37,9 @@ namespace BlackCore
             IcaoDataReader       = 1 << 4,   //!< reader for ICAO data
             ModelReader          = 1 << 5,   //!< reader for model data such as liveries, models, etc
             AirportReader        = 1 << 6,   //!< reader for airport list
-            InfoDataReader       = 1 << 7,   //!< DB info data (metdata, how many data, when updated)
+            DbInfoDataReader     = 1 << 7,   //!< DB info data (metdata, how many data, when updated)
             AllVatsimReaders     = VatsimBookingReader | VatsimDataReader | VatsimMetarReader | VatsimStatusReader,  //!< all VATSIM readers
-            AllSwiftDbReaders    = IcaoDataReader | ModelReader | InfoDataReader | AirportReader,                    //!< all swift data
+            AllSwiftDbReaders    = IcaoDataReader | ModelReader | DbInfoDataReader | AirportReader,                    //!< all swift data
             AllReaders           = AllSwiftDbReaders | AllVatsimReaders                                              //!< everything
         };
         Q_DECLARE_FLAGS(WebReader, WebReaderFlag)

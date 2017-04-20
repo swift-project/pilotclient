@@ -108,7 +108,7 @@ namespace BlackCore
         Vatsim::CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
 
         //! Info data reader
-        Db::CInfoDataReader *getInfoDataReader() const { return m_infoDataReader; }
+        BlackCore::Db::CInfoDataReader *getDbInfoDataReader() const { return m_dbInfoDataReader; }
 
         //! Currently used URL for shared DB data
         BlackMisc::Network::CUrl getDbReaderCurrentSharedDbDataUrl() const;
@@ -389,9 +389,10 @@ namespace BlackCore
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
         //! Header of shared file read
+        //! \deprecated shared file headers will be replaced by dbinfo.json
         void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
 
-        // simplified signals
+        // simplified signals follow
         // 1) simple signature
         // 2) fired direct after read, no need to wait for other entities
 
@@ -450,8 +451,8 @@ namespace BlackCore
         //! Init the readers
         void initReaders(CWebReaderFlags::WebReader flags, BlackMisc::Network::CEntityFlags::Entity entities);
 
-        //! Init the info objects readers
-        void initInfoObjectReaderAndTriggerRead();
+        //! Init the info objects reader (DB web service)
+        void initDbInfoObjectReaderAndTriggerRead();
 
         //! DB reader for given entity
         Db::CDatabaseReader *getDbReader(BlackMisc::Network::CEntityFlags::Entity entity) const;
@@ -463,18 +464,18 @@ namespace BlackCore
         bool signalEntitiesRead(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Wait for info objects to be read
-        bool waitForInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities);
+        bool waitForDbInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Wait for shared headers to be read
         bool waitForSharedHeaders(BlackMisc::Network::CEntityFlags::Entity entities);
 
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
-        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;                                 //!< how to read DB data
-        BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< those entities which are permanently updated by timers
+        BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
         BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead      = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
+        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;           //!< how to read DB data
         bool                                     m_initialRead = false;      //!< Initial read started
         bool                                     m_signalledHeaders = false; //!< headers loading has been signalled
-        int                                      m_infoObjectTrials = 0;     //!< Tried to read info objects
+        int                                      m_dbInfoObjectTrials = 0;   //!< Tried to read info objects
         int                                      m_sharedHeadersTrials = 0;  //!< Tried to read shared file headers
         QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;  //!< remember signalled entites
 
@@ -485,8 +486,8 @@ namespace BlackCore
         Vatsim::CVatsimMetarReader      *m_vatsimMetarReader    = nullptr;
         Db::CIcaoDataReader             *m_icaoDataReader       = nullptr;
         Db::CModelDataReader            *m_modelDataReader      = nullptr;
-        Db::CInfoDataReader             *m_infoDataReader       = nullptr;
         Db::CAirportDataReader          *m_airportDataReader    = nullptr;
+        Db::CInfoDataReader             *m_dbInfoDataReader     = nullptr;
 
         // writing objects directly into DB
         Db::CDatabaseWriter *m_databaseWriter = nullptr;

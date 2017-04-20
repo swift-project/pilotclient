@@ -91,37 +91,17 @@ namespace BlackCore
             return sApp->getGlobalSetup().getDbInfoReaderUrl();
         }
 
-        void CInfoDataReader::read(CEntityFlags::Entity entities, const QDateTime &newerThan)
+        void CInfoDataReader::read()
         {
-            this->ps_read(entities, CDbFlags::DbReading, newerThan);
-        }
-
-        void CInfoDataReader::ps_read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
-        {
-            Q_UNUSED(mode);
-            CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
-            CUrl url(getInfoObjectsUrl());
-            if (entities.testFlag(CEntityFlags::InfoObjectEntity))
+            const CUrl url(getDbInfoObjectsUrl());
+            if (!url.isEmpty())
             {
-                if (!url.isEmpty())
-                {
-                    if (!newerThan.isNull())
-                    {
-                        const QString tss(newerThan.toString(Qt::ISODate));
-                        url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
-                    }
-                    sApp->getFromNetwork(url, { this, &CInfoDataReader::ps_parseInfoObjectsData});
-                    triggeredRead |= CEntityFlags::InfoObjectEntity;
-                }
-                else
-                {
-                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::InfoObjectEntity);
-                }
+                sApp->getFromNetwork(url, { this, &CInfoDataReader::ps_parseInfoObjectsData});
+                emit dataRead(CEntityFlags::InfoObjectEntity, CEntityFlags::StartRead, 0);
             }
-
-            if (triggeredRead != CEntityFlags::NoEntity)
+            else
             {
-                emit dataRead(triggeredRead, CEntityFlags::StartRead, 0);
+                CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::InfoObjectEntity);
             }
         }
 
@@ -153,7 +133,7 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::InfoObjectEntity, n, res);
         }
 
-        CUrl CInfoDataReader::getInfoObjectsUrl() const
+        CUrl CInfoDataReader::getDbInfoObjectsUrl() const
         {
             return getBaseUrl(CDbFlags::DbReading).withAppendedPath("jsondbinfo.php");
         }
