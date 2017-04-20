@@ -31,7 +31,8 @@ namespace BlackMisc
             case BookingEntity: return "VATSIM bookings";
             case CountryEntity: return "Country";
             case DistributorEntity: return "Distributor";
-            case InfoObjectEntity: return "Info objects";
+            case DbInfoObjectEntity: return "Info objects (DB)";
+            case SharedInfoObjectEntity: return "Info objects (shared)";
             case LiveryEntity: return "Livery";
             case ModelEntity: return "Model";
             case NoEntity: return "no data";
@@ -52,7 +53,8 @@ namespace BlackMisc
             if (flag.testFlag(BookingEntity)) list << "VATSIM bookings";
             if (flag.testFlag(CountryEntity)) list << "Country";
             if (flag.testFlag(DistributorEntity)) list << "Distributor";
-            if (flag.testFlag(InfoObjectEntity)) list << "Info objects";
+            if (flag.testFlag(DbInfoObjectEntity)) list << "Info objects (DB)";
+            if (flag.testFlag(SharedInfoObjectEntity)) list << "Info objects (shared)";
             if (flag.testFlag(LiveryEntity)) list << "Livery";
             if (flag.testFlag(ModelEntity)) list << "Model";
             if (flag.testFlag(NoEntity)) list << "no data";
@@ -112,7 +114,7 @@ namespace BlackMisc
 
         CEntityFlags::Entity CEntityFlags::iterateDbEntities(Entity &entities)
         {
-            if (entities == NoEntity || entities == InfoObjectEntity) { return NoEntity; }
+            if (entities == NoEntity || entities == DbInfoObjectEntity) { return NoEntity; }
             if (entities.testFlag(AircraftIcaoEntity)) { entities &= ~AircraftIcaoEntity; return AircraftIcaoEntity; }
             if (entities.testFlag(AirlineIcaoEntity))  { entities &= ~AirlineIcaoEntity; return AirlineIcaoEntity; }
             if (entities.testFlag(AirportEntity))      { entities &= ~AirportEntity; return AirportEntity; }

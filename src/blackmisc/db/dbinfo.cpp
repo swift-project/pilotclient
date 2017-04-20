@@ -159,6 +159,12 @@ namespace BlackMisc
             return names;
         }
 
+        const QString &CDbInfo::sharedInfoFileName()
+        {
+            static const QString f("dbinfo.json");
+            return f;
+        }
+
         const QStringList &CDbInfo::serviceNames()
         {
             static const QStringList names({"jsonaircrafticao.php", "jsonairlineicao.php", "jsonairport.php", "jsoncountry.php", "jsondistributor.php", "jsonlivery.php", "jsonaircraftmodel.php" });

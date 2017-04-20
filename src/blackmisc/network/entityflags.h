@@ -33,26 +33,27 @@ namespace BlackMisc
             enum EntityFlag
             {
                 NoEntity               = 0,                //!< no data at all
-                InfoObjectEntity       = 1 << 0,           //!< info about DB data (kinf of metadata)
-                AircraftIcaoEntity     = 1 << 1,           //!< ICAO codes for aircraft
-                AirlineIcaoEntity      = 1 << 2,           //!< ICAO codes for airlines
-                CountryEntity          = 1 << 3,           //!< country codes
-                DistributorEntity      = 1 << 4,           //!< distributors
-                LiveryEntity           = 1 << 5,           //!< liveries
-                ModelEntity            = 1 << 6,           //!< models
-                BookingEntity          = 1 << 7,           //!< bookings
-                MetarEntity            = 1 << 8,           //!< METAR
-                VatsimDataFile         = 1 << 9,           //!< the VATSIM data file (multiple data entities)
-                VatsimStatusFile       = 1 << 10,          //!< the VATSIM status file (URLs for data files etc.)
-                AirportEntity          = 1 << 11,          //!< airports
-                AllEntities            = ((1 << 12) - 1),  //!< everything
+                DbInfoObjectEntity     = 1 << 0,           //!< info about DB data (kind of metadata)
+                SharedInfoObjectEntity = 1 << 1,           //!< info about shared DB data (metadata)
+                AircraftIcaoEntity     = 1 << 2,           //!< ICAO codes for aircraft
+                AirlineIcaoEntity      = 1 << 3,           //!< ICAO codes for airlines
+                CountryEntity          = 1 << 4,           //!< country codes
+                DistributorEntity      = 1 << 5,           //!< distributors
+                LiveryEntity           = 1 << 6,           //!< liveries
+                ModelEntity            = 1 << 7,           //!< models
+                BookingEntity          = 1 << 8,           //!< bookings
+                MetarEntity            = 1 << 9,           //!< METAR
+                VatsimDataFile         = 1 << 10,           //!< the VATSIM data file (multiple data entities)
+                VatsimStatusFile       = 1 << 11,          //!< the VATSIM status file (URLs for data files etc.)
+                AirportEntity          = 1 << 12,          //!< airports
+                AllEntities            = ((1 << 13) - 1),  //!< everything
                 AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                    //!< all ICAO codes
                 AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity,    //!< all ICAO codes and countries
                 DistributorLiveryModel = DistributorEntity  | LiveryEntity      | ModelEntity,      //!< Combinded
                 ModelMatchingEntities  = AllIcaoEntities    | LiveryEntity      | ModelEntity,      //!< all needed for model matching
-                AllDbEntities                        = AllIcaoAndCountries | DistributorLiveryModel | InfoObjectEntity | AirportEntity, //!< All DB stuff
-                AllDbEntitiesNoInfoObjects           = AllIcaoAndCountries | DistributorLiveryModel | AirportEntity,                    //!< All DB entities, no info objects
-                AllDbEntitiesNoInfoObjectsNoAirports = AllIcaoAndCountries | DistributorLiveryModel                                     //!< All DB entities, no info objects and airports
+                AllDbEntities                        = AllIcaoAndCountries | DistributorLiveryModel | DbInfoObjectEntity | AirportEntity, //!< All DB stuff
+                AllDbEntitiesNoInfoObjects           = AllIcaoAndCountries | DistributorLiveryModel | AirportEntity,                      //!< All DB entities, no info objects
+                AllDbEntitiesNoInfoObjectsNoAirports = AllIcaoAndCountries | DistributorLiveryModel                                       //!< All DB entities, no info objects and airports
             };
             Q_DECLARE_FLAGS(Entity, EntityFlag)
 

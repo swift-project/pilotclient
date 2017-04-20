@@ -31,7 +31,7 @@ namespace BlackCore
             f |= AirportReader;
         }
 
-        if (entity.testFlag(CEntityFlags::InfoObjectEntity)) { f |= DbInfoDataReader; }
+        if (entity.testFlag(CEntityFlags::DbInfoObjectEntity)) { f |= DbInfoDataReader; }
         if (entity.testFlag(CEntityFlags::BookingEntity)) { f |= VatsimBookingReader; }
         if (entity.testFlag(CEntityFlags::VatsimDataFile)) { f |= VatsimDataReader; }
         if (entity.testFlag(CEntityFlags::VatsimStatusFile)) { f |= VatsimStatusReader; }
@@ -51,7 +51,7 @@ namespace BlackCore
         if (readers.testFlag(IcaoDataReader)) { entities |= CEntityFlags::AllIcaoAndCountries; }
         if (readers.testFlag(ModelReader)) { entities |= CEntityFlags::DistributorLiveryModel; }
         if (readers.testFlag(AirportReader)) { entities |= CEntityFlags::AirportEntity; }
-        if (readers.testFlag(DbInfoDataReader)) { entities |= CEntityFlags::InfoObjectEntity; }
+        if (readers.testFlag(DbInfoDataReader)) { entities |= CEntityFlags::DbInfoObjectEntity; }
         if (readers.testFlag(VatsimBookingReader)) { entities |= CEntityFlags::BookingEntity; }
         if (readers.testFlag(VatsimMetarReader)) { entities |= CEntityFlags::MetarEntity; }
         if (readers.testFlag(VatsimDataReader)) { entities |= CEntityFlags::VatsimDataFile; }

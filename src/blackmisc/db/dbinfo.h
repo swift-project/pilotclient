@@ -92,6 +92,9 @@ namespace BlackMisc
             //! The shared file names
             static const QStringList &sharedFileNames();
 
+            //! Get shared info file name
+            static const QString &sharedInfoFileName();
+
             //! Service names
             static const QStringList &serviceNames();
 
