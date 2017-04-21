@@ -1,7 +1,0 @@
-QWidget {
-    color: white;
-    font-family: $$QSS_FONT_FAMILY;
-    font-size: $$QSS_FONT_SIZE pt;
-    font-style: $$QSS_FONT_STYLE;
-    font-weight: $$QSS_FONT_WEIGHT;
-}

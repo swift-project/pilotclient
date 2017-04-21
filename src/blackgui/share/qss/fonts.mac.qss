@@ -1,0 +1,7 @@
+QWidget {
+    color: white;
+    font-family: "Arial";
+    font-size: 12pt;
+    font-style: normal;
+    font-weight: normal;
+}

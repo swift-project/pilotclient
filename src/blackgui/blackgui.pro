@@ -53,20 +53,6 @@ RESOURCES +=
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
-QSS_FONT_FAMILY = "Arial"
-QSS_FONT_SIZE = "8"
-QSS_FONT_STYLE = "normal"
-QSS_FONT_WEIGHT = "bold"
-
-macx {
-    QSS_FONT_SIZE = "12"
-    QSS_FONT_WEIGHT = "normal"
-}
-
-fontsqss.input = share/qss/fonts.qss.in
-fontsqss.output = $$DestRoot/share/qss/fonts.qss
-QMAKE_SUBSTITUTES += fontsqss
-
 OTHER_FILES += ./share/qss/*.qss ./share/qss/*.qss.in ./share/qss/*.css
 COPY_FILES += $$PWD/share/qss/*.qss
 COPY_FILES += $$PWD/share/qss/*.css
