@@ -151,6 +151,12 @@ namespace BlackGui
         void ps_qssDirectoryChanged(const QString &file);
 
     private:
+        //! Most suitable filename based on OS/existing file
+        static QString getBestFileName(const QString &fileName);
+
+        //! Check existance of qss file
+        static bool qssFileExists(const QString &filename);
+
         QMap<QString, QString>   m_styleSheets;         //!< filename, stylesheet
         QFileSystemWatcher       m_fileWatcher {this};  //!< Monitor my qss files
     };

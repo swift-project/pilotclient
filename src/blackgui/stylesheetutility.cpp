@@ -206,7 +206,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
     {
-        const QString indent("     ");
+        static const QString indent("     ");
         QString fontStyleSheet;
         fontStyleSheet.append(indent).append("font-family: \"").append(fontFamily).append("\";\n");
         fontStyleSheet.append(indent).append("font-size: ").append(fontSize).append(";\n");
@@ -266,7 +266,7 @@ namespace BlackGui
 
     const QString &CStyleSheetUtility::fileNameFonts()
     {
-        static const QString f("fonts.qss");
+        static const QString f(getBestFileName("fonts"));
         return f;
     }
 
@@ -289,31 +289,31 @@ namespace BlackGui
 
     const QString &CStyleSheetUtility::fileNameSwiftStandardGui()
     {
-        static const QString f("swiftstdgui.qss");
+        static const QString f(getBestFileName("swiftstdgui"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameInfoBar()
     {
-        static const QString f("infobar.qss");
+        static const QString f(getBestFileName("infobar"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameNavigator()
     {
-        static const QString f("navigator.qss");
+        static const QString f(getBestFileName("navigator"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameDockWidgetTab()
     {
-        static const QString f("dockwidgettab.qss");
+        static const QString f(getBestFileName("dockwidgettab"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameStandardWidget()
     {
-        static const QString f("stdwidget.qss");
+        static const QString f(getBestFileName("stdwidget"));
         return f;
     }
 
@@ -325,25 +325,25 @@ namespace BlackGui
 
     const QString &CStyleSheetUtility::fileNameFilterDialog()
     {
-        static const QString f("filterdialog.qss");
+        static const QString f(getBestFileName("filterdialog"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameSwiftCore()
     {
-        static const QString f("swiftcore.qss");
+        static const QString f(getBestFileName("swiftcore"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameSwiftData()
     {
-        static const QString f("swiftdata.qss");
+        static const QString f(getBestFileName("swiftdata"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameSwiftLauncher()
     {
-        static const QString f("swiftlauncher.qss");
+        static const QString f(getBestFileName("swiftlauncher"));
         return f;
     }
 
@@ -435,5 +435,34 @@ namespace BlackGui
     {
         Q_UNUSED(file);
         this->read();
+    }
+
+    QString CStyleSheetUtility::getBestFileName(const QString &fileName)
+    {
+        static const QString qss(".qss");
+        QString fn(fileName);
+        if (fn.endsWith(qss)) fn = fn.left(fn.length() - qss.length());
+
+        QString specific;
+        if (CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            specific = fn + ".win" + qss;
+        }
+        else if (CBuildConfig::isRunningOnMacOSXPlatform())
+        {
+            specific = fn + ".mac" + qss;
+        }
+        else if (CBuildConfig::isRunningOnLinuxPlatform())
+        {
+            specific = fn + ".linux" + qss;
+        }
+        return qssFileExists(specific) ? specific : fn + qss;
+    }
+
+    bool CStyleSheetUtility::qssFileExists(const QString &filename)
+    {
+        if (filename.isEmpty()) { return false; }
+        const QFileInfo f(CFileUtils::appendFilePaths(CBuildConfig::getStylesheetsDir(), filename));
+        return f.exists() && f.isReadable();
     }
 }
