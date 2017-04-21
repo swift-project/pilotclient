@@ -9,6 +9,7 @@
 
 #include "blackconfig/buildconfig.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/application.h"
 #include "blackmisc/json.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/user.h"
@@ -69,7 +70,12 @@ namespace BlackCore
         CUrl CGlobalSetup::getHelpPageUrl() const
         {
             const CUrlList urls(this->m_onlineHelpUrls);
-            const CUrl url = urls.getRandomWorkingUrl();
+            CUrl url = urls.getRandomWorkingUrl();
+            if (sApp)
+            {
+                const QString a = sApp->getApplicationNameVersionBetaDev();
+                url.appendQuery("swift", a);
+            }
             return url;
         }
 
