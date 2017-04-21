@@ -106,6 +106,9 @@ namespace BlackMisc
             //! Append query
             QString appendQuery(const QString &queryToAppend);
 
+            //! Append query
+            QString appendQuery(const QString &key, const QString &value);
+
             //! Empty
             bool isEmpty() const;
 

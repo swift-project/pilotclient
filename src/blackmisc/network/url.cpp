@@ -96,15 +96,14 @@ namespace BlackMisc
         {
             const QString q(stripQueryString(queryToAppend));
             if (q.isEmpty()) { return m_query;  }
-            if (!hasQuery())
-            {
-                this->setQuery(q);
-            }
-            else
-            {
-                m_query = m_query + "&" + q;
-            }
+            m_query += hasQuery() ? "&" + q : q;
             return m_query;
+        }
+
+        QString CUrl::appendQuery(const QString &key, const QString &value)
+        {
+            if (key.isEmpty()) { return m_query; }
+            return this->appendQuery(key + "=" + value);
         }
 
         QString CUrl::getFullUrl(bool withQuery) const

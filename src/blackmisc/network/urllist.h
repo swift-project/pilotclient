@@ -102,13 +102,17 @@ namespace BlackMisc
             //! Next working URL, test if it can be connected
             CUrl obtainNextWorkingUrl( bool random = false, const CUrl &failedUrl = CUrl());
 
+            //! Get the error messages
+            const QStringList &getErrorMessages() const { return m_errorMsgs; }
+
             //! Reset failed URL, allows to set an optional new number of max.trials
             void reset(int maxTrials = -1);
 
         private:
             int m_currentIndexDistributedLoad = -1; //!< index for random access
-            int m_maxTrials = 2;                    //!< number of max trials
-            CUrlList m_failedUrls;
+            int m_maxTrials = 2;     //!< number of max trials
+            CUrlList m_failedUrls;   //!< failed tested URLs
+            QStringList m_errorMsgs; //!< error messages while testing;
         };
 
     } //namespace

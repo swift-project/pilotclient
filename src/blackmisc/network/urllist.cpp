@@ -147,8 +147,16 @@ namespace BlackMisc
             if (!failedUrl.isEmpty()) { this->addFailedUrl(failedUrl); }
             if (!hasMoreUrlsToTry()) { return CUrl(); }
             const CUrl url(this->obtainNextUrlWithout(random, this->m_failedUrls));
-            if (CNetworkUtils::canConnect(url)) { return url; }
-            if (addFailedUrl(url)) { return obtainNextWorkingUrl(); }
+            QString msg;
+            if (CNetworkUtils::canConnect(url, msg)) { return url; }
+            if (addFailedUrl(url))
+            {
+                if (!msg.isEmpty())
+                {
+                    this->m_errorMsgs.append(QString("URL: %1 error: ").arg(url.toQString(), msg));
+                }
+                return obtainNextWorkingUrl();
+            }
             return CUrl();
         }
 
