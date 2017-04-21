@@ -21,7 +21,7 @@ namespace BlackMisc
         bool CMeasurementUnit::operator ==(const CMeasurementUnit &other) const
         {
             if (this == &other) return true;
-            return this->m_name == other.m_name;
+            return this->m_data->m_name == other.m_data->m_name;
         }
 
         bool CMeasurementUnit::operator !=(const CMeasurementUnit &other) const
@@ -32,8 +32,8 @@ namespace BlackMisc
         double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
         {
             if (this->isNull() || unit.isNull()) return 0;
-            if (this->m_toDefault == unit.m_toDefault && this->m_fromDefault == unit.m_fromDefault) return value;
-            return this->m_fromDefault(unit.m_toDefault(value));
+            if (this->m_data->m_toDefault == unit.m_data->m_toDefault && this->m_data->m_fromDefault == unit.m_data->m_fromDefault) return value;
+            return this->m_data->m_fromDefault(unit.m_data->m_toDefault(value));
         }
 
         QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
@@ -43,13 +43,13 @@ namespace BlackMisc
 
         double CMeasurementUnit::roundValue(double value, int digits) const
         {
-            if (digits < 0) digits = this->m_displayDigits;
+            if (digits < 0) digits = this->m_data->m_displayDigits;
             return CMathUtils::round(value, digits);
         }
 
         QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool /* i18n */) const
         {
-            if (digits < 0) digits = this->m_displayDigits;
+            if (digits < 0) digits = this->m_data->m_displayDigits;
             double v = CMathUtils::round(value, digits);
             QString s = QLocale::system().toString(v, 'f', digits);
             return s;

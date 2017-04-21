@@ -204,15 +204,29 @@ namespace BlackMisc
             };
             //! @}
 
-        private:
-            QLatin1String m_name; //!< name, e.g. "meter"
-            QLatin1String m_symbol; //!< unit name, e.g. "m"
-            double m_epsilon = 0.0; //!< values with differences below epsilon are the equal
-            int m_displayDigits = 0; //!< standard rounding for string conversions
-            ConverterFunction m_toDefault = nullptr; //!< convert from this unit to default unit
-            ConverterFunction m_fromDefault = nullptr; //!< convert to this unit from default unit
-
         protected:
+            //! Pimpl class
+            struct Data
+            {
+                //! Construct a unit with custom conversion
+                template <class Converter>
+                Q_DECL_CONSTEXPR Data(QLatin1String name, QLatin1String symbol, Converter, int displayDigits = 2, double epsilon = 1e-9)
+                    : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_toDefault(Converter::toDefault), m_fromDefault(Converter::fromDefault)
+                {}
+
+                //! Construct a null unit
+                Q_DECL_CONSTEXPR Data(QLatin1String name, QLatin1String symbol)
+                    : m_name(name), m_symbol(symbol)
+                {}
+
+                QLatin1String m_name; //!< name, e.g. "meter"
+                QLatin1String m_symbol; //!< unit name, e.g. "m"
+                double m_epsilon = 0.0; //!< values with differences below epsilon are the equal
+                int m_displayDigits = 0; //!< standard rounding for string conversions
+                ConverterFunction m_toDefault = nullptr; //!< convert from this unit to default unit
+                ConverterFunction m_fromDefault = nullptr; //!< convert to this unit from default unit
+            };
+
             //! Workaround to constant-initialize QLatin1String on platforms without constexpr strlen.
             template <size_t N>
             static Q_DECL_CONSTEXPR QLatin1String constQLatin1(const char (&str)[N])
@@ -220,26 +234,17 @@ namespace BlackMisc
                 return QLatin1String(str, N - 1); // -1 because N includes the null terminator
             }
 
-            //! Workaround because std::nullptr_t might not be a literal type.
-            struct NullType {};
+            //! Constructor
+            CMeasurementUnit(const Data &data) : m_data(&data) {}
 
-            /*!
-             * Construct a unit with custom conversion
-             */
-            template <class Converter>
-            Q_DECL_CONSTEXPR CMeasurementUnit(QLatin1String name, QLatin1String symbol, Converter, int displayDigits, double epsilon)
-                : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_toDefault(Converter::toDefault), m_fromDefault(Converter::fromDefault)
-            {}
-
-            /*!
-             * Construct a null unit
-             */
-            Q_DECL_CONSTEXPR CMeasurementUnit(QLatin1String name, QLatin1String symbol, NullType)
-                : m_name(name), m_symbol(symbol)
-            {}
+            //! Constructor saves the address of its argument, so forbid rvalues
+            CMeasurementUnit(const Data &&) = delete;
 
             //! Destructor
             ~CMeasurementUnit() = default;
+
+        private:
+            const Data *m_data = (throw std::logic_error("Uninitialized pimpl"), nullptr);
 
         public:
             //! \copydoc BlackMisc::Mixin::String::toQString
@@ -251,7 +256,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
             void marshallToDbus(QDBusArgument &argument) const
             {
-                argument << this->m_symbol;
+                argument << this->m_data->m_symbol;
             }
 
             //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
@@ -261,11 +266,6 @@ namespace BlackMisc
                 // this is required so I can also stream None
                 (*this) = CMeasurementUnit::None();
             }
-
-            //! Default constructor for meta system
-            //! \remarks Only public because the need, to use this with the metasystem
-            CMeasurementUnit() : m_name("none")
-            {}
 
             //! Equal operator ==
             bool operator == (const CMeasurementUnit &other) const;
@@ -282,13 +282,13 @@ namespace BlackMisc
             //! Name such as "meter"
             QString getName(bool i18n = false) const
             {
-                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.latin1()) : this->m_name;
+                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_data->m_name.latin1()) : this->m_data->m_name;
             }
 
             //! Unit name such as "m"
             QString getSymbol(bool i18n = false) const
             {
-                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.latin1()) : this->m_symbol;
+                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_data->m_symbol.latin1()) : this->m_data->m_symbol;
             }
 
             //! Rounded value
@@ -303,13 +303,13 @@ namespace BlackMisc
             //! Threshold for rounding
             double getEpsilon() const
             {
-                return this->m_epsilon;
+                return this->m_data->m_epsilon;
             }
 
             //! Display digits
             int getDisplayDigits() const
             {
-                return this->m_displayDigits;
+                return this->m_data->m_displayDigits;
             }
 
             //! Convert from other unit to this unit.
@@ -320,13 +320,13 @@ namespace BlackMisc
             {
                 if (this->isNull()) return false;
                 if (value == 0) return true;
-                return std::abs(value) <= this->m_epsilon;
+                return std::abs(value) <= this->m_data->m_epsilon;
             }
 
             //! Is unit null?
             bool isNull() const
             {
-                return this->m_toDefault == nullptr;
+                return this->m_data->m_toDefault == nullptr;
             }
 
             // --------------------------------------------------------------------
@@ -338,7 +338,7 @@ namespace BlackMisc
              * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
              * \param strict strict check means if unit is not found, program terminates
              */
-            template <class U> static const U &unitFromSymbol(const QString &symbol, bool strict = true)
+            template <class U> static U unitFromSymbol(const QString &symbol, bool strict = true)
             {
                 if (symbol.isEmpty()) return U::defaultUnit();
                 const QList<U> &units = U::allUnits();
@@ -368,9 +368,9 @@ namespace BlackMisc
             }
 
             //! Dimensionless unit
-            static const CMeasurementUnit &None()
+            static CMeasurementUnit None()
             {
-                static Q_CONSTEXPR CMeasurementUnit none(constQLatin1("none"), constQLatin1(""), NilConverter(), 0, 0);
+                static Q_CONSTEXPR CMeasurementUnit::Data none(constQLatin1("none"), constQLatin1(""), NilConverter(), 0, 0);
                 return none;
             }
         };
