@@ -533,7 +533,11 @@ namespace BlackGui
     {
         const CGlobalSetup gs = this->getGlobalSetup();
         const CUrl helpPage = gs.getHelpPageUrl();
-        if (helpPage.isEmpty()) { return; }
+        if (helpPage.isEmpty())
+        {
+            CLogMessage(this).warning("No help page");
+            return;
+        }
         QDesktopServices::openUrl(helpPage);
     }
 

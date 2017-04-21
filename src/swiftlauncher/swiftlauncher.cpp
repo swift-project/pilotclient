@@ -184,7 +184,11 @@ void CSwiftLauncher::loadLatestNews()
 {
     CFailoverUrlList newsUrls(sGui->getGlobalSetup().getSwiftLatestNewsUrls());
     const CUrl newsUrl(newsUrls.obtainNextWorkingUrl());
-    if (newsUrl.isEmpty()) { return; }
+    if (newsUrl.isEmpty())
+    {
+        CLogMessage(this).error("No working news URL in %1") << newsUrls.toQString();
+        return;
+    }
     sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::ps_displayLatestNews});
 }
 
