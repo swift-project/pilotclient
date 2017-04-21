@@ -32,8 +32,8 @@ namespace BlackMisc
         double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
         {
             if (this->isNull() || unit.isNull()) return 0;
-            if (this->m_converter == unit.m_converter) return value;
-            return this->m_converter->fromDefault(unit.m_converter->toDefault(value));
+            if (this->m_toDefault == unit.m_toDefault && this->m_fromDefault == unit.m_fromDefault) return value;
+            return this->m_fromDefault(unit.m_toDefault(value));
         }
 
         QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const

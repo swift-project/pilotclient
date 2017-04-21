@@ -46,41 +46,26 @@ namespace BlackMisc
         {
         protected:
             /*!
-             * Abstract strategy pattern that encapsulates a unit conversion strategy.
+             * Pointer to function for converting between units.
              */
-            class Converter : public QSharedData
-            {
-            public:
-                /*!
-                 * Virtual destructor.
-                 */
-                virtual ~Converter() {}
-                /*!
-                 * Convert from this unit to default unit.
-                 */
-                virtual double toDefault(double value) const = 0;
-                /*!
-                 * Convert from default unit to this unit.
-                 */
-                virtual double fromDefault(double value) const = 0;
-            };
+            using ConverterFunction = double (*)(double);
 
             /*!
              * Converter for default values, such as None, used with public constructor
              */
-            struct NilConverter : public Converter
+            struct NilConverter
             {
-                virtual double toDefault(double) const override { return 0.0; }
-                virtual double fromDefault(double) const override { return 0.0; }
+                static double toDefault(double) { return 0.0; } //!< convert from this unit to the default unit
+                static double fromDefault(double) { return 0.0; } //!< convert to this unit from the default unit
             };
 
             /*!
              * Concrete strategy pattern for converting unit that does nothing.
              */
-            struct IdentityConverter : public Converter
+            struct IdentityConverter
             {
-                virtual double toDefault(double value) const override { return value; }
-                virtual double fromDefault(double value) const override { return value; }
+                static double toDefault(double value) { return value; } //!< convert from this unit to the default unit
+                static double fromDefault(double value) { return value; } //!< convert to this unit from the default unit
             };
 
             /*!
@@ -88,10 +73,10 @@ namespace BlackMisc
              * \tparam Policy a policy class with static method factor() returning double
              */
             template <class Policy>
-            struct LinearConverter : public Converter
+            struct LinearConverter
             {
-                virtual double toDefault(double value) const override { return value * Policy::factor(); }
-                virtual double fromDefault(double value) const override { return value / Policy::factor(); }
+                static double toDefault(double value) { return value * Policy::factor(); } //!< convert from this unit to the default unit
+                static double fromDefault(double value) { return value / Policy::factor(); } //!< convert to this unit from the default unit
             };
 
             /*!
@@ -99,10 +84,10 @@ namespace BlackMisc
              * \tparam Policy a policy class with static methods factor() and offset() returning double
              */
             template <class Policy>
-            struct AffineConverter : public Converter
+            struct AffineConverter
             {
-                virtual double toDefault(double value) const override { return (value - Policy::offset()) * Policy::factor(); }
-                virtual double fromDefault(double value) const override { return value / Policy::factor() + Policy::offset(); }
+                static double toDefault(double value) { return (value - Policy::offset()) * Policy::factor(); } //!< convert from this unit to the default unit
+                static double fromDefault(double value) { return value / Policy::factor() + Policy::offset(); } //!< convert to this unit from the default unit
             };
 
             /*!
@@ -111,16 +96,18 @@ namespace BlackMisc
              * \tparam SubdivPolicy a policy class with static methods fraction() and subfactor() returning double
              */
             template <class FactorPolicy, class SubdivPolicy>
-            struct SubdivisionConverter : public Converter
+            struct SubdivisionConverter
             {
-                virtual double toDefault(double value) const override
+                //! convert from this unit to the default unit
+                static double toDefault(double value)
                 {
                     using BlackMisc::Math::CMathUtils;
                     double part2 = CMathUtils::fract(value) * SubdivPolicy::fraction();
                     value = CMathUtils::trunc(value) + part2 / SubdivPolicy::subfactor();
                     return value * FactorPolicy::factor();
                 }
-                virtual double fromDefault(double value) const override
+                //! convert to this unit from the default unit
+                static double fromDefault(double value)
                 {
                     using BlackMisc::Math::CMathUtils;
                     double part1 = CMathUtils::trunc(value / FactorPolicy::factor());
@@ -136,9 +123,10 @@ namespace BlackMisc
              * \tparam SubdivPolicy a policy class with static methods fraction() and subfactor() returning double
              */
             template <class FactorPolicy, class SubdivPolicy>
-            struct SubdivisionConverter2 : public Converter
+            struct SubdivisionConverter2
             {
-                virtual double toDefault(double value) const override
+                //! convert from this unit to the default unit
+                static double toDefault(double value)
                 {
                     using BlackMisc::Math::CMathUtils;
                     double part2 = CMathUtils::fract(value) * SubdivPolicy::fraction();
@@ -146,7 +134,8 @@ namespace BlackMisc
                     value = CMathUtils::trunc(value) + (CMathUtils::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
                     return value * FactorPolicy::factor();
                 }
-                virtual double fromDefault(double value) const override
+                //! convert to this unit from the default unit
+                static double fromDefault(double value)
                 {
                     using BlackMisc::Math::CMathUtils;
                     double part1 = CMathUtils::trunc(value / FactorPolicy::factor());
@@ -220,7 +209,8 @@ namespace BlackMisc
             QString m_symbol; //!< unit name, e.g. "m"
             double m_epsilon; //!< values with differences below epsilon are the equal
             int m_displayDigits; //!< standard rounding for string conversions
-            QSharedDataPointer<Converter> m_converter; //!< strategy pattern allows an arbitrary conversion method as per object
+            ConverterFunction m_toDefault = nullptr; //!< convert from this unit to default unit
+            ConverterFunction m_fromDefault = nullptr; //!< convert to this unit from default unit
 
         protected:
             /*!
@@ -228,7 +218,7 @@ namespace BlackMisc
              */
             template <class Converter>
             CMeasurementUnit(const QString &name, const QString &symbol, const Converter &, int displayDigits, double epsilon)
-                : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(new Converter)
+                : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_toDefault(Converter::toDefault), m_fromDefault(Converter::fromDefault)
             {}
 
             /*!
@@ -326,7 +316,7 @@ namespace BlackMisc
             //! Is unit null?
             bool isNull() const
             {
-                return this->m_converter.data() == nullptr;
+                return this->m_toDefault == nullptr;
             }
 
             // --------------------------------------------------------------------
