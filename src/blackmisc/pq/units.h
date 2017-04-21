@@ -137,18 +137,17 @@ namespace BlackMisc
             //! All units
             static const QList<CLengthUnit> &allUnits()
             {
-                static QList<CLengthUnit> u;
-                if (u.isEmpty())
+                static const QList<CLengthUnit> u
                 {
-                    u.append(CLengthUnit::nullUnit());
-                    u.append(CLengthUnit::cm());
-                    u.append(CLengthUnit::ft());
-                    u.append(CLengthUnit::km());
-                    u.append(CLengthUnit::m());
-                    u.append(CLengthUnit::mi());
-                    u.append(CLengthUnit::SM());
-                    u.append(CLengthUnit::NM());
-                }
+                    CLengthUnit::nullUnit(),
+                    CLengthUnit::cm(),
+                    CLengthUnit::ft(),
+                    CLengthUnit::km(),
+                    CLengthUnit::m(),
+                    CLengthUnit::mi(),
+                    CLengthUnit::SM(),
+                    CLengthUnit::NM()
+                };
                 return u;
             }
 
@@ -242,15 +241,14 @@ namespace BlackMisc
             //! All units
             static const QList<CAngleUnit> &allUnits()
             {
-                static QList<CAngleUnit> u;
-                if (u.isEmpty())
+                static const QList<CAngleUnit> u
                 {
-                    u.append(CAngleUnit::nullUnit());
-                    u.append(CAngleUnit::deg());
-                    u.append(CAngleUnit::rad());
-                    u.append(CAngleUnit::sexagesimalDeg());
-                    u.append(CAngleUnit::sexagesimalDegMin());
-                }
+                    CAngleUnit::nullUnit(),
+                    CAngleUnit::deg(),
+                    CAngleUnit::rad(),
+                    CAngleUnit::sexagesimalDeg(),
+                    CAngleUnit::sexagesimalDegMin()
+                };
                 return u;
             }
 
@@ -335,15 +333,14 @@ namespace BlackMisc
             //! All units
             static const QList<CFrequencyUnit> &allUnits()
             {
-                static QList<CFrequencyUnit> u;
-                if (u.isEmpty())
+                static const QList<CFrequencyUnit> u
                 {
-                    u.append(CFrequencyUnit::nullUnit());
-                    u.append(CFrequencyUnit::GHz());
-                    u.append(CFrequencyUnit::Hz());
-                    u.append(CFrequencyUnit::kHz());
-                    u.append(CFrequencyUnit::MHz());
-                }
+                    CFrequencyUnit::nullUnit(),
+                    CFrequencyUnit::GHz(),
+                    CFrequencyUnit::Hz(),
+                    CFrequencyUnit::kHz(),
+                    CFrequencyUnit::MHz()
+                };
                 return u;
             }
 
@@ -436,16 +433,15 @@ namespace BlackMisc
             //! All units
             static const QList<CMassUnit> &allUnits()
             {
-                static QList<CMassUnit> u;
-                if (u.isEmpty())
+                static const QList<CMassUnit> u
                 {
-                    u.append(CMassUnit::nullUnit());
-                    u.append(CMassUnit::g());
-                    u.append(CMassUnit::kg());
-                    u.append(CMassUnit::lb());
-                    u.append(CMassUnit::tonne());
-                    u.append(CMassUnit::shortTon());
-                }
+                    CMassUnit::nullUnit(),
+                    CMassUnit::g(),
+                    CMassUnit::kg(),
+                    CMassUnit::lb(),
+                    CMassUnit::tonne(),
+                    CMassUnit::shortTon()
+                };
                 return u;
             }
 
@@ -554,17 +550,16 @@ namespace BlackMisc
             //! All units
             static const QList<CPressureUnit> &allUnits()
             {
-                static QList<CPressureUnit> u;
-                if (u.isEmpty())
+                static const QList<CPressureUnit> u
                 {
-                    u.append(CPressureUnit::nullUnit());
-                    u.append(CPressureUnit::bar());
-                    u.append(CPressureUnit::hPa());
-                    u.append(CPressureUnit::inHg());
-                    u.append(CPressureUnit::mmHg());
-                    u.append(CPressureUnit::mbar());
-                    u.append(CPressureUnit::psi());
-                }
+                    CPressureUnit::nullUnit(),
+                    CPressureUnit::bar(),
+                    CPressureUnit::hPa(),
+                    CPressureUnit::inHg(),
+                    CPressureUnit::mmHg(),
+                    CPressureUnit::mbar(),
+                    CPressureUnit::psi()
+                };
                 return u;
             }
 
@@ -651,14 +646,13 @@ namespace BlackMisc
             //! All units
             static const QList<CTemperatureUnit> &allUnits()
             {
-                static QList<CTemperatureUnit> u;
-                if (u.isEmpty())
+                static const QList<CTemperatureUnit> u
                 {
-                    u.append(CTemperatureUnit::nullUnit());
-                    u.append(CTemperatureUnit::C());
-                    u.append(CTemperatureUnit::F());
-                    u.append(CTemperatureUnit::K());
-                }
+                    CTemperatureUnit::nullUnit(),
+                    CTemperatureUnit::C(),
+                    CTemperatureUnit::F(),
+                    CTemperatureUnit::K()
+                };
                 return u;
             }
 
@@ -760,17 +754,16 @@ namespace BlackMisc
             //! All units
             static const QList<CSpeedUnit> &allUnits()
             {
-                static QList<CSpeedUnit> u;
-                if (u.isEmpty())
+                static const QList<CSpeedUnit> u
                 {
-                    u.append(CSpeedUnit::nullUnit());
-                    u.append(CSpeedUnit::ft_min());
-                    u.append(CSpeedUnit::ft_s());
-                    u.append(CSpeedUnit::km_h());
-                    u.append(CSpeedUnit::kts());
-                    u.append(CSpeedUnit::m_s());
-                    u.append(CSpeedUnit::NM_h());
-                }
+                    CSpeedUnit::nullUnit(),
+                    CSpeedUnit::ft_min(),
+                    CSpeedUnit::ft_s(),
+                    CSpeedUnit::km_h(),
+                    CSpeedUnit::kts(),
+                    CSpeedUnit::m_s(),
+                    CSpeedUnit::NM_h()
+                };
                 return u;
             }
 
@@ -895,18 +888,17 @@ namespace BlackMisc
             //! All units
             static const QList<CTimeUnit> &allUnits()
             {
-                static QList<CTimeUnit> u;
-                if (u.isEmpty())
+                static const QList<CTimeUnit> u
                 {
-                    u.append(CTimeUnit::nullUnit());
-                    u.append(CTimeUnit::d());
-                    u.append(CTimeUnit::h());
-                    u.append(CTimeUnit::hms());
-                    u.append(CTimeUnit::hrmin());
-                    u.append(CTimeUnit::min());
-                    u.append(CTimeUnit::ms());
-                    u.append(CTimeUnit::s());
-                }
+                    CTimeUnit::nullUnit(),
+                    CTimeUnit::d(),
+                    CTimeUnit::h(),
+                    CTimeUnit::hms(),
+                    CTimeUnit::hrmin(),
+                    CTimeUnit::min(),
+                    CTimeUnit::ms(),
+                    CTimeUnit::s()
+                };
                 return u;
             }
 
@@ -977,13 +969,12 @@ namespace BlackMisc
             //! All units
             static const QList<CAccelerationUnit> &allUnits()
             {
-                static QList<CAccelerationUnit> u;
-                if (u.isEmpty())
+                static const QList<CAccelerationUnit> u
                 {
-                    u.append(CAccelerationUnit::nullUnit());
-                    u.append(CAccelerationUnit::ft_s2());
-                    u.append(CAccelerationUnit::m_s2());
-                }
+                    CAccelerationUnit::nullUnit(),
+                    CAccelerationUnit::ft_s2(),
+                    CAccelerationUnit::m_s2()
+                };
                 return u;
             }
 
