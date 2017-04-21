@@ -57,7 +57,7 @@ namespace BlackMisc
         QString CPhysicalQuantity<MU, PQ>::getUnitSymbol() const { return this->m_unit.getSymbol(true); }
 
         template <class MU, class PQ>
-        CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, const MU &unit) :
+        CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, MU unit) :
             m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
         { }
 
@@ -240,7 +240,7 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        PQ &CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
+        PQ &CPhysicalQuantity<MU, PQ>::switchUnit(MU newUnit)
         {
             if (this->m_unit != newUnit)
             {
@@ -286,7 +286,7 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool i18n) const
+        QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(MU unit, int digits, bool i18n) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             if (this->isNull()) { return this->convertToQString(i18n); }
@@ -301,14 +301,14 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        double CPhysicalQuantity<MU, PQ>::valueRounded(const MU &unit, int digits) const
+        double CPhysicalQuantity<MU, PQ>::valueRounded(MU unit, int digits) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             return unit.roundValue(this->value(unit), digits);
         }
 
         template <class MU, class PQ>
-        int CPhysicalQuantity<MU, PQ>::valueInteger(const MU &unit) const
+        int CPhysicalQuantity<MU, PQ>::valueInteger(MU unit) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             double v = unit.roundValue(this->value(unit), 0);
@@ -322,7 +322,7 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        double CPhysicalQuantity<MU, PQ>::value(const MU &unit) const
+        double CPhysicalQuantity<MU, PQ>::value(MU unit) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             return unit.convertFrom(this->m_value, this->m_unit);

@@ -74,7 +74,7 @@ namespace BlackMisc
 
             //! Simply set unit, do no calclulate conversion
             //! \sa switchUnit
-            void setUnit(const MU &unit) { this->m_unit = unit; }
+            void setUnit(MU unit) { this->m_unit = unit; }
 
             //! Set unit by string
             void setUnitBySymbol(const QString &unitName);
@@ -83,7 +83,7 @@ namespace BlackMisc
             QString getUnitSymbol() const;
 
             //! Change unit, and convert value to maintain the same quantity
-            PQ &switchUnit(const MU &newUnit);
+            PQ &switchUnit(MU newUnit);
 
             //! Is quantity null?
             bool isNull() const;
@@ -92,7 +92,7 @@ namespace BlackMisc
             void setNull();
 
             //! Value in given unit
-            double value(const MU &unit) const;
+            double value(MU unit) const;
 
             //! Value in current unit
             double value() const;
@@ -101,16 +101,16 @@ namespace BlackMisc
             void setCurrentUnitValue(double value);
 
             //! Rounded value in given unit
-            double valueRounded(const MU &unit, int digits = -1) const;
+            double valueRounded(MU unit, int digits = -1) const;
 
             //! As integer value
-            int valueInteger(const MU &unit) const;
+            int valueInteger(MU unit) const;
 
             //! Rounded value in current unit
             double valueRounded(int digits = -1) const;
 
             //! Value to QString with the given unit, e.g. "5.00m"
-            QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
+            QString valueRoundedWithUnit(MU unit, int digits = -1, bool i18n = false) const;
 
             //! Value to QString with the current unit, e.g. "5.00m"
             QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const;
@@ -222,7 +222,7 @@ namespace BlackMisc
 
         protected:
             //! Constructor with double
-            CPhysicalQuantity(double value, const MU &unit);
+            CPhysicalQuantity(double value, MU unit);
 
             //! Constructor by parsed string, e.g. 10m
             CPhysicalQuantity(const QString &unitString);

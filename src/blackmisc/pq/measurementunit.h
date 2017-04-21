@@ -341,10 +341,9 @@ namespace BlackMisc
             template <class U> static U unitFromSymbol(const QString &symbol, bool strict = true)
             {
                 if (symbol.isEmpty()) return U::defaultUnit();
-                const QList<U> &units = U::allUnits();
-                for (int i = 0; i < units.size(); ++i)
+                for (const auto unit : U::allUnits())
                 {
-                    if (units.at(i).getSymbol() == symbol) return units.at(i);
+                    if (unit.getSymbol() == symbol) { return unit; }
                 }
                 if (strict) qFatal("Illegal unit name");
                 return U::defaultUnit();
@@ -358,11 +357,9 @@ namespace BlackMisc
             template <class U> static bool isValidUnitSymbol(const QString &symbol, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
             {
                 if (symbol.isEmpty()) return false;
-                const QList<U> &units = U::allUnits();
-                for (int i = 0; i < units.size(); ++i)
+                for (const auto unit : U::allUnits())
                 {
-                    if (caseSensitivity == Qt::CaseSensitive && units.at(i).getSymbol() == symbol) return true;
-                    if (units.at(i).getSymbol().compare(symbol, Qt::CaseInsensitive) == 0) return 0;
+                    if (QString::compare(unit.getSymbol(), symbol, caseSensitivity) == 0) { return true; }
                 }
                 return false;
             }
