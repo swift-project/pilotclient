@@ -207,8 +207,8 @@ namespace BlackMisc
         private:
             QString m_name; //!< name, e.g. "meter"
             QString m_symbol; //!< unit name, e.g. "m"
-            double m_epsilon; //!< values with differences below epsilon are the equal
-            int m_displayDigits; //!< standard rounding for string conversions
+            double m_epsilon = 0.0; //!< values with differences below epsilon are the equal
+            int m_displayDigits = 0; //!< standard rounding for string conversions
             ConverterFunction m_toDefault = nullptr; //!< convert from this unit to default unit
             ConverterFunction m_fromDefault = nullptr; //!< convert to this unit from default unit
 
@@ -225,7 +225,7 @@ namespace BlackMisc
              * Construct a null unit
              */
             CMeasurementUnit(const QString &name, const QString &symbol, std::nullptr_t)
-                : m_name(name), m_symbol(symbol), m_epsilon(0.0), m_displayDigits(0)
+                : m_name(name), m_symbol(symbol)
             {}
 
         public:
@@ -254,7 +254,7 @@ namespace BlackMisc
 
             //! Default constructor for meta system
             //! \remarks Only public because the need, to use this with the metasystem
-            CMeasurementUnit() : m_name("none"), m_symbol(""),  m_epsilon(0), m_displayDigits(0)
+            CMeasurementUnit() : m_name("none")
             {}
 
             //! Equal operator ==
@@ -358,7 +358,7 @@ namespace BlackMisc
             }
 
             //! Dimensionless unit
-            static CMeasurementUnit &None()
+            static const CMeasurementUnit &None()
             {
                 static CMeasurementUnit none("none", "", NilConverter(), 0, 0);
                 return none;
