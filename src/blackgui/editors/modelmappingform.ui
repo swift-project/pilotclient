@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>417</width>
+    <width>407</width>
     <height>107</height>
    </rect>
   </property>
@@ -170,6 +170,12 @@
       </item>
       <item row="0" column="5">
        <widget class="BlackGui::Components::CSimulatorSelector" name="selector_Simulator">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>22</height>
+         </size>
+        </property>
         <property name="focusPolicy">
          <enum>Qt::StrongFocus</enum>
         </property>
