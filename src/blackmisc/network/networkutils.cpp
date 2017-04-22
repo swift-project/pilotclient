@@ -88,6 +88,7 @@ namespace BlackMisc
 
         bool CNetworkUtils::canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs)
         {
+            if (timeoutMs < 0) { timeoutMs = getTimeoutMs(); } // external functions might call with -1
             QTcpSocket socket;
             QSignalMapper mapper;
             QObject::connect(&socket, &QTcpSocket::connected, &mapper, QOverload<>::of(&QSignalMapper::map));

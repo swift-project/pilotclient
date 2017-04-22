@@ -142,20 +142,19 @@ namespace BlackMisc
             return (m_failedUrls.size() < this->size() && m_failedUrls.size() < m_maxTrials);
         }
 
-        CUrl CFailoverUrlList::obtainNextWorkingUrl(bool random, const CUrl &failedUrl)
+        CUrl CFailoverUrlList::obtainNextWorkingUrl(bool random, int connectTimeoutMs)
         {
-            if (!failedUrl.isEmpty()) { this->addFailedUrl(failedUrl); }
             if (!hasMoreUrlsToTry()) { return CUrl(); }
             const CUrl url(this->obtainNextUrlWithout(random, this->m_failedUrls));
             QString msg;
-            if (CNetworkUtils::canConnect(url, msg)) { return url; }
+            if (CNetworkUtils::canConnect(url, msg, connectTimeoutMs)) { return url; }
             if (addFailedUrl(url))
             {
                 if (!msg.isEmpty())
                 {
                     this->m_errorMsgs.append(QString("URL: %1 error: ").arg(url.toQString(), msg));
                 }
-                return obtainNextWorkingUrl();
+                return obtainNextWorkingUrl(random, connectTimeoutMs);
             }
             return CUrl();
         }

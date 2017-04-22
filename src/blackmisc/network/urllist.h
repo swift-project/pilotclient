@@ -100,7 +100,7 @@ namespace BlackMisc
             CUrl obtainNextUrlWithout(bool randomStart = false, const CUrlList &exclude = CUrlList()) const;
 
             //! Next working URL, test if it can be connected
-            CUrl obtainNextWorkingUrl( bool random = false, const CUrl &failedUrl = CUrl());
+            CUrl obtainNextWorkingUrl(bool random = false, int connectTimeoutMs = -1);
 
             //! Get the error messages
             const QStringList &getErrorMessages() const { return m_errorMsgs; }

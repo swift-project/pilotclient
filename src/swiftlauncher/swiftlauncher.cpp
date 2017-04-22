@@ -183,10 +183,10 @@ void CSwiftLauncher::initStyleSheet()
 void CSwiftLauncher::loadLatestNews()
 {
     CFailoverUrlList newsUrls(sGui->getGlobalSetup().getSwiftLatestNewsUrls());
-    const CUrl newsUrl(newsUrls.obtainNextWorkingUrl());
+    const CUrl newsUrl(newsUrls.obtainNextWorkingUrl(true, 10 * 1000));
     if (newsUrl.isEmpty())
     {
-        CLogMessage(this).error("No working news URL in %1") << newsUrls.toQString();
+        CLogMessage(this).warning("No working news URL in %1") << newsUrls.toQString();
         return;
     }
     sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::ps_displayLatestNews});
