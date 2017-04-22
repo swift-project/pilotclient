@@ -266,7 +266,7 @@ namespace BlackGui
 
     const QString &CStyleSheetUtility::fileNameFonts()
     {
-        static const QString f(getBestFileName("fonts"));
+        static const QString f(getQssFileName("fonts"));
         return f;
     }
 
@@ -289,31 +289,31 @@ namespace BlackGui
 
     const QString &CStyleSheetUtility::fileNameSwiftStandardGui()
     {
-        static const QString f(getBestFileName("swiftstdgui"));
+        static const QString f(getQssFileName("swiftstdgui"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameInfoBar()
     {
-        static const QString f(getBestFileName("infobar"));
+        static const QString f(getQssFileName("infobar"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameNavigator()
     {
-        static const QString f(getBestFileName("navigator"));
+        static const QString f(getQssFileName("navigator"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameDockWidgetTab()
     {
-        static const QString f(getBestFileName("dockwidgettab"));
+        static const QString f(getQssFileName("dockwidgettab"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameStandardWidget()
     {
-        static const QString f(getBestFileName("stdwidget"));
+        static const QString f(getQssFileName("stdwidget"));
         return f;
     }
 
@@ -325,25 +325,25 @@ namespace BlackGui
 
     const QString &CStyleSheetUtility::fileNameFilterDialog()
     {
-        static const QString f(getBestFileName("filterdialog"));
+        static const QString f(getQssFileName("filterdialog"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameSwiftCore()
     {
-        static const QString f(getBestFileName("swiftcore"));
+        static const QString f(getQssFileName("swiftcore"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameSwiftData()
     {
-        static const QString f(getBestFileName("swiftdata"));
+        static const QString f(getQssFileName("swiftdata"));
         return f;
     }
 
     const QString &CStyleSheetUtility::fileNameSwiftLauncher()
     {
-        static const QString f(getBestFileName("swiftlauncher"));
+        static const QString f(getQssFileName("swiftlauncher"));
         return f;
     }
 
@@ -437,7 +437,7 @@ namespace BlackGui
         this->read();
     }
 
-    QString CStyleSheetUtility::getBestFileName(const QString &fileName)
+    QString CStyleSheetUtility::getQssFileName(const QString &fileName)
     {
         static const QString qss(".qss");
         QString fn(fileName);
