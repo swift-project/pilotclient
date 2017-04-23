@@ -14,6 +14,7 @@
 
 #include "blackmisc/settingscache.h"
 #include "blackmisc/audio/audiosettings.h"
+#include <QString>
 
 namespace BlackCore
 {
@@ -28,6 +29,21 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::isValid
             static bool isValid(const BlackMisc::Audio::CSettings &value) { Q_UNUSED(value); return true; }
         };
+
+        //! Audio input device settings
+        struct TInputDevice : public BlackMisc::TSettingTrait<QString>
+        {
+            //! \copydoc BlackMisc::TSettingTrait::key
+            static const char *key() { return "audio/inputdevice"; }
+        };
+
+        //! Audio input device settings
+        struct TOutputDevice : public BlackMisc::TSettingTrait<QString>
+        {
+            //! \copydoc BlackMisc::TSettingTrait::key
+            static const char *key() { return "audio/outputdevice"; }
+        };
+
     } // ns
 } // ns
 

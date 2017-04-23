@@ -88,6 +88,8 @@ namespace BlackCore
             m_unusedVoiceChannels.push_back(m_channel2);
 
             m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
+
+            changeDeviceSettings();
         }
 
         CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
@@ -207,6 +209,10 @@ namespace BlackCore
                     this->m_voiceInputDevice->setInputDevice(audioDevice);
                     changed = true;
                 }
+                if (m_inputDeviceSetting.get() != audioDevice.getName())
+                {
+                    m_inputDeviceSetting.set(audioDevice.getName());
+                }
             }
             else
             {
@@ -214,6 +220,10 @@ namespace BlackCore
                 {
                     this->m_voiceOutputDevice->setOutputDevice(audioDevice);
                     changed = true;
+                }
+                if (m_outputDeviceSetting.get() != audioDevice.getName())
+                {
+                    m_outputDeviceSetting.set(audioDevice.getName());
                 }
             }
 
@@ -547,6 +557,35 @@ namespace BlackCore
         void CContextAudio::ps_userLeftRoom(const CCallsign & /**callsign**/)
         {
             emit this->changedVoiceRoomMembers();
+        }
+
+        void CContextAudio::changeDeviceSettings()
+        {
+            QString inputDeviceName = m_inputDeviceSetting.get();
+            if (!inputDeviceName.isEmpty())
+            {
+                for (auto device : m_voiceInputDevice->getInputDevices())
+                {
+                    if (device.getName() == inputDeviceName)
+                    {
+                        setCurrentAudioDevice(device);
+                        break;
+                    }
+                }
+            }
+
+            QString outputDeviceName = m_outputDeviceSetting.get();
+            if (!outputDeviceName.isEmpty())
+            {
+                for (auto device : m_voiceOutputDevice->getOutputDevices())
+                {
+                    if (device.getName() == outputDeviceName)
+                    {
+                        setCurrentAudioDevice(device);
+                        break;
+                    }
+                }
+            }
         }
 
         QSharedPointer<IVoiceChannel> CContextAudio::getVoiceChannelBy(const CVoiceRoom &voiceRoom)

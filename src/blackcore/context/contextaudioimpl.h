@@ -134,6 +134,8 @@ namespace BlackCore
             //! Connection in transition
             bool inTransitionState() const;
 
+            void changeDeviceSettings();
+
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
@@ -156,6 +158,8 @@ namespace BlackCore
 
             // settings
             BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this };
+            BlackMisc::CSetting<BlackCore::Audio::TInputDevice> m_inputDeviceSetting { this, &CContextAudio::changeDeviceSettings };
+            BlackMisc::CSetting<BlackCore::Audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudio::changeDeviceSettings };
         };
     } // namespace
 } // namespace
