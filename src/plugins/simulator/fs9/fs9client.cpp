@@ -199,7 +199,6 @@ namespace BlackSimPlugin
         {
             initDirectPlay();
             createDeviceAddress();
-            //enumDirectPlayHosts();
             connectToSession(m_callsign);
         }
 

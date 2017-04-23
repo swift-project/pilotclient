@@ -77,11 +77,7 @@ namespace BlackSimPlugin
             virtual void cleanup() override;
 
         private:
-            /*!
-             * Enumerate all FS9 session hosts
-             * \todo Ideally host enumeration is required only once (if ever).
-             *       Move this into its own class with a static member host address.
-             */
+            //! Enumerate all FS9 session hosts
             HRESULT enumDirectPlayHosts();
 
             HRESULT createHostAddress();

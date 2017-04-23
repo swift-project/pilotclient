@@ -22,7 +22,6 @@ namespace BlackInput
 {
     /*!
      * Abstract interface for native keyboard handling.
-     * \todo Add implementation for Linux and OSX.
      */
     class BLACKINPUT_EXPORT IKeyboard : public QObject
     {
