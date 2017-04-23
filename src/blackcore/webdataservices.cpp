@@ -320,7 +320,7 @@ namespace BlackCore
     CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront)
     {
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
-        this->triggerReadOfSharedInfoObjects(); // trigger reload of headers
+        this->triggerReadOfSharedInfoObjects(); // trigger reload of info objects (for shared)
 
         if (m_icaoDataReader)
         {

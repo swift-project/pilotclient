@@ -108,7 +108,7 @@ namespace BlackGui
             //! Refresh directly from DB
             void ps_refreshDbPressed();
 
-            //! Refresh directly from DB
+            //! Refresh directly from shared files
             void ps_refreshSharedPressed();
 
             //! Init the value panel

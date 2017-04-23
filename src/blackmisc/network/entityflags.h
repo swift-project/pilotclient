@@ -76,6 +76,9 @@ namespace BlackMisc
             //! Representing single entity?
             static bool isSingleEntity(BlackMisc::Network::CEntityFlags::Entity flag);
 
+            //! Any finished state
+            static bool isFinishedReadState(ReadState state);
+
             //! Represented number of entities
             static int numberOfEntities(BlackMisc::Network::CEntityFlags::Entity flag);
 

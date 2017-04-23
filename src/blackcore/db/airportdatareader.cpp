@@ -44,7 +44,7 @@ namespace BlackCore
             if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
             QTimer::singleShot(0, this, [this, dir, whatToRead]()
             {
-                CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead);
+                const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead);
                 if (msgs.isFailure())
                 {
                     CLogMessage::preformatted(msgs);

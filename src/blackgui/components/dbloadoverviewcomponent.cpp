@@ -311,12 +311,10 @@ namespace BlackGui
         void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
         {
             Q_UNUSED(number);
-            if (!entities.testFlag(CEntityFlags::SharedInfoObjectEntity) && !entities.testFlag(CEntityFlags::DbInfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
-            if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
-            {
-                this->m_loadInProgress = false;
-                emit this->ps_triggerDigestGuiUpdate();
-            }
+            if (!CEntityFlags::isFinishedReadState(state)) return;
+            if (!entities.testFlag(CEntityFlags::SharedInfoObjectEntity) && entities.testFlag(CEntityFlags::DbInfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
+            this->m_loadInProgress = false;
+            emit this->ps_triggerDigestGuiUpdate();
         }
 
         void CDbLoadOverviewComponent::ps_loadInfoObjects()

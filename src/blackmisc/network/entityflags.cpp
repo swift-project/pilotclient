@@ -68,6 +68,11 @@ namespace BlackMisc
             return numberOfEntities(flag) == 1;
         }
 
+        bool CEntityFlags::isFinishedReadState(CEntityFlags::ReadState state)
+        {
+            return state == ReadFinished || state == ReadFinishedRestricted;
+        }
+
         int CEntityFlags::numberOfEntities(BlackMisc::Network::CEntityFlags::Entity flag)
         {
             const int c = static_cast<int>(std::bitset<(sizeof(flag) * 8)>(flag).count());

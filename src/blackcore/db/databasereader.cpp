@@ -140,7 +140,7 @@ namespace BlackCore
             if (entities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
             if (checkCacheTsUpfront)
             {
-                CEntityFlags::Entity newerHeaderEntities  = this->getEntitesWithNewerHeaderTimestamp(entities);
+                CEntityFlags::Entity newerHeaderEntities = this->getEntitesWithNewerSharedInfoObject(entities);
                 if (newerHeaderEntities != entities)
                 {
                     const CEntityFlags::Entity validInCacheEntities = (entities ^ newerHeaderEntities) & entities;
@@ -389,7 +389,7 @@ namespace BlackCore
             const QDateTime cacheTs(this->getCacheTimestamp(entity));
             if (!cacheTs.isValid()) { return true; } // we have no cache ts
 
-            const QDateTime sharedInfoTimestamp(this->getLatestSharedFileHeaderTimestamp(entity));
+            const QDateTime sharedInfoTimestamp(this->getLatestEntityTimestampFromSharedInfoObjects(entity));
             if (!sharedInfoTimestamp.isValid()) { return false; }
             return sharedInfoTimestamp > cacheTs;
         }
