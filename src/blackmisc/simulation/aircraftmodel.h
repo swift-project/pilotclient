@@ -164,7 +164,7 @@ namespace BlackMisc
             const QString &getDescription() const { return this->m_description; }
 
             //! Descriptive text
-            void setDescription(const QString &description) { this->m_description = description; }
+            void setDescription(const QString &description) { this->m_description = description.trimmed(); }
 
             //! Set queried model string
             void setQueriedModelString(const QString &model) { this->m_modelString = model; this->m_modelType = TypeQueriedFromNetwork; }

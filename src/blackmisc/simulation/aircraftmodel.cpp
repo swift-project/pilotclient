@@ -636,7 +636,8 @@ namespace BlackMisc
             CStatusMessageList msgs;
             if (!hasModelString()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Model: missing model string (aka key)")); }
             if (!hasValidSimulator()) {msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Model: no simulator set")); }
-            if (!hasDescription()) {msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Model: no description")); }
+            // as of T34 made description optional, lines can be removed after 6/2017
+            // if (!hasDescription()) {msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, "Model: no description")); }
             if (withNestedObjects)
             {
                 msgs.push_back(m_aircraftIcao.validate());

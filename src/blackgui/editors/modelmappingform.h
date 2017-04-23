@@ -23,7 +23,6 @@
 class QWidget;
 
 namespace Ui { class CModelMappingForm; }
-
 namespace BlackGui
 {
     namespace Editors
@@ -40,7 +39,7 @@ namespace BlackGui
             explicit CModelMappingForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CModelMappingForm();
+            virtual ~CModelMappingForm();
 
             //! Value
             BlackMisc::Simulation::CAircraftModel getValue() const;
