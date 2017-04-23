@@ -10,6 +10,7 @@
 #include "ui_copyconfigurationcomponent.h"
 #include "copyconfigurationcomponent.h"
 #include "configurationwizard.h"
+#include "blackgui/guiapplication.h"
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/settingscache.h"
@@ -24,6 +25,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Data;
 using namespace BlackConfig;
+using namespace BlackGui;
 
 namespace BlackGui
 {
@@ -344,6 +346,9 @@ namespace BlackGui
                     CLogMessage(this).preformatted(msg);
                 }
             }
+
+            // allow the cache files to be generated before we will override them
+            CGuiApplication::processEventsFor(2500);
         }
 
         const CLogCategoryList &CCopyConfigurationWizardPage::getLogCategories()
