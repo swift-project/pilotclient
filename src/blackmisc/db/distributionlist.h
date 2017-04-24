@@ -45,6 +45,18 @@ namespace BlackMisc
             //! Find distribution by channels
             CDistribution findByChannelOrDefault(const QString &channel) const;
 
+            //! Version for specific channel and platform
+            QString getVersionForChannelAndPlatform(const QString &channel, const QString &platform) const;
+
+            //! Version for specific channel and platform
+            QVersionNumber getQVersionForChannelAndPlatform(const QString &channel, const QString &platform) const;
+
+            //! Version for specific channel and platform
+            QString getVersionForChannelAndPlatform(const QStringList &channelPlatform) const;
+
+            //! Version for specific channel and platform
+            QVersionNumber getQVersionForChannelAndPlatform(const QStringList &channelPlatform) const;
+
             //! From database JSON
             static CDistributionList fromDatabaseJson(const QJsonArray &array);
         };

@@ -36,6 +36,30 @@ namespace BlackMisc
             return this->findFirstByOrDefault(&CDistribution::getChannel, channel);
         }
 
+        QString CDistributionList::getVersionForChannelAndPlatform(const QString &channel, const QString &platform) const
+        {
+            const CDistribution dist = this->findByChannelOrDefault(channel);
+            return dist.getVersionString(platform);
+        }
+
+        QVersionNumber CDistributionList::getQVersionForChannelAndPlatform(const QString &channel, const QString &platform) const
+        {
+            const CDistribution dist = this->findByChannelOrDefault(channel);
+            return dist.getQVersion(platform);
+        }
+
+        QString CDistributionList::getVersionForChannelAndPlatform(const QStringList &channelPlatform) const
+        {
+            Q_ASSERT_X(channelPlatform.length() != 2, Q_FUNC_INFO, "Wrong size");
+            return this->getVersionForChannelAndPlatform(channelPlatform.first(), channelPlatform.last());
+        }
+
+        QVersionNumber CDistributionList::getQVersionForChannelAndPlatform(const QStringList &channelPlatform) const
+        {
+            Q_ASSERT_X(channelPlatform.length() == 2, Q_FUNC_INFO, "Wrong size");
+            return this->getQVersionForChannelAndPlatform(channelPlatform.first(), channelPlatform.last());
+        }
+
         CDistributionList CDistributionList::fromDatabaseJson(const QJsonArray &array)
         {
             CDistributionList distributions;
