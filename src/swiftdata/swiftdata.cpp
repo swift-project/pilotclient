@@ -15,23 +15,30 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
 #include "blackmisc/network/url.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackconfig/buildconfig.h"
 #include "ui_swiftdata.h"
 
 #include <QAction>
 #include <QString>
 #include <QStyle>
 #include <QtGlobal>
+#include <QVersionNumber>
 
 class QWidget;
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 using namespace BlackGui;
 using namespace BlackGui::Components;
+using namespace BlackConfig;
 
 CSwiftData::CSwiftData(QWidget *parent) :
     QMainWindow(parent),
@@ -106,6 +113,7 @@ void CSwiftData::init()
         this->setWindowTitle(t);
     }
 
+    QTimer::singleShot(10 * 1000, this, &CSwiftData::checkNewVersion);
     emit sGui->startUpCompleted(true);
 }
 
@@ -141,6 +149,21 @@ void CSwiftData::initMenu()
 void CSwiftData::performGracefulShutdown()
 {
     // void
+}
+
+void CSwiftData::checkNewVersion()
+{
+    const QStringList channelPlatform = m_distributionSettings.get();
+    Q_ASSERT_X(channelPlatform.size() == 2, Q_FUNC_INFO, "wrong setting");
+    const QVersionNumber v = m_distributionInfo.get().getQVersionForChannelAndPlatform(channelPlatform);
+    if (v.isNull() || v.segmentCount() < 4) return;
+    const QVersionNumber vCurrent = CBuildConfig::getVersion();
+    if (v <= vCurrent) return;
+
+    // new version
+    const CStatusMessage m = CStatusMessage(this).info("New version '%1' from %2 for %3. Current version is '%4'") << v.toString() << channelPlatform.first() << channelPlatform.last() << vCurrent.toString();
+    this->displayInOverlayWindow(m, 5000);
+    CLogMessage::preformatted(m);
 }
 
 void CSwiftData::displayConsole()
