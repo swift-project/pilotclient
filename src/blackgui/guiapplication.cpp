@@ -301,12 +301,12 @@ namespace BlackGui
         return m->displayInStatusBar(message);
     }
 
-    bool CGuiApplication::displayInOverlayWindow(const CStatusMessage &message)
+    bool CGuiApplication::displayInOverlayWindow(const CStatusMessage &message, int timeOutMs)
     {
         IMainWindowAccess *m = mainWindowAccess();
         BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
         if (!m) { return false; }
-        return m->displayInOverlayWindow(message);
+        return m->displayInOverlayWindow(message, timeOutMs);
     }
 
     bool CGuiApplication::displayTextInConsole(const QString &text)

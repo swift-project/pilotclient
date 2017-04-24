@@ -36,11 +36,11 @@ namespace BlackGui
         return true;
     }
 
-    bool IMainWindowAccess::displayInOverlayWindow(const BlackMisc::CStatusMessage &message)
+    bool IMainWindowAccess::displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return false; }
         if (!this->m_mwaOverlayFrame) { return false; }
-        this->m_mwaOverlayFrame->showOverlayMessage(message);
+        this->m_mwaOverlayFrame->showOverlayMessage(message, timeOutMs);
         return true;
     }
 

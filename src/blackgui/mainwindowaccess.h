@@ -38,7 +38,7 @@ namespace BlackGui
         virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message);
 
         //! Display in overlay window
-        virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message);
+        virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
 
     protected:
         Components::CLogComponent *m_mwaLogComponent = nullptr; //!< the log component if any
