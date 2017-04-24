@@ -97,7 +97,7 @@ namespace BlackGui
         {
             const CDistributionList distributions(m_distributionInfo.get());
             const QStringList channels = distributions.getChannels();
-            const QStringList settings = m_distributionSettings.get();
+            const QStringList settings = m_distributionSettings.get(); // channel / platform
 
             // default value
             QString channel = ui->cb_Channels->currentText();
