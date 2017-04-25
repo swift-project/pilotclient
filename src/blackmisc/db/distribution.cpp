@@ -8,7 +8,6 @@
  */
 
 #include "distribution.h"
-#include "blackconfig/buildconfig.h"
 #include <QStringBuilder>
 
 using namespace BlackConfig;

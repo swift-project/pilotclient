@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>233</width>
-    <height>248</height>
+    <width>209</width>
+    <height>236</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,8 +50,8 @@
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <property name="horizontalSpacing">
-       <number>6</number>
+      <property name="spacing">
+       <number>4</number>
       </property>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_SettingsGuiFontSize">
@@ -210,6 +210,12 @@
       <string>General</string>
      </property>
      <layout class="QFormLayout" name="fl_GuiGeneral">
+      <property name="horizontalSpacing">
+       <number>4</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>4</number>
+      </property>
       <property name="leftMargin">
        <number>3</number>
       </property>

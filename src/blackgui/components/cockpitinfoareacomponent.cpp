@@ -21,7 +21,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CCockpitInfoAreaComponent::CCockpitInfoAreaComponent(QWidget *parent) :
             CInfoArea(parent),
             ui(new Ui::CCockpitInfoAreaComponent)

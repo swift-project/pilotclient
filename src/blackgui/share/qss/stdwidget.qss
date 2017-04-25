@@ -280,7 +280,7 @@ QPlainTextEdit {
 QGroupBox {
   border: 1px solid green;
   margin-top: 2.0ex; /* the x-height of the relevant font, leave space at the top for the title */
-  padding-top: 2.0ex;
+  padding-top: 1.0ex;
   border-radius: 5px;
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);

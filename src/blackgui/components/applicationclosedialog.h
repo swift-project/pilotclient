@@ -33,7 +33,7 @@ namespace BlackGui
             explicit CApplicationCloseDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CApplicationCloseDialog();
+            virtual ~CApplicationCloseDialog();
 
         private slots:
             //! Accepted
