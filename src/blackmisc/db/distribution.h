@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_DB_DISTRIBUTION_H
 #define BLACKMISC_DB_DISTRIBUTION_H
 
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/db/datastore.h"
@@ -135,7 +136,24 @@ namespace BlackMisc
             static const char *key() { return "distribution"; }
 
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static QStringList defaultValue() { static const QStringList d{"", ""}; return d; }
+            static const QStringList &defaultValue()
+            {
+                // guessing / preseting some default values
+                static const QStringList d{"ALPHA", platformString()};
+                return d;
+            }
+
+            //! Guessed platform string
+            //! \todo this hardcoded stuff here is useful right now, but needs to go
+            static QString platformString()
+            {
+                QString p;
+                if (BlackConfig::CBuildConfig::isRunningOnWindowsNtPlatform()) { p = "win-64"; }
+                else  if (BlackConfig::CBuildConfig::isRunningOnMacOSXPlatform()) { p = "macos-64"; }
+                else if (BlackConfig::CBuildConfig::isRunningOnLinuxPlatform()) { p = "linux-64"; }
+                if (!p.isEmpty() && BlackConfig::CBuildConfig::isVatsimVersion()) { p += "-vatsim"; }
+                return p;
+            }
         };
     } // ns
 } // ns
