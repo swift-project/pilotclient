@@ -113,7 +113,7 @@ void CSwiftData::init()
         this->setWindowTitle(t);
     }
 
-    QTimer::singleShot(10 * 1000, this, &CSwiftData::checkNewVersion);
+    sGui->triggerNewVersionCheck(10 * 1000);
     emit sGui->startUpCompleted(true);
 }
 
@@ -149,21 +149,6 @@ void CSwiftData::initMenu()
 void CSwiftData::performGracefulShutdown()
 {
     // void
-}
-
-void CSwiftData::checkNewVersion()
-{
-    const QStringList channelPlatform = m_distributionSettings.get();
-    Q_ASSERT_X(channelPlatform.size() == 2, Q_FUNC_INFO, "wrong setting");
-    const QVersionNumber v = m_distributionInfo.get().getQVersionForChannelAndPlatform(channelPlatform);
-    if (v.isNull() || v.segmentCount() < 4) return;
-    const QVersionNumber vCurrent = CBuildConfig::getVersion();
-    if (v <= vCurrent) return;
-
-    // new version
-    const CStatusMessage m = CStatusMessage(this).info("New version '%1' from %2 for %3. Current version is '%4'") << v.toString() << channelPlatform.first() << channelPlatform.last() << vCurrent.toString();
-    this->displayInOverlayWindow(m, 5000);
-    CLogMessage::preformatted(m);
 }
 
 void CSwiftData::displayConsole()

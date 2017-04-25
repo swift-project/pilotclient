@@ -14,9 +14,6 @@
 
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/db/distributionlist.h"
-#include "blackmisc/settingscache.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/statusmessage.h"
 
@@ -69,16 +66,14 @@ private:
     void initStyleSheet();
     void initMenu();
     void initDynamicMenus();
+
     void performGracefulShutdown();
-    void checkNewVersion();
 
     void displayConsole();
     void displayLog();
 
-    QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
-    BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionInfo> m_distributionInfo { this }; //!< version cache
-    BlackMisc::CSettingReadOnly<BlackMisc::Db::TDistributionSetting> m_distributionSettings { this }; //!< channel/platform selected
+    QScopedPointer<Ui::CSwiftData> ui;
 };
 
 #endif // guard
