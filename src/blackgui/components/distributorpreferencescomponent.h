@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CDistributorPreferencesComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDistributorPreferencesComponent();
+            virtual ~CDistributorPreferencesComponent();
 
         private slots:
             //! Changed preferences

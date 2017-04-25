@@ -37,11 +37,20 @@ namespace BlackGui
             virtual ~CDistributionInfoComponent();
 
             //! Is there a new version available return version, else empty string
-            QString getNewVersionAvailable() const { return m_newVersionAvailable; }
+            QString getNewAvailableVersionForSelection() const { return m_newVersionAvailable; }
+
+            //! Is there a new version available?
+            bool isNewVersionAvailable() const;
+
+            //! Current distribution
+            BlackMisc::Db::CDistribution getCurrentDistribution() { return m_currentDistribution; }
 
         signals:
             //! Distribution info loaded
             void distributionInfoAvailable(bool success);
+
+            //! New platfrom or channel
+            void selectionChanged();
 
         private slots:
             //! Load latest version

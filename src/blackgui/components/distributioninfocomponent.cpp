@@ -36,18 +36,28 @@ namespace BlackGui
 
             // use version signal as trigger for completion
             connect(sGui, &CGuiApplication::distributionInfoAvailable, this, &CDistributionInfoComponent::ps_loadedDistributionInfo);
-            QTimer::singleShot(10 * 1000, this, [ = ]
+            const int time = this->m_distributionInfo.get().isEmpty() ? 10 * 1000 : 500;
+            QTimer::singleShot(time, this, [ = ]
             {
                 // use this as timeout failover with cached data
                 if (m_distributionsLoaded) { return; }
                 this->ps_loadedDistributionInfo(true);
             });
-
             connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_loadSetup);
         }
 
         CDistributionInfoComponent::~CDistributionInfoComponent()
         { }
+
+        bool CDistributionInfoComponent::isNewVersionAvailable() const
+        {
+            const QStringList channelPlatform = m_distributionSettings.get();
+            Q_ASSERT_X(channelPlatform.size() == 2, Q_FUNC_INFO, "wrong setting");
+            const QVersionNumber vCurrentChannelPlatform = m_distributionInfo.get().getQVersionForChannelAndPlatform(channelPlatform);
+            if (vCurrentChannelPlatform.isNull() || vCurrentChannelPlatform.segmentCount() < 4) return false;
+            const QVersionNumber vCurrent = CBuildConfig::getVersion();
+            return (vCurrentChannelPlatform > vCurrent);
+        }
 
         void CDistributionInfoComponent::ps_loadSetup()
         {
@@ -98,6 +108,7 @@ namespace BlackGui
             const CDistributionList distributions(m_distributionInfo.get());
             const QStringList channels = distributions.getChannels();
             const QStringList settings = m_distributionSettings.get(); // channel / platform
+            Q_ASSERT_X(settings.size() == 2, Q_FUNC_INFO, "Settings");
 
             // default value
             QString channel = ui->cb_Channels->currentText();
@@ -169,6 +180,8 @@ namespace BlackGui
                     ui->lbl_NewVersionUrl->setText(hl.arg(urlStr, currentPlatform));
                     ui->lbl_NewVersionUrl->setToolTip("Download '" + latestVersionStr + "' " + m_currentDistribution.getFilename(currentPlatform));
                 }
+
+                emit selectionChanged();
             }
         }
     } // ns

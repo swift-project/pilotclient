@@ -136,7 +136,7 @@ void CSwiftLauncher::ps_distributionInfoAvailable(bool success)
 {
     if (success)
     {
-        this->setHeaderInfo(ui->comp_DistributionInfo->getNewVersionAvailable());
+        this->setHeaderInfo(ui->comp_DistributionInfo->getNewAvailableVersionForSelection());
     }
     else
     {
