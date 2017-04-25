@@ -11,6 +11,7 @@
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/applicationclosedialog.h"
+#include "blackgui/components/downloadandinstalldialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/registermetadata.h"
@@ -386,6 +387,10 @@ namespace BlackGui
                 QDesktopServices::openUrl(QUrl::fromLocalFile(path));
             }
         });
+
+        a = menu.addAction(CIcons::swift24(), "Check for updates");
+        c = connect(a, &QAction::triggered, this, &CGuiApplication::checkNewVersion);
+
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
     }
@@ -620,6 +625,28 @@ namespace BlackGui
     bool CGuiApplication::parsingHookIn()
     {
         return true;
+    }
+
+    void CGuiApplication::checkNewVersion()
+    {
+        if (!m_installDialog)
+        {
+            // without parent stylesheet is not inherited
+            m_installDialog = new CDownloadAndInstallDialog(this->mainApplicationWindow());
+        }
+
+        if (!m_installDialog->isNewVersionAvailable()) return;
+        const int result = m_installDialog->exec();
+        if (result != QDialog::Accepted) { return; }
+    }
+
+    void CGuiApplication::triggerNewVersionCheck(int delayedMs)
+    {
+        QTimer::singleShot(delayedMs, this, [ = ]
+        {
+            if (this->m_installDialog) { return; }
+            this->checkNewVersion();
+        });
     }
 
     void CGuiApplication::settingsChanged()

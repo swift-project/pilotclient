@@ -35,7 +35,14 @@ class QWidget;
 class QMainWindow;
 
 namespace BlackMisc { class CLogCategoryList; }
-namespace BlackGui  { namespace Components { class CApplicationCloseDialog; }}
+namespace BlackGui
+{
+    namespace Components
+    {
+        class CApplicationCloseDialog;
+        class CDownloadAndInstallDialog;
+    }
+}
 namespace BlackGui
 {
     /*!
@@ -154,6 +161,9 @@ namespace BlackGui
         //! Show close dialog
         QDialog::DialogCode showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent);
 
+        //! Trigger new version check
+        void triggerNewVersionCheck(int delayedMs);
+
         //! Set icon
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter
         static void setWindowIcon(const QPixmap &icon);
@@ -192,11 +202,15 @@ namespace BlackGui
         //! Handle paring of special GUI cmd arguments
         virtual bool parsingHookIn() override;
 
+        //! Check for a new version (update)
+        void checkNewVersion();
+
         //! Register metadata
         static void registerMetadata();
 
     private:
         QPixmap m_windowIcon;
+        BlackGui::Components::CDownloadAndInstallDialog *m_installDialog = nullptr; //!< software installation dialog
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
         CStyleSheetUtility m_styleSheetUtility{{}, this};         //!< style sheet utility
