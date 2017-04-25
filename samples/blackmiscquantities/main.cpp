@@ -14,6 +14,7 @@
 #include "samplesgeo.h"
 #include "samplesphysicalquantities.h"
 #include "blackcore/application.h"
+#include "blackmisc/directoryutils.h"
 
 #include <stdio.h>
 #include <QCoreApplication>
@@ -28,6 +29,9 @@ using namespace BlackCore;
 //! main
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_MAC
+    QCoreApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
+#endif
     QCoreApplication qa(argc, argv);
     CApplication a;
     Q_UNUSED(a);

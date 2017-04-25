@@ -11,6 +11,7 @@
 //! \ingroup sampleblackmiscdbus
 
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusutils.h"
@@ -28,6 +29,8 @@
 #include <Qt>
 #include <QtDebug>
 
+using namespace BlackMisc;
+
 //! main
 int main(int argc, char *argv[])
 {
@@ -35,6 +38,9 @@ int main(int argc, char *argv[])
     // is just for testing, I did not split it up
 
     BlackMisc::registerMetadata();
+#ifdef Q_OS_MAC
+    QCoreApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
+#endif
     QCoreApplication a(argc, argv);
     QTextStream out(stdout, QIODevice::WriteOnly);
     QTextStream qtin(stdin);

@@ -143,6 +143,9 @@
                     <origin>../../dist/lib/QtNetwork.framework</origin>
                 </distributionDirectory>
                 <distributionDirectory>
+                    <origin>../../dist/lib/QtPrintSupport.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
                     <origin>../../dist/lib/QtSvg.framework</origin>
                 </distributionDirectory>
                 <distributionDirectory>

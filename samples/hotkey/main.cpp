@@ -10,16 +10,21 @@
 //! \file
 //! \ingroup samplehotkey
 
+#include "blackmisc/directoryutils.h"
 #include "blackgui/components/settingshotkeycomponent.h"
 #include "blackgui/guiapplication.h"
 
 #include <QApplication>
 
+using namespace BlackMisc;
 using namespace BlackGui;
 
 //! main
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_MAC
+    QApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
+#endif
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("samplehotkey", BlackMisc::CApplicationInfo::Sample, QPixmap());

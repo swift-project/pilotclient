@@ -11,6 +11,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackcore/registermetadata.h"
 #include "blackcore/db/databasereaderconfig.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
 
@@ -29,6 +30,9 @@ using namespace BlackCore::Db;
 int main(int argc, char *argv[])
 {
     //! [SwiftApplicationDemo]
+#ifdef Q_OS_MAC
+    QApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
+#endif
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv); // needed
     Q_UNUSED(qa);

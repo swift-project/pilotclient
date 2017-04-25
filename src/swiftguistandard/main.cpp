@@ -9,6 +9,7 @@
 
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiapplication.h"
+#include "blackmisc/directoryutils.h"
 #include "swiftguistd.h"
 #include "swiftguistdapplication.h"
 
@@ -22,6 +23,9 @@ using namespace BlackCore;
 int main(int argc, char *argv[])
 {
     //! [SwiftApplicationDemo]
+#ifdef Q_OS_MAC
+    QApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
+#endif
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     Q_UNUSED(qa); // application init needed

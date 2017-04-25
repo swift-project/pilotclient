@@ -12,16 +12,21 @@
 
 #include "reader.h"
 #include "client.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/loghandler.h"
 
 #include <QCoreApplication>
 #include <QObject>
 
 using namespace BlackSample;
+using namespace BlackMisc;
 
 //! main
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_MAC
+    QCoreApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
+#endif
     QCoreApplication app (argc, argv);
     BlackMisc::CLogHandler::instance()->install();
 

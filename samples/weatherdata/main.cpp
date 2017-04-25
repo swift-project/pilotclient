@@ -10,6 +10,7 @@
 //! \file
 //! \ingroup sampleweatherdata
 
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/registermetadata.h"
 #include "reader.h"
@@ -26,6 +27,9 @@ using namespace BlackMisc::PhysicalQuantities;
 //! main
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_MAC
+    QCoreApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
+#endif
     QCoreApplication a(argc, argv);
     BlackMisc::registerMetadata();
     CLogHandler::instance()->install(true);

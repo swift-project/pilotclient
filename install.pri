@@ -31,7 +31,8 @@ else:macx {
     qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtXml.framework/ $${PREFIX}/lib/QtXml.framework/ &&
     qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtMultimedia.framework/ $${PREFIX}/lib/QtMultimedia.framework/ &&
     qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtSvg.framework/ $${PREFIX}/lib/QtSvg.framework/ &&
-    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/lib/QtWidgets.framework/
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/lib/QtWidgets.framework/ &&
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtPrintSupport.framework/ $${PREFIX}/lib/QtPrintSupport.framework/
 }
 else:unix: {
     QT5_LIBRARIES *= libQt5Core.so.5
