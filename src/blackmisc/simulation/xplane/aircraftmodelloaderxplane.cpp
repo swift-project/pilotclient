@@ -186,19 +186,32 @@ namespace BlackMisc
                     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
                     QTextStream ts(&file);
-                    //! \todo Do you rely on case sensitive parsing, mabe case insensitive would be better?
                     if (ts.readLine() == "I" && ts.readLine().contains("version") && ts.readLine() == "ACF")
                     {
                         while (!ts.atEnd())
                         {
                             QString line = ts.readLine();
-                            QStringList tokens = line.split(' ');
-                            if (tokens.size() != 3) { continue; }
+                            QStringList tokens = line.split(' ', QString::SkipEmptyParts);
+                            if (tokens.at(0) != "P" || tokens.size() < 3) { continue; }
                             if (tokens.at(1) == "acf/_ICAO")
                             {
-                                CAircraftIcaoCode icao(tokens.at(2));
+                                const CAircraftIcaoCode icao(tokens.at(2));
                                 model.setAircraftIcaoCode(icao);
-                                break;
+                            }
+                            else if (tokens.at(1) == "acf/_descrip")
+                            {
+                                const QString desc(tokens.mid(2).join(' '));
+                                model.setDescription(desc);
+                            }
+                            else if (tokens.at(1) == "acf/_name")
+                            {
+                                const QString name(tokens.mid(2).join(' '));
+                                model.setName(name);
+                            }
+                            else if (tokens.at(1) == "acf/_studio")
+                            {
+                                const CDistributor dist({}, tokens.mid(2).join(' '), {}, {}, CSimulatorInfo::XPLANE);
+                                model.setDistributor(dist);
                             }
                         }
                     }
