@@ -203,7 +203,7 @@ namespace BlackGui
         virtual bool parsingHookIn() override;
 
         //! Check for a new version (update)
-        void checkNewVersion();
+        void checkNewVersion(bool onlyIfNew);
 
         //! Register metadata
         static void registerMetadata();
@@ -224,6 +224,9 @@ namespace BlackGui
 
         //! Reload widget style from settings
         void settingsChanged();
+
+        //! Check new from menu
+        void checkNewVersionMenu();
     };
 } // ns
 

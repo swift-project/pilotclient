@@ -389,7 +389,7 @@ namespace BlackGui
         });
 
         a = menu.addAction(CIcons::swift24(), "Check for updates");
-        c = connect(a, &QAction::triggered, this, &CGuiApplication::checkNewVersion);
+        c = connect(a, &QAction::triggered, this, &CGuiApplication::checkNewVersionMenu);
 
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
@@ -627,7 +627,7 @@ namespace BlackGui
         return true;
     }
 
-    void CGuiApplication::checkNewVersion()
+    void CGuiApplication::checkNewVersion(bool onlyIfNew)
     {
         if (!m_installDialog)
         {
@@ -635,7 +635,7 @@ namespace BlackGui
             m_installDialog = new CDownloadAndInstallDialog(this->mainApplicationWindow());
         }
 
-        if (!m_installDialog->isNewVersionAvailable()) return;
+        if (onlyIfNew && !m_installDialog->isNewVersionAvailable()) return;
         const int result = m_installDialog->exec();
         if (result != QDialog::Accepted) { return; }
     }
@@ -645,7 +645,7 @@ namespace BlackGui
         QTimer::singleShot(delayedMs, this, [ = ]
         {
             if (this->m_installDialog) { return; }
-            this->checkNewVersion();
+            this->checkNewVersion(true);
         });
     }
 
@@ -670,5 +670,10 @@ namespace BlackGui
                 }
             }
         }
+    }
+
+    void CGuiApplication::checkNewVersionMenu()
+    {
+        this->checkNewVersion(false);
     }
 } // ns
