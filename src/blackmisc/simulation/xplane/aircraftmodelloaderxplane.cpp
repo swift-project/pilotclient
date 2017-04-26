@@ -190,27 +190,27 @@ namespace BlackMisc
                     {
                         while (!ts.atEnd())
                         {
-                            QString line = ts.readLine();
-                            QStringList tokens = line.split(' ', QString::SkipEmptyParts);
-                            if (tokens.at(0) != "P" || tokens.size() < 3) { continue; }
-                            if (tokens.at(1) == "acf/_ICAO")
+                            const QString line = ts.readLine();
+                            QVector<QStringRef> tokens = line.splitRef(' ', QString::SkipEmptyParts);
+                            if (tokens.at(0) != QLatin1String("P") || tokens.size() < 3) { continue; }
+                            if (tokens.at(1) == QLatin1String("acf/_ICAO"))
                             {
-                                const CAircraftIcaoCode icao(tokens.at(2));
+                                const CAircraftIcaoCode icao(tokens.at(2).toString());
                                 model.setAircraftIcaoCode(icao);
                             }
-                            else if (tokens.at(1) == "acf/_descrip")
+                            else if (tokens.at(1) == QLatin1String("acf/_descrip"))
                             {
-                                const QString desc(tokens.mid(2).join(' '));
+                                const QString desc(line.mid(tokens.at(2).position()));
                                 model.setDescription(desc);
                             }
-                            else if (tokens.at(1) == "acf/_name")
+                            else if (tokens.at(1) == QLatin1String("acf/_name"))
                             {
-                                const QString name(tokens.mid(2).join(' '));
+                                const QString name(line.mid(tokens.at(2).position()));
                                 model.setName(name);
                             }
-                            else if (tokens.at(1) == "acf/_studio")
+                            else if (tokens.at(1) == QLatin1String("acf/_studio"))
                             {
-                                const CDistributor dist({}, tokens.mid(2).join(' '), {}, {}, CSimulatorInfo::XPLANE);
+                                const CDistributor dist({}, line.mid(tokens.at(2).position()), {}, {}, CSimulatorInfo::XPLANE);
                                 model.setDistributor(dist);
                             }
                         }
