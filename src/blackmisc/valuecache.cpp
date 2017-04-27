@@ -475,7 +475,7 @@ namespace BlackMisc
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
-        return CStatusMessage(this).info("Loaded cache values %1 from %2 %3") <<
+        return CStatusMessage(this).info("Loaded cache values '%1' from '%2' '%3'") <<
             (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir << (ok ? "successfully" : "with errors");
     }
 

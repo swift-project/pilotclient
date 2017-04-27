@@ -975,16 +975,16 @@ namespace BlackCore
             const CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);
             if (severity == CStatusMessage::SeverityWarning)
             {
-                CLogMessage(cats).warning("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+                CLogMessage(cats).warning("Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
             }
             else
             {
-                CLogMessage(cats).error("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+                CLogMessage(cats).error("Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
             }
         }
         else
         {
-            CLogMessage(cats).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
+            CLogMessage(cats).info("Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
         }
 
         this->m_swiftDbEntitiesRead |= entities;
@@ -1067,7 +1067,7 @@ namespace BlackCore
         // try to read
         if (trials > maxWaitCycles)
         {
-            CLogMessage(this).warning("Cannot read %1 info objects for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString();
+            CLogMessage(this).warning("Cannot read %1 info objects for '%2' from '%3' trial %4") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString() << trials;
 
             // continue here and read data without info objects
             reader->setMarkedAsFailed(true);
