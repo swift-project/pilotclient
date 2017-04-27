@@ -22,9 +22,7 @@ namespace BlackGui
         {
             Q_UNUSED(i18n);
             static const QString s("In range only: %1");
-            return s.arg(
-                       boolToOnOff(this->showOnlyInRange())
-                   );
+            return s.arg(boolToOnOff(this->showOnlyInRange()));
         }
 
         CVariant CAtcStationsSettings::propertyByIndex(const CPropertyIndex &index) const

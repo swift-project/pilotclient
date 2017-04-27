@@ -10,7 +10,7 @@
 #include "application.h"
 #include "modelsetbuilder.h"
 #include "webdataservices.h"
-#include "db/databaseutils.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 

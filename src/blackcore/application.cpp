@@ -1229,7 +1229,7 @@ namespace BlackCore
             {
                 // Called when finished!
                 // QNetworkRequest::FollowRedirectsAttribute would allow auto redirect, but we use our approach as it gives us better control
-                // \fixme: Check again on Qt 5.9: Added redirects policy to QNetworkAccessManager (ManulRedirectsPolicy, NoLessSafeRedirectsPolicy, SameOriginRedirectsPolicy, UserVerifiedRedirectsPolicy)
+                // \fixme: Check again on Qt 5.9: Added redirects policy to QNetworkAccessManager (ManualRedirectsPolicy, NoLessSafeRedirectsPolicy, SameOriginRedirectsPolicy, UserVerifiedRedirectsPolicy)
                 const bool isRedirect = CNetworkUtils::isHttpStatusRedirect(reply);
                 if (isRedirect && maxRedirects > 0)
                 {

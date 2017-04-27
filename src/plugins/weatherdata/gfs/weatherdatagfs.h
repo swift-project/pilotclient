@@ -22,13 +22,11 @@
 #include <QUrl>
 #include <QByteArray>
 #include <QNetworkReply>
+#include <QNetworkAccessManager>
 #include <QPointer>
 #include <array>
 
-class QNetworkAccessManager;
-
 namespace BlackMisc { namespace PhysicalQuantities { class CTemperature; }}
-
 namespace BlackWxPlugin
 {
     namespace Gfs
@@ -45,7 +43,7 @@ namespace BlackWxPlugin
             CWeatherDataGfs(QObject *parent = nullptr);
 
             //! Destructor
-            ~CWeatherDataGfs();
+            virtual ~CWeatherDataGfs();
 
             //! \copydoc BlackCore::IWeatherData::fetchWeatherData
             virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &grid,
@@ -59,6 +57,7 @@ namespace BlackWxPlugin
             //! \threadsafe
             void ps_fetchingWeatherDataFinished();
 
+            //! Parsing
             void ps_parseGfsFile(QNetworkReply *reply);
 
         private:

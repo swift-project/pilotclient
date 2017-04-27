@@ -153,7 +153,7 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Db::CDistributionList getDistributionInfo() const;
 
-        //! Delete all cookies from cookier manager
+        //! Delete all cookies from cookie manager
         void deleteAllCookies();
 
         //! Network accessible?
