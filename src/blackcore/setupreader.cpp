@@ -12,6 +12,7 @@
 #include "blackmisc/verify.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -19,6 +20,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QByteArray>
 #include <QFile>
@@ -29,6 +31,7 @@
 #include <QUrl>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
@@ -77,7 +80,7 @@ namespace BlackCore
         const bool cacheAvailable = cachedSetup.wasLoaded();
         msgs.push_back(cacheAvailable ?
                        CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized and contains data") :
-                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized, but no data")
+                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized, but no data in cache")
                       );
         if (this->m_bootstrapMode == CacheOnly)
         {
@@ -114,13 +117,14 @@ namespace BlackCore
         }
         else
         {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Empty cache, will not add URLs"));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Empty cache, will not add URLs from cache"));
         }
 
         this->m_bootstrapUrls.removeDuplicates(); // clean up
         if (this->m_bootstrapUrls.isEmpty())
         {
             // after all still empty
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Your log files are here: " + CDirectoryUtils::getLogDirectory()));
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup"));
         }
         else
@@ -171,11 +175,19 @@ namespace BlackCore
         {
             if (!url.isLocalFile())
             {
-                if (!CNetworkUtils::canConnect(url))
+                bool retry = false;
+                bool ok = false;
+                do
                 {
-                    sApp->cmdLineErrorMessage(QString("URL '%1' not reachable").arg(urlString));
-                    return false;
+                    if (CNetworkUtils::canConnect(url, CNetworkUtils::getLongTimeoutMs()))
+                    {
+                        ok = true;
+                        break;
+                    }
+                    retry = sApp->cmdLineErrorMessage(QString("URL '%1' not reachable").arg(urlString), true);
                 }
+                while (retry);
+                if (!ok) { return false; }
             }
         }
         return true;
@@ -200,7 +212,7 @@ namespace BlackCore
         if (this->m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
         if (!sApp->isNetworkAccessible())
         {
-            const CStatusMessage m(this, CStatusMessage::SeverityError, "No network, cancelled reading of setup");
+            const CStatusMessage m(this, CStatusMessage::SeverityInfo, "No network, will try to recover");
             CStatusMessageList msgs(m);
             msgs.push_back(this->manageSetupAvailability(false, false));
             this->setLastSetupReadErrorMessages(msgs);
@@ -214,6 +226,7 @@ namespace BlackCore
                                    "Cannot read setup, URLs: " + this->m_bootstrapUrls.toQString() +
                                    " failed URLs: " + this->m_bootstrapUrls.getFailedUrls().toQString());
             CStatusMessageList msgs(m);
+            msgs.push_back(CNetworkUtils::createNetworkReport(sApp->getNetworkAccessManager()));
             msgs.push_back(this->manageSetupAvailability(false, false));
             this->setLastSetupReadErrorMessages(msgs);
             return msgs;
@@ -224,14 +237,13 @@ namespace BlackCore
         return m;
     }
 
-    void CSetupReader::ps_readUpdateInfo()
+    void CSetupReader::ps_readDistributionInfo()
     {
         const CUrl url(this->m_distributionUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read update info, URLs: '%1', failed URLs: '%2'")
-                    << this->m_distributionUrls
-                    << this->m_distributionUrls.getFailedUrls();
+            CLogMessage(this).warning("Cannot read update info, URLs: '%1', failed URLs: '%2'") << this->m_distributionUrls << this->m_distributionUrls.getFailedUrls();
+            CLogMessage::preformatted(CNetworkUtils::createNetworkReport(sApp->getNetworkAccessManager()));
             this->manageDistributionsInfoAvailability(false);
             return;
         }
@@ -258,7 +270,7 @@ namespace BlackCore
         return url;
     }
 
-    CStatusMessageList CSetupReader::readLocalBootstrapFile(QString &fileName)
+    CStatusMessageList CSetupReader::readLocalBootstrapFile(const QString &fileName)
     {
         if (fileName.isEmpty()) { return CStatusMessage(this).error("No file name for local bootstrap file"); }
         QString fn;
@@ -465,7 +477,7 @@ namespace BlackCore
         // try next one if any
         if (this->m_distributionUrls.addFailedUrl(url))
         {
-            QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
+            QTimer::singleShot(500, this, &CSetupReader::ps_readDistributionInfo);
         }
         else
         {
@@ -493,6 +505,23 @@ namespace BlackCore
     CGlobalSetup CSetupReader::getSetup() const
     {
         return m_setup.get();
+    }
+
+    bool CSetupReader::prefillCacheWithLocalResourceBootstrapFile()
+    {
+        if (m_shutdown) { return false; }
+        this->m_setup.synchronize(); // make sure it is loaded
+        const CGlobalSetup cachedSetup = m_setup.get();
+        const bool cacheAvailable = cachedSetup.wasLoaded();
+        if (cacheAvailable)
+        {
+            CLogMessage(this).info("Setup (bootstrap already cached, no prefill needed");
+            return false;
+        }
+        const QString fn = CBuildConfig::getBootstrapResourceFile();
+        const CStatusMessageList msgs = this->readLocalBootstrapFile(fn);
+        CLogMessage::preformatted(msgs);
+        return true;
     }
 
     QString CSetupReader::getLastSuccessfulSetupUrl() const
@@ -530,13 +559,13 @@ namespace BlackCore
         CStatusMessageList msgs;
         if (webRead)
         {
-            msgs.push_back(CStatusMessage(this).info("Setup loaded from web, will trigger read of update information"));
-            QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
+            msgs.push_back(CStatusMessage(this).info("Setup loaded from web, will trigger read of distribution information"));
+            QTimer::singleShot(500, this, &CSetupReader::ps_readDistributionInfo);
         }
         if (localRead)
         {
-            msgs.push_back(CStatusMessage(this).info("Setup loaded locally, will trigger read of update information"));
-            QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
+            msgs.push_back(CStatusMessage(this).info("Setup loaded locally, will trigger read of distribution information"));
+            QTimer::singleShot(500, this, &CSetupReader::ps_readDistributionInfo);
         }
 
         bool available = false;

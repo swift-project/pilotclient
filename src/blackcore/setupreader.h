@@ -64,6 +64,11 @@ namespace BlackCore
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getSetup() const;
 
+        //! Load the cache file local boostrap file
+        //! \remark can be used during installation as failover
+        //! \threadsafe
+        bool prefillCacheWithLocalResourceBootstrapFile();
+
         //! Last distribution URL successfully read
         //! \threadsafe
         QString getLastSuccessfulSetupUrl() const;
@@ -120,8 +125,8 @@ namespace BlackCore
         //! Do reading
         void ps_readSetup();
 
-        //! Do reading
-        void ps_readUpdateInfo();
+        //! Do reading of distributions
+        void ps_readDistributionInfo();
 
         //! Setup has been changed
         void ps_setupChanged();
@@ -135,7 +140,7 @@ namespace BlackCore
             CacheOnly
         };
 
-        bool m_shutdown = false;
+        std::atomic<bool> m_shutdown { false };
         std::atomic<bool> m_setupAvailable { false };
         std::atomic<bool> m_distributionInfoAvailable { false };
         QString m_localSetupFileValue;                           //! Local file for setup, passed by cmd line arguments
@@ -154,7 +159,7 @@ namespace BlackCore
         BlackMisc::CData<BlackMisc::Db::TDistributionInfo> m_distributions {this};                         //!< data cache distributions
 
         //! Read by local individual file and update cache from that
-        BlackMisc::CStatusMessageList readLocalBootstrapFile(QString &fileName);
+        BlackMisc::CStatusMessageList readLocalBootstrapFile(const QString &fileName);
 
         //! Trigger reading
         BlackMisc::CStatusMessageList triggerReadSetup();
