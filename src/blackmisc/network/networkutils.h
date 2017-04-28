@@ -12,10 +12,12 @@
 #ifndef BLACKMISC_NETWORKUTILS_H
 #define BLACKMISC_NETWORKUTILS_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/urllist.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <QNetworkRequest>
+#include <QNetworkAccessManager>
 #include <QString>
 #include <QStringList>
 #include <QtGlobal>
@@ -45,6 +47,9 @@ namespace BlackMisc
 
             //! Default for timeout
             static int getTimeoutMs();
+
+            //! Default for timeout (long)
+            static int getLongTimeoutMs();
 
             //! Can ping the address?
             //! \note uses OS ping
@@ -136,6 +141,13 @@ namespace BlackMisc
 
             //! Remove the HTML formatting from a PHP error message
             static QString removeHtmlPartsFromPhpErrorMessage(const QString &errorMessage);
+
+            //! Status about network
+            static BlackMisc::CStatusMessageList createNetworkReport(const QNetworkAccessManager *am);
+
+            //! Status about network, can be used when an URL fails to resolve issues
+            //! \remark that can take a moment to complete, as it checks network
+            static BlackMisc::CStatusMessageList createNetworkReport(const CUrl &url, const QNetworkAccessManager *am = nullptr);
 
         private:
             //! Hidden constructor

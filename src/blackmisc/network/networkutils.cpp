@@ -7,12 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/eventloop.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/server.h"
+#include "blackmisc/eventloop.h"
+#include "blackmisc/stringutils.h"
 #include "blackconfig/buildconfig.h"
 #include <QAbstractSocket>
 #include <QDateTime>
+#include <QMetaEnum>
 #include <QDebug>
 #include <QHostAddress>
 #include <QJsonDocument>
@@ -21,6 +23,7 @@
 #include <QNetworkAddressEntry>
 #include <QNetworkInterface>
 #include <QNetworkReply>
+#include <QNetworkConfiguration>
 #include <QObject>
 #include <QSignalMapper>
 #include <QSslCertificate>
@@ -48,6 +51,11 @@ namespace BlackMisc
         int CNetworkUtils::getTimeoutMs()
         {
             return 3000;
+        }
+
+        int CNetworkUtils::getLongTimeoutMs()
+        {
+            return 3 * getTimeoutMs();
         }
 
         bool CNetworkUtils::canPing(const QString &hostAddress)
@@ -340,6 +348,51 @@ namespace BlackMisc
             QString phpError(errorMessage);
             static const QRegularExpression regEx("<[^>]*>");
             return phpError.remove(regEx);
+        }
+
+        CStatusMessageList CNetworkUtils::createNetworkReport(const QNetworkAccessManager *am)
+        {
+            return CNetworkUtils::createNetworkReport(CUrl(), am);
+        }
+
+        CStatusMessageList CNetworkUtils::createNetworkReport(const CUrl &url, const QNetworkAccessManager *am)
+        {
+            static const CLogCategoryList cats({CLogCategory::network()});
+            CStatusMessageList msgs;
+
+            if (!url.isEmpty())
+            {
+                const QString host = url.getHost();
+                const bool canPing = CNetworkUtils::canPing(host);
+                const CStatusMessage ping(cats, canPing ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, "Host: " + host + " ping: " + boolToYesNo(canPing));
+                msgs.push_back(ping);
+
+                QString msg;
+                const bool canConnect = CNetworkUtils::canConnect(url, msg, getTimeoutMs() * 2);
+                if (canConnect)
+                {
+                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, "Can connect to " + url.getFullUrl()));
+                }
+                else
+                {
+                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Cannot connect to " + url.getFullUrl() + " msg: " + msg));
+                }
+            }
+
+            if (am)
+            {
+                const bool accessible = am->networkAccessible() == QNetworkAccessManager::Accessible;
+                const QNetworkConfiguration c = am->configuration();
+                static const QMetaEnum enumAccessible = QMetaEnum::fromType<QNetworkAccessManager::NetworkAccessibility>();
+
+                const QString msg = QString("Accessible: %1 (%2) bearer: %3 %4").arg(
+                                        boolToYesNo(accessible),
+                                        enumAccessible.valueToKey(am->networkAccessible()),
+                                        c.bearerTypeName(), c.identifier());
+                msgs.push_back(CStatusMessage(cats, accessible ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, msg));
+            }
+
+            return msgs;
         }
     } // namespace
 } // namespace
