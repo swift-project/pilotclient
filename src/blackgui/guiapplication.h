@@ -111,8 +111,8 @@ namespace BlackGui
 
         //! \name print messages generated during parsing / cmd handling
         //! @{
-        virtual void cmdLineErrorMessage(const QString &cmdLineErrorMessage) const override;
-        virtual void cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs) const override;
+        virtual bool cmdLineErrorMessage(const QString &cmdLineErrorMessage, bool retry = false) const override;
+        virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const override;
         //! @}
 
         //! \name direct access to main application window

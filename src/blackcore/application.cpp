@@ -96,7 +96,8 @@ namespace BlackCore
     { }
 
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
-        m_cookieManager( {}, this), m_applicationName(applicationName), m_application(application), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+        m_accessManager(new QNetworkAccessManager(this)),
+        m_application(application), m_cookieManager( {}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -139,9 +140,11 @@ namespace BlackCore
             QCoreApplication::instance()->installTranslator(&translator);
 
             // Init network
-            this->m_cookieManager.setParent(&this->m_accessManager);
-            this->m_accessManager.setCookieJar(&this->m_cookieManager);
-            connect(&this->m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::ps_networkAccessibleChanged);
+            Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
+            this->m_cookieManager.setParent(this->m_accessManager);
+            this->m_accessManager->setCookieJar(&this->m_cookieManager);
+            connect(this->m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::ps_networkAccessibleChanged);
+            CLogMessage::preformatted(CNetworkUtils::createNetworkReport(this->m_accessManager));
 
             // global setup
             sApp = this;
@@ -149,7 +152,7 @@ namespace BlackCore
             connect(this->m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::ps_setupHandlingCompleted);
             connect(this->m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable);
 
-            this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions());
+            this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions()); // add options from reader
 
             // startup done
             connect(this, &CApplication::startUpCompleted, this, &CApplication::ps_startupCompleted);
@@ -174,6 +177,15 @@ namespace BlackCore
         Q_ASSERT_X(instance(), Q_FUNC_INFO, "missing application");
         CApplication::registerAsRunning();
         return QCoreApplication::exec();
+    }
+
+    void CApplication::restartApplication()
+    {
+        this->gracefulShutdown();
+        const QString prg = QCoreApplication::applicationFilePath();
+        const QStringList args = CApplication::arguments();
+        QProcess::startDetached(prg, args);
+        this->exit(0);
     }
 
     CApplication::~CApplication()
@@ -380,7 +392,7 @@ namespace BlackCore
     CStatusMessageList CApplication::waitForSetup()
     {
         if (!this->m_setupReader) { return CStatusMessage(this).error("No setup reader"); }
-        CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, 5000, [this]
+        CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, CNetworkUtils::getLongTimeoutMs(), [this]
         {
             return this->m_setupReader->isSetupAvailable();
         });
@@ -567,9 +579,9 @@ namespace BlackCore
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
     {
         if (!this->isNetworkAccessible()) { return nullptr; }
-        if (QThread::currentThread() != this->m_accessManager.thread())
+        if (QThread::currentThread() != this->m_accessManager->thread())
         {
-            multiPart->moveToThread(this->m_accessManager.thread());
+            multiPart->moveToThread(this->m_accessManager->thread());
         }
 
         return httpRequestImpl(request, callback, -1, [ this, multiPart ](QNetworkAccessManager & nam, const QNetworkRequest & request)
@@ -598,7 +610,12 @@ namespace BlackCore
 
     bool CApplication::isNetworkAccessible() const
     {
-        return this->m_accessManager.networkAccessible() == QNetworkAccessManager::Accessible;
+        if (!this->m_accessManager) return false;
+        const QNetworkAccessManager::NetworkAccessibility a = this->m_accessManager->networkAccessible();
+        if (a == QNetworkAccessManager::Accessible) return true;
+
+        // currently I also accept unknown
+        return a == QNetworkAccessManager::UnknownAccessibility;
     }
 
     bool CApplication::hasSetupReader() const
@@ -847,6 +864,7 @@ namespace BlackCore
         switch (accessible)
         {
         case QNetworkAccessManager::Accessible:
+            this->m_accessManager->setNetworkAccessible(accessible); // for some reasons the queried value still is unknown
             CLogMessage(this).info("Network is accessible");
             break;
         case QNetworkAccessManager::NotAccessible:
@@ -947,6 +965,11 @@ namespace BlackCore
         return this->m_parser.isSet(option);
     }
 
+    bool CApplication::isInstallerOptionSet() const
+    {
+        return this->isParserOptionSet("installer");
+    }
+
     bool CApplication::isParserOptionSet(const QCommandLineOption &option) const
     {
         return this->m_parser.isSet(option);
@@ -1011,20 +1034,24 @@ namespace BlackCore
         return true;
     }
 
-    void CApplication::cmdLineErrorMessage(const QString &errorMessage) const
+    bool CApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
     {
+        Q_UNUSED(retry); // onyl works with UI version
         fputs(qPrintable(errorMessage), stderr);
         fputs("\n\n", stderr);
         fputs(qPrintable(this->m_parser.helpText()), stderr);
+        return false;
     }
 
-    void CApplication::cmdLineErrorMessage(const CStatusMessageList &msgs) const
+    bool CApplication::cmdLineErrorMessage(const CStatusMessageList &msgs, bool retry) const
     {
-        if (msgs.isEmpty()) { return; }
-        if (!msgs.hasErrorMessages())  { return; }
+        Q_UNUSED(retry); // onyl works with UI version
+        if (msgs.isEmpty()) { return false; }
+        if (!msgs.hasErrorMessages())  { return false; }
         CApplication::cmdLineErrorMessage(
             msgs.toFormattedQString(true)
         );
+        return false;
     }
 
     void CApplication::cmdLineHelpMessage()
@@ -1206,14 +1233,14 @@ namespace BlackCore
         if (this->m_shutdown) { return nullptr; }
         if (!this->isNetworkAccessible()) { return nullptr; }
         QWriteLocker locker(&m_accessManagerLock);
-        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
-        if (QThread::currentThread() != this->m_accessManager.thread())
+        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager->thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        if (QThread::currentThread() != this->m_accessManager->thread())
         {
             QTimer::singleShot(0, this, std::bind(&CApplication::httpRequestImpl, this, request, callback, maxRedirects, requestOrPostMethod));
             return nullptr; // not yet started
         }
 
-        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
+        Q_ASSERT_X(QThread::currentThread() == m_accessManager->thread(), Q_FUNC_INFO, "Network manager thread mismatch");
         QNetworkRequest copiedRequest(request); // no QObject
         CNetworkUtils::ignoreSslVerification(copiedRequest);
         CNetworkUtils::setSwiftUserAgent(copiedRequest);
@@ -1221,7 +1248,7 @@ namespace BlackCore
         // If URL is one of the shared urls, add swift client SSL certificate
         CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, getGlobalSetup().getSwiftSharedUrls());
 
-        QNetworkReply *reply = requestOrPostMethod(this->m_accessManager, copiedRequest);
+        QNetworkReply *reply = requestOrPostMethod(*this->m_accessManager, copiedRequest);
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
         if (callback)
         {

@@ -259,39 +259,27 @@ namespace BlackGui
         return html;
     }
 
-    void CGuiApplication::cmdLineErrorMessage(const QString &errorMessage) const
+    bool CGuiApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
     {
-        if (CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
-            QMessageBox::warning(nullptr,
-                                 QGuiApplication::applicationDisplayName(),
-                                 "<html><head/><body><h2>" + errorMessage + "</h2><br>" + helpText + "</body></html>");
-        }
-        else
-        {
-            CApplication::cmdLineErrorMessage(errorMessage);
-        }
+        const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
+        const int r = QMessageBox::warning(nullptr,
+                                           QGuiApplication::applicationDisplayName(),
+                                           "<html><head/><body><h2>" + errorMessage + "</h2><br>" + helpText + "</body></html>", QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
+        return (r == QMessageBox::Retry);
     }
 
-    void CGuiApplication::cmdLineErrorMessage(const CStatusMessageList &msgs) const
+    bool CGuiApplication::cmdLineErrorMessage(const CStatusMessageList &msgs, bool retry) const
     {
-        if (msgs.isEmpty()) { return; }
-        if (!msgs.hasErrorMessages()) { return; }
-        if (CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
-            static const CPropertyIndexList propertiesMulti({ CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
-            const QString helpText(CGuiApplication::beautifyHelpMessage(this->m_parser.helpText()));
-            const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
-            QMessageBox::critical(nullptr,
-                                  QGuiApplication::applicationDisplayName(),
-                                  "<html><head/><body>" + msgsHtml + "<br><br>" + helpText + "</body></html>");
-        }
-        else
-        {
-            CApplication::cmdLineErrorMessage(msgs);
-        }
+        if (msgs.isEmpty()) { return false; }
+        if (!msgs.hasErrorMessages()) { return false; }
+        static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
+        static const CPropertyIndexList propertiesMulti({ CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
+        const QString helpText(CGuiApplication::beautifyHelpMessage(this->m_parser.helpText()));
+        const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
+        const int r = QMessageBox::critical(nullptr,
+                                            QGuiApplication::applicationDisplayName(),
+                                            "<html><head/><body>" + msgsHtml + "<br><br>" + helpText + "</body></html>", QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
+        return (r == QMessageBox::Retry);
     }
 
     bool CGuiApplication::displayInStatusBar(const CStatusMessage &message)

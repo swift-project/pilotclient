@@ -12,19 +12,6 @@
 #ifndef BLACKCORE_APPLICATION_H
 #define BLACKCORE_APPLICATION_H
 
-#include <QByteArray>
-#include <QCommandLineOption>
-#include <QCommandLineParser>
-#include <QList>
-#include <QNetworkAccessManager>
-#include <QObject>
-#include <QReadWriteLock>
-#include <QScopedPointer>
-#include <QString>
-#include <QStringList>
-#include <atomic>
-#include <functional>
-
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacadeconfig.h"
@@ -37,6 +24,19 @@
 #include "blackmisc/slot.h"
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/statusmessagelist.h"
+
+#include <QByteArray>
+#include <QCommandLineOption>
+#include <QCommandLineParser>
+#include <QList>
+#include <QNetworkAccessManager>
+#include <QObject>
+#include <QReadWriteLock>
+#include <QScopedPointer>
+#include <QString>
+#include <QStringList>
+#include <atomic>
+#include <functional>
 
 #if defined(Q_CC_MSVC) || defined(Q_OS_OSX) // Crashpad only supported on MSVC and MacOS/X
 #define BLACK_USE_CRASHPAD
@@ -159,6 +159,9 @@ namespace BlackCore
         //! Network accessible?
         bool isNetworkAccessible() const;
 
+        //! Access to access manager
+        const QNetworkAccessManager *getNetworkAccessManager() const { return m_accessManager; }
+
         //! Setup reader?
         bool hasSetupReader() const;
 
@@ -221,6 +224,9 @@ namespace BlackCore
         //! Directory for temporary files
         QString getTemporaryDirectory() const;
 
+        //! Stop and restart application
+        void restartApplication();
+
         //! Register as running
         //! \note Normally done automatically when CApplication::exec is called
         static bool registerAsRunning();
@@ -268,6 +274,9 @@ namespace BlackCore
         //! Delegates to QCommandLineParser::isSet
         bool isParserOptionSet(const QString &option) const;
 
+        //! Installer called?
+        bool isInstallerOptionSet() const;
+
         //! Delegates to QCommandLineParser::isSet
         bool isParserOptionSet(const QCommandLineOption &option) const;
 
@@ -285,10 +294,10 @@ namespace BlackCore
         //! @}
 
         //! Display error message
-        virtual void cmdLineErrorMessage(const QString &cmdLineErrorMessage) const;
+        virtual bool cmdLineErrorMessage(const QString &cmdLineErrorMessage, bool retry = false) const;
 
         //! Display error message
-        virtual void cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs) const;
+        virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const;
 
         // ----------------------- contexts ----------------------------------------
 
@@ -479,14 +488,14 @@ namespace BlackCore
                                        int maxRedirects,
                                        std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod);
 
+        QNetworkAccessManager                   *m_accessManager = nullptr; //!< single network access manager
+        BlackMisc::CApplicationInfo::Application m_application = BlackMisc::CApplicationInfo::Unknown; //!< Application if specified
         QScopedPointer<CCoreFacade>              m_coreFacade;             //!< core facade if any
         QScopedPointer<CSetupReader>             m_setupReader;            //!< setup reader
         QScopedPointer<CWebDataServices>         m_webDataServices;        //!< web data services
         QScopedPointer<BlackMisc::CFileLogger>   m_fileLogger;             //!< file logger
-        QNetworkAccessManager                    m_accessManager { this }; //!< single network access manager
         CCookieManager                           m_cookieManager;          //!< single cookie manager for our access manager
         QString                                  m_applicationName;        //!< application name
-        BlackMisc::CApplicationInfo::Application m_application = BlackMisc::CApplicationInfo::Unknown; //!< Application if specified
         QReadWriteLock                           m_accessManagerLock;      //!< lock to make access manager access threadsafe
         CCoreFacadeConfig                        m_coreFacadeConfig;       //!< Core facade config if any
         CWebReaderFlags::WebReader               m_webReadersUsed;         //!< Readers to be used

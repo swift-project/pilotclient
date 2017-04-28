@@ -70,7 +70,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     m_checkTimer.start();
 
     // auto launch wizard
-    if (sGui->isParserOptionSet("installer"))
+    if (sGui->isInstallerOptionSet())
     {
         QTimer::singleShot(2500, this, &CSwiftLauncher::ps_startWizard);
     }
