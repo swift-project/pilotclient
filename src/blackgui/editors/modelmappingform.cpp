@@ -57,7 +57,7 @@ namespace BlackGui
 
         CStatusMessageList CModelMappingForm::validate(bool withNestedObjects) const
         {
-            CAircraftModel model(getValue());
+            const CAircraftModel model(getValue());
             CStatusMessageList msgs(model.validate(withNestedObjects));
             ui->val_Indicator->setState(msgs);
             return msgs;

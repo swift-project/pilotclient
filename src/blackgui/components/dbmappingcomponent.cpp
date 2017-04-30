@@ -352,10 +352,17 @@ namespace BlackGui
 
         CStatusMessageList CDbMappingComponent::validateCurrentModel(bool withNestedForms) const
         {
-            CStatusMessageList msgs(ui->editor_ModelMapping->validate(!withNestedForms));
+            CStatusMessageList msgs;
             if (withNestedForms)
             {
-                msgs.push_back(ui->editor_AircraftModel->validate(withNestedForms));
+                // tests the 3 subforms and the model itself lenient
+                msgs.push_back(ui->editor_ModelMapping->validate(false));
+                msgs.push_back(ui->editor_AircraftModel->validate(true));
+            }
+            else
+            {
+                // model lenient
+                msgs.push_back(ui->editor_ModelMapping->validate(false));
             }
             return msgs;
         }
@@ -369,14 +376,16 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_stashCurrentModel()
         {
-            CStatusMessageList msgs(this->validateCurrentModel(true));
+            const bool nested = this->isStashTab(); // on stash tab, full validation, otherwise not
+            CStatusMessageList msgs(this->validateCurrentModel(nested));
             if (!msgs.hasErrorMessages())
             {
                 const CAircraftModel editorModel(getEditorAircraftModel());
 
-                // do not consolidate, because we want to keep data as they are from the editor
+                // from stash, do not consolidate, because we want to keep data as they are from the editor
+                const bool consolidate = !this->isStashTab();
                 msgs.push_back(
-                    ui->comp_StashAircraft->stashModel(editorModel, true, false)
+                    ui->comp_StashAircraft->stashModel(editorModel, true, consolidate)
                 );
             }
             if (msgs.hasErrorMessages())
