@@ -173,12 +173,8 @@ win32-msvc2015 {
 }
 
 macx {
-    DBUS_BINARY_SOURCE_DIR = /usr/local/bin
-    DBUS_BINARIES *= dbus-daemon
+    # Binaries are copied from externals
     dbus_binary_target.path = $${PREFIX}/bin
-
-    DBUS_LIBARY_SOURCE_DIR = /usr/local/lib
-    DBUS_LIBRARIES *= libdbus-1.3.dylib
     dbus_library_target.path = $${PREFIX}/lib
 
     DBUS_CONFIG_SOURCE_DIR = /usr/local/share/dbus-1
