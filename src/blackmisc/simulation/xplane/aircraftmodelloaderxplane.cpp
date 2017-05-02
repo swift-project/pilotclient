@@ -61,6 +61,58 @@ namespace BlackMisc
                 }
             }
 
+            //! Create a unique string to identify a model
+            static QString stringForFlyableModel(const CAircraftModel &model, const QFileInfo &acfFile)
+            {
+                if (model.getDistributor().hasDescription())
+                {
+                    if (!model.getName().isEmpty())
+                    {
+                        if (model.getName().contains(model.getDistributor().getDescription()))
+                        {
+                            return model.getName();
+                        }
+                        else
+                        {
+                            return model.getDistributor().getDescription() % ' ' % model.getName();
+                        }
+                    }
+                    else if (model.hasAircraftDesignator())
+                    {
+                        return model.getDistributor().getDescription() % ' ' % model.getAircraftIcaoCodeDesignator();
+                    }
+                }
+                return acfFile.dir().dirName() % ' ' % acfFile.baseName();
+            }
+
+            //! Create a description string for a model that doesn't already have one
+            static QString descriptionForFlyableModel(const CAircraftModel &model)
+            {
+                if (!model.getName().isEmpty())
+                {
+                    if (model.getDistributor().hasDescription() && !model.getName().contains(model.getDistributor().getDescription()))
+                    {
+                        return "[ACF] " % model.getName() % " by " % model.getDistributor().getDescription();
+                    }
+                    else
+                    {
+                        return "[ACF] " % model.getName();
+                    }
+                }
+                else if (model.hasAircraftDesignator())
+                {
+                    if (model.getDistributor().hasDescription())
+                    {
+                        return "[ACF] " % model.getAircraftIcaoCodeDesignator() % " by " % model.getDistributor().getDescription();
+                    }
+                    else
+                    {
+                        return "[ACF] " % model.getAircraftIcaoCodeDesignator();
+                    }
+                }
+                return "[ACF]";
+            }
+
             CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane() : IAircraftModelLoader(CSimulatorInfo::XPLANE)
             { }
 
@@ -168,10 +220,6 @@ namespace BlackMisc
                     aircraftIt.next();
                     if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
 
-                    // <dirname> <filename> for the default model and <dirname> <filename> <texturedir> for the liveries
-                    const QString dirName(aircraftIt.fileInfo().dir().dirName());
-                    const QString modelString = QString("%1 %2").arg(dirName, aircraftIt.fileInfo().baseName());
-
                     CAircraftModel model;
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                     model.setSimulator(this->getSimulator());
@@ -179,7 +227,6 @@ namespace BlackMisc
                     const QDateTime lastModifiedTs(aircraftIt.fileInfo().lastModified());
                     model.setUtcTimestamp(lastModifiedTs);
                     model.setFileTimestamp(lastModifiedTs);
-                    model.setModelString(modelString);
                     model.setModelMode(CAircraftModel::Exclude);
 
                     QFile file(aircraftIt.filePath());
@@ -201,7 +248,7 @@ namespace BlackMisc
                             else if (tokens.at(1) == QLatin1String("acf/_descrip"))
                             {
                                 const QString desc(line.mid(tokens.at(2).position()));
-                                model.setDescription(desc);
+                                model.setDescription("[ACF] " % desc);
                             }
                             else if (tokens.at(1) == QLatin1String("acf/_name"))
                             {
@@ -213,19 +260,29 @@ namespace BlackMisc
                                 const CDistributor dist({}, line.mid(tokens.at(2).position()), {}, {}, CSimulatorInfo::XPLANE);
                                 model.setDistributor(dist);
                             }
+                            else if (tokens.at(1) == QLatin1String("acf/_author"))
+                            {
+                                if (model.getDistributor().hasDescription()) { continue; }
+                                const thread_local QRegularExpression end("\\W\\s", QRegularExpression::UseUnicodePropertiesOption);
+                                QString author = line.mid(tokens.at(2).position());
+                                author = author.left(author.indexOf(end)).trimmed();
+                                if (author.isEmpty()) { continue; }
+                                const CDistributor dist({}, author, {}, {}, CSimulatorInfo::XPLANE);
+                                model.setDistributor(dist);
+                            }
                         }
                     }
                     file.close();
 
+                    model.setModelString(stringForFlyableModel(model, aircraftIt.fileInfo()));
+                    if (!model.hasDescription()) { model.setDescription(descriptionForFlyableModel(model)); }
                     addUniqueModel(model, installedModels);
 
                     QDirIterator liveryIt(aircraftIt.fileInfo().canonicalPath() + "/liveries", QDir::Dirs | QDir::NoDotAndDotDot);
                     while (liveryIt.hasNext())
                     {
                         liveryIt.next();
-                        QString modelStringWithLivery = modelString + liveryIt.fileName();
-                        model.setModelString(modelStringWithLivery);
-
+                        model.setModelString(model.getModelString() % ' ' % liveryIt.fileName());
                         addUniqueModel(model, installedModels);
                     }
                 }
@@ -300,6 +357,7 @@ namespace BlackMisc
                         model.setDistributor(distributor);
 
                         model.setSimulator(this->getSimulator());
+                        model.setDescription("[CSL]");
                         installedModels.push_back(model);
                     }
                 }
