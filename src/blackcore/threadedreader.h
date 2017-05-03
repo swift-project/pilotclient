@@ -110,7 +110,7 @@ namespace BlackCore
         uint                    m_contentHash = 0;          //!< has of the content given
         std::atomic<bool>       m_markedAsFailed { false }; //!< marker if reading failed
         std::atomic<bool>       m_shutdown { false };       //!< marker it is shutting down
-        QTimer                  *m_updateTimer = nullptr;
+        QTimer                  m_updateTimer { this };
     };
 } // namespace
 

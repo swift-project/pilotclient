@@ -32,11 +32,10 @@ namespace BlackCore
     }
 
     CThreadedReader::CThreadedReader(QObject *owner, const QString &name) :
-        CContinuousWorker(owner, name),
-        m_updateTimer(new QTimer(this))
+        CContinuousWorker(owner, name)
     {
-        connect(m_updateTimer, &QTimer::timeout, this, &CThreadedReader::doWork);
-        m_updateTimer->setSingleShot(true);
+        connect(&m_updateTimer, &QTimer::timeout, this, &CThreadedReader::doWork);
+        m_updateTimer.setSingleShot(true);
     }
 
     CThreadedReader::~CThreadedReader()
@@ -77,6 +76,7 @@ namespace BlackCore
     void CThreadedReader::gracefulShutdown()
     {
         // if not in main thread stop, otherwise it makes no sense to abandon
+        if (this->m_shutdown) { return; }
         this->m_shutdown = true;
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
@@ -92,7 +92,7 @@ namespace BlackCore
 
     void CThreadedReader::pauseReader()
     {
-        QTimer::singleShot(0, m_updateTimer, &QTimer::stop);
+        QTimer::singleShot(0, &m_updateTimer, &QTimer::stop);
     }
 
     bool CThreadedReader::isShuttingDown() const
@@ -139,11 +139,11 @@ namespace BlackCore
     {
         m_initialTime = initialTime;
         m_periodicTime = periodicTime;
-        if (m_updateTimer->isActive())
+        if (m_updateTimer.isActive())
         {
-            int oldPeriodicTime = m_updateTimer->interval();
-            int delta = m_periodicTime - oldPeriodicTime + m_updateTimer->remainingTime();
-            m_updateTimer->start(qMax(delta, 0));
+            int oldPeriodicTime = m_updateTimer.interval();
+            int delta = m_periodicTime - oldPeriodicTime + m_updateTimer.remainingTime();
+            m_updateTimer.start(qMax(delta, 0));
         }
     }
 
@@ -152,7 +152,7 @@ namespace BlackCore
         if (isFinished()) { return; }
         doWorkImpl();
         Q_ASSERT(m_periodicTime > 0);
-        m_updateTimer->start(m_periodicTime);
+        m_updateTimer.start(m_periodicTime);
     }
 
 } // namespace
