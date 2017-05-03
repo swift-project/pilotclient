@@ -166,11 +166,7 @@ namespace BlackCore
                 CUrl url(getLiveryUrl(mode));
                 if (!url.isEmpty())
                 {
-                    if (!newerThan.isNull())
-                    {
-                        const QString tss(newerThan.toString(Qt::ISODate));
-                        url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
-                    }
+                    url.appendQuery(queryLatestTimestamp(newerThan));
                     sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseLiveryData});
                     triggeredRead |= CEntityFlags::LiveryEntity;
                 }
@@ -185,11 +181,7 @@ namespace BlackCore
                 CUrl url(getDistributorUrl(mode));
                 if (!url.isEmpty())
                 {
-                    if (!newerThan.isNull())
-                    {
-                        const QString tss(newerThan.toString(Qt::ISODate));
-                        url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
-                    }
+                    url.appendQuery(queryLatestTimestamp(newerThan));
                     sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseDistributorData});
                     triggeredRead |= CEntityFlags::DistributorEntity;
                 }
@@ -204,11 +196,7 @@ namespace BlackCore
                 CUrl url(getModelUrl(mode));
                 if (!url.isEmpty())
                 {
-                    if (!newerThan.isNull())
-                    {
-                        const QString tss(newerThan.toString(Qt::ISODate));
-                        url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
-                    }
+                    url.appendQuery(queryLatestTimestamp(newerThan));
                     sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseModelData});
                     triggeredRead |= CEntityFlags::ModelEntity;
                 }
@@ -274,8 +262,10 @@ namespace BlackCore
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
+                const CLiveryList incLiveries(CLiveryList::fromDatabaseJson(res));
+                if (incLiveries.isEmpty()) { return; } // currenty ignored
                 liveries = this->getLiveries();
-                liveries.replaceOrAddObjectsByKey(CLiveryList::fromDatabaseJson(res));
+                liveries.replaceOrAddObjectsByKey(incLiveries);
             }
             else
             {
@@ -314,8 +304,10 @@ namespace BlackCore
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
+                const CDistributorList incDistributors(CDistributorList::fromDatabaseJson(res));
+                if (incDistributors.isEmpty()) { return; } // currently ignored
                 distributors = this->getDistributors();
-                distributors.replaceOrAddObjectsByKey(CDistributorList::fromDatabaseJson(res));
+                distributors.replaceOrAddObjectsByKey(incDistributors);
             }
             else
             {
@@ -354,8 +346,10 @@ namespace BlackCore
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
+                const CAircraftModelList incModels(CAircraftModelList::fromDatabaseJson(res));
+                if (incModels.isEmpty()) { return; } // currently ignored
                 models = this->getModels();
-                models.replaceOrAddObjectsByKey(CAircraftModelList::fromDatabaseJson(res));
+                models.replaceOrAddObjectsByKey(incModels);
             }
             else
             {

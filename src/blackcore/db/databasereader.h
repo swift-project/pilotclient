@@ -227,12 +227,6 @@ namespace BlackCore
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
-            //! Name of latest timestamp
-            static const QString &parameterLatestTimestamp();
-
-            //! Name of parameter for latest id
-            static const QString &parameterLatestId();
-
             //! swift DB server reachable?
             static bool canPingSwiftServer();
 
@@ -299,6 +293,19 @@ namespace BlackCore
 
             //! File name for given mode, either php service or shared file name
             static QString fileNameForMode(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode);
+
+            //! Name of latest timestamp
+            static const QString &parameterLatestTimestamp();
+
+            //! Name of parameter for latest id
+            static const QString &parameterLatestId();
+
+            //! A newer than value understood by swift DB
+            //! \sa CDatabaseReader::parameterLatestTimestamp
+            static QString dateTimeToDbLatestTs(const QDateTime &ts);
+
+            //! Latest timestamp query for DB
+            static QString queryLatestTimestamp(const QDateTime &ts);
 
             //! \name Cache access
             //! @{

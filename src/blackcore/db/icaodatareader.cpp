@@ -146,7 +146,7 @@ namespace BlackCore
                 CUrl url(getAircraftIcaoUrl(mode));
                 if (!url.isEmpty())
                 {
-                    if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
+                    url.appendQuery(queryLatestTimestamp(newerThan));
                     sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseAircraftIcaoData });
                     entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
                 }
@@ -161,7 +161,7 @@ namespace BlackCore
                 CUrl url(getAirlineIcaoUrl(mode));
                 if (!url.isEmpty())
                 {
-                    if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
+                    url.appendQuery(queryLatestTimestamp(newerThan));
                     sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseAirlineIcaoData });
                     entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
                 }
@@ -176,7 +176,7 @@ namespace BlackCore
                 CUrl url(getCountryUrl(mode));
                 if (!url.isEmpty())
                 {
-                    if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
+                    url.appendQuery(queryLatestTimestamp(newerThan));
                     sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseCountryData });
                     entitiesTriggered |= CEntityFlags::CountryEntity;
                 }
@@ -238,8 +238,21 @@ namespace BlackCore
                 return;
             }
 
-            // normally read from special view which already filter incomplete
-            const CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(res, true);
+            CAircraftIcaoCodeList codes;
+            if (res.isRestricted())
+            {
+                // create full list if it was just incremental
+                const CAircraftIcaoCodeList incIcao(CAircraftIcaoCodeList::fromDatabaseJson(res, true));
+                if (incIcao.isEmpty()) { return; } // currently ignored
+                codes = this->getAircraftIcaoCodes();
+                codes.replaceOrAddObjectsByKey(incIcao);
+            }
+            else
+            {
+                // normally read from special view which already filters incomplete
+                codes  = CAircraftIcaoCodeList::fromDatabaseJson(res, true);
+            }
+
             const int n = codes.size();
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
@@ -266,7 +279,22 @@ namespace BlackCore
                 emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
                 return;
             }
-            const CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(res, true);
+
+            CAirlineIcaoCodeList codes;
+            if (res.isRestricted())
+            {
+                // create full list if it was just incremental
+                const CAirlineIcaoCodeList incIcao(CAirlineIcaoCodeList::fromDatabaseJson(res, true));
+                if (incIcao.isEmpty()) { return; } // currently ignored
+                codes = this->getAirlineIcaoCodes();
+                codes.replaceOrAddObjectsByKey(incIcao);
+            }
+            else
+            {
+                // normally read from special view which already filters incomplete
+                codes  = CAirlineIcaoCodeList::fromDatabaseJson(res, true);
+            }
+
             const int n = codes.size();
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
@@ -291,7 +319,22 @@ namespace BlackCore
                 emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
                 return;
             }
-            const CCountryList countries = CCountryList::fromDatabaseJson(res);
+
+            CCountryList countries;
+            if (res.isRestricted())
+            {
+                // create full list if it was just incremental
+                const CCountryList incCountries(CCountryList::fromDatabaseJson(res));
+                if (incCountries.isEmpty()) { return; } // currently ignored
+                countries = this->getCountries();
+                countries.replaceOrAddObjectsByKey(incCountries);
+            }
+            else
+            {
+                // normally read from special view which already filters incomplete
+                countries  = CCountryList::fromDatabaseJson(res);
+            }
+
             const int n = countries.size();
             qint64 latestTimestamp = countries.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)

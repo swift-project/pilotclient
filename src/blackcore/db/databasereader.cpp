@@ -574,6 +574,12 @@ namespace BlackCore
             }
         }
 
+        QString CDatabaseReader::dateTimeToDbLatestTs(const QDateTime &ts)
+        {
+            if (!ts.isValid()) return "";
+            return ts.toUTC().toString(Qt::ISODate);
+        }
+
         const CLogCategoryList &CDatabaseReader::getLogCategories()
         {
             static const BlackMisc::CLogCategoryList cats
@@ -587,6 +593,13 @@ namespace BlackCore
         {
             static const QString p("latestTimestamp");
             return p;
+        }
+
+        QString CDatabaseReader::queryLatestTimestamp(const QDateTime &ts)
+        {
+            if (!ts.isValid()) return "";
+            const QString q = parameterLatestTimestamp() + "=" + dateTimeToDbLatestTs(ts);
+            return q;
         }
 
         const QString &CDatabaseReader::parameterLatestId()

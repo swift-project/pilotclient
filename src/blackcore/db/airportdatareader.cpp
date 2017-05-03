@@ -161,9 +161,10 @@ namespace BlackCore
             CAirportList airports;
             if (res.isRestricted())
             {
+                const CAirportList incAirports(CAirportList::fromDatabaseJson(res));
+                if (incAirports.isEmpty()) { return; } // currently ignored
                 airports = this->getAirports();
-                CAirportList updates(CAirportList::fromDatabaseJson(res));
-                airports.replaceOrAddObjectsByKey(updates);
+                airports.replaceOrAddObjectsByKey(incAirports);
             }
             else
             {
@@ -200,11 +201,7 @@ namespace BlackCore
                 CUrl url = getAirportsUrl(mode);
                 if (!url.isEmpty())
                 {
-                    if (!newerThan.isNull())
-                    {
-                        const QString tss(newerThan.toString(Qt::ISODate));
-                        url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
-                    }
+                    url.appendQuery(queryLatestTimestamp(newerThan));
                     sApp->getFromNetwork(url, { this, &CAirportDataReader::ps_parseAirportData });
                     emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::StartRead, 0);
                 }
