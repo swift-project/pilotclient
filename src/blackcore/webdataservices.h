@@ -346,11 +346,11 @@ namespace BlackCore
 
         //! Corresponding DB timestamp if applicable
         //! \threadsafe
-        QDateTime getDbLatestEntityTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        QDateTime getLatestDbEntityTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
         //! Shared info object timestamp
         //! \threadsafe
-        QDateTime getSharedInfoObjectTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+        QDateTime getLatestSharedInfoObjectTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
         //! Entities with newer shared file (from DB Info object)
         //! \threadsafe

@@ -368,7 +368,7 @@ namespace BlackCore
         }
     }
 
-    QDateTime CWebDataServices::getDbLatestEntityTimestamp(CEntityFlags::Entity entity) const
+    QDateTime CWebDataServices::getLatestDbEntityTimestamp(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
         if (CEntityFlags::anySwiftDbEntity(entity))
@@ -383,7 +383,7 @@ namespace BlackCore
         }
     }
 
-    QDateTime CWebDataServices::getSharedInfoObjectTimestamp(CEntityFlags::Entity entity) const
+    QDateTime CWebDataServices::getLatestSharedInfoObjectTimestamp(CEntityFlags::Entity entity) const
     {
         const CDatabaseReader *reader = this->getDbReader(entity);
         if (reader)

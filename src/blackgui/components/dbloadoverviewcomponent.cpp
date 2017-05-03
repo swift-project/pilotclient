@@ -229,7 +229,7 @@ namespace BlackGui
 
         QString CDbLoadOverviewComponent::dbTimestampForEntity(CEntityFlags::Entity entity)
         {
-            const QDateTime ts = sGui->getWebDataServices()->getDbLatestEntityTimestamp(entity);
+            const QDateTime ts = sGui->getWebDataServices()->getLatestDbEntityTimestamp(entity);
             return formattedTimestamp(ts);
         }
 
@@ -241,7 +241,7 @@ namespace BlackGui
 
         QString CDbLoadOverviewComponent::sharedFileTimestampForEntity(CEntityFlags::Entity entity)
         {
-            const QDateTime ts = sGui->getWebDataServices()->getSharedInfoObjectTimestamp(entity);
+            const QDateTime ts = sGui->getWebDataServices()->getLatestSharedInfoObjectTimestamp(entity);
             return formattedTimestamp(ts);
         }
 
