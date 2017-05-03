@@ -94,6 +94,7 @@ namespace BlackMisc
 
         QString CUrl::appendQuery(const QString &queryToAppend)
         {
+            if (queryToAppend.isEmpty()) { return m_query; }
             const QString q(stripQueryString(queryToAppend));
             if (q.isEmpty()) { return m_query;  }
             m_query += hasQuery() ? "&" + q : q;

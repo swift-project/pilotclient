@@ -31,7 +31,7 @@ namespace BlackMisc
     QDateTime ITimestampBased::getUtcTimestamp() const
     {
         if (this->m_timestampMSecsSinceEpoch < 0) { return QDateTime(); }
-        return QDateTime::fromMSecsSinceEpoch(this->m_timestampMSecsSinceEpoch, Qt::UTC);
+        return QDateTime::fromMSecsSinceEpoch(this->m_timestampMSecsSinceEpoch);
     }
 
     void ITimestampBased::setTimestampToNull()
