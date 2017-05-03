@@ -50,7 +50,6 @@ namespace BlackMisc
                 //! \name Interface functions
                 //! @{
                 virtual bool isLoadingFinished() const override;
-                virtual bool areModelFilesUpdated() const override;
                 //! @}
 
             public slots:

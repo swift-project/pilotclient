@@ -132,7 +132,7 @@ namespace BlackMisc
                 if (modelDirectory.isEmpty())
                 {
                     this->clearCache();
-                    emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directory '%1' is empty") << modelDirectory, simulator);
+                    emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directory '%1' is empty") << modelDirectory, simulator, ParsedData);
                     return;
                 }
 
@@ -163,19 +163,10 @@ namespace BlackMisc
                 return !m_parserWorker || m_parserWorker->isFinished();
             }
 
-            bool CAircraftModelLoaderXPlane::areModelFilesUpdated() const
-            {
-                const QDateTime cacheTs(getCacheTimestamp());
-                if (!cacheTs.isValid()) { return true; }
-                return CFileUtils::containsFileNewerThan(
-                           cacheTs, this->getFirstModelDirectoryOrDefault(),
-                           true, {fileFilterCsl(), fileFilterFlyable()},  this->getModelExcludeDirectoryPatterns());
-            }
-
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
                 this->setCachedModels(models);
-                emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, "Updated '%1' models") << models.size(), this->getSimulator());
+                emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, "Updated '%1' models") << models.size(), this->getSimulator(), ParsedData);
             }
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
@@ -386,7 +377,7 @@ namespace BlackMisc
                     return false;
                 }
 
-                auto p = std::find_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage &p) { return p.name == tokens[1]; });
+                auto p = std::find_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage & p) { return p.name == tokens[1]; });
                 if (p == m_cslPackages.cend())
                 {
                     package.path = path;
@@ -409,7 +400,7 @@ namespace BlackMisc
                     return false;
                 }
 
-                if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage &p) { return p.name == tokens[1]; }) == 0)
+                if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage & p) { return p.name == tokens[1]; }) == 0)
                 {
                     CLogMessage(this).warning("WARNING: required package %1 not found. Aborting processing of this package.") << tokens[1];
                     return false;

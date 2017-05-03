@@ -105,13 +105,13 @@ namespace BlackMisc
                                 this->setCachedModels(models, simulator); // not thread safe
                             }
                             // currently I treat no data as error
-                            emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator);
+                            emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator, ParsedData);
                         }
                         else
                         {
                             CStatusMessage status = this->m_loadingMessages.toSingleMessage();
                             status.setSeverity(CStatusMessage::SeverityError);
-                            emit this->loadingFinished(status, simulator);
+                            emit this->loadingFinished(status, simulator, ParsedData);
                         }
                     });
                 }
@@ -128,23 +128,13 @@ namespace BlackMisc
                         this->setCachedModels(models); // not thread safe
                     }
                     // currently I treat no data as error
-                    emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator);
+                    emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator, ParsedData);
                 }
             }
 
             bool CAircraftCfgParser::isLoadingFinished() const
             {
                 return !m_parserWorker || m_parserWorker->isFinished();
-            }
-
-            bool CAircraftCfgParser::areModelFilesUpdated() const
-            {
-                const QDateTime cacheTs(getCacheTimestamp());
-                if (!cacheTs.isValid()) { return true; }
-                return CFileUtils::containsFileNewerThan(
-                           cacheTs,
-                           this->m_settings.getFirstModelDirectoryOrDefault(this->getSimulator()),
-                           true, { fileFilter() }, this->getModelExcludeDirectoryPatterns());
             }
 
             CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, CStatusMessageList &messages, bool *ok)

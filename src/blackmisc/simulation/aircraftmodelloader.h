@@ -57,14 +57,20 @@ namespace BlackMisc
                 NotSet                = 0,
                 LoadDirectly          = 1 << 0,   //!< load syncronously (blocking), normally for testing
                 LoadInBackground      = 1 << 1,   //!< load in background, asyncronously
-                CacheUntilNewer       = 1 << 2,   //!< use cache until newer data re available
-                CacheFirst            = 1 << 3,   //!< always use cache (if it has data)
-                CacheSkipped          = 1 << 4,   //!< ignore cache
-                CacheOnly             = 1 << 5,   //!< only read cache, never load from disk
+                CacheFirst            = 1 << 2,   //!< always use cache (if it has data)
+                CacheSkipped          = 1 << 3,   //!< ignore cache
+                CacheOnly             = 1 << 4,   //!< only read cache, never load from disk
                 InBackgroundWithCache = LoadInBackground | CacheFirst,   //!< Background, cached
                 InBackgroundNoCache   = LoadInBackground | CacheSkipped  //!< Background, not cached
             };
             Q_DECLARE_FLAGS(LoadMode, LoadModeFlag)
+
+            //! Load mode
+            enum LoadFinishedInfo
+            {
+                CacheLoaded, //!< cache was loaded
+                ParsedData   //!< parsed data
+            };
 
             //! Destructor
             virtual ~IAircraftModelLoader();
@@ -97,9 +103,6 @@ namespace BlackMisc
 
             //! Count of loaded models
             int getAircraftModelsCount() const { return getAircraftModels().size(); }
-
-            //! Model files updated?
-            virtual bool areModelFilesUpdated() const = 0;
 
             //! Which simulator is supported by that very loader
             const CSimulatorInfo getSimulator() const;
@@ -155,7 +158,7 @@ namespace BlackMisc
 
         signals:
             //! Parsing is finished or cache has been loaded
-            void loadingFinished(const BlackMisc::CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void loadingFinished(const BlackMisc::CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, LoadFinishedInfo info);
 
         protected:
             //! Constructor
@@ -181,7 +184,7 @@ namespace BlackMisc
 
         protected slots:
             //! Loading finished, also logs messages
-            void ps_loadFinished(const CStatusMessage &status, const CSimulatorInfo &simulator);
+            void ps_loadFinished(const CStatusMessage &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
 
             //! A cache has been changed
             void ps_cacheChanged(const CSimulatorInfo &simInfo);
@@ -191,6 +194,7 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::IAircraftModelLoader::LoadMode)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::IAircraftModelLoader::LoadModeFlag)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::IAircraftModelLoader::LoadMode)
 
 #endif // guard

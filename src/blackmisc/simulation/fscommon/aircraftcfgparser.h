@@ -52,7 +52,6 @@ namespace BlackMisc
                 //! \name Interface functions
                 //! @{
                 virtual bool isLoadingFinished() const override;
-                virtual bool areModelFilesUpdated() const override;
                 //! @}
 
                 //! Create an parser object for given simulator
