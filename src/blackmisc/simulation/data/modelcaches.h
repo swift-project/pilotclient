@@ -215,6 +215,9 @@ namespace BlackMisc
                 //! Info string without XPlane (FSX,P3D, FS9)
                 QString getInfoStringFsFamily() const;
 
+                //! Descriptive text
+                virtual QString getDescription() const = 0;
+
             signals:
                 //! Cache has been changed
                 void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -262,6 +265,7 @@ namespace BlackMisc
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual QString getDescription() const override { return "Model caches"; }
                 //! @}
 
             private:
@@ -304,6 +308,7 @@ namespace BlackMisc
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual QString getDescription() const override { return "Model sets"; }
                 //! @}
 
             private:
