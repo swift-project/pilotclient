@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSMODELCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSMODELCOMPONENT_H
 
+#include "blackgui/settings/guisettings.h"
 #include <QFrame>
 
 namespace Ui { class CSettingsModelComponent; }
@@ -33,8 +34,18 @@ namespace BlackGui
             //! Destructor
             virtual ~CSettingsModelComponent();
 
+            //! Interval, -1 for disabled
+            int getBackgroundUpdaterIntervallSecs() const;
+
         private:
             QScopedPointer<Ui::CSettingsModelComponent> ui;
+            BlackMisc::CSetting<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSetting { this, &CSettingsModelComponent::cacheChanged }; //!< consolidation time
+
+            //! Consolidation time entered
+            void consolidationEntered();
+
+            //! Cache has been changed
+            void cacheChanged();
         };
     } // ns
 } // ns

@@ -6,20 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>175</width>
+    <width>374</width>
     <height>28</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
-  <layout class="QVBoxLayout" name="vl_Settings">
+  <layout class="QHBoxLayout" name="hl_SettingsModelComponent">
    <property name="leftMargin">
     <number>3</number>
    </property>
@@ -42,8 +36,55 @@
      </property>
     </widget>
    </item>
+   <item>
+    <spacer name="hs_SetiingsModelComponent">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="lbl_Consolidate">
+     <property name="text">
+      <string>Consolidate (secs):</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="le_ConsolidateSecs">
+     <property name="maximumSize">
+      <size>
+       <width>50</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="maxLength">
+      <number>4</number>
+     </property>
+     <property name="placeholderText">
+      <string>secs.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="BlackGui::CLedWidget" name="comp_Led" native="true"/>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::CLedWidget</class>
+   <extends>QWidget</extends>
+   <header>blackgui/led.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
