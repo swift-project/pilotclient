@@ -8,6 +8,7 @@
  */
 
 #include "swiftdata.h"
+#include "blackcore/db/backgrounddataupdater.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
@@ -36,6 +37,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
+using namespace BlackCore::Db;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackConfig;
@@ -149,6 +151,28 @@ void CSwiftData::initMenu()
 void CSwiftData::performGracefulShutdown()
 {
     // void
+}
+
+void CSwiftData::consolidationSettingChanged()
+{
+    int consolidationSecs = m_consolidationSettings.get();
+    if (consolidationSecs < 0)
+    {
+        if (m_updater)
+        {
+            m_updater->gracefulShutdown();
+            m_updater.reset(nullptr);
+        }
+    }
+    else
+    {
+        if (!m_updater)
+        {
+            m_updater.reset(new CBackgroundDataUpdater(this));
+            m_updater->start(QThread::LowestPriority);
+        }
+        m_updater->startUpdating(consolidationSecs);
+    }
 }
 
 void CSwiftData::displayConsole()

@@ -12,6 +12,7 @@
 #ifndef SWIFTDATA_H
 #define SWIFTDATA_H
 
+#include "blackgui/settings/guisettings.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/identifiable.h"
@@ -24,7 +25,14 @@
 class QWidget;
 
 namespace Ui { class CSwiftData; }
-namespace BlackCore { class CWebDataServices; }
+namespace BlackCore
+{
+    class CWebDataServices;
+    namespace Db
+    {
+        class CBackgroundDataUpdater;
+    }
+}
 
 /*!
  * swift data entry control (aka mapping tool)
@@ -68,12 +76,15 @@ private:
     void initDynamicMenus();
 
     void performGracefulShutdown();
+    void consolidationSettingChanged();
 
     void displayConsole();
     void displayLog();
 
     BlackGui::CManagedStatusBar    m_statusBar;
     QScopedPointer<Ui::CSwiftData> ui;
+    QScopedPointer<BlackCore::Db::CBackgroundDataUpdater, QScopedPointerDeleteLater> m_updater;
+    BlackMisc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
 };
 
 #endif // guard
