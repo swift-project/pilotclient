@@ -86,6 +86,25 @@ namespace BlackGui
             //! Key in data cache
             static const char *key() { return "guinownaircraftmodel"; }
         };
+
+        //! Settings for last manual entries of own aircraft mode
+        struct TBackgroundConsolidation : public BlackMisc::TSettingTrait<int>
+        {
+            //! Key in data cache
+            static const char *key() { return "backgroundconsolidation"; }
+
+            //! Validator function.
+            static bool isValid(const int &valueInSeconds) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
+
+            //! Default, not consolidating
+            static const int &defaultValue() { static const int i = -1; return i; }
+
+            //! Minimum
+            static int minSecs() { return 60; }
+
+            //! Maximum
+            static int maxSecs() { return 3600; }
+        };
     } // ns
 } // ns
 
