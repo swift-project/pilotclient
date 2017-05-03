@@ -50,6 +50,12 @@ namespace BlackMisc
             //! Update or insert data (based on DB key)
             int replaceOrAddObjectsByKey(const CONTAINER &container);
 
+            //! Latest DB timestamp (means objects with DB key)
+            QDateTime latestDbTimestamp() const;
+
+            //! Latest DB timestamp (means objects with DB key)
+            QDateTime oldestDbTimestamp() const;
+
             //! From DB JSON with default prefixes
             static CONTAINER fromDatabaseJson(const QJsonArray &array);
 

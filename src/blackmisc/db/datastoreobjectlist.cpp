@@ -142,6 +142,24 @@ namespace BlackMisc
             return newValues.size() - removeSize;
         }
 
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        QDateTime IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::oldestDbTimestamp() const
+        {
+            CONTAINER objs(this->container());
+            objs.removeObjectsWithoutDbKey();
+            if (objs.isEmpty()) { return QDateTime(); }
+            return objs.oldestDbTimestamp();
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        QDateTime IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::latestDbTimestamp() const
+        {
+            CONTAINER objs(this->container());
+            objs.removeObjectsWithoutDbKey();
+            if (objs.isEmpty()) { return QDateTime(); }
+            return objs.latestTimestamp();
+        }
+
         template <class OBJ, class CONTAINER, typename KEYTYPE>
         CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::fromDatabaseJson(const QJsonArray &array)
         {
