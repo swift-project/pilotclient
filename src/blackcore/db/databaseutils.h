@@ -32,11 +32,17 @@ namespace BlackCore
             //! No constructor
             CDatabaseUtils() = delete;
 
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Consolidate own (aircraft) model data with DB data
             static BlackMisc::Simulation::CAircraftModel consolidateOwnAircraftModelWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool force, bool *modified = nullptr);
 
             //! Consolidate model data with DB data
             static BlackMisc::Simulation::CAircraftModel consolidateModelWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool force, bool *modified = nullptr);
+
+            //! Consolidate model data with DB data
+            static BlackMisc::Simulation::CAircraftModel consolidateModelWithDbData(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::Simulation::CAircraftModel &dbModel, bool force, bool *modified);
 
             //! Consolidate models with DB data
             static int consolidateModelsWithDbData(BlackMisc::Simulation::CAircraftModelList &models, bool force);
@@ -44,6 +50,10 @@ namespace BlackCore
             //! Consolidate models with simulator model data (aka "models on disk")
             //! \remark kept here with the other consolidate functions, but actually DB independent
             static BlackMisc::Simulation::CAircraftModelList consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CAircraftModelList &simulatorModels, bool processEvents);
+
+            //! Consolidate models with simulator model data (aka "models on disk")
+            //! \remark kept here with the other consolidate functions, but actually DB independent
+            static int consolidateModelsWithDbData(const BlackMisc::Simulation::CAircraftModelList &dbModels, BlackMisc::Simulation::CAircraftModelList &simulatorModels, bool force);
 
             //! Consolidate models with DB data
             static int consolidateModelsWithDbDataAllowsGuiRefresh(BlackMisc::Simulation::CAircraftModelList &models, bool force, bool processEvents);

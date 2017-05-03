@@ -442,7 +442,7 @@ namespace BlackGui
             CLogMessage(this).info("Starting loading for %1") << simulator.toQString();
             ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
-            this->m_modelLoader->startLoading(mode, &CDatabaseUtils::consolidateModelsWithDbData, directory);
+            this->m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), directory);
         }
 
         void CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished(const CStatusMessage &status, const CSimulatorInfo &simulator)

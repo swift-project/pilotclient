@@ -21,6 +21,12 @@ namespace BlackCore
 {
     namespace Db
     {
+        const CLogCategoryList &CDatabaseUtils::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats { CLogCategory::modelCache(), CLogCategory::modelSetCache() };
+            return cats;
+        }
+
         CAircraftModel CDatabaseUtils::consolidateOwnAircraftModelWithDbData(const CAircraftModel &model, bool force, bool *modified)
         {
             bool myModified = false;
@@ -44,23 +50,32 @@ namespace BlackCore
 
         CAircraftModel CDatabaseUtils::consolidateModelWithDbData(const CAircraftModel &model, bool force, bool *modified)
         {
+            if (modified) { *modified = false; }
+            if (!model.hasModelString()) { return model; }
+            if (!hasDbAircraftData()) { return model; }
+
+            CAircraftModel dbModel(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
+            return CDatabaseUtils::consolidateModelWithDbData(model, dbModel, force, modified);
+        }
+
+        CAircraftModel CDatabaseUtils::consolidateModelWithDbData(const CAircraftModel &model, const CAircraftModel &dbModel, bool force, bool *modified)
+        {
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application object");
             Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
 
             if (modified) { *modified = false; }
-            if (!hasDbAircraftData()) { return model; }
             if (!model.hasModelString()) { return model; }
             if (!force && model.hasValidDbKey()) { return model; }
             const int distributorOrder = model.getDistributorOrder(); // later restore that order
 
-            CAircraftModel dbModel(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
             if (dbModel.isLoadedFromDb())
             {
                 // take the db model as original
                 if (modified) { *modified = true; }
-                dbModel.updateMissingParts(model);
-                dbModel.setDistributorOrder(distributorOrder);
-                return dbModel;
+                CAircraftModel dbModelModified(dbModel);
+                dbModelModified.updateMissingParts(model);
+                dbModelModified.setDistributorOrder(distributorOrder);
+                return dbModelModified;
             }
 
             // we try our best to update by DB data here
@@ -122,7 +137,7 @@ namespace BlackCore
                 if (!allOwnModelsModelStrings.contains(ms)) { continue; }
                 consolidatedModels.push_back(model);
             }
-            CLogMessage().debug() << "Consolidated " << models.size() << " vs. " << simulatorModels.size() << " in " << timer.elapsed() << "ms";
+            CLogMessage(getLogCategories()).info("Consolidated %1  vs. %2 in %3 ms") << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
             return consolidatedModels;
         }
 
@@ -143,7 +158,30 @@ namespace BlackCore
                     if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
                 }
             }
-            CLogMessage().debug() << "Consolidated " << models.size() << " in " << timer.elapsed() << "ms";
+            CLogMessage(getLogCategories()).info("Consolidated %1 models in %2 ms") << models.size() << timer.elapsed();
+            return c;
+        }
+
+        int CDatabaseUtils::consolidateModelsWithDbData(const CAircraftModelList &dbModels, CAircraftModelList &simulatorModels, bool force)
+        {
+            QTime timer;
+            timer.start();
+            if (dbModels.isEmpty() || simulatorModels.isEmpty()) { return 0; }
+            const QSet<QString> dbModelsModelStrings = dbModels.getModelStringSet();
+
+            int c = 0;
+            for (CAircraftModel &model : simulatorModels)
+            {
+                const QString ms(model.getModelString());
+                if (ms.isEmpty()) { continue; }
+                if (!dbModelsModelStrings.contains(ms)) { continue; }
+                bool modified = false;
+                const CAircraftModel consolidated = CDatabaseUtils::consolidateModelWithDbData(model, dbModels.findFirstByModelStringOrDefault(ms), force, &modified);
+                if (!modified) { continue; }
+                model = consolidated;
+                c++;
+            }
+            CLogMessage(getLogCategories()).info("Consolidated %1 models in %2 ms") << simulatorModels.size() << timer.elapsed();
             return c;
         }
 
