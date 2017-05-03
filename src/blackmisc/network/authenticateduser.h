@@ -137,6 +137,9 @@ namespace BlackMisc
             //! Has bulk role?
             bool hasBulkRole() const;
 
+            //! Has bulk add role?
+            bool hasBulkAddRole() const;
+
             //! Authenticated
             void setAuthenticated(bool authenticated) { m_authenticated = authenticated; }
 

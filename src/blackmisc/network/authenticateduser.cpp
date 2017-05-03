@@ -112,9 +112,14 @@ namespace BlackMisc
             return this->hasRole("BULK");
         }
 
+        bool CAuthenticatedUser::hasBulkAddRole() const
+        {
+            return this->hasRole("BULKADD");
+        }
+
         bool CAuthenticatedUser::canDirectlyWriteModels() const
         {
-            return this->hasBulkRole();
+            return this->hasBulkRole() || this->hasBulkAddRole();
         }
 
         CIcon CAuthenticatedUser::toIcon() const
