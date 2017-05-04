@@ -63,6 +63,11 @@ namespace BlackGui
             return ui->comp_DataInfoArea;
         }
 
+        CDataSettingsComponent *CDataMainInfoAreaComponent::getDataSettingsComponent() const
+        {
+            return ui->comp_Settings;
+        }
+
         void CDataMainInfoAreaComponent::displayLog()
         {
             this->selectArea(InfoAreaLog);

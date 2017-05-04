@@ -23,7 +23,6 @@ class QPixmap;
 class QWidget;
 
 namespace Ui { class CDataMainInfoAreaComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -31,6 +30,7 @@ namespace BlackGui
         class CDataInfoAreaComponent;
         class CDbMappingComponent;
         class CLogComponent;
+        class CDataSettingsComponent;
 
         /**
          * Main info area for data entry tool
@@ -56,7 +56,7 @@ namespace BlackGui
             explicit CDataMainInfoAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDataMainInfoAreaComponent();
+            virtual ~CDataMainInfoAreaComponent();
 
             //! Log component
             CLogComponent *getLogComponent() const;
@@ -64,8 +64,11 @@ namespace BlackGui
             //! Mapping component
             CDbMappingComponent *getMappingComponent() const;
 
-            //! Mapping component
+            //! Info area component
             CDataInfoAreaComponent *getDataInfoAreaComponent() const;
+
+            //! Settings component
+            BlackGui::Components::CDataSettingsComponent *getDataSettingsComponent() const;
 
             //! Display the log
             void displayLog();
@@ -87,7 +90,6 @@ namespace BlackGui
         private:
             QScopedPointer <Ui::CDataMainInfoAreaComponent> ui;
         };
-
     } // ns
 } // ns
 
