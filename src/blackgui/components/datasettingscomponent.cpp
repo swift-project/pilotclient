@@ -11,6 +11,7 @@
 #include "ui_datasettingscomponent.h"
 
 using namespace BlackGui;
+using namespace BlackCore::Db;
 
 namespace BlackGui
 {
@@ -27,5 +28,9 @@ namespace BlackGui
         CDataSettingsComponent::~CDataSettingsComponent()
         { }
 
+        void CDataSettingsComponent::setBackgroundUpdater(CBackgroundDataUpdater *updater)
+        {
+            ui->comp_ModelSettings->setBackgroundUpdater(updater);
+        }
     } // ns
 } // ns

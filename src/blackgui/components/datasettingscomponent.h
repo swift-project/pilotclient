@@ -14,14 +14,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
-
 #include <QObject>
 #include <QScopedPointer>
 
 class QWidget;
 
 namespace Ui { class CDataSettingsComponent; }
-
+namespace BlackCore { namespace Db { class CBackgroundDataUpdater; }}
 namespace BlackGui
 {
     namespace Components
@@ -38,7 +37,10 @@ namespace BlackGui
             explicit CDataSettingsComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDataSettingsComponent();
+            virtual ~CDataSettingsComponent();
+
+            //! Background updater
+            void setBackgroundUpdater(BlackCore::Db::CBackgroundDataUpdater *updater);
 
         private:
             QScopedPointer<Ui::CDataSettingsComponent> ui;

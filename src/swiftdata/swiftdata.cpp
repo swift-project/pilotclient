@@ -13,6 +13,7 @@
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/logcomponent.h"
+#include "blackgui/components/datasettingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/loghandler.h"
@@ -160,6 +161,7 @@ void CSwiftData::consolidationSettingChanged()
     {
         if (m_updater)
         {
+            ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(nullptr);
             m_updater->gracefulShutdown();
             m_updater.reset(nullptr);
         }
@@ -170,6 +172,7 @@ void CSwiftData::consolidationSettingChanged()
         {
             m_updater.reset(new CBackgroundDataUpdater(this));
             m_updater->start(QThread::LowestPriority);
+            ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(m_updater.data());
         }
         m_updater->startUpdating(consolidationSecs);
     }

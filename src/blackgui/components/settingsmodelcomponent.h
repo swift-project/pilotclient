@@ -16,6 +16,7 @@
 #include <QFrame>
 
 namespace Ui { class CSettingsModelComponent; }
+namespace BlackCore { namespace Db { class CBackgroundDataUpdater; }}
 namespace BlackGui
 {
     namespace Components
@@ -37,9 +38,13 @@ namespace BlackGui
             //! Interval, -1 for disabled
             int getBackgroundUpdaterIntervallSecs() const;
 
+            //! Updater (the updater this setting is for)
+            void setBackgroundUpdater(BlackCore::Db::CBackgroundDataUpdater *updater);
+
         private:
             QScopedPointer<Ui::CSettingsModelComponent> ui;
             BlackMisc::CSetting<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSetting { this, &CSettingsModelComponent::cacheChanged }; //!< consolidation time
+            BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr;
 
             //! Consolidation time entered
             void consolidationEntered();

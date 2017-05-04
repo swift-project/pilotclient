@@ -9,7 +9,8 @@
 
 #include "settingsmodelcomponent.h"
 #include "ui_settingsmodelcomponent.h"
-
+#include "blackgui/guiapplication.h"
+#include "blackcore/db/backgrounddataupdater.h"
 #include "blackmisc/logmessage.h"
 #include <QValidator>
 
@@ -45,6 +46,11 @@ namespace BlackGui
             return ok ? secs : -1;
         }
 
+        void CSettingsModelComponent::setBackgroundUpdater(BlackCore::Db::CBackgroundDataUpdater *updater)
+        {
+            m_updater = updater;
+        }
+
         void CSettingsModelComponent::consolidationEntered()
         {
             int v = this->getBackgroundUpdaterIntervallSecs();
@@ -61,7 +67,12 @@ namespace BlackGui
             const bool on = v > 0;
             const QString s = on ? QString::number(v) : "";
             ui->le_ConsolidateSecs->setText(s);
-            ui->comp_Led->setOn(on);
+
+            const bool updater =
+                on &&
+                sApp && !sApp->isShuttingDown() &&
+                this->m_updater && this->m_updater->isEnabled();
+            ui->comp_Led->setOn(updater);
         }
     } // ns
 } // ns
