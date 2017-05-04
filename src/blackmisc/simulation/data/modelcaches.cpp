@@ -135,12 +135,12 @@ namespace BlackMisc
                 if (synchronizeCache)
                 {
                     this->synchronizeCacheImpl(sim);
-                    CLogMessage(this).info("Initialized model caches to %1") << simStr;
+                    CLogMessage(this).info("Initialized model caches (%1) for %2") << this->getDescription() << simStr;
                 }
                 else
                 {
                     this->admitCacheImpl(sim);
-                    CLogMessage(this).info("Admit model caches to %1") << simStr;
+                    CLogMessage(this).info("Admit model (%1) caches for %2") << this->getDescription() << simStr;
                 }
             }
 
@@ -317,12 +317,12 @@ namespace BlackMisc
                 if (synchronizeCache)
                 {
                     this->synchronizeCacheImpl(sim);
-                    CLogMessage(this).info("Initialized model caches to %1") << simStr;
+                    CLogMessage(this).info("Initialized model caches (%1) for %2") << this->getDescription() << simStr;
                 }
                 else
                 {
                     this->admitCacheImpl(sim);
-                    CLogMessage(this).info("Admit model caches to %1") << simStr;
+                    CLogMessage(this).info("Admit model (%1) caches for %2") << this->getDescription() << simStr;
                 }
             }
 
