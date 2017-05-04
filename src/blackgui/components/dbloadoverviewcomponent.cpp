@@ -281,7 +281,7 @@ namespace BlackGui
             this->m_loadInProgress = true;
             this->showLoading();
 
-            // shared files ts
+            // shared files ts and DB info objects
             sGui->getWebDataServices()->triggerReadOfSharedInfoObjects();
             sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
         }
@@ -305,7 +305,7 @@ namespace BlackGui
             this->showLoading();
 
             // shared files ts
-            sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
+            sGui->getWebDataServices()->triggerReadOfSharedInfoObjects();
         }
 
         void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
