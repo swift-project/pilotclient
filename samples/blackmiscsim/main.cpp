@@ -30,9 +30,6 @@ using namespace BlackMisc;
 //! main
 int main(int argc, char *argv[])
 {
-#ifdef Q_OS_MAC
-    QCoreApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
-#endif
     QCoreApplication qa(argc, argv);
     BlackCore::CApplication a;
     Q_UNUSED(a);

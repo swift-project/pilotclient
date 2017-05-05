@@ -22,9 +22,6 @@ using namespace BlackGui;
 //! main
 int main(int argc, char *argv[])
 {
-#ifdef Q_OS_MAC
-    QApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
-#endif
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("samplehotkey", BlackMisc::CApplicationInfo::Sample, QPixmap());

@@ -30,9 +30,6 @@ using namespace BlackCore::Db;
 int main(int argc, char *argv[])
 {
     //! [SwiftApplicationDemo]
-#ifdef Q_OS_MAC
-    QApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
-#endif
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv); // needed
     Q_UNUSED(qa);

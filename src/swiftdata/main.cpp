@@ -24,9 +24,6 @@ using namespace BlackGui;
 
 int main(int argc, char *argv[])
 {
-#ifdef Q_OS_MAC
-    QApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
-#endif
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     Q_UNUSED(qa);

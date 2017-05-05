@@ -38,9 +38,6 @@ int main(int argc, char *argv[])
     // is just for testing, I did not split it up
 
     BlackMisc::registerMetadata();
-#ifdef Q_OS_MAC
-    QCoreApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
-#endif
     QCoreApplication a(argc, argv);
     QTextStream out(stdout, QIODevice::WriteOnly);
     QTextStream qtin(stdin);

@@ -33,9 +33,6 @@ int main(int argc, char *argv[])
 {
     // I use CGuiApplication and not core application
     // otherwise no QPixmap metadata (metadata sample)
-#ifdef Q_OS_MAC
-    QCoreApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
-#endif
     QCoreApplication qa(argc, argv);
     CApplication a(CApplicationInfo::Sample);
     Q_UNUSED(qa);

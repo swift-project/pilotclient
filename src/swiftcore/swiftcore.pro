@@ -29,4 +29,11 @@ DESTDIR = $$DestRoot/bin
 target.path = $$PREFIX/bin
 INSTALLS += target
 
+macx {
+    # Modifies plugin path
+    qtconf.path = $$PREFIX/bin/swiftcore.app/Contents/Resources
+    qtconf.files = qt.conf
+    INSTALLS += qtconf
+}
+
 load(common_post)

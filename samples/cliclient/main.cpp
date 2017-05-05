@@ -24,9 +24,6 @@ using namespace BlackMisc;
 //! main
 int main(int argc, char *argv[])
 {
-#ifdef Q_OS_MAC
-    QCoreApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
-#endif
     QCoreApplication app (argc, argv);
     BlackMisc::CLogHandler::instance()->install();
 

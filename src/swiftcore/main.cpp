@@ -26,9 +26,6 @@ using namespace BlackGui;
 int main(int argc, char *argv[])
 {
     //! [SwiftApplicationDemo]
-#ifdef Q_OS_MAC
-    QApplication::addLibraryPath(CDirectoryUtils::applicationDirectoryPath());
-#endif
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     Q_UNUSED(qa); // init of qa is required, but qa not used
