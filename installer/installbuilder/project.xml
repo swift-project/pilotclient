@@ -6,6 +6,7 @@
     <leftImage>../images/leftimage.png</leftImage>
     <logoImage>../images/logo.png</logoImage>
     <splashImage>../images/splashscreen.png</splashImage>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <componentList>
         <include>
             <file>swift.xml</file>
@@ -30,6 +31,24 @@ update_download_location = ${system_temp_directory}
 check_for_updates = 1
 </text>
         </writeFile>
+        <createDirectory>
+            <path>/usr/local/var/lib/dbus</path>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </createDirectory>
+        <runProgram>
+            <program>bin/dbus-uuidgen</program>
+            <programArguments>--ensure=/usr/local/var/lib/dbus/machine-id</programArguments>
+            <workingDirectory>${installdir}</workingDirectory>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
     </postInstallationActionList>
     <preUninstallationActionList>
         <deleteFile>

@@ -332,3 +332,8 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     publish_installer.depends = create_installer
     QMAKE_EXTRA_TARGETS += publish_installer
 }
+
+############### Bitrock Installbuilder Files ###############
+
+# List them in IDE
+OTHER_FILES += installer/installbuilder/*.xml

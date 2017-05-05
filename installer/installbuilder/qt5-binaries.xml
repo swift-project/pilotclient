@@ -165,6 +165,9 @@
                 <distributionFile>
                     <origin>../../dist/bin/dbus-daemon</origin>
                 </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/dbus-uuidgen</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
