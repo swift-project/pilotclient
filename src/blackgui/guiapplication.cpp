@@ -39,7 +39,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QProcess>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QSplashScreen>
 #include <QStyleFactory>
 #include <QStringList>
@@ -244,7 +244,7 @@ namespace BlackGui
                         html += "</td></tr>\n";
                     }
                     html += "<tr><td>";
-                    static const QRegExp reg("[ ]{2,}");
+                    thread_local const QRegularExpression reg("[ ]{2,}");
                     html += lt.replace(reg, "</td><td>");
                     pendingTr = true;
                 }

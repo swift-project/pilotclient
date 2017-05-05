@@ -49,7 +49,7 @@
 #include <QJsonParseError>
 #include <QJsonValue>
 #include <QList>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTextCodec>
 #include <QVector>
 #include <Qt>
@@ -1062,7 +1062,7 @@ namespace BlackCore
                 {
                     //  detect the stupid z1, z2, z3 placeholders
                     //! \fixme: Anything better as this stupid code here?
-                    const QString test = fixed.toLower().remove(QRegExp("[\\n\\t\\r]"));
+                    const QString test = fixed.toLower().remove(QRegularExpression("[\\n\\t\\r]"));
                     if (test == "z") return;
                     if (test.startsWith("z") && test.length() == 2) return; // z1, z2, ..
                     if (test.length() == 1) return; // sometimes just z
@@ -1088,8 +1088,8 @@ namespace BlackCore
             }
 
             auto cruiseAltString = cbvar_cast(cbvar)->fromFSD(fp->cruiseAltitude);
-            static const QRegExp withUnit("\\D+");
-            if (!cruiseAltString.isEmpty() && withUnit.indexIn(cruiseAltString) < 0)
+            thread_local const QRegularExpression withUnit("\\D+");
+            if (!cruiseAltString.isEmpty() && !withUnit.match(cruiseAltString).hasMatch())
             {
                 cruiseAltString += "ft";
             }

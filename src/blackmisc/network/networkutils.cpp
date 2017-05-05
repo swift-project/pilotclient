@@ -346,7 +346,7 @@ namespace BlackMisc
         {
             if (errorMessage.isEmpty()) { return errorMessage; }
             QString phpError(errorMessage);
-            static const QRegularExpression regEx("<[^>]*>");
+            thread_local const QRegularExpression regEx("<[^>]*>");
             return phpError.remove(regEx);
         }
 

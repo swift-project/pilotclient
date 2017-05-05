@@ -20,7 +20,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QRegExp>
 #include <QTimeZone>
 
 using namespace BlackMisc;

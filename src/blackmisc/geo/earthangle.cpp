@@ -12,7 +12,7 @@
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <Qt>
 #include <QtGlobal>
 #include <QtMath>
@@ -72,7 +72,7 @@ namespace BlackMisc
         {
             // http://www.regular-expressions.info/floatingpoint.html
             const QString wgs = wgsCoordinate.simplified().trimmed();
-            QRegExp rx("([-+]?[0-9]*\\.?[0-9]+)");
+            thread_local const QRegularExpression rx("([-+]?[0-9]*\\.?[0-9]+)");
             qint32 deg = 0;
             qint32 min = 0;
             double sec = 0.0;
@@ -80,10 +80,11 @@ namespace BlackMisc
             int fragmentLength = 0;
             int c = 0;
             int pos = 0;
-            while ((pos = rx.indexIn(wgs, pos)) != -1)
+            QRegularExpressionMatch match = rx.match(wgs, pos);
+            while (match.hasMatch())
             {
-                QString cap = rx.cap(1);
-                pos += rx.matchedLength();
+                QString cap = match.captured(1);
+                pos += match.capturedLength(1);
                 switch (c++)
                 {
                 case 0:
@@ -102,6 +103,7 @@ namespace BlackMisc
                 default:
                     break;
                 }
+                match = rx.match(wgs, pos);
             }
             if (fragmentLength > 0)
             {

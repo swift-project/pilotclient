@@ -37,7 +37,7 @@
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTabBar>
 #include <QCompleter>
 #include <Qt>
@@ -270,9 +270,9 @@ namespace BlackGui
                 flightPlan.setTakeoffTimePlanned(v);
             }
 
-            static const QRegExp withUnit("\\D+");
+            thread_local const QRegularExpression withUnit("\\D+");
             v = ui->le_CrusingAltitude->text().trimmed();
-            if (!v.isEmpty() && withUnit.indexIn(v) < 0)
+            if (!v.isEmpty() && !withUnit.match(v).hasMatch())
             {
                 v += "ft";
                 ui->le_CrusingAltitude->setText(v);

@@ -13,6 +13,8 @@
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
 
+#include <QRegularExpression>
+
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
@@ -176,7 +178,7 @@ namespace BlackGui
             const QString raw = rawString.trimmed();
             if (raw.isEmpty()) { return QStringList(); }
             QStringList dirs;
-            const QStringList rawLines = raw.split(QRegExp("\n|\r\n|\r"));
+            const QStringList rawLines = raw.split(QRegularExpression("\n|\r\n|\r"));
             for (const QString &l : rawLines)
             {
                 const QString normalized = CFileUtils::normalizeFilePathToQtStandard(l);

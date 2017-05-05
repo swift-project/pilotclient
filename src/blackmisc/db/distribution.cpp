@@ -8,6 +8,7 @@
  */
 
 #include "distribution.h"
+#include <QRegularExpression>
 #include <QStringBuilder>
 
 using namespace BlackConfig;
@@ -230,23 +231,25 @@ namespace BlackMisc
             if (filename.isEmpty()) { return QVersionNumber(); }
 
             // swift-installer-linux-64-0.7.3_2017-03-25_11-24-50.run
-            static const QRegExp firstSegments("\\d+\\.\\d+\\.\\d+");
-            if (firstSegments.indexIn(filename) < 0)
+            thread_local const QRegularExpression firstSegments("\\d+\\.\\d+\\.\\d+");
+            QRegularExpressionMatch firstSegmentsMatch = firstSegments.match(filename);
+            if (!firstSegmentsMatch.hasMatch())
             {
                 return QVersionNumber(); // no version, invalid
             }
-            QString v = firstSegments.cap(0); // first 3 segments, like 0.9.3
+            QString v = firstSegmentsMatch.captured(0); // first 3 segments, like 0.9.3
             if (!v.endsWith('.')) { v += '.'; }
 
-            static const QRegExp ts1("\\d{4}.?\\d{2}.?\\d{2}.?\\d{2}.?\\d{2}.?\\d{2}");
-            if (ts1.indexIn(filename) < 0)
+            thread_local const QRegularExpression ts1("\\d{4}.?\\d{2}.?\\d{2}.?\\d{2}.?\\d{2}.?\\d{2}");
+            QRegularExpressionMatch ts1Match = ts1.match(filename);
+            if (!ts1Match.hasMatch())
             {
                 // version without timestamp
                 v += "0";
                 return QVersionNumber::fromString(v);
             }
 
-            const QString versionTimestampString = BlackMisc::digitOnlyString(ts1.cap(0));
+            const QString versionTimestampString = BlackMisc::digitOnlyString(ts1Match.captured(0));
             const QDateTime versionTimestamp = QDateTime::fromString(versionTimestampString, "yyyyMMddHHmmss");
             const QString lastSegment = QString::number(CBuildConfig::buildTimestampAsVersionSegment(versionTimestamp));
 

@@ -21,7 +21,7 @@
 #include <QFlags>
 #include <QFont>
 #include <QIODevice>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStyleOption>
 #include <QStylePainter>
 #include <QTextStream>
@@ -101,9 +101,8 @@ namespace BlackGui
     {
         const QString s = this->style(fileNameFonts()).toLower();
         if (!s.contains("color:")) return "red";
-        QRegExp rx("color:\\s*(#*\\w+);");
-        rx.indexIn(s);
-        const QString c = rx.cap(1);
+        thread_local const QRegularExpression rx("color:\\s*(#*\\w+);");
+        const QString c = rx.match(s).captured(1);
         return c.isEmpty() ? "red" : c;
     }
 

@@ -21,7 +21,7 @@
 #include "blackmisc/pq/units.h"
 
 #include <QLocale>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QThreadStorage>
 #include <QtDebug>
 
@@ -45,12 +45,10 @@ namespace BlackMisc
             // check
             if (vs.isEmpty()) { return v; }
 
-            static QThreadStorage<QRegExp> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegExp("([-+]?[0-9]*[\\.,]?[0-9]+)\\s*(\\D*)$")); }
-            const auto &regex = tsRegex.localData();
-
-            if (regex.indexIn(value) < 0) { return v; } // not a valid number
-            QString unit = regex.cap(2).trimmed();
+            thread_local const QRegularExpression regex("([-+]?[0-9]*[\\.,]?[0-9]+)\\s*(\\D*)$");
+            auto match = regex.match(value);
+            if (!match.hasMatch()) { return v; } // not a valid number
+            QString unit = match.captured(2).trimmed();
             QString number = QString(value).replace(unit, "");
             unit = unit.trimmed(); // trim after replace, not before
 

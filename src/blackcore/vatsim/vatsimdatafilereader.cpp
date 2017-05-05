@@ -35,7 +35,6 @@
 #include <QMetaObject>
 #include <QNetworkReply>
 #include <QReadLocker>
-#include <QRegExp>
 #include <QRegularExpression>
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
@@ -317,7 +316,7 @@ namespace BlackCore
                                 {
                                     // http://uk.flightaware.com/about/faq_aircraft_flight_plan_suffix.rvt
                                     // we expect something like H/B772/F B773 B773/F
-                                    static const QRegularExpression reg("/.");
+                                    thread_local const QRegularExpression reg("/.");
                                     aircraftIcaoCode = aircraftIcaoCode.replace(reg, "").trimmed().toUpper();
                                     if (CAircraftIcaoCode::isValidDesignator(aircraftIcaoCode))
                                     {

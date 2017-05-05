@@ -12,6 +12,7 @@
 
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QRegularExpression>
 #include <Qt>
 
 namespace BlackMisc
@@ -33,9 +34,9 @@ namespace BlackMisc
     {
         if (countryName.isEmpty()) { return CCountry(); }
 
-        static const QRegExp reg("^[a-z]+", Qt::CaseInsensitive);
-        int pos = reg.indexIn(countryName);
-        const QString cn(pos >= 0 ? reg.cap(0) : countryName);
+        thread_local const QRegularExpression reg("^[a-z]+", QRegularExpression::CaseInsensitiveOption);
+        QRegularExpressionMatch match = reg.match(countryName);
+        const QString cn(match.hasMatch() ? match.captured(0) : countryName);
         CCountryList countries = this->findBy([&](const CCountry & country)
         {
             return country.matchesCountryName(cn);

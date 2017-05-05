@@ -229,10 +229,10 @@ namespace BlackGui
 
         void CWeatherComponent::setupInputValidators()
         {
-            QRegExp reIcaoOrLatitude("^[a-zA-Z]{4}|-?\\d{1,2}[,.]?\\d+$", Qt::CaseInsensitive);
-            ui->le_LatOrIcao->setValidator(new QRegExpValidator(reIcaoOrLatitude, this));
-            QRegExp reLongitude("^-?\\d{1,2}[,.]?\\d+$", Qt::CaseInsensitive);
-            ui->le_Lon->setValidator(new QRegExpValidator(reLongitude, this));
+            QRegularExpression reIcaoOrLatitude("^[a-zA-Z]{4}|-?\\d{1,2}[,.]?\\d+$", QRegularExpression::CaseInsensitiveOption);
+            ui->le_LatOrIcao->setValidator(new QRegularExpressionValidator(reIcaoOrLatitude, this));
+            QRegularExpression reLongitude("^-?\\d{1,2}[,.]?\\d+$", QRegularExpression::CaseInsensitiveOption);
+            ui->le_Lon->setValidator(new QRegularExpressionValidator(reLongitude, this));
         }
 
         void CWeatherComponent::setupCompleter()

@@ -10,7 +10,6 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
 
-#include <QRegExp>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QStringList>
@@ -126,10 +125,10 @@ namespace BlackMisc
             if (this->m_callsign.length() < 3) { return ""; }
             if (this->isAtcCallsign()) { return ""; }
 
-            static const QRegExp regExp("^[A-Z]{3,}");
-            const int pos = regExp.indexIn(this->m_callsign);
-            if (pos < 0) { return ""; }
-            const QString airline = regExp.cap(0);
+            thread_local const QRegularExpression regExp("^[A-Z]{3,}");
+            QRegularExpressionMatch match = regExp.match(this->m_callsign);
+            if (!match.hasMatch()) { return QString(); }
+            const QString airline = match.captured(0);
             if (airline.length() == 3) { return airline; } // we allow 3 letters
             if (airline.length() == 4 && airline.startsWith('V')) { return airline; } // we allow virtual 4 letter codes, e.g. VDLD
             return ""; // invalid

@@ -11,7 +11,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <Qt>
 #include <QtDebug>
 
@@ -131,8 +131,8 @@ namespace BlackMisc
             qint32 tc = transponderCode.toInt(&number);
             if (!number) return false;
             if (tc < 0 || tc > 7777) return false;
-            QRegExp rx("[0-7]{1,4}");
-            return rx.exactMatch(transponderCode);
+            thread_local const QRegularExpression rx("^[0-7]{1,4}$");
+            return rx.match(transponderCode).hasMatch();
         }
 
         bool CTransponder::isValidTransponderCode(qint32 transponderCode)

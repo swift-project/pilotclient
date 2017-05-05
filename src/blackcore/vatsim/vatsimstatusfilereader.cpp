@@ -20,7 +20,6 @@
 #include <QList>
 #include <QMetaObject>
 #include <QNetworkReply>
-#include <QRegExp>
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
 #include <QString>
