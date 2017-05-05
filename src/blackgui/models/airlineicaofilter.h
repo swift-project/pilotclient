@@ -37,10 +37,9 @@ namespace BlackGui
             QString m_vDesignator;
             QString m_name;
             QString m_countryIso;
-            bool m_real;
-            bool m_va;
+            bool m_real = false;
+            bool m_va = false;
         };
-
     } // namespace
 } // namespace
 

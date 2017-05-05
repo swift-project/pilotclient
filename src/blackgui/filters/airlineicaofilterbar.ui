@@ -2,16 +2,8 @@
 <ui version="4.0">
  <class>CAirlineIcaoFilterBar</class>
  <widget class="QFrame" name="CAirlineIcaoFilterBar">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>492</width>
-    <height>22</height>
-   </rect>
-  </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Airline ICAO filter</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>

@@ -33,7 +33,15 @@ namespace BlackGui
             {
                 if (!m_vDesignator.isEmpty())
                 {
-                    if (!this->stringMatchesFilterExpression(icao.getVDesignator(), m_vDesignator)) { continue; }
+                    // based on T72, also find VLHA based on LHA
+                    if (m_vDesignator.length() == 4)
+                    {
+                        if (!this->stringMatchesFilterExpression(icao.getVDesignator(), m_vDesignator)) { continue; }
+                    }
+                    else
+                    {
+                        if (!this->stringMatchesFilterExpression(icao.getDesignator(), m_vDesignator)) { continue; }
+                    }
                 }
 
                 if (!this->m_name.isEmpty())
