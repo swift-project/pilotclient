@@ -30,7 +30,7 @@ contains(BLACK_CONFIG,SwiftLauncher) {
     SUBDIRS += swiftlauncher
 }
 contains(BLACK_CONFIG,XPlane) {
-    SUBDIRS += xbus
+    SUBDIRS += xswiftbus
 }
 SUBDIRS += plugins
 

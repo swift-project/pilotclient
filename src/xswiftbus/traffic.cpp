@@ -27,7 +27,7 @@
 
 // clazy:excludeall=reserve-candidates
 
-namespace XBus
+namespace XSwiftBus
 {
 
     CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_)
@@ -83,7 +83,7 @@ namespace XBus
     void CTraffic::initLegacyData()
     {
         initXPlanePath();
-        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xbus" + g_sep + "LegacyData" + g_sep;
+        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "LegacyData" + g_sep;
 
         auto err = XPMPMultiplayerInitLegacyData(qPrintable(dir + "CSL"), qPrintable(dir + "related.txt"),
                    qPrintable(dir + "lights.png"), qPrintable(dir + "Doc8643.txt"), "C172", preferences, preferences);
@@ -151,7 +151,7 @@ namespace XBus
     bool CTraffic::loadPlanesPackage(const QString &path)
     {
         initXPlanePath();
-        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xbus" + g_sep + "LegacyData" + g_sep;
+        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "LegacyData" + g_sep;
 
         auto err = XPMPLoadCSLPackage(qPrintable(path), qPrintable(dir + "related.txt"), qPrintable(dir + "Doc8643.txt"));
         if (*err) { return false; }

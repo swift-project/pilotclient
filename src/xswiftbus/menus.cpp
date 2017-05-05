@@ -14,7 +14,7 @@
 #include <cassert>
 #include <string>
 
-namespace XBus
+namespace XSwiftBus
 {
     //! "safe" cast from integer to void*
     template <typename T> void *voidptr_cast(T i)

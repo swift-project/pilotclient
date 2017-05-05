@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_WEATHER_H
-#define BLACKSIM_XBUS_WEATHER_H
+#ifndef BLACKSIM_XSWIFTBUS_WEATHER_H
+#define BLACKSIM_XSWIFTBUS_WEATHER_H
 
 //! \file
 
@@ -19,20 +19,20 @@
 #include <QObject>
 
 //! \cond PRIVATE
-#define XBUS_WEATHER_INTERFACENAME "org.swift_project.xbus.weather"
-#define XBUS_WEATHER_OBJECTPATH "/xbus/weather"
+#define XSWIFTBUS_WEATHER_INTERFACENAME "org.swift_project.xswiftbus.weather"
+#define XSWIFTBUS_WEATHER_OBJECTPATH "/xswiftbus/weather"
 //! \endcond
 
-namespace XBus
+namespace XSwiftBus
 {
 
     /*!
-     * XBus weather object which is accessible through DBus
+     * XSwiftBus weather object which is accessible through DBus
      */
     class CWeather : public QObject
     {
         Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", XBUS_WEATHER_INTERFACENAME)
+        Q_CLASSINFO("D-Bus Interface", XSWIFTBUS_WEATHER_INTERFACENAME)
 
     public:
         //! Constructor
@@ -41,14 +41,14 @@ namespace XBus
         //! DBus interface name
         static const QString &InterfaceName()
         {
-            static QString s(XBUS_WEATHER_INTERFACENAME);
+            static QString s(XSWIFTBUS_WEATHER_INTERFACENAME);
             return s;
         }
 
         //! DBus object path
         static const QString &ObjectPath()
         {
-            static QString s(XBUS_WEATHER_OBJECTPATH);
+            static QString s(XSWIFTBUS_WEATHER_OBJECTPATH);
             return s;
         }
 

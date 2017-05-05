@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_XBUS_WEATHER_PROXY_H
-#define BLACKSIMPLUGIN_XBUS_WEATHER_PROXY_H
+#ifndef BLACKSIMPLUGIN_XSWIFTBUS_WEATHER_PROXY_H
+#define BLACKSIMPLUGIN_XSWIFTBUS_WEATHER_PROXY_H
 
 #include "blackmisc/genericdbusinterface.h"
 
@@ -20,8 +20,8 @@
 class QDBusConnection;
 
 //! \cond PRIVATE
-#define XBUS_WEATHER_INTERFACENAME "org.swift_project.xbus.weather"
-#define XBUS_WEATHER_OBJECTPATH "/xbus/weather"
+#define XSWIFTBUS_WEATHER_INTERFACENAME "org.swift_project.xswiftbus.weather"
+#define XSWIFTBUS_WEATHER_OBJECTPATH "/xswiftbus/weather"
 //! \endcond
 
 namespace BlackSimPlugin
@@ -30,9 +30,9 @@ namespace BlackSimPlugin
     {
 
         /*!
-         * Proxy object connected to a real XBus::CWeather object via DBus
+         * Proxy object connected to a real XSwiftBus::CWeather object via DBus
          */
-        class CXBusWeatherProxy : public QObject
+        class CXSwiftBusWeatherProxy : public QObject
         {
             Q_OBJECT
 
@@ -40,19 +40,19 @@ namespace BlackSimPlugin
             //! Service name
             static const QString &InterfaceName()
             {
-                static QString s(XBUS_WEATHER_INTERFACENAME);
+                static QString s(XSWIFTBUS_WEATHER_INTERFACENAME);
                 return s;
             }
 
             //! Service path
             static const QString &ObjectPath()
             {
-                static QString s(XBUS_WEATHER_OBJECTPATH);
+                static QString s(XSWIFTBUS_WEATHER_OBJECTPATH);
                 return s;
             }
 
             //! Constructor
-            CXBusWeatherProxy(QDBusConnection &connection, QObject *parent = nullptr);
+            CXSwiftBusWeatherProxy(QDBusConnection &connection, QObject *parent = nullptr);
 
             //! Does the remote object exist?
             bool isValid() const { return m_dbusInterface->isValid(); }
@@ -61,40 +61,40 @@ namespace BlackSimPlugin
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
 
         public slots:
-            //! \copydoc XBus::CWeather::isUsingRealWeather
+            //! \copydoc XSwiftBus::CWeather::isUsingRealWeather
             bool isUsingRealWeather() const;
 
-            //! \copydoc XBus::CWeather::setUseRealWeather
+            //! \copydoc XSwiftBus::CWeather::setUseRealWeather
             void setUseRealWeather(bool enable);
 
-            //! \copydoc XBus::CWeather::setVisibility
+            //! \copydoc XSwiftBus::CWeather::setVisibility
             void setVisibility(double visibilityM);
 
-            //! \copydoc XBus::CWeather::setTemperature
+            //! \copydoc XSwiftBus::CWeather::setTemperature
             void setTemperature(int degreesC);
 
-            //! \copydoc XBus::CWeather::setDewPoint
+            //! \copydoc XSwiftBus::CWeather::setDewPoint
             void setDewPoint(int degreesC);
 
-            //! \copydoc XBus::CWeather::setQNH
+            //! \copydoc XSwiftBus::CWeather::setQNH
             void setQNH(double inHg);
 
-            //! \copydoc XBus::CWeather::setPrecipitationRatio
+            //! \copydoc XSwiftBus::CWeather::setPrecipitationRatio
             void setPrecipitationRatio(double precipRatio);
 
-            //! \copydoc XBus::CWeather::setThunderstormRatio
+            //! \copydoc XSwiftBus::CWeather::setThunderstormRatio
             void setThunderstormRatio(double cbRatio);
 
-            //! \copydoc XBus::CWeather::setTurbulenceRatio
+            //! \copydoc XSwiftBus::CWeather::setTurbulenceRatio
             void setTurbulenceRatio(double turbulenceRatio);
 
-            //! \copydoc XBus::CWeather::setRunwayFriction
+            //! \copydoc XSwiftBus::CWeather::setRunwayFriction
             void setRunwayFriction(int friction);
 
-            //! \copydoc XBus::CWeather::setCloudLayer
+            //! \copydoc XSwiftBus::CWeather::setCloudLayer
             void setCloudLayer(int layer, int base, int tops, int type, int coverage);
 
-            //! \copydoc XBus::CWeather::setWindLayer
+            //! \copydoc XSwiftBus::CWeather::setWindLayer
             void setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence);
         };
 

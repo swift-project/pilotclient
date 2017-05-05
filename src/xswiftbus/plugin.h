@@ -7,13 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_PLUGIN_H
-#define BLACKSIM_XBUS_PLUGIN_H
+#ifndef BLACKSIM_XSWIFTBUS_PLUGIN_H
+#define BLACKSIM_XSWIFTBUS_PLUGIN_H
 
 //! \file
 
 /*!
- * \namespace XBus
+ * \namespace XSwiftBus
  * Plugin loaded by X-Plane which publishes a DBus service
  */
 
@@ -29,7 +29,7 @@
 
 #include <QVector>
 
-namespace XBus
+namespace XSwiftBus
 {
     class CService;
     class CTraffic;

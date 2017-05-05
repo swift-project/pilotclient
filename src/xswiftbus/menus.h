@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_MENUS_H
-#define BLACKSIM_XBUS_MENUS_H
+#ifndef BLACKSIM_XSWIFTBUS_MENUS_H
+#define BLACKSIM_XSWIFTBUS_MENUS_H
 
 //! \file
 
@@ -17,7 +17,7 @@
 #include <vector>
 #include <memory>
 
-namespace XBus
+namespace XSwiftBus
 {
 
     class CMenu;

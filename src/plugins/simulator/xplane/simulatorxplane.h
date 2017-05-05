@@ -62,9 +62,9 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-        class CXBusServiceProxy;
-        class CXBusTrafficProxy;
-        class CXBusWeatherProxy;
+        class CXSwiftBusServiceProxy;
+        class CXSwiftBusTrafficProxy;
+        class CXSwiftBusWeatherProxy;
 
         //! X-Plane ISimulator implementation
         class CSimulatorXPlane : public BlackCore::CSimulatorCommon
@@ -146,9 +146,9 @@ namespace BlackSimPlugin
 
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
-            CXBusServiceProxy *m_service { nullptr };
-            CXBusTrafficProxy *m_traffic { nullptr };
-            CXBusWeatherProxy *m_weather { nullptr };
+            CXSwiftBusServiceProxy *m_service { nullptr };
+            CXSwiftBusTrafficProxy *m_traffic { nullptr };
+            CXSwiftBusWeatherProxy *m_weather { nullptr };
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
             BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft
@@ -195,7 +195,7 @@ namespace BlackSimPlugin
             }
         };
 
-        //! Listener waits for xbus service to show up
+        //! Listener waits for xswiftbus service to show up
         class CSimulatorXPlaneListener : public BlackCore::ISimulatorListener
         {
             Q_OBJECT
@@ -212,17 +212,17 @@ namespace BlackSimPlugin
             virtual void stopImpl() override;
 
         private:
-            //! \brief Check if XBus service is already registered
-            bool isXBusRunning() const;
+            //! \brief Check if XSwiftBus service is already registered
+            bool isXSwiftBusRunning() const;
 
         private slots:
             void ps_serviceRegistered(const QString &serviceName);
-            void ps_xbusServerSettingChanged();
+            void ps_xswiftbusServerSettingChanged();
 
         private:
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
-            BlackMisc::CSetting<TXBusServer> m_xbusServerSetting { this, &CSimulatorXPlaneListener::ps_xbusServerSettingChanged };
+            BlackMisc::CSetting<TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::ps_xswiftbusServerSettingChanged };
         };
 
         //! Factory for creating CSimulatorXPlane instance

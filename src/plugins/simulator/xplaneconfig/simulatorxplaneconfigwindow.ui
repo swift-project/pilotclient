@@ -15,19 +15,19 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="1">
-    <widget class="QComboBox" name="cp_XBusServer"/>
+    <widget class="QComboBox" name="cp_XSwiftBusServer"/>
    </item>
    <item row="0" column="0">
-    <widget class="QLabel" name="lbl_XBusServer">
+    <widget class="QLabel" name="lbl_XSwiftBusServer">
      <property name="text">
-      <string>XBus server:</string>
+      <string>XSwiftBus server:</string>
      </property>
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QPushButton" name="pb_InstallXBus">
+    <widget class="QPushButton" name="pb_InstallXSwiftBus">
      <property name="text">
-      <string>Install XBus in the X-Plane directory...</string>
+      <string>Install XSwiftBus in the X-Plane directory...</string>
      </property>
     </widget>
    </item>

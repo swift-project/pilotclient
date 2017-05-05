@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_SERVICE_H
-#define BLACKSIM_XBUS_SERVICE_H
+#ifndef BLACKSIM_XSWIFTBUS_SERVICE_H
+#define BLACKSIM_XSWIFTBUS_SERVICE_H
 
 //! \file
 
@@ -26,8 +26,8 @@
 class QTimer;
 
 //! \cond PRIVATE
-#define XBUS_SERVICE_INTERFACENAME "org.swift_project.xbus.service"
-#define XBUS_SERVICE_OBJECTPATH "/xbus/service"
+#define XSWIFTBUS_SERVICE_INTERFACENAME "org.swift_project.xswiftbus.service"
+#define XSWIFTBUS_SERVICE_OBJECTPATH "/xswiftbus/service"
 //! \endcond
 
 //! Typedef needed to use QList<double> as a DBus argument
@@ -36,16 +36,16 @@ using QDoubleList = QList<double>;
 //! Typedef needed to use QList<double> as a DBus argument
 Q_DECLARE_METATYPE(QDoubleList)
 
-namespace XBus
+namespace XSwiftBus
 {
 
     /*!
-     * XBus service object which is accessible through DBus
+     * XSwiftBus service object which is accessible through DBus
      */
     class CService : public QObject
     {
         Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", XBUS_SERVICE_INTERFACENAME)
+        Q_CLASSINFO("D-Bus Interface", XSWIFTBUS_SERVICE_INTERFACENAME)
 
     public:
         //! Constructor
@@ -54,14 +54,14 @@ namespace XBus
         //! DBus interface name
         static const QString &InterfaceName()
         {
-            static QString s(XBUS_SERVICE_INTERFACENAME);
+            static QString s(XSWIFTBUS_SERVICE_INTERFACENAME);
             return s;
         }
 
         //! DBus object path
         static const QString &ObjectPath()
         {
-            static QString s(XBUS_SERVICE_OBJECTPATH);
+            static QString s(XSWIFTBUS_SERVICE_OBJECTPATH);
             return s;
         }
 

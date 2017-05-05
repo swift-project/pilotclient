@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_UTILS_H
-#define BLACKSIM_XBUS_UTILS_H
+#ifndef BLACKSIM_XSWIFTBUS_UTILS_H
+#define BLACKSIM_XSWIFTBUS_UTILS_H
 
 #include <XPLM/XPLMDefs.h>
 #include <XPLM/XPLMPlugin.h>
@@ -82,7 +82,7 @@ public:
 };
 
 /*!
- * QApplication subclass used by XBus.
+ * QApplication subclass used by XSwiftBus.
  *
  * Only one instance of QApplication is allowed per process, so if any other
  * X-Plane plugin, completely unrelated to this pilot client, wants to use the
@@ -174,7 +174,7 @@ public:
     }
 };
 
-namespace XBus
+namespace XSwiftBus
 {
     //! Absolute xplane path
     extern QString g_xplanePath;

@@ -16,7 +16,7 @@
 #include <XPLMGraphics.h>
 #include <XPUIGraphics.h>
 
-namespace XBus
+namespace XSwiftBus
 {
 
     void CMessageBox::draw()
@@ -70,14 +70,14 @@ namespace XBus
 
     CMessageBoxControl::CMessageBoxControl(int left, int right, int top) :
         m_messageBox(left, right, top),
-        m_showCommand("org/swift-project/xbus/show_messages", "Show XBus text messages", [this] { show(); }),
-        m_hideCommand("org/swift-project/xbus/hide_messages", "Hide XBus text messages", [this] { hide(); }),
-        m_toggleCommand("org/swift-project/xbus/toggle_messages", "Toggle XBus text messages", [this] { toggle(); }),
-        m_scrollUpCommand("org/swift-project/xbus/scroll_up", "Scroll up XBus text messages", [this] { scrollUp(); }),
-        m_scrollDownCommand("org/swift-project/xbus/scroll_down", "Scroll down XBus text messages", [this] { scrollDown(); }),
-        m_scrollToTopCommand("org/swift-project/xbus/scroll_top", "Scroll to top of XBus text messages", [this] { scrollToTop(); }),
-        m_scrollToBottomCommand("org/swift-project/xbus/scroll_bottom", "Scroll to bottom of XBus text messages", [this] { scrollToBottom(); }),
-        m_debugCommand("org/swift-project/xbus/debug", "", [this] { static int c = 0; this->addMessage({ "hello " + std::to_string(c++), 0, .75, 0 }); })
+        m_showCommand("org/swift-project/xswiftbus/show_messages", "Show XSwiftBus text messages", [this] { show(); }),
+        m_hideCommand("org/swift-project/xswiftbus/hide_messages", "Hide XSwiftBus text messages", [this] { hide(); }),
+        m_toggleCommand("org/swift-project/xswiftbus/toggle_messages", "Toggle XSwiftBus text messages", [this] { toggle(); }),
+        m_scrollUpCommand("org/swift-project/xswiftbus/scroll_up", "Scroll up XSwiftBus text messages", [this] { scrollUp(); }),
+        m_scrollDownCommand("org/swift-project/xswiftbus/scroll_down", "Scroll down XSwiftBus text messages", [this] { scrollDown(); }),
+        m_scrollToTopCommand("org/swift-project/xswiftbus/scroll_top", "Scroll to top of XSwiftBus text messages", [this] { scrollToTop(); }),
+        m_scrollToBottomCommand("org/swift-project/xswiftbus/scroll_bottom", "Scroll to bottom of XSwiftBus text messages", [this] { scrollToBottom(); }),
+        m_debugCommand("org/swift-project/xswiftbus/debug", "", [this] { static int c = 0; this->addMessage({ "hello " + std::to_string(c++), 0, .75, 0 }); })
     {}
 
     void CMessageBoxControl::addMessage(const CMessage &message)

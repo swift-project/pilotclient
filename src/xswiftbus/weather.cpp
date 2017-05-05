@@ -12,7 +12,7 @@
 #include "weather.h"
 #include <QDebug>
 
-namespace XBus
+namespace XSwiftBus
 {
 
     //! Set cloud layer

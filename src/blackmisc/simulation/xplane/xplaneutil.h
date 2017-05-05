@@ -48,8 +48,8 @@ namespace BlackMisc
                 //! Exclude directories for models
                 static QStringList xplaneModelExcludeDirectoryPatterns();
 
-                //! XBus legacy directory
-                static QString xbusLegacyDir(const QString &rootDir);
+                //! XSwiftBus legacy directory
+                static QString xswiftbusLegacyDir(const QString &rootDir);
 
             private:
                 //! Concatenates dirs for used OS

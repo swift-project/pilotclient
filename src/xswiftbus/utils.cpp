@@ -18,7 +18,7 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace XBus
+namespace XSwiftBus
 {
 
     QString g_xplanePath;

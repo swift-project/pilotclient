@@ -20,7 +20,7 @@ else:macx {
 }
 else:unix {
     # Flags needed because there is no XPLM link library
-    QMAKE_LFLAGS += -shared -rdynamic -nodefaultlibs -undefined_warning -Wl,--version-script=$$PWD/xbus.map
+    QMAKE_LFLAGS += -shared -rdynamic -nodefaultlibs -undefined_warning -Wl,--version-script=$$PWD/xswiftbus.map
 }
 
 DEPENDPATH += . $$SourceRoot/src
@@ -60,8 +60,8 @@ DEFINES += XPLM200=1
 DEFINES += XPLM210=1
 
 # Name will be used in libxplanemp log messages
-DEFINES += XPMP_CLIENT_NAME=\\\"xbus\\\"
-DEFINES += XPMP_CLIENT_LONGNAME=\\\"xbus\\\"
+DEFINES += XPMP_CLIENT_NAME=\\\"xswiftbus\\\"
+DEFINES += XPMP_CLIENT_LONGNAME=\\\"xswiftbus\\\"
 
 # X-Plane plugins must follow a prescribed filename and directory structure.
 TARGET_EXT = .xpl
@@ -70,33 +70,33 @@ linux:TARGET = lin
 macx:TARGET = mac
 macx {
     # a single dylib file contains both 32bit and 64bit binaries
-    XBUS_DIR = xbus
-    XBUS_DESTDIR = $$DestRoot/$$XBUS_DIR
+    XSWIFTBUS_DIR = xswiftbus
+    XSWIFTBUS_DESTDIR = $$DestRoot/$$XSWIFTBUS_DIR
 } else {
     equals(WORD_SIZE,64) {
-        XBUS_DIR = xbus/64
+        XSWIFTBUS_DIR = xswiftbus/64
         DEFINES += WORD_SIZE_64
     }
     equals(WORD_SIZE,32) {
-        XBUS_DIR = xbus
+        XSWIFTBUS_DIR = xswiftbus
     }
-    XBUS_DESTDIR = $$DestRoot/$$XBUS_DIR
+    XSWIFTBUS_DESTDIR = $$DestRoot/$$XSWIFTBUS_DIR
 }
 
 # Default MSVC project name is $$TARGET, so use a better name
-QMAKE_PROJECT_NAME = xbus
+QMAKE_PROJECT_NAME = xswiftbus
 
 # QMake ignores TARGET_EXT on Unix
-     macx: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.dylib $$XBUS_DESTDIR/$${TARGET}.xpl
-else:unix: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.so    $$XBUS_DESTDIR/$${TARGET}.xpl
-else:      DESTDIR = $$XBUS_DESTDIR
+     macx: QMAKE_POST_LINK += mkdir -p $$XSWIFTBUS_DESTDIR && cp $$OUT_PWD/lib$${TARGET}.dylib $$XSWIFTBUS_DESTDIR/$${TARGET}.xpl
+else:unix: QMAKE_POST_LINK += mkdir -p $$XSWIFTBUS_DESTDIR && cp $$OUT_PWD/lib$${TARGET}.so    $$XSWIFTBUS_DESTDIR/$${TARGET}.xpl
+else:      DESTDIR = $$XSWIFTBUS_DESTDIR
 
-target.path = $$PREFIX/$$XBUS_DIR
-target.files *= $$XBUS_DESTDIR/$${TARGET}.xpl
+target.path = $$PREFIX/$$XSWIFTBUS_DIR
+target.files *= $$XSWIFTBUS_DESTDIR/$${TARGET}.xpl
 target.CONFIG += no_check_exist
 INSTALLS += target
 
-dep_target.path = $$PREFIX/$$XBUS_DIR
+dep_target.path = $$PREFIX/$$XSWIFTBUS_DIR
 win32 {
     dep_target.files *= $$DestRoot/lib/blackmisc.dll
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Core$${DLL_DEBUG_SUFFIX}.dll
@@ -109,42 +109,42 @@ win32 {
     else: dep_target.files *= $$[QT_INSTALL_BINS]/dbus-1-3.dll
     dep_target.CONFIG += no_check_exist
 
-    legacy_data_target.path = $$PREFIX/xbus
+    legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
 } else:macx: {
     dep_target.files *= $$PREFIX/lib/libblackmisc.0.dylib
-    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/$$XBUS_DIR/QtCore.framework/ &&
-    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/$$XBUS_DIR/QtGui.framework/ &&
-    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/$$XBUS_DIR/QtWidgets.framework/ &&
-    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtDBus.framework/ $${PREFIX}/$$XBUS_DIR/QtDBus.framework/ &&
-    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtNetwork.framework/ $${PREFIX}/$$XBUS_DIR/QtNetwork.framework/ &&
-    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtXml.framework/ $${PREFIX}/$$XBUS_DIR/QtXml.framework/
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtCore.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtGui.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtWidgets.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtDBus.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtDBus.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtNetwork.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtNetwork.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtXml.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtXml.framework/
     dep_target.CONFIG += no_check_exist
 
-    legacy_data_target.path = $$PREFIX/xbus
+    legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
 
     # We rely on legacy_data_target to be called after dep_target. So the library should already be installed and can be modified in place.
-    # We cannot modify the original library since this is xbus specific.
+    # We cannot modify the original library since this is xswiftbus specific.
     legacy_data_target.depends += fix_plugin_rpath
     fix_plugin_rpath.target = fix_plugin_rpath
-    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/libblackmisc.0.dylib\" \"@loader_path/libblackmisc.0.dylib\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
-    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtWidgets.framework/Versions/5/QtWidgets\" \"@loader_path/QtWidgets.framework/Versions/5/QtWidgets\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
-    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtGui.framework/Versions/5/QtGui\" \"@loader_path/QtGui.framework/Versions/5/QtGui\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
-    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtDBus.framework/Versions/5/QtDBus\" \"@loader_path/QtDBus.framework/Versions/5/QtDBus\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
-    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtNetwork.framework/Versions/5/QtNetwork\" \"@loader_path/QtNetwork.framework/Versions/5/QtNetwork\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
-    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtCore.framework/Versions/5/QtCore\" \"@loader_path/QtCore.framework/Versions/5/QtCore\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
-    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtXml.framework/Versions/5/QtXml\" \"@loader_path/QtXml.framework/Versions/5/QtXml\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib)
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/libblackmisc.0.dylib\" \"@loader_path/libblackmisc.0.dylib\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtWidgets.framework/Versions/5/QtWidgets\" \"@loader_path/QtWidgets.framework/Versions/5/QtWidgets\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtGui.framework/Versions/5/QtGui\" \"@loader_path/QtGui.framework/Versions/5/QtGui\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtDBus.framework/Versions/5/QtDBus\" \"@loader_path/QtDBus.framework/Versions/5/QtDBus\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtNetwork.framework/Versions/5/QtNetwork\" \"@loader_path/QtNetwork.framework/Versions/5/QtNetwork\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtCore.framework/Versions/5/QtCore\" \"@loader_path/QtCore.framework/Versions/5/QtCore\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtXml.framework/Versions/5/QtXml\" \"@loader_path/QtXml.framework/Versions/5/QtXml\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib)
     QMAKE_EXTRA_TARGETS += fix_plugin_rpath
 
     fix_plugin_rpath.depends += fix_misc_rpath
     fix_misc_rpath.target = fix_misc_rpath
-    fix_misc_rpath.commands += install_name_tool -id \"@loader_path/libblackmisc.0.dylib\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
-    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtGui.framework/Versions/5/QtGui\" \"@loader_path/QtGui.framework/Versions/5/QtGui\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
-    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtDBus.framework/Versions/5/QtDBus\" \"@loader_path/QtDBus.framework/Versions/5/QtDBus\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
-    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtNetwork.framework/Versions/5/QtNetwork\" \"@loader_path/QtNetwork.framework/Versions/5/QtNetwork\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
-    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtCore.framework/Versions/5/QtCore\" \"@loader_path/QtCore.framework/Versions/5/QtCore\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
-    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtXml.framework/Versions/5/QtXml\" \"@loader_path/QtXml.framework/Versions/5/QtXml\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib)
+    fix_misc_rpath.commands += install_name_tool -id \"@loader_path/libblackmisc.0.dylib\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtGui.framework/Versions/5/QtGui\" \"@loader_path/QtGui.framework/Versions/5/QtGui\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtDBus.framework/Versions/5/QtDBus\" \"@loader_path/QtDBus.framework/Versions/5/QtDBus\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtNetwork.framework/Versions/5/QtNetwork\" \"@loader_path/QtNetwork.framework/Versions/5/QtNetwork\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtCore.framework/Versions/5/QtCore\" \"@loader_path/QtCore.framework/Versions/5/QtCore\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtXml.framework/Versions/5/QtXml\" \"@loader_path/QtXml.framework/Versions/5/QtXml\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib)
     QMAKE_EXTRA_TARGETS += fix_misc_rpath
 
 } else:unix: {
@@ -160,7 +160,7 @@ win32 {
     dep_target.files *= $$[QT_INSTALL_LIBS]/libicudata.so.56
     dep_target.CONFIG += no_check_exist
 
-    legacy_data_target.path = $$PREFIX/xbus
+    legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
 }
 
@@ -177,7 +177,7 @@ win32-g++ {
     dep_target.depends += copy_libstdc
     copy_libstdc.target = copy_libstdc
     source_path = $$[QT_INSTALL_BINS]/libstdc++-6.dll
-    dest_path = $$PREFIX/$$XBUS_DIR
+    dest_path = $$PREFIX/$$XSWIFTBUS_DIR
     copy_libstdc.commands = xcopy /Y $$shell_path($$source_path) $$shell_path($$dest_path)
     QMAKE_EXTRA_TARGETS += copy_libstdc
 }

@@ -18,16 +18,16 @@
 #include <functional>
 
 namespace {
-    inline QString xbusServiceName() {
-        return QStringLiteral("org.swift-project.xbus");
+    inline QString xswiftbusServiceName() {
+        return QStringLiteral("org.swift-project.xswiftbus");
     }
 }
 
-namespace XBus
+namespace XSwiftBus
 {
 
     CPlugin::CPlugin()
-        : m_menu(CMenu::mainMenu().subMenu("XBus"))
+        : m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
         m_startServerMenuItems.push_back(m_menu.item("Start server on session bus", [this]{ startServer(BlackMisc::CDBusServer::sessionBusAddress()); }));
         m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemBusAddress()); }));
@@ -51,7 +51,7 @@ namespace XBus
         // Make sure that there are no calls to XPLM in this method
         Q_ASSERT(! m_server);
         auto previousLibraryPath = BlackMisc::getCustomLibraryPath();
-        auto libraryPath = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xbus";
+        auto libraryPath = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus";
         #if !defined (Q_OS_MAC) && defined(WORD_SIZE_64)
         libraryPath = libraryPath + g_sep + "64";
         #endif
@@ -66,7 +66,7 @@ namespace XBus
             return;
         }
 
-        m_server = new BlackMisc::CDBusServer(xbusServiceName(), address, this);
+        m_server = new BlackMisc::CDBusServer(xswiftbusServiceName(), address, this);
         BlackMisc::setCustomLibraryPath(previousLibraryPath);
 
         m_server->addObject(CService::ObjectPath(), m_service);

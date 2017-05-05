@@ -7,80 +7,80 @@
  * contained in the LICENSE file.
  */
 
-#include "xbusweatherproxy.h"
+#include "xswiftbusweatherproxy.h"
 
 #include <QLatin1String>
 
 class QDBusConnection;
 
-#define XBUS_SERVICENAME "org.swift-project.xbus"
+#define XSWIFTBUS_SERVICENAME "org.swift-project.xswiftbus"
 
 namespace BlackSimPlugin
 {
     namespace XPlane
     {
 
-        CXBusWeatherProxy::CXBusWeatherProxy(QDBusConnection &connection, QObject *parent) : QObject(parent)
+        CXSwiftBusWeatherProxy::CXSwiftBusWeatherProxy(QDBusConnection &connection, QObject *parent) : QObject(parent)
         {
-            m_dbusInterface = new BlackMisc::CGenericDBusInterface(XBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
+            m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
         }
 
-        bool CXBusWeatherProxy::isUsingRealWeather() const
+        bool CXSwiftBusWeatherProxy::isUsingRealWeather() const
         {
             return m_dbusInterface->callDBusRet<bool>(QLatin1String("isUsingRealWeather"));
         }
 
-        void CXBusWeatherProxy::setUseRealWeather(bool enable)
+        void CXSwiftBusWeatherProxy::setUseRealWeather(bool enable)
         {
             m_dbusInterface->callDBus(QLatin1String("setUseRealWeather"), enable);
         }
 
-        void CXBusWeatherProxy::setVisibility(double visibilityM)
+        void CXSwiftBusWeatherProxy::setVisibility(double visibilityM)
         {
             m_dbusInterface->callDBus(QLatin1String("setVisibility"), visibilityM);
         }
 
-        void CXBusWeatherProxy::setTemperature(int degreesC)
+        void CXSwiftBusWeatherProxy::setTemperature(int degreesC)
         {
             m_dbusInterface->callDBus(QLatin1String("setTemperature"), degreesC);
         }
 
-        void CXBusWeatherProxy::setDewPoint(int degreesC)
+        void CXSwiftBusWeatherProxy::setDewPoint(int degreesC)
         {
             m_dbusInterface->callDBus(QLatin1String("setDewPoint"), degreesC);
         }
 
-        void CXBusWeatherProxy::setQNH(double inHg)
+        void CXSwiftBusWeatherProxy::setQNH(double inHg)
         {
             m_dbusInterface->callDBus(QLatin1String("setQNH"), inHg);
         }
 
-        void CXBusWeatherProxy::setPrecipitationRatio(double precipRatio)
+        void CXSwiftBusWeatherProxy::setPrecipitationRatio(double precipRatio)
         {
             m_dbusInterface->callDBus(QLatin1String("setPrecipitationRatio"), precipRatio);
         }
 
-        void CXBusWeatherProxy::setThunderstormRatio(double cbRatio)
+        void CXSwiftBusWeatherProxy::setThunderstormRatio(double cbRatio)
         {
             m_dbusInterface->callDBus(QLatin1String("setThunderstormRatio"), cbRatio);
         }
 
-        void CXBusWeatherProxy::setTurbulenceRatio(double turbulenceRatio)
+        void CXSwiftBusWeatherProxy::setTurbulenceRatio(double turbulenceRatio)
         {
             m_dbusInterface->callDBus(QLatin1String("setTurbulenceRatio"), turbulenceRatio);
         }
 
-        void CXBusWeatherProxy::setRunwayFriction(int friction)
+        void CXSwiftBusWeatherProxy::setRunwayFriction(int friction)
         {
             m_dbusInterface->callDBus(QLatin1String("setRunwayFriction"), friction);
         }
 
-        void CXBusWeatherProxy::setCloudLayer(int layer, int base, int tops, int type, int coverage)
+        void CXSwiftBusWeatherProxy::setCloudLayer(int layer, int base, int tops, int type, int coverage)
         {
             m_dbusInterface->callDBus(QLatin1String("setCloudLayer"), layer, base, tops, type, coverage);
         }
 
-        void CXBusWeatherProxy::setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
+        void CXSwiftBusWeatherProxy::setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
         {
             m_dbusInterface->callDBus(QLatin1String("setWindLayer"), layer, altitude, direction, speed, shearDirection, shearSpeed, turbulence);
         }

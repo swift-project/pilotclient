@@ -22,11 +22,11 @@ passedByValue:src/blackmisc/logcategorylist.h
 passedByValue:src/blackmisc/lockfree.h
 
 // False positive caused by cppcheck getting confused with preprocessor defines
-ConfigurationNotChecked:src/xbus/libxplanemp/src/XObjReadWrite.cpp
+ConfigurationNotChecked:src/xswiftbus/libxplanemp/src/XObjReadWrite.cpp
 
 // Passing std::function by value is acceptable
-passedByValue:src/xbus/libxplanemp/src/ResourceManager.h
-passedByValue:src/xbus/command.h
+passedByValue:src/xswiftbus/libxplanemp/src/ResourceManager.h
+passedByValue:src/xswiftbus/command.h
 
 // Unique pointers should be passed by value
-passedByValue:src/xbus/menus.h
+passedByValue:src/xswiftbus/menus.h

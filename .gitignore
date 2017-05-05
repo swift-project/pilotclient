@@ -36,7 +36,7 @@ Makefile
 *.obj
 
 # Exception for XPlane object files
-!src/xbus/LegacyData/**/*.obj
+!src/xswiftbus/LegacyData/**/*.obj
 
 # Linux compile
 *.a

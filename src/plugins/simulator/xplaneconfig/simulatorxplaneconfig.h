@@ -26,12 +26,12 @@ namespace BlackSimPlugin
     namespace XPlane
     {
         /*!
-         * Setting for XBus.
+         * Setting for XSwiftBus.
          */
-        struct TXBusServer : public BlackMisc::TSettingTrait<QString>
+        struct TXSwiftBusServer : public BlackMisc::TSettingTrait<QString>
         {
             //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "xbus/server"; }
+            static const char *key() { return "xswiftbus/server"; }
 
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static QString defaultValue() { return QStringLiteral("session"); }

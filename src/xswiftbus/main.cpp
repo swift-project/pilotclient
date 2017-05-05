@@ -32,15 +32,15 @@
 // See https://dev.vatsim-germany.org/issues/293 for more information.
 
 QSharedPointer<QCoreApplication> g_qApp;
-XBus::CPlugin *g_plugin;
+XSwiftBus::CPlugin *g_plugin;
 
 PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
 {
-    std::strcpy(o_name, "X-Bus");
-    std::strcpy(o_sig, "org.swift-project.xbus");
-    std::strcpy(o_desc, "Allows pilot client to connect to X-Plane via D-Bus");
+    std::strcpy(o_name, "XSwiftBus");
+    std::strcpy(o_sig, "org.swift-project.xswiftbus");
+    std::strcpy(o_desc, "Allows swift to connect to X-Plane via D-Bus IPC");
 
-    XBus::CTraffic::initLegacyData();
+    XSwiftBus::CTraffic::initLegacyData();
     return 1;
 }
 
@@ -57,7 +57,7 @@ PLUGIN_API int XPluginEnable()
     g_qApp = QSharedApplication::sharedInstance();
     QXPlaneEventLoop::exec();
 
-    g_plugin = new XBus::CPlugin;
+    g_plugin = new XSwiftBus::CPlugin;
 
     // Here we can be safely assume that QtDBus was loaded by the process
     preventQtDBusDllUnload();

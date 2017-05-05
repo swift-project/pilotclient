@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_MESSAGES_H
-#define BLACKSIM_XBUS_MESSAGES_H
+#ifndef BLACKSIM_XSWIFTBUS_MESSAGES_H
+#define BLACKSIM_XSWIFTBUS_MESSAGES_H
 
 //! \file
 
@@ -19,7 +19,7 @@
 #include <array>
 #include <algorithm>
 
-namespace XBus
+namespace XSwiftBus
 {
 
     /*!
@@ -94,7 +94,7 @@ namespace XBus
         //! Add a new message to the bottom of the list.
         void addMessage(const CMessage &message);
 
-        //! \copydoc XBus::CMessageBox::maxLineLength
+        //! \copydoc XSwiftBus::CMessageBox::maxLineLength
         int maxLineLength() const { return m_messageBox.maxLineLength(); }
 
     private:

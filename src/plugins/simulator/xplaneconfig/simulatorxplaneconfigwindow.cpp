@@ -32,9 +32,9 @@ using namespace BlackMisc;
 
 namespace
 {
-    QString xBusOriginDir()
+    QString xSwiftBusOriginDir()
     {
-        return CDirectoryUtils::applicationDirectoryPath() % QStringLiteral("/../xbus");
+        return CDirectoryUtils::applicationDirectoryPath() % QStringLiteral("/../xswiftbus");
     }
 }
 
@@ -48,19 +48,19 @@ namespace BlackSimPlugin
         {
             ui->setupUi(this);
 
-            ui->cp_XBusServer->addItem(BlackMisc::CDBusServer::sessionBusAddress());
-            ui->cp_XBusServer->addItem(BlackMisc::CDBusServer::systemBusAddress());
+            ui->cp_XSwiftBusServer->addItem(BlackMisc::CDBusServer::sessionBusAddress());
+            ui->cp_XSwiftBusServer->addItem(BlackMisc::CDBusServer::systemBusAddress());
 
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::ps_storeSettings);
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::close);
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorXPlaneConfigWindow::close);
 
-            ui->cp_XBusServer->setCurrentText(m_xbusServerSetting.getThreadLocal());
+            ui->cp_XSwiftBusServer->setCurrentText(m_xswiftbusServerSetting.getThreadLocal());
 
-            if (xBusAvailable())
-                connect(ui->pb_InstallXBus, &QPushButton::clicked, this, &CSimulatorXPlaneConfigWindow::ps_installXBus);
+            if (xSwiftBusAvailable())
+                connect(ui->pb_InstallXSwiftBus, &QPushButton::clicked, this, &CSimulatorXPlaneConfigWindow::ps_installXSwiftBus);
             else
-                ui->pb_InstallXBus->setEnabled(false);
+                ui->pb_InstallXSwiftBus->setEnabled(false);
         }
 
         CSimulatorXPlaneConfigWindow::~CSimulatorXPlaneConfigWindow()
@@ -68,20 +68,20 @@ namespace BlackSimPlugin
 
         }
 
-        bool CSimulatorXPlaneConfigWindow::xBusAvailable()
+        bool CSimulatorXPlaneConfigWindow::xSwiftBusAvailable()
         {
-            return QDir(xBusOriginDir()).exists();
+            return QDir(xSwiftBusOriginDir()).exists();
         }
 
         void CSimulatorXPlaneConfigWindow::ps_storeSettings()
         {
-            if (ui->cp_XBusServer->currentText() != m_xbusServerSetting.getThreadLocal())
+            if (ui->cp_XSwiftBusServer->currentText() != m_xswiftbusServerSetting.getThreadLocal())
             {
-                m_xbusServerSetting.set(ui->cp_XBusServer->currentText());
+                m_xswiftbusServerSetting.set(ui->cp_XSwiftBusServer->currentText());
             }
         }
 
-        void CSimulatorXPlaneConfigWindow::ps_installXBus()
+        void CSimulatorXPlaneConfigWindow::ps_installXSwiftBus()
         {
             const QString xPlaneLocation = BlackMisc::Simulation::XPlane::CXPlaneUtil::xplaneRootDir();
             QString path = QFileDialog::getExistingDirectory(parentWidget(),
@@ -99,17 +99,17 @@ namespace BlackSimPlugin
                 return;
             }
 
-            path.append("/xbus");
+            path.append("/xswiftbus");
 
             // TODO Use QtConcurrent here, maybe?
-            const bool result = BlackMisc::CFileUtils::copyRecursively(xBusOriginDir(), path);
+            const bool result = BlackMisc::CFileUtils::copyRecursively(xSwiftBusOriginDir(), path);
             if (result)
             {
-                QMessageBox::information(this, tr("XBus installed"), tr("You may now launch your X-Plane and start using XBus!"));
+                QMessageBox::information(this, tr("XSwiftBus installed"), tr("You may now launch your X-Plane and start using XSwiftBus!"));
             }
             else
             {
-                QMessageBox::warning(this, tr("Failed installing XBus"), tr("Failed installing the XBus plugin in your X-Plane installation directory; try installing it manually."));
+                QMessageBox::warning(this, tr("Failed installing XSwiftBus"), tr("Failed installing the XSwiftBus plugin in your X-Plane installation directory; try installing it manually."));
             }
         }
     }

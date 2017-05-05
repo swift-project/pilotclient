@@ -7,14 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_DRAWABLE_H
-#define BLACKSIM_XBUS_DRAWABLE_H
+#ifndef BLACKSIM_XSWIFTBUS_DRAWABLE_H
+#define BLACKSIM_XSWIFTBUS_DRAWABLE_H
 
 //! \file
 
 #include <XPLMDisplay.h>
 
-namespace XBus
+namespace XSwiftBus
 {
 
     /*!

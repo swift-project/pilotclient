@@ -7,12 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_ELEVATIONPROVIDER_H
-#define BLACKSIM_XBUS_ELEVATIONPROVIDER_H
+#ifndef BLACKSIM_XSWIFTBUS_ELEVATIONPROVIDER_H
+#define BLACKSIM_XSWIFTBUS_ELEVATIONPROVIDER_H
 
 #include <XPLM/XPLMScenery.h>
 
-namespace XBus
+namespace XSwiftBus
 {
     /*!
      * Class based interface to X-Plane SDK terrain probe.

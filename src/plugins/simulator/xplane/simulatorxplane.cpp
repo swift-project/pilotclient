@@ -48,9 +48,9 @@
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
 #include "qcompilerdetection.h"
-#include "xbusserviceproxy.h"
-#include "xbustrafficproxy.h"
-#include "xbusweatherproxy.h"
+#include "xswiftbusserviceproxy.h"
+#include "xswiftbustrafficproxy.h"
+#include "xswiftbusweatherproxy.h"
 
 #include <QColor>
 #include <QDBusServiceWatcher>
@@ -69,9 +69,9 @@ using namespace BlackMisc::Weather;
 
 namespace
 {
-    inline QString xbusServiceName()
+    inline QString xswiftbusServiceName()
     {
-        return QStringLiteral("org.swift-project.xbus");
+        return QStringLiteral("org.swift-project.xswiftbus");
     }
 }
 
@@ -89,7 +89,7 @@ namespace BlackSimPlugin
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
-            m_watcher->addWatchedService(xbusServiceName());
+            m_watcher->addWatchedService(xswiftbusServiceName());
             m_watcher->setObjectName("QDBusServiceWatcher");
             connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::ps_serviceUnregistered);
 
@@ -243,16 +243,16 @@ namespace BlackSimPlugin
         {
             if (isConnected()) { return true; }
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
-            m_service = new CXBusServiceProxy(m_conn, this);
-            m_traffic = new CXBusTrafficProxy(m_conn, this);
-            m_weather = new CXBusWeatherProxy(m_conn, this);
+            m_service = new CXSwiftBusServiceProxy(m_conn, this);
+            m_traffic = new CXSwiftBusTrafficProxy(m_conn, this);
+            m_weather = new CXSwiftBusWeatherProxy(m_conn, this);
 
             if (m_service->isValid() && m_traffic->isValid() && m_weather->isValid() && m_traffic->initialize())
             {
                 // FIXME duplication
-                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
-                connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
-                connect(m_traffic, &CXBusTrafficProxy::installedModelsUpdated, this, &CSimulatorXPlane::ps_installedModelsUpdated);
+                connect(m_service, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
+                connect(m_service, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
+                connect(m_traffic, &CXSwiftBusTrafficProxy::installedModelsUpdated, this, &CSimulatorXPlane::ps_installedModelsUpdated);
                 m_service->updateAirportsInRange();
                 m_traffic->updateInstalledModels();
                 m_watcher->setConnection(m_conn);
@@ -722,15 +722,15 @@ namespace BlackSimPlugin
         void CSimulatorXPlaneListener::startImpl()
         {
             if (m_watcher) { return; } // already started
-            if (isXBusRunning())
+            if (isXSwiftBusRunning())
             {
                 emit simulatorStarted(getPluginInfo());
             }
             else
             {
-                CLogMessage(this).debug() << "Starting XBus on" << m_xbusServerSetting.getThreadLocal();
-                m_conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.getThreadLocal());
-                m_watcher = new QDBusServiceWatcher(xbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
+                CLogMessage(this).debug() << "Starting XSwiftBus on" << m_xswiftbusServerSetting.getThreadLocal();
+                m_conn = CSimulatorXPlane::connectionFromString(m_xswiftbusServerSetting.getThreadLocal());
+                m_watcher = new QDBusServiceWatcher(xswiftbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
                 connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
             }
         }
@@ -744,11 +744,11 @@ namespace BlackSimPlugin
             }
         }
 
-        bool CSimulatorXPlaneListener::isXBusRunning() const
+        bool CSimulatorXPlaneListener::isXSwiftBusRunning() const
         {
-            QDBusConnection conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.getThreadLocal());
-            CXBusServiceProxy *service = new CXBusServiceProxy(conn);
-            CXBusTrafficProxy *traffic = new CXBusTrafficProxy(conn);
+            QDBusConnection conn = CSimulatorXPlane::connectionFromString(m_xswiftbusServerSetting.getThreadLocal());
+            CXSwiftBusServiceProxy *service = new CXSwiftBusServiceProxy(conn);
+            CXSwiftBusTrafficProxy *traffic = new CXSwiftBusTrafficProxy(conn);
 
             bool result = service->isValid() && traffic->isValid();
 
@@ -760,13 +760,13 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneListener::ps_serviceRegistered(const QString &serviceName)
         {
-            if (serviceName == xbusServiceName())
+            if (serviceName == xswiftbusServiceName())
             {
                 emit simulatorStarted(getPluginInfo());
             }
         }
 
-        void CSimulatorXPlaneListener::ps_xbusServerSettingChanged()
+        void CSimulatorXPlaneListener::ps_xswiftbusServerSettingChanged()
         {
             // user changed settings, restart the listener
             if (m_watcher)

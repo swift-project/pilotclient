@@ -42,16 +42,16 @@ namespace BlackSimPlugin
             virtual ~CSimulatorXPlaneConfigWindow();
 
         private:
-            //! Checks whether xbus is present in the distributed directory.
-            bool xBusAvailable();
+            //! Checks whether xswiftbus is present in the distributed directory.
+            bool xSwiftBusAvailable();
 
         private slots:
             void ps_storeSettings();
-            void ps_installXBus();
+            void ps_installXSwiftBus();
 
         private:
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-            BlackMisc::CSetting<TXBusServer> m_xbusServerSetting { this };
+            BlackMisc::CSetting<TXSwiftBusServer> m_xswiftbusServerSetting { this };
         };
     }
 }

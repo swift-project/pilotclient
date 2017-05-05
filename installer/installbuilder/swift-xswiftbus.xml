@@ -1,19 +1,19 @@
 <component>
-    <name>xbus</name>
-    <description>xbus</description>
+    <name>xswiftbus</name>
+    <description>xswiftbus</description>
     <canBeEdited>1</canBeEdited>
     <detailedDescription>Plugin loaded by X-Plane which publishes a DBus service</detailedDescription>
     <selected>1</selected>
     <show>1</show>
     <folderList>
         <folder>
-            <description>xbus</description>
+            <description>xswiftbus</description>
             <destination>${installdir}</destination>
-            <name>xbus</name>
+            <name>xswiftbus</name>
             <platforms>all</platforms>
             <distributionFileList>
                 <distributionDirectory>
-                    <origin>../../dist/xbus</origin>
+                    <origin>../../dist/xswiftbus</origin>
                 </distributionDirectory>
             </distributionFileList>
         </folder>

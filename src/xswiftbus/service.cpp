@@ -15,7 +15,7 @@
 
 // clazy:excludeall=reserve-candidates
 
-namespace XBus
+namespace XSwiftBus
 {
 
     CService::CService(QObject *parent) : QObject(parent)

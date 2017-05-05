@@ -11,7 +11,7 @@
 #include <XPLM/XPLMGraphics.h>
 #include <limits>
 
-namespace XBus
+namespace XSwiftBus
 {
     CTerrainProbe::CTerrainProbe() : m_ref(XPLMCreateProbe(xplm_ProbeY)) {}
 

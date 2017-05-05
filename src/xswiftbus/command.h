@@ -7,15 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_COMMAND_H
-#define BLACKSIM_XBUS_COMMAND_H
+#ifndef BLACKSIM_XSWIFTBUS_COMMAND_H
+#define BLACKSIM_XSWIFTBUS_COMMAND_H
 
 //! \file
 
 #include <XPLMUtilities.h>
 #include <functional>
 
-namespace XBus
+namespace XSwiftBus
 {
 
     /*!

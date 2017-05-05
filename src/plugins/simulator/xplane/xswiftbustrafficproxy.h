@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_XBUS_TRAFFIC_PROXY_H
-#define BLACKSIMPLUGIN_XBUS_TRAFFIC_PROXY_H
+#ifndef BLACKSIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
+#define BLACKSIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
 
 #include "blackmisc/genericdbusinterface.h"
 
@@ -21,8 +21,8 @@
 class QDBusConnection;
 
 //! \cond PRIVATE
-#define XBUS_TRAFFIC_INTERFACENAME "org.swift_project.xbus.traffic"
-#define XBUS_TRAFFIC_OBJECTPATH "/xbus/traffic"
+#define XSWIFTBUS_TRAFFIC_INTERFACENAME "org.swift_project.xswiftbus.traffic"
+#define XSWIFTBUS_TRAFFIC_OBJECTPATH "/xswiftbus/traffic"
 //! \endcond
 
 namespace BlackSimPlugin
@@ -31,9 +31,9 @@ namespace BlackSimPlugin
     {
 
         /*!
-         * Proxy object connected to a real XBus::CTraffic object via DBus
+         * Proxy object connected to a real XSwiftBus::CTraffic object via DBus
          */
-        class CXBusTrafficProxy : public QObject
+        class CXSwiftBusTrafficProxy : public QObject
         {
             Q_OBJECT
 
@@ -41,19 +41,19 @@ namespace BlackSimPlugin
             //! Service name
             static const QString &InterfaceName()
             {
-                static QString s(XBUS_TRAFFIC_INTERFACENAME);
+                static QString s(XSWIFTBUS_TRAFFIC_INTERFACENAME);
                 return s;
             }
 
             //! Service path
             static const QString &ObjectPath()
             {
-                static QString s(XBUS_TRAFFIC_OBJECTPATH);
+                static QString s(XSWIFTBUS_TRAFFIC_OBJECTPATH);
                 return s;
             }
 
             //! Constructor
-            CXBusTrafficProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);
+            CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);
 
             //! Does the remote object exist?
             bool isValid() const { return m_dbusInterface->isValid(); }
@@ -62,57 +62,57 @@ namespace BlackSimPlugin
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
 
         signals:
-            //! \copydoc XBus::CTraffic::installedModelsUpdated
+            //! \copydoc XSwiftBus::CTraffic::installedModelsUpdated
             void installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
 
         public slots:
-            //! \copydoc XBus::CTraffic::initialize
+            //! \copydoc XSwiftBus::CTraffic::initialize
             bool initialize();
 
-            //! \copydoc XBus::CTraffic::cleanup
+            //! \copydoc XSwiftBus::CTraffic::cleanup
             void cleanup();
 
-            //! \copydoc XBus::CTraffic::loadPlanesPackage
+            //! \copydoc XSwiftBus::CTraffic::loadPlanesPackage
             bool loadPlanesPackage(const QString &path);
 
-            //! \copydoc XBus::CTraffic::setDefaultIcao
+            //! \copydoc XSwiftBus::CTraffic::setDefaultIcao
             void setDefaultIcao(const QString &defaultIcao);
 
-            //! \copydoc XBus::CTraffic::setDrawingLabels
+            //! \copydoc XSwiftBus::CTraffic::setDrawingLabels
             void setDrawingLabels(bool drawing);
 
-            //! \copydoc XBus::CTraffic::isDrawingLabels
+            //! \copydoc XSwiftBus::CTraffic::isDrawingLabels
             bool isDrawingLabels() const;
 
-            //! \copydoc XBus::CTraffic::updateInstalledModels
+            //! \copydoc XSwiftBus::CTraffic::updateInstalledModels
             void updateInstalledModels() const;
 
-            //! \copydoc XBus::CTraffic::setMaxPlanes
+            //! \copydoc XSwiftBus::CTraffic::setMaxPlanes
             void setMaxPlanes(int planes);
 
-            //! \copydoc XBus::CTraffic::setMaxDrawDistance
+            //! \copydoc XSwiftBus::CTraffic::setMaxDrawDistance
             void setMaxDrawDistance(float nauticalMiles);
 
-            //! \copydoc XBus::CTraffic::addPlane
+            //! \copydoc XSwiftBus::CTraffic::addPlane
             void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
-            //! \copydoc XBus::CTraffic::removePlane
+            //! \copydoc XSwiftBus::CTraffic::removePlane
             void removePlane(const QString &callsign);
 
-            //! \copydoc XBus::CTraffic::removeAllPlanes
+            //! \copydoc XSwiftBus::CTraffic::removeAllPlanes
             void removeAllPlanes();
 
-            //! \copydoc XBus::CTraffic::addPlanePosition
+            //! \copydoc XSwiftBus::CTraffic::addPlanePosition
             void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime);
 
-            //! \copydoc XBus::CTraffic::addPlaneSurfaces
+            //! \copydoc XSwiftBus::CTraffic::addPlaneSurfaces
             void addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
                 double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime);
 
-            //! \copydoc XBus::CTraffic::setPlaneTransponder
+            //! \copydoc XSwiftBus::CTraffic::setPlaneTransponder
             void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
 
-            //! \copydoc XBus::CTraffic::setInterpolatorMode
+            //! \copydoc XSwiftBus::CTraffic::setInterpolatorMode
             void setInterpolatorMode(const QString &callsign, bool spline);
         };
 

@@ -119,25 +119,25 @@ namespace BlackMisc
                 return QStringList();
             }
 
-            QString CXPlaneUtil::xbusLegacyDir(const QString &rootDir)
+            QString CXPlaneUtil::xswiftbusLegacyDir(const QString &rootDir)
             {
-                static const QString legacyPath("/Resources/plugins/xbus/LegacyData");
+                static const QString legacyPath("/Resources/plugins/xswiftbus/LegacyData");
                 // Return the first non empty path, we can find.
                 if (!rootDir.isEmpty())
                 {
-                    const QString xbusLegacy = CFileUtils::appendFilePaths(rootDir, legacyPath);
-                    if (QDir(xbusLegacy).exists())
+                    const QString xswiftbusLegacy = CFileUtils::appendFilePaths(rootDir, legacyPath);
+                    if (QDir(xswiftbusLegacy).exists())
                     {
-                        return xbusLegacy;
+                        return xswiftbusLegacy;
                     }
                 }
 
                 for (auto func : {&CXPlaneUtil::xplane11Dir, &CXPlaneUtil::xplane10Dir, &CXPlaneUtil::xplane9Dir})
                 {
-                    const QString xbusLegacy = CFileUtils::appendFilePaths(func(), legacyPath);
-                    if (QDir(xbusLegacy).exists())
+                    const QString xswiftbusLegacy = CFileUtils::appendFilePaths(func(), legacyPath);
+                    if (QDir(xswiftbusLegacy).exists())
                     {
-                        return xbusLegacy;
+                        return xswiftbusLegacy;
                     }
                 }
                 return {};

@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_TRAFFIC_H
-#define BLACKSIM_XBUS_TRAFFIC_H
+#ifndef BLACKSIM_XSWIFTBUS_TRAFFIC_H
+#define BLACKSIM_XSWIFTBUS_TRAFFIC_H
 
 //! \file
 
@@ -26,20 +26,20 @@
 #include <utility>
 
 //! \cond PRIVATE
-#define XBUS_TRAFFIC_INTERFACENAME "org.swift_project.xbus.traffic"
-#define XBUS_TRAFFIC_OBJECTPATH "/xbus/traffic"
+#define XSWIFTBUS_TRAFFIC_INTERFACENAME "org.swift_project.xswiftbus.traffic"
+#define XSWIFTBUS_TRAFFIC_OBJECTPATH "/xswiftbus/traffic"
 //! \endcond
 
 namespace BlackMisc { namespace Simulation { class CInterpolationHints; } }
-namespace XBus
+namespace XSwiftBus
 {
     /*!
-     * XBus service object for traffic aircraft which is accessible through DBus
+     * XSwiftBus service object for traffic aircraft which is accessible through DBus
      */
     class CTraffic : public QObject
     {
         Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", XBUS_TRAFFIC_INTERFACENAME)
+        Q_CLASSINFO("D-Bus Interface", XSWIFTBUS_TRAFFIC_INTERFACENAME)
 
     public:
         //! Constructor
@@ -51,14 +51,14 @@ namespace XBus
         //! DBus interface name
         static const QString &InterfaceName()
         {
-            static QString s(XBUS_TRAFFIC_INTERFACENAME);
+            static QString s(XSWIFTBUS_TRAFFIC_INTERFACENAME);
             return s;
         }
 
         //! DBus object path
         static const QString &ObjectPath()
         {
-            static QString s(XBUS_TRAFFIC_OBJECTPATH);
+            static QString s(XSWIFTBUS_TRAFFIC_OBJECTPATH);
             return s;
         }
 

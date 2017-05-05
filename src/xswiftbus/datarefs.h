@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKSIM_XBUS_DATAREFS_H
-#define BLACKSIM_XBUS_DATAREFS_H
+#ifndef BLACKSIM_XSWIFTBUS_DATAREFS_H
+#define BLACKSIM_XSWIFTBUS_DATAREFS_H
 
 //! \file
 
@@ -20,7 +20,7 @@
 
 #include "datarefs.inc"
 
-namespace XBus
+namespace XSwiftBus
 {
 
     //! \private
