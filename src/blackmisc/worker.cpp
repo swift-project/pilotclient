@@ -9,6 +9,7 @@
 
 #include "blackmisc/threadutils.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/verify.h"
 
 #include <future>
 
@@ -54,8 +55,9 @@ namespace BlackMisc
 
     CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
     {
-        auto *thread = new CRegularThread(owner);
         auto *worker = new CWorker(task);
+        worker->setStarted();
+        auto *thread = new CRegularThread(owner);
 
         if (typeId != QMetaType::Void) { worker->m_result = CVariant(typeId, nullptr); }
 
@@ -115,8 +117,12 @@ namespace BlackMisc
 
     void CContinuousWorker::start(QThread::Priority priority)
     {
+        BLACK_VERIFY_X(!hasStarted(), Q_FUNC_INFO, "Tried to start a worker that was already started");
+        if (hasStarted()) { return; }
+
         if (m_name.isEmpty()) { m_name = metaObject()->className(); }
 
+        setStarted();
         auto *thread = new CRegularThread(m_owner);
 
         Q_ASSERT(m_owner); // must not be null, see (9) https://dev.vatsim-germany.org/issues/402

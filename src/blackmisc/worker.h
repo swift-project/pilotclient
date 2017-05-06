@@ -166,6 +166,12 @@ namespace BlackMisc
         //! \threadsafe
         bool isAbandoned() const;
 
+        //! True if the worker has started.
+        bool hasStarted() const { return m_started; }
+
+        //! Mark the task as started.
+        void setStarted() { m_started = true; }
+
         //! Mark the task as finished.
         void setFinished()
         {
@@ -178,6 +184,7 @@ namespace BlackMisc
         virtual void quit() noexcept {}
         virtual void quitAndWait() noexcept { waitForFinished(); }
 
+        bool m_started = false;
         bool m_finished = false;
         mutable QMutex m_finishedMutex { QMutex::Recursive };
     };
@@ -285,6 +292,8 @@ namespace BlackMisc
         void ps_finish();
 
     private:
+        using CWorkerBase::hasStarted;
+        using CWorkerBase::setStarted;
         using CWorkerBase::setFinished;
 
         QObject *m_owner = nullptr;
