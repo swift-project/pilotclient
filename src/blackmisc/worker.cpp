@@ -56,6 +56,7 @@ namespace BlackMisc
     CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
     {
         auto *worker = new CWorker(task);
+        emit worker->aboutToStart();
         worker->setStarted();
         auto *thread = new CRegularThread(owner);
 
@@ -122,6 +123,7 @@ namespace BlackMisc
 
         if (m_name.isEmpty()) { m_name = metaObject()->className(); }
 
+        emit aboutToStart();
         setStarted();
         auto *thread = new CRegularThread(m_owner);
 

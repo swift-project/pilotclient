@@ -15,6 +15,7 @@
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
+#include "blackcore/db/backgrounddataupdater.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/statusmessage.h"
 
@@ -28,10 +29,6 @@ namespace Ui { class CSwiftData; }
 namespace BlackCore
 {
     class CWebDataServices;
-    namespace Db
-    {
-        class CBackgroundDataUpdater;
-    }
 }
 
 /*!
@@ -83,7 +80,7 @@ private:
 
     BlackGui::CManagedStatusBar    m_statusBar;
     QScopedPointer<Ui::CSwiftData> ui;
-    QScopedPointer<BlackCore::Db::CBackgroundDataUpdater, QScopedPointerDeleteLater> m_updater;
+    BlackMisc::CWorkerPointer<BlackCore::Db::CBackgroundDataUpdater> m_updater;
     BlackMisc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
 };
 

@@ -8,7 +8,6 @@
  */
 
 #include "swiftdata.h"
-#include "blackcore/db/backgrounddataupdater.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
@@ -163,14 +162,14 @@ void CSwiftData::consolidationSettingChanged()
         {
             ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(nullptr);
             m_updater->gracefulShutdown();
-            m_updater.reset(nullptr);
+            m_updater = nullptr;
         }
     }
     else
     {
         if (!m_updater)
         {
-            m_updater.reset(new CBackgroundDataUpdater(this));
+            m_updater = m_updater.create(this);
             m_updater->start(QThread::LowestPriority);
             ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(m_updater.data());
         }

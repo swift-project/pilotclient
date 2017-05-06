@@ -23,6 +23,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QObject>
+#include <QPointer>
 #include <QSharedPointer>
 #include <QString>
 #include <QThread>
@@ -31,11 +32,15 @@
 #include <QtGlobal>
 #include <algorithm>
 #include <functional>
+#include <memory>
 #include <type_traits>
 #include <atomic>
 
 namespace BlackMisc
 {
+
+    template <typename T>
+    class CWorkerPointer;
 
     /*!
      * Starts a single-shot timer which will call a task in the thread of the given object when it times out.
@@ -158,6 +163,9 @@ namespace BlackMisc
         void abandonAndWait() noexcept;
 
     signals:
+        //! Emitted when the task is about to start.
+        void aboutToStart();
+
         //! Emitted when the task is finished.
         void finished();
 
@@ -292,12 +300,68 @@ namespace BlackMisc
         void ps_finish();
 
     private:
+        template <typename T>
+        friend class CWorkerPointer;
+
         using CWorkerBase::hasStarted;
         using CWorkerBase::setStarted;
         using CWorkerBase::setFinished;
 
         QObject *m_owner = nullptr;
         QString m_name;
+    };
+
+    /*!
+     * RAII smart pointer to manage a CContinuousWorker instance.
+     *
+     * Not required if the worker is immediately started after construction.
+     * Before the worker starts, it is owned by the pointer.
+     * After the worker starts, becomes a non-owning pointer, as ownership is tied to the lifetime of the thread.
+     */
+    template <typename T>
+    class CWorkerPointer
+    {
+    public:
+        static_assert(std::is_base_of<CContinuousWorker, T>::value, "T must be a CContinuousWorker subclass");
+
+        //! Constructor. Takes ownership.
+        explicit CWorkerPointer(T *ptr) : m_weak(ptr)
+        {
+            if (!ptr || static_cast<const CContinuousWorker *>(ptr)->hasStarted()) { return; }
+            m_strong.reset(ptr);
+            QObject::connect(ptr, &CWorkerBase::aboutToStart, [this] { m_strong.reset(); });
+        }
+
+        //! Construct a null pointer.
+        //! @{
+        CWorkerPointer() = default;
+        CWorkerPointer(std::nullptr_t) {}
+        //! @}
+
+        //! Factory method.
+        //! Arguments are forwarded to the constructor of T. Strictly more exception-safe than calling the constructor with new.
+        template <typename... Ts>
+        static CWorkerPointer create(Ts &&... args) { return CWorkerPointer(new T(std::forward<Ts>(args)...)); }
+
+        //! Access the raw pointer.
+        //! @{
+        T *data() const { return m_weak.data(); }
+        T &operator *() const { return *data(); }
+        T *operator ->() const { return &*data(); }
+        //! @}
+
+        //! True if it points to a valid worker.
+        //! @{
+        explicit operator bool() const { return m_weak; }
+        bool isValid() const { return m_weak; }
+        //! @}
+
+        //! True if it owns the worker it points to (i.e. worker has not yet started).
+        bool isOwner() const { return m_strong; }
+
+    private:
+        std::unique_ptr<T> m_strong;
+        QPointer<T> m_weak;
     };
 
 }
