@@ -68,6 +68,9 @@ namespace BlackMisc
             //! Null constructor
             CLengthUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
+            //! Destructor
+            virtual ~CLengthUnit() final = default;
+
             //! Default unit
             static CLengthUnit defaultUnit() { return m(); }
 
@@ -178,6 +181,9 @@ namespace BlackMisc
             //! Null constructor
             CAngleUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
+            //! Destructor
+            virtual ~CAngleUnit() final = default;
+
             //! Default unit
             static CAngleUnit defaultUnit() { return deg(); }
 
@@ -271,6 +277,9 @@ namespace BlackMisc
             //! Null constructor
             CFrequencyUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
+            //! Destructor
+            virtual ~CFrequencyUnit() final = default;
+
             //! Default unit
             static CFrequencyUnit defaultUnit() { return Hz(); }
 
@@ -356,6 +365,9 @@ namespace BlackMisc
 
             //! Null constructor
             CMassUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
+
+            //! Destructor
+            virtual ~CMassUnit() final = default;
 
             //! Default unit
             static CMassUnit defaultUnit() { return kg(); }
@@ -452,6 +464,9 @@ namespace BlackMisc
 
             //! Null constructor
             CPressureUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
+
+            //! Destructor
+            virtual ~CPressureUnit() final = default;
 
             //! Default unit
             static CPressureUnit defaultUnit() { return hPa(); }
@@ -570,6 +585,9 @@ namespace BlackMisc
             //! Null constructor
             CTemperatureUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
+            //! Destructor
+            virtual ~CTemperatureUnit() final = default;
+
             //! Default unit
             static CTemperatureUnit defaultUnit() { return C(); }
 
@@ -649,6 +667,9 @@ namespace BlackMisc
 
             //! Null constructor
             CSpeedUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
+
+            //! Destructor
+            virtual ~CSpeedUnit() final = default;
 
             //! Default unit
             static CSpeedUnit defaultUnit() { return m_s(); }
@@ -753,6 +774,9 @@ namespace BlackMisc
 
             //! Null constructor
             CTimeUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
+
+            //! Destructor
+            virtual ~CTimeUnit() final = default;
 
             //! Default unit
             static CTimeUnit defaultUnit() { return s(); }
@@ -878,6 +902,9 @@ namespace BlackMisc
 
             //! Null constructor
             CAccelerationUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
+
+            //! Destructor
+            virtual ~CAccelerationUnit() final = default;
 
             //! Default unit
             static CAccelerationUnit defaultUnit() { return m_s2(); }
