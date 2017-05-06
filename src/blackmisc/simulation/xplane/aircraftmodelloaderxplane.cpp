@@ -230,7 +230,7 @@ namespace BlackMisc
                         {
                             const QString line = ts.readLine();
                             QVector<QStringRef> tokens = line.splitRef(' ', QString::SkipEmptyParts);
-                            if (tokens.at(0) != QLatin1String("P") || tokens.size() < 3) { continue; }
+                            if (tokens.size() < 3 || tokens.at(0) != QLatin1String("P")) { continue; }
                             if (tokens.at(1) == QLatin1String("acf/_ICAO"))
                             {
                                 const CAircraftIcaoCode icao(tokens.at(2).toString());
