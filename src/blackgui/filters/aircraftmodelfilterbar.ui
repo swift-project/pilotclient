@@ -38,28 +38,67 @@
    <property name="verticalSpacing">
     <number>2</number>
    </property>
-   <item row="2" column="7">
-    <widget class="QLabel" name="lbl_FileName">
+   <item row="0" column="5">
+    <widget class="QCheckBox" name="cbt_IncludeExclude">
+     <property name="toolTip">
+      <string>Included/excluded models?</string>
+     </property>
      <property name="text">
-      <string>File:</string>
+      <string>Incl.</string>
+     </property>
+     <property name="tristate">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="2" column="8" colspan="2">
+   <item row="1" column="8">
+    <widget class="QCheckBox" name="cbt_ColorLiveries">
+     <property name="toolTip">
+      <string>Color liveries</string>
+     </property>
+     <property name="text">
+      <string>Color liv.</string>
+     </property>
+     <property name="tristate">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="9">
+    <widget class="QLabel" name="lbl_Distributor">
+     <property name="text">
+      <string>Distributor:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QCheckBox" name="cbt_Military">
+     <property name="toolTip">
+      <string>Military</string>
+     </property>
+     <property name="text">
+      <string>Mil.</string>
+     </property>
+     <property name="tristate">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="7" colspan="2">
     <widget class="QLineEdit" name="le_FileName">
      <property name="placeholderText">
       <string>filename e.g. FSX/SimObjects/MyAircraft</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="8">
-    <widget class="QLineEdit" name="le_ModelString">
-     <property name="placeholderText">
-      <string>Identifier</string>
+   <item row="2" column="6">
+    <widget class="QLabel" name="lbl_FileName">
+     <property name="text">
+      <string>File:</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="11">
+   <item row="0" column="10">
     <widget class="QLineEdit" name="le_AircraftIcao">
      <property name="maximumSize">
       <size>
