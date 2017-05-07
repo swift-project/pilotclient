@@ -19,7 +19,7 @@ namespace BlackGui
 {
     namespace Models
     {
-        CAircraftModelFilter::CAircraftModelFilter(const QString &modelKey, const QString &description,
+        CAircraftModelFilter::CAircraftModelFilter(int id, const QString &modelKey, const QString &description,
                 CAircraftModel::ModelModeFilter modelMode, BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
                 Qt::CheckState military, Qt::CheckState colorLiveries,
                 const QString &aircraftIcao, const QString &aircraftManufacturer,
@@ -27,6 +27,7 @@ namespace BlackGui
                 const QString &liveryCode, const QString &fileName,
                 const CSimulatorInfo &simInfo,
                 const CDistributor &distributor) :
+            m_id(id),
             m_modelKey(modelKey.trimmed().toUpper()), m_description(description.trimmed()),
             m_modelMode(modelMode), m_dbKeyFilter(dbKeyFilter), m_military(military), m_colorLiveries(colorLiveries),
             m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftManufacturer(aircraftManufacturer.trimmed().toUpper()),
@@ -45,6 +46,17 @@ namespace BlackGui
             CAircraftModelList outContainer;
             for (const CAircraftModel &model : inContainer)
             {
+                if (m_id >= 0)
+                {
+                    // search only for id
+                    if (model.isLoadedFromDb() && model.getDbKey() == m_id)
+                    {
+                        outContainer.push_back(model);
+                        break;
+                    }
+                    continue;
+                }
+
                 if (!m_simulatorInfo.isAllSimulators())
                 {
                     if (!this->m_simulatorInfo.matchesAny(model.getSimulator())) { continue; }
@@ -140,10 +152,12 @@ namespace BlackGui
 
         bool CAircraftModelFilter::valid() const
         {
-            const bool allEmpty = this->m_modelKey.isEmpty() && this->m_description.isEmpty() &&
-                                  this->m_aircraftManufacturer.isEmpty() && this->m_aircraftIcao.isEmpty() &&
-                                  this->m_airlineIcao.isEmpty() && this->m_airlineName.isEmpty() &&
-                                  this->m_liveryCode.isEmpty() && this->m_fileName.isEmpty();
+            const bool allEmpty =
+                m_id < 0 &&
+                this->m_modelKey.isEmpty() && this->m_description.isEmpty() &&
+                this->m_aircraftManufacturer.isEmpty() && this->m_aircraftIcao.isEmpty() &&
+                this->m_airlineIcao.isEmpty() && this->m_airlineName.isEmpty() &&
+                this->m_liveryCode.isEmpty() && this->m_fileName.isEmpty();
             if (!allEmpty) { return true; }
             const bool noSim = this->m_simulatorInfo.isNoSimulator() || this->m_simulatorInfo.isAllSimulators();
             const bool noModelMode = this->m_modelMode == CAircraftModel::Undefined || this->m_modelMode == CAircraftModel::All;

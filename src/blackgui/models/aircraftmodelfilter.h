@@ -31,22 +31,25 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CAircraftModelFilter(const QString &modelKey, const QString &description,
-                                 BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
-                                 BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
-                                 Qt::CheckState military, Qt::CheckState colorLiveries,
-                                 const QString &aircraftIcao, const QString &aircraftManufacturer,
-                                 const QString &airlineIcao, const QString &airlineName,
-                                 const QString &liveryCode,
-                                 const QString &fileName,
-                                 const BlackMisc::Simulation::CSimulatorInfo &simInfo = BlackMisc::Simulation::CSimulatorInfo::allSimulators(),
-                                 const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor()
-                                );
+            CAircraftModelFilter(
+                int id,
+                const QString &modelKey, const QString &description,
+                BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
+                BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
+                Qt::CheckState military, Qt::CheckState colorLiveries,
+                const QString &aircraftIcao, const QString &aircraftManufacturer,
+                const QString &airlineIcao, const QString &airlineName,
+                const QString &liveryCode,
+                const QString &fileName,
+                const BlackMisc::Simulation::CSimulatorInfo &simInfo = BlackMisc::Simulation::CSimulatorInfo::allSimulators(),
+                const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor()
+            );
 
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::Simulation::CAircraftModelList filter(const BlackMisc::Simulation::CAircraftModelList &inContainer) const override;
 
         private:
+            int m_id = -1;
             QString m_modelKey;
             QString m_description;
             BlackMisc::Simulation::CAircraftModel::ModelModeFilter m_modelMode;

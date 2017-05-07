@@ -46,6 +46,7 @@ namespace BlackGui
             connect(ui->le_AirlineIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_AirlineName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelDescription, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelString, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_FileName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
@@ -64,6 +65,7 @@ namespace BlackGui
             ui->le_ModelString->setValidator(ucv);
             ui->le_AircraftManufacturer->setValidator(ucv);
             ui->le_LiveryCode->setValidator(ucv);
+            ui->le_Id->setValidator(new QIntValidator(ui->le_Id));
 
             // reset form
             this->clearForm();
@@ -100,6 +102,7 @@ namespace BlackGui
             }
 
             return std::make_unique<CAircraftModelFilter>(
+                       convertDbId(ui->le_Id->text()),
                        ui->le_ModelString->text(),
                        ui->le_ModelDescription->text(),
                        mf,
