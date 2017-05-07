@@ -47,6 +47,7 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this, true));
+            ui->tvp_OwnAircraftModels->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::ps_requestOwnModelsUpdate);
 
@@ -65,7 +66,7 @@ namespace BlackGui
 
             ui->comp_SimulatorSelector->setValue(simulator);
             ui->le_Simulator->setText(simulator.toQString());
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::ps_requestSimulatorModelsWithCacheInBackground);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::ps_onSimulatorChanged);
 
             // menu
             ui->tvp_OwnAircraftModels->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnAircraftModels, this, false));
@@ -465,7 +466,7 @@ namespace BlackGui
                 CLogMessage(this).error("Loading of models failed, simulator '%1', details: %2") << simulator.toQString() << status.getMessage();
             }
 
-            // cache loads may occur in background, do not adjust UI
+            // cache loads may occur in background, do not adjust UI settings
             if (info == IAircraftModelLoader::CacheLoaded) { return; }
 
             // parsed loads normally explicit
@@ -481,6 +482,13 @@ namespace BlackGui
         void CDbOwnModelsComponent::ps_requestSimulatorModelsWithCacheInBackground(const CSimulatorInfo &simulator)
         {
             this->ps_requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundWithCache);
+        }
+
+        void CDbOwnModelsComponent::ps_onSimulatorChanged()
+        {
+            const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
+            ui->tvp_OwnAircraftModels->setSimulatorForLoading(sim);
+            this->ps_requestSimulatorModelsWithCacheInBackground(sim);
         }
     } // ns
 } // ns

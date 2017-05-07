@@ -54,15 +54,6 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-            //! How to validate loaded JSON data
-            enum JsonLoadFlag
-            {
-                NotSet                   = 0,
-                AllowOnlySingleSimulator = 1 << 0,
-                ReduceToOneSimulator     = 1 << 1
-            };
-            Q_DECLARE_FLAGS(JsonLoad, JsonLoadFlag)
-
             //! Constructor
             explicit CAircraftModelView(QWidget *parent = nullptr);
 
@@ -114,8 +105,8 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModelStrings
             bool highlightModelStrings() const;
 
-            //! Load validation
-            void setJsonLoad(JsonLoad jsonLoad) { m_jsonLoad = jsonLoad; }
+            //! Loading data will be restricted to simulator
+            void setSimulatorForLoading(const BlackMisc::Simulation::CSimulatorInfo &sim) { m_loadingRequiresSimulator = sim; }
 
         signals:
             //! Request to stash if applicable
@@ -157,14 +148,10 @@ namespace BlackGui
             void ps_requestStash();
 
         private:
-            bool     m_stashingClearsSelection = true;   //!< stashing unselects
-            JsonLoad m_jsonLoad                = NotSet; //!< Loaded JSON validation
+            bool m_stashingClearsSelection = true; //!< stashing unselects
+            BlackMisc::Simulation::CSimulatorInfo m_loadingRequiresSimulator; //!< simulator required when loading
         };
     } // ns
 } // ns
-
-Q_DECLARE_METATYPE(BlackGui::Views::CAircraftModelView::JsonLoad)
-Q_DECLARE_METATYPE(BlackGui::Views::CAircraftModelView::JsonLoadFlag)
-Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CAircraftModelView::JsonLoad)
 
 #endif // guard

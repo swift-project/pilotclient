@@ -330,48 +330,22 @@ namespace BlackGui
 
         CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const
         {
-            if (!this->m_jsonLoad.testFlag(ReduceToOneSimulator)) { return {}; }
+            if (this->m_loadingRequiresSimulator.isNoSimulator()) { return {}; }
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Empty models", true); }
-            const CSimulatorInfo maxSims = models.simulatorsWithMaxEntries();
-            if (maxSims.isNoSimulator())
-            {
-                return CStatusMessage(this, CStatusMessage::SeverityError, "No simulator with maximum, cannot reduce");
-            }
-
-            if (maxSims.isSingleSimulator())
-            {
-                int rm = models.removeIfNotMatchingSimulator(maxSims);
-                return rm < 1 ?
-                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Now only for " + maxSims.toQString(true), true) :
-                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Reduced by % 1 to only use %2", true) << rm << maxSims.toQString(true);
-            }
-
-            // one simulator dominating
-            if (maxSims.isSingleSimulator())
-            {
-                int rm = models.removeIfNotMatchingSimulator(maxSims);
-                return rm < 1 ?
-                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Now only for " + maxSims.toQString(true), true) :
-                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Reduced by % 1 to only use %2", true) << rm << maxSims.toQString(true);
-            }
 
             // multiple sims with same count
-            const CSimulatorInfo first = CSimulatorInfoList::splitIntoSingleSimulators(maxSims).front();
-            int d = models.removeIfNotMatchingSimulator(first);
-            return d < 1 ?
-                   CStatusMessage(this, CStatusMessage::SeverityInfo, "Now only for " + maxSims.toQString(true), true) :
-                   CStatusMessage(this, CStatusMessage::SeverityInfo, "Reduced by % 1 to only use %2", true) << d << maxSims.toQString(true);
+            const int removed = models.removeIfNotMatchingSimulator(this->m_loadingRequiresSimulator);
+            if (removed < 1) { return {}; }
+            return CStatusMessage(this, CStatusMessage::SeverityWarning, "Reduced by %1 model(s) to only use %2 models", true) << removed << this->m_loadingRequiresSimulator.toQString(true);
         }
 
         CStatusMessage CAircraftModelView::validateLoadedJsonData(const CAircraftModelList &models) const
         {
-            static const CStatusMessage ok(this, CStatusMessage::SeverityInfo, "model validation passed", true);
-            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "no data", true); }
-            if (this->m_jsonLoad == AllowOnlySingleSimulator)
+            if (models.isEmpty()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
+            if (this->m_loadingRequiresSimulator.isNoSimulator()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
+            if (models.containsNotMatchingSimulator(this->m_loadingRequiresSimulator))
             {
-                const CSimulatorInfo sim = models.simulatorsSupported();
-                if (sim.isSingleSimulator()) { return ok; }
-                return CStatusMessage(this, CStatusMessage::SeverityError, "data need to be from one simulator");
+                return CStatusMessage(this, CStatusMessage::SeverityError, "Found entry not matching %1 in model data", true) << this->m_loadingRequiresSimulator.toQString();
             }
             return COrderableViewWithDbObjects::validateLoadedJsonData(models);
         }

@@ -60,13 +60,13 @@ namespace BlackGui
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuMaterializeFilter);
             ui->tvp_OwnModelSet->addFilterDialog();
-            ui->tvp_OwnModelSet->setJsonLoad(CAircraftModelView::AllowOnlySingleSimulator | CAircraftModelView::ReduceToOneSimulator);
             ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
             ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnModelSet, this, true));
             ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithSimulatorModels(ui->tvp_OwnModelSet, this, false));
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuOrderable);
             ui->tvp_OwnModelSet->setSorting(CAircraftModel::IndexOrderString);
             ui->tvp_OwnModelSet->initAsOrderable();
+            ui->tvp_OwnModelSet->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
 
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
@@ -342,6 +342,7 @@ namespace BlackGui
         {
             if (this->m_modelSetLoader.getSimulator() == simulator) { return; } // avoid unnecessary signals
             this->m_modelSetLoader.changeSimulator(simulator);
+            ui->tvp_OwnModelSet->setSimulatorForLoading(simulator);
             ui->le_Simulator->setText(simulator.toQString(true));
             ui->comp_SimulatorSelector->setValue(simulator);
         }

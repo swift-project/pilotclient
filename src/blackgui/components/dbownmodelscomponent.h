@@ -133,10 +133,13 @@ namespace BlackGui
             //! Request simulator models from cache
             void ps_requestSimulatorModelsWithCacheInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Own simulator changed
+            void ps_onSimulatorChanged();
+
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader; //!< read own aircraft models
-            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection {this }; //!< last selection
+            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection { this }; //!< last selection
 
             //! Init or change model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
