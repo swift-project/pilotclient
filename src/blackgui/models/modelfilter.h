@@ -66,10 +66,10 @@ namespace BlackGui
             //! Remove the * wildcards
             QString stripWildcard(const QString &value) const;
 
-            bool m_valid = false; //!< is filter valid
+            bool m_valid = false;  //!< is filter valid?
 
         private:
-            bool m_enabled = true;
+            bool m_enabled = true; //!< is filter enabled?
         };
 
         //! Model filter interface for those who can generate such a filter (e.g. a widget or dialog)
