@@ -17,9 +17,10 @@ namespace BlackGui
 {
     namespace Models
     {
-        CLiveryFilter::CLiveryFilter(const QString &combinedCode, const QString &descriptiom,
+        CLiveryFilter::CLiveryFilter(int id, const QString &combinedCode, const QString &descriptiom,
                                      const QString &airlineDesignator,
                                      const BlackMisc::CRgbColor &fuselageColor, const BlackMisc::CRgbColor &tailColor, double maxColorDistance, bool colorLiveries, bool airlineLiveries) :
+            m_id(id),
             m_combinedCode(combinedCode.trimmed().toUpper()), m_description(descriptiom),
             m_airlineIcaoDesignator(airlineDesignator.trimmed().toUpper()),
             m_fuselageColor(fuselageColor), m_tailColor(tailColor), m_maxColorDistance(maxColorDistance),
@@ -35,12 +36,21 @@ namespace BlackGui
             bool checkLiveryType = filterByLiveryType();
             for (const CLivery &livery : inContainer)
             {
+                if (m_id >= 0)
+                {
+                    // search only for id
+                    if (livery.isLoadedFromDb() && livery.getDbKey() == m_id)
+                    {
+                        outContainer.push_back(livery);
+                        break;
+                    }
+                    continue;
+                }
                 if (checkLiveryType)
                 {
                     if (!m_colorLiveries && livery.isColorLivery()) {continue;}
                     if (!m_airlineLiveries && livery.isAirlineLivery()) { continue; }
                 }
-
                 if (!m_combinedCode.isEmpty())
                 {
                     if (!this->stringMatchesFilterExpression(livery.getCombinedCode(), m_combinedCode)) { continue; }
@@ -70,7 +80,7 @@ namespace BlackGui
         {
             if (filterByLiveryType()) { return true; }
             if (m_fuselageColor.isValid() || m_tailColor.isValid()) { return true; }
-            return !(this->m_combinedCode.isEmpty() && this->m_description.isEmpty() &&
+            return !(this->m_id < 0 && this->m_combinedCode.isEmpty() && this->m_description.isEmpty() &&
                      this->m_airlineIcaoDesignator.isEmpty());
         }
 

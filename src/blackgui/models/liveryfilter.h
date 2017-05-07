@@ -23,26 +23,28 @@ namespace BlackGui
 {
     namespace Models
     {
-
         //! Filter for aircraft liveries
         class BLACKGUI_EXPORT CLiveryFilter : public IModelFilter<BlackMisc::Aviation::CLiveryList>
         {
         public:
             //! Constructor
-            CLiveryFilter(const QString &combinedCode,
-                          const QString &descriptiom,
-                          const QString &airlineDesignator,
-                          const BlackMisc::CRgbColor &fuselageColor,
-                          const BlackMisc::CRgbColor &tailColor,
-                          double maxColorDistance,
-                          bool colorLiveries,
-                          bool airlineLiveries
-                         );
+            CLiveryFilter(
+                int id,
+                const QString &combinedCode,
+                const QString &descriptiom,
+                const QString &airlineDesignator,
+                const BlackMisc::CRgbColor &fuselageColor,
+                const BlackMisc::CRgbColor &tailColor,
+                double maxColorDistance,
+                bool colorLiveries,
+                bool airlineLiveries
+            );
 
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::Aviation::CLiveryList filter(const BlackMisc::Aviation::CLiveryList &inContainer) const override;
 
         private:
+            int m_id = -1;
             QString m_combinedCode;
             QString m_description;
             QString m_airlineIcaoDesignator;
@@ -58,7 +60,6 @@ namespace BlackGui
             //! Valid filter?
             bool valid() const;
         };
-
     } // namespace
 } // namespace
 

@@ -39,15 +39,16 @@ namespace BlackGui
             connect(ui->le_AirlineIcaoCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Description, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_LiveryCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->color_Fuselage, &CColorSelector::colorChanged, this, &CLiveryFilterBar::ps_colorChanged);
             connect(ui->color_Tail, &CColorSelector::colorChanged, this, &CLiveryFilterBar::ps_colorChanged);
             connect(ui->cb_Airlines, &QCheckBox::released, this, &CFilterWidget::triggerFilter);
             connect(ui->cb_Colors, &QCheckBox::released, this, &CFilterWidget::triggerFilter);
             connect(ui->hs_ColorDistance, &QSlider::valueChanged, this, &CLiveryFilterBar::ps_colorDistanceChanged);
 
-            CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
-            ui->le_AirlineIcaoCode->setValidator(ucv);
-            ui->le_LiveryCode->setValidator(ucv);
+            ui->le_AirlineIcaoCode->setValidator(new CUpperCaseValidator(ui->le_AirlineIcaoCode));
+            ui->le_LiveryCode->setValidator(new CUpperCaseValidator(ui->le_LiveryCode));
+            ui->le_Id->setValidator(new QIntValidator(ui->le_Id));
 
             // reset form
             this->clearForm();
@@ -58,8 +59,9 @@ namespace BlackGui
 
         std::unique_ptr<BlackGui::Models::IModelFilter<CLiveryList> > CLiveryFilterBar::createModelFilter() const
         {
-            double maxColorDistance = ui->hs_ColorDistance->value() / 100.0;
+            const double maxColorDistance = ui->hs_ColorDistance->value() / 100.0;
             return std::make_unique<CLiveryFilter>(
+                       convertDbId(ui->le_Id->text()),
                        ui->le_LiveryCode->text(),
                        ui->le_Description->text(),
                        ui->le_AirlineIcaoCode->text(),
@@ -103,14 +105,8 @@ namespace BlackGui
 
         void CLiveryFilterBar::filter(const CAirlineIcaoCode &airlineIcao)
         {
-            if (airlineIcao.hasValidDesignator())
-            {
-                ui->le_AirlineIcaoCode->setText(airlineIcao.getDesignator());
-            }
-            else
-            {
-                return;
-            }
+            if (!airlineIcao.hasValidDesignator()) { return; }
+            ui->le_AirlineIcaoCode->setText(airlineIcao.getDesignator());
             ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
         }
 
@@ -121,6 +117,7 @@ namespace BlackGui
 
         void CLiveryFilterBar::clearForm()
         {
+            ui->le_Id->clear();
             ui->le_AirlineIcaoCode->clear();
             ui->le_LiveryCode->clear();
             ui->le_Description->clear();
