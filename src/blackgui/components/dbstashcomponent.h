@@ -197,7 +197,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModelList getSelectedOrAllModels() const;
 
             //! Consolidate with any DB data (if available).
-            BlackMisc::Simulation::CAircraftModel consolidateWithDbData(const BlackMisc::Simulation::CAircraftModel &model) const;
+            BlackMisc::Simulation::CAircraftModel consolidateWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool forced) const;
 
             //! Consolidate with own models (if available). This updates mostly with model description, path etc.
             BlackMisc::Simulation::CAircraftModel consolidateWithOwnModels(const BlackMisc::Simulation::CAircraftModel &model) const;

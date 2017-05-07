@@ -384,9 +384,9 @@ namespace BlackGui
             return models;
         }
 
-        CAircraftModel CDbStashComponent::consolidateWithDbData(const CAircraftModel &model) const
+        CAircraftModel CDbStashComponent::consolidateWithDbData(const CAircraftModel &model, bool forced) const
         {
-            const CAircraftModel consolidatedModel = CDatabaseUtils::consolidateModelWithDbData(model, true);
+            const CAircraftModel consolidatedModel = CDatabaseUtils::consolidateModelWithDbData(model, forced);
             return consolidatedModel;
         }
 
@@ -410,11 +410,9 @@ namespace BlackGui
             CAircraftModel stashModel(model);
             const bool ownModel = stashModel.getModelType() == CAircraftModel::TypeOwnSimulatorModel;
 
-            // merge with DB data if any
-            if (!stashModel.hasValidDbKey())
-            {
-                stashModel = this->consolidateWithDbData(stashModel);
-            }
+            // merge/update with DB data if any
+            // this is a forced update with DB data, as DB data can change
+            stashModel = this->consolidateWithDbData(stashModel, true);
 
             // merge with own models if any
             if (!ownModel)
