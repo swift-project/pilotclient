@@ -269,11 +269,12 @@ namespace BlackMisc
                     if (!model.hasDescription()) { model.setDescription(descriptionForFlyableModel(model)); }
                     addUniqueModel(model, installedModels);
 
+                    const QString baseModelString = model.getModelString();
                     QDirIterator liveryIt(aircraftIt.fileInfo().canonicalPath() + "/liveries", QDir::Dirs | QDir::NoDotAndDotDot);
                     while (liveryIt.hasNext())
                     {
                         liveryIt.next();
-                        model.setModelString(model.getModelString() % ' ' % liveryIt.fileName());
+                        model.setModelString(baseModelString % ' ' % liveryIt.fileName());
                         addUniqueModel(model, installedModels);
                     }
                 }
