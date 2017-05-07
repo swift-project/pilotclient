@@ -153,6 +153,9 @@ namespace BlackMisc
             //! As a set of single simulator info objects
             QSet<CSimulatorInfo> asSingleSimulatorSet() const;
 
+            //! All simulators selected become unselected and vice versa
+            void invertSimulators();
+
             //! To plugin indentifier, empty string if not single simulator
             const QString &toPluginIdentifier() const;
 

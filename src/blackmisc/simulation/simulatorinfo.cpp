@@ -169,6 +169,11 @@ namespace BlackMisc
             return set;
         }
 
+        void CSimulatorInfo::invertSimulators()
+        {
+            m_simulator = (m_simulator ^ static_cast<int>(All)) & static_cast<int>(All);
+        }
+
         const QString &CSimulatorInfo::toPluginIdentifier() const
         {
             static const QString e;

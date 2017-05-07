@@ -280,6 +280,22 @@ namespace BlackMisc
             });
         }
 
+        bool CAircraftModelList::containsMatchingSimulator(const CSimulatorInfo &simulators) const
+        {
+            return this->containsBy([ & ](const CAircraftModel & model)
+            {
+                return model.matchesSimulator(simulators);
+            });
+        }
+
+        bool CAircraftModelList::containsNotMatchingSimulator(const CSimulatorInfo &simulators) const
+        {
+            return this->containsBy([ & ](const CAircraftModel & model)
+            {
+                return !model.matchesSimulator(simulators);
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findByDistributors(const CDistributorList &distributors) const
         {
             if (distributors.isEmpty()) { return CAircraftModelList(); }

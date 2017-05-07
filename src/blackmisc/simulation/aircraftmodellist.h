@@ -80,6 +80,12 @@ namespace BlackMisc
             //! Contains any model with aircraft and airline ICAO designator
             bool containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const;
 
+            //! Contains any model matching any of of passed simulators
+            bool containsMatchingSimulator(const CSimulatorInfo &simulators) const;
+
+            //! Contains any model not matching any of of passed simulators
+            bool containsNotMatchingSimulator(const CSimulatorInfo &simulators) const;
+
             //! Find by model string
             //! \remark normally CAircraftModelList::findFirstByModelStringOrDefault would be used
             CAircraftModelList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
