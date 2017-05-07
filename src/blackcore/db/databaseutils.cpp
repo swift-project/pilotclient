@@ -75,6 +75,7 @@ namespace BlackCore
                 CAircraftModel dbModelModified(dbModel);
                 dbModelModified.updateMissingParts(model);
                 dbModelModified.setDistributorOrder(distributorOrder);
+                dbModelModified.setSimulator(dbModel.getSimulator()); // DB simulator settings have priority
                 return dbModelModified;
             }
 
