@@ -36,10 +36,11 @@ namespace BlackGui
             connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Manufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Description, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
-            CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
-            ui->le_Designator->setValidator(ucv);
-            ui->le_Manufacturer->setValidator(ucv);
+            ui->le_Designator->setValidator(new CUpperCaseValidator(ui->le_Designator));
+            ui->le_Manufacturer->setValidator(new CUpperCaseValidator(ui->le_Manufacturer));
+            ui->le_Id->setValidator(new QIntValidator(ui->le_Id));
 
             // reset form
             this->clearForm();
@@ -51,6 +52,7 @@ namespace BlackGui
         std::unique_ptr<BlackGui::Models::IModelFilter<CAircraftIcaoCodeList> > CAircraftIcaoFilterBar::createModelFilter() const
         {
             return std::make_unique<CAircraftIcaoFilter>(
+                       convertDbId(ui->le_Id->text()),
                        ui->le_Designator->text(),
                        ui->le_Manufacturer->text(),
                        ui->le_Description->text(),
@@ -99,6 +101,7 @@ namespace BlackGui
 
         void CAircraftIcaoFilterBar::clearForm()
         {
+            ui->le_Id->clear();
             ui->le_Designator->clear();
             ui->le_Manufacturer->clear();
             ui->le_Description->clear();

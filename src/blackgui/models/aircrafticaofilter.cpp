@@ -17,12 +17,14 @@ namespace BlackGui
     namespace Models
     {
         CAircraftIcaoFilter::CAircraftIcaoFilter(
+            int id,
             const QString &designator, const QString &name,
             const QString &description, const QString &combinedType) :
+            m_id(id),
             m_designator(designator.trimmed().toUpper()), m_manufacturer(name.trimmed()),
             m_description(description.trimmed()),  m_combinedType(combinedType.trimmed().toUpper())
         {
-            this->m_valid = !(this->m_combinedType.isEmpty() && this->m_designator.isEmpty() &&
+            this->m_valid = !(this->m_id < 0 && this->m_combinedType.isEmpty() && this->m_designator.isEmpty() &&
                               this->m_description.isEmpty() && this->m_manufacturer.isEmpty());
         }
 
@@ -34,6 +36,16 @@ namespace BlackGui
 
             for (const CAircraftIcaoCode &icao : inContainer)
             {
+                if (m_id >= 0)
+                {
+                    // search only for id
+                    if (icao.isLoadedFromDb() && icao.getDbKey() == m_id)
+                    {
+                        outContainer.push_back(icao);
+                        break;
+                    }
+                    continue;
+                }
                 if (!m_designator.isEmpty())
                 {
                     if (!this->stringMatchesFilterExpression(icao.getDesignator(), m_designator)) { continue; }

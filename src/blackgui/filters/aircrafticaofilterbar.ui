@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>574</width>
-    <height>44</height>
+    <width>602</width>
+    <height>48</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -121,7 +121,58 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="5">
+   <item row="1" column="0">
+    <widget class="QWidget" name="wi_Id" native="true">
+     <layout class="QHBoxLayout" name="hl_DbId">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_Id">
+        <property name="text">
+         <string>Id:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_Id">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>id</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="hs_Id">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="3">
     <widget class="BlackGui::Components::CAircraftCombinedTypeSelector" name="combinedType_Selector">
      <property name="minimumSize">
       <size>
@@ -137,19 +188,26 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="lbl_Combined">
+     <property name="text">
+      <string>Combined:</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CAircraftCombinedTypeSelector</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/aircraftcombinedtypeselector.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Filters::CFilterBarButtons</class>
    <extends>QFrame</extends>
    <header>blackgui/filters/filterbarbuttons.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CAircraftCombinedTypeSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/aircraftcombinedtypeselector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

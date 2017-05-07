@@ -29,7 +29,8 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CAircraftIcaoFilter(const QString &designator,
+            CAircraftIcaoFilter(int id,
+                                const QString &designator,
                                 const QString &manufacturer,
                                 const QString &description,
                                 const QString &combinedType);
@@ -38,6 +39,7 @@ namespace BlackGui
             virtual BlackMisc::Aviation::CAircraftIcaoCodeList filter(const BlackMisc::Aviation::CAircraftIcaoCodeList &inContainer) const override;
 
         private:
+            int m_id = -1;
             QString m_designator;
             QString m_manufacturer;
             QString m_description;
