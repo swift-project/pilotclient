@@ -37,6 +37,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/identifierlist.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/namevariantpair.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/network/client.h"
@@ -573,14 +574,22 @@ namespace BlackGui
         void CViewBaseNonTemplate::ps_loadJsonAction()
         {
             if (!this->m_menus.testFlag(MenuLoad)) { return; }
-            this->ps_loadJson();
+            const CStatusMessage m = this->ps_loadJson();
+            if (!m.isEmpty())
+            {
+                CLogMessage::preformatted(m);
+            }
         }
 
         void CViewBaseNonTemplate::ps_saveJsonAction()
         {
             if (this->isEmpty()) { return; }
             if (!this->m_menus.testFlag(MenuSave)) { return; }
-            this->ps_saveJson();
+            const CStatusMessage m = this->ps_saveJson();
+            if (!m.isEmpty())
+            {
+                CLogMessage::preformatted(m);
+            }
         }
 
         void CViewBaseNonTemplate::ps_triggerReload()
@@ -1374,7 +1383,7 @@ namespace BlackGui
         CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::validateLoadedJsonData(const ContainerType &data) const
         {
             Q_UNUSED(data);
-            static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "no validation", true);
+            static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "validation passed", true);
             return e;
         }
 
@@ -1421,8 +1430,10 @@ namespace BlackGui
                     }
 
                     ContainerType container = containerVariant.value<ContainerType>();
+                    const int countBefore = container.size();
                     m = this->modifyLoadedJsonData(container);
                     if (m.isFailure()) { break; } // modification error
+                    if (countBefore > 0 && container.isEmpty()) { break; }
                     m = this->validateLoadedJsonData(container);
                     if (m.isFailure()) { break; } // validaton error
                     this->updateContainerMaybeAsync(container);
