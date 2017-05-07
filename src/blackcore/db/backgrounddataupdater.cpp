@@ -75,7 +75,7 @@ namespace BlackCore
             m_enabled = false;
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
-                this->abandonAndWait();
+                doIfNotFinished([this] { this->abandonAndWait(); });
             }
         }
 
