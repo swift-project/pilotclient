@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-
 #include <QString>
 
 namespace BlackGui
@@ -27,13 +26,14 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CAirlineIcaoFilter(const QString &vDesignator, const QString &name,
+            CAirlineIcaoFilter(int id, const QString &vDesignator, const QString &name,
                                const QString &countryIso, bool isReal, bool isVa);
 
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::Aviation::CAirlineIcaoCodeList filter(const BlackMisc::Aviation::CAirlineIcaoCodeList &inContainer) const override;
 
         private:
+            int m_id = -1;
             QString m_vDesignator;
             QString m_name;
             QString m_countryIso;

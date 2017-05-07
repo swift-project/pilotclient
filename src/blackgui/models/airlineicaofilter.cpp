@@ -16,12 +16,12 @@ namespace BlackGui
 {
     namespace Models
     {
-        CAirlineIcaoFilter::CAirlineIcaoFilter(const QString &vDesignator, const QString &name,
+        CAirlineIcaoFilter::CAirlineIcaoFilter(int id, const QString &vDesignator, const QString &name,
                                                const QString &countryIso, bool isReal, bool isVa) :
-            m_vDesignator(vDesignator.trimmed().toUpper()), m_name(name.trimmed()),
+            m_id(id), m_vDesignator(vDesignator.trimmed().toUpper()), m_name(name.trimmed()),
             m_countryIso(countryIso.trimmed().toUpper()), m_real(isReal), m_va(isVa)
         {
-            this->m_valid =  !(this->m_countryIso.isEmpty() && this->m_vDesignator.isEmpty() &&
+            this->m_valid =  !(m_id < 0 && this->m_countryIso.isEmpty() && this->m_vDesignator.isEmpty() &&
                                this->m_name.isEmpty() && !this->m_va && !this->m_real);
         }
 
@@ -31,6 +31,17 @@ namespace BlackGui
             CAirlineIcaoCodeList outContainer;
             for (const CAirlineIcaoCode &icao : inContainer)
             {
+                if (m_id >= 0)
+                {
+                    // search only for id
+                    if (icao.isLoadedFromDb() && icao.getDbKey() == m_id)
+                    {
+                        outContainer.push_back(icao);
+                        break;
+                    }
+                    continue;
+                }
+
                 if (!m_vDesignator.isEmpty())
                 {
                     // based on T72, also find VLHA based on LHA

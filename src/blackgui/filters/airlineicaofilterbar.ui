@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CAirlineIcaoFilterBar</class>
  <widget class="QFrame" name="CAirlineIcaoFilterBar">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>515</width>
+    <height>24</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Airline ICAO filter</string>
   </property>
@@ -30,27 +38,14 @@
    <property name="verticalSpacing">
     <number>2</number>
    </property>
-   <item row="0" column="1">
-    <widget class="BlackGui::Filters::CFilterBarButtons" name="filter_Buttons">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+   <item row="0" column="2">
+    <widget class="QLabel" name="lbl_AirlineId">
+     <property name="text">
+      <string>Id:</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="7">
-    <widget class="BlackGui::Components::CDbCountrySelectorComponent" name="country_Selector">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3">
+   <item row="0" column="5">
     <widget class="QLineEdit" name="le_Designator">
      <property name="maximumSize">
       <size>
@@ -66,41 +61,14 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="0" column="4">
     <widget class="QLabel" name="lbl_Designator">
      <property name="text">
       <string>Airline:</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="8">
-    <widget class="QCheckBox" name="cb_RealAirline">
-     <property name="text">
-      <string>Real airline</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="9">
-    <widget class="QCheckBox" name="cb_VirtualAirline">
-     <property name="text">
-      <string>Virtual airline</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <widget class="QLineEdit" name="le_Name">
-     <property name="placeholderText">
-      <string>Name of airline</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="10">
+   <item row="0" column="12">
     <spacer name="hs_FilterBar">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -113,17 +81,70 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="4">
+   <item row="0" column="7">
+    <widget class="QLineEdit" name="le_Name">
+     <property name="placeholderText">
+      <string>Name of airline</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="10">
+    <widget class="QCheckBox" name="cb_RealAirline">
+     <property name="text">
+      <string>Real airline</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
     <widget class="QLabel" name="lbl_Name">
      <property name="text">
       <string>Name:</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="6">
+   <item row="0" column="11">
+    <widget class="QCheckBox" name="cb_VirtualAirline">
+     <property name="text">
+      <string>Virtual airline</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="8">
     <widget class="QLabel" name="lbl_Country">
      <property name="text">
       <string>Country:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="BlackGui::Filters::CFilterBarButtons" name="filter_Buttons"/>
+   </item>
+   <item row="0" column="9">
+    <widget class="BlackGui::Components::CDbCountrySelectorComponent" name="country_Selector">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLineEdit" name="le_AirlineId">
+     <property name="maximumSize">
+      <size>
+       <width>50</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="placeholderText">
+      <string>id</string>
      </property>
     </widget>
    </item>
@@ -131,15 +152,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CDbCountrySelectorComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbcountryselectorcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Filters::CFilterBarButtons</class>
    <extends>QFrame</extends>
    <header>blackgui/filters/filterbarbuttons.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbCountrySelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbcountryselectorcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

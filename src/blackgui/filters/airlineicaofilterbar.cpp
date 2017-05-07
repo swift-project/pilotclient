@@ -19,6 +19,7 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QString>
+#include <QIntValidator>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -38,9 +39,11 @@ namespace BlackGui
 
             connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_AirlineId, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->country_Selector, &CDbCountrySelectorComponent::countryChanged, this, &CAirlineIcaoFilterBar::ps_CountryChanged);
 
-            ui->le_Designator->setValidator(new CUpperCaseValidator(this));
+            ui->le_Designator->setValidator(new CUpperCaseValidator(ui->le_Designator));
+            ui->le_AirlineId->setValidator(new QIntValidator(ui->le_AirlineId));
 
             // reset form
             this->clearForm();
@@ -48,9 +51,10 @@ namespace BlackGui
 
         CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() { }
 
-        std::unique_ptr<BlackGui::Models::IModelFilter<CAirlineIcaoCodeList> > CAirlineIcaoFilterBar::createModelFilter() const
+        std::unique_ptr<IModelFilter<CAirlineIcaoCodeList> > CAirlineIcaoFilterBar::createModelFilter() const
         {
             return std::make_unique<CAirlineIcaoFilter>(
+                       convertDbId(ui->le_AirlineId->text()),
                        ui->le_Designator->text().trimmed(),
                        ui->le_Name->text().trimmed(),
                        ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
@@ -94,12 +98,12 @@ namespace BlackGui
 
         void CAirlineIcaoFilterBar::clearForm()
         {
+            ui->le_AirlineId->clear();
             ui->le_Designator->clear();
             ui->le_Name->clear();
             ui->country_Selector->clear();
             ui->cb_RealAirline->setChecked(true);
             ui->cb_VirtualAirline->setChecked(true);
         }
-
     } // ns
 } // ns
