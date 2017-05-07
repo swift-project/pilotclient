@@ -57,6 +57,9 @@ namespace BlackGui
             //! Clear the filter form
             virtual void clearForm() = 0;
 
+            //! Convert DB id
+            static int convertDbId(const QString &candidate);
+
         private slots:
             //! Button clicked
             void ps_filterButtonClicked(CFilterBarButtons::FilterButton filterButton);
@@ -64,7 +67,6 @@ namespace BlackGui
             //! Stylesheet changed
             void ps_onStyleSheetChanged();
         };
-
     } // namespace
 } // namespace
 

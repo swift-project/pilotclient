@@ -39,6 +39,15 @@ namespace BlackGui
             }
         }
 
+        int CFilterWidget::convertDbId(const QString &candidate)
+        {
+            const QString s = candidate.trimmed();
+            if (s.isEmpty()) { return -1; }
+            bool ok = false;
+            const int id = s.toInt(&ok);
+            return ok && id >= 0 ? id : -1;
+        }
+
         void CFilterWidget::triggerFilter()
         {
             this->ps_filterButtonClicked(CFilterBarButtons::Filter);
@@ -67,6 +76,5 @@ namespace BlackGui
                 break;
             }
         }
-
     } // namespace
 } // namespace
