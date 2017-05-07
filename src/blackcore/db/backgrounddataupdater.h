@@ -38,6 +38,12 @@ namespace BlackCore
             //! Destructor
             virtual ~CBackgroundDataUpdater();
 
+            //! \copydoc BlackMisc::CContinuousWorker::initialize
+            virtual void initialize() override;
+
+            //! \copydoc BlackMisc::CContinuousWorker::cleanup
+            virtual void cleanup() override;
+
             //! Is shutting down?
             //! \threadsafe
             bool isShuttingDown() const;

@@ -37,7 +37,18 @@ namespace BlackCore
             CContinuousWorker(owner, "Background data updater")
         {
             connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundDataUpdater::doWork);
+        }
+
+        void CBackgroundDataUpdater::initialize()
+        {
             m_updateTimer.start(60 * 1000);
+        }
+
+        void CBackgroundDataUpdater::cleanup()
+        {
+            m_updateTimer.stop();
+            m_shutdown = true;
+            m_enabled = false;
         }
 
         CBackgroundDataUpdater::~CBackgroundDataUpdater()
@@ -60,17 +71,11 @@ namespace BlackCore
 
         void CBackgroundDataUpdater::gracefulShutdown()
         {
-            if (m_shutdown) { return; }
             m_shutdown = true;
             m_enabled = false;
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
                 this->abandonAndWait();
-            }
-            else
-            {
-                // timer needs to be stopped in its own thread
-                m_updateTimer.stop();
             }
         }
 
