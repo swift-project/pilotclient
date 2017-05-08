@@ -101,7 +101,7 @@ namespace BlackGui
         struct TViewUpdateSettings : public BlackMisc::TSettingTrait<CViewUpdateSettings>
         {
             //! Key in data cache
-            static const char *key() { return "guiviewupdatesettings"; }
+            static const char *key() { return "guiviewupdate"; }
 
             //! Validator function.
             static bool isValid(const CViewUpdateSettings &settings) { return settings.isValid(); }
