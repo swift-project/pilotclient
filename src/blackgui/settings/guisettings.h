@@ -64,7 +64,7 @@ namespace BlackGui
 
         private:
             QString m_widgetStyle { "Fusion" };
-            int     m_preferredSelection = static_cast<int>(QAbstractItemView::ExtendedSelection);
+            int m_preferredSelection = static_cast<int>(QAbstractItemView::ExtendedSelection);
 
             BLACK_METACLASS(
                 CGeneralGuiSettings,

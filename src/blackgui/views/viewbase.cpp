@@ -215,7 +215,7 @@ namespace BlackGui
             return this->ps_loadJson();
         }
 
-        CStatusMessage CViewBaseNonTemplate::showFileSaveDialog() const
+        CStatusMessage CViewBaseNonTemplate::showFileSaveDialog()
         {
             return this->ps_saveJson();
         }
@@ -514,11 +514,10 @@ namespace BlackGui
             this->settingsChanged();
         }
 
-        QString CViewBaseNonTemplate::getDefaultFilename(bool load) const
+        QString CViewBaseNonTemplate::getSettingsFileName(bool load) const
         {
             // some logic to find a useful default name
-            QString dir = CBuildConfig::getDocumentationDirectory();
-
+            const QString dir = m_dirSettings.get();
             if (load)
             {
                 return CFileUtils::appendFilePaths(dir, CFileUtils::jsonWildcardAppendix());
@@ -1400,7 +1399,7 @@ namespace BlackGui
             do
             {
                 const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                         tr("Load data file"), getDefaultFilename(true),
+                                         tr("Load data file"), getSettingsFileName(true),
                                          tr("swift (*.json *.txt)"));
                 if (fileName.isEmpty())
                 {
@@ -1453,13 +1452,23 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson() const
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson()
         {
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
-                                     tr("Save data file"), getDefaultFilename(false),
+                                     tr("Save data file"), getSettingsFileName(false),
                                      tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true); }
             const QString json(this->toJsonString()); // save as CVariant JSON
+
+            // keep directory for settings
+            const QFileInfo file(fileName);
+            const QDir fileDir(file.absoluteDir());
+            if (fileDir.exists())
+            {
+                this->m_dirSettings.setAndSave(fileDir.absolutePath());
+            }
+
+            // save file
             const bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
             if (ok)
             {

@@ -17,6 +17,7 @@
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/models/selectionmodel.h"
 #include "blackgui/settings/guisettings.h"
+#include "blackgui/settings/viewdirectorysettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/propertyindex.h"
@@ -256,7 +257,7 @@ namespace BlackGui
             BlackMisc::CStatusMessage showFileLoadDialog();
 
             //! Show file save dialog
-            BlackMisc::CStatusMessage showFileSaveDialog() const;
+            BlackMisc::CStatusMessage showFileSaveDialog();
 
             //! Save file name (optional)
             void setSaveFileName(const QString &saveName) { this->m_saveFileName = saveName; }
@@ -385,7 +386,7 @@ namespace BlackGui
             void init();
 
             //! Default file for load/save operations
-            QString getDefaultFilename(bool load) const;
+            QString getSettingsFileName(bool load) const;
 
             //! Init menu actions
             BlackGui::Menus::CMenuActions initMenuActions(MenuFlag menu);
@@ -425,6 +426,7 @@ namespace BlackGui
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if needed
             QMap<MenuFlag, BlackGui::Menus::CMenuActions> m_menuFlagActions;   //!< initialized actions
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
+            BlackMisc::CSetting<BlackGui::Settings::TViewDirectorySettings> m_dirSettings { this }; //!< directory for load/save
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
@@ -458,7 +460,7 @@ namespace BlackGui
             void ps_loadJsonAction();
 
             //! Save JSON
-            virtual BlackMisc::CStatusMessage ps_saveJson() const = 0;
+            virtual BlackMisc::CStatusMessage ps_saveJson() = 0;
 
             //! Save JSON for action/menu, no return signatur
             void ps_saveJsonAction();
@@ -696,7 +698,7 @@ namespace BlackGui
             virtual void ps_doubleClicked(const QModelIndex &index) override;
             virtual void ps_rowSelected(const QModelIndex &index) override;
             virtual BlackMisc::CStatusMessage ps_loadJson() override;
-            virtual BlackMisc::CStatusMessage ps_saveJson() const override;
+            virtual BlackMisc::CStatusMessage ps_saveJson() override;
             virtual void ps_copy() override;
             virtual void ps_cut() override;
             virtual void ps_paste() override;
