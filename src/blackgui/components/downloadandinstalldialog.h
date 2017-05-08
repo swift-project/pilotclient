@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DOWNLOADANDINSTALLDIALOG_H
 #define BLACKGUI_COMPONENTS_DOWNLOADANDINSTALLDIALOG_H
 
+#include "blackgui/settings/updatenotification.h"
 #include "blackgui/blackguiexport.h"
 #include <QDialog>
 
@@ -42,6 +43,10 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDownloadAndInstallDialog> ui;
+            BlackMisc::CSetting<BlackGui::Settings::TUpdateNotificationSettings> m_setting { this }; //!< show again?
+
+            //! Toggled checkbox
+            void onDontShowAgain(bool dontShowAgain);
 
             //! Selection in distribution component changed
             void selectionChanged();

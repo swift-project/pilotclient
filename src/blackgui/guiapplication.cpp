@@ -630,6 +630,7 @@ namespace BlackGui
 
     void CGuiApplication::triggerNewVersionCheck(int delayedMs)
     {
+        if (!m_updateSetting.get()) { return; }
         QTimer::singleShot(delayedMs, this, [ = ]
         {
             if (this->m_installDialog) { return; }

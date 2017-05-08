@@ -17,6 +17,7 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/settings/guisettings.h"
+#include "blackgui/settings/updatenotification.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/statusmessage.h"
@@ -218,6 +219,7 @@ namespace BlackGui
         QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
         BlackGui::Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
         BlackMisc::CSettingReadOnly<BlackGui::Settings::TGeneralGui> m_guiSettings{ this, &CGuiApplication::settingsChanged };
+        BlackMisc::CSettingReadOnly<BlackGui::Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
 
         //! Qt help message to formatted HTML
         static QString beautifyHelpMessage(const QString &helpText);

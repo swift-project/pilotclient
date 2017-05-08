@@ -26,8 +26,10 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->bb_DownloadInstallDialog->button(QDialogButtonBox::Ok)->setText(" Download and install ");
+            ui->cb_DontShowAgain->setChecked(!m_setting.get());
             this->selectionChanged();
             connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::selectionChanged, this, &CDownloadAndInstallDialog::selectionChanged);
+            connect(ui->cb_DontShowAgain, &QCheckBox::toggled, this, &CDownloadAndInstallDialog::onDontShowAgain);
         }
 
         CDownloadAndInstallDialog::~CDownloadAndInstallDialog()
@@ -51,6 +53,11 @@ namespace BlackGui
             // for now, just open URL
             QDesktopServices::openUrl(distribution.getDownloadUrls().getRandomUrl());
             return QDialog::Rejected;
+        }
+
+        void CDownloadAndInstallDialog::onDontShowAgain(bool dontShowAgain)
+        {
+            m_setting.setAndSave(!dontShowAgain);
         }
 
         void CDownloadAndInstallDialog::selectionChanged()
