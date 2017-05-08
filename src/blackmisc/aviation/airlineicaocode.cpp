@@ -62,7 +62,7 @@ namespace BlackMisc
         {
             if (this->isLoadedFromDb())
             {
-                return this->getVDesignator() % QLatin1Char(' ') % this->getDbKeyAsStringInParentheses();
+                return this->getVDesignator() % this->getDbKeyAsStringInParentheses(" ");
             }
             else
             {
@@ -350,7 +350,7 @@ namespace BlackMisc
             QString s(getVDesignator());
             if (s.isEmpty()) s = "????";
             if (hasName()) { s = s.append(" ").append(getName()); }
-            return s.append(" ").append(getDbKeyAsStringInParentheses());
+            return s.append(getDbKeyAsStringInParentheses(" "));
         }
 
         CAirlineIcaoCode CAirlineIcaoCode::thisOrCallsignCode(const CCallsign &callsign) const

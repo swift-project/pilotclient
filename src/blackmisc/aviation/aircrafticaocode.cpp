@@ -336,7 +336,7 @@ namespace BlackMisc
             if (s.isEmpty()) s = "????";
             if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
             if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
-            return s.append(" ").append(getDbKeyAsStringInParentheses());
+            return s.append(getDbKeyAsStringInParentheses(" "));
         }
 
         QString CAircraftIcaoCode::getCombinedIataStringWithKey() const
@@ -347,7 +347,7 @@ namespace BlackMisc
             if (hasDesignator()) { s.append(" ").append(getDesignator()); }
             if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
             if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
-            return s.append(" ").append(getDbKeyAsStringInParentheses());
+            return s.append(getDbKeyAsStringInParentheses(" "));
         }
 
         QString CAircraftIcaoCode::getCombinedFamilyStringWithKey() const
@@ -358,7 +358,7 @@ namespace BlackMisc
             if (hasDesignator()) { s.append(" ").append(getDesignator()); }
             if (hasManufacturer()) { s.append(" ").append(getManufacturer()); }
             if (hasModelDescription()) { s.append(" ").append(getModelDescription()); }
-            return s.append(" ").append(getDbKeyAsStringInParentheses());
+            return s.append(getDbKeyAsStringInParentheses(" "));
         }
 
         bool CAircraftIcaoCode::hasCompleteData() const

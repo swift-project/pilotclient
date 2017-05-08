@@ -53,7 +53,7 @@ namespace BlackMisc
             QString s = this->m_realname;
             if (this->hasValidDbKey())
             {
-                s.append(" ").append(this->getDbKeyAsStringInParentheses());
+                s.append(this->getDbKeyAsStringInParentheses(" "));
             }
             return s;
         }

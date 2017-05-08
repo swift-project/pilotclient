@@ -25,10 +25,10 @@ namespace BlackMisc
             return QString::number(this->m_dbKey);
         }
 
-        QString IDatastoreObjectWithIntegerKey::getDbKeyAsStringInParentheses() const
+        QString IDatastoreObjectWithIntegerKey::getDbKeyAsStringInParentheses(const QString &prefix) const
         {
             if (this->m_dbKey < 0) { return ""; }
-            return "(" + QString::number(this->m_dbKey) + ")";
+            return prefix + "(" + QString::number(this->m_dbKey) + ")";
         }
 
         void IDatastoreObjectWithIntegerKey::setDbKey(const QString &key)

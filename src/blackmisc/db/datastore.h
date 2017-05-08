@@ -62,7 +62,7 @@ namespace BlackMisc
             QJsonValue getDbKeyAsJsonValue() const;
 
             //! Db ley in parentheses, e.g. "(3)"
-            QString getDbKeyAsStringInParentheses() const;
+            QString getDbKeyAsStringInParentheses(const QString &prefix = {}) const;
 
             //! Set the DB key
             void setDbKey(int key) { m_dbKey = key; }

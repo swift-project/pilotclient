@@ -24,7 +24,7 @@ namespace BlackMisc
             Q_UNUSED(i18n);
             return "Role: " + m_name +
                    " description: " + m_description +
-                   " " + this->getDbKeyAsStringInParentheses();
+                   this->getDbKeyAsStringInParentheses(" ");
         }
 
         CVariant CRole::propertyByIndex(const CPropertyIndex &index) const

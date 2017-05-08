@@ -145,7 +145,7 @@ namespace BlackMisc
             if (this->hasValidDbKey())
             {
                 return this->hasModelString() ?
-                       QString(this->getModelString()).append(" ").append(this->getDbKeyAsStringInParentheses()) :
+                       QString(this->getModelString() + this->getDbKeyAsStringInParentheses(" ")) :
                        this->getDbKeyAsString();
             }
             else
