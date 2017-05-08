@@ -469,19 +469,19 @@ namespace BlackGui
             const CAuthenticatedUser user(this->getSwiftDbUser());
             if (!user.isAuthenticated())
             {
-                ui->pb_Publish->setText("Publish (login)");
+                ui->pb_Publish->setText(" Publish (login) ");
                 ui->pb_Publish->setToolTip("Login first");
                 ui->pb_Publish->setEnabled(false);
             }
             else if (user.canDirectlyWriteModels())
             {
-                ui->pb_Publish->setText("Publish (dir.)");
+                ui->pb_Publish->setText(" Publish (dir.) ");
                 ui->pb_Publish->setToolTip("Models directly released");
                 ui->pb_Publish->setEnabled(true);
             }
             else
             {
-                ui->pb_Publish->setText("Publish (CR)");
+                ui->pb_Publish->setText(" Publish (CR) ");
                 ui->pb_Publish->setToolTip("Models published as change request");
                 ui->pb_Publish->setEnabled(true);
             }

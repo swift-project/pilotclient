@@ -6,21 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>859</width>
-    <height>221</height>
+    <width>860</width>
+    <height>222</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::NoFrame</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Plain</enum>
-  </property>
-  <property name="lineWidth">
-   <number>0</number>
   </property>
   <layout class="QVBoxLayout" name="vl_DbStashComponent">
    <property name="leftMargin">
@@ -127,35 +118,35 @@
       <item>
        <widget class="QPushButton" name="pb_Model">
         <property name="text">
-         <string>Model</string>
+         <string>&amp;1: Model</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_Distributor">
         <property name="text">
-         <string>Distributor</string>
+         <string> &amp;2: Distributor</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_AircraftIcao">
         <property name="text">
-         <string>Aircraft ICAO</string>
+         <string> &amp;3: Aircraft ICAO</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_Livery">
         <property name="text">
-         <string>Livery</string>
+         <string> &amp;4: Livery</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_AirlineIcao">
         <property name="text">
-         <string>Airline ICAO</string>
+         <string> &amp;5: Airline ICAO</string>
         </property>
        </widget>
       </item>

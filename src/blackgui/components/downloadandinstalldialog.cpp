@@ -25,7 +25,7 @@ namespace BlackGui
             ui(new Ui::CDownloadAndInstallDialog)
         {
             ui->setupUi(this);
-            ui->bb_DownloadInstallDialog->button(QDialogButtonBox::Ok)->setText("Download and install");
+            ui->bb_DownloadInstallDialog->button(QDialogButtonBox::Ok)->setText(" Download and install ");
             this->selectionChanged();
             connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::selectionChanged, this, &CDownloadAndInstallDialog::selectionChanged);
         }
