@@ -105,7 +105,7 @@ namespace BlackMisc
         QJsonObject CAircraftModel::toMemoizedJson(MemoHelper::CMemoizer &helper) const
         {
             QJsonObject json;
-            auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
+            const auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
             meta.forEachMember([ &, this ](auto member)
             {
                 auto &&maybeMemo = helper.maybeMemoize(member.in(*this));
@@ -116,7 +116,7 @@ namespace BlackMisc
 
         void CAircraftModel::convertFromMemoizedJson(const QJsonObject &json, const MemoHelper::CUnmemoizer &helper)
         {
-            auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
+            const auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
             meta.forEachMember([ &, this ](auto member)
             {
                 auto it = json.find(CExplicitLatin1String(member.latin1Name()));
@@ -126,10 +126,12 @@ namespace BlackMisc
 
         QString CAircraftModel::asHtmlSummary(const QString &separator) const
         {
-            static const QString html = "Model: %1%2Aircraft ICAO: %3%4Livery: %5";
-            return html.arg(this->getModelStringAndDbKey(), separator,
-                            this->getAircraftIcaoCode().asHtmlSummary(), separator,
-                            this->getLivery().asHtmlSummary());
+            static const QString html = "Model: %1 changed: %2%3Simulator: %4 Mode: %5 Distributor: %6%7Aircraft ICAO: %8%9Livery: %10";
+            return html
+                   .arg(this->getModelStringAndDbKey(), this->getFormattedUtcTimestampYmdhms() , separator,
+                        this->getSimulator().toQString(true), this->getModelModeAsString(), this->getDistributor().getIdAndDescription(), separator,
+                        this->getAircraftIcaoCode().asHtmlSummary(), separator)
+                   .arg(this->getLivery().asHtmlSummary("&nbsp;")).replace(" ", "&nbsp;");
         }
 
         bool CAircraftModel::canInitializeFromFsd() const

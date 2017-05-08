@@ -74,8 +74,11 @@ namespace BlackMisc
             //! Combined code
             const QString &getCombinedCode() const { return m_combinedCode; }
 
-            //! Combined code
+            //! Combined code plus info
             QString getCombinedCodePlusInfo() const;
+
+            //! Combined code, info, plus id
+            QString getCombinedCodePlusInfoAndId() const;
 
             //! Get description.
             const QString &getDescription() const { return m_description; }
@@ -171,7 +174,7 @@ namespace BlackMisc
             void updateMissingParts(const CLivery &otherLivery);
 
             //! As a brief HTML summary (e.g. used in tooltips)
-            QString asHtmlSummary() const;
+            QString asHtmlSummary(const QString &separator) const;
 
             //! Score by comparison to another livery 0..100
             //! \remark normally used with liveries preselect by airline ICAO code

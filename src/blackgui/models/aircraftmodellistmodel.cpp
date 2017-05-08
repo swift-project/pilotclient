@@ -190,17 +190,29 @@ namespace BlackGui
 
         QVariant CAircraftModelListModel::data(const QModelIndex &index, int role) const
         {
-            if (role != Qt::BackgroundRole) { return CListModelDbObjects::data(index, role); }
-            bool ms = highlightModelStrings() && !m_highlightStrings.isEmpty();
-            if (!ms) { return CListModelDbObjects::data(index, role); }
-
-            CAircraftModel model(this->at(index));
-            // highlight stashed first
-            if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive))
+            if (role == Qt::BackgroundRole)
             {
-                return this->m_highlightColor;
+                const bool ms = highlightModelStrings() && !m_highlightStrings.isEmpty();
+                if (!ms) { return CListModelDbObjects::data(index, role); }
+
+                // the underlying model object
+                const CAircraftModel model(this->at(index));
+
+                // highlight stashed first
+                if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive))
+                {
+                    return this->m_highlightColor;
+                }
+
+                return QVariant();
             }
-            return QVariant();
+            else if (role == Qt::ToolTipRole)
+            {
+                // the underlying model object as summary
+                const CAircraftModel model(this->at(index));
+                return model.asHtmlSummary("<br>");
+            }
+            return CListModelDbObjects::data(index, role);
         }
 
         void CAircraftModelListModel::clearHighlighting()

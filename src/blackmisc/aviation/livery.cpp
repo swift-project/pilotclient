@@ -67,11 +67,19 @@ namespace BlackMisc
 
         QString CLivery::getCombinedCodePlusInfo() const
         {
-            QString s(getCombinedCode());
+            QString s = this->getCombinedCode();
             if (!this->getDescription().isEmpty())
             {
-                s += QLatin1String(" (") % this->getDescription() % QLatin1String(")");
+                s += " ";
+                s += this->getDescription();
             }
+            return s;
+        }
+
+        QString CLivery::getCombinedCodePlusInfoAndId() const
+        {
+            QString s = this->getCombinedCodePlusInfo();
+            s += this->getDbKeyAsStringInParentheses(" ");
             return s;
         }
 
@@ -383,9 +391,13 @@ namespace BlackMisc
             }
         }
 
-        QString CLivery::asHtmlSummary() const
+        QString CLivery::asHtmlSummary(const QString &separator) const
         {
-            return this->getCombinedCodePlusInfo();
+            static const QString html = "%1%2Airline: %3";
+            return html.arg(
+                       this->getCombinedCodePlusInfoAndId(), separator,
+                       this->getAirlineIcaoCode().getDesignator().isEmpty() ? "No airline" : this->getAirlineIcaoCode().getCombinedStringWithKey()
+                   ).replace(" ", "&nbsp;");
         }
 
         int CLivery::calculateScore(const CLivery &otherLivery, bool preferColorLiveries) const

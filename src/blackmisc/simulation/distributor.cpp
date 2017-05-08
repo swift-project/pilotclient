@@ -33,6 +33,16 @@ namespace BlackMisc
             this->setDbKey(id);
         }
 
+        const QString CDistributor::getIdAndDescription() const
+        {
+            if (!this->getDbKey().isEmpty() && !this->getDescription().isEmpty())
+            {
+                return this->getDbKey() + " " + this->getDescription();
+            }
+            if (!this->getDbKey().isEmpty()) { return this->getDbKey(); }
+            return "";
+        }
+
         bool CDistributor::matchesKeyOrAlias(const QString &keyOrAlias) const
         {
             QString s(keyOrAlias.trimmed().toUpper());
