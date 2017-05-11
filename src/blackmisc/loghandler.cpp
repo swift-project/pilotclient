@@ -35,9 +35,17 @@ namespace BlackMisc
     }
 
     //! Qt message handler
+    //! \todo Qt 5.10: Use invokeMethod() overload taking pointer-to-member-function.
     void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
     {
-        CStatusMessage statusMessage(type, context, message);
+        const CStatusMessage statusMessage(type, context, message);
+        if (type == QtFatalMsg && CLogHandler::instance()->thread() != QThread::currentThread())
+        {
+            // Fatal message means this thread is about to crash the application. A queued connection would be useless.
+            // Blocking queued connection means we pause this thread just long enough to let the main thread handle the message.
+            QMetaObject::invokeMethod(CLogHandler::instance(), "logLocalMessage", Qt::BlockingQueuedConnection, Q_ARG(BlackMisc::CStatusMessage, statusMessage));
+            return;
+        }
         QMetaObject::invokeMethod(CLogHandler::instance(), "logLocalMessage", Q_ARG(BlackMisc::CStatusMessage, statusMessage));
     }
 
