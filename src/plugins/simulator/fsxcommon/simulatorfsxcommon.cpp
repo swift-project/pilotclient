@@ -1072,7 +1072,7 @@ namespace BlackSimPlugin
                                objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights);
 
-            if (hr == S_OK)
+            if (hr == S_OK && m_simConnectObjects.contains(simObj.getCallsign()))
             {
                 // Update data
                 CSimConnectObject &objUdpate = m_simConnectObjects[simObj.getCallsign()];
@@ -1103,8 +1103,11 @@ namespace BlackSimPlugin
             const CCallsign callsign(simObj.getCallsign());
 
             // Update data
-            CSimConnectObject &simObjToUpdate = m_simConnectObjects[callsign];
-            simObjToUpdate.setLightsAsSent(lightsWanted);
+            if (m_simConnectObjects.contains(callsign))
+            {
+                CSimConnectObject &simObjToUpdate = m_simConnectObjects[callsign];
+                simObjToUpdate.setLightsAsSent(lightsWanted);
+            }
 
             // state available, then I can toggle
             if (!lightsIsState.isNull())
@@ -1141,6 +1144,7 @@ namespace BlackSimPlugin
             CLogMessage(this).info("Missing light state for '%1'") << callsign;
             QTimer::singleShot(2500, this, [ = ]
             {
+                if (!m_simConnectObjects.contains(callsign)) { return; }
                 const CSimConnectObject currentSimObj = m_simConnectObjects[callsign];
                 if (!currentSimObj.hasValidRequestAndObjectId()) { return; } // stale
                 if (lightsWanted != currentSimObj.getLightsAsSent())  { return; } // changed in between
@@ -1229,7 +1233,8 @@ namespace BlackSimPlugin
                                        m_hSimConnect, simObject.getRequestId() + RequestSimDataOffset,
                                        CSimConnectDefinitions::DataRemoteAircraftSimData,
                                        simObject.getObjectId(), period);
-            if (result == S_OK)
+
+            if (result == S_OK && m_simConnectObjects.contains(simObject.getCallsign()))
             {
                 m_simConnectObjects[simObject.getCallsign()].setSimDataPeriod(period);
                 return true;

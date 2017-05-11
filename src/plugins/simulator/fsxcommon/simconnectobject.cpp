@@ -31,11 +31,13 @@ namespace BlackSimPlugin
 
         void CSimConnectObject::addAircraftParts(const CAircraftParts &parts)
         {
+            Q_ASSERT(m_interpolator);
             m_interpolator->addAircraftParts(parts);
         }
 
         void CSimConnectObject::addAircraftSituation(const CAircraftSituation &situation)
         {
+            Q_ASSERT(m_interpolator);
             m_interpolator->addAircraftSituation(situation);
         }
 
@@ -76,11 +78,13 @@ namespace BlackSimPlugin
 
         void CSimConnectObject::toggleInterpolatorMode()
         {
+            Q_ASSERT(m_interpolator);
             this->m_interpolator->toggleMode();
         }
 
         bool CSimConnectObject::setInterpolatorMode(CInterpolatorMulti::Mode mode)
         {
+            Q_ASSERT(m_interpolator);
             return this->m_interpolator->setMode(mode);
         }
 
