@@ -453,7 +453,7 @@ class DumperMac(Dumper):
         return False
 
     @staticmethod
-    def fix_library_name(self, file_name):
+    def fix_library_name(file_name):
         basename = os.path.basename(file_name)
         dirname = os.path.dirname(file_name)
         match = re.match('lib(\w+).(\d).(\d).(\d).dylib', basename)
