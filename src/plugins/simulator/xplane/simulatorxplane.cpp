@@ -728,7 +728,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                CLogMessage(this).debug() << "Starting XSwiftBus on" << m_xswiftbusServerSetting.getThreadLocal();
+                CLogMessage(this).debug() << "Watching XSwiftBus on" << m_xswiftbusServerSetting.getThreadLocal();
                 m_conn = CSimulatorXPlane::connectionFromString(m_xswiftbusServerSetting.getThreadLocal());
                 m_watcher = new QDBusServiceWatcher(xswiftbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
                 connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);

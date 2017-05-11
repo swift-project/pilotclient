@@ -57,10 +57,11 @@ namespace XSwiftBus
         #endif
         BlackMisc::setCustomLibraryPath(libraryPath);
 
-        if (!BlackMisc::CDBusServer::isP2PAddress(address) && !BlackMisc::CDBusServer::isDBusAvailable(address))
+        QString message;
+        if (!BlackMisc::CDBusServer::isP2PAddress(address) && !BlackMisc::CDBusServer::isDBusAvailable(address, message))
         {
             constexpr int msec = 30000;
-            BlackMisc::CLogMessage(this).warning("DBus daemon not available. Trying again in %1 sec.") << msec / 1000;
+            BlackMisc::CLogMessage(this).warning("DBus daemon not available. (%1) Trying again in %2 sec.") << message << (msec / 1000);
             QTimer::singleShot(msec, this, [&] { tryStartServer(address); });
             BlackMisc::setCustomLibraryPath(previousLibraryPath);
             return;

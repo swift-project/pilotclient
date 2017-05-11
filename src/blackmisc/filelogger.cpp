@@ -124,7 +124,7 @@ namespace BlackMisc
         m_stream << " " << QSysInfo::currentCpuArchitecture() << endl;
 
         m_stream << "Built from revision " << CBuildConfig::gitHeadSha1();
-        m_stream << " on " << CBuildConfig::buildTimestamp().toString() << endl;
+        m_stream << " on " << CBuildConfig::buildDateAndTime() << endl;
 
         m_stream << "Built with Qt " << QT_VERSION_STR;
         m_stream << " and running with Qt " << qVersion();
