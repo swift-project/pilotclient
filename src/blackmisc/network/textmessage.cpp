@@ -13,8 +13,8 @@
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/stringutils.h"
 
-#include <QRegularExpression>
 #include <Qt>
 #include <QtGlobal>
 
@@ -170,16 +170,13 @@ namespace BlackMisc
             // on their primary frequency, formatted like so:
             // SELCAL AB-CD
 
-            const QString invalid;
-
-            // some first level checks, before really parsing the message
-            if (this->isEmpty()) return invalid;
-            if (this->isPrivateMessage()) return invalid;
-            if (this->m_message.length() > 15 || this->m_message.length() < 10) return invalid; // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
-            QString candidate = this->m_message.toUpper().remove(QRegularExpression("[^A-Z]")); // SELCALABCD
-            if (candidate.length() != 10) return invalid;
-            if (!candidate.startsWith("SELCAL")) return invalid;
-            return candidate.right(4).toUpper();
+            if (this->isEmpty()) return {};
+            if (this->isPrivateMessage()) return {};
+            if (!this->m_message.startsWith(QLatin1String("SELCAL"), Qt::CaseInsensitive)) return {};
+            if (this->m_message.length() > 15 || this->m_message.length() < 10) return {}; // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
+            QString candidate = removeChars(this->m_message, [](QChar c) { return !c.isLetter(); }); // SELCALABCD
+            if (candidate.length() != 10) return {};
+            return std::move(candidate).right(4).toUpper();
         }
 
         CIcon CTextMessage::toIcon() const
