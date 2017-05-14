@@ -52,6 +52,9 @@ namespace BlackMisc
                 virtual bool isLoadingFinished() const override;
                 //! @}
 
+                //! Extract from an acf file (flyable plane) the properties needed to generate model string.
+                static BlackMisc::Simulation::CAircraftModel extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo);
+
             public slots:
                 //! Parsed or injected models
                 void updateInstalledModels(const BlackMisc::Simulation::CAircraftModelList &models);

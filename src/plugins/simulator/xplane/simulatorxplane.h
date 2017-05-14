@@ -135,7 +135,8 @@ namespace BlackSimPlugin
         private slots:
             void ps_serviceUnregistered();
             void ps_setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
-            void ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
+            void ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
+                const QString &modelString, const QString &name, const QString &distributor, const QString &description);
             void ps_fastTimerTimeout();
             void ps_slowTimerTimeout();
             void ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);

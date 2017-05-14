@@ -89,7 +89,8 @@ namespace BlackSimPlugin
             void asyncMethodError(QDBusError error);
 
             //! \copydoc XSwiftBus::CService::aircraftModelChanged
-            void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
+            void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
+                const QString &modelString, const QString &name, const QString &distributor, const QString &description);
 
             //! \copydoc XSwiftBus::CService::airportsInRangeUpdated
             void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
@@ -123,6 +124,12 @@ namespace BlackSimPlugin
             //! @{
             QString getAircraftIcaoCode() const;
             void getAircraftIcaoCodeAsync(QString *o_icaoCode);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getAircraftDescription
+            //! @{
+            QString getAircraftDescription() const;
+            void getAircraftDescriptionAsync(QString *o_description);
             //! @}
 
             //! \copydoc XSwiftBus::CService::getXPlaneVersionMajor

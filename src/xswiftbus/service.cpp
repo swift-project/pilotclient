@@ -8,6 +8,7 @@
  */
 
 #include "service.h"
+#include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
 #include <QDebug>
@@ -31,7 +32,9 @@ namespace XSwiftBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        emit aircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode());
+        const auto model = BlackMisc::Simulation::XPlane::CAircraftModelLoaderXPlane::extractAcfProperties(path, QFileInfo(path));
+        emit aircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode(),
+            model.getModelString(), model.getName(), model.getDistributor().getDescription(), getAircraftDescription());
     }
 
     void CService::addTextMessage(const QString &text, double red, double green, double blue)

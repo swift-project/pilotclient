@@ -300,18 +300,14 @@ namespace BlackSimPlugin
             emitSimulatorCombinedStatus();
         }
 
-        void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
+        void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
+            const QString &modelString, const QString &name, const QString &distributor, const QString &description)
         {
-            Q_UNUSED(icao);
+            Q_UNUSED(distributor);
 
-            //! \todo XP, change as appropriate, add resolution of own livery
-            // try to set correct model and ICAO values here
-            // thy show up in GUI
-            CAircraftModel model(getOwnAircraftModel());
-            CAirlineIcaoCode airlineIcaoCode(model.getAirlineIcaoCode());
-            model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+            CAircraftModel model(modelString, CAircraftModel::TypeOwnSimulatorModel, CSimulatorInfo::XPLANE, name, description, icao);
+            if (!livery.isEmpty()) { model.setModelString(model.getModelString() + " " + livery); }
             model.setFileName(path + "/" + filename);
-            model.setLivery(CLivery("XPLANE." + livery, airlineIcaoCode, "XP livery", "", "", false));
 
             this->reverseLookupAndUpdateOwnAircraftModel(model);
         }

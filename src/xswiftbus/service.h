@@ -70,7 +70,8 @@ namespace XSwiftBus
 
     signals:
         //! Emitted when the model or livery changes.
-        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
+        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
+            const QString &modelString, const QString &name, const QString &distributor, const QString &description);
 
         //! Airports in range updated.
         void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QDoubleList &lats, const QDoubleList &lons, const QDoubleList &alts);
@@ -93,6 +94,9 @@ namespace XSwiftBus
 
         //! Get the ICAO code of the current aircraft model
         QString getAircraftIcaoCode() const { return m_icao.get().c_str(); }
+
+        //! Get the description of the current aircraft model
+        QString getAircraftDescription() const { return m_descrip.get().c_str(); }
 
         //! Get major version number
         int getXPlaneVersionMajor() const;
@@ -233,6 +237,7 @@ namespace XSwiftBus
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;
+        StringDataRef<xplane::data::sim::aircraft::view::acf_descrip> m_descrip;
         DataRef<xplane::data::sim::time::paused> m_paused;
         DataRef<xplane::data::sim::time::use_system_time> m_useSystemTime;
         DataRef<xplane::data::sim::flightmodel::position::latitude> m_latitude;
