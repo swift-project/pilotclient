@@ -205,33 +205,43 @@ namespace BlackMisc
             //! @}
 
         private:
-            QString m_name; //!< name, e.g. "meter"
-            QString m_symbol; //!< unit name, e.g. "m"
+            QLatin1String m_name; //!< name, e.g. "meter"
+            QLatin1String m_symbol; //!< unit name, e.g. "m"
             double m_epsilon = 0.0; //!< values with differences below epsilon are the equal
             int m_displayDigits = 0; //!< standard rounding for string conversions
             ConverterFunction m_toDefault = nullptr; //!< convert from this unit to default unit
             ConverterFunction m_fromDefault = nullptr; //!< convert to this unit from default unit
 
         protected:
+            //! Workaround to constant-initialize QLatin1String on platforms without constexpr strlen.
+            template <size_t N>
+            static Q_DECL_CONSTEXPR QLatin1String constQLatin1(const char (&str)[N])
+            {
+                return QLatin1String(str, N - 1); // -1 because N includes the null terminator
+            }
+
+            //! Workaround because std::nullptr_t might not be a literal type.
+            struct NullType {};
+
             /*!
              * Construct a unit with custom conversion
              */
             template <class Converter>
-            CMeasurementUnit(const QString &name, const QString &symbol, const Converter &, int displayDigits, double epsilon)
+            Q_DECL_CONSTEXPR CMeasurementUnit(QLatin1String name, QLatin1String symbol, Converter, int displayDigits, double epsilon)
                 : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_toDefault(Converter::toDefault), m_fromDefault(Converter::fromDefault)
             {}
 
             /*!
              * Construct a null unit
              */
-            CMeasurementUnit(const QString &name, const QString &symbol, std::nullptr_t)
+            Q_DECL_CONSTEXPR CMeasurementUnit(QLatin1String name, QLatin1String symbol, NullType)
                 : m_name(name), m_symbol(symbol)
             {}
 
-        public:
             //! Destructor
-            virtual ~CMeasurementUnit() = default;
+            ~CMeasurementUnit() = default;
 
+        public:
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const
             {
@@ -272,13 +282,13 @@ namespace BlackMisc
             //! Name such as "meter"
             QString getName(bool i18n = false) const
             {
-                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.toStdString().c_str()) : this->m_name;
+                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.latin1()) : this->m_name;
             }
 
             //! Unit name such as "m"
             QString getSymbol(bool i18n = false) const
             {
-                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.toStdString().c_str()) : this->m_symbol;
+                return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.latin1()) : this->m_symbol;
             }
 
             //! Rounded value
@@ -360,7 +370,7 @@ namespace BlackMisc
             //! Dimensionless unit
             static const CMeasurementUnit &None()
             {
-                static CMeasurementUnit none("none", "", NilConverter(), 0, 0);
+                static Q_CONSTEXPR CMeasurementUnit none(constQLatin1("none"), constQLatin1(""), NilConverter(), 0, 0);
                 return none;
             }
         };
