@@ -64,17 +64,6 @@
             </distributionFileList>
         </folder>
         <folder>
-            <description>etc</description>
-            <destination>${installdir}/</destination>
-            <name>etc</name>
-            <platforms>windows</platforms>
-            <distributionFileList>
-                <distributionDirectory>
-                    <origin>../../dist/etc</origin>
-                </distributionDirectory>
-            </distributionFileList>
-        </folder>
-        <folder>
             <description>lib</description>
             <destination>${installdir}/lib</destination>
             <name>lib_linux</name>
