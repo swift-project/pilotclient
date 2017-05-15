@@ -24,6 +24,10 @@
 #include <algorithm>
 #include <tuple>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 namespace BlackMisc
 {
     Q_GLOBAL_STATIC(CLogHandler, g_handler)
@@ -39,6 +43,9 @@ namespace BlackMisc
     void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
     {
         const CStatusMessage statusMessage(type, context, message);
+#if defined(Q_CC_MSVC) && defined(QT_NO_DEBUG)
+        if (type == QtFatalMsg) { MessageBoxW(nullptr, message.toStdWString().c_str(), nullptr, MB_OK); }
+#endif
         if (type == QtFatalMsg && CLogHandler::instance()->thread() != QThread::currentThread())
         {
             // Fatal message means this thread is about to crash the application. A queued connection would be useless.
