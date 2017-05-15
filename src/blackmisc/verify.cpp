@@ -12,6 +12,10 @@
 
 #include <QtGlobal>
 
+#ifdef BLACK_USE_CRASHPAD
+#include "crashpad/client/simulate_crash.h"
+#endif
+
 #if defined(Q_CC_MSVC)
 #include <intrin.h>
 #elif defined(Q_OS_UNIX)
@@ -36,6 +40,9 @@ namespace BlackMisc
             Q_UNUSED(context);
             Q_UNUSED(message);
 #if defined(QT_NO_DEBUG)
+#   if defined(BLACK_USE_CRASHPAD)
+            CRASHPAD_SIMULATE_CRASH();
+#   endif
             if (context && message)
             {
                 CLogMessage(CLogCategory::verification()).warning("Failed to verify: %1 (%2 in %3) in %4 line %5") << condition << message << context << filename << line;

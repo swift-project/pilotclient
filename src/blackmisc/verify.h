@@ -14,6 +14,14 @@
 
 #include "blackmisc/blackmiscexport.h"
 
+//! \cond
+#ifdef Q_CC_MSVC
+#define BLACK_NO_INLINE __declspec(noinline)
+#else
+#define BLACK_NO_INLINE __attribute__((noinline))
+#endif
+//! \endcond
+
 namespace BlackMisc
 {
     namespace Private
@@ -22,7 +30,7 @@ namespace BlackMisc
         inline void noop() {}
 
         //! \private Called by BLACK_VERIFY when the condition is false.
-        BLACKMISC_EXPORT void failedVerify(const char *condition, const char *filename, int line, const char *context = nullptr, const char *message = nullptr);
+        BLACKMISC_EXPORT BLACK_NO_INLINE void failedVerify(const char *condition, const char *filename, int line, const char *context = nullptr, const char *message = nullptr);
     }
 }
 
