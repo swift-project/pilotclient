@@ -39,6 +39,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/verify.h"
 #include "vatlib/vatlib.h"
 
 #include <QChar>
@@ -157,7 +158,8 @@ namespace BlackCore
 
         CNetworkVatlib::~CNetworkVatlib()
         {
-            Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "CNetworkVatlib destroyed while still connected.");
+            BLACK_VERIFY_X(isDisconnected(), Q_FUNC_INFO, "CNetworkVatlib destroyed while still connected.");
+            terminateConnection();
         }
 
         void CNetworkVatlib::process()
@@ -466,7 +468,7 @@ namespace BlackCore
         void CNetworkVatlib::terminateConnection()
         {
             stopPositionTimers();
-            if (m_net && isConnected())
+            if (m_net && !isDisconnected())
             {
                 // Process all pending tasks before logging off
                 process();

@@ -216,15 +216,11 @@ namespace BlackCore
         CStatusMessage CContextNetwork::disconnectFromNetwork()
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (this->m_network->isConnected())
+            if (this->m_network->isConnected() || this->m_network->isPendingConnection())
             {
                 this->m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
                 this->m_network->terminateConnection();
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection terminating");
-            }
-            else if (this->isPendingConnection())
-            {
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Pending connection, please wait");
             }
             else
             {
