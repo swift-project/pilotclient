@@ -128,7 +128,6 @@ namespace BlackCore
 
         private:
             bool getCmdLineClientIdAndKey(int &id, QString &key) const;
-            bool getCmdLineServerType(VatServerType &serverType) const;
 
         private slots:
             void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);

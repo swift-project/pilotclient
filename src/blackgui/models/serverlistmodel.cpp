@@ -29,6 +29,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn::standardString("port", CServer::IndexPort));
             this->m_columns.addColumn(CColumn::standardString("realname", { CServer::IndexUser, CUser::IndexRealName}));
             this->m_columns.addColumn(CColumn::standardString("userid", { CServer::IndexUser, CUser::IndexId}));
+            this->m_columns.addColumn(CColumn::standardString("type", CServer::IndexServerTypeAsString));
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ServerListModel", "name");
@@ -37,6 +38,7 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ServerListModel", "port");
             (void)QT_TRANSLATE_NOOP("ServerListModel", "realname");
             (void)QT_TRANSLATE_NOOP("ServerListModel", "userid");
+            (void)QT_TRANSLATE_NOOP("ServerListModel", "type");
         }
 
     } // class

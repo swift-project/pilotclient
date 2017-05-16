@@ -26,6 +26,10 @@ namespace BlackGui
             ui(new Ui::CNetworkServerForm)
         {
             ui->setupUi(this);
+            ui->cb_ServerType->clear();
+            ui->cb_ServerType->insertItem(0, QStringLiteral("VATSIM"), QVariant::fromValue(CServer::ServerVatsim));
+            ui->cb_ServerType->insertItem(1, QStringLiteral("FSC"), QVariant::fromValue(CServer::ServerFSC));
+            ui->cb_ServerType->insertItem(2, QStringLiteral("Legacy FSD"), QVariant::fromValue(CServer::ServerLegacyFSD));
             ui->le_Port->setValidator(new QIntValidator(1, 65535, this));
         }
 
@@ -38,6 +42,12 @@ namespace BlackGui
             ui->le_NetworkId->setText(user.getId());
             ui->le_RealName->setText(user.getRealName());
             ui->le_Name->setText(server.getName());
+            switch (server.getServerType())
+            {
+            case CServer::ServerVatsim: ui->cb_ServerType->setCurrentIndex(0); break;
+            case CServer::ServerFSC: ui->cb_ServerType->setCurrentIndex(1); break;
+            case CServer::ServerLegacyFSD: ui->cb_ServerType->setCurrentIndex(2); break;
+            }
             ui->le_Password->setText(user.getPassword());
             ui->le_Description->setText(server.getDescription());
             ui->le_Address->setText(server.getAddress());
@@ -58,7 +68,9 @@ namespace BlackGui
                 ui->le_Description->text().trimmed().simplified(),
                 ui->le_Address->text().trimmed(),
                 ui->le_Port->text().trimmed().toInt(),
-                user
+                user,
+                true,
+                ui->cb_ServerType->currentData().value<CServer::ServerType>()
             );
             CFsdSetup setup(ui->form_ServerFsd->getValue());
             server.setFsdSetup(setup);

@@ -125,8 +125,11 @@ namespace BlackCore
             }
 
             VatServerType serverType;
-            bool success = getCmdLineServerType(serverType);
-            if (!success) { serverType = CBuildConfig::isVatsimVersion() ? vatServerVatsim : vatServerLegacyFsd; }
+            switch (m_server.getServerType())
+            {
+            case CServer::ServerVatsim: serverType = vatServerVatsim; break;
+            default: serverType = vatServerLegacyFsd; break;
+            }
 
             m_net.reset(Vat_CreateNetworkSession(serverType, sApp->swiftVersionChar(),
                                                  CBuildConfig::getVersion().majorVersion(), CBuildConfig::getVersion().minorVersion(),
@@ -389,6 +392,10 @@ namespace BlackCore
         void CNetworkVatlib::presetServer(const CServer &server)
         {
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "Can't change server details while still connected");
+
+            // If the server type changed, we need to destroy the existing vatlib session
+            if (m_server.getServerType() != server.getServerType()) { m_net.reset(); }
+
             m_server = server;
             const QString codecName(server.getFsdSetup().getTextCodec());
             Q_ASSERT_X(!codecName.isEmpty(), Q_FUNC_INFO, "Missing code name");
@@ -697,9 +704,7 @@ namespace BlackCore
             static const QList<QCommandLineOption> opts
             {
                 QCommandLineOption({ "idAndKey", "clientIdAndKey" },
-                QCoreApplication::translate("networkvatlib", "Client id and key pair separated by ':', e.g. <id>:<key>."), "clientIdAndKey"),
-                QCommandLineOption({ "s", "serverType" },
-                QCoreApplication::translate("networkvatlib", "FSD server type. Possible values: vatsim, fsd"), "serverType")
+                QCoreApplication::translate("networkvatlib", "Client id and key pair separated by ':', e.g. <id>:<key>."), "clientIdAndKey")
             };
 
             // only in not officially shipped versions
@@ -717,23 +722,6 @@ namespace BlackCore
             if (!ok) { return false; }
             key = stringList[1];
             return true;
-        }
-
-        bool CNetworkVatlib::getCmdLineServerType(VatServerType &serverType) const
-        {
-            QString serverTypeAsString = sApp->getParserValue("serverType").toLower();
-            if (QString::compare(serverTypeAsString, "vatsim", Qt::CaseInsensitive) == 0)
-            {
-                serverType = vatServerVatsim;
-                return true;
-            }
-
-            if (QString::compare(serverTypeAsString, "fsd", Qt::CaseInsensitive) == 0)
-            {
-                serverType = vatServerLegacyFsd;
-                return true;
-            }
-            return false;
         }
 
         void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)

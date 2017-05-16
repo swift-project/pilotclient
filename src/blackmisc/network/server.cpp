@@ -23,8 +23,8 @@ namespace BlackMisc
 {
     namespace Network
     {
-        CServer::CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user, bool isAcceptingConnections)
-            : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections) {}
+        CServer::CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user, bool isAcceptingConnections, ServerType serverType)
+            : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections), m_serverType(serverType) {}
 
         QString CServer::convertToQString(bool i18n) const
         {
@@ -69,6 +69,17 @@ namespace BlackMisc
         bool CServer::hasAddressAndPort() const
         {
             return m_port > 0 && !m_address.isEmpty();
+        }
+
+        QString CServer::getServerTypeAsString() const
+        {
+            switch (m_serverType)
+            {
+            case CServer::ServerVatsim: return QStringLiteral("VATSIM");
+            case CServer::ServerFSC: return QStringLiteral("FSC");
+            case CServer::ServerLegacyFSD: return QStringLiteral("Legacy FSD");
+            default: return {};
+            }
         }
 
         bool CServer::isConnected() const
@@ -119,6 +130,10 @@ namespace BlackMisc
                 return this->m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
             case IndexIsAcceptingConnections:
                 return CVariant::fromValue(this->m_isAcceptingConnections);
+            case IndexServerType:
+                return CVariant::fromValue(this->m_serverType);
+            case IndexServerTypeAsString:
+                return CVariant::fromValue(getServerTypeAsString());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -152,6 +167,9 @@ namespace BlackMisc
                 break;
             case IndexIsAcceptingConnections:
                 this->setIsAcceptingConnections(variant.value<bool>());
+                break;
+            case IndexServerType:
+                this->setServerType(static_cast<ServerType>(variant.toInt()));
                 break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
