@@ -7,5 +7,5 @@ VATSIM_CLIENT_ID = "0xb9ba"
 # VATSIM private key, which belongs to the id above.
 VATSIM_CLIENT_PRIVATE_KEY = "727d1efd5cb9f8d2c28372469d922bb4"
 
-# Uncomment the section below to build a version with VATSIM features enabled
-#BLACK_CONFIG *= SwiftVatsimSupport
+# Comment the section below to build a version without VATSIM features enabled
+BLACK_CONFIG *= SwiftVatsimSupport
