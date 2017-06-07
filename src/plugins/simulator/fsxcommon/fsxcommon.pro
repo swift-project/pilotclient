@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT += core dbus concurrent xml network widgets
+QT += core dbus xml network widgets
 
 TARGET = simulatorfsxcommon
 TEMPLATE = lib

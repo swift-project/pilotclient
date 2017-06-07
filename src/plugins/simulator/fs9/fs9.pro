@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core dbus gui network concurrent xml
+QT       += core dbus gui network xml
 
 TARGET = simulatorfs9
 TEMPLATE = lib
