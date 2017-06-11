@@ -118,10 +118,11 @@ namespace BlackGui
             QScopedPointer<QCompleter> m_completerIcaoDescription;
             BlackMisc::Aviation::CAircraftIcaoCode m_currentIcao;
             Display m_display = DisplayIcaoAndId;
+            QStringList m_completerStrings; //!< the completer strings
 
             //! Get the completer strings
             //! \remark shared for performance reasons
-            static const QStringList &completerStrings();
+            const QStringList &completerStrings();
         };
     } // ns
 } // ns

@@ -177,11 +177,15 @@ namespace BlackGui
 
         const QStringList &CDbAircraftIcaoSelectorComponent::completerStrings()
         {
-            // done for performance reasons
-            // init only once, future instance can share thte list
-            // only to be called when data are read!
-            static const QStringList cs(sGui->getWebDataServices()->getAircraftIcaoCodes().toCompleterStrings(true, true, true));
-            return cs;
+            const int c = sGui->getWebDataServices()->getAircraftIcaoCodesCount();
+            if (c != m_completerStrings.size())
+            {
+                CAircraftIcaoCodeList icaos(sGui->getWebDataServices()->getAircraftIcaoCodes());
+                icaos.removeInvalidCombinedCodes();
+                icaos.sortByDesignatorManufacturerAndRank();
+                m_completerStrings = icaos.toCompleterStrings(true, true, true);
+            }
+            return m_completerStrings;
         }
 
         void CDbAircraftIcaoSelectorComponent::ps_codesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
@@ -191,7 +195,7 @@ namespace BlackGui
             {
                 if (count > 0)
                 {
-                    QCompleter *c = new QCompleter(completerStrings(), this);
+                    QCompleter *c = new QCompleter(this->completerStrings(), this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
