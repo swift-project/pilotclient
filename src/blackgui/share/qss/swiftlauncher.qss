@@ -1,7 +1,8 @@
-/** Works around two issues on Mac OS
-      1. The launcher dialog was entirely transparent
-      2. Transparency caused the QToolBox labels to be broken
-*/
+/**
+Works around two issues on Mac OS
+ 1. The launcher dialog was entirely transparent
+ 2. Transparency caused the QToolBox labels to be broken
+**/
 QStackedWidget#sw_SwiftLauncher {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }

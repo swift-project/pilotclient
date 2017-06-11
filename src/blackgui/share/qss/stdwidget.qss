@@ -534,8 +534,10 @@ QTableView, QTreeView, QListView {
   padding:0px;
 }
 
+/** explicitly setting font color avoids black when pressing CTRL-S **/
 QTableView::item:selected {
   background-color: blue;
+  color: white;
 }
 
 QTreeView {

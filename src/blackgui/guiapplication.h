@@ -229,6 +229,9 @@ namespace BlackGui
 
         //! Check new from menu
         void checkNewVersionMenu();
+
+        //! Fix the palette for better readibility
+        void adjustPalette();
     };
 } // ns
 

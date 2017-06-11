@@ -79,6 +79,7 @@ namespace BlackGui
         {
             CGuiApplication::registerMetadata();
             CApplication::init(false); // base class without metadata
+            CGuiApplication::adjustPalette();
             this->setWindowIcon(icon);
             this->settingsChanged();
             sGui = this;
@@ -664,5 +665,17 @@ namespace BlackGui
     void CGuiApplication::checkNewVersionMenu()
     {
         this->checkNewVersion(false);
+    }
+
+    void CGuiApplication::adjustPalette()
+    {
+        // only way to change link color
+        // https://stackoverflow.com/q/5497799/356726
+        // Ref T84
+        QPalette newPalette(qApp->palette());
+        const QColor linkColor(135, 206, 250);
+        newPalette.setColor(QPalette::Link, linkColor);
+        newPalette.setColor(QPalette::LinkVisited, linkColor);
+        qApp->setPalette(newPalette);
     }
 } // ns
