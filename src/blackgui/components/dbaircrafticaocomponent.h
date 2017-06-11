@@ -22,6 +22,7 @@
 #include <QScopedPointer>
 
 class QWidget;
+
 namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
 namespace Ui { class CDbAircraftIcaoComponent; }
 namespace BlackGui
@@ -44,7 +45,7 @@ namespace BlackGui
             explicit CDbAircraftIcaoComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbAircraftIcaoComponent();
+            virtual ~CDbAircraftIcaoComponent();
 
             //! Get the view
             BlackGui::Views::CAircraftIcaoCodeView *view() const;

@@ -8,7 +8,6 @@
  */
 
 #include "blackgui/models/modelfilter.h"
-
 #include <QtGlobal>
 
 namespace BlackGui
@@ -52,7 +51,7 @@ namespace BlackGui
             }
 
             // should never happen
-            Q_ASSERT(false);
+            qFatal("Illegal state");
             return false;
         }
 
