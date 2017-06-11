@@ -24,7 +24,6 @@ class QModelIndex;
 class QWidget;
 
 namespace Ui { class CSettingsNetworkServersComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -40,7 +39,7 @@ namespace BlackGui
             explicit CSettingsNetworkServersComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsNetworkServersComponent();
+            virtual ~CSettingsNetworkServersComponent();
 
         private slots:
             //! Reload settings

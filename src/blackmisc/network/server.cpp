@@ -91,13 +91,14 @@ namespace BlackMisc
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             CStatusMessageList msgs;
-            if (this->getName().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing name")); }
-            if (this->getAddress().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing address")); }
+            if (this->getName().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, "Missing name")); }
+            if (this->getAddress().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, "Missing address")); }
             if (this->getDescription().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing description")); }
-            if (this->getPort() < 1 || this->getPort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Wrong port")); }
+            if (this->getPort() < 1 || this->getPort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, "Wrong port")); }
             msgs.push_back(this->getUser().validate());
             msgs.push_back(this->getFsdSetup().validate());
             msgs.addCategories(cats);
+            msgs.sortBySeverity();
             return msgs;
         }
 

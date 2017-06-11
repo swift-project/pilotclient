@@ -25,7 +25,6 @@
 class QWidget;
 
 namespace Ui { class CNetworkServerForm; }
-
 namespace BlackGui
 {
     namespace Editors
@@ -40,7 +39,7 @@ namespace BlackGui
             explicit CServerForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CServerForm();
+            virtual ~CServerForm();
 
             //! Set server
             void setServer(const BlackMisc::Network::CServer &server);

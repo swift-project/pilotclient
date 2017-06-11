@@ -47,7 +47,6 @@ namespace BlackGui
             // Settings server
             this->connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
             this->connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            this->connect(ui->pb_AddServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
             this->connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_serverSelected);
             this->ps_reloadSettings();
         }
@@ -76,47 +75,38 @@ namespace BlackGui
 
         void CSettingsNetworkServersComponent::ps_alterTrafficServer()
         {
-            CServer server(ui->form_Server->getServer());
-            CStatusMessageList msgs = server.validate();
-            if (!msgs.isEmpty()) { msgs.addCategories(this); }
+            const QObject *sender = QObject::sender();
+            const CServer server(ui->form_Server->getServer());
 
             CServerList serverList(m_trafficNetworkServers.getThreadLocal());
-            QObject *sender = QObject::sender();
             CStatusMessage msg;
-            bool changed = false;
-            bool save = false;
             if (sender == ui->pb_RemoveServer)
             {
                 // lenient name removal
                 serverList.removeByName(server.getName());
-                changed = true;
             }
-            else if (sender == ui->pb_AddServer)
+            else if (sender == ui->pb_SaveServer)
             {
-                if (!msgs.isEmpty())
+                CStatusMessageList msgs = server.validate();
+                if (!msgs.isEmpty()) { msgs.addCategories(this); }
+
+                // error?
+                if (msgs.isFailure())
                 {
                     CLogMessage::preformatted(msgs);
                     return;
                 }
+
                 serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
-                changed = true;
             }
-            else if (sender == ui->pb_SaveServer)
+            else
             {
-                save = true;
-                if (msgs.isEmpty() && server.hasAddressAndPort())
-                {
-                    // update in any case to list before saving if we have a valid form
-                    serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
-                    changed = true;
-                }
+                qFatal("Wrong sender");
+                return;
             }
 
-            if (changed)
-            {
-                msg = save ? m_trafficNetworkServers.setAndSave(serverList) : m_trafficNetworkServers.set(serverList);
-                this->ps_reloadSettings(); // call manually as local object
-            }
+            msg = m_trafficNetworkServers.setAndSave(serverList);
+            this->ps_reloadSettings(); // call manually as local object
 
             if (!msg.isEmpty())
             {

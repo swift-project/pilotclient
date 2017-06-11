@@ -18,7 +18,6 @@
 #include <QScopedPointer>
 
 namespace Ui { class CFsdSetupForm; }
-
 namespace BlackGui
 {
     namespace Editors
@@ -35,7 +34,7 @@ namespace BlackGui
             explicit CFsdSetupForm(QWidget *parent = nullptr);
 
             //! Constructor
-            ~CFsdSetupForm();
+            virtual ~CFsdSetupForm();
 
             //! FSD setup from GUI
             BlackMisc::Network::CFsdSetup getValue() const;
@@ -55,17 +54,19 @@ namespace BlackGui
             //! Show the enable info
             void showEnableInfo(bool visible);
 
+            //! Set default values
+            void resetToDefaultValues();
+
             //! \name Form class implementations
             //! @{
             virtual void setReadOnly(bool readonly) override;
             virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
             //! @}
 
-        private slots:
-            //! Enable / disable
-            void ps_enabledToggled(bool enabled);
-
         private:
+            //! Enable / disable
+            void enabledToggled(bool enabled);
+
             QScopedPointer<Ui::CFsdSetupForm> ui;
         };
     } // ns

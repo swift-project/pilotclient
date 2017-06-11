@@ -26,9 +26,11 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->showEnableInfo(false);
+            this->resetToDefaultValues();
             ui->cb_Enabled->setChecked(true);
             ui->le_TextCodec->setCompleter(new QCompleter(textCodecNames(true, true), this));
-            connect(ui->cb_Enabled, &QCheckBox::toggled, this, &CFsdSetupForm::ps_enabledToggled);
+            connect(ui->cb_Enabled, &QCheckBox::toggled, this, &CFsdSetupForm::enabledToggled);
+            connect(ui->pb_SetDefaults, &QPushButton::clicked, this, &CFsdSetupForm::resetToDefaultValues);
         }
 
         CFsdSetupForm::~CFsdSetupForm()
@@ -100,7 +102,7 @@ namespace BlackGui
             return msgs;
         }
 
-        void CFsdSetupForm::ps_enabledToggled(bool enabled)
+        void CFsdSetupForm::enabledToggled(bool enabled)
         {
             Q_UNUSED(enabled);
             this->setReadOnly(!enabled);
@@ -108,6 +110,15 @@ namespace BlackGui
             {
                 this->setValue(CFsdSetup());
             }
+        }
+
+        void CFsdSetupForm::resetToDefaultValues()
+        {
+            ui->cb_AircraftPartsReceive->setChecked(true);
+            ui->cb_AircraftPartsSend->setChecked(true);
+            ui->cb_FastPositionReceive->setChecked(true);
+            ui->cb_FastPositionSend->setChecked(true);
+            ui->le_TextCodec->setText("latin1");
         }
     } // ns
 } // ns

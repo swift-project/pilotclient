@@ -121,13 +121,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pb_AddServer">
-        <property name="text">
-         <string>add</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pb_RemoveServer">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>189</width>
-    <height>102</height>
+    <width>209</width>
+    <height>130</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -81,8 +81,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_AircraftPartsSend">
+      <item row="1" column="1" alignment="Qt::AlignHCenter">
+       <widget class="QCheckBox" name="cb_FastPositionSend">
         <property name="text">
          <string>send</string>
         </property>
@@ -95,8 +95,8 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FastPositionSend">
+      <item row="0" column="1" alignment="Qt::AlignHCenter">
+       <widget class="QCheckBox" name="cb_AircraftPartsSend">
         <property name="text">
          <string>send</string>
         </property>
@@ -106,6 +106,13 @@
        <widget class="QCheckBox" name="cb_FastPositionReceive">
         <property name="text">
          <string>receive</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pb_SetDefaults">
+        <property name="text">
+         <string>set defaults</string>
         </property>
        </widget>
       </item>
