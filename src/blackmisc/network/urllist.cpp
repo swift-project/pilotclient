@@ -152,7 +152,7 @@ namespace BlackMisc
             {
                 if (!msg.isEmpty())
                 {
-                    this->m_errorMsgs.append(QString("URL: %1 error: ").arg(url.toQString(), msg));
+                    this->m_errorMsgs.append(QString("URL: %1 error: %2").arg(url.toQString(), msg));
                 }
                 return obtainNextWorkingUrl(random, connectTimeoutMs);
             }
