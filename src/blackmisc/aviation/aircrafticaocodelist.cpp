@@ -167,6 +167,11 @@ namespace BlackMisc
             this->sortBy(&CAircraftIcaoCode::getDesignator, &CAircraftIcaoCode::getManufacturer, &CAircraftIcaoCode::getRank);
         }
 
+        void CAircraftIcaoCodeList::removeInvalidCombinedCodes()
+        {
+            this->removeIf([](const CAircraftIcaoCode & icao) { return !icao.hasValidCombinedType(); });
+        }
+
         QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily, bool sort) const
         {
             QStringList c;

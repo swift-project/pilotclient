@@ -100,6 +100,9 @@ namespace BlackMisc
             //! Sort by designator first, then by manufacturer and rank
             void sortByDesignatorManufacturerAndRank();
 
+            //! Remove invalid combined codes
+            void removeInvalidCombinedCodes();
+
             //! For selection completion
             QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool sort = true) const;
 
