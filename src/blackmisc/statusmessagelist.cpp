@@ -120,6 +120,11 @@ namespace BlackMisc
         }
     }
 
+    void CStatusMessageList::sortBySeverity()
+    {
+        this->sortBy(&CStatusMessage::getSeverity);
+    }
+
     void CStatusMessageList::removeWarningsAndBelow()
     {
         if (this->isEmpty()) { return; }

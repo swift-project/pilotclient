@@ -88,6 +88,9 @@ namespace BlackMisc
         //! And higher (more critical) severity will be clipped to given severity
         void clampSeverity(CStatusMessage::StatusSeverity severity);
 
+        //! Sort by severity, lowest first
+        void sortBySeverity();
+
         //! Remove warnings and below
         void removeWarningsAndBelow();
 
