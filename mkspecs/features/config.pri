@@ -28,6 +28,17 @@ isEmpty(BLACK_EOL): BLACK_EOL = "20180101"
 
 ## Private Area ##
 
+## Dependency Checks ##
+load(configure)
+
+defineTest(CheckMandatoryDependency) {
+    !qtCompileTest($${1}): error(Cannot find $${1} development package. Make sure it is installed. Inspect config.log for more information.)
+}
+
+defineTest(CheckOptionalDependency) {
+    qtCompileTest($${1})
+}
+
 # include vatsim client id and key
 include(vatsim.pri)
 

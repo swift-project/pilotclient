@@ -6,6 +6,11 @@ CONFIG += ordered
 OTHER_FILES += mkspecs/features/*.prf
 OTHER_FILES += mkspecs/features/*.pri
 
+CheckMandatoryDependency(gl)
+CheckMandatoryDependency(glu)
+CheckMandatoryDependency(libpng)
+CheckMandatoryDependency(zlib)
+
 contains(BLACK_CONFIG,Doxygen) {
     SUBDIRS += docs
 }
