@@ -12,16 +12,20 @@
 #include "blackgui/filters/filterbarbuttons.h"
 #include "blackgui/models/aircrafticaofilter.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "ui_aircrafticaofilterbar.h"
 
 #include <QLineEdit>
 #include <QString>
+#include <QCompleter>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackGui;
 using namespace BlackGui::Models;
+using namespace BlackCore;
 
 namespace BlackGui
 {
@@ -37,10 +41,18 @@ namespace BlackGui
             connect(ui->le_Manufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Description, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Id, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
+            connect(ui->le_Family, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
             ui->le_Designator->setValidator(new CUpperCaseValidator(ui->le_Designator));
+            ui->le_Family->setValidator(new CUpperCaseValidator(ui->le_Family));
             ui->le_Manufacturer->setValidator(new CUpperCaseValidator(ui->le_Manufacturer));
             ui->le_Id->setValidator(new QIntValidator(ui->le_Id));
+
+            if (sGui && sGui->hasWebDataServices())
+            {
+                connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAircraftIcaoRead, this, &CAircraftIcaoFilterBar::initCompleters);
+                this->initCompleters();
+            }
 
             // reset form
             this->clearForm();
@@ -54,6 +66,7 @@ namespace BlackGui
             return std::make_unique<CAircraftIcaoFilter>(
                        convertDbId(ui->le_Id->text()),
                        ui->le_Designator->text(),
+                       ui->le_Family->text(),
                        ui->le_Manufacturer->text(),
                        ui->le_Description->text(),
                        ui->combinedType_Selector->getCombinedType()
@@ -106,6 +119,22 @@ namespace BlackGui
             ui->le_Manufacturer->clear();
             ui->le_Description->clear();
             ui->combinedType_Selector->clear();
+        }
+
+        void CAircraftIcaoFilterBar::initCompleters()
+        {
+            if (m_hasCompleters) { return; }
+            if (!sGui || !sGui->hasWebDataServices()) { return; }
+
+            if (sGui->getWebDataServices()->getAircraftIcaoCodesCount() < 1) { return; }
+            m_hasCompleters = true;
+            const CAircraftIcaoCodeList codes = sGui->getWebDataServices()->getAircraftIcaoCodes();
+            const QStringList designators = codes.allIcaoCodes().toList();
+            ui->le_Designator->setCompleter(new QCompleter(designators, ui->le_Designator));
+            const QStringList families = codes.allFamilies().toList();
+            ui->le_Family->setCompleter(new QCompleter(families, ui->le_Family));
+            const QStringList manufacturers = codes.allManufacturers().toList();
+            ui->le_Manufacturer->setCompleter(new QCompleter(manufacturers, ui->le_Manufacturer));
         }
     } // ns
 } // nss

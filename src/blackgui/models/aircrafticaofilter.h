@@ -22,7 +22,6 @@ namespace BlackGui
 {
     namespace Models
     {
-
         //! Filter for aircraft ICAO data
         class BLACKGUI_EXPORT CAircraftIcaoFilter :
             public IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList>
@@ -31,6 +30,7 @@ namespace BlackGui
             //! Constructor
             CAircraftIcaoFilter(int id,
                                 const QString &designator,
+                                const QString &family,
                                 const QString &manufacturer,
                                 const QString &description,
                                 const QString &combinedType);
@@ -41,11 +41,11 @@ namespace BlackGui
         private:
             int m_id = -1;
             QString m_designator;
+            QString m_family;
             QString m_manufacturer;
             QString m_description;
             QString m_combinedType;
         };
-
     } // namespace
 } // namespace
 

@@ -31,7 +31,6 @@ namespace BlackMisc
     }
 }
 namespace Ui { class CAircraftIcaoFilterBar; }
-
 namespace BlackGui
 {
     namespace Filters
@@ -50,7 +49,7 @@ namespace BlackGui
             explicit CAircraftIcaoFilterBar(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAircraftIcaoFilterBar();
+            virtual ~CAircraftIcaoFilterBar();
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CAircraftIcaoCodeList> > createModelFilter() const override;
@@ -71,8 +70,11 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAircraftIcaoFilterBar> ui;
-        };
+            bool m_hasCompleters = false;
 
+            //! Set the completers
+            void initCompleters();
+        };
     } // ns
 } // ns
 
