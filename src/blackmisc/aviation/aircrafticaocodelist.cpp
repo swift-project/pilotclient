@@ -172,6 +172,11 @@ namespace BlackMisc
             this->removeIf([](const CAircraftIcaoCode & icao) { return !icao.hasValidCombinedType(); });
         }
 
+        void CAircraftIcaoCodeList::removeDuplicates()
+        {
+            this->removeIf(&CAircraftIcaoCode::isDbDuplicate, true);
+        }
+
         QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily, bool sort) const
         {
             QStringList c;
@@ -218,6 +223,18 @@ namespace BlackMisc
             return c;
         }
 
+        QSet<QString> CAircraftIcaoCodeList::allFamilies() const
+        {
+            QSet<QString> c;
+            for (const CAircraftIcaoCode &icao : *this)
+            {
+                if (!icao.hasFamily()) { continue; }
+                const QString d(icao.getFamily());
+                c.insert(d);
+            }
+            return c;
+        }
+
         QSet<QString> CAircraftIcaoCodeList::allManufacturers(bool onlyKnownDesignators) const
         {
             QSet<QString> c;
@@ -231,15 +248,16 @@ namespace BlackMisc
             return c;
         }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete)
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates)
         {
             CAircraftIcaoCodeList codes;
             for (const QJsonValue &value : array)
             {
-                CAircraftIcaoCode icao(CAircraftIcaoCode::fromDatabaseJson(value.toObject()));
-                if (ignoreIncomplete && !icao.hasSpecialDesignator() && !icao.hasCompleteData())
+                const CAircraftIcaoCode icao(CAircraftIcaoCode::fromDatabaseJson(value.toObject()));
+                if (ignoreIncompleteAndDuplicates)
                 {
-                    continue;
+                    if (!icao.hasSpecialDesignator() && !icao.hasCompleteData()) { continue; }
+                    if (icao.isDbDuplicate()) { continue; }
                 }
                 codes.push_back(icao);
             }
@@ -250,7 +268,7 @@ namespace BlackMisc
         {
             if (icaoPattern.hasValidDbKey())
             {
-                int k = icaoPattern.getDbKey();
+                const int k = icaoPattern.getDbKey();
                 CAircraftIcaoCode c(this->findByKey(k));
                 if (c.hasCompleteData()) { return c; }
             }

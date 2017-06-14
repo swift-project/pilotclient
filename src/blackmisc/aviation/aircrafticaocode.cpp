@@ -55,6 +55,19 @@ namespace BlackMisc
             if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
         }
 
+        CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family, const QString &combinedType, const QString &manufacturer,
+                                             const QString &model, const QString &modelIata, const QString &modelSwift, const QString &wtc, bool realworld, bool legacy, bool military, int rank)
+            : m_designator(icao.trimmed().toUpper()),
+              m_iataCode(iata.trimmed().toUpper()),
+              m_family(family.trimmed().toUpper()),
+              m_combinedType(combinedType.trimmed().toUpper()),
+              m_manufacturer(manufacturer.trimmed()),
+              m_modelDescription(model.trimmed()), m_modelIataDescription(modelIata.trimmed()), m_modelSwiftDescription(modelSwift.trimmed()),
+              m_wtc(wtc.trimmed().toUpper()), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
+        {
+            if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
+        }
+
         QString CAircraftIcaoCode::getDesignatorDbKey() const
         {
             if (this->isLoadedFromDb())
@@ -83,6 +96,9 @@ namespace BlackMisc
             if (!this->hasValidCombinedType() && otherIcaoCode.hasValidCombinedType()) { this->setCombinedType(otherIcaoCode.getCombinedType()); }
             if (this->m_manufacturer.isEmpty()) { this->setManufacturer(otherIcaoCode.getManufacturer());}
             if (this->m_modelDescription.isEmpty()) { this->setModelDescription(otherIcaoCode.getModelDescription()); }
+            if (this->m_modelIataDescription.isEmpty()) { this->setModelIataDescription(otherIcaoCode.getModelIataDescription()); }
+            if (this->m_modelSwiftDescription.isEmpty()) { this->setModelSwiftDescription(otherIcaoCode.getModelSwiftDescription()); }
+            if (this->m_family.isEmpty()) { this->setFamily(otherIcaoCode.getFamily()); }
             if (!this->hasValidDbKey())
             {
                 // need to observe if it makes sense to copy the key but not copying the whole object
@@ -224,6 +240,18 @@ namespace BlackMisc
             return c;
         }
 
+        QString CAircraftIcaoCode::getCombinedModelDescription() const
+        {
+            // Shortcut for most cases
+            if (!this->hasModelIataDescription() && !this->hasModelSwiftDescription()) { return this->getModelDescription(); }
+
+            QStringList combined({ this->getModelDescription() });
+            if (this->hasModelIataDescription()) { combined.append(this->getModelIataDescription()); }
+            if (this->hasModelSwiftDescription()) { combined.append(this->getModelSwiftDescription()); }
+            combined.removeDuplicates();
+            return combined.join(", ");
+        }
+
         bool CAircraftIcaoCode::matchesCombinedType(const QString &combinedType) const
         {
             const QString cc(combinedType.toUpper().trimmed().replace(' ', '*').replace('-', '*'));
@@ -289,6 +317,12 @@ namespace BlackMisc
                 ) { return true; }
             }
             return false;
+        }
+
+        bool CAircraftIcaoCode::isDbDuplicate() const
+        {
+            return m_modelIataDescription.startsWith("duplicate", Qt::CaseInsensitive) ||
+                   m_modelSwiftDescription.startsWith("duplicate", Qt::CaseInsensitive);
         }
 
         void CAircraftIcaoCode::setCodeFlags(bool military, bool legacy, bool realWorld)
@@ -402,7 +436,7 @@ namespace BlackMisc
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAircraftDesignator:
@@ -415,6 +449,12 @@ namespace BlackMisc
                 return CVariant::fromValue(this->m_combinedType);
             case IndexModelDescription:
                 return CVariant::fromValue(this->m_modelDescription);
+            case IndexModelIataDescription:
+                return CVariant::fromValue(this->m_modelIataDescription);
+            case IndexModelSwiftDescription:
+                return CVariant::fromValue(this->m_modelSwiftDescription);
+            case IndexCombinedDescription:
+                return CVariant::fromValue(this->getCombinedModelDescription());
             case IndexManufacturer:
                 return CVariant::fromValue(this->m_manufacturer);
             case IndexWtc:
@@ -440,7 +480,7 @@ namespace BlackMisc
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftIcaoCode>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAircraftDesignator:
@@ -457,6 +497,12 @@ namespace BlackMisc
                 break;
             case IndexModelDescription:
                 this->setModelDescription(variant.value<QString>());
+                break;
+            case IndexModelIataDescription:
+                this->setModelIataDescription(variant.value<QString>());
+                break;
+            case IndexModelSwiftDescription:
+                this->setModelSwiftDescription(variant.value<QString>());
                 break;
             case IndexManufacturer:
                 this->setManufacturer(variant.value<QString>());
@@ -496,6 +542,24 @@ namespace BlackMisc
                 return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
             case IndexModelDescription:
                 return m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
+            case IndexModelIataDescription:
+                return m_modelIataDescription.compare(compareValue.getModelIataDescription(), Qt::CaseInsensitive);
+            case IndexModelSwiftDescription:
+                return m_modelSwiftDescription.compare(compareValue.getModelSwiftDescription(), Qt::CaseInsensitive);
+            case IndexCombinedDescription:
+                {
+                    // compare without generating new strings
+                    int c = m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
+                    if (c == 0)
+                    {
+                        c = m_modelIataDescription.compare(compareValue.getModelIataDescription(), Qt::CaseInsensitive);
+                        if (c == 0)
+                        {
+                            c = m_modelSwiftDescription.compare(compareValue.getModelSwiftDescription(), Qt::CaseInsensitive);
+                        }
+                    }
+                    return c;
+                }
             case IndexManufacturer:
                 return m_manufacturer.compare(compareValue.getManufacturer(), Qt::CaseInsensitive);
             case IndexWtc:
@@ -615,15 +679,17 @@ namespace BlackMisc
                 return CAircraftIcaoCode();
             }
 
-            QString designator(json.value(prefix + "designator").toString());
-            QString iata(json.value(prefix + "iata").toString());
-            QString family(json.value(prefix + "family").toString());
-            QString manufacturer(json.value(prefix + "manufacturer").toString());
-            QString model(json.value(prefix + "model").toString());
-            QString type(json.value(prefix + "type").toString());
-            QString engine(json.value(prefix + "engine").toString());
-            int engineCount(json.value(prefix + "enginecount").toInt(-1));
-            QString combined(createdCombinedString(type, engineCount, engine));
+            const QString designator(json.value(prefix + "designator").toString());
+            const QString iata(json.value(prefix + "iata").toString());
+            const QString family(json.value(prefix + "family").toString());
+            const QString manufacturer(json.value(prefix + "manufacturer").toString());
+            const QString model(json.value(prefix + "model").toString());
+            const QString modelIata(json.value(prefix + "modeliata").toString());
+            const QString modelSwift(json.value(prefix + "modelswift").toString());
+            const QString type(json.value(prefix + "type").toString());
+            const QString engine(json.value(prefix + "engine").toString());
+            const int engineCount(json.value(prefix + "enginecount").toInt(-1));
+            const QString combined(createdCombinedString(type, engineCount, engine));
             QString wtc(json.value(prefix + "wtc").toString());
             if (wtc.length() > 1 && wtc.contains("/"))
             {
@@ -632,17 +698,16 @@ namespace BlackMisc
             }
             Q_ASSERT_X(wtc.length() < 2, Q_FUNC_INFO, "WTC too long");
 
-            bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "realworld").toString());
-            bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "legacy").toString());
-            bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
-            int rank(json.value(prefix + "rank").toInt(10));
+            const bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "realworld").toString());
+            const bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "legacy").toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
+            const int rank(json.value(prefix + "rank").toInt(10));
 
             CAircraftIcaoCode code(
-                designator, iata, combined,
-                manufacturer, model, wtc,
+                designator, iata, family, combined, manufacturer,
+                model, modelIata, modelSwift, wtc,
                 real, legacy, military, rank
             );
-            code.setFamily(family);
             code.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return code;
         }
@@ -650,39 +715,17 @@ namespace BlackMisc
         QString CAircraftIcaoCode::createdCombinedString(const QString &type, const QString &engineCount, const QString &engine)
         {
             Q_ASSERT_X(engineCount.length() < 2, Q_FUNC_INFO, "Wrong engine count");
-
-            QString c(type.trimmed().toUpper().left(1));
-            if (c.isEmpty()) { c.append("-"); }
-            if (engineCount.isEmpty())
-            {
-                c.append("-");
-            }
-            else
-            {
-                c.append(engineCount);
-            }
-            if (engine.isEmpty())
-            {
-                c.append("-");
-            }
-            else
-            {
-                c.append(engine.at(0));
-            }
+            QString c(type.isEmpty() ? "-" : type.trimmed().left(1).toUpper());
+            c += engineCount.isEmpty() ? "-" : engineCount.trimmed();
+            c += engine.isEmpty() ? "-" : engine.trimmed().left(1).toUpper();
             Q_ASSERT_X(c.length() == 3, Q_FUNC_INFO, "Wrong combined length");
             return c;
         }
 
         QString CAircraftIcaoCode::createdCombinedString(const QString &type, int engineCount, const QString &engine)
         {
-            if (engineCount >= 0 && engineCount < 10)
-            {
-                return createdCombinedString(type, QString::number(engineCount), engine);
-            }
-            else
-            {
-                return createdCombinedString(type, "", engine);
-            }
+            const bool valid = engineCount >= 0 && engineCount < 10;
+            return createdCombinedString(type, valid ? QString::number(engineCount) : "", engine);
         }
     } // namespace
 } // namespace

@@ -103,17 +103,23 @@ namespace BlackMisc
             //! Remove invalid combined codes
             void removeInvalidCombinedCodes();
 
+            //! Remove duplicates as marked by CAircraftIcaoCode::isDbDuplicate
+            void removeDuplicates();
+
             //! For selection completion
             QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool sort = true) const;
 
             //! All ICAO codes, no duplicates
             QSet<QString> allIcaoCodes(bool noUnspecified = true) const;
 
+            //! All families, no duplicates
+            QSet<QString> allFamilies() const;
+
             //! All manufacturers
             QSet<QString> allManufacturers(bool onlyKnownDesignators = true) const;
 
             //! From our database JSON format
-            static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);
+            static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates = true);
         };
     } //namespace
 } // namespace

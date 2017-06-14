@@ -44,13 +44,16 @@ namespace BlackMisc
                 IndexCombinedAircraftType,
                 IndexManufacturer,
                 IndexModelDescription,
+                IndexModelIataDescription,
+                IndexModelSwiftDescription,
+                IndexCombinedDescription,
                 IndexWtc,
                 IndexIsRealworld,
                 IndexIsMilitary,
                 IndexIsLegacy,
                 IndexIsVtol,
                 IndexRank,
-                IndexDesignatorManufacturer    //!< designator and manufacturer
+                IndexDesignatorManufacturer //!< designator and manufacturer
             };
 
             //! Default constructor.
@@ -66,6 +69,10 @@ namespace BlackMisc
             //! Constructor
             CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer,
                               const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
+
+            //! Constructor
+            CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family, const QString &combinedType, const QString &manufacturer,
+                              const QString &model, const QString &modelIata, const QString &modelSwift, const QString &wtc, bool realworld, bool legacy, bool military, int rank);
 
             //! Get ICAO designator, e.g. "B737"
             const QString &getDesignator() const { return m_designator; }
@@ -133,8 +140,17 @@ namespace BlackMisc
             //! Set type
             void setCombinedType(const QString &type) { this->m_combinedType = type.trimmed().toUpper(); }
 
-            //! Get model description, e.g. "A-330-200"
+            //! Get IACO model description, e.g. "A-330-200"
             const QString &getModelDescription() const { return m_modelDescription; }
+
+            //! Get IATA model description
+            const QString &getModelIataDescription() const { return m_modelIataDescription; }
+
+            //! Get swift model description
+            const QString &getModelSwiftDescription() const { return m_modelSwiftDescription; }
+
+            //! Combined description
+            QString getCombinedModelDescription() const;
 
             //! Matches given combined code
             //! \remark * can be used as wildcard, e.g. L*J, L**
@@ -143,11 +159,23 @@ namespace BlackMisc
             //! Designator + Manufacturer
             QString getDesignatorManufacturer() const;
 
-            //! Set the model description
+            //! Set the model description (ICAO description)
             void setModelDescription(const QString &modelDescription) { m_modelDescription = modelDescription.trimmed(); }
 
-            //! Has model description
+            //! Set the alternative IATA model description
+            void setModelIataDescription(const QString &modelDescription) { m_modelIataDescription = modelDescription.trimmed(); }
+
+            //! Set the  alternative swift model description
+            void setModelSwiftDescription(const QString &modelDescription) { m_modelSwiftDescription = modelDescription.trimmed(); }
+
+            //! Has model description?
             bool hasModelDescription() const { return !this->m_modelDescription.isEmpty(); }
+
+            //! Has IATA model description?
+            bool hasModelIataDescription() const { return !this->m_modelIataDescription.isEmpty(); }
+
+            //! Has swift model description?
+            bool hasModelSwiftDescription() const { return !this->m_modelSwiftDescription.isEmpty(); }
 
             //! Get manufacturer, e.g. "Airbus"
             const QString &getManufacturer() const { return m_manufacturer; }
@@ -181,6 +209,10 @@ namespace BlackMisc
 
             //! Legacy aircraft (no current ICAO code)
             bool isLegacyAircraft() const { return m_legacy; }
+
+            //! Is DB duplicate, means redundant ICAO DB entry.
+            //! \see https://aviation.stackexchange.com/q/37848/4024
+            bool isDbDuplicate() const;
 
             //! Flags
             void setCodeFlags(bool military, bool legacy, bool realWorld);
@@ -280,17 +312,19 @@ namespace BlackMisc
             static CAircraftIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
-            QString m_designator;         //!< "B737"
-            QString m_iataCode;           //!< "320"
-            QString m_family;             //!< "A350" (not a real ICAO code, but a family)
-            QString m_combinedType;       //!< "L2J"
-            QString m_manufacturer;       //!< "Airbus"
-            QString m_modelDescription;   //!< "A-330-200"
-            QString m_wtc;                //!< wake turbulence "M","H" "L/M", "L", we only use the one letter versions
-            bool m_realWorld = true;      //!< real world aircraft
-            bool m_legacy = false;        //!< legacy code
-            bool m_military = false;      //!< military aircraft?
-            int m_rank = 10;              //!< rank among same codes
+            QString m_designator;            //!< "B737"
+            QString m_iataCode;              //!< "320"
+            QString m_family;                //!< "A350" (not a real ICAO code, but a family)
+            QString m_combinedType;          //!< "L2J"
+            QString m_manufacturer;          //!< "Airbus"
+            QString m_modelDescription;      //!< "A-330-200", the ICAO description
+            QString m_modelIataDescription;  //!< alternative IATA description
+            QString m_modelSwiftDescription; //!< alternative swift description
+            QString m_wtc;                   //!< wake turbulence "M","H" "L/M", "L", we only use the one letter versions
+            bool m_realWorld = true;         //!< real world aircraft
+            bool m_legacy = false;           //!< legacy code
+            bool m_military = false;         //!< military aircraft?
+            int m_rank = 10;                 //!< rank among same codes
 
             //! Create a combined string like L2J
             static QString createdCombinedString(const QString &type, const QString &engineCount, const QString &engine);
@@ -308,6 +342,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(combinedType),
                 BLACK_METAMEMBER(manufacturer),
                 BLACK_METAMEMBER(modelDescription),
+                BLACK_METAMEMBER(modelIataDescription),
+                BLACK_METAMEMBER(modelSwiftDescription),
                 BLACK_METAMEMBER(wtc),
                 BLACK_METAMEMBER(military),
                 BLACK_METAMEMBER(realWorld),
