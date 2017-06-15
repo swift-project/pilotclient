@@ -97,7 +97,7 @@ namespace BlackGui
             static bool isValid(const int &valueInSeconds) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
 
             //! Default, not consolidating
-            static const int &defaultValue() { static const int i = -1; return i; }
+            static const int &defaultValue() { static const int i = 240; return i; }
 
             //! Minimum
             static int minSecs() { return 60; }
