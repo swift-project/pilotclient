@@ -97,11 +97,11 @@ namespace BlackMisc
                 static QThreadStorage<QRegularExpression> tsRegex;
                 if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("(-\\s*|\\s)([A-Z]{4})$")); }
                 const auto &regex = tsRegex.localData();
-                QRegularExpressionMatch match = regex.match(rn);
+                const QRegularExpressionMatch match = regex.match(rn);
                 if (match.hasMatch())
                 {
-                    int pos = match.capturedStart(0);
-                    QString icao = match.captured(0).trimmed().right(4);
+                    const int pos = match.capturedStart(0);
+                    const QString icao = match.captured(0).trimmed().right(4);
                     rn = rn.leftRef(pos).trimmed().toString();
                     this->setHomeBase(CAirportIcaoCode(icao));
                 }

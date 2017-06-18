@@ -263,7 +263,7 @@ namespace BlackCore
                             // ; !CLIENTS section
                             int i = currentLine.lastIndexOf(' ');
                             const QVector<QStringRef> attributes = currentLine.midRef(i).trimmed().split(':', QString::SkipEmptyParts);
-                            for (const QStringRef &attr : attributes) { clientSectionAttributes.push_back(attr.toString()); }
+                            for (const QStringRef &attr : attributes) { clientSectionAttributes.push_back(attr.toString().trimmed().toLower()); }
                             section = SectionNone; // reset
                         }
                         continue;
@@ -447,14 +447,20 @@ namespace BlackCore
         {
             QMap<QString, QString> parts;
             if (currentLine.isEmpty()) { return parts; }
-            const QStringList clientParts = currentLine.split(':');
+            QStringList clientParts = currentLine.split(':');
+
+            // remove last empty item if required
+            if (currentLine.endsWith(':')) { clientParts.removeLast(); }
+            if (clientParts.size() != clientSectionAttributes.size())
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong parts size");
+                return parts;
+            }
+
             for (int i = 0; i < clientSectionAttributes.size(); i++)
             {
                 // section attributes are the column names
-                // more column names than parts
-                const QString attribute(clientSectionAttributes.at(i).toLower());
-                BLACK_VERIFY_X(i < clientParts.size(), Q_FUNC_INFO, "Wrong parts size");
-                if (i < clientSectionAttributes.size() || i < clientParts.size()) { continue; }
+                const QString attribute(clientSectionAttributes.at(i));
                 parts.insert(attribute, clientParts.at(i));
             }
             return parts;

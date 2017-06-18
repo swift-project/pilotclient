@@ -149,9 +149,9 @@ namespace BlackCore
                         CUser user;
                         for (int v = 0; v < bookingNodeValues.size(); v++)
                         {
-                            QDomNode bookingNodeValue = bookingNodeValues.at(v);
-                            QString name = bookingNodeValue.nodeName().toLower();
-                            QString value = bookingNodeValue.toElement().text();
+                            const QDomNode bookingNodeValue = bookingNodeValues.at(v);
+                            const QString name = bookingNodeValue.nodeName().toLower();
+                            const QString value = bookingNodeValue.toElement().text();
                             if (name == "id")
                             {
                                 // could be used as unique key
@@ -182,7 +182,7 @@ namespace BlackCore
                             }
                         }
                         // time checks
-                        QDateTime now = QDateTime::currentDateTimeUtc();
+                        const QDateTime now = QDateTime::currentDateTimeUtc();
                         if (now.msecsTo(bookedStation.getBookedUntilUtc()) < (1000 * 60 * 15))     { continue; } // until n mins in past
                         if (now.msecsTo(bookedStation.getBookedFromUtc()) > (1000 * 60 * 60 * 24)) { continue; } // to far in the future, n hours
                         bookedStation.setController(user);

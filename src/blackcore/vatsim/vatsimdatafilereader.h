@@ -148,6 +148,7 @@ namespace BlackCore
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
 
             //! Split line and assign values to their corresponding attribute names
+            //! \remark attributes expected as lower case
             static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes);
 
             //! Section in file
