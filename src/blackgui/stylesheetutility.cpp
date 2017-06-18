@@ -440,7 +440,7 @@ namespace BlackGui
     {
         static const QString qss(".qss");
         QString fn(fileName);
-        if (fn.endsWith(qss)) fn = fn.left(fn.length() - qss.length());
+        if (fn.endsWith(qss)) { fn.chop(qss.length()); }
 
         QString specific;
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
