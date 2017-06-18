@@ -150,7 +150,7 @@ namespace BlackGui
             // Connected button
             if (to == INetwork::Connected)
             {
-                ui->pb_Connect->setText("Disconnect");
+                ui->pb_Connect->setText("Discon."); // full terms some too wide
                 ui->pb_Connect->setStyleSheet("background-color: green");
             }
             else

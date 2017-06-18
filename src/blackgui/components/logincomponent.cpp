@@ -104,6 +104,9 @@ namespace BlackGui
             ui->lblp_VatsimPassword->setToolTips("ok", "wrong");
             ui->lblp_VatsimRealName->setToolTips("ok", "wrong");
 
+            //! \fixme hardcoded padding, could maybe goto to stylesheet file
+            ui->bb_OkCancel->button(QDialogButtonBox::Ok)->setStyleSheet("padding-left: 3px; padding-right: 3px;");
+
             // Stored data
             this->loadRememberedVatsimData();
 
