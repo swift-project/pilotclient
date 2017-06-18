@@ -32,8 +32,8 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        CAircraftIcaoCode::CAircraftIcaoCode(const QString &designator, const QString &combinedType) :
-            m_designator(designator.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper())
+        CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType) :
+            m_designator(icao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper())
         {}
 
         CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer, const QString &model, const QString &wtc, bool realworld, bool legacy, bool military, int rank)

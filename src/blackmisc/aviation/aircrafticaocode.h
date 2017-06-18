@@ -60,7 +60,7 @@ namespace BlackMisc
             CAircraftIcaoCode() {}
 
             //! Constructor.
-            CAircraftIcaoCode(const QString &designator, const QString &combinedType = "");
+            CAircraftIcaoCode(const QString &icao, const QString &combinedType = "");
 
             //! Constructor
             CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer,
