@@ -54,7 +54,7 @@ namespace BlackMisc
             //! Convert to string
             static QString flagToString(CDbFlags::DataRetrievalMode mode);
 
-            //! Adjust flag as we alread know DB is down
+            //! Adjust flag as we already know DB is down
             static DataRetrievalMode adjustWhenDbIsDown(DataRetrievalMode mode);
 
             //! Register metadata

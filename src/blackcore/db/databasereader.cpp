@@ -51,7 +51,7 @@ namespace BlackCore
         {
             if (this->isShuttingDown()) { return; }
 
-            // we accept cached cached data
+            // we accept cached data
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
             const bool hasInfoObjects = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
             CEntityFlags::Entity allEntities    = entities;
@@ -63,6 +63,8 @@ namespace BlackCore
                 const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
                 const QString currentEntityName = CEntityFlags::flagToString(currentEntity);
                 const CDbFlags::DataRetrievalMode rm = config.getRetrievalMode();
+                const QString rmString = CDbFlags::flagToString(rm);
+                const bool rmCacheOnly = (rm == CDbFlags::Cached);
                 Q_ASSERT_X(!rm.testFlag(CDbFlags::Unspecified), Q_FUNC_INFO, "Missing retrieval mode");
                 if (rm.testFlag(CDbFlags::Ignore) || rm.testFlag(CDbFlags::Canceled))
                 {
@@ -70,6 +72,7 @@ namespace BlackCore
                 }
                 else if (rm.testFlag(CDbFlags::Cached))
                 {
+                    // cache + shared or DB data
                     if (hasInfoObjects)
                     {
                         const bool changedUrl = this->hasChangedUrl(currentEntity);
@@ -101,7 +104,14 @@ namespace BlackCore
                     {
                         // no info objects, server down or no info objects loaded
                         this->admitCaches(currentEntity);
-                        CLogMessage(this).info("No info object for %1, triggered reading cache") << currentEntityName;
+                        if (rmCacheOnly)
+                        {
+                            CLogMessage(this).info("Triggered reading cache (cache only flag)") << currentEntityName;
+                        }
+                        else
+                        {
+                            CLogMessage(this).info("No info object for %1, triggered reading cache, read mode: %2") << currentEntityName << rmString;
+                        }
                         cachedEntities |= currentEntity; // read from cache
                     }
                 }
