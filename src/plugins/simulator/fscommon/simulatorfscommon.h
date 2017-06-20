@@ -18,6 +18,7 @@
 #include "fsuipc.h"
 
 #include <QObject>
+#include <memory>
 
 namespace BlackSimPlugin
 {
@@ -81,7 +82,7 @@ namespace BlackSimPlugin
             QString m_simulatorName;                                //!< name of simulator
             QString m_simulatorDetails;                             //!< describes version etc.
             QString m_simulatorVersion;                             //!< Simulator version
-            QScopedPointer<FsCommon::CFsuipc> m_fsuipc;             //!< FSUIPC
+            std::unique_ptr<CFsuipc> m_fsuipc;                      //!< FSUIPC
             bool m_useFsuipc = true;                                //!< use FSUIPC
             bool m_simPaused = false;                               //!< Simulator paused?
             bool m_simTimeSynced = false;                           //!< Time synchronized?

@@ -41,6 +41,9 @@ namespace BlackConfig
         //! with P3D support?
         static bool isCompiledWithP3DSupport(); // defined in buildconfig_gen.cpp.in
 
+        //! with Fsuipc support?
+        static bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.cpp.in
+
         //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9)
         static bool isCompiledWithMsFlightSimulatorSupport();
 

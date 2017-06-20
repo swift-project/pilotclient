@@ -33,7 +33,7 @@ namespace BlackSimPlugin
             Weather::IWeatherGridProvider *weatherGridProvider,
             QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, parent),
-            m_fsuipc(new CFsuipc())
+            m_fsuipc(std::make_unique<CFsuipc>(this))
         {
             CSimulatorFsCommon::registerHelp();
         }
@@ -79,7 +79,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsCommon::isFsuipcConnected() const
         {
-            return !m_fsuipc.isNull() && m_fsuipc->isConnected();
+            return m_fsuipc && m_fsuipc->isConnected();
         }
 
         bool CSimulatorFsCommon::useFsuipc(bool on)

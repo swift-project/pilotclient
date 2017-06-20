@@ -22,6 +22,7 @@ BLACK_CONFIG    *= PackageInstaller
 BLACK_CONFIG    *= Doxygen
 #BLACK_CONFIG    *= SwiftDevBranch
 #BLACK_CONFIG    *= SwiftStableBranch
+BLACK_CONFIG    *= FSUIPC
 
 isEmpty(BLACK_EOL): BLACK_EOL = "20180101"
 
@@ -42,6 +43,7 @@ include(vatsim.pri)
 !contains(BLACK_CONFIG, P3D) { DEFINE_WITH_P3D = "//" }
 !contains(BLACK_CONFIG, FSX) { DEFINE_WITH_FSX = "//" }
 !contains(BLACK_CONFIG, FS9) { DEFINE_WITH_FS9 = "//" }
+!contains(BLACK_CONFIG, FSUIPC) { DEFINE_WITH_FSUIPC = "//" }
 !contains(BLACK_CONFIG, XPlane) { DEFINE_WITH_XPLANE = "//" }
 !contains(BLACK_CONFIG, SwiftDevBranch) { DEFINE_SWIFT_DEV_BRANCH = "//" }
 !contains(BLACK_CONFIG, SwiftStableBranch) { DEFINE_SWIFT_STABLE_BRANCH = "//" }

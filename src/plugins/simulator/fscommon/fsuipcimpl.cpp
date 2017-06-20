@@ -1,4 +1,4 @@
-/* Copyright (C) 2014
+/* Copyright (C) 2017
  * swift Project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -6,6 +6,8 @@
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
+
+#ifdef SWIFT_USING_FSUIPC
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -36,7 +38,18 @@ namespace BlackSimPlugin
 {
     namespace FsCommon
     {
-        CFsuipc::CFsuipc()
+        //! Fsuipc weather message
+        struct CFsuipc::FsuipcWeatherMessage
+        {
+            FsuipcWeatherMessage() = default;
+            FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials);
+            int m_offset = 0;
+            QByteArray m_messageData;
+            int m_leftTrials = 0;
+        };
+
+        CFsuipc::CFsuipc(QObject *parent)
+            : QObject(parent)
         {
             startTimer(100);
         }
@@ -82,6 +95,11 @@ namespace BlackSimPlugin
         {
             FSUIPC_Close(); // Closing when it wasn't open is okay, so this is safe here
             this->m_connected = false;
+        }
+
+        bool CFsuipc::isConnected() const
+        {
+            return m_connected;
         }
 
         bool CFsuipc::write(const CSimulatedAircraft &aircraft)
@@ -222,6 +240,11 @@ namespace BlackSimPlugin
             QByteArray weatherData(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
             m_weatherMessageQueue.append(FsuipcWeatherMessage(0xC800, weatherData, 5));
             return true;
+        }
+
+        QString CFsuipc::getVersion() const
+        {
+            return m_fsuipcVersion;
         }
 
         bool CFsuipc::read(CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts)
@@ -476,3 +499,5 @@ namespace BlackSimPlugin
         }
     } // namespace
 } // namespace
+
+#endif //SWIFT_USING_FSUIPC

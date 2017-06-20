@@ -27,7 +27,7 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor
-            CFsuipc();
+            CFsuipc(QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CFsuipc();
@@ -39,10 +39,7 @@ namespace BlackSimPlugin
             void disconnect();
 
             //! Is connected?
-            bool isConnected() const { return m_connected; }
-
-            //! Process reading and writing variables
-            void process(BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            bool isConnected() const;
 
             //! Write variables
             bool write(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
@@ -51,7 +48,7 @@ namespace BlackSimPlugin
             bool write(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
             //! Get the version
-            QString getVersion() const { return m_fsuipcVersion; }
+            QString getVersion() const;
 
             //! Read data from FSUIPC
             //! \param aircraft       object to be updated
@@ -102,19 +99,13 @@ namespace BlackSimPlugin
             //! Log message category
             static QString getLogCategory() { return "swift.fscommon.fsuipc"; }
 
+
         protected:
             //! \copydoc QObject::timerEvent
             void timerEvent(QTimerEvent *event);
 
         private:
-            struct FsuipcWeatherMessage
-            {
-                FsuipcWeatherMessage() = default;
-                FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials);
-                int m_offset = 0;
-                QByteArray m_messageData;
-                int m_leftTrials = 0;
-            };
+            struct FsuipcWeatherMessage;
 
             void clearAllWeather();
             void processWeatherMessages();

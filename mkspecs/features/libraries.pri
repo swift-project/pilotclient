@@ -32,13 +32,6 @@ blackcore {
     }
 
     LIBS *= -lblackcore -lvatlib
-
-    win32 {
-        contains(BLACK_CONFIG, FSX) {
-            LIBS *= -lSimConnect
-            LIBS *= -lFSUIPC_User
-        }
-    }
 }
 
 blacksound {

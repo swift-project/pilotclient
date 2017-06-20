@@ -21,6 +21,7 @@ $$DEFINE_WITH_SWIFTCORE#define WITH_SWIFTCORE
 $$DEFINE_WITH_FSX#define WITH_FSX
 $$DEFINE_WITH_P3D#define WITH_P3D
 $$DEFINE_WITH_FS9#define WITH_FS9
+$$DEFINE_WITH_FSUIPC#define WITH_FSUIPC
 $$DEFINE_WITH_XPLANE#define WITH_XPLANE
 $$DEFINE_SWIFT_DEV_BRANCH#define SWIFT_DEV_BRANCH
 $$DEFINE_SWIFT_STABLE_BRANCH#define SWIFT_STABLE_BRANCH
@@ -74,6 +75,15 @@ bool BlackConfig::CBuildConfig::isCompiledWithP3DSupport()
 bool BlackConfig::CBuildConfig::isCompiledWithFsxSupport()
 {
 #ifdef WITH_FSX
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackConfig::CBuildConfig::isCompiledWithFsuipcSupport()
+{
+#ifdef WITH_FSUIPC
     return true;
 #else
     return false;

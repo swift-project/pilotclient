@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_SIMULATOR_H
 #define BLACKCORE_SIMULATOR_H
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
@@ -173,7 +174,10 @@ namespace BlackCore
             if (BlackMisc::CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
             BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
             BlackMisc::CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
+            if (BlackConfig::CBuildConfig::isCompiledWithFsuipcSupport())
+            {
+                BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
+            }
         }
 
         //! Status to string
