@@ -395,7 +395,7 @@ void SwiftGuiStd::ps_verifyDataAvailability()
     const CSimulatorInfo sims = sGui->getIContextSimulator()->simulatorsWithInitializedModelSet();
     if (sims.isNoSimulator())
     {
-        CLogMessage(this).error("No model set so far, you need at least one model set");
+        CLogMessage(this).error("No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher.");
     }
 }
 

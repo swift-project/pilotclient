@@ -148,7 +148,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Rendering</string>
+         <string>Models</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

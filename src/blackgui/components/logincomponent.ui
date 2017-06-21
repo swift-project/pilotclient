@@ -56,6 +56,22 @@
       <property name="spacing">
        <number>6</number>
       </property>
+      <item row="0" column="0" colspan="2">
+       <widget class="BlackGui::CLoginModeButtons" name="gbp_LoginMode">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0" colspan="2">
        <widget class="QTabWidget" name="tw_Network">
         <property name="tabPosition">
@@ -90,36 +106,11 @@
           <property name="verticalSpacing">
            <number>4</number>
           </property>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_VatsimId"/>
+          </item>
           <item row="3" column="5">
            <widget class="BlackGui::CTickLabel" name="lblp_VatsimHomeAirport">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="5">
-           <widget class="BlackGui::CTickLabel" name="lblp_VatsimRealName">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="lbl_VatsimId">
-            <property name="text">
-             <string>Id:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="5">
-           <widget class="BlackGui::CTickLabel" name="lblp_VatsimPassword">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="BlackGui::CTickLabel" name="lblp_VatsimId">
             <property name="text">
              <string/>
             </property>
@@ -132,28 +123,33 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="le_VatsimHomeAirport">
-            <property name="maxLength">
-             <number>4</number>
-            </property>
-            <property name="placeholderText">
-             <string>e.g. &quot;KLAX&quot;</string>
+          <item row="1" column="5">
+           <widget class="BlackGui::CTickLabel" name="lblp_VatsimPassword">
+            <property name="text">
+             <string/>
             </property>
            </widget>
           </item>
-          <item row="4" column="1" colspan="4">
-           <widget class="BlackGui::Components::CServerListSelector" name="comp_VatsimServer"/>
-          </item>
-          <item row="2" column="1" colspan="4">
-           <widget class="QLineEdit" name="le_VatsimRealName">
-            <property name="placeholderText">
-             <string>e.g. Joe Doe</string>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_VatsimId">
+            <property name="text">
+             <string>Id:</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="le_VatsimId"/>
+          <item row="1" column="2">
+           <widget class="BlackGui::CTickLabel" name="lblp_VatsimId">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="5">
+           <widget class="BlackGui::CTickLabel" name="lblp_VatsimRealName">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="lbl_VatsimHomeAirport">
@@ -165,10 +161,37 @@
             </property>
            </widget>
           </item>
+          <item row="4" column="1" colspan="4">
+           <widget class="BlackGui::Components::CServerListSelector" name="comp_VatsimServer"/>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="le_VatsimHomeAirport">
+            <property name="maxLength">
+             <number>4</number>
+            </property>
+            <property name="placeholderText">
+             <string>e.g. &quot;KLAX&quot;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="4">
+           <widget class="QLineEdit" name="le_VatsimRealName">
+            <property name="placeholderText">
+             <string>e.g. Joe Doe</string>
+            </property>
+           </widget>
+          </item>
           <item row="4" column="0">
            <widget class="QLabel" name="lbl_VatsimServer">
             <property name="text">
              <string>Server</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel" name="lbl_VatsimPassword">
+            <property name="text">
+             <string>Password</string>
             </property>
            </widget>
           </item>
@@ -179,10 +202,13 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QLabel" name="lbl_VatsimPassword">
-            <property name="text">
-             <string>Password</string>
+          <item row="5" column="0" colspan="5">
+           <widget class="QWidget" name="wi_EmptyForSpace" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>10</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -271,22 +297,6 @@
         </widget>
        </widget>
       </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="BlackGui::CLoginModeButtons" name="gbp_LoginMode">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="title">
-         <string/>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -314,122 +324,6 @@
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <item row="2" column="3">
-       <widget class="QLabel" name="lbl_AircraftIcaoAirline">
-        <property name="toolTip">
-         <string>ICAO code e.g. DLH, LHA, ...</string>
-        </property>
-        <property name="text">
-         <string>Airline</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="le_Callsign">
-        <property name="toolTip">
-         <string>e.g. DEMBZ</string>
-        </property>
-        <property name="inputMethodHints">
-         <set>Qt::ImhUppercaseOnly</set>
-        </property>
-        <property name="maxLength">
-         <number>10</number>
-        </property>
-        <property name="placeholderText">
-         <string>e.g. DEMBZ</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_Callsign">
-        <property name="text">
-         <string>Callsign</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="lbl_AircraftIcaoDesignator">
-        <property name="toolTip">
-         <string>ICAO code e.g.  B737, A320, F18</string>
-        </property>
-        <property name="text">
-         <string>Aircraft</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="BlackGui::CTickLabel" name="lblp_Callsign">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="BlackGui::CTickLabel" name="lblp_AircraftIcao">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_Model">
-        <property name="toolTip">
-         <string>Launch </string>
-        </property>
-        <property name="text">
-         <string>Model</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_AircraftCombinedType">
-        <property name="toolTip">
-         <string>Aircraft type e.g. L2J, L1P, ....</string>
-        </property>
-        <property name="text">
-         <string>Type</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="le_AircraftCombinedType">
-        <property name="toolTip">
-         <string>e.g. L2J</string>
-        </property>
-        <property name="inputMask">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="maxLength">
-         <number>3</number>
-        </property>
-        <property name="placeholderText">
-         <string>e.g. &quot;L2J&quot;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="5">
-       <widget class="BlackGui::CTickLabel" name="lblp_AirlineIcao">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="BlackGui::CTickLabel" name="lblp_AircraftCombinedType">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1" colspan="5">
        <widget class="QWidget" name="wi_SimulatorModel" native="true">
         <layout class="QHBoxLayout" name="hl_AircraftModel">
@@ -503,6 +397,122 @@
         </property>
         <property name="focusPolicy">
          <enum>Qt::StrongFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Callsign">
+        <property name="text">
+         <string>Callsign</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="lbl_AircraftIcaoDesignator">
+        <property name="toolTip">
+         <string>ICAO code e.g.  B737, A320, F18</string>
+        </property>
+        <property name="text">
+         <string>Aircraft</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="BlackGui::CTickLabel" name="lblp_Callsign">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_Model">
+        <property name="toolTip">
+         <string>Launch </string>
+        </property>
+        <property name="text">
+         <string>Model</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="BlackGui::CTickLabel" name="lblp_AircraftIcao">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLabel" name="lbl_AircraftIcaoAirline">
+        <property name="toolTip">
+         <string>ICAO code e.g. DLH, LHA, ...</string>
+        </property>
+        <property name="text">
+         <string>Airline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_Callsign">
+        <property name="toolTip">
+         <string>e.g. DEMBZ</string>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhUppercaseOnly</set>
+        </property>
+        <property name="maxLength">
+         <number>10</number>
+        </property>
+        <property name="placeholderText">
+         <string>e.g. DEMBZ</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="5">
+       <widget class="BlackGui::CTickLabel" name="lblp_AirlineIcao">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_AircraftCombinedType">
+        <property name="toolTip">
+         <string>e.g. L2J</string>
+        </property>
+        <property name="inputMask">
+         <string/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="maxLength">
+         <number>3</number>
+        </property>
+        <property name="placeholderText">
+         <string>e.g. &quot;L2J&quot;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="BlackGui::CTickLabel" name="lblp_AircraftCombinedType">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_AircraftCombinedType">
+        <property name="toolTip">
+         <string>Aircraft type e.g. L2J, L1P, ....</string>
+        </property>
+        <property name="text">
+         <string>Type</string>
         </property>
        </widget>
       </item>

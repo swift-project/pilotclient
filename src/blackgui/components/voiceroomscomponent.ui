@@ -79,6 +79,9 @@
           <property name="readOnly">
            <bool>true</bool>
           </property>
+          <property name="placeholderText">
+           <string>voice room</string>
+          </property>
          </widget>
         </item>
         <item alignment="Qt::AlignRight">
@@ -88,6 +91,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>override voice room</string>
           </property>
           <property name="text">
            <string>Ovr.</string>
@@ -139,10 +145,16 @@
           <property name="readOnly">
            <bool>true</bool>
           </property>
+          <property name="placeholderText">
+           <string>voice room</string>
+          </property>
          </widget>
         </item>
         <item alignment="Qt::AlignRight">
          <widget class="QCheckBox" name="cb_CockpitVoiceRoom1Override">
+          <property name="toolTip">
+           <string>override voice room</string>
+          </property>
           <property name="text">
            <string>Ovr.</string>
           </property>
