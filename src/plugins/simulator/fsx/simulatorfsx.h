@@ -18,7 +18,7 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        //! FSX Simulator Implementation
+        //! FSX simulator implementation
         class CSimulatorFsx : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommon
         {
             Q_OBJECT

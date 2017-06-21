@@ -36,7 +36,7 @@ namespace BlackSimPlugin
             //! Destructor
             ~CSimConnectObject() {}
 
-            //! Get Callsign
+            //! Get callsign
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
 
             //! Simulated aircraft (as added)
@@ -56,6 +56,9 @@ namespace BlackSimPlugin
 
             //! Get current lights (requested from simulator)
             const BlackMisc::Aviation::CAircraftLights &getCurrentLightsInSimulator() const { return m_currentLightsInSim; }
+
+            //! Received lights in simulator
+            bool hasCurrentLightsInSimulator() const { return !m_currentLightsInSim.isNull(); }
 
             //! Set current lights when received from simulator
             void setCurrentLightsInSimulator(const BlackMisc::Aviation::CAircraftLights &lights) { m_currentLightsInSim = lights; }
@@ -162,7 +165,22 @@ namespace BlackSimPlugin
             bool isKnownSimObjectId(DWORD objectId) const;
 
             //! Pending add condition
-            bool containsPendingAdd() const;
+            bool containsPendingAdded() const;
+
+            //! Pending removed condition
+            bool containsPendingRemoved() const;
+
+            //! Number of pending added
+            int countPendingAdded() const;
+
+            //! Number of pending removed
+            int countPendingRemoved() const;
+
+            //! Callsigns of pending added callsigns
+            BlackMisc::Aviation::CCallsignSet getPendingAddedCallsigns() const;
+
+            //! Callsigns of pending removed callsigns
+            BlackMisc::Aviation::CCallsignSet getPendingRemovedCallsigns() const;
 
             //! Toggle interpolator modes
             void toggleInterpolatorModes();

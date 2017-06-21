@@ -138,30 +138,29 @@ namespace BlackSimPlugin
             virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
             //! @}
 
-            //! Timer event (our SimConnect event loop), runs ps_dispatch
+            //! Timer event (our SimConnect event loop), runs dispatch
             //! \sa m_simconnectTimerId
             virtual void timerEvent(QTimerEvent *event) override;
 
-        private slots:
+        private:
             //! Dispatch SimConnect messages
-            void ps_dispatch();
+            void dispatch();
 
-            //! Remove aircraft not in provider anymore
+            //! Remove aircraft no longer in provider
             //! \remark kind of cleanup function, in an ideal this should never need to cleanup something
-            BlackMisc::Aviation::CCallsignSet ps_physicallyRemoveAircraftNotInProvider();
+            BlackMisc::Aviation::CCallsignSet physicallyRemoveAircraftNotInProvider();
 
             //! Handle that an object has been added in simulator
             //! \remark checks if the object was really added after an add request and not directly removed again
-            bool ps_deferredSimulatorReportedObjectAdded(const BlackMisc::Aviation::CCallsign &callsign);
+            bool deferredSimulatorReportedObjectAdded(const BlackMisc::Aviation::CCallsign &callsign);
 
-            //! Try to add the aircraft currently out of bubble
-            void ps_addAircraftCurrentlyOutOfBubble();
+            //! Try to add the next aircraft (one by one)
+            void addPendingAircraft();
 
-        private:
             //! Call this method to declare the simulator connected
             void setSimConnected();
 
-            //! Called when sim has started
+            //! Called when simulator has started
             void onSimRunning();
 
             //! Slot called every visual frame
@@ -213,13 +212,13 @@ namespace BlackSimPlugin
             void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
 
             //! An AI aircraft was added in the simulator
-            bool simulatorReportedObjectAdded(DWORD objectID);
+            bool simulatorReportedObjectAdded(DWORD objectId);
 
             //! Simulator reported that AI aircraft was removed
             bool simulatorReportedObjectRemoved(DWORD objectID);
 
             //! Set ID of a SimConnect object, so far we only have an request id in the object
-            bool setSimConnectObjectId(DWORD requestID, DWORD objectID);
+            bool setSimConnectObjectId(DWORD requestId, DWORD objectId);
 
             //! Remember current lights
             bool setCurrentLights(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftLights &lights);
@@ -252,19 +251,21 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CCallsignSet getCallsignsMissingInProvider() const;
 
             //! Request for sim data?
-            static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestSimDataOffset) && requestId < (RequestSimDataStart + RequestSimDataOffset + SimObjectNumber); }
+            static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestSimDataOffset) && requestId < (RequestSimDataStart + RequestSimDataOffset + MaxSimObjects); }
 
             //! Request for sim data?
-            static bool isRequestForLights(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestLightsOffset) && requestId < (RequestSimDataStart + RequestLightsOffset + SimObjectNumber); }
+            static bool isRequestForLights(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestLightsOffset) && requestId < (RequestSimDataStart + RequestLightsOffset + MaxSimObjects); }
 
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
             static constexpr int SkipUpdateCyclesForCockpit = 10;    //!< skip x cycles before updating cockpit again
             static constexpr int IgnoreReceiveExceptions = 10;       //!< skip exceptions when displayed more than x times
-            static constexpr int SimObjectNumber = 10000;            //!< max. SimObjects at the same time
+            static constexpr int MaxSimObjects = 10000;              //!< max.number of SimObjects at the same time
             static constexpr int RequestSimDataStart = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
-            static constexpr int RequestSimDataEnd = RequestSimDataStart + SimObjectNumber - 1;
-            static constexpr int RequestSimDataOffset = 0 * SimObjectNumber;
-            static constexpr int RequestLightsOffset  = 1 * SimObjectNumber;
+            static constexpr int RequestSimDataEnd = RequestSimDataStart + MaxSimObjects - 1;
+            static constexpr int RequestSimDataOffset = 0 * MaxSimObjects;
+            static constexpr int RequestLightsOffset  = 1 * MaxSimObjects;
+            static constexpr int AddPendingAircraftIntervalMs = 20 * 1000;
+            static constexpr int DispatchIntervalMs = 10;
 
             QString m_simConnectVersion;            //!< SimConnect version
             bool m_simConnected  = false;           //!< Is simulator connected?
@@ -274,13 +275,13 @@ namespace BlackSimPlugin
             int  m_simConnectTimerId = -1;          //!< Timer identifier
             int  m_skipCockpitUpdateCycles = 0;     //!< skip some update cycles to allow changes in simulator cockpit to be set
             int  m_interpolationRequest = 0;        //!< current interpolation request
-            int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa ps_dispatch
+            int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa dispatch
             int  m_receiveExceptionCount = 0;       //!< exceptions
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
-            QTimer m_realityBubbleTimer { this };   //!< updating of aircraft out of reality bubble
+            QTimer m_addPendingAircraftTimer { this };      //!< updating of aircraft awaiting add
             DWORD m_requestIdSimData = RequestSimDataStart; //!< request id, use obtainRequestId() to get id
-            BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
+            BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
         };
 
         //! Listener for FSX

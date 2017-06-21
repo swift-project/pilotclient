@@ -332,7 +332,7 @@ namespace BlackMisc
             //! Compare for index
             int comparePropertyByIndex(const CPropertyIndex &index, const CSimulatedAircraft &compareValue) const;
 
-            //! Get model
+            //! Get model (model used for mapping)
             const BlackMisc::Simulation::CAircraftModel &getModel() const { return m_models[CurrentModel]; }
 
             //! Get network model

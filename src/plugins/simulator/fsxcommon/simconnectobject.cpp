@@ -129,13 +129,62 @@ namespace BlackSimPlugin
             return simObject.hasValidRequestAndObjectId() && objectId == simObject.getObjectId();
         }
 
-        bool CSimConnectObjects::containsPendingAdd() const
+        bool CSimConnectObjects::containsPendingAdded() const
         {
             for (const CSimConnectObject &simObject : this->values())
             {
                 if (simObject.isPendingAdded()) { return true; }
             }
             return false;
+        }
+
+        bool CSimConnectObjects::containsPendingRemoved() const
+        {
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.isPendingRemoved()) { return true; }
+            }
+            return false;
+        }
+
+        int CSimConnectObjects::countPendingAdded() const
+        {
+            int c = 0;
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.isPendingAdded()) { c++; }
+            }
+            return c;
+        }
+
+        int CSimConnectObjects::countPendingRemoved() const
+        {
+            int c = 0;
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.isPendingRemoved()) { c++; }
+            }
+            return c;
+        }
+
+        CCallsignSet CSimConnectObjects::getPendingAddedCallsigns() const
+        {
+            CCallsignSet callsigns;
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.isPendingAdded()) { callsigns.push_back(simObject.getCallsign()); }
+            }
+            return callsigns;
+        }
+
+        CCallsignSet CSimConnectObjects::getPendingRemovedCallsigns() const
+        {
+            CCallsignSet callsigns;
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.isPendingRemoved()) { callsigns.push_back(simObject.getCallsign()); }
+            }
+            return callsigns;
         }
 
         void CSimConnectObjects::toggleInterpolatorModes()

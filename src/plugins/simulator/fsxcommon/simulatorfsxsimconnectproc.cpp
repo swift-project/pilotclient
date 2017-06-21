@@ -111,7 +111,7 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
                 {
                     const SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
-                    const DWORD objectID = event->dwData;
+                    const DWORD objectId = event->dwData;
                     const SIMCONNECT_SIMOBJECT_TYPE objectType = event->eObjType;
                     if (objectType != SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT && objectType != SIMCONNECT_SIMOBJECT_TYPE_HELICOPTER)
                     {
@@ -119,15 +119,15 @@ namespace BlackSimPlugin
                     }
 
                     // such an object is not necessarily one of ours
-                    // for instance, I always see object 5 when I start the simulator
-                    if (!simulatorFsx->getSimConnectObjects().isKnownSimObjectId(objectID)) break;
+                    // for instance, I always see object "5" when I start the simulator
+                    if (!simulatorFsx->getSimConnectObjects().isKnownSimObjectId(objectId)) break;
                     switch (event->uEventID)
                     {
                     case SystemEventObjectAdded:
                         // added in SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
                         break;
                     case SystemEventObjectRemoved:
-                        simulatorFsx->simulatorReportedObjectRemoved(objectID);
+                        simulatorFsx->simulatorReportedObjectRemoved(objectId);
                         break;
                     default:
                         break;

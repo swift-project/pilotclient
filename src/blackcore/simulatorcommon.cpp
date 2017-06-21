@@ -134,7 +134,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    this->physicallyAddRemoteAircraft(aircraft);
+                    this->physicallyAddRemoteAircraft(aircraft); // blink
                 }
             }
         }
@@ -162,7 +162,7 @@ namespace BlackCore
             // are we already visible?
             if (!this->isPhysicallyRenderedAircraft(callsign))
             {
-                this->physicallyAddRemoteAircraft(aircraft);
+                this->physicallyAddRemoteAircraft(aircraft); // enable/disable
             }
         }
         else
@@ -455,7 +455,7 @@ namespace BlackCore
                 {
                     Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
                     Q_ASSERT_X(aircraft.hasModelString(), Q_FUNC_INFO, "Missing model string");
-                    this->physicallyAddRemoteAircraft(aircraft);
+                    this->physicallyAddRemoteAircraft(aircraft); // recalcuate snapshot
                     changed = true;
                 }
             }
@@ -495,12 +495,16 @@ namespace BlackCore
         m_statsUpdateAircraftCountMs = 0;
         m_statsUpdateAircraftTimeAvgMs = 0;
         m_statsUpdateAircraftTimeTotalMs = 0;
+        m_blinkCycle = false;
+        m_highlightEndTimeMsEpoch = false;
         this->clearAllAircraft();
     }
 
     void CSimulatorCommon::clearAllAircraft()
     {
         m_aircraftToAddAgainWhenRemoved.clear();
+        m_highlightedAircraft.clear();
+        m_callsignsToBeRendered.clear();
     }
 
     CAirportList CSimulatorCommon::getWebServiceAirports() const

@@ -51,8 +51,8 @@ namespace BlackSimPlugin
             Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
-            m_realityBubbleTimer.setInterval(20 * 1000);
-            connect(&m_realityBubbleTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::ps_addAircraftCurrentlyOutOfBubble);
+            m_addPendingAircraftTimer.setInterval(AddPendingAircraftIntervalMs);
+            connect(&m_addPendingAircraftTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::addPendingAircraft);
 
             m_useFsuipc = false;
             m_defaultModel =
@@ -94,8 +94,8 @@ namespace BlackSimPlugin
             // set structures and move on
             initEvents();
             initDataDefinitionsWhenConnected();
-            m_simConnectTimerId = startTimer(10);
-            m_realityBubbleTimer.start();
+            m_simConnectTimerId = startTimer(DispatchIntervalMs);
+            m_addPendingAircraftTimer.start();
             return true;
         }
 
@@ -127,7 +127,7 @@ namespace BlackSimPlugin
             if (callsign.isEmpty()) { return false; }
 
             // check if we have to do something
-            m_outOfRealityBubble.removeByCallsign(callsign);
+            m_addPendingAircraft.removeByCallsign(callsign);
             if (m_simConnectObjects.contains(callsign))
             {
                 const CSimConnectObject simObj = m_simConnectObjects[callsign];
@@ -293,7 +293,7 @@ namespace BlackSimPlugin
         {
             CCallsignSet callsigns(this->m_simConnectObjects.keys());
             callsigns.push_back(m_aircraftToAddAgainWhenRemoved.getCallsigns()); // not really rendered right now, but very soon
-            callsigns.push_back(m_outOfRealityBubble.getCallsigns()); // not really rendered, but for the logic it should look like it is
+            callsigns.push_back(m_addPendingAircraft.getCallsigns()); // not really rendered, but for the logic it should look like it is
             return CCallsignSet(this->m_simConnectObjects.keys());
         }
 
@@ -364,11 +364,12 @@ namespace BlackSimPlugin
                 return;
             }
 
-            emitSimulatorCombinedStatus();
+            emitSimulatorCombinedStatus(); // force sending status
         }
 
         void CSimulatorFsxCommon::onSimStopped()
         {
+            // stopping events in FSX: Load menu, weather and season
             const int oldStatus = getSimulatorStatus();
             m_simSimulating = false;
             emitSimulatorCombinedStatus(oldStatus);
@@ -547,11 +548,11 @@ namespace BlackSimPlugin
             if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty()) { return false; }
 
             // we know the object has been created. But it can happen it is directly removed afterwards
-            QTimer::singleShot(500, this, [ = ] { this->ps_deferredSimulatorReportedObjectAdded(callsign); });
+            QTimer::singleShot(500, this, [ = ] { this->deferredSimulatorReportedObjectAdded(callsign); });
             return true;
         }
 
-        bool CSimulatorFsxCommon::ps_deferredSimulatorReportedObjectAdded(const CCallsign &callsign)
+        bool CSimulatorFsxCommon::deferredSimulatorReportedObjectAdded(const CCallsign &callsign)
         {
             if (callsign.isEmpty()) { return false; }
             if (!m_simConnectObjects.contains(callsign)) { return false; } // removed in mean time
@@ -594,13 +595,13 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFsxCommon::ps_addAircraftCurrentlyOutOfBubble()
+        void CSimulatorFsxCommon::addPendingAircraft()
         {
-            if (m_outOfRealityBubble.isEmpty()) { return; }
+            if (m_addPendingAircraft.isEmpty()) { return; }
             const CCallsignSet aircraftCallsignsInRange(getAircraftInRangeCallsigns());
             CSimulatedAircraftList toBeAddedAircraft;
             CCallsignSet toBeRemovedCallsigns;
-            for (const CSimulatedAircraft &aircraft : as_const(m_outOfRealityBubble))
+            for (const CSimulatedAircraft &aircraft : as_const(m_addPendingAircraft))
             {
                 Q_ASSERT_X(!aircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
                 if (aircraftCallsignsInRange.contains(aircraft.getCallsign()))
@@ -612,7 +613,7 @@ namespace BlackSimPlugin
                     toBeRemovedCallsigns.push_back(aircraft.getCallsign());
                 }
             }
-            m_outOfRealityBubble.removeByCallsigns(toBeRemovedCallsigns);
+            m_addPendingAircraft.removeByCallsigns(toBeRemovedCallsigns);
 
             // add aircraft, but non blocking
             int t = 100;
@@ -633,7 +634,6 @@ namespace BlackSimPlugin
             const CCallsign callsign(simObject.getCallsign());
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
-            bool ok = false;
             if (simObject.isPendingRemoved())
             {
                 // good case, object has been removed
@@ -642,11 +642,15 @@ namespace BlackSimPlugin
             else
             {
                 // object was removed, but removal was not requested by us
-                // this means we are out of the reality bubble (or something else went wrong)
+                // this means we are out of the reality bubble or something else went wrong
+                // Possible reasons:
+                // 1) out of reality bubble
+                // 2) wrong position (in ground etc.)
+                // 3) Simulator not running (ie in stopped mode)
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
-                    this->m_outOfRealityBubble.push_back(simObject.getAircraft());
-                    CLogMessage(this).info("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    this->m_addPendingAircraft.push_back(simObject.getAircraft());
+                    CLogMessage(this).info("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
                 else
                 {
@@ -656,7 +660,7 @@ namespace BlackSimPlugin
 
             // in all cases we remove
             const int c = m_simConnectObjects.remove(callsign);
-            ok = c > 0;
+            const bool removed = (c > 0);
             const bool updated = this->updateAircraftRendered(simObject.getCallsign(), false);
             if (updated)
             {
@@ -694,10 +698,10 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
-            ps_dispatch();
+            dispatch();
         }
 
-        void CSimulatorFsxCommon::ps_dispatch()
+        void CSimulatorFsxCommon::dispatch()
         {
             HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
             if (hr != S_OK)
@@ -736,7 +740,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
-            m_outOfRealityBubble.removeByCallsign(callsign);
+            m_addPendingAircraft.removeByCallsign(callsign);
             if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
 
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
@@ -767,7 +771,7 @@ namespace BlackSimPlugin
             }
 
             // cleanup function, actually this should not be needed
-            QTimer::singleShot(100, this, &CSimulatorFsxCommon::ps_physicallyRemoveAircraftNotInProvider);
+            QTimer::singleShot(100, this, &CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider);
 
             // bye
             return true;
@@ -870,7 +874,7 @@ namespace BlackSimPlugin
                 return hr;
             }
 
-            // inti data definitions and SB data area
+            // init data definitions and SB data area
             hr += initDataDefinitionsWhenConnected();
             if (hr != S_OK)
             {
@@ -1287,7 +1291,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::clearAllAircraft()
         {
             m_simConnectObjects.clear();
-            m_outOfRealityBubble.clear();
+            m_addPendingAircraft.clear();
             CSimulatorFsCommon::clearAllAircraft();
         }
 
@@ -1318,7 +1322,7 @@ namespace BlackSimPlugin
             return simObjectCallsigns.difference(providerCallsigns);
         }
 
-        CCallsignSet CSimulatorFsxCommon::ps_physicallyRemoveAircraftNotInProvider()
+        CCallsignSet CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider()
         {
             const CCallsignSet toBeRemoved(getCallsignsMissingInProvider());
             if (toBeRemoved.isEmpty()) { return toBeRemoved; }
