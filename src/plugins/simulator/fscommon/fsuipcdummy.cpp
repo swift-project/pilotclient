@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#ifndef SWIFT_USING_FSUIPC
+#if !defined(SWIFT_USING_FSUIPC32) && !defined(SWIFT_USING_FSUIPC64)
 
 #include "fsuipc.h"
 
@@ -75,4 +75,4 @@ namespace BlackSimPlugin
     } // namespace
 } // namespace
 
-#endif //SWIFT_USING_FSUIPC
+#endif // !defined(SWIFT_USING_FSUIPC32) && !defined(SWIFT_USING_FSUIPC64)

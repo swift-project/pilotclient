@@ -1,19 +1,19 @@
 load(common_pre)
 
-QT += core dbus xml network widgets
+requires(equals(WORD_SIZE,32))
 
-TARGET = simulatorfsxcommon
+QT       += core dbus xml network
+
+TARGET = fsuipc
 TEMPLATE = lib
 
 CONFIG += staticlib
-CONFIG += blackmisc blackcore blackgui
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
-SOURCES += *.cpp
 HEADERS += *.h
-FORMS += *.ui
+SOURCES += *.c
 
 DESTDIR = $$DestRoot/lib
 

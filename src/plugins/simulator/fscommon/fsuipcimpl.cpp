@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#ifdef SWIFT_USING_FSUIPC
+#if defined(SWIFT_USING_FSUIPC32) || defined(SWIFT_USING_FSUIPC64)
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -16,8 +16,16 @@
 #include "fsuipc.h"
 #include <windows.h>
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
-#include "FSUIPC/FSUIPC_User.h"
-#include "FSUIPC/NewWeather.h"
+
+#ifdef SWIFT_USING_FSUIPC32
+    #include "../fsuipc32/FSUIPC_User.h"
+    #include "../fsuipc32/NewWeather.h"
+#endif
+
+#ifdef SWIFT_USING_FSUIPC64
+    #include "../fsuipc64/FSUIPC_User64.h"
+    #include "../fsuipc64/NewWeather.h"
+#endif
 
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/logmessage.h"
@@ -500,4 +508,4 @@ namespace BlackSimPlugin
     } // namespace
 } // namespace
 
-#endif //SWIFT_USING_FSUIPC
+#endif // defined(SWIFT_USING_FSUIPC32) || defined(SWIFT_USING_FSUIPC64)

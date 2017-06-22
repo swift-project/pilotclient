@@ -14,12 +14,14 @@ INCLUDEPATH += . $$SourceRoot/src
 SOURCES += *.cpp
 HEADERS += *.h
 
-contains(BLACK_CONFIG, FSUIPC): DEFINES += SWIFT_USING_FSUIPC
-
-LIBS += -lFSUIPC_User
-
-# required for FSUIPC
-win32:!win32-g++*: QMAKE_LFLAGS += /NODEFAULTLIB:LIBC.lib
+contains(BLACK_CONFIG, FSUIPC) {
+    equals(WORD_SIZE,32) {
+        DEFINES += SWIFT_USING_FSUIPC32
+    }
+    equals(WORD_SIZE,64) {
+        DEFINES += SWIFT_USING_FSUIPC64
+    }
+}
 
 DESTDIR = $$DestRoot/lib
 
