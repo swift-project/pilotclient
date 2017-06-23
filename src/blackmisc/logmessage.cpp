@@ -30,14 +30,7 @@ namespace BlackMisc
 
     CLogMessage::~CLogMessage()
     {
-        // ostream(encodedCategory()) << message(); // QDebug::operator<<(QString) puts quote characters around the message
-
-        // hack to avoid putting quote characters around the message
-        // should be safe, we could directly call qt_message_output instead, but it's undocumented
-        QByteArray category = qtCategory();
-        QDebug debug = ostream(category);
-        auto &stream = **reinterpret_cast<QTextStream **>(&debug); // should be safe because it is relying on Qt's guarantee of ABI compatibility
-        stream << message();
+        ostream(qtCategory()).noquote() << message();
     }
 
     QByteArray CLogMessage::qtCategory() const
