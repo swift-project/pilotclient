@@ -241,8 +241,8 @@ namespace BlackCore
         const int c = this->updateAircraftInRange(callsign, vm);
         {
             QReadLocker l(&m_lockAircraft);
-            CSimulatedAircraftList enabledAircrafts = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
-            m_network->setInterimPositionReceivers(enabledAircrafts.getCallsigns());
+            const CSimulatedAircraftList enabledAircraft = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
+            m_network->setInterimPositionReceivers(enabledAircraft.getCallsigns());
         }
         return c > 0;
     }
@@ -771,7 +771,7 @@ namespace BlackCore
         if (changedOnline < 1) { return; }
 
         Q_ASSERT(changedOnline == 1);
-        CAtcStation station = this->m_atcStationsOnline.findFirstByCallsign(callsign);
+        const CAtcStation station = this->m_atcStationsOnline.findFirstByCallsign(callsign);
         emit this->changedAtcStationOnlineConnectionStatus(station, true); // send when voice room url is available
 
         vm.addValue(CAtcStation::IndexIsOnline, true); // with voice room ATC is online

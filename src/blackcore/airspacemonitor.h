@@ -232,10 +232,10 @@ namespace BlackCore
             QString modelString;
         };
 
-        BlackMisc::Aviation::CAtcStationList           m_atcStationsOnline;  //!< online ATC stations
-        BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked;  //!< booked ATC stations
-        BlackMisc::Network::CClientList                m_otherClients;       //!< client informatiom, thread safe access required
-        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;    //!< aircraft, thread safe access required
+        BlackMisc::Aviation::CAtcStationList           m_atcStationsOnline; //!< online ATC stations
+        BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked; //!< booked ATC stations
+        BlackMisc::Network::CClientList                m_otherClients;      //!< client informatiom, thread safe access required
+        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;   //!< aircraft, thread safe access required
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_reverseLookupMessages;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_aircraftPartsHistory;
         QMap<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
@@ -247,11 +247,11 @@ namespace BlackCore
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved any cached
 
-        INetwork            *m_network                  = nullptr; //!< corresponding network interface
-        CAirspaceAnalyzer   *m_analyzer                 = nullptr; //!< owned analyzer
-        bool m_enableReverseLookupMsgs  = false;  //!< shall we log. information about the matching process
-        bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts
-        bool m_bookingsRequested = false;         //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
+        INetwork          *m_network = nullptr;    //!< corresponding network interface
+        CAirspaceAnalyzer *m_analyzer = nullptr;   //!< owned analyzer
+        bool m_enableReverseLookupMsgs  = false;   //!< shall we log. information about the matching process
+        bool m_enableAircraftPartsHistory = true;  //!< shall we keep a history of aircraft parts
+        bool m_bookingsRequested = false;          //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
 
         // locks
         mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign

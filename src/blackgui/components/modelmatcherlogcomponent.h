@@ -35,11 +35,11 @@ namespace BlackGui
             explicit CModelMatcherLogComponent(QWidget *parent = nullptr);
 
             //! Constructor
-            ~CModelMatcherLogComponent();
+            virtual ~CModelMatcherLogComponent();
 
         private:
             QScopedPointer<Ui::CModelMatcherLogComponent> ui;
-            QTimer m_timer { this };
+            QTimer m_updateCompleterTimer { this };
             QTextDocument m_text { this };
 
             //! Init

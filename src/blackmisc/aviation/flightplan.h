@@ -186,7 +186,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! Rules to string
-            static const QString flightruleToString(FlightRules rule);
+            static const QString flightRuleToString(FlightRules rule);
 
         private:
             QString m_equipmentIcao; //!< e.g. "T/A320/F"

@@ -286,7 +286,7 @@ namespace BlackMisc
         CVariant CSimulatedAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexModel:
@@ -372,7 +372,7 @@ namespace BlackMisc
                 break;
             case IndexModel:
                 this->m_models[CurrentModel].setPropertyByIndex(index.copyFrontRemoved(), variant);
-                this->setModel(this->m_models[CurrentModel]); // sync some values
+                this->setModel(this->m_models[CurrentModel]); // sync some values such as callsign
                 break;
             case IndexNetworkModel:
                 this->m_models[NetworkModel].setPropertyByIndex(index.copyFrontRemoved(), variant);

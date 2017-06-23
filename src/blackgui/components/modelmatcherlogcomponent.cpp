@@ -35,7 +35,7 @@ namespace BlackGui
             ui->setupUi(this);
             ui->le_Callsign->setValidator(new CUpperCaseValidator(this));
             ui->le_Callsign->setCompleter(new QCompleter(ui->le_Callsign));
-            this->m_timer.setInterval(20 * 1000);
+            this->m_updateCompleterTimer.setInterval(20 * 1000);
             this->initGui();
             this->m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
             connect(ui->le_Callsign, &QLineEdit::returnPressed, this, &CModelMatcherLogComponent::ps_callsignEntered);
@@ -48,7 +48,7 @@ namespace BlackGui
                 connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::ps_valuesChanged);
                 connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CModelMatcherLogComponent::ps_connectionStatusChanged);
             }
-            connect(&this->m_timer, &QTimer::timeout, this, &CModelMatcherLogComponent::ps_updateCallsignCompleter);
+            connect(&this->m_updateCompleterTimer, &QTimer::timeout, this, &CModelMatcherLogComponent::ps_updateCallsignCompleter);
         }
 
         CModelMatcherLogComponent::~CModelMatcherLogComponent()
@@ -57,14 +57,14 @@ namespace BlackGui
         void CModelMatcherLogComponent::initGui()
         {
             const bool needCallsigns = this->enabledMessages();
-            if (needCallsigns && !this->m_timer.isActive())
+            if (needCallsigns && !this->m_updateCompleterTimer.isActive())
             {
-                this->m_timer.start();
+                this->m_updateCompleterTimer.start();
                 this->ps_updateCallsignCompleter();
             }
             else if (!needCallsigns)
             {
-                this->m_timer.stop();
+                this->m_updateCompleterTimer.stop();
             }
 
             // avoid signal roundtrip

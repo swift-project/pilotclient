@@ -119,7 +119,7 @@ namespace BlackGui
             }
 
             this->m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
-            const CAircraftModel matched = this->m_matcher.getClosestMatch(remoteAircraft, &msgs);
+            const CAircraftModel matched = this->m_matcher.getClosestMatch(remoteAircraft, &msgs); // test model matching
             ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
         }

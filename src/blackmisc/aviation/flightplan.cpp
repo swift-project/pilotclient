@@ -45,7 +45,7 @@ namespace BlackMisc
             return s;
         }
 
-        const QString CFlightPlan::flightruleToString(CFlightPlan::FlightRules rule)
+        const QString CFlightPlan::flightRuleToString(CFlightPlan::FlightRules rule)
         {
             switch (rule)
             {
