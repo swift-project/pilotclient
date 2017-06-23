@@ -280,7 +280,7 @@ namespace BlackCore
         void sendInitialAtcQueries(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Network queries for pilots
-        void sendInitialPilotQueries(const BlackMisc::Aviation::CCallsign &callsign, bool withFsInn);
+        void sendInitialPilotQueries(const BlackMisc::Aviation::CCallsign &callsign, bool withIcaoQuery, bool withFsInn);
 
         //! Connected with network?
         bool isConnected() const;
@@ -333,6 +333,10 @@ namespace BlackCore
         //! Call ps_customFSInnPacketReceived with stored packet
         void recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Send the information if aircraft and(!) client are available
+        //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
+        void sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1);
+
         //! Reverse lookup messages
         //! \threadsafe
         void addReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CStatusMessageList &messages);
@@ -360,10 +364,6 @@ namespace BlackCore
 
         //! Create ATC station, this is the only place where an online ATC station should be added
         void ps_atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
-
-        //! Send the information if aircraft and(!) client are available
-        //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
-        void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1);
 
         //! Receive FSInn packet
         //! \remark This can happen even without a query before

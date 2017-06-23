@@ -126,12 +126,13 @@ namespace BlackCore
 
     CSimulatedAircraft CAirspaceMonitor::getAircraftInRangeForCallsign(const CCallsign &callsign) const
     {
-        return this->getAircraftInRange().findFirstByCallsign(callsign);
+        const CSimulatedAircraft aircraft = this->getAircraftInRange().findFirstByCallsign(callsign);
+        return aircraft;
     }
 
     CAircraftModel CAirspaceMonitor::getAircraftInRangeModelForCallsign(const CCallsign &callsign) const
     {
-        CSimulatedAircraft aircraft(getAircraftInRangeForCallsign(callsign)); // threadsafe
+        const CSimulatedAircraft aircraft(getAircraftInRangeForCallsign(callsign)); // threadsafe
         return aircraft.getModel();
     }
 
@@ -455,6 +456,7 @@ namespace BlackCore
 
             // we only query ICAO if we have none yet
             // it happens sometimes with some FSD servers (e.g our testserver) a first query is skipped
+            // Important: this is only a workaround and must not replace a sendInitialPilotQueries
             if (!aircraft.hasAircraftDesignator())
             {
                 this->m_network->sendIcaoCodesQuery(cs);
@@ -652,7 +654,7 @@ namespace BlackCore
         this->m_otherClients = clients;
     }
 
-    void CAirspaceMonitor::ps_sendReadyForModelMatching(const CCallsign &callsign, int trial)
+    void CAirspaceMonitor::sendReadyForModelMatching(const CCallsign &callsign, int trial)
     {
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
         if (!this->isConnected()) { return; }
@@ -665,7 +667,7 @@ namespace BlackCore
             this->addReverseLookupMessage(callsign, "Wait for further data");
             QTimer::singleShot(1500, this, [ = ]()
             {
-                this->ps_sendReadyForModelMatching(callsign, trial + 1);
+                this->sendReadyForModelMatching(callsign, trial + 1); // recursive
             });
             return;
         }
@@ -805,7 +807,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::ps_customFSInnPacketReceived(const CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftIcaoDesignator, const QString &combinedAircraftType, const QString &modelString)
     {
-        // it can happen this is called before any questions
+        // it can happen this is called before any queries
         // ES sends FsInn packets for callsigns such as ACCGER1, which are hard to distinguish
         // 1) checking if they are already in the list checks again ATC position which is safe
         // 2) the ATC alike callsign check is guessing
@@ -820,7 +822,7 @@ namespace BlackCore
         if (!isAircraft && !isAtc)
         {
             // we have no idea what we are dealing with, so we store it
-            FsInnPacket fsInn(aircraftIcaoDesignator, airlineIcaoDesignator, combinedAircraftType, modelString);
+            const FsInnPacket fsInn(aircraftIcaoDesignator, airlineIcaoDesignator, combinedAircraftType, modelString);
             m_tempFsInnPackets[callsign] = fsInn;
             return;
         }
@@ -838,7 +840,7 @@ namespace BlackCore
 
             this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", modelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
             this->addReverseLookupMessages(callsign, reverseLookupMessages);
-            this->ps_sendReadyForModelMatching(callsign);
+            this->sendReadyForModelMatching(callsign); // from FSInn
         }
     }
 
@@ -858,7 +860,7 @@ namespace BlackCore
         const CClient client = this->getOtherClientOrDefaultForCallsign(callsign);
         this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
         this->addReverseLookupMessages(callsign, reverseLookupMessages);
-        this->ps_sendReadyForModelMatching(callsign);
+        this->sendReadyForModelMatching(callsign); // ICAO codes received
 
         emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
     }
@@ -1036,7 +1038,7 @@ namespace BlackCore
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
             this->addNewAircraftInRange(aircraft);
-            this->sendInitialPilotQueries(callsign, !hasFsInnPacket);
+            this->sendInitialPilotQueries(callsign, true, !hasFsInnPacket);
 
             // new client, there is a chance it has been already created by custom packet
             const CClient c(callsign);
@@ -1128,7 +1130,7 @@ namespace BlackCore
         bool removedCallsign = false;
         {
             QWriteLocker l(&m_lockAircraft);
-            int c = this->m_aircraftInRange.removeByCallsign(callsign);
+            const int c = this->m_aircraftInRange.removeByCallsign(callsign);
             removedCallsign = c > 0;
         }
         if (removedCallsign) { emit this->removedAircraft(callsign); }
@@ -1146,7 +1148,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        CSimulatedAircraft simAircraft(getAircraftInRangeForCallsign(callsign));
+        const CSimulatedAircraft simAircraft(getAircraftInRangeForCallsign(callsign));
 
         // If we are not yet synchronized, we throw away any incremental packet
         if (!simAircraft.hasValidCallsign()) { return; }
@@ -1163,7 +1165,7 @@ namespace BlackCore
             {
                 // incremental update
                 parts = this->remoteAircraftParts(callsign).frontOrDefault();
-                QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
+                const QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
                 parts.convertFromJson(config);
             }
         }
@@ -1183,9 +1185,9 @@ namespace BlackCore
 
         if (m_enableAircraftPartsHistory)
         {
-            QJsonDocument doc(jsonObject);
-            QString partsAsString = doc.toJson(QJsonDocument::Compact);
-            CStatusMessage message(getLogCategories(), BlackMisc::CStatusMessage::SeverityInfo, callsign.isEmpty() ? callsign.toQString() + ": " + partsAsString.trimmed() : partsAsString.trimmed());
+            const QJsonDocument doc(jsonObject);
+            const QString partsAsString = doc.toJson(QJsonDocument::Compact);
+            const CStatusMessage message(getLogCategories(), BlackMisc::CStatusMessage::SeverityInfo, callsign.isEmpty() ? callsign.toQString() + ": " + partsAsString.trimmed() : partsAsString.trimmed());
             if (this->m_aircraftPartsHistory.contains(callsign))
             {
                 CStatusMessageList &msgs = this->m_aircraftPartsHistory[callsign];
@@ -1264,17 +1266,17 @@ namespace BlackCore
         this->m_network->sendServerQuery(callsign);
     }
 
-    void CAirspaceMonitor::sendInitialPilotQueries(const CCallsign &callsign, bool withFsInn)
+    void CAirspaceMonitor::sendInitialPilotQueries(const CCallsign &callsign, bool withIcaoQuery, bool withFsInn)
     {
         if (!this->isConnected()) { return; }
+
+        if (withIcaoQuery) { this->m_network->sendIcaoCodesQuery(callsign); }
+        if (withFsInn) { this->m_network->sendCustomFsinnQuery(callsign); }
+
         this->m_network->sendFrequencyQuery(callsign);
         this->m_network->sendRealNameQuery(callsign);
         this->m_network->sendCapabilitiesQuery(callsign);
         this->m_network->sendServerQuery(callsign);
-        if (withFsInn)
-        {
-            this->m_network->sendCustomFsinnQuery(callsign);
-        }
     }
 
     bool CAirspaceMonitor::isConnected() const
