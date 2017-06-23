@@ -127,7 +127,7 @@ namespace BlackCore
             VatServerType serverType;
             switch (m_server.getServerType())
             {
-            case CServer::ServerVatsim: serverType = vatServerVatsim; break;
+            case CServer::FSDServerVatsim: serverType = vatServerVatsim; break;
             default: serverType = vatServerLegacyFsd; break;
             }
 

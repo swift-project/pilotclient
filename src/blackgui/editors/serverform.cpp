@@ -26,11 +26,16 @@ namespace BlackGui
             ui(new Ui::CNetworkServerForm)
         {
             ui->setupUi(this);
-            ui->cb_ServerType->clear();
-            ui->cb_ServerType->insertItem(0, QStringLiteral("VATSIM"), QVariant::fromValue(CServer::ServerVatsim));
-            ui->cb_ServerType->insertItem(1, QStringLiteral("FSC"), QVariant::fromValue(CServer::ServerFSC));
-            ui->cb_ServerType->insertItem(2, QStringLiteral("Legacy FSD"), QVariant::fromValue(CServer::ServerLegacyFSD));
             ui->le_Port->setValidator(new QIntValidator(1, 65535, this));
+
+            // init all server type values
+            ui->cb_ServerType->clear();
+            int c = 0;
+            for (int type : CServer::allServerTypes())
+            {
+                const CServer::ServerType st = static_cast<CServer::ServerType>(type);
+                ui->cb_ServerType->insertItem(c++, CServer::serverTypeToString(st), QVariant::fromValue(type));
+            }
         }
 
         CServerForm::~CServerForm()
@@ -38,16 +43,11 @@ namespace BlackGui
 
         void CServerForm::setServer(const CServer &server)
         {
-            CUser user = server.getUser();
+            const CUser user = server.getUser();
             ui->le_NetworkId->setText(user.getId());
             ui->le_RealName->setText(user.getRealName());
             ui->le_Name->setText(server.getName());
-            switch (server.getServerType())
-            {
-            case CServer::ServerVatsim: ui->cb_ServerType->setCurrentIndex(0); break;
-            case CServer::ServerFSC: ui->cb_ServerType->setCurrentIndex(1); break;
-            case CServer::ServerLegacyFSD: ui->cb_ServerType->setCurrentIndex(2); break;
-            }
+            ui->cb_ServerType->setCurrentText(server.getServerTypeAsString());
             ui->le_Password->setText(user.getPassword());
             ui->le_Description->setText(server.getDescription());
             ui->le_Address->setText(server.getAddress());
@@ -69,8 +69,8 @@ namespace BlackGui
                 ui->le_Address->text().trimmed(),
                 ui->le_Port->text().trimmed().toInt(),
                 user,
-                true,
-                ui->cb_ServerType->currentData().value<CServer::ServerType>()
+                ui->cb_ServerType->currentData().value<CServer::ServerType>(),
+                true
             );
             CFsdSetup setup(ui->form_ServerFsd->getValue());
             server.setFsdSetup(setup);
@@ -87,6 +87,7 @@ namespace BlackGui
             ui->le_Port->setReadOnly(readOnly);
             ui->le_Password->setReadOnly(readOnly);
             ui->form_ServerFsd->setReadOnly(readOnly);
+            ui->cb_ServerType->setEnabled(!readOnly);
         }
 
         void CServerForm::showPasswordField(bool show)

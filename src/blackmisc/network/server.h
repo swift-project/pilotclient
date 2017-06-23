@@ -52,17 +52,25 @@ namespace BlackMisc
             //! Server Type
             enum ServerType
             {
-                ServerVatsim,
-                ServerFSC,
-                ServerLegacyFSD
+                FSDServerVatsim,
+                FSDServerFSC,
+                FSDServerLegacy,
+                WebService,
+                Unspecified
             };
+
+            //! Allows to iterate over all ServerType
+            static const QList<int> &allServerTypes();
+
+            //! Enum to string
+            static const QString &serverTypeToString(ServerType server);
 
             //! Default constructor.
             CServer() {}
 
             //! Constructor.
             CServer(const QString &name, const QString &description, const QString &address, int port,
-                    const CUser &user, bool isAcceptingConnections = true, ServerType serverType = ServerVatsim);
+                    const CUser &user, ServerType serverType = FSDServerVatsim, bool isAcceptingConnections = true);
 
             //! Get address.
             const QString &getAddress() const { return m_address; }
@@ -118,17 +126,20 @@ namespace BlackMisc
             //! Get setup
             const CFsdSetup &getFsdSetup() const { return this->m_fsdSetup; }
 
+            //! A FSD server?
+            bool isFsdServer() const;
+
             //! Set setup
             void setFsdSetup(const CFsdSetup &setup) { this->m_fsdSetup = setup; }
 
             //! Set server type
-            void setServerType(ServerType serverType) { m_serverType = serverType; }
+            void setServerType(ServerType serverType) { m_serverType = static_cast<int>(serverType); }
 
             //! Get server type
-            ServerType getServerType() const { return m_serverType; }
+            ServerType getServerType() const { return static_cast<ServerType>(m_serverType); }
 
             //! Get server type as string
-            QString getServerTypeAsString() const;
+            const QString &getServerTypeAsString() const;
 
             //! Connected since
             QDateTime getConnectedSince() const { return this->getUtcTimestamp(); }
@@ -167,8 +178,8 @@ namespace BlackMisc
             int       m_port = -1;
             CUser     m_user;
             CFsdSetup m_fsdSetup;
+            int       m_serverType = FSDServerVatsim;
             bool      m_isAcceptingConnections = true; //!< disable server for connections
-            ServerType m_serverType = ServerVatsim;
 
             BLACK_METACLASS(
                 CServer,
@@ -178,8 +189,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(port),
                 BLACK_METAMEMBER(user),
                 BLACK_METAMEMBER(fsdSetup),
-                BLACK_METAMEMBER(isAcceptingConnections),
                 BLACK_METAMEMBER(serverType),
+                BLACK_METAMEMBER(isAcceptingConnections),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison)
             );
         };

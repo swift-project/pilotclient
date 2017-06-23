@@ -12,9 +12,9 @@
 #ifndef BLACKMISC_NETWORK_SERVERLIST_H
 #define BLACKMISC_NETWORK_SERVERLIST_H
 
+#include "server.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/network/server.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 
@@ -25,8 +25,6 @@ namespace BlackMisc
 {
     namespace Network
     {
-        class CServer;
-
         //! Value object encapsulating a list of servers.
         class BLACKMISC_EXPORT CServerList :
             public CSequence<CServer>,
@@ -55,6 +53,9 @@ namespace BlackMisc
 
             //! Add if address not already exists
             void addIfAddressNotExists(const CServerList &servers);
+
+            //! Find all FSD servers
+            CServerList findFsdServers() const;
 
             //! Set FSD setup for all entries
             void setFsdSetup(const CFsdSetup &setup);

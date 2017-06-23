@@ -9,8 +9,6 @@
 
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/metaclassprivate.h"
-#include "blackmisc/network/server.h"
-
 #include <tuple>
 
 namespace BlackMisc
@@ -70,6 +68,16 @@ namespace BlackMisc
             {
                 this->addIfAddressNotExists(s);
             }
+        }
+
+        CServerList CServerList::findFsdServers() const
+        {
+            CServerList fsdServers;
+            for (const CServer &s : *this)
+            {
+                if (s.isFsdServer()) { fsdServers.push_back(s); }
+            }
+            return fsdServers;
         }
 
         void CServerList::setFsdSetup(const CFsdSetup &setup)
