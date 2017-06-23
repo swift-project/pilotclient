@@ -89,7 +89,7 @@ namespace BlackCore
             }
 
             //! \copydoc CContext::getPathAndContextId()
-            virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
+            virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
             static IContextNetwork *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection);

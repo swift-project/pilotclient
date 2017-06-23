@@ -74,7 +74,7 @@ namespace BlackCore
             static const BlackMisc::PhysicalQuantities::CTime &HighlightTime();
 
             //! \copydoc CContext::getPathAndContextId()
-            virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
+            virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
             static IContextSimulator *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);

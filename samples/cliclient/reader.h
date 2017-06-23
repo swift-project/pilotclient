@@ -36,7 +36,7 @@ namespace BlackSample
 
     protected:
         //! Run reader in background
-        void run();
+        virtual void run() override;
 
     signals:
         //! User command

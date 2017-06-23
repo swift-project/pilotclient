@@ -31,7 +31,7 @@ public:
 
 protected:
     //! \copydoc QThread::run
-    void run();
+    virtual void run() override;
 
 signals:
     //! User is asking for weather data

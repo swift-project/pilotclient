@@ -77,7 +77,7 @@ namespace BlackCore
             static const QPixmap &pttHotkeyIcon();
 
             //! \copydoc CContext::getPathAndContextId()
-            virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
+            virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
             static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn);
