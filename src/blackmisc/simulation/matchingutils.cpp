@@ -30,7 +30,7 @@ namespace BlackMisc
 
         CStatusMessage CMatchingUtils::logMessage(const BlackMisc::Aviation::CCallsign &callsign, const QString &message, const CLogCategoryList &categories, CStatusMessage::StatusSeverity s)
         {
-            const CStatusMessage m(categories, s, callsign.isEmpty() ? callsign.toQString() + ": " + message.trimmed() : message.trimmed());
+            const CStatusMessage m(categories, s, callsign.isEmpty() ? message.trimmed() : callsign.toQString() + ": " + message.trimmed());
             return m;
         }
     } // ns
