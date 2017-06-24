@@ -68,6 +68,11 @@ namespace BlackMisc
             //! \threadsafe
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const = 0;
 
+            //! Is aircraft in range?
+            //! \remark convenience function with default implementation
+            //! \threadsafe
+            virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const;
+
             //! Current snapshot
             //! \threadsafe
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const = 0;
@@ -176,6 +181,9 @@ namespace BlackMisc
         public:
             //! \copydoc IRemoteAircraftProvider::getAircraftInRange
             BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const;
+
+            //! \copydoc IRemoteAircraftProvider::isAircraftInRange
+            bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
             int getAircraftInRangeCount() const;
