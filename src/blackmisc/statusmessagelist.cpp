@@ -189,7 +189,9 @@ namespace BlackMisc
 
             for (const CPropertyIndex &index : usedIndexes)
             {
-                rowHtml += QLatin1String("<td>") % statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped() % QLatin1String("</td>");
+                rowHtml += QLatin1String("<td>") %
+                           statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped().replace('\n', "<br>") %
+                           QLatin1String("</td>");
             }
 
             const QString severityClass = statusMessage.getSeverityAsString();
