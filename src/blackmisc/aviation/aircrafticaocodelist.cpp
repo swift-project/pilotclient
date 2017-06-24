@@ -124,6 +124,14 @@ namespace BlackMisc
             });
         }
 
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findMatchingByAnyDescription(const QString &description) const
+        {
+            return this->findBy([&](const CAircraftIcaoCode & code)
+            {
+                return code.matchesAnyDescription(description);
+            });
+        }
+
         CAircraftIcaoCodeList CAircraftIcaoCodeList::findWithIataCode(bool removeWhenSameAsDesignator) const
         {
             return this->findBy([&](const CAircraftIcaoCode & code)
@@ -139,6 +147,14 @@ namespace BlackMisc
             {
                 if (!code.hasFamily()) { return false; }
                 return !removeWhenSameAsDesignator || !code.isFamilySameAsDesignator();
+            });
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByMilitaryFlag(bool military) const
+        {
+            return this->findBy([&](const CAircraftIcaoCode & code)
+            {
+                return (code.isMilitary() == military);
             });
         }
 
@@ -269,35 +285,40 @@ namespace BlackMisc
             if (icaoPattern.hasValidDbKey())
             {
                 const int k = icaoPattern.getDbKey();
-                CAircraftIcaoCode c(this->findByKey(k));
+                const CAircraftIcaoCode c(this->findByKey(k));
                 if (c.hasCompleteData()) { return c; }
             }
 
             // get an initial set of data we can choose from
-            const QString d(icaoPattern.getDesignator());
-            if (d.isEmpty()) { return CAircraftIcaoCode(); }
+            const QString designator(icaoPattern.getDesignator());
+            if (designator.isEmpty()) { return CAircraftIcaoCode(); }
             CAircraftIcaoCodeList codes;
             do
             {
-                codes = this->findByDesignator(d);
+                codes = this->findByDesignator(designator);
                 if (!codes.isEmpty()) break;
 
                 // now we search if the ICAO designator is actually an IATA code
-                codes = this->findByIataCode(d);
+                codes = this->findByIataCode(designator);
                 if (!codes.isEmpty()) break;
 
-                if (d.length() > 4)
+                // search by reduced length
+                if (designator.length() >= 4)
                 {
-                    codes = this->findByDesignator(d.left(4));
+                    codes = this->findByDesignator(designator.left(4));
                     if (!codes.isEmpty()) break;
                 }
 
                 // still empty, try to find by family
-                codes = this->findByFamily(d);
+                codes = this->findByFamily(designator);
                 if (!codes.isEmpty()) break;
 
                 // now try to find as ending
-                codes = this->findEndingWith(d);
+                codes = this->findEndingWith(designator);
+                if (!codes.isEmpty()) break;
+
+                // by any descriptionS
+                codes = this->findMatchingByAnyDescription(designator);
             }
             while (false);
 

@@ -152,6 +152,9 @@ namespace BlackMisc
             //! Combined description
             QString getCombinedModelDescription() const;
 
+            //! Matches any of the (unempty) descriptions
+            bool matchesAnyDescription(const QString &candidate) const;
+
             //! Matches given combined code
             //! \remark * can be used as wildcard, e.g. L*J, L**
             bool matchesCombinedType(const QString &combinedType) const;

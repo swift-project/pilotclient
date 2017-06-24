@@ -39,6 +39,9 @@ namespace BlackMisc
             //! Construct from a base class object.
             CCallsignSet(const CCollection<CCallsign> &other);
 
+            //! The callsign strings
+            QStringList getCallsignStrings() const;
+
             //! Register metadata
             static void registerMetadata();
         };

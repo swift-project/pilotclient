@@ -252,6 +252,23 @@ namespace BlackMisc
             return combined.join(", ");
         }
 
+        bool CAircraftIcaoCode::matchesAnyDescription(const QString &candidate) const
+        {
+            if (this->hasModelDescription())
+            {
+                if (this->getModelDescription().contains(candidate, Qt::CaseInsensitive)) { return true; }
+            }
+            if (this->hasModelIataDescription())
+            {
+                if (this->getModelIataDescription().contains(candidate, Qt::CaseInsensitive)) { return true; }
+            }
+            if (this->hasModelSwiftDescription())
+            {
+                if (this->getModelSwiftDescription().contains(candidate, Qt::CaseInsensitive)) { return true; }
+            }
+            return false;
+        }
+
         bool CAircraftIcaoCode::matchesCombinedType(const QString &combinedType) const
         {
             const QString cc(combinedType.toUpper().trimmed().replace(' ', '*').replace('-', '*'));

@@ -219,6 +219,19 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByCombinedTypeWithColorLivery(const QString &combinedType) const
+        {
+            return this->findByCombinedType(combinedType).findColorLiveries();
+        }
+
+        CAircraftModelList CAircraftModelList::findColorLiveries() const
+        {
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return model.getLivery().isColorLivery();
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findByMilitaryFlag(bool military) const
         {
             return this->findBy([ = ](const CAircraftModel & model)

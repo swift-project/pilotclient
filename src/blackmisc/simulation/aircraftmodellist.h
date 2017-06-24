@@ -138,6 +138,12 @@ namespace BlackMisc
             //! Find by combined code, wildcards possible e.g. L*P, *2J
             CAircraftModelList findByCombinedType(const QString &combinedType) const;
 
+            //! Find aircraft with color livery by combined code, wildcards possible e.g. L*P, *2J
+            CAircraftModelList findByCombinedTypeWithColorLivery(const QString &combinedType) const;
+
+            //! Find models with color liveries
+            CAircraftModelList findColorLiveries() const;
+
             //! Find by military flag
             CAircraftModelList findByMilitaryFlag(bool military) const;
 

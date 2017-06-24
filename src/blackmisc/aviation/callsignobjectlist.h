@@ -57,6 +57,9 @@ namespace BlackMisc
             //! All callsigns
             BlackMisc::Aviation::CCallsignSet getCallsigns() const;
 
+            //! Get callsign string list
+            QStringList getCallsignStrings() const;
+
             //! Find 0..n stations by callsign
             CONTAINER findByCallsign(const CCallsign &callsign) const;
 

@@ -76,11 +76,17 @@ namespace BlackMisc
             //! Find by model description
             CAircraftIcaoCodeList findByDescription(const QString &description) const;
 
+            //! Find matching by any model description
+            CAircraftIcaoCodeList findMatchingByAnyDescription(const QString &description) const;
+
             //! Those with IATA code
             CAircraftIcaoCodeList findWithIataCode(bool removeWhenSameAsDesignator) const;
 
             //! Those with family
             CAircraftIcaoCodeList findWithFamily(bool removeWhenSameAsDesignator) const;
+
+            //! By military flag
+            CAircraftIcaoCodeList findByMilitaryFlag(bool military) const;
 
             //! Find by designator, then best match by rank
             CAircraftIcaoCode findFirstByDesignatorAndRank(const QString &designator) const;

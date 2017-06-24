@@ -26,6 +26,16 @@ namespace BlackMisc
             CCollection<CCallsign>(other)
         { }
 
+        QStringList CCallsignSet::getCallsignStrings() const
+        {
+            QStringList callsigns;
+            for (const CCallsign &cs : *this)
+            {
+                callsigns.push_back(cs.asString());
+            }
+            return callsigns;
+        }
+
         void CCallsignSet::registerMetadata()
         {
             qRegisterMetaType<BlackMisc::CSequence<CCallsign>>();
