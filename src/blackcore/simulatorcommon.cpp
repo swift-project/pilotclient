@@ -198,6 +198,25 @@ namespace BlackCore
         return false;
     }
 
+    void CSimulatorCommon::debugLogMessage(const QString &msg) const
+    {
+        if (!showDebugLogMessage()) { return; }
+        if (msg.isEmpty()) { return; }
+        CLogMessage(this).info(msg);
+    }
+
+    void CSimulatorCommon::debugLogMessage(const QString &funcInfo, const QString &msg) const
+    {
+        if (!showDebugLogMessage()) { return; }
+        if (msg.isEmpty()) { return; }
+        CLogMessage(this).info("%1 %2") << msg << funcInfo;
+    }
+
+    bool CSimulatorCommon::showDebugLogMessage() const
+    {
+        return m_interpolationRenderingSetup.showSimulatorDebugMessages();
+    }
+
     void CSimulatorCommon::reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");

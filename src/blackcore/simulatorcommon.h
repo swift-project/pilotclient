@@ -192,6 +192,15 @@ namespace BlackCore
         //! Parse driver specific details for ISimulator::parseCommandLine
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser);
 
+        //! Display a debug log message based on BlackMisc::Simulation::CInterpolationAndRenderingSetup
+        void debugLogMessage(const QString &msg) const;
+
+        //! Display a debug log message based on BlackMisc::Simulation::CInterpolationAndRenderingSetup
+        void debugLogMessage(const QString &funcInfo, const QString &msg) const;
+
+        //! Show log messages?
+        bool showDebugLogMessage() const;
+
         bool m_pausedSimFreezesInterpolation = false;                      //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         BlackMisc::Simulation::CAircraftModel m_defaultModel;              //!< default model
         int    m_statsUpdateAircraftCountMs = 0;                           //!< statistics update count
