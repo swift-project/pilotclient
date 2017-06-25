@@ -121,14 +121,16 @@ namespace BlackCore
         CVoiceCapabilities CVatsimDataFileReader::getVoiceCapabilityForCallsign(const CCallsign &callsign)
         {
             QReadLocker rl(&this->m_lock);
-            if (this->m_voiceCapabilities.contains(callsign))
-            {
-                return m_voiceCapabilities[callsign];
-            }
-            else
-            {
-                return CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Unknown);
-            }
+            return (this->m_voiceCapabilities.contains(callsign)) ?
+                   m_voiceCapabilities[callsign] :
+                   CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Unknown);
+        }
+
+        QString CVatsimDataFileReader::getFlightPlanRemarksForCallsign(const CCallsign &callsign)
+        {
+            QReadLocker rl(&this->m_lock);
+            return (this->m_flightPlanRemarks.contains(callsign)) ?
+                   m_flightPlanRemarks[callsign] : "";
         }
 
         void CVatsimDataFileReader::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUdpated) const
@@ -237,7 +239,8 @@ namespace BlackCore
                 CServerList                         fsdServers;
                 CAtcStationList                     atcStations;
                 CSimulatedAircraftList              aircraft;
-                QMap<CCallsign, CVoiceCapabilities> voiceCapabilities;
+                QMap<CCallsign, CVoiceCapabilities> voiceCapabilitiesMap;
+                QMap<CCallsign, QString>            flightPlanRemarksMap;
                 QDateTime                           updateTimestampFromFile;
 
                 QStringList clientSectionAttributes;
@@ -289,16 +292,17 @@ namespace BlackCore
                             const double alt = clientPartsMap["altitude"].toDouble();
                             const CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
                             CCoordinateGeodetic position(lat, lng, alt);
-                            CAltitude altitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
-                            QString flightPlanRemarks = clientPartsMap["planned_remarks"];
+                            const CAltitude altitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+                            const QString flightPlanRemarks = clientPartsMap["planned_remarks"].trimmed();
 
                             // Voice capabilities
                             if (!flightPlanRemarks.isEmpty())
                             {
-                                CVoiceCapabilities vc(flightPlanRemarks);
+                                flightPlanRemarksMap[callsign] = flightPlanRemarks;
+                                const CVoiceCapabilities vc(flightPlanRemarks);
                                 if (!vc.isUnknown())
                                 {
-                                    voiceCapabilities.insert(callsign, vc);
+                                    voiceCapabilitiesMap.insert(callsign, vc);
                                 }
                             }
 
@@ -403,9 +407,8 @@ namespace BlackCore
                     this->setUpdateTimestamp(updateTimestampFromFile);
                     this->m_aircraft = aircraft;
                     this->m_atcStations = atcStations;
-                    this->m_voiceCapabilities = voiceCapabilities;
-
-                    // check if we need to save in cache
+                    this->m_voiceCapabilities = voiceCapabilitiesMap;
+                    this->m_flightPlanRemarks = flightPlanRemarksMap;
                 }
 
                 // update cache itself is thread safe
@@ -416,7 +419,6 @@ namespace BlackCore
                     vs.setUtcTimestamp(updateTimestampFromFile);
                     this->m_lastGoodSetup.set(vs);
                 }
-
 
                 // warnings, if required
                 if (!illegalIcaoCodes.isEmpty())

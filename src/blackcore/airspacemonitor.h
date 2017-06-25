@@ -121,6 +121,11 @@ namespace BlackCore
         //! \remarks pseudo synchronous, call the async functions and waits for result
         BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Try to get flight plan remarks
+        //! \remarks returns a value only if the flight plan is already cached
+        //! \threadsafe
+        QString tryToGetFlightPlanRemarks(const BlackMisc::Aviation::CCallsign &callsign) const;
+
         //! Returns this list of other clients we know about
         //! \threadsafe
         BlackMisc::Network::CClientList getOtherClients() const;
@@ -285,6 +290,9 @@ namespace BlackCore
 
         //! Connected with network?
         bool isConnected() const;
+
+        //! Supports VATSIM data file
+        bool supportsVatsimDataFile() const;
 
         //! Distance calculation
         BlackMisc::PhysicalQuantities::CLength calculateDistanceToOwnAircraft(const BlackMisc::Aviation::CAircraftSituation &situation) const;

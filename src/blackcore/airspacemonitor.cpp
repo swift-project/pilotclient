@@ -103,7 +103,7 @@ namespace BlackCore
             this->connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsReadUnchanged, this, &CAirspaceMonitor::onReadUnchangedAtcBookings);
         }
 
-        if (sApp->getWebDataServices()->getVatsimDataFileReader())
+        if (this->supportsVatsimDataFile())
         {
             this->connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::onReceivedDataFile);
         }
@@ -303,6 +303,14 @@ namespace BlackCore
             }
         }
         return plan;
+    }
+
+    QString CAirspaceMonitor::tryToGetFlightPlanRemarks(const CCallsign &callsign) const
+    {
+        if (callsign.isEmpty()) { return ""; }
+        if (m_flightPlanCache.contains(callsign)) { return m_flightPlanCache[callsign].getRemarks(); }
+        if (this->supportsVatsimDataFile()) { return sApp->getWebDataServices()->getVatsimDataFileReader()->getFlightPlanRemarksForCallsign(callsign); }
+        return "";
     }
 
     CUserList CAirspaceMonitor::getUsers() const
@@ -1291,6 +1299,11 @@ namespace BlackCore
     bool CAirspaceMonitor::isConnected() const
     {
         return this->m_network && this->m_network->isConnected();
+    }
+
+    bool CAirspaceMonitor::supportsVatsimDataFile() const
+    {
+        return sApp && sApp->getWebDataServices() && sApp->getWebDataServices()->getVatsimDataFileReader();
     }
 
     CLength CAirspaceMonitor::calculateDistanceToOwnAircraft(const CAircraftSituation &situation) const

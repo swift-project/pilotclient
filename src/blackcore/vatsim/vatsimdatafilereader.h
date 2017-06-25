@@ -109,6 +109,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Flight plan remarks for callsign
+            //! \threadsafe
+            QString getFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
             //! Update aircraft with VATSIM aircraft data from data file
             //! \threadsafe
             void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
@@ -140,11 +144,12 @@ namespace BlackCore
         private:
             void reloadSettings();
 
-            BlackMisc::Aviation::CAtcStationList           m_atcStations;
-            BlackMisc::Simulation::CSimulatedAircraftList  m_aircraft;
+            BlackMisc::Aviation::CAtcStationList m_atcStations;
+            BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
             BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile> m_settings { this, &CVatsimDataFileReader::reloadSettings };
-            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
+            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities; //!< voice capabilities
+            QMap<BlackMisc::Aviation::CCallsign, QString> m_flightPlanRemarks; //!< cache for flight plan remarks
 
             //! Split line and assign values to their corresponding attribute names
             //! \remark attributes expected as lower case
