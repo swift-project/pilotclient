@@ -533,6 +533,8 @@ namespace BlackMisc
             }
 
             this->updateLocalFileNames(otherModel);
+            if (this->hasValidDbKey() && otherModel.hasValidDbKey()) { return; } // both are DB data, treat as being the same except for filename maybe
+
             if (this->m_callsign.isEmpty())       { this->setCallsign(otherModel.getCallsign()); }
             if (this->m_modelString.isEmpty())    { this->setModelString(otherModel.getModelString()); }
             if (this->m_name.isEmpty())           { this->setName(otherModel.getName()); }
