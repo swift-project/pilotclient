@@ -455,7 +455,7 @@ namespace BlackCore
             if (currentLine.endsWith(':')) { clientParts.removeLast(); }
             if (clientParts.size() != clientSectionAttributes.size())
             {
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong parts size");
+                CLogMessage(getLogCategories()).warning("Client parts: %1 attributes: %2 line: '%3'") << clientParts.size() << clientSectionAttributes.size() << currentLine;
                 return parts;
             }
 
