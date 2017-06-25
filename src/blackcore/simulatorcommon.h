@@ -199,24 +199,26 @@ namespace BlackCore
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;                         //!< statistics update time
         BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals;   //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log interpolation
-        BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
         mutable QReadWriteLock m_interpolationRenderingSetupMutex;         //!< mutex protecting setup object
+
+        // setup for debugging, logs ..
+        BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
 
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved;             //!< add this model again when removed, normally used to change model
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< last ground elevation fetched
 
-        bool m_isWeatherActivated = false;                               //!< Is simulator weather activated?
-        BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition;       //!< Own aircraft position at which weather was fetched and injected last
+        bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?
+        BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
         BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorCommon::reloadWeatherSettings }; //!< Selected weather scenario
 
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
     private:
-        bool m_blinkCycle = false;             //!< use for highlighting
-        qint64 m_highlightEndTimeMsEpoch = 0;  //!< end highlighting
-        int m_timerCounter = 0;                //!< allows to calculate n seconds
+        bool m_blinkCycle = false;            //!< used for highlighting
+        qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
+        int m_timerCounter = 0;               //!< allows to calculate n seconds
         QTimer                                        m_oneSecondTimer {this};              //!< multi purpose timer
         BlackMisc::Simulation::CSimulatorPluginInfo   m_simulatorPluginInfo;                //!< info object
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;                //!< all other aircraft are to be ignored

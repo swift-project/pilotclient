@@ -79,7 +79,7 @@ namespace BlackCore
         }
 
         // info
-        CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
+        CLogMessage(this).info("Initialized simulator driver: '%1'") << m_simulatorPluginInfo.toQString();
     }
 
     CSimulatorCommon::~CSimulatorCommon() { }
@@ -94,12 +94,15 @@ namespace BlackCore
     {
         Q_ASSERT_X(remoteAircraft.hasModelString(), Q_FUNC_INFO, "Missing model string");
         Q_ASSERT_X(remoteAircraft.hasCallsign(), Q_FUNC_INFO, "Missing callsign");
+
+        const bool renderingRestricted = m_interpolationRenderingSetup.isRenderingRestricted();
+        if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Restricted: %1 cs: '%2' enabled: %3").arg(boolToYesNo(renderingRestricted), remoteAircraft.getCallsignAsString(), boolToYesNo(remoteAircraft.isEnabled()))); }
         if (!remoteAircraft.isEnabled()) { return false; }
 
         // if not restriced, directly change
-        if (!m_interpolationRenderingSetup.isRenderingRestricted()) { this->physicallyAddRemoteAircraft(remoteAircraft); return true; }
+        if (!renderingRestricted) { this->physicallyAddRemoteAircraft(remoteAircraft); return true; }
 
-        // will be added with next snapshot ps_recalculateRenderedAircraft
+        // restricted -> will be added with next snapshot ps_recalculateRenderedAircraft
         return false;
     }
 

@@ -116,7 +116,8 @@ namespace BlackCore
         //! Returns a list of the users corresponding to the given callsigns
         BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
-        //! Returns the flightplan for the given callsign
+        //! Returns the loaded flight plan for the given callsign
+        //! \remarks only use this if a network loaded flight plan is directly needed
         //! \remarks pseudo synchronous, call the async functions and waits for result
         BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign);
 
@@ -170,9 +171,9 @@ namespace BlackCore
         //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
         virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             QObject *receiver,
-            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
-            std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)>   addedPartsSlot,
-            std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,
+            std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)> addedPartsSlot,
+            std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot,
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
 
@@ -232,10 +233,10 @@ namespace BlackCore
             QString modelString;
         };
 
-        BlackMisc::Aviation::CAtcStationList           m_atcStationsOnline; //!< online ATC stations
-        BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked; //!< booked ATC stations
-        BlackMisc::Network::CClientList                m_otherClients;      //!< client informatiom, thread safe access required
-        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;   //!< aircraft, thread safe access required
+        BlackMisc::Aviation::CAtcStationList          m_atcStationsOnline; //!< online ATC stations
+        BlackMisc::Aviation::CAtcStationList          m_atcStationsBooked; //!< booked ATC stations
+        BlackMisc::Network::CClientList               m_otherClients;      //!< client informatiom, thread safe access required
+        BlackMisc::Simulation::CSimulatedAircraftList m_aircraftInRange;   //!< aircraft, thread safe access required
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_reverseLookupMessages;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_aircraftPartsHistory;
         QMap<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
@@ -247,11 +248,11 @@ namespace BlackCore
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved any cached
 
-        INetwork          *m_network = nullptr;    //!< corresponding network interface
-        CAirspaceAnalyzer *m_analyzer = nullptr;   //!< owned analyzer
-        bool m_enableReverseLookupMsgs  = false;   //!< shall we log. information about the matching process
-        bool m_enableAircraftPartsHistory = true;  //!< shall we keep a history of aircraft parts
-        bool m_bookingsRequested = false;          //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
+        INetwork          *m_network = nullptr;   //!< corresponding network interface
+        CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
+        bool m_enableReverseLookupMsgs = false;   //!< shall we log. information about the matching process
+        bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts
+        bool m_bookingsRequested = false;         //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
 
         // locks
         mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign

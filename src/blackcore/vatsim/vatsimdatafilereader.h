@@ -35,7 +35,6 @@
 class QNetworkReply;
 
 namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
-
 namespace BlackCore
 {
     namespace Vatsim
