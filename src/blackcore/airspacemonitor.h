@@ -360,12 +360,11 @@ namespace BlackCore
             const BlackMisc::Aviation::CCallsign &callsign, const QString &message,
             BlackMisc::CStatusMessage::StatusSeverity severity = BlackMisc::CStatusMessage::SeverityInfo);
 
-        //! Init a new aircraft
-        //! \threadsafe
-        static BlackMisc::Simulation::CSimulatedAircraft initNewAircraft(
-            const BlackMisc::Aviation::CCallsign &callsign,
-            const QString &aircraftIcao, const QString &airlineIcao, const QString &livery,
-            const QString &modelString, BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log = nullptr);
+        //! Reverse lookup, if available flight plan data are considered
+        BlackMisc::Simulation::CAircraftModel reverseLookupModelWithFlightplanData(
+            const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao,
+            const QString &airlineIcao, const QString &livery, const QString &modelString,
+            BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log) const;
 
     private slots:
         //! Create aircraft in range, this is the only place where a new aircraft should be added

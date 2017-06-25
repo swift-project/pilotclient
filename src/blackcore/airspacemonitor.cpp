@@ -22,6 +22,7 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/modulator.h"
 #include "blackmisc/aviation/transponder.h"
+#include "blackmisc/aviation/flightplanutils.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -914,6 +915,16 @@ namespace BlackCore
         this->addReverseLookupMessage(callsign, m);
     }
 
+    CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, CAircraftModel::ModelType type, CStatusMessageList *log) const
+    {
+        const QString fpRemarks = this->tryToGetFlightPlanRemarks(callsign);
+        if (!fpRemarks.isEmpty())
+        {
+            CFlightPlanUtils::parseFlightPlanRemarks(fpRemarks);
+        }
+        return CAircraftMatcher::reverselLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
+    }
+
     bool CAirspaceMonitor::addNewAircraftInRange(const CSimulatedAircraft &aircraft)
     {
         const CCallsign callsign = aircraft.getCallsign();
@@ -1008,10 +1019,11 @@ namespace BlackCore
 
     CSimulatedAircraft CAirspaceMonitor::addOrUpdateAircraftInRange(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
-        CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
+        CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
+        const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
+
         if (aircraft.hasValidCallsign())
         {
-            CAircraftModel model = CAircraftMatcher::reverselLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
             model.updateMissingParts(aircraft.getModel());
             // Use anonymous as originator here, since the remote aircraft provider is ourselves and the call to updateAircraftModel() would
             // return without doing anything.
@@ -1020,16 +1032,9 @@ namespace BlackCore
         }
         else
         {
-            aircraft = CAirspaceMonitor::initNewAircraft(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
-            this->addNewAircraftInRange(aircraft);
+            const CSimulatedAircraft initAircraft(model);
+            this->addNewAircraftInRange(initAircraft);
         }
-        return aircraft;
-    }
-
-    CSimulatedAircraft CAirspaceMonitor::initNewAircraft(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, CAircraftModel::ModelType type, CStatusMessageList *log)
-    {
-        const CAircraftModel model = CAircraftMatcher::reverselLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
-        const CSimulatedAircraft aircraft(model);
         return aircraft;
     }
 
@@ -1058,8 +1063,8 @@ namespace BlackCore
             this->sendInitialPilotQueries(callsign, true, !hasFsInnPacket);
 
             // new client, there is a chance it has been already created by custom packet
-            const CClient c(callsign);
-            this->addNewClient(c);
+            const CClient client(callsign);
+            this->addNewClient(client);
         }
         else
         {

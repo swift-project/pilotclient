@@ -73,11 +73,10 @@ namespace BlackCore
 
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModel reverselLookupModel(
-            const BlackMisc::Aviation::CCallsign &callsign,
-            const QString &networkAircraftIcao, const QString &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
-            BlackMisc::Simulation::CAircraftModel::ModelType type,
-            BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModel reverselLookupModel(const BlackMisc::Aviation::CCallsign &callsign,
+                const BlackMisc::Aviation::CAircraftIcaoCode &networkAircraftIcao, const BlackMisc::Aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
+                BlackMisc::Simulation::CAircraftModel::ModelType type,
+                BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe

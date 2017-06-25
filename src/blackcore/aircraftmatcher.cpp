@@ -114,11 +114,11 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::reverselLookupModel(const CCallsign &callsign, const QString &networkAircraftIcao, const QString &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, CAircraftModel::ModelType type, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverselLookupModel(const CCallsign &callsign, const CAircraftIcaoCode &networkAircraftIcao, const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
         CLivery livery;
         livery.setAirlineIcaoCode(networkAirlineIcao);
-        CAircraftModel model(networkModelString, type, "", CAircraftIcaoCode(networkAircraftIcao), livery);
+        CAircraftModel model(networkModelString, type, "", networkAircraftIcao, livery);
         model.setCallsign(callsign);
         model = CAircraftMatcher::reverselLookupModel(model, networkLiveryInfo, log);
         return model;
