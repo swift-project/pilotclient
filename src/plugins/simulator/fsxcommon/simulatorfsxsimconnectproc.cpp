@@ -156,21 +156,13 @@ namespace BlackSimPlugin
                     bool success = simulatorFsx->setSimConnectObjectId(requestId, objectId);
                     if (!success) { break; } // not an request ID of ours
 
-                    success = simulatorFsx->simulatorReportedObjectAdded(objectId);
-                    if (success)
-                    {
-                        const CSimConnectObject simObject = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
-                        HRESULT result = S_OK;
-                        result += simulatorFsx->requestDataForSimObject(simObject);
-                        result += simulatorFsx->requestLightsForSimObject(simObject);
-                        Q_UNUSED(result);
-                    }
-                    else
+                    success = simulatorFsx->simulatorReportedObjectAdded(objectId); // trigger follow up actions
+                    if (!success)
                     {
                         const CSimulatedAircraft remoteAircraft(simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId).getAircraft());
-                        const CStatusMessage msgAdd = CStatusMessage(simulatorFsx).error("Cannot add object %1") << objectId;
-                        CLogMessage::preformatted(msgAdd);
-                        emit simulatorFsx->physicallyAddingRemoteModelFailed(remoteAircraft, msgAdd);
+                        const CStatusMessage msg = CStatusMessage(simulatorFsx).error("Cannot add object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
+                        CLogMessage::preformatted(msg);
+                        emit simulatorFsx->physicallyAddingRemoteModelFailed(remoteAircraft, msg);
                     }
                     break;
                 }

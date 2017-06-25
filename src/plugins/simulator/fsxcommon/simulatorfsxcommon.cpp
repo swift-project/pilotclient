@@ -52,7 +52,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
             m_addPendingAircraftTimer.setInterval(AddPendingAircraftIntervalMs);
-            connect(&m_addPendingAircraftTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::addPendingAircraft);
+            connect(&m_addPendingAircraftTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::addPendingAircraftByTimer);
 
             m_useFsuipc = false;
             m_defaultModel =
@@ -95,7 +95,8 @@ namespace BlackSimPlugin
             initEvents();
             initDataDefinitionsWhenConnected();
             m_simConnectTimerId = startTimer(DispatchIntervalMs);
-            m_addPendingAircraftTimer.start();
+            // do not start m_addPendingAircraftTimer here, it will be started when object was added
+
             return true;
         }
 
@@ -104,6 +105,7 @@ namespace BlackSimPlugin
             if (!m_simConnected) { return true; }
             if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
             m_simConnectTimerId = -1;
+            this->onSimStopped(); // treat as stopped
             if (m_hSimConnect)
             {
                 SimConnect_Close(m_hSimConnect);
@@ -119,72 +121,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
-            const CCallsign callsign(newRemoteAircraft.getCallsign());
-
-            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
-            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
-            Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
-            if (callsign.isEmpty()) { return false; }
-
-            // check if we have to do something
-            m_addPendingAircraft.removeByCallsign(callsign);
-            if (m_simConnectObjects.contains(callsign))
-            {
-                const CSimConnectObject simObj = m_simConnectObjects[callsign];
-                if (simObj.isPendingAdded())
-                {
-                    return true; // already pending
-                }
-                else
-                {
-                    // same model, nothing will change, otherwise add again when removed
-                    if (simObj.getAircraft().getModel() != newRemoteAircraft.getModel())
-                    {
-                        m_aircraftToAddAgainWhenRemoved.push_back(newRemoteAircraft);
-                    }
-                    return false;
-                }
-            }
-
-            // create AI
-            bool adding = false;
-            const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-            CSimulatedAircraft addedAircraft(newRemoteAircraft);
-            if (isConnected())
-            {
-                const DWORD requestId = obtainRequestIdSimData();
-                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
-                const QString modelString(addedAircraft.getModelString());
-
-                if (m_interpolationRenderingSetup.showSimulatorDebugMessages())
-                {
-                    CLogMessage(this).debug() << "physicallyAddRemoteAircraft" << callsign.toQString() << "request" << requestId << "model" << modelString;
-                    CLogMessage(this).debug() << "initial position" << fsxPositionToString(initialPosition);
-                }
-
-                HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
-                if (hr != S_OK)
-                {
-                    const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << aircraftModel.getModelString();
-                    CLogMessage::preformatted(msg);
-                    emit physicallyAddingRemoteModelFailed(addedAircraft, msg);
-                }
-                else
-                {
-                    // we will request a new aircraft by request ID, later we will receive its object id
-                    // so far this object id is -1
-                    addedAircraft.setRendered(false);
-                    CSimConnectObject simObject(addedAircraft, requestId, &m_interpolationLogger);
-                    if (addedAircraft.isPartsSynchronized()) { simObject.addAircraftParts(addedAircraft.getParts()); }
-                    m_simConnectObjects.insert(callsign, simObject);
-                    adding = true;
-                }
-            }
-            else
-            {
-                CLogMessage(this).warning("FSX: Not connected, not added aircraft '%1' '%2'") << callsign.toQString() << aircraftModel.getModelString();
-            }
-            return adding;
+            return this->physicallyAddRemoteAircraftImpl(newRemoteAircraft, ExternalCall);
         }
 
         bool CSimulatorFsxCommon::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
@@ -331,7 +268,17 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::onSimRunning()
         {
+            QTimer::singleShot(DeferSimulatingFlagMs, this, [ = ]
+            {
+                m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
+                this->onSimRunningDefered(m_simulatingChangedTs);
+            });
+        }
+
+        void CSimulatorFsxCommon::onSimRunningDefered(qint64 referenceTs)
+        {
             if (m_simSimulating) { return; }
+            if (referenceTs != m_simulatingChangedTs) { return; } // changed, so no longer valid
             m_simSimulating = true; // only place where this should be set to true
             m_simConnected = true;
             HRESULT hr = SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraft,
@@ -372,6 +319,7 @@ namespace BlackSimPlugin
             // stopping events in FSX: Load menu, weather and season
             const int oldStatus = getSimulatorStatus();
             m_simSimulating = false;
+            m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
             emitSimulatorCombinedStatus(oldStatus);
         }
 
@@ -383,6 +331,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::onSimExit()
         {
             // reset complete state, we are going down
+            m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
             disconnectFrom();
         }
 
@@ -402,7 +351,7 @@ namespace BlackSimPlugin
 
             if (simulatorOwnAircraft.pitch < -90.0 || simulatorOwnAircraft.pitch >= 90.0)
             {
-                CLogMessage(this).warning("FSX: Pitch value out of limits: %1") << simulatorOwnAircraft.pitch;
+                CLogMessage(this).warning("FSX: Pitch value (own aircraft) out of limits: %1") << simulatorOwnAircraft.pitch;
             }
             BlackMisc::Aviation::CAircraftSituation aircraftSituation;
             aircraftSituation.setPosition(position);
@@ -541,61 +490,120 @@ namespace BlackSimPlugin
             this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
         }
 
-        bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectID)
+        bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
         {
-            const CSimConnectObject simObject = this->m_simConnectObjects.getSimObjectForObjectId(objectID);
+            const CSimConnectObject simObject = this->m_simConnectObjects.getSimObjectForObjectId(objectId);
             const CCallsign callsign(simObject.getCallsign());
             if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty()) { return false; }
 
             // we know the object has been created. But it can happen it is directly removed afterwards
-            QTimer::singleShot(500, this, [ = ] { this->deferredSimulatorReportedObjectAdded(callsign); });
+            QTimer::singleShot(500, this, [ = ]
+            {
+                // also triggers new add
+                this->verifyAddedRemoteAircraft(simObject.getAircraft());
+            });
             return true;
         }
 
-        bool CSimulatorFsxCommon::deferredSimulatorReportedObjectAdded(const CCallsign &callsign)
+        void CSimulatorFsxCommon::verifyAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraftIn)
         {
-            if (callsign.isEmpty()) { return false; }
-            if (!m_simConnectObjects.contains(callsign)) { return false; } // removed in mean time
+            CStatusMessage msg;
+            CSimulatedAircraft remoteAircraft = remoteAircraftIn;
+            const CCallsign callsign(remoteAircraft.getCallsign());
 
-            CSimConnectObject &simObject = m_simConnectObjects[callsign];
-            if (!simObject.hasValidRequestAndObjectId() || simObject.isPendingRemoved()) { return false; }
-
-            Q_ASSERT_X(simObject.isPendingAdded(), Q_FUNC_INFO, "already confirmed");
-            simObject.setConfirmedAdded(true);
-            const DWORD objectId = simObject.getObjectId();
-
-            if (m_interpolationRenderingSetup.showSimulatorDebugMessages())
+            do
             {
-                CLogMessage(this).debug() << "Adding AI" << callsign.toQString() << "confirmed" << "id" << objectId << "model" << simObject.getAircraftModelString();
+                // no callsign
+                if (callsign.isEmpty())
+                {
+                    msg = CLogMessage(this).error("Cannot confirm AI object, empty callsign");
+                    break;
+                }
+
+                // removed in meantime
+                const bool aircraftStillInRange = this->isAircraftInRange(callsign);
+                if (!m_simConnectObjects.contains(callsign))
+                {
+                    if (aircraftStillInRange)
+                    {
+                        msg = CLogMessage(this).warning("Callsign '%1' removed in meantime, but still in range") << callsign.toQString();
+                    }
+                    else
+                    {
+                        this->removeAsPendingAndAddAgain(callsign);
+                        msg = CLogMessage(this).info("Callsign '%1' removed in meantime and no longer in range") << callsign.toQString();
+                    }
+                    break;
+                }
+
+                CSimConnectObject &simObject = m_simConnectObjects[callsign];
+                remoteAircraft = simObject.getAircraft(); // update, if something has changed
+
+                if (!simObject.hasValidRequestAndObjectId() || simObject.isPendingRemoved())
+                {
+                    msg = CStatusMessage(this).warning("Object for callsign '%1'/id: %2 removed in meantime/invalid") << callsign.toQString() << simObject.getObjectId();
+                    break;
+                }
+
+                Q_ASSERT_X(simObject.isPendingAdded(), Q_FUNC_INFO, "already confirmed, this should be the only place");
+                simObject.setConfirmedAdded(true);
+
+                // P3D also has SimConnect_AIReleaseControlEx;
+                const DWORD requestId = obtainRequestIdSimData();
+                const DWORD objectId = simObject.getObjectId();
+                HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
+                hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1,
+                                                     SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1,
+                                                     SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1,
+                                                     SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+                if (hr != S_OK)
+                {
+                    msg = CStatusMessage(this).error("Cannot confirm object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
+                    break;
+                }
+
+                // request data on object
+                this->requestDataForSimObject(simObject);
+                this->requestLightsForSimObject(simObject);
+
+                this->removeAsPendingAndAddAgain(callsign); // no longer try to add
+                const bool updated = this->updateAircraftRendered(callsign, true);
+                if (updated)
+                {
+                    emit aircraftRenderingChanged(simObject.getAircraft());
+                    if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' model: '%2' verified, request/object id: %3 %4").arg(callsign.toQString(), remoteAircraft.getModelString()).arg(requestId).arg(objectId)); }
+                }
+            }
+            while (false);
+
+            // log errors and emit signal
+            if (!msg.isEmpty())
+            {
+                CLogMessage::preformatted(msg);
+                emit this->physicallyAddingRemoteModelFailed(CSimulatedAircraft(), msg);
             }
 
-            // P3D also has SimConnect_AIReleaseControlEx;
-            const DWORD requestId = obtainRequestIdSimData();
-            HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
-            if (hr == S_OK)
+            // trigger new adding
+            if (!m_addPendingAircraft.isEmpty())
             {
-                SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1,
-                                               SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1,
-                                               SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1,
-                                               SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                this->addPendingAircraftAfterAdded();
             }
-            else
-            {
-                CLogMessage(this).error("Adding AI %1 failed") << callsign.toQString();
-                return false;
-            }
-
-            const bool updated = this->updateAircraftRendered(callsign, true);
-            if (updated)
-            {
-                emit aircraftRenderingChanged(simObject.getAircraft());
-            }
-            return true;
         }
 
-        void CSimulatorFsxCommon::addPendingAircraft()
+        void CSimulatorFsxCommon::addPendingAircraftByTimer()
+        {
+            this->addPendingAircraft(AddByTimer);
+        }
+
+        void CSimulatorFsxCommon::addPendingAircraftAfterAdded()
+        {
+            this->addPendingAircraft(AddAfterAdded);
+        }
+
+        void CSimulatorFsxCommon::addPendingAircraft(AircraftAddMode mode)
         {
             if (m_addPendingAircraft.isEmpty()) { return; }
             const CCallsignSet aircraftCallsignsInRange(getAircraftInRangeCallsigns());
@@ -613,18 +621,27 @@ namespace BlackSimPlugin
                     toBeRemovedCallsigns.push_back(aircraft.getCallsign());
                 }
             }
-            m_addPendingAircraft.removeByCallsigns(toBeRemovedCallsigns);
 
-            // add aircraft, but non blocking
-            int t = 100;
-            for (const CSimulatedAircraft &aircraft : as_const(toBeAddedAircraft))
+            // no longer required to be added
+            m_addPendingAircraft.removeByCallsigns(toBeRemovedCallsigns);
+            m_aircraftToAddAgainWhenRemoved.removeByCallsigns(toBeRemovedCallsigns);
+
+            // add aircraft, but "non blocking"
+            if (!toBeAddedAircraft.isEmpty())
             {
-                QTimer::singleShot(t, this, [ = ]
+                const CSimulatedAircraft nextPendingAircraft(m_addPendingAircraft.front());
+                QTimer::singleShot(100, this, [ = ]
                 {
-                    this->physicallyAddRemoteAircraft(aircraft);
+                    this->physicallyAddRemoteAircraftImpl(nextPendingAircraft, mode);
                 });
-                t += 100;
             }
+        }
+
+        void CSimulatorFsxCommon::removeAsPendingAndAddAgain(const CCallsign &callsign)
+        {
+            if (callsign.isEmpty()) { return; }
+            this->m_addPendingAircraft.removeByCallsign(callsign);
+            this->m_aircraftToAddAgainWhenRemoved.removeByCallsign(callsign);
         }
 
         bool CSimulatorFsxCommon::simulatorReportedObjectRemoved(DWORD objectID)
@@ -650,7 +667,7 @@ namespace BlackSimPlugin
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
                     this->m_addPendingAircraft.push_back(simObject.getAircraft());
-                    CLogMessage(this).info("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
                 else
                 {
@@ -671,14 +688,18 @@ namespace BlackSimPlugin
             if (m_aircraftToAddAgainWhenRemoved.containsCallsign(callsign))
             {
                 const CSimulatedAircraft aircraftAddAgain = m_aircraftToAddAgainWhenRemoved.findFirstByCallsign(callsign);
-                QTimer::singleShot(1000, this,  [ = ] { this->physicallyAddRemoteAircraft(aircraftAddAgain); });
+                m_aircraftToAddAgainWhenRemoved.removeByCallsign(callsign);
+                QTimer::singleShot(1000, this,  [ = ]
+                {
+                    this->physicallyAddRemoteAircraftImpl(aircraftAddAgain, AddedAfterRemoved);
+                });
             }
-            return ok;
+            return removed;
         }
 
-        bool CSimulatorFsxCommon::setSimConnectObjectId(DWORD requestID, DWORD objectID)
+        bool CSimulatorFsxCommon::setSimConnectObjectId(DWORD requestId, DWORD objectId)
         {
-            return this->m_simConnectObjects.setSimConnectObjectIdForRequestId(requestID, objectID, true);
+            return this->m_simConnectObjects.setSimConnectObjectIdForRequestId(requestId, objectId, true);
         }
 
         bool CSimulatorFsxCommon::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
@@ -701,9 +722,28 @@ namespace BlackSimPlugin
             dispatch();
         }
 
+        const QString &CSimulatorFsxCommon::modeToString(CSimulatorFsxCommon::AircraftAddMode mode)
+        {
+            static const QString e("external call");
+            static const QString pt("add pending by timer");
+            static const QString oa("add pending after object added");
+            static const QString ar("add again after removed");
+            static const QString dontKnow("???");
+
+            switch (mode)
+            {
+            case ExternalCall: return e;
+            case AddByTimer: return pt;
+            case AddAfterAdded: return oa;
+            case AddedAfterRemoved: return ar;
+            default: break;
+            }
+            return dontKnow;
+        }
+
         void CSimulatorFsxCommon::dispatch()
         {
-            HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
+            const HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
             if (hr != S_OK)
             {
                 m_dispatchErrors++;
@@ -734,13 +774,95 @@ namespace BlackSimPlugin
             }
         }
 
+        bool CSimulatorFsxCommon::physicallyAddRemoteAircraftImpl(const CSimulatedAircraft &newRemoteAircraft, CSimulatorFsxCommon::AircraftAddMode addMode)
+        {
+            const CCallsign callsign(newRemoteAircraft.getCallsign());
+
+            // entry checks
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
+            Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
+
+            // reset timer
+            m_addPendingAircraftTimer.start(AddPendingAircraftIntervalMs); // restart
+
+            const bool hasPendingAdded = m_simConnectObjects.containsPendingAdded();
+            const bool canAdd = m_simSimulating && m_simConnected && !hasPendingAdded;
+
+            Q_ASSERT_X(!hasPendingAdded || m_simConnectObjects.countPendingAdded() < 2, Q_FUNC_INFO, "There must be only 0..1 pending objects");
+            if (this->showDebugLogMessage())
+            {
+                this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' mode: '%2' model: '%3'").arg(newRemoteAircraft.getCallsignAsString(), modeToString(addMode), newRemoteAircraft.getModelString()));
+                this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' pending callsigns: '%2', pending objects: '%3'").arg(newRemoteAircraft.getCallsignAsString(), m_addPendingAircraft.getCallsignStrings().join(", "), m_simConnectObjects.getPendingAddedCallsigns().getCallsignStrings().join(", ")));
+            }
+
+            // do we need to remove/add again because something has changed
+            if (m_simConnectObjects.contains(callsign))
+            {
+                const CSimConnectObject simObj = m_simConnectObjects[callsign];
+                const QString newModelString(newRemoteAircraft.getModelString());
+                const QString simObjModelString(simObj.getAircraftModelString());
+                const bool sameModel = (simObjModelString == newModelString); // compare on string only (other attributes might change such as mode)
+
+                // same model, nothing will change, otherwise add again when removed
+                if (sameModel)
+                {
+                    if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' re-added same model '%2'").arg(newRemoteAircraft.getCallsignAsString(), newModelString)); }
+                    return true;
+                }
+
+                this->physicallyRemoveRemoteAircraft(newRemoteAircraft.getCallsign());
+                m_aircraftToAddAgainWhenRemoved.replaceOrAddByCallsign(newRemoteAircraft);
+                if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' re-added changed model '%2', will be added again").arg(newRemoteAircraft.getCallsignAsString(), newModelString)); }
+                return false;
+            }
+
+            // check if we can add, do not add if simulator is stopped or other objects pending
+            if (!canAdd)
+            {
+                m_addPendingAircraft.replaceOrAddByCallsign(newRemoteAircraft);
+                return false;
+            }
+
+            this->removeAsPendingAndAddAgain(callsign);
+
+            // create AI
+            bool adding = false;
+            const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+            CSimulatedAircraft addedAircraft(newRemoteAircraft);
+
+            const DWORD requestId = obtainRequestIdSimData();
+            SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
+            const QString modelString(addedAircraft.getModelString());
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
+
+            const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
+            if (hr != S_OK)
+            {
+                const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << aircraftModel.getModelString();
+                CLogMessage::preformatted(msg);
+                emit physicallyAddingRemoteModelFailed(addedAircraft, msg);
+            }
+            else
+            {
+                // we will request a new aircraft by request ID, later we will receive its object id
+                // so far this object id is -1
+                addedAircraft.setRendered(false);
+                CSimConnectObject simObject(addedAircraft, requestId, &m_interpolationLogger);
+                if (addedAircraft.isPartsSynchronized()) { simObject.addAircraftParts(addedAircraft.getParts()); }
+                m_simConnectObjects.insert(callsign, simObject);
+                adding = true;
+            }
+            return adding;
+        }
+
         bool CSimulatorFsxCommon::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             // only remove from sim
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
-            m_addPendingAircraft.removeByCallsign(callsign);
+            this->removeAsPendingAndAddAgain(callsign);
             if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
 
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
@@ -748,21 +870,23 @@ namespace BlackSimPlugin
             if (simObject.isPendingAdded())
             {
                 // problem: we try to delete an aircraft just requested to be added
-                return false; //! \fixme improve, since this scenario is not really covered
+                // best solution so far, call remove again with a delays
+                QTimer::singleShot(2000, this, [ = ]
+                {
+                    this->physicallyRemoveRemoteAircraft(callsign);
+                });
+                return false; // not yet deleted
             }
 
             simObject.setPendingRemoved(true);
-            if (m_interpolationRenderingSetup.showSimulatorDebugMessages())
-            {
-                CLogMessage(this).debug() << "physicallyRemoveRemoteAircraft" << callsign.toQString();
-            }
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' request/object id: %2/%3").arg(callsign.toQString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
 
             // call in SIM
             SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_requestIdSimData++));
             m_hints.remove(simObject.getCallsign());
 
             // mark in provider
-            bool updated = updateAircraftRendered(callsign, false);
+            const bool updated = updateAircraftRendered(callsign, false);
             if (updated)
             {
                 CSimulatedAircraft aircraft(simObject.getAircraft());
@@ -911,6 +1035,7 @@ namespace BlackSimPlugin
                 // happening if aircraft is not yet added to simulator or to be deleted
                 if (simObj.isPendingAdded()) { continue; }
                 if (simObj.isPendingRemoved()) { continue; }
+                if (!simObj.hasCurrentLightsInSimulator()) { continue; } // wait until we have light state
 
                 const CCallsign callsign(simObj.getCallsign());
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
@@ -1091,7 +1216,8 @@ namespace BlackSimPlugin
             SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventLandingLightsSet, lights.isLandingOn() ? 1.0 : 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventStrobesSet, lights.isStrobeOn() ? 1.0 : 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
-            // lights we need to toggle (risk with quickly changing values that we accidentally toggle back)
+            // lights we need to toggle
+            // (potential risk with quickly changing values that we accidentally toggle back, also we need the light state before we can toggle)
             sendToggledLightsToSimulator(simObj, lights);
 
             // done
@@ -1144,15 +1270,17 @@ namespace BlackSimPlugin
                 return;
             }
 
-            // missing lights info from simulator
-            CLogMessage(this).info("Missing light state for '%1'") << callsign;
-            QTimer::singleShot(2500, this, [ = ]
+            // missing lights info from simulator so far
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Missing light state in simulator for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
+
+            QTimer::singleShot(DeferResendingLights, this, [ = ]
             {
                 if (!m_simConnectObjects.contains(callsign)) { return; }
                 const CSimConnectObject currentSimObj = m_simConnectObjects[callsign];
                 if (!currentSimObj.hasValidRequestAndObjectId()) { return; } // stale
-                if (lightsWanted != currentSimObj.getLightsAsSent())  { return; } // changed in between
-                sendToggledLightsToSimulator(currentSimObj, lightsWanted, true);
+                if (lightsWanted != currentSimObj.getLightsAsSent())  { return; } // changed in between, so another call sendToggledLightsToSimulator is pending
+                if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Resending light state for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
+                this->sendToggledLightsToSimulator(currentSimObj, lightsWanted, true);
             });
         }
 
@@ -1276,7 +1404,8 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::reset()
         {
             if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
-            m_simConnectTimerId   = -1;
+            m_simConnectTimerId = -1;
+            m_simulatingChangedTs = -1;
             m_simConnected = false;
             m_simSimulating = false;
             m_syncDeferredCounter =  0;
@@ -1309,7 +1438,7 @@ namespace BlackSimPlugin
 
         QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
         {
-            const QString positionStr("Lat: %1 lng: %2 alt: %3ft pitch: %4 bank: %5 hdg: %6 airspeed: %7kts onGround: %8");
+            const QString positionStr("Lat: %1deg lng: %2deg alt: %3ft pitch: %4deg bank: %5deg hdg: %6deg airspeed: %7kts onGround: %8");
             return positionStr.
                    arg(position.Latitude).arg(position.Longitude).arg(position.Altitude).
                    arg(position.Pitch).arg(position.Bank).arg(position.Heading).arg(position.Airspeed).arg(position.OnGround);
@@ -1330,6 +1459,8 @@ namespace BlackSimPlugin
             {
                 physicallyRemoveRemoteAircraft(callsign);
             }
+
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1'").arg(toBeRemoved.toStringList().join(", "))); }
             return toBeRemoved;
         }
 

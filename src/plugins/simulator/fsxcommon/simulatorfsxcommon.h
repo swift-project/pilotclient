@@ -143,25 +143,54 @@ namespace BlackSimPlugin
             virtual void timerEvent(QTimerEvent *event) override;
 
         private:
+            //! Reason for adding an aircraft
+            enum AircraftAddMode
+            {
+                ExternalCall,     //!< normal external request to add aircraft
+                AddByTimer,       //!< add pending aircraft by timer
+                AddAfterAdded,    //!< add pending because object successfully added
+                AddedAfterRemoved //!< added again after removed
+            };
+
+            //! Mode as string
+            const QString &modeToString(AircraftAddMode mode);
+
             //! Dispatch SimConnect messages
             void dispatch();
+
+            //! Implementation of add remote aircraft, which also handles FSX specific adding one by one
+            //! \remark main purpose of this function is to only add one aircraft at a time,
+            //!         and only if simulator is not paused/stopped
+            bool physicallyAddRemoteAircraftImpl(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft, AircraftAddMode addMode);
 
             //! Remove aircraft no longer in provider
             //! \remark kind of cleanup function, in an ideal this should never need to cleanup something
             BlackMisc::Aviation::CCallsignSet physicallyRemoveAircraftNotInProvider();
 
-            //! Handle that an object has been added in simulator
-            //! \remark checks if the object was really added after an add request and not directly removed again
-            bool deferredSimulatorReportedObjectAdded(const BlackMisc::Aviation::CCallsign &callsign);
+            //! Verify that an object has been added in simulator
+            //! \remark checks if the object was really added after an "add request" and not directly removed again
+            void verifyAddedRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraftIn);
+
+            //! Add next aircraft based on timer
+            void addPendingAircraftByTimer();
+
+            //! Add next aircraft after another has been confirmed
+            void addPendingAircraftAfterAdded();
 
             //! Try to add the next aircraft (one by one)
-            void addPendingAircraft();
+            void addPendingAircraft(AircraftAddMode mode);
+
+            //! Remove as m_addPendingAircraft and m_aircraftToAddAgainWhenRemoved
+            void removeAsPendingAndAddAgain(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Call this method to declare the simulator connected
             void setSimConnected();
 
             //! Called when simulator has started
             void onSimRunning();
+
+            //! Deferred version of onSimRunning to avoid jitter
+            void onSimRunningDefered(qint64 referenceTs);
 
             //! Slot called every visual frame
             void onSimFrame();
@@ -200,6 +229,7 @@ namespace BlackSimPlugin
 
             //! Send lights to simulator (those which have to be toggled)
             //! \remark challenge here is that I can only sent those value if I have already obtained the current light state from simulator
+            //! \param force send lights even if they appear to be the same
             void sendToggledLightsToSimulator(const CSimConnectObject &simObj, const BlackMisc::Aviation::CAircraftLights &lightsWanted, bool force = false);
 
             //! Called when data about our own aircraft are received
@@ -265,12 +295,15 @@ namespace BlackSimPlugin
             static constexpr int RequestSimDataOffset = 0 * MaxSimObjects;
             static constexpr int RequestLightsOffset  = 1 * MaxSimObjects;
             static constexpr int AddPendingAircraftIntervalMs = 20 * 1000;
-            static constexpr int DispatchIntervalMs = 10;
+            static constexpr int DispatchIntervalMs = 10; //!< how often with run the FSX event queue
+            static constexpr int DeferSimulatingFlagMs = 1500; //! simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we defer detection
+            static constexpr int DeferResendingLights = 2500;  //! Resend light state when aircraft light state was not yet available
 
             QString m_simConnectVersion;            //!< SimConnect version
             bool m_simConnected  = false;           //!< Is simulator connected?
             bool m_simSimulating = false;           //!< Simulator running?
             bool m_useSbOffsets  = true;            //!< with SB offsets
+            qint64 m_simulatingChangedTs = -1;      //!< timestamp, when simulating changed (used to avoid jitter)
             int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
             int  m_simConnectTimerId = -1;          //!< Timer identifier
             int  m_skipCockpitUpdateCycles = 0;     //!< skip some update cycles to allow changes in simulator cockpit to be set
