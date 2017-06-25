@@ -129,14 +129,12 @@ namespace BlackCore
         private:
             bool getCmdLineClientIdAndKey(int &id, QString &key) const;
 
-        private slots:
             void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
             void replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
             void replyToConfigQuery(const BlackMisc::Aviation::CCallsign &callsign);
             void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
             void sendIncrementalAircraftConfig();
 
-        private:
             //! \name Shimlib callbacks
             //! @{
             static void onConnectionStatusChanged(VatSessionID, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbvar);
@@ -188,7 +186,6 @@ namespace BlackCore
                 static QJsonObject aircraftConfigRequest();
             };
 
-        private slots:
             void process();
             void sendPositionUpdate();
             void sendInterimPositions();
