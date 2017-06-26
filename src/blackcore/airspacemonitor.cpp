@@ -605,7 +605,7 @@ namespace BlackCore
         { QWriteLocker l(&m_lockParts); m_partsByCallsign.clear(); m_aircraftSupportingParts.clear(); }
         { QWriteLocker l(&m_lockSituations); m_situationsByCallsign.clear(); }
         { QWriteLocker l(&m_lockMessages); m_reverseLookupMessages.clear(); }
-        { QWriteLocker l(&m_lockAircraft);  m_aircraftInRange.clear(); }
+        { QWriteLocker l(&m_lockAircraft); m_aircraftInRange.clear(); }
 
         // non thread safe parts
         m_flightPlanCache.clear();
@@ -915,12 +915,30 @@ namespace BlackCore
         this->addReverseLookupMessage(callsign, m);
     }
 
-    CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, CAircraftModel::ModelType type, CStatusMessageList *log) const
+    CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(const CCallsign &callsign, const QString &aircraftIcaoString, const QString &airlineIcaoString, const QString &livery, const QString &modelString, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
         const QString fpRemarks = this->tryToGetFlightPlanRemarks(callsign);
+        CAircraftIcaoCode aircraftIcao(aircraftIcaoString);
+        CAirlineIcaoCode airlineIcao(airlineIcaoString);
         if (!fpRemarks.isEmpty())
         {
-            CFlightPlanUtils::parseFlightPlanRemarks(fpRemarks);
+            const CFlightPlanUtils::AirlineRemarks ar = CFlightPlanUtils::parseFlightPlanAirlineRemarks(fpRemarks);
+            if (ar.hasAnyRemarks())
+            {
+                const QString airlineName = CAircraftMatcher::reverseLookupAirlineName(ar.flightOperator, callsign, log);
+                if (!airlineName.isEmpty())
+                {
+                    airlineIcao.setName(airlineName);
+                    this->addReverseLookupMessage(callsign, QString("Setting airline name '%1'").arg(airlineName));
+                }
+
+                const QString telephony = CAircraftMatcher::reverseLookupTelephonyDesignator(ar.radioTelephony, callsign, log);
+                if (!telephony.isEmpty())
+                {
+                    airlineIcao.setTelephonyDesignator(telephony);
+                    this->addReverseLookupMessage(callsign, QString("Setting telephoy designator '%1'").arg(telephony));
+                }
+            }
         }
         return CAircraftMatcher::reverselLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
     }

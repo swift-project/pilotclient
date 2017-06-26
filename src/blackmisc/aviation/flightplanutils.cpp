@@ -14,9 +14,45 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        void CFlightPlanUtils::parseFlightPlanRemarks(const QString &remarks)
+        CFlightPlanUtils::AirlineRemarks CFlightPlanUtils::parseFlightPlanAirlineRemarks(const QString &remarks)
         {
-            if (remarks.isEmpty()) { return; }
+            AirlineRemarks ar;
+            if (remarks.isEmpty()) { return ar; }
+            const QString r = remarks.toUpper();
+            if (r.contains("/CALLSIGN"))
+            {
+                // used similar to radio telephony
+                ar.radioTelephony = cut(r, "/CALLSIGN");
+            }
+            else if (r.contains("/RT"))
+            {
+                // radio telephony designator
+                ar.radioTelephony = cut(r, "/RT");
+            }
+            if (r.contains("/OPR"))
+            {
+                // operator, e.g. British airways
+                ar.flightOperator = cut(r, "/OPR");
+            }
+            return ar;
+        }
+
+        QString CFlightPlanUtils::cut(const QString &remarks, const QString &marker)
+        {
+            const int maxIndex = remarks.size() - 1;
+            int f = remarks.indexOf(marker);
+            if (f < 0) { return ""; }
+            f += marker.length();
+            if (maxIndex <= f) { return ""; }
+            int to = remarks.indexOf(' ', f + 1);
+            if (to < 0) { to = maxIndex; } // no more spaces
+            const QString cut = remarks.mid(f, to - f).replace('/', ' '); // variations like /OPR/EASYJET/
+            // problem is that this cuts something like "Uzbekistan airways"
+            return cut;
         }
     } // namespace
 } // namespace
+
+// RT/KESTREL OPR/MYTRAVEL REG/G-DAJC SEL/FP-ES PER/C NAV/RNP10
+// VFPS = VATSIM Flightplan Prefile System
+// OPR/UAL CALLSIGN/UNITED

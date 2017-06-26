@@ -13,6 +13,7 @@
 #define BLACKMISC_AVIATION_FLIGHTPLANUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
+#include <QString>
 
 namespace BlackMisc
 {
@@ -22,11 +23,28 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CFlightPlanUtils
         {
         public:
+            //! Useful value in flight plan remarks
+            struct AirlineRemarks
+            {
+                QString radioTelephony; //!< radio telephony designator
+                QString flightOperator; //!< operator, i.e. normally the airline name
+
+                //! Any remarks available
+                bool hasAnyRemarks() const
+                {
+                    return !radioTelephony.isEmpty() || !flightOperator.isEmpty();
+                }
+            };
+
             //! Constructor
             CFlightPlanUtils() = delete;
 
             //! Parse remarks from a flight plan
-            static void parseFlightPlanRemarks(const QString &remarks);
+            static AirlineRemarks parseFlightPlanAirlineRemarks(const QString &remarks);
+
+        private:
+            //! Cut the remarks part
+            static QString cut(const QString &remarks, const QString &marker);
         };
     } // namespace
 } // namespace
