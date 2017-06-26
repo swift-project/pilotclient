@@ -366,34 +366,33 @@ namespace BlackCore
             const QString &airlineIcao, const QString &livery, const QString &modelString,
             BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log) const;
 
-    private slots:
         //! Create aircraft in range, this is the only place where a new aircraft should be added
-        void ps_aircraftUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+        void onAircraftUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 
         //! Create ATC station, this is the only place where an online ATC station should be added
-        void ps_atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
+        void onAtcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
 
         //! Receive FSInn packet
         //! \remark This can happen even without a query before
-        void ps_customFSInnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
+        void onCustomFSInnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
 
-        void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
-        void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
-        void ps_flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
-        void ps_atcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void ps_atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
-        void ps_atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
-        void ps_atisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
-        void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
-        void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
-        void ps_receivedAtcBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
-        void ps_readUnchangedAtcBookings();
-        void ps_receivedDataFile();
-        void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
-        void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
+        void onRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+        void onCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
+        void onServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
+        void onFlightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
+        void onAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        void onAtisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
+        void onAtisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+        void onAtisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+        void onIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
+        void onPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        void onFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+        void onReceivedAtcBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void onReadUnchangedAtcBookings();
+        void onReceivedDataFile();
+        void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
+        void onAircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
+        void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
     };
 } // namespace
 
