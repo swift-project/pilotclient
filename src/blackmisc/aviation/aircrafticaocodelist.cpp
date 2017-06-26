@@ -264,6 +264,42 @@ namespace BlackMisc
             return c;
         }
 
+        QMap<QString, int> CAircraftIcaoCodeList::countManufacturers() const
+        {
+            QMap<QString, int> count;
+            for (const CAircraftIcaoCode &icao : *this)
+            {
+                if (!icao.hasManufacturer()) continue;
+                const QString m(icao.getManufacturer());
+                if (count.contains(m))
+                {
+                    count[m]++;
+                }
+                else
+                {
+                    count[m] = 1;
+                }
+            }
+            return count;
+        }
+
+        QPair<QString, int> CAircraftIcaoCodeList::maxCountManufacturer() const
+        {
+            if (this->isEmpty()) return QPair<QString, int>("", 0);
+            const QMap<QString, int> counts(countManufacturers());
+            QPair<QString, int> max;
+            for (const QString &m : counts.keys())
+            {
+                const int mv = counts[m];
+                if (mv > max.second)
+                {
+                    max.first = m;
+                    max.second = mv;
+                }
+            }
+            return max;
+        }
+
         CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates)
         {
             CAircraftIcaoCodeList codes;
@@ -361,7 +397,7 @@ namespace BlackMisc
         {
             CAircraftIcaoCodeList copy(*this);
             copy.sortByDesignatorManufacturerAndRank();
-            CAircraftIcaoCodeList grouped;
+            CAircraftIcaoCodeList grouped; // will contain the entries with the best rank
             QString designator;
             QString manufacturer;
             for (const CAircraftIcaoCode &code : as_const(copy))

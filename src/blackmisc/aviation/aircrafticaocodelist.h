@@ -124,6 +124,12 @@ namespace BlackMisc
             //! All manufacturers
             QSet<QString> allManufacturers(bool onlyKnownDesignators = true) const;
 
+            //! Count by manufacturer
+            QMap<QString, int> countManufacturers() const;
+
+            //! Uses countManufacturers to find "most important" manufacturer
+            QPair<QString, int> maxCountManufacturer() const;
+
             //! From our database JSON format
             static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates = true);
         };
