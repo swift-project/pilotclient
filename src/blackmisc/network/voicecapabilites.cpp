@@ -22,7 +22,6 @@ namespace BlackMisc
 {
     namespace Network
     {
-
         CVoiceCapabilities::CVoiceCapabilities(const QString &flightPlanRemarks)
         {
             this->setFromFlightPlanRemarks(flightPlanRemarks);
@@ -66,20 +65,20 @@ namespace BlackMisc
                 return;
             }
 
-            const QString r = flightPlanRemarks.toLower();
-            if (r.contains("/v/") || r.contains("/voice/"))
+            const QString r = flightPlanRemarks.toUpper(); // normally already upper case
+            if (r.contains("/V/") || r.contains("/VOICE/"))
             {
                 this->setCapabilities(Voice);
                 return;
             }
 
-            if (r.contains("/t/"))
+            if (r.contains("/T/"))
             {
                 this->setCapabilities(TextOnly);
                 return;
             }
 
-            if (r.contains("/r/"))
+            if (r.contains("/R/"))
             {
                 this->setCapabilities(VoiceReceivingOnly);
                 return;
@@ -116,15 +115,11 @@ namespace BlackMisc
 
             switch (capabilities)
             {
-            case CVoiceCapabilities::TextOnly:
-                return to;
-            case CVoiceCapabilities::Voice:
-                return v;
-            case CVoiceCapabilities::VoiceReceivingOnly:
-                return vro;
+            case CVoiceCapabilities::TextOnly: return to;
+            case CVoiceCapabilities::Voice: return v;
+            case CVoiceCapabilities::VoiceReceivingOnly: return vro;
             case CVoiceCapabilities::Unknown:
-            default:
-                return u;
+            default: return u;
             }
         }
 
@@ -133,6 +128,5 @@ namespace BlackMisc
             static const QList<CVoiceCapabilities> all({fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice), fromVoiceCapabilities(VoiceReceivingOnly), fromVoiceCapabilities(TextOnly)});
             return all;
         }
-
     } // namespace
 } // namespace

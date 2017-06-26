@@ -131,9 +131,6 @@ namespace BlackCore
             Vat_ConnectProducerConsumerToConsumer(audioMixerVatlib->getVatAudioMixer(), outputPort, nullptr, 0);
         }
 
-        /*
-         * Process voice handling
-         */
         void CVoiceVatlib::timerEvent(QTimerEvent *)
         {
             Q_ASSERT_X(m_audioService, "CVoiceVatlib", "VatAudioService invalid!");

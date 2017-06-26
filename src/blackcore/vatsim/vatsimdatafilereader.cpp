@@ -359,7 +359,7 @@ namespace BlackCore
                                 const QString dts = updateParts.at(1).trimmed();
                                 updateTimestampFromFile = QDateTime::fromString(dts, "yyyyMMddHHmmss");
                                 updateTimestampFromFile.setOffsetFromUtc(0);
-                                bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
+                                const bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
                                 if (alreadyRead)
                                 {
                                     CLogMessage(this).info("VATSIM file has same timestamp, skipped");
@@ -374,8 +374,8 @@ namespace BlackCore
                             const QStringList fsdServerParts = currentLine.split(':');
                             if (fsdServerParts.size() < 5) break;
                             if (!fsdServerParts.at(4).trimmed().contains('1')) break; // allowed?
-                            QString description(fsdServerParts.at(2)); // part(3) could be added
-                            BlackMisc::Network::CServer fsdServer(fsdServerParts.at(0), description, fsdServerParts.at(1), 6809, CUser("id", "real name", "email", "password"));
+                            const QString description(fsdServerParts.at(2)); // part(3) could be added
+                            const BlackMisc::Network::CServer fsdServer(fsdServerParts.at(0), description, fsdServerParts.at(1), 6809, CUser("id", "real name", "email", "password"));
                             fsdServers.push_back(fsdServer);
                         }
                         break;
@@ -385,7 +385,7 @@ namespace BlackCore
                             const QStringList voiceServerParts = currentLine.split(':');
                             if (voiceServerParts.size() < 3) break;
                             if (!voiceServerParts.at(3).trimmed().contains('1')) break; // allowed?
-                            BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
+                            const BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
                             voiceServers.push_back(voiceServer);
                         }
                         break;

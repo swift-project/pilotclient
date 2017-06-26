@@ -40,6 +40,7 @@ namespace BlackCore
     class IAudioInputDevice;
     class IAudioOutputDevice;
     class IVoiceChannel;
+
     namespace Vatsim
     {
         //! Vatlib implementation of the IVoice interface.
@@ -90,14 +91,12 @@ namespace BlackCore
             //! \copydoc IVoice::disconnectVoice()
             void disconnectVoice(IAudioMixer *mixer, IAudioMixer::OutputPort outputPort) override;
 
-        protected: // QObject overrides
-
+        protected:
             //! Process voice lib
             virtual void timerEvent(QTimerEvent *) override;
 
         private:
-
-            // this struct calls "myCustomDeallocator" to delete the pointer
+            //! this struct calls Vat_DestroyAudioService to delete the pointer
             struct VatAudioServiceDeleter
             {
                 static inline void cleanup(VatAudioService_tag *obj)
@@ -106,6 +105,7 @@ namespace BlackCore
                 }
             };
 
+            //! this struct calls Vat_DestroyUDPAudioPort to delete the pointer
             struct VatUDPAudioPortDeleter
             {
                 static inline void cleanup(VatUDPAudioPort_tag *obj)
@@ -118,7 +118,6 @@ namespace BlackCore
 
             QScopedPointer<VatAudioService_tag, VatAudioServiceDeleter> m_audioService;
             QScopedPointer<VatUDPAudioPort_tag, VatUDPAudioPortDeleter> m_udpPort;
-
         };
     } // namespace
 } // namespace

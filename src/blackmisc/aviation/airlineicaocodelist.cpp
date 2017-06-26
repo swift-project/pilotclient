@@ -157,7 +157,7 @@ namespace BlackMisc
                 // further reduce
                 if (patternUsed.hasName())
                 {
-                    CAirlineIcaoCodeList backup(codesFound);
+                    const CAirlineIcaoCodeList backup(codesFound);
                     codesFound = this->findByNamesOrTelephonyDesignator(patternUsed.getName());
                     if (codesFound.isEmpty()) { codesFound = backup; }
                 }

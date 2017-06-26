@@ -222,7 +222,6 @@ namespace BlackCore
         void CNetworkVatlib::sendInterimPositions()
         {
             if (!m_net) { return; }
-
             if (isConnected())
             {
                 CSimulatedAircraft myAircraft(getOwnAircraft());
