@@ -88,11 +88,19 @@ namespace BlackCore
 
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
-        static BlackMisc::Aviation::CAirlineIcaoCode reverseLookupAirlineIcao(const QString &icaoDesignator, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Aviation::CAirlineIcaoCode reverseLookupAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of standard livery
         //! \threadsafe
         static BlackMisc::Aviation::CLivery reverseLookupStandardLivery(const BlackMisc::Aviation::CAirlineIcaoCode &airline, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Lookup of airline name
+        //! \threadsafe
+        static QString reverseLookupAirlineName(const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {}, BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Lookup of telephony designator
+        //! \threadsafe
+        static QString reverseLookupTelephonyDesignator(const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {}, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Turn callsign into airline
         //! \threadsafe
