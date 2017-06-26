@@ -588,6 +588,34 @@ namespace BlackCore
         return 0;
     }
 
+    QStringList CWebDataServices::getAirlineNames() const
+    {
+        QStringList names;
+        if (!m_icaoDataReader) { return names; }
+        for (const CAirlineIcaoCode &code : this->getAirlineIcaoCodes())
+        {
+            if (code.hasName())
+            {
+                names.push_back(code.getName());
+            }
+        }
+        return names;
+    }
+
+    QStringList CWebDataServices::getTelephonyDesignators() const
+    {
+        QStringList designators;
+        if (!m_icaoDataReader) { return designators; }
+        for (const CAirlineIcaoCode &code : this->getAirlineIcaoCodes())
+        {
+            if (code.hasTelephonyDesignator())
+            {
+                designators.push_back(code.getTelephonyDesignator());
+            }
+        }
+        return designators;
+    }
+
     CAirlineIcaoCode CWebDataServices::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->smartAirlineIcaoSelector(icaoPattern, callsign); }

@@ -261,6 +261,14 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
 
+        //! Airline names
+        //! \threadsafe
+        QStringList getAirlineNames() const;
+
+        //! Airline telephony designators
+        //! \threadsafe
+        QStringList getTelephonyDesignators() const;
+
         //! Airline ICAO codes count
         //! \threadsafe
         int getAirlineIcaoCodesCount() const;
