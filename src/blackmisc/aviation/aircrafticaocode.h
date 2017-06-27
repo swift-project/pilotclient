@@ -251,13 +251,14 @@ namespace BlackMisc
             bool hasCompleteData() const;
 
             //! Matches designator string?
-            bool matchesDesignator(const QString &designator) const;
+            bool matchesDesignator(const QString &designator, int fuzzyMatch = -1, int *result = nullptr) const;
 
             //! Matches IATA string?
-            bool matchesIataCode(const QString &iata) const;
+            //! \remark IATA codes are only 3 characters, so using fuzzy search might yield bad results
+            bool matchesIataCode(const QString &iata, int fuzzyMatch = -1, int *result = nullptr) const;
 
             //! Matches family?
-            bool matchesFamily(const QString &family) const;
+            bool matchesFamily(const QString &family, int fuzzyMatch = -1, int *result = nullptr) const;
 
             //! Matches ICAO or IATA code
             bool matchesDesignatorOrIata(const QString &icaoOrIata) const;

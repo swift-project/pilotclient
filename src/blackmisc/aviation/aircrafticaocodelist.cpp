@@ -25,13 +25,30 @@ namespace BlackMisc
             CSequence<CAircraftIcaoCode>(other)
         { }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignator(const QString &designator) const
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignator(const QString &designator, int fuzzySearch) const
         {
-            if (!CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCodeList(); }
+            if (!fuzzySearch && !CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCodeList(); }
+            if (fuzzySearch && designator.length() < 3) { return CAircraftIcaoCodeList(); }
             return this->findBy([&](const CAircraftIcaoCode & code)
             {
-                return code.matchesDesignator(designator);
+                return code.matchesDesignator(designator, fuzzySearch);
             });
+        }
+
+        CAircraftIcaoCode CAircraftIcaoCodeList::findBestFuzzyMatchOrDefault(const QString &designator, int cutoff) const
+        {
+            if (designator.length() < 3) { return CAircraftIcaoCode(); }
+            int best = 0;
+            int current = 0;
+            CAircraftIcaoCode found;
+            const QString d(designator.trimmed().toUpper());
+            for (const CAircraftIcaoCode &code : * this)
+            {
+                if (!code.matchesDesignator(d, cutoff, &current)) { continue; }
+                if (current == 100.0) { return code; }
+                if (best < current) { found = code; }
+            }
+            return found;
         }
 
         CAircraftIcaoCodeList CAircraftIcaoCodeList::findByValidDesignator() const
@@ -88,21 +105,21 @@ namespace BlackMisc
             return icaosDesignator.isEmpty() ? icaosFamily : icaosDesignator;
         }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByIataCode(const QString &iata) const
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByIataCode(const QString &iata, int fuzzySearch) const
         {
             if (iata.isEmpty()) { return CAircraftIcaoCodeList(); }
             return this->findBy([&](const CAircraftIcaoCode & code)
             {
-                return code.matchesIataCode(iata);
+                return code.matchesIataCode(iata, fuzzySearch);
             });
         }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByFamily(const QString &family) const
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByFamily(const QString &family, int fuzzySearch) const
         {
             if (family.isEmpty()) { return CAircraftIcaoCodeList(); }
             return this->findBy([&](const CAircraftIcaoCode & code)
             {
-                return code.matchesFamily(family);
+                return code.matchesFamily(family, fuzzySearch);
             });
         }
 
@@ -338,22 +355,15 @@ namespace BlackMisc
                 codes = this->findByIataCode(designator);
                 if (!codes.isEmpty()) break;
 
-                // search by reduced length
-                if (designator.length() >= 4)
-                {
-                    codes = this->findByDesignator(designator.left(4));
-                    if (!codes.isEmpty()) break;
-                }
+                // search fuzzy and restrict length
+                const CAircraftIcaoCode bestMatch = this->findBestFuzzyMatchOrDefault(designator.length() < 5 ? designator : designator.left(5), 70);
+                if (bestMatch.hasValidDesignator()) { return bestMatch; }
 
                 // still empty, try to find by family
                 codes = this->findByFamily(designator);
                 if (!codes.isEmpty()) break;
 
-                // now try to find as ending
-                codes = this->findEndingWith(designator);
-                if (!codes.isEmpty()) break;
-
-                // by any descriptionS
+                // by any description
                 codes = this->findMatchingByAnyDescription(designator);
             }
             while (false);

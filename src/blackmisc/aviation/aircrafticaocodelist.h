@@ -46,13 +46,16 @@ namespace BlackMisc
             CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other);
 
             //! Find by designator
-            CAircraftIcaoCodeList findByDesignator(const QString &designator) const;
+            CAircraftIcaoCodeList findByDesignator(const QString &designator, int fuzzySearch = -1) const;
+
+            //! Find by designator
+            CAircraftIcaoCode findBestFuzzyMatchOrDefault(const QString &designator, int cutoff = 50) const;
 
             //! Find by IATA code
-            CAircraftIcaoCodeList findByIataCode(const QString &iata) const;
+            CAircraftIcaoCodeList findByIataCode(const QString &iata, int fuzzySearch = -1) const;
 
             //! Find by family
-            CAircraftIcaoCodeList findByFamily(const QString &family) const;
+            CAircraftIcaoCodeList findByFamily(const QString &family, int fuzzySearch = -1) const;
 
             //! Ones with a valid designator
             CAircraftIcaoCodeList findByValidDesignator() const;
@@ -67,7 +70,8 @@ namespace BlackMisc
             CAircraftIcaoCodeList findByDesignatorIataOrFamily(const QString &icaoIataOrFamily) const;
 
             //! Find code ending with string, e.g. "738" finds "B738"
-            //! \remark many users use wrong ICAO designators, one typical mistake is "738" for  "B737"
+            //! \remark many users use wrong ICAO designators, one typical mistake is "738" for "B737"
+            //! \remark consider to use findBestFuzzyMatchOrDefault
             CAircraftIcaoCodeList findEndingWith(const QString &icaoEnding) const;
 
             //! Find by manufacturer

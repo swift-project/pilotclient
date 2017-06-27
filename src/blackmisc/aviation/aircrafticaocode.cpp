@@ -290,7 +290,7 @@ namespace BlackMisc
                 if (getEngineCount() != c.digitValue()) { return false; }
             }
             if (et == '*') { return true; }
-            const QString cet = getEngineType();
+            const QString cet = this->getEngineType();
             return cet.length() == 1 && cet.at(0) == et;
         }
 
@@ -417,22 +417,61 @@ namespace BlackMisc
             return hasValidCombinedType() && hasDesignator() && hasValidWtc() && hasManufacturer();
         }
 
-        bool CAircraftIcaoCode::matchesDesignator(const QString &designator) const
+        bool CAircraftIcaoCode::matchesDesignator(const QString &designator, int fuzzyMatch, int *result) const
         {
+            Q_ASSERT_X(fuzzyMatch >= -1 && fuzzyMatch <= 100, Q_FUNC_INFO, "fuzzyMatch range 0..100 or -1");
             if (designator.isEmpty()) { return false; }
-            return designator.trimmed().toUpper() == this->m_designator;
+            const QString d = designator.trimmed().toUpper();
+            if (fuzzyMatch >= 0)
+            {
+                const int r = fuzzyShortStringComparision(this->getDesignator(), d) >= fuzzyMatch;
+                if (result) { *result = r; }
+                return r >= fuzzyMatch;
+            }
+            else
+            {
+                const bool e = this->getDesignator() == d;
+                if (result) { *result = e ? 100 : 0; }
+                return e;
+            }
         }
 
-        bool CAircraftIcaoCode::matchesIataCode(const QString &iata) const
+        bool CAircraftIcaoCode::matchesIataCode(const QString &iata, int fuzzyMatch, int *result) const
         {
+            Q_ASSERT_X(fuzzyMatch >= -1 && fuzzyMatch <= 100, Q_FUNC_INFO, "fuzzyMatch range 0..100 or -1");
             if (iata.isEmpty()) { return false; }
-            return iata.trimmed().toUpper() == this->m_iataCode;
+            const QString i = iata.trimmed().toUpper();
+            if (fuzzyMatch >= 0)
+            {
+                const int r = fuzzyShortStringComparision(this->getIataCode(), i) >= fuzzyMatch;
+                if (result) { *result = r; }
+                return r >= fuzzyMatch;
+            }
+            else
+            {
+                const bool e = this->getIataCode() == i;
+                if (result) { *result = e ? 100 : 0; }
+                return e;
+            }
         }
 
-        bool CAircraftIcaoCode::matchesFamily(const QString &family) const
+        bool CAircraftIcaoCode::matchesFamily(const QString &family, int fuzzyMatch, int *result) const
         {
+            Q_ASSERT_X(fuzzyMatch >= -1 && fuzzyMatch <= 100, Q_FUNC_INFO, "fuzzyMatch range 0..100 or -1");
             if (family.isEmpty()) { return false; }
-            return family.trimmed().toUpper() == this->m_family;
+            const QString f = family.trimmed().toUpper();
+            if (fuzzyMatch >= 0)
+            {
+                const int r = fuzzyShortStringComparision(this->getFamily(), f) >= fuzzyMatch;
+                if (result) { *result = r; }
+                return r >= fuzzyMatch;
+            }
+            else
+            {
+                const bool e = this->getFamily() == f;
+                if (result) { *result = e ? 100 : 0; }
+                return e;
+            }
         }
 
         bool CAircraftIcaoCode::matchesDesignatorOrIata(const QString &icaoOrIata) const
