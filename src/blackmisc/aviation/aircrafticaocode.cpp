@@ -627,7 +627,7 @@ namespace BlackMisc
             if (candidate.isEmpty()) { return true; } // we accept unspecified
             if (candidate.length() == 1)
             {
-                return candidate == "L" || candidate == "M" || candidate == "H";
+                return candidate == "L" || candidate == "M" || candidate == "H" || candidate == "J";
             }
             return false;
         }
