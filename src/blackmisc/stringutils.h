@@ -38,7 +38,7 @@ namespace BlackMisc
     template <class F> QString removeChars(const QString &s, F predicate)
     {
         QString result;
-        std::copy_if(s.begin(), s.end(), std::back_inserter(result), [=](auto c) { return !predicate(c); });
+        std::copy_if(s.begin(), s.end(), std::back_inserter(result), [ = ](auto c) { return !predicate(c); });
         return result;
     }
 
@@ -61,7 +61,7 @@ namespace BlackMisc
     template <class F> QList<QStringRef> splitStringRefs(const QString &s, F predicate)
     {
         QList<QStringRef> result;
-        auto notPredicate = [=](auto c) { return !predicate(c); };
+        auto notPredicate = [ = ](auto c) { return !predicate(c); };
         auto begin = s.begin();
         while (true)
         {
@@ -131,6 +131,10 @@ namespace BlackMisc
 
     //! Convert string to bool
     BLACKMISC_EXPORT bool stringToBool(const QString &boolString);
+
+    //! Fuzzy compare for short strings (like ICAO designators)
+    //! \return int 0..100 (100 is perfect match)
+    BLACKMISC_EXPORT int fuzzyShortStringComparision(const QString &str1, const QString &str2, Qt::CaseSensitivity cs = Qt::CaseSensitive);
 
     //! Int to hex value
     BLACKMISC_EXPORT QString intToHex(int value, int digits = 2);
@@ -230,10 +234,10 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)                \
-            using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
-            using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
-            using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
-            using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
+    using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
+    using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
+    using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
+    using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
     } // ns
 } // ns
 

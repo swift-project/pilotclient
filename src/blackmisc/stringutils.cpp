@@ -56,6 +56,57 @@ namespace BlackMisc
         return false;
     }
 
+    int fuzzyShortStringComparision(const QString &str1, const QString &str2, Qt::CaseSensitivity cs)
+    {
+        // same
+        if (cs == Qt::CaseInsensitive) { if (caseInsensitiveStringCompare(str1, str2)) { return 100; }}
+        else if (str1 == str2) { return 100; }
+
+        // one string is empty
+        if (str1.isEmpty() || str2.isEmpty()) { return 0; }
+
+        // make sure aStr is not shorter
+        const QString aStr = str1.length() >= str2.length() ? str1 : str2;
+        const QString bStr = str1.length() >= str2.length() ? str2 : str1;
+
+        // starts/ends with
+        float s1 = aStr.length();
+        float s2 = bStr.length();
+        if (aStr.endsWith(bStr, cs)) { return s1 / s2 * 100; }
+        if (aStr.startsWith(bStr, cs)) { return s1 / s2 * 100; }
+
+        // contains
+        if (aStr.contains(bStr, cs)) { return s1 / s2 * 100; }
+
+        // char by char
+        float points = 0;
+        for (int p = 0; p < aStr.length(); p++)
+        {
+            if (p < bStr.length() && aStr[p] == bStr[p])
+            {
+                points += 1.0;
+                continue;
+            }
+
+            // char after
+            const int a = p + 1;
+            if (a < bStr.length() && aStr[p] == bStr[a])
+            {
+                points += 0.5;
+                continue;
+            }
+
+            // char before
+            const int b = p - 1;
+            if (b >= 0 && aStr[p] == bStr[b])
+            {
+                points += 0.5;
+                continue;
+            }
+        }
+        return points / s1 * 100;
+    }
+
     QString intToHex(int value, int digits)
     {
         QString hex(QString::number(value, 16).toUpper());
