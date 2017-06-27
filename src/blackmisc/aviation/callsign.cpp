@@ -129,8 +129,15 @@ namespace BlackMisc
             QRegularExpressionMatch match = regExp.match(this->m_callsign);
             if (!match.hasMatch()) { return QString(); }
             const QString airline = match.captured(0);
+
+            // hard facts
             if (airline.length() == 3) { return airline; } // we allow 3 letters
             if (airline.length() == 4 && airline.startsWith('V')) { return airline; } // we allow virtual 4 letter codes, e.g. VDLD
+
+            // some people use callsigns like UPSE123
+            const QString number = match.captured(1);
+            if (number.length() >= 3 && airline.length() == 4) { return airline.left(3); }
+
             return ""; // invalid
         }
 
