@@ -156,6 +156,7 @@ namespace BlackSimPlugin
             vis.UpperAlt = surfaceVisibility.getTop().value(CLengthUnit::m());
             // Range is measured in: 1/100ths sm
             vis.Range = surfaceVisibility.getVisibility().value(CLengthUnit::SM()) * 100;
+            vis.Spare = 0;
             nw.Vis = vis;
 
             for (const auto &visibilityLayer : visibilityLayers)
@@ -163,6 +164,7 @@ namespace BlackSimPlugin
                 vis.LowerAlt = visibilityLayer.getBase().value(CLengthUnit::m());
                 vis.UpperAlt = visibilityLayer.getTop().value(CLengthUnit::m());
                 vis.Range = visibilityLayer.getVisibility().value(CLengthUnit::SM()) * 100;
+                vis.Spare = 0;
                 nw.UpperVis[nw.nUpperVisCtr++] = vis;
             }
 
