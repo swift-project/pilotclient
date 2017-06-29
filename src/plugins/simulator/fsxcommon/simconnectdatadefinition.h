@@ -18,7 +18,7 @@
 #define NOMINMAX
 #endif
 #include "blackmisc/aviation/aircraftlights.h"
-#include <simconnect/SimConnect.h>
+#include <SimConnect.h>
 #include <windows.h>
 #include <algorithm>
 #include <QString>

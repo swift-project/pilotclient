@@ -26,7 +26,7 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
 
-#include <simconnect/SimConnect.h>
+#include <SimConnect.h>
 #include <QObject>
 #include <QtPlugin>
 #include <QHash>

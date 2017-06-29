@@ -77,10 +77,11 @@ msvc:!llvm: QMAKE_CXXFLAGS *= /bigobj
 win32-g++: QMAKE_CXXFLAGS_DEBUG += -Og
 
 ################################
-# FSX, P3D or FS9 on 32bit Windows only
+# FSX or FS9 on 32bit Windows only
 ################################
 
-equals(WORD_SIZE,64)|!win32: BLACK_CONFIG -= FSX FS9 P3D
+equals(WORD_SIZE,64)|!win32: BLACK_CONFIG -= FSX FS9
+equals(WORD_SIZE,32)|!win32: BLACK_CONFIG -= P3D
 
 ################################
 # For BlackMisc::getStackTrace

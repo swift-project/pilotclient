@@ -15,7 +15,6 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 
-#include <simconnect/SimConnect.h>
 #include <QObject>
 #include <QtPlugin>
 

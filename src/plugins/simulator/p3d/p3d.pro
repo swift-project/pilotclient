@@ -10,15 +10,34 @@ TEMPLATE = lib
 CONFIG += plugin shared
 CONFIG += blackmisc blackcore
 
-LIBS +=  -lsimulatorfscommon -lsimulatorfsxcommon -lfsuipc -lSimConnect
-
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
-LIBS += -ldxguid -lole32
-
 SOURCES += *.cpp
 HEADERS += *.h
+
+equals(WORD_SIZE,64) {
+    INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/P3D-v4
+}
+equals(WORD_SIZE,32) {
+    INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
+}
+
+LIBS += -lsimulatorfscommon -lsimulatorfsxcommon -lfsuipc
+equals(WORD_SIZE,64) {
+    LIBS *= -L$$EXTERNALS_LIB_DIR/P3D-v4
+    CONFIG(debug, debug|release): LIBS *= -lSimConnectDebug
+    else:                         LIBS *= -lSimConnect
+}
+equals(WORD_SIZE,32) {
+    LIBS *= -L$$EXTERNALS_LIB_DIR/FSX-XPack
+    LIBS *= -lSimConnect
+}
+LIBS += -ldxguid -lole32
+
+# Ignore linker warning about missing pdb files from Simconnect
+msvc: QMAKE_LFLAGS *= /ignore:4099
+
 DISTFILES += simulatorp3d.json
 
 DESTDIR = $$DestRoot/bin/plugins/simulator

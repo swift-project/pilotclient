@@ -8,11 +8,10 @@ TEMPLATE = lib
 CONFIG += plugin shared
 CONFIG += blackmisc blackcore
 
-LIBS +=  -lsimulatorfscommon -lfsuipc -luuid
-
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
+LIBS += -lsimulatorfscommon -lfsuipc -luuid
 LIBS += -ldxguid -lole32
 
 SOURCES += *.cpp
