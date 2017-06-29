@@ -16,12 +16,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        bool IRemoteAircraftProvider::isAircraftInRange(const CCallsign &callsign) const
-        {
-            if (callsign.isEmpty()) { return false; }
-            return this->getAircraftInRange().containsCallsign(callsign);
-        }
-
         CSimulatedAircraftList CRemoteAircraftAware::getAircraftInRange() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");

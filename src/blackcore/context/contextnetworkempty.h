@@ -79,6 +79,14 @@ namespace BlackCore
                 return 0;
             }
 
+            //! \copydoc IContextNetwork::isAircraftInRange
+            virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const override
+            {
+                Q_UNUSED(callsign);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextNetwork::getOnlineStationForCallsign
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override
             {

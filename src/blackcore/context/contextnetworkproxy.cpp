@@ -131,6 +131,11 @@ namespace BlackCore
             return this->m_dBusInterface->callDBusRet<int>(QLatin1String("getAircraftInRangeCount"));
         }
 
+        bool CContextNetworkProxy::isAircraftInRange(const CCallsign &callsign) const
+        {
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("isAircraftInRange"), callsign);
+        }
+
         CSimulatedAircraft CContextNetworkProxy::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
             return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1String("getAircraftInRangeForCallsign"), callsign);

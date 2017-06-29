@@ -184,6 +184,9 @@ namespace BlackCore
             //! Aircraft count
             virtual int getAircraftInRangeCount() const = 0;
 
+            //! Aircraft in range
+            virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
             //! Get METAR, if not available request it (code such as EDDF, KLAX)
             virtual BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const = 0;
 

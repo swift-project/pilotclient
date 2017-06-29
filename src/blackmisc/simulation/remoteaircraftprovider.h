@@ -69,9 +69,8 @@ namespace BlackMisc
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const = 0;
 
             //! Is aircraft in range?
-            //! \remark convenience function with default implementation
             //! \threadsafe
-            virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const;
+            virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
             //! Current snapshot
             //! \threadsafe
