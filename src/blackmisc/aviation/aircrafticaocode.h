@@ -213,7 +213,7 @@ namespace BlackMisc
             //! Legacy aircraft (no current ICAO code)
             bool isLegacyAircraft() const { return m_legacy; }
 
-            //! Is DB duplicate, means redundant ICAO DB entry.
+            //! Is DB duplicate? This means a redundant ICAO DB entry.
             //! \see https://aviation.stackexchange.com/q/37848/4024
             bool isDbDuplicate() const;
 
@@ -324,11 +324,11 @@ namespace BlackMisc
             QString m_modelDescription;      //!< "A-330-200", the ICAO description
             QString m_modelIataDescription;  //!< alternative IATA description
             QString m_modelSwiftDescription; //!< alternative swift description
-            QString m_wtc;                   //!< wake turbulence "M","H" "L/M", "L", we only use the one letter versions
+            QString m_wtc;                   //!< wake turbulence like "M","H" "L/M", "L", "J", we only use the one letter versions
             bool m_realWorld = true;         //!< real world aircraft
             bool m_legacy = false;           //!< legacy code
             bool m_military = false;         //!< military aircraft?
-            int m_rank = 10;                 //!< rank among same codes
+            int m_rank = 10;                 //!< rank among same codes (0 is best)
 
             //! Create a combined string like L2J
             static QString createdCombinedString(const QString &type, const QString &engineCount, const QString &engine);

@@ -85,7 +85,7 @@ namespace BlackMisc
         //! Constructor for generated icon
         CIcon(const QPixmap &pixmap, const QString &descriptiveText);
 
-        //! Construcror for file icons
+        //! Constructor for file icons
         CIcon(const QString &resourceFilePath, const QString &descriptiveText);
 
         //! Get descriptive text
