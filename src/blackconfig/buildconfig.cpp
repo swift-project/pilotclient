@@ -246,6 +246,18 @@ namespace BlackConfig
         return s;
     }
 
+    const QString &CBuildConfig::getImagesAirlinesDir()
+    {
+        static const QString s(QDir::cleanPath(getImagesDir() + QDir::separator() + "airlines"));
+        return s;
+    }
+
+    const QString &CBuildConfig::getImagesFlagsDir()
+    {
+        static const QString s(QDir::cleanPath(getImagesDir() + QDir::separator() + "flags"));
+        return s;
+    }
+
     QString getHtmlDirImpl()
     {
         const QString d(CBuildConfig::getSwiftShareDir());

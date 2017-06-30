@@ -111,6 +111,12 @@ namespace BlackConfig
         //! Where images are located
         static const QString &getImagesDir();
 
+        //! Where airline images are located
+        static const QString &getImagesAirlinesDir();
+
+        //! Where flags images are located
+        static const QString &getImagesFlagsDir();
+
         //! Where HTML files are located
         static const QString &getHtmlDir();
 

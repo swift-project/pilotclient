@@ -25,6 +25,7 @@
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
+#include <QSet>
 
 namespace BlackMisc
 {
@@ -235,6 +236,9 @@ namespace BlackMisc
 
             //! From our DB JSON
             static CAirlineIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+
+            //! The airline icon names (name only, not path)
+            static const QSet<int> &iconIds();
 
         private:
             QString m_designator;           //!< "DLH"

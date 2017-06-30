@@ -9,6 +9,7 @@
 
 #include "airlineicaocode.h"
 #include "callsign.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/icons.h"
@@ -18,15 +19,18 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/verify.h"
 
 #include <QJsonValue>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QThreadStorage>
 #include <QStringBuilder>
+#include <QDir>
 #include <Qt>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 
@@ -60,14 +64,9 @@ namespace BlackMisc
 
         QString CAirlineIcaoCode::getVDesignatorDbKey() const
         {
-            if (this->isLoadedFromDb())
-            {
-                return this->getVDesignator() % this->getDbKeyAsStringInParentheses(" ");
-            }
-            else
-            {
-                return this->getVDesignator();
-            }
+            return this->isLoadedFromDb() ?
+                   this->getVDesignator() % this->getDbKeyAsStringInParentheses(" ") :
+                   this->getVDesignator();
         }
 
         void CAirlineIcaoCode::setDesignator(const QString &icaoDesignator)
@@ -166,36 +165,30 @@ namespace BlackMisc
 
         CIcon CAirlineIcaoCode::toIcon() const
         {
-            if (hasValidDesignator())
+            if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
             {
-                // relative to images
-                return CIcon(QLatin1String("airlines/") % m_designator.toLower() % QLatin1String(".png"), this->convertToQString());
+                static const QString p("airlines/%1_%2.png");
+                const QString n(p.arg(this->getDbKey(), 5, 10, QChar('0')).arg(this->getDesignator()));
+                return CIcon(n, this->convertToQString());
             }
-            else
-            {
-                return CIcon::iconByIndex(CIcons::StandardIconEmpty);
-            }
+            return CIcon::iconByIndex(CIcons::StandardIconEmpty);
         }
 
         QString CAirlineIcaoCode::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s(this->m_designator);
-            if (this->m_name.isEmpty()) { return ""; }
-            if (!this->m_name.isEmpty()) { s.append(" (").append(this->m_name).append(")"); }
-
-            s.append(" Op: ").append(boolToYesNo(this->isOperating()));
-            s.append(" VA: ").append(boolToYesNo(this->isVirtualAirline()));
-            s.append(" Mil: ").append(boolToYesNo(this->isMilitary()));
-
-            return s;
+            return m_designator %
+                   QLatin1String(" (") % m_name % QLatin1String(")") %
+                   QLatin1String(" Op: ") % boolToYesNo(this->isOperating()) %
+                   QLatin1String(" VA: ") % boolToYesNo(this->isVirtualAirline()) %
+                   QLatin1String(" Mil: ") % boolToYesNo(this->isMilitary());
         }
 
         CVariant CAirlineIcaoCode::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAirlineDesignator:
@@ -233,7 +226,7 @@ namespace BlackMisc
         {
             if (index.isMyself()) { (*this) = variant.to<CAirlineIcaoCode>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAirlineDesignator:
@@ -379,15 +372,10 @@ namespace BlackMisc
 
         QString CAirlineIcaoCode::getNameWithKey() const
         {
-            if (!hasValidDbKey()) { return getName(); }
-            if (hasName())
-            {
-                return QString(getName()).append(" ").append(getDbKeyAsStringInParentheses());
-            }
-            else
-            {
-                return getDbKeyAsStringInParentheses();
-            }
+            if (!this->hasValidDbKey()) { return this->getName(); }
+            return this->hasName() ?
+                   QString(this->getName()).append(" ").append(this->getDbKeyAsStringInParentheses()) :
+                   this->getDbKeyAsStringInParentheses();
         }
 
         void CAirlineIcaoCode::updateMissingParts(const CAirlineIcaoCode &otherIcaoCode)
@@ -488,6 +476,36 @@ namespace BlackMisc
             code.setGroupName(groupName);
             code.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return code;
+        }
+
+        //! \private
+        QSet<int> iconIdsImpl()
+        {
+            QDir dir(CBuildConfig::getImagesAirlinesDir());
+            Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "image directory missing");
+
+            QSet<int> ids;
+            dir.setFilter(QDir::Files | QDir::NoSymLinks);
+            dir.setSorting(QDir::Name);
+            bool ok = false;
+            for (const QFileInfo &fileInfo : dir.entryInfoList())
+            {
+                const QString fn(fileInfo.fileName());
+                ok = fn.size() > 5;
+                if (!ok) { continue; }
+                BLACK_VERIFY_X(ok, Q_FUNC_INFO, "wrong file name");
+                const int id = fn.left(5).toInt(&ok);
+                BLACK_VERIFY_X(ok, Q_FUNC_INFO, "wrong id format");
+                if (!ok) { continue; }
+                ids.insert(id);
+            }
+            return ids;
+        }
+
+        const QSet<int> &CAirlineIcaoCode::iconIds()
+        {
+            static const QSet<int> ids = iconIdsImpl();
+            return ids;
         }
     } // namespace
 } // namespace
