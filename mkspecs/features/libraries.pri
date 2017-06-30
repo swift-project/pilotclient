@@ -7,30 +7,12 @@ unix:!macx {
 }
 
 blackgui {
-    contains(BLACK_CONFIG, Static) {
-        win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackgui.lib
-        else:           PRE_TARGETDEPS += $$DestRoot/lib/libblackgui.a
-    } else {
-        win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackgui.lib
-        win32-g++*:     PRE_TARGETDEPS += $$DestRoot/lib/libblackgui.a
-        linux-g++*:     PRE_TARGETDEPS += $$DestRoot/lib/libblackgui.so
-        macx-clang:     PRE_TARGETDEPS += $$DestRoot/lib/libblackgui.dylib
-    }
-
+    addLibraryDependency(blackgui)
     LIBS *= -lblackgui
 }
 
 blackcore {
-    contains(BLACK_CONFIG, Static) {
-        win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackcore.lib
-        else:           PRE_TARGETDEPS += $$DestRoot/lib/libblackcore.a
-    } else {
-        win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackcore.lib
-        win32-g++*:     PRE_TARGETDEPS += $$DestRoot/lib/libblackcore.a
-        linux-g++*:     PRE_TARGETDEPS += $$DestRoot/lib/libblackcore.so
-        macx-clang:     PRE_TARGETDEPS += $$DestRoot/lib/libblackcore.dylib
-    }
-
+    addLibraryDependency(blackcore)
     LIBS *= -lblackcore -lvatlib
 }
 
@@ -39,16 +21,7 @@ blacksound {
 }
 
 blackinput {
-    contains(BLACK_CONFIG, Static) {
-        win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackinput.lib
-        else:           PRE_TARGETDEPS += $$DestRoot/lib/libblackinput.a
-    } else {
-        win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackinput.lib
-        win32-g++*:     PRE_TARGETDEPS += $$DestRoot/lib/libblackinput.a
-        linux-g++*:     PRE_TARGETDEPS += $$DestRoot/lib/libblackinput.so
-        macx-clang:     PRE_TARGETDEPS += $$DestRoot/lib/libblackinput.dylib
-    }
-
+    addLibraryDependency(blackinput)
     LIBS *= -lblackinput
 
     macx {
@@ -61,15 +34,7 @@ blackinput {
 }
 
 blackmisc {
-    contains(BLACK_CONFIG, Static) {
-        win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackmisc.lib
-        else:           PRE_TARGETDEPS += $$DestRoot/lib/libblackmisc.a
-    } else {
-        win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackmisc.lib
-        win32-g++*:     PRE_TARGETDEPS += $$DestRoot/lib/libblackmisc.a
-        linux-g++*:     PRE_TARGETDEPS += $$DestRoot/lib/libblackmisc.so
-        macx-clang:     PRE_TARGETDEPS += $$DestRoot/lib/libblackmisc.dylib
-    }
+    addLibraryDependency(blackmisc)
     LIBS *= -lblackmisc
 
     win32 {
@@ -78,7 +43,6 @@ blackmisc {
 }
 
 blackconfig {
-    win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/blackconfig.lib
-    else:           PRE_TARGETDEPS += $$DestRoot/lib/libblackconfig.a
+    addStaticLibraryDependency(blackconfig)
     LIBS *= -lblackconfig
 }

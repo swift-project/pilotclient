@@ -195,6 +195,27 @@ isEmpty(PREFIX) {
 win32: CONFIG(debug, debug|release): DLL_DEBUG_SUFFIX = d
 
 ################################
+# Inter-project dependencies
+################################
+defineTest(addStaticLibraryDependency) {
+    win32:msvc:     PRE_TARGETDEPS += $$DestRoot/lib/$${1}.lib
+    else:           PRE_TARGETDEPS += $$DestRoot/lib/lib$${1}.a
+    export(PRE_TARGETDEPS)
+}
+defineTest(addLibraryDependency) {
+    contains(BLACK_CONFIG, Static) {
+        addStaticLibraryDependency($$1)
+    }
+    else {
+        win32:msvc: PRE_TARGETDEPS += $$DestRoot/lib/$${1}.lib
+        win32-g++*: PRE_TARGETDEPS += $$DestRoot/lib/lib$${1}.a
+        linux-g++*: PRE_TARGETDEPS += $$DestRoot/lib/lib$${1}.so
+        macx-clang: PRE_TARGETDEPS += $$DestRoot/lib/lib$${1}.dylib
+        export(PRE_TARGETDEPS)
+    }
+}
+
+################################
 # Experimental support for Clang on Windows
 ################################
 

@@ -34,6 +34,9 @@ equals(WORD_SIZE,32) {
     LIBS *= -lSimConnect
 }
 LIBS += -ldxguid -lole32
+addStaticLibraryDependency(simulatorfscommon)
+addStaticLibraryDependency(simulatorfsxcommon)
+addStaticLibraryDependency(fsuipc)
 
 # Ignore linker warning about missing pdb files from Simconnect
 msvc: QMAKE_LFLAGS *= /ignore:4099

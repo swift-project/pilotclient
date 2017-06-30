@@ -13,6 +13,8 @@ INCLUDEPATH += . $$SourceRoot/src
 
 LIBS += -lsimulatorfscommon -lfsuipc -luuid
 LIBS += -ldxguid -lole32
+addStaticLibraryDependency(simulatorfscommon)
+addStaticLibraryDependency(fsuipc)
 
 SOURCES += *.cpp
 HEADERS += *.h

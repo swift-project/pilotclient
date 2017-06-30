@@ -17,6 +17,9 @@ INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
 LIBS *= -L$$EXTERNALS_LIB_DIR/FSX-XPack
 LIBS *= -lsimulatorfscommon -lsimulatorfsxcommon -lfsuipc -lSimConnect
 LIBS += -ldxguid -lole32
+addStaticLibraryDependency(simulatorfscommon)
+addStaticLibraryDependency(simulatorfsxcommon)
+addStaticLibraryDependency(fsuipc)
 
 SOURCES += *.cpp
 HEADERS += *.h

@@ -14,6 +14,8 @@ SOURCES += *.cpp
 HEADERS += *.h
 DISTFILES += simulatorp3dconfig.json
 LIBS +=  -lsimulatorfsxcommon
+addStaticLibraryDependency(simulatorfsxcommon)
+
 DESTDIR = $$DestRoot/bin/plugins/simulator
 
 win32 {
