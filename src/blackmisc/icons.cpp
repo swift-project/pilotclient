@@ -12,6 +12,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/threadutils.h"
 
 #include <QIcon>
 #include <QImage>
@@ -1143,20 +1144,16 @@ namespace BlackMisc
 
     const QPixmap &CIcons::pixmapByResourceFileName(const QString &fileName)
     {
+        //! \fixme KB 20170701 noticed the "cache" is not threadsafe. However, there has never be an issue so far. Added thread assert.
         Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "missing filename");
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "not thread safe");
+
         if (!getResourceFileCache().contains(fileName))
         {
             const QString path = CFileUtils::appendFilePaths(CBuildConfig::getImagesDir(), fileName);
             QPixmap pm;
             const bool s = pm.load(path);
-            if (s)
-            {
-                getResourceFileCache().insert(fileName, pm);
-            }
-            else
-            {
-                getResourceFileCache().insert(fileName, CIcons::empty());
-            }
+            getResourceFileCache().insert(fileName, s ? pm : CIcons::empty());
         }
         return getResourceFileCache()[fileName];
     }

@@ -703,7 +703,7 @@ namespace BlackMisc
         static QPixmap rotate(int rotateDegrees, const QPixmap &original);
 
     private:
-        //! File cache for the loaded
+        //! File cache for the loaded files
         static QMap<QString, QPixmap> &getResourceFileCache();
     };
 }
