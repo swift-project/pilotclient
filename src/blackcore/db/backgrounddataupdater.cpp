@@ -89,6 +89,7 @@ namespace BlackCore
         {
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
+                // shift in correct thread
                 QTimer::singleShot(0, this, [this, updateTimeSecs] { this->startUpdating(updateTimeSecs); });
                 return;
             }

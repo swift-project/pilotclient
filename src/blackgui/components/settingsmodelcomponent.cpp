@@ -30,8 +30,11 @@ namespace BlackGui
 
             this->cacheChanged();
             connect(ui->le_ConsolidateSecs, &QLineEdit::returnPressed, this, &CSettingsModelComponent::consolidationEntered);
-            static QString lbl("Consolidate (%1-%2s):");
+            const QString lbl("Consolidate (%1-%2s):");
             ui->lbl_Consolidate->setText(lbl.arg(TBackgroundConsolidation::minSecs()).arg(TBackgroundConsolidation::maxSecs()));
+
+            // start updater if not yet done
+            QTimer::singleShot(2000, this, &CSettingsModelComponent::consolidationEntered);
         }
 
         CSettingsModelComponent::~CSettingsModelComponent()
@@ -54,7 +57,7 @@ namespace BlackGui
         void CSettingsModelComponent::consolidationEntered()
         {
             int v = this->getBackgroundUpdaterIntervallSecs();
-            if (v < TBackgroundConsolidation::minSecs()) v = -1;
+            if (v < TBackgroundConsolidation::minSecs()) { v = -1; }
 
             const CStatusMessage m = m_consolidationSetting.setAndSave(v);
             CLogMessage::preformatted(m);

@@ -150,7 +150,10 @@ void CSwiftData::initMenu()
 
 void CSwiftData::performGracefulShutdown()
 {
-    // void
+    if (this->m_updater)
+    {
+        this->m_updater->gracefulShutdown();
+    }
 }
 
 void CSwiftData::consolidationSettingChanged()
