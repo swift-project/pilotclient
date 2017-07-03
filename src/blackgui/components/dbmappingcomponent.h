@@ -421,6 +421,7 @@ namespace BlackGui
             };
 
             //! Merge with vPilot data
+            //! \deprecated vPilot menus will be removed in the future
             class CMergeWithVPilotMenu : public BlackGui::Menus::IMenuDelegate
             {
             public:

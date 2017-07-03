@@ -77,6 +77,7 @@ namespace BlackGui
             ui->comp_StashAircraft->setMappingComponent(this);
             ui->comp_OwnModelSet->setMappingComponent(this);
 
+            //! \fixme vPilot merging will be most likely removed in the future
             ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
             ui->tvp_AircraftModelsForVPilot->addFilterDialog();
 
