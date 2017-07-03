@@ -90,11 +90,11 @@ namespace BlackGui
                 if (model.hasFileName())
                 {
                     menuActions.addMenuSimulator();
-                    this->m_fileAction = menuActions.addAction(this->m_fileAction, CIcons::text16(), "Open simulator file", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_showSimulatorFile });
+                    this->m_fileAction = menuActions.addAction(this->m_fileAction, CIcons::text16(), "Open simulator file", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::showSimulatorFile });
                     added = true;
                     if (CModelConverterX::supportsModelConverterX())
                     {
-                        this->m_modelConverterX = menuActions.addAction(this->m_modelConverterX, CIcons::modelConverterX(), "ModelConverterX", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_startModelConverterX });
+                        this->m_modelConverterX = menuActions.addAction(this->m_modelConverterX, CIcons::modelConverterX(), "ModelConverterX", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::startModelConverterX });
                     }
                 }
 
@@ -102,7 +102,7 @@ namespace BlackGui
                 {
                     added = true;
                     menuActions.addMenuSimulator();
-                    this->m_iconAction = menuActions.addAction(this->m_iconAction, CIcons::appAircraft16(), "Display icon", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_displayIcon });
+                    this->m_iconAction = menuActions.addAction(this->m_iconAction, CIcons::appAircraft16(), "Display icon", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::displayIcon });
                 }
 
                 if (added)
@@ -113,7 +113,7 @@ namespace BlackGui
             this->nestedCustomMenu(menuActions);
         }
 
-        void CShowSimulatorFileMenu::ps_showSimulatorFile()
+        void CShowSimulatorFileMenu::showSimulatorFile()
         {
             const CAircraftModelView *mv = modelView();
             if (!mv->hasSingleSelectedRow()) { return; }
@@ -126,7 +126,7 @@ namespace BlackGui
             }
         }
 
-        void CShowSimulatorFileMenu::ps_displayIcon()
+        void CShowSimulatorFileMenu::displayIcon()
         {
             const CAircraftModelView *mv = modelView();
             if (!mv->hasSingleSelectedRow()) { return; }
@@ -144,7 +144,7 @@ namespace BlackGui
             }
         }
 
-        void CShowSimulatorFileMenu::ps_startModelConverterX()
+        void CShowSimulatorFileMenu::startModelConverterX()
         {
             if (!CModelConverterX::supportsModelConverterX()) { return; }
             const CAircraftModelView *mv = modelView();
@@ -161,7 +161,7 @@ namespace BlackGui
             // it can be the target is not yet known
             if (modelsTarget)
             {
-                bool ok = modelsTargetSetable() || modelsTargetUpdatable();
+                const bool ok = modelsTargetSetable() || modelsTargetUpdatable();
                 Q_ASSERT_X(ok, Q_FUNC_INFO, "Neither setable nor updatable");
                 Q_UNUSED(ok);
             }
@@ -181,15 +181,15 @@ namespace BlackGui
 
             menuActions.addMenuConsolidateModels();
 
-            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, CIcons::databaseEdit16(), "All with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::ps_consolidateData });
+            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, CIcons::databaseEdit16(), "All with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateData });
             if (mv->hasSelection())
             {
-                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::ps_consolidateSelectedData });
+                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }
 
-        void CConsolidateWithDbDataMenu::ps_consolidateData()
+        void CConsolidateWithDbDataMenu::consolidateData()
         {
             BLACK_VERIFY_X(sGui, Q_FUNC_INFO, "Missing sGui");
             if (!sGui->hasWebDataServices()) { return; }
@@ -231,7 +231,7 @@ namespace BlackGui
             }
         }
 
-        void CConsolidateWithDbDataMenu::ps_consolidateSelectedData()
+        void CConsolidateWithDbDataMenu::consolidateSelectedData()
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             if (!sGui->hasWebDataServices()) { return; }
@@ -243,7 +243,7 @@ namespace BlackGui
                 CLogMessage(this).warning("No updatable target");
                 return;
             }
-            int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
+            const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
             if (c > 0 && this->modelsTargetUpdatable())
             {
                 this->modelsTargetUpdatable()->updateModels(models);
@@ -268,7 +268,7 @@ namespace BlackGui
             // it can be the target is not yet known
             if (modelsTarget)
             {
-                bool ok = modelsTargetSetable() || modelsTargetUpdatable();
+                const bool ok = modelsTargetSetable() || modelsTargetUpdatable();
                 Q_ASSERT_X(ok, Q_FUNC_INFO, "Neither setable nor updatable");
                 Q_UNUSED(ok);
             }
@@ -288,15 +288,15 @@ namespace BlackGui
 
             menuActions.addMenuConsolidateModels();
 
-            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::ps_consolidateData });
+            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateData });
             if (mv->hasSelection())
             {
-                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::ps_consolidateSelectedData });
+                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }
 
-        void CConsolidateWithSimulatorModels::ps_consolidateData()
+        void CConsolidateWithSimulatorModels::consolidateData()
         {
             bool filtered = false;
             const CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
@@ -323,7 +323,7 @@ namespace BlackGui
             this->modelView()->hideLoadIndicator(i);
         }
 
-        void CConsolidateWithSimulatorModels::ps_consolidateSelectedData()
+        void CConsolidateWithSimulatorModels::consolidateSelectedData()
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             const CAircraftModelList models(this->getSelectedAircraftModels());

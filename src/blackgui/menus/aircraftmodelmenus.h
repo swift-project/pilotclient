@@ -25,7 +25,7 @@ namespace BlackGui
     namespace Components { class CDbMappingComponent; }
     namespace Menus
     {
-        //! Menu base for aircraft model view menus
+        //! Menu base class for aircraft model view menus
         class IAircraftModelViewMenu : public IMenuDelegate
         {
         public:
@@ -66,12 +66,11 @@ namespace BlackGui
             //! \copydoc IMenuDelegate::customMenu
             virtual void customMenu(CMenuActions &menuActions) override;
 
-        private slots:
-            void ps_showSimulatorFile();    //!< simulator file
-            void ps_displayIcon();          //!< aircraft icon if any
-            void ps_startModelConverterX(); //!< show in model converter X
-
         private:
+            void showSimulatorFile();    //!< simulator file
+            void displayIcon();          //!< aircraft icon if any
+            void startModelConverterX(); //!< show in model converter X
+
             BlackGui::COverlayMessagesFrame *m_messageFrame = nullptr;
             QAction *m_fileAction = nullptr;
             QAction *m_iconAction = nullptr;
@@ -99,11 +98,10 @@ namespace BlackGui
             //! Change target
             void setModelsTarget(QObject *target) { this->m_modelsTarget = target; }
 
-        private slots:
-            void ps_consolidateData();
-            void ps_consolidateSelectedData();
-
         private:
+            void consolidateData();
+            void consolidateSelectedData();
+
             BlackMisc::Simulation::IModelsSetable   *modelsTargetSetable() const;
             BlackMisc::Simulation::IModelsUpdatable *modelsTargetUpdatable() const;
             QObject *m_modelsTarget        = nullptr; //!< optional target for setting/updating the models
@@ -132,11 +130,10 @@ namespace BlackGui
             //! Change target
             void setModelsTarget(QObject *target) { this->m_modelsTarget = target; }
 
-        private slots:
-            void ps_consolidateData();
-            void ps_consolidateSelectedData();
-
         private:
+            void consolidateData();
+            void consolidateSelectedData();
+
             //! Get models
             BlackMisc::Simulation::CAircraftModelList getSimulatorModels() const;
 
