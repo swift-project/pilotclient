@@ -49,7 +49,7 @@ namespace BlackGui
             return ok ? secs : -1;
         }
 
-        void CSettingsModelComponent::setBackgroundUpdater(BlackCore::Db::CBackgroundDataUpdater *updater)
+        void CSettingsModelComponent::setBackgroundUpdater(const BlackCore::Db::CBackgroundDataUpdater *updater)
         {
             m_updater = updater;
         }

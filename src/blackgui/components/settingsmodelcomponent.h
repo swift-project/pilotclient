@@ -39,12 +39,12 @@ namespace BlackGui
             int getBackgroundUpdaterIntervallSecs() const;
 
             //! Updater (the updater this setting is for)
-            void setBackgroundUpdater(BlackCore::Db::CBackgroundDataUpdater *updater);
+            void setBackgroundUpdater(const BlackCore::Db::CBackgroundDataUpdater *updater);
 
         private:
             QScopedPointer<Ui::CSettingsModelComponent> ui;
             BlackMisc::CSetting<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSetting { this, &CSettingsModelComponent::cacheChanged }; //!< consolidation time
-            BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr; //!< externally (i.e. other component) provided existing updater
+            const BlackCore::Db::CBackgroundDataUpdater *m_updater = nullptr; //!< externally (i.e. other component) provided existing updater
 
             //! Consolidation time entered
             void consolidationEntered();

@@ -28,7 +28,7 @@ namespace BlackGui
         CDataSettingsComponent::~CDataSettingsComponent()
         { }
 
-        void CDataSettingsComponent::setBackgroundUpdater(CBackgroundDataUpdater *updater)
+        void CDataSettingsComponent::setBackgroundUpdater(const CBackgroundDataUpdater *updater)
         {
             ui->comp_ModelSettings->setBackgroundUpdater(updater);
         }

@@ -40,7 +40,7 @@ namespace BlackGui
             virtual ~CDataSettingsComponent();
 
             //! Background updater
-            void setBackgroundUpdater(BlackCore::Db::CBackgroundDataUpdater *updater);
+            void setBackgroundUpdater(const BlackCore::Db::CBackgroundDataUpdater *updater);
 
         private:
             QScopedPointer<Ui::CDataSettingsComponent> ui;

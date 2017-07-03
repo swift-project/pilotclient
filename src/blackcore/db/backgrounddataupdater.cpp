@@ -169,6 +169,7 @@ namespace BlackCore
             const QSet<CSimulatorInfo> simSet = sims.asSingleSimulatorSet();
             for (const CSimulatorInfo &singleInfo : simSet)
             {
+                if (this->isShuttingDown()) { return; }
                 CAircraftModelList simModels = cache.getSynchronizedCachedModels(singleInfo);
                 if (simModels.isEmpty()) { continue; }
                 const CAircraftModelList dbModelsForSim = dbModels.matchesSimulator(singleInfo);
