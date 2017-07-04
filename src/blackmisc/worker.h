@@ -13,6 +13,7 @@
 #define BLACKMISC_WORKER_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/connectionguard.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/invoke.h"
 #include "blackmisc/stacktrace.h"
@@ -329,13 +330,34 @@ namespace BlackMisc
         {
             if (!ptr || static_cast<const CContinuousWorker *>(ptr)->hasStarted()) { return; }
             m_strong.reset(ptr);
-            QObject::connect(ptr, &CWorkerBase::aboutToStart, [this] { m_strong.release(); });
+            connect();
         }
 
         //! Construct a null pointer.
         //! @{
         CWorkerPointer() = default;
         CWorkerPointer(std::nullptr_t) {}
+        //! @}
+
+        //! Move constructor.
+        CWorkerPointer(CWorkerPointer &&other) : m_strong(std::move(other.m_strong)), m_weak(other.m_weak), m_guard()
+        {
+            connect();
+        }
+
+        //! Move assignment operator.
+        CWorkerPointer &operator =(CWorkerPointer &&other)
+        {
+            m_strong = std::move(other.m_strong);
+            m_weak = other.m_weak;
+            connect();
+            return *this;
+        }
+
+        //! Not copyable.
+        //! @{
+        CWorkerPointer(const CWorkerPointer &) = delete;
+        CWorkerPointer &operator =(const CWorkerPointer &) = delete;
         //! @}
 
         //! Factory method.
@@ -360,8 +382,15 @@ namespace BlackMisc
         bool isOwner() const { return m_strong; }
 
     private:
+        void connect()
+        {
+            if (!m_strong) { return; }
+            m_guard = QObject::connect(m_strong.get(), &CWorkerBase::aboutToStart, [this] { m_strong.release(); });
+        }
+
         std::unique_ptr<T> m_strong;
         QPointer<T> m_weak;
+        CConnectionGuard m_guard;
     };
 
 }

@@ -25,16 +25,26 @@ namespace BlackMisc
      * be disconnected when the object is destroyed. So it can be used with lambdas or bind which feature
      * non QObjects, if those might be destroyed before the signaling QObject.
      */
-    class BLACKMISC_EXPORT CConnectionGuard : public QObject
+    class BLACKMISC_EXPORT CConnectionGuard
     {
-        Q_OBJECT
-
     public:
         //! Constructor
         CConnectionGuard() = default;
 
         //! Constructor
         CConnectionGuard(const QMetaObject::Connection &connection);
+
+        //! Move constructor
+        CConnectionGuard(CConnectionGuard &&) = default;
+
+        //! Move assignment operator
+        CConnectionGuard &operator =(CConnectionGuard &&) = default;
+
+        //! Not copyable
+        //! @{
+        CConnectionGuard(const CConnectionGuard &) = delete;
+        CConnectionGuard &operator =(const CConnectionGuard &) = delete;
+        //! @}
 
         //! Destructor
         ~CConnectionGuard();
