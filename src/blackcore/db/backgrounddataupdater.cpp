@@ -75,7 +75,13 @@ namespace BlackCore
             m_enabled = false;
             if (!CThreadUtils::isCurrentThreadObjectThread(this))
             {
-                doIfNotFinished([this] { this->abandonAndWait(); });
+                std::promise<void> promise;
+                doIfFinishedElse([&promise] { promise.set_value(); }, [&promise, this]
+                {
+                    this->then([&promise] { promise.set_value(); });
+                    this->abandon();
+                });
+                promise.get_future().wait();
             }
         }
 

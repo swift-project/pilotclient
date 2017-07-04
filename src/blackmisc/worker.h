@@ -134,7 +134,7 @@ namespace BlackMisc
         }
 
         //! Executes some code (in the caller's thread) if the task has not finished.
-        //! \threadsafe
+        //! \threadsafe But the functor will deadlock if it waits for the task to finish.
         template <typename F>
         void doIfNotFinished(F functor) const
         {
@@ -142,8 +142,8 @@ namespace BlackMisc
             if (! m_finished) { functor(); }
         }
 
-        //! Executes some code (in the caller's thread) if the task has not finished and some different code if it has finished.
-        //! \threadsafe
+        //! Executes some code (in the caller's thread) if the task has finished and some different code if it has not finished.
+        //! \threadsafe But the elseFunctor will deadlock if it waits for the task to finish.
         template <typename F1, typename F2>
         void doIfFinishedElse(F1 ifFunctor, F2 elseFunctor) const
         {
