@@ -85,7 +85,7 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::gracefulShutdown()
     {
-        bool s = QMetaObject::invokeMethod(&m_timer, "stop");
+        const bool s = QMetaObject::invokeMethod(&m_timer, "stop");
         Q_ASSERT_X(s, Q_FUNC_INFO, "invoke failed");
         Q_UNUSED(s);
     }

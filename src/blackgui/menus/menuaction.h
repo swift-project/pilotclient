@@ -137,6 +137,7 @@ namespace BlackGui
             static const QString &pathStashEditor()  { static const QString p("Custom.13.Stash/Editor"); return p; }
 
             //! vPilot data
+            //! \deprecated vPilot functionality likely to be removed in the future
             static const QString &pathVPilot()  { static const QString p("Custom.14.vPilot/vPilot"); return p; }
 
             //! Log functionality

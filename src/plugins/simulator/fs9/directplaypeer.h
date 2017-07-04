@@ -63,7 +63,7 @@ namespace BlackSimPlugin
             HRESULT directPlayMessageHandler(DWORD messageId, void *msgBuffer);
 
             //! Initialize DirectPlay
-            HRESULT     initDirectPlay();
+            HRESULT initDirectPlay();
 
             //! Returns true of the service provider is a valid on this machine
             bool isServiceProviderValid(const GUID *pGuidSP);

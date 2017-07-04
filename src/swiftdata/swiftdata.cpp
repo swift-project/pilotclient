@@ -109,10 +109,7 @@ void CSwiftData::init()
     const CGlobalSetup s(sApp->getGlobalSetup());
     if (!s.getDbHomePageUrl().isEmpty())
     {
-        QString t(this->windowTitle());
-        t += " ";
-        t += s.getDbHomePageUrl().toQString(true);
-        this->setWindowTitle(t);
+        this->setWindowTitle(QString("%1 %2").arg(this->windowTitle(), s.getDbHomePageUrl().toQString(true)));
     }
 
     sGui->triggerNewVersionCheck(10 * 1000);
@@ -158,7 +155,7 @@ void CSwiftData::performGracefulShutdown()
 
 void CSwiftData::consolidationSettingChanged()
 {
-    int consolidationSecs = m_consolidationSettings.get();
+    const int consolidationSecs = m_consolidationSettings.get();
     if (consolidationSecs < 0)
     {
         if (m_updater)
