@@ -329,7 +329,7 @@ namespace BlackMisc
         {
             if (!ptr || static_cast<const CContinuousWorker *>(ptr)->hasStarted()) { return; }
             m_strong.reset(ptr);
-            QObject::connect(ptr, &CWorkerBase::aboutToStart, [this] { m_strong.reset(); });
+            QObject::connect(ptr, &CWorkerBase::aboutToStart, [this] { m_strong.release(); });
         }
 
         //! Construct a null pointer.
