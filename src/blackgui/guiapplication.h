@@ -156,6 +156,9 @@ namespace BlackGui
         //! Update the fonts
         bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
 
+        //! Update the fonts
+        bool updateFont(const QString &qss);
+
         //! Reset the font to default
         bool resetFont();
 

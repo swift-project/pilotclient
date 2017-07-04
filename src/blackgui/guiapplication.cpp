@@ -557,6 +557,11 @@ namespace BlackGui
         return m_styleSheetUtility.updateFont(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
     }
 
+    bool CGuiApplication::updateFont(const QString &qss)
+    {
+        return m_styleSheetUtility.updateFont(qss);
+    }
+
     bool CGuiApplication::resetFont()
     {
         return m_styleSheetUtility.resetFont();

@@ -97,6 +97,14 @@ namespace BlackGui
         return w.append(" ").append(s);
     }
 
+    QString CStyleSheetUtility::asStylesheet(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
+    {
+        static const QString indent("     ");
+        static const QString lf("\n");
+        static QString fontStyleSheet("%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2%1color: %7;%2");
+        return fontStyleSheet.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+    }
+
     QString CStyleSheetUtility::fontColor() const
     {
         const QString s = this->style(fileNameFonts()).toLower();
@@ -205,24 +213,22 @@ namespace BlackGui
 
     bool CStyleSheetUtility::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
     {
-        static const QString indent("     ");
-        QString fontStyleSheet;
-        fontStyleSheet.append(indent).append("font-family: \"").append(fontFamily).append("\";\n");
-        fontStyleSheet.append(indent).append("font-size: ").append(fontSize).append(";\n");
-        fontStyleSheet.append(indent).append("font-style: ").append(fontStyle).append(";\n");
-        fontStyleSheet.append(indent).append("font-weight: ").append(fontWeight).append(";\n");
-        fontStyleSheet.append(indent).append("color: ").append(fontColor).append(";\n");
+        QString qss = CStyleSheetUtility::asStylesheet(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+        return CStyleSheetUtility::updateFont(qss);
+    }
 
-        QString qss("QWidget {\n");
-        qss.append(fontStyleSheet);
-        qss.append("}\n");
+    bool CStyleSheetUtility::updateFont(const QString &qss)
+    {
+        QString qssWidget("QWidget {\n");
+        qssWidget.append(qss);
+        qssWidget.append("}\n");
 
         QFile fontFile(CBuildConfig::getStylesheetsDir() + "/" + fileNameFontsModified());
         bool ok = fontFile.open(QFile::Text | QFile::WriteOnly);
         if (ok)
         {
             QTextStream out(&fontFile);
-            out << qss;
+            out << qssWidget;
             fontFile.close();
             ok = this->read();
         }

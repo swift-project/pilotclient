@@ -54,6 +54,9 @@ namespace BlackGui
         bool updateFont(const QFont &font);
 
         //! Update the fonts
+        bool updateFont(const QString &qss);
+
+        //! Update the fonts
         bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
 
         //! Reset font
@@ -127,6 +130,9 @@ namespace BlackGui
 
         //! Font as combined weight and style
         static QString fontAsCombinedWeightStyle(const QFont &font);
+
+        //! Parameter as stylesheet
+        static QString asStylesheet(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
 
         //! Use style sheets in derived widgets
         //! \sa QWidget::paintEvent
