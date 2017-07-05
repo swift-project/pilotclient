@@ -49,15 +49,6 @@ namespace BlackGui
             void changedWindowsOpacity(int opacity);
 
         private slots:
-            //! Font has been changed
-            void ps_fontChanged();
-
-            //! Font color dialof
-            void ps_fontColorDialog();
-
-            //! Reset font
-            void ps_resetFont();
-
             //! Selection radio buttons changed
             void ps_selectionChanged();
 
@@ -69,7 +60,6 @@ namespace BlackGui
             void widgetStyleChanged(const QString &widgetStyle);
 
             QScopedPointer<Ui::CSettingsGuiComponent> ui;
-            QColor m_fontColor;
             BlackMisc::CSetting<BlackGui::Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
         };
     } // ns

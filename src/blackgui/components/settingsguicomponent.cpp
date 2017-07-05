@@ -35,34 +35,16 @@ namespace BlackGui
             ui->cb_SettingsGuiWidgetStyle->clear();
             ui->cb_SettingsGuiWidgetStyle->insertItems(0, QStyleFactory::keys());
 
-            // Font
-            const QFont font = this->font();
-            this->m_fontColor = QColor(sGui->getStyleSheetUtility().fontColor());
-            ui->cb_SettingsGuiFontStyle->setCurrentText(CStyleSheetUtility::fontAsCombinedWeightStyle(font));
-            ui->cb_SettingsGuiFont->setCurrentFont(font);
-            ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
-            ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
-
-            connect(ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsGuiComponent::ps_fontColorDialog);
-            bool connected = this->connect(ui->cb_SettingsGuiFont, SIGNAL(currentFontChanged(QFont)), this, SLOT(ps_fontChanged()));
-            Q_ASSERT(connected);
-            connected = connect(ui->cb_SettingsGuiFontSize, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
-            Q_ASSERT(connected);
-            connected = connect(ui->cb_SettingsGuiFontStyle, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
-            Q_ASSERT(connected);
-
-            // Widget style and rest
+            // Widget style
             connect(ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsGuiComponent::changedWindowsOpacity);
             connect(ui->cb_SettingsGuiWidgetStyle, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
                     this, &CSettingsGuiComponent::widgetStyleChanged);
-            connect(ui->tb_ResetFont, &QToolButton::pressed, this, &CSettingsGuiComponent::ps_resetFont);
 
             // selection
             connect(ui->rb_PreferExtendedSelection, &QRadioButton::released, this, &CSettingsGuiComponent::ps_selectionChanged);
             connect(ui->rb_PreferMultiSelection, &QRadioButton::released, this, &CSettingsGuiComponent::ps_selectionChanged);
 
             this->guiSettingsChanged();
-            Q_UNUSED(connected);
         }
 
         CSettingsGuiComponent::~CSettingsGuiComponent()
@@ -77,42 +59,6 @@ namespace BlackGui
         void CSettingsGuiComponent::setGuiOpacity(double value)
         {
             ui->hs_SettingsGuiOpacity->setValue(static_cast<int>(value));
-        }
-
-        void CSettingsGuiComponent::ps_fontChanged()
-        {
-            const QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
-            const QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
-            const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
-            QString fontColor = this->m_fontColor.name();
-            if (!this->m_fontColor.isValid() || this->m_fontColor.name().isEmpty())
-            {
-                fontColor = sGui->getStyleSheetUtility().fontColor();
-            }
-            ui->le_SettingsGuiFontColor->setText(fontColor);
-            const bool ok = sGui->updateFont(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
-            if (ok)
-            {
-                CLogMessage(this).info("Updated font style");
-            }
-            else
-            {
-                CLogMessage(this).info("Updating style failed");
-            }
-        }
-
-        void CSettingsGuiComponent::ps_fontColorDialog()
-        {
-            const QColor c =  QColorDialog::getColor(this->m_fontColor, this, "Font color");
-            if (c == this->m_fontColor) return;
-            this->m_fontColor = c;
-            ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
-            this->ps_fontChanged();
-        }
-
-        void CSettingsGuiComponent::ps_resetFont()
-        {
-            sGui->resetFont();
         }
 
         void CSettingsGuiComponent::ps_selectionChanged()
