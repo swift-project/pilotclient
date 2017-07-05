@@ -422,7 +422,8 @@ namespace BlackMisc
 
     const QPixmap &CIcons::font16()
     {
-        return empty16(); //! \fixme icon needed
+        static const QPixmap pm(":/pastel/icons/pastel/16/font.png");
+        return pm;
     }
 
     const QPixmap &CIcons::database16()

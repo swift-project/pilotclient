@@ -101,6 +101,14 @@
         <file>icons/pastel/48/font-error.png</file>
         <file>icons/pastel/48/plugin-error.png</file>
         <file>icons/pastel/48/table-error.png</file>
+        <file>icons/pastel/16/font.png</file>
+        <file>icons/pastel/16/font-add.png</file>
+        <file>icons/pastel/16/font-disk.png</file>
+        <file>icons/pastel/16/font-edit.png</file>
+        <file>icons/pastel/16/font-enlarge.png</file>
+        <file>icons/pastel/16/font-error.png</file>
+        <file>icons/pastel/16/font-go.png</file>
+        <file>icons/pastel/16/font-shrink.png</file>
     </qresource>
     <qresource prefix="/vatsim">
         <file>icons/vatsim/C1.png</file>

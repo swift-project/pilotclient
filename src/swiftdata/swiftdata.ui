@@ -85,7 +85,6 @@
     <property name="title">
      <string>&amp;Window</string>
     </property>
-    <addaction name="menu_WindowFont"/>
    </widget>
    <widget class="QMenu" name="menu_InfoAreas">
     <property name="title">
