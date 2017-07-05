@@ -131,6 +131,7 @@ namespace BlackMisc
             StandardIconFilter16,
             StandardIconFloatAll16,
             StandardIconFloatOne16,
+            StandardIconFont16,
             StandardIconGlobe16,
             StandardIconHeadingOne16,
             StandardIconInfo16,
@@ -386,6 +387,9 @@ namespace BlackMisc
 
         //! Filter
         static const QPixmap &filter16();
+
+        //! Font
+        static const QPixmap &font16();
 
         //! Arrow
         static const QPixmap &arrowMediumNorth16();

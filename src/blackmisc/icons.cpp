@@ -420,6 +420,11 @@ namespace BlackMisc
         return tableSheet16();
     }
 
+    const QPixmap &CIcons::font16()
+    {
+        return empty16(); //! \fixme icon needed
+    }
+
     const QPixmap &CIcons::database16()
     {
         static const QPixmap pm(":/pastel/icons/pastel/16/database.png");
@@ -1067,6 +1072,7 @@ namespace BlackMisc
         case StandardIconError16: return error16();
         case StandardIconFloatAll16: return floatAll16();
         case StandardIconFloatOne16: return floatOne16();
+        case StandardIconFont16: return font16();
         case StandardIconGlobe16: return globe16();
         case StandardIconHeadingOne16: return headingOne16();
         case StandardIconInfo16: return info16();
