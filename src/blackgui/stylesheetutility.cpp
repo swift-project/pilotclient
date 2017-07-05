@@ -101,8 +101,24 @@ namespace BlackGui
     {
         static const QString indent("     ");
         static const QString lf("\n");
-        static QString fontStyleSheet("%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2%1color: %7;%2");
-        return fontStyleSheet.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+        static const QString fontStyleSheet("%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2%1color: %7;%2");
+        static const QString fontStyleSheetNoColor("%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2");
+
+        return fontColor.isEmpty() ?
+               fontStyleSheetNoColor.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight) :
+               fontStyleSheet.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+    }
+
+    QString CStyleSheetUtility::asStylesheet(const QWidget *widget, int pointSize)
+    {
+        Q_ASSERT_X(widget, Q_FUNC_INFO, "Missing widget");
+        const QFont f = widget->font();
+        return CStyleSheetUtility::asStylesheet(
+                   f.family(),
+                   QString("%1pt").arg(pointSize < 0 ? f.pointSize() : pointSize),
+                   CStyleSheetUtility::fontStyleAsString(f),
+                   CStyleSheetUtility::fontWeightAsString(f)
+               );
     }
 
     QString CStyleSheetUtility::fontColor() const
@@ -155,7 +171,7 @@ namespace BlackGui
 
     QString CStyleSheetUtility::style(const QString &fileName) const
     {
-        if (!this->containsStyle(fileName)) return QString();
+        if (!this->containsStyle(fileName)) { return QString(); }
         return this->m_styleSheets[fileName.toLower()].trimmed();
     }
 
@@ -213,7 +229,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
     {
-        QString qss = CStyleSheetUtility::asStylesheet(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+        const QString qss = CStyleSheetUtility::asStylesheet(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
         return CStyleSheetUtility::updateFont(qss);
     }
 
@@ -244,7 +260,7 @@ namespace BlackGui
     QString CStyleSheetUtility::fontStyle(const QString &combinedStyleAndWeight)
     {
         static const QString n("normal");
-        QString c = combinedStyleAndWeight.toLower();
+        const QString c = combinedStyleAndWeight.toLower();
         for (const QString &s : fontStyles())
         {
             if (c.contains(s))
@@ -258,7 +274,7 @@ namespace BlackGui
     QString CStyleSheetUtility::fontWeight(const QString &combinedStyleAndWeight)
     {
         static const QString n("normal");
-        QString c = combinedStyleAndWeight.toLower();
+        const QString c = combinedStyleAndWeight.toLower();
         for (const QString &w : fontWeights())
         {
             if (c.contains(w))

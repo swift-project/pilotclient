@@ -131,8 +131,12 @@ namespace BlackGui
         //! Font as combined weight and style
         static QString fontAsCombinedWeightStyle(const QFont &font);
 
-        //! Parameter as stylesheet
-        static QString asStylesheet(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
+        //! Parameters as stylesheet
+        static QString asStylesheet(const QString &fontFamily, const QString &fontSize, const QString &fontStyle,
+                                    const QString &fontWeight, const QString &fontColor = {});
+
+        //! Widget's font as stylesheet
+        static QString asStylesheet(const QWidget *widget, int pointSize = -1);
 
         //! Use style sheets in derived widgets
         //! \sa QWidget::paintEvent
@@ -163,8 +167,8 @@ namespace BlackGui
         //! Check existance of qss file
         static bool qssFileExists(const QString &filename);
 
-        QMap<QString, QString>   m_styleSheets;         //!< filename, stylesheet
-        QFileSystemWatcher       m_fileWatcher {this};  //!< Monitor my qss files
+        QMap<QString, QString> m_styleSheets;         //!< filename, stylesheet
+        QFileSystemWatcher     m_fileWatcher {this};  //!< Monitor my qss files
     };
 }
 #endif // guard
