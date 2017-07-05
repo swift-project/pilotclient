@@ -143,6 +143,9 @@ namespace BlackGui
             //! Log functionality
             static const QString &pathLog()  { static const QString p("Custom15.Log"); return p; }
 
+            //! Font menus (font size etc.)
+            static const QString &pathFont()  { static const QString p("Custom20.Font"); return p; }
+
             // ---- client ----
 
             //! Client COM related
@@ -200,12 +203,12 @@ namespace BlackGui
             //! @}
 
         private:
-            QAction *m_action = nullptr;    //!< the action
-            QIcon    m_icon;                //!< icon
-            QString  m_title;               //!< title
-            QString  m_path;                //!< path in menu
-            bool     m_separator = false;   //!< separator
-            bool     m_isMenu = false;      //!< is menu?
+            QAction *m_action = nullptr;  //!< the action
+            QIcon    m_icon;              //!< icon
+            QString  m_title;             //!< title
+            QString  m_path;              //!< path in menu
+            bool     m_separator = false; //!< separator
+            bool     m_isMenu = false;    //!< is menu?
         };
 
         /*!
