@@ -57,7 +57,12 @@ namespace BlackGui
     class CDockWidgetInfoArea;
     class CLoadIndicator;
 
-    namespace Menus { class IMenuDelegate; }
+    namespace Menus
+    {
+        class IMenuDelegate;
+        class CFontMenu;
+    }
+
     namespace Filters
     {
         class CFilterDialog;
@@ -116,16 +121,15 @@ namespace BlackGui
                 MenuCopy                 = 1 << 11,  //!< copy (for copy/paste)
                 MenuPaste                = 1 << 12,  //!< paste (for copy/paste)
                 MenuCut                  = 1 << 13,  //!< cut (for copy/paste)
-                MenuStandard             = MenuClear | MenuRemoveSelectedRows | MenuRefresh | MenuBackend |
-                                           MenuDisplayAutomatically | MenuFilter | MenuSave | MenuLoad | MenuToggleSelectionMode,
+                MenuFont                 = 1 << 14,  //!< font related menu (size)
                 MenuLoadAndSave          = MenuLoad  | MenuSave,
-                MenuDefault              = MenuClear | MenuDisplayAutomaticallyAndRefresh | MenuToggleSelectionMode,
-                MenuDefaultNoClear       = MenuDisplayAutomaticallyAndRefresh | MenuToggleSelectionMode,
-                MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend,
+                MenuDefault              = MenuToggleSelectionMode | MenuDisplayAutomaticallyAndRefresh | MenuFont | MenuClear,
+                MenuDefaultNoClear       = MenuToggleSelectionMode | MenuDisplayAutomaticallyAndRefresh | MenuFont,
+                MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend | MenuFont,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightStashed     = 1 << 14,  //!< highlight stashed models
-                MenuCanStashModels       = 1 << 15,  //!< stash models
+                MenuHighlightStashed     = 1 << 15,  //!< highlight stashed models
+                MenuCanStashModels       = 1 << 16,  //!< stash models
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
@@ -421,8 +425,9 @@ namespace BlackGui
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
             bool m_dropIndicator                      = false;                 //!< draw indicator
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
-            Menu     m_menus                          = MenuDefault;           //!< Default menu settings
+            Menu m_menus                              = MenuDefault;           //!< Default menu settings
             BlackGui::Menus::IMenuDelegate *m_menu    = nullptr;               //!< custom menu if any
+            BlackGui::Menus::CFontMenu *m_fontMenu    = nullptr;               //!< font menu if applicable
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if needed
             QMap<MenuFlag, BlackGui::Menus::CMenuActions> m_menuFlagActions;   //!< initialized actions
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
@@ -527,8 +532,8 @@ namespace BlackGui
             public CViewBaseNonTemplate,
             public BlackGui::Models::ISelectionModel<ContainerType>
         {
-            // I cannot use Q_OBJECT here, because of error: Template classes not supported by Q_OBJECT
-            // Cannot declare slots as SLOT because I have no Q_OBJECT macro
+            // I cannot use Q_OBJECT here, because: Template classes are not supported by Q_OBJECT
+            // and I cannot declare slots as SLOT because I have no Q_OBJECT macro
 
         public:
             //! Destructor

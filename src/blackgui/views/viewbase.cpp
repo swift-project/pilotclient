@@ -17,6 +17,7 @@
 #include "blackgui/models/allmodels.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/menus/menudelegate.h"
+#include "blackgui/menus/fontmenus.h"
 #include "blackgui/shortcut.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/views/viewbaseproxystyle.h"
@@ -126,6 +127,9 @@ namespace BlackGui
             deleteRow->setObjectName("Delete selected rows for " + this->objectName());
             QShortcut *copy = new QShortcut(CShortcut::keyCopy(), this, SLOT(ps_copy()), nullptr, Qt::WidgetShortcut);
             copy->setObjectName("Copy rows for " + this->objectName());
+
+            // Font menus
+            m_fontMenu = new CFontMenu(this, true);
         }
 
         bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
@@ -165,7 +169,7 @@ namespace BlackGui
             this->setFilterWidgetImpl(filterDialog);
             if (filterDialog)
             {
-                bool s = connect(filterDialog, &CFilterDialog::finished, this, &CViewBaseNonTemplate::ps_filterDialogFinished);
+                const bool s = connect(filterDialog, &CFilterDialog::finished, this, &CViewBaseNonTemplate::ps_filterDialogFinished);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "filter dialog connect");
                 Q_UNUSED(s);
             }
@@ -226,7 +230,7 @@ namespace BlackGui
             {
                 // new menu with nesting
                 menu->setNestedDelegate(this->m_menu);
-                m_menu =  menu;
+                m_menu = menu;
             }
             else if (!menu && nestPreviousMenu)
             {
@@ -352,6 +356,10 @@ namespace BlackGui
             if (this->m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
             if (this->m_menus.testFlag(MenuCut)) { menuActions.addActions(this->initMenuActions(MenuCut)); }
             if (this->m_menus.testFlag(MenuPaste)) { menuActions.addActions(this->initMenuActions(MenuPaste)); }
+            if (this->m_menus.testFlag(MenuFont))
+            {
+                menuActions.addActions(m_fontMenu->getActions(), CMenuAction::pathFont());
+            }
 
             if (this->m_menus.testFlag(MenuFilter) && m_filterWidget)
             {
