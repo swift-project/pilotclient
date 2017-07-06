@@ -26,6 +26,7 @@
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/statusmessage.h"
 #include "ui_flightplancomponent.h"
 
@@ -598,7 +599,7 @@ namespace BlackGui
         QString CFlightPlanComponent::getDefaultFilename(bool load)
         {
             // some logic to find a useful default name
-            QString dir = CBuildConfig::getDocumentationDirectory();
+            QString dir = CDirectoryUtils::getDocumentationDirectory();
 
             if (load)
             {

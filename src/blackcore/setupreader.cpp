@@ -20,7 +20,6 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/statusmessage.h"
-#include "blackconfig/buildconfig.h"
 
 #include <QByteArray>
 #include <QFile>
@@ -31,7 +30,6 @@
 #include <QUrl>
 #include <QtGlobal>
 
-using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
@@ -518,7 +516,7 @@ namespace BlackCore
             CLogMessage(this).info("Setup (bootstrap already cached, no prefill needed");
             return false;
         }
-        const QString fn = CBuildConfig::getBootstrapResourceFile();
+        const QString fn = CDirectoryUtils::getBootstrapResourceFile();
         const CStatusMessageList msgs = this->readLocalBootstrapFile(fn);
         CLogMessage::preformatted(msgs);
         return true;

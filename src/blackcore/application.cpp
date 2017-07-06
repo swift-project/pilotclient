@@ -1189,7 +1189,7 @@ namespace BlackCore
         if (isUnitTest()) { return CStatusMessage(this).info("No crash handler for unit tests"); }
 
         static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
-        static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::applicationDirectoryPath(), crashpadHandler);
+        static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::getBinDir(), crashpadHandler);
         static const QString crashpadPath = CDirectoryUtils::getCrashpadDirectory();
         static const QString database = CFileUtils::appendFilePaths(crashpadPath, "/database");
         static const QString metrics = CFileUtils::appendFilePaths(crashpadPath, "/metrics");

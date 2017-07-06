@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/dbaircrafticaocomponent.h"
@@ -21,6 +20,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/verify.h"
 #include "ui_datainfoareacomponent.h"
 
@@ -29,7 +29,6 @@
 #include <QTabWidget>
 #include <QtGlobal>
 
-using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackGui;
@@ -91,7 +90,7 @@ namespace BlackGui
             }
 
             // write to disk
-            bool s = sGui->getWebDataServices()->writeDbDataToDisk(CBuildConfig::getSwiftStaticDbFilesDir());
+            bool s = sGui->getWebDataServices()->writeDbDataToDisk(CDirectoryUtils::getSwiftStaticDbFilesDir());
             if (s)
             {
                 CLogMessage(this).info("Written DB data");
@@ -106,12 +105,12 @@ namespace BlackGui
         bool CDataInfoAreaComponent::readDbDataFromResourceDir()
         {
             bool s = sGui &&
-                     sGui->getWebDataServices()->readDbDataFromDisk(CBuildConfig::getSwiftStaticDbFilesDir(), true);
+                     sGui->getWebDataServices()->readDbDataFromDisk(CDirectoryUtils::getSwiftStaticDbFilesDir(), true);
 
             // info
             if (s)
             {
-                CLogMessage(this).info("Read DB data from directory: %1") << CBuildConfig::getSwiftStaticDbFilesDir();
+                CLogMessage(this).info("Read DB data from directory: %1") << CDirectoryUtils::getSwiftStaticDbFilesDir();
                 ui->comp_DbAircraftIcao->showLoadIndicator();
                 ui->comp_DbAirlineIcao->showLoadIndicator();
                 ui->comp_DbCountries->showLoadIndicator();

@@ -9,7 +9,7 @@
 
 //! \cond PRIVATE
 
-#include "blackconfig/buildconfig.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/threadutils.h"
@@ -21,8 +21,6 @@
 #include <QPainter>
 #include <QSize>
 #include <QtGlobal>
-
-using namespace BlackConfig;
 
 namespace BlackMisc
 {
@@ -1157,7 +1155,7 @@ namespace BlackMisc
 
         if (!getResourceFileCache().contains(fileName))
         {
-            const QString path = CFileUtils::appendFilePaths(CBuildConfig::getImagesDir(), fileName);
+            const QString path = CFileUtils::appendFilePaths(CDirectoryUtils::getImagesDir(), fileName);
             QPixmap pm;
             const bool s = pm.load(path);
             getResourceFileCache().insert(fileName, s ? pm : CIcons::empty());

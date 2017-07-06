@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
 #include "blacksound/soundgenerator.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/filedeleter.h"
 #include <QtCore/qendian.h>
 #include <math.h>
@@ -23,7 +23,6 @@
 #include <QFile>
 #include <QDir>
 
-using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -501,12 +500,12 @@ namespace BlackSound
             // order here is crucial, needs to be the same as in CSoundGenerator::Notification
             if (!playlist) playlist = new QMediaPlaylist(mediaPlayer);
             bool success = true;
-            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/error.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/login.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/logoff.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/privatemessage.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/voiceroomjoined.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/voiceroomleft.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/error.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/login.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/logoff.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/privatemessage.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/voiceroomjoined.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/voiceroomleft.wav")) && success;
 
             Q_ASSERT(success);
             playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
@@ -546,5 +545,4 @@ namespace BlackSound
             out << qd.deviceName() << endl;
         }
     }
-
 } // namespace

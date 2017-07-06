@@ -10,6 +10,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/restricted.h"
 
 #include <QAbstractScrollArea>
@@ -132,12 +133,12 @@ namespace BlackGui
 
     bool CStyleSheetUtility::read()
     {
-        QDir directory(CBuildConfig::getStylesheetsDir());
+        QDir directory(CDirectoryUtils::getStylesheetsDir());
         if (!directory.exists()) { return false; }
 
         // qss/css files
         const bool needsWatcher = this->m_fileWatcher.files().isEmpty();
-        if (needsWatcher) { this->m_fileWatcher.addPath(CBuildConfig::getStylesheetsDir()); } // directory to deleted file watching
+        if (needsWatcher) { this->m_fileWatcher.addPath(CDirectoryUtils::getStylesheetsDir()); } // directory to deleted file watching
         directory.setNameFilters({"*.qss", "*.css"});
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
@@ -239,7 +240,7 @@ namespace BlackGui
         qssWidget.append(qss);
         qssWidget.append("}\n");
 
-        QFile fontFile(CBuildConfig::getStylesheetsDir() + "/" + fileNameFontsModified());
+        QFile fontFile(CDirectoryUtils::getStylesheetsDir() + "/" + fileNameFontsModified());
         bool ok = fontFile.open(QFile::Text | QFile::WriteOnly);
         if (ok)
         {
@@ -253,7 +254,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::resetFont()
     {
-        QFile fontFile(CBuildConfig::getStylesheetsDir() + "/" + fileNameFontsModified());
+        QFile fontFile(CDirectoryUtils::getStylesheetsDir() + "/" + fileNameFontsModified());
         return fontFile.remove();
     }
 
@@ -299,7 +300,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::deleteModifiedFontFile()
     {
-        const QString fn = CFileUtils::appendFilePaths(CBuildConfig::getStylesheetsDir(), fileNameFontsModified());
+        const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getStylesheetsDir(), fileNameFontsModified());
         QFile file(fn);
         if (!file.exists()) { return false; }
         bool r = file.remove();
@@ -483,7 +484,7 @@ namespace BlackGui
     bool CStyleSheetUtility::qssFileExists(const QString &filename)
     {
         if (filename.isEmpty()) { return false; }
-        const QFileInfo f(CFileUtils::appendFilePaths(CBuildConfig::getStylesheetsDir(), filename));
+        const QFileInfo f(CFileUtils::appendFilePaths(CDirectoryUtils::getStylesheetsDir(), filename));
         return f.exists() && f.isReadable();
     }
-}
+} // ns

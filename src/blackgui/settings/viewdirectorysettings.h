@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/settingscache.h"
-#include "blackconfig/buildconfig.h"
+#include "blackmisc/directoryutils.h"
 #include <QString>
 
 namespace BlackGui
@@ -31,7 +31,7 @@ namespace BlackGui
             static bool isValid(const QString &directory) { Q_UNUSED(directory); return true; }
 
             //! Default, not consolidating
-            static const QString &defaultValue() { return BlackConfig::CBuildConfig::getDocumentationDirectory(); }
+            static const QString &defaultValue() { return BlackMisc::CDirectoryUtils::getDocumentationDirectory(); }
         };
     } // ns
 } // ns

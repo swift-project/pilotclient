@@ -9,7 +9,6 @@
 
 #include "airlineicaocode.h"
 #include "callsign.h"
-#include "blackconfig/buildconfig.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/icons.h"
@@ -18,6 +17,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
 
@@ -30,7 +30,6 @@
 #include <Qt>
 #include <QtGlobal>
 
-using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 
@@ -481,7 +480,7 @@ namespace BlackMisc
         //! \private
         QSet<int> iconIdsImpl()
         {
-            QDir dir(CBuildConfig::getImagesAirlinesDir());
+            QDir dir(CDirectoryUtils::getImagesAirlinesDir());
             Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "image directory missing");
 
             QSet<int> ids;

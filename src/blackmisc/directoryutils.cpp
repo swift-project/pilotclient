@@ -12,6 +12,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/range.h"
+#include "blackconfig/buildconfig.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QUrl>
@@ -20,9 +21,11 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 
+using namespace BlackConfig;
+
 namespace BlackMisc
 {
-    QString applicationDirectoryPathImpl()
+    QString binDirectoryImpl()
     {
         QString appDirectoryString(qApp->applicationDirPath());
         if (appDirectoryString.endsWith("Contents/MacOS")) { appDirectoryString += "/../../.."; }
@@ -30,15 +33,15 @@ namespace BlackMisc
         return appDirectory.absolutePath();
     }
 
-    QString CDirectoryUtils::applicationDirectoryPath()
+    const QString &CDirectoryUtils::getBinDir()
     {
-        static const QString appDirectory(applicationDirectoryPathImpl());
-        return appDirectory;
+        static const QString binDir(binDirectoryImpl());
+        return binDir;
     }
 
     QString normalizedApplicationDirectoryImpl()
     {
-        QString appDir = CDirectoryUtils::applicationDirectoryPath();
+        QString appDir = CDirectoryUtils::getBinDir();
         Q_ASSERT(appDir.size() > 0);
         // Remove leading '/' on Unix
         if (appDir.at(0) == '/') { appDir.remove(0, 1); }
@@ -88,6 +91,198 @@ namespace BlackMisc
     {
         static const QString p = CFileUtils::appendFilePaths(swiftNormalizedApplicationDataDirectory(), "/logs");
         return p;
+    }
+
+    bool isAppBundleImpl()
+    {
+        QDir bundleDir(CDirectoryUtils::getBinDir());
+        bundleDir.cd("../..");
+        const bool isBundled = QFileInfo(bundleDir.absolutePath()).isBundle();
+        return isBundled;
+    }
+
+    QString getSwiftShareDirImpl()
+    {
+        QDir dir(CDirectoryUtils::getBinDir());
+        bool success = true;
+
+        static const bool appBundle = isAppBundleImpl();
+        if (CBuildConfig::isRunningOnMacOSXPlatform() && appBundle)
+        {
+            success = dir.cd("../../../../share");
+        }
+        else { success = dir.cd("../share"); }
+
+        if (success)
+        {
+            Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+            return dir.absolutePath();
+        }
+        Q_ASSERT_X(false, Q_FUNC_INFO, "missing dir");
+        return "";
+    }
+
+    const QString &CDirectoryUtils::getSwiftShareDir()
+    {
+        static const QString s(getSwiftShareDirImpl());
+        return s;
+    }
+
+    const QString getBootstrapResourceFileImpl()
+    {
+        const QString d(CDirectoryUtils::getSwiftShareDir());
+        if (d.isEmpty()) { return ""; }
+        const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/boostrap/boostrap.json"));
+        Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing dir");
+        return QFileInfo(file).absoluteFilePath();
+    }
+
+    const QString &CDirectoryUtils::getBootstrapResourceFile()
+    {
+        static const QString s(getBootstrapResourceFileImpl());
+        return s;
+    }
+
+    QString getSwiftStaticDbFilesDirImpl()
+    {
+        const QString d(CDirectoryUtils::getSwiftShareDir());
+        if (d.isEmpty()) { return ""; }
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "shared/dbdata"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CDirectoryUtils::getSwiftStaticDbFilesDir()
+    {
+        static QString s(getSwiftStaticDbFilesDirImpl());
+        return s;
+    }
+
+    QString getSoundFilesDirImpl()
+    {
+        const QString d(CDirectoryUtils::getSwiftShareDir());
+        if (d.isEmpty()) { return ""; }
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "sounds"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CDirectoryUtils::getSoundFilesDir()
+    {
+        static QString s(getSoundFilesDirImpl());
+        return s;
+    }
+
+    QString getStylesheetsDirImpl()
+    {
+        const QString d(CDirectoryUtils::getSwiftShareDir());
+        if (d.isEmpty()) { return ""; }
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "qss"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CDirectoryUtils::getStylesheetsDir()
+    {
+        static QString s(getStylesheetsDirImpl());
+        return s;
+    }
+
+    QString getImagesDirImpl()
+    {
+        const QString d(CDirectoryUtils::getSwiftShareDir());
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "images"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CDirectoryUtils::getImagesDir()
+    {
+        static const QString s(getImagesDirImpl());
+        return s;
+    }
+
+    const QString &CDirectoryUtils::getImagesAirlinesDir()
+    {
+        static const QString s(QDir::cleanPath(getImagesDir() + QDir::separator() + "airlines"));
+        return s;
+    }
+
+    const QString &CDirectoryUtils::getImagesFlagsDir()
+    {
+        static const QString s(QDir::cleanPath(getImagesDir() + QDir::separator() + "flags"));
+        return s;
+    }
+
+    QString getHtmlDirImpl()
+    {
+        const QString d(CDirectoryUtils::getSwiftShareDir());
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "html"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CDirectoryUtils::getHtmlDir()
+    {
+        static const QString s(getHtmlDirImpl());
+        return s;
+    }
+
+    QString getLegalDirImpl()
+    {
+        const QString d(CDirectoryUtils::getSwiftShareDir());
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "legal"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CDirectoryUtils::getLegalDir()
+    {
+        static const QString s(getLegalDirImpl());
+        return s;
+    }
+
+    const QString &CDirectoryUtils::getAboutFileLocation()
+    {
+        static const QString about = QDir::cleanPath(CDirectoryUtils::getLegalDir() + QDir::separator() + "about.html");
+        return about;
+    }
+
+    QString getTestFilesDirImpl()
+    {
+        const QString d(CDirectoryUtils::getSwiftShareDir());
+        if (d.isEmpty()) { return ""; }
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "test"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CDirectoryUtils::getTestFilesDir()
+    {
+        static QString s(getTestFilesDirImpl());
+        return s;
+    }
+
+    const QString &CDirectoryUtils::getHtmlTemplateFileName()
+    {
+        static const QString s(getHtmlDir() + QDir::separator() + "swifttemplate.html");
+        return s;
+    }
+
+    QString getDocumentationDirectoryImpl()
+    {
+        QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
+        QString d = pathes.first();
+        d = QDir::cleanPath(d + QDir::separator() + "swift");
+        QDir dir(d);
+        if (dir.exists()) { return dir.absolutePath(); }
+        return pathes.first();
+    }
+
+    const QString &CDirectoryUtils::getDocumentationDirectory()
+    {
+        static const QString d(getDocumentationDirectoryImpl());
+        return d;
     }
 
     const QString &CDirectoryUtils::getCrashpadDirectory()

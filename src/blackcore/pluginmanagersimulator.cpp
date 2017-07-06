@@ -105,7 +105,7 @@ namespace BlackCore
 
     QString CPluginManagerSimulator::pluginDirectory() const
     {
-        return CDirectoryUtils::applicationDirectoryPath() % QStringLiteral("/plugins/simulator");
+        return CDirectoryUtils::getBinDir() % QStringLiteral("/plugins/simulator");
     }
 
 }

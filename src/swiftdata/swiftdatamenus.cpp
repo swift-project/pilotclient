@@ -7,12 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/directoryutils.h"
 #include "swiftdata.h"
 #include "ui_swiftdata.h"
 
@@ -24,7 +24,6 @@
 #include <QString>
 #include <QtGlobal>
 
-using namespace BlackConfig;
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackGui::Components;
@@ -56,7 +55,7 @@ void CSwiftData::initDynamicMenus()
     Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "missing main area");
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
 
-    QString resourceDir(CBuildConfig::getSwiftShareDir());
+    QString resourceDir(CDirectoryUtils::getSwiftShareDir());
     if (!resourceDir.isEmpty() && QDir(resourceDir).exists())
     {
         Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");

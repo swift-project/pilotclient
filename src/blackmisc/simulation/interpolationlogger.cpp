@@ -81,7 +81,7 @@ namespace BlackMisc
         {
             if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).warning("No data for log"); }
             static const QString html = QStringLiteral("Entries: %1\n\n%2");
-            const QString htmlTemplate = CFileUtils::readFileToString(CBuildConfig::getHtmlTemplateFileName());
+            const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::getHtmlTemplateFileName());
 
             CStatusMessageList msgs;
             const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss");

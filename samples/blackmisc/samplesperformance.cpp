@@ -12,8 +12,8 @@
 
 #include "samplesperformance.h"
 #include "blackcore/db/databasereader.h"
-#include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
@@ -24,8 +24,8 @@
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/test/testing.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/stringutils.h"
 
 #include <QDateTime>
@@ -51,7 +51,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Test;
-using namespace BlackConfig;
 using namespace BlackCore::Db;
 
 namespace BlackSample
@@ -373,7 +372,7 @@ namespace BlackSample
 
     int CSamplesPerformance::samplesJsonModel(QTextStream &out)
     {
-        const QString dir = CBuildConfig::getSwiftStaticDbFilesDir();
+        const QString dir = CDirectoryUtils::getSwiftStaticDbFilesDir();
         const QString file = QDir(dir).filePath("models.json");
         QFile modelFile(file);
         Q_ASSERT_X(modelFile.exists(), Q_FUNC_INFO, "Model file does not exist");

@@ -89,52 +89,6 @@ namespace BlackConfig
         //! Running on Unix (Linux or Mac OS X) platform
         static bool isRunningOnUnixPlatform();
 
-        //! Application directory where current application is located
-        static const QString &getApplicationDir();
-
-        //! Where resource files (static DB files, ...) etc are located
-        //! \remark share not shared (do no mix)
-        static const QString &getSwiftShareDir();
-
-        //! Bootstrap resource directory
-        static const QString &getBootstrapResourceFile();
-
-        //! Where static DB files are located
-        static const QString &getSwiftStaticDbFilesDir();
-
-        //! Where sound files are located
-        static const QString &getSoundFilesDir();
-
-        //! Where qss files are located
-        static const QString &getStylesheetsDir();
-
-        //! Where images are located
-        static const QString &getImagesDir();
-
-        //! Where airline images are located
-        static const QString &getImagesAirlinesDir();
-
-        //! Where flags images are located
-        static const QString &getImagesFlagsDir();
-
-        //! Where HTML files are located
-        static const QString &getHtmlDir();
-
-        //! Where Legal files are located
-        static const QString &getLegalDir();
-
-        //! The about document file location
-        static const QString &getAboutFileLocation();
-
-        //! Where test files are located
-        static const QString &getTestFilesDir();
-
-        //! Where HTML files are located
-        static const QString &getHtmlTemplateFileName();
-
-        //! Directory where data can be stored
-        static const QString &getDocumentationDirectory();
-
         //! Info string about compilation
         static const QString &compiledWithInfo(bool shortVersion = true);
 

@@ -25,9 +25,11 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CDirectoryUtils
     {
     public:
-        //! Returns the directory of the application. In contrast to QCoreApplication::applicationDirPath()
-        //! it takes Mac OS X app bundles into account and returns the directory of the bundle.
-        static QString applicationDirectoryPath();
+        //! Returns the bin directory. On Windows/Linux this is the same directory as
+        //! QCoreApplication::applicationDirPath(), but on MacOS the exceutable is
+        //! located deeper in the hierarchy of the bundles
+        //! \see https://dev.swift-project.org/w/dev/swiftpc/dirstructure/
+        static const QString &getBinDir();
 
         //! swift application data directory, contains 0..n swift installation directories
         static const QString &swiftApplicationDataDirectory();
@@ -40,6 +42,49 @@ namespace BlackMisc
 
         //! swift application data directory for one specific installation (a version)
         static const QString &swiftNormalizedApplicationDataDirectory();
+
+        //! Where resource files (static DB files, ...) etc are located
+        //! \remark share not shared (do no mix)
+        static const QString &getSwiftShareDir();
+
+        //! Bootstrap resource directory
+        static const QString &getBootstrapResourceFile();
+
+        //! Where static DB files are located
+        static const QString &getSwiftStaticDbFilesDir();
+
+        //! Where sound files are located
+        static const QString &getSoundFilesDir();
+
+        //! Where qss files are located
+        static const QString &getStylesheetsDir();
+
+        //! Where images are located
+        static const QString &getImagesDir();
+
+        //! Where airline images are located
+        static const QString &getImagesAirlinesDir();
+
+        //! Where flags images are located
+        static const QString &getImagesFlagsDir();
+
+        //! Where HTML files are located
+        static const QString &getHtmlDir();
+
+        //! Where Legal files are located
+        static const QString &getLegalDir();
+
+        //! The about document file location
+        static const QString &getAboutFileLocation();
+
+        //! Where test files are located
+        static const QString &getTestFilesDir();
+
+        //! Where HTML files are located
+        static const QString &getHtmlTemplateFileName();
+
+        //! Directory where data can be stored
+        static const QString &getDocumentationDirectory();
 
         //! Directory for log files
         //! \remark In BlackMisc so it can also be used from BlackMisc classes
