@@ -20,7 +20,6 @@
 
 namespace BlackCore
 {
-
     using namespace BlackMisc;
     using namespace BlackMisc::Simulation;
 
@@ -88,7 +87,8 @@ namespace BlackCore
         for (const QJsonObject &json : plugins)
         {
             QString iid = json["IID"].toString();
-            if (iid == QStringLiteral("org.swift-project.blackcore.simulatorinterface")) {
+            if (iid == QStringLiteral("org.swift-project.blackcore.simulatorinterface"))
+            {
                 auto it = m_plugins.insert(pluginIdentifier(json), {});
                 it->info.convertFromJson(json);
             }
@@ -97,14 +97,16 @@ namespace BlackCore
 
     BlackMisc::CSequence<QString> CPluginManagerSimulator::acceptedIids() const
     {
-        return {
+        return
+        {
             QStringLiteral("org.swift-project.blackcore.simulatorinterface"),
             QStringLiteral("org.swift-project.blackgui.pluginconfiginterface")
         };
     }
 
-    QString CPluginManagerSimulator::pluginDirectory() const
+    const QString &CPluginManagerSimulator::pluginDirectory() const
     {
-        return CDirectoryUtils::binDirectory() % QStringLiteral("/plugins/simulator");
+        static const QString d(CFileUtils::appendFilePaths(CDirectoryUtils::pluginsDirectory(), "simulator"));
+        return d;
     }
 }

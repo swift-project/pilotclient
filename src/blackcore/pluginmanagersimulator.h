@@ -64,7 +64,7 @@ namespace BlackCore
         virtual BlackMisc::CSequence<QString> acceptedIids() const override;
 
         //! \copydoc BlackCore::IPluginManager::pluginDirectory()
-        virtual QString pluginDirectory() const override;
+        virtual const QString &pluginDirectory() const override;
 
     private:
         /*!

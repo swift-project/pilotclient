@@ -56,7 +56,7 @@ namespace BlackCore
 
         //! Where to look for plugins, absolute path.
         //! Default implementation returns `plugins` in the application dir.
-        virtual QString pluginDirectory() const;
+        virtual const QString &pluginDirectory() const;
 
         //! Defines whether the given plugin is valid or not, based on its metadata.
         //! The default implementation checks if all values common for all plugins

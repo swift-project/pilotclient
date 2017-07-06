@@ -50,9 +50,9 @@ namespace BlackCore
         return m_configs.contains(identifier) ? m_configs.value(identifier) : QString();
     }
 
-    QString IPluginManager::pluginDirectory() const
+    const QString &IPluginManager::pluginDirectory() const
     {
-        return CDirectoryUtils::binDirectory() % QStringLiteral("/plugins");
+        return CDirectoryUtils::pluginsDirectory();
     }
 
     bool IPluginManager::isValid(const QJsonObject &metadata) const

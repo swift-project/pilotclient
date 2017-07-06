@@ -31,6 +31,9 @@ namespace BlackMisc
         //! \see https://dev.swift-project.org/w/dev/swiftpc/dirstructure/
         static const QString &binDirectory();
 
+        //! Plugins directory
+        static const QString &pluginsDirectory();
+
         //! swift application data directory, contains 0..n swift installation directories
         static const QString &applicationDataDirectory();
 

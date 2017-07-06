@@ -24,7 +24,6 @@
 #include <QString>
 
 namespace BlackMisc { class CVariant; }
-
 namespace BlackCore
 {
     class IWeatherDataFactory;
@@ -33,7 +32,7 @@ namespace BlackCore
      * Manages plugins of type WeatherData.
      */
     class BLACKCORE_EXPORT CPluginManagerWeatherData :
-            public BlackCore::IPluginManager
+        public BlackCore::IPluginManager
     {
         Q_OBJECT
 
@@ -55,7 +54,7 @@ namespace BlackCore
         virtual BlackMisc::CSequence<QString> acceptedIids() const override;
 
         //! \copydoc BlackCore::IPluginManager::pluginDirectory()
-        virtual QString pluginDirectory() const override;
+        virtual const QString &pluginDirectory() const override;
 
     private:
         //! Extended data for plugin
@@ -66,7 +65,6 @@ namespace BlackCore
 
         QMap<QString, PluginExtended> m_plugins; //!< Id <-> extended data pairs
     };
-
 } // namespace
 
 #endif // guard

@@ -39,6 +39,12 @@ namespace BlackMisc
         return binDir;
     }
 
+    const QString &CDirectoryUtils::pluginsDirectory()
+    {
+        static const QString pDir(CFileUtils::appendFilePaths(binDirectory(), "plugins"));
+        return pDir;
+    }
+
     QString normalizedApplicationDirectoryImpl()
     {
         QString appDir = CDirectoryUtils::binDirectory();
