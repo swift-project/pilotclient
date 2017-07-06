@@ -132,7 +132,7 @@ namespace BlackMisc
             BLACK_VERIFY_X(dir.exists(), Q_FUNC_INFO, "Directory does not exist");
             if (!dir.exists()) { return ""; }
 
-            const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::getHtmlTemplateFileName());
+            const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::htmlTemplateFilePath());
             const QString fn("airlineAircraftMatrix.html");
             const bool ok = CFileUtils::writeStringToFile(htmlTemplate.arg(html), dir.absoluteFilePath(fn));
             return ok ? dir.absoluteFilePath(fn) : "";

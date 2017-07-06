@@ -372,7 +372,7 @@ namespace BlackSample
 
     int CSamplesPerformance::samplesJsonModel(QTextStream &out)
     {
-        const QString dir = CDirectoryUtils::getSwiftStaticDbFilesDir();
+        const QString dir = CDirectoryUtils::staticDbFilesDirectory();
         const QString file = QDir(dir).filePath("models.json");
         QFile modelFile(file);
         Q_ASSERT_X(modelFile.exists(), Q_FUNC_INFO, "Model file does not exist");

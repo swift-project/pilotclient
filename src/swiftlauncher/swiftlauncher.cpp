@@ -197,7 +197,7 @@ void CSwiftLauncher::loadAbout()
     // workaround:
     // 1) Only reading as HTML gives proper formatting
     // 2) Reading the file resource fails (likely because of the style sheet)
-    static const QString html = CFileUtils::readFileToString(CDirectoryUtils::getAboutFileLocation());
+    static const QString html = CFileUtils::readFileToString(CDirectoryUtils::aboutFilePath());
     static const QString legalDir = sGui->getGlobalSetup().getLegalDirectoryUrl().getFullUrl();
 
     // make links absolute
@@ -265,7 +265,7 @@ void CSwiftLauncher::startSwiftCore()
     // I set this for debug purpose only
     m_executableArgs = args;
     m_executable.clear();
-    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::getBinDir(), CBuildConfig::swiftCoreExecutableName());
+    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), CBuildConfig::swiftCoreExecutableName());
     if (CBuildConfig::isRunningOnMacOSXPlatform())
     {
         m_executable += QLatin1String(".app/Contents/MacOS/");
@@ -281,7 +281,7 @@ void CSwiftLauncher::startSwiftCore()
 void CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable.clear();
-    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::getBinDir(), CBuildConfig::swiftDataExecutableName());
+    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), CBuildConfig::swiftDataExecutableName());
     if (CBuildConfig::isRunningOnMacOSXPlatform())
     {
         m_executable += QLatin1String(".app/Contents/MacOS/");
@@ -293,7 +293,7 @@ void CSwiftLauncher::setSwiftDataExecutable()
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
     m_executable.clear();
-    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::getBinDir(), CBuildConfig::swiftGuiExecutableName());
+    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), CBuildConfig::swiftGuiExecutableName());
     if (CBuildConfig::isRunningOnMacOSXPlatform())
     {
         m_executable += QLatin1String(".app/Contents/MacOS/");

@@ -43,8 +43,8 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->cb_OtherVersions->clear();
-            ui->cb_OtherVersions->addItems(CDirectoryUtils::swiftApplicationDataDirectoryList(true, true));
-            m_otherVersionDirs = CDirectoryUtils::swiftApplicationDataDirectoryList(true, false); // not beautified
+            ui->cb_OtherVersions->addItems(CDirectoryUtils::applicationDataDirectoryList(true, true));
+            m_otherVersionDirs = CDirectoryUtils::applicationDataDirectoryList(true, false); // not beautified
 
             connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
             connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, [ = ] { this->initCurrentDirectories(true); });
@@ -277,7 +277,7 @@ namespace BlackGui
         QString CCopyConfigurationComponent::getOtherVersionsSelectedDirectory() const
         {
             if (ui->cb_OtherVersions->count() < 1) { return ""; }
-            const QFileInfoList dirs(CDirectoryUtils::swiftApplicationDataDirectories());
+            const QFileInfoList dirs(CDirectoryUtils::applicationDataDirectories());
             if (dirs.isEmpty()) { return ""; }
             const QString otherVersionDir = m_otherVersionDirs.at(ui->cb_OtherVersions->currentIndex());
             QString dir;

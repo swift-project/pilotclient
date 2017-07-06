@@ -1155,7 +1155,7 @@ namespace BlackMisc
 
         if (!getResourceFileCache().contains(fileName))
         {
-            const QString path = CFileUtils::appendFilePaths(CDirectoryUtils::getImagesDir(), fileName);
+            const QString path = CFileUtils::appendFilePaths(CDirectoryUtils::imagesDirectory(), fileName);
             QPixmap pm;
             const bool s = pm.load(path);
             getResourceFileCache().insert(fileName, s ? pm : CIcons::empty());

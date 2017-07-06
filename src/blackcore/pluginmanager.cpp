@@ -52,7 +52,7 @@ namespace BlackCore
 
     QString IPluginManager::pluginDirectory() const
     {
-        return CDirectoryUtils::getBinDir() % QStringLiteral("/plugins");
+        return CDirectoryUtils::binDirectory() % QStringLiteral("/plugins");
     }
 
     bool IPluginManager::isValid(const QJsonObject &metadata) const

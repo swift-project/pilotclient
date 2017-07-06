@@ -599,7 +599,7 @@ namespace BlackGui
         QString CFlightPlanComponent::getDefaultFilename(bool load)
         {
             // some logic to find a useful default name
-            QString dir = CDirectoryUtils::getDocumentationDirectory();
+            QString dir = CDirectoryUtils::documentationDirectory();
 
             if (load)
             {

@@ -67,7 +67,7 @@ namespace BlackCore
 
     QString CPluginManagerWeatherData::pluginDirectory() const
     {
-        return CDirectoryUtils::getBinDir() % QStringLiteral("/plugins/weatherdata");
+        return CDirectoryUtils::binDirectory() % QStringLiteral("/plugins/weatherdata");
     }
 
 }

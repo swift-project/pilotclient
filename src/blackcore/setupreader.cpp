@@ -122,7 +122,7 @@ namespace BlackCore
         if (this->m_bootstrapUrls.isEmpty())
         {
             // after all still empty
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Your log files are here: " + CDirectoryUtils::getLogDirectory()));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Your log files are here: " + CDirectoryUtils::logDirectory()));
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup"));
         }
         else
@@ -516,7 +516,7 @@ namespace BlackCore
             CLogMessage(this).info("Setup (bootstrap already cached, no prefill needed");
             return false;
         }
-        const QString fn = CDirectoryUtils::getBootstrapResourceFile();
+        const QString fn = CDirectoryUtils::bootstrapResourceFilePath();
         const CStatusMessageList msgs = this->readLocalBootstrapFile(fn);
         CLogMessage::preformatted(msgs);
         return true;

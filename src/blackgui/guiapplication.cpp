@@ -370,7 +370,7 @@ namespace BlackGui
         a = menu.addAction(CIcons::disk16(), "Log directory");
         c = connect(a, &QAction::triggered, this, [this]()
         {
-            const QString path(QDir::toNativeSeparators(CDirectoryUtils::getLogDirectory()));
+            const QString path(QDir::toNativeSeparators(CDirectoryUtils::logDirectory()));
             if (QDir(path).exists())
             {
                 QDesktopServices::openUrl(QUrl::fromLocalFile(path));

@@ -31,7 +31,7 @@ namespace BlackGui
             static bool isValid(const QString &directory) { Q_UNUSED(directory); return true; }
 
             //! Default, not consolidating
-            static const QString &defaultValue() { return BlackMisc::CDirectoryUtils::getDocumentationDirectory(); }
+            static const QString &defaultValue() { return BlackMisc::CDirectoryUtils::documentationDirectory(); }
         };
     } // ns
 } // ns

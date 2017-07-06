@@ -90,7 +90,7 @@ namespace BlackGui
             }
 
             // write to disk
-            bool s = sGui->getWebDataServices()->writeDbDataToDisk(CDirectoryUtils::getSwiftStaticDbFilesDir());
+            bool s = sGui->getWebDataServices()->writeDbDataToDisk(CDirectoryUtils::staticDbFilesDirectory());
             if (s)
             {
                 CLogMessage(this).info("Written DB data");
@@ -105,12 +105,12 @@ namespace BlackGui
         bool CDataInfoAreaComponent::readDbDataFromResourceDir()
         {
             bool s = sGui &&
-                     sGui->getWebDataServices()->readDbDataFromDisk(CDirectoryUtils::getSwiftStaticDbFilesDir(), true);
+                     sGui->getWebDataServices()->readDbDataFromDisk(CDirectoryUtils::staticDbFilesDirectory(), true);
 
             // info
             if (s)
             {
-                CLogMessage(this).info("Read DB data from directory: %1") << CDirectoryUtils::getSwiftStaticDbFilesDir();
+                CLogMessage(this).info("Read DB data from directory: %1") << CDirectoryUtils::staticDbFilesDirectory();
                 ui->comp_DbAircraftIcao->showLoadIndicator();
                 ui->comp_DbAirlineIcao->showLoadIndicator();
                 ui->comp_DbCountries->showLoadIndicator();

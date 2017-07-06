@@ -133,12 +133,12 @@ namespace BlackGui
 
     bool CStyleSheetUtility::read()
     {
-        QDir directory(CDirectoryUtils::getStylesheetsDir());
+        QDir directory(CDirectoryUtils::stylesheetsDirectory());
         if (!directory.exists()) { return false; }
 
         // qss/css files
         const bool needsWatcher = this->m_fileWatcher.files().isEmpty();
-        if (needsWatcher) { this->m_fileWatcher.addPath(CDirectoryUtils::getStylesheetsDir()); } // directory to deleted file watching
+        if (needsWatcher) { this->m_fileWatcher.addPath(CDirectoryUtils::stylesheetsDirectory()); } // directory to deleted file watching
         directory.setNameFilters({"*.qss", "*.css"});
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
@@ -240,7 +240,7 @@ namespace BlackGui
         qssWidget.append(qss);
         qssWidget.append("}\n");
 
-        QFile fontFile(CDirectoryUtils::getStylesheetsDir() + "/" + fileNameFontsModified());
+        QFile fontFile(CDirectoryUtils::stylesheetsDirectory() + "/" + fileNameFontsModified());
         bool ok = fontFile.open(QFile::Text | QFile::WriteOnly);
         if (ok)
         {
@@ -254,7 +254,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::resetFont()
     {
-        QFile fontFile(CDirectoryUtils::getStylesheetsDir() + "/" + fileNameFontsModified());
+        QFile fontFile(CDirectoryUtils::stylesheetsDirectory() + "/" + fileNameFontsModified());
         return fontFile.remove();
     }
 
@@ -300,7 +300,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::deleteModifiedFontFile()
     {
-        const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getStylesheetsDir(), fileNameFontsModified());
+        const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::stylesheetsDirectory(), fileNameFontsModified());
         QFile file(fn);
         if (!file.exists()) { return false; }
         bool r = file.remove();
@@ -484,7 +484,7 @@ namespace BlackGui
     bool CStyleSheetUtility::qssFileExists(const QString &filename)
     {
         if (filename.isEmpty()) { return false; }
-        const QFileInfo f(CFileUtils::appendFilePaths(CDirectoryUtils::getStylesheetsDir(), filename));
+        const QFileInfo f(CFileUtils::appendFilePaths(CDirectoryUtils::stylesheetsDirectory(), filename));
         return f.exists() && f.isReadable();
     }
 } // ns

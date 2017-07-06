@@ -29,69 +29,69 @@ namespace BlackMisc
         //! QCoreApplication::applicationDirPath(), but on MacOS the exceutable is
         //! located deeper in the hierarchy of the bundles
         //! \see https://dev.swift-project.org/w/dev/swiftpc/dirstructure/
-        static const QString &getBinDir();
+        static const QString &binDirectory();
 
         //! swift application data directory, contains 0..n swift installation directories
-        static const QString &swiftApplicationDataDirectory();
+        static const QString &applicationDataDirectory();
 
         //! swift application data sub directories
-        static QFileInfoList swiftApplicationDataDirectories();
+        static QFileInfoList applicationDataDirectories();
 
         //! swift application data sub directories
-        static QStringList swiftApplicationDataDirectoryList(bool withoutCurrent = false, bool beautify = false);
+        static QStringList applicationDataDirectoryList(bool withoutCurrent = false, bool beautify = false);
 
         //! swift application data directory for one specific installation (a version)
-        static const QString &swiftNormalizedApplicationDataDirectory();
+        static const QString &normalizedApplicationDataDirectory();
 
         //! Where resource files (static DB files, ...) etc are located
         //! \remark share not shared (do no mix)
-        static const QString &getSwiftShareDir();
+        static const QString &shareDirectory();
 
-        //! Bootstrap resource directory
-        static const QString &getBootstrapResourceFile();
+        //! Bootstrap resource file path
+        static const QString &bootstrapResourceFilePath();
 
         //! Where static DB files are located
-        static const QString &getSwiftStaticDbFilesDir();
+        static const QString &staticDbFilesDirectory();
 
         //! Where sound files are located
-        static const QString &getSoundFilesDir();
+        static const QString &soundFilesDirectory();
 
         //! Where qss files are located
-        static const QString &getStylesheetsDir();
+        static const QString &stylesheetsDirectory();
 
         //! Where images are located
-        static const QString &getImagesDir();
+        static const QString &imagesDirectory();
 
         //! Where airline images are located
-        static const QString &getImagesAirlinesDir();
+        static const QString &imagesAirlinesDirectory();
 
         //! Where flags images are located
-        static const QString &getImagesFlagsDir();
+        static const QString &imagesFlagsDirectory();
 
         //! Where HTML files are located
-        static const QString &getHtmlDir();
+        static const QString &htmlDirectory();
 
         //! Where Legal files are located
-        static const QString &getLegalDir();
+        static const QString &legalDirectory();
 
         //! The about document file location
-        static const QString &getAboutFileLocation();
+        static const QString &aboutFilePath();
 
         //! Where test files are located
-        static const QString &getTestFilesDir();
+        static const QString &testFilesDirectory();
 
-        //! Where HTML files are located
-        static const QString &getHtmlTemplateFileName();
+        //! HTML template
+        static const QString &htmlTemplateFilePath();
 
         //! Directory where data can be stored
-        static const QString &getDocumentationDirectory();
+        static const QString &documentationDirectory();
 
         //! Directory for log files
         //! \remark In BlackMisc so it can also be used from BlackMisc classes
-        static const QString &getLogDirectory();
+        static const QString &logDirectory();
 
         //! Directory for log files
-        static const QString &getCrashpadDirectory();
+        static const QString &crashpadDirectory();
 
         //! Virtually the inverse operation of CDirectoryUtils::normalizedApplicationDirectory
         static QString decodeNormalizedDirectory(const QString &directory);

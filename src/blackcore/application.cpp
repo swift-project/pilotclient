@@ -738,7 +738,7 @@ namespace BlackCore
         CLogHandler::instance()->install(); // make sure we have a log handler!
 
         // File logger
-        this->m_fileLogger.reset(new CFileLogger(executable(), CDirectoryUtils::getLogDirectory()));
+        this->m_fileLogger.reset(new CFileLogger(executable(), CDirectoryUtils::logDirectory()));
         this->m_fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
     }
 
@@ -1189,8 +1189,8 @@ namespace BlackCore
         if (isUnitTest()) { return CStatusMessage(this).info("No crash handler for unit tests"); }
 
         static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
-        static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::getBinDir(), crashpadHandler);
-        static const QString crashpadPath = CDirectoryUtils::getCrashpadDirectory();
+        static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), crashpadHandler);
+        static const QString crashpadPath = CDirectoryUtils::crashpadDirectory();
         static const QString database = CFileUtils::appendFilePaths(crashpadPath, "/database");
         static const QString metrics = CFileUtils::appendFilePaths(crashpadPath, "/metrics");
 

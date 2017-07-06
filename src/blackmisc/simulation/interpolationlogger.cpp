@@ -60,7 +60,7 @@ namespace BlackMisc
         QStringList CInterpolationLogger::getLatestLogFiles()
         {
             QStringList files({ "", ""});
-            const QString logDir = CDirectoryUtils::getLogDirectory();
+            const QString logDir = CDirectoryUtils::logDirectory();
             QDir logs(logDir);
             if (!logs.exists()) { return files; }
             logs.setNameFilters(QStringList() << "*interpolation.html" << "*parts.html");
@@ -81,14 +81,14 @@ namespace BlackMisc
         {
             if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).warning("No data for log"); }
             static const QString html = QStringLiteral("Entries: %1\n\n%2");
-            const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::getHtmlTemplateFileName());
+            const QString htmlTemplate = CFileUtils::readFileToString(CDirectoryUtils::htmlTemplateFilePath());
 
             CStatusMessageList msgs;
             const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss");
             const QString htmlInterpolation = CInterpolationLogger::getHtmlInterpolationLog(interpolation);
             if (!htmlInterpolation.isEmpty())
             {
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getLogDirectory(), QString("%1 interpolation.html").arg(ts));
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QString("%1 interpolation.html").arg(ts));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(interpolation.size()).arg(htmlInterpolation)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -96,7 +96,7 @@ namespace BlackMisc
             const QString htmlParts = CInterpolationLogger::getHtmlPartsLog(parts);
             if (!htmlParts.isEmpty())
             {
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getLogDirectory(), QString("%1 parts.html").arg(ts));
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QString("%1 parts.html").arg(ts));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(parts.size()).arg(htmlParts)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }

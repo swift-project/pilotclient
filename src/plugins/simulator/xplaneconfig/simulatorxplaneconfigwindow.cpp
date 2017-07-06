@@ -34,7 +34,7 @@ namespace
 {
     QString xSwiftBusOriginDir()
     {
-        return CDirectoryUtils::getBinDir() % QStringLiteral("/../xswiftbus");
+        return CDirectoryUtils::binDirectory() % QStringLiteral("/../xswiftbus");
     }
 }
 

@@ -480,7 +480,7 @@ namespace BlackMisc
         //! \private
         QSet<int> iconIdsImpl()
         {
-            QDir dir(CDirectoryUtils::getImagesAirlinesDir());
+            QDir dir(CDirectoryUtils::imagesAirlinesDirectory());
             Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "image directory missing");
 
             QSet<int> ids;

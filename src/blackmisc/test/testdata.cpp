@@ -239,7 +239,7 @@ namespace BlackMisc
 
         const CAircraftIcaoCode &CTestData::getDBAircraftIcaoB737()
         {
-            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::getTestFilesDir(), "DBAircraftIcaoB737Boeing.json");
+            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::testFilesDirectory(), "DBAircraftIcaoB737Boeing.json");
             static const CAircraftIcaoCode icao(CAircraftIcaoCode::fromJson(json));
             Q_ASSERT(icao.hasValidDbKey());
             return icao;
@@ -247,7 +247,7 @@ namespace BlackMisc
 
         const CAircraftIcaoCode &CTestData::getDBAircraftIcaoC172()
         {
-            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::getTestFilesDir(), "DBAircraftIcaoC172Cessna.json");
+            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::testFilesDirectory(), "DBAircraftIcaoC172Cessna.json");
             static const CAircraftIcaoCode icao(CAircraftIcaoCode::fromJson(json));
             Q_ASSERT(icao.hasValidDbKey());
             return icao;
@@ -255,7 +255,7 @@ namespace BlackMisc
 
         const CAirlineIcaoCode &CTestData::getDbAirlineIcaoDLH()
         {
-            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::getTestFilesDir(), "DBAirlineIcaoDLH.json");
+            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::testFilesDirectory(), "DBAirlineIcaoDLH.json");
             static const CAirlineIcaoCode icao(CAirlineIcaoCode::fromJson(json));
             Q_ASSERT(icao.hasValidDbKey());
             return icao;
@@ -263,7 +263,7 @@ namespace BlackMisc
 
         const CAirlineIcaoCode &CTestData::getDbAirlineIcaoBAW()
         {
-            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::getTestFilesDir(), "DBAirlineIcaoBAW.json");
+            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::testFilesDirectory(), "DBAirlineIcaoBAW.json");
             static const CAirlineIcaoCode icao(CAirlineIcaoCode::fromJson(json));
             Q_ASSERT(icao.hasValidDbKey());
             return icao;
@@ -271,7 +271,7 @@ namespace BlackMisc
 
         const CLivery &CTestData::getDbLiveryDLHStarAlliance()
         {
-            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::getTestFilesDir(), "DBLiveryDLHStarAlliance.json");
+            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::testFilesDirectory(), "DBLiveryDLHStarAlliance.json");
             static const CLivery livery(CLivery::fromJson(json));
             Q_ASSERT(livery.hasValidDbKey());
             return livery;
@@ -279,7 +279,7 @@ namespace BlackMisc
 
         const CAircraftModel &CTestData::getDbAircraftModelFsxA2AC172Skyhawk()
         {
-            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::getTestFilesDir(), "DBModelFSXA2ACessnaC172.json");
+            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::testFilesDirectory(), "DBModelFSXA2ACessnaC172.json");
             static const CAircraftModel model(CAircraftModel::fromDatabaseJson(Json::jsonObjectFromString(json)));
             Q_ASSERT(model.hasValidDbKey());
             Q_ASSERT(!model.getModelString().isEmpty());
@@ -288,7 +288,7 @@ namespace BlackMisc
 
         const CAircraftModel &CTestData::getDbAircraftModelFsxAerosoftA320()
         {
-            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::getTestFilesDir(), "DBModelFSXAerosoftA320.json");
+            static const QString json = CFileUtils::readFileToString(CDirectoryUtils::testFilesDirectory(), "DBModelFSXAerosoftA320.json");
             static const CAircraftModel model(CAircraftModel::fromDatabaseJson(Json::jsonObjectFromString(json)));
             Q_ASSERT(model.hasValidDbKey());
             Q_ASSERT(!model.getModelString().isEmpty());

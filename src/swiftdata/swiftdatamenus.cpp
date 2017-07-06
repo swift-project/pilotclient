@@ -55,7 +55,7 @@ void CSwiftData::initDynamicMenus()
     Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "missing main area");
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
 
-    QString resourceDir(CDirectoryUtils::getSwiftShareDir());
+    QString resourceDir(CDirectoryUtils::shareDirectory());
     if (!resourceDir.isEmpty() && QDir(resourceDir).exists())
     {
         Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");

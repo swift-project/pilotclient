@@ -500,12 +500,12 @@ namespace BlackSound
             // order here is crucial, needs to be the same as in CSoundGenerator::Notification
             if (!playlist) playlist = new QMediaPlaylist(mediaPlayer);
             bool success = true;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/error.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/login.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/logoff.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/privatemessage.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/voiceroomjoined.wav")) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::getSoundFilesDir() + "/voiceroomleft.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/error.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/login.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/logoff.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/privatemessage.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomjoined.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CDirectoryUtils::soundFilesDirectory() + "/voiceroomleft.wav")) && success;
 
             Q_ASSERT(success);
             playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
