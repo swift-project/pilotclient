@@ -265,13 +265,7 @@ void CSwiftLauncher::startSwiftCore()
     // I set this for debug purpose only
     m_executableArgs = args;
     m_executable.clear();
-    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), CBuildConfig::swiftCoreExecutableName());
-    if (CBuildConfig::isRunningOnMacOSXPlatform())
-    {
-        m_executable += QLatin1String(".app/Contents/MacOS/");
-        m_executable += CBuildConfig::swiftCoreExecutableName();
-    }
-
+    m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
     CLogMessage(this).info(this->getCmdLine());
 
     // start
@@ -281,24 +275,14 @@ void CSwiftLauncher::startSwiftCore()
 void CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable.clear();
-    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), CBuildConfig::swiftDataExecutableName());
-    if (CBuildConfig::isRunningOnMacOSXPlatform())
-    {
-        m_executable += QLatin1String(".app/Contents/MacOS/");
-        m_executable += CBuildConfig::swiftDataExecutableName();
-    }
+    m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftDataExecutableName());
     m_executableArgs.clear();
 }
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
     m_executable.clear();
-    m_executable = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), CBuildConfig::swiftGuiExecutableName());
-    if (CBuildConfig::isRunningOnMacOSXPlatform())
-    {
-        m_executable += QLatin1String(".app/Contents/MacOS/");
-        m_executable += CBuildConfig::swiftGuiExecutableName();
-    }
+    m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftGuiExecutableName());
 
     QStringList args
     {

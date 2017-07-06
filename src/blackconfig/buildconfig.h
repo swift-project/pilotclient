@@ -19,7 +19,7 @@
 
 namespace BlackConfig
 {
-    //! Build configuration
+    //! Build configuration, also used to secure VATSIM key
     class CBuildConfig
     {
     public:
@@ -100,6 +100,9 @@ namespace BlackConfig
 
         //! Executable name for swift data, no(!) appendix
         static const QString &swiftDataExecutableName();
+
+        //! Known executable
+        static bool isKnownExecutableName(const QString &executable);
 
         //! End of lifetime
         static const QDateTime &getEol(); // defined in buildconfig_gen.cpp.in

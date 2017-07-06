@@ -34,6 +34,9 @@ namespace BlackMisc
         //! Plugins directory
         static const QString &pluginsDirectory();
 
+        //! The executable file path
+        static QString executableFilePath(const QString &executable);
+
         //! swift application data directory, contains 0..n swift installation directories
         static const QString &applicationDataDirectory();
 

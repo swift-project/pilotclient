@@ -45,6 +45,23 @@ namespace BlackMisc
         return pDir;
     }
 
+    QString CDirectoryUtils::executableFilePath(const QString &executable)
+    {
+        Q_ASSERT_X(!executable.isEmpty(), Q_FUNC_INFO, "Missing executable file path");
+        Q_ASSERT_X(CBuildConfig::isKnownExecutableName(executable), Q_FUNC_INFO, "Unknown exectuable");
+
+        QString s = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), executable);
+        if (CBuildConfig::isRunningOnMacOSXPlatform() && CDirectoryUtils::isMacOSXAppBundle())
+        {
+            s += QLatin1String(".app/Contents/MacOS/") + executable;
+        }
+        else if (CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            s += QLatin1String(".exe");
+        }
+        return s;
+    }
+
     QString normalizedApplicationDirectoryImpl()
     {
         QString appDir = CDirectoryUtils::binDirectory();

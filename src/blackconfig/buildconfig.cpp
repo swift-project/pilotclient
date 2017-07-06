@@ -50,6 +50,13 @@ namespace BlackConfig
         return s;
     }
 
+    bool CBuildConfig::isKnownExecutableName(const QString &executable)
+    {
+        return executable == CBuildConfig::swiftCoreExecutableName() ||
+               executable == CBuildConfig::swiftDataExecutableName() ||
+               executable == CBuildConfig::swiftGuiExecutableName();
+    }
+
     bool CBuildConfig::isRunningOnWindowsNtPlatform()
     {
 #ifdef Q_OS_WIN
