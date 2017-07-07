@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     a.addVatlibOptions();
     a.addParserOption({{"r", "start"}, QCoreApplication::translate("main", "Start the server.")});
     a.addParserOption({{"c", "coreaudio"}, QCoreApplication::translate("main", "Audio in core.")});
-    if (!a.parse()) { return EXIT_FAILURE; }
+    if (!a.parseAndStartupCheck()) { return EXIT_FAILURE; }
 
     const QString dBusAdress(a.getCmdDBusAddressValue());
     a.useContexts(a.isParserOptionSet("coreaudio") ?

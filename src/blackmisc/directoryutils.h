@@ -100,7 +100,7 @@ namespace BlackMisc
         //! \remark In BlackMisc so it can also be used from BlackMisc classes
         static const QString &logDirectory();
 
-        //! Directory for log files
+        //! Directory for crashpad files
         static const QString &crashpadDirectory();
 
         //! Virtually the inverse operation of CDirectoryUtils::normalizedApplicationDirectory
@@ -108,6 +108,9 @@ namespace BlackMisc
 
         //! All sub directories of given dir
         static QStringList getSubDirectories(const QString &rootDir);
+
+        //! Check if the (most important) runtime directories are available
+        static QStringList verifyRuntimeDirectoriesAndFiles();
 
         //! Result of directory comparison
         struct DirComparison

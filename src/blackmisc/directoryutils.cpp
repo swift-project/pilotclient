@@ -327,6 +327,34 @@ namespace BlackMisc
         return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
     }
 
+    QStringList CDirectoryUtils::verifyRuntimeDirectoriesAndFiles()
+    {
+        QStringList failed;
+        QDir d(CDirectoryUtils::binDirectory());
+        if (!d.isReadable()) { failed.append(d.absolutePath()); }
+
+        d = QDir(CDirectoryUtils::imagesDirectory());
+        if (!d.isReadable()) { failed.append(d.absolutePath()); }
+
+        d = QDir(CDirectoryUtils::stylesheetsDirectory());
+        if (!d.isReadable()) { failed.append(d.absolutePath()); }
+
+        d = QDir(CDirectoryUtils::applicationDataDirectory());
+        if (!d.isReadable()) { failed.append(d.absolutePath()); }
+
+        // check if the executables are avialable
+        QString fn = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
+        if (!QFile::exists(fn)) { failed.append(fn); }
+
+        fn = CDirectoryUtils::executableFilePath(CBuildConfig::swiftDataExecutableName());
+        if (!QFile::exists(fn)) { failed.append(fn); }
+
+        fn = CDirectoryUtils::executableFilePath(CBuildConfig::swiftGuiExecutableName());
+        if (!QFile::exists(fn)) { failed.append(fn); }
+
+        return failed;
+    }
+
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         QSet<QString> sl;

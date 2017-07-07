@@ -263,9 +263,23 @@ namespace BlackGui
     bool CGuiApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
     {
         const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
+        constexpr int MaxLength = 60;
+
+        QString htmlMsg;
+        if (errorMessage.length() > MaxLength)
+        {
+            htmlMsg = "<html><head/><body><h4>" + errorMessage.left(MaxLength) + "..." + "</h4>" +
+                      "Details: " + errorMessage + "<br><br>";
+        }
+        else
+        {
+            htmlMsg = "<html><head/><body><h4>" + errorMessage + "</h4>";
+        }
+        htmlMsg += helpText + "</body></html>";
+
         const int r = QMessageBox::warning(nullptr,
                                            QGuiApplication::applicationDisplayName(),
-                                           "<html><head/><body><h2>" + errorMessage + "</h2><br>" + helpText + "</body></html>", QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
+                                           htmlMsg, QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
         return (r == QMessageBox::Retry);
     }
 
@@ -279,7 +293,7 @@ namespace BlackGui
         const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
         const int r = QMessageBox::critical(nullptr,
                                             QGuiApplication::applicationDisplayName(),
-                                            "<html><head/><body>" + msgsHtml + "<br><br>" + helpText + "</body></html>", QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
+                                            "<html><head><body>" + msgsHtml + "<br><br>" + helpText + "</body></html>", QMessageBox::Abort, retry ? QMessageBox::Retry : QMessageBox::NoButton);
         return (r == QMessageBox::Retry);
     }
 

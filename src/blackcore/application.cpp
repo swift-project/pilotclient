@@ -102,7 +102,7 @@ namespace BlackCore
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
 
-        // init skiped when called from CGuiApplication
+        // init skipped when called from CGuiApplication
         if (init)
         {
             this->init(true);
@@ -133,8 +133,6 @@ namespace BlackCore
             //
 
             // Translations
-            const QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
-            CLogMessage(this).debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
             QTranslator translator;
             if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/")) { CLogMessage(this).debug() << "Translator loaded"; }
             QCoreApplication::instance()->installTranslator(&translator);
@@ -315,7 +313,7 @@ namespace BlackCore
         // parse if needed, parsing contains its own error handling
         if (!this->m_parsed)
         {
-            const bool s = this->parse();
+            const bool s = this->parseAndStartupCheck();
             if (!s) { return false; }
         }
 
@@ -985,12 +983,21 @@ namespace BlackCore
         return this->m_parser.value(option).trimmed();
     }
 
-    bool CApplication::parse()
+    bool CApplication::parseAndStartupCheck()
     {
-        if (this->m_parsed) { return m_parsed; }
+        if (this->m_parsed) { return m_parsed; } // already done
+
+        // checks
         if (CBuildConfig::isLifetimeExpired())
         {
             this->cmdLineErrorMessage("Program exired " + CBuildConfig::getEol().toString());
+            return false;
+        }
+
+        const QStringList verifyErrors = CDirectoryUtils::verifyRuntimeDirectoriesAndFiles();
+        if (!verifyErrors.isEmpty())
+        {
+            this->cmdLineErrorMessage("Missing runtime directories/files: " + verifyErrors.join(", "));
             return false;
         }
 
@@ -1036,7 +1043,7 @@ namespace BlackCore
 
     bool CApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
     {
-        Q_UNUSED(retry); // onyl works with UI version
+        Q_UNUSED(retry); // only works with UI version
         fputs(qPrintable(errorMessage), stderr);
         fputs("\n\n", stderr);
         fputs(qPrintable(this->m_parser.helpText()), stderr);
@@ -1045,7 +1052,7 @@ namespace BlackCore
 
     bool CApplication::cmdLineErrorMessage(const CStatusMessageList &msgs, bool retry) const
     {
-        Q_UNUSED(retry); // onyl works with UI version
+        Q_UNUSED(retry); // only works with UI version
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages())  { return false; }
         CApplication::cmdLineErrorMessage(

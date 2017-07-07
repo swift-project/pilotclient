@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     CSwiftGuiStdApplication a;
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swift256());
-    if (!a.parse()) { return EXIT_FAILURE; }
+    if (!a.parseAndStartupCheck()) { return EXIT_FAILURE; }
     if (!a.hasSetupReader() || !a.start())
     {
         a.gracefulShutdown();

@@ -290,7 +290,7 @@ namespace BlackCore
         //! \note in some cases (error, version, help) application is terminated during this step
         //! \sa parsingHookIn
         //! \return true means to continue, false to stop
-        bool parse();
+        bool parseAndStartupCheck();
         //! @}
 
         //! Display error message
