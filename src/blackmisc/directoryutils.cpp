@@ -51,7 +51,7 @@ namespace BlackMisc
         Q_ASSERT_X(CBuildConfig::isKnownExecutableName(executable), Q_FUNC_INFO, "Unknown exectuable");
 
         QString s = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), executable);
-        if (CBuildConfig::isRunningOnMacOSXPlatform() && CDirectoryUtils::isMacOSXAppBundle())
+        if (CDirectoryUtils::isMacOSXAppBundle())
         {
             s += QLatin1String(".app/Contents/MacOS/") + executable;
         }
@@ -123,25 +123,19 @@ namespace BlackMisc
         return p;
     }
 
-    bool isAppBundleImpl()
-    {
-        QDir bundleDir(CDirectoryUtils::binDirectory());
-        bundleDir.cd("../..");
-        const bool isBundled = QFileInfo(bundleDir.absolutePath()).isBundle();
-        return isBundled;
-    }
-
     QString getSwiftShareDirImpl()
     {
         QDir dir(CDirectoryUtils::binDirectory());
         bool success = true;
 
-        static const bool appBundle = isAppBundleImpl();
-        if (CBuildConfig::isRunningOnMacOSXPlatform() && appBundle)
+        if (CDirectoryUtils::isMacOSXAppBundle())
         {
             success = dir.cd("../../../../share");
         }
-        else { success = dir.cd("../share"); }
+        else
+        {
+            success = dir.cd("../share");
+        }
 
         if (success)
         {
