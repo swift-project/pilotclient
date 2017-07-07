@@ -30,7 +30,7 @@ namespace BlackMisc
         inline void noop() {}
 
         //! \private Called by BLACK_VERIFY when the condition is false.
-        BLACKMISC_EXPORT BLACK_NO_INLINE void failedVerify(const char *condition, const char *filename, int line, const char *context = nullptr, const char *message = nullptr);
+        BLACKMISC_EXPORT BLACK_NO_INLINE void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit);
     }
 }
 
@@ -39,8 +39,18 @@ namespace BlackMisc
  * In debug builds, triggers a debugger breakpoint. In release builds, generates a warning.
  */
 //! @{
-#define BLACK_VERIFY_X(COND, WHERE, WHAT) ((COND) ? BlackMisc::Private::noop() : BlackMisc::Private::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT))
+#define BLACK_VERIFY_X(COND, WHERE, WHAT) ((COND) ? BlackMisc::Private::noop() : BlackMisc::Private::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT, false))
 #define BLACK_VERIFY(COND) BLACK_VERIFY_X(COND, nullptr, nullptr)
+//! @}
+
+/*!
+ * A weaker kind of verify. Indicative of a serious but recoverable problem originating in an external data source.
+ * In debug builds under debugging, triggers a debugger breakpoint. Otherwise generates a warning.
+ * Not a substitute for proper validation. A failed audit in production is suggestive of insufficient validation.
+ */
+//! @{
+#define BLACK_AUDIT_X(COND, WHERE, WHAT) ((COND) ? BlackMisc::Private::noop() : BlackMisc::Private::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT, true))
+#define BLACK_AUDIT(COND) BLACK_AUDIT_X(COND, nullptr, nullptr)
 //! @}
 
 #endif
