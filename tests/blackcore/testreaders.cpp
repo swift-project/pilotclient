@@ -52,9 +52,9 @@ namespace BlackCoreTest
 
     CTestReaders::~CTestReaders()
     {
-        this->m_airportReader->gracefulShutdown();
-        this->m_icaoReader->gracefulShutdown();
-        this->m_modelReader->gracefulShutdown();
+        this->m_airportReader->setEnabled(false);
+        this->m_icaoReader->setEnabled(false);
+        this->m_modelReader->setEnabled(false);
     }
 
     void CTestReaders::readIcaoData()

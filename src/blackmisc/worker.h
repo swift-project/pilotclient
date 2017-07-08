@@ -289,18 +289,28 @@ namespace BlackMisc
         //! \threadsafe Will deadlock if called by the worker thread.
         virtual void quitAndWait() noexcept final override;
 
-    protected slots:
+        //! Enabled (running)?
+        //! \threadsafe
+        bool isEnabled() const { return m_enabled; }
+
+        //! Enabled (running)?
+        //! \threadsafe
+        void setEnabled(bool enabled) { m_enabled = enabled; }
+
+    protected:
         //! Called when the thread is started.
         virtual void initialize() {}
 
         //! Called when the thread is finished.
         virtual void cleanup() {}
 
-    private slots:
-        //! Called after cleanup().
-        void ps_finish();
+        //! Name of the worker
+        const QString &getName() { return m_name; }
 
     private:
+        //! Called after cleanup().
+        void finish();
+
         template <typename T>
         friend class CWorkerPointer;
 
@@ -309,7 +319,8 @@ namespace BlackMisc
         using CWorkerBase::setFinished;
 
         QObject *m_owner = nullptr;
-        QString m_name;
+        QString m_name; //!< worker's name
+        std::atomic<bool> m_enabled { true }; //!< marker it is enabled
     };
 
     /*!

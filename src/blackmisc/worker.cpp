@@ -138,25 +138,27 @@ namespace BlackMisc
         moveToThread(thread);
         connect(thread, &QThread::started, this, &CContinuousWorker::initialize);
         connect(thread, &QThread::finished, this, &CContinuousWorker::cleanup);
-        connect(thread, &QThread::finished, this, &CContinuousWorker::ps_finish);
+        connect(thread, &QThread::finished, this, &CContinuousWorker::finish);
         thread->start(priority);
     }
 
     void CContinuousWorker::quit() noexcept
     {
         Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
+        setEnabled(false);
         thread()->quit();
     }
 
     void CContinuousWorker::quitAndWait() noexcept
     {
         Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
+        setEnabled(false);
         auto *ownThread = thread();
         quit();
         ownThread->wait();
     }
 
-    void CContinuousWorker::ps_finish()
+    void CContinuousWorker::finish()
     {
         setFinished();
 
