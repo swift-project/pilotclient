@@ -87,7 +87,7 @@ namespace BlackMisc
 
         CAircraftIcaoCodeList CAircraftIcaoCodeList::findEndingWith(const QString &icaoEnding) const
         {
-            QString ends = icaoEnding.trimmed().toUpper();
+            const QString ends = icaoEnding.trimmed().toUpper();
             if (ends.isEmpty()) { return CAircraftIcaoCodeList(); }
             CAircraftIcaoCodeList icaosDesignator;
             CAircraftIcaoCodeList icaosFamily;
@@ -317,16 +317,29 @@ namespace BlackMisc
             return max;
         }
 
-        CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates)
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates, CAircraftIcaoCodeList *inconsistent)
         {
             CAircraftIcaoCodeList codes;
             for (const QJsonValue &value : array)
             {
                 const CAircraftIcaoCode icao(CAircraftIcaoCode::fromDatabaseJson(value.toObject()));
-                if (ignoreIncompleteAndDuplicates)
+                if (!icao.hasSpecialDesignator() && !icao.hasCompleteData())
                 {
-                    if (!icao.hasSpecialDesignator() && !icao.hasCompleteData()) { continue; }
-                    if (icao.isDbDuplicate()) { continue; }
+                    if (ignoreIncompleteAndDuplicates) { continue; }
+                    if (inconsistent)
+                    {
+                        inconsistent->push_back(icao);
+                        continue;
+                    }
+                }
+                if (icao.isDbDuplicate())
+                {
+                    if (ignoreIncompleteAndDuplicates) { continue; }
+                    if (inconsistent)
+                    {
+                        inconsistent->push_back(icao);
+                        continue;
+                    }
                 }
                 codes.push_back(icao);
             }

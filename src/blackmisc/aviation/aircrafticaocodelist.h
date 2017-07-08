@@ -135,7 +135,7 @@ namespace BlackMisc
             QPair<QString, int> maxCountManufacturer() const;
 
             //! From our database JSON format
-            static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates = true);
+            static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncompleteAndDuplicates = true, CAircraftIcaoCodeList *inconsistent = nullptr);
         };
     } //namespace
 } // namespace

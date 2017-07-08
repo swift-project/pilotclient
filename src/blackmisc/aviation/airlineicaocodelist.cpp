@@ -185,15 +185,21 @@ namespace BlackMisc
             return airlineCode;
         }
 
-        CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array,  bool ignoreIncomplete)
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array,  bool ignoreIncomplete, CAirlineIcaoCodeList *inconsistent)
         {
             CAirlineIcaoCodeList codes;
             for (const QJsonValue &value : array)
             {
                 const CAirlineIcaoCode icao(CAirlineIcaoCode::fromDatabaseJson(value.toObject()));
-                if (ignoreIncomplete && !icao.hasCompleteData())
+                const bool incomplete = !icao.hasCompleteData();
+                if (incomplete)
                 {
-                    continue;
+                    if (ignoreIncomplete) { continue; }
+                    if (inconsistent)
+                    {
+                        inconsistent->push_back(icao);
+                        continue;
+                    }
                 }
                 codes.push_back(icao);
             }

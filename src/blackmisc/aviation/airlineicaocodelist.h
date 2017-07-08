@@ -96,7 +96,7 @@ namespace BlackMisc
             QStringList toNameCompleterStrings(bool sort = true) const;
 
             //! From our DB JSON
-            static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);
+            static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true, CAirlineIcaoCodeList *inconsistent = nullptr);
         };
     } //namespace
 } // namespace

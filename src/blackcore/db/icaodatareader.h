@@ -43,7 +43,7 @@ namespace BlackCore
 
         public:
             //! Constructor
-            explicit CIcaoDataReader(QObject *owner, const CDatabaseReaderConfigList &confg);
+            explicit CIcaoDataReader(QObject *owner, const CDatabaseReaderConfigList &config);
 
             //! Get aircraft ICAO information
             //! \threadsafe

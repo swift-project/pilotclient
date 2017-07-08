@@ -15,6 +15,7 @@
 #include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QDateTime>
 #include <QDir>
@@ -40,8 +41,8 @@ namespace BlackCore
 {
     namespace Db
     {
-        CIcaoDataReader::CIcaoDataReader(QObject *owner, const CDatabaseReaderConfigList &confg) :
-            CDatabaseReader(owner, confg, "CIcaoDataReader")
+        CIcaoDataReader::CIcaoDataReader(QObject *owner, const CDatabaseReaderConfigList &config) :
+            CDatabaseReader(owner, config, "CIcaoDataReader")
         {
             // init to avoid threading issues
             getBaseUrl(CDbFlags::DbReading);
@@ -105,7 +106,7 @@ namespace BlackCore
 
         CAirlineIcaoCode CIcaoDataReader::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
         {
-            CAirlineIcaoCodeList codes(this->getAirlineIcaoCodes()); // thread safe copy
+            const CAirlineIcaoCodeList codes(this->getAirlineIcaoCodes()); // thread safe copy
             return codes.smartAirlineIcaoSelector(icaoPattern, callsign);
         }
 
@@ -239,18 +240,25 @@ namespace BlackCore
             }
 
             CAircraftIcaoCodeList codes;
+            CAircraftIcaoCodeList inconsistent;
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CAircraftIcaoCodeList incIcao(CAircraftIcaoCodeList::fromDatabaseJson(res, true));
-                if (incIcao.isEmpty()) { return; } // currently ignored
+                const CAircraftIcaoCodeList incrementalCodes(CAircraftIcaoCodeList::fromDatabaseJson(res, true, &inconsistent));
+                if (incrementalCodes.isEmpty()) { return; } // currently ignored
                 codes = this->getAircraftIcaoCodes();
-                codes.replaceOrAddObjectsByKey(incIcao);
+                codes.replaceOrAddObjectsByKey(incrementalCodes);
             }
             else
             {
                 // normally read from special view which already filters incomplete
-                codes  = CAircraftIcaoCodeList::fromDatabaseJson(res, true);
+                codes  = CAircraftIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
+            }
+
+            if (!inconsistent.isEmpty())
+            {
+                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Inconsistent aircraft codes");
+                CLogMessage(this).warning("Inconsistent aircraft codes: %1") << inconsistent.dbKeysAsStrings(", ");
             }
 
             const int n = codes.size();
@@ -281,18 +289,25 @@ namespace BlackCore
             }
 
             CAirlineIcaoCodeList codes;
+            CAirlineIcaoCodeList inconsistent;
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CAirlineIcaoCodeList incIcao(CAirlineIcaoCodeList::fromDatabaseJson(res, true));
-                if (incIcao.isEmpty()) { return; } // currently ignored
+                const CAirlineIcaoCodeList incrementalCodes(CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent));
+                if (incrementalCodes.isEmpty()) { return; } // currently ignored
                 codes = this->getAirlineIcaoCodes();
-                codes.replaceOrAddObjectsByKey(incIcao);
+                codes.replaceOrAddObjectsByKey(incrementalCodes);
             }
             else
             {
                 // normally read from special view which already filters incomplete
-                codes  = CAirlineIcaoCodeList::fromDatabaseJson(res, true);
+                codes  = CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
+            }
+
+            if (!inconsistent.isEmpty())
+            {
+                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Inconsistent airline codes");
+                CLogMessage(this).warning("Inconsistent airline codes: %1") << inconsistent.dbKeysAsStrings(", ");
             }
 
             const int n = codes.size();
