@@ -149,7 +149,7 @@ void CSwiftData::performGracefulShutdown()
 {
     if (this->m_updater)
     {
-        this->m_updater->gracefulShutdown();
+        this->m_updater->abandonAndWait();
     }
 }
 
@@ -161,7 +161,7 @@ void CSwiftData::consolidationSettingChanged()
         if (m_updater)
         {
             ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(nullptr);
-            m_updater->gracefulShutdown();
+            m_updater->abandonAndWait();
             m_updater = nullptr;
         }
     }

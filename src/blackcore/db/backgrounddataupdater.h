@@ -35,36 +35,20 @@ namespace BlackCore
             //! Constructor
             CBackgroundDataUpdater(QObject *owner);
 
-            //! Destructor
-            virtual ~CBackgroundDataUpdater();
+            //! Enable updates
+            void startUpdating(int updateTimeSecs);
 
+        protected:
             //! \copydoc BlackMisc::CContinuousWorker::initialize
             virtual void initialize() override;
 
             //! \copydoc BlackMisc::CContinuousWorker::cleanup
             virtual void cleanup() override;
 
-            //! Is shutting down?
-            //! \threadsafe
-            bool isShuttingDown() const;
-
-            //! Enabled (running)?
-            //! \threadsafe
-            bool isEnabled() const;
-
-            //! Graceful shutdown
-            //! \threadsafe
-            void gracefulShutdown();
-
-            //! Enable updates
-            void startUpdating(int updateTimeSecs);
-
         private:
-            std::atomic<bool> m_shutdown { false };  //!< marker it is shutting down
-            std::atomic<bool> m_enabled { false };   //!< marker it is enabled
-            int               m_cycle = 0;           //!< cycle
-            bool              m_inWork = false;      //!< indicates a running update
-            QTimer            m_updateTimer { this };
+            int    m_cycle = 0;           //!< cycle
+            bool   m_inWork = false;      //!< indicates a running update
+            QTimer m_updateTimer { this };
 
             BlackMisc::Simulation::Data::CModelCaches    m_modelCaches { false, this };    //!< caches
             BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this }; //!< caches
@@ -83,7 +67,7 @@ namespace BlackCore
             void syncDbEntity(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
             //! Still enabled etc.
-            bool entryCheck() const;
+            bool doWorkCheck() const;
         };
     } // ns
 } // ns

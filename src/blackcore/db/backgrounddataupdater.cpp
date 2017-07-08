@@ -37,6 +37,7 @@ namespace BlackCore
             CContinuousWorker(owner, "Background data updater")
         {
             connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundDataUpdater::doWork);
+            m_updateTimer.setObjectName(getName());
         }
 
         void CBackgroundDataUpdater::initialize()
@@ -47,42 +48,6 @@ namespace BlackCore
         void CBackgroundDataUpdater::cleanup()
         {
             m_updateTimer.stop();
-            m_shutdown = true;
-            m_enabled = false;
-        }
-
-        CBackgroundDataUpdater::~CBackgroundDataUpdater()
-        {
-            gracefulShutdown();
-        }
-
-        bool CBackgroundDataUpdater::isShuttingDown() const
-        {
-            if (!sApp) { return true; } // sApp object is gone, whole system shutdown
-            if (this->m_shutdown) { return true; } // marked as shutdown
-            if (this->isAbandoned()) { return true; } // worker abandoned
-            return false;
-        }
-
-        bool CBackgroundDataUpdater::isEnabled() const
-        {
-            return m_enabled;
-        }
-
-        void CBackgroundDataUpdater::gracefulShutdown()
-        {
-            m_shutdown = true;
-            m_enabled = false;
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
-            {
-                std::promise<void> promise;
-                doIfFinishedElse([&promise] { promise.set_value(); }, [&promise, this]
-                {
-                    this->then([&promise] { promise.set_value(); });
-                    this->abandon();
-                });
-                promise.get_future().wait();
-            }
         }
 
         void CBackgroundDataUpdater::startUpdating(int updateTimeSecs)
@@ -94,22 +59,21 @@ namespace BlackCore
                 return;
             }
 
-            m_enabled = updateTimeSecs > 0;
             if (updateTimeSecs < 0)
             {
-                m_enabled = false;
+                setEnabled(false);
                 QTimer::singleShot(0, &m_updateTimer, &QTimer::stop);
             }
             else
             {
-                m_enabled = true;
+                setEnabled(true);
                 m_updateTimer.start(1000 * updateTimeSecs);
             }
         }
 
         void CBackgroundDataUpdater::doWork()
         {
-            if (!this->entryCheck()) { return; }
+            if (!this->doWorkCheck()) { return; }
             m_inWork = true;
 
             const int cycle = m_cycle;
@@ -143,14 +107,14 @@ namespace BlackCore
 
         void CBackgroundDataUpdater::triggerInfoReads()
         {
-            if (!this->entryCheck()) { return; }
+            if (!this->doWorkCheck()) { return; }
             sApp->getWebDataServices()->triggerReadOfDbInfoObjects();
             sApp->getWebDataServices()->triggerReadOfSharedInfoObjects();
         }
 
         void CBackgroundDataUpdater::syncModelOrModelSetCacheWithDbData(Simulation::Data::IMultiSimulatorModelCaches &cache)
         {
-            if (!this->entryCheck()) { return; }
+            if (!this->doWorkCheck()) { return; }
             const QDateTime cacheTs = sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity);
             if (!cacheTs.isValid()) { return; }
 
@@ -169,7 +133,7 @@ namespace BlackCore
             const QSet<CSimulatorInfo> simSet = sims.asSingleSimulatorSet();
             for (const CSimulatorInfo &singleInfo : simSet)
             {
-                if (this->isShuttingDown()) { return; }
+                if (!this->doWorkCheck()) { return; }
                 CAircraftModelList simModels = cache.getSynchronizedCachedModels(singleInfo);
                 if (simModels.isEmpty()) { continue; }
                 const CAircraftModelList dbModelsForSim = dbModels.matchesSimulator(singleInfo);
@@ -193,7 +157,7 @@ namespace BlackCore
 
         void CBackgroundDataUpdater::syncDbEntity(CEntityFlags::Entity entity) const
         {
-            if (!this->entryCheck()) { return; }
+            if (!this->doWorkCheck()) { return; }
             const QDateTime latestCacheTs = sApp->getWebDataServices()->getCacheTimestamp(entity);
             if (!latestCacheTs.isValid()) { return; }
             const QDateTime latestDbTs = sApp->getWebDataServices()->getLatestDbEntityTimestamp(entity);
@@ -208,11 +172,10 @@ namespace BlackCore
             sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity, latestCacheTs);
         }
 
-        bool CBackgroundDataUpdater::entryCheck() const
+        bool CBackgroundDataUpdater::doWorkCheck() const
         {
             if (!sApp || !sApp->hasWebDataServices()) { return false; }
-            if (isShuttingDown()) { return false; }
-            if (!m_enabled) { return false; }
+            if (!isEnabled()) { return false; }
             return true;
         }
     } // ns
