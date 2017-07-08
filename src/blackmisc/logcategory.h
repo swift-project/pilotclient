@@ -180,6 +180,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Data inconsistency
+        static const CLogCategory &dataInconsistency()
+        {
+            static const CLogCategory cat { "swift.datainconsistency" };
+            return cat;
+        }
+
         //! Startup of application
         static const CLogCategory &startup()
         {
@@ -239,6 +246,7 @@ namespace BlackMisc
                 cache(),
                 context(),
                 contextSlot(),
+                dataInconsistency(),
                 download(),
                 driver(),
                 guiComponent(),
