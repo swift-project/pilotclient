@@ -79,6 +79,20 @@ namespace BlackMisc
             return keys;
         }
 
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        QString IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::dbKeysAsStrings(const QString &separator) const
+        {
+            if (ITimestampObjectList<OBJ, CONTAINER>::container().isEmpty()) { return ""; }
+            const QSet<KEYTYPE> keys = IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeySet();
+            QString s;
+            for (const KEYTYPE &k : keys)
+            {
+                if (!s.isEmpty()) { s += separator; }
+                s = s.append(k); // append works with string and int
+            }
+            return s;
+        }
+
         template <class OBJ, class CONTAINER, typename KEYTYPE>
         KEYTYPE IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::getMaxKey(bool *ok) const
         {

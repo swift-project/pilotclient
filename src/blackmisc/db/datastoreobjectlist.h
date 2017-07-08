@@ -38,6 +38,9 @@ namespace BlackMisc
             //! All keys as list
             QSet<KEYTYPE> toDbKeySet() const;
 
+            //! The DB keys as string
+            QString dbKeysAsStrings(const QString &separator) const;
+
             //! Max.key value (making sense with integer key)
             KEYTYPE getMaxKey(bool *ok = nullptr) const;
 
