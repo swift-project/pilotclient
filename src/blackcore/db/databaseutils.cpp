@@ -120,10 +120,10 @@ namespace BlackCore
 
         CAircraftModelList CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const CAircraftModelList &models, const CAircraftModelList &simulatorModels, bool processEvents)
         {
-            QTime timer;
-            timer.start();
             if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }
 
+            QTime timer;
+            timer.start();
             const QSet<QString> allOwnModelsModelStrings = simulatorModels.getModelStringSet();
             CAircraftModelList consolidatedModels;
 
@@ -138,7 +138,7 @@ namespace BlackCore
                 if (!allOwnModelsModelStrings.contains(ms)) { continue; }
                 consolidatedModels.push_back(model);
             }
-            CLogMessage(getLogCategories()).info("Consolidated %1  vs. %2 in %3 ms") << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1  vs. %2 in %3 ms") << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
             return consolidatedModels;
         }
 
@@ -159,15 +159,16 @@ namespace BlackCore
                     if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
                 }
             }
-            CLogMessage(getLogCategories()).info("Consolidated %1 models in %2 ms") << models.size() << timer.elapsed();
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1 models in %2 ms") << models.size() << timer.elapsed();
             return c;
         }
 
         int CDatabaseUtils::consolidateModelsWithDbData(const CAircraftModelList &dbModels, CAircraftModelList &simulatorModels, bool force)
         {
+            if (dbModels.isEmpty() || simulatorModels.isEmpty()) { return 0; }
+
             QTime timer;
             timer.start();
-            if (dbModels.isEmpty() || simulatorModels.isEmpty()) { return 0; }
             const QSet<QString> dbModelsModelStrings = dbModels.getModelStringSet();
 
             int c = 0;
@@ -182,7 +183,7 @@ namespace BlackCore
                 model = consolidated;
                 c++;
             }
-            CLogMessage(getLogCategories()).info("Consolidated %1 models in %2 ms") << simulatorModels.size() << timer.elapsed();
+            CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info("Consolidated %1 models in %2 ms") << simulatorModels.size() << timer.elapsed();
             return c;
         }
 
