@@ -138,10 +138,10 @@ namespace BlackCore
             //! Airlines have been read
             void ps_parseAirlineIcaoData(QNetworkReply *nwReply);
 
-            //! Airlines have been read
+            //! Countries have been read
             void ps_parseCountryData(QNetworkReply *nwReply);
 
-            //! Read / re-read data file
+            //! Read / re-read data
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entities,
                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan);
 

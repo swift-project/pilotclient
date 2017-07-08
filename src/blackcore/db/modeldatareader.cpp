@@ -262,10 +262,10 @@ namespace BlackCore
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CLiveryList incLiveries(CLiveryList::fromDatabaseJson(res));
-                if (incLiveries.isEmpty()) { return; } // currenty ignored
+                const CLiveryList incrementalLiveries(CLiveryList::fromDatabaseJson(res));
+                if (incrementalLiveries.isEmpty()) { return; } // currenty ignored
                 liveries = this->getLiveries();
-                liveries.replaceOrAddObjectsByKey(incLiveries);
+                liveries.replaceOrAddObjectsByKey(incrementalLiveries);
             }
             else
             {
@@ -304,10 +304,10 @@ namespace BlackCore
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CDistributorList incDistributors(CDistributorList::fromDatabaseJson(res));
-                if (incDistributors.isEmpty()) { return; } // currently ignored
+                const CDistributorList incrementalDistributors(CDistributorList::fromDatabaseJson(res));
+                if (incrementalDistributors.isEmpty()) { return; } // currently ignored
                 distributors = this->getDistributors();
-                distributors.replaceOrAddObjectsByKey(incDistributors);
+                distributors.replaceOrAddObjectsByKey(incrementalDistributors);
             }
             else
             {
@@ -346,10 +346,10 @@ namespace BlackCore
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CAircraftModelList incModels(CAircraftModelList::fromDatabaseJson(res));
-                if (incModels.isEmpty()) { return; } // currently ignored
+                const CAircraftModelList incrementalModels(CAircraftModelList::fromDatabaseJson(res));
+                if (incrementalModels.isEmpty()) { return; } // currently ignored
                 models = this->getModels();
-                models.replaceOrAddObjectsByKey(incModels);
+                models.replaceOrAddObjectsByKey(incrementalModels);
             }
             else
             {

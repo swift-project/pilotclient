@@ -60,9 +60,11 @@ namespace BlackMisc
             QDateTime oldestDbTimestamp() const;
 
             //! From DB JSON with default prefixes
+            //! \remark Specialized classes might have their own fromDatabaseJson implementation
             static CONTAINER fromDatabaseJson(const QJsonArray &array);
 
             //! From DB JSON
+            //! \remark Specialized classes might have their own fromDatabaseJson implementation
             static CONTAINER fromDatabaseJson(const QJsonArray &array, const QString &prefix);
 
         protected:
