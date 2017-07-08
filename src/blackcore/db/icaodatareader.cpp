@@ -339,10 +339,10 @@ namespace BlackCore
             if (res.isRestricted())
             {
                 // create full list if it was just incremental
-                const CCountryList incCountries(CCountryList::fromDatabaseJson(res));
-                if (incCountries.isEmpty()) { return; } // currently ignored
+                const CCountryList incrementalCountries(CCountryList::fromDatabaseJson(res));
+                if (incrementalCountries.isEmpty()) { return; } // currently ignored
                 countries = this->getCountries();
-                countries.replaceOrAddObjectsByKey(incCountries);
+                countries.replaceOrAddObjectsByKey(incrementalCountries);
             }
             else
             {

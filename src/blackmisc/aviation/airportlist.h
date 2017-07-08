@@ -62,7 +62,7 @@ namespace BlackMisc
             QStringList allIcaoCodes(bool sorted) const;
 
             //! From our DB JSON
-            static CAirportList fromDatabaseJson(const QJsonArray &array);
+            static CAirportList fromDatabaseJson(const QJsonArray &array, CAirportList *inconsistent = nullptr);
         };
     } //namespace
 } // namespace

@@ -10,8 +10,9 @@
 #include "airportdatareader.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 #include <QNetworkReply>
 
 using namespace BlackMisc;
@@ -159,16 +160,23 @@ namespace BlackCore
             }
 
             CAirportList airports;
+            CAirportList inconsistent;
             if (res.isRestricted())
             {
-                const CAirportList incAirports(CAirportList::fromDatabaseJson(res));
-                if (incAirports.isEmpty()) { return; } // currently ignored
+                const CAirportList incrementalAirports(CAirportList::fromDatabaseJson(res, &inconsistent));
+                if (incrementalAirports.isEmpty()) { return; } // currently ignored
                 airports = this->getAirports();
-                airports.replaceOrAddObjectsByKey(incAirports);
+                airports.replaceOrAddObjectsByKey(incrementalAirports);
             }
             else
             {
-                airports = CAirportList::fromDatabaseJson(res);
+                airports = CAirportList::fromDatabaseJson(res, &inconsistent);
+            }
+
+            if (!inconsistent.isEmpty())
+            {
+                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Inconsistent aircraft codes");
+                CLogMessage(this).warning("Inconsistent airports: %1") << inconsistent.dbKeysAsStrings(", ");
             }
 
             const int size = airports.size();

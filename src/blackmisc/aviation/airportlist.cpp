@@ -79,9 +79,10 @@ namespace BlackMisc
             return icaos;
         }
 
-        CAirportList CAirportList::fromDatabaseJson(const QJsonArray &array)
+        CAirportList CAirportList::fromDatabaseJson(const QJsonArray &array, CAirportList *inconsistent)
         {
             CAirportList airports;
+            Q_UNUSED(inconsistent); // not yet implemented, but signature already prepared
             for (const QJsonValue &value : array)
             {
                 const CAirport airport(CAirport::fromDatabaseJson(value.toObject()));
