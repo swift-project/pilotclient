@@ -14,7 +14,6 @@ using namespace BlackMisc;
 
 namespace BlackSound
 {
-
     CThreadedTonePairPlayer::CThreadedTonePairPlayer(QObject *owner, const QString &name, const QAudioDeviceInfo &device)
         : CContinuousWorker(owner, name),
           m_deviceInfo(device)
