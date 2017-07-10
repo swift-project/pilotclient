@@ -72,9 +72,6 @@ namespace BlackCore
         //! Render restrictions in simulator
         void setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
 
-        //! Gracefully shut down, e.g. for thread safety
-        void gracefulShutdown();
-
         //! Destructor
         virtual ~CAirspaceAnalyzer();
 
@@ -92,34 +89,37 @@ namespace BlackCore
         //! New aircraft snapshot
         void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
-    private slots:
-        //! Remove callsign from watch list
-        void ps_watchdogRemoveAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign);
-
-        //! Remove callsign from watch list
-        void ps_watchdogRemoveAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign);
-
-        //! Reset timestamp for callsign
-        void ps_watchdogTouchAircraftCallsign(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
-
-        //! Reset timestamp for callsign
-        void ps_watchdogTouchAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency,
-                                         const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
-
-        //! Connection status of network changed
-        void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
-
-        //! Run a check
-        void ps_timeout();
+    protected:
+        //! \copydoc BlackMisc::CContinuousWorker::cleanup
+        virtual void cleanup() override;
 
     private:
+        //! Remove callsign from watch list
+        void watchdogRemoveAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Remove callsign from watch list
+        void watchdogRemoveAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Reset timestamp for callsign
+        void watchdogTouchAircraftCallsign(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+
+        //! Reset timestamp for callsign
+        void watchdogTouchAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency,
+                                      const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
+
+        //! Connection status of network changed
+        void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
+
+        //! Run a check
+        void onTimeout();
+
         //! Check for time outs
         void watchdogCheckTimeouts();
 
         //! Analyze the airspace
         void analyzeAirspace();
 
-        QTimer m_timer {this}; //!< multi purpose timer for snapshots and watchdog
+        QTimer m_timer { this }; //!< multi purpose timer for snapshots and watchdog
 
         // watchdog
         CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)
@@ -137,7 +137,6 @@ namespace BlackCore
         mutable QReadWriteLock m_lockSnapshot;      //!< lock snapshot
         mutable QReadWriteLock m_lockRestrictions;  //!< lock simulator restrictions
     };
-
 } // namespace
 
 #endif

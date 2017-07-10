@@ -37,30 +37,28 @@ namespace BlackCore
     {
         Q_ASSERT_X(network, Q_FUNC_INFO, "Network object required to connect");
 
-        // start in thread
-        this->setObjectName("CAirspaceAnalyzer");
-
         // all in new thread from here on
+        this->setObjectName(getName());
         m_timer.setObjectName(this->objectName().append(":m_timer"));
         m_timer.start(7500);
         m_lastWatchdogCallMsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
-        bool c = connect(&m_timer, &QTimer::timeout, this, &CAirspaceAnalyzer::ps_timeout);
+        bool c = connect(&m_timer, &QTimer::timeout, this, &CAirspaceAnalyzer::onTimeout);
         Q_ASSERT(c);
 
         // disconnect
-        c = connect(network, &INetwork::pilotDisconnected, this, &CAirspaceAnalyzer::ps_watchdogRemoveAircraftCallsign);
+        c = connect(network, &INetwork::pilotDisconnected, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign);
         Q_ASSERT(c);
-        c = connect(network, &INetwork::atcDisconnected, this, &CAirspaceAnalyzer::ps_watchdogRemoveAtcCallsign);
+        c = connect(network, &INetwork::atcDisconnected, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign);
         Q_ASSERT(c);
 
         // update
-        c = connect(network, &INetwork::aircraftPositionUpdate, this, &CAirspaceAnalyzer::ps_watchdogTouchAircraftCallsign);
+        c = connect(network, &INetwork::aircraftPositionUpdate, this, &CAirspaceAnalyzer::watchdogTouchAircraftCallsign);
         Q_ASSERT(c);
-        c = connect(network, &INetwork::atcPositionUpdate, this, &CAirspaceAnalyzer::ps_watchdogTouchAtcCallsign);
+        c = connect(network, &INetwork::atcPositionUpdate, this, &CAirspaceAnalyzer::watchdogTouchAtcCallsign);
         Q_ASSERT(c);
 
         // network
-        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::ps_onConnectionStatusChanged);
+        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged);
         Q_ASSERT(c);
         Q_UNUSED(c);
 
@@ -83,26 +81,17 @@ namespace BlackCore
         this->m_simulatorMaxRenderedDistance = maxRenderedDistance;
     }
 
-    void CAirspaceAnalyzer::gracefulShutdown()
-    {
-        const bool s = QMetaObject::invokeMethod(&m_timer, "stop");
-        Q_ASSERT_X(s, Q_FUNC_INFO, "invoke failed");
-        Q_UNUSED(s);
-    }
-
     CAirspaceAnalyzer::~CAirspaceAnalyzer()
-    {
-        gracefulShutdown();
-    }
+    { }
 
-    void CAirspaceAnalyzer::ps_watchdogTouchAircraftCallsign(const CAircraftSituation &situation, const CTransponder &transponder)
+    void CAirspaceAnalyzer::watchdogTouchAircraftCallsign(const CAircraftSituation &situation, const CTransponder &transponder)
     {
         Q_ASSERT_X(!situation.getCallsign().isEmpty(), Q_FUNC_INFO, "No callsign in situaton");
         Q_UNUSED(transponder);
         m_aircraftCallsignTimestamps[situation.getCallsign()] = QDateTime::currentMSecsSinceEpoch();
     }
 
-    void CAirspaceAnalyzer::ps_watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &frequency, const Geo::CCoordinateGeodetic &position, const CLength &range)
+    void CAirspaceAnalyzer::watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &frequency, const Geo::CCoordinateGeodetic &position, const CLength &range)
     {
         Q_UNUSED(frequency);
         Q_UNUSED(position);
@@ -110,7 +99,7 @@ namespace BlackCore
         m_atcCallsignTimestamps[callsign] = QDateTime::currentMSecsSinceEpoch();
     }
 
-    void CAirspaceAnalyzer::ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus)
+    void CAirspaceAnalyzer::onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus)
     {
         Q_UNUSED(oldStatus);
         if (newStatus == INetwork::Disconnected)
@@ -124,8 +113,9 @@ namespace BlackCore
         }
     }
 
-    void CAirspaceAnalyzer::ps_timeout()
+    void CAirspaceAnalyzer::onTimeout()
     {
+        if (!this->isEnabled()) { return; }
         this->analyzeAirspace();
         this->watchdogCheckTimeouts();
     }
@@ -139,12 +129,17 @@ namespace BlackCore
         m_latestAircraftSnapshot = CAirspaceAircraftSnapshot();
     }
 
-    void CAirspaceAnalyzer::ps_watchdogRemoveAircraftCallsign(const CCallsign &callsign)
+    void CAirspaceAnalyzer::cleanup()
+    {
+        m_timer.stop();
+    }
+
+    void CAirspaceAnalyzer::watchdogRemoveAircraftCallsign(const CCallsign &callsign)
     {
         m_aircraftCallsignTimestamps.remove(callsign);
     }
 
-    void CAirspaceAnalyzer::ps_watchdogRemoveAtcCallsign(const CCallsign &callsign)
+    void CAirspaceAnalyzer::watchdogRemoveAtcCallsign(const CCallsign &callsign)
     {
         m_atcCallsignTimestamps.remove(callsign);
     }
@@ -222,5 +217,4 @@ namespace BlackCore
 
         emit airspaceAircraftSnapshot(snapshot);
     }
-
 } // ns

@@ -523,7 +523,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::gracefulShutdown()
     {
-        if (this->m_analyzer) { this->m_analyzer->gracefulShutdown(); }
+        if (this->m_analyzer) { this->m_analyzer->setEnabled(false); }
         QObject::disconnect(this);
     }
 
