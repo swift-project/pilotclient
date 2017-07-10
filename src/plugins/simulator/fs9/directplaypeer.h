@@ -13,8 +13,9 @@
 #include "fs9.h"
 #include "hostnode.h"
 #include "callbackwrapper.h"
-#include "blackmisc/worker.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/worker.h"
+#include "blackmisc/logcategorylist.h"
 #include <QObject>
 #include <QList>
 #include <QMutex>
@@ -46,6 +47,9 @@ namespace BlackSimPlugin
 
             //! Sets users DirectPlay ID
             void setPlayerUserId(DPNID id) { m_playerUser = id; }
+
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
 
         public slots:
             //! Send a custom DirectPlay message
@@ -92,7 +96,7 @@ namespace BlackSimPlugin
             using TCallbackWrapper = CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *>; //!< DirectPlay peer message handler wrapper
             TCallbackWrapper m_callbackWrapper; //!< Callback wrapper
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

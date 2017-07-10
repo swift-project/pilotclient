@@ -25,13 +25,18 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
+        const CLogCategoryList &CDirectPlayPeer::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats { CLogCategory::driver() };
+            return cats;
+        }
+
         CDirectPlayPeer::CDirectPlayPeer(QObject *owner, const BlackMisc::Aviation::CCallsign &callsign)
             : CContinuousWorker(owner, "peer_" + callsign.toQString()),
               m_callsign(callsign),
               m_mutexHostList(QMutex::Recursive),
               m_callbackWrapper(this, &CDirectPlayPeer::directPlayMessageHandler)
-        {
-        }
+        { }
 
         CDirectPlayPeer::~CDirectPlayPeer()
         {
@@ -49,7 +54,7 @@ namespace BlackSimPlugin
         {
             switch (messageId)
             {
-                case DPN_MSGID_CREATE_PLAYER:
+            case DPN_MSGID_CREATE_PLAYER:
                 {
                     DPNMSG_CREATE_PLAYER *pCreatePlayerMsg = static_cast<DPNMSG_CREATE_PLAYER *>(msgBuffer);
 
@@ -91,7 +96,7 @@ namespace BlackSimPlugin
                     break;
                 }
 
-                case DPN_MSGID_RECEIVE:
+            case DPN_MSGID_RECEIVE:
                 {
                     PDPNMSG_RECEIVE pReceiveMsg = static_cast<PDPNMSG_RECEIVE>(msgBuffer);
 
@@ -99,13 +104,12 @@ namespace BlackSimPlugin
                     if (pReceiveMsg->dpnidSender == m_playerUser)
                     {
                         QByteArray messageData = QByteArray((char *)pReceiveMsg->pReceiveData, pReceiveMsg->dwReceiveDataSize);
-
                         emit customPacketReceived(messageData);
                     }
                     break;
                 }
 
-                case DPN_MSGID_ENUM_HOSTS_RESPONSE:
+            case DPN_MSGID_ENUM_HOSTS_RESPONSE:
                 {
                     PDPNMSG_ENUM_HOSTS_RESPONSE enumHostsResponseMsg = static_cast<PDPNMSG_ENUM_HOSTS_RESPONSE>(msgBuffer);
                     const DPN_APPLICATION_DESC *applicationDescription = enumHostsResponseMsg->pApplicationDescription;
@@ -127,7 +131,7 @@ namespace BlackSimPlugin
                         // Copy the Host Address
                         if (FAILED(hr = enumHostsResponseMsg->pAddressSender->Duplicate(hostNode.getHostAddressPtr())))
                         {
-                            qWarning() << "Failed to duplicate host address!";
+                            CLogMessage(this).warning("Failed to duplicate host address!");
                             return hr;
                         }
 
@@ -171,14 +175,14 @@ namespace BlackSimPlugin
                                              IID_IDirectPlay8Peer,
                                              reinterpret_cast<void **>(&m_directPlayPeer))))
             {
-                qWarning() << "Failed to create DirectPlay8Peer object!";
+                CLogMessage(this).warning("Failed to create DirectPlay8Peer object!");
                 return hr;
             }
 
             // Init DirectPlay
             if (FAILED(hr = m_directPlayPeer->Initialize(&m_callbackWrapper, m_callbackWrapper.messageHandler, 0)))
             {
-                qWarning() << "Failed to initialize directplay peer!";
+                CLogMessage(this).warning("Failed to initialize directplay peer!");
                 return hr;
             }
 
@@ -186,7 +190,7 @@ namespace BlackSimPlugin
             if (!isServiceProviderValid(&CLSID_DP8SP_TCPIP))
             {
                 hr = E_FAIL;
-                qWarning() << "Service provider is invalid!";
+                CLogMessage(this).warning("Service provider is invalid!");
                 return hr;
             }
 
@@ -203,7 +207,7 @@ namespace BlackSimPlugin
 
             if (hr != DPNERR_BUFFERTOOSMALL)
             {
-                qWarning() << "Failed to enumerate service providers!";
+                CLogMessage(this).warning("Failed to enumerate service providers!");
                 return false;
             }
 
@@ -214,7 +218,7 @@ namespace BlackSimPlugin
 
             if (FAILED(hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, dpnSPInfo, &dwSize, &dwItems, 0)))
             {
-                qWarning() << "Failed to enumerate service providers!";
+                CLogMessage(this).warning("Failed to enumerate service providers!");
                 return false;
             }
 
@@ -235,14 +239,14 @@ namespace BlackSimPlugin
                                              IID_IDirectPlay8Address,
                                              reinterpret_cast<void **>(&m_deviceAddress))))
             {
-                qWarning() << "Failed to create DirectPlay8Address instance!";
+                CLogMessage(this).warning("Failed to create DirectPlay8Address instance!");
                 return hr;
             }
 
             // Set the SP for our Device Address
             if (FAILED(hr = m_deviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
             {
-                qWarning() << "Failed to set SP!";
+                CLogMessage(this).warning("Failed to set SP!");
                 return hr;
             }
 
@@ -276,6 +280,7 @@ namespace BlackSimPlugin
 
             if ((dpBufferDesc.dwBufferSize = message.size()) == 0) { return S_FALSE; }
 
+            //! \fixme KB 201707, style? pBufferData = const_cast<BYTE *>(reinterpret_cast<const BYTE *>(message.data()));
             dpBufferDesc.pBufferData = (BYTE *)message.data();
 
             // If m_playerUser is non zero, send it only to him
@@ -285,8 +290,9 @@ namespace BlackSimPlugin
                             nullptr, nullptr,
                             DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
             {
+                const QString m(message);
                 CLogMessage(this).warning("DirectPlay: Failed to send message!");
-                qDebug() << message;
+                CLogMessage(this).debug() << m;
             }
             return hr;
         }
@@ -295,5 +301,5 @@ namespace BlackSimPlugin
         {
             m_playerUser = 0;
         }
-    }
-}
+    } // ns
+} // ns
