@@ -52,7 +52,7 @@ namespace BlackCore
         //! \threadsafe
         bool updatedWithinLastMs(qint64 timeLastMs);
 
-        //! Network accessable?
+        //! Network accessible?
         bool isNetworkAccessible() const;
 
         //! Is marked as read failed
@@ -71,13 +71,8 @@ namespace BlackCore
         //! \threadsafe
         void pauseReader();
 
-        //! Is shutting down?
-        //! \threadsafe
-        bool isShuttingDown() const;
-
-        //! Graceful shutdown
-        //! \threadsafe
-        void gracefulShutdown();
+        //! Used in unit test
+        void markAsUsedInUnitTest() { m_unitTest = true; }
 
     protected:
         mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock which can be used from the derived classes
@@ -95,22 +90,29 @@ namespace BlackCore
         //! \threadsafe
         bool didContentChange(const QString &content, int startPosition = -1);
 
+        //! \copydoc BlackMisc::CContinuousWorker::cleanup
+        virtual void cleanup() override;
+
         //! Set initial and periodic times
         void setInitialAndPeriodicTime(int initialTime, int periodicTime);
 
         //! This method does the actual work in the derived class
         virtual void doWorkImpl() {}
 
+        //! Still enabled etc.
+        bool doWorkCheck() const;
+
     private:
+        //! Trigger doWorkImpl
         void doWork();
 
-        int                     m_initialTime = -1;         //!< Initial start delay
-        int                     m_periodicTime = -1;        //!< Periodic time after which the task is repeated
-        QDateTime               m_updateTimestamp;          //!< when file/resource was read
-        uint                    m_contentHash = 0;          //!< has of the content given
-        std::atomic<bool>       m_markedAsFailed { false }; //!< marker if reading failed
-        std::atomic<bool>       m_shutdown { false };       //!< marker it is shutting down
-        QTimer                  m_updateTimer { this };
+        int               m_initialTime = -1;         //!< Initial start delay
+        int               m_periodicTime = -1;        //!< Periodic time after which the task is repeated
+        QDateTime         m_updateTimestamp;          //!< when file/resource was read
+        uint              m_contentHash = 0;          //!< has of the content given
+        std::atomic<bool> m_markedAsFailed { false }; //!< marker if reading failed
+        QTimer            m_updateTimer { this };
+        bool              m_unitTest { false };       //!< mark as unit test
     };
 } // namespace
 

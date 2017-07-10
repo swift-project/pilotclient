@@ -48,7 +48,11 @@ namespace BlackCoreTest
         m_airportReader(new CAirportDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess())),
         m_icaoReader(new CIcaoDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess())),
         m_modelReader(new CModelDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess()))
-    { }
+    {
+        m_airportReader->markAsUsedInUnitTest();
+        m_icaoReader->markAsUsedInUnitTest();
+        m_modelReader->markAsUsedInUnitTest();
+    }
 
     CTestReaders::~CTestReaders()
     {

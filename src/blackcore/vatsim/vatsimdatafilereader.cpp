@@ -186,12 +186,13 @@ namespace BlackCore
 
         void CVatsimDataFileReader::ps_read()
         {
+            this->threadAssertCheck();
+            if (!this->doWorkCheck()) { return; }
             if (!this->isNetworkAccessible())
             {
                 CLogMessage(this).warning("No network, cannot read VATSIM data file");
                 return;
             }
-            this->threadAssertCheck();
 
             // round robin for load balancing
             // remark: Don't use QThread to run network operations in the background
@@ -209,10 +210,9 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
 
-            this->threadAssertCheck();
-
             // Worker thread, make sure to write only synced here!
-            if (this->isAbandoned())
+            this->threadAssertCheck();
+            if (!this->doWorkCheck())
             {
                 CLogMessage(this).debug() << Q_FUNC_INFO;
                 CLogMessage(this).info("Terminated VATSIM file parsing process");
@@ -249,7 +249,7 @@ namespace BlackCore
                 QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
                 for (const QStringRef &clRef : lines)
                 {
-                    if (this->isAbandoned())
+                    if (!this->doWorkCheck())
                     {
                         CLogMessage(this).debug() << Q_FUNC_INFO;
                         CLogMessage(this).info("Terminated VATSIM file parsing process"); // for users

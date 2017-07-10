@@ -112,7 +112,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
 
             const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())

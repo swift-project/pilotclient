@@ -35,13 +35,12 @@ namespace BlackCore
         CContinuousWorker(owner, name)
     {
         connect(&m_updateTimer, &QTimer::timeout, this, &CThreadedReader::doWork);
+        m_updateTimer.setObjectName(getName());
         m_updateTimer.setSingleShot(true);
     }
 
     CThreadedReader::~CThreadedReader()
-    {
-        gracefulShutdown();
-    }
+    { }
 
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
     {
@@ -73,17 +72,6 @@ namespace BlackCore
         return sApp->isNetworkAccessible();
     }
 
-    void CThreadedReader::gracefulShutdown()
-    {
-        // if not in main thread stop, otherwise it makes no sense to abandon
-        if (this->m_shutdown) { return; }
-        this->m_shutdown = true;
-        if (!CThreadUtils::isCurrentThreadObjectThread(this))
-        {
-            this->abandonAndWait();
-        }
-    }
-
     void CThreadedReader::startReader()
     {
         Q_ASSERT(m_initialTime > 0);
@@ -93,14 +81,6 @@ namespace BlackCore
     void CThreadedReader::pauseReader()
     {
         QTimer::singleShot(0, &m_updateTimer, &QTimer::stop);
-    }
-
-    bool CThreadedReader::isShuttingDown() const
-    {
-        if (!sApp) { return true; } // sApp object is gone, whole system shutdown
-        if (this->m_shutdown) { return true; } // marked as shutdown
-        if (this->isAbandoned()) { return true; } // worker abandoned
-        return false;
     }
 
     bool CThreadedReader::didContentChange(const QString &content, int startPosition)
@@ -117,6 +97,11 @@ namespace BlackCore
             this->m_contentHash = newHash;
         }
         return true;
+    }
+
+    void CThreadedReader::cleanup()
+    {
+        m_updateTimer.stop();
     }
 
     bool CThreadedReader::isMarkedAsFailed() const
@@ -149,10 +134,16 @@ namespace BlackCore
 
     void CThreadedReader::doWork()
     {
-        if (isFinished()) { return; }
+        if (!doWorkCheck()) { return; }
         doWorkImpl();
         Q_ASSERT(m_periodicTime > 0);
-        m_updateTimer.start(m_periodicTime);
+        m_updateTimer.start(m_periodicTime); // restart
     }
 
+    bool CThreadedReader::doWorkCheck() const
+    {
+        if (!m_unitTest && (!sApp || !sApp->hasWebDataServices())) { return false; }
+        if (!isEnabled()) { return false; }
+        return true;
+    }
 } // namespace

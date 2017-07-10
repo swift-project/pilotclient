@@ -74,6 +74,7 @@ namespace BlackCore
             //! Do reading
             void readMetars();
 
+            //! Reload settings
             void reloadSettings();
 
         private:

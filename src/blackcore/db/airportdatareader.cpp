@@ -149,7 +149,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
 
             const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReplyPtr);
             if (res.hasErrorMessage())
@@ -196,7 +196,7 @@ namespace BlackCore
         void CAirportDataReader::ps_read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
             entity &= CEntityFlags::AirportEntity;
             if (!this->isNetworkAccessible())
             {

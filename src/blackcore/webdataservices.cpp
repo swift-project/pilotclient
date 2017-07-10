@@ -715,14 +715,16 @@ namespace BlackCore
     void CWebDataServices::gracefulShutdown()
     {
         this->disconnect(); // all signals
-        if (this->m_vatsimMetarReader)    { this->m_vatsimMetarReader->gracefulShutdown(); }
-        if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->gracefulShutdown(); }
-        if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->gracefulShutdown(); }
-        if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->gracefulShutdown(); }
-        if (this->m_modelDataReader)      { this->m_modelDataReader->gracefulShutdown(); }
-        if (this->m_airportDataReader)    { this->m_airportDataReader->gracefulShutdown(); }
-        if (this->m_icaoDataReader)       { this->m_icaoDataReader->gracefulShutdown(); }
-        if (this->m_dbInfoDataReader)     { this->m_dbInfoDataReader->gracefulShutdown(); }
+        if (this->m_vatsimMetarReader)    { this->m_vatsimMetarReader->setEnabled(false); }
+        if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->setEnabled(false); }
+        if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->setEnabled(false); }
+        if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->setEnabled(false); }
+        if (this->m_modelDataReader)      { this->m_modelDataReader->setEnabled(false); }
+        if (this->m_airportDataReader)    { this->m_airportDataReader->setEnabled(false); }
+        if (this->m_icaoDataReader)       { this->m_icaoDataReader->setEnabled(false); }
+        if (this->m_dbInfoDataReader)     { this->m_dbInfoDataReader->setEnabled(false); }
+
+        // DB writer is no threaded reader, it has a special role
         if (this->m_databaseWriter)       { this->m_databaseWriter->gracefulShutdown(); }
     }
 

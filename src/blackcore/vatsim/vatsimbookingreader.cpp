@@ -67,13 +67,13 @@ namespace BlackCore
 
         void CVatsimBookingReader::ps_read()
         {
+            this->threadAssertCheck();
+            if (!this->doWorkCheck()) { return; }
             if (!this->isNetworkAccessible())
             {
                 CLogMessage(this).warning("No network, cannot read VATSIM bookings");
                 return;
             }
-
-            this->threadAssertCheck();
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
             const QUrl url(sApp->getGlobalSetup().getVatsimBookingsUrl());
@@ -90,7 +90,7 @@ namespace BlackCore
             this->threadAssertCheck();
 
             // Worker thread, make sure to write no members here od do it threadsafe
-            if (this->isShuttingDown())
+            if (!this->doWorkCheck())
             {
                 CLogMessage(this).debug() << Q_FUNC_INFO;
                 CLogMessage(this).info("Terminated booking parsing process");
@@ -135,7 +135,7 @@ namespace BlackCore
                     CAtcStationList bookedStations;
                     for (int i = 0; i < size; i++)
                     {
-                        if (this->isAbandoned())
+                        if (!this->doWorkCheck())
                         {
                             CLogMessage(this).debug() << Q_FUNC_INFO;
                             CLogMessage(this).info("Terminated booking parsing process"); // for users

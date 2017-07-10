@@ -152,7 +152,7 @@ namespace BlackCore
         void CModelDataReader::ps_read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
             entities &= CEntityFlags::DistributorLiveryModel;
             if (!this->isNetworkAccessible())
             {
@@ -248,7 +248,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -290,7 +290,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -332,7 +332,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {

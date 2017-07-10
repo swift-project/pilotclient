@@ -49,7 +49,7 @@ namespace BlackCore
 
         void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
         {
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
 
             // we accept cached data
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
@@ -226,7 +226,7 @@ namespace BlackCore
         {
             Q_ASSERT_X(nwReply, Q_FUNC_INFO, "Missing reply");
             this->threadAssertCheck();
-            if (this->isAbandoned())
+            if (!this->doWorkCheck())
             {
                 nwReply->abort();
                 headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Terminated data parsing process"));
@@ -469,7 +469,7 @@ namespace BlackCore
 
         CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            if (this->isShuttingDown()) { return CUrl(); }
+            if (!this->doWorkCheck()) { return CUrl(); }
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing app object, URLs cannot be obtained");
             switch (mode)
             {
@@ -500,7 +500,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isShuttingDown()) { return; }
+            if (!this->doWorkCheck()) { return; }
             this->receivedSharedFileHeaderNonClosing(nwReplyPtr);
             nwReply->close();
         }

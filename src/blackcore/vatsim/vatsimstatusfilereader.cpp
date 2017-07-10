@@ -47,7 +47,7 @@ namespace BlackCore
 
         void CVatsimStatusFileReader::readInBackgroundThread()
         {
-            bool s = QMetaObject::invokeMethod(this, "ps_read");
+            const bool s = QMetaObject::invokeMethod(this, "ps_read");
             Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
             Q_UNUSED(s);
         }
@@ -70,7 +70,12 @@ namespace BlackCore
         void CVatsimStatusFileReader::ps_read()
         {
             this->threadAssertCheck();
-            if (!this->isNetworkAccessible()) { return; }
+            if (!this->doWorkCheck()) { return; }
+            if (!this->isNetworkAccessible())
+            {
+                CLogMessage(this).warning("No network, cannot read VATSIM status file");
+                return;
+            }
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
             CFailoverUrlList urls(sApp->getGlobalSetup().getVatsimStatusFileUrls());
@@ -85,10 +90,9 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
 
-            this->threadAssertCheck();
-
             // Worker thread, make sure to write only synced here!
-            if (this->isAbandoned())
+            this->threadAssertCheck();
+            if (!this->doWorkCheck())
             {
                 CLogMessage(this).debug() << Q_FUNC_INFO;
                 CLogMessage(this).info("Terminated VATSIM status file parsing process"); // for users
@@ -112,7 +116,7 @@ namespace BlackCore
                 QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
                 for (const QStringRef &clRef : lines)
                 {
-                    if (this->isAbandoned())
+                    if (!this->doWorkCheck())
                     {
                         CLogMessage(this).debug() << Q_FUNC_INFO;
                         CLogMessage(this).info("Terminated status parsing process"); // for users

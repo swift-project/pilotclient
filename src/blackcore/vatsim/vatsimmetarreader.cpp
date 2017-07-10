@@ -79,13 +79,13 @@ namespace BlackCore
 
         void CVatsimMetarReader::readMetars()
         {
-            if (this->isAbandoned()) { return; }
+            this->threadAssertCheck();
+            if (!this->doWorkCheck()) { return; }
             if (!this->isNetworkAccessible())
             {
                 CLogMessage(this).warning("No network, cannot read METARs");
                 return;
             }
-            this->threadAssertCheck();
 
             CFailoverUrlList urls(sApp->getVatsimMetarUrls());
             const CUrl url(urls.obtainNextWorkingUrl(true));
@@ -100,10 +100,9 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
 
-            this->threadAssertCheck();
-
             // Worker thread, make sure to write thread safe!
-            if (this->isAbandoned())
+            this->threadAssertCheck();
+            if (!this->doWorkCheck())
             {
                 CLogMessage(this).debug() << Q_FUNC_INFO;
                 CLogMessage(this).info("terminated METAR decoding process"); // for users
@@ -126,7 +125,7 @@ namespace BlackCore
                 QTextStream lineReader(&metarData);
                 while (!lineReader.atEnd())
                 {
-                    if (this->isAbandoned()) { return; }
+                    if (!this->doWorkCheck()) { return; }
                     QString line = lineReader.readLine();
                     CMetar metar = m_metarDecoder.decode(line);
                     if (metar != CMetar()) { metars.push_back(metar); }
@@ -157,6 +156,5 @@ namespace BlackCore
             CReaderSettings s = m_settings.get();
             setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
         }
-
     } // ns
 } // ns
