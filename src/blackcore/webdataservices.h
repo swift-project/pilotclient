@@ -437,20 +437,22 @@ namespace BlackCore
         //! \remark ensures info objects (if and only if needed) are read upfront
         void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities);
 
-    private slots:
+    private:
         //! ATC bookings received
-        void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 
         //! Received METAR data
-        void ps_receivedMetars(const BlackMisc::Weather::CMetarList &metars);
+        void receivedMetars(const BlackMisc::Weather::CMetarList &metars);
 
-        //! Data file has been read
-        void ps_vatsimDataFileRead(int lines);
+        //! VATSIM data file has been read
+        void vatsimDataFileRead(int lines);
+
+        //! VATSIM status file has been read
+        void vatsimStatusFileRead(int lines);
 
         //! Read finished from reader
-        void ps_readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+        void readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
-    private:
         //! Init the readers
         void initReaders(CWebReaderFlags::WebReader flags, BlackMisc::Network::CEntityFlags::Entity entities);
 

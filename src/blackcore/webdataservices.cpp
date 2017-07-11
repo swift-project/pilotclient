@@ -28,6 +28,7 @@
 #include "blackmisc/restricted.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/threadutils.h"
 
 #include <QDir>
 #include <QFlags>
@@ -769,10 +770,11 @@ namespace BlackCore
 
     void CWebDataServices::initReaders(CWebReaderFlags::WebReader flags, CEntityFlags::Entity entities)
     {
-        //
-        // ---- "metadata" reader, 1/2 will trigger read directly during init
-        //
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "shall run in main application thread");
 
+        //
+        // ---- "metadata" reader, 1 will trigger read directly during init
+        //
         CDatabaseReaderConfigList dbReaderConfig(this->m_dbReaderConfig);
         const bool anyDbEntities = CEntityFlags::anySwiftDbEntity(entities);
         const bool needsSharedInfoObjects = dbReaderConfig.needsSharedInfoObjects(entities);
@@ -806,12 +808,16 @@ namespace BlackCore
         }
 
         // 2. Status file, updating the VATSIM related caches
+        // Read as soon as initReaders is done
         if (flags.testFlag(CWebReaderFlags::VatsimStatusReader) || flags.testFlag(CWebReaderFlags::VatsimDataReader) || flags.testFlag(CWebReaderFlags::VatsimMetarReader))
         {
             this->m_vatsimStatusReader = new CVatsimStatusFileReader(this);
+            c = connect(this->m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead);
+            CLogMessage(this).info("Trigger read of VATSIM status file");
             this->m_vatsimStatusReader->start(QThread::LowPriority);
-            // no timer updates from timer here
-            QTimer::singleShot(100, this->m_vatsimStatusReader, &CVatsimStatusFileReader::readInBackgroundThread);
+
+            // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
+            QTimer::singleShot(100, this, [this]() { this->m_vatsimStatusReader->readInBackgroundThread(); });
         }
 
         // ---- "normal data", triggerRead will start read, not starting directly
@@ -820,7 +826,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
         {
             this->m_vatsimBookingReader = new CVatsimBookingReader(this);
-            c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::atcBookingsRead, this, &CWebDataServices::ps_receivedBookings);
+            c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::atcBookingsRead, this, &CWebDataServices::receivedBookings);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM booking reader signals");
             c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed bookings");
@@ -833,7 +839,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             this->m_vatsimDataFileReader = new CVatsimDataFileReader(this);
-            c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::ps_vatsimDataFileRead);
+            c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::vatsimDataFileRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
             c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
@@ -846,7 +852,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
             this->m_vatsimMetarReader = new CVatsimMetarReader(this);
-            c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::ps_receivedMetars);
+            c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
             c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
@@ -859,7 +865,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             this->m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
-            c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftReader);
+            c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
             c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
@@ -870,7 +876,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             this->m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
-            c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftReader);
+            c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
@@ -881,7 +887,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
             this->m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
-            c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftReader);
+            c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
@@ -896,7 +902,7 @@ namespace BlackCore
         if (!this->m_dbInfoDataReader)
         {
             this->m_dbInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::DbReading);
-            bool c = connect(this->m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftReader);
+            bool c = connect(this->m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
 
             // relay signal
@@ -917,7 +923,7 @@ namespace BlackCore
         if (!this->m_sharedInfoDataReader)
         {
             this->m_sharedInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::Shared);
-            bool c = connect(this->m_sharedInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftReader);
+            bool c = connect(this->m_sharedInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
 
             // relay signal
@@ -980,22 +986,27 @@ namespace BlackCore
         }
     }
 
-    void CWebDataServices::ps_receivedBookings(const CAtcStationList &stations)
+    void CWebDataServices::receivedBookings(const CAtcStationList &stations)
     {
         CLogMessage(this).info("Read %1 ATC bookings from network") << stations.size();
     }
 
-    void CWebDataServices::ps_receivedMetars(const CMetarList &metars)
+    void CWebDataServices::receivedMetars(const CMetarList &metars)
     {
         CLogMessage(this).info("Read %1 METARs") << metars.size();
     }
 
-    void CWebDataServices::ps_vatsimDataFileRead(int lines)
+    void CWebDataServices::vatsimDataFileRead(int lines)
     {
         CLogMessage(this).info("Read VATSIM data file, %1 lines") << lines;
     }
 
-    void CWebDataServices::ps_readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
+    void CWebDataServices::vatsimStatusFileRead(int lines)
+    {
+        CLogMessage(this).info("Read VATSIM status file, %1 lines") << lines;
+    }
+
+    void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
     {
         static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
 

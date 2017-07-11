@@ -90,7 +90,6 @@ namespace BlackCore
                 return; // stop, terminate straight away, ending thread
             }
 
-            QStringList illegalIcaoCodes;
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 const QString dataFileData = nwReply->readAll();
@@ -145,18 +144,12 @@ namespace BlackCore
 
                 // cache itself is thread safe, avoid writing with unchanged data
                 CVatsimSetup vs(this->m_lastGoodSetup.get());
-                bool changed = vs.setUrls(dataFileUrls, serverFileUrls, metarFileUrls);
+                const bool changed = vs.setUrls(dataFileUrls, serverFileUrls, metarFileUrls);
                 if (changed)
                 {
                     vs.setUtcTimestamp(QDateTime::currentDateTime());
                     const CStatusMessage cacheMsg = this->m_lastGoodSetup.set(vs);
                     if (cacheMsg.isFailure()) { CLogMessage::preformatted(cacheMsg); }
-                }
-
-                // warnings, if required
-                if (!illegalIcaoCodes.isEmpty())
-                {
-                    CLogMessage(this).info("Illegal / ignored ICAO code(s) in VATSIM data file: %1") << illegalIcaoCodes.join(", ");
                 }
 
                 // data read finished
@@ -166,7 +159,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning("Reading VATSIM status file failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning("Reading VATSIM status file failed '%1' '%2'") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
                 emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFailed, 0);
             }

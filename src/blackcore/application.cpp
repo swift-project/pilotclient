@@ -721,13 +721,13 @@ namespace BlackCore
             this->m_webDataServices.reset(
                 new CWebDataServices(this->m_webReadersUsed, this->m_dbReaderConfig, {}, this)
             );
+            emit webDataServicesStarted(true);
         }
         else
         {
             msgs.push_back(CStatusMessage(this).info("Web data services already running"));
         }
 
-        emit webDataServicesStarted(true);
         return msgs;
     }
 
