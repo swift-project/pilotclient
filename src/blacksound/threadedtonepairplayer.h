@@ -49,9 +49,6 @@ namespace BlackSound
         //! \copydoc BlackMisc::CContinuousWorker::initialize
         virtual void initialize() override;
 
-        //! \copydoc BlackMisc::CContinuousWorker::cleanup
-        virtual void cleanup() override {}
-
     private:
         void handleStateChanged(QAudio::State newState);
         void playBuffer();

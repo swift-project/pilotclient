@@ -67,11 +67,6 @@ namespace BlackCore
             return m_metars.size();
         }
 
-        void CVatsimMetarReader::cleanup()
-        {
-            // void
-        }
-
         void CVatsimMetarReader::doWorkImpl()
         {
             readMetars();

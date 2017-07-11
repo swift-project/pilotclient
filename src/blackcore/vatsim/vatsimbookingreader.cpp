@@ -55,11 +55,6 @@ namespace BlackCore
             Q_UNUSED(s);
         }
 
-        void CVatsimBookingReader::cleanup()
-        {
-            // void
-        }
-
         void CVatsimBookingReader::doWorkImpl()
         {
             ps_read();

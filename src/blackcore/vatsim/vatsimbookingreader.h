@@ -50,7 +50,6 @@ namespace BlackCore
         protected:
             //! \name BlackCore::CThreadedReader overrides
             //! @{
-            virtual void cleanup() override;
             virtual void doWorkImpl() override;
             //! @}
 

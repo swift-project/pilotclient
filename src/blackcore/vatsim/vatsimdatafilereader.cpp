@@ -174,11 +174,6 @@ namespace BlackCore
             Q_UNUSED(s);
         }
 
-        void CVatsimDataFileReader::cleanup()
-        {
-            // void
-        }
-
         void CVatsimDataFileReader::doWorkImpl()
         {
             ps_read();

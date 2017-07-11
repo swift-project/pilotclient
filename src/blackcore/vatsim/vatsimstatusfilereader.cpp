@@ -62,11 +62,6 @@ namespace BlackCore
             return this->m_lastGoodSetup.get().getDataFileUrls();
         }
 
-        void CVatsimStatusFileReader::cleanup()
-        {
-            // void
-        }
-
         void CVatsimStatusFileReader::ps_read()
         {
             this->threadAssertCheck();
