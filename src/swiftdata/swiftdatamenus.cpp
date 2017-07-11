@@ -29,7 +29,7 @@ using namespace BlackCore;
 using namespace BlackGui::Components;
 using namespace BlackMisc;
 
-void CSwiftData::ps_onMenuClicked()
+void CSwiftData::onMenuClicked()
 {
     QObject *sender = QObject::sender();
     if (sender == ui->menu_WindowFont)

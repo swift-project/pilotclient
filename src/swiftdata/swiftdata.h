@@ -26,10 +26,7 @@
 class QWidget;
 
 namespace Ui { class CSwiftData; }
-namespace BlackCore
-{
-    class CWebDataServices;
-}
+namespace BlackCore { class CWebDataServices; }
 
 /*!
  * swift data entry control (aka mapping tool)
@@ -55,17 +52,16 @@ protected:
     virtual void closeEvent(QCloseEvent *event) override;
     //! @}
 
-private slots:
+private:
     //! Append log message
-    void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);
+    void appendLogMessage(const BlackMisc::CStatusMessage &message);
 
     //! Style sheet has changed
-    void ps_onStyleSheetsChanged();
+    void onStyleSheetsChanged();
 
     //! Menu clicked
-    void ps_onMenuClicked();
+    void onMenuClicked();
 
-private:
     void init();
     void initLogDisplay();
     void initStyleSheet();
@@ -78,7 +74,7 @@ private:
     void displayConsole();
     void displayLog();
 
-    BlackGui::CManagedStatusBar    m_statusBar;
+    BlackGui::CManagedStatusBar m_statusBar;
     QScopedPointer<Ui::CSwiftData> ui;
     BlackMisc::CWorkerPointer<BlackCore::Db::CBackgroundDataUpdater> m_updater;
     BlackMisc::CSettingReadOnly<BlackGui::Settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time

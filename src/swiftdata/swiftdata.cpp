@@ -76,7 +76,7 @@ void CSwiftData::closeEvent(QCloseEvent *event)
     this->performGracefulShutdown();
 }
 
-void CSwiftData::ps_appendLogMessage(const CStatusMessage &message)
+void CSwiftData::appendLogMessage(const CStatusMessage &message)
 {
     if (!ui->comp_MainInfoArea) { return; } // not initialized yet
     CLogComponent *logComponent = ui->comp_MainInfoArea->getLogComponent();
@@ -87,7 +87,7 @@ void CSwiftData::ps_appendLogMessage(const CStatusMessage &message)
     m_statusBar.displayStatusMessage(message);
 }
 
-void CSwiftData::ps_onStyleSheetsChanged()
+void CSwiftData::onStyleSheetsChanged()
 {
     this->initStyleSheet();
 }
@@ -102,7 +102,7 @@ void CSwiftData::init()
     this->m_mwaOverlayFrame = ui->comp_MainInfoArea->getMappingComponent();
 
     this->initStyleSheet();
-    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::ps_onStyleSheetsChanged);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::onStyleSheetsChanged);
     this->initMenu();
 
     // update title
@@ -125,7 +125,7 @@ void CSwiftData::initLogDisplay()
     auto logHandler = CLogHandler::instance()->handlerForPattern(
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
                       );
-    logHandler->subscribe(this, &CSwiftData::ps_appendLogMessage);
+    logHandler->subscribe(this, &CSwiftData::appendLogMessage);
 }
 
 void CSwiftData::initMenu()
@@ -135,9 +135,9 @@ void CSwiftData::initMenu()
     this->initDynamicMenus();
     ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
 
-    connect(ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::onMenuClicked);
+    connect(ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::onMenuClicked);
+    connect(ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::onMenuClicked);
 
     sGui->addMenuFile(*ui->menu_File);
     sGui->addMenuInternals(*ui->menu_Internals);
