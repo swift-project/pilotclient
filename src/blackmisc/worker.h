@@ -52,7 +52,7 @@ namespace BlackMisc
     template <typename F>
     void singleShot(int msec, QObject *target, F &&task)
     {
-        QSharedPointer<QTimer> timer(new QTimer, [](QObject *o) { QMetaObject::invokeMethod(o, "deleteLater"); });
+        QSharedPointer<QTimer> timer(new QTimer, [](QObject * o) { QMetaObject::invokeMethod(o, "deleteLater"); });
         timer->setSingleShot(true);
         timer->moveToThread(target->thread());
         QObject::connect(timer.data(), &QTimer::timeout, target, [trace = getStackTrace(), task = std::forward<F>(task), timer]() mutable
@@ -75,7 +75,7 @@ namespace BlackMisc
         CRegularThread(QObject *parent = nullptr) : QThread(parent) {}
 
         //! Destructor
-        ~CRegularThread();
+        virtual ~CRegularThread();
 
     protected:
         //! \copydoc QThread::run
@@ -149,7 +149,8 @@ namespace BlackMisc
         void doIfFinishedElse(F1 ifFunctor, F2 elseFunctor) const
         {
             QMutexLocker lock(&m_finishedMutex);
-            if (m_finished) { ifFunctor(); } else { elseFunctor(); }
+            if (m_finished) { ifFunctor(); }
+            else { elseFunctor(); }
         }
 
         //! Blocks until the task is finished.
@@ -275,7 +276,7 @@ namespace BlackMisc
          * \param owner Will be the parent of the new thread (the worker has no parent).
          * \param name A name for the worker, which will be used to create a name for the thread.
          */
-        CContinuousWorker(QObject *owner, const QString &name = "") : m_owner(owner), m_name(name) {}
+        CContinuousWorker(QObject *owner, const QString &name = "");
 
         //! Starts a thread and moves the worker into it.
         void start(QThread::Priority priority = QThread::InheritPriority);
@@ -297,6 +298,10 @@ namespace BlackMisc
         //! \threadsafe
         void setEnabled(bool enabled) { m_enabled = enabled; }
 
+        //! Start updating (start/stop timer)
+        //! \threadsafe
+        void startUpdating(int updateTimeSecs);
+
     protected:
         //! Called when the thread is started.
         virtual void initialize() {}
@@ -306,6 +311,8 @@ namespace BlackMisc
 
         //! Name of the worker
         const QString &getName() { return m_name; }
+
+        QTimer m_updateTimer { this }; //!< timer which can be used by implementing classes
 
     private:
         //! Called after cleanup().

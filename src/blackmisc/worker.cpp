@@ -116,6 +116,12 @@ namespace BlackMisc
         return thread()->isInterruptionRequested();
     }
 
+    CContinuousWorker::CContinuousWorker(QObject *owner, const QString &name) :
+        m_owner(owner), m_name(name)
+    {
+        m_updateTimer.setObjectName(name + ":timer");
+    }
+
     void CContinuousWorker::start(QThread::Priority priority)
     {
         BLACK_VERIFY_X(!hasStarted(), Q_FUNC_INFO, "Tried to start a worker that was already started");
@@ -137,6 +143,7 @@ namespace BlackMisc
 
         moveToThread(thread);
         connect(thread, &QThread::started, this, &CContinuousWorker::initialize);
+        connect(thread, &QThread::finished, &m_updateTimer, &QTimer::stop);
         connect(thread, &QThread::finished, this, &CContinuousWorker::cleanup);
         connect(thread, &QThread::finished, this, &CContinuousWorker::finish);
         thread->start(priority);
@@ -146,6 +153,7 @@ namespace BlackMisc
     {
         Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
         setEnabled(false);
+        // remark: cannot stop timer here, as I am normally not in the correct thread
         thread()->quit();
     }
 
@@ -156,6 +164,36 @@ namespace BlackMisc
         auto *ownThread = thread();
         quit();
         ownThread->wait();
+    }
+
+    void CContinuousWorker::startUpdating(int updateTimeSecs)
+    {
+        Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Worker not yet started");
+        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        {
+            // shift in correct thread
+            if (!this->isFinished())
+            {
+                QTimer::singleShot(0, this, [this, updateTimeSecs]
+                {
+                    if (this->isFinished()) { return; }
+                    this->startUpdating(updateTimeSecs);
+                });
+            }
+            return;
+        }
+
+        // here in correct timer thread
+        if (updateTimeSecs < 0)
+        {
+            setEnabled(false);
+            m_updateTimer.stop();
+        }
+        else
+        {
+            setEnabled(true);
+            m_updateTimer.start(1000 * updateTimeSecs);
+        }
     }
 
     void CContinuousWorker::finish()
