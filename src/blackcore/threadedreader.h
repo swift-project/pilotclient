@@ -53,7 +53,8 @@ namespace BlackCore
         bool updatedWithinLastMs(qint64 timeLastMs);
 
         //! Network accessible?
-        bool isNetworkAccessible() const;
+        //! \param logWarningMessage optional warning if not accessible
+        bool isNetworkAccessible(const QString &logWarningMessage = {}) const;
 
         //! Is marked as read failed
         //! \threadsafe

@@ -179,11 +179,7 @@ namespace BlackCore
 
             // ps_read is implemented in the derived classes
             if (entities == CEntityFlags::NoEntity) { return; }
-            if (!this->isNetworkAccessible())
-            {
-                CLogMessage(this).warning("No network, will not read %1") << CEntityFlags::flagToString(entities);
-                return;
-            }
+            if (!this->isNetworkAccessible(QString("No network, will not read %1").arg(CEntityFlags::flagToString(entities)))) { return; }
 
             const bool s = QMetaObject::invokeMethod(this, "ps_read",
                            Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities),
@@ -355,11 +351,7 @@ namespace BlackCore
 
         bool CDatabaseReader::requestHeadersOfSharedFiles(CEntityFlags::Entity entities)
         {
-            if (!this->isNetworkAccessible())
-            {
-                CLogMessage(this).warning("No network, will not read shared file headers for %1") << CEntityFlags::flagToString(entities);
-                return false;
-            }
+            if (!this->isNetworkAccessible(QString("No network, will not read shared file headers for %1").arg(CEntityFlags::flagToString(entities)))) { return false; }
 
             CEntityFlags::Entity allEntities(this->maskBySupportedEntities(entities));
             CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);

@@ -11,6 +11,7 @@
 #include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/threadutils.h"
+#include "blackmisc/logmessage.h"
 
 #include <QCoreApplication>
 #include <QMetaObject>
@@ -66,9 +67,14 @@ namespace BlackCore
         return delta <= timeLastMs;
     }
 
-    bool CThreadedReader::isNetworkAccessible() const
+    bool CThreadedReader::isNetworkAccessible(const QString &logWarningMessage) const
     {
-        return sApp->isNetworkAccessible();
+        const bool a = sApp->isNetworkAccessible();
+        if (!a && !logWarningMessage.isEmpty())
+        {
+            CLogMessage(this).warning(logWarningMessage);
+        }
+        return a;
     }
 
     void CThreadedReader::startReader()

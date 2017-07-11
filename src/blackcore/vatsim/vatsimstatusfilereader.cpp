@@ -66,11 +66,7 @@ namespace BlackCore
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
-            if (!this->isNetworkAccessible())
-            {
-                CLogMessage(this).warning("No network, cannot read VATSIM status file");
-                return;
-            }
+            if (!this->isNetworkAccessible("No network, cannot read VATSIM status file")) { return; }
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
             CFailoverUrlList urls(sApp->getGlobalSetup().getVatsimStatusFileUrls());

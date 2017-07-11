@@ -183,11 +183,7 @@ namespace BlackCore
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
-            if (!this->isNetworkAccessible())
-            {
-                CLogMessage(this).warning("No network, cannot read VATSIM data file");
-                return;
-            }
+            if (!this->isNetworkAccessible("No network, cannot read VATSIM data file")) { return; }
 
             // round robin for load balancing
             // remark: Don't use QThread to run network operations in the background
