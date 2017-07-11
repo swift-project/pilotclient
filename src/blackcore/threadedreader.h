@@ -90,9 +90,6 @@ namespace BlackCore
         //! \threadsafe
         bool didContentChange(const QString &content, int startPosition = -1);
 
-        //! \copydoc BlackMisc::CContinuousWorker::cleanup
-        virtual void cleanup() override;
-
         //! Set initial and periodic times
         void setInitialAndPeriodicTime(int initialTime, int periodicTime);
 
@@ -111,7 +108,6 @@ namespace BlackCore
         QDateTime         m_updateTimestamp;          //!< when file/resource was read
         uint              m_contentHash = 0;          //!< has of the content given
         std::atomic<bool> m_markedAsFailed { false }; //!< marker if reading failed
-        QTimer            m_updateTimer { this };
         bool              m_unitTest { false };       //!< mark as unit test
     };
 } // namespace

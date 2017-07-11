@@ -35,7 +35,6 @@ namespace BlackCore
         CContinuousWorker(owner, name)
     {
         connect(&m_updateTimer, &QTimer::timeout, this, &CThreadedReader::doWork);
-        m_updateTimer.setObjectName(getName());
         m_updateTimer.setSingleShot(true);
     }
 
@@ -99,11 +98,6 @@ namespace BlackCore
         return true;
     }
 
-    void CThreadedReader::cleanup()
-    {
-        m_updateTimer.stop();
-    }
-
     bool CThreadedReader::isMarkedAsFailed() const
     {
         return this->m_markedAsFailed;
@@ -124,10 +118,13 @@ namespace BlackCore
     {
         m_initialTime = initialTime;
         m_periodicTime = periodicTime;
+
+        // if timer is active start with delta time
+        // remark: will be reset in doWork
         if (m_updateTimer.isActive())
         {
-            int oldPeriodicTime = m_updateTimer.interval();
-            int delta = m_periodicTime - oldPeriodicTime + m_updateTimer.remainingTime();
+            const int oldPeriodicTime = m_updateTimer.interval();
+            const int delta = m_periodicTime - oldPeriodicTime + m_updateTimer.remainingTime();
             m_updateTimer.start(qMax(delta, 0));
         }
     }

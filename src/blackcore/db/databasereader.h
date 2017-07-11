@@ -28,7 +28,6 @@
 #include <QObject>
 #include <QReadWriteLock>
 #include <QString>
-#include <QTimer>
 #include <QtGlobal>
 #include <QNetworkReply>
 

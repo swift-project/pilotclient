@@ -35,20 +35,9 @@ namespace BlackCore
             //! Constructor
             CBackgroundDataUpdater(QObject *owner);
 
-            //! Enable updates
-            void startUpdating(int updateTimeSecs);
-
-        protected:
-            //! \copydoc BlackMisc::CContinuousWorker::initialize
-            virtual void initialize() override;
-
-            //! \copydoc BlackMisc::CContinuousWorker::cleanup
-            virtual void cleanup() override;
-
         private:
             int    m_cycle = 0;           //!< cycle
             bool   m_inWork = false;      //!< indicates a running update
-            QTimer m_updateTimer { this };
 
             BlackMisc::Simulation::Data::CModelCaches    m_modelCaches { false, this };    //!< caches
             BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this }; //!< caches

@@ -37,38 +37,7 @@ namespace BlackCore
             CContinuousWorker(owner, "Background data updater")
         {
             connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundDataUpdater::doWork);
-            m_updateTimer.setObjectName(getName());
-        }
-
-        void CBackgroundDataUpdater::initialize()
-        {
-            m_updateTimer.start(60 * 1000);
-        }
-
-        void CBackgroundDataUpdater::cleanup()
-        {
-            m_updateTimer.stop();
-        }
-
-        void CBackgroundDataUpdater::startUpdating(int updateTimeSecs)
-        {
-            if (!CThreadUtils::isCurrentThreadObjectThread(this))
-            {
-                // shift in correct thread
-                QTimer::singleShot(0, this, [this, updateTimeSecs] { this->startUpdating(updateTimeSecs); });
-                return;
-            }
-
-            if (updateTimeSecs < 0)
-            {
-                setEnabled(false);
-                QTimer::singleShot(0, &m_updateTimer, &QTimer::stop);
-            }
-            else
-            {
-                setEnabled(true);
-                m_updateTimer.start(1000 * updateTimeSecs);
-            }
+            m_updateTimer.setInterval(60 * 1000);
         }
 
         void CBackgroundDataUpdater::doWork()

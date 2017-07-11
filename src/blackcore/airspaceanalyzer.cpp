@@ -39,10 +39,9 @@ namespace BlackCore
 
         // all in new thread from here on
         this->setObjectName(getName());
-        m_timer.setObjectName(this->objectName().append(":m_timer"));
-        m_timer.start(7500);
+        m_updateTimer.start(7500);
         m_lastWatchdogCallMsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
-        bool c = connect(&m_timer, &QTimer::timeout, this, &CAirspaceAnalyzer::onTimeout);
+        bool c = connect(&m_updateTimer, &QTimer::timeout, this, &CAirspaceAnalyzer::onTimeout);
         Q_ASSERT(c);
 
         // disconnect
@@ -105,11 +104,11 @@ namespace BlackCore
         if (newStatus == INetwork::Disconnected)
         {
             this->clear();
-            this->m_timer.stop();
+            this->m_updateTimer.stop();
         }
         else if (newStatus == INetwork::Connected)
         {
-            this->m_timer.start();
+            this->m_updateTimer.start();
         }
     }
 
@@ -129,11 +128,6 @@ namespace BlackCore
         m_latestAircraftSnapshot = CAirspaceAircraftSnapshot();
     }
 
-    void CAirspaceAnalyzer::cleanup()
-    {
-        m_timer.stop();
-    }
-
     void CAirspaceAnalyzer::watchdogRemoveAircraftCallsign(const CCallsign &callsign)
     {
         m_aircraftCallsignTimestamps.remove(callsign);
@@ -149,7 +143,7 @@ namespace BlackCore
         qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
 
         qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
-        qint64 callThresholdMs = static_cast<int>(m_timer.interval() * 1.5);
+        qint64 callThresholdMs = static_cast<int>(m_updateTimer.interval() * 1.5);
         m_lastWatchdogCallMsSinceEpoch = currentTimeMsEpoch;
 
         // this is a trick to not remove everything while debugging

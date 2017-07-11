@@ -89,10 +89,6 @@ namespace BlackCore
         //! New aircraft snapshot
         void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
-    protected:
-        //! \copydoc BlackMisc::CContinuousWorker::cleanup
-        virtual void cleanup() override;
-
     private:
         //! Remove callsign from watch list
         void watchdogRemoveAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign);
@@ -118,8 +114,6 @@ namespace BlackCore
 
         //! Analyze the airspace
         void analyzeAirspace();
-
-        QTimer m_timer { this }; //!< multi purpose timer for snapshots and watchdog
 
         // watchdog
         CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)
