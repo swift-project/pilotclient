@@ -29,7 +29,8 @@ namespace BlackMisc
                 if (! json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
 
                 // json data is already validated by CPluginManagerSimulator
-                CJsonScope scope("MetaData");
+                //! \todo for RW See T107, remove, change code?
+                // CJsonScope scope("MetaData");
                 CValueObject::convertFromJson(json["MetaData"].toObject());
                 m_valid = true;
             }

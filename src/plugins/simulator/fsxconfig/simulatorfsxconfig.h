@@ -22,7 +22,7 @@ namespace BlackSimPlugin
         /*!
          * Window for setting up the FSX plugin.
          */
-        class CSimulatorFsxConfig :  public QObject, public BlackGui::IPluginConfig
+        class CSimulatorFsxConfig : public QObject, public BlackGui::IPluginConfig
         {
             Q_OBJECT
             Q_PLUGIN_METADATA(IID "org.swift-project.blackgui.pluginconfiginterface" FILE "simulatorfsxconfig.json")

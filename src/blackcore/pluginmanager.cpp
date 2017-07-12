@@ -103,7 +103,7 @@ namespace BlackCore
         const QJsonObject json = loader.metaData();
         if (!isValid(json))
         {
-            CLogMessage(this).warning("Plugin %1 invalid, not loading it") << path;
+            CLogMessage(this).warning("Plugin '%1' invalid, not loading it") << path;
             return false;
         }
 

@@ -86,7 +86,7 @@ namespace BlackCore
         const CSequence<QJsonObject> &plugins = getPlugins();
         for (const QJsonObject &json : plugins)
         {
-            QString iid = json["IID"].toString();
+            const QString iid = json["IID"].toString();
             if (iid == QStringLiteral("org.swift-project.blackcore.simulatorinterface"))
             {
                 auto it = m_plugins.insert(pluginIdentifier(json), {});

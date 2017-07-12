@@ -93,4 +93,4 @@ namespace BlackCore
     };
 }
 
-#endif // BLACKCORE_PLUGIN_MANAGER_H
+#endif // guard
