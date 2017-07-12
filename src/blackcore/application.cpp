@@ -57,6 +57,7 @@
 #include <QWriteLocker>
 #include <Qt>
 #include <QtGlobal>
+#include <QSysInfo>
 #include <cstdlib>
 
 #ifdef BLACK_USE_CRASHPAD
@@ -503,11 +504,22 @@ namespace BlackCore
         const QString env =
             QLatin1String("Beta: ") %
             boolToYesNo(CBuildConfig::isDevBranch()) %
-            QLatin1String(" dev.env,: ") %
-            boolToYesNo(isRunningInDeveloperEnvironment()) %
+            QLatin1String(" dev.env.: ") %
+            boolToYesNo(this->isRunningInDeveloperEnvironment()) %
             separator %
-            QLatin1String("Windows: ") %
-            boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform());
+            QLatin1String("Windows NT: ") %
+            boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()) %
+            QLatin1String(" Windows 10: ") %
+            boolToYesNo(CBuildConfig::isRunningOnWindows10()) %
+            separator %
+            QLatin1String("MacOSX: ") %
+            boolToYesNo(CBuildConfig::isRunningOnMacOSXPlatform()) %
+            QLatin1String(" Linux: ") %
+            boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) %
+            separator %
+            QLatin1String("Unix: ") %
+            boolToYesNo(CBuildConfig::isRunningOnUnixPlatform());
+
         return env;
     }
 
@@ -554,6 +566,12 @@ namespace BlackCore
             QLatin1Char(' ') % (CBuildConfig::isReleaseBuild() ? QLatin1String("Release build") : QLatin1String("Debug build")) %
             separator %
             getEnvironmentInfoString(separator) %
+            separator %
+            QLatin1String("Build Abi: ") %
+            QSysInfo::buildAbi() %
+            separator %
+            QLatin1String("Build CPU: ") %
+            QSysInfo::buildCpuArchitecture() %
             separator %
             CBuildConfig::compiledWithInfo(false);
         return str;
