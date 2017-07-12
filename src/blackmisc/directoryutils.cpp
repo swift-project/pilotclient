@@ -51,9 +51,14 @@ namespace BlackMisc
         Q_ASSERT_X(CBuildConfig::isKnownExecutableName(executable), Q_FUNC_INFO, "Unknown exectuable");
 
         QString s = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), executable);
-        if (CDirectoryUtils::isMacOSXAppBundle())
+        if (CBuildConfig::isRunningOnMacOSXPlatform())
         {
-            s += QLatin1String(".app/Contents/MacOS/") + executable;
+            // Mac OSX bundle may or may not be a bundle
+            const QDir dir(s + QLatin1String(".app/Contents/MacOS"));
+            if (dir.exists())
+            {
+                s += QLatin1String(".app/Contents/MacOS/") + executable;
+            }
         }
         else if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
