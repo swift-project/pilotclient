@@ -12,6 +12,7 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QCoreApplication>
 #include <QMetaObject>
@@ -148,5 +149,19 @@ namespace BlackCore
         if (!m_unitTest && (!sApp || !sApp->hasWebDataServices())) { return false; }
         if (!isEnabled()) { return false; }
         return true;
+    }
+
+    void CThreadedReader::logInconsistentData(const CStatusMessage &msg, const char *funcInfo)
+    {
+        if (msg.isEmpty()) { return; }
+        CStatusMessage logMsg(msg);
+        logMsg.addCategory(CLogCategory::dataInconsistency());
+        logMsg.setSeverity(CStatusMessage::SeverityWarning);
+        if (funcInfo)
+        {
+            const QByteArray m(logMsg.getMessage().toLatin1());
+            BLACK_AUDIT_X(false, funcInfo, m.constData());
+        }
+        CLogMessage::preformatted(logMsg);
     }
 } // namespace

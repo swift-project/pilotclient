@@ -100,6 +100,10 @@ namespace BlackCore
         //! Still enabled etc.
         bool doWorkCheck() const;
 
+        //! Use this to log inconsistent data
+        //! \remark here in a single place severity / format can be adjusted
+        static void logInconsistentData(const BlackMisc::CStatusMessage &msg, const char *funcInfo = nullptr);
+
     private:
         //! Trigger doWorkImpl
         void doWork();
