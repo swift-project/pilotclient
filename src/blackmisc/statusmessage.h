@@ -53,16 +53,16 @@ namespace BlackMisc
         CMessageBase() {}
 
         //! Construct a message with some specific category.
-        explicit CMessageBase(const CLogCategory &category) : m_categories({ category }) {}
+        explicit CMessageBase(const CLogCategory &category) : m_categories( { category }) {}
 
         //! Construct a message with some specific categories.
         explicit CMessageBase(const CLogCategoryList &categories) : m_categories(categories) {}
 
         //! Construct a message with some specific categories.
-        CMessageBase(const CLogCategoryList &categories, const CLogCategory &extra) : CMessageBase(categories) { m_categories.push_back(extra); }
+        CMessageBase(const CLogCategoryList &categories, const CLogCategory &extra) : CMessageBase(categories) { this->addIfNotExisting(extra); }
 
         //! Construct a message with some specific categories.
-        CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories) { m_categories.push_back(extra); }
+        CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories) { this->addIfNotExisting(extra); }
 
         //! Set the severity to debug.
         Derived &debug() { return setSeverityAndMessage(SeverityDebug, ""); }
@@ -107,12 +107,35 @@ namespace BlackMisc
         //! @}
 
     private:
-        void setValidation() { m_categories.remove(CLogCategory::uncategorized()); m_categories.push_back(CLogCategory::validation()); }
+        void setValidation() { m_categories.remove(CLogCategory::uncategorized()); this->addIfNotExisting(CLogCategory::validation()); }
         Derived &setSeverityAndMessage(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
         Derived &arg(const QString &value) { m_args.push_back(value); return derived(); }
         Derived &derived() { return static_cast<Derived &>(*this); }
 
     protected:
+        //! Add category if not already existing
+        void addIfNotExisting(const CLogCategory &category)
+        {
+            if (this->m_categories.contains(category)) { return; }
+            this->m_categories.push_back(category);
+        }
+
+        //! Add categories if not already existing
+        void addIfNotExisting(const CLogCategoryList &categories)
+        {
+            if (this->m_categories.isEmpty())
+            {
+                this->m_categories.push_back(categories);
+            }
+            else
+            {
+                for (const CLogCategory &cat : categories)
+                {
+                    this->addIfNotExisting(cat);
+                }
+            }
+        }
+
         //! \private
         //! @{
         QString m_message;
@@ -266,14 +289,14 @@ namespace BlackMisc
         //! Severity
         void setSeverity(StatusSeverity severity) { this->m_severity = severity; }
 
-        //! Add category
-        void addCategory(const CLogCategory &category) { this->m_categories.push_back(category); }
+        //! Add category, avoids duplicates
+        void addCategory(const CLogCategory &category) { this->addIfNotExisting(category); }
 
         //! Adds validation as category
-        void addValidationCategory();
+        void addValidationCategory() { this->addCategory(CLogCategory::validation()); }
 
-        //! Add categories
-        void addCategories(const CLogCategoryList &categories) { this->m_categories.push_back(categories); }
+        //! Add categories, avoids duplicates
+        void addCategories(const CLogCategoryList &categories) { this->addIfNotExisting(categories); }
 
         //! Reset category
         void setCategory(const CLogCategory &category) { this->m_categories = CLogCategoryList { category }; }

@@ -15,6 +15,7 @@
 #include "logmessage.h"
 #include "comparefunctions.h"
 #include <QMetaEnum>
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
@@ -258,24 +259,19 @@ namespace BlackMisc
         return this->m_handledByObjects.contains(quintptr(object));
     }
 
-    void CStatusMessage::addValidationCategory()
-    {
-        this->addCategory(CLogCategory::validation());
-    }
-
     QString CStatusMessage::convertToQString(bool /** i18n */) const
     {
-        QString s("Category: ");
-        s.append(this->m_categories.toQString());
+        return QLatin1String("Category: ") %
+               this->m_categories.toQString() %
 
-        s.append(" Severity: ");
-        s.append(QString::number(this->m_severity));
+               QLatin1String(" Severity: ") %
+               severityToString(this->m_severity) %
 
-        s.append(" when: ");
-        s.append(this->getFormattedUtcTimestampYmdhms());
+               QLatin1String(" when: ") %
+               this->getFormattedUtcTimestampYmdhms() %
 
-        s.append(" ").append(this->getMessage());
-        return s;
+               QLatin1String(" ") %
+               this->getMessage();
     }
 
     const CIcon &CStatusMessage::convertToIcon(const CStatusMessage &statusMessage)
