@@ -15,7 +15,6 @@
 #include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/verify.h"
 
 #include <QDateTime>
 #include <QDir>
@@ -257,8 +256,9 @@ namespace BlackCore
 
             if (!inconsistent.isEmpty())
             {
-                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Inconsistent aircraft codes");
-                CLogMessage(this).warning("Inconsistent aircraft codes: %1") << inconsistent.dbKeysAsStrings(", ");
+                logInconsistentData(
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent aircraft codes: " + inconsistent.dbKeysAsStrings(", ")),
+                    Q_FUNC_INFO);
             }
 
             const int n = codes.size();
@@ -301,13 +301,14 @@ namespace BlackCore
             else
             {
                 // normally read from special view which already filters incomplete
-                codes  = CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
+                codes = CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent);
             }
 
             if (!inconsistent.isEmpty())
             {
-                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Inconsistent airline codes");
-                CLogMessage(this).warning("Inconsistent airline codes: %1") << inconsistent.dbKeysAsStrings(", ");
+                logInconsistentData(
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent airline codes: " + inconsistent.dbKeysAsStrings(", ")),
+                    Q_FUNC_INFO);
             }
 
             const int n = codes.size();

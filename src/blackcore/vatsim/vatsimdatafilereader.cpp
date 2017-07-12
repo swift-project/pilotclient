@@ -205,7 +205,6 @@ namespace BlackCore
             this->threadAssertCheck();
             if (!this->doWorkCheck())
             {
-                CLogMessage(this).debug() << Q_FUNC_INFO;
                 CLogMessage(this).info("Terminated VATSIM file parsing process");
                 return; // stop, terminate straight away, ending thread
             }
@@ -242,7 +241,6 @@ namespace BlackCore
                 {
                     if (!this->doWorkCheck())
                     {
-                        CLogMessage(this).debug() << Q_FUNC_INFO;
                         CLogMessage(this).info("Terminated VATSIM file parsing process"); // for users
                         return; // stop, terminate straight away, ending thread
                     }
@@ -414,7 +412,9 @@ namespace BlackCore
                 // warnings, if required
                 if (!illegalIcaoCodes.isEmpty())
                 {
-                    CLogMessage(this).info("Illegal / ignored ICAO code(s) in VATSIM data file: %1") << illegalIcaoCodes.join(", ");
+                    logInconsistentData(
+                        CStatusMessage(this, CStatusMessage::SeverityInfo, "Illegal / ignored ICAO code(s) in VATSIM data file: " + illegalIcaoCodes.join(", "))
+                    );
                 }
 
                 // data read finished
@@ -446,7 +446,9 @@ namespace BlackCore
             if (currentLine.endsWith(':')) { clientParts.removeLast(); }
             if (clientParts.size() != clientSectionAttributes.size())
             {
-                CLogMessage(getLogCategories()).warning("Client parts: %1 attributes: %2 line: '%3'") << clientParts.size() << clientSectionAttributes.size() << currentLine;
+                logInconsistentData(
+                    CStatusMessage(static_cast<CVatsimDataFileReader *>(nullptr), CStatusMessage::SeverityInfo, QString("Client parts: %1 attributes: %2 line: '%3'").arg(clientParts.size()).arg(clientSectionAttributes.size()).arg(currentLine))
+                );
                 return parts;
             }
 

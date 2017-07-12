@@ -95,8 +95,7 @@ namespace BlackCore
             this->threadAssertCheck();
             if (!this->doWorkCheck())
             {
-                CLogMessage(this).debug() << Q_FUNC_INFO;
-                CLogMessage(this).info("terminated METAR decoding process"); // for users
+                CLogMessage(this).info("Terminated METAR decoding process"); // for users
                 return; // stop, terminate straight away, ending thread
             }
 
@@ -117,7 +116,7 @@ namespace BlackCore
                 while (!lineReader.atEnd())
                 {
                     if (!this->doWorkCheck()) { return; }
-                    QString line = lineReader.readLine();
+                    const QString line = lineReader.readLine();
                     CMetar metar = m_metarDecoder.decode(line);
                     if (metar != CMetar()) { metars.push_back(metar); }
                     else { invalidLines++; }

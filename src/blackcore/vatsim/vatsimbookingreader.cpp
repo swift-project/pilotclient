@@ -83,7 +83,6 @@ namespace BlackCore
             // Worker thread, make sure to write no members here od do it threadsafe
             if (!this->doWorkCheck())
             {
-                CLogMessage(this).debug() << Q_FUNC_INFO;
                 CLogMessage(this).info("Terminated booking parsing process");
                 return; // stop, terminate straight away, ending thread
             }
@@ -128,7 +127,6 @@ namespace BlackCore
                     {
                         if (!this->doWorkCheck())
                         {
-                            CLogMessage(this).debug() << Q_FUNC_INFO;
                             CLogMessage(this).info("Terminated booking parsing process"); // for users
                             return; // stop, terminate straight away, ending thread
                         }

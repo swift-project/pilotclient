@@ -12,7 +12,6 @@
 #include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
 #include <QNetworkReply>
 
 using namespace BlackMisc;
@@ -175,8 +174,9 @@ namespace BlackCore
 
             if (!inconsistent.isEmpty())
             {
-                BLACK_AUDIT_X(false, Q_FUNC_INFO, "Inconsistent aircraft codes");
-                CLogMessage(this).warning("Inconsistent airports: %1") << inconsistent.dbKeysAsStrings(", ");
+                logInconsistentData(
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent airports: " + inconsistent.dbKeysAsStrings(", ")),
+                    Q_FUNC_INFO);
             }
 
             const int size = airports.size();
