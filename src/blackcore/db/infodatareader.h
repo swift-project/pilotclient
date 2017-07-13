@@ -25,6 +25,8 @@ namespace BlackCore
     namespace Db
     {
         //! Read information about data from Database or shared file
+        //! like when updated and number of entries.
+        //! \see BlackMisc::Db::CDbInfo
         class BLACKCORE_EXPORT CInfoDataReader : public CDatabaseReader
         {
             Q_OBJECT
@@ -64,11 +66,10 @@ namespace BlackCore
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
-        private slots:
-            //! Info objects have been read
-            void ps_parseInfoObjectsData(QNetworkReply *nwReply);
-
         private:
+            //! Info objects have been read
+            void parseInfoObjectsData(QNetworkReply *nwReply);
+
             //! URL info objects web service
             BlackMisc::Network::CUrl getDbInfoObjectsUrl() const;
 

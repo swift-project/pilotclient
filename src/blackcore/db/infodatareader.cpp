@@ -98,7 +98,7 @@ namespace BlackCore
             const CUrl url(this->getInfoObjectsUrl());
             if (!url.isEmpty())
             {
-                sApp->getFromNetwork(url, { this, &CInfoDataReader::ps_parseInfoObjectsData});
+                sApp->getFromNetwork(url, { this, &CInfoDataReader::parseInfoObjectsData});
                 emit dataRead(this->getEntityForMode(), CEntityFlags::StartRead, 0);
             }
             else
@@ -107,7 +107,7 @@ namespace BlackCore
             }
         }
 
-        void CInfoDataReader::ps_parseInfoObjectsData(QNetworkReply *nwReplyPtr)
+        void CInfoDataReader::parseInfoObjectsData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
