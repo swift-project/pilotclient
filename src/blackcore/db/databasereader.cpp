@@ -57,24 +57,34 @@ namespace BlackCore
             CEntityFlags::Entity allEntities    = entities;
             CEntityFlags::Entity cachedEntities = CEntityFlags::NoEntity;
             CEntityFlags::Entity dbEntities     = CEntityFlags::NoEntity;
+            CEntityFlags::Entity sharedEntities = CEntityFlags::NoEntity;
             CEntityFlags::Entity currentEntity  = CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
             while (currentEntity)
             {
                 const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
                 const QString currentEntityName = CEntityFlags::flagToString(currentEntity);
-                const CDbFlags::DataRetrievalMode rm = config.getRetrievalMode();
+
+                // retrieval mode
+                const CDbFlags::DataRetrievalMode rm = config.getRetrievalMode(); // DB reading, cache, shared
+                Q_ASSERT_X(!rm.testFlag(CDbFlags::Unspecified), Q_FUNC_INFO, "Missing retrieval mode");
                 const QString rmString = CDbFlags::flagToString(rm);
                 const bool rmCacheOnly = (rm == CDbFlags::Cached);
-                Q_ASSERT_X(!rm.testFlag(CDbFlags::Unspecified), Q_FUNC_INFO, "Missing retrieval mode");
+                const CDbFlags::DataRetrievalModeFlag rmDbOrSharedFlag = CDbFlags::modeToModeFlag(rm & CDbFlags::DbReadingOrShared);
+                const QString rmDbOrSharedFlagString = CDbFlags::flagToString(rmDbOrSharedFlag);
+                const bool rmDbReadingOrShared = (rmDbOrSharedFlag == CDbFlags::DbReading || rmDbOrSharedFlag == CDbFlags::Shared);
+
                 if (rm.testFlag(CDbFlags::Ignore) || rm.testFlag(CDbFlags::Canceled))
                 {
                     // do not load
                 }
                 else if (rm.testFlag(CDbFlags::Cached))
                 {
-                    // cache + shared or DB data
+                    // info objects -> cache + shared or cache + DB data
                     if (hasInfoObjects)
                     {
+                        // check mode here for consistency
+                        Q_ASSERT_X(!getBaseUrl(rmDbOrSharedFlag).isEmpty(), Q_FUNC_INFO, "Wrong retrieval mode");
+
                         const bool changedUrl = this->hasChangedUrl(currentEntity);
                         const QDateTime cacheTs(this->getCacheTimestamp(currentEntity));
                         const QDateTime latestEntityTs(this->getLatestEntityTimestampFromDbInfoObjects(currentEntity));
@@ -85,24 +95,27 @@ namespace BlackCore
                         {
                             this->admitCaches(currentEntity);
                             cachedEntities |= currentEntity; // read from cache
-                            CLogMessage(this).info("Using cache for %1 (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
+                            CLogMessage(this).info("Using cache for '%1' (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
                         }
                         else
                         {
-                            dbEntities |= currentEntity;
+                            Q_ASSERT_X(rmDbReadingOrShared, Q_FUNC_INFO, "Wrong retrieval mode");
+                            if (rmDbOrSharedFlag == CDbFlags::DbReading) { dbEntities |= currentEntity; }
+                            else if (rmDbOrSharedFlag == CDbFlags::Shared) { sharedEntities |= currentEntity; }
+
                             if (changedUrl)
                             {
-                                CLogMessage(this).info("Data location changed, will override cache for %1") << currentEntityName;
+                                CLogMessage(this).info("Data location changed, will override cache for '%1' reading '%2'") << currentEntityName << rmDbOrSharedFlagString;
                             }
                             else
                             {
-                                CLogMessage(this).info("Cache for %1 outdated, latest entity (%2, %3)") << currentEntityName << latestEntityTs.toString() << latestEntityTimestamp;
+                                CLogMessage(this).info("Cache for '%1' outdated, latest entity (%2, %3), reading '%4'") << currentEntityName << latestEntityTs.toString() << latestEntityTimestamp << rmDbOrSharedFlagString;
                             }
                         }
                     }
                     else
                     {
-                        // no info objects, server down or no info objects loaded
+                        // no info objects, server down or no info objects loaded, e.g. cache only
                         this->admitCaches(currentEntity);
                         if (rmCacheOnly)
                         {
@@ -110,7 +123,7 @@ namespace BlackCore
                         }
                         else
                         {
-                            CLogMessage(this).info("No info object for %1, triggered reading cache, read mode: %2") << currentEntityName << rmString;
+                            CLogMessage(this).info("No info object for '%1', triggered reading cache, read mode: %2") << currentEntityName << rmString;
                         }
                         cachedEntities |= currentEntity; // read from cache
                     }
@@ -118,10 +131,9 @@ namespace BlackCore
                 else
                 {
                     // cache ignored
-                    if (rm.testFlag(CDbFlags::DbReading))
-                    {
-                        dbEntities |= currentEntity;
-                    }
+                    Q_ASSERT_X(rmDbReadingOrShared, Q_FUNC_INFO, "Wrong retrieval mode");
+                    if (rmDbOrSharedFlag == CDbFlags::DbReading) { dbEntities |= currentEntity; }
+                    else if (rmDbOrSharedFlag == CDbFlags::Shared) { sharedEntities |= currentEntity; }
                 }
                 currentEntity = CEntityFlags::iterateDbEntities(allEntities);
             }
@@ -135,7 +147,15 @@ namespace BlackCore
             // Real read from DB
             if (dbEntities != CEntityFlags::NoEntity)
             {
+                CLogMessage(this).info("Start reading DB entities: %1") << CEntityFlags::flagToString(dbEntities);
                 this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::DbReading, newerThan);
+            }
+
+            // Real read from shared
+            if (sharedEntities != CEntityFlags::NoEntity)
+            {
+                CLogMessage(this).info("Start reading shared entities: %1") << CEntityFlags::flagToString(sharedEntities);
+                this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::Shared, newerThan);
             }
         }
 
@@ -461,7 +481,6 @@ namespace BlackCore
 
         CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            if (!this->doWorkCheck()) { return CUrl(); }
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing app object, URLs cannot be obtained");
             switch (mode)
             {
