@@ -214,7 +214,7 @@ namespace BlackCore
         CDatabaseReaderConfigList CDatabaseReaderConfigList::forPilotClient()
         {
             const CTime cacheLifetime(30.0, CTimeUnit::d());
-            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheAndSharedHeaders;
+            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheAndSharedInfo;
             CDbFlags::DataRetrievalMode retrievalFlagsWriting = retrievalFlags;
             retrievalFlagsWriting |= CDbFlags::DbWriting;
 

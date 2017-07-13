@@ -51,6 +51,19 @@ namespace BlackMisc
             return list.join(',');
         }
 
+        CDbFlags::DataRetrievalModeFlag CDbFlags::modeToModeFlag(DataRetrievalMode mode)
+        {
+            if (mode == Unspecified) return Unspecified;
+            if (mode == DbReading) return DbReading;
+            if (mode == DbWriting) return DbWriting;
+            if (mode == Shared) return Shared;
+            if (mode == SharedInfoOnly) return SharedInfoOnly;
+            if (mode == Cached) return Cached;
+            if (mode == Canceled) return Canceled;
+            if (mode == Ignore) return Ignore;
+            return Unspecified;
+        }
+
         CDbFlags::DataRetrievalMode CDbFlags::adjustWhenDbIsDown(DataRetrievalMode mode)
         {
             switch (mode)
