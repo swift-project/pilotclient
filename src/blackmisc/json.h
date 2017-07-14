@@ -379,6 +379,7 @@ namespace BlackMisc
                     else
                     {
                         CJsonScope scope(member.latin1Name());
+                        Q_UNUSED(scope);
                         value >> member.in(*this->derived());
                     }
                 });

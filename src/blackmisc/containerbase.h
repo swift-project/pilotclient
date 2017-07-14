@@ -129,6 +129,7 @@ namespace BlackMisc
             for (auto i = array.begin(); i != array.end(); ++i)
             {
                 CJsonScope scope("containerbase", index++);
+                Q_UNUSED(scope);
                 QJsonValueRef ref = (*i);
                 T val;
                 ref >> val;

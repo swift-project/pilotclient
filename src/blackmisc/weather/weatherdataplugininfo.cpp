@@ -29,7 +29,8 @@ namespace BlackMisc
                 if (! json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
 
                 // json data is already validated by CPluginManagerWeatherData
-                CJsonScope scope("MetaData");
+                CJsonScope scope("MetaData"); // for stack trace
+                Q_UNUSED(scope);
                 CValueObject::convertFromJson(json["MetaData"].toObject());
                 m_valid = true;
             }

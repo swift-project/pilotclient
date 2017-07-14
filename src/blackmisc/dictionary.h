@@ -273,10 +273,12 @@ namespace BlackMisc
                 Value val;
                 {
                     CJsonScope scope("associativecontainerbase", 2 * index);
+                    Q_UNUSED(scope);
                     jsonKey >> key;
                 }
                 {
                     CJsonScope scope("associativecontainerbase", 2 * index++ + 1);
+                    Q_UNUSED(scope);
                     jsonValue >> val;
                 }
                 m_impl.insert(std::move(key), std::move(val));

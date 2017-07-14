@@ -39,6 +39,7 @@ namespace BlackMisc
         {
             const QString key = it.key();
             CJsonScope scope(key);
+            Q_UNUSED(scope);
             CVariant value;
             value.convertFromJson(it.value().toObject());
             implementationOf(*this).insert(cend(), key, value);
@@ -53,6 +54,7 @@ namespace BlackMisc
             auto value = json.value(key);
             if (value.isUndefined()) { continue; }
             CJsonScope scope(key);
+            Q_UNUSED(scope);
             CVariant var;
             var.convertFromJson(value.toObject());
             insert(key, var);
@@ -82,6 +84,7 @@ namespace BlackMisc
         {
             const QString key = it.key();
             CJsonScope scope(key);
+            Q_UNUSED(scope);
             CVariant value;
             value.convertFromMemoizedJson(it.value().toObject());
             implementationOf(*this).insert(cend(), key, value);
@@ -96,6 +99,7 @@ namespace BlackMisc
             auto value = json.value(key);
             if (value.isUndefined()) { continue; }
             CJsonScope scope(key);
+            Q_UNUSED(scope);
             CVariant var;
             var.convertFromMemoizedJson(value.toObject());
             insert(key, var);
@@ -110,6 +114,7 @@ namespace BlackMisc
         {
             const QString key = it.key();
             CJsonScope scope(key);
+            Q_UNUSED(scope);
             CVariant value;
             auto message = value.convertFromJsonNoThrow(it.value().toObject(), categories, prefix);
             if (message.isSuccess()) { implementationOf(*this).insert(cend(), key, value); }
@@ -127,6 +132,7 @@ namespace BlackMisc
             auto value = json.value(key);
             if (value.isUndefined()) { continue; }
             CJsonScope scope(key);
+            Q_UNUSED(scope);
             CVariant var;
             auto message = var.convertFromJsonNoThrow(value.toObject(), categories, prefix);
             if (message.isSuccess()) { insert(key, var); }
@@ -143,6 +149,7 @@ namespace BlackMisc
         {
             const QString key = it.key();
             CJsonScope scope(key);
+            Q_UNUSED(scope);
             CVariant value;
             auto message = value.convertFromMemoizedJsonNoThrow(it.value().toObject(), categories, prefix);
             if (message.isSuccess()) { implementationOf(*this).insert(cend(), key, value); }
@@ -160,6 +167,7 @@ namespace BlackMisc
             auto value = json.value(key);
             if (value.isUndefined()) { continue; }
             CJsonScope scope(key);
+            Q_UNUSED(scope);
             CVariant var;
             auto message = var.convertFromMemoizedJsonNoThrow(value.toObject(), categories, prefix);
             if (message.isSuccess()) { insert(key, var); }

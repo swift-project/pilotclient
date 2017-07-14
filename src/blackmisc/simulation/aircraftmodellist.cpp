@@ -749,14 +749,17 @@ namespace BlackMisc
             if (distributors.isUndefined()) { throw CJsonException("Missing 'distributors'"); }
             {
                 CJsonScope scope("aircraftIcaos");
+                Q_UNUSED(scope);
                 helper.getTable<CAircraftIcaoCode>().convertFromJson(aircraftIcaos.toObject());
             }
             {
                 CJsonScope scope("liveries");
+                Q_UNUSED(scope);
                 helper.getTable<CLivery>().convertFromJson(liveries.toObject());
             }
             {
                 CJsonScope scope("distributors");
+                Q_UNUSED(scope);
                 helper.getTable<CDistributor>().convertFromJson(distributors.toObject());
             }
 
@@ -764,6 +767,7 @@ namespace BlackMisc
             for (auto i = array.begin(); i != array.end(); ++i)
             {
                 CJsonScope scope("containerbase", index++);
+                Q_UNUSED(scope);
                 CAircraftModel value;
                 value.convertFromMemoizedJson(i->toObject(), helper);
                 insert(value);
