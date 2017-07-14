@@ -280,9 +280,16 @@
     <addaction name="menu_WindowToggleNavigator"/>
     <addaction name="separator"/>
    </widget>
+   <widget class="QMenu" name="menu_Map">
+    <property name="title">
+     <string>Map</string>
+    </property>
+    <addaction name="menu_MovingMap"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Window"/>
    <addaction name="menu_InfoAreas"/>
+   <addaction name="menu_Map"/>
    <addaction name="menu_Help"/>
    <addaction name="menu_Test"/>
   </widget>
@@ -497,6 +504,11 @@
   <action name="menu_CacheReset">
    <property name="text">
     <string>Reset</string>
+   </property>
+  </action>
+  <action name="menu_MovingMap">
+   <property name="text">
+    <string>Moving map</string>
    </property>
   </action>
  </widget>

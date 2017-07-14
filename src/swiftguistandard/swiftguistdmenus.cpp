@@ -12,6 +12,7 @@
 #include "blackgui/guiactionbind.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/altitude.h"
+#include "blackmisc/network/urllist.h"
 #include "blackmisc/pq/units.h"
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
@@ -22,12 +23,14 @@
 #include <QScopedPointer>
 #include <QStackedWidget>
 #include <QtGlobal>
+#include <QDesktopServices>
 
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 
 void SwiftGuiStd::ps_onMenuClicked()
 {
@@ -61,6 +64,12 @@ void SwiftGuiStd::ps_onMenuClicked()
     {
         ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
     }
+    else if (sender == ui->menu_MovingMap && sGui && !sGui->getGlobalSetup().getSwiftMapUrls().isEmpty())
+    {
+        const CUrlList urls = sGui->getGlobalSetup().getSwiftMapUrls();
+        const CUrl url = urls.getRandomUrl();
+        QDesktopServices::openUrl(url);
+    }
 }
 
 void SwiftGuiStd::initMenus()
@@ -72,6 +81,7 @@ void SwiftGuiStd::initMenus()
     sGui->addMenuWindow(*ui->menu_Window);
     sGui->addMenuHelp(*ui->menu_Help);
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
+    ui->menu_MovingMap->setIcon(CIcons::swiftMap16());
 
     // for hotkeys
     const QString swift(CGuiActionBindHandler::pathSwiftPilotClient());

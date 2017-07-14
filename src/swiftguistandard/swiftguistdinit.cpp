@@ -208,6 +208,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_WindowToggleNavigator, &QAction::triggered, this->m_navigator.data(), &CNavigatorDialog::toggleNavigator);
     connect(this->m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::ps_navigatorClosed);
     connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_MovingMap, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages
     connect(ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, ui->fr_CentralFrameInside, &COverlayMessagesFrame::showOverlayVariant);
