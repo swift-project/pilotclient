@@ -529,9 +529,16 @@ namespace BlackGui
         const QWidget *w = mainApplicationWindow();
         if (!w) { return; }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
-        const bool c = connect(a, &QAction::triggered, this, [this]()
+        bool c = connect(a, &QAction::triggered, this, [this]()
         {
             this->showHelp();
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction("About Qt");
+        c = connect(a, &QAction::triggered, this, []()
+        {
+            QApplication::aboutQt();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
