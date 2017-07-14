@@ -12,6 +12,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/applicationclosedialog.h"
 #include "blackgui/components/downloadandinstalldialog.h"
+#include "blackgui/components/aboutdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/registermetadata.h"
@@ -462,20 +463,6 @@ namespace BlackGui
             this->displayTextInConsole(getAllUserMetatypesTypes());
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-
-        a = menu.addAction("Setup");
-        c = connect(a, &QAction::triggered, this, [a, this]()
-        {
-            this->displayTextInConsole(this->getGlobalSetup().convertToQString("\n", true));
-        });
-        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-
-        a = menu.addAction("Compile info");
-        c = connect(a, &QAction::triggered, this, [a, this]()
-        {
-            this->displayTextInConsole(this->getInfoString("\n"));
-        });
-        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
     }
 
@@ -526,7 +513,7 @@ namespace BlackGui
 
     void CGuiApplication::addMenuHelp(QMenu &menu)
     {
-        const QWidget *w = mainApplicationWindow();
+        QWidget *w = mainApplicationWindow();
         if (!w) { return; }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
         bool c = connect(a, &QAction::triggered, this, [this]()
@@ -535,7 +522,17 @@ namespace BlackGui
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
-        a = menu.addAction("About Qt");
+        a = menu.addAction(QApplication::windowIcon(), "About swift");
+        c = connect(a, &QAction::triggered, this, [w]()
+        {
+            CAboutDialog dialog(w);
+            dialog.exec();
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c);
+
+        // https://joekuan.wordpress.com/2015/09/23/list-of-qt-icons/
+        a = menu.addAction(QApplication::style()->standardIcon(QStyle::SP_TitleBarMenuButton), "About Qt");
         c = connect(a, &QAction::triggered, this, []()
         {
             QApplication::aboutQt();

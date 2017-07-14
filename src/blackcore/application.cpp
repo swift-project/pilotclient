@@ -512,13 +512,13 @@ namespace BlackCore
             QLatin1String(" Windows 10: ") %
             boolToYesNo(CBuildConfig::isRunningOnWindows10()) %
             separator %
-            QLatin1String("MacOSX: ") %
-            boolToYesNo(CBuildConfig::isRunningOnMacOSXPlatform()) %
-            QLatin1String(" Linux: ") %
+            QLatin1String("Linux: ") %
             boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) %
+            QLatin1String(" Unix: ") %
+            boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) %
             separator %
-            QLatin1String("Unix: ") %
-            boolToYesNo(CBuildConfig::isRunningOnUnixPlatform());
+            QLatin1String("MacOSX: ") %
+            boolToYesNo(CBuildConfig::isRunningOnMacOSXPlatform());
 
         return env;
     }
