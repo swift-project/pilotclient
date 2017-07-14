@@ -487,6 +487,13 @@ namespace BlackMisc
         static const QPixmap &swiftLauncher128();
         static const QPixmap &swiftLauncher256();
         static const QPixmap &swiftLauncher1024();
+        static const QPixmap &swiftMap16();
+        static const QPixmap &swiftMap24();
+        static const QPixmap &swiftMap48();
+        static const QPixmap &swiftMap64();
+        static const QPixmap &swiftMap128();
+        static const QPixmap &swiftMap256();
+        static const QPixmap &swiftMap1024();
 
         //! @}
 

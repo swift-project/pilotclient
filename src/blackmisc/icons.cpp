@@ -658,6 +658,47 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::swiftMap16()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DYellow-16.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftMap24()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DYellow-24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftMap48()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DYellow-48.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftMap64()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DYellow-64.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftMap128()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DYellow-128.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftMap256()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DYellow-512.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftMap1024()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DYellow-1024.png");
+        return pm;
+    }
 
     const QPixmap &CIcons::appWeather16()
     {
