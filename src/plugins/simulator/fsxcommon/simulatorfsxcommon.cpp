@@ -1503,13 +1503,13 @@ namespace BlackSimPlugin
             bool check = false;
             if (result == S_OK)
             {
-                for (int i = 0; !check && i < 3; i++)
+                for (int i = 0; !check && i < 3 && !this->isShuttingDown(); i++)
                 {
-                    // result not always in first dispatch
+                    // result not always in first dispatch as we first have to obtain simulator name
                     result = SimConnect_CallDispatch(hSimConnect, CSimulatorFsxCommonListener::SimConnectProc, this);
                     if (result != S_OK) { break; } // means serious failure
                     check = this->checkVersionAndSimulator();
-                    sApp->processEventsFor(500);
+                    if (!check) { sApp->processEventsFor(500); }
                 }
             }
             SimConnect_Close(hSimConnect);
@@ -1522,17 +1522,20 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommonListener::checkVersionAndSimulator() const
         {
-            const CSimulatorInfo sim(getPluginInfo().getIdentifier());
-            const QString simName = m_simulatorName.toLower().trimmed();
+            const CSimulatorInfo pluginSim(getPluginInfo().getIdentifier());
+            const QString connectedSimName = m_simulatorName.toLower().trimmed();
 
-            if (simName.isEmpty()) { return false; }
-            if (sim.p3d())
+            if (connectedSimName.isEmpty()) { return false; }
+            if (pluginSim.p3d())
             {
-                return simName.contains("lockheed") || simName.contains("martin") || simName.contains("p3d") || simName.contains("prepar");
+                // P3D drivers only work with P3D
+                return connectedSimName.contains("lockheed") || connectedSimName.contains("martin") || connectedSimName.contains("p3d") || connectedSimName.contains("prepar");
             }
-            else if (sim.fsx())
+            else if (pluginSim.fsx())
             {
-                return simName.contains("fsx") || simName.contains("microsoft") || simName.contains("simulator x");
+                // FSX drivers works with P3D and FSX
+                return connectedSimName.contains("fsx") || connectedSimName.contains("microsoft") || connectedSimName.contains("simulator x") ||
+                       connectedSimName.contains("lockheed") || connectedSimName.contains("martin") || connectedSimName.contains("p3d") || connectedSimName.contains("prepar");
             }
             return false;
         }

@@ -626,9 +626,9 @@ namespace BlackCore
 
     bool CApplication::isNetworkAccessible() const
     {
-        if (!this->m_accessManager) return false;
+        if (!this->m_accessManager) { return false; }
         const QNetworkAccessManager::NetworkAccessibility a = this->m_accessManager->networkAccessible();
-        if (a == QNetworkAccessManager::Accessible) return true;
+        if (a == QNetworkAccessManager::Accessible) { return true; }
 
         // currently I also accept unknown
         return a == QNetworkAccessManager::UnknownAccessibility;
@@ -658,6 +658,7 @@ namespace BlackCore
         {
             instance()->gracefulShutdown();
         }
+
         // when the event loop is not running, this does nothing
         QCoreApplication::exit(retcode);
     }
@@ -669,6 +670,7 @@ namespace BlackCore
 
     void CApplication::processEventsFor(int milliseconds)
     {
+        if (CApplication::instance()->isShuttingDown()) { return; }
         QEventLoop eventLoop;
         QTimer::singleShot(milliseconds, &eventLoop, &QEventLoop::quit);
         eventLoop.exec();
