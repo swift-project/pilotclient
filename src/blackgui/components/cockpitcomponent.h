@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COCKPITCOMPONENT_H
-#define BLACKGUI_COCKPITCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
+#define BLACKGUI_COMPONENTS_COCKPITCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
