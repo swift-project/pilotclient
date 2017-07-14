@@ -26,6 +26,7 @@ equals(WORD_SIZE,32) {
 LIBS += -lsimulatorfscommon -lsimulatorfsxcommon -lfsuipc
 equals(WORD_SIZE,64) {
     LIBS *= -L$$EXTERNALS_LIB_DIR/P3D-v4
+    LIBS *= -lAdvapi32
     CONFIG(debug, debug|release): LIBS *= -lSimConnectDebug
     else:                         LIBS *= -lSimConnect
 }
