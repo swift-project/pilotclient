@@ -214,13 +214,13 @@ namespace BlackGui
         {
             const QPixmap pm = this->indexToPixmap(i);
             const QString wt(dockWidgetInfoArea->windowTitleBackup());
-            static const QString keys("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            static const QString keys("123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
             QAction *action = new QAction(QIcon(pm), wt, parent);
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaSelectActions:").append(wt));
             if (withShortcut && i < keys.length())
             {
-                static const QString ks("Ctrl+%1");
+                static const QString ks("Ctrl+%1"); // Qt::CTRL
                 action->setShortcut(QKeySequence(ks.arg(keys.at(i))));
             }
 
