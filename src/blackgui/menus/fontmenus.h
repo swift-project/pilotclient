@@ -25,7 +25,7 @@ namespace BlackGui
 {
     namespace Menus
     {
-        //! Standard font (size, style) menus for fonts.
+        //! Standard font (size, style) menus.
         //! Can be used as nested menu or via getActions added manually
         class CFontMenu : public IMenuDelegate
         {
@@ -33,7 +33,7 @@ namespace BlackGui
 
         public:
             //! Constructor
-            CFontMenu(QWidget *widget, bool separator = true);
+            CFontMenu(QWidget *widget, bool separator = true, Qt::ShortcutContext shortcutContext = Qt::WidgetShortcut);
 
             //! Log.categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
@@ -43,6 +43,9 @@ namespace BlackGui
 
             //! Allow to use the actions directly
             QList<QAction *> getActions() const;
+
+            //! The shortcus owned by QWidget
+            QList<QShortcut *> getShortcuts() const;
 
         private:
             void changeFontDialog();

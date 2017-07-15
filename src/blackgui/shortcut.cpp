@@ -70,4 +70,22 @@ namespace BlackGui
         static const QKeySequence k(Qt::CTRL + Qt::Key_C);
         return k;
     }
+
+    const QKeySequence &CShortcut::keyFontPlus()
+    {
+        static const QKeySequence k(Qt::CTRL + Qt::Key_Plus);
+        return k;
+    }
+
+    const QKeySequence &CShortcut::keyFontMinus()
+    {
+        static const QKeySequence k(Qt::CTRL + Qt::Key_Minus);
+        return k;
+    }
+
+    const QKeySequence &CShortcut::keyFontReset()
+    {
+        static const QKeySequence k(Qt::CTRL + Qt::Key_0);
+        return k;
+    }
 } // ns

@@ -9,6 +9,7 @@
 
 #include "fontmenus.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/shortcut.h"
 #include "blackmisc/verify.h"
 #include <QShortcut>
 
@@ -25,22 +26,22 @@ namespace BlackGui
             return cats;
         }
 
-        CFontMenu::CFontMenu(QWidget *widget, bool separator) :
+        CFontMenu::CFontMenu(QWidget *widget, bool separator, Qt::ShortcutContext shortcutContext) :
             IMenuDelegate(widget, separator), m_widget(widget)
         {
             this->m_fontDialogAction.reset(new QAction(CIcons::font16(), "Font", this));
             QObject::connect(this->m_fontDialogAction.data(), &QAction::triggered, this, &CFontMenu::changeFontDialog);
 
-            m_fontSizePlusShortcut = new QShortcut(Qt::CTRL + Qt::Key_Plus, this->m_widget);
-            m_fontSizePlusShortcut->setContext(Qt::WidgetShortcut);
+            m_fontSizePlusShortcut = new QShortcut(CShortcut::keyFontPlus(), this->m_widget);
+            m_fontSizePlusShortcut->setContext(shortcutContext);
             QObject::connect(this->m_fontSizePlusShortcut, &QShortcut::activated, this, &CFontMenu::fontSizePlus);
 
-            m_fontSizeMinusShortcut = new QShortcut(Qt::CTRL + Qt::Key_Minus, this->m_widget);
-            m_fontSizeMinusShortcut->setContext(Qt::WidgetShortcut);
+            m_fontSizeMinusShortcut = new QShortcut(CShortcut::keyFontMinus(), this->m_widget);
+            m_fontSizeMinusShortcut->setContext(shortcutContext);
             QObject::connect(this->m_fontSizeMinusShortcut, &QShortcut::activated, this, &CFontMenu::fontSizeMinus);
 
-            m_fontResetShortcut = new QShortcut(Qt::CTRL + Qt::Key_0, this->m_widget);
-            m_fontResetShortcut->setContext(Qt::WidgetShortcut);
+            m_fontResetShortcut = new QShortcut(CShortcut::keyFontReset(), this->m_widget);
+            m_fontResetShortcut->setContext(shortcutContext);
             QObject::connect(this->m_fontResetShortcut, &QShortcut::activated, this, &CFontMenu::fontReset);
         }
 
@@ -55,6 +56,11 @@ namespace BlackGui
             return QList<QAction *>({ m_fontDialogAction.data() });
         }
 
+        QList<QShortcut *> CFontMenu::getShortcuts() const
+        {
+            return QList<QShortcut *>({ m_fontResetShortcut, m_fontSizeMinusShortcut, m_fontSizePlusShortcut });
+        }
+
         void CFontMenu::changeFontDialog()
         {
             Q_ASSERT_X(m_widget, Q_FUNC_INFO, "No widget");
@@ -64,7 +70,7 @@ namespace BlackGui
                 m_dialog->setModal(true);
             }
             m_dialog->setCurrentFont(m_widget->font());
-            int r = m_dialog->exec();
+            const int r = m_dialog->exec();
             if (r == QDialog::Rejected) { return; }
             const QString qss(m_dialog->getQss());
             m_widget->setStyleSheet(qss);
@@ -73,7 +79,7 @@ namespace BlackGui
         void CFontMenu::fontSizePlus()
         {
             Q_ASSERT_X(m_widget, Q_FUNC_INFO, "No widget");
-            int pt = m_widget->font().pointSize() + 1;
+            const int pt = m_widget->font().pointSize() + 1;
             if (pt > 24) { return; }
             m_widget->setStyleSheet(
                 CStyleSheetUtility::asStylesheet(m_widget, pt)
@@ -83,7 +89,7 @@ namespace BlackGui
         void CFontMenu::fontSizeMinus()
         {
             Q_ASSERT_X(m_widget, Q_FUNC_INFO, "No widget");
-            int pt = m_widget->font().pointSize() - 1;
+            const int pt = m_widget->font().pointSize() - 1;
             if (pt < 5) { return; }
             m_widget->setStyleSheet(
                 CStyleSheetUtility::asStylesheet(m_widget, pt)
