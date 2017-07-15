@@ -89,16 +89,16 @@ namespace BlackMisc
             }
 
             // char after
-            const int a = p + 1;
-            if (a < bStr.length() && aStr[p] == bStr[a])
+            const int after = p + 1;
+            if (after < bStr.length() && aStr[p] == bStr[after])
             {
                 points += 0.5;
                 continue;
             }
 
             // char before
-            const int b = p - 1;
-            if (b >= 0 && aStr[p] == bStr[b])
+            const int before = p - 1;
+            if (before >= 0 && before < bStr.length() && aStr[p] == bStr[before])
             {
                 points += 0.5;
                 continue;
