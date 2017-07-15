@@ -129,7 +129,7 @@ namespace BlackGui
             copy->setObjectName("Copy rows for " + this->objectName());
 
             // Font menus
-            m_fontMenu = new CFontMenu(this, true);
+            // m_fontMenu = new CFontMenu(this, true);
         }
 
         bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
@@ -356,7 +356,7 @@ namespace BlackGui
             if (this->m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
             if (this->m_menus.testFlag(MenuCut)) { menuActions.addActions(this->initMenuActions(MenuCut)); }
             if (this->m_menus.testFlag(MenuPaste)) { menuActions.addActions(this->initMenuActions(MenuPaste)); }
-            if (this->m_menus.testFlag(MenuFont))
+            if (this->m_menus.testFlag(MenuFont) && m_fontMenu)
             {
                 menuActions.addActions(m_fontMenu->getActions(), CMenuAction::pathFont());
             }

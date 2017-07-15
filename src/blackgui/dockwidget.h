@@ -36,6 +36,7 @@ class QWidgetAction;
 namespace BlackGui
 {
     namespace Components { class CMarginsInput; }
+    namespace Menus { class CFontMenu; }
 
     //! \brief Our base class for dockable widgets containing some specialized functionality on top of QDockWidget.
     //! \details We currently use dockable widgets either as "info area" or "info bar" dockable widget.
@@ -224,6 +225,7 @@ namespace BlackGui
         QWidget *m_titleBarWidgetOriginal  = nullptr; //!< the original title bar
         QWidgetAction *m_marginMenuAction  = nullptr; //!< menu widget(!) action for margin widget
         Components::CMarginsInput *m_input = nullptr; //!< margins widget
+        Menus::CFontMenu *m_fontMenu       = nullptr; //!< Font menu
         CManagedStatusBar m_statusBar;                //!< status bar when floating
         QString m_windowTitleBackup;                  //!< original title, even if the widget title is deleted for layout purposes
         QSize m_preferredSizeWhenFloating;            //!< preferred size when floating 1st time

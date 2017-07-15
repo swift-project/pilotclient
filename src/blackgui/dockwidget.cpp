@@ -8,6 +8,7 @@
  */
 
 #include "blackgui/components/marginsinput.h"
+#include "blackgui/menus/fontmenus.h"
 #include "blackgui/dockwidget.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -37,6 +38,7 @@
 using namespace BlackMisc;
 using namespace BlackGui::Components;
 using namespace BlackGui::Settings;
+using namespace BlackGui::Menus;
 
 namespace BlackGui
 {
@@ -54,6 +56,7 @@ namespace BlackGui
         this->m_input->setMaximumWidth(150);
         this->m_marginMenuAction = new QWidgetAction(this);
         this->m_marginMenuAction->setDefaultWidget(this->m_input);
+        this->m_fontMenu = new CFontMenu(this, true, Qt::WidgetWithChildrenShortcut);
 
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::ps_showContextMenu);
@@ -339,6 +342,13 @@ namespace BlackGui
         else
         {
             contextMenu->addAction(BlackMisc::CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
+        }
+
+        // Font actions
+        Q_ASSERT_X(m_fontMenu, Q_FUNC_INFO, "Missing menu object");
+        if (m_fontMenu)
+        {
+            contextMenu->addActions(m_fontMenu->getActions());
         }
 
         // State actions (windows state)
