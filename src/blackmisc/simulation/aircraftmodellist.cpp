@@ -208,6 +208,30 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByFamilyWithColorLivery(const QString &family) const
+        {
+            if (family.isEmpty()) { return CAircraftModelList(); }
+            const QString f(family.toUpper().trimmed());
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                if (!model.getLivery().isColorLivery()) { return false; }
+                const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
+                if (!icao.hasFamily()) { return false; }
+                return icao.getFamily() == f;
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByDesignatorOrFamilyWithColorLivery(const CAircraftIcaoCode &icao) const
+        {
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                if (!model.getLivery().isColorLivery()) { return false; }
+                const CAircraftIcaoCode modelIcao(model.getAircraftIcaoCode());
+                if (modelIcao.getDesignator() == icao.getDesignator()) { return true; }
+                return icao.hasFamily() && modelIcao.getFamily() == icao.getFamily();
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findByCombinedType(const QString &combinedType) const
         {
             const QString cc(combinedType.trimmed().toUpper());
@@ -219,9 +243,26 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByCombinedTypeAndWtc(const QString &combinedType, const QString &wtc) const
+        {
+            const CAircraftModelList ml = this->findByCombinedType(combinedType);
+            if (ml.isEmpty()) { return ml; }
+            const QString wtcUc(wtc.toUpper().trimmed());
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
+                return icao.getWtc() == wtcUc;
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findByCombinedTypeWithColorLivery(const QString &combinedType) const
         {
             return this->findByCombinedType(combinedType).findColorLiveries();
+        }
+
+        CAircraftModelList CAircraftModelList::findByCombinedTypeAndWtcWithColorLivery(const QString &combinedType, const QString &wtc) const
+        {
+            return this->findByCombinedTypeAndWtc(combinedType, wtc).findColorLiveries();
         }
 
         CAircraftModelList CAircraftModelList::findColorLiveries() const
@@ -525,6 +566,26 @@ namespace BlackMisc
             return maxSim;
         }
 
+        int CAircraftModelList::countModelsWithColorLivery() const
+        {
+            int count = 0;
+            for (const CAircraftModel &model : (*this))
+            {
+                if (model.getLivery().isColorLivery()) { count++; }
+            }
+            return count;
+        }
+
+        int CAircraftModelList::countModelsWithAirlineLivery() const
+        {
+            int count = 0;
+            for (const CAircraftModel &model : (*this))
+            {
+                if (model.getLivery().isAirlineLivery()) { count++; }
+            }
+            return count;
+        }
+
         void CAircraftModelList::updateDistributor(const CDistributor &distributor)
         {
             for (CAircraftModel &model : *this)
@@ -619,8 +680,9 @@ namespace BlackMisc
         {
             ScoredModels scoreMap;
 
-            // prefer colors if there is no airline
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: %1, airline: '%2'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator()));
+            // normally prefer colors if there is no airline
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: %1, airline: '%2', ignore zero scores: %3").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Scoring in list with %1 models, airline liveries: %2, color liveries: %3").arg(this->size()).arg(this->countModelsWithAirlineLivery()).arg(this->countModelsWithColorLivery()));
 
             for (const CAircraftModel &model : *this)
             {

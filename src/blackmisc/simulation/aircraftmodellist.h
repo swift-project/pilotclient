@@ -135,11 +135,23 @@ namespace BlackMisc
             //! Models with aircraft family
             CAircraftModelList findByFamily(const QString &family) const;
 
-            //! Find by combined code, wildcards possible e.g. L*P, *2J
+            //! Models with aircraft family and color livery
+            CAircraftModelList findByFamilyWithColorLivery(const QString &family) const;
+
+            //! Models with aircraft family or designator and color livery
+            CAircraftModelList findByDesignatorOrFamilyWithColorLivery(const Aviation::CAircraftIcaoCode &icao) const;
+
+            //! Find by combined code, wildcards possible, e.g. L*P, *2J
             CAircraftModelList findByCombinedType(const QString &combinedType) const;
 
-            //! Find aircraft with color livery by combined code, wildcards possible e.g. L*P, *2J
+            //! Find by combined code and WTC, wildcards for combined code possible, e.g. L*P, *2J
+            CAircraftModelList findByCombinedTypeAndWtc(const QString &combinedType, const QString &wtc) const;
+
+            //! \copydoc findByCombinedType
             CAircraftModelList findByCombinedTypeWithColorLivery(const QString &combinedType) const;
+
+            //! \copydoc findByCombinedTypeAndWtc
+            CAircraftModelList findByCombinedTypeAndWtcWithColorLivery(const QString &combinedType, const QString &wtc) const;
 
             //! Find models with color liveries
             CAircraftModelList findColorLiveries() const;
@@ -209,6 +221,12 @@ namespace BlackMisc
 
             //! Which simulator(s) have the most entries?
             CSimulatorInfo simulatorsWithMaxEntries() const;
+
+            //! Models with a color livery
+            int countModelsWithColorLivery() const;
+
+            //! Models with an airline livery
+            int countModelsWithAirlineLivery() const;
 
             //! Update distributor, all models in list are set to given distributor
             void updateDistributor(const CDistributor &distributor);
