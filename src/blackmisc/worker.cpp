@@ -119,7 +119,9 @@ namespace BlackMisc
     CContinuousWorker::CContinuousWorker(QObject *owner, const QString &name) :
         m_owner(owner), m_name(name)
     {
-        m_updateTimer.setObjectName(name + ":timer");
+        if (m_name.isEmpty()) { m_name = metaObject()->className(); }
+        setObjectName(m_name);
+        m_updateTimer.setObjectName(m_name + ":timer");
     }
 
     void CContinuousWorker::start(QThread::Priority priority)
@@ -127,8 +129,8 @@ namespace BlackMisc
         BLACK_VERIFY_X(!hasStarted(), Q_FUNC_INFO, "Tried to start a worker that was already started");
         if (hasStarted()) { return; }
 
-        if (m_name.isEmpty()) { m_name = metaObject()->className(); }
-
+        // avoid message "QObject: Cannot create children for a parent that is in a different thread"
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(m_owner), Q_FUNC_INFO, "Needs to be started in owner thread");
         emit aboutToStart();
         setStarted();
         auto *thread = new CRegularThread(m_owner);
@@ -136,10 +138,9 @@ namespace BlackMisc
         Q_ASSERT(m_owner); // must not be null, see (9) https://dev.vatsim-germany.org/issues/402
         if (m_owner)
         {
-            QString ownerName = m_owner->objectName().isEmpty() ? m_owner->metaObject()->className() : m_owner->objectName();
+            const QString ownerName = m_owner->objectName().isEmpty() ? m_owner->metaObject()->className() : m_owner->objectName();
             thread->setObjectName(ownerName + ":" + m_name);
         }
-        setObjectName(m_name);
 
         moveToThread(thread);
         connect(thread, &QThread::started, this, &CContinuousWorker::initialize);
