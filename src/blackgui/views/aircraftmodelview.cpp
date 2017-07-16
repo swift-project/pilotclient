@@ -228,43 +228,43 @@ namespace BlackGui
                     if (!this->hasSelection()) { return; }
                     if (valueVariant.canConvert<CAircraftIcaoCode>())
                     {
-                        CAircraftIcaoCode icao = valueVariant.value<CAircraftIcaoCode>();
+                        const CAircraftIcaoCode icao = valueVariant.value<CAircraftIcaoCode>();
                         if (icao.validate().hasErrorMessages()) { return; }
                         this->applyToSelected(icao);
                     }
                     else if (valueVariant.canConvert<CAircraftIcaoCodeList>())
                     {
-                        CAircraftIcaoCodeList icaos(valueVariant.value<CAircraftIcaoCodeList>());
+                        const CAircraftIcaoCodeList icaos(valueVariant.value<CAircraftIcaoCodeList>());
                         if (icaos.size() != 1) { return; }
-                        CAircraftIcaoCode icao = icaos.front();
+                        const CAircraftIcaoCode icao = icaos.front();
                         if (icao.validate().hasErrorMessages()) { return; }
                         this->applyToSelected(icao);
                     }
                     else if (valueVariant.canConvert<CLivery>())
                     {
-                        CLivery livery = valueVariant.value<CLivery>();
+                        const CLivery livery = valueVariant.value<CLivery>();
                         if (livery.validate().hasErrorMessages()) { return; }
                         this->applyToSelected(livery);
                     }
                     else if (valueVariant.canConvert<CLiveryList>())
                     {
-                        CLiveryList liveries(valueVariant.value<CLiveryList>());
+                        const CLiveryList liveries(valueVariant.value<CLiveryList>());
                         if (liveries.size() != 1) { return; }
-                        CLivery livery = liveries.front();
+                        const CLivery livery = liveries.front();
                         if (livery.validate().hasErrorMessages()) { return; }
                         this->applyToSelected(livery);
                     }
                     else if (valueVariant.canConvert<CDistributor>())
                     {
-                        CDistributor distributor = valueVariant.value<CDistributor>();
+                        const CDistributor distributor = valueVariant.value<CDistributor>();
                         if (distributor.validate().hasErrorMessages()) { return; }
                         this->applyToSelected(distributor);
                     }
                     else if (valueVariant.canConvert<CDistributorList>())
                     {
-                        CDistributorList distributors(valueVariant.value<CDistributorList>());
+                        const CDistributorList distributors(valueVariant.value<CDistributorList>());
                         if (distributors.size() != 1) { return; }
-                        CDistributor distributor = distributors.front();
+                        const CDistributor distributor = distributors.front();
                         if (distributor.validate().hasErrorMessages()) { return; }
                         this->applyToSelected(distributor);
                     }
@@ -276,9 +276,9 @@ namespace BlackGui
                     }
                     else if (valueVariant.canConvert<CAirlineIcaoCodeList>())
                     {
-                        CAirlineIcaoCodeList airlines(valueVariant.value<CAirlineIcaoCodeList>());
+                        const CAirlineIcaoCodeList airlines(valueVariant.value<CAirlineIcaoCodeList>());
                         if (airlines.size() != 1) { return; }
-                        CAirlineIcaoCode airline = airlines.front();
+                        const CAirlineIcaoCode airline = airlines.front();
                         if (airline.validate().hasErrorMessages()) { return; }
                         emit requestHandlingOfStashDrop(airline); // I need to convert to stanard livery, which I can`t do here
                     }

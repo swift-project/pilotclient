@@ -802,7 +802,7 @@ namespace BlackGui
 
         // when toplevel is changed, I need a round in the event loop until
         // current tab bar widget is visible
-        QTimer::singleShot(250, this, SLOT(ps_emitInfoAreaStatus()));
+        QTimer::singleShot(250, this, &CInfoArea::ps_emitInfoAreaStatus);
     }
 
     void CInfoArea::ps_onStyleSheetChanged()

@@ -149,7 +149,7 @@ void CSwiftData::performGracefulShutdown()
 {
     if (this->m_updater)
     {
-        this->m_updater->abandonAndWait();
+        m_updater->abandonAndWait();
     }
 }
 

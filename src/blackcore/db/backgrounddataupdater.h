@@ -36,8 +36,8 @@ namespace BlackCore
             CBackgroundDataUpdater(QObject *owner);
 
         private:
-            int    m_cycle = 0;           //!< cycle
-            bool   m_inWork = false;      //!< indicates a running update
+            int    m_cycle = 0;      //!< cycle
+            bool   m_inWork = false; //!< indicates a running update
 
             BlackMisc::Simulation::Data::CModelCaches    m_modelCaches { false, this };    //!< caches
             BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this }; //!< caches
