@@ -58,7 +58,7 @@ namespace BlackCore
 
         Q_ASSERT_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "Missing SSL support");
         Q_ASSERT_X(sApp->isSetupAvailable(), Q_FUNC_INFO, "Setup not synchronized");
-        this->setObjectName("CWebDataReader");
+        this->setObjectName("CWebDataServices");
 
         // check if I need info objects
         const bool readFromSwiftDb = dbReaderConfig.possiblyReadsFromSwiftDb(); // DB read access
@@ -899,6 +899,13 @@ namespace BlackCore
 
     void CWebDataServices::initDbInfoObjectReaderAndTriggerRead()
     {
+        // run in correct thread
+        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        {
+            QTimer::singleShot(0, this, &CWebDataServices::initDbInfoObjectReaderAndTriggerRead);
+            return;
+        }
+
         if (!this->m_dbInfoDataReader)
         {
             this->m_dbInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::DbReading);
@@ -915,11 +922,18 @@ namespace BlackCore
         }
 
         // and trigger read
-        QTimer::singleShot(0, [this]() { this->m_dbInfoDataReader->read(); });
+        QTimer::singleShot(0, m_dbInfoDataReader, [this]() { this->m_dbInfoDataReader->read(); });
     }
 
     void CWebDataServices::initSharedInfoObjectReaderAndTriggerRead()
     {
+        // run in correct thread
+        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        {
+            QTimer::singleShot(0, this, &CWebDataServices::initSharedInfoObjectReaderAndTriggerRead);
+            return;
+        }
+
         if (!this->m_sharedInfoDataReader)
         {
             this->m_sharedInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::Shared);
@@ -936,7 +950,7 @@ namespace BlackCore
         }
 
         // and trigger read
-        QTimer::singleShot(0, [this]() { this->m_sharedInfoDataReader->read(); });
+        QTimer::singleShot(0, m_sharedInfoDataReader, [this]() { this->m_sharedInfoDataReader->read(); });
     }
 
     CDatabaseReader *CWebDataServices::getDbReader(CEntityFlags::Entity entity) const
