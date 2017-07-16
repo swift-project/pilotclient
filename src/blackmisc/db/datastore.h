@@ -73,6 +73,9 @@ namespace BlackMisc
             //! Has valid DB key
             bool hasValidDbKey() const { return m_dbKey >= 0; }
 
+            //! Same DB key and hence equal
+            bool isDbEqual(const IDatastoreObjectWithIntegerKey &other) const { return other.isLoadedFromDb() && this->isLoadedFromDb() && other.getDbKey() == this->getDbKey(); }
+
             //! Loaded from DB
             //! \remarks here not really needed, but added to have similar signature as IDatastoreObjectWithStringKey
             bool isLoadedFromDb() const;
@@ -142,6 +145,9 @@ namespace BlackMisc
 
             //! Has valid DB key
             bool hasValidDbKey() const { return !m_dbKey.isEmpty(); }
+
+            //! Same DB key and hence equal
+            bool isDbEqual(const IDatastoreObjectWithStringKey &other) const { return other.isLoadedFromDb() && this->isLoadedFromDb() && other.getDbKey() == this->getDbKey(); }
 
             //! Loaded from DB
             bool isLoadedFromDb() const { return m_loadedFromDb; }

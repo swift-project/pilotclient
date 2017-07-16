@@ -476,7 +476,7 @@ namespace BlackMisc
         {
             const CAircraftIcaoCode icao(this->getModel().getAircraftIcaoCode());
             const CAircraftIcaoCode icaoNw(this->getNetworkModel().getAircraftIcaoCode());
-            if (icao == icaoNw || icao.getDesignator() == icaoNw.getDesignator()) { return "[=] " + icao.getDesignator(); }
+            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return QStringLiteral("[=] ") + icao.getDesignator(); }
             static const QString diff("%1 -> %2");
             return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
         }
@@ -485,7 +485,7 @@ namespace BlackMisc
         {
             const CAirlineIcaoCode icao(this->getModel().getAirlineIcaoCode());
             const CAirlineIcaoCode icaoNw(this->getNetworkModel().getAirlineIcaoCode());
-            if (icao == icaoNw || icao.getDesignator() == icaoNw.getDesignator()) { return "[=] " + icao.getDesignator(); }
+            if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return QStringLiteral("[=] ") + icao.getDesignator(); }
             static const QString diff("%1 -> %2");
             return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
         }
@@ -496,7 +496,7 @@ namespace BlackMisc
 
             const CLivery livery(this->getModel().getLivery());
             const CLivery liveryNw(this->getNetworkModel().getLivery());
-            if (livery == liveryNw) { return "[=] " + livery.getCombinedCodePlusInfo(); }
+            if (livery.isDbEqual(liveryNw) || livery == liveryNw) { return QStringLiteral("[=] ") + livery.getCombinedCodePlusInfo(); }
             static const QString diff("%1 -> %2");
             return diff.arg(liveryNw.getCombinedCodePlusInfo(), livery.getCombinedCodePlusInfo());
         }
