@@ -257,7 +257,7 @@ namespace BlackCore
             if (!inconsistent.isEmpty())
             {
                 logInconsistentData(
-                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent aircraft codes: " + inconsistent.dbKeysAsStrings(", ")),
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent aircraft codes: " + inconsistent.dbKeysAsString(", ")),
                     Q_FUNC_INFO);
             }
 
@@ -307,7 +307,7 @@ namespace BlackCore
             if (!inconsistent.isEmpty())
             {
                 logInconsistentData(
-                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent airline codes: " + inconsistent.dbKeysAsStrings(", ")),
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent airline codes: " + inconsistent.dbKeysAsString(", ")),
                     Q_FUNC_INFO);
             }
 

@@ -49,6 +49,8 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastoreInteger,
+                IndexDbKeyAsString,
+                IndexIsLoadedFromDb,
                 IndexDatabaseIcon
             };
 
@@ -61,7 +63,7 @@ namespace BlackMisc
             //! Key as JSON value, or null
             QJsonValue getDbKeyAsJsonValue() const;
 
-            //! Db ley in parentheses, e.g. "(3)"
+            //! Db key in parentheses, e.g. "(3)"
             QString getDbKeyAsStringInParentheses(const QString &prefix = {}) const;
 
             //! Set the DB key
@@ -130,6 +132,7 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexDbStringKey = CPropertyIndex::GlobalIndexIDatastoreString,
+                IndexDbKeyAsString,
                 IndexIsLoadedFromDb,
                 IndexDatabaseIcon
             };
@@ -137,8 +140,14 @@ namespace BlackMisc
             //! Get DB key.
             const QString &getDbKey() const { return m_dbKey; }
 
+            //! DB key as string
+            QString getDbKeyAsString() const { return getDbKey(); }
+
             //! Key as JSON value, or null
             QJsonValue getDbKeyAsJsonValue() const;
+
+            //! Db key in parentheses, e.g. "(3)"
+            QString getDbKeyAsStringInParentheses(const QString &prefix = {}) const;
 
             //! Set the DB key
             void setDbKey(const QString &key) { m_dbKey = key.trimmed().toUpper(); }

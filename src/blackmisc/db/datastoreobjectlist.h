@@ -35,11 +35,14 @@ namespace BlackMisc
             //! Sort by timestamp
             void sortByKey();
 
-            //! All keys as list
+            //! All keys as set
             QSet<KEYTYPE> toDbKeySet() const;
 
+            //! All keys as string set (also int keys will be converted to string)
+            QSet<QString> toDbKeyStringSet() const;
+
             //! The DB keys as string
-            QString dbKeysAsStrings(const QString &separator) const;
+            QString dbKeysAsString(const QString &separator) const;
 
             //! Max.key value (making sense with integer key)
             KEYTYPE getMaxKey(bool *ok = nullptr) const;

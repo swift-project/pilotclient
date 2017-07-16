@@ -93,10 +93,12 @@ namespace BlackMisc
         CVariant IDatastoreObjectWithIntegerKey::propertyByIndex(const CPropertyIndex &index) const
         {
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDbIntegerKey: return CVariant::from(this->m_dbKey);
+            case IndexDbKeyAsString: return CVariant::from(this->getDbKeyAsString());
+            case IndexIsLoadedFromDb: return CVariant::from(this->hasValidDbKey());
             case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
             default: break;
             }
@@ -106,12 +108,14 @@ namespace BlackMisc
         void IDatastoreObjectWithIntegerKey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDbIntegerKey:
                 this->m_dbKey = variant.toInt();
                 break;
+            case IndexDbKeyAsString:
+                this->m_dbKey = stringToDbKey(variant.toQString());
             default:
                 break;
             }
@@ -123,6 +127,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexDbKeyAsString: // fall thru
             case IndexDbIntegerKey: return Compare::compare(this->m_dbKey, compareValue.getDbKey());
             case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
             default: break;
@@ -134,7 +139,7 @@ namespace BlackMisc
         bool IDatastoreObjectWithIntegerKey::canHandleIndex(const BlackMisc::CPropertyIndex &index)
         {
             if (ITimestampBased::canHandleIndex(index)) { return true;}
-            int i = index.frontCasted<int>();
+            const int i = index.frontCasted<int>();
             return (i >= static_cast<int>(IndexDbIntegerKey)) && (i <= static_cast<int>(IndexDatabaseIcon));
         }
 
@@ -143,6 +148,12 @@ namespace BlackMisc
             if (this->hasValidDbKey()) { return QJsonValue(this->m_dbKey); }
             static const QJsonValue null;
             return null;
+        }
+
+        QString IDatastoreObjectWithStringKey::getDbKeyAsStringInParentheses(const QString &prefix) const
+        {
+            if (this->m_dbKey.isEmpty()) { return ""; }
+            return prefix + "(" + m_dbKey + ")";
         }
 
         bool IDatastoreObjectWithStringKey::matchesDbKeyState(Db::DbKeyStateFilter filter) const
@@ -178,6 +189,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexDbKeyAsString: // fall thru
             case IndexDbStringKey: return CVariant::from(this->m_dbKey);
             case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
             case IndexIsLoadedFromDb: return CVariant::from(this->m_loadedFromDb);
@@ -194,6 +206,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexDbStringKey:
+            case IndexDbKeyAsString:
                 this->m_dbKey = variant.value<QString>();
                 break;
             case IndexIsLoadedFromDb:
@@ -210,6 +223,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexDbKeyAsString: // fall thru
             case IndexDbStringKey:  return this->m_dbKey.compare(compareValue.getDbKey());
             case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
             default:
@@ -223,7 +237,7 @@ namespace BlackMisc
         {
             if (index.isEmpty()) { return false; }
             if (ITimestampBased::canHandleIndex(index)) { return true;}
-            int i = index.frontCasted<int>();
+            const int i = index.frontCasted<int>();
             return (i >= static_cast<int>(IndexDbStringKey)) && (i <= static_cast<int>(IndexDatabaseIcon));
         }
     }

@@ -80,15 +80,33 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>
-        QString IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::dbKeysAsStrings(const QString &separator) const
+        QSet<QString> IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeyStringSet() const
+        {
+            QSet<QString> keys;
+            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+            {
+                if (!obj.hasValidDbKey()) { continue; }
+                keys.insert(obj.getDbKeyAsString());
+            }
+            return keys;
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        QString IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::dbKeysAsString(const QString &separator) const
         {
             if (ITimestampObjectList<OBJ, CONTAINER>::container().isEmpty()) { return ""; }
-            const QSet<KEYTYPE> keys = IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeySet();
+            const QSet<QString> keys = IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeyStringSet();
             QString s;
-            for (const KEYTYPE &k : keys)
+            for (const QString &k : keys)
             {
-                if (!s.isEmpty()) { s += separator; }
-                s = s.append(k); // append works with string and int
+                if (s.isEmpty())
+                {
+                    s += k;
+                }
+                else
+                {
+                    s += separator + k;
+                }
             }
             return s;
         }

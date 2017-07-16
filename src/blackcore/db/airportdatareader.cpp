@@ -175,7 +175,7 @@ namespace BlackCore
             if (!inconsistent.isEmpty())
             {
                 logInconsistentData(
-                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent airports: " + inconsistent.dbKeysAsStrings(", ")),
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, "Inconsistent airports: " + inconsistent.dbKeysAsString(", ")),
                     Q_FUNC_INFO);
             }
 
