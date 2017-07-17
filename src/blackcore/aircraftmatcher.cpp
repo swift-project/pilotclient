@@ -53,7 +53,7 @@ namespace BlackCore
         const MatchingMode mode = this->m_matchingMode;
 
         static const QString format("hh:mm:ss.zzz");
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching: UTC %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Start matching: UTC %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models").arg(modelSet.size()), getLogCategories());
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()), getLogCategories());
 
@@ -189,7 +189,7 @@ namespace BlackCore
                     {
                         // we have found a livery in the DB
                         model.setLivery(reverseLivery);
-                        if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of livery '%1'").arg(reverseLivery.getCombinedCodePlusInfo()), getLogCategories()); }
+                        if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of livery found '%1'").arg(reverseLivery.getCombinedCodePlusInfoAndId()), getLogCategories()); }
                     }
                     else
                     {
@@ -260,7 +260,7 @@ namespace BlackCore
             // sometimes from network we receive something like "CESSNA C172"
             if (CAircraftIcaoCode::isValidDesignator(designator))
             {
-                CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of ICAO '%1' did not find anything, using smart search").arg(designator), CAircraftMatcher::getLogCategories());
+                CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of aircraft ICAO '%1' did not find anything, using smart search").arg(designator), CAircraftMatcher::getLogCategories());
                 icao = sApp->getWebDataServices()->smartAircraftIcaoSelector(icaoCandidate);
             }
             else
@@ -269,7 +269,7 @@ namespace BlackCore
                 const QStringList parts(designator.split(' '));
                 for (const QString &p : parts)
                 {
-                    CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Trying parts, now reverse lookup of ICAO '%1' using smart search").arg(p), CAircraftMatcher::getLogCategories());
+                    CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Trying parts, now reverse lookup of aircraft ICAO '%1' using smart search").arg(p), CAircraftMatcher::getLogCategories());
                     icao = sApp->getWebDataServices()->smartAircraftIcaoSelector(p);
                     if (icao.isLoadedFromDb()) break;
                 }
@@ -288,28 +288,29 @@ namespace BlackCore
 
         if (foundIcaos.size() < 1)
         {
-            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of ICAO '%1'', nothing found").arg(designator), CAircraftMatcher::getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of aircraft ICAO '%1'', nothing found").arg(designator), CAircraftMatcher::getLogCategories());
             return CAircraftIcaoCode(icaoCandidate);
         }
         else if (foundIcaos.size() == 1)
         {
             const CAircraftIcaoCode icao(foundIcaos.front());
-            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of ICAO '%1'', found one manufacturer '%2'").arg(designator, icao.getDesignatorManufacturer()), CAircraftMatcher::getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of aircraft ICAO '%1'', found one manufacturer '%2'").arg(designator, icao.getDesignatorManufacturer()), CAircraftMatcher::getLogCategories());
             return icao;
         }
         else
         {
             // multiple ICAOs
+            Q_ASSERT_X(foundIcaos.size() > 1, Q_FUNC_INFO, "Wrong size");
             const QPair<QString, int> maxManufacturer = foundIcaos.maxCountManufacturer();
-            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of ICAO '%1'', found %2 values (ambiguous)").arg(designator).arg(foundIcaos.size()), CAircraftMatcher::getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of aircraft ICAO '%1'', found %2 values (ambiguous): %3").arg(designator).arg(foundIcaos.size()).arg(foundIcaos.dbKeysAsString(", ")), CAircraftMatcher::getLogCategories());
             if (maxManufacturer.second < foundIcaos.size())
             {
                 foundIcaos = foundIcaos.findByManufacturer(maxManufacturer.first);
                 CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reducing by manufacturer '%1', now %2 values").arg(maxManufacturer.first).arg(foundIcaos.size()), CAircraftMatcher::getLogCategories());
             }
             foundIcaos.sortByRank();
-            CAircraftIcaoCode icao = foundIcaos.front(); // best rank
-            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of ICAO '%1'', using ICAO '%2' with rank %3").arg(designator, icao.toQString(), icao.getRankString()), CAircraftMatcher::getLogCategories());
+            const CAircraftIcaoCode icao = foundIcaos.front(); // best rank
+            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of aircraft ICAO '%1'', using ICAO '%2' with rank %3").arg(designator, icao.toQString(), icao.getRankString()), CAircraftMatcher::getLogCategories());
             return icao;
         }
     }
@@ -322,8 +323,8 @@ namespace BlackCore
         const CAirlineIcaoCode icao = sApp->getWebDataServices()->smartAirlineIcaoSelector(icaoPattern, callsign);
         if (log)
         {
-            if (icao.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline '%1' and callsign '%2' found '%3'").arg(icaoPattern.getDesignator(), callsign.asString(), icao.getDesignator()), CAircraftMatcher::getLogCategories()); }
-            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline '%1' and callsign '%2', nothing found").arg(icaoPattern.getDesignator(), callsign.asString()), CAircraftMatcher::getLogCategories()); }
+            if (icao.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline ICAO '%1' and callsign '%2' found '%3' '%4'").arg(icaoPattern.getDesignator(), callsign.asString(), icao.getVDesignatorDbKey(), icao.getName()), CAircraftMatcher::getLogCategories()); }
+            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline ICAO '%1' and callsign '%2', nothing found").arg(icaoPattern.getDesignator(), callsign.asString()), CAircraftMatcher::getLogCategories()); }
         }
         return icao;
     }
@@ -606,7 +607,7 @@ namespace BlackCore
         {
             // Aircraft ICAO only
             const CAircraftModelList byAircraft(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), CAirlineIcaoCode()));
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO '%2' (no airline) for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey()), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO '%2' only (no airline in set) for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey()), getLogCategories());
 
             // we do not have an airline for that aircraft, prefer color liveries
             // this could also become a setting

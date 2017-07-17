@@ -22,6 +22,7 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QThreadStorage>
+#include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>
 
@@ -83,10 +84,8 @@ namespace BlackMisc
         QString CAircraftIcaoCode::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s(this->m_designator);
-            if (this->hasValidCombinedType()) { s.append(" ").append(this->m_combinedType); }
-            if (this->hasValidWtc()) { s.append(" ").append(this->m_wtc); }
-            return s;
+            static const QString s("%1 %2 %3");
+            return s.arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc());
         }
 
         void CAircraftIcaoCode::updateMissingParts(const CAircraftIcaoCode &otherIcaoCode)
@@ -371,20 +370,12 @@ namespace BlackMisc
 
         void CAircraftIcaoCode::setRank(int rank)
         {
-            if (rank < 0 || rank >= 10)
-            {
-                m_rank = 10;
-            }
-            else
-            {
-                m_rank = rank;
-            }
+            m_rank = (rank < 0 || rank >= 10) ? 10 : rank;
         }
 
         QString CAircraftIcaoCode::getCombinedIcaoStringWithKey() const
         {
-            QString s(getDesignator());
-            if (s.isEmpty()) s = "????";
+            QString s(hasDesignator() ? getDesignator() : "????");
             if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
             if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
             return s.append(getDbKeyAsStringInParentheses(" "));
