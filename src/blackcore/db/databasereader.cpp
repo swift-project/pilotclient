@@ -68,7 +68,6 @@ namespace BlackCore
                 const CDbFlags::DataRetrievalMode rm = config.getRetrievalMode(); // DB reading, cache, shared
                 Q_ASSERT_X(!rm.testFlag(CDbFlags::Unspecified), Q_FUNC_INFO, "Missing retrieval mode");
                 const QString rmString = CDbFlags::flagToString(rm);
-                const bool rmCacheOnly = (rm == CDbFlags::Cached);
                 const CDbFlags::DataRetrievalModeFlag rmDbOrSharedFlag = CDbFlags::modeToModeFlag(rm & CDbFlags::DbReadingOrShared);
                 const QString rmDbOrSharedFlagString = CDbFlags::flagToString(rmDbOrSharedFlag);
                 const bool rmDbReadingOrShared = (rmDbOrSharedFlag == CDbFlags::DbReading || rmDbOrSharedFlag == CDbFlags::Shared);
@@ -79,8 +78,8 @@ namespace BlackCore
                 }
                 else if (rm.testFlag(CDbFlags::Cached))
                 {
-                    // info objects -> cache + shared or cache + DB data
-                    if (hasInfoObjects)
+                    // info object comparisons only for: cache + shared or cache + DB data
+                    if (hasInfoObjects && rmDbReadingOrShared)
                     {
                         // check mode here for consistency
                         Q_ASSERT_X(!getBaseUrl(rmDbOrSharedFlag).isEmpty(), Q_FUNC_INFO, "Wrong retrieval mode");
@@ -115,11 +114,11 @@ namespace BlackCore
                     }
                     else
                     {
-                        // no info objects, server down or no info objects loaded, e.g. cache only
+                        // no info objects, server down or no shared/db read mode
                         this->admitCaches(currentEntity);
-                        if (rmCacheOnly)
+                        if (!rmDbReadingOrShared)
                         {
-                            CLogMessage(this).info("Triggered reading cache (cache only flag)") << currentEntityName;
+                            CLogMessage(this).info("Triggered reading cache for '%1', read mode: %2") << currentEntityName << rmString;
                         }
                         else
                         {
