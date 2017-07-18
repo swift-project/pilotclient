@@ -198,10 +198,11 @@ class Dumper:
         if stop_pool:
             JobPool.shutdown()
 
-    def pack(self):
-        symbol_full_path = os.path.normpath(os.path.join(self.symbol_path, ".."))
-        tar_name = os.path.join(symbol_full_path, 'symbols.tar.gz')
-        tar = tarfile.open(tar_name, "w:gz")
+    def pack(self, tar_path=None):
+        if tar_path is None:
+            symbol_full_path = os.path.normpath(os.path.join(self.symbol_path, ".."))
+            tar_path = os.path.join(symbol_full_path, 'symbols.tar.gz')
+        tar = tarfile.open(tar_path, "w:gz")
         tar.add(self.symbol_path, arcname="symbols")
 
     def process(self, *args):
