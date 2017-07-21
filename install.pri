@@ -224,6 +224,7 @@ win32-g++ {
         VC_RUNTIME_LIBS *= libgcc_s_seh-1
     }
     VC_RUNTIME_LIBS *= libwinpthread-1
+    VC_RUNTIME_LIBS *= libstdc++-6
 
     vc_runtime_target.path *= $${PREFIX}/bin
 
@@ -232,14 +233,6 @@ win32-g++ {
     }
 
     INSTALLS += vc_runtime_target
-
-    # libstdc++-6.dll needs a workaround since copy does not accept a filepath with '+' in it
-    vc_runtime_target.depends += copy_libstdc
-    copy_libstdc.target = copy_libstdc
-    source_path = $$[QT_INSTALL_BINS]/libstdc++-6.dll
-    dest_path = $$vc_runtime_target.path
-    copy_libstdc.commands = xcopy /Y $$shell_path($$source_path) $$shell_path($$dest_path)
-    QMAKE_EXTRA_TARGETS += copy_libstdc
 }
 
 ############### Install externals ##############

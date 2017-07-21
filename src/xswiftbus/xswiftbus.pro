@@ -188,14 +188,7 @@ win32-g++ {
         dep_target.files *= $$[QT_INSTALL_BINS]/libgcc_s_seh-1.dll
     }
     dep_target.files *= $$[QT_INSTALL_BINS]/libwinpthread-1.dll
-
-    # libstdc++-6.dll needs a workaround since copy does not accept a filepath with '+' in it
-    dep_target.depends += copy_libstdc
-    copy_libstdc.target = copy_libstdc
-    source_path = $$[QT_INSTALL_BINS]/libstdc++-6.dll
-    dest_path = $$PREFIX/$$XSWIFTBUS_DIR
-    copy_libstdc.commands = xcopy /Y $$shell_path($$source_path) $$shell_path($$dest_path)
-    QMAKE_EXTRA_TARGETS += copy_libstdc
+    dep_target.files *= $$[QT_INSTALL_BINS]/libstdc++-6.dll
 }
 
 INSTALLS += dep_target
