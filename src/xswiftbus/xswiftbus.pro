@@ -112,7 +112,6 @@ win32 {
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
 } else:macx: {
-    dep_target.files *= $$PREFIX/lib/libblackmisc.0.dylib
     dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtCore.framework/ &&
     dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtGui.framework/ &&
     dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtWidgets.framework/ &&
@@ -120,6 +119,15 @@ win32 {
     dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtNetwork.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtNetwork.framework/ &&
     dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtXml.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtXml.framework/
     dep_target.CONFIG += no_check_exist
+
+    # Manually copy to workaround shortcomings introduced
+    # when qmake migrated away from GNU install in Qt 5.9
+    dep_target.depends += copy_blackmisc
+    copy_blackmisc.target = copy_blackmisc
+    source_path = $$PREFIX/lib/libblackmisc.0.dylib
+    dest_path = $$PREFIX/$$XSWIFTBUS_DIR
+    copy_blackmisc.commands = cp $$shell_path($$source_path) $$shell_path($$dest_path)
+    QMAKE_EXTRA_TARGETS += copy_blackmisc
 
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
@@ -148,7 +156,6 @@ win32 {
     QMAKE_EXTRA_TARGETS += fix_misc_rpath
 
 } else:unix: {
-    dep_target.files *= $$PREFIX/lib/libblackmisc.so*
     dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5Core.so.5
     dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5Gui.so.5
     dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5Widgets.so.5
@@ -159,6 +166,15 @@ win32 {
     dep_target.files *= $$[QT_INSTALL_LIBS]/libicuuc.so.56
     dep_target.files *= $$[QT_INSTALL_LIBS]/libicudata.so.56
     dep_target.CONFIG += no_check_exist
+
+    # Manually copy to workaround shortcomings introduced
+    # when qmake migrated away from GNU install in Qt 5.9
+    dep_target.depends += copy_blackmisc
+    copy_blackmisc.target = copy_blackmisc
+    source_path = $$PREFIX/lib/libblackmisc.so.0
+    dest_path = $$PREFIX/$$XSWIFTBUS_DIR
+    copy_blackmisc.commands = cp $$shell_path($$source_path) $$shell_path($$dest_path)
+    QMAKE_EXTRA_TARGETS += copy_blackmisc
 
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
