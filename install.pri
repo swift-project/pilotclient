@@ -246,7 +246,7 @@ win32-g++ {
 
 win32: externals_lib_target.path = $${PREFIX}/bin
 else: externals_lib_target.path = $${PREFIX}/lib
-!win32-g++: externals_lib_target.files *= $${EXTERNALS_LIB_DIR}/*.$${QMAKE_EXTENSION_SHLIB}
+!win32-g++: externals_lib_target.files *= $${EXTERNALS_LIB_DIR}/*.$${QMAKE_EXTENSION_SHLIB}*
 INSTALLS += externals_lib_target
 
 # win32-g++ needs a workaround since copy does not accept a filepath with '+' in it
