@@ -287,10 +287,12 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     QMAKE_EXTRA_TARGETS += create_updater
 
     create_installer.depends = create_updater
+    WINDOWS64BITMODE = 0
     win32 {
         INSTALLER_PLATFORM = windows
         INSTALLER_BASENAME = swift-installer-win-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = exe
+        equals(WORD_SIZE,64): WINDOWS64BITMODE = 1
     }
     else:macx {
         INSTALLER_PLATFORM = osx
@@ -306,7 +308,8 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} $${INSTALLER_PLATFORM} \
                                     --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
                                               project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT} \
-                                              project.version=$${BLACK_VERSION}
+                                              project.version=$${BLACK_VERSION} \
+                                              project.windows64bitMode=$${WINDOWS64BITMODE}
     QMAKE_EXTRA_TARGETS += create_installer
 }
 
