@@ -17,11 +17,12 @@
 #include <QtGlobal>
 #include <QtMath>
 
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackMisc
 {
     namespace Geo
     {
-
         template <class LATorLON>
         CEarthAngle<LATorLON> &CEarthAngle<LATorLON>::operator +=(const CEarthAngle &latOrLon)
         {
@@ -70,49 +71,64 @@ namespace BlackMisc
         template <class LATorLON>
         LATorLON CEarthAngle<LATorLON>::fromWgs84(const QString &wgsCoordinate)
         {
-            // http://www.regular-expressions.info/floatingpoint.html
             const QString wgs = wgsCoordinate.simplified().trimmed();
-            thread_local const QRegularExpression rx("([-+]?[0-9]*\\.?[0-9]+)");
-            qint32 deg = 0;
-            qint32 min = 0;
-            double sec = 0.0;
-            double secFragment = 0.0;
-            int fragmentLength = 0;
-            int c = 0;
-            int pos = 0;
-            QRegularExpressionMatch match = rx.match(wgs, pos);
-            while (match.hasMatch())
+            if (wgs.isEmpty()) { return LATorLON(); }
+
+            // support for 5deg, 1.2rad
+            if (CAngleUnit::deg().endsStringWithNameOrSymbol(wgs) || CAngleUnit::rad().endsStringWithNameOrSymbol(wgs))
             {
-                QString cap = match.captured(1);
-                pos += match.capturedLength(1);
-                switch (c++)
-                {
-                case 0:
-                    deg = cap.toInt();
-                    break;
-                case 1:
-                    min = cap.toInt();
-                    break;
-                case 2:
-                    sec = cap.toDouble();
-                    break;
-                case 3:
-                    secFragment = cap.toDouble();
-                    fragmentLength = cap.length();
-                    break;
-                default:
-                    break;
-                }
-                match = rx.match(wgs, pos);
-            }
-            if (fragmentLength > 0)
-            {
-                // we do have given ms in string
-                sec += secFragment / qPow(10, fragmentLength);
+                LATorLON latOrLon;
+                latOrLon.parseFromString(wgs);
+                return latOrLon;
             }
 
-            if (wgs.contains('S', Qt::CaseInsensitive) ||
-                    wgs.contains('W', Qt::CaseInsensitive)) deg *= -1;
+            // number only -> parsed as degrees
+            bool isDouble;
+            const double valueDegrees = wgs.toDouble(&isDouble);
+            if (isDouble)
+            {
+                CAngle a(valueDegrees, CAngleUnit::deg());
+                return LATorLON(a);
+            }
+
+            // http://www.regular-expressions.info/floatingpoint.html
+            thread_local const QRegularExpression rx("[+-]?\\d+(?:\\.\\d+)?");
+            int deg = 0;
+            int min = 0;
+            double sec = 0.0;
+            int c = 0;
+            QRegularExpressionMatchIterator i = rx.globalMatch(wgs);
+            while (i.hasNext() && c < 3)
+            {
+                const QRegularExpressionMatch match = i.next();
+                bool ok;
+                if (match.hasMatch())
+                {
+                    const QString cap = match.captured(0);
+                    switch (c++)
+                    {
+                    case 0:
+                        deg = cap.toInt(&ok);
+                        break;
+                    case 1:
+                        min = cap.toInt(&ok);
+                        break;
+                    case 2:
+                        sec = cap.toDouble(&ok);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                Q_UNUSED(ok); // ok for debugging purposes
+            }
+
+            if (wgs.contains('S', Qt::CaseInsensitive) || wgs.contains('W', Qt::CaseInsensitive))
+            {
+                deg *= -1;
+                min *= -1;
+                sec *= -1;
+            }
 
             PhysicalQuantities::CAngle a(deg, min, sec);
             return LATorLON(a);
@@ -149,6 +165,19 @@ namespace BlackMisc
         CIcon CEarthAngle<LATorLON>::toIcon() const
         {
             return BlackMisc::CIcon::iconByIndex(CIcons::GeoPosition);
+        }
+
+        template<class LATorLON>
+        QString CEarthAngle<LATorLON>::toWgs84(const QChar pos, const QChar neg, int fractionalDigits) const
+        {
+            const CAngle::DegMinSecFractionalSec v = this->asSexagesimalDegMinSec(true);
+            const QChar pn = v.sign < 0 ? neg : pos;
+
+            static const QString vs("%1° %2' %3\" %4");
+            if (fractionalDigits < 1) { return vs.arg(v.deg).arg(v.min).arg(v.sec).arg(pn); }
+
+            static const QString vsf("%1° %2' %3.%4\" %5");
+            return vsf.arg(v.deg).arg(v.min).arg(v.sec).arg(v.fractionalSecAsString(fractionalDigits)).arg(pn);
         }
 
         // see here for the reason of thess forward instantiations

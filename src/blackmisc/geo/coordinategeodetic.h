@@ -187,8 +187,7 @@ namespace BlackMisc
         {
         public:
             //! Default constructor
-            CCoordinateGeodetic() :
-                CCoordinateGeodetic(0, 0, 0) {}
+            CCoordinateGeodetic() : CCoordinateGeodetic(0, 0, 0) {}
 
             //! Constructor by normal vector
             CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
@@ -201,6 +200,9 @@ namespace BlackMisc
 
             //! Constructor by values
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightFeet);
+
+            //! Constructor by interface
+            CCoordinateGeodetic(const ICoordinateGeodetic &coordinate);
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual CLatitude latitude() const override;

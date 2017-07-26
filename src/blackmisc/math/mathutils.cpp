@@ -53,10 +53,12 @@ namespace BlackMisc
 
         double CMathUtils::roundEpsilon(double value, double epsilon)
         {
+            if (epsilon == 0) { return value; } // avoid division by 0
             double fractpart, intpart;
             fractpart = modf(value, &intpart);
-            if (fractpart == 0) return value; // do not mess any "integers" to the worse
-            qint64 ri = qRound(value / epsilon);
+            if (fractpart == 0) { return value; } // do not mess any "integers" to the worse
+            const double roundValue = value / epsilon;
+            qint64 ri = qRound64(roundValue);
             double rv = static_cast<double>(ri) * epsilon; // do not loose any range here
             return rv;
         }
@@ -113,5 +115,15 @@ namespace BlackMisc
             return multiplier * divisor;
         }
 
+        QString CMathUtils::fractionalPartAsString(double value, int width)
+        {
+            double intpart;
+            const double fractpart = modf(value, &intpart);
+            const QString f = QString::number(fractpart);
+            const QString fInt = f.length() < 3 ? QString("0") : f.mid(2);
+            if (width < 0) { return fInt; }
+            if (fInt.length() >= width) { return fInt.left(width); }
+            return fInt.leftJustified(width, '0');
+        }
     } // namespace
 } // namespace

@@ -300,6 +300,13 @@ namespace BlackMisc
             return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
         }
 
+        template<class MU, class PQ>
+        void CPhysicalQuantity<MU, PQ>::roundToEpsilon()
+        {
+            if (this->isNull()) { return; }
+            this->m_value = this->m_unit.roundToEpsilon(this->m_value);
+        }
+
         template <class MU, class PQ>
         double CPhysicalQuantity<MU, PQ>::valueRounded(MU unit, int digits) const
         {

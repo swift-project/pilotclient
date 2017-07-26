@@ -36,7 +36,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         /*!
          * Base class for all units, such as meter, hertz.
          */
@@ -219,11 +218,11 @@ namespace BlackMisc
                     : m_name(name), m_symbol(symbol)
                 {}
 
-                QLatin1String m_name; //!< name, e.g. "meter"
-                QLatin1String m_symbol; //!< unit name, e.g. "m"
-                double m_epsilon = 0.0; //!< values with differences below epsilon are the equal
-                int m_displayDigits = 0; //!< standard rounding for string conversions
-                ConverterFunction m_toDefault = nullptr; //!< convert from this unit to default unit
+                QLatin1String m_name;     //!< name, e.g. "meter"
+                QLatin1String m_symbol;   //!< unit name, e.g. "m"
+                double m_epsilon = 0.0;   //!< values with differences below epsilon are the equal
+                int m_displayDigits = 0;  //!< standard rounding for string conversions
+                ConverterFunction m_toDefault = nullptr;   //!< convert from this unit to default unit
                 ConverterFunction m_fromDefault = nullptr; //!< convert to this unit from default unit
             };
 
@@ -291,16 +290,31 @@ namespace BlackMisc
                 return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_data->m_symbol.latin1()) : this->m_data->m_symbol;
             }
 
+            //! Does a string end with name or symbol? E.g. 3meter, 3m, 3deg
+            bool endsStringWithNameOrSymbol(const QString &candidate, Qt::CaseSensitivity cs = Qt::CaseSensitive)
+            {
+                const QString c = candidate.trimmed();
+                return c.endsWith(this->getName(false), cs) || c.endsWith(this->getName(true)) ||
+                       c.endsWith(this->getSymbol(false), cs) || c.endsWith(this->getSymbol(true));
+            }
+
             //! Rounded value
+            //! \note default digits is CMeasurementUnit::getDisplayDigits
             double roundValue(double value, int digits = -1) const;
 
+            //! Rounded to the nearest CMeasurementUnit::getEpsilon
+            //! \remark uses CMathUtils::roundEpsilon
+            double roundToEpsilon(double value) const;
+
             //! Rounded string utility method, virtual so units can have specialized formatting
+            //! \note default digits is CMeasurementUnit::getDisplayDigits
             virtual QString makeRoundedQString(double value, int digits = -1, bool i18n = false) const;
 
             //! Value rounded with unit, e.g. "5.00m", "30kHz"
+            //! \note default digits is CMeasurementUnit::getDisplayDigits
             virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
-            //! Threshold for rounding
+            //! Threshold for comparions
             double getEpsilon() const
             {
                 return this->m_data->m_epsilon;
@@ -371,8 +385,7 @@ namespace BlackMisc
                 return none;
             }
         };
-
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

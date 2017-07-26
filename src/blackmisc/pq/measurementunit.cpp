@@ -17,7 +17,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         bool CMeasurementUnit::operator ==(const CMeasurementUnit &other) const
         {
             if (this == &other) return true;
@@ -43,17 +42,23 @@ namespace BlackMisc
 
         double CMeasurementUnit::roundValue(double value, int digits) const
         {
-            if (digits < 0) digits = this->m_data->m_displayDigits;
+            if (digits < 0) { digits = this->m_data->m_displayDigits; }
             return CMathUtils::round(value, digits);
         }
 
-        QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool /* i18n */) const
+        double CMeasurementUnit::roundToEpsilon(double value) const
         {
-            if (digits < 0) digits = this->m_data->m_displayDigits;
-            double v = CMathUtils::round(value, digits);
-            QString s = QLocale::system().toString(v, 'f', digits);
-            return s;
+            if (this->getEpsilon() == 0 || this->isNull()) { return value; }
+            return CMathUtils::roundEpsilon(value, this->getEpsilon());
         }
 
+        QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool i18n) const
+        {
+            Q_UNUSED(i18n);
+            if (digits < 0) digits = this->m_data->m_displayDigits;
+            const double v = CMathUtils::round(value, digits);
+            const QString s = QLocale::system().toString(v, 'f', digits);
+            return s;
+        }
     } // namespace
 } // namespace

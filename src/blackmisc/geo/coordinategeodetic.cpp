@@ -212,6 +212,13 @@ namespace BlackMisc
         CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightFeet) :
             CCoordinateGeodetic( { latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { heightFeet, BlackMisc::PhysicalQuantities::CLengthUnit::ft() }) {}
 
+        CCoordinateGeodetic::CCoordinateGeodetic(const ICoordinateGeodetic &coordinate) :
+            m_x(coordinate.normalVectorDouble()[0]),
+            m_y(coordinate.normalVectorDouble()[1]),
+            m_z(coordinate.normalVectorDouble()[2]),
+            m_geodeticHeight(coordinate.geodeticHeight())
+        { }
+
         CLatitude CCoordinateGeodetic::latitude() const
         {
             return { std::atan2(m_z, std::hypot(m_x, m_y)), PhysicalQuantities::CAngleUnit::rad() };

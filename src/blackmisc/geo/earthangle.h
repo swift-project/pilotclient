@@ -18,7 +18,6 @@ namespace BlackMisc
 {
     namespace Geo
     {
-
         class CLatitude;
         class CLongitude;
 
@@ -66,6 +65,9 @@ namespace BlackMisc
             //! Init by CAngle value
             CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle);
 
+            //! To WGS84 string
+            QString toWgs84(const QChar pos, const QChar neg, int fractionalDigits = 3) const;
+
         public:
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -82,8 +84,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLatitude>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLongitude>;
         //! \endcond
-
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

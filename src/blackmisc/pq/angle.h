@@ -25,7 +25,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         //! Physical unit angle (radians, degrees)
         class BLACKMISC_EXPORT CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>
         {
@@ -39,26 +38,49 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CAngle(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
-            /*!
-             * \brief Init as sexagesimal degrees, minutes, seconds
-             * The sign of all parameters must be the same, either all positive or all negative.
-             */
-            CAngle(int degrees, int minutes, double seconds) :
-                CPhysicalQuantity(
-                    degrees + minutes / 100.0 + seconds / 10000.0,
-                    CAngleUnit::sexagesimalDeg()) {}
+            //! Value as individual values
+            struct DegMinSecFractionalSec
+            {
+                int sign = 1; //!< 1/-1
+                int deg = 0;  //!< 0-359
+                int min = 0;  //!< 0-59
+                int sec = 0;  //!< 0-59
+                double fractionalSec = 0; //!< value < 1.0
 
-            /*!
-             * \brief Init as sexagesimal degrees, minutes
-             * The sign of both parameters must be the same, either both positive or both negative.
-             */
-            CAngle(int degrees, double minutes) :
-                CPhysicalQuantity(
-                    degrees + minutes / 100.0,
-                    CAngleUnit::sexagesimalDegMin()) {}
+                //! Degrees as string
+                QString degAsString() const { return QString::number(deg); }
+
+                //! Minutes as string
+                QString minAsString() const { return QString::number(min); }
+
+                //! Seconds as string
+                QString secAsString() const { return QString::number(sec); }
+
+                //! Fractional seconds as string
+                QString fractionalSecAsString(int width = -1) const { return BlackMisc::Math::CMathUtils::fractionalPartAsString(fractionalSec, width); }
+            };
+
+            //! \brief Init as sexagesimal degrees, minutes, seconds
+            //! The sign of all parameters must be the same, either all positive or all negative.
+            //! \see CAngle::unifySign(int &, int &, double &)
+            CAngle(int degrees, int minutes, double seconds);
+
+            //! \brief Init as sexagesimal degrees, minutes
+            //! The sign of both parameters must be the same, either both positive or both negative.
+            //! \see CAngle::unifySign(int &, double &)
+            CAngle(int degrees, double minutes);
+
+            //! Minutes and secods will get same sign as degrees
+            void static unifySign(int &degrees, int &minutes, double &seconds);
+
+            //! Minutes will get same sign as degrees
+            void static unifySign(int &degrees, int &minutes);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
             BlackMisc::CIcon toIcon() const;
+
+            //! As individual values
+            DegMinSecFractionalSec asSexagesimalDegMinSec(bool range180Degrees = false) const;
 
             //! Value as factor of PI (e.g. 0.5PI)
             double piFactor() const;
@@ -75,8 +97,8 @@ namespace BlackMisc
             //! Tangent of angle
             double tan() const;
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngle)
 

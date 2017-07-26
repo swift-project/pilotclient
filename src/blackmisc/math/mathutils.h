@@ -21,7 +21,6 @@ namespace BlackMisc
 {
     namespace Math
     {
-
         //! Math utils
         class BLACKMISC_EXPORT CMathUtils
         {
@@ -103,10 +102,13 @@ namespace BlackMisc
             //! Random number between low and high
             static int randomInteger(int low, int high);
 
-            //! Round numToRound to the nearest multiple of multiple
+            //! Round numToRound to the nearest multiple of divisor
             static int roundToMultipleOf(int value, int divisor);
-        };
 
+            //! Fractional part as integer string, e.g. 3.12 -> 12 / 3.012 -> 012
+            //! \remark because of leading 0 returned as string
+            static QString fractionalPartAsString(double value, int width = -1);
+        };
     } // namespace
 } // namespace
 

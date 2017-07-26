@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace Geo
     {
-
         //! Longitude
         class BLACKMISC_EXPORT CLongitude :
             public CEarthAngle<CLongitude>,
@@ -36,12 +35,20 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CLongitude)
             BLACKMISC_DECLARE_USING_MIXIN_INDEX(CLongitude)
 
+            //! To WGS84 string
+            QString toWgs84(int withFragmentSecDigits = 3) const
+            {
+                return CEarthAngle<CLongitude>::toWgs84('E', 'W', withFragmentSecDigits);
+            }
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const
             {
                 QString s(CEarthAngle::convertToQString(i18n));
                 if (!this->isZeroEpsilonConsidered())
+                {
                     s.append(this->isNegativeWithEpsilonConsidered() ? " W" : " E");
+                }
                 return s;
             }
 
@@ -52,11 +59,11 @@ namespace BlackMisc
             explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
             //! Init by double value
+            //! Longitude measurements range from 0° to (+/–)180°.
             CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
         };
-
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CLongitude)
 

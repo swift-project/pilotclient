@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace Geo
     {
-
         //! Latitude
         class BLACKMISC_EXPORT CLatitude :
             public CEarthAngle<CLatitude>,
@@ -35,6 +34,12 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CLatitude)
             BLACKMISC_DECLARE_USING_MIXIN_STRING(CLatitude)
             BLACKMISC_DECLARE_USING_MIXIN_INDEX(CLatitude)
+
+            //! To WGS84 string
+            QString toWgs84(int fractionalDigits = 3) const
+            {
+                return CEarthAngle<CLatitude>::toWgs84('N', 'S', fractionalDigits);
+            }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const
@@ -54,11 +59,11 @@ namespace BlackMisc
             explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
             //! Init by double value
+            //! \remark Latitude measurements range from 0° to (+/–)90°
             CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
         };
-
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CLatitude)
 
