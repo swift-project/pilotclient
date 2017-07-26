@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/simulation/ownaircraftproviderdummy.h"
-
 #include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
@@ -18,29 +17,44 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        CSimulatedAircraft COwnAircraftProviderDummy::getOwnAircraft() const
+        {
+            QReadLocker l(&m_lock);
+            return this->m_ownAircraft;
+        }
 
         Geo::CCoordinateGeodetic COwnAircraftProviderDummy::getOwnAircraftPosition() const
         {
+            QReadLocker l(&m_lock);
             return m_ownAircraft.getPosition();
+        }
+
+        CAircraftSituation COwnAircraftProviderDummy::getOwnAircraftSituation() const
+        {
+            QReadLocker l(&m_lock);
+            return m_ownAircraft.getSituation();
         }
 
         CAircraftParts COwnAircraftProviderDummy::getOwnAircraftParts() const
         {
+            QReadLocker l(&m_lock);
             return m_ownAircraft.getParts();
         }
 
         CAircraftModel COwnAircraftProviderDummy::getOwnAircraftModel() const
         {
+            QReadLocker l(&m_lock);
             return m_ownAircraft.getModel();
         }
 
         CLength COwnAircraftProviderDummy::getDistanceToOwnAircraft(const Geo::ICoordinateGeodetic &position) const
         {
-            return m_ownAircraft.calculateGreatCircleDistance(position);
+            return getOwnAircraft().calculateGreatCircleDistance(position);
         }
 
         bool COwnAircraftProviderDummy::updateCockpit(const Aviation::CComSystem &com1, const Aviation::CComSystem &com2, const Aviation::CTransponder &transponder, const CIdentifier &originator)
         {
+            QWriteLocker l(&m_lock);
             m_ownAircraft.setCom1System(com1);
             m_ownAircraft.setCom2System(com2);
             m_ownAircraft.setTransponder(transponder);
@@ -51,6 +65,7 @@ namespace BlackMisc
         bool COwnAircraftProviderDummy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator)
         {
             if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+            QWriteLocker l(&m_lock);
             CComSystem com = m_ownAircraft.getComSystem(comUnit);
             com.setFrequencyActive(frequency);
             m_ownAircraft.setComSystem(com, comUnit);
@@ -60,6 +75,7 @@ namespace BlackMisc
 
         bool COwnAircraftProviderDummy::updateSelcal(const CSelcal &selcal, const BlackMisc::CIdentifier &originator)
         {
+            QWriteLocker l(&m_lock);
             m_ownAircraft.setSelcal(selcal);
             Q_UNUSED(originator);
             return true;
@@ -67,30 +83,35 @@ namespace BlackMisc
 
         bool COwnAircraftProviderDummy::updateOwnModel(const CAircraftModel &model)
         {
+            QWriteLocker l(&m_lock);
             m_ownAircraft.setModel(model);
             return true;
         }
 
         bool COwnAircraftProviderDummy::updateOwnSituation(const CAircraftSituation &situation)
         {
+            QWriteLocker l(&m_lock);
             m_ownAircraft.setSituation(situation);
             return true;
         }
 
         bool COwnAircraftProviderDummy::updateOwnParts(const CAircraftParts &parts)
         {
+            QWriteLocker l(&m_lock);
             m_ownAircraft.setParts(parts);
             return true;
         }
 
         bool COwnAircraftProviderDummy::updateOwnCallsign(const CCallsign &callsign)
         {
+            QWriteLocker l(&m_lock);
             m_ownAircraft.setCallsign(callsign);
             return true;
         }
 
         bool COwnAircraftProviderDummy::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
         {
+            QWriteLocker l(&m_lock);
             m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
             return true;
         }
@@ -100,6 +121,5 @@ namespace BlackMisc
             static COwnAircraftProviderDummy *dummy = new COwnAircraftProviderDummy();
             return dummy;
         }
-
     } // namespace
 } // namespace

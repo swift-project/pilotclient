@@ -72,9 +72,14 @@ namespace BlackCore
             virtual ~CContextOwnAircraft();
 
             // IOwnAircraftProvider overrides
+            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
             //! \ingroup ownaircraftprovider
-            //! @{
             virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
+
+            //! Own aircraft's situation
+            //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
+            //! \ingroup ownaircraftprovider
+            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override;
 
             //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::getOwnAircraftParts
             //! \ingroup ownaircraftprovider

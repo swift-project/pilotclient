@@ -52,6 +52,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const = 0;
 
+            //! Own aircraft's situation
+            //! \threadsafe
+            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const = 0;
+
             //! Own aircraft's parts
             //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const = 0;
@@ -98,7 +102,6 @@ namespace BlackMisc
             //! Update cockpit, but send signals when applicable
             //! \threadsafe
             virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) = 0;
-
         };
 
         //! Delegating class which can be directly used to access an \sa IOwnAircraftProvider instance
@@ -106,10 +109,13 @@ namespace BlackMisc
         {
         public:
             //! \copydoc IOwnAircraftProvider::getOwnAircraft
-            virtual const CSimulatedAircraft getOwnAircraft() const;
+            virtual CSimulatedAircraft getOwnAircraft() const;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
             virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const;
+
+            //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
+            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftParts
             virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const;
@@ -149,7 +155,6 @@ namespace BlackMisc
             COwnAircraftAware(IOwnAircraftProvider *ownAircraftProvider) : m_ownAircraftProvider(ownAircraftProvider) { Q_ASSERT(ownAircraftProvider); }
             IOwnAircraftProvider *m_ownAircraftProvider = nullptr; //!< access to object
         };
-
     } // namespace
 } // namespace
 

@@ -26,6 +26,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 #include <QObject>
+#include <QReadWriteLock>
 
 namespace BlackMisc
 {
@@ -39,7 +40,7 @@ namespace BlackMisc
 
     namespace Simulation
     {
-        //! For testing, thread safety not implemented in this class
+        //! For testing
         class BLACKMISC_EXPORT COwnAircraftProviderDummy :
             public QObject,
             public IOwnAircraftProvider
@@ -54,10 +55,13 @@ namespace BlackMisc
             static COwnAircraftProviderDummy *instance();
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraft
-            virtual CSimulatedAircraft getOwnAircraft() const override { return this->m_ownAircraft; }
+            virtual CSimulatedAircraft getOwnAircraft() const override;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
             virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
+
+            //! \copydoc IOwnAircraftProvider::getOwnAircraftSituation
+            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const override;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftParts
             virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const override;
@@ -95,8 +99,8 @@ namespace BlackMisc
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft;
+            mutable QReadWriteLock m_lock; //!< lock for m_ownAircraft
         };
-
     } // namespace
 } // namespace
 

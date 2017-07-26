@@ -17,7 +17,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        const CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
+        CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->getOwnAircraft();
@@ -27,6 +27,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->getOwnAircraftPosition();
+        }
+
+        CAircraftSituation COwnAircraftAware::getOwnAircraftSituation() const
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->getOwnAircraftSituation();
         }
 
         CAircraftParts COwnAircraftAware::getOwnAircraftParts() const

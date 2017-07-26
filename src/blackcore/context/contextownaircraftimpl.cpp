@@ -91,6 +91,12 @@ namespace BlackCore
             return this->m_ownAircraft.getPosition();
         }
 
+        CAircraftSituation CContextOwnAircraft::getOwnAircraftSituation() const
+        {
+            QReadLocker l(&m_lockAircraft);
+            return this->m_ownAircraft.getSituation();
+        }
+
         CAircraftParts CContextOwnAircraft::getOwnAircraftParts() const
         {
             QReadLocker l(&m_lockAircraft);
