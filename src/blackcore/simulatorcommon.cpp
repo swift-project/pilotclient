@@ -371,19 +371,12 @@ namespace BlackCore
     {
         if (this->isMyIdentifier(originator)) { return false; }
         if (commandLine.isEmpty()) { return false; }
-        CSimpleCommandParser parser(
-        {
-            ".plugin", ".drv", ".driver",
-        });
+        CSimpleCommandParser parser({ ".plugin", ".drv", ".driver" });
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
 
         // .plugin unload
-        if (parser.matchesPart(1, "unload"))
-        {
-            this->unload();
-            return true;
-        }
+        if (parser.matchesPart(1, "unload")) { this->unload(); return true; }
 
         // .plugin log interpolator
         const QString part1(parser.part(1).toLower().trimmed());
@@ -445,6 +438,17 @@ namespace BlackCore
 
         // driver specific cmd line arguments
         return this->parseDetails(parser);
+    }
+
+    void CSimulatorCommon::registerHelp()
+    {
+        if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CSimulatorCommon")) { return; }
+        BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+        BlackMisc::CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
+        BlackMisc::CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
+        BlackMisc::CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
+        BlackMisc::CSimpleCommandParser::registerCommand({".drv logint clear", "clear current log"});
+        BlackMisc::CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
     }
 
     void CSimulatorCommon::ps_oneSecondTimer()

@@ -157,10 +157,17 @@ namespace BlackMisc
 
         static const QString html("<table style=\"font-size: 8pt; white-space: nowrap;\">\n%1\n</table>");
         static const QString row("<td>%1</td><td>%2</td>");
+        static const QString rowHeader("<th>%1</th><th>%2</th><th>%3</th><th>%4</th>");
 
         QString rows;
         QList<CommandHtmlHelp> cmds(s_commands);
         qSort(cmds.begin(), cmds.end(), CommandHtmlHelp::less);
+
+        static const QString cmdCol(QString().fill('-', 20));
+        static const QString textCol(QString().fill('-', 40));
+        rows += "<tr>" + rowHeader.arg("command", "synopsis", "command", "synopsis") + "</tr>\n";
+        rows += "<tr>" + rowHeader.arg(cmdCol, textCol, cmdCol, textCol) + "</tr>\n";
+
         for (int i = 0; i < cmds.size(); i++)
         {
             CommandHtmlHelp help = cmds[i];

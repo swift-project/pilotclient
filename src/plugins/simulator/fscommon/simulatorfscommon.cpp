@@ -67,6 +67,13 @@ namespace BlackSimPlugin
             return false;
         }
 
+        void CSimulatorFsCommon::registerHelp()
+        {
+            if (BlackMisc::CSimpleCommandParser::registered("BlackSimPlugin::FsCommon::CSimulatorFsCommon")) { return; }
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "FSUIPC on|off if applicable"});
+        }
+
         bool CSimulatorFsCommon::disconnectFrom()
         {
             if (this->m_fsuipc) { this->m_fsuipc->disconnect(); }

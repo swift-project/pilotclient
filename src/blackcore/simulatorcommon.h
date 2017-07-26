@@ -101,16 +101,7 @@ namespace BlackCore
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
         //! Register help
-        static void registerHelp()
-        {
-            if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CSimulatorCommon")) { return; }
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv logint clear", "clear current log"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
-        }
+        static void registerHelp();
 
         // --------- ISimulator implementations ------------
 

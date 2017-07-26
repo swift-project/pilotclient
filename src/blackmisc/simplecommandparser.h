@@ -99,7 +99,7 @@ namespace BlackMisc
         //! Help already registered
         static bool registered(const QString &helpContext);
 
-        //! HTML commans HELP
+        //! HTML commands HELP
         static QString commandsHtmlHelp();
 
     private:

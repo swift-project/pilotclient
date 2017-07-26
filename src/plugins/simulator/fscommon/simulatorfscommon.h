@@ -72,12 +72,7 @@ namespace BlackSimPlugin
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
             //! Register help
-            static void registerHelp()
-            {
-                if (BlackMisc::CSimpleCommandParser::registered("BlackSimPlugin::FsCommon::CSimulatorFsCommon")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "FSUIPC on|off if applicable"});
-            }
+            static void registerHelp();
 
             QString m_simulatorName;                                //!< name of simulator
             QString m_simulatorDetails;                             //!< describes version etc.
