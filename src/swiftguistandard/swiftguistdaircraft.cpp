@@ -32,9 +32,6 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 
-/*
- * Load own aircraft
- */
 bool SwiftGuiStd::ps_reloadOwnAircraft()
 {
     if (!this->isContextNetworkAvailableCheck()) { return false; }
@@ -50,9 +47,6 @@ bool SwiftGuiStd::ps_reloadOwnAircraft()
     return changed;
 }
 
-/*
-* Position
-*/
 void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude)
 {
     CCoordinateGeodetic coordinate(

@@ -34,11 +34,7 @@ namespace BlackCore
 
     ISimulatorListener *CPluginManagerSimulator::createListener(const QString &pluginId)
     {
-        if (!m_plugins.contains(pluginId))
-        {
-            return nullptr;
-        }
-
+        if (!m_plugins.contains(pluginId)) { return nullptr; }
         PluginExtended &plugin = m_plugins[pluginId];
         if (!plugin.listener)
         {
@@ -60,11 +56,7 @@ namespace BlackCore
 
     ISimulatorListener *CPluginManagerSimulator::getListener(const QString &pluginId)
     {
-        if (!m_plugins.contains(pluginId))
-        {
-            return nullptr;
-        }
-
+        if (!m_plugins.contains(pluginId)) { return nullptr; }
         PluginExtended &plugin = m_plugins[pluginId];
         return plugin.listener;
     }

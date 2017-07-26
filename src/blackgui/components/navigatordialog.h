@@ -29,7 +29,6 @@ class QPoint;
 class QWidget;
 
 namespace Ui { class CNavigatorDialog; }
-
 namespace BlackGui
 {
     namespace Components

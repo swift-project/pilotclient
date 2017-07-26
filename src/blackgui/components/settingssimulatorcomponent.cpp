@@ -25,6 +25,7 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/verify.h"
 #include "ui_settingssimulatorcomponent.h"
 
 #include <QApplication>
@@ -146,7 +147,7 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::ps_pluginStateChanged(const QString &identifier, bool enabled)
         {
-            Q_ASSERT(sGui->getIContextSimulator());
+            Q_ASSERT(sGui && sGui->getIContextSimulator());
 
             const CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
             const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
@@ -156,18 +157,22 @@ namespace BlackGui
                 return;
             }
 
-            QStringList e = m_enabledSimulators.getThreadLocal();
+            QStringList e = m_enabledSimulators.getThreadLocal(); // from setting
             if (enabled != e.contains(selected.getIdentifier()))
             {
                 if (enabled)
                 {
-                    e << selected.getIdentifier();
+                    e << selected.getIdentifier(); // add enabled plugin
                 }
                 else
                 {
                     e.removeAll(selected.getIdentifier());
                 }
-                m_enabledSimulators.set(e);
+                const CStatusMessage msg = m_enabledSimulators.set(e); // change setting
+                if (msg.isWarningOrAbove())
+                {
+                    CLogMessage::preformatted(msg);
+                }
             }
 
             // changing of GUI state will be done via received signal
@@ -234,7 +239,7 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::ps_onApplyTimeSync()
         {
-            bool timeSync = ui->cb_TimeSync->isChecked();
+            const bool timeSync = ui->cb_TimeSync->isChecked();
             const QString os = ui->le_TimeSyncOffset->text();
             CTime ost(0, CTimeUnit::hrmin());
             if (!os.isEmpty())
@@ -284,8 +289,12 @@ namespace BlackGui
             const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
 
             QWidget *aw = qApp->activeWindow();
+            Q_ASSERT_X(aw, Q_FUNC_INFO, "Missing active window");
 
             CPluginDetailsWindow *w = new CPluginDetailsWindow(aw);
+            BLACK_VERIFY_X(w, Q_FUNC_INFO, "Missing window");
+            if (!w) { return; }
+
             w->setAttribute(Qt::WA_DeleteOnClose);
             w->setPluginIdentifier(selected.getIdentifier());
             w->setPluginName(selected.getName());
@@ -301,12 +310,13 @@ namespace BlackGui
 
             const QString configId = m_plugins->getPluginConfigId(selected.getIdentifier());
             IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
-            if (!config)
-            {
-                return;
-            }
+            BLACK_VERIFY_X(config, Q_FUNC_INFO, "Missing config");
+            if (!config) { return; }
 
             CPluginConfigWindow *window = config->createConfigWindow(qApp->activeWindow());
+            BLACK_VERIFY_X(window, Q_FUNC_INFO, "Missing window");
+            if (!window) { return; }
+
             window->setAttribute(Qt::WA_DeleteOnClose);
             window->show();
         }

@@ -302,18 +302,23 @@ namespace BlackCore
 
             // Once the simulator signaled it is ready to simulate, add all known aircraft
             m_initallyAddAircrafts = true;
+            m_matchingMessages.clear();
+
             // try to connect to simulator
-            simulator->connectTo();
+            const bool connected = simulator->connectTo();
+            simulator->setWeatherActivated(m_isWeatherActivated);
+
             // when everything is set up connected, update the current plugin info
             m_simulatorPlugin.first = simulatorPluginInfo;
             m_simulatorPlugin.second = simulator;
 
+            //! \fixme KB 7/2017 wonder if it was better to force an Qt::QueuedConnection emit by calling CTimer::singleShot
+            //! Replace this comment by an info comment after review, or change
             emit simulatorPluginChanged(simulatorPluginInfo);
-            CLogMessage(this).info("Simulator plugin loaded: %1") << simulatorPluginInfo.toQString(true);
+            CLogMessage(this).info("Simulator plugin loaded: '%1' connected: %2")
+                    << simulatorPluginInfo.toQString(true)
+                    << boolToYesNo(connected);
 
-            simulator->setWeatherActivated(m_isWeatherActivated);
-
-            m_matchingMessages.clear();
             return true;
         }
 
@@ -326,7 +331,7 @@ namespace BlackCore
 
             if (!m_listenersThread.isRunning())
             {
-                m_listenersThread.setObjectName("CContextSimulator:Thread for listeners");
+                m_listenersThread.setObjectName("CContextSimulator: Thread for listener " + simulatorInfo.getIdentifier());
                 m_listenersThread.start(QThread::LowPriority);
             }
 
@@ -335,14 +340,14 @@ namespace BlackCore
 
             if (listener->thread() != &m_listenersThread)
             {
-                bool c = connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
+                Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
+
+                const bool c = connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
                 if (!c)
                 {
                     CLogMessage(this).error("Unable to use '%1'") << simulatorInfo.toQString();
                     return false;
                 }
-
-                Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
                 listener->setProperty("isInitialized", true);
                 listener->moveToThread(&m_listenersThread);
             }
@@ -549,8 +554,8 @@ namespace BlackCore
             if (!m_simulatorPlugin.first.isUnspecified()) { return; }
 
             stopSimulatorListeners();
-            const auto enabledSimulators = m_enabledSimulators.getThreadLocal();
-            const auto allSimulators = m_plugins->getAvailableSimulatorPlugins();
+            const QStringList enabledSimulators = m_enabledSimulators.getThreadLocal();
+            const CSimulatorPluginInfoList allSimulators = m_plugins->getAvailableSimulatorPlugins();
             for (const CSimulatorPluginInfo &s : allSimulators)
             {
                 if (enabledSimulators.contains(s.getIdentifier()))
@@ -664,7 +669,12 @@ namespace BlackCore
             for (const auto &info : getAvailableSimulatorPlugins())
             {
                 ISimulatorListener *listener = m_plugins->getListener(info.getIdentifier());
-                if (listener) { QMetaObject::invokeMethod(listener, "stop"); }
+                if (listener)
+                {
+                    const bool s = QMetaObject::invokeMethod(listener, "stop");
+                    Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke stop");
+                    Q_UNUSED(s);
+                }
             }
         }
 

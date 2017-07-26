@@ -153,11 +153,6 @@ namespace BlackSimPlugin
             }
         }
 
-        void CLobbyClient::cleanup()
-        {
-
-        }
-
         HRESULT CLobbyClient::allocAndInitConnectSettings(const QString &address, GUID *pAppGuid, DPL_CONNECTION_SETTINGS **ppdplConnectSettings)
         {
             HRESULT hr;
@@ -337,8 +332,7 @@ namespace BlackSimPlugin
                     break;
                 }
             }
-
             return S_OK;
         }
-    }
-}
+    } // ns
+} // ns

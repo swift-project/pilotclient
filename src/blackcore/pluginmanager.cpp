@@ -93,12 +93,9 @@ namespace BlackCore
 
     bool IPluginManager::tryLoad(const QString &path)
     {
-        if (!QLibrary::isLibrary(path))
-        {
-            return false;
-        }
+        if (!QLibrary::isLibrary(path)) { return false; }
 
-        CLogMessage(this).debug() << "Loading plugin: " << path;
+        CLogMessage(this).debug() << "Try loading plugin:" << path;
         QPluginLoader loader(path);
         const QJsonObject json = loader.metaData();
         if (!isValid(json))

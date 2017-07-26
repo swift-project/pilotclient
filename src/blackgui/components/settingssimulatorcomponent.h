@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
-#define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_SETTINGSSIMULATORCOMPONENT_H
+#define BLACKGUI_COMPONENTS_SETTINGSSIMULATORCOMPONENT_H
 
 #include "blackcore/application/applicationsettings.h"
 #include "blackgui/blackguiexport.h"
@@ -27,7 +27,6 @@ class QWidget;
 namespace BlackCore { class CPluginManagerSimulator; }
 namespace BlackMisc { namespace Simulation { class CSimulatorPluginInfo; } }
 namespace Ui { class CSettingsSimulatorComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -89,4 +88,5 @@ namespace BlackGui
         };
     }
 } // namespace
+
 #endif // guard

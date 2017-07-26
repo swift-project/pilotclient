@@ -18,12 +18,11 @@ namespace BlackSimPlugin
             void disconnected();
 
         public:
-
             //! Constructor
             CLobbyClient(QObject *parent = nullptr);
 
             //! Destructor
-            ~CLobbyClient();
+            virtual ~CLobbyClient();
 
             //! Initialize DirectPlay
             HRESULT initDirectPlay();
@@ -34,11 +33,7 @@ namespace BlackSimPlugin
             //! Connect FS9 simulator to our host
             HRESULT connectFs9ToHost(const QString address);
 
-            //! Cleanup & be ready to another connection
-            void cleanup();
-
         private:
-
             //! Alloc and fill up a DPL_CONNECTION_SETTINGS. Call FreeConnectSettings later to free it.
             HRESULT allocAndInitConnectSettings(const QString &address, GUID* pAppGuid, DPL_CONNECTION_SETTINGS** ppdplConnectSettings );
 
@@ -67,6 +62,5 @@ namespace BlackSimPlugin
 
             static const size_t m_maxSizePlayerName = 14;
         };
-
-    }
-}
+    } // ns
+} // ns

@@ -160,7 +160,7 @@ namespace BlackSimPlugin
             QSharedPointer<CFs9Host> m_fs9Host;
             QSharedPointer<CLobbyClient> m_lobbyClient;
         };
-    } // namespace Fs9
-} // namespace BlackCore
+    } // ns
+} // ns
 
 #endif // guard

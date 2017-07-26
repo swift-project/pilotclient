@@ -59,12 +59,17 @@ namespace BlackCore
         ISimulator::registerHelp();
     }
 
-    void ISimulator::emitSimulatorCombinedStatus(int oldStatus)
+    void ISimulator::emitSimulatorCombinedStatus(SimulatorStatus oldStatus)
     {
-        int newStatus = getSimulatorStatus();
+        const SimulatorStatus newStatus = getSimulatorStatus();
         if (oldStatus != newStatus)
         {
-            emit simulatorStatusChanged(newStatus);
+            // decouple, follow up of signal can include unloading
+            // simulator so this should happen asyncronously (which is like forcing Qt::QueuedConnection)
+            QTimer::singleShot(0, this, [ = ]
+            {
+                emit this->simulatorStatusChanged(newStatus);
+            });
         }
     }
 

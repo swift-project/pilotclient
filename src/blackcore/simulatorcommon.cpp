@@ -248,7 +248,7 @@ namespace BlackCore
     CAirportList CSimulatorCommon::getAirportsInRange() const
     {
         // default implementation
-        if (!sApp->hasWebDataServices()) { return CAirportList(); }
+        if (!sApp || !sApp->hasWebDataServices()) { return CAirportList(); }
 
         const CAirportList airports = sApp->getWebDataServices()->getAirports();
         if (airports.isEmpty()) { return airports; }

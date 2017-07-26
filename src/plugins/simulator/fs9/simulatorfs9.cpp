@@ -38,7 +38,7 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CAircraftSituation aircraftSituationfromFS9(const MPPositionVelocity &positionVelocity)
+        CAircraftSituation aircraftSituationFromFS9(const MPPositionVelocity &positionVelocity)
         {
             CAircraftSituation situation;
 
@@ -259,6 +259,7 @@ namespace BlackSimPlugin
 
             if (newTransponder.getTransponderMode() != this->m_simTransponder.getTransponderMode())
             {
+                // void
             }
 
             // avoid changes of cockpit back to old values due to an outdated read back value
@@ -343,7 +344,7 @@ namespace BlackSimPlugin
                 {
                     MPPositionVelocity mpPositionVelocity;
                     MultiPlayerPacketParser::readMessage(message, mpPositionVelocity);
-                    auto aircraftSituation = aircraftSituationfromFS9(mpPositionVelocity);
+                    auto aircraftSituation = aircraftSituationFromFS9(mpPositionVelocity);
                     updateOwnSituation(aircraftSituation);
 
                     if (m_isWeatherActivated)
@@ -435,7 +436,7 @@ namespace BlackSimPlugin
                     if (m_isConnecting || m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress()) == S_OK)
                     {
                         m_isConnecting = true;
-                        CLogMessage(this).info("Swift is joining FS9 to the multiplayer session...");
+                        CLogMessage(this).info("swift is joining FS9 to the multiplayer session...");
                     }
                 }
 

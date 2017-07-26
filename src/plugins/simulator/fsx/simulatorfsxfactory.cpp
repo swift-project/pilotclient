@@ -10,7 +10,6 @@
 #include "simulatorfsxfactory.h"
 #include "simulatorfsx.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
-#include <QTimer>
 
 namespace BlackSimPlugin
 {
