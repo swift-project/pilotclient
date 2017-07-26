@@ -109,46 +109,46 @@ namespace BlackMisc
         {
         public:
             //! \copydoc IOwnAircraftProvider::getOwnAircraft
-            virtual CSimulatedAircraft getOwnAircraft() const;
+            CSimulatedAircraft getOwnAircraft() const;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
-            virtual BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const;
+            BlackMisc::Geo::CCoordinateGeodetic getOwnAircraftPosition() const;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftPosition
-            virtual BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const;
+            BlackMisc::Aviation::CAircraftSituation getOwnAircraftSituation() const;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftParts
-            virtual BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const;
+            BlackMisc::Aviation::CAircraftParts getOwnAircraftParts() const;
 
             //! \copydoc IOwnAircraftProvider::getOwnAircraftModel
-            virtual BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const;
+            BlackMisc::Simulation::CAircraftModel getOwnAircraftModel() const;
 
             //! \copydoc IOwnAircraftProvider::getDistanceToOwnAircraft
-            virtual BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const;
+            BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const;
 
             //! \copydoc IOwnAircraftProvider::updateCockpit
-            virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator);
+            bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IOwnAircraftProvider::updateActiveComFrequency
-            virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator);
+            bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IOwnAircraftProvider::updateSelcal
-            virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
+            bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IOwnAircraftProvider::updateOwnCallsign
-            virtual bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            bool updateOwnCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! \copydoc IOwnAircraftProvider::updateOwnIcaoCodes
-            virtual bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoData, const Aviation::CAirlineIcaoCode &airlineIcaoCode);
+            bool updateOwnIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoData, const Aviation::CAirlineIcaoCode &airlineIcaoCode);
 
             //! \copydoc IOwnAircraftProvider::updateOwnModel
-            virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model);
+            bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! \copydoc IOwnAircraftProvider::updateOwnSituation
-            virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+            bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! \copydoc IOwnAircraftProvider::updateOwnParts
-            virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts);
+            bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
         protected:
             //! Constructor
