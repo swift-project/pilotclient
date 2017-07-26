@@ -111,7 +111,12 @@ namespace BlackSimPlugin
             m_fs9Host(fs9Host),
             m_lobbyClient(lobbyClient)
         {
-            connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
+            //! \fixme KB 7/2017 change or remove when reviewed Could we just use: connect(lobbyClient.data(), &CLobbyClient::disconnected, this, &CSimulatorFs9::disconnectFrom);
+            connect(lobbyClient.data(), &CLobbyClient::disconnected, this, [ = ]
+            {
+                emit this->simulatorStatusChanged(ISimulator::Disconnected);
+            });
+
             m_defaultModel =
             {
                 "Boeing 737-400",

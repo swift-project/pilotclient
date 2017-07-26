@@ -22,34 +22,30 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    int ISimulator::getSimulatorStatus() const
+    ISimulator::SimulatorStatus ISimulator::getSimulatorStatus() const
     {
-        int status =
-            (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatus>(0))
-            | (isSimulating() ? Simulating : static_cast<ISimulator::SimulatorStatus>(0))
-            | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatus>(0));
+        const SimulatorStatus status =
+            (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatusFlag>(0))
+            | (isSimulating() ? Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0))
+            | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
         return status;
     }
 
-    QString ISimulator::statusToString(int status)
     {
-        if (status > 0)
         {
-            QString s;
-            if (status & Connected) { s.append("Connected"); }
-            if (status & Simulating) { if (!s.isEmpty()) { s.append(", "); } s.append("Simulating"); }
-            if (status & Paused) { if (!s.isEmpty()) { s.append(", "); } s.append("Paused"); }
-            return s;
-        }
-        else
-        {
-            return "Disconnected";
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
         }
     }
 
-    ISimulator::SimulatorStatus ISimulator::statusToEnum(int status)
+    QString ISimulator::statusToString(SimulatorStatus status)
     {
-        return static_cast<SimulatorStatus>(status);
+        QStringList s;
+        if (status.testFlag(Unspecified)) s << "Unspecified";
+        if (status.testFlag(Disconnected)) s << "Disconnected";
+        if (status.testFlag(Connected)) s << "Connected";
+        if (status.testFlag(Simulating)) s << "Simulating";
+        if (status.testFlag(Paused)) s << "Paused";
+        return s.join(", ");
     }
 
     ISimulator::ISimulator(QObject *parent) :

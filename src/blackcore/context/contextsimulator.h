@@ -85,6 +85,7 @@ namespace BlackCore
         signals:
             //! Simulator combined status
             //! \sa ISimulator::SimulatorStatus
+            //! \remark still int for DBus
             void simulatorStatusChanged(int status);
 
             //! Simulator plugin loaded / unloaded (default info)

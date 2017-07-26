@@ -59,10 +59,11 @@ namespace BlackCore
         //! ISimulator status
         enum SimulatorStatusFlag
         {
-            Disconnected = 0,
-            Connected   = 1 << 0, //!< Is the plugin connected to the simulator?
-            Simulating  = 1 << 1, //!< Is the simulator actually simulating?
-            Paused      = 1 << 2, //!< Is the simulator paused?
+            Unspecified  = 0,      //!< unspecied, needed as default value
+            Disconnected = 1 << 0, //!< not connected, and hence not simulating/paused
+            Connected    = 1 << 1, //!< Is the plugin connected to the simulator?
+            Simulating   = 1 << 2, //!< Is the simulator actually simulating?
+            Paused       = 1 << 3, //!< Is the simulator paused?
         };
         Q_DECLARE_FLAGS(SimulatorStatus, SimulatorStatusFlag)
 
@@ -73,7 +74,7 @@ namespace BlackCore
         virtual ~ISimulator() {}
 
         //! Combined status
-        virtual int getSimulatorStatus() const;
+        virtual SimulatorStatus getSimulatorStatus() const;
 
         //! Is time synchronization on?
         virtual bool isTimeSynchronized() const = 0;
@@ -181,16 +182,11 @@ namespace BlackCore
         }
 
         //! Status to string
-        static QString statusToString(int status);
-
-        //! Status to enum
-        //! \fixme remove with Qt 5.5 when SimulatorStatus can be transferred via DBus
-        static SimulatorStatus statusToEnum(int status);
+        static QString statusToString(SimulatorStatus status);
 
     signals:
         //! Simulator combined status
-        //! \fixme with Qt 5.5 make use of QFlags
-        void simulatorStatusChanged(int status);
+        void simulatorStatusChanged(SimulatorStatus status);
 
         //! Emitted when own aircraft model has changed
         void ownAircraftModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
@@ -236,7 +232,7 @@ namespace BlackCore
         //! Emit the combined status
         //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal status values no signal will be sent
         //! \sa simulatorStatusChanged;
-        void emitSimulatorCombinedStatus(int oldStatus = -1);
+        void emitSimulatorCombinedStatus(SimulatorStatus oldStatus = Unspecified);
     };
 
     //! Interface to a simulator listener.

@@ -422,26 +422,25 @@ namespace BlackCore
             m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(callsign);
         }
 
-        void CContextSimulator::ps_onSimulatorStatusChanged(int status)
+        void CContextSimulator::ps_onSimulatorStatusChanged(ISimulator::SimulatorStatus status)
         {
-            ISimulator::SimulatorStatus statusEnum = ISimulator::statusToEnum(status);
-            if (m_initallyAddAircrafts && statusEnum.testFlag(ISimulator::Simulating))
+            if (m_initallyAddAircrafts && status.testFlag(ISimulator::Simulating))
             {
                 // use network to initally add aircraft
                 IContextNetwork *networkContext = this->getIContextNetwork();
-                Q_ASSERT(networkContext);
-                Q_ASSERT(networkContext->isLocalObject());
+                Q_ASSERT_X(networkContext, Q_FUNC_INFO, "Need context");
+                Q_ASSERT_X(networkContext->isLocalObject(), Q_FUNC_INFO, "Need local object");
 
                 // initially add aircraft
-                const CSimulatedAircraftList aircrafts = networkContext->getAircraftInRange();
-                for (const CSimulatedAircraft &simulatedAircraft : aircrafts)
+                const CSimulatedAircraftList aircraft = networkContext->getAircraftInRange();
+                for (const CSimulatedAircraft &simulatedAircraft : aircraft)
                 {
-                    Q_ASSERT(!simulatedAircraft.getCallsign().isEmpty());
+                    BLACK_VERIFY_X(!simulatedAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "Need callsign");
                     ps_addedRemoteAircraft(simulatedAircraft);
                 }
                 m_initallyAddAircrafts = false;
             }
-            if (!statusEnum.testFlag(ISimulator::Connected))
+            if (!status.testFlag(ISimulator::Connected))
             {
                 // we got disconnected, plugin no longer needed
                 unloadSimulatorPlugin();

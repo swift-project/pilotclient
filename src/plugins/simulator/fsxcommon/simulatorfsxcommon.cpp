@@ -317,7 +317,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::onSimStopped()
         {
             // stopping events in FSX: Load menu, weather and season
-            const int oldStatus = getSimulatorStatus();
+            const SimulatorStatus oldStatus = getSimulatorStatus();
             m_simSimulating = false;
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
             emitSimulatorCombinedStatus(oldStatus);

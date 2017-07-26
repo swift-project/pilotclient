@@ -151,7 +151,7 @@ namespace BlackCore
             //  ------------ slots connected with network or other contexts ---------
 
             //! Handle new connection status of simulator
-            void ps_onSimulatorStatusChanged(int status);
+            void ps_onSimulatorStatusChanged(BlackCore::ISimulator::SimulatorStatus status);
 
             //! Model set from model set loader changed
             void ps_modelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
