@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSettingsSwiftPlugin</class>
+ <widget class="QFrame" name="CSettingsSwiftPlugin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>215</width>
+    <height>168</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QFormLayout" name="fl_SettingsPlugin">
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_EmulatedSimulator">
+     <property name="text">
+      <string>Emulated simulator:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="BlackGui::Components::CSimulatorSelector" name="comp_EmulatedSimulatorSelector">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_DefaultModel">
+     <property name="text">
+      <string>Default model:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="BlackGui::Components::CDbModelKeyCompleter" name="lep_DefaultModel"/>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <widget class="QWidget" name="wi_Buttons" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Save">
+        <property name="text">
+         <string>save</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="cb_LogFunctionCalls">
+     <property name="text">
+      <string>function calls</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="lbl_Logging">
+     <property name="text">
+      <string>Logging:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_OwnModel">
+     <property name="text">
+      <string>Own model:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="BlackGui::Components::CDbModelKeyCompleter" name="lep_OwnModel"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbModelKeyCompleter</class>
+   <extends>QLineEdit</extends>
+   <header>blackgui/components/dbmodelkeycompleter.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>lep_OwnModel</tabstop>
+  <tabstop>lep_DefaultModel</tabstop>
+  <tabstop>cb_LogFunctionCalls</tabstop>
+  <tabstop>pb_Save</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
