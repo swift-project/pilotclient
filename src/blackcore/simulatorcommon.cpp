@@ -115,6 +115,12 @@ namespace BlackCore
         return false;
     }
 
+    void CSimulatorCommon::setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel)
+    {
+        m_simulatorPluginInfo = info;
+        m_defaultModel = defaultModel;
+    }
+
     int CSimulatorCommon::maxAirportsInRange() const
     {
         // might change in future or become a setting or such

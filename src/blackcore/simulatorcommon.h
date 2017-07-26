@@ -156,6 +156,10 @@ namespace BlackCore
         virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
         //! @}
 
+        //! New plugin info
+        //! \remark normally only used by
+        void setNewPluginInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &info, const BlackMisc::Simulation::CAircraftModel &defaultModel);
+
         //! Max.airports in range
         int maxAirportsInRange() const;
 
