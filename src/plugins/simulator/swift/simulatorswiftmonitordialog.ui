@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSimulatorSwiftMonitorDialog</class>
+ <widget class="QDialog" name="CSimulatorSwiftMonitorDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>580</width>
+    <height>402</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>swift driver monitor</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_Settings">
+   <item>
+    <widget class="QTabWidget" name="tw_SwiftMonitorDialog">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="tb_AircraftSituation">
+      <attribute name="title">
+       <string>Situation</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="BlackGui::Components::CCoordinateSelector" name="comp_Position">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>100</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="vs_Situation">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Simulator">
+      <attribute name="title">
+       <string>Simulator</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="9" column="0">
+        <widget class="QLabel" name="lbl_Paused">
+         <property name="text">
+          <string>Paused:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="cb_Paused">
+         <property name="text">
+          <string>simulator paused?</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="lbl_Connected">
+         <property name="text">
+          <string>Connected:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QCheckBox" name="cb_Connected">
+         <property name="text">
+          <string>simulator connected?</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="lbl_Simulating">
+         <property name="text">
+          <string>Simulating:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QCheckBox" name="cb_Simulating">
+         <property name="text">
+          <string>simulator simulating?</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="lbl_SimulatorPlugin">
+         <property name="text">
+          <string>Simulator plugin:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="lbl_Simulator">
+         <property name="text">
+          <string>Simulator:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLineEdit" name="le_SimulatorPlugin">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="le_Simulator">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_LogMessages">
+      <attribute name="title">
+       <string>Log information</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_LogInformation">
+       <item>
+        <widget class="BlackGui::Components::CLogComponent" name="comp_LogComponent"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Settings">
+      <attribute name="title">
+       <string>Settings</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="BlackGui::Components::CSettingsSwiftPlugin" name="comp_Settings"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="bb_SwiftMonitorDialog">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsSwiftPlugin</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsswiftplugin.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLogComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/logcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCoordinateSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/coordinateselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>bb_SwiftMonitorDialog</sender>
+   <signal>accepted()</signal>
+   <receiver>CSimulatorSwiftMonitorDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bb_SwiftMonitorDialog</sender>
+   <signal>rejected()</signal>
+   <receiver>CSimulatorSwiftMonitorDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

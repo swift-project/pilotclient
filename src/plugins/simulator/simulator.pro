@@ -3,6 +3,9 @@ load(common_pre)
 TEMPLATE = subdirs
 CONFIG += ordered
 
+SUBDIRS += swift
+SUBDIRS += swiftconfig
+
 contains(BLACK_CONFIG,FSX|FS9|P3D) {
     SUBDIRS += fsuipc32
     SUBDIRS += fsuipc64

@@ -267,15 +267,17 @@ namespace BlackCore
 
             // We assume we run in the same process as the own aircraft context
             // Hence we pass in memory reference to own aircraft object
-            Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
-            Q_ASSERT(this->getIContextNetwork()->isUsingImplementingObject());
+            Q_ASSERT_X(this->getIContextOwnAircraft()->isUsingImplementingObject(), Q_FUNC_INFO, "Need implementing object");
+            Q_ASSERT_X(this->getIContextNetwork()->isUsingImplementingObject(), Q_FUNC_INFO, "Need implementing object");
             IOwnAircraftProvider *ownAircraftProvider = this->getRuntime()->getCContextOwnAircraft();
             IRemoteAircraftProvider *renderedAircraftProvider = this->getRuntime()->getCContextNetwork();
             ISimulator *simulator = factory->create(simulatorPluginInfo, ownAircraftProvider, renderedAircraftProvider, &m_weatherManager);
             Q_ASSERT_X(simulator, Q_FUNC_INFO, "no simulator driver can be created");
 
             setRemoteAircraftProvider(renderedAircraftProvider);
-            const CSimulatorInfo simInfo(simulatorPluginInfo.getIdentifier());
+
+            // use sim info from ISimulator as it can access the swift driver settings
+            const CSimulatorInfo simInfo = simulator->getSimulatorInfo();
             m_modelSetLoader.changeSimulator(simInfo);
             m_aircraftMatcher.setModelSet(m_modelSetLoader.getAircraftModels(), simInfo);
             m_aircraftMatcher.setDefaultModel(simulator->getDefaultModel());
