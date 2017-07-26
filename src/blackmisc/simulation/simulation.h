@@ -33,5 +33,6 @@
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/settings/swiftpluginsettings.h"
 
 #endif // guard

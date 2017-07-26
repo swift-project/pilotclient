@@ -13,6 +13,7 @@
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackMisc
 {
@@ -43,6 +44,7 @@ namespace BlackMisc
             CSimulatorPluginInfo::registerMetadata();
             CSimulatorPluginInfoList::registerMetadata();
             CSimulatorSettings::registerMetadata();
+            CSwiftPluginSettings::registerMetadata();
             CVPilotModelRule::registerMetadata();
             CVPilotModelRuleSet::registerMetadata();
         }
