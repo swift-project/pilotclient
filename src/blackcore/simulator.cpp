@@ -31,7 +31,17 @@ namespace BlackCore
         return status;
     }
 
+    CSimulatorInfo ISimulator::getSimulatorInfo() const
     {
+        return CSimulatorInfo(this->getSimulatorPluginInfo().getSimulatorInfo());
+    }
+
+    void ISimulator::registerHelp()
+    {
+        if (BlackMisc::CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
+        BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+        BlackMisc::CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
+        if (BlackConfig::CBuildConfig::isCompiledWithFsuipcSupport())
         {
             BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
         }

@@ -170,16 +170,7 @@ namespace BlackCore
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
 
         //! Register help
-        static void registerHelp()
-        {
-            if (BlackMisc::CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
-            if (BlackConfig::CBuildConfig::isCompiledWithFsuipcSupport())
-            {
-                BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
-            }
-        }
+        static void registerHelp();
 
         //! Status to string
         static QString statusToString(SimulatorStatus status);
