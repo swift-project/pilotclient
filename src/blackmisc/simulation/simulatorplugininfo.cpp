@@ -24,7 +24,7 @@ namespace BlackMisc
 
         void CSimulatorPluginInfo::convertFromJson(const QJsonObject &json)
         {
-            if (json.contains("IID"))   // comes from the plugin
+            if (json.contains("IID")) // comes from the plugin
             {
                 if (! json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
 
@@ -43,6 +43,16 @@ namespace BlackMisc
         bool CSimulatorPluginInfo::isUnspecified() const
         {
             return m_identifier.isEmpty();
+        }
+
+        CSimulatorInfo CSimulatorPluginInfo::getSimulatorInfo() const
+        {
+            return CSimulatorInfo(getSimulator());
+        }
+
+        bool CSimulatorPluginInfo::isSwiftPlugin() const
+        {
+            return this->getIdentifier() == swiftPluginIndentifier();
         }
 
         QString CSimulatorPluginInfo::convertToQString(bool i18n) const
@@ -75,6 +85,12 @@ namespace BlackMisc
             return s;
         }
 
+        const QString &CSimulatorPluginInfo::swiftPluginIndentifier()
+        {
+            static const QString s("org.swift-project.plugins.simulator.swift");
+            return s;
+        }
+
         const QStringList &CSimulatorPluginInfo::allIdentifiers()
         {
             static const QStringList identifiers(
@@ -82,7 +98,8 @@ namespace BlackMisc
                 fsxPluginIndentifier(),
                 p3dPluginIndentifier(),
                 xplanePluginIndentifier(),
-                fs9PluginIndentifier()
+                fs9PluginIndentifier(),
+                swiftPluginIndentifier()
             });
             return identifiers;
         }

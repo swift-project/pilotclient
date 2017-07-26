@@ -259,7 +259,7 @@ namespace BlackMisc
             ScoredModels scoreFull(const CAircraftModel &remoteModel, bool preferColorLiveries, bool ignoreZeroScores = true, CStatusMessageList *log = nullptr) const;
 
             //! Completer strings
-            QStringList toCompleterStrings(bool sorted = true) const;
+            QStringList toCompleterStrings(bool sorted = true, const BlackMisc::Simulation::CSimulatorInfo &simulator = { BlackMisc::Simulation::CSimulatorInfo::All }) const;
 
             //! Validate for publishing
             CStatusMessageList validateForPublishing() const;

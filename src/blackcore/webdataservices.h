@@ -223,7 +223,7 @@ namespace BlackCore
 
         //! Model completer string
         //! \threadsafe
-        QStringList getModelCompleterStrings(bool sorted = true) const;
+        QStringList getModelCompleterStrings(bool sorted = true, const BlackMisc::Simulation::CSimulatorInfo &simulator = { BlackMisc::Simulation::CSimulatorInfo::All }) const;
 
         //! Models for combined code and aircraft designator
         //! \threadsafe
@@ -312,6 +312,10 @@ namespace BlackCore
         //! Get airports count
         //! \threadsafe
         int getAirportsCount() const;
+
+        //! Get airport for ICAO designator
+        //! \threadsafe
+        BlackMisc::Aviation::CAirport getAirportForIcaoDesignator(const QString &icao) const;
 
         //! Get METARs
         //! \threadsafe

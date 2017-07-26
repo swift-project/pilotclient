@@ -523,9 +523,9 @@ namespace BlackCore
         return QStringList();
     }
 
-    QStringList CWebDataServices::getModelCompleterStrings(bool sorted) const
+    QStringList CWebDataServices::getModelCompleterStrings(bool sorted, const CSimulatorInfo &simulator) const
     {
-        if (m_modelDataReader) { return m_modelDataReader->getModels().toCompleterStrings(sorted); }
+        if (m_modelDataReader) { return m_modelDataReader->getModels().toCompleterStrings(sorted, simulator); }
         return QStringList();
     }
 
@@ -664,6 +664,12 @@ namespace BlackCore
     {
         if (m_airportDataReader) { return m_airportDataReader->getAirportsCount(); }
         return 0;
+    }
+
+    CAirport CWebDataServices::getAirportForIcaoDesignator(const QString &icao) const
+    {
+        if (m_airportDataReader) { return m_airportDataReader->getAirportForIcaoDesignator(icao); }
+        return CAirport();
     }
 
     CCountry CWebDataServices::getCountryForIsoCode(const QString &iso) const

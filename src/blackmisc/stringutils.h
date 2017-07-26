@@ -234,10 +234,10 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)                \
-    using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
-    using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
-    using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
-    using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
+            using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
+            using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
+            using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
+            using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
     } // ns
 } // ns
 

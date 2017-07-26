@@ -34,6 +34,11 @@ namespace BlackCore
             return m_airportCache.get();
         }
 
+        CAirport CAirportDataReader::getAirportForIcaoDesignator(const QString &designator) const
+        {
+            return getAirports().findByIcao(CAirportIcaoCode(designator)).frontOrDefault();
+        }
+
         int CAirportDataReader::getAirportsCount() const
         {
             return this->getAirports().size();

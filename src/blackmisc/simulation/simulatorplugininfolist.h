@@ -13,9 +13,10 @@
 #define BLACKMISC_SIMULATION_SIMULATORPLUGININFOLIST_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/variant.h"
 
 #include <QMetaType>
@@ -50,6 +51,9 @@ namespace BlackMisc
 
             //! Find by identifier (unique)
             CSimulatorPluginInfo findByIdentifier(const QString &identifier) const;
+
+            //! Find by simulator
+            CSimulatorPluginInfo findBySimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
         };
     } // ns
 } // ns

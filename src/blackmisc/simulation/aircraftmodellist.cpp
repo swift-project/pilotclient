@@ -693,13 +693,16 @@ namespace BlackMisc
             return scoreMap;
         }
 
-        QStringList CAircraftModelList::toCompleterStrings(bool sorted) const
+        QStringList CAircraftModelList::toCompleterStrings(bool sorted, const CSimulatorInfo &simulator) const
         {
             QStringList c;
             c.reserve(size());
             for (const CAircraftModel &model : *this)
             {
-                c.append(model.getModelString());
+                if (model.getSimulator().matchesAny(simulator))
+                {
+                    c.append(model.getModelString());
+                }
             }
             if (sorted) { c.sort(); }
             return c;

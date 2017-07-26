@@ -38,5 +38,14 @@ namespace BlackMisc
         {
             return this->findFirstByOrDefault(&CSimulatorPluginInfo::getIdentifier, identifier);
         }
+
+        CSimulatorPluginInfo CSimulatorPluginInfoList::findBySimulator(const CSimulatorInfo &simulator) const
+        {
+            for (const CSimulatorPluginInfo &info : *this)
+            {
+                if (info.getSimulatorInfo() == simulator) { return info; }
+            }
+            return CSimulatorPluginInfo();
+        }
     } // namespace
 } // namespace

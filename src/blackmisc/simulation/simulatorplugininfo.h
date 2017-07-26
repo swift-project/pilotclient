@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATORPLUGININFO_H
 #define BLACKMISC_SIMULATION_SIMULATORPLUGININFO_H
 
+#include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
@@ -58,6 +59,12 @@ namespace BlackMisc
             //! Simulator
             const QString &getSimulator() const { return m_simulator; }
 
+            //! Simulator info object
+            BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
+
+            //! Is this the pseudo swift driver?
+            bool isSwiftPlugin() const;
+
             //! Description
             const QString &getDescription() const { return m_description; }
 
@@ -75,6 +82,9 @@ namespace BlackMisc
 
             //! Plugin identifier (XPlane)
             static const QString &xplanePluginIndentifier();
+
+            //! Plugin identifier (swift pseudo driver)
+            static const QString &swiftPluginIndentifier();
 
             //! All valid identifiers
             static const QStringList &allIdentifiers();
