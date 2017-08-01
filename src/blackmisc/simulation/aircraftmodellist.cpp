@@ -696,7 +696,6 @@ namespace BlackMisc
         QStringList CAircraftModelList::toCompleterStrings(bool sorted, const CSimulatorInfo &simulator) const
         {
             QStringList c;
-            c.reserve(size());
             for (const CAircraftModel &model : *this)
             {
                 if (model.getSimulator().matchesAny(simulator))
