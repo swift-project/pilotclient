@@ -367,6 +367,13 @@ namespace BlackCore
         return removed;
     }
 
+    int CSimulatorCommon::physicallyRemoveAllRemoteAircraft()
+    {
+        // a default implementation, but normally overridden by the sims
+        const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
+        return this->physicallyRemoveMultipleRemoteAircraft(callsigns);
+    }
+
     bool CSimulatorCommon::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         if (this->isMyIdentifier(originator)) { return false; }

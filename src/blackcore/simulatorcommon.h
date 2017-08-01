@@ -85,6 +85,7 @@ namespace BlackCore
         virtual void unload() override;
         virtual bool isShuttingDown() const override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
+        virtual int physicallyRemoveAllRemoteAircraft() override;
 
         //! \addtogroup swiftdotcommands
         //! @{
