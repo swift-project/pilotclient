@@ -109,6 +109,19 @@ namespace BlackMisc
             return c;
         }
 
+        int CSimulatedAircraftList::setEnabled(const CCallsign &callsign, bool enabled, bool onlyFirst)
+        {
+            int c = 0;
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                aircraft.setEnabled(enabled);
+                c++;
+                if (onlyFirst) break;
+            }
+            return c;
+        }
+
         int CSimulatedAircraftList::setAircraftModel(const CCallsign &callsign, const CAircraftModel &model, bool onlyFirst)
         {
             int c = 0;

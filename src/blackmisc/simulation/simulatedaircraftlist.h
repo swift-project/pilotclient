@@ -80,6 +80,9 @@ namespace BlackMisc
             //! Mark given callsign as rendered
             int setRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, bool onlyFirst = true);
 
+            //! Mark given callsign as enabled
+            int setEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabled, bool onlyFirst = true);
+
             //! Set model
             int setAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftModel &model, bool onlyFirst = true);
 
