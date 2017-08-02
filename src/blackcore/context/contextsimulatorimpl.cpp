@@ -314,9 +314,12 @@ namespace BlackCore
             m_simulatorPlugin.first = simulatorPluginInfo;
             m_simulatorPlugin.second = simulator;
 
-            //! \fixme KB 7/2017 wonder if it was better to force an Qt::QueuedConnection emit by calling CTimer::singleShot
-            //! Replace this comment by an info comment after review, or change
-            emit simulatorPluginChanged(simulatorPluginInfo);
+            // Emit signal after this function completes
+            QTimer::singleShot(0, this, [ = ]
+            {
+                emit this->simulatorPluginChanged(simulatorPluginInfo);
+            });
+
             CLogMessage(this).info("Simulator plugin loaded: '%1' connected: %2")
                     << simulatorPluginInfo.toQString(true)
                     << boolToYesNo(connected);
