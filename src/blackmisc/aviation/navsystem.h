@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         //! NAV system (radio navigation)
         class BLACKMISC_EXPORT CNavSystem :
             public CModulator<CNavSystem>,
@@ -43,29 +42,37 @@ namespace BlackMisc
             { }
 
             //! Set active frequency
-            void setFrequencyActiveMHz(double frequencyMHz) override
+            void setFrequencyActiveMHz(double frequencyMHz)
             {
-                this->CModulator::setFrequencyActiveMHz(frequencyMHz);
+                const BlackMisc::PhysicalQuantities::CFrequency f(Math::CMathUtils::round(frequencyMHz, 3), BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
+                this->setFrequencyActive(f);
             }
 
             //! Set standby frequency
-            void setFrequencyStandbyMHz(double frequencyMHz) override
+            void setFrequencyStandbyMHz(double frequencyMHz)
             {
-                this->CModulator::setFrequencyStandbyMHz(frequencyMHz);
+                const BlackMisc::PhysicalQuantities::CFrequency f(Math::CMathUtils::round(frequencyMHz, 3), BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
+                this->setFrequencyStandby(f);
             }
 
             //! Valid civil aviation frequency?
             static bool isValidCivilNavigationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
-                double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
+                const double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 108.0 && fr <= 117.95;
             }
 
             //! Valid military aviation frequency?
             static bool isValidMilitaryNavigationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
-                double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
+                const double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 960.0 && fr <= 1215.0; // valid TACAN frequency
+            }
+
+            //! Valid aviation frequency (military/civil)
+            static bool isValidNavigationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
+            {
+                return isValidCivilNavigationFrequency(f) || isValidMilitaryNavigationFrequency(f);
             }
 
             //! NAV1 unit
@@ -75,9 +82,10 @@ namespace BlackMisc
             }
 
             //! NAV1 unit
-            static CNavSystem getNav1System(const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet())
+            static CNavSystem getNav1System(const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency,
+                                            const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = { 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() })
             {
-                return CNavSystem(CModulator::NameNav1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
+                return CNavSystem(CModulator::NameNav1(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
             }
 
             //! NAV2 unit
@@ -87,22 +95,10 @@ namespace BlackMisc
             }
 
             //! NAV2 unit
-            static CNavSystem getNav2System(const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet())
+            static CNavSystem getNav2System(const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency,
+                                            const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = { 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() })
             {
-                return CNavSystem(CModulator::NameNav2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
-            }
-
-        protected:
-            //! \copydoc CModulator::validValues
-            virtual bool validValues() const override
-            {
-                if (this->isDefaultValue()) return true; // special case
-                bool v =
-                    (this->isValidCivilNavigationFrequency(this->getFrequencyActive()) ||
-                     this->isValidMilitaryNavigationFrequency(this->getFrequencyActive())) &&
-                    (this->isValidCivilNavigationFrequency(this->getFrequencyStandby()) ||
-                     this->isValidMilitaryNavigationFrequency(this->getFrequencyStandby()));
-                return v;
+                return CNavSystem(CModulator::NameNav2(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
             }
 
         private:
@@ -112,7 +108,6 @@ namespace BlackMisc
             //! Easy access to derived class (CRTP template parameter)
             CNavSystem *derived() { return static_cast<CNavSystem *>(this); }
         };
-
     } // namespace
 } // namespace
 

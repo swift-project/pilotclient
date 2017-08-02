@@ -29,25 +29,15 @@ namespace BlackMisc
             qDBusRegisterMetaType<ComUnit>();
         }
 
-        bool CComSystem::validValues() const
-        {
-            if (this->isDefaultValue()) return true; // special case
-            return
-                (CComSystem::isValidCivilAviationFrequency(this->getFrequencyActive()) ||
-                 CComSystem::isValidMilitaryFrequency(this->getFrequencyActive())) &&
-                (CComSystem::isValidCivilAviationFrequency(this->getFrequencyStandby()) ||
-                 CComSystem::isValidMilitaryFrequency(this->getFrequencyStandby()));
-        }
-
         void CComSystem::setFrequencyActiveMHz(double frequencyMHz)
         {
-            CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
+            const CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
             this->setFrequencyActive(f);
         }
 
         void CComSystem::setFrequencyStandbyMHz(double frequencyMHz)
         {
-            CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
+            const CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
             this->setFrequencyStandby(f);
         }
 
@@ -96,7 +86,7 @@ namespace BlackMisc
 
         CComSystem CComSystem::getCom1System(const CFrequency &activeFrequency, const CFrequency &standbyFrequency)
         {
-            return CComSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
+            return CComSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
         }
 
         CComSystem CComSystem::getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz)
@@ -106,7 +96,7 @@ namespace BlackMisc
 
         CComSystem CComSystem::getCom2System(const CFrequency &activeFrequency, const CFrequency &standbyFrequency)
         {
-            return CComSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
+            return CComSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
         }
 
         bool CComSystem::isValidCivilAviationFrequency(const CFrequency &f)

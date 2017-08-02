@@ -54,7 +54,6 @@ namespace BlackMisc
 
         bool CTransponder::validValues() const
         {
-            if (this->isDefaultValue()) return true; // special case
             return CTransponder::isValidTransponderCode(this->m_transponderCode);
         }
 

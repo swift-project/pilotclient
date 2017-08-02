@@ -17,6 +17,7 @@
 #include "blackmisc/variant.h"
 #include "blackmisc/comparefunctions.h"
 #include <QtGlobal>
+#include <type_traits>
 
 using BlackMisc::PhysicalQuantities::CFrequency;
 using BlackMisc::PhysicalQuantities::CFrequencyUnit;
@@ -26,15 +27,9 @@ namespace BlackMisc
     namespace Aviation
     {
         template <class AVIO>
-        bool CModulator<AVIO>::isDefaultValue() const
-        {
-            return (this->m_frequencyActive == FrequencyNotSet());
-        }
-
-        template <class AVIO>
         void CModulator<AVIO>::toggleActiveStandby()
         {
-            CFrequency a = this->m_frequencyActive;
+            const CFrequency a = this->m_frequencyActive;
             this->m_frequencyActive = this->m_frequencyStandby;
             this->m_frequencyStandby = a;
         }
@@ -180,15 +175,17 @@ namespace BlackMisc
         }
 
         template <class AVIO>
-        CModulator<AVIO>::CModulator() :
-            m_name("default") {}
+        CModulator<AVIO>::CModulator() : m_name("default")
+        {
+            static_assert(!std::is_polymorphic<AVIO>::value, "Must not use virtual functions for value classes");
+        }
 
         template <class AVIO>
         CModulator<AVIO>::CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
-            m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
-
-        template <class AVIO>
-        CModulator<AVIO>::~CModulator() {}
+            m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency)
+        {
+            static_assert(!std::is_polymorphic<AVIO>::value, "Must not use virtual functions for value classes");
+        }
 
         template <class AVIO>
         QString CModulator<AVIO>::convertToQString(bool i18n) const
@@ -209,21 +206,6 @@ namespace BlackMisc
         void CModulator<AVIO>::setFrequencyStandbyKHz(double frequencyKHz)
         {
             this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
-        }
-
-
-        template <class AVIO>
-        void CModulator<AVIO>::setFrequencyActiveMHz(double frequencyMHz)
-        {
-            frequencyMHz = Math::CMathUtils::round(frequencyMHz, 3);
-            this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
-        }
-
-        template <class AVIO>
-        void CModulator<AVIO>::setFrequencyStandbyMHz(double frequencyMHz)
-        {
-            frequencyMHz = Math::CMathUtils::round(frequencyMHz, 3);
-            this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
         }
 
         template <class AVIO>
@@ -280,13 +262,6 @@ namespace BlackMisc
         {
             static QString n("ADF2");
             return n;
-        }
-
-        template <class AVIO>
-        const BlackMisc::PhysicalQuantities::CFrequency &CModulator<AVIO>::FrequencyNotSet()
-        {
-            static BlackMisc::PhysicalQuantities::CFrequency f;
-            return f;
         }
 
         // see here for the reason of the forward instantiations

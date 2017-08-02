@@ -33,9 +33,6 @@ namespace BlackMisc
                 IndexEnabled
             };
 
-            //! Default value?
-            virtual bool isDefaultValue() const;
-
             //! Toggle active and standby frequencies
             void toggleActiveStandby();
 
@@ -44,12 +41,6 @@ namespace BlackMisc
 
             //! Standby frequency
             BlackMisc::PhysicalQuantities::CFrequency getFrequencyStandby() const;
-
-            //! Set active frequency
-            virtual void setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
-
-            //! Set standby frequency
-            virtual void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
             //! Output volume 0..100
             int getVolumeOutput() const;
@@ -72,9 +63,6 @@ namespace BlackMisc
             //! Enabled?
             void setEnabled(bool enable);
 
-            //! Are set values valid?
-            virtual bool validValues() const { return true; }
-
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -87,9 +75,6 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
-            //! Destructor
-            virtual ~CModulator();
-
         protected:
             //! Default constructor
             CModulator();
@@ -98,16 +83,16 @@ namespace BlackMisc
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency);
 
             //! Set active frequency
+            void setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+
+            //! Set standby frequency
+            void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+
+            //! Set active frequency
             void setFrequencyActiveKHz(double frequencyKHz);
 
             //! Set standby frequency
             void setFrequencyStandbyKHz(double frequencyKHz);
-
-            //! Set active frequency
-            virtual void setFrequencyActiveMHz(double frequencyMHz);
-
-            //! Set standby frequency
-            virtual void setFrequencyStandbyMHz(double frequencyMHz);
 
             //! COM1
             static const QString &NameCom1();
@@ -132,9 +117,6 @@ namespace BlackMisc
 
             //! ADF2
             static const QString &NameAdf2();
-
-            //! Frequency not set
-            static const BlackMisc::PhysicalQuantities::CFrequency &FrequencyNotSet();
 
         private:
             QString m_name; //!< name of the unit

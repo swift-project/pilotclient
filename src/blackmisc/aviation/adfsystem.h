@@ -21,7 +21,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         //! ADF system ("for NDBs")
         class BLACKMISC_EXPORT CAdfSystem :
             public CModulator<CAdfSystem>,
@@ -40,8 +39,9 @@ namespace BlackMisc
             CAdfSystem() = default;
 
             //! Constructor
-            CAdfSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
-                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
+            CAdfSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency,
+                       const PhysicalQuantities::CFrequency &standbyFrequency = { 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() }):
+                CModulator(name, activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency)
             { }
 
             //! Valid aviation frequency?
@@ -58,9 +58,10 @@ namespace BlackMisc
             }
 
             //! ADF1 unit
-            static CAdfSystem GetAdf1System(const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet())
+            static CAdfSystem GetAdf1System(const PhysicalQuantities::CFrequency &activeFrequency,
+                                            const PhysicalQuantities::CFrequency &standbyFrequency = { 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() })
             {
-                return CAdfSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
+                return CAdfSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
             }
 
             //! ADF2 unit
@@ -70,23 +71,14 @@ namespace BlackMisc
             }
 
             //! ADF2 unit
-            static CAdfSystem GetAdf2System(const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet())
+            static CAdfSystem GetAdf2System(const PhysicalQuantities::CFrequency &activeFrequency,
+                                            const PhysicalQuantities::CFrequency &standbyFrequency = { 0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit() })
             {
-                return CAdfSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
-            }
-
-        protected:
-            //! \copydoc CModulator::validValues
-            virtual bool validValues() const override
-            {
-                if (this->isDefaultValue()) return true; // special case
-                return
-                    this->isValidFrequency(this->getFrequencyActive()) &&
-                    this->isValidFrequency(this->getFrequencyStandby());
+                return CAdfSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
             }
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAdfSystem)
 
