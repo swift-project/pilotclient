@@ -41,7 +41,7 @@ namespace BlackMisc
     {
 
         //! Specialized class for distance units (meter, foot, nautical miles).
-        class BLACKMISC_EXPORT CLengthUnit :
+        class BLACKMISC_EXPORT CLengthUnit final :
             public CMeasurementUnit,
             public Mixin::MetaType<CLengthUnit>,
             public Mixin::DBusOperators<CLengthUnit>,
@@ -67,9 +67,6 @@ namespace BlackMisc
 
             //! Null constructor
             CLengthUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CLengthUnit() final = default;
 
             //! Default unit
             static CLengthUnit defaultUnit() { return m(); }
@@ -157,7 +154,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for angles (degrees, radian).
-        class BLACKMISC_EXPORT CAngleUnit :
+        class BLACKMISC_EXPORT CAngleUnit final :
             public CMeasurementUnit,
             public Mixin::MetaType<CAngleUnit>,
             public Mixin::DBusOperators<CAngleUnit>,
@@ -180,9 +177,6 @@ namespace BlackMisc
 
             //! Null constructor
             CAngleUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CAngleUnit() final = default;
 
             //! Default unit
             static CAngleUnit defaultUnit() { return deg(); }
@@ -254,7 +248,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for frequency (hertz, mega hertz, kilo hertz).
-        class BLACKMISC_EXPORT CFrequencyUnit :
+        class BLACKMISC_EXPORT CFrequencyUnit final :
             public CMeasurementUnit,
             public Mixin::MetaType<CFrequencyUnit>,
             public Mixin::DBusOperators<CFrequencyUnit>,
@@ -276,9 +270,6 @@ namespace BlackMisc
 
             //! Null constructor
             CFrequencyUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CFrequencyUnit() final = default;
 
             //! Default unit
             static CFrequencyUnit defaultUnit() { return Hz(); }
@@ -342,7 +333,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for mass units (kg, lbs).
-        class BLACKMISC_EXPORT CMassUnit :
+        class BLACKMISC_EXPORT CMassUnit final :
             public CMeasurementUnit,
             public Mixin::MetaType<CMassUnit>,
             public Mixin::DBusOperators<CMassUnit>,
@@ -365,9 +356,6 @@ namespace BlackMisc
 
             //! Null constructor
             CMassUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CMassUnit() final = default;
 
             //! Default unit
             static CMassUnit defaultUnit() { return kg(); }
@@ -439,7 +427,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for pressure (psi, hPa, bar).
-        class BLACKMISC_EXPORT CPressureUnit :
+        class BLACKMISC_EXPORT CPressureUnit final :
             public CMeasurementUnit,
             public Mixin::MetaType<CPressureUnit>,
             public Mixin::DBusOperators<CPressureUnit>,
@@ -464,9 +452,6 @@ namespace BlackMisc
 
             //! Null constructor
             CPressureUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CPressureUnit() final = default;
 
             //! Default unit
             static CPressureUnit defaultUnit() { return hPa(); }
@@ -553,7 +538,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for temperatur units (kelvin, centidegree).
-        class BLACKMISC_EXPORT CTemperatureUnit :
+        class BLACKMISC_EXPORT CTemperatureUnit final :
             public CMeasurementUnit,
             public Mixin::MetaType<CTemperatureUnit>,
             public Mixin::DBusOperators<CTemperatureUnit>,
@@ -584,9 +569,6 @@ namespace BlackMisc
 
             //! Null constructor
             CTemperatureUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CTemperatureUnit() final = default;
 
             //! Default unit
             static CTemperatureUnit defaultUnit() { return C(); }
@@ -642,7 +624,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for speed units (m/s, ft/s, NM/h).
-        class BLACKMISC_EXPORT CSpeedUnit :
+        class BLACKMISC_EXPORT CSpeedUnit final:
             public CMeasurementUnit,
             public Mixin::MetaType<CSpeedUnit>,
             public Mixin::DBusOperators<CSpeedUnit>,
@@ -667,9 +649,6 @@ namespace BlackMisc
 
             //! Null constructor
             CSpeedUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CSpeedUnit() final = default;
 
             //! Default unit
             static CSpeedUnit defaultUnit() { return m_s(); }
@@ -749,7 +728,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for time units (ms, hour, min).
-        class BLACKMISC_EXPORT CTimeUnit :
+        class BLACKMISC_EXPORT CTimeUnit final:
             public CMeasurementUnit,
             public Mixin::MetaType<CTimeUnit>,
             public Mixin::DBusOperators<CTimeUnit>,
@@ -774,9 +753,6 @@ namespace BlackMisc
 
             //! Null constructor
             CTimeUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CTimeUnit() final = default;
 
             //! Default unit
             static CTimeUnit defaultUnit() { return s(); }
@@ -880,7 +856,7 @@ namespace BlackMisc
         };
 
         //! Specialized class for acceleration units (m/s2, ft/s2).
-        class BLACKMISC_EXPORT CAccelerationUnit :
+        class BLACKMISC_EXPORT CAccelerationUnit final:
             public CMeasurementUnit,
             public Mixin::MetaType<CAccelerationUnit>,
             public Mixin::DBusOperators<CAccelerationUnit>,
@@ -902,9 +878,6 @@ namespace BlackMisc
 
             //! Null constructor
             CAccelerationUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
-
-            //! Destructor
-            virtual ~CAccelerationUnit() final = default;
 
             //! Default unit
             static CAccelerationUnit defaultUnit() { return m_s2(); }
