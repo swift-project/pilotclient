@@ -43,9 +43,6 @@ namespace BlackMisc
                 //! Constructor
                 CAircraftCfgEntriesList() {}
 
-                //! Virtual destructor
-                virtual ~CAircraftCfgEntriesList() {}
-
                 //! Contains model with title?
                 bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
 
