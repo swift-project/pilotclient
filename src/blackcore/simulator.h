@@ -66,6 +66,7 @@ namespace BlackCore
             Paused       = 1 << 3, //!< Is the simulator paused?
         };
         Q_DECLARE_FLAGS(SimulatorStatus, SimulatorStatusFlag)
+        Q_FLAG(SimulatorStatus)
 
         //! Render all aircraft if number of aircraft >= MaxAircraftInfinite
         const int MaxAircraftInfinite = 100;
