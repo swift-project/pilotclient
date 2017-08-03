@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSituationForm</class>
+ <widget class="QFrame" name="CSituationForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>386</width>
+    <height>324</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_SituationForm">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="gb_Situation">
+     <property name="title">
+      <string>Situation</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QFrame" name="comp_Situation">
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QGridLayout" name="gl_Situation" columnstretch="1,1,1,3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbl_Bank">
+           <property name="text">
+            <string>Bank (-179° to 180°):</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QSlider" name="hs_Pitch">
+           <property name="minimum">
+            <number>-179</number>
+           </property>
+           <property name="maximum">
+            <number>180</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::TicksAbove</enum>
+           </property>
+           <property name="tickInterval">
+            <number>25</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_Pitch">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="placeholderText">
+            <string>deg.</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_Bank">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="placeholderText">
+            <string>deg.</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="lbl_Pitch">
+           <property name="text">
+            <string>Pitch (-179° to 180°):</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QSlider" name="hs_Bank">
+           <property name="minimum">
+            <number>-179</number>
+           </property>
+           <property name="maximum">
+            <number>180</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::TicksAbove</enum>
+           </property>
+           <property name="tickInterval">
+            <number>25</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <spacer name="vs_Situation">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="2">
+          <widget class="QToolButton" name="tb_ResetBank">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../blackmisc/blackmisc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QToolButton" name="tb_ResetPitch">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../blackmisc/blackmisc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3" alignment="Qt::AlignRight">
+          <widget class="QPushButton" name="pb_Set">
+           <property name="text">
+            <string>set</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_Coordinate">
+     <property name="title">
+      <string>Coordinate</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="BlackGui::Editors::CCoordinateForm" name="comp_Coordinate">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Editors::CCoordinateForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/coordinateform.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

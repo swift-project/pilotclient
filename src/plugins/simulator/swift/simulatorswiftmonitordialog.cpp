@@ -39,7 +39,7 @@ namespace BlackSimPlugin
             connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
 
             this->setSimulatorUiValues();
-            ui->comp_Position->setCoordinate(m_simulator->getOwnAircraftSituation());
+            ui->comp_Situation->setSituation(m_simulator->getOwnAircraftSituation());
         }
 
         CSimulatorSwiftMonitorDialog::~CSimulatorSwiftMonitorDialog()
