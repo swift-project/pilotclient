@@ -77,32 +77,28 @@ namespace BlackMisc
 
         CAngle::DegMinSecFractionalSec CAngle::asSexagesimalDegMinSec(bool range180Degrees) const
         {
-            double v = this->value(CAngleUnit::deg());
-            v = CAngleUnit::deg().roundToEpsilon(v);
+            double dms = this->value(CAngleUnit::sexagesimalDeg());
 
-            // range -179-180 ?
             if (range180Degrees)
             {
-                v = std::fmod(v + 180.0, 360.0);
-                v += (v < 0) ? 180.0 : -180.0;
+                dms = std::fmod(dms + 180.0, 360.0);
+                dms += (dms < 0) ? 180.0 : -180.0;
             }
 
             DegMinSecFractionalSec values;
-            if (v < 0)
+            if (dms < 0)
             {
                 values.sign = -1;
-                v *= -1.0;
+                dms *= -1.0;
             }
 
-            values.deg = v;
-            v -= values.deg;
-            v = v * 100.0 * 0.6;
-            values.min = v;
-            v -= values.min;
-            v = v * 100.0 * 0.6;
-            values.sec = v;
-            v -= values.sec;
-            values.fractionalSec = CMathUtils::round(v, 6);
+            values.deg = CMathUtils::trunc(dms);
+            dms = CMathUtils::fract(dms) * 100;
+            values.min = CMathUtils::trunc(dms);
+            dms = CMathUtils::fract(dms) * 100;
+            values.sec = CMathUtils::trunc(dms);
+            dms = CMathUtils::fract(dms);
+            values.fractionalSec = CMathUtils::round(dms, 6);
             return values;
         }
 
