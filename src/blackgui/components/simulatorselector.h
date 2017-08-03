@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_COMPONENTS_SIMULATORSELECTOR_H
 #define BLACKGUI_COMPONENTS_SIMULATORSELECTOR_H
 
@@ -21,7 +23,6 @@
 class QWidget;
 
 namespace Ui { class CSimulatorSelector; }
-
 namespace BlackGui
 {
     namespace Components

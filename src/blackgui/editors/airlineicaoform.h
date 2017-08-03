@@ -24,7 +24,6 @@
 class QWidget;
 
 namespace Ui { class CAirlineIcaoForm; }
-
 namespace BlackGui
 {
     namespace Editors
@@ -32,8 +31,7 @@ namespace BlackGui
         /*!
          * Airline ICAO code form
          */
-        class BLACKGUI_EXPORT CAirlineIcaoForm :
-            public CForm
+        class BLACKGUI_EXPORT CAirlineIcaoForm : public CForm
         {
             Q_OBJECT
 
