@@ -96,6 +96,12 @@ namespace BlackMisc
 
             //! Tangent of angle
             double tan() const;
+
+            //! Normalize: -180< degrees ≤180
+            static double normalizeDegrees180(double degrees, int roundDigits = -1);
+
+            //! Normalize: 0≤ degrees <360
+            static double normalizeDegrees360(double degrees, int roundDigits = -1);
         };
     } // ns
 } // ns

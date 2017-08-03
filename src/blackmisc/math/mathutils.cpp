@@ -79,9 +79,15 @@ namespace BlackMisc
             return radians * 180.0 / CMathUtils::PI();
         }
 
-        double CMathUtils::normalizeDegrees(double degrees)
+        double CMathUtils::normalizeDegrees180(double degrees)
         {
-            double result = std::fmod(degrees, 360.0);
+            const double result = CMathUtils::normalizeDegrees360(degrees + 180.0) - 180.0;
+            return (result <= -180.0) ? 180.0 : result; // -180->180
+        }
+
+        double CMathUtils::normalizeDegrees360(double degrees)
+        {
+            const double result = std::fmod(degrees, 360.0);
             return (result >= 0.0) ? result : result + 360.0;
         }
 

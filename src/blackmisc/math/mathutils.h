@@ -96,8 +96,11 @@ namespace BlackMisc
             //! Radians to degrees
             static double rad2deg(double radians);
 
+            //! Normalize: -180< degrees ≤180
+            static double normalizeDegrees180(double degrees);
+
             //! Normalize: 0≤ degrees <360
-            static double normalizeDegrees(double degrees);
+            static double normalizeDegrees360(double degrees);
 
             //! Random number between low and high
             static int randomInteger(int low, int high);

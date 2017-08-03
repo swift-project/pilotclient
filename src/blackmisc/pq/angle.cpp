@@ -126,5 +126,18 @@ namespace BlackMisc
         {
             return std::tan(this->value(CAngleUnit::rad()));
         }
+
+        double CAngle::normalizeDegrees180(double degrees, int roundDigits)
+        {
+            double d = CMathUtils::normalizeDegrees360(degrees + 180.0) - 180.0;
+            if (d <= -180.0) { d = 180.0; } // -180 -> 180
+            return roundDigits < 0 ? d : CMathUtils::round(d, roundDigits);
+        }
+
+        double CAngle::normalizeDegrees360(double degrees, int roundDigits)
+        {
+            const double d = CMathUtils::normalizeDegrees360(degrees);
+            return roundDigits < 0 ? d : CMathUtils::round(d, roundDigits);
+        }
     } // ns
 } // ns
