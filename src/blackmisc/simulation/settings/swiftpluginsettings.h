@@ -75,7 +75,7 @@ namespace BlackMisc
                 void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
 
             private:
-                BlackMisc::Simulation::CSimulatorInfo m_emulatedSimulator;
+                BlackMisc::Simulation::CSimulatorInfo m_emulatedSimulator { BlackMisc::Simulation::CSimulatorInfo::P3D }; // simulator with default value
                 BlackMisc::Simulation::CAircraftModel m_ownModel;
                 BlackMisc::Simulation::CAircraftModel m_defaultModel;
                 bool m_logFunctionCalls = true;
@@ -94,6 +94,9 @@ namespace BlackMisc
             {
                 //! Key in data cache
                 static const char *key() { return "settingsswiftplugin"; }
+
+                //! Validator function.
+                static bool isValid(const CSwiftPluginSettings &value) { return value.getEmulatedSimulator().isSingleSimulator(); }
             };
         } // ns
     } // ns
