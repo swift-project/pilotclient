@@ -7,27 +7,28 @@
  * contained in the LICENSE file.
  */
 
-#include "coordinateselector.h"
+#include "coordinateform.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/airportdatareader.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/airport.h"
-#include "ui_coordinateselector.h"
+#include "ui_coordinateform.h"
 
 #include <QIntValidator>
 
 using namespace BlackGui;
+using namespace BlackMisc;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
 {
-    namespace Components
+    namespace Editors
     {
-        CCoordinateSelector::CCoordinateSelector(QWidget *parent) :
-            QFrame(parent),
-            ui(new Ui::CCoordinateSelector)
+        CCoordinateForm::CCoordinateForm(QWidget *parent) :
+            CForm(parent),
+            ui(new Ui::CCoordinateForm)
         {
             ui->setupUi(this);
 
@@ -45,30 +46,31 @@ namespace BlackGui
             ui->le_LngSec->setValidator(new QIntValidator(0, 60, ui->le_LngSec));
             ui->le_LngSecFrag->setValidator(new QIntValidator(0, 10E7, ui->le_LngSecFrag));
 
-            connect(ui->le_Latitude, &QLineEdit::editingFinished, this, &CCoordinateSelector::latEntered);
-            connect(ui->le_Longitude, &QLineEdit::editingFinished, this, &CCoordinateSelector::lngEntered);
-            connect(ui->le_Elevation, &QLineEdit::editingFinished, this, &CCoordinateSelector::elvEntered);
+            connect(ui->le_Latitude, &QLineEdit::editingFinished, this, &CCoordinateForm::latEntered);
+            connect(ui->le_Longitude, &QLineEdit::editingFinished, this, &CCoordinateForm::lngEntered);
+            connect(ui->le_Elevation, &QLineEdit::editingFinished, this, &CCoordinateForm::elvEntered);
 
-            connect(ui->le_LatDeg, &QLineEdit::editingFinished, this, &CCoordinateSelector::latCombinedEntered);
-            connect(ui->le_LatMin, &QLineEdit::editingFinished, this, &CCoordinateSelector::latCombinedEntered);
-            connect(ui->le_LatSec, &QLineEdit::editingFinished, this, &CCoordinateSelector::latCombinedEntered);
-            connect(ui->le_LatSecFrag, &QLineEdit::editingFinished, this, &CCoordinateSelector::latCombinedEntered);
+            connect(ui->le_LatDeg, &QLineEdit::editingFinished, this, &CCoordinateForm::latCombinedEntered);
+            connect(ui->le_LatMin, &QLineEdit::editingFinished, this, &CCoordinateForm::latCombinedEntered);
+            connect(ui->le_LatSec, &QLineEdit::editingFinished, this, &CCoordinateForm::latCombinedEntered);
+            connect(ui->le_LatSecFrag, &QLineEdit::editingFinished, this, &CCoordinateForm::latCombinedEntered);
 
-            connect(ui->le_LngDeg, &QLineEdit::editingFinished, this, &CCoordinateSelector::lngCombinedEntered);
-            connect(ui->le_LngMin, &QLineEdit::editingFinished, this, &CCoordinateSelector::lngCombinedEntered);
-            connect(ui->le_LngSec, &QLineEdit::editingFinished, this, &CCoordinateSelector::lngCombinedEntered);
-            connect(ui->le_LngSecFrag, &QLineEdit::editingFinished, this, &CCoordinateSelector::lngCombinedEntered);
+            connect(ui->le_LngDeg, &QLineEdit::editingFinished, this, &CCoordinateForm::lngCombinedEntered);
+            connect(ui->le_LngMin, &QLineEdit::editingFinished, this, &CCoordinateForm::lngCombinedEntered);
+            connect(ui->le_LngSec, &QLineEdit::editingFinished, this, &CCoordinateForm::lngCombinedEntered);
+            connect(ui->le_LngSecFrag, &QLineEdit::editingFinished, this, &CCoordinateForm::lngCombinedEntered);
 
-            connect(ui->le_Location, &QLineEdit::returnPressed, this, &CCoordinateSelector::locationEntered);
+            connect(ui->le_Location, &QLineEdit::returnPressed, this, &CCoordinateForm::locationEntered);
+            connect(ui->pb_Set, &QPushButton::pressed, this, &CCoordinateForm::changeCoordinate);
 
             const CCoordinateGeodetic c;
             this->setCoordinate(c);
         }
 
-        CCoordinateSelector::~CCoordinateSelector()
+        CCoordinateForm::~CCoordinateForm()
         { }
 
-        void CCoordinateSelector::setCoordinate(const ICoordinateGeodetic &coordinate)
+        void CCoordinateForm::setCoordinate(const ICoordinateGeodetic &coordinate)
         {
             m_coordinate = coordinate;
 
@@ -115,7 +117,40 @@ namespace BlackGui
             ui->le_Elevation->setText(coordinate.geodeticHeightAsString());
         }
 
-        void CCoordinateSelector::locationEntered()
+        void CCoordinateForm::setReadOnly(bool readonly)
+        {
+            ui->le_Elevation->setReadOnly(readonly);
+            ui->le_LatDeg->setReadOnly(readonly);
+            ui->le_Latitude->setReadOnly(readonly);
+            ui->le_LatMin->setReadOnly(readonly);
+            ui->le_LatSec->setReadOnly(readonly);
+            ui->le_LatSecFrag->setReadOnly(readonly);
+            ui->le_LngDeg->setReadOnly(readonly);
+            ui->le_LngMin->setReadOnly(readonly);
+            ui->le_LngSec->setReadOnly(readonly);
+            ui->le_LngSecFrag->setReadOnly(readonly);
+            ui->le_Location->setReadOnly(readonly);
+            ui->le_Longitude->setReadOnly(readonly);
+        }
+
+        void CCoordinateForm::setSelectOnly()
+        {
+            this->setReadOnly(true);
+        }
+
+        BlackMisc::CStatusMessageList CCoordinateForm::validate(bool nested) const
+        {
+            Q_UNUSED(nested);
+            CStatusMessageList ml;
+            return ml;
+        }
+
+        void CCoordinateForm::showSetButton(bool visible)
+        {
+            ui->pb_Set->setVisible(visible);
+        }
+
+        void CCoordinateForm::locationEntered()
         {
             const QString l = ui->le_Location->text().trimmed().toUpper();
 
@@ -135,7 +170,7 @@ namespace BlackGui
             }
         }
 
-        void CCoordinateSelector::latEntered()
+        void CCoordinateForm::latEntered()
         {
             const QString ls = ui->le_Latitude->text();
             const CLatitude l = CLatitude::fromWgs84(ls);
@@ -145,7 +180,7 @@ namespace BlackGui
             this->setCoordinate(c);
         }
 
-        void CCoordinateSelector::latCombinedEntered()
+        void CCoordinateForm::latCombinedEntered()
         {
             bool ok;
             int deg = ui->le_LatDeg->text().trimmed().toInt(&ok);
@@ -167,7 +202,7 @@ namespace BlackGui
             this->setCoordinate(c);
         }
 
-        void CCoordinateSelector::lngEntered()
+        void CCoordinateForm::lngEntered()
         {
             const QString ls = ui->le_Longitude->text();
             const CLongitude l = CLongitude::fromWgs84(ls);
@@ -177,7 +212,7 @@ namespace BlackGui
             this->setCoordinate(c);
         }
 
-        void CCoordinateSelector::lngCombinedEntered()
+        void CCoordinateForm::lngCombinedEntered()
         {
             bool ok;
             int deg = ui->le_LngDeg->text().trimmed().toInt(&ok);
@@ -199,7 +234,7 @@ namespace BlackGui
             this->setCoordinate(c);
         }
 
-        void CCoordinateSelector::elvEntered()
+        void CCoordinateForm::elvEntered()
         {
             const QString e = ui->le_Elevation->text();
             CAltitude a;

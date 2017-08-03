@@ -13,6 +13,7 @@
 #define BLACKGUI_EDITORS_FORM_H
 
 #include "blackgui/overlaymessagesframe.h"
+#include "blackgui/blackguiexport.h"
 #include "blackcore/data/authenticateduser.h"
 #include "blackmisc/datacache.h"
 #include <QFrame>
@@ -28,7 +29,7 @@ namespace BlackGui
         /*!
          * Form base class
          */
-        class CForm : public COverlayMessagesFrame
+        class BLACKGUI_EXPORT CForm : public COverlayMessagesFrame
         {
             Q_OBJECT
 

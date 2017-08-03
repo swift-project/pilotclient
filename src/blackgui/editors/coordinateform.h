@@ -9,31 +9,34 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_COORDINATESELECTOR_H
-#define BLACKGUI_COMPONENTS_COORDINATESELECTOR_H
+#ifndef BLACKGUI_EDITORS_COORDINATEFORM_H
+#define BLACKGUI_EDITORS_COORDINATEFORM_H
 
-#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
-#include <QFrame>
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/statusmessagelist.h"
 
-namespace Ui { class CCoordinateSelector; }
+class QWidget;
+
+namespace Ui { class CCoordinateForm; }
 namespace BlackGui
 {
-    namespace Components
+    namespace Editors
     {
         /**
          * Select / enter a geo position
          */
-        class BLACKGUI_EXPORT CCoordinateSelector : public QFrame
+        class BLACKGUI_EXPORT CCoordinateForm : public CForm
         {
             Q_OBJECT
 
         public:
             //! Ctor
-            explicit CCoordinateSelector(QWidget *parent = nullptr);
+            explicit CCoordinateForm(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CCoordinateSelector();
+            virtual ~CCoordinateForm();
 
             //! Get the coordinate
             BlackMisc::Geo::CCoordinateGeodetic getCoordinate() const { return m_coordinate; }
@@ -41,8 +44,22 @@ namespace BlackGui
             //! Set the coordinate
             void setCoordinate(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
 
+            //! \name Form class implementations
+            //! @{
+            virtual void setReadOnly(bool readonly) override;
+            virtual void setSelectOnly() override;
+            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+            //! @}
+
+            //! Set button visible
+            void showSetButton(bool visible);
+
+        signals:
+            //! Change coordinate
+            void changeCoordinate();
+
         private:
-            QScopedPointer<Ui::CCoordinateSelector> ui;
+            QScopedPointer<Ui::CCoordinateForm> ui;
 
             void locationEntered();
             void latEntered();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CCoordinateSelector</class>
- <widget class="QFrame" name="CCoordinateSelector">
+ <class>CCoordinateForm</class>
+ <widget class="QFrame" name="CCoordinateForm">
   <property name="geometry">
    <rect>
     <x>0</x>
