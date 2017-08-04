@@ -35,7 +35,7 @@ class Builder:
         os.environ['PATH'] += os.pathsep + self._get_qt_binary_path()
         self._specific_prepare()
 
-    def build(self, dev_build):
+    def build(self, jobs, dev_build):
         """
         Run the build itself. Pass dev_build=True to enable a dev build
         """
@@ -50,8 +50,10 @@ class Builder:
         qmake_call += ['-r', os.pardir]
         subprocess.check_call(qmake_call, env=dict(os.environ))
 
-        job_arg = '-j{0}'.format(multiprocessing.cpu_count())
-        subprocess.check_call([self.make_cmd, job_arg], env=dict(os.environ))
+        if not jobs:
+            jobs = multiprocessing.cpu_count()
+        jobs_arg = '-j{0}'.format(jobs)
+        subprocess.check_call([self.make_cmd, jobs_arg], env=dict(os.environ))
 
     def checks(self):
         """
@@ -327,9 +329,10 @@ def main(argv):
     word_size = ''
     tool_chain = ''
     dev_build = False
+    jobs = None
 
     try:
-        opts, args = getopt.getopt(argv, 'hc:w:t:d', ['config=', 'wordsize=', 'toolchain=', 'dev'])
+        opts, args = getopt.getopt(argv, 'hc:w:t:j:d', ['config=', 'wordsize=', 'toolchain=', 'jobs=', 'dev'])
     except getopt.GetoptError:
         print_help()
         sys.exit(2)
@@ -351,6 +354,8 @@ def main(argv):
             word_size = arg
         elif opt in ('-t', '--toolchain'):
             tool_chain = arg
+        elif opt in ('-j', '--jobs'):
+            jobs = arg
         elif opt in ('-d', '--dev'):
             dev_build = True
 
@@ -375,7 +380,7 @@ def main(argv):
     builder = builders[platform.system()][tool_chain](config_file, word_size)
 
     builder.prepare()
-    builder.build(dev_build)
+    builder.build(jobs, dev_build)
     builder.checks()
     builder.install()
     builder.package_xswiftbus()
