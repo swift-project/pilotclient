@@ -7,13 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>116</height>
+    <height>144</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
   <layout class="QGridLayout" name="gl_CoordinateSelector">
+   <item row="2" column="5">
+    <widget class="QLineEdit" name="le_LngDeg">
+     <property name="placeholderText">
+      <string>deg.</string>
+     </property>
+    </widget>
+   </item>
    <item row="3" column="2">
     <widget class="BlackGui::CTickLabel" name="lblp_AltCheck">
      <property name="minimumSize">
@@ -24,20 +31,6 @@
      </property>
      <property name="text">
       <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="5">
-    <widget class="QLineEdit" name="le_LngDeg">
-     <property name="placeholderText">
-      <string>deg.</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="6">
-    <widget class="QLineEdit" name="le_LatMin">
-     <property name="placeholderText">
-      <string>min</string>
      </property>
     </widget>
    </item>
@@ -67,6 +60,20 @@
      </attribute>
     </widget>
    </item>
+   <item row="1" column="6">
+    <widget class="QLineEdit" name="le_LatMin">
+     <property name="placeholderText">
+      <string>min</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="8">
+    <widget class="QLineEdit" name="le_LngSecFrag">
+     <property name="placeholderText">
+      <string>fract.sec</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="8">
     <widget class="QLineEdit" name="le_LatSecFrag">
      <property name="placeholderText">
@@ -76,13 +83,6 @@
    </item>
    <item row="3" column="5" colspan="4">
     <widget class="QLineEdit" name="le_Location"/>
-   </item>
-   <item row="2" column="8">
-    <widget class="QLineEdit" name="le_LngSecFrag">
-     <property name="placeholderText">
-      <string>fract.sec</string>
-     </property>
-    </widget>
    </item>
    <item row="2" column="7">
     <widget class="QLineEdit" name="le_LngSec">
@@ -95,13 +95,6 @@
     <widget class="QLabel" name="lbl_Latitude">
      <property name="text">
       <string>Latitude (0°-90°):</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lbl_Longitude">
-     <property name="text">
-      <string>Longitude (0°-180°):</string>
      </property>
     </widget>
    </item>
@@ -125,6 +118,13 @@
      </property>
     </widget>
    </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_Longitude">
+     <property name="text">
+      <string>Longitude (0°-180°):</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="1">
     <widget class="QLineEdit" name="le_Latitude">
      <property name="minimumSize">
@@ -135,6 +135,20 @@
      </property>
      <property name="placeholderText">
       <string>WGS 0° 0' 0.000&quot; N/S</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="lbl_Altitude">
+     <property name="text">
+      <string>Elevation:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="7">
+    <widget class="QLineEdit" name="le_LatSec">
+     <property name="placeholderText">
+      <string>sec</string>
      </property>
     </widget>
    </item>
@@ -155,17 +169,10 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="lbl_Altitude">
+   <item row="3" column="3" colspan="2">
+    <widget class="QLabel" name="lbl_Location">
      <property name="text">
-      <string>Elevation:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="7">
-    <widget class="QLineEdit" name="le_LatSec">
-     <property name="placeholderText">
-      <string>sec</string>
+      <string>Location:</string>
      </property>
     </widget>
    </item>
@@ -173,6 +180,13 @@
     <widget class="QLineEdit" name="le_LngMin">
      <property name="placeholderText">
       <string>min</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QLineEdit" name="le_LatDeg">
+     <property name="placeholderText">
+      <string>deg.</string>
      </property>
     </widget>
    </item>
@@ -186,13 +200,6 @@
      </attribute>
     </widget>
    </item>
-   <item row="1" column="5">
-    <widget class="QLineEdit" name="le_LatDeg">
-     <property name="placeholderText">
-      <string>deg.</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="4">
     <widget class="QRadioButton" name="rb_S">
      <property name="text">
@@ -203,10 +210,10 @@
      </attribute>
     </widget>
    </item>
-   <item row="3" column="3" colspan="2">
-    <widget class="QLabel" name="lbl_Location">
+   <item row="0" column="6">
+    <widget class="QLabel" name="lbl_Min">
      <property name="text">
-      <string>Location:</string>
+      <string>min</string>
      </property>
     </widget>
    </item>
@@ -214,13 +221,6 @@
     <widget class="QLabel" name="lbl_Deg">
      <property name="text">
       <string>deg</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="6">
-    <widget class="QLabel" name="lbl_Min">
-     <property name="text">
-      <string>min</string>
      </property>
     </widget>
    </item>
@@ -235,6 +235,13 @@
     <widget class="QLabel" name="lbl_FracSec">
      <property name="text">
       <string>fract.sec</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="8">
+    <widget class="QPushButton" name="pb_Set">
+     <property name="text">
+      <string>set</string>
      </property>
     </widget>
    </item>
