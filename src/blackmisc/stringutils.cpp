@@ -285,6 +285,11 @@ namespace BlackMisc
         // SystemLocaleLongDate,
         return QDateTime();
     }
+
+    QString dotToLocaleDecimalPoint(QString &input)
+    {
+        return input.replace('.', QLocale::system().decimalPoint());
+    }
 }
 
 //! \endcond
