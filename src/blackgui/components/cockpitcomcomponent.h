@@ -29,8 +29,7 @@ class QPaintEvent;
 class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CComSystem; } }
-namespace Ui { class CCockpitMainComponent; }
-
+namespace Ui { class CCockpitComComponent; }
 namespace BlackGui
 {
     namespace Components
@@ -103,7 +102,7 @@ namespace BlackGui
             //! COM frequencies displayed
             void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
-            QScopedPointer<Ui::CCockpitMainComponent> ui;
+            QScopedPointer<Ui::CCockpitComComponent> ui;
        };
 
     } // namespace

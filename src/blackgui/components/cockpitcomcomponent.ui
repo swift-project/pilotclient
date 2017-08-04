@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CCockpitMainComponent</class>
- <widget class="QFrame" name="CCockpitMainComponent">
+ <class>CCockpitComComponent</class>
+ <widget class="QFrame" name="CCockpitComComponent">
   <property name="geometry">
    <rect>
     <x>0</x>
