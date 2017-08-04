@@ -211,6 +211,16 @@ namespace BlackGui
         }
     }
 
+    void CGuiUtility::checkBoxesReadOnly(QWidget *parent, bool readOnly)
+    {
+        if (!parent) { return; }
+        QList<QCheckBox *> allCheckBoxes = parent->findChildren<QCheckBox *>();
+        for (QCheckBox *cb : allCheckBoxes)
+        {
+            CGuiUtility::checkBoxReadOnly(cb, readOnly);
+        }
+    }
+
     QWidgetList CGuiUtility::topLevelApplicationWidgetsWithName()
     {
         QWidgetList tlw = QApplication::topLevelWidgets();

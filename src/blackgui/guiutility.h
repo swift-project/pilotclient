@@ -18,6 +18,7 @@
 #include <QByteArray>
 #include <QPoint>
 #include <QString>
+#include <QWidget>
 #include <QWidgetList>
 #include <QModelIndexList>
 
@@ -26,7 +27,6 @@ class QComboBox;
 class QLayout;
 class QMimeData;
 class QTabWidget;
-class QWidget;
 class QGraphicsOpacityEffect;
 
 namespace BlackGui
@@ -85,6 +85,21 @@ namespace BlackGui
 
         //! Pseudo readonly state for checkbox
         static void checkBoxReadOnly(QCheckBox *checkBox, bool readOnly);
+
+        //! Pseudo readonly state for checkboxes of widget
+        static void checkBoxesReadOnly(QWidget *parent, bool readOnly);
+
+        //! Enable/disable all child widgets
+        template <class WIDGET>
+        static void childrenSetEnabled(QWidget *parent, bool enabled)
+        {
+            if (!parent) { return; }
+            QList<WIDGET *> children = parent->findChildren<WIDGET *>();
+            for (WIDGET *w : children)
+            {
+                w->setEnabled(enabled);
+            }
+        }
 
         //! Toogle window flags / stay on top
         static bool toggleStayOnTop(QWidget *widget);
