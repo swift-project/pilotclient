@@ -214,7 +214,11 @@ class MSVCBuilder(Builder):
     def _specific_prepare(self):
         os.environ['PATH'] += os.pathsep + self._get_externals_path()
         os.environ['PATH'] += os.pathsep + 'C:/Program Files/7-Zip'
-        vs_env = get_vs_env('14.0', 'amd64')
+        if self.word_size == '32':
+            vs_env = get_vs_env('14.0', 'x86')
+        else:
+            vs_env = get_vs_env('14.0', 'amd64')
+
         os.environ.update(vs_env)
 
     def _get_qmake_spec(self):
