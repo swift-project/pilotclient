@@ -48,15 +48,6 @@ namespace BlackGui
             //! Send aircraft parts
             void ps_sendAircraftParts();
 
-            //! Set all lights
-            void ps_setAllLights();
-
-            //! Set all engines
-            void ps_setAllEngines();
-
-            //! GUI to JSON
-            void ps_guiToJson();
-
             //! Current parts in UI
             void ps_setCurrentParts();
 
@@ -80,12 +71,6 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CInternalsComponent> ui;
-
-            //! Get parts object
-            BlackMisc::Aviation::CAircraftParts guiToAircraftParts() const;
-
-            //! GUI set by parts
-            void partsToGui(const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! Set the context flags
             void contextFlagsToGui();
