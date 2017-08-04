@@ -12,6 +12,8 @@
 #include "ui_simulatorswiftmonitordialog.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackGui::Editors;
 
 namespace BlackSimPlugin
 {
@@ -37,6 +39,7 @@ namespace BlackSimPlugin
             connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
+            connect(ui->comp_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorSwiftMonitorDialog::changeSituation);
 
             this->setSimulatorUiValues();
             ui->comp_Situation->setSituation(m_simulator->getOwnAircraftSituation());
@@ -88,6 +91,20 @@ namespace BlackSimPlugin
                 ui->cb_Simulating->isChecked(),
                 ui->cb_Paused->isChecked()
             );
+        }
+
+        void CSimulatorSwiftMonitorDialog::changeSituation()
+        {
+            if (!m_simulator) { return; }
+            const CAircraftSituation s(ui->editor_Situation->getSituation());
+            m_simulator->updateOwnSituation(s);
+        }
+
+        void CSimulatorSwiftMonitorDialog::changeParts()
+        {
+            if (!m_simulator) { return; }
+            const CAircraftParts p(ui->editor_AircraftParts->getAircraftPartsFromGui());
+            m_simulator->updateOwnParts(p);
         }
 
         void CSimulatorSwiftMonitorDialog::setSimulatorUiValues()

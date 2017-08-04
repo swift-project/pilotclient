@@ -34,19 +34,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <spacer name="vs_Situation">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tb_Simulator">
@@ -147,6 +134,19 @@
       </layout>
      </widget>
     </widget>
+   </item>
+   <item>
+    <spacer name="vs_Situation">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="bb_SwiftMonitorDialog">

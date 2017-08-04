@@ -54,6 +54,12 @@ namespace BlackSimPlugin
             //! UI values changed
             void onSimulatorValuesChanged();
 
+            //! Update aircraft situation
+            void changeSituation();
+
+            //! Change the aircraft parts
+            void changeParts();
+
             //! UI values
             void setSimulatorUiValues();
 
