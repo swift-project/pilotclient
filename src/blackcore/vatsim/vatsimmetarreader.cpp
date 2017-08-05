@@ -76,7 +76,7 @@ namespace BlackCore
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
-            if (!this->isNetworkAccessible("No network, cannot read METARs")) { return; }
+            if (!this->isInternetAccessible("No network/internet access, cannot read METARs")) { return; }
 
             CFailoverUrlList urls(sApp->getVatsimMetarUrls());
             const CUrl url(urls.obtainNextWorkingUrl(true));

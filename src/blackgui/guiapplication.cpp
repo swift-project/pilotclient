@@ -205,9 +205,9 @@ namespace BlackGui
         qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
     }
 
-    void CGuiApplication::ps_startupCompleted()
+    void CGuiApplication::startupCompleted()
     {
-        CApplication::ps_startupCompleted();
+        CApplication::startupCompleted();
         if (this->m_splashScreen)
         {
             this->m_splashScreen->close();

@@ -95,6 +95,7 @@ namespace BlackCore
 
         void CInfoDataReader::read()
         {
+            if (!this->doWorkCheck()) { return; }
             const CUrl url(this->getInfoObjectsUrl());
             if (!url.isEmpty())
             {

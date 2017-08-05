@@ -194,7 +194,7 @@ namespace BlackGui
 
     protected slots:
         //! Startup competed
-        virtual void ps_startupCompleted() override;
+        virtual void startupCompleted() override;
 
     protected:
         //! \name print messages generated during parsing / cmd handling

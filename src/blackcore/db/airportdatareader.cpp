@@ -203,7 +203,7 @@ namespace BlackCore
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
             entity &= CEntityFlags::AirportEntity;
-            if (!this->isNetworkAccessible())
+            if (!this->isInternetAccessible())
             {
                 emit this->dataRead(entity, CEntityFlags::ReadSkipped, 0);
                 return;

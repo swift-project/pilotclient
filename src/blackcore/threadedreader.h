@@ -54,7 +54,7 @@ namespace BlackCore
 
         //! Network accessible?
         //! \param logWarningMessage optional warning if not accessible
-        bool isNetworkAccessible(const QString &logWarningMessage = {}) const;
+        bool isInternetAccessible(const QString &logWarningMessage = {}) const;
 
         //! Is marked as read failed
         //! \threadsafe

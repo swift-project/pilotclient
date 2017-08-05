@@ -140,21 +140,24 @@ namespace BlackCore
 
             // Init network
             Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
+            m_internetAccessTimer.setObjectName("Application::m_internetAccessTimer");
             this->m_cookieManager.setParent(this->m_accessManager);
             this->m_accessManager->setCookieJar(&this->m_cookieManager);
-            connect(this->m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::ps_networkAccessibleChanged);
+            connect(this->m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::networkAccessibleChanged, Qt::QueuedConnection);
+            connect(&this->m_internetAccessTimer, &QTimer::timeout, this, [this] { this->checkInternetAccessible(true); });
             CLogMessage::preformatted(CNetworkUtils::createNetworkReport(this->m_accessManager));
+            this->checkInternetAccessible();
 
             // global setup
             sApp = this;
             this->m_setupReader.reset(new CSetupReader(this));
-            connect(this->m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::ps_setupHandlingCompleted);
+            connect(this->m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingIsCompleted);
             connect(this->m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable);
 
             this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions()); // add options from reader
 
             // startup done
-            connect(this, &CApplication::startUpCompleted, this, &CApplication::ps_startupCompleted);
+            connect(this, &CApplication::startUpCompleted, this, &CApplication::startupCompleted);
 
             // notify when app goes down
             connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
@@ -336,11 +339,11 @@ namespace BlackCore
             {
                 QTimer::singleShot(10 * 1000, [ = ]
                 {
-                #ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
                     CRASHPAD_SIMULATE_CRASH();
-                #else
+#else
                     CLogMessage(this).warning("This compiler or platform does not support crashpad. Cannot simulate crash dump!");
-                #endif
+#endif
                 });
             }
 
@@ -494,6 +497,40 @@ namespace BlackCore
         return false;
     }
 
+    void CApplication::checkInternetAccessible(bool logWarning)
+    {
+        if (this->isShuttingDown()) { return; }
+
+        bool access = false;
+        if (this->isNetworkAccessible())
+        {
+            QString message1;
+            static const QString testHost1("www.google.com"); // what else?
+            access = CNetworkUtils::canConnect(testHost1, 443, message1);
+            if (!access)
+            {
+                QString message2;
+                static const QString testHost2("www.microsoft.com"); // secondary test
+                access = CNetworkUtils::canConnect(testHost2, 80, message2);
+                if (!access && logWarning) { CLogMessage(this).warning("Internet access problems: %1 based on testing '%2'") << message1 << testHost1; }
+            }
+        }
+        else
+        {
+            if (logWarning) { CLogMessage(this).warning("No network access"); }
+        }
+
+        if (m_internetAccessible != access)
+        {
+            m_internetAccessible = access;
+            emit this->internetAccessibleChanged(access);
+        }
+
+        constexpr int checkAgainSuccess = 60 * 1000;
+        constexpr int checkAgainFailure = 30 * 1000;
+        m_internetAccessTimer.start(access ? checkAgainSuccess : checkAgainFailure);
+    }
+
     void CApplication::setSignalStartupAutomatically(bool enabled)
     {
         this->m_signalStartup = enabled;
@@ -630,8 +667,13 @@ namespace BlackCore
         const QNetworkAccessManager::NetworkAccessibility a = this->m_accessManager->networkAccessible();
         if (a == QNetworkAccessManager::Accessible) { return true; }
 
-        // currently I also accept unknown
+        // currently I also accept unknown because of that issue with Network Manager
         return a == QNetworkAccessManager::UnknownAccessibility;
+    }
+
+    bool CApplication::isInternetAccessible() const
+    {
+        return this->isNetworkAccessible() && m_internetAccessible;
     }
 
     bool CApplication::hasSetupReader() const
@@ -855,7 +897,7 @@ namespace BlackCore
         this->m_fileLogger->close();
     }
 
-    void CApplication::ps_setupHandlingCompleted(bool available)
+    void CApplication::setupHandlingIsCompleted(bool available)
     {
         if (available)
         {
@@ -872,12 +914,12 @@ namespace BlackCore
         }
     }
 
-    void CApplication::ps_startupCompleted()
+    void CApplication::startupCompleted()
     {
         // void
     }
 
-    void CApplication::ps_networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible)
+    void CApplication::networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible)
     {
         switch (accessible)
         {
@@ -892,6 +934,7 @@ namespace BlackCore
             CLogMessage(this).warning("Network accessibility unknown");
             break;
         }
+        this->checkInternetAccessible();
     }
 
     CStatusMessageList CApplication::asyncWebAndContextStart()

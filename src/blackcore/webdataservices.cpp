@@ -928,7 +928,14 @@ namespace BlackCore
         }
 
         // and trigger read
-        QTimer::singleShot(0, m_dbInfoDataReader, [this]() { this->m_dbInfoDataReader->read(); });
+        if (sApp->isInternetAccessible())
+        {
+            QTimer::singleShot(0, m_dbInfoDataReader, [this]() { this->m_dbInfoDataReader->read(); });
+        }
+        else
+        {
+            CLogMessage(this).warning("No network/internet access, skipping read of info objects");
+        }
     }
 
     void CWebDataServices::initSharedInfoObjectReaderAndTriggerRead()
@@ -956,7 +963,14 @@ namespace BlackCore
         }
 
         // and trigger read
-        QTimer::singleShot(0, m_sharedInfoDataReader, [this]() { this->m_sharedInfoDataReader->read(); });
+        if (sApp->isInternetAccessible())
+        {
+            QTimer::singleShot(0, m_sharedInfoDataReader, [this]() { this->m_sharedInfoDataReader->read(); });
+        }
+        else
+        {
+            CLogMessage(this).warning("No network/internet access, skipping read of shared data");
+        }
     }
 
     CDatabaseReader *CWebDataServices::getDbReader(CEntityFlags::Entity entity) const

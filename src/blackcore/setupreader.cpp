@@ -208,9 +208,9 @@ namespace BlackCore
     CStatusMessageList CSetupReader::triggerReadSetup()
     {
         if (this->m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
-        if (!sApp->isNetworkAccessible())
+        if (!sApp->isInternetAccessible())
         {
-            const CStatusMessage m(this, CStatusMessage::SeverityInfo, "No network, will try to recover");
+            const CStatusMessage m(this, CStatusMessage::SeverityInfo, "No network/internet, will try to recover");
             CStatusMessageList msgs(m);
             msgs.push_back(this->manageSetupAvailability(false, false));
             this->setLastSetupReadErrorMessages(msgs);

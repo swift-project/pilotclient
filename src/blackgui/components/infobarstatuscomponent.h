@@ -25,14 +25,12 @@ class QPoint;
 class QWidget;
 
 namespace Ui { class CInfoBarStatusComponent; }
-
 namespace BlackGui
 {
     namespace Components
     {
         //! Info bar displaying status (Network, Simulator, DBus)
-        class BLACKGUI_EXPORT CInfoBarStatusComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CInfoBarStatusComponent : public QFrame
         {
             Q_OBJECT
 
@@ -41,7 +39,7 @@ namespace BlackGui
             explicit CInfoBarStatusComponent(QWidget *parent = nullptr);
 
             //!Destructor
-            ~CInfoBarStatusComponent();
+            virtual ~CInfoBarStatusComponent();
 
             //! Init the LEDs
             void initLeds();
@@ -54,27 +52,29 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-            BlackCore::CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CInfoBarStatusComponent::ps_onPttChanged };
+            BlackCore::CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CInfoBarStatusComponent::onPttChanged };
 
-        private slots:
             //! Simulator connection has been changed
-            void ps_onSimulatorStatusChanged(int status);
+            void onSimulatorStatusChanged(int status);
 
             //! Network connection has been changed
-            void ps_onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Context menu requested
-            void ps_customAudioContextMenuRequested(const QPoint &position);
+            void onCustomAudioContextMenuRequested(const QPoint &position);
 
             //! Mute changed
-            void ps_onMuteChanged(bool muted);
+            void onMuteChanged(bool muted);
 
             //! Mapper is ready
-            void ps_onMapperReady();
+            void onMapperReady();
 
             //! Ptt button changed
-            void ps_onPttChanged(bool enabled);
+            void onPttChanged(bool enabled);
+
+            //! Internet accessible?
+            void onInternetAccessibleChanged(bool access);
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

@@ -68,9 +68,9 @@ namespace BlackCore
         return delta <= timeLastMs;
     }
 
-    bool CThreadedReader::isNetworkAccessible(const QString &logWarningMessage) const
+    bool CThreadedReader::isInternetAccessible(const QString &logWarningMessage) const
     {
-        const bool a = sApp->isNetworkAccessible();
+        const bool a = sApp->isInternetAccessible();
         if (!a && !logWarningMessage.isEmpty())
         {
             CLogMessage(this).warning(logWarningMessage);
@@ -148,6 +148,7 @@ namespace BlackCore
     {
         if (!m_unitTest && (!sApp || !sApp->hasWebDataServices())) { return false; }
         if (!isEnabled()) { return false; }
+        if (isAbandoned()) { return false; }
         return true;
     }
 

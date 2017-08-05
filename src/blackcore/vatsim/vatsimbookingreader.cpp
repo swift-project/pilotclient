@@ -64,7 +64,7 @@ namespace BlackCore
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
-            if (!this->isNetworkAccessible("No network, cannot read VATSIM bookings")) { return; }
+            if (!this->isInternetAccessible("No network/internet access, cannot read VATSIM bookings")) { return; }
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
             const QUrl url(sApp->getGlobalSetup().getVatsimBookingsUrl());

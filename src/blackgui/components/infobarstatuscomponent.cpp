@@ -46,21 +46,22 @@ namespace BlackGui
             this->initLeds();
 
             ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::ps_customAudioContextMenuRequested);
+            connect(ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::onCustomAudioContextMenuRequested);
 
             if (sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::ps_onSimulatorStatusChanged);
-                connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CInfoBarStatusComponent::ps_onMapperReady);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::onSimulatorStatusChanged);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CInfoBarStatusComponent::onMapperReady);
+                connect(sGui, &CGuiApplication::internetAccessibleChanged, this, &CInfoBarStatusComponent::onInternetAccessibleChanged);
 
                 // initial values
-                this->ps_onMapperReady();
-                this->ps_onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
+                this->onMapperReady();
+                this->onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
             }
 
             if (sGui->getIContextNetwork())
             {
-                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::ps_onNetworkConnectionChanged);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::onNetworkConnectionChanged);
             }
 
             if (sGui->getIContextApplication())
@@ -71,7 +72,7 @@ namespace BlackGui
             if (sGui->getIContextAudio())
             {
                 ui->led_Audio->setOn(!sGui->getIContextAudio()->isMuted());
-                connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::ps_onMuteChanged);
+                connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::onMuteChanged);
             }
         }
 
@@ -89,6 +90,7 @@ namespace BlackGui
             shape = CLedWidget::Rounded;
             ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Ptt", "Silence", 18);
             ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "On", "Muted", 18);
+            this->onInternetAccessibleChanged(sGui->isInternetAccessible());
         }
 
         void CInfoBarStatusComponent::setDBusStatus(bool dbus)
@@ -101,7 +103,7 @@ namespace BlackGui
             ui->led_DBus->setOnToolTip(tooltip);
         }
 
-        void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(int status)
+        void CInfoBarStatusComponent::onSimulatorStatusChanged(int status)
         {
             ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
             if (simStatus.testFlag(ISimulator::Connected))
@@ -111,7 +113,6 @@ namespace BlackGui
                     sGui->getIContextSimulator()->getSimulatorPluginInfo().getDescription() + ": " +
                     ISimulator::statusToString(simStatus)
                 );
-
 
                 if (simStatus.testFlag(ISimulator::Paused))
                 {
@@ -136,10 +137,10 @@ namespace BlackGui
             }
 
             // simulator status has impact on model set available
-            this->ps_onMapperReady();
+            this->onMapperReady();
         }
 
-        void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CInfoBarStatusComponent::onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
 
@@ -164,11 +165,11 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatusComponent::ps_customAudioContextMenuRequested(const QPoint &position)
+        void CInfoBarStatusComponent::onCustomAudioContextMenuRequested(const QPoint &position)
         {
-            QWidget *sender = qobject_cast<QWidget *>(QWidget::sender());
-            Q_ASSERT(sender);
-            QPoint globalPosition = sender->mapToGlobal(position);
+            const QWidget *sender = qobject_cast<QWidget *>(QWidget::sender());
+            Q_ASSERT_X(sender, Q_FUNC_INFO, "Missing sender");
+            const QPoint globalPosition = sender->mapToGlobal(position);
 
             QMenu menuAudio(this);
             menuAudio.addAction("Toogle mute");
@@ -178,7 +179,7 @@ namespace BlackGui
                 menuAudio.addAction("Mixer");
             }
 
-            QAction *selectedItem = menuAudio.exec(globalPosition);
+            const QAction *selectedItem = menuAudio.exec(globalPosition);
             if (selectedItem)
             {
                 // http://forum.technical-assistance.co.uk/sndvol32exe-command-line-parameters-vt1348.html
@@ -194,12 +195,12 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatusComponent::ps_onMuteChanged(bool muted)
+        void CInfoBarStatusComponent::onMuteChanged(bool muted)
         {
             ui->led_Audio->setOn(!muted);
         }
 
-        void CInfoBarStatusComponent::ps_onMapperReady()
+        void CInfoBarStatusComponent::onMapperReady()
         {
             if (!sGui || !sGui->getIContextSimulator())
             {
@@ -212,14 +213,28 @@ namespace BlackGui
             ui->led_MapperReady->setOn(on);
             if (on)
             {
-                QString m = QString("Mapper with %1 models").arg(models);
+                const QString m = QString("Mapper with %1 models").arg(models);
                 ui->led_MapperReady->setToolTip(m);
             }
         }
 
-        void CInfoBarStatusComponent::ps_onPttChanged(bool enabled)
+        void CInfoBarStatusComponent::onPttChanged(bool enabled)
         {
             ui->led_Ptt->setOn(enabled);
+        }
+
+        void CInfoBarStatusComponent::onInternetAccessibleChanged(bool access)
+        {
+            if (access)
+            {
+                ui->led_Network->setOffColor(CLedWidget::Black);
+                ui->led_Network->setOffToolTip("Network disconnected");
+            }
+            else
+            {
+                ui->led_Network->setOffColor(CLedWidget::Red);
+                ui->led_Network->setOffToolTip("No network/internet access");
+            }
         }
     } // namespace
 } // namespace
