@@ -39,10 +39,12 @@ namespace BlackSimPlugin
             connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
-            connect(ui->comp_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorSwiftMonitorDialog::changeSituation);
+
+            connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorSwiftMonitorDialog::changeSituation);
+            connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CSimulatorSwiftMonitorDialog::changeParts);
 
             this->setSimulatorUiValues();
-            ui->comp_Situation->setSituation(m_simulator->getOwnAircraftSituation());
+            ui->editor_Situation->setSituation(m_simulator->getOwnAircraftSituation());
         }
 
         CSimulatorSwiftMonitorDialog::~CSimulatorSwiftMonitorDialog()

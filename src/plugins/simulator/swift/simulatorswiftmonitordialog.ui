@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>580</width>
-    <height>402</height>
+    <width>718</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,79 +36,114 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tb_Parts">
+      <attribute name="title">
+       <string>Parts</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Parts">
+       <item>
+        <widget class="QGroupBox" name="gb_Parts">
+         <property name="title">
+          <string>Parts</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_GroupBoxParts">
+          <item>
+           <widget class="BlackGui::Editors::CAircraftPartsForm" name="editor_AircraftParts">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>125</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tb_Simulator">
       <attribute name="title">
        <string>Simulator</string>
       </attribute>
-      <layout class="QFormLayout" name="formLayout">
-       <item row="9" column="0">
-        <widget class="QLabel" name="lbl_Paused">
-         <property name="text">
-          <string>Paused:</string>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="gb_General">
+         <property name="title">
+          <string>General</string>
          </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QCheckBox" name="cb_Paused">
-         <property name="text">
-          <string>simulator paused?</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="lbl_Connected">
-         <property name="text">
-          <string>Connected:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QCheckBox" name="cb_Connected">
-         <property name="text">
-          <string>simulator connected?</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="lbl_Simulating">
-         <property name="text">
-          <string>Simulating:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QCheckBox" name="cb_Simulating">
-         <property name="text">
-          <string>simulator simulating?</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="lbl_SimulatorPlugin">
-         <property name="text">
-          <string>Simulator plugin:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="lbl_Simulator">
-         <property name="text">
-          <string>Simulator:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="le_SimulatorPlugin">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QLineEdit" name="le_Simulator">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
+         <layout class="QFormLayout" name="fl_General">
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_SimulatorPlugin">
+            <property name="text">
+             <string>Simulator plugin:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="le_SimulatorPlugin">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_Simulator">
+            <property name="text">
+             <string>Simulator:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_Simulator">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbl_Connected">
+            <property name="text">
+             <string>Connected:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbl_Simulating">
+            <property name="text">
+             <string>Simulating:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="lbl_Paused">
+            <property name="text">
+             <string>Paused:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="cb_Connected">
+            <property name="text">
+             <string>simulator connected?</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="cb_Simulating">
+            <property name="text">
+             <string>simulator simulating?</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="cb_Paused">
+            <property name="text">
+             <string>simulator paused?</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -119,7 +154,16 @@
       </attribute>
       <layout class="QVBoxLayout" name="vl_LogInformation">
        <item>
-        <widget class="BlackGui::Components::CLogComponent" name="comp_LogComponent"/>
+        <widget class="QGroupBox" name="gb_LogMessages">
+         <property name="title">
+          <string>Simulator API calls</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_GroupBoxLogMessages">
+          <item>
+           <widget class="BlackGui::Components::CLogComponent" name="comp_LogComponent"/>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -129,7 +173,16 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="BlackGui::Components::CSettingsSwiftPlugin" name="comp_Settings"/>
+        <widget class="QGroupBox" name="gb_Settings">
+         <property name="title">
+          <string>Simulator settings</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_GroupBoxSettings">
+          <item>
+           <widget class="BlackGui::Components::CSettingsSwiftPlugin" name="comp_Settings"/>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -177,6 +230,12 @@
    <class>BlackGui::Editors::CSituationForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/situationform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CAircraftPartsForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/aircraftpartsform.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
