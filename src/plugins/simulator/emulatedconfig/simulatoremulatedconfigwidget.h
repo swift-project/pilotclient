@@ -9,33 +9,33 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SWIFT_SWIFTCONFIGWIDGET_H
-#define BLACKSIMPLUGIN_SWIFT_SWIFTCONFIGWIDGET_H
+#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
+#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
 
 #include <blackgui/pluginconfigwindow.h>
 #include <QScopedPointer>
 
-namespace Ui { class CSwiftConfigWidget; }
+namespace Ui { class CSimulatorEmulatedConfigWidget; }
 namespace BlackSimPlugin
 {
-    namespace Swift
+    namespace Emulated
     {
         /**
-         * Configuration window for CSimulatorSwiftConfig
+         * Configuration window for CSimulatorEmulatedConfig
          */
-        class Q_DECL_EXPORT CSwiftConfigWidget : public BlackGui::CPluginConfigWindow
+        class Q_DECL_EXPORT CSimulatorEmulatedConfigWidget : public BlackGui::CPluginConfigWindow
         {
             Q_OBJECT
 
         public:
             //! Ctor
-            explicit CSwiftConfigWidget(QWidget *parent = nullptr);
+            explicit CSimulatorEmulatedConfigWidget(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CSwiftConfigWidget();
+            virtual ~CSimulatorEmulatedConfigWidget();
 
         private:
-            QScopedPointer <Ui::CSwiftConfigWidget> ui;
+            QScopedPointer <Ui::CSimulatorEmulatedConfigWidget> ui;
         };
     } // ns
 } // ns

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CSimulatorSwiftMonitorDialog</class>
- <widget class="QDialog" name="CSimulatorSwiftMonitorDialog">
+ <class>CSimulatorEmulatedMonitorDialog</class>
+ <widget class="QDialog" name="CSimulatorEmulatedMonitorDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>swift driver monitor</string>
+   <string>Emulated simulator monitor</string>
   </property>
   <layout class="QVBoxLayout" name="vl_Settings">
    <item>
@@ -244,7 +244,7 @@
   <connection>
    <sender>bb_SwiftMonitorDialog</sender>
    <signal>accepted()</signal>
-   <receiver>CSimulatorSwiftMonitorDialog</receiver>
+   <receiver>CSimulatorEmulatedMonitorDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -260,7 +260,7 @@
   <connection>
    <sender>bb_SwiftMonitorDialog</sender>
    <signal>rejected()</signal>
-   <receiver>CSimulatorSwiftMonitorDialog</receiver>
+   <receiver>CSimulatorEmulatedMonitorDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

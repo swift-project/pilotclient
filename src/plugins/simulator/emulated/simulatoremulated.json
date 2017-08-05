@@ -1,0 +1,7 @@
+{
+    "identifier" : "org.swift-project.plugins.simulator.emulated",
+    "name" : "Emulated simulator",
+    "simulator" : "emulated",
+    "description" : "Emulated simulator driver",
+    "config" : "org.swift-project.plugins.simulator.emulated.config"
+}

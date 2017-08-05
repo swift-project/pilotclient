@@ -9,25 +9,25 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SWIFT_SIMULATORSWIFTMONITORDIALOG_H
-#define BLACKSIMPLUGIN_SWIFT_SIMULATORSWIFTMONITORDIALOG_H
+#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
+#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 
 #include <QDialog>
 #include <QScopedPointer>
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logcategorylist.h"
 
-namespace Ui { class CSimulatorSwiftMonitorDialog; }
+namespace Ui { class CSimulatorEmulatedMonitorDialog; }
 namespace BlackSimPlugin
 {
-    namespace Swift
+    namespace Emulated
     {
-        class CSimulatorSwift;
+        class CSimulatorEmulated;
 
         /**
          * Monitor widget for the pseudo driver
          */
-        class CSimulatorSwiftMonitorDialog : public QDialog
+        class CSimulatorEmulatedMonitorDialog : public QDialog
         {
             Q_OBJECT
 
@@ -36,10 +36,10 @@ namespace BlackSimPlugin
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Ctor
-            explicit CSimulatorSwiftMonitorDialog(CSimulatorSwift *simulator, QWidget *parent = nullptr);
+            explicit CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CSimulatorSwiftMonitorDialog();
+            virtual ~CSimulatorEmulatedMonitorDialog();
 
             //! \copydoc BlackGui::Components::CLogComponent::appendStatusMessageToList
             void appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage);
@@ -63,8 +63,8 @@ namespace BlackSimPlugin
             //! UI values
             void setSimulatorUiValues();
 
-            QScopedPointer<Ui::CSimulatorSwiftMonitorDialog> ui;
-            CSimulatorSwift *m_simulator = nullptr;
+            QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
+            CSimulatorEmulated *m_simulator = nullptr;
         };
     } // ns
 } // ns

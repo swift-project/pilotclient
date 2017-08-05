@@ -50,9 +50,9 @@ namespace BlackMisc
             return CSimulatorInfo(getSimulator());
         }
 
-        bool CSimulatorPluginInfo::isSwiftPlugin() const
+        bool CSimulatorPluginInfo::isEmulatedPlugin() const
         {
-            return this->getIdentifier() == swiftPluginIndentifier();
+            return this->getIdentifier() == emulatedPluginIndentifier();
         }
 
         QString CSimulatorPluginInfo::convertToQString(bool i18n) const
@@ -85,9 +85,9 @@ namespace BlackMisc
             return s;
         }
 
-        const QString &CSimulatorPluginInfo::swiftPluginIndentifier()
+        const QString &CSimulatorPluginInfo::emulatedPluginIndentifier()
         {
-            static const QString s("org.swift-project.plugins.simulator.swift");
+            static const QString s("org.swift-project.plugins.simulator.emulated");
             return s;
         }
 
@@ -99,7 +99,7 @@ namespace BlackMisc
                 p3dPluginIndentifier(),
                 xplanePluginIndentifier(),
                 fs9PluginIndentifier(),
-                swiftPluginIndentifier()
+                emulatedPluginIndentifier()
             });
             return identifiers;
         }

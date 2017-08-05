@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorswift.h"
+#include "simulatoremulated.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -28,9 +28,9 @@ using namespace BlackCore::Context;
 
 namespace BlackSimPlugin
 {
-    namespace Swift
+    namespace Emulated
     {
-        CSimulatorSwift::CSimulatorSwift(const CSimulatorPluginInfo &info,
+        CSimulatorEmulated::CSimulatorEmulated(const CSimulatorPluginInfo &info,
                                          IOwnAircraftProvider *ownAircraftProvider,
                                          IRemoteAircraftProvider *remoteAircraftProvider,
                                          IWeatherGridProvider *weatherGridProvider,
@@ -39,24 +39,24 @@ namespace BlackSimPlugin
         {
             Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
 
-            CSimulatorSwift::registerHelp();
-            m_monitorWidget.reset(new CSimulatorSwiftMonitorDialog(this, sGui->mainApplicationWindow()));
-            connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorSwift::closeMonitor);
+            CSimulatorEmulated::registerHelp();
+            m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWindow()));
+            connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
             this->onSettingsChanged();
         }
 
-        CSimulatorInfo CSimulatorSwift::getSimulatorInfo() const
+        CSimulatorInfo CSimulatorEmulated::getSimulatorInfo() const
         {
             const CSwiftPluginSettings s = m_settings.get();
             return s.getEmulatedSimulator();
         }
 
-        bool CSimulatorSwift::isTimeSynchronized() const
+        bool CSimulatorEmulated::isTimeSynchronized() const
         {
             return m_timeSyncronized;
         }
 
-        bool CSimulatorSwift::connectTo()
+        bool CSimulatorEmulated::connectTo()
         {
             QTimer::singleShot(1000, this, [ = ]
             {
@@ -68,38 +68,38 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorSwift::disconnectFrom()
+        bool CSimulatorEmulated::disconnectFrom()
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO);
             m_renderedAircraft.clear();
             return true;
         }
 
-        bool CSimulatorSwift::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        bool CSimulatorEmulated::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, remoteAircraft.toQString());
             return CSimulatorCommon::logicallyAddRemoteAircraft(remoteAircraft);
         }
 
-        bool CSimulatorSwift::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
+        bool CSimulatorEmulated::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, callsign.toQString());
             return CSimulatorCommon::logicallyRemoveRemoteAircraft(callsign);
         }
 
-        int CSimulatorSwift::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
+        int CSimulatorEmulated::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, callsigns.toQString());
             return CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(callsigns);
         }
 
-        bool CSimulatorSwift::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
+        bool CSimulatorEmulated::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, aircraft.toQString());
             return true;
         }
 
-        bool CSimulatorSwift::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
+        bool CSimulatorEmulated::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, aircraft.toQString());
             const int c = m_renderedAircraft.setEnabled(aircraft.getCallsign(), aircraft.isEnabled(), true);
@@ -107,23 +107,23 @@ namespace BlackSimPlugin
             return c > 0;
         }
 
-        bool CSimulatorSwift::updateOwnSimulatorCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        bool CSimulatorEmulated::updateOwnSimulatorCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, aircraft.toQString(), originator.toQString());
             return true;
         }
 
-        void CSimulatorSwift::displayStatusMessage(const CStatusMessage &message) const
+        void CSimulatorEmulated::displayStatusMessage(const CStatusMessage &message) const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, message.toQString());
         }
 
-        void CSimulatorSwift::displayTextMessage(const CTextMessage &message) const
+        void CSimulatorEmulated::displayTextMessage(const CTextMessage &message) const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, message.toQString());
         }
 
-        bool CSimulatorSwift::setTimeSynchronization(bool enable, const CTime &offset)
+        bool CSimulatorEmulated::setTimeSynchronization(bool enable, const CTime &offset)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, boolToTrueFalse(enable), offset.toQString());
             m_timeSyncronized = enable;
@@ -131,45 +131,45 @@ namespace BlackSimPlugin
             return enable;
         }
 
-        CTime CSimulatorSwift::getTimeSynchronizationOffset() const
+        CTime CSimulatorEmulated::getTimeSynchronizationOffset() const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO);
             return m_offsetTime;
         }
 
-        bool CSimulatorSwift::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
+        bool CSimulatorEmulated::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, callsign.toQString());
             return m_renderedAircraft.containsCallsign(callsign);
         }
 
-        CCallsignSet CSimulatorSwift::physicallyRenderedAircraft() const
+        CCallsignSet CSimulatorEmulated::physicallyRenderedAircraft() const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO);
             return m_renderedAircraft.getCallsigns();
         }
 
-        void CSimulatorSwift::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
+        void CSimulatorEmulated::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, aircraftToHighlight.toQString(), boolToTrueFalse(enableHighlight), displayTime.toQString());
             CSimulatorCommon::highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
         }
 
-        bool CSimulatorSwift::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
+        bool CSimulatorEmulated::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, commandLine, originator.toQString());
             return CSimulatorCommon::parseCommandLine(commandLine, originator);
         }
 
-        void CSimulatorSwift::registerHelp()
+        void CSimulatorEmulated::registerHelp()
         {
-            if (BlackMisc::CSimpleCommandParser::registered("BlackSimPlugin::Swift::CSimulatorSwift")) { return; }
+            if (BlackMisc::CSimpleCommandParser::registered("BlackSimPlugin::Swift::CSimulatorEmulated")) { return; }
             BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
             BlackMisc::CSimpleCommandParser::registerCommand({".drv show", "show swift driver window"});
             BlackMisc::CSimpleCommandParser::registerCommand({".drv hide", "hide swift driver window"});
         }
 
-        void CSimulatorSwift::setCombinedStatus(bool connected, bool simulating, bool paused)
+        void CSimulatorEmulated::setCombinedStatus(bool connected, bool simulating, bool paused)
         {
             m_connected = connected;
             m_simulating = simulating;
@@ -177,25 +177,25 @@ namespace BlackSimPlugin
             this->emitSimulatorCombinedStatus();
         }
 
-        bool CSimulatorSwift::isConnected() const
+        bool CSimulatorEmulated::isConnected() const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO);
             return m_connected;
         }
 
-        bool CSimulatorSwift::isPaused() const
+        bool CSimulatorEmulated::isPaused() const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO);
             return m_paused;
         }
 
-        bool CSimulatorSwift::isSimulating() const
+        bool CSimulatorEmulated::isSimulating() const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO);
             return m_simulating;
         }
 
-        bool CSimulatorSwift::physicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        bool CSimulatorEmulated::physicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, remoteAircraft.toQString());
             CSimulatedAircraft aircraft(remoteAircraft);
@@ -205,26 +205,26 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorSwift::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
+        bool CSimulatorEmulated::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, callsign.toQString());
             const int c = m_renderedAircraft.removeByCallsign(callsign);
             return c > 0;
         }
 
-        bool CSimulatorSwift::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
+        bool CSimulatorEmulated::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, CInterpolatorMulti::modeToString(mode), callsign.toQString());
             return false;
         }
 
-        int CSimulatorSwift::physicallyRemoveAllRemoteAircraft()
+        int CSimulatorEmulated::physicallyRemoveAllRemoteAircraft()
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO);
             return CSimulatorCommon::physicallyRemoveAllRemoteAircraft();
         }
 
-        bool CSimulatorSwift::parseDetails(const CSimpleCommandParser &parser)
+        bool CSimulatorEmulated::parseDetails(const CSimpleCommandParser &parser)
         {
             if (m_monitorWidget && parser.isKnownCommand())
             {
@@ -234,12 +234,12 @@ namespace BlackSimPlugin
             return false;
         }
 
-        bool CSimulatorSwift::canLog() const
+        bool CSimulatorEmulated::canLog() const
         {
             return sApp && !sApp->isShuttingDown() && m_log && m_monitorWidget;
         }
 
-        void CSimulatorSwift::closeMonitor()
+        void CSimulatorEmulated::closeMonitor()
         {
             if (m_monitorWidget)
             {
@@ -247,7 +247,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorSwift::setOwnAircraftPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude)
+        void CSimulatorEmulated::setOwnAircraftPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude)
         {
             const CCoordinateGeodetic coordinate(
                 CLatitude::fromWgs84(wgsLatitude),
@@ -261,7 +261,7 @@ namespace BlackSimPlugin
             this->updateOwnSituation(s);
         }
 
-        void CSimulatorSwift::onSettingsChanged()
+        void CSimulatorEmulated::onSettingsChanged()
         {
             const CSwiftPluginSettings settings(m_settings.get());
             m_log = settings.isLoggingFunctionCalls();
@@ -282,11 +282,11 @@ namespace BlackSimPlugin
             this->updateOwnModel(settings.getOwnModel());
         }
 
-        CSimulatorSwiftListener::CSimulatorSwiftListener(const CSimulatorPluginInfo &info)
+        CSimulatorEmulatedListener::CSimulatorEmulatedListener(const CSimulatorPluginInfo &info)
             : ISimulatorListener(info)
         { }
 
-        void CSimulatorSwiftListener::startImpl()
+        void CSimulatorEmulatedListener::startImpl()
         {
             if (this->isShuttingDown()) { return; }
             QTimer::singleShot(2000, this, [ = ]
@@ -296,7 +296,7 @@ namespace BlackSimPlugin
             });
         }
 
-        void CSimulatorSwiftListener::stopImpl()
+        void CSimulatorEmulatedListener::stopImpl()
         { }
     } // ns
 } // ns

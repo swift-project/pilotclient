@@ -65,6 +65,5 @@ namespace BlackMisc
             if (sim.xplane()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
             return sims;
         }
-
     } // namespace
 } // namespace

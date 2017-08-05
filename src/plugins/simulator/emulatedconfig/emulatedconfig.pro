@@ -1,10 +1,9 @@
 load(common_pre)
 
-QT       += core dbus gui widgets network xml
+QT       += core widgets dbus network
 
-TARGET = simulatorswift
+TARGET = simulatoremulatedconfig
 TEMPLATE = lib
-
 CONFIG += plugin shared
 CONFIG += blackmisc blackcore blackgui
 
@@ -13,9 +12,9 @@ INCLUDEPATH += . $$SourceRoot/src
 
 SOURCES += *.cpp
 HEADERS += *.h
-FORMS += *.ui
-DISTFILES += simulatorswift.json
+FORMS   += *.ui
 
+DISTFILES += simulatoremulatedconfig.json
 DESTDIR = $$DestRoot/bin/plugins/simulator
 
 win32 {

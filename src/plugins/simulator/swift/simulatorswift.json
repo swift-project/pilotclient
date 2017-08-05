@@ -1,7 +1,0 @@
-{
-    "identifier" : "org.swift-project.plugins.simulator.swift",
-    "name" : "swift pseudo simulator",
-    "simulator" : "swift",
-    "description" : "swift testing driver",
-    "config" : "org.swift-project.plugins.simulator.swift.config"
-}

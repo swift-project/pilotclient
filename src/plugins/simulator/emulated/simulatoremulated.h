@@ -9,30 +9,30 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SWIFT_SIMULATORSWIFT_H
-#define BLACKSIMPLUGIN_SWIFT_SIMULATORSWIFT_H
+#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
+#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 
 #include "blackcore/simulatorcommon.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/settings/swiftpluginsettings.h"
 #include "blackmisc/pq/time.h"
-#include "simulatorswiftmonitordialog.h"
+#include "simulatoremulatedmonitordialog.h"
 
 #include <QScopedPointer>
 
 namespace BlackSimPlugin
 {
-    namespace Swift
+    namespace Emulated
     {
         //! swift simulator implementation
-        class CSimulatorSwift : public BlackCore::CSimulatorCommon
+        class CSimulatorEmulated : public BlackCore::CSimulatorCommon
         {
             Q_OBJECT
-            friend class CSimulatorSwiftMonitorDialog; //!< the monitor widget represents the simulator and needs access to internals (i.e. private/protected)
+            friend class CSimulatorEmulatedMonitorDialog; //!< the monitor widget represents the simulator and needs access to internals (i.e. private/protected)
 
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-            CSimulatorSwift(
+            CSimulatorEmulated(
                 const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
@@ -67,8 +67,8 @@ namespace BlackSimPlugin
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
-            //! .drv show   show swift driver window     BlackSimPlugin::Swift::CSimulatorSwift
-            //! .drv hide   hide swift driver window     BlackSimPlugin::Swift::CSimulatorSwift
+            //! .drv show   show swift driver window     BlackSimPlugin::Swift::CSimulatorEmulated
+            //! .drv hide   hide swift driver window     BlackSimPlugin::Swift::CSimulatorEmulated
             //! </pre>
             //! @}
             //! \copydoc BlackCore::ISimulator::parseCommandLine
@@ -117,18 +117,18 @@ namespace BlackSimPlugin
             BlackMisc::PhysicalQuantities::CTime m_offsetTime;
             BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft;
 
-            QScopedPointer<CSimulatorSwiftMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSimulatorSwift::onSettingsChanged };
+            QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSimulatorEmulated::onSettingsChanged };
         };
 
         //! Listener for swift
-        class CSimulatorSwiftListener : public BlackCore::ISimulatorListener
+        class CSimulatorEmulatedListener : public BlackCore::ISimulatorListener
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            CSimulatorSwiftListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+            CSimulatorEmulatedListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         protected:
             //! \copydoc BlackCore::ISimulatorListener::startImpl

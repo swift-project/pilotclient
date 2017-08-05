@@ -7,27 +7,27 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorswiftfactory.h"
-#include "simulatorswift.h"
+#include "simulatoremulatedfactory.h"
+#include "simulatoremulated.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include <QTimer>
 
 namespace BlackSimPlugin
 {
-    namespace Swift
+    namespace Emulated
     {
-        BlackCore::ISimulator *CSimulatorSwiftFactory::create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+        BlackCore::ISimulator *CSimulatorEmulatedFactory::create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider)
         {
             Q_ASSERT(ownAircraftProvider);
-            return new CSimulatorSwift(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, this);
+            return new CSimulatorEmulated(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, this);
         }
 
-        BlackCore::ISimulatorListener *CSimulatorSwiftFactory::createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info)
+        BlackCore::ISimulatorListener *CSimulatorEmulatedFactory::createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info)
         {
-            return new CSimulatorSwiftListener(info);
+            return new CSimulatorEmulatedListener(info);
         }
     } // namespace
 } // namespace

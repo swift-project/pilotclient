@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CSwiftConfigWidget</class>
- <widget class="QWidget" name="CSwiftConfigWidget">
+ <class>CSimulatorEmulatedConfigWidget</class>
+ <widget class="QWidget" name="CSimulatorEmulatedConfigWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>swift pseudo driver</string>
+   <string>emulated simulator driver</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

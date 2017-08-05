@@ -63,7 +63,7 @@ namespace BlackMisc
             BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
 
             //! Is this the pseudo swift driver?
-            bool isSwiftPlugin() const;
+            bool isEmulatedPlugin() const;
 
             //! Description
             const QString &getDescription() const { return m_description; }
@@ -83,8 +83,8 @@ namespace BlackMisc
             //! Plugin identifier (XPlane)
             static const QString &xplanePluginIndentifier();
 
-            //! Plugin identifier (swift pseudo driver)
-            static const QString &swiftPluginIndentifier();
+            //! Plugin identifier (emulated simulator plugin)
+            static const QString &emulatedPluginIndentifier();
 
             //! All valid identifiers
             static const QStringList &allIdentifiers();

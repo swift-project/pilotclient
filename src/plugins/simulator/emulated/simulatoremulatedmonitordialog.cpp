@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorswiftmonitordialog.h"
-#include "simulatorswift.h"
-#include "ui_simulatorswiftmonitordialog.h"
+#include "simulatoremulatedmonitordialog.h"
+#include "simulatoremulated.h"
+#include "ui_simulatoremulatedmonitordialog.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -17,17 +17,17 @@ using namespace BlackGui::Editors;
 
 namespace BlackSimPlugin
 {
-    namespace Swift
+    namespace Emulated
     {
-        const CLogCategoryList &CSimulatorSwiftMonitorDialog::getLogCategories()
+        const CLogCategoryList &CSimulatorEmulatedMonitorDialog::getLogCategories()
         {
             static const BlackMisc::CLogCategoryList cats { CLogCategory::driver(), CLogCategory::plugin() };
             return cats;
         }
 
-        CSimulatorSwiftMonitorDialog::CSimulatorSwiftMonitorDialog(CSimulatorSwift *simulator, QWidget *parent) :
+        CSimulatorEmulatedMonitorDialog::CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent) :
             QDialog(parent),
-            ui(new Ui::CSimulatorSwiftMonitorDialog)
+            ui(new Ui::CSimulatorEmulatedMonitorDialog)
         {
             Q_ASSERT_X(simulator, Q_FUNC_INFO, "Need simulator");
 
@@ -36,31 +36,31 @@ namespace BlackSimPlugin
             ui->tw_SwiftMonitorDialog->setCurrentIndex(0);
             this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-            connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
-            connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
-            connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged);
+            connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
+            connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
+            connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
 
-            connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorSwiftMonitorDialog::changeSituation);
-            connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CSimulatorSwiftMonitorDialog::changeParts);
+            connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorEmulatedMonitorDialog::changeSituation);
+            connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CSimulatorEmulatedMonitorDialog::changeParts);
 
             this->setSimulatorUiValues();
             ui->editor_Situation->setSituation(m_simulator->getOwnAircraftSituation());
         }
 
-        CSimulatorSwiftMonitorDialog::~CSimulatorSwiftMonitorDialog()
+        CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog()
         { }
 
-        void CSimulatorSwiftMonitorDialog::appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage)
+        void CSimulatorEmulatedMonitorDialog::appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage)
         {
             ui->comp_LogComponent->appendStatusMessagesToList(statusMessage);
         }
 
-        void CSimulatorSwiftMonitorDialog::appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages)
+        void CSimulatorEmulatedMonitorDialog::appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages)
         {
             ui->comp_LogComponent->appendStatusMessagesToList(statusMessages);
         }
 
-        void CSimulatorSwiftMonitorDialog::appendFunctionCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
+        void CSimulatorEmulatedMonitorDialog::appendFunctionCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
         {
             static const QString c1("%1 %2");
             static const QString c2("%1 %2 %3");
@@ -86,7 +86,7 @@ namespace BlackSimPlugin
             this->appendStatusMessageToList(msg);
         }
 
-        void CSimulatorSwiftMonitorDialog::onSimulatorValuesChanged()
+        void CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged()
         {
             m_simulator->setCombinedStatus(
                 ui->cb_Connected->isChecked(),
@@ -95,21 +95,21 @@ namespace BlackSimPlugin
             );
         }
 
-        void CSimulatorSwiftMonitorDialog::changeSituation()
+        void CSimulatorEmulatedMonitorDialog::changeSituation()
         {
             if (!m_simulator) { return; }
             const CAircraftSituation s(ui->editor_Situation->getSituation());
             m_simulator->updateOwnSituation(s);
         }
 
-        void CSimulatorSwiftMonitorDialog::changeParts()
+        void CSimulatorEmulatedMonitorDialog::changeParts()
         {
             if (!m_simulator) { return; }
             const CAircraftParts p(ui->editor_AircraftParts->getAircraftPartsFromGui());
             m_simulator->updateOwnParts(p);
         }
 
-        void CSimulatorSwiftMonitorDialog::setSimulatorUiValues()
+        void CSimulatorEmulatedMonitorDialog::setSimulatorUiValues()
         {
             ui->cb_Connected->setChecked(m_simulator->isConnected());
             ui->cb_Paused->setChecked(m_simulator->isPaused());

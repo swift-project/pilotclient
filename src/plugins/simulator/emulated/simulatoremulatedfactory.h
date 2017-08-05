@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_SWIFTFACTORY_H
-#define BLACKSIMPLUGIN_SIMULATOR_SWIFTFACTORY_H
+#ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDFACTORY_H
+#define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDFACTORY_H
 
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -20,15 +20,15 @@
 
 namespace BlackSimPlugin
 {
-    namespace Swift
+    namespace Emulated
     {
-        //! Factory implementation to create CSimulatorSwift instances
-        class CSimulatorSwiftFactory :
+        //! Factory implementation to create CSimulatorEmulated instances
+        class CSimulatorEmulatedFactory :
             public QObject,
             public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
-            Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulatorswift.json")
+            Q_PLUGIN_METADATA(IID "org.swift-project.blackcore.simulatorinterface" FILE "simulatoremulated.json")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
         public:

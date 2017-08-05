@@ -7,21 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorswiftconfig.h"
-#include "swiftconfigwidget.h"
+#include "simulatoremulatedconfig.h"
+#include "simulatoremulatedconfigwidget.h"
 
 namespace BlackSimPlugin
 {
-    namespace Swift
+    namespace Emulated
     {
-        CSimulatorSwiftConfig::CSimulatorSwiftConfig(QObject *parent) : QObject(parent)
+        CSimulatorEmulatedConfig::CSimulatorEmulatedConfig(QObject *parent) : QObject(parent)
         {
             // void
         }
 
-        BlackGui::CPluginConfigWindow *CSimulatorSwiftConfig::createConfigWindow(QWidget *parent)
+        BlackGui::CPluginConfigWindow *CSimulatorEmulatedConfig::createConfigWindow(QWidget *parent)
         {
-            return new CSwiftConfigWidget(parent);
+            return new CSimulatorEmulatedConfigWidget(parent);
         }
     }
 }
