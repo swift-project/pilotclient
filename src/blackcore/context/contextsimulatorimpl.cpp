@@ -44,6 +44,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackCore
 {

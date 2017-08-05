@@ -22,7 +22,7 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"

@@ -14,7 +14,7 @@
 #include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
-#include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 
 #include <QByteArray>
@@ -28,6 +28,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackSample
 {

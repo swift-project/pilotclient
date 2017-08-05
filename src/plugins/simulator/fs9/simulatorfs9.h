@@ -16,7 +16,7 @@
 #include "fs9client.h"
 #include "lobbyclient.h"
 #include "../fscommon/simulatorfscommon.h"
-#include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/simulatedaircraft.h"

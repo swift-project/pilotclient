@@ -44,20 +44,23 @@ namespace BlackMisc
             static QProcess *s_proccess; //!< 0..1 process running
         };
 
-        //! Binary of MCX
-        struct TModelConverterXBinary : public BlackMisc::TSettingTrait<QString>
+        namespace Settings
         {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "mapping/modelconverterxbin"; }
-
-            //! \copydoc BlackMisc::TSettingTrait::isValid
-            static bool isValid(const QString &value)
+            //! Binary of MCX
+            struct TModelConverterXBinary : public BlackMisc::TSettingTrait<QString>
             {
-                if (value.isEmpty()) { return true; }
-                const QFile f(value);
-                return f.exists();
-            }
-        };
+                //! \copydoc BlackMisc::TSettingTrait::key
+                static const char *key() { return "mapping/modelconverterxbin"; }
+
+                //! \copydoc BlackMisc::TSettingTrait::isValid
+                static bool isValid(const QString &value)
+                {
+                    if (value.isEmpty()) { return true; }
+                    const QFile f(value);
+                    return f.exists();
+                }
+            };
+        } // ns
     } // ns
 } // ns
 

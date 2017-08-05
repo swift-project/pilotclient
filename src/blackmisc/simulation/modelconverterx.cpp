@@ -16,6 +16,7 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackMisc
 {

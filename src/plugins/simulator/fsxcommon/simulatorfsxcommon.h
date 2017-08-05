@@ -18,7 +18,7 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/airportlist.h"

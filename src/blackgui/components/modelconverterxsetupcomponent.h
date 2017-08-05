@@ -42,7 +42,7 @@ namespace BlackGui
             void saveSettings();
 
             QScopedPointer<Ui::CModelConverterXSetupComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::TModelConverterXBinary> m_setting { this };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TModelConverterXBinary> m_setting { this };
         };
     } // ns
 } // ns

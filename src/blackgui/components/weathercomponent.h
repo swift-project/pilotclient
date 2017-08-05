@@ -16,7 +16,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackcore/actionbind.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/weather/weatherscenario.h"
 #include "blackmisc/identifiable.h"
 
@@ -77,7 +77,7 @@ namespace BlackGui
             QVector<BlackMisc::Weather::CWeatherScenario> m_weatherScenarios;
             QTimer m_weatherUpdateTimer { this };
             BlackMisc::Geo::CCoordinateGeodetic m_lastOwnAircraftPosition;
-            BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
             BlackCore::CActionBindings m_hotkeyBindings;
             bool m_isWeatherActivated = false;
         };

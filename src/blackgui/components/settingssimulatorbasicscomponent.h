@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 
-#include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include <QFrame>
 #include <QFileDialog>
@@ -58,7 +58,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSettingsSimulatorBasicsComponent> ui;
-            BlackMisc::Simulation::CMultiSimulatorSettings m_settings { this };
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this };
             Qt::CaseSensitivity m_fileCaseSensitivity = BlackMisc::CFileUtils::osFileNameCaseSensitivity();
 
             //! Optimize for small layout
@@ -77,7 +77,7 @@ namespace BlackGui
             void displayModelDirectories(const QStringList &dirs);
 
             //! Current settings
-            BlackMisc::Simulation::CSimulatorSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            BlackMisc::Simulation::Settings::CSimulatorSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
             //! Display simulator`s settings
             void displaySettings(const BlackMisc::Simulation::CSimulatorInfo &simulator);

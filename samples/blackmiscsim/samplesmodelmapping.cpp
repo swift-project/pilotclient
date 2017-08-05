@@ -15,9 +15,9 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/sampleutils.h"
-#include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
@@ -33,6 +33,7 @@ using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Aviation;
 
 namespace BlackSample
@@ -40,12 +41,12 @@ namespace BlackSample
     void CSamplesModelMapping::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
         CVPilotRulesReader vpRulesReader;
-        bool s = vpRulesReader.read(true);
+        const bool s = vpRulesReader.read(true);
         streamOut << "directory: " << CVPilotRulesReader::standardMappingsDirectory() << endl;
         streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << vpRulesReader.getAsModelsFromCache().size() << endl;
 
         // mapper with rule set, handing over ownership
-        QString fsDir = CSampleUtils::selectDirectory(
+        const QString fsDir = CSampleUtils::selectDirectory(
         {
             QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
             QStringLiteral("P:/Temp/SimObjects"),

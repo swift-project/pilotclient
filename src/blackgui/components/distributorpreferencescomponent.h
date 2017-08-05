@@ -14,7 +14,7 @@
 
 #include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
-#include "blackmisc/simulation/modelsettings.h"
+#include "blackmisc/simulation/settings/modelsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 
 #include <QFrame>
@@ -70,7 +70,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDistributorPreferencesComponent> ui;
             BlackGui::COverlayMessagesFrame *m_overlayMessageFrame = nullptr;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackMisc::CSetting<BlackMisc::Simulation::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::ps_preferencesChanged };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::ps_preferencesChanged };
 
             //! Update
             void updateContainerMaybeAsync(const BlackMisc::Simulation::CDistributorList &models, bool sortByOrder = true);

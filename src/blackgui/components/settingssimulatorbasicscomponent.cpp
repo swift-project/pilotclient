@@ -18,6 +18,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackConfig;
 
 namespace BlackGui

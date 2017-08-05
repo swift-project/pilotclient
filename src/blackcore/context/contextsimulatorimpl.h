@@ -31,7 +31,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
-#include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/worker.h"
 
 #include <QObject>
@@ -206,7 +206,7 @@ namespace BlackCore
             BlackCore::CAircraftMatcher m_aircraftMatcher; //!< Model matcher
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
             BlackMisc::CSettingReadOnly<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
             QString m_networkSessionId; //! Network session, if not connected empty
             bool m_initallyAddAircrafts = false;
