@@ -25,7 +25,6 @@ namespace Ui { class CPluginDetailsWindow; }
 
 namespace BlackGui
 {
-
     /*!
      * A window that shows plugin details.
      */
@@ -35,7 +34,7 @@ namespace BlackGui
 
     public:
         //! Ctor
-        explicit CPluginDetailsWindow(QWidget *parent = 0);
+        explicit CPluginDetailsWindow(QWidget *parent = nullptr);
 
         //! Destructor
         virtual ~CPluginDetailsWindow();
@@ -61,4 +60,4 @@ namespace BlackGui
     };
 } // namespace
 
-#endif // BLACKGUI_PLUGINDETAILSWINDOW_H
+#endif // guard
