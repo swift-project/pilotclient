@@ -60,7 +60,7 @@ namespace BlackGui
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this, &CCockpitComComponent::transponderStateIdentEnded);
 
             // init from aircraft
-            CSimulatedAircraft ownAircraft = this->getOwnAircraft();
+            const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
             this->ps_updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
 
             // SELCAL pairs in cockpit
@@ -102,18 +102,18 @@ namespace BlackGui
 
         void CCockpitComComponent::ps_guiChangedCockpitValues()
         {
-            QObject *sender = QObject::sender();
+            const QObject *sender = QObject::sender();
             if (sender == ui->tb_ComPanelCom1Toggle)
             {
-                if (ui->ds_ComPanelCom1Standby->value() == ui->ds_ComPanelCom1Active->value()) return;
-                double f = ui->ds_ComPanelCom1Active->value();
+                if (ui->ds_ComPanelCom1Standby->value() == ui->ds_ComPanelCom1Active->value()) { return; }
+                const double f = ui->ds_ComPanelCom1Active->value();
                 ui->ds_ComPanelCom1Active->setValue(ui->ds_ComPanelCom1Standby->value());
                 ui->ds_ComPanelCom1Standby->setValue(f);
             }
             else if (sender == ui->tb_ComPanelCom2Toggle)
             {
-                if (ui->ds_ComPanelCom2Standby->value() == ui->ds_ComPanelCom2Active->value()) return;
-                double f = ui->ds_ComPanelCom2Active->value();
+                if (ui->ds_ComPanelCom2Standby->value() == ui->ds_ComPanelCom2Active->value()) { return; }
+                const double f = ui->ds_ComPanelCom2Active->value();
                 ui->ds_ComPanelCom2Active->setValue(ui->ds_ComPanelCom2Standby->value());
                 ui->ds_ComPanelCom2Standby->setValue(f);
             }
@@ -141,7 +141,7 @@ namespace BlackGui
             this->updateFrequencyDisplaysFromComSystems(com1, com2);
 
             // update transponder
-            int tc = transponder.getTransponderCode();
+            const int tc = transponder.getTransponderCode();
             if (tc != ui->sbp_ComPanelTransponder->value())
             {
                 ui->sbp_ComPanelTransponder->setValue(tc);
@@ -151,9 +151,9 @@ namespace BlackGui
 
             if (sGui->getIContextNetwork())
             {
-                CAtcStationList selectedStations = sGui->getIContextNetwork()->getSelectedAtcStations();
-                CAtcStation com1Station = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();
-                CAtcStation com2Station = selectedStations.size() > 1 ? selectedStations[1] : CAtcStation();
+                const CAtcStationList selectedStations = sGui->getIContextNetwork()->getSelectedAtcStations();
+                const CAtcStation com1Station = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();
+                const CAtcStation com2Station = selectedStations.size() > 1 ? selectedStations[1] : CAtcStation();
                 if (com1Station.getCallsign().isEmpty())
                 {
                     ui->lbl_ComPanelCom1Active->setToolTip("");
@@ -180,7 +180,7 @@ namespace BlackGui
 
         void CCockpitComComponent::ps_testSelcal()
         {
-            CSelcal selcal = this->getSelcal();
+            const CSelcal selcal = this->getSelcal();
             if (!selcal.isValid())
             {
                 CLogMessage().validationWarning("Invalid SELCAL code");
@@ -208,7 +208,7 @@ namespace BlackGui
 
         void CCockpitComComponent::initLeds()
         {
-            CLedWidget::LedShape shape = CLedWidget::Rounded;
+            const CLedWidget::LedShape shape = CLedWidget::Rounded;
             ui->led_ComPanelCom1->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 connected", "COM1 disconnected", 14);
             ui->led_ComPanelCom2->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 connected", "COM2 disconnected", 14);
         }
@@ -223,7 +223,7 @@ namespace BlackGui
             //
             // Transponder
             //
-            QString transponderCode = QString::number(ui->sbp_ComPanelTransponder->value());
+            const QString transponderCode = QString::number(ui->sbp_ComPanelTransponder->value());
             if (CTransponder::isValidTransponderCode(transponderCode))
             {
                 transponder.setTransponderCode(transponderCode);
@@ -296,8 +296,8 @@ namespace BlackGui
         void CCockpitComComponent::ps_onChangedVoiceRoomStatus(const CVoiceRoomList &selectedVoiceRooms, bool connected)
         {
             Q_ASSERT(selectedVoiceRooms.size() == 2);
-            CVoiceRoom room1 = selectedVoiceRooms[0];
-            CVoiceRoom room2 = selectedVoiceRooms[1];
+            const CVoiceRoom room1 = selectedVoiceRooms[0];
+            const CVoiceRoom room2 = selectedVoiceRooms[1];
             ui->led_ComPanelCom1->setOn(room1.isConnected());
             ui->led_ComPanelCom2->setOn(room2.isConnected());
             Q_UNUSED(connected);

@@ -47,7 +47,7 @@ namespace BlackGui
             explicit CCockpitComComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CCockpitComComponent();
+            virtual ~CCockpitComComponent();
 
         signals:
             //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
@@ -103,7 +103,7 @@ namespace BlackGui
             void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
             QScopedPointer<Ui::CCockpitComComponent> ui;
-       };
+        };
 
     } // namespace
 } // namespace
