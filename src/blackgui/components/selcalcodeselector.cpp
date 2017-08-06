@@ -35,11 +35,8 @@ namespace BlackGui
             ui->cb_SelcalPairs1->setStyleSheet("combobox-popup: 0;");
             ui->cb_SelcalPairs2->setStyleSheet("combobox-popup: 0;");
 
-            bool c = connect(ui->cb_SelcalPairs1, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
-            Q_ASSERT(c);
-            c = connect(ui->cb_SelcalPairs2, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
-            Q_ASSERT(c);
-            Q_UNUSED(c);
+            connect(ui->cb_SelcalPairs1, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CSelcalCodeSelector::selcalIndexChanged);
+            connect(ui->cb_SelcalPairs2, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CSelcalCodeSelector::selcalIndexChanged);
         }
 
         CSelcalCodeSelector::~CSelcalCodeSelector()
@@ -52,7 +49,7 @@ namespace BlackGui
             return selcal;
         }
 
-        BlackMisc::Aviation::CSelcal CSelcalCodeSelector::getSelcal() const
+        CSelcal CSelcalCodeSelector::getSelcal() const
         {
             CSelcal selcal(getSelcalCode());
             return selcal;
@@ -71,11 +68,11 @@ namespace BlackGui
         void CSelcalCodeSelector::setSelcalCode(const QString &selcal)
         {
             if (selcal.length() == 4 && this->getSelcalCode() == selcal) return; // avoid unintended signals
-            QString s = selcal.isEmpty() ? "    " : selcal.toUpper().trimmed();
+            const QString s = selcal.isEmpty() ? "    " : selcal.toUpper().trimmed();
             Q_ASSERT(s.length() == 4);
             if (s.length() != 4) return;
-            QString s1 = s.left(2);
-            QString s2 = s.right(2);
+            const QString s1 = s.left(2);
+            const QString s2 = s.right(2);
             if (BlackMisc::Aviation::CSelcal::codePairs().contains(s1))
             {
                 ui->cb_SelcalPairs1->setCurrentText(s1);
@@ -86,14 +83,14 @@ namespace BlackGui
             }
         }
 
-        void CSelcalCodeSelector::setSelcalCode(const BlackMisc::Aviation::CSelcal &selcal)
+        void CSelcalCodeSelector::setSelcal(const BlackMisc::Aviation::CSelcal &selcal)
         {
             this->setSelcalCode(selcal.getCode());
         }
 
         bool CSelcalCodeSelector::hasValidCode() const
         {
-            QString s = this->getSelcalCode();
+            const QString s = this->getSelcalCode();
             if (s.length() != 4) return false;
             return BlackMisc::Aviation::CSelcal::isValidCode(s);
         }
@@ -105,8 +102,9 @@ namespace BlackGui
             ui->cb_SelcalPairs2->setCurrentIndex(0);
         }
 
-        void CSelcalCodeSelector::ps_selcalIndexChanged()
+        void CSelcalCodeSelector::selcalIndexChanged(int index)
         {
+            Q_UNUSED(index);
             this->setValidityHint();
             emit valueChanged();
         }

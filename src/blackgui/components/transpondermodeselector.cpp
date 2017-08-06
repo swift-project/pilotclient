@@ -46,13 +46,12 @@ namespace BlackGui
 
         const QStringList &CTransponderModeSelector::modes()
         {
-            static QStringList modes;
-            if (modes.isEmpty())
+            static const QStringList modes(
             {
-                modes << CTransponderModeSelector::transponderStateStandby();
-                modes << CTransponderModeSelector::transponderModeC();
-                modes << CTransponderModeSelector::transponderStateIdent();
-            }
+                CTransponderModeSelector::transponderStateStandby(),
+                CTransponderModeSelector::transponderModeC(),
+                CTransponderModeSelector::transponderStateIdent()
+            });
             return modes;
         }
 
@@ -61,13 +60,18 @@ namespace BlackGui
             return this->m_currentMode;
         }
 
+        bool CTransponderModeSelector::isIdentSelected() const
+        {
+            return this->getSelectedTransponderMode() == BlackMisc::Aviation::CTransponder::StateIdent;
+        }
+
         void CTransponderModeSelector::setSelectedTransponderMode(CTransponder::TransponderMode mode)
         {
             if (mode != CTransponder::StateIdent) { this->m_resetMode = mode; }
             if (this->m_currentMode == mode) { return; }
             if (this->m_currentMode == CTransponder::StateIdent) { emit this->transponderStateIdentEnded(); }
             this->m_currentMode = mode;
-            QString m = CTransponder::modeAsString(mode);
+            const QString m = CTransponder::modeAsString(mode);
             QComboBox::setCurrentText(m);
             if (mode == CTransponder::StateIdent)
             {

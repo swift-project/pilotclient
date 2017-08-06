@@ -33,7 +33,6 @@ namespace BlackGui
         {
             Q_OBJECT
 
-
         public:
             //! Constructor
             explicit CTransponderModeSelector(QWidget *parent = nullptr);
@@ -54,12 +53,8 @@ namespace BlackGui
             BlackMisc::Aviation::CTransponder::TransponderMode getSelectedTransponderMode() const;
 
             //! Ident selected
-            bool isIdentSelected() const
-            {
-                return this->getSelectedTransponderMode() == BlackMisc::Aviation::CTransponder::StateIdent;
-            }
+            bool isIdentSelected() const;
 
-        public slots:
             //! reset to last mode (unequal ident)
             void resetTransponderMode();
 
@@ -82,8 +77,7 @@ namespace BlackGui
         private:
             BlackMisc::Aviation::CTransponder::TransponderMode m_currentMode = BlackMisc::Aviation::CTransponder::StateStandby;
             BlackMisc::Aviation::CTransponder::TransponderMode m_resetMode   = BlackMisc::Aviation::CTransponder::StateStandby;
-            QTimer m_resetTimer;
-
+            QTimer m_resetTimer { this };
         };
     } // ns
 } // ns

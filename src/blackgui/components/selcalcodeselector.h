@@ -21,8 +21,8 @@
 #include <QString>
 
 class QWidget;
-namespace Ui { class CSelcalCodeSelector; }
 
+namespace Ui { class CSelcalCodeSelector; }
 namespace BlackGui
 {
     namespace Components
@@ -37,7 +37,7 @@ namespace BlackGui
             explicit CSelcalCodeSelector(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSelcalCodeSelector();
+            virtual ~CSelcalCodeSelector();
 
             //! SELCAL code
             QString getSelcalCode() const;
@@ -52,7 +52,7 @@ namespace BlackGui
             void setSelcalCode(const QString &selcal);
 
             //! Set the SELCAL code
-            void setSelcalCode(const BlackMisc::Aviation::CSelcal &selcal);
+            void setSelcal(const BlackMisc::Aviation::CSelcal &selcal);
 
             //! Valid code?
             bool hasValidCode() const;
@@ -64,12 +64,11 @@ namespace BlackGui
             //! Value has been changed
             void valueChanged();
 
-        private slots:
-            //! SELCAL changed
-            void ps_selcalIndexChanged();
-
         private:
             QScopedPointer<Ui::CSelcalCodeSelector> ui;
+
+            //! SELCAL changed
+            void selcalIndexChanged(int index);
 
             //! Set valid/invalid icon
             void setValidityHint();
