@@ -37,6 +37,7 @@
 #include <QtGlobal>
 
 using namespace BlackGui;
+using namespace BlackGui::Editors;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackMisc;
@@ -55,43 +56,34 @@ namespace BlackGui
             ui(new Ui::CCockpitComComponent)
         {
             ui->setupUi(this);
-            this->initLeds();
-            connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComComponent::transponderModeChanged);
-            connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this, &CCockpitComComponent::transponderStateIdentEnded);
 
             // init from aircraft
             const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
-            this->ps_updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
+            this->updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
 
-            // SELCAL pairs in cockpit
-            ui->frp_ComPanelSelcalBottom->clear();
-            connect(ui->tb_ComPanelSelcalTest, &QPushButton::clicked, this, &CCockpitComComponent::ps_testSelcal);
+            // COM form
+            connect(ui->editor_Com, &CCockpitComForm::testSelcal, this, &CCockpitComComponent::testSelcal);
+            connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CCockpitComComponent::updateOwnCockpitInContext);
+            connect(ui->editor_Com, &CCockpitComForm::selcalChanged, this, &CCockpitComComponent::updateSelcalInContext);
 
-            // COM GUI events
-            connect(ui->tb_ComPanelCom1Toggle, &QPushButton::clicked, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(ui->tb_ComPanelCom2Toggle, &QPushButton::clicked, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(ui->ds_ComPanelCom1Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(ui->ds_ComPanelCom2Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(ui->ds_ComPanelCom1Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(ui->ds_ComPanelCom2Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(ui->frp_ComPanelSelcalBottom, &CSelcalCodeSelector::valueChanged, this, &CCockpitComComponent::ps_guiChangedSelcal);
+            // Relay COM form signals
+            connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this, &CCockpitComComponent::transponderModeChanged);
+            connect(ui->editor_Com, &CCockpitComForm::transponderStateIdentEnded, this, &CCockpitComComponent::transponderStateIdentEnded);
 
             // hook up with changes from own aircraft context
-            this->connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::ps_updateCockpitFromContext);
-            this->connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal, this, &CCockpitComComponent::ps_onChangedSelcal);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::updateCockpitFromContext);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal, this, &CCockpitComComponent::updateSelcalFromContext);
 
             // hook up with audio context
-            this->connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::ps_onChangedVoiceRoomStatus);
+            connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::updateVoiceRoomStatusFromContext);
         }
 
         CCockpitComComponent::~CCockpitComComponent()
         { }
 
-        void CCockpitComComponent::setSelectedTransponderModeStateIdent()
+        void CCockpitComComponent::setTransponderModeStateIdent()
         {
-            ui->cbp_ComPanelTransponderMode->setSelectedTransponderModeStateIdent();
+            ui->editor_Com->setTransponderModeStateIdent();
         }
 
         void CCockpitComComponent::paintEvent(QPaintEvent *event)
@@ -100,34 +92,7 @@ namespace BlackGui
             CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
         }
 
-        void CCockpitComComponent::ps_guiChangedCockpitValues()
-        {
-            const QObject *sender = QObject::sender();
-            if (sender == ui->tb_ComPanelCom1Toggle)
-            {
-                if (ui->ds_ComPanelCom1Standby->value() == ui->ds_ComPanelCom1Active->value()) { return; }
-                const double f = ui->ds_ComPanelCom1Active->value();
-                ui->ds_ComPanelCom1Active->setValue(ui->ds_ComPanelCom1Standby->value());
-                ui->ds_ComPanelCom1Standby->setValue(f);
-            }
-            else if (sender == ui->tb_ComPanelCom2Toggle)
-            {
-                if (ui->ds_ComPanelCom2Standby->value() == ui->ds_ComPanelCom2Active->value()) { return; }
-                const double f = ui->ds_ComPanelCom2Active->value();
-                ui->ds_ComPanelCom2Active->setValue(ui->ds_ComPanelCom2Standby->value());
-                ui->ds_ComPanelCom2Standby->setValue(f);
-            }
-
-            const CSimulatedAircraft ownAircraft = this->cockpitValuesToAircraftObject();
-            this->updateOwnCockpitInContext(ownAircraft);
-        }
-
-        void CCockpitComComponent::ps_guiChangedSelcal()
-        {
-            sGui->getIContextOwnAircraft()->updateSelcal(this->getSelcal(), identifier());
-        }
-
-        void CCockpitComComponent::ps_updateCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
+        void CCockpitComComponent::updateCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
             if (isMyIdentifier(originator)) { return; } // comes from myself
 
@@ -138,49 +103,23 @@ namespace BlackGui
             const CTransponder transponder = ownAircraft.getTransponder();
 
             // update the frequencies
-            this->updateFrequencyDisplaysFromComSystems(com1, com2);
+            ui->editor_Com->setFrequencyDisplays(com1, com2);
 
             // update transponder
-            const int tc = transponder.getTransponderCode();
-            if (tc != ui->sbp_ComPanelTransponder->value())
-            {
-                ui->sbp_ComPanelTransponder->setValue(tc);
-            }
+            ui->editor_Com->setTransponder(transponder);
 
-            ui->cbp_ComPanelTransponderMode->setSelectedTransponderMode(transponder.getTransponderMode());
-
+            // selected stations
             if (sGui->getIContextNetwork())
             {
                 const CAtcStationList selectedStations = sGui->getIContextNetwork()->getSelectedAtcStations();
-                const CAtcStation com1Station = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();
-                const CAtcStation com2Station = selectedStations.size() > 1 ? selectedStations[1] : CAtcStation();
-                if (com1Station.getCallsign().isEmpty())
-                {
-                    ui->lbl_ComPanelCom1Active->setToolTip("");
-                    ui->led_ComPanelCom1->setOn(false);
-                }
-                else
-                {
-                    ui->lbl_ComPanelCom1Active->setToolTip(com1Station.getCallsign().getStringAsSet());
-                    ui->led_ComPanelCom1->setOn(true);
-
-                }
-                if (com2Station.getCallsign().isEmpty())
-                {
-                    ui->lbl_ComPanelCom2Active->setToolTip("");
-                    ui->led_ComPanelCom2->setOn(false);
-                }
-                else
-                {
-                    ui->lbl_ComPanelCom2Active->setToolTip(com2Station.getCallsign().getStringAsSet());
-                    ui->led_ComPanelCom2->setOn(true);
-                }
+                ui->editor_Com->setSelectedAtcStations(selectedStations);
             }
         }
 
-        void CCockpitComComponent::ps_testSelcal()
+        void CCockpitComComponent::testSelcal()
         {
-            const CSelcal selcal = this->getSelcal();
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+            const CSelcal selcal = ui->editor_Com->getSelcal();
             if (!selcal.isValid())
             {
                 CLogMessage().validationWarning("Invalid SELCAL code");
@@ -195,59 +134,10 @@ namespace BlackGui
             }
         }
 
-        void CCockpitComComponent::ps_onChangedSelcal(const CSelcal &selcal, const CIdentifier &originator)
+        void CCockpitComComponent::updateSelcalFromContext(const CSelcal &selcal, const CIdentifier &originator)
         {
             if (isMyIdentifier(originator)) { return; } // comes from myself
-            ui->frp_ComPanelSelcalBottom->setSelcalCode(selcal);
-        }
-
-        CSelcal CCockpitComComponent::getSelcal() const
-        {
-            return ui->frp_ComPanelSelcalBottom->getSelcal();
-        }
-
-        void CCockpitComComponent::initLeds()
-        {
-            const CLedWidget::LedShape shape = CLedWidget::Rounded;
-            ui->led_ComPanelCom1->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 connected", "COM1 disconnected", 14);
-            ui->led_ComPanelCom2->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 connected", "COM2 disconnected", 14);
-        }
-
-        CSimulatedAircraft CCockpitComComponent::cockpitValuesToAircraftObject()
-        {
-            CSimulatedAircraft ownAircraft = this->getOwnAircraft();
-            CTransponder transponder = ownAircraft.getTransponder();
-            CComSystem com1 = ownAircraft.getCom1System();
-            CComSystem com2 = ownAircraft.getCom2System();
-
-            //
-            // Transponder
-            //
-            const QString transponderCode = QString::number(ui->sbp_ComPanelTransponder->value());
-            if (CTransponder::isValidTransponderCode(transponderCode))
-            {
-                transponder.setTransponderCode(transponderCode);
-            }
-            else
-            {
-                CLogMessage().validationWarning("Wrong transponder code, reset");
-                ui->sbp_ComPanelTransponder->setValue(transponder.getTransponderCode());
-            }
-            transponder.setTransponderMode(ui->cbp_ComPanelTransponderMode->getSelectedTransponderMode());
-
-            //
-            // COM units
-            //
-            com1.setFrequencyActiveMHz(ui->ds_ComPanelCom1Active->value());
-            com1.setFrequencyStandbyMHz(ui->ds_ComPanelCom1Standby->value());
-            com2.setFrequencyActiveMHz(ui->ds_ComPanelCom2Active->value());
-            com2.setFrequencyStandbyMHz(ui->ds_ComPanelCom2Standby->value());
-            this->updateFrequencyDisplaysFromComSystems(com1, com2); // back annotation after rounding
-
-            ownAircraft.setCom1System(com1);
-            ownAircraft.setCom2System(com2);
-            ownAircraft.setTransponder(transponder);
-            return ownAircraft;
+            ui->editor_Com->setSelcal(selcal);
         }
 
         CSimulatedAircraft CCockpitComComponent::getOwnAircraft() const
@@ -266,41 +156,17 @@ namespace BlackGui
             return sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), identifier());
         }
 
-        void CCockpitComComponent::updateFrequencyDisplaysFromComSystems(const CComSystem &com1, const CComSystem &com2)
-        {
-            double freq = com1.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
-            if (freq != ui->ds_ComPanelCom1Active->value())
-            {
-                ui->ds_ComPanelCom1Active->setValue(freq);
-            }
-
-            freq = com2.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
-            if (freq != ui->ds_ComPanelCom2Active->value())
-            {
-                ui->ds_ComPanelCom2Active->setValue(freq);
-            }
-
-            freq = com1.getFrequencyStandby().valueRounded(CFrequencyUnit::MHz(), 3);
-            if (freq != ui->ds_ComPanelCom1Standby->value())
-            {
-                ui->ds_ComPanelCom1Standby->setValue(freq);
-            }
-
-            freq = com2.getFrequencyStandby().valueRounded(CFrequencyUnit::MHz(), 3);
-            if (freq != ui->ds_ComPanelCom2Standby->value())
-            {
-                ui->ds_ComPanelCom2Standby->setValue(freq);
-            }
-        }
-
-        void CCockpitComComponent::ps_onChangedVoiceRoomStatus(const CVoiceRoomList &selectedVoiceRooms, bool connected)
+        void CCockpitComComponent::updateVoiceRoomStatusFromContext(const CVoiceRoomList &selectedVoiceRooms, bool connected)
         {
             Q_ASSERT(selectedVoiceRooms.size() == 2);
-            const CVoiceRoom room1 = selectedVoiceRooms[0];
-            const CVoiceRoom room2 = selectedVoiceRooms[1];
-            ui->led_ComPanelCom1->setOn(room1.isConnected());
-            ui->led_ComPanelCom2->setOn(room2.isConnected());
             Q_UNUSED(connected);
+            ui->editor_Com->setVoiceRoomStatus(selectedVoiceRooms);
+        }
+
+        void CCockpitComComponent::updateSelcalInContext(const CSelcal &selcal)
+        {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+            sGui->getIContextOwnAircraft()->updateSelcal(selcal, identifier());
         }
     } // namespace
 } // namespace

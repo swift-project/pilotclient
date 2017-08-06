@@ -52,7 +52,7 @@ namespace BlackGui
 
         void CCockpitComponent::setSelectedTransponderModeStateIdent()
         {
-            ui->comp_CockpitComComponent->setSelectedTransponderModeStateIdent();
+            ui->comp_CockpitComComponent->setTransponderModeStateIdent();
         }
 
         void CCockpitComponent::showAudio()

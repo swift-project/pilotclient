@@ -49,6 +49,9 @@ namespace BlackGui
             //! Destructor
             virtual ~CCockpitComComponent();
 
+            //! Set to BlackMisc::Aviation::CTransponder::StateIdent
+            void setTransponderModeStateIdent();
+
         signals:
             //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderModeChanged
             void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
@@ -56,55 +59,34 @@ namespace BlackGui
             //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
             void transponderStateIdentEnded();
 
-        public slots:
-            //!\ Set to ident
-            void setSelectedTransponderModeStateIdent();
-
         protected:
             //! \copydoc QWidget::paintEvent
             virtual void paintEvent(QPaintEvent *event) override;
 
-        private slots:
-            //! Cockpit values have been changed in GUI
-            void ps_guiChangedCockpitValues();
-
-            //! SELCAL changed in GUI
-            void ps_guiChangedSelcal();
-
-            //! Update cockpit from context
-            void ps_updateCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
-
-            //! Cockpit values have been changed in GUI
-            void ps_testSelcal();
-
-            //! SELCAL was changed
-            void ps_onChangedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
-
-            //! Update voice room related information
-            void ps_onChangedVoiceRoomStatus(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
-
         private:
-            //! Init LEDs
-            void initLeds();
-
-            //! Cockpit values to aircraft
-            BlackMisc::Simulation::CSimulatedAircraft cockpitValuesToAircraftObject();
+            //! Cockpit values have been changed in GUI
+            void testSelcal();
 
             //! Get own aircraft
             BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
-            //! Current SELCAL code
-            BlackMisc::Aviation::CSelcal getSelcal() const;
-
             //! Cockpit updates
             bool updateOwnCockpitInContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
-            //! COM frequencies displayed
-            void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+            //! SELCAL changed in GUI
+            void updateSelcalInContext(const BlackMisc::Aviation::CSelcal &selcal);
+
+            //! SELCAL was changed
+            void updateSelcalFromContext(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
+
+            //! Update cockpit from context
+            void updateCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
+
+            //! Update voice room related information
+            void updateVoiceRoomStatusFromContext(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
 
             QScopedPointer<Ui::CCockpitComComponent> ui;
         };
-
     } // namespace
 } // namespace
 
