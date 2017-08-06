@@ -425,7 +425,7 @@
           <number>0</number>
          </property>
          <item row="1" column="0" colspan="2">
-          <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_ComPanelSelcalBottom"/>
+          <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_ComPanelSelcalSelector"/>
          </item>
          <item row="0" column="0" colspan="2" alignment="Qt::AlignLeft">
           <widget class="QFrame" name="fr_ComPanelSelcalTop">
@@ -519,6 +519,17 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>ds_ComPanelCom1Active</tabstop>
+  <tabstop>ds_ComPanelCom2Active</tabstop>
+  <tabstop>ds_ComPanelCom1Standby</tabstop>
+  <tabstop>ds_ComPanelCom2Standby</tabstop>
+  <tabstop>sbp_ComPanelTransponder</tabstop>
+  <tabstop>cbp_ComPanelTransponderMode</tabstop>
+  <tabstop>tb_ComPanelCom1Toggle</tabstop>
+  <tabstop>tb_ComPanelCom2Toggle</tabstop>
+  <tabstop>tb_ComPanelSelcalTest</tabstop>
+ </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
  </resources>

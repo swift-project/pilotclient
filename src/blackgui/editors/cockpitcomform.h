@@ -13,7 +13,9 @@
 #define BLACKGUI_EDITORS_COCKPITCOMFORM_H
 
 #include "form.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -26,7 +28,7 @@ namespace BlackGui
         /*!
          * COM elements
          */
-        class CCockpitComForm : public CForm
+        class BLACKGUI_EXPORT CCockpitComForm : public CForm
         {
             Q_OBJECT
 
@@ -37,8 +39,26 @@ namespace BlackGui
             //! Destrutor
             virtual ~CCockpitComForm();
 
+            //! COM frequencies displayed
+            void setFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+
+            //! Set the XPDR values
+            void setTransponder(const BlackMisc::Aviation::CTransponder &transponder);
+
             //! Change the voice room status
-            void changeVoiceRoomStatus(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms);
+            void setVoiceRoomStatus(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms);
+
+            //! Set selected stations
+            void setSelectedAtcStations(const BlackMisc::Aviation::CAtcStationList &selectedStations);
+
+            //! Set to BlackMisc::Aviation::CTransponder::StateIdent
+            void setTransponderModeStateIdent();
+
+            //! Get SELCAL
+            BlackMisc::Aviation::CSelcal getSelcal() const;
+
+            //! Set SELCAL
+            void setSelcal(const BlackMisc::Aviation::CSelcal &selcal);
 
             //! \name Form class implementations
             //! @{
@@ -54,11 +74,14 @@ namespace BlackGui
             //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
             void transponderStateIdentEnded();
 
+            //! SELCAL value changed
+            void selcalChanged(const BlackMisc::Aviation::CSelcal &selcal);
+
             //! Request to test SELCAL
             void testSelcal();
 
             //! GUI values changed
-            void guiChangedCockpitValues(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void changedCockpitValues(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         private:
             //! Init LEDs
@@ -67,11 +90,11 @@ namespace BlackGui
             //! Cockpit values to aircraft
             BlackMisc::Simulation::CSimulatedAircraft cockpitValuesToAircraftObject();
 
-            //! COM frequencies displayed
-            void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
-
             //! GUI values have been changed, will trigger CCockpitComForm::guiChangedCockpitValues
             void onGuiChangedCockpitValues();
+
+            //! SELCAL value changed (in selector)
+            void onSelcalChanged();
 
             QScopedPointer<Ui::CCockpitComForm> ui;
         };

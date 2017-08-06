@@ -30,8 +30,9 @@ namespace BlackGui
             ui->setupUi(this);
 
             // SELCAL pairs in cockpit
-            ui->frp_ComPanelSelcalBottom->clear();
+            ui->frp_ComPanelSelcalSelector->clear();
             connect(ui->tb_ComPanelSelcalTest, &QPushButton::clicked, this, &CCockpitComForm::testSelcal);
+            connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onSelcalChanged);
 
             // XPdr
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::transponderModeChanged);
@@ -46,7 +47,7 @@ namespace BlackGui
             connect(ui->ds_ComPanelCom2Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
             connect(ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
-            connect(ui->frp_ComPanelSelcalBottom, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
+            connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
         }
 
         CCockpitComForm::~CCockpitComForm()
@@ -75,13 +76,55 @@ namespace BlackGui
             return msgs;
         }
 
-        void CCockpitComForm::changeVoiceRoomStatus(const Audio::CVoiceRoomList &selectedVoiceRooms)
+        void CCockpitComForm::setVoiceRoomStatus(const Audio::CVoiceRoomList &selectedVoiceRooms)
         {
             Q_ASSERT_X(selectedVoiceRooms.size() == 2, Q_FUNC_INFO, "Expect 2 voice rooms");
             const CVoiceRoom room1 = selectedVoiceRooms[0];
             const CVoiceRoom room2 = selectedVoiceRooms[1];
             ui->led_ComPanelCom1->setOn(room1.isConnected());
             ui->led_ComPanelCom2->setOn(room2.isConnected());
+        }
+
+        void CCockpitComForm::setSelectedAtcStations(const CAtcStationList &selectedStations)
+        {
+            const CAtcStation com1Station = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();
+            const CAtcStation com2Station = selectedStations.size() > 1 ? selectedStations[1] : CAtcStation();
+            if (com1Station.getCallsign().isEmpty())
+            {
+                ui->lbl_ComPanelCom1Active->setToolTip("");
+                ui->led_ComPanelCom1->setOn(false);
+            }
+            else
+            {
+                ui->lbl_ComPanelCom1Active->setToolTip(com1Station.getCallsign().getStringAsSet());
+                ui->led_ComPanelCom1->setOn(true);
+
+            }
+            if (com2Station.getCallsign().isEmpty())
+            {
+                ui->lbl_ComPanelCom2Active->setToolTip("");
+                ui->led_ComPanelCom2->setOn(false);
+            }
+            else
+            {
+                ui->lbl_ComPanelCom2Active->setToolTip(com2Station.getCallsign().getStringAsSet());
+                ui->led_ComPanelCom2->setOn(true);
+            }
+        }
+
+        void CCockpitComForm::setTransponderModeStateIdent()
+        {
+            ui->cbp_ComPanelTransponderMode->setSelectedTransponderModeStateIdent();
+        }
+
+        CSelcal CCockpitComForm::getSelcal() const
+        {
+            return ui->frp_ComPanelSelcalSelector->getSelcal();
+        }
+
+        void CCockpitComForm::setSelcal(const CSelcal &selcal)
+        {
+            ui->frp_ComPanelSelcalSelector->setSelcal(selcal);
         }
 
         void CCockpitComForm::initLeds()
@@ -120,7 +163,7 @@ namespace BlackGui
             com1.setFrequencyStandbyMHz(ui->ds_ComPanelCom1Standby->value());
             com2.setFrequencyActiveMHz(ui->ds_ComPanelCom2Active->value());
             com2.setFrequencyStandbyMHz(ui->ds_ComPanelCom2Standby->value());
-            this->updateFrequencyDisplaysFromComSystems(com1, com2); // back annotation after rounding
+            this->setFrequencyDisplays(com1, com2); // back annotation after rounding
 
             comAircraft.setCom1System(com1);
             comAircraft.setCom2System(com2);
@@ -128,7 +171,7 @@ namespace BlackGui
             return comAircraft;
         }
 
-        void CCockpitComForm::updateFrequencyDisplaysFromComSystems(const CComSystem &com1, const CComSystem &com2)
+        void CCockpitComForm::setFrequencyDisplays(const CComSystem &com1, const CComSystem &com2)
         {
             double freq = com1.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
             if (freq != ui->ds_ComPanelCom1Active->value())
@@ -155,6 +198,20 @@ namespace BlackGui
             }
         }
 
+        void CCockpitComForm::setTransponder(const CTransponder &transponder)
+        {
+            const int tc = transponder.getTransponderCode();
+            if (tc != ui->sbp_ComPanelTransponder->value())
+            {
+                ui->sbp_ComPanelTransponder->setValue(tc);
+            }
+
+            if (transponder.getTransponderMode() != ui->cbp_ComPanelTransponderMode->getSelectedTransponderMode())
+            {
+                ui->cbp_ComPanelTransponderMode->setSelectedTransponderMode(transponder.getTransponderMode());
+            }
+        }
+
         void CCockpitComForm::onGuiChangedCockpitValues()
         {
             const QObject *sender = QObject::sender();
@@ -174,7 +231,13 @@ namespace BlackGui
             }
 
             const CSimulatedAircraft aircraft = this->cockpitValuesToAircraftObject();
-            emit this->guiChangedCockpitValues(aircraft);
+            emit this->changedCockpitValues(aircraft);
+        }
+
+        void CCockpitComForm::onSelcalChanged()
+        {
+            const CSelcal selcal = ui->frp_ComPanelSelcalSelector->getSelcal();
+            emit this->selcalChanged(selcal);
         }
     } // ns
 } // ns
