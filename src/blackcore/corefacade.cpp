@@ -208,6 +208,9 @@ namespace BlackCore
                 c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
                             this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorCockpitFromContext);
                 Q_ASSERT(c);
+                c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedSelcal,
+                            this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorSelcalFromContext);
+                Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
                             this->getCContextOwnAircraft(), &CContextOwnAircraft::ps_changedSimulatorModel);
                 Q_ASSERT(c);

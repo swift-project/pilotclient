@@ -524,6 +524,15 @@ namespace BlackCore
             m_simulatorPlugin.second->updateOwnSimulatorCockpit(ownAircraft, originator);
         }
 
+        void CContextSimulator::ps_updateSimulatorSelcalFromContext(const CSelcal &selcal, const CIdentifier &originator)
+        {
+            if (!isSimulatorSimulating()) { return; }
+            if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
+
+            // update
+            m_simulatorPlugin.second->updateOwnSimulatorSelcal(selcal, originator);
+        }
+
         void CContextSimulator::ps_networkRequestedNewAircraft(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
         {
             if (m_networkSessionId.isEmpty()) { return; }

@@ -145,6 +145,9 @@ namespace BlackCore
             //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
             void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
+            //! Update simulator SELCAL from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
+            void ps_updateSimulatorSelcalFromContext(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
+
             //! Raw data when a new aircraft was requested, used for statistics
             void ps_networkRequestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
             //! @}
