@@ -254,6 +254,9 @@ namespace BlackMisc
             //! SELCAL
             const BlackMisc::Aviation::CSelcal getSelcal() const { return m_selcal; }
 
+            //! Set COM unit (all values + transponder and SELCAL)
+            void setCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
             //! Cockpit data
             void setCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
 

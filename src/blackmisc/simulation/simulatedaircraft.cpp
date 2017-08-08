@@ -171,8 +171,14 @@ namespace BlackMisc
             case CComSystem::Com2: return this->getCom2System();
             default: break;
             }
-            Q_ASSERT(false);
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit");
             return CComSystem(); // avoid warning
+        }
+
+        void CSimulatedAircraft::setCockpit(const CSimulatedAircraft &aircraft)
+        {
+            this->setCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder());
+            this->setSelcal(aircraft.getSelcal());
         }
 
         void CSimulatedAircraft::setComSystem(const CComSystem &com, CComSystem::ComUnit unit)
@@ -181,6 +187,7 @@ namespace BlackMisc
             {
             case CComSystem::Com1: this->setCom1System(com); break;
             case CComSystem::Com2: this->setCom2System(com); break;
+            default: BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit"); break;
             }
         }
 
@@ -205,6 +212,7 @@ namespace BlackMisc
             {
             case CComSystem::Com1: return this->setCom1ActiveFrequency(frequency);
             case CComSystem::Com2: return this->setCom2ActiveFrequency(frequency);
+            default: BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit"); break;
             }
             return false;
         }
