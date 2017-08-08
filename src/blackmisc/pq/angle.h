@@ -71,10 +71,10 @@ namespace BlackMisc
             CAngle(int degrees, double minutes);
 
             //! Minutes and secods will get same sign as degrees
-            void static unifySign(int &degrees, int &minutes, double &seconds);
+            void static unifySign(int degrees, int &minutes, double &seconds);
 
             //! Minutes will get same sign as degrees
-            void static unifySign(int &degrees, int &minutes);
+            void static unifySign(int degrees, int &minutes);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
             BlackMisc::CIcon toIcon() const;
