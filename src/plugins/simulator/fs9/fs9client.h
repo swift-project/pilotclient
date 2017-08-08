@@ -11,7 +11,7 @@
 #define DIRECTPLAY_CLIENT_H
 
 #include "directplaypeer.h"
-#include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolatormulti.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/aviation/callsign.h"
@@ -51,7 +51,7 @@ namespace BlackSimPlugin
             void setHostAddress(const QString &hostAddress);
 
             //! Get interpolator
-            BlackMisc::Simulation::CInterpolatorLinear *getInterpolator() { return &m_interpolator; }
+            BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() { return &m_interpolator; }
 
             //! Set interpolation setup
             //! \threadsafe
@@ -94,7 +94,7 @@ namespace BlackSimPlugin
             BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationSetup() const;
 
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
-            BlackMisc::Simulation::CInterpolatorLinear m_interpolator;
+            BlackMisc::Simulation::CInterpolatorMulti m_interpolator;
             BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationSetup;
             mutable QReadWriteLock m_interpolationSetupMutex;
             QString m_modelName;

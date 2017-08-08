@@ -164,6 +164,7 @@ namespace BlackCore
         virtual bool isShuttingDown() const = 0;
 
         //! Set interpolation mode, empty callsign applies to all know callsigns
+        //! \return Returns true if the mode changed, otherwise false. Note that some implementations always return true.
         virtual bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode, const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! \addtogroup swiftdotcommands

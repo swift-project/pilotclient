@@ -305,10 +305,12 @@ namespace BlackSimPlugin
 
         bool CSimulatorFs9::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
         {
-            //! \todo (added by KWB 3/17) interpolator mode for FS9 needs implementation
-            Q_UNUSED(mode);
-            Q_UNUSED(callsign);
-            return false;
+            const auto it = m_hashFs9Clients.find(callsign);
+            if (it == m_hashFs9Clients.end()) { return false; }
+            QTimer::singleShot(0, it->data(), [client = *it, mode] { client->getInterpolator()->setMode(mode); });
+            // Always return true if we were setting the mode, since we cannot easily access the return value from
+            // CInterpolatorMulti::setMode in a thread safe manner.
+            return true;
         }
 
         bool CSimulatorFs9::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
