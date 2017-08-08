@@ -415,7 +415,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            Q_ASSERT(isConnected());
+            Q_ASSERT(isConnected()); //! \fixme KB 8/2017 would BLACK_VERIFY + return be better?
             if (originator == this->identifier()) { return false; }
             auto com1 = CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
             auto com2 = CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
@@ -438,6 +438,16 @@ namespace BlackSimPlugin
                 m_service->cancelAllPendingAsyncCalls(); // in case there is already a reply with some old data incoming
                 return true;
             }
+            return false;
+        }
+
+        bool CSimulatorXPlane::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
+        {
+            if (!isConnected()) { return false; };
+            if (originator == this->identifier()) { return false; }
+            Q_UNUSED(selcal);
+
+            //! \fixme KB 8/2017 use SELCAL??
             return false;
         }
 

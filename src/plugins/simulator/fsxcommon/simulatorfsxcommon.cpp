@@ -198,6 +198,16 @@ namespace BlackSimPlugin
             return changed;
         }
 
+        bool CSimulatorFsxCommon::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
+        {
+            if (originator == this->identifier()) { return false; }
+            if (!this->isSimulating()) { return false; }
+
+            //! \fixme KB 2017/8 use SELCAL
+            Q_UNUSED(selcal);
+            return false;
+        }
+
         void CSimulatorFsxCommon::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
             QByteArray m = message.getMessage().toLocal8Bit().constData();

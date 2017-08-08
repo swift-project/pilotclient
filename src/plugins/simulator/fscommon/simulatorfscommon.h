@@ -88,6 +88,7 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CComSystem   m_simCom1;            //!< cockpit COM1 state in simulator
             BlackMisc::Aviation::CComSystem   m_simCom2;            //!< cockpit COM2 state in simulator
             BlackMisc::Aviation::CTransponder m_simTransponder;     //!< cockpit xpdr state in simulator
+            BlackMisc::Aviation::CSelcal      m_selcal;             //!< SELCAL as in cockpit
         };
     } // namespace
 } // namespace

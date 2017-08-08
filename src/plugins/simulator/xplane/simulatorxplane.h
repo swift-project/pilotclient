@@ -92,6 +92,7 @@ namespace BlackSimPlugin
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateOwnSimulatorSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -136,7 +137,7 @@ namespace BlackSimPlugin
             void ps_serviceUnregistered();
             void ps_setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
             void ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
-                const QString &modelString, const QString &name, const QString &distributor, const QString &description);
+                                                const QString &modelString, const QString &name, const QString &distributor, const QString &description);
             void ps_fastTimerTimeout();
             void ps_slowTimerTimeout();
             void ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);

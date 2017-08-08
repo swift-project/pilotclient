@@ -116,6 +116,9 @@ namespace BlackCore
         //! Update own aircraft cockpit (usually from context)
         virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) = 0;
 
+        //! Update own aircraft cockpit (usually from context)
+        virtual bool updateOwnSimulatorSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) = 0;
+
         //! Display a status message in the simulator
         virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const = 0;
 

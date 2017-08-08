@@ -236,24 +236,20 @@ namespace BlackSimPlugin
             bool changed = false;
             if (newCom1.getFrequencyActive() != this->m_simCom1.getFrequencyActive())
             {
-                // CFrequency newFreq = newCom1.getFrequencyActive();
                 changed = true;
 
             }
             if (newCom1.getFrequencyStandby() != this->m_simCom1.getFrequencyStandby())
             {
-                // CFrequency newFreq = newCom1.getFrequencyStandby();
                 changed = true;
             }
 
             if (newCom2.getFrequencyActive() != this->m_simCom2.getFrequencyActive())
             {
-                // CFrequency newFreq = newCom2.getFrequencyActive();
                 changed = true;
             }
             if (newCom2.getFrequencyStandby() != this->m_simCom2.getFrequencyStandby())
             {
-                // CFrequency newFreq = newCom2.getFrequencyStandby();
                 changed = true;
             }
 
@@ -264,18 +260,33 @@ namespace BlackSimPlugin
 
             if (newTransponder.getTransponderMode() != this->m_simTransponder.getTransponderMode())
             {
-                // void
+                changed = true;
             }
 
-            // avoid changes of cockpit back to old values due to an outdated read back value
+            //! \todo KB 8/2017 set FS9 cockpit values
 
             // bye
             return changed;
         }
 
+        bool CSimulatorFs9::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
+        {
+            if (originator == this->identifier()) { return false; }
+            if (!this->isSimulating()) { return false; }
+
+            bool changed = false;
+            if (selcal != this->m_selcal)
+            {
+                changed = true;
+            }
+
+            //! \todo KB 8/2017 set FS9 SELCAL value
+            return changed;
+        }
+
         void CSimulatorFs9::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
-            /* Avoid errors from CDirectPlayPeer as it may end in infinite loop */
+            // Avoid errors from CDirectPlayPeer as it may end in infinite loop
             if (message.getSeverity() == BlackMisc::CStatusMessage::SeverityError && message.isFromClass<CDirectPlayPeer>())
             {
                 return;

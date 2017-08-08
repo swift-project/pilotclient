@@ -61,6 +61,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateOwnSimulatorSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
             virtual bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode, const BlackMisc::Aviation::CCallsign &callsign) override;
