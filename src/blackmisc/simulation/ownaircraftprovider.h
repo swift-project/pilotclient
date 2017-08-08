@@ -91,15 +91,19 @@ namespace BlackMisc
             // and are subject of roundtrips -> originator
             // ------------------------------------------------------------------------
 
-            //! Update cockpit, but send signals when applicable
+            //! Update cockpit, but only send signals when applicable
+            //! \threadsafe
+            bool updateCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+
+            //! Update cockpit, but only send signals when applicable
             //! \threadsafe
             virtual bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator) = 0;
 
-            //! Update cockpit, but send signals when applicable
+            //! Update cockpit, but only send signals when applicable
             //! \threadsafe
             virtual bool updateActiveComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const BlackMisc::CIdentifier &originator) = 0;
 
-            //! Update cockpit, but send signals when applicable
+            //! Update cockpit, but only send signals when applicable
             //! \threadsafe
             virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) = 0;
         };
@@ -126,7 +130,10 @@ namespace BlackMisc
             //! \copydoc IOwnAircraftProvider::getDistanceToOwnAircraft
             BlackMisc::PhysicalQuantities::CLength getDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position) const;
 
-            //! \copydoc IOwnAircraftProvider::updateCockpit
+            //! \copydoc IOwnAircraftProvider::updateCockpit(const BlackMisc::Simulation::CSimulatedAircraft &, const BlackMisc::CIdentifier &)
+            bool updateCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+
+            //! \copydoc IOwnAircraftProvider::updateCockpit(const BlackMisc::Aviation::CComSystem &, const BlackMisc::Aviation::CComSystem &, const BlackMisc::Aviation::CTransponder &, const BlackMisc::CIdentifier &);
             bool updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IOwnAircraftProvider::updateActiveComFrequency

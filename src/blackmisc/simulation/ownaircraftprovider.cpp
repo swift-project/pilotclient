@@ -17,6 +17,13 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        bool IOwnAircraftProvider::updateCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        {
+            const bool changed1 = this->updateCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), originator);
+            const bool changed2 = this->updateSelcal(aircraft.getSelcal(), originator);
+            return changed1 || changed2;
+        }
+
         CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
@@ -51,6 +58,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->getDistanceToOwnAircraft(position);
+        }
+
+        bool COwnAircraftAware::updateCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        {
+            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_ownAircraftProvider->updateCockpit(aircraft, originator);
         }
 
         bool COwnAircraftAware::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
@@ -100,6 +113,5 @@ namespace BlackMisc
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_ownAircraftProvider->updateOwnIcaoCodes(aircraftIcaoData, airlineIcaoCode);
         }
-
     } // namespace
 } // namespace
