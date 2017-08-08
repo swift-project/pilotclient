@@ -67,10 +67,9 @@ namespace BlackGui
 
         void CSelcalCodeSelector::setSelcalCode(const QString &selcal)
         {
-            if (selcal.length() == 4 && this->getSelcalCode() == selcal) return; // avoid unintended signals
             const QString s = selcal.isEmpty() ? "    " : selcal.toUpper().trimmed();
-            Q_ASSERT(s.length() == 4);
-            if (s.length() != 4) return;
+            if (s.length() != 4) { return; } // still incomplete code
+            if (this->getSelcalCode() == s) { return; } // avoid unintended signals
             const QString s1 = s.left(2);
             const QString s2 = s.right(2);
             if (BlackMisc::Aviation::CSelcal::codePairs().contains(s1))
