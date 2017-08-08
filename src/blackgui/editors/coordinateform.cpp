@@ -157,15 +157,24 @@ namespace BlackGui
             // location based on swift data
             if (sApp && sApp->hasWebDataServices())
             {
+                CAirport airport;
+
                 // airport ICAO
                 if (l.length() == 4 && sApp->getWebDataServices()->getAirportsCount() > 0)
                 {
-                    const CAirport airport = sApp->getWebDataServices()->getAirportForIcaoDesignator(l);
+                    airport = sApp->getWebDataServices()->getAirportForIcaoDesignator(l);
                     if (airport.hasValidDbKey())
                     {
                         this->setCoordinate(airport);
                         return;
                     }
+                }
+
+                airport = sApp->getWebDataServices()->getAirportForNameOrLocation(l);
+                if (airport.hasValidDbKey())
+                {
+                    this->setCoordinate(airport);
+                    return;
                 }
             }
         }

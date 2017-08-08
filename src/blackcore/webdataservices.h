@@ -317,6 +317,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAirport getAirportForIcaoDesignator(const QString &icao) const;
 
+        //! Get airport for name of location
+        //! \threadsafe
+        BlackMisc::Aviation::CAirport getAirportForNameOrLocation(const QString &nameOrLocation) const;
+
         //! Get METARs
         //! \threadsafe
         BlackMisc::Weather::CMetarList getMetars() const;

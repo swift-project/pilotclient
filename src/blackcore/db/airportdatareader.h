@@ -42,6 +42,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAirport getAirportForIcaoDesignator(const QString &designator) const;
 
+            //! Get airports for location
+            //! \threadsafe
+            BlackMisc::Aviation::CAirport getAirportForNameOrLocation(const QString &location) const;
+
             //! Returns a list of all airports in the database.
             //! \threadsafe
             int getAirportsCount() const;
