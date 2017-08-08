@@ -117,6 +117,13 @@ namespace BlackGui
             ui->cbp_ComPanelTransponderMode->setSelectedTransponderModeStateIdent();
         }
 
+        void CCockpitComForm::setValue(const CSimulatedAircraft &aircraft)
+        {
+            this->setFrequencies(aircraft.getCom1System(), aircraft.getCom2System());
+            this->setSelcal(aircraft.getSelcal());
+            this->setTransponder(aircraft.getTransponder());
+        }
+
         CSelcal CCockpitComForm::getSelcal() const
         {
             return ui->frp_ComPanelSelcalSelector->getSelcal();
@@ -163,7 +170,7 @@ namespace BlackGui
             com1.setFrequencyStandbyMHz(ui->ds_ComPanelCom1Standby->value());
             com2.setFrequencyActiveMHz(ui->ds_ComPanelCom2Active->value());
             com2.setFrequencyStandbyMHz(ui->ds_ComPanelCom2Standby->value());
-            this->setFrequencyDisplays(com1, com2); // back annotation after rounding
+            this->setFrequencies(com1, com2); // back annotation after rounding
 
             comAircraft.setCom1System(com1);
             comAircraft.setCom2System(com2);
@@ -171,7 +178,7 @@ namespace BlackGui
             return comAircraft;
         }
 
-        void CCockpitComForm::setFrequencyDisplays(const CComSystem &com1, const CComSystem &com2)
+        void CCockpitComForm::setFrequencies(const CComSystem &com1, const CComSystem &com2)
         {
             double freq = com1.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
             if (freq != ui->ds_ComPanelCom1Active->value())
@@ -237,7 +244,7 @@ namespace BlackGui
         void CCockpitComForm::onSelcalChanged()
         {
             const CSelcal selcal = ui->frp_ComPanelSelcalSelector->getSelcal();
-            emit this->selcalChanged(selcal);
+            emit this->changedSelcal(selcal);
         }
     } // ns
 } // ns

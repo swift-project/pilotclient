@@ -64,7 +64,7 @@ namespace BlackGui
             // COM form
             connect(ui->editor_Com, &CCockpitComForm::testSelcal, this, &CCockpitComComponent::testSelcal);
             connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CCockpitComComponent::updateOwnCockpitInContext);
-            connect(ui->editor_Com, &CCockpitComForm::selcalChanged, this, &CCockpitComComponent::updateSelcalInContext);
+            connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CCockpitComComponent::updateSelcalInContext);
 
             // Relay COM form signals
             connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this, &CCockpitComComponent::transponderModeChanged);
@@ -103,7 +103,7 @@ namespace BlackGui
             const CTransponder transponder = ownAircraft.getTransponder();
 
             // update the frequencies
-            ui->editor_Com->setFrequencyDisplays(com1, com2);
+            ui->editor_Com->setFrequencies(com1, com2);
 
             // update transponder
             ui->editor_Com->setTransponder(transponder);

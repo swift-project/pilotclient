@@ -40,7 +40,7 @@ namespace BlackGui
             virtual ~CCockpitComForm();
 
             //! COM frequencies displayed
-            void setFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+            void setFrequencies(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
             //! Set the XPDR values
             void setTransponder(const BlackMisc::Aviation::CTransponder &transponder);
@@ -53,6 +53,9 @@ namespace BlackGui
 
             //! Set to BlackMisc::Aviation::CTransponder::StateIdent
             void setTransponderModeStateIdent();
+
+            //! Set all values
+            void setValue(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Get SELCAL
             BlackMisc::Aviation::CSelcal getSelcal() const;
@@ -74,11 +77,11 @@ namespace BlackGui
             //! \copydoc BlackGui::Components::CTransponderModeSelector::transponderStateIdentEnded
             void transponderStateIdentEnded();
 
-            //! SELCAL value changed
-            void selcalChanged(const BlackMisc::Aviation::CSelcal &selcal);
-
             //! Request to test SELCAL
             void testSelcal();
+
+            //! SELCAL value changed
+            void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal);
 
             //! GUI values changed
             void changedCockpitValues(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
