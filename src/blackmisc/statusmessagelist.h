@@ -97,6 +97,10 @@ namespace BlackMisc
         //! Remove info and below
         void removeInfoAndBelow();
 
+        //! Keep latest n status messages
+        //! \remark taking timestamp of n-th oldest messages, deleting all older
+        int keepLatest(int estimtatedNumber);
+
         //! Find worst severity
         CStatusMessage::StatusSeverity worstSeverity() const;
 

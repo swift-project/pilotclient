@@ -39,6 +39,20 @@ namespace BlackGui
             this->setFilterDialog(new CStatusMessageFilterDialog(this));
         }
 
+        void CStatusMessageView::keepLatest(int desiredSize)
+        {
+            if (desiredSize >= this->rowCount()) { return; }
+            if (desiredSize < 1)
+            {
+                this->clear();
+                return;
+            }
+
+            CStatusMessageList msgs = this->container();
+            msgs.keepLatest(desiredSize);
+            this->updateContainerMaybeAsync(msgs);
+        }
+
         CStatusMessageFilterDialog *CStatusMessageView::getFilterDialog() const
         {
             return qobject_cast<CStatusMessageFilterDialog *>(this->getFilterWidget());

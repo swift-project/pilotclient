@@ -48,8 +48,7 @@ namespace BlackGui
         };
 
         //! GUI displaying log and status messages
-        class BLACKGUI_EXPORT CLogComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CLogComponent : public QFrame
         {
             Q_OBJECT
 
@@ -75,11 +74,17 @@ namespace BlackGui
             //! Show a filter bar
             void showFilterBar();
 
-            //! Set fi
+            //! Set descriptive icons
             void filterUseRadioButtonDescriptiveIcons(bool oneLetterText);
 
             //! Clear
             void clear();
+
+            //! Number of status messages in log view
+            int rowCount() const;
+
+            //! Set max.log messages
+            void setMaxLogMessages(int desiredNumber) { m_maxLogMessages = desiredNumber; }
 
         signals:
             //! Make me visible
@@ -100,9 +105,13 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CLogComponent> ui;
+            int m_maxLogMessages = -1;
 
             //! Status messages changed
             void onStatusMessageDataChanged(int count, bool withFilter);
+
+            //! Remove oldest messages
+            void removeOldest();
 
             //! Custom menu for the log component
             class CLogMenu : public BlackGui::Menus::IMenuDelegate

@@ -102,6 +102,11 @@ namespace BlackGui
             ui->tep_StatusPageConsole->clear();
         }
 
+        int CLogComponent::rowCount() const
+        {
+            return ui->tvp_StatusMessages->rowCount();
+        }
+
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
         {
             if (statusMessage.isEmpty()) return;
@@ -117,12 +122,14 @@ namespace BlackGui
         {
             if (statusMessage.isEmpty()) { return; }
             ui->tvp_StatusMessages->insert(statusMessage);
+            this->removeOldest();
         }
 
         void CLogComponent::appendStatusMessagesToList(const CStatusMessageList &statusMessages)
         {
             if (statusMessages.isEmpty()) { return; }
             ui->tvp_StatusMessages->insert(statusMessages);
+            this->removeOldest();
         }
 
         void CLogComponent::onStatusMessageDataChanged(int count, bool withFilter)
@@ -134,6 +141,20 @@ namespace BlackGui
             const QString f = ui->tvp_StatusMessages->hasFilter() ? "F" : "";
             o = CGuiUtility::replaceTabCountValue(o, ui->tvp_StatusMessages->rowCount()) + f;
             ui->tw_StatusPage->setTabText(i, o);
+        }
+
+        void CLogComponent::removeOldest()
+        {
+            // do not remove every time, but when a threshold is reached
+            if (m_maxLogMessages < 1) { return; }
+            if (m_maxLogMessages < 100 && ui->tvp_StatusMessages->rowCount() > (m_maxLogMessages + 10))
+            {
+                ui->tvp_StatusMessages->keepLatest(m_maxLogMessages);
+            }
+            else if (ui->tvp_StatusMessages->rowCount() > (m_maxLogMessages * 1.1))
+            {
+                ui->tvp_StatusMessages->keepLatest(m_maxLogMessages);
+            }
         }
 
         void CLogComponent::CLogMenu::customMenu(CMenuActions &menuActions)

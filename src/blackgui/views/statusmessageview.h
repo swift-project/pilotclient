@@ -43,6 +43,9 @@ namespace BlackGui
             //! Add my own filter dialog
             void addFilterDialog();
 
+            //! \copydoc BlackMisc::CStatusMessageList::keepLatest
+            void keepLatest(int desiredSize);
+
             //! Filter dialog if any
             BlackGui::Filters::CStatusMessageFilterDialog *getFilterDialog() const;
         };

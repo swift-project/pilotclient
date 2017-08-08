@@ -139,6 +139,25 @@ namespace BlackMisc
         this->removeIf(&CStatusMessage::getSeverity, CStatusMessage::SeverityInfo);
     }
 
+    int CStatusMessageList::keepLatest(int estimtatedNumber)
+    {
+        const int oldSize = this->size();
+        if (estimtatedNumber >= oldSize) { return 0; }
+        if (estimtatedNumber < 1)
+        {
+            this->clear();
+            return oldSize;
+        }
+
+        CStatusMessageList copy(*this);
+        copy.sortLatestFirst();
+        const QDateTime ts = copy[estimtatedNumber - 1].getUtcTimestamp();
+        copy = *this; // keep order
+        copy.removeBefore(ts);
+        *this = copy;
+        return oldSize - this->size();
+    }
+
     CStatusMessage::StatusSeverity CStatusMessageList::worstSeverity() const
     {
         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
