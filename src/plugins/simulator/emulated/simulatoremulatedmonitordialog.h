@@ -14,6 +14,7 @@
 
 #include <QDialog>
 #include <QScopedPointer>
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logcategorylist.h"
 
@@ -50,18 +51,35 @@ namespace BlackSimPlugin
             //! Append a function call as status message
             void appendFunctionCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
 
+            //! Display status message
+            void displayStatusMessage(const BlackMisc::CStatusMessage &message);
+
+            //! Display text message
+            void displayTextMessage(const BlackMisc::Network::CTextMessage &message);
+
         private:
+            static int constexpr MaxLogMessages = 500; //!< desired log message number
+
             //! UI values changed
             void onSimulatorValuesChanged();
 
+            //! Cockpit COM values changed
+            void changeComFromUi(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! SELCAL values changed
+            void changeSelcalFromUi(const BlackMisc::Aviation::CSelcal &selcal);
+
             //! Update aircraft situation
-            void changeSituation();
+            void changeSituationFromUi();
 
             //! Change the aircraft parts
-            void changeParts();
+            void changePartsFromUi();
 
             //! UI values
             void setSimulatorUiValues();
+
+            //! Set values from internal aircraft
+            void setInteralAircraftUiValues();
 
             QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
             CSimulatorEmulated *m_simulator = nullptr;

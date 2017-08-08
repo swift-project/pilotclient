@@ -31,15 +31,17 @@ namespace BlackSimPlugin
     namespace Emulated
     {
         CSimulatorEmulated::CSimulatorEmulated(const CSimulatorPluginInfo &info,
-                                         IOwnAircraftProvider *ownAircraftProvider,
-                                         IRemoteAircraftProvider *remoteAircraftProvider,
-                                         IWeatherGridProvider *weatherGridProvider,
-                                         QObject *parent) :
+                                               IOwnAircraftProvider *ownAircraftProvider,
+                                               IRemoteAircraftProvider *remoteAircraftProvider,
+                                               IWeatherGridProvider *weatherGridProvider,
+                                               QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent)
         {
             Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
 
             CSimulatorEmulated::registerHelp();
+            m_myAircraft = this->getOwnAircraft(); // sync with provider
+
             m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWindow()));
             connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
             this->onSettingsChanged();
@@ -110,17 +112,32 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::updateOwnSimulatorCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, aircraft.toQString(), originator.toQString());
+            if (originator == identifier()) { return false; } // myself
+            m_myAircraft.setCockpit(aircraft);
+            emit this->internalAircraftChanged();
+            return true;
+        }
+
+        bool CSimulatorEmulated::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
+        {
+            if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, selcal.toQString(), originator.toQString());
+            if (originator == identifier()) { return false; } // myself
+            if (m_myAircraft.getSelcal() == selcal) { return false; }
+            m_myAircraft.setSelcal(selcal);
+            emit this->internalAircraftChanged();
             return true;
         }
 
         void CSimulatorEmulated::displayStatusMessage(const CStatusMessage &message) const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, message.toQString());
+            m_monitorWidget->displayStatusMessage(message);
         }
 
         void CSimulatorEmulated::displayTextMessage(const CTextMessage &message) const
         {
             if (canLog()) m_monitorWidget->appendFunctionCall(Q_FUNC_INFO, message.toQString());
+            m_monitorWidget->displayTextMessage(message);
         }
 
         bool CSimulatorEmulated::setTimeSynchronization(bool enable, const CTime &offset)
@@ -175,6 +192,40 @@ namespace BlackSimPlugin
             m_simulating = simulating;
             m_paused = paused;
             this->emitSimulatorCombinedStatus();
+        }
+
+        bool CSimulatorEmulated::changeInternalCom(const CSimulatedAircraft &aircraft)
+        {
+            bool changed = false;
+            if (aircraft.getCom1System() != m_myAircraft.getCom1System()) { changed = true; }
+            if (aircraft.getCom2System() != m_myAircraft.getCom2System()) { changed = true; }
+            if (aircraft.getTransponder() != m_myAircraft.getTransponder()) { changed = true; }
+            if (aircraft.getSelcal() != m_myAircraft.getSelcal()) { changed = true; }
+
+            if (!changed) { return false; }
+            m_myAircraft.setCockpit(aircraft);
+            return this->updateCockpit(aircraft, this->identifier());
+        }
+
+        bool CSimulatorEmulated::changeInternalSelcal(const CSelcal &selcal)
+        {
+            if (m_myAircraft.getSelcal() == selcal) { return false; }
+            m_myAircraft.setSelcal(selcal);
+            return this->updateSelcal(selcal, identifier());
+        }
+
+        bool CSimulatorEmulated::changeInternalSituation(const CAircraftSituation &situation)
+        {
+            if (m_myAircraft.getSituation() == situation) { return false; }
+            m_myAircraft.setSituation(situation);
+            return this->updateOwnSituation(situation);
+        }
+
+        bool CSimulatorEmulated::changeInternalParts(const CAircraftParts &parts)
+        {
+            if (m_myAircraft.getParts() == parts) { return false; }
+            m_myAircraft.setParts(parts);
+            return this->updateOwnParts(parts);
         }
 
         bool CSimulatorEmulated::isConnected() const
@@ -245,20 +296,6 @@ namespace BlackSimPlugin
             {
                 m_monitorWidget->close();
             }
-        }
-
-        void CSimulatorEmulated::setOwnAircraftPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude)
-        {
-            const CCoordinateGeodetic coordinate(
-                CLatitude::fromWgs84(wgsLatitude),
-                CLongitude::fromWgs84(wgsLongitude),
-                CAltitude(0, CLengthUnit::m()));
-
-            CAircraftSituation s = this->getOwnAircraftSituation();
-            s.setPosition(coordinate);
-            s.setAltitude(altitude);
-
-            this->updateOwnSituation(s);
         }
 
         void CSimulatorEmulated::onSettingsChanged()

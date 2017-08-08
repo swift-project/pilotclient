@@ -13,6 +13,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackGui::Editors;
 
 namespace BlackSimPlugin
@@ -32,19 +33,24 @@ namespace BlackSimPlugin
             Q_ASSERT_X(simulator, Q_FUNC_INFO, "Need simulator");
 
             m_simulator = simulator;
+            connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this, &CSimulatorEmulatedMonitorDialog::setInteralAircraftUiValues, Qt::QueuedConnection);
+
             ui->setupUi(this);
             ui->tw_SwiftMonitorDialog->setCurrentIndex(0);
+            ui->comp_LogComponent->setMaxLogMessages(500);
             this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
             connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
 
-            connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorEmulatedMonitorDialog::changeSituation);
-            connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CSimulatorEmulatedMonitorDialog::changeParts);
+            connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorEmulatedMonitorDialog::changeSituationFromUi);
+            connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CSimulatorEmulatedMonitorDialog::changePartsFromUi);
+            connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CSimulatorEmulatedMonitorDialog::changeComFromUi);
+            connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CSimulatorEmulatedMonitorDialog::changeSelcalFromUi);
 
             this->setSimulatorUiValues();
-            ui->editor_Situation->setSituation(m_simulator->getOwnAircraftSituation());
+            this->setInteralAircraftUiValues();
         }
 
         CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog()
@@ -86,6 +92,16 @@ namespace BlackSimPlugin
             this->appendStatusMessageToList(msg);
         }
 
+        void CSimulatorEmulatedMonitorDialog::displayStatusMessage(const CStatusMessage &message)
+        {
+            ui->pte_StatusMessages->setPlainText(message.toQString(true));
+        }
+
+        void CSimulatorEmulatedMonitorDialog::displayTextMessage(const Network::CTextMessage &message)
+        {
+            ui->pte_TextMessages->setPlainText(message.toQString(true));
+        }
+
         void CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged()
         {
             m_simulator->setCombinedStatus(
@@ -95,18 +111,30 @@ namespace BlackSimPlugin
             );
         }
 
-        void CSimulatorEmulatedMonitorDialog::changeSituation()
+        void CSimulatorEmulatedMonitorDialog::changeComFromUi(const CSimulatedAircraft &aircraft)
+        {
+            if (!m_simulator) { return; }
+            m_simulator->changeInternalCom(aircraft);
+        }
+
+        void CSimulatorEmulatedMonitorDialog::changeSelcalFromUi(const CSelcal &selcal)
+        {
+            if (!m_simulator) { return; }
+            m_simulator->changeInternalSelcal(selcal);
+        }
+
+        void CSimulatorEmulatedMonitorDialog::changeSituationFromUi()
         {
             if (!m_simulator) { return; }
             const CAircraftSituation s(ui->editor_Situation->getSituation());
-            m_simulator->updateOwnSituation(s);
+            m_simulator->changeInternalSituation(s);
         }
 
-        void CSimulatorEmulatedMonitorDialog::changeParts()
+        void CSimulatorEmulatedMonitorDialog::changePartsFromUi()
         {
             if (!m_simulator) { return; }
             const CAircraftParts p(ui->editor_AircraftParts->getAircraftPartsFromGui());
-            m_simulator->updateOwnParts(p);
+            m_simulator->changeInternalParts(p);
         }
 
         void CSimulatorEmulatedMonitorDialog::setSimulatorUiValues()
@@ -117,6 +145,14 @@ namespace BlackSimPlugin
 
             ui->le_Simulator->setText(m_simulator->getSimulatorInfo().toQString(true));
             ui->le_SimulatorPlugin->setText(m_simulator->getSimulatorPluginInfo().toQString(true));
+        }
+
+        void CSimulatorEmulatedMonitorDialog::setInteralAircraftUiValues()
+        {
+            const CSimulatedAircraft internal(m_simulator->getInternalOwnAircraft());
+            ui->editor_Situation->setSituation(internal.getSituation());
+            ui->editor_AircraftParts->setAircraftParts(internal.getParts());
+            ui->editor_Com->setValue(internal);
         }
     } // ns
 } // ns

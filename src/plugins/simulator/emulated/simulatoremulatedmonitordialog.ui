@@ -23,7 +23,19 @@
       <attribute name="title">
        <string>Situation</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="vl_Situation">
+       <property name="leftMargin">
+        <number>6</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>6</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
        <item>
         <widget class="BlackGui::Editors::CSituationForm" name="editor_Situation">
          <property name="minimumSize">
@@ -36,12 +48,44 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tb_Parts">
+     <widget class="QWidget" name="tb_ComParts">
       <attribute name="title">
-       <string>Parts</string>
+       <string>COM and Parts</string>
       </attribute>
-      <layout class="QVBoxLayout" name="vl_Parts">
-       <item>
+      <layout class="QGridLayout" name="gl_ComParts">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="gb_Com">
+         <property name="title">
+          <string>COM</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="BlackGui::Editors::CCockpitComForm" name="editor_Com">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>75</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <spacer name="vs_Com">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="1" rowspan="2">
         <widget class="QGroupBox" name="gb_Parts">
          <property name="title">
           <string>Parts</string>
@@ -66,7 +110,7 @@
       <attribute name="title">
        <string>Simulator</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="vl_Simulator">
        <item>
         <widget class="QGroupBox" name="gb_General">
          <property name="title">
@@ -140,6 +184,49 @@
            <widget class="QCheckBox" name="cb_Paused">
             <property name="text">
              <string>simulator paused?</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_Messages">
+         <property name="title">
+          <string>Messages</string>
+         </property>
+         <layout class="QGridLayout" name="gl_Messages">
+          <item row="1" column="1">
+           <widget class="QPlainTextEdit" name="pte_StatusMessages">
+            <property name="documentTitle">
+             <string>Received status messages</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPlainTextEdit" name="pte_TextMessages">
+            <property name="documentTitle">
+             <string>Received text messages</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_TextMessages">
+            <property name="text">
+             <string>Text messages</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lbl_StatusMessages">
+            <property name="text">
+             <string>Status messages</string>
             </property>
            </widget>
           </item>
@@ -236,6 +323,12 @@
    <class>BlackGui::Editors::CAircraftPartsForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/aircraftpartsform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CCockpitComForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/cockpitcomform.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

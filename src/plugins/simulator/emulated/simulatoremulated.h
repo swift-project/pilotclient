@@ -49,6 +49,7 @@ namespace BlackSimPlugin
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateOwnSimulatorSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
@@ -80,6 +81,30 @@ namespace BlackSimPlugin
             //! UI setter
             void setCombinedStatus(bool connected, bool simulating, bool paused);
 
+            //! Internal own aircraft
+            //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+            const BlackMisc::Simulation::CSimulatedAircraft &getInternalOwnAircraft() const { return m_myAircraft; }
+
+            //! Simulator internal change of COM values
+            //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+            bool changeInternalCom(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Simulator internal change of SELCAL
+            //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+            bool changeInternalSelcal(const BlackMisc::Aviation::CSelcal &selcal);
+
+            //! Simulator internal change of situation
+            //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+            bool changeInternalSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+            //! Simulator internal change of parts
+            //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
+            bool changeInternalParts(const BlackMisc::Aviation::CAircraftParts &parts);
+
+        signals:
+            //! Internal aircraft changed
+            void internalAircraftChanged();
+
         protected:
             virtual bool isConnected() const override;
             virtual bool isPaused() const override;
@@ -100,9 +125,6 @@ namespace BlackSimPlugin
             //! Close window
             void closeMonitor();
 
-            //! Set own aircraft position
-            void setOwnAircraftPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
-
             //! Settings changed
             void onSettingsChanged();
 
@@ -115,7 +137,8 @@ namespace BlackSimPlugin
             bool m_simulating = true;
             bool m_timeSyncronized = false;
             BlackMisc::PhysicalQuantities::CTime m_offsetTime;
-            BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft;
+            BlackMisc::Simulation::CSimulatedAircraft m_myAircraft; //!< represents own aircraft of simulator
+            BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents other aircraft of simulator
 
             QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSimulatorEmulated::onSettingsChanged };
