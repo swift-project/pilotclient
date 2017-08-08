@@ -11,11 +11,13 @@
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/stringutils.h"
 
 #include <QCoreApplication>
 #include <Qt>
 #include <QtGlobal>
 
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 
@@ -37,6 +39,18 @@ namespace BlackMisc
         CAirport::CAirport(const CAirportIcaoCode &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName) :
             m_descriptiveName(descriptiveName), m_icao(icao), m_position(position)
         { }
+
+        bool CAirport::matchesLocation(const QString &location) const
+        {
+            if (location.isEmpty()) { return false; }
+            return caseInsensitiveStringCompare(location, this->getLocation());
+        }
+
+        bool CAirport::matchesDescriptiveName(const QString &name) const
+        {
+            if (name.isEmpty()) { return false; }
+            return caseInsensitiveStringCompare(name, this->getDescriptiveName());
+        }
 
         void CAirport::updateMissingParts(const CAirport &airport)
         {
@@ -61,6 +75,7 @@ namespace BlackMisc
         {
             CAirport airport(json.value(prefix + "icao").toString());
             airport.setDescriptiveName(json.value(prefix + "name").toString());
+            airport.setLocation(json.value(prefix + "location").toString());
             const CCoordinateGeodetic pos(
                 json.value(prefix + "latitude").toDouble(),
                 json.value(prefix + "longitude").toDouble(),
@@ -79,11 +94,13 @@ namespace BlackMisc
         CVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIcao:
                 return this->m_icao.propertyByIndex(index.copyFrontRemoved());
+            case IndexLocation:
+                return CVariant(this->m_location);
             case IndexDescriptiveName:
                 return CVariant(this->m_descriptiveName);
             case IndexPosition:
@@ -102,11 +119,14 @@ namespace BlackMisc
         void CAirport::setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAirport>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIcao:
                 this->m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                break;
+            case IndexLocation:
+                this->setLocation(variant.toQString());
                 break;
             case IndexDescriptiveName:
                 this->setDescriptiveName(variant.toQString());
@@ -133,11 +153,13 @@ namespace BlackMisc
         int CAirport::comparePropertyByIndex(const CPropertyIndex &index, const CAirport &compareValue) const
         {
             if (index.isMyself()) { return this->m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao()); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIcao:
                 return this->m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
+            case IndexLocation:
+                return this->m_location.compare(compareValue.getLocation(), Qt::CaseInsensitive);
             case IndexDescriptiveName:
                 return this->m_descriptiveName.compare(compareValue.getDescriptiveName(), Qt::CaseInsensitive);
             default:

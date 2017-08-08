@@ -45,6 +45,7 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexIcao = BlackMisc::CPropertyIndex::GlobalIndexCAirport,
+                IndexLocation,
                 IndexDescriptiveName,
                 IndexPosition,
                 IndexCountry,
@@ -73,11 +74,23 @@ namespace BlackMisc
             //! Set ICAO code.
             void setIcao(const CAirportIcaoCode &icao) {  m_icao = icao; }
 
+            //! Get location (e.g. "London")
+            const QString &getLocation() const { return m_location; }
+
+            //! Set location
+            void setLocation(const QString &location) { this->m_location = location; }
+
+            //! Matches location?
+            bool matchesLocation(const QString &location) const;
+
             //! Get descriptive name
-            QString getDescriptiveName() const { return m_descriptiveName; }
+            const QString &getDescriptiveName() const { return m_descriptiveName; }
 
             //! Set descriptive name
             void setDescriptiveName(const QString &name) { this->m_descriptiveName = name; }
+
+            //! Matches name?
+            bool matchesDescriptiveName(const QString &name) const;
 
             //! Get the position
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
@@ -148,6 +161,7 @@ namespace BlackMisc
             static CAirport fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
+            QString                             m_location;
             QString                             m_descriptiveName;
             bool                                m_operating = true;
             CAirportIcaoCode                    m_icao;
@@ -157,6 +171,7 @@ namespace BlackMisc
             BLACK_METACLASS(
                 CAirport,
                 BLACK_METAMEMBER(icao),
+                BLACK_METAMEMBER(location),
                 BLACK_METAMEMBER(descriptiveName),
                 BLACK_METAMEMBER(position),
                 BLACK_METAMEMBER(country),

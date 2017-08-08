@@ -49,6 +49,9 @@ namespace BlackMisc
             //! Find first station by callsign, if not return given value / default
             CAirport findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound = CAirport()) const;
 
+            //! Find first by name or location, if not return given value / default
+            CAirport findFirstByNameOrLocation(const QString &nameOrLocation, const CAirport &ifNotFound = CAirport()) const;
+
             //! Containing an airport with given ICAO code?
             bool containsAirportWithIcaoCode(const CAirportIcaoCode &icao) const;
 

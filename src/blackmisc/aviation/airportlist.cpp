@@ -62,6 +62,23 @@ namespace BlackMisc
             return this->findFirstByOrDefault(&CAirport::getIcao, icao, ifNotFound);
         }
 
+        CAirport CAirportList::findFirstByNameOrLocation(const QString &nameOrLocation, const CAirport &ifNotFound) const
+        {
+            if (this->isEmpty() || nameOrLocation.isEmpty()) { return ifNotFound; }
+            CAirportList airports = this->findBy([&](const CAirport & airport)
+            {
+                return airport.matchesDescriptiveName(nameOrLocation);
+            });
+            if (!airports.isEmpty()) { return airports.frontOrDefault(); }
+
+            airports = this->findBy([&](const CAirport & airport)
+            {
+                return airport.matchesLocation(nameOrLocation);
+            });
+            if (!airports.isEmpty()) { return airports.frontOrDefault(); }
+            return ifNotFound;
+        }
+
         QStringList CAirportList::allIcaoCodes(bool sorted) const
         {
             QStringList icaos;
