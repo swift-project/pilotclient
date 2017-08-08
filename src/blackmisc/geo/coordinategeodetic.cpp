@@ -27,14 +27,14 @@ namespace BlackMisc
     {
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
-            QString s = "Geodetic: {%1, %2, %3}";
+            static const QString s = "Geodetic: {%1, %2, %3}";
             return s.arg(this->latitude().valueRoundedWithUnit(6, i18n), this->longitude().valueRoundedWithUnit(6, i18n), this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
         }
 
         CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CAltitude &geodeticHeight)
         {
-            CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
-            CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
+            const CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
+            const CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
             return CCoordinateGeodetic(lat, lon, geodeticHeight);
         }
 
@@ -89,7 +89,7 @@ namespace BlackMisc
         {
             if (!index.isMyself())
             {
-                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
                 case IndexLatitude:
@@ -120,7 +120,7 @@ namespace BlackMisc
         {
             if (!index.isMyself())
             {
-                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
                 case IndexLatitude:
@@ -285,7 +285,7 @@ namespace BlackMisc
             if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
             if (!index.isMyself())
             {
-                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
                 case IndexRelativeBearing:
@@ -306,7 +306,7 @@ namespace BlackMisc
             if (ICoordinateGeodetic::canHandleIndex(index)) { return; }
             if (!index.isMyself())
             {
-                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
                 case IndexRelativeBearing:
@@ -328,7 +328,7 @@ namespace BlackMisc
             if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue); }
             if (!index.isMyself())
             {
-                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
                 case IndexRelativeBearing:

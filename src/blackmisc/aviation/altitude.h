@@ -78,7 +78,7 @@ namespace BlackMisc
             //! Constructor
             CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(datum) {}
 
-            //! Constructor
+            //! Constructor, value as CAltitude::MeanSeaLevel
             CAltitude(double value, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(MeanSeaLevel) {}
 
             //! Altitude as string

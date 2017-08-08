@@ -43,7 +43,6 @@ namespace BlackMisc
         class BLACKMISC_EXPORT IOwnAircraftProvider
         {
         public:
-
             //! Own aircraft
             //! \threadsafe
             virtual CSimulatedAircraft getOwnAircraft() const = 0;
