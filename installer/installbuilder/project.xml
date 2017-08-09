@@ -14,23 +14,14 @@
         <include>
             <file>qt5-binaries.xml</file>
         </include>
-        <include>
+        <!--<include>
             <file>autoupdater.xml</file>
-        </include>
+        </include>-->
         <include>
             <file>vcredist.xml</file>
         </include>
     </componentList>
     <postInstallationActionList>
-        <writeFile>
-            <path>${installdir}/update.ini</path>
-            <text>[Update]
-url = http://127.0.0.1:8080/update.xml
-version_id = 061
-update_download_location = ${system_temp_directory}
-check_for_updates = 1
-</text>
-        </writeFile>
         <createDirectory>
             <path>/usr/local/var/lib/dbus</path>
             <ruleList>
