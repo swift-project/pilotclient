@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/settings/swiftpluginsettings.h"
 #include "blackmisc/pq/time.h"
+#include "blackmisc/connectionguard.h"
 #include "simulatoremulatedmonitordialog.h"
 
 #include <QScopedPointer>
@@ -131,6 +132,9 @@ namespace BlackSimPlugin
             //! Values from UI
             void onSimulatorStatusChanged();
 
+            //! Connect own signals for monitoring
+            void connectOwnSignals();
+
             bool m_log = false; //!< from settings
             bool m_paused = false;
             bool m_connected = true;
@@ -142,6 +146,7 @@ namespace BlackSimPlugin
 
             QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSimulatorEmulated::onSettingsChanged };
+            BlackMisc::CConnectionGuard m_connectionGuard;
         };
 
         //! Listener for swift

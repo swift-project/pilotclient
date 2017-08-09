@@ -14,6 +14,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackGui;
 using namespace BlackGui::Editors;
 
 namespace BlackSimPlugin
@@ -49,6 +50,11 @@ namespace BlackSimPlugin
             connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CSimulatorEmulatedMonitorDialog::changeComFromUi);
             connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CSimulatorEmulatedMonitorDialog::changeSelcalFromUi);
 
+            ui->wi_LedReceiving->setToolTips("receiving", "idle");
+            ui->wi_LedReceiving->setShape(CLedWidget::Rounded);
+            ui->wi_LedSending->setToolTips("sending", "idle");
+            ui->wi_LedSending->setShape(CLedWidget::Rounded);
+
             this->setSimulatorUiValues();
             this->setInteralAircraftUiValues();
         }
@@ -64,6 +70,18 @@ namespace BlackSimPlugin
         void CSimulatorEmulatedMonitorDialog::appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages)
         {
             ui->comp_LogComponent->appendStatusMessagesToList(statusMessages);
+        }
+
+        void CSimulatorEmulatedMonitorDialog::appendReceivingCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
+        {
+            ui->wi_LedReceiving->blink();
+            this->appendFunctionCall(function, p1, p2, p3);
+        }
+
+        void CSimulatorEmulatedMonitorDialog::appendSendingCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
+        {
+            ui->wi_LedSending->blink();
+            this->appendFunctionCall(function, p1, p2, p3);
         }
 
         void CSimulatorEmulatedMonitorDialog::appendFunctionCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)

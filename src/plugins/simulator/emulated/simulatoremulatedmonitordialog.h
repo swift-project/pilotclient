@@ -48,8 +48,11 @@ namespace BlackSimPlugin
             //! \copydoc BlackGui::Components::CLogComponent::appendStatusMessagesToList
             void appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages);
 
-            //! Append a function call as status message
-            void appendFunctionCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
+            //! Receiving call to be written in log widget
+            void appendReceivingCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
+
+            //! Sending call to be written in log widget
+            void appendSendingCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
 
             //! Display status message
             void displayStatusMessage(const BlackMisc::CStatusMessage &message);
@@ -59,6 +62,9 @@ namespace BlackSimPlugin
 
         private:
             static int constexpr MaxLogMessages = 500; //!< desired log message number
+
+            //! Append a function call as status message
+            void appendFunctionCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
 
             //! UI values changed
             void onSimulatorValuesChanged();

@@ -6,14 +6,59 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>718</width>
-    <height>480</height>
+    <width>582</width>
+    <height>593</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Emulated simulator monitor</string>
   </property>
   <layout class="QVBoxLayout" name="vl_Settings">
+   <item>
+    <widget class="QFrame" name="fr_LedHeader">
+     <layout class="QHBoxLayout" name="hl_LedHeader">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lbl_Receiving">
+        <property name="text">
+         <string>Receiving</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="BlackGui::CLedWidget" name="wi_LedReceiving" native="true"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_Sending">
+        <property name="text">
+         <string>Sending</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="BlackGui::CLedWidget" name="wi_LedSending" native="true"/>
+      </item>
+      <item>
+       <spacer name="hs_LedHeader">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item>
     <widget class="QTabWidget" name="tw_SwiftMonitorDialog">
      <property name="currentIndex">
@@ -329,6 +374,12 @@
    <class>BlackGui::Editors::CCockpitComForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/cockpitcomform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CLedWidget</class>
+   <extends>QWidget</extends>
+   <header>blackgui/led.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
