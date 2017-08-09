@@ -20,7 +20,7 @@ namespace BlackMisc
 
     CIdentifiable::CIdentifiable(QObject *object) : m_identifier(object->objectName())
     {
-        // if the object name changes we update our origiginator
+        // if the object name changes we update our originator
         this->m_connection = QObject::connect(object, &QObject::objectNameChanged, [this, object]()
         {
             this->m_identifier = CIdentifier(object->objectName());
