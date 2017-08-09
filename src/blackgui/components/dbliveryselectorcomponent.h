@@ -109,10 +109,8 @@ namespace BlackGui
 
             QScopedPointer<Ui::CDbLiverySelectorComponent> ui;
             QScopedPointer<QCompleter>   m_completerLiveries;
-            QMetaObject::Connection      m_signalConnection;
             BlackMisc::Aviation::CLivery m_currentLivery;
         };
-
     } // ns
 } // ns
 
