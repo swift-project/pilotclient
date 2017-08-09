@@ -65,6 +65,9 @@ namespace BlackGui
         //! Allows to set the led value {true, false}
         void setOn(bool on, int resetTimeMs = -1);
 
+        //! Set to on for resetTimeMs
+        void blink(int resetTimeMs = 500);
+
         //! Sets the 3rd state
         void setTriState(int resetTimeMs = -1);
 
@@ -133,21 +136,21 @@ namespace BlackGui
         void clicked();
 
     protected:
-        State m_value = Off;         //!< current value
-        LedColor m_colorOn = Yellow; //!< On color
-        LedColor m_colorOff = Black; //!< Off color
+        State m_value = Off;             //!< current value
+        LedColor m_colorOn = Yellow;     //!< On color
+        LedColor m_colorOff = Black;     //!< Off color
         LedColor m_colorTriState = Blue; //!< tri-state color
-        LedShape m_shape = Circle;   //!< shape
-        double m_whRatio = 1.0;      //!< width/height ratio
-        int m_widthTarget = -1;      //!< desired width
-        int m_heightCalculated = 1;  //!< calculated height
+        LedShape m_shape = Circle;       //!< shape
+        double m_whRatio = 1.0;          //!< width/height ratio
+        int m_widthTarget = -1;          //!< desired width
+        int m_heightCalculated = 1;      //!< calculated height
 
         QString m_tooltipOn = "on";              //!< tooltip when on
         QString m_tooltipOff = "off";            //!< tooltip when off
-        QString m_tooltipTriState = "tri-state"; //!< tooltip tri state
+        QString m_tooltipTriState = "tri-state"; //!< tooltip tri-state
         QString m_currentToolTip = "off";        //!< currently used tooltip
         QScopedPointer<QSvgRenderer> m_renderer; //!< Renderer
-        QTimer m_resetTimer {this};              //!< reset state
+        QTimer m_resetTimer { this };            //!< reset state
 
         //! Init
         void init();

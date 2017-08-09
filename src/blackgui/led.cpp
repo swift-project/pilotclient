@@ -237,6 +237,11 @@ namespace BlackGui
         setLed();
     }
 
+    void CLedWidget::blink(int resetTimeMs)
+    {
+        this->setOn(true, resetTimeMs);
+    }
+
     void CLedWidget::setTriState(int resetTimeMs)
     {
         if (resetTimeMs < 0 && m_resetTimer.isActive()) { m_resetTimer.stop();}
@@ -283,13 +288,13 @@ namespace BlackGui
 
     const QStringList &CLedWidget::shapes()
     {
-        static const QStringList shapes( {":/qled/icons/qled/circle_" , ":/qled/icons/qled/square_" , ":/qled/icons/qled/triang_" , ":/qled/icons/qled/round_"});
+        static const QStringList shapes({":/qled/icons/qled/circle_" , ":/qled/icons/qled/square_" , ":/qled/icons/qled/triang_" , ":/qled/icons/qled/round_"});
         return shapes;
     }
 
     const QStringList &CLedWidget::colorFiles()
     {
-        static const QStringList colors( { "red.svg", "green.svg", "yellow.svg", "grey.svg", "orange.svg", "purple.svg", "blue.svg", "black.svg" });
+        static const QStringList colors({ "red.svg", "green.svg", "yellow.svg", "grey.svg", "orange.svg", "purple.svg", "blue.svg", "black.svg" });
         return colors;
     }
 
