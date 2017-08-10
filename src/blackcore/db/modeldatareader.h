@@ -79,6 +79,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
 
+            //! Get model for DB key
+            //! \threadsafe
+            BlackMisc::Simulation::CAircraftModel getModelForDbKey(int dbKey) const;
+
             //! Get model for designator/combined code
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode);
@@ -149,7 +153,8 @@ namespace BlackCore
 
             //! Read / re-read data file
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
-                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
+                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading,
+                         const QDateTime &newerThan = QDateTime());
 
             void ps_liveryCacheChanged();
             void ps_modelCacheChanged();

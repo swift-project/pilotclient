@@ -229,9 +229,13 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
 
+        //! Model for model string if any
+        //! \threadsafe
+        BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
+
         //! Model for key if any
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelKey) const;
+        BlackMisc::Simulation::CAircraftModel getModelForDbKey(int dbKey) const;
 
         //! Aircraft ICAO codes
         //! \threadsafe
@@ -335,10 +339,17 @@ namespace BlackCore
 
         //! Validate for publishing
         //! \remark More detailed check than BlackMisc::Simulation::CAircraftModelList::validateForPublishing
-        BlackMisc::CStatusMessageList validateForPublishing(const BlackMisc::Simulation::CAircraftModelList &models, BlackMisc::Simulation::CAircraftModelList &validModels, BlackMisc::Simulation::CAircraftModelList &invalidModels) const;
+        BlackMisc::CStatusMessageList validateForPublishing(
+            const BlackMisc::Simulation::CAircraftModelList &modelsToBePublished,
+            bool ignoreEqual,
+            BlackMisc::Simulation::CAircraftModelList &validModels,
+            BlackMisc::Simulation::CAircraftModelList &invalidModels) const;
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::isEqualForPublishing
+        bool isDbModelEqualForPublishing(const BlackMisc::Simulation::CAircraftModel &modelToBeChecked, BlackMisc::CStatusMessageList *details = nullptr) const;
 
         //! Publish models to database
-        BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
+        BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &modelsToBePublished) const;
 
         //! Trigger read of DB info objects
         void triggerReadOfDbInfoObjects();

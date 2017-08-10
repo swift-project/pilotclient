@@ -148,9 +148,9 @@ namespace BlackCore
         if (m_vatsimDataFileReader) { m_vatsimDataFileReader->updateWithVatsimDataFileData(aircraftToBeUdpated); }
     }
 
-    CStatusMessageList CWebDataServices::asyncPublishModels(const CAircraftModelList &models) const
+    CStatusMessageList CWebDataServices::asyncPublishModels(const CAircraftModelList &modelsToBePublished) const
     {
-        if (m_databaseWriter) { return m_databaseWriter->asyncPublishModels(models);}
+        if (m_databaseWriter) { return m_databaseWriter->asyncPublishModels(modelsToBePublished);}
         return CStatusMessageList();
     }
 
@@ -541,6 +541,12 @@ namespace BlackCore
         return CAircraftModel();
     }
 
+    CAircraftModel CWebDataServices::getModelForDbKey(int dbKey) const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->getModelForDbKey(dbKey); }
+        return CAircraftModel();
+    }
+
     CAircraftIcaoCodeList CWebDataServices::getAircraftIcaoCodes() const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAircraftIcaoCodes(); }
@@ -702,9 +708,9 @@ namespace BlackCore
         return 0;
     }
 
-    CStatusMessageList CWebDataServices::validateForPublishing(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
+    CStatusMessageList CWebDataServices::validateForPublishing(const CAircraftModelList &modelsToBePublished, bool ignoreEqual, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
     {
-        CStatusMessageList msgs(models.validateForPublishing(validModels, invalidModels));
+        CStatusMessageList msgs(modelsToBePublished.validateForPublishing(validModels, invalidModels)); // technical validation
 
         // check against existing distributors
         const CDistributorList distributors(this->getDistributors());
@@ -712,11 +718,47 @@ namespace BlackCore
         {
             // only further check the valid ones
             CAircraftModelList newValidModels;
-            CStatusMessageList msgsDistributos(validModels.validateDistributors(distributors, newValidModels, invalidModels));
+            const CStatusMessageList msgsDistributors(validModels.validateDistributors(distributors, newValidModels, invalidModels));
             validModels = newValidModels;
-            msgs.push_back(msgsDistributos);
+            msgs.push_back(msgsDistributors);
+        }
+
+        // check if model is changed
+        // in case of not ignoreEqual we just check create the messages
+        {
+            CAircraftModelList newValidModels;
+            for (const CAircraftModel &publishModel : validModels)
+            {
+                CStatusMessageList equalMessages;
+                const bool changed = !this->isDbModelEqualForPublishing(publishModel, &equalMessages);
+                if (changed)
+                {
+                    // all good
+                    newValidModels.push_back(publishModel);
+                    continue;
+                }
+                if (ignoreEqual) { equalMessages.warningToError(); }
+                msgs.push_back(CStatusMessage(this, ignoreEqual ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning, "Model: '%1', there is no change") << publishModel.getModelString());
+                if (ignoreEqual)
+                {
+                    invalidModels.push_back(publishModel);
+                }
+                else
+                {
+                    newValidModels.push_back(publishModel);
+                }
+            }
+            validModels = newValidModels;
         }
         return msgs;
+    }
+
+    bool CWebDataServices::isDbModelEqualForPublishing(const CAircraftModel &modelToBeChecked, CStatusMessageList *details) const
+    {
+        const CAircraftModel compareDbModel = modelToBeChecked.isLoadedFromDb() ?
+                                              this->getModelForDbKey(modelToBeChecked.getDbKey()) :
+                                              this->getModelForModelString(modelToBeChecked.getModelString());
+        return modelToBeChecked.isEqualForPublishing(compareDbModel, details);
     }
 
     CAirlineIcaoCodeList CWebDataServices::getAirlineIcaoCodesForDesignator(const QString &designator) const
