@@ -120,6 +120,15 @@ namespace BlackMisc
         }
     }
 
+    void CStatusMessageList::warningToError()
+    {
+        for (CStatusMessage &msg : *this)
+        {
+            if (msg.getSeverity() != CStatusMessage::SeverityWarning) { continue; }
+            msg.setSeverity(CStatusMessage::SeverityError);
+        }
+    }
+
     void CStatusMessageList::sortBySeverity()
     {
         this->sortBy(&CStatusMessage::getSeverity);
@@ -130,6 +139,12 @@ namespace BlackMisc
         if (this->isEmpty()) { return; }
         this->removeIf(&CStatusMessage::getSeverity, CStatusMessage::SeverityWarning);
         this->removeInfoAndBelow();
+    }
+
+    void CStatusMessageList::removeSeverity(CStatusMessage::StatusSeverity severity)
+    {
+        if (this->isEmpty()) { return; }
+        this->removeIf(&CStatusMessage::getSeverity, severity);
     }
 
     void CStatusMessageList::removeInfoAndBelow()

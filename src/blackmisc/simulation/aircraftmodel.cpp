@@ -648,6 +648,71 @@ namespace BlackMisc
             return msgs;
         }
 
+        //! Create an appropriate status message for an attribute comparison
+        CStatusMessage equalMessage(bool same, const CAircraftModel &model, const QString &description, const QString &oldValue, const QString &newValue)
+        {
+            if (same)
+            {
+                static const CStatusMessage msgSame({ CLogCategory::validation() }, CStatusMessage::SeverityWarning, "Model '%1' same %2 '%3'");
+                return CStatusMessage(msgSame) << model.getModelStringAndDbKey() << description << newValue;
+            }
+            else
+            {
+                static const CStatusMessage msgDiff({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Model '%1' changed %2 '%3'->'%4'");
+                return CStatusMessage(msgDiff) << model.getModelStringAndDbKey() << description << oldValue << newValue;
+            }
+        }
+
+        bool CAircraftModel::isEqualForPublishing(const CAircraftModel &dbModel, CStatusMessageList *details) const
+        {
+            if (!dbModel.isLoadedFromDb())
+            {
+                static const CStatusMessage msgNoDbModel({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "No DB model yet");
+                if (details) { details->push_back(msgNoDbModel); }
+                return false;
+            }
+
+            CStatusMessageList validationMsgs;
+            bool changed = false;
+            bool equal = dbModel.getLivery().isLoadedFromDb() && dbModel.getLivery().isDbEqual(this->getLivery());
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("livery"), dbModel.getLivery().getCombinedCodePlusInfoAndId(), this->getLivery().getCombinedCodePlusInfoAndId())); }
+            changed |= !equal;
+
+            equal = dbModel.getAircraftIcaoCode().isLoadedFromDb() && dbModel.getAircraftIcaoCode().isDbEqual(this->getAircraftIcaoCode());
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("aircraft ICAO"), dbModel.getAircraftIcaoCode().getDesignatorDbKey(), this->getAircraftIcaoCode().getDesignatorDbKey())); }
+            changed |= !equal;
+
+            equal = dbModel.getDistributor().isLoadedFromDb() && dbModel.getDistributor().isDbEqual(this->getDistributor());
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("distributor"), dbModel.getDistributor().getDescription(), this->getDistributor().getDescription())); }
+            changed |= !equal;
+
+            equal = dbModel.getSimulator() == this->getSimulator();
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("simulator"), dbModel.getSimulator().toQString(), this->getSimulator().toQString())); }
+            changed |= !equal;
+
+            equal = dbModel.getDescription() == this->getDescription();
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("description"), dbModel.getDescription(), this->getDescription())); }
+            changed |= !equal;
+
+            equal = dbModel.getName() == this->getName();
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("name"), dbModel.getName(), this->getName())); }
+            changed |= !equal;
+
+            equal = dbModel.getModelMode() == this->getModelMode();
+            if (details) { validationMsgs.push_back(equalMessage(equal, *this, QStringLiteral("mode"), dbModel.getModelModeAsString(), this->getModelModeAsString())); }
+            changed |= !equal;
+
+            // clean messages
+            if (changed && details)
+            {
+                // we have a changed entity, remove the warnings as they are just noise
+                validationMsgs.removeSeverity(CStatusMessage::SeverityWarning);
+            }
+
+            if (details) { details->push_back(validationMsgs); }
+            return !changed;
+        }
+
         QString CAircraftModel::modelTypeToString(CAircraftModel::ModelType type)
         {
             switch (type)

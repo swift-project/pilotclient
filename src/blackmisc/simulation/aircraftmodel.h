@@ -368,6 +368,9 @@ namespace BlackMisc
             //! Validate
             BlackMisc::CStatusMessageList validate(bool withNestedObjects) const;
 
+            //! Considered equal for publishing, compares if livery etc. are the same DB values
+            bool isEqualForPublishing(const CAircraftModel &dbModel, BlackMisc::CStatusMessageList *details = nullptr) const;
+
             //! Helper class used by implementation.
             using MemoHelper = CMemoHelper<Aviation::CAircraftIcaoCode, Aviation::CLivery, CDistributor>;
 
