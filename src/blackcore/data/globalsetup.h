@@ -141,13 +141,13 @@ namespace BlackCore
             BlackMisc::Network::CUrlList getSwiftDbDataFileLocationUrls() const;
 
             //! Locations of swift DB news
-            const BlackMisc::Network::CUrlList &getSwiftLatestNewsUrls() const { return m_newsUrls; }
+            const BlackMisc::Network::CUrlList &getSwiftLatestNewsUrls() const;
 
             //! Online help URLs
-            const BlackMisc::Network::CUrlList &getOnlineHelpUrls() const { return m_onlineHelpUrls; }
+            const BlackMisc::Network::CUrlList &getOnlineHelpUrls() const;
 
             //! swift map URLs
-            const BlackMisc::Network::CUrlList &getSwiftMapUrls() const { return m_mapUrls; }
+            const BlackMisc::Network::CUrlList &getSwiftMapUrls() const;
 
             //! FSD test servers
             const BlackMisc::Network::CServerList &getFsdTestServers() const { return m_fsdTestServers; }

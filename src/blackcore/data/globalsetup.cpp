@@ -179,6 +179,21 @@ namespace BlackCore
             return urls.appendPath(CGlobalSetup::versionString() + "/dbdata/");
         }
 
+        const CUrlList &CGlobalSetup::getSwiftLatestNewsUrls() const
+        {
+            return m_newsUrls;
+        }
+
+        const CUrlList &CGlobalSetup::getOnlineHelpUrls() const
+        {
+            return m_onlineHelpUrls;
+        }
+
+        const CUrlList &CGlobalSetup::getSwiftMapUrls() const
+        {
+            return m_mapUrls;
+        }
+
         CServerList CGlobalSetup::getFsdTestServersPlusHardcodedServers() const
         {
             static const CServerList hardcoded({ CServer("swift", "swift Testserver", "vatsim-germany.org", 6809, CUser("1234567", "swift Test User", "", "123456"), CServer::FSDServerVatsim, true) });
