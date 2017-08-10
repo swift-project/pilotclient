@@ -171,7 +171,7 @@ namespace BlackMisc
             ) = 0;
 
             //! Remove outdated aircraft parts, but never the most recent one
-            void static removeOutdatedParts(Aviation::CAircraftPartsList &partsList);
+            static void removeOutdatedParts(Aviation::CAircraftPartsList &partsList);
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object

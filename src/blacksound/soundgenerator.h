@@ -173,7 +173,7 @@ namespace BlackSound
         static void playNotificationSound(int volume, BlackMisc::Audio::CNotificationSounds::Notification notification);
 
         //! For debugging purposes
-        void static printAllQtSoundDevices(QTextStream &qtout);
+        static void printAllQtSoundDevices(QTextStream &qtout);
 
     signals:
         //! Device was closed

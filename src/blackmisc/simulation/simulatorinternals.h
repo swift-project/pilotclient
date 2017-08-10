@@ -87,7 +87,7 @@ namespace BlackMisc
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
             //! Register metadata
-            void static registerMetadata();
+            static void registerMetadata();
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
