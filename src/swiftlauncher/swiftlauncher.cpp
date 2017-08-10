@@ -122,6 +122,7 @@ void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
     {
         const QString html = nwReply->readAll().trimmed();
         if (html.isEmpty()) { return; }
+        CLogMessage(this).info("Received news from '%1'") << nwReply->url().toString();
         ui->tbr_LatestNews->setHtml(html); // causes QFSFileEngine::open: No file name specified
         constexpr qint64 newNews = 72 * 3600 * 1000;
         const qint64 deltaT = CNetworkUtils::lastModifiedSinceNow(nwReply.data());
@@ -129,6 +130,10 @@ void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
         {
             ui->tb_Launcher->setCurrentWidget(ui->pg_LatestNews);
         }
+    }
+    else
+    {
+        CLogMessage(this).warning("Error received news from '%1'") << nwReply->url().toString();
     }
 }
 
