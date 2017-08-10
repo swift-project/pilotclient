@@ -84,7 +84,9 @@ namespace BlackCore
                         // check mode here for consistency
                         Q_ASSERT_X(!getBaseUrl(rmDbOrSharedFlag).isEmpty(), Q_FUNC_INFO, "Wrong retrieval mode");
 
-                        const bool changedUrl = this->hasChangedUrl(currentEntity);
+                        CUrl oldUrlInfo;
+                        CUrl newUrlInfo;
+                        const bool changedUrl = this->hasChangedUrl(currentEntity, oldUrlInfo, newUrlInfo);
                         const QDateTime cacheTs(this->getCacheTimestamp(currentEntity));
                         const QDateTime latestEntityTs(this->getLatestEntityTimestampFromDbInfoObjects(currentEntity));
                         const qint64 cacheTimestamp = cacheTs.isValid() ? cacheTs.toMSecsSinceEpoch() : -1;
@@ -104,7 +106,10 @@ namespace BlackCore
 
                             if (changedUrl)
                             {
-                                CLogMessage(this).info("Data location changed, will override cache for '%1' reading '%2'") << currentEntityName << rmDbOrSharedFlagString;
+                                CLogMessage(this).info("Data location for '%1' changed ('%2'->'%3'), will override cache for reading '%4'")
+                                        << currentEntityName
+                                        << oldUrlInfo.toQString() << newUrlInfo.toQString()
+                                        << rmDbOrSharedFlagString;
                             }
                             else
                             {

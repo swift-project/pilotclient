@@ -81,10 +81,12 @@ namespace BlackCore
             return 0;
         }
 
-        bool CInfoDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
+        bool CInfoDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
         {
             // not implemented
             Q_UNUSED(entity);
+            oldUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
+            newUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
             return false;
         }
 

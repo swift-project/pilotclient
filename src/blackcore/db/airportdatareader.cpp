@@ -137,10 +137,12 @@ namespace BlackCore
             if (entities.testFlag(CEntityFlags::AirportEntity)) { CDataCache::instance()->clearAllValues(this->m_airportCache.getKey()); }
         }
 
-        bool CAirportDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
+        bool CAirportDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl(CDbFlags::DbReading));
+            oldUrlInfo = this->m_readerUrlCache.get();
+            newUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
+            return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);
         }
 
         CUrl CAirportDataReader::getDbServiceBaseUrl() const

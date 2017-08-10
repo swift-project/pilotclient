@@ -319,12 +319,14 @@ namespace BlackCore
 
             //! Changed URL, means the cache values have been read from elsewhere
             //! \remark testing based on BlackMisc::Db::CDbFlags::DbReading
-            virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
+            virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity,
+                                       BlackMisc::Network::CUrl &oldUrlInfo,
+                                       BlackMisc::Network::CUrl &newUrlInfo) const = 0;
 
             //! Cache for given entity has changed
             virtual void cacheHasChanged(BlackMisc::Network::CEntityFlags::Entity entities);
 
-            //! Has URL been changed? Means we load from a differrent server
+            //! Has URL been changed? Means we load from a different server
             static bool isChangedUrl(const BlackMisc::Network::CUrl &oldUrl, const BlackMisc::Network::CUrl &currentUrl);
             //! @}
 

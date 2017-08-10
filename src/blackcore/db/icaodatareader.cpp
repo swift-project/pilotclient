@@ -557,10 +557,12 @@ namespace BlackCore
             }
         }
 
-        bool CIcaoDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
+        bool CIcaoDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl(CDbFlags::DbReading));
+            oldUrlInfo = this->m_readerUrlCache.get();
+            newUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
+            return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);
         }
 
         CUrl CIcaoDataReader::getDbServiceBaseUrl() const

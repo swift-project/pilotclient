@@ -138,7 +138,7 @@ namespace BlackCore
         protected:
             // cache handling for base class
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-            virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CUrl &oldUrlInfo, BlackMisc::Network::CUrl &newUrlInfo) const override;
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private slots:
