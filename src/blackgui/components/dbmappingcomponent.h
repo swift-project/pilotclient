@@ -87,7 +87,7 @@ namespace BlackGui
             explicit CDbMappingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbMappingComponent();
+            virtual ~CDbMappingComponent();
 
             //! Graceful shutdown
             void gracefulShutdown();
@@ -123,6 +123,9 @@ namespace BlackGui
             //! @{
             //! Stashed models
             const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
+
+            //! Any stashed models?
+            bool hasStashedModels() const;
 
             //! Stashed model strings
             QStringList getStashedModelStrings() const;
@@ -279,6 +282,9 @@ namespace BlackGui
             //! Remove DB models from current view
             void ps_removeDbModelsFromView();
 
+            //! Show changed attributes of stashed
+            void ps_showChangedAttributes();
+
             //! Toggle auto filtering
             void ps_toggleAutoFiltering();
 
@@ -311,10 +317,10 @@ namespace BlackGui
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader     m_vPilotReader;        //!< read vPilot rules
             BlackMisc::CDigestSignal                                m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
             BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this };
-            const bool vPilotSupport   = true;   //!< vPilot support
-            bool m_vPilot1stInit       = true;   //!< vPilot extensions initaliazed?
+            const bool vPilotSupport   = true;   //!< vPilot support (will be removed in future)
+            bool m_vPilot1stInit       = true;   //!< vPilot extensions initalized?
             bool m_vPilotEnabled       = false;  //!< use vPilot extensions
-            bool m_vPilotFormatted     = false;  //!< vPilot fomratted (workaround)
+            bool m_vPilotFormatted     = false;  //!< vPilot formatted (workaround)
             bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model
 
             //! Init vPilot if rights and suitable
@@ -355,17 +361,18 @@ namespace BlackGui
                 QAction *m_menuAction = nullptr;
             };
 
-            //! Menu for tools:
-            //! -# removing DB models from current view and
+            //! Menu for stashing related tools:
+            //! -# removing DB models from stash view
             //! -# for auto stashing
-            //! -# automatically updating simulators (FSX, FS9, P3D family)
-            //! -# toggle auto filtering
-            //! \note This is a specific menu for that very component
-            class CModelStashToolsMenu : public BlackGui::Menus::IMenuDelegate
+            //! -# cross simulator updating (FSX, FS9, P3D family)
+            //! -# toggle stash auto filtering
+            //! -# show changed attributes
+            //! \note This is a specific menu for the CDbMappingComponent component
+            class CStashToolsMenu : public BlackGui::Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                CModelStashToolsMenu(CDbMappingComponent *mappingComponent, bool separator = true);
+                CStashToolsMenu(CDbMappingComponent *mappingComponent, bool separator = true);
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
@@ -375,7 +382,7 @@ namespace BlackGui
                 CDbMappingComponent *mappingComponent() const;
 
                 //! Removel models existing in DB
-                void addRemoveDbModels(Menus::CMenuActions &menuActions);
+                void addStashViewSpecificMenus(Menus::CMenuActions &menuActions);
 
                 QAction *m_autoStashing = nullptr;
                 QAction *m_autoSimulatorStashing = nullptr;

@@ -85,15 +85,15 @@ namespace BlackGui
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnAircraftModels->view(), this, true));
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new CMergeWithVPilotMenu(this));
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new COwnModelSetMenu(this, true));
-            ui->comp_OwnAircraftModels->view()->setCustomMenu(new CModelStashToolsMenu(this, false));
+            ui->comp_OwnAircraftModels->view()->setCustomMenu(new CStashToolsMenu(this, false));
 
             ui->comp_OwnModelSet->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnModelSet->view(), this, true));
-            ui->comp_OwnModelSet->view()->setCustomMenu(new CModelStashToolsMenu(this, true));
+            ui->comp_OwnModelSet->view()->setCustomMenu(new CStashToolsMenu(this, true));
 
             ui->comp_StashAircraft->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_StashAircraft->view(), this, true));
             ui->comp_StashAircraft->view()->setCustomMenu(new CApplyDbDataMenu(this, true));
             ui->comp_StashAircraft->view()->setCustomMenu(new COwnModelSetMenu(this, true));
-            ui->comp_StashAircraft->view()->setCustomMenu(new CModelStashToolsMenu(this, false));
+            ui->comp_StashAircraft->view()->setCustomMenu(new CStashToolsMenu(this, false));
 
             // connects
             connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::ps_stashCurrentModel);
@@ -161,7 +161,7 @@ namespace BlackGui
                 connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this, &CDbMappingComponent::ps_requestVPilotDataUpdate);
 
                 ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
-                ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CModelStashToolsMenu(this, false));
+                ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CStashToolsMenu(this, false));
                 ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
 
                 ui->tvp_AircraftModelsForVPilot->addFilterDialog();
@@ -328,6 +328,11 @@ namespace BlackGui
             return ui->comp_StashAircraft->getStashedModels();
         }
 
+        bool CDbMappingComponent::hasStashedModels() const
+        {
+            return !this->getStashedModels().isEmpty();
+        }
+
         QStringList CDbMappingComponent::getStashedModelStrings() const
         {
             return ui->comp_StashAircraft->getStashedModelStrings();
@@ -420,6 +425,13 @@ namespace BlackGui
             default:
                 break;
             }
+        }
+
+        void CDbMappingComponent::ps_showChangedAttributes()
+        {
+            if (!this->hasStashedModels()) { return; }
+            if (this->currentTabIndex() != TabStash) { return; }
+            ui->comp_StashAircraft->showChangedAttributes();
         }
 
         void CDbMappingComponent::ps_toggleAutoFiltering()
@@ -912,11 +924,11 @@ namespace BlackGui
             return qobject_cast<CDbMappingComponent *>(this->parent());
         }
 
-        CDbMappingComponent::CModelStashToolsMenu::CModelStashToolsMenu(CDbMappingComponent *mappingComponent, bool separator) :
+        CDbMappingComponent::CStashToolsMenu::CStashToolsMenu(CDbMappingComponent *mappingComponent, bool separator) :
             BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
         {}
 
-        void CDbMappingComponent::CModelStashToolsMenu::customMenu(CMenuActions &menuActions)
+        void CDbMappingComponent::CStashToolsMenu::customMenu(CMenuActions &menuActions)
         {
             CDbMappingComponent *mapComp = mappingComponent();
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
@@ -929,10 +941,6 @@ namespace BlackGui
                 this->m_stashFiltering->setCheckable(true);
                 this->m_stashFiltering->setChecked(mapComp->m_autoFilterInDbViews);
 
-                // Currently disabled as the same effect can be realized by filtering than
-                // this->addRemoveDbModels(menuActions);
-                // remove if not needed in the long term (added 2016-Sep)
-
                 this->m_autoStashing = menuActions.addAction(this->m_autoStashing, CIcons::appDbStash16(), "Auto stashing", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_displayAutoStashingDialog });
                 this->m_autoSimulatorStashing = menuActions.addAction(this->m_autoSimulatorStashing, CIcons::appDbStash16(), "Cross simulator updating (FSX-P3D-FS9)", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_displayAutoSimulatorStashingDialog });
                 if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
@@ -942,26 +950,31 @@ namespace BlackGui
             }
             else if (mapComp->currentTabIndex() == CDbMappingComponent::TabStash)
             {
-                this->addRemoveDbModels(menuActions);
+                this->addStashViewSpecificMenus(menuActions);
             }
             this->nestedCustomMenu(menuActions);
         }
 
-        void CDbMappingComponent::CModelStashToolsMenu::addRemoveDbModels(CMenuActions &menuActions)
+        void CDbMappingComponent::CStashToolsMenu::addStashViewSpecificMenus(CMenuActions &menuActions)
         {
             CDbMappingComponent *mapComp = mappingComponent();
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
 
             const int dbModels = sGui->getWebDataServices()->getModelsCount();
-            if (dbModels > 0)
+            if (dbModels > 0 && mapComp->hasStashedModels())
             {
+                menuActions.addMenu(CIcons::appDbStash16(), "Stash", CMenuAction::pathStash());
+
                 // we have keys and data by which we could delete them from view
                 const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from '" + mapComp->currentTabText() + "'");
                 menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathStash(), nullptr, { mapComp, &CDbMappingComponent::ps_removeDbModelsFromView});
+
+                // attribute info
+                menuActions.addAction(CIcons::info16(), "Show changed attributes", CMenuAction::pathStash(), nullptr, { mapComp, &CDbMappingComponent::ps_showChangedAttributes});
             }
         }
 
-        CDbMappingComponent *CDbMappingComponent::CModelStashToolsMenu::mappingComponent() const
+        CDbMappingComponent *CDbMappingComponent::CStashToolsMenu::mappingComponent() const
         {
             return qobject_cast<CDbMappingComponent *>(this->parent());
         }

@@ -319,7 +319,8 @@ namespace BlackGui
             Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "No web services");
             const CAircraftModelList models(getSelectedOrAllModels());
             if (models.isEmpty()) { return CStatusMessageList(); }
-            const CStatusMessageList msgs(sGui->getWebDataServices()->validateForPublishing(models, validModels, invalidModels));
+            const bool ignoreEqual = ui->cb_ChangedOnly->isChecked();
+            const CStatusMessageList msgs(sGui->getWebDataServices()->validateForPublishing(models, ignoreEqual, validModels, invalidModels));
 
             // OK?
             if (msgs.isEmpty())
@@ -423,7 +424,30 @@ namespace BlackGui
             return stashModel;
         }
 
+        void CDbStashComponent::showChangedAttributes()
         {
+            if (!sGui || !sGui->hasWebDataServices()) { return; }
+            if (sGui->isShuttingDown()) { return; }
+            const CAircraftModelList models = ui->tvp_StashAircraftModels->selectedObjects();
+            if (models.isEmpty()) { return; }
+
+            CStatusMessageList msgs;
+            for (const CAircraftModel &model : models)
+            {
+                CStatusMessageList modelMsgs;
+                const bool equal = sGui->getWebDataServices()->isDbModelEqualForPublishing(model, &modelMsgs);
+                if (equal)
+                {
+                    msgs.push_back(CStatusMessage(this).info("Model '%1' has no change values") << model.getModelStringAndDbKey());
+                }
+                else
+                {
+                    msgs.push_back(modelMsgs);
+                }
+            }
+            this->showMessages(msgs);
+        }
+
         void CDbStashComponent::ps_copyOverValuesToSelectedModels()
         {
             const QObject *sender = QObject::sender();

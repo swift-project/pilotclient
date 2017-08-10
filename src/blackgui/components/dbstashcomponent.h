@@ -118,6 +118,9 @@ namespace BlackGui
             //! Consolidate with other available data
             BlackMisc::Simulation::CAircraftModel consolidateModel(const BlackMisc::Simulation::CAircraftModel &model) const;
 
+            //! Show changed attributes of selected models
+            void showChangedAttributes();
+
         public slots:
             //! Stash given model (includes validation and consolidation with DB data)
             BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false, bool consolidateWithDbData = true);
