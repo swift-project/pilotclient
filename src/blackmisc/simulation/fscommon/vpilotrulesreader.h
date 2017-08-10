@@ -32,6 +32,7 @@ namespace BlackMisc
         namespace FsCommon
         {
             //! Model mappings
+            //! \deprecated vPilot rules might be removed in future
             class BLACKMISC_EXPORT CVPilotRulesReader : public QObject
             {
                 Q_OBJECT

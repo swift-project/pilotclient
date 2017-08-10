@@ -68,10 +68,10 @@ namespace BlackGui
             connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::ps_onRowCountChanged);
 
             // copy over buttons
-            connect(ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
-            connect(ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
-            connect(ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
-            connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
+            connect(ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValuesToSelectedModels);
+            connect(ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValuesToSelectedModels);
+            connect(ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValuesToSelectedModels);
+            connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValuesToSelectedModels);
             connect(ui->pb_Model, &QPushButton::pressed, this, &CDbStashComponent::ps_modifyModelDialog);
 
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
@@ -423,14 +423,15 @@ namespace BlackGui
             return stashModel;
         }
 
-        void CDbStashComponent::ps_copyOverPartsToSelected()
         {
-            QObject *sender = QObject::sender();
-            BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+        void CDbStashComponent::ps_copyOverValuesToSelectedModels()
+        {
+            const QObject *sender = QObject::sender();
+            BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
             if (!this->getMappingComponent()) { return; }
             if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
 
-            CAircraftModel model(this->getMappingComponent()->getEditorAircraftModel());
+            const CAircraftModel model(this->getMappingComponent()->getEditorAircraftModel());
             if (sender == ui->pb_AircraftIcao)
             {
                 this->applyToSelected(model.getAircraftIcaoCode());

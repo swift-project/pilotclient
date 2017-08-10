@@ -68,7 +68,7 @@ namespace BlackGui
             explicit CDbStashComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbStashComponent();
+            virtual ~CDbStashComponent();
 
             //! Test the given model if it can be stashed
             BlackMisc::CStatusMessage validateStashModel(const BlackMisc::Simulation::CAircraftModel &model, bool allowReplace) const;
@@ -157,7 +157,7 @@ namespace BlackGui
                                             const BlackMisc::CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite);
 
             //! Copy over values
-            void ps_copyOverPartsToSelected();
+            void ps_copyOverValuesToSelectedModels();
 
             //! Display model dialog
             void ps_modifyModelDialog();
