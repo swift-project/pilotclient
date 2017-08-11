@@ -502,17 +502,17 @@ namespace BlackCore
 
         //! Wait for info objects to be read
         //! \return true means info objects available
-        bool waitForInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *reader, int &trials);
+        bool waitForInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *reader, const QDateTime &timeOut);
 
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
         BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead      = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
-        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;              //!< how to read DB data
-        bool                                     m_initialRead = false;         //!< Initial read started
-        bool                                     m_signalledHeaders = false;    //!< headers loading has been signalled
-        int                                      m_dbInfoObjectTrials = 0;      //!< Tried to read info objects
-        int                                      m_sharedInfoObjectsTrials = 0; //!< Tried to read shared file headers
-        QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;     //!< remember signalled entites
+        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;           //!< how to read DB data
+        bool                                     m_initialRead = false;      //!< initial read started
+        bool                                     m_signalledHeaders = false; //!< haders loading has been signalled
+        QDateTime                                m_dbInfoObjectTimeout;      //!< started reading DB info objects
+        QDateTime                                m_sharedInfoObjectsTimeout; //!< started reading shared info objects
+        QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;  //!< remember signalled entites
 
         // for reading XML and VATSIM data files
         Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;

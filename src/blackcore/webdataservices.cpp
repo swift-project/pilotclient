@@ -1147,28 +1147,34 @@ namespace BlackCore
 
     bool CWebDataServices::waitForDbInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
-        const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTrials);
+        if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
+        const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTimeout);
+        if (read) { m_dbInfoObjectTimeout = QDateTime(); } // reset to null
         return read;
     }
 
     bool CWebDataServices::waitForSharedInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
-        const bool read = this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTrials);
+        if (!m_sharedInfoObjectsTimeout.isValid()) { m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
+        const bool read = this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTimeout);
+        if (read) { m_sharedInfoObjectsTimeout = QDateTime(); } // reset to null
         return read;
     }
 
-    bool CWebDataServices::waitForInfoObjectsThenRead(CEntityFlags::Entity entities, const QString &info, CInfoDataReader *reader, int &trials)
+    bool CWebDataServices::waitForInfoObjectsThenRead(CEntityFlags::Entity entities, const QString &info, CInfoDataReader *reader, const QDateTime &timeOut)
     {
         Q_ASSERT_X(reader, Q_FUNC_INFO, "Need info data reader");
 
         // this will called for each entity readers, i.e. model reader, ICAO reader ...
         const int waitForInfoObjectsMs = 1000; // ms
-        const int maxWaitCycles = 10;
 
-        // try to read
-        if (trials > maxWaitCycles)
+        // try to read if not timed out
+        if (QDateTime::currentDateTimeUtc() > timeOut)
         {
-            CLogMessage(this).warning("Could not read '%1' info objects for '%2' from '%3', tried %4 times. Marking reader as failed and continue.") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString() << trials;
+            const QString timeOutString = timeOut.toString();
+            CLogMessage(this).warning("Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader as failed and continue.")
+                    << info << CEntityFlags::flagToString(entities)
+                    << reader->getInfoObjectsUrl().toQString() << timeOutString;
 
             // continue here and read data without info objects
             reader->setMarkedAsFailed(true);
@@ -1179,7 +1185,7 @@ namespace BlackCore
             if (reader->areAllDataRead())
             {
                 // we have all data and carry on
-                CLogMessage(this).info("Info objects (%1) for '%2' loaded (trial %3) from '%4'") << info << CEntityFlags::flagToString(entities) << trials << reader->getInfoObjectsUrl().toQString();
+                CLogMessage(this).info("Info objects (%1) for '%2' loaded from '%3'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString();
                 return true; // no need to wait any longer
             }
             else
@@ -1188,9 +1194,8 @@ namespace BlackCore
                 if (reader->hasReceivedOkReply())
                 {
                     // ok, this means we are parsing
-                    trials++;
                     this->readDeferredInBackground(entities, waitForInfoObjectsMs);
-                    CLogMessage(this).info("Waiting for objects (%1) for '%2', trial %3 from '%4'") << info << CEntityFlags::flagToString(entities) << trials << reader->getInfoObjectsUrl().toQString();
+                    CLogMessage(this).info("Waiting for objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString();
                     return false; // wait
                 }
                 else
@@ -1206,8 +1211,7 @@ namespace BlackCore
         else
         {
             // wait for 1st reply
-            trials++;
-            CLogMessage(this).info("Waiting for 1st reply of info objects (%1) for '%2', trial %3 from '%4'") << info << CEntityFlags::flagToString(entities) << trials << reader->getInfoObjectsUrl().toQString();
+            // CLogMessage(this).info("Waiting for 1st reply of info objects (%1) for '%2', from '%4'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString();
             this->readDeferredInBackground(entities, waitForInfoObjectsMs);
             return false; // wait
         }
