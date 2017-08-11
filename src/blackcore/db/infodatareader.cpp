@@ -127,9 +127,9 @@ namespace BlackCore
 
             // get all or incremental set
             const CDbInfoList infoObjects = CDbInfoList::fromDatabaseJson(res.getJsonArray());
+            const int n = infoObjects.size();
 
             // this part needs to be synchronized
-            const int n = infoObjects.size();
             {
                 QWriteLocker wl(&this->m_lockInfoObjects);
                 this->m_infoObjects = infoObjects;

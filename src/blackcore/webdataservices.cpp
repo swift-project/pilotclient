@@ -67,7 +67,7 @@ namespace BlackCore
         {
             // will remove info reader because not needed
             readers &= ~CWebReaderFlags::DbInfoDataReader;
-            this->m_readers = readers;
+            m_readers = readers;
             CLogMessage(this).info("Remove info object reader because not needed");
         }
 
@@ -88,7 +88,7 @@ namespace BlackCore
         // make sure this is called in event queue, so pending tasks cam be performed
         entities &= ~CEntityFlags::DbInfoObjectEntity; // triggered in init readers
         entities &= ~CEntityFlags::VatsimStatusFile;   // triggered in init readers
-        entities &= ~this->m_entitiesPeriodicallyRead; // will be triggered by timers
+        entities &= ~m_entitiesPeriodicallyRead; // will be triggered by timers
 
         // trigger reading
         // but do not start all at the same time
@@ -169,22 +169,10 @@ namespace BlackCore
         if (!m_icaoDataReader && !m_modelDataReader && !m_airportDataReader && !m_dbInfoDataReader) { return false; }
 
         // use the first one to test
-        if (m_dbInfoDataReader)
-        {
-            return m_dbInfoDataReader->hasReceivedOkReply();
-        }
-        else if (m_icaoDataReader)
-        {
-            return m_icaoDataReader->hasReceivedOkReply();
-        }
-        else if (m_modelDataReader)
-        {
-            return m_modelDataReader->hasReceivedOkReply();
-        }
-        else if (m_airportDataReader)
-        {
-            return m_airportDataReader->hasReceivedOkReply();
-        }
+        if (m_dbInfoDataReader)  { return m_dbInfoDataReader->hasReceivedOkReply(); }
+        if (m_icaoDataReader)    { return m_icaoDataReader->hasReceivedOkReply(); }
+        if (m_modelDataReader)   { return m_modelDataReader->hasReceivedOkReply(); }
+        if (m_airportDataReader) { return m_airportDataReader->hasReceivedOkReply(); }
         return false;
     }
 
@@ -202,13 +190,13 @@ namespace BlackCore
     void CWebDataServices::admitDbCaches(CEntityFlags::Entity entities)
     {
         // hint: those 2 are currently doing nothing, but this might change in the future
-        if (this->m_dbInfoDataReader) { this->m_dbInfoDataReader->admitCaches(entities); }
-        if (this->m_sharedInfoDataReader) { this->m_sharedInfoDataReader->admitCaches(entities); }
+        if (m_dbInfoDataReader)     { m_dbInfoDataReader->admitCaches(entities); }
+        if (m_sharedInfoDataReader) { m_sharedInfoDataReader->admitCaches(entities); }
 
         // hint: all the readers use own threads
-        if (this->m_modelDataReader) { this->m_modelDataReader->admitCaches(entities); }
-        if (this->m_icaoDataReader) { this->m_icaoDataReader->admitCaches(entities); }
-        if (this->m_airportDataReader) { this->m_airportDataReader->admitCaches(entities); }
+        if (m_modelDataReader)   { m_modelDataReader->admitCaches(entities); }
+        if (m_icaoDataReader)    { m_icaoDataReader->admitCaches(entities); }
+        if (m_airportDataReader) { m_airportDataReader->admitCaches(entities); }
     }
 
     CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
@@ -289,7 +277,7 @@ namespace BlackCore
         {
             if (m_icaoDataReader->supportsAnyOfEntities(whatToRead))
             {
-                CEntityFlags::Entity icaoEntities = m_icaoDataReader->maskBySupportedEntities(whatToRead);
+                const CEntityFlags::Entity icaoEntities = m_icaoDataReader->maskBySupportedEntities(whatToRead);
                 m_icaoDataReader->triggerLoadingDirectlyFromDb(icaoEntities, newerThan);
                 triggeredRead |= icaoEntities;
             }
@@ -299,7 +287,7 @@ namespace BlackCore
         {
             if (m_modelDataReader->supportsAnyOfEntities(whatToRead))
             {
-                CEntityFlags::Entity modelEntities = m_modelDataReader->maskBySupportedEntities(whatToRead);
+                const CEntityFlags::Entity modelEntities = m_modelDataReader->maskBySupportedEntities(whatToRead);
                 m_modelDataReader->triggerLoadingDirectlyFromDb(modelEntities, newerThan);
                 triggeredRead |= modelEntities;
             }
@@ -309,7 +297,7 @@ namespace BlackCore
         {
             if (m_airportDataReader->supportsAnyOfEntities(whatToRead))
             {
-                CEntityFlags::Entity airportEntities = m_airportDataReader->maskBySupportedEntities(whatToRead);
+                const CEntityFlags::Entity airportEntities = m_airportDataReader->maskBySupportedEntities(whatToRead);
                 m_airportDataReader->triggerLoadingDirectlyFromDb(airportEntities, newerThan);
                 triggeredRead |= airportEntities;
             }
@@ -356,53 +344,34 @@ namespace BlackCore
     QDateTime CWebDataServices::getCacheTimestamp(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
-        if (CEntityFlags::anySwiftDbEntity(entity))
-        {
-            const CDatabaseReader *dr = this->getDbReader(entity);
-            if (!dr) { return QDateTime(); }
-            return dr->getCacheTimestamp(entity);
-        }
-        else
-        {
-            // non DB entities would go here
-            return QDateTime();
-        }
+        if (!CEntityFlags::anySwiftDbEntity(entity)) { return QDateTime(); }
+        const CDatabaseReader *dr = this->getDbReader(entity);
+        if (!dr) { return QDateTime(); }
+        return dr->getCacheTimestamp(entity);
     }
 
     QDateTime CWebDataServices::getLatestDbEntityTimestamp(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
-        if (CEntityFlags::anySwiftDbEntity(entity))
-        {
-            CInfoDataReader *ir = this->getDbInfoDataReader();
-            if (!ir) { return QDateTime(); }
-            return ir->getLatestEntityTimestampFromDbInfoObjects(entity);
-        }
-        else
-        {
-            return QDateTime();
-        }
+        if (!CEntityFlags::anySwiftDbEntity(entity)) { return QDateTime(); }
+        const CInfoDataReader *ir = this->getDbInfoDataReader();
+        if (!ir) { return QDateTime(); }
+        return ir->getLatestEntityTimestampFromDbInfoObjects(entity);
     }
 
     QDateTime CWebDataServices::getLatestSharedInfoObjectTimestamp(CEntityFlags::Entity entity) const
     {
         const CDatabaseReader *reader = this->getDbReader(entity);
-        if (reader)
-        {
-            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
-            return reader->getLatestEntityTimestampFromSharedInfoObjects(entity);
-        }
-        else
-        {
-            return QDateTime();
-        }
+        if (!reader) { return QDateTime(); }
+        Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
+        return reader->getLatestEntityTimestampFromSharedInfoObjects(entity);
     }
 
     CEntityFlags::Entity CWebDataServices::getEntitiesWithNewerSharedFile(CEntityFlags::Entity entities) const
     {
-        Q_ASSERT_X(this->m_sharedInfoDataReader, Q_FUNC_INFO, "Shared info reader was not initialized");
-        if (this->m_sharedInfoDataReader->getInfoObjectCount() < 1) { return CEntityFlags::NoEntity; }
-        return this->m_sharedInfoDataReader->getEntitesWithNewerSharedInfoObject(entities);
+        Q_ASSERT_X(m_sharedInfoDataReader, Q_FUNC_INFO, "Shared info reader was not initialized");
+        if (m_sharedInfoDataReader->getInfoObjectCount() < 1) { return CEntityFlags::NoEntity; }
+        return m_sharedInfoDataReader->getEntitesWithNewerSharedInfoObject(entities);
     }
 
     int CWebDataServices::getCacheCount(CEntityFlags::Entity entity) const
@@ -410,7 +379,7 @@ namespace BlackCore
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
         if (CEntityFlags::anySwiftDbEntity(entity))
         {
-            CDatabaseReader *dr = this->getDbReader(entity);
+            const CDatabaseReader *dr = this->getDbReader(entity);
             if (!dr) { return -1; }
             return dr->getCacheCount(entity);
         }
@@ -423,14 +392,14 @@ namespace BlackCore
 
     int CWebDataServices::getDbInfoObjectCount(CEntityFlags::Entity entity) const
     {
-        if (!this->m_dbInfoDataReader) return -1;
-        return this->getInfoObjectCount(entity, this->m_dbInfoDataReader);
+        if (!m_dbInfoDataReader) return -1;
+        return this->getInfoObjectCount(entity, m_dbInfoDataReader);
     }
 
     int CWebDataServices::getSharedInfoObjectCount(CEntityFlags::Entity entity) const
     {
-        if (!this->m_sharedInfoDataReader) return -1;
-        return this->getInfoObjectCount(entity, this->m_sharedInfoDataReader);
+        if (!m_sharedInfoDataReader) return -1;
+        return this->getInfoObjectCount(entity, m_sharedInfoDataReader);
     }
 
     CDistributorList CWebDataServices::getDistributors() const
@@ -770,17 +739,17 @@ namespace BlackCore
     void CWebDataServices::gracefulShutdown()
     {
         this->disconnect(); // all signals
-        if (this->m_vatsimMetarReader)    { this->m_vatsimMetarReader->setEnabled(false); }
-        if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->setEnabled(false); }
-        if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->setEnabled(false); }
-        if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->setEnabled(false); }
-        if (this->m_modelDataReader)      { this->m_modelDataReader->setEnabled(false); }
-        if (this->m_airportDataReader)    { this->m_airportDataReader->setEnabled(false); }
-        if (this->m_icaoDataReader)       { this->m_icaoDataReader->setEnabled(false); }
-        if (this->m_dbInfoDataReader)     { this->m_dbInfoDataReader->setEnabled(false); }
+        if (m_vatsimMetarReader)    { m_vatsimMetarReader->setEnabled(false); }
+        if (m_vatsimBookingReader)  { m_vatsimBookingReader->setEnabled(false); }
+        if (m_vatsimDataFileReader) { m_vatsimDataFileReader->setEnabled(false); }
+        if (m_vatsimStatusReader)   { m_vatsimStatusReader->setEnabled(false); }
+        if (m_modelDataReader)      { m_modelDataReader->setEnabled(false); }
+        if (m_airportDataReader)    { m_airportDataReader->setEnabled(false); }
+        if (m_icaoDataReader)       { m_icaoDataReader->setEnabled(false); }
+        if (m_dbInfoDataReader)     { m_dbInfoDataReader->setEnabled(false); }
 
         // DB writer is no threaded reader, it has a special role
-        if (this->m_databaseWriter)       { this->m_databaseWriter->gracefulShutdown(); }
+        if (m_databaseWriter)       { m_databaseWriter->gracefulShutdown(); }
     }
 
     CUrl CWebDataServices::getDbReaderCurrentSharedDbDataUrl() const
@@ -792,23 +761,23 @@ namespace BlackCore
     {
         // obtain entities from real readers (means when reader is really used)
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-        if (this->m_icaoDataReader)
+        if (m_icaoDataReader)
         {
             entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::IcaoDataReader);
         }
-        if (this->m_modelDataReader)
+        if (m_modelDataReader)
         {
             entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::ModelReader);
         }
-        if (this->m_airportDataReader)
+        if (m_airportDataReader)
         {
             entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::AirportReader);
         }
 
         // when we have a config, we ignore the ones not from cache or DB
-        if (!this->m_dbReaderConfig.isEmpty())
+        if (!m_dbReaderConfig.isEmpty())
         {
-            CEntityFlags::Entity configuredEntities = this->m_dbReaderConfig.getEntitesCachedOrReadFromDB();
+            CEntityFlags::Entity configuredEntities = m_dbReaderConfig.getEntitesCachedOrReadFromDB();
             entities &= configuredEntities;
         }
 
@@ -829,7 +798,7 @@ namespace BlackCore
         //
         // ---- "metadata" reader, 1 will trigger read directly during init
         //
-        CDatabaseReaderConfigList dbReaderConfig(this->m_dbReaderConfig);
+        CDatabaseReaderConfigList dbReaderConfig(m_dbReaderConfig);
         const bool anyDbEntities = CEntityFlags::anySwiftDbEntity(entities);
         const bool needsSharedInfoObjects = dbReaderConfig.needsSharedInfoObjects(entities);
         const bool needsDbInfoObjects = dbReaderConfig.possiblyReadsFromSwiftDb();
@@ -865,13 +834,13 @@ namespace BlackCore
         // Read as soon as initReaders is done
         if (flags.testFlag(CWebReaderFlags::VatsimStatusReader) || flags.testFlag(CWebReaderFlags::VatsimDataReader) || flags.testFlag(CWebReaderFlags::VatsimMetarReader))
         {
-            this->m_vatsimStatusReader = new CVatsimStatusFileReader(this);
-            c = connect(this->m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead);
+            m_vatsimStatusReader = new CVatsimStatusFileReader(this);
+            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead);
             CLogMessage(this).info("Trigger read of VATSIM status file");
-            this->m_vatsimStatusReader->start(QThread::LowPriority);
+            m_vatsimStatusReader->start(QThread::LowPriority);
 
             // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
-            QTimer::singleShot(100, this, [this]() { this->m_vatsimStatusReader->readInBackgroundThread(); });
+            QTimer::singleShot(100, this, [this]() { m_vatsimStatusReader->readInBackgroundThread(); });
         }
 
         // ---- "normal data", triggerRead will start read, not starting directly
@@ -879,73 +848,73 @@ namespace BlackCore
         // 3. VATSIM bookings
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
         {
-            this->m_vatsimBookingReader = new CVatsimBookingReader(this);
-            c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::atcBookingsRead, this, &CWebDataServices::receivedBookings);
+            m_vatsimBookingReader = new CVatsimBookingReader(this);
+            c = connect(m_vatsimBookingReader, &CVatsimBookingReader::atcBookingsRead, this, &CWebDataServices::receivedBookings);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM booking reader signals");
-            c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataServices::dataRead);
+            c = connect(m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed bookings");
-            this->m_entitiesPeriodicallyRead |= CEntityFlags::BookingEntity;
-            this->m_vatsimBookingReader->start(QThread::LowPriority);
-            this->m_vatsimBookingReader->startReader();
+            m_entitiesPeriodicallyRead |= CEntityFlags::BookingEntity;
+            m_vatsimBookingReader->start(QThread::LowPriority);
+            m_vatsimBookingReader->startReader();
         }
 
         // 4. VATSIM data file
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
-            this->m_vatsimDataFileReader = new CVatsimDataFileReader(this);
-            c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::vatsimDataFileRead);
+            m_vatsimDataFileReader = new CVatsimDataFileReader(this);
+            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::vatsimDataFileRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
-            c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead);
+            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
-            this->m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
-            this->m_vatsimDataFileReader->start(QThread::LowPriority);
-            this->m_vatsimDataFileReader->startReader();
+            m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
+            m_vatsimDataFileReader->start(QThread::LowPriority);
+            m_vatsimDataFileReader->startReader();
         }
 
         // 5. VATSIM METAR data
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
-            this->m_vatsimMetarReader = new CVatsimMetarReader(this);
-            c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars);
+            m_vatsimMetarReader = new CVatsimMetarReader(this);
+            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
-            c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead);
+            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
-            this->m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
-            this->m_vatsimMetarReader->start(QThread::LowPriority);
-            this->m_vatsimMetarReader->startReader();
+            m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
+            m_vatsimMetarReader->start(QThread::LowPriority);
+            m_vatsimMetarReader->startReader();
         }
 
         // 6. ICAO data reader
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
-            this->m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
-            c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
+            m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
-            c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
-            this->m_icaoDataReader->start(QThread::LowPriority);
+            m_icaoDataReader->start(QThread::LowPriority);
         }
 
         // 7. Model reader
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
-            this->m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
-            c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
+            m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
+            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead);
+            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            this->m_modelDataReader->start(QThread::LowPriority);
+            m_modelDataReader->start(QThread::LowPriority);
         }
 
         // 8. Airport list reader
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
-            this->m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
-            c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
+            m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
+            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead);
+            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            this->m_airportDataReader->start(QThread::LowPriority);
+            m_airportDataReader->start(QThread::LowPriority);
         }
 
         Q_UNUSED(c); // signal connect flag
@@ -960,25 +929,26 @@ namespace BlackCore
             return;
         }
 
-        if (!this->m_dbInfoDataReader)
+        if (!m_dbInfoDataReader)
         {
-            this->m_dbInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::DbReading);
-            bool c = connect(this->m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
+            m_dbInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::DbReading);
+            m_dbInfoDataReader->setObjectName(m_dbInfoDataReader->objectName() + " (DB)");
+            bool c = connect(m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
 
             // relay signal
-            c = connect(this->m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
+            c = connect(m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
             Q_UNUSED(c);
 
             // start in own thread
-            this->m_dbInfoDataReader->start(QThread::LowPriority);
+            m_dbInfoDataReader->start(QThread::LowPriority);
         }
 
         // and trigger read
         if (sApp->isInternetAccessible())
         {
-            QTimer::singleShot(0, m_dbInfoDataReader, [this]() { this->m_dbInfoDataReader->read(); });
+            QTimer::singleShot(0, m_dbInfoDataReader, [this]() { m_dbInfoDataReader->read(); });
         }
         else
         {
@@ -995,25 +965,26 @@ namespace BlackCore
             return;
         }
 
-        if (!this->m_sharedInfoDataReader)
+        if (!m_sharedInfoDataReader)
         {
-            this->m_sharedInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::Shared);
-            bool c = connect(this->m_sharedInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
+            m_sharedInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::Shared);
+            m_sharedInfoDataReader->setObjectName(m_sharedInfoDataReader->objectName() + " (shared)");
+            bool c = connect(m_sharedInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
 
             // relay signal
-            c = connect(this->m_sharedInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
+            c = connect(m_sharedInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
             Q_UNUSED(c);
 
             // start in own thread
-            this->m_sharedInfoDataReader->start(QThread::LowPriority);
+            m_sharedInfoDataReader->start(QThread::LowPriority);
         }
 
         // and trigger read
         if (sApp->isInternetAccessible())
         {
-            QTimer::singleShot(0, m_sharedInfoDataReader, [this]() { this->m_sharedInfoDataReader->read(); });
+            QTimer::singleShot(0, m_sharedInfoDataReader, [this]() { m_sharedInfoDataReader->read(); });
         }
         else
         {
@@ -1029,9 +1000,9 @@ namespace BlackCore
         const CWebReaderFlags::WebReader wr = CWebReaderFlags::entityToReader(entity);
         switch (wr)
         {
-        case CWebReaderFlags::IcaoDataReader: return this->m_icaoDataReader;
-        case CWebReaderFlags::ModelReader: return this->m_modelDataReader;
-        case CWebReaderFlags::AirportReader: return this->m_airportDataReader;
+        case CWebReaderFlags::IcaoDataReader: return m_icaoDataReader;
+        case CWebReaderFlags::ModelReader: return m_modelDataReader;
+        case CWebReaderFlags::AirportReader: return m_airportDataReader;
         default:
             break;
         }
@@ -1040,7 +1011,7 @@ namespace BlackCore
 
     void CWebDataServices::initWriters()
     {
-        this->m_databaseWriter = new CDatabaseWriter(
+        m_databaseWriter = new CDatabaseWriter(
             sApp->getGlobalSetup().getDbRootDirectoryUrl(),
             this);
     }
@@ -1110,9 +1081,9 @@ namespace BlackCore
             CLogMessage(cats).info("Read data '%1' entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
         }
 
-        this->m_swiftDbEntitiesRead |= entities;
+        m_swiftDbEntitiesRead |= entities;
         const int allUsedEntities = static_cast<int>(this->allDbEntitiesForUsedReaders());
-        if (((static_cast<int>(this->m_swiftDbEntitiesRead)) & allUsedEntities) == allUsedEntities)
+        if (((static_cast<int>(m_swiftDbEntitiesRead)) & allUsedEntities) == allUsedEntities)
         {
             emit allSwiftDbDataRead();
         }
@@ -1142,27 +1113,31 @@ namespace BlackCore
         if (entities == CEntityFlags::NoEntity) { return; }
         QTimer::singleShot(delayMs, [ = ]()
         {
-            this->readInBackground(entities);
+            this->readInBackground(entities); // deferred
         });
     }
 
     void CWebDataServices::readInBackground(CEntityFlags::Entity entities)
     {
-        this->m_initialRead = true; // read started
+        m_initialRead = true; // read started
         if (CEntityFlags::anySwiftDbEntity(entities))
         {
             // with info objects wait until info objects are loaded
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront, do not pass as entity here");
-            const bool waitForDbInfoReader = this->m_dbInfoDataReader && !this->m_dbInfoDataReader->areAllDataRead() && !this->m_dbInfoDataReader->isMarkedAsFailed();
+            const bool waitForDbInfoReader = m_dbInfoDataReader && !m_dbInfoDataReader->areAllDataRead() && !m_dbInfoDataReader->isMarkedAsFailed();
             if (waitForDbInfoReader)
             {
-                if (!this->waitForDbInfoObjects(entities)) { return; } // will call this function again after some time
+                // do not read yet, will call this function again after some time
+                // see CWebDataServices::waitForInfoObjects
+                if (!this->waitForDbInfoObjectsThenRead(entities)) { return; }
             }
 
             const bool waitForSharedInfoFile = m_dbReaderConfig.needsSharedInfoFileLoaded(entities);
             if (waitForSharedInfoFile)
             {
-                if (!this->waitForSharedInfoObjects(entities)) { return; } // will call this function again after some time
+                // do not read yet, will call this function again after some time
+                // CWebDataServices::waitForInfoObjects
+                if (!this->waitForSharedInfoObjectsThenRead(entities)) { return; }
             }
         }
 
@@ -1170,27 +1145,30 @@ namespace BlackCore
         this->triggerRead(entities);
     }
 
-    bool CWebDataServices::waitForDbInfoObjects(CEntityFlags::Entity entities)
+    bool CWebDataServices::waitForDbInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
-        return this->waitForInfoObjects(entities, "DB", this->m_dbInfoDataReader, this->m_dbInfoObjectTrials);
+        const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTrials);
+        return read;
     }
 
-    bool CWebDataServices::waitForSharedInfoObjects(CEntityFlags::Entity entities)
+    bool CWebDataServices::waitForSharedInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
-        return this->waitForInfoObjects(entities, "shared", this->m_sharedInfoDataReader, this->m_sharedInfoObjectsTrials);
+        const bool read = this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTrials);
+        return read;
     }
 
-    bool CWebDataServices::waitForInfoObjects(CEntityFlags::Entity entities, const QString &info, CInfoDataReader *reader, int &trials)
+    bool CWebDataServices::waitForInfoObjectsThenRead(CEntityFlags::Entity entities, const QString &info, CInfoDataReader *reader, int &trials)
     {
         Q_ASSERT_X(reader, Q_FUNC_INFO, "Need info data reader");
 
+        // this will called for each entity readers, i.e. model reader, ICAO reader ...
         const int waitForInfoObjectsMs = 1000; // ms
         const int maxWaitCycles = 10;
 
         // try to read
         if (trials > maxWaitCycles)
         {
-            CLogMessage(this).warning("Cannot read %1 info objects for '%2' from '%3' trial %4") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString() << trials;
+            CLogMessage(this).warning("Could not read '%1' info objects for '%2' from '%3', tried %4 times. Marking reader as failed and continue.") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString() << trials;
 
             // continue here and read data without info objects
             reader->setMarkedAsFailed(true);
@@ -1212,6 +1190,7 @@ namespace BlackCore
                     // ok, this means we are parsing
                     trials++;
                     this->readDeferredInBackground(entities, waitForInfoObjectsMs);
+                    CLogMessage(this).info("Waiting for objects (%1) for '%2', trial %3 from '%4'") << info << CEntityFlags::flagToString(entities) << trials << reader->getInfoObjectsUrl().toQString();
                     return false; // wait
                 }
                 else
@@ -1228,6 +1207,7 @@ namespace BlackCore
         {
             // wait for 1st reply
             trials++;
+            CLogMessage(this).info("Waiting for 1st reply of info objects (%1) for '%2', trial %3 from '%4'") << info << CEntityFlags::flagToString(entities) << trials << reader->getInfoObjectsUrl().toQString();
             this->readDeferredInBackground(entities, waitForInfoObjectsMs);
             return false; // wait
         }
@@ -1274,24 +1254,24 @@ namespace BlackCore
         if (!directory.exists()) { return false; }
 
         bool s = false;
-        if (this->m_icaoDataReader)
+        if (m_icaoDataReader)
         {
-            if (inBackground) { return this->m_icaoDataReader->readFromJsonFilesInBackground(dir); }
-            const CStatusMessageList msgs = this->m_icaoDataReader->readFromJsonFiles(dir);
+            if (inBackground) { return m_icaoDataReader->readFromJsonFilesInBackground(dir); }
+            const CStatusMessageList msgs = m_icaoDataReader->readFromJsonFiles(dir);
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
             s = msgs.isSuccess();
         }
-        if (s && this->m_modelDataReader)
+        if (s && m_modelDataReader)
         {
-            if (inBackground) { return this->m_modelDataReader->readFromJsonFilesInBackground(dir); }
-            const CStatusMessageList msgs = this->m_modelDataReader->readFromJsonFiles(dir);
+            if (inBackground) { return m_modelDataReader->readFromJsonFilesInBackground(dir); }
+            const CStatusMessageList msgs = m_modelDataReader->readFromJsonFiles(dir);
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
             s = msgs.isSuccess();
         }
-        if (s && this->m_airportDataReader)
+        if (s && m_airportDataReader)
         {
-            if (inBackground) { return this->m_airportDataReader->readFromJsonFilesInBackground(dir); }
-            const CStatusMessageList msgs = this->m_airportDataReader->readFromJsonFiles(dir);
+            if (inBackground) { return m_airportDataReader->readFromJsonFilesInBackground(dir); }
+            const CStatusMessageList msgs = m_airportDataReader->readFromJsonFiles(dir);
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
             s = msgs.isSuccess();
         }

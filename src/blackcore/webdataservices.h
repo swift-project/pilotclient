@@ -494,13 +494,15 @@ namespace BlackCore
         int getInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity, BlackCore::Db::CInfoDataReader *reader) const;
 
         //! Wait for DB info objects to be read
-        bool waitForDbInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities);
+        bool waitForDbInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Wait for shared info objects to be read
-        bool waitForSharedInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities);
+        //! \return true means info objects available
+        bool waitForSharedInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Wait for info objects to be read
-        bool waitForInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *reader, int &trials);
+        //! \return true means info objects available
+        bool waitForInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *reader, int &trials);
 
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
