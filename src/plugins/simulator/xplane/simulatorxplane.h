@@ -23,6 +23,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
+#include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
@@ -224,7 +225,7 @@ namespace BlackSimPlugin
         private:
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
-            BlackMisc::CSetting<TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::ps_xswiftbusServerSettingChanged };
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::ps_xswiftbusServerSettingChanged };
         };
 
         //! Factory for creating CSimulatorXPlane instance

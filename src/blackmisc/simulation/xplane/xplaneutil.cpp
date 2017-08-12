@@ -89,6 +89,7 @@ namespace BlackMisc
 
             QString CXPlaneUtil::xplaneDir(const QString &xplaneInstallFile)
             {
+                //! \fixme KB 8/17 we could also use the runtime CBuildConfig decision here, which looks nicer (I personally always try to avoid ifdef)
 #if defined(Q_OS_WIN)
                 return CFileUtils::appendFilePaths(getWindowsLocalAppDataPath(), xplaneInstallFile);
 #elif defined (Q_OS_LINUX)
@@ -106,6 +107,25 @@ namespace BlackMisc
                 else if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
                 else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
                 else { return {}; }
+            }
+
+            bool CXPlaneUtil::isXplaneRootDirExisting()
+            {
+                const QDir dir(xplaneRootDir());
+                return dir.exists();
+            }
+
+            QString CXPlaneUtil::xplanePluginDir()
+            {
+                const QString xp = xplaneRootDir();
+                if (xp.isEmpty()) { return xp; }
+                return CFileUtils::appendFilePaths(xp, "/Resources/plugins");
+            }
+
+            bool CXPlaneUtil::isXplanePluginDirDirExisting()
+            {
+                const QDir dir(xplanePluginDir());
+                return dir.exists();
             }
 
             QStringList CXPlaneUtil::xplaneModelDirectories()
@@ -142,7 +162,6 @@ namespace BlackMisc
                 }
                 return {};
             }
-
         } // namespace
     } // namespace
 } // namespace

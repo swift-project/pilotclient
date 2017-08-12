@@ -42,6 +42,16 @@ namespace BlackMisc
                 //! In case more then one XPlane version is found, the path to the highest version is used
                 static QString xplaneRootDir();
 
+                //! Is the xplaneRootDir existing?
+                static bool isXplaneRootDirExisting();
+
+                //! XPlane root directory
+                //! In case more then one XPlane version is found, the path to the highest version is used
+                static QString xplanePluginDir();
+
+                //! Is the xplanePluginDir existing?
+                static bool isXplanePluginDirDirExisting();
+
                 //! Directories with models
                 static QStringList xplaneModelDirectories();
 
