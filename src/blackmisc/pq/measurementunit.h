@@ -227,7 +227,7 @@ namespace BlackMisc
             };
 
             //! Workaround to constant-initialize QLatin1String on platforms without constexpr strlen.
-            template <size_t N>
+            template <int N>
             static Q_DECL_CONSTEXPR QLatin1String constQLatin1(const char (&str)[N])
             {
                 return QLatin1String(str, N - 1); // -1 because N includes the null terminator
