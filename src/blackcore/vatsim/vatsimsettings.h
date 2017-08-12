@@ -43,7 +43,7 @@ namespace BlackCore
             static const BlackMisc::Network::CServer &defaultValue()
             {
                 using namespace BlackMisc::Network;
-                static const CServer dv("Testserver", "Client project testserver", "vatsim-germany.org", 6809, CUser("guest", "Guest Client project", "", "guest"));
+                static const CServer dv("Testserver", "Client project testserver", "fsd.swift-project.org", 6809, CUser("guest", "Guest Client project", "", "guest"));
                 return dv;
             }
         };
