@@ -34,7 +34,6 @@ namespace BlackMisc
         {
             /*!
              * XPlane aircraft model loader
-             * \todo Obj8Aircraft and Obj8 parsers are not yet implemented
              */
             class BLACKMISC_EXPORT CAircraftModelLoaderXPlane : public BlackMisc::Simulation::IAircraftModelLoader
             {

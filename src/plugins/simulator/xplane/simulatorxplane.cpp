@@ -368,7 +368,6 @@ namespace BlackSimPlugin
 
         BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
         {
-            //! \todo XP driver: Check if units match, xPlaneData has now hints what the values are
             return m_airportsInRange;
         }
 
