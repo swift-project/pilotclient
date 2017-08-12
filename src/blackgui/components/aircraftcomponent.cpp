@@ -50,14 +50,15 @@ namespace BlackGui
             ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
             ui->tvp_AircraftInRange->configureMenu(true, false, false);
 
-            this->ps_settingsChanged();
-
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::ps_onRowCountChanged);
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
             connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::ps_onRowCountChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::ps_connectionStatusChanged);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
+
+            this->ps_settingsChanged();
+            m_updateTimer.start();
         }
 
         CAircraftComponent::~CAircraftComponent()
@@ -141,11 +142,10 @@ namespace BlackGui
             if (INetwork::isDisconnectedStatus(to))
             {
                 ui->tvp_AircraftInRange->clear();
-                this->m_updateTimer.stop();
             }
             else if (INetwork::isConnectedStatus(to))
             {
-                this->m_updateTimer.start();
+                // void
             }
         }
 
