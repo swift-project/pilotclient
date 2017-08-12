@@ -290,19 +290,19 @@ namespace BlackMisc
 
     const QDBusConnection &CDBusServer::defaultConnection()
     {
-        static QDBusConnection defaultConnection("default");
+        static const QDBusConnection defaultConnection("default");
         return defaultConnection;
     }
 
     const QString &CDBusServer::sessionBusAddress()
     {
-        static QString session = "session";
+        static const QString session("session");
         return session;
     }
 
     const QString &CDBusServer::systemBusAddress()
     {
-        static QString system = "system";
+        static const QString system("system");
         return system;
     }
 
