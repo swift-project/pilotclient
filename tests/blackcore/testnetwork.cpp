@@ -45,7 +45,7 @@ namespace BlackCoreTest
 {
     void CTestNetwork::networkTest(BlackCore::INetwork *net)
     {
-        CServer fsdServer("", "", "vatsim-germany.org", 6809, CUser("1234567", "", "", "123456"));
+        CServer fsdServer("", "", "fsd.swift-project.org", 6809, CUser("1234567", "", "", "123456"));
         if (!this->pingServer(fsdServer)) { QSKIP("Server not reachable."); }
 
         QString string = net->connectionStatusToString(INetwork::Connected);
