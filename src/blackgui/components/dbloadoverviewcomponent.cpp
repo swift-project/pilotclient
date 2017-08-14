@@ -40,30 +40,30 @@ namespace BlackGui
             ui->lbl_SharedUrls->setTextInteractionFlags(Qt::TextBrowserInteraction);
             ui->lbl_SharedUrls->setOpenExternalLinks(true);
 
-            connect(ui->tb_DbReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshDbPressed);
-            connect(ui->tb_DbReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshDbPressed);
-            connect(ui->tb_DbReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshDbPressed);
-            connect(ui->tb_DbReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshDbPressed);
-            connect(ui->tb_DbReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshDbPressed);
-            connect(ui->tb_DbReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshDbPressed);
-            connect(ui->tb_DbReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshDbPressed);
+            connect(ui->tb_DbReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
+            connect(ui->tb_DbReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshDbPressed);
 
-            connect(ui->tb_SharedReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
-            connect(ui->tb_SharedReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
-            connect(ui->tb_SharedReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
-            connect(ui->tb_SharedReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
-            connect(ui->tb_SharedReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
-            connect(ui->tb_SharedReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
-            connect(ui->tb_SharedReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
+            connect(ui->tb_SharedReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
+            connect(ui->tb_SharedReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::refreshSharedPressed);
 
             connect(ui->pb_LoadAllFromDB, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
             connect(ui->pb_LoadAllFromShared, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
 
-            connect(this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, this, &CDbLoadOverviewComponent::ps_setValues);
+            connect(this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, this, &CDbLoadOverviewComponent::setGuiValues);
             if (sGui->hasWebDataServices())
             {
-                connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
-                QTimer::singleShot(10 * 1000, this, &CDbLoadOverviewComponent::ps_loadInfoObjects);
+                connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::dataLoaded);
+                QTimer::singleShot(10 * 1000, this, &CDbLoadOverviewComponent::loadInfoObjects);
             }
         }
 
@@ -72,7 +72,7 @@ namespace BlackGui
 
         void CDbLoadOverviewComponent::display()
         {
-            this->ps_setValues();
+            m_dsTriggerGuiUpdate.inputSignal();
         }
 
         void CDbLoadOverviewComponent::showVisibleDbRefreshButtons(bool visible)
@@ -127,10 +127,12 @@ namespace BlackGui
             this->triggerLoadingFromSharedFiles(CEntityFlags::AllDbEntitiesNoInfoObjects);
         }
 
-        void CDbLoadOverviewComponent::ps_setValues()
+        void CDbLoadOverviewComponent::setGuiValues()
         {
             if (!sGui) { return; }
             if (!sGui->hasWebDataServices()) { return; }
+            if (m_setValuesInProgress) { return; }
+            m_setValuesInProgress = true; // avoid processEvent (canConnect) calling this again before done
 
             ui->le_AircraftIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -184,7 +186,7 @@ namespace BlackGui
             static const QString imgOk(":/diagona/icons/diagona/icons/tick.png");
             static const QString imgFailed(":/diagona/icons/diagona/icons/cross-script.png");
             const QString dbUrlHtml("<img src=\"%1\">&nbsp;&nbsp;<a href=\"%2\">%3</a>");
-            QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
+            const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
             bool canConnect = CNetworkUtils::canConnect(sGui->getGlobalSetup().getDbHomePageUrl());
             ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(canConnect ? imgOk : imgFailed, url, url));
             ui->lbl_DatabaseUrl->setToolTip(url);
@@ -198,16 +200,25 @@ namespace BlackGui
             QString allRowsHtml;
             for (const CUrl &sharedUrl : sharedUrls)
             {
+                if (!sGui || sGui->isShuttingDown())
+                {
+                    // shutdown during connect test
+                    m_setValuesInProgress = false;
+                    return;
+                }
                 canConnect = CNetworkUtils::canConnect(sharedUrl);
                 allRowsHtml += rowHtml.arg(canConnect ? imgOk : imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost()));
-                if (!sGui || sGui->isShuttingDown()) { return; } // shutdown during connect test
             }
             ui->lbl_SharedUrls->setText(tableHtml.arg(allRowsHtml.trimmed()));
-            ui->lbl_SharedUrls->setToolTip(sGui->getWebDataServices()->getDbReaderCurrentSharedDbDataUrl().toQString());
             ui->lbl_SharedUrls->setMinimumHeight(10 + (18 * sharedUrls.size()));
+            const QString currentlyUsedSharedUrl = sGui->getWebDataServices()->getDbReaderCurrentSharedDbDataUrl().toQString();
+            ui->lbl_SharedUrls->setToolTip(
+                currentlyUsedSharedUrl.isEmpty() ? "No shared URL" : "currently used: " + currentlyUsedSharedUrl
+            );
 
             // Indicator
             this->hideLoading();
+            m_setValuesInProgress = false;
         }
 
         bool CDbLoadOverviewComponent::isInitialized() const
@@ -263,9 +274,9 @@ namespace BlackGui
             sGui->getWebDataServices()->admitDbCaches(CEntityFlags::AllDbEntities);
         }
 
-        void CDbLoadOverviewComponent::ps_refreshDbPressed()
+        void CDbLoadOverviewComponent::refreshDbPressed()
         {
-            if (this->m_loadInProgress) { return; }
+            if (m_loadInProgress) { return; }
             const QObject *sender = QObject::sender();
             const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(sender->objectName());
             this->triggerLoadingFromDb(entity);
@@ -273,12 +284,13 @@ namespace BlackGui
 
         void CDbLoadOverviewComponent::triggerLoadingFromDb(CEntityFlags::Entity entities)
         {
-            if (this->m_loadInProgress) { return; }
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+            if (m_loadInProgress) { return; }
 
             // DB entities
             const CEntityFlags::Entity triggeredEntities = sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(entities);
             if (triggeredEntities == CEntityFlags::NoEntity) { return; }
-            this->m_loadInProgress = true;
+            m_loadInProgress = true;
             this->showLoading();
 
             // shared files ts and DB info objects
@@ -286,9 +298,9 @@ namespace BlackGui
             sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
         }
 
-        void CDbLoadOverviewComponent::ps_refreshSharedPressed()
+        void CDbLoadOverviewComponent::refreshSharedPressed()
         {
-            if (this->m_loadInProgress) { return; }
+            if (m_loadInProgress) { return; }
             const QObject *sender = QObject::sender();
             const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(sender->objectName());
             this->triggerLoadingFromSharedFiles(entity);
@@ -296,30 +308,30 @@ namespace BlackGui
 
         void CDbLoadOverviewComponent::triggerLoadingFromSharedFiles(CEntityFlags::Entity entities)
         {
-            if (this->m_loadInProgress) { return; }
+            if (m_loadInProgress) { return; }
 
             // DB entities
             const CEntityFlags::Entity triggeredEntities = sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(entities, true);
             if (triggeredEntities == CEntityFlags::NoEntity) { return; }
-            this->m_loadInProgress = true;
+            m_loadInProgress = true;
             this->showLoading();
 
             // shared files ts
             sGui->getWebDataServices()->triggerReadOfSharedInfoObjects();
         }
 
-        void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
+        void CDbLoadOverviewComponent::dataLoaded(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
         {
             Q_UNUSED(number);
             if (!CEntityFlags::isFinishedReadState(state)) return;
             if (!entities.testFlag(CEntityFlags::SharedInfoObjectEntity) && entities.testFlag(CEntityFlags::DbInfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
-            this->m_loadInProgress = false;
-            emit this->ps_triggerDigestGuiUpdate();
+            m_loadInProgress = false;
+            m_dsTriggerGuiUpdate.inputSignal();
         }
 
-        void CDbLoadOverviewComponent::ps_loadInfoObjects()
+        void CDbLoadOverviewComponent::loadInfoObjects()
         {
-            if (this->m_loadInProgress) { return; }
+            if (m_loadInProgress) { return; }
             if (!sGui || !sGui->hasWebDataServices()) { return; }
             bool direct = false;
 
@@ -343,7 +355,7 @@ namespace BlackGui
 
             if (direct)
             {
-                this->m_dsTriggerGuiUpdate.inputSignal();
+                m_dsTriggerGuiUpdate.inputSignal();
             }
         }
     } // ns

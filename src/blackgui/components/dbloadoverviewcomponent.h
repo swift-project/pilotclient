@@ -68,8 +68,9 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
-            BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, &CDbLoadOverviewComponent::ps_setValues, 750, 4 };
+            BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
             bool m_loadInProgress = false; //!< data loading in progress
+            bool m_setValuesInProgress = false; //!< setting values in progress, needed because of CNetworkUtils::canConnect check (processing events)
 
             //! Trigger loading from DB
             void triggerLoadingFromDb(BlackMisc::Network::CEntityFlags::Entity entities);
@@ -79,6 +80,21 @@ namespace BlackGui
 
             //! Values at least set once
             bool isInitialized() const;
+
+            //! Refresh directly from DB
+            void refreshDbPressed();
+
+            //! Refresh directly from shared files
+            void refreshSharedPressed();
+
+            //! Init the value panel
+            void setGuiValues();
+
+            //! Data have been loaded
+            void dataLoaded(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+
+            //! Load info objects if not already loaded
+            void loadInfoObjects();
 
             //! Timestamp
             static QString formattedTimestamp(const QDateTime &dateTime);
@@ -103,22 +119,6 @@ namespace BlackGui
 
             //! Admit caches
             static void admitCaches();
-
-        private slots:
-            //! Refresh directly from DB
-            void ps_refreshDbPressed();
-
-            //! Refresh directly from shared files
-            void ps_refreshSharedPressed();
-
-            //! Init the value panel
-            void ps_setValues();
-
-            //! Data have been loaded
-            void ps_dataLoaded(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-
-            //! Load info objects if not already loaded
-            void ps_loadInfoObjects();
         };
     } // ns
 } // ns
