@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     if (clientFlag)
     {
         // 2nd Process !!! Running on the client's side
-        // This runs in a second process, hence cannot be directly debugged within Qt Creators
+        // This runs in a second process, hence cannot be directly debugged within Qt Creator
         out << "Running client side " << QCoreApplication::applicationPid() << endl;
 
         // run tests
@@ -161,8 +161,8 @@ int main(int argc, char *argv[])
         BlackMisc::CDBusServer *dBusServer = new BlackMisc::CDBusServer(useSessionBusForServer ? "session" : address);
         if (dBusServer->hasQDBusServer())
         {
-            out << "server" << dBusServer->qDBusServer()->address() <<
-                " connected:" << dBusServer->qDBusServer()->isConnected() << endl;
+            out << "server" << dBusServer->qDBusServer()->address()
+                << " connected:" << dBusServer->qDBusServer()->isConnected() << endl;
         }
         // start client process
         QStringList args;

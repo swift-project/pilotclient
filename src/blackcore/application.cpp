@@ -712,7 +712,8 @@ namespace BlackCore
 
     void CApplication::processEventsFor(int milliseconds)
     {
-        if (CApplication::instance()->isShuttingDown()) { return; }
+        // sApp check allows to use in test cases without sApp
+        if (sApp && sApp->isShuttingDown()) { return; }
         QEventLoop eventLoop;
         QTimer::singleShot(milliseconds, &eventLoop, &QEventLoop::quit);
         eventLoop.exec();
