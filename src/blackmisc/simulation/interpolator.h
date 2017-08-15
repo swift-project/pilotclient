@@ -49,7 +49,7 @@ namespace BlackMisc
 
             //! Parts before given offset time (aka pending parts)
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                qint64 cutoffTime, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
+                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
 
             //! Add a new aircraft situation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);

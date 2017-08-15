@@ -35,7 +35,7 @@ namespace BlackMisc
 
             //! \copydoc CInterpolator::getInterpolatedParts
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                qint64 cutoffTime, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
+                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
 
             //! \copydoc CInterpolator::addAircraftSituation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);

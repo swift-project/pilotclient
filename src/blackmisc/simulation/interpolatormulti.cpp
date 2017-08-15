@@ -37,14 +37,14 @@ namespace BlackMisc
         }
 
         BlackMisc::Aviation::CAircraftParts CInterpolatorMulti::getInterpolatedParts(
-            qint64 cutoffTime, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log)
+            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log)
         {
             switch (m_mode)
             {
             case ModeLinear:
-                return m_linear.getInterpolatedParts(cutoffTime, setup, partsStatus, log);
+                return m_linear.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
             case ModeSpline:
-                return m_spline.getInterpolatedParts(cutoffTime, setup, partsStatus, log);
+                return m_spline.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
             default:
                 break;
             }
