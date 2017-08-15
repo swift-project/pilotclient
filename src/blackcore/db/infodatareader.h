@@ -45,7 +45,7 @@ namespace BlackCore
 
             //! All data read?
             //! \threadsafe
-            bool areAllDataRead() const;
+            bool areAllInfoObjectsRead() const;
 
             //! Allow to call directly, special for info objects reader
             void read();

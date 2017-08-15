@@ -1124,7 +1124,7 @@ namespace BlackCore
         {
             // with info objects wait until info objects are loaded
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront, do not pass as entity here");
-            const bool waitForDbInfoReader = m_dbInfoDataReader && !m_dbInfoDataReader->areAllDataRead() && !m_dbInfoDataReader->isMarkedAsFailed();
+            const bool waitForDbInfoReader = m_dbInfoDataReader && !m_dbInfoDataReader->areAllInfoObjectsRead() && !m_dbInfoDataReader->isMarkedAsFailed();
             if (waitForDbInfoReader)
             {
                 // do not read yet, will call this function again after some time
@@ -1182,7 +1182,7 @@ namespace BlackCore
         }
         else if (reader->hasReceivedFirstReply())
         {
-            if (reader->areAllDataRead())
+            if (reader->areAllInfoObjectsRead())
             {
                 // we have all data and carry on
                 CLogMessage(this).info("Info objects (%1) for '%2' loaded from '%3'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString();

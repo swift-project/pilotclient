@@ -44,7 +44,7 @@ namespace BlackCore
             return m_infoObjects.size();
         }
 
-        bool CInfoDataReader::areAllDataRead() const
+        bool CInfoDataReader::areAllInfoObjectsRead() const
         {
             return getInfoObjectCount() > 4;
         }
