@@ -70,5 +70,11 @@ namespace BlackMisc
             }
             return distributions;
         }
+
+        CDistributionList CDistributionList::fromDatabaseJson(const QString &json)
+        {
+            if (json.isEmpty()) { return CDistributionList(); }
+            return CDistributionList::fromDatabaseJson(Json::jsonArrayFromString(json));
+        }
     } // namespace
 } // namespace

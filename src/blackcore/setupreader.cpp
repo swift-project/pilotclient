@@ -13,7 +13,6 @@
 #include "blackmisc/compare.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/directoryutils.h"
-#include "blackmisc/json.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
@@ -331,7 +330,7 @@ namespace BlackCore
                 {
                     const CGlobalSetup currentSetup = m_setup.get();
                     CGlobalSetup loadedSetup;
-                    loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
+                    loadedSetup.convertFromJson(setupJson);
                     loadedSetup.markAsLoaded(true);
                     if (lastModified > 0 && lastModified > loadedSetup.getMSecsSinceEpoch()) { loadedSetup.setMSecsSinceEpoch(lastModified); }
                     bool sameVersionLoaded = (loadedSetup == currentSetup);
@@ -422,9 +421,7 @@ namespace BlackCore
             {
                 try
                 {
-                    const CDistributionList loadedDistributions = CDistributionList::fromDatabaseJson(
-                                Json::jsonArrayFromString(distributionJson)
-                            );
+                    const CDistributionList loadedDistributions = CDistributionList::fromDatabaseJson(distributionJson);
                     if (loadedDistributions.isEmpty())
                     {
                         CLogMessage(this).error("Loading of distribution yielded no data");

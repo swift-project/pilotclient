@@ -59,6 +59,9 @@ namespace BlackMisc
 
             //! From database JSON
             static CDistributionList fromDatabaseJson(const QJsonArray &array);
+
+            //! From database JSON
+            static CDistributionList fromDatabaseJson(const QString &json);
         };
 
         //! Trait for global setup data
