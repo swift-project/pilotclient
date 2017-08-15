@@ -1064,9 +1064,16 @@ namespace BlackCore
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
+        CAircraftSituation fullSituation(situation);
+
         // store situation history
-        this->storeAircraftSituation(situation);
-        emit this->addedAircraftSituation(situation);
+        this->storeAircraftSituation(fullSituation);
+        {
+            //! \fixme Workaround to consolidate time offset from storeAircraftSituation
+            QReadLocker lock(&m_lockSituations);
+            fullSituation.setTimeOffsetMs(m_situationsByCallsign[callsign].front().getTimeOffsetMs());
+        }
+        emit this->addedAircraftSituation(fullSituation);
 
         const bool existsInRange = this->isAircraftInRange(callsign);
         const bool hasFsInnPacket = this->m_tempFsInnPackets.contains(callsign);
@@ -1075,7 +1082,7 @@ namespace BlackCore
         {
             CSimulatedAircraft aircraft;
             aircraft.setCallsign(callsign);
-            aircraft.setSituation(situation);
+            aircraft.setSituation(fullSituation);
             aircraft.setTransponder(transponder);
             this->addNewAircraftInRange(aircraft);
             this->sendInitialPilotQueries(callsign, true, !hasFsInnPacket);
@@ -1089,9 +1096,9 @@ namespace BlackCore
             // update, aircraft already exists
             CPropertyIndexVariantMap vm;
             vm.addValue(CSimulatedAircraft::IndexTransponder, transponder);
-            vm.addValue(CSimulatedAircraft::IndexSituation, situation);
-            vm.addValue(CSimulatedAircraft::IndexRelativeDistance, this->calculateDistanceToOwnAircraft(situation));
-            vm.addValue(CSimulatedAircraft::IndexRelativeBearing, this->calculateBearingToOwnAircraft(situation));
+            vm.addValue(CSimulatedAircraft::IndexSituation, fullSituation);
+            vm.addValue(CSimulatedAircraft::IndexRelativeDistance, this->calculateDistanceToOwnAircraft(fullSituation));
+            vm.addValue(CSimulatedAircraft::IndexRelativeBearing, this->calculateBearingToOwnAircraft(fullSituation));
             this->updateAircraftInRange(callsign, vm);
         }
 
@@ -1124,6 +1131,11 @@ namespace BlackCore
 
         // store situation history
         this->storeAircraftSituation(interimSituation);
+        {
+            //! \fixme Workaround to consolidate time offset from storeAircraftSituation
+            QReadLocker lock(&m_lockSituations);
+            interimSituation.setTimeOffsetMs(m_situationsByCallsign[callsign].front().getTimeOffsetMs());
+        }
         emit this->addedAircraftSituation(interimSituation);
 
         // if we have not aircraft in range yer, we stop here
@@ -1221,6 +1233,11 @@ namespace BlackCore
 
         // store part history (parts always absolute)
         this->storeAircraftParts(callsign, parts);
+        {
+            //! \fixme Workaround to consolidate time offset from storeAircraftParts
+            QReadLocker lock(&m_lockParts);
+            parts.setTimeOffsetMs(m_partsByCallsign[callsign].front().getTimeOffsetMs());
+        }
         emit this->addedAircraftParts(callsign, parts);
 
         if (m_enableAircraftPartsHistory)
