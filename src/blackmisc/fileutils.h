@@ -60,6 +60,9 @@ namespace BlackMisc
         //! Write string to text file in background
         static bool writeStringToFileInBackground(const QString &content, const QString &fileNameAndPath);
 
+        //! Write byte array to file
+        static bool writeByteArrayToFile(const QByteArray &data, const QString &fileNameAndPath);
+
         //! Append file paths
         //! \sa CNetworkUtils::buildUrl for URLs
         static QString appendFilePaths(const QString &path1, const QString &path2);

@@ -53,6 +53,9 @@ namespace BlackMisc
                 //! Simulator directory
                 const QString &getSimulatorDirectory() const;
 
+                //! Setting has simulator setting
+                bool hasSimulatorDirectory() const;
+
                 //! Set model directories
                 void setModelDirectories(const QStringList &modelDirectories);
 

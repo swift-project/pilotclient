@@ -52,6 +52,16 @@ namespace BlackMisc
         return true;
     }
 
+    bool CFileUtils::writeByteArrayToFile(const QByteArray &data, const QString &fileNameAndPath)
+    {
+        if (fileNameAndPath.isEmpty()) { return false; }
+        QFile file(fileNameAndPath);
+        if (!file.open(QIODevice::WriteOnly)) { return false; }
+        qint64 c = file.write(data);
+        file.close();
+        return c == data.count();
+    }
+
     bool CFileUtils::writeStringToLockedFile(const QString &content, const QString &fileNameAndPath)
     {
         QLockFile lock(fileNameAndPath + ".lock");

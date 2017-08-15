@@ -37,6 +37,11 @@ namespace BlackMisc
                 return this->m_simulatorDirectory;
             }
 
+            bool CSimulatorSettings::hasSimulatorDirectory() const
+            {
+                return !getSimulatorDirectory().isEmpty();
+            }
+
             void CSimulatorSettings::setModelDirectories(const QStringList &modelDirectories)
             {
                 this->m_modelDirectories = modelDirectories;

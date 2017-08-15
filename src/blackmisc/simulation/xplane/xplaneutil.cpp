@@ -119,7 +119,13 @@ namespace BlackMisc
             {
                 const QString xp = xplaneRootDir();
                 if (xp.isEmpty()) { return xp; }
-                return CFileUtils::appendFilePaths(xp, "/Resources/plugins");
+                return CFileUtils::appendFilePaths(xp, xplanePluginPath());
+            }
+
+            QString CXPlaneUtil::xplanePluginPath()
+            {
+                static const QString p("/Resources/plugins");
+                return p;
             }
 
             bool CXPlaneUtil::isXplanePluginDirDirExisting()
