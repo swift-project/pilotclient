@@ -28,7 +28,7 @@ namespace BlackCore
     namespace Db
     {
         //! Databse user used with swift DB. Features role and cookie handling.
-        class BLACKCORE_EXPORT  CDatabaseAuthenticationService: public QObject
+        class BLACKCORE_EXPORT CDatabaseAuthenticationService: public QObject
         {
             Q_OBJECT
 
@@ -59,15 +59,14 @@ namespace BlackCore
             //! Logoff completed
             void logoffFinished();
 
-        private slots:
+        private:
             //! Parse login answer
-            void ps_parseServerResponse(QNetworkReply *nwReplyPtr);
+            void parseServerResponse(QNetworkReply *nwReplyPtr);
 
             //! User object changed
-            void ps_userChanged();
+            void userChanged();
 
-        private:
-            BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDatabaseAuthenticationService::ps_userChanged};
+            BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDatabaseAuthenticationService::userChanged};
             bool m_shutdown = false;
         };
     } // ns

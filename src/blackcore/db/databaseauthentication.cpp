@@ -89,7 +89,7 @@ namespace BlackCore
 
             QString query = params.toString();
             const QNetworkRequest request(CNetworkUtils::getNetworkRequest(url, CNetworkUtils::PostUrlEncoded));
-            sApp->postToNetwork(request, query.toUtf8(), { this, &CDatabaseAuthenticationService::ps_parseServerResponse});
+            sApp->postToNetwork(request, query.toUtf8(), { this, &CDatabaseAuthenticationService::parseServerResponse});
             QString rm("Sent request to authentication server %1");
             msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, rm.arg(url.toQString())));
             return msgs;
@@ -100,11 +100,11 @@ namespace BlackCore
             CUrl url(sApp->getGlobalSetup().getDbLoginServiceUrl());
             url.setQuery("logoff=true");
             QNetworkRequest request(CNetworkUtils::getNetworkRequest(url));
-            sApp->getFromNetwork(request, { this, &CDatabaseAuthenticationService::ps_parseServerResponse });
+            sApp->getFromNetwork(request, { this, &CDatabaseAuthenticationService::parseServerResponse });
             this->m_swiftDbUser.set(CAuthenticatedUser());
         }
 
-        void CDatabaseAuthenticationService::ps_parseServerResponse(QNetworkReply *nwReplyPtr)
+        void CDatabaseAuthenticationService::parseServerResponse(QNetworkReply *nwReplyPtr)
         {
             // always cleanup reply
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
@@ -170,7 +170,7 @@ namespace BlackCore
             }
         }
 
-        void CDatabaseAuthenticationService::ps_userChanged()
+        void CDatabaseAuthenticationService::userChanged()
         {
             // code goes here
         }

@@ -50,7 +50,7 @@ namespace BlackCore
             //! Allow to call directly, special for info objects reader
             void read();
 
-            //! URL depending on mode
+            //! URL depending on mode, i.e. shared/DB
             BlackMisc::Network::CUrl getInfoObjectsUrl() const;
 
             // cache handling for base class: no cache handling here in that case

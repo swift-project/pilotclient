@@ -409,7 +409,7 @@ QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs
 
 void CSwiftLauncher::ps_startButtonPressed()
 {
-    QObject *sender = QObject::sender();
+    const QObject *sender = QObject::sender();
     if (sender == ui->tb_SwiftGui)
     {
         if (this->setSwiftGuiExecutable())

@@ -436,7 +436,7 @@ namespace BlackGui
 
             if (this->m_modelLoader->isLoadingInProgress())
             {
-                CLogMessage(this).info("Loading for %1 already in progress") << simulator.toQString();
+                CLogMessage(this).info("Loading for '%1' already in progress") << simulator.toQString();
                 return;
             }
 

@@ -239,8 +239,8 @@ namespace BlackCore
             CAircraftModelList stashModels;
             if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty()) { return stashModels; }
             const QSet<QString> dbKeys = dbFsFamilyModels.getModelStringSet();
-            const int mexModelsCount = maxToStash >= 0 ? maxToStash : ownModels.size();
-            if (mexModelsCount < 1) { return stashModels; }
+            const int maxModelsCount = maxToStash >= 0 ? maxToStash : ownModels.size();
+            if (maxModelsCount < 1) { return stashModels; }
 
             int c = 0; // counter
             for (const CAircraftModel &ownModel : ownModels)
@@ -252,7 +252,7 @@ namespace BlackCore
                 {
                     if (progressIndicator)
                     {
-                        const int percentage = c * 100 / mexModelsCount;
+                        const int percentage = c * 100 / maxModelsCount;
                         progressIndicator->updateProgressIndicatorAndProcessEvents(percentage);
                     }
                     else

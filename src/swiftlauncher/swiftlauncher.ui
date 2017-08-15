@@ -92,8 +92,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>349</height>
+               <width>98</width>
+               <height>88</height>
               </rect>
              </property>
              <attribute name="label">
@@ -123,8 +123,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>349</height>
+               <width>199</width>
+               <height>63</height>
               </rect>
              </property>
              <attribute name="label">
@@ -188,8 +188,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>349</height>
+               <width>277</width>
+               <height>244</height>
               </rect>
              </property>
              <attribute name="label">
@@ -475,7 +475,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
-                     <height>80</height>
+                     <height>100</height>
                     </size>
                    </property>
                   </widget>
@@ -515,7 +515,7 @@
                       <x>0</x>
                       <y>0</y>
                       <width>376</width>
-                      <height>199</height>
+                      <height>179</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -565,8 +565,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>392</width>
-               <height>349</height>
+               <width>98</width>
+               <height>88</height>
               </rect>
              </property>
              <attribute name="label">

@@ -258,7 +258,6 @@ namespace BlackCore
                 % "swift DB datafile locations: "
                 % getSwiftDbDataFileLocationUrls().toQString(i18n)
                 % separator;
-
             s +=
                 "VATSIM bookings: "
                 % getVatsimBookingsUrl().toQString(i18n)

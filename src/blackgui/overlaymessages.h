@@ -141,12 +141,12 @@ namespace BlackGui
     private:
         QScopedPointer<Ui::COverlayMessages> ui;
         BlackMisc::CSettingReadOnly<BlackGui::Settings::TextMessageSettings> m_messageSettings { this };
-        QString                              m_header;
-        int                                  m_lastConfirmation = QMessageBox::Cancel;
-        bool                                 m_awaitingConfirmation = false;
-        bool                                 m_hasKillButton = false;
-        std::function<void()>                m_okLambda;
-        QTimer                               m_autoCloseTimer { this };
+        QString                      m_header;
+        int                          m_lastConfirmation = QMessageBox::Cancel;
+        bool                         m_awaitingConfirmation = false;
+        bool                         m_hasKillButton = false;
+        std::function<void()>        m_okLambda;
+        QTimer                       m_autoCloseTimer { this };
         QList<std::function<void()>> m_pendingMessageCalls;
 
         //! Init widget
