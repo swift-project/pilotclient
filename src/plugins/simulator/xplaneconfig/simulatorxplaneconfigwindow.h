@@ -13,16 +13,13 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
 #include "blackgui/pluginconfigwindow.h"
-#include "blackmisc/settingscache.h"
 #include "simulatorxplaneconfig.h"
-
 #include <QObject>
 #include <QScopedPointer>
 
 class QWidget;
 
 namespace Ui { class CSimulatorXPlaneConfigWindow; }
-
 namespace BlackSimPlugin
 {
     namespace XPlane
@@ -42,18 +39,9 @@ namespace BlackSimPlugin
             virtual ~CSimulatorXPlaneConfigWindow();
 
         private:
-            //! Checks whether xswiftbus is present in the distributed directory.
-            bool xSwiftBusAvailable();
-
-        private slots:
-            void ps_storeSettings();
-            void ps_installXSwiftBus();
-
-        private:
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-            BlackMisc::CSetting<TXSwiftBusServer> m_xswiftbusServerSetting { this };
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

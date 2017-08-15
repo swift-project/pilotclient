@@ -6,32 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>136</height>
+    <width>184</width>
+    <height>66</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>X-Plane plugin settings</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
-    <widget class="QComboBox" name="cp_XSwiftBusServer"/>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_XSwiftBusServer">
-     <property name="text">
-      <string>XSwiftBus server:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QPushButton" name="pb_InstallXSwiftBus">
-     <property name="text">
-      <string>Install XSwiftBus in the X-Plane directory...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
+  <layout class="QGridLayout" name="gl_ConfigWindow">
+   <item row="1" column="0">
     <widget class="QDialogButtonBox" name="bb_OkCancel">
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
@@ -41,21 +24,26 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
+   <item row="0" column="0">
+    <widget class="BlackGui::Components::CSettingsXSwiftBusComponent" name="comp_SettingsXSwiftBus">
+     <property name="minimumSize">
       <size>
-       <width>20</width>
-       <height>40</height>
+       <width>0</width>
+       <height>20</height>
       </size>
      </property>
-    </spacer>
+    </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsXSwiftBusComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsxswiftbuscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

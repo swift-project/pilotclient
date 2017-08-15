@@ -26,18 +26,6 @@ namespace BlackSimPlugin
     namespace XPlane
     {
         /*!
-         * Setting for XSwiftBus.
-         */
-        struct TXSwiftBusServer : public BlackMisc::TSettingTrait<QString>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "xswiftbus/server"; }
-
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static QString defaultValue() { return QStringLiteral("session"); }
-        };
-
-        /*!
          * Config plugin for the X-Plane plugin.
          */
         class CSimulatorXPlaneConfig : public QObject, public BlackGui::IPluginConfig
@@ -56,7 +44,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
             BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard
