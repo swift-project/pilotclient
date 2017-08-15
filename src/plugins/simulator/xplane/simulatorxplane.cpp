@@ -315,6 +315,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
             // No assert here as status message may come because of network problems
+            //! \fixme comment above assumes other methods Q_ASSERT(isConnected())
             if (!isConnected()) { return; }
 
             // avoid infinite recursion in case this function is called due to a message caused by this very function
@@ -414,7 +415,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            Q_ASSERT(isConnected()); //! \fixme KB 8/2017 would BLACK_VERIFY + return be better?
+            if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?
             if (originator == this->identifier()) { return false; }
             auto com1 = CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
             auto com2 = CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
@@ -442,7 +443,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            if (!isConnected()) { return false; };
+            if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?
             if (originator == this->identifier()) { return false; }
             Q_UNUSED(selcal);
 
@@ -496,7 +497,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
-            Q_ASSERT(isConnected());
+            if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?
             //! \todo XPlane driver check if already exists, how?
             //! \todo XPlane driver set correct return value
 
@@ -520,7 +521,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
         {
-            Q_ASSERT(isConnected());
+            if (!isConnected()) { return; } //! \fixme why is this method called when not connected?
             using namespace BlackMisc::PhysicalQuantities;
             m_traffic->addPlanePosition(situation.getCallsign().asString(),
                                         situation.latitude().value(CAngleUnit::deg()),
@@ -565,7 +566,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
         {
-            Q_ASSERT(isConnected());
+            if (!isConnected()) { return; } //! \fixme why is this method called when not connected?
             m_traffic->addPlaneSurfaces(callsign.asString(), parts.isGearDown() ? 1 : 0,
                                         parts.getFlapsPercent() / 100.0, parts.isSpoilersOut() ? 1 : 0, parts.isSpoilersOut() ? 1 : 0, parts.getFlapsPercent() / 100.0,
                                         0, parts.isAnyEngineOn() ? 0 : 0.75, 0, 0, 0,
@@ -582,7 +583,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
-            Q_ASSERT(isConnected());
+            if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?
             m_traffic->removePlane(callsign.asString());
             updateAircraftRendered(callsign, false);
             CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
