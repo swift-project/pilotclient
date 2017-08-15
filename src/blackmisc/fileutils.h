@@ -130,6 +130,9 @@ namespace BlackMisc
         //! UNC file paths on Qt start with "/", but UNC file paths only work when they start with "//"
         //! \remark On Windows starting with "/" means an UNC path, on UNIX it varies, see http://unix.stackexchange.com/a/12291/19428
         static QString fixWindowsUncPath(const QString &filePath);
+
+        //! Human readable (GB, MB, ..) file size
+        static QString humanReadableFileSize(qint64 size);
     };
 } // ns
 

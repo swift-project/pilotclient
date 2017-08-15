@@ -51,6 +51,11 @@ namespace BlackMisc
             return rv;
         }
 
+        QString CMathUtils::roundAsString(double value, int digits)
+        {
+            return QString::number(round(value, digits));
+        }
+
         double CMathUtils::roundEpsilon(double value, double epsilon)
         {
             if (epsilon == 0) { return value; } // avoid division by 0

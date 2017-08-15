@@ -7,9 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
-#include "blackmisc/fileutils.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/math/mathutils.h"
+
+#include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -23,6 +25,7 @@
 #include <algorithm>
 
 using namespace BlackConfig;
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
@@ -124,8 +127,8 @@ namespace BlackMisc
                 return false;
             }
 
-            QDir originDir(sourceFileInfo.absoluteFilePath());
-            auto fileNames = originDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
+            const QDir originDir(sourceFileInfo.absoluteFilePath());
+            const auto fileNames = originDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
             for (const QString &fileName : fileNames)
             {
                 if (!copyRecursively(originDir.absoluteFilePath(fileName), targetDir.absoluteFilePath(fileName)))
@@ -141,7 +144,6 @@ namespace BlackMisc
                 return false;
             }
         }
-
         return true;
     }
 
@@ -353,5 +355,23 @@ namespace BlackMisc
         if (filePath.startsWith("//")) { return filePath; }
         static const QString f("/%1");
         return f.arg(filePath);
+    }
+
+    QString CFileUtils::humanReadableFileSize(qint64 size)
+    {
+        // from https://stackoverflow.com/a/30958189/356726
+        // fell free to replace it by something better
+        static const QStringList units({ "KB", "MB", "GB", "TB" });
+        if (size <= 1024) { return QString::number(size); }
+
+        QStringListIterator i(units);
+        double currentSize = size;
+        QString unit;
+        while (currentSize >= 1024.0 && i.hasNext())
+        {
+            unit = i.next();
+            currentSize /= 1024.0;
+        }
+        return QString("%1 %2").arg(CMathUtils::roundAsString(currentSize, 2), unit);
     }
 } // ns

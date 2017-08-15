@@ -50,6 +50,9 @@ namespace BlackMisc
             //! Utility round method
             static double round(double value, int digits);
 
+            //! Utility round method, returning as string
+            static QString roundAsString(double value, int digits);
+
             //! Round by given epsilon
             static double roundEpsilon(double value, double epsilon);
 
