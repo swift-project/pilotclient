@@ -20,6 +20,7 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 #include <QDateTime>
 #include <QStringBuilder>
 
@@ -227,6 +228,10 @@ namespace BlackMisc
                 const double secondsUntilLanding = soonestLanding == partsNewer.end() ? maxSecs : (soonestLanding->getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoch) / 1000.0;
                 Q_ASSERT(secondsSinceTakeoff >= 0.0);
                 Q_ASSERT(secondsUntilLanding >= 0.0);
+
+                //! \fixme In future, will we need to be able to support time offsets of zero?
+                BLACK_VERIFY(predictableFutureSecs != 0);
+                if (predictableFutureSecs == 0) { break; } // avoid divide by zero
 
                 const double takeoffFactor = secondsSinceTakeoff / significantPastSecs;
                 const double landingFactor = secondsUntilLanding / predictableFutureSecs;
