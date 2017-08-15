@@ -126,10 +126,10 @@ namespace BlackMisc
 
         void IRemoteAircraftProvider::removeOutdatedParts(CAircraftPartsList &partsList)
         {
-            // remove outdated parts (but never remove the most recent one)
+            // remove all outdated parts but one
             const auto predicate = [now = partsList.front().getMSecsSinceEpoch()](const auto & p) { return p.getMSecsSinceEpoch() >= now - PartsPerCallsignMaxAgeInSeconds * 1000; };
             const auto newEnd = std::find_if(partsList.rbegin(), partsList.rend(), predicate).base();
-            partsList.erase(newEnd, partsList.end());
+            if (newEnd != partsList.end()) { partsList.erase(newEnd + 1, partsList.end()); }
         }
     } // namespace
 } // namespace
