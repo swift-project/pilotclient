@@ -101,6 +101,9 @@ namespace BlackCore
             //! Login service
             BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
 
+            //! alpha XSwiftBus files available
+            BlackMisc::Network::CUrl getAlphaXSwiftBusFilesServiceUrl() const;
+
             //! Root directory of DB
             const BlackMisc::Network::CUrl &getDbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
 
@@ -204,6 +207,9 @@ namespace BlackCore
 
             // transient members, to be switched on/off via GUI or set from reader
             bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
+
+            //! Set the default URLs
+            void initDefaultUrls();
 
             BLACK_METACLASS(
                 CGlobalSetup,

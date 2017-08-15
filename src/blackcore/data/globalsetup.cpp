@@ -29,13 +29,30 @@ namespace BlackCore
     namespace Data
     {
         CGlobalSetup::CGlobalSetup() :
-            ITimestampBased(0),
-            m_dbRootDirectoryUrl("https://datastore.swift-project.org/"), m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
-            m_vatsimMetarsUrls( {"http://metar.vatsim.net/metar.php"}), m_vatsimStatusFileUrls({ "https://status.vatsim.net" }),
-            m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" }), m_sharedUrls({"https://datastore.swift-project.org/shared", "https://vatsim-germany.org:50443/datastore/shared"}),
-            m_newsUrls(QStringList({ "http://swift-project.org/" })), m_onlineHelpUrls(QStringList({ "help.swift-project.org/" })),
-            m_mapUrls(QStringList({ "map.swift-project.org/" }))
-        { }
+            ITimestampBased(0)
+        {
+            this->initDefaultUrls();
+        }
+
+        void CGlobalSetup::initDefaultUrls()
+        {
+            m_dbRootDirectoryUrl = CUrl("https://datastore.swift-project.org/");
+            m_vatsimBookingsUrl = CUrl("http://vatbook.euroutepro.com/xml2.php");
+            m_vatsimMetarsUrls = CUrlList({"http://metar.vatsim.net/metar.php"});
+            m_vatsimStatusFileUrls = CUrlList({ "https://status.vatsim.net" });
+            m_vatsimDataFileUrls = CUrlList({ "http://info.vroute.net/vatsim-data.txt" });
+            m_sharedUrls = CUrlList(
+            {
+                "https://datastore.swift-project.org/shared",
+                "http://www.siliconmind.de/datastore/shared/",
+                "http://swift-project.org/datastore/shared/"
+            });
+
+            // spare: "https://vatsim-germany.org:50443/datastore/shared"
+            m_newsUrls = CUrlList({ "http://swift-project.org/" });
+            m_onlineHelpUrls = CUrlList({ "help.swift-project.org/" });
+            m_mapUrls = CUrlList({ "map.swift-project.org/" });
+        }
 
         CUrl CGlobalSetup::getDbIcaoReaderUrl() const
         {
@@ -88,6 +105,13 @@ namespace BlackCore
         {
             return getDbRootDirectoryUrl().
                    withAppendedPath("/service/jsonauthenticate.php").
+                   withSwitchedScheme("https", m_dbHttpsPort);
+        }
+
+        CUrl CGlobalSetup::getAlphaXSwiftBusFilesServiceUrl() const
+        {
+            return getDbRootDirectoryUrl().
+                   withAppendedPath("/service/jsonalphaxswiftbusfiles.php").
                    withSwitchedScheme("https", m_dbHttpsPort);
         }
 
