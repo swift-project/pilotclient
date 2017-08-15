@@ -86,16 +86,16 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("removeAllPlanes"));
         }
 
-        void CXSwiftBusTrafficProxy::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime)
+        void CXSwiftBusTrafficProxy::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset)
         {
-            m_dbusInterface->callDBus(QLatin1String("addPlanePosition"), callsign, latitude, longitude, altitude, pitch, roll, heading, relativeTime);
+            m_dbusInterface->callDBus(QLatin1String("addPlanePosition"), callsign, latitude, longitude, altitude, pitch, roll, heading, relativeTime, timeOffset);
         }
 
         void CXSwiftBusTrafficProxy::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime)
+            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
         {
             m_dbusInterface->callDBus(QLatin1String("addPlaneSurfaces"), callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron,
-                landLight, beaconLight, strobeLight, navLight, lightPattern, onGround, relativeTime);
+                landLight, beaconLight, strobeLight, navLight, lightPattern, onGround, relativeTime, timeOffset);
         }
 
         void CXSwiftBusTrafficProxy::setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident)

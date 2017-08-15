@@ -257,7 +257,7 @@ namespace XSwiftBus
         m_planesById.clear();
     }
 
-    void CTraffic::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime)
+    void CTraffic::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset)
     {
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
         if (plane)
@@ -273,14 +273,15 @@ namespace XSwiftBus
                 CSpeed(0, CSpeedUnit::kts())
             );
             situation.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+            situation.setTimeOffsetMs(timeOffset);
             plane->interpolator.addAircraftSituation(situation);
         }
     }
 
     void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                                    double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime)
+                                    double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
     {
-        const auto surfaces = std::make_pair(relativeTime + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane *plane)
+        const auto surfaces = std::make_pair(relativeTime + timeOffset + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane *plane)
         {
             plane->hasSurfaces = true;
             plane->targetGearPosition = gear;
@@ -309,6 +310,7 @@ namespace XSwiftBus
             BlackMisc::Aviation::CAircraftParts parts;
             parts.setOnGround(onGround);
             parts.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+            parts.setTimeOffsetMs(timeOffset);
             plane->interpolator.addAircraftParts(parts);
         }
     }

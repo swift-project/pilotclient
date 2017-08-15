@@ -529,7 +529,8 @@ namespace BlackSimPlugin
                                         situation.getPitch().value(CAngleUnit::deg()),
                                         situation.getBank().value(CAngleUnit::deg()),
                                         situation.getHeading().value(CAngleUnit::deg()),
-                                        situation.getAdjustedMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch());
+                                        situation.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(),
+                                        situation.getTimeOffsetMs());
 
             if (! isRemoteAircraftSupportingParts(situation.getCallsign()))
             {
@@ -569,7 +570,7 @@ namespace BlackSimPlugin
                                         parts.getFlapsPercent() / 100.0, parts.isSpoilersOut() ? 1 : 0, parts.isSpoilersOut() ? 1 : 0, parts.getFlapsPercent() / 100.0,
                                         0, parts.isAnyEngineOn() ? 0 : 0.75, 0, 0, 0,
                                         parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
-                                        0, parts.isOnGround(), parts.getAdjustedMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch());
+                                        0, parts.isOnGround(), parts.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(), parts.getTimeOffsetMs());
             m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false);
         }
 

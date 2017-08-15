@@ -103,11 +103,11 @@ namespace BlackSimPlugin
             void removeAllPlanes();
 
             //! \copydoc XSwiftBus::CTraffic::addPlanePosition
-            void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime);
+            void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset);
 
             //! \copydoc XSwiftBus::CTraffic::addPlaneSurfaces
             void addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime);
+                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset);
 
             //! \copydoc XSwiftBus::CTraffic::setPlaneTransponder
             void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
