@@ -637,9 +637,9 @@ namespace BlackCore
             multiPart->moveToThread(this->m_accessManager->thread());
         }
 
-        return httpRequestImpl(request, callback, -1, [ this, multiPart ](QNetworkAccessManager & nam, const QNetworkRequest & request)
+        return httpRequestImpl(request, callback, -1, [ this, multiPart ](QNetworkAccessManager & qam, const QNetworkRequest & request)
         {
-            QNetworkReply *reply = nam.post(request, multiPart);
+            QNetworkReply *reply = qam.post(request, multiPart);
             Q_ASSERT(reply);
             multiPart->setParent(reply);
             return reply;
@@ -648,12 +648,43 @@ namespace BlackCore
 
     QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const CSlot<void (QNetworkReply *)> &callback, int maxRedirects)
     {
-        return httpRequestImpl(url.toNetworkRequest(), callback, maxRedirects, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.head(request); });
+        return httpRequestImpl(url.toNetworkRequest(), callback, maxRedirects, [ ](QNetworkAccessManager & qam, const QNetworkRequest & request) { return qam.head(request); });
     }
 
     QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const CSlot<void (QNetworkReply *)> &callback, int maxRedirects)
     {
-        return httpRequestImpl(request, callback, maxRedirects, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.head(request); });
+        return httpRequestImpl(request, callback, maxRedirects, [ ](QNetworkAccessManager & qam, const QNetworkRequest & request) { return qam.head(request); });
+    }
+
+    QNetworkReply *CApplication::downloadFromNetwork(const CUrl &url, const QString &saveAsFileName, const BlackMisc::CSlot<void (const CStatusMessage &)> &callback, int maxRedirects)
+    {
+        // upfront checks
+        if (url.isEmpty()) { return nullptr; }
+        if (saveAsFileName.isEmpty()) { return nullptr; }
+        const QFileInfo fi(saveAsFileName);
+        if (!fi.dir().exists()) { return nullptr; }
+
+        CSlot<void (QNetworkReply *)> slot([ = ](QNetworkReply * reply)
+        {
+            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
+            CStatusMessage msg;
+            if (reply->error() != QNetworkReply::NoError)
+            {
+                msg = CStatusMessage(this, CStatusMessage::SeverityError, "Download for '%1' failed: '%2'") <<  url.getFullUrl() << nwReply->errorString();
+            }
+            else
+            {
+                const bool ok = CFileUtils::writeByteArrayToFile(reply->readAll(), saveAsFileName);
+                msg = ok ?
+                      CStatusMessage(this, CStatusMessage::SeverityInfo, "Saved file '%1' downloaded from '%2'") << saveAsFileName << url.getFullUrl() :
+                      CStatusMessage(this, CStatusMessage::SeverityError, "Saving file '%1' downloaded from '%2' failed") << saveAsFileName << url.getFullUrl();
+            }
+            nwReply->close();
+            QTimer::singleShot(0, callback.object(), [ = ] { callback(msg); });
+        });
+        slot.setObject(this); // object for thread
+        QNetworkReply *reply = this->getFromNetwork(url, slot, maxRedirects);
+        return reply;
     }
 
     void CApplication::deleteAllCookies()
@@ -1301,13 +1332,14 @@ namespace BlackCore
 
     QNetworkReply *CApplication::httpRequestImpl(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback, int maxRedirects, std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod)
     {
-        if (this->m_shutdown) { return nullptr; }
+        if (this->isShuttingDown()) { return nullptr; }
         if (!this->isNetworkAccessible()) { return nullptr; }
         QWriteLocker locker(&m_accessManagerLock);
         Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager->thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
         if (QThread::currentThread() != this->m_accessManager->thread())
         {
-            QTimer::singleShot(0, this, std::bind(&CApplication::httpRequestImpl, this, request, callback, maxRedirects, requestOrPostMethod));
+            // run in QAM thread
+            QTimer::singleShot(0, this->m_accessManager, std::bind(&CApplication::httpRequestImpl, this, request, callback, maxRedirects, requestOrPostMethod));
             return nullptr; // not yet started
         }
 
@@ -1323,6 +1355,7 @@ namespace BlackCore
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
         if (callback)
         {
+            Q_ASSERT_X(callback.object(), Q_FUNC_INFO, "Need callback object (to determine thread)");
             connect(reply, &QNetworkReply::finished, callback.object(), [ = ]
             {
                 // Called when finished!

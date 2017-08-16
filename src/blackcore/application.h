@@ -393,6 +393,12 @@ namespace BlackCore
         QNetworkReply *headerFromNetwork(const QNetworkRequest &request,
                                          const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = -1);
 
+    public: // downloadFromNetwork no slot to avoid issue with CSlot, see T125
+        //! Download file from network and store it as passed
+        //! \threadsafe
+        QNetworkReply *downloadFromNetwork(const BlackMisc::Network::CUrl &url, const QString &saveAsFileName,
+                                           const BlackMisc::CSlot<void(const BlackMisc::CStatusMessage &)> &callback, int maxRedirects = 2);
+
     signals:
         //! Setup available (cache, web load, ..) or failed to load setup
         void setupHandlingCompleted(bool success);
