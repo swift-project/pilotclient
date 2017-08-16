@@ -78,6 +78,13 @@ namespace BlackMisc
         CSlot(T *object, R(U::* function)(Args...)) :
             m_object(object),
             m_function([ = ](Args... args) { return (object->*function)(args...); })
+        {
+            Q_ASSERT_X(object, Q_FUNC_INFO, "Need object");
+        }
+
+        //! Construct a slot from the given object passing a function
+        CSlot(std::function<R(Args...)> function) :
+            m_function(function)
         {}
 
         //! Call the slot. The behaviour is undefined if the slot is empty.
@@ -92,6 +99,14 @@ namespace BlackMisc
         QObject *object() const
         {
             return m_object.data();
+        }
+
+        //! Set the object which the slot belongs to.
+        //! Use this as the third argument to QObject::connect to ensure the slot is called in the correct thread.
+        void setObject(QObject *object)
+        {
+            Q_ASSERT_X(hasNullObject(), Q_FUNC_INFO, "Can only set, not change the object");
+            m_object = object;
         }
 
         //! True if the slot can be called, false if it is empty.

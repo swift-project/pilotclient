@@ -30,8 +30,9 @@ namespace BlackMiscTest
         CSlot<void(const QString &)> slot1 = { obj, &QObject::setObjectName };
         QVERIFY2(slot1, "Slot has valid object and function - can be called.");
 
-        CSlot<void(const QString &)> slot2 = { static_cast<QObject*>(nullptr), &QObject::setObjectName };
-        QVERIFY2(!slot2, "Slot has an invalid pointer - cannot be called.");
+        // KB 8/17 T125, CSlot can no longer be constructed with null object
+        // CSlot<void(const QString &)> slot2 = { static_cast<QObject*>(nullptr), &QObject::setObjectName };
+        // QVERIFY2(!slot2, "Slot has an invalid pointer - cannot be called.");
 
         CSlot<void(const QString &)> slot3;
         QVERIFY2(!slot3, "Slot has an invalid pointer and invalid function - cannot be called.");
