@@ -24,6 +24,8 @@
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/network/role.h"
 #include "blackmisc/network/rolelist.h"
+#include "blackmisc/network/remotefile.h"
+#include "blackmisc/network/remotefilelist.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/textmessage.h"
