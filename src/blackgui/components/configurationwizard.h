@@ -35,6 +35,7 @@ namespace BlackGui
                 CopySettings,
                 CopyCaches,
                 ConfigSimulator,
+                XSwiftBus,
                 DataLoad,
                 ConfigHotkeys
             };

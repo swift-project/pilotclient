@@ -22,6 +22,8 @@ namespace BlackGui
 {
     namespace Components
     {
+        class CInstallXSwiftBusDialog;
+
         /**
          * Update info (distributions etc.)
          */
@@ -68,8 +70,12 @@ namespace BlackGui
             //! Cache values have been changed
             void ps_changedDistributionCache();
 
+            //! Install XSwiftBus dialog
+            void ps_installXSwiftBusDialog();
+
         private:
             QScopedPointer<Ui::CDistributionInfoComponent> ui;
+            QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
             bool m_distributionsLoaded = false; //!< distribution info loaded
             QString m_newVersionAvailable; //!< new version number if any
             BlackMisc::Db::CDistribution m_currentDistribution; //!< current distribution

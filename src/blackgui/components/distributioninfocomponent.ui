@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>307</width>
-    <height>90</height>
+    <height>106</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -32,16 +32,6 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_CurrentVersion">
-     <property name="text">
-      <string>This version:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="QComboBox" name="cb_Platforms"/>
-   </item>
    <item row="0" column="2">
     <widget class="QLabel" name="lbl_LatestVersion">
      <property name="text">
@@ -56,10 +46,27 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_CurrentVersion">
+     <property name="text">
+      <string>This version:</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="lbl_Channel">
      <property name="text">
       <string>Channel:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QComboBox" name="cb_Platforms"/>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="lbl_Platforms">
+     <property name="text">
+      <string>Platform:</string>
      </property>
     </widget>
    </item>
@@ -70,34 +77,41 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QComboBox" name="cb_Channels"/>
-   </item>
-   <item row="1" column="2">
-    <widget class="QLabel" name="lbl_Platforms">
-     <property name="text">
-      <string>Platform:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
+   <item row="4" column="3">
     <widget class="QPushButton" name="pb_CheckForUpdates">
      <property name="text">
       <string>check again</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="1" column="1">
+    <widget class="QComboBox" name="cb_Channels"/>
+   </item>
+   <item row="4" column="0">
     <widget class="QLabel" name="lbl_NewVersionInfo">
      <property name="text">
       <string>Nothing new</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="2">
+   <item row="4" column="1" colspan="2">
     <widget class="QLabel" name="lbl_NewVersionUrl">
      <property name="text">
       <string>URL goes here</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QPushButton" name="pb_InstallXSwiftBus">
+     <property name="text">
+      <string>install</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QLabel" name="lbl_XSwiftBus">
+     <property name="text">
+      <string>XSwiftBus (XPlane only):</string>
      </property>
     </widget>
    </item>

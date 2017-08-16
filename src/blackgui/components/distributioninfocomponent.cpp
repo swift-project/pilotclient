@@ -9,11 +9,12 @@
 
 #include "distributioninfocomponent.h"
 #include "ui_distributioninfocomponent.h"
-#include "blackconfig/buildconfig.h"
+#include "installxswiftbusdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 
 using namespace BlackConfig;
 using namespace BlackCore::Application;
@@ -35,15 +36,20 @@ namespace BlackGui
             ui->lbl_NewVersionUrl->setOpenExternalLinks(true);
 
             // use version signal as trigger for completion
-            connect(sGui, &CGuiApplication::distributionInfoAvailable, this, &CDistributionInfoComponent::ps_loadedDistributionInfo);
-            const int time = this->m_distributionInfo.get().isEmpty() ? 10 * 1000 : 500;
-            QTimer::singleShot(time, this, [ = ]
+            if (!m_distributionInfo.get().isEmpty())
             {
-                // use this as timeout failover with cached data
-                if (m_distributionsLoaded) { return; }
-                this->ps_loadedDistributionInfo(true);
-            });
+                // we have at least cached data:
+                // in case CGuiApplication::distributionInfoAvailable never comes/was already sent
+                QTimer::singleShot(10 * 1000, this, [ = ]
+                {
+                    // use this as timeout failover with cached data
+                    if (m_distributionsLoaded) { return; }
+                    this->ps_loadedDistributionInfo(true);
+                });
+            }
+            connect(sGui, &CGuiApplication::distributionInfoAvailable, this, &CDistributionInfoComponent::ps_loadedDistributionInfo);
             connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_loadSetup);
+            connect(ui->pb_InstallXSwiftBus, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_installXSwiftBusDialog);
         }
 
         CDistributionInfoComponent::~CDistributionInfoComponent()
@@ -71,13 +77,16 @@ namespace BlackGui
 
         void CDistributionInfoComponent::ps_loadedDistributionInfo(bool success)
         {
-            ui->pb_CheckForUpdates->setToolTip("");
             if (!success)
             {
+                m_distributionsLoaded = false;
+                ui->pb_CheckForUpdates->setToolTip("");
                 CLogMessage(this).warning("Loading setup or distribution information failed");
                 return;
             }
 
+            // only emit once
+            if (m_distributionsLoaded) { return; }
             m_distributionsLoaded = true;
             this->ps_channelChanged();
             ui->pb_CheckForUpdates->setToolTip(sApp->getLastSuccesfulDistributionUrl());
@@ -91,12 +100,22 @@ namespace BlackGui
             this->ps_loadedDistributionInfo(true);
         }
 
+        void CDistributionInfoComponent::ps_installXSwiftBusDialog()
+        {
+            if (!m_installXSwiftBusDialog)
+            {
+                m_installXSwiftBusDialog.reset(new CInstallXSwiftBusDialog(this));
+                m_installXSwiftBusDialog->setModal(true);
+            }
+            m_installXSwiftBusDialog->show();
+        }
+
         void CDistributionInfoComponent::saveSettings()
         {
             const QString channel = ui->cb_Channels->currentText();
             const QString currentPlatform = ui->cb_Platforms->currentText();
             const QStringList settings({ channel, currentPlatform });
-            const CStatusMessage m = this->m_distributionSettings.setAndSave(settings);
+            const CStatusMessage m = m_distributionSettings.setAndSave(settings);
             if (m.isFailure())
             {
                 CLogMessage(this).preformatted(m);
@@ -152,7 +171,7 @@ namespace BlackGui
             ui->lbl_NewVersionInfo->setText("Nothing new");
             ui->lbl_NewVersionInfo->setStyleSheet("background-color: green");
             ui->lbl_NewVersionUrl->clear();
-            this->m_newVersionAvailable.clear();
+            m_newVersionAvailable.clear();
 
             const QString currentPlatform = ui->cb_Platforms->currentText();
             if (!currentPlatform.isEmpty())
@@ -170,7 +189,7 @@ namespace BlackGui
                     ui->lbl_NewVersionInfo->setText("New version!");
                     ui->lbl_NewVersionInfo->setToolTip("New version '" + latestVersionStr + "'");
                     ui->lbl_NewVersionInfo->setStyleSheet("background-color: red");
-                    this->m_newVersionAvailable = latestVersionStr;
+                    m_newVersionAvailable = latestVersionStr;
                 }
 
                 if (!downloadUrl.isEmpty())

@@ -23,6 +23,7 @@ namespace BlackGui
             ui->wp_CopyCaches->setConfigComponent(ui->comp_CopyCaches);
             ui->wp_CopySettings->setConfigComponent(ui->comp_CopySettings);
             ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
+            ui->wp_XSwiftBus->setConfigComponent(ui->comp_XSwiftBus);
             ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
             ui->wp_Hotkeys->setConfigComponent(ui->comp_Hotkeys);
             ui->comp_Hotkeys->registerDummyPttEntry();

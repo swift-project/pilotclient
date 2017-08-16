@@ -130,7 +130,45 @@
     </item>
    </layout>
   </widget>
+  <widget class="BlackGui::Components::CInstallXSwiftBusWizardPage" name="wp_XSwiftBus">
+   <property name="title">
+    <string>XSwiftBus</string>
+   </property>
+   <property name="subTitle">
+    <string>Install XSwiftBus (X-Plane only)</string>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="BlackGui::Components::CInstallXSwiftBusComponent" name="comp_XSwiftBus">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="BlackGui::Components::CInitialDataLoadWizardPage" name="wp_DataLoad">
+   <property name="title">
+    <string>Data loading</string>
+   </property>
+   <property name="subTitle">
+    <string>Caches model and ICAO data</string>
+   </property>
    <layout class="QVBoxLayout" name="vl_DataLoad">
     <property name="leftMargin">
      <number>4</number>
@@ -229,6 +267,18 @@
    <class>BlackGui::Components::CConfigHotkeyWizardPage</class>
    <extends>QWizardPage</extends>
    <header>blackgui/components/settingshotkeycomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInstallXSwiftBusComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/installxswiftbuscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInstallXSwiftBusWizardPage</class>
+   <extends>QWizardPage</extends>
+   <header>blackgui/components/installxswiftbuscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
