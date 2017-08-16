@@ -552,7 +552,7 @@ namespace BlackSimPlugin
                         parts.setGearDown(true);
                     }
                 }
-                if (situation.getAltitude() < CAltitude(10'000, CLengthUnit::ft()))
+                if (situation.getAltitude() < CAltitude(10000, CLengthUnit::ft()))
                 {
                     parts.setLights({ true, true, true, true, true, true, true, true });
                 }
