@@ -255,11 +255,14 @@ namespace BlackCore
     {
         // default implementation
         if (!sApp || !sApp->hasWebDataServices()) { return CAirportList(); }
+        if (sApp->isShuttingDown()) { return CAirportList(); }
 
-        const CAirportList airports = sApp->getWebDataServices()->getAirports();
+        CAirportList airports = sApp->getWebDataServices()->getAirports();
         if (airports.isEmpty()) { return airports; }
         const CCoordinateGeodetic ownPosition = this->getOwnAircraftPosition();
-        return airports.findClosest(maxAirportsInRange(), ownPosition);
+        airports = airports.findClosest(maxAirportsInRange(), ownPosition);
+        if (m_autoCalcAirportDistance) { airports.calculcateAndUpdateRelativeDistanceAndBearing(ownPosition); }
+        return airports;
     }
 
     void CSimulatorCommon::setWeatherActivated(bool activated)

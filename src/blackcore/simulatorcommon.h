@@ -198,6 +198,7 @@ namespace BlackCore
         bool showDebugLogMessage() const;
 
         bool m_pausedSimFreezesInterpolation = false;                      //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        bool m_autoCalcAirportDistance = true;                             //!< automatically calculate airport distance and bearing
         BlackMisc::Simulation::CAircraftModel m_defaultModel;              //!< default model
         int    m_statsUpdateAircraftCountMs = 0;                           //!< statistics update count
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;                       //!< statistics update time
