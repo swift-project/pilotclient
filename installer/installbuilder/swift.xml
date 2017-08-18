@@ -20,8 +20,5 @@
         <include>
             <file>swift-samples.xml</file>
         </include>
-        <include>
-            <file>swift-xswiftbus.xml</file>
-        </include>
     </componentList>
 </componentGroup>
