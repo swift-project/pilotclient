@@ -58,7 +58,9 @@ namespace BlackGui
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
         connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::ps_killClicked);
 
-        ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAuto);
+        ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAlways);
+        ui->tvp_StatusMessages->setForceColumnsToMaxSize(false); // problems with multinline entries, with T138 we need multiline messages
+        ui->tvp_StatusMessages->setWordWrap(true);
         ui->fr_Confirmation->setVisible(false);
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
@@ -76,7 +78,7 @@ namespace BlackGui
         ui->setupUi(this);
         this->resize(w, h);
         this->setAutoFillBackground(true);
-        this->m_autoCloseTimer.setObjectName(objectName() + ":autoCloseTimer");
+        m_autoCloseTimer.setObjectName(objectName() + ":autoCloseTimer");
         ui->tvp_StatusMessages->setMode(CStatusMessageListModel::Simplified);
         connect(ui->tb_Close, &QToolButton::released, this, &COverlayMessages::close);
         connect(&m_autoCloseTimer, &QTimer::timeout, this, &COverlayMessages::close);
@@ -84,14 +86,7 @@ namespace BlackGui
 
     void COverlayMessages::setHeader(const QString &header)
     {
-        if (m_header.isEmpty())
-        {
-            ui->lbl_Header->setText(header);
-        }
-        else
-        {
-            ui->lbl_Header->setText(m_header);
-        }
+        ui->lbl_Header->setText(m_header.isEmpty() ? header : m_header);
     }
 
     void COverlayMessages::ps_onStyleSheetsChanged()
@@ -101,17 +96,14 @@ namespace BlackGui
 
     void COverlayMessages::ps_okClicked()
     {
-        this->m_lastConfirmation = QMessageBox::Ok;
-        if (this->m_okLambda)
-        {
-            this->m_okLambda();
-        }
+        m_lastConfirmation = QMessageBox::Ok;
+        if (m_okLambda) { m_okLambda(); }
         this->close();
     }
 
     void COverlayMessages::ps_cancelClicked()
     {
-        this->m_lastConfirmation = QMessageBox::Cancel;
+        m_lastConfirmation = QMessageBox::Cancel;
         this->close();
     }
 
@@ -142,9 +134,9 @@ namespace BlackGui
 
     bool COverlayMessages::displayTextMessage(const CTextMessage &textMessage) const
     {
-        const CTextMessageSettings s = this->m_messageSettings.getThreadLocal();
+        if (!sApp || sApp->isShuttingDown() || !sApp->getIContextOwnAircraft()) { return false; }
+        const CTextMessageSettings s = m_messageSettings.getThreadLocal();
         if (s.popup(textMessage)) { return true; } // fast check without needing own aircraft
-        if (!sApp || !sApp->getIContextOwnAircraft()) { return false; }
         const CSimulatedAircraft ownAircraft(sApp->getIContextOwnAircraft()->getOwnAircraft());
         return s.popup(textMessage, ownAircraft);
     }
@@ -155,17 +147,19 @@ namespace BlackGui
     void COverlayMessages::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
+        if (!sApp || sApp->isShuttingDown()) { return; }
         if (this->hasPendingConfirmation())
         {
             // defer message
-            this->m_pendingMessageCalls.push_back([ = ]()
+            m_pendingMessageCalls.push_back([ = ]()
             {
                 this->showOverlayMessages(messages, timeOutMs);
             });
             return;
         }
 
-        ui->tvp_StatusMessages->updateContainer(messages);
+        ui->tvp_StatusMessages->updateContainerMaybeAsync(messages);
+        ui->tvp_StatusMessages->resizeRowsToContents();
         this->showKill(false);
         this->setModeToMessages(messages.hasErrorMessages());
         this->display(timeOutMs);
@@ -174,10 +168,11 @@ namespace BlackGui
     void COverlayMessages::showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
+        if (!sApp || sApp->isShuttingDown()) { return; }
         if (this->hasPendingConfirmation())
         {
             // defer message
-            this->m_pendingMessageCalls.push_back([ = ]()
+            m_pendingMessageCalls.push_back([ = ]()
             {
                 this->showOverlayMessage(message, timeOutMs);
             });
@@ -201,10 +196,12 @@ namespace BlackGui
     {
         if (textMessage.isEmpty()) { return; }
         if (!displayTextMessage(textMessage)) { return; }
+        if (!sApp || sApp->isShuttingDown()) { return; }
+
         if (this->hasPendingConfirmation())
         {
             // defer message
-            this->m_pendingMessageCalls.push_back([ = ]()
+            m_pendingMessageCalls.push_back([ = ]()
             {
                 this->showOverlayTextMessage(textMessage, timeOutMs);
             });
@@ -232,7 +229,7 @@ namespace BlackGui
         if (this->hasPendingConfirmation())
         {
             // defer message
-            this->m_pendingMessageCalls.push_back([ = ]()
+            m_pendingMessageCalls.push_back([ = ]()
             {
                 this->showOverlayImage(image, timeOutMs);
             });
@@ -292,7 +289,7 @@ namespace BlackGui
 
     void COverlayMessages::showKillButton(bool killButton)
     {
-        this->m_hasKillButton = killButton;
+        m_hasKillButton = killButton;
     }
 
     void COverlayMessages::setModeToMessages(bool withKillButton)
@@ -347,7 +344,7 @@ namespace BlackGui
         if (this->hasPendingConfirmation())
         {
             // defer message
-            this->m_pendingMessageCalls.push_back([ = ]()
+            m_pendingMessageCalls.push_back([ = ]()
             {
                 this->showOverlayMessagesWithConfirmation(messages, confirmationMessage, okLambda, defaultButton, timeOutMs);
             });
@@ -355,8 +352,8 @@ namespace BlackGui
         }
         this->setConfirmationMessage(confirmationMessage);
         this->showOverlayMessages(messages, timeOutMs);
-        this->m_awaitingConfirmation = true; // needs to be after showOverlayMessages
-        this->m_okLambda = okLambda;
+        m_awaitingConfirmation = true; // needs to be after showOverlayMessages
+        m_okLambda = okLambda;
         this->setDefaultConfirmationButton(defaultButton);
     }
 
@@ -370,7 +367,7 @@ namespace BlackGui
             ui->pb_Ok->setDefault(true);
             ui->pb_Ok->setAutoDefault(true);
             ui->pb_Ok->setFocus();
-            this->m_lastConfirmation = QMessageBox::Ok;
+            m_lastConfirmation = QMessageBox::Ok;
             break;
         case QMessageBox::Cancel:
             ui->pb_Ok->setDefault(false);
@@ -378,7 +375,7 @@ namespace BlackGui
             ui->pb_Cancel->setDefault(true);
             ui->pb_Cancel->setAutoDefault(true);
             ui->pb_Cancel->setFocus();
-            this->m_lastConfirmation = QMessageBox::Cancel;
+            m_lastConfirmation = QMessageBox::Cancel;
             break;
         default:
             break;
@@ -387,7 +384,7 @@ namespace BlackGui
 
     bool COverlayMessages::hasPendingConfirmation() const
     {
-        return this->m_awaitingConfirmation;
+        return m_awaitingConfirmation;
     }
 
     void COverlayMessages::addShadow()
@@ -418,21 +415,21 @@ namespace BlackGui
         this->hide();
         this->setEnabled(false);
         ui->fr_Confirmation->setVisible(false);
-        if (this->m_awaitingConfirmation)
+        if (m_awaitingConfirmation)
         {
-            emit confirmationCompleted();
+            emit this->confirmationCompleted();
         }
         else
         {
-            this->m_lastConfirmation = QMessageBox::Cancel;
+            m_lastConfirmation = QMessageBox::Cancel;
         }
-        this->m_awaitingConfirmation = false;
-        this->m_okLambda = nullptr;
+        m_awaitingConfirmation = false;
+        m_okLambda = nullptr;
 
-        if (!this->m_pendingMessageCalls.isEmpty())
+        if (!m_pendingMessageCalls.isEmpty())
         {
-            std::function<void()> f = this->m_pendingMessageCalls.front();
-            this->m_pendingMessageCalls.removeFirst();
+            std::function<void()> f = m_pendingMessageCalls.front();
+            m_pendingMessageCalls.removeFirst();
             QTimer::singleShot(500, this, f);
         }
     }

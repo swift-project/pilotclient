@@ -69,6 +69,7 @@
 #include <QAction>
 #include <QClipboard>
 #include <QDialog>
+#include <QDesktopWidget>
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
@@ -145,27 +146,27 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::setFilterWidgetImpl(QWidget *filterWidget)
         {
-            if (filterWidget == this->m_filterWidget) { return; }
+            if (filterWidget == m_filterWidget) { return; }
 
             // dialog or filter widget
-            if (this->m_filterWidget)
+            if (m_filterWidget)
             {
-                disconnect(this->m_filterWidget);
+                disconnect(m_filterWidget);
                 this->menuRemoveItems(MenuFilter);
-                if (this->m_filterWidget->parent() == this) { m_filterWidget->deleteLater(); }
+                if (m_filterWidget->parent() == this) { m_filterWidget->deleteLater(); }
                 m_filterWidget = nullptr;
             }
 
             if (filterWidget)
             {
                 this->menuAddItems(MenuFilter);
-                this->m_filterWidget = filterWidget;
+                m_filterWidget = filterWidget;
             }
         }
 
         void CViewBaseNonTemplate::setFilterDialog(CFilterDialog *filterDialog)
         {
-            if (filterDialog == this->m_filterWidget) { return; }
+            if (filterDialog == m_filterWidget) { return; }
             this->setFilterWidgetImpl(filterDialog);
             if (filterDialog)
             {
@@ -177,7 +178,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::setFilterWidget(CFilterWidget *filterWidget)
         {
-            if (filterWidget == this->m_filterWidget) { return; }
+            if (filterWidget == m_filterWidget) { return; }
             this->setFilterWidgetImpl(filterWidget);
             if (filterWidget)
             {
@@ -229,7 +230,7 @@ namespace BlackGui
             if (menu && nestPreviousMenu)
             {
                 // new menu with nesting
-                menu->setNestedDelegate(this->m_menu);
+                menu->setNestedDelegate(m_menu);
                 m_menu = menu;
             }
             else if (!menu && nestPreviousMenu)
@@ -247,7 +248,7 @@ namespace BlackGui
 
         CMenuActions CViewBaseNonTemplate::initMenuActions(CViewBaseNonTemplate::MenuFlag menu)
         {
-            if (this->m_menuFlagActions.contains(menu)) { return this->m_menuFlagActions.value(menu); }
+            if (m_menuFlagActions.contains(menu)) { return m_menuFlagActions.value(menu); }
 
             CMenuActions ma;
             switch (menu)
@@ -307,7 +308,7 @@ namespace BlackGui
             default:
                 break;
             }
-            this->m_menuFlagActions.insert(menu, ma);
+            m_menuFlagActions.insert(menu, ma);
             return ma;
         }
 
@@ -315,8 +316,8 @@ namespace BlackGui
         {
             if (this->allowsMultipleSelectedRows())
             {
-                const CGeneralGuiSettings settings = this->m_guiSettings.getThreadLocal();
-                this->m_originalSelectionMode = settings.getPreferredSelection();
+                const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
+                m_originalSelectionMode = settings.getPreferredSelection();
                 if (this->isCurrentlyAllowingMultipleRowSelections())
                 {
                     this->setSelectionMode(settings.getPreferredSelection());
@@ -327,25 +328,25 @@ namespace BlackGui
         void CViewBaseNonTemplate::customMenu(CMenuActions &menuActions)
         {
             // delegate?
-            if (this->m_menu) { this->m_menu->customMenu(menuActions); }
+            if (m_menu) { m_menu->customMenu(menuActions); }
 
             // standard view menus
-            if (this->m_menus.testFlag(MenuRefresh)) { menuActions.addActions(this->initMenuActions(MenuRefresh)); }
-            if (this->m_menus.testFlag(MenuBackend)) { menuActions.addActions(this->initMenuActions(MenuBackend)); }
+            if (m_menus.testFlag(MenuRefresh)) { menuActions.addActions(this->initMenuActions(MenuRefresh)); }
+            if (m_menus.testFlag(MenuBackend)) { menuActions.addActions(this->initMenuActions(MenuBackend)); }
             if (m_showingLoadIndicator)
             {
                 // just in case, if this ever will be dangling
                 menuActions.addAction(BlackMisc::CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::ps_hideLoadIndicator });
             }
 
-            if (this->m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }
-            if (this->m_menus.testFlag(MenuDisplayAutomatically))
+            if (m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }
+            if (m_menus.testFlag(MenuDisplayAutomatically))
             {
                 // here I expect only one action
                 QAction *a = menuActions.addActions(this->initMenuActions(MenuDisplayAutomatically)).first();
                 a->setChecked(this->displayAutomatically());
             }
-            if (this->m_menus.testFlag(MenuRemoveSelectedRows))
+            if (m_menus.testFlag(MenuRemoveSelectedRows))
             {
                 if (this->hasSelection())
                 {
@@ -353,18 +354,18 @@ namespace BlackGui
                 }
             }
 
-            if (this->m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
-            if (this->m_menus.testFlag(MenuCut)) { menuActions.addActions(this->initMenuActions(MenuCut)); }
-            if (this->m_menus.testFlag(MenuPaste)) { menuActions.addActions(this->initMenuActions(MenuPaste)); }
-            if (this->m_menus.testFlag(MenuFont) && m_fontMenu)
+            if (m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
+            if (m_menus.testFlag(MenuCut)) { menuActions.addActions(this->initMenuActions(MenuCut)); }
+            if (m_menus.testFlag(MenuPaste)) { menuActions.addActions(this->initMenuActions(MenuPaste)); }
+            if (m_menus.testFlag(MenuFont) && m_fontMenu)
             {
                 menuActions.addActions(m_fontMenu->getActions(), CMenuAction::pathFont());
             }
 
-            if (this->m_menus.testFlag(MenuFilter) && m_filterWidget)
+            if (m_menus.testFlag(MenuFilter) && m_filterWidget)
             {
                 menuActions.addActions(this->initMenuActions(MenuFilter));
-                if (this->m_menus.testFlag(MenuMaterializeFilter))
+                if (m_menus.testFlag(MenuMaterializeFilter))
                 {
                     menuActions.addActions(this->initMenuActions(MenuMaterializeFilter));
                 }
@@ -380,7 +381,7 @@ namespace BlackGui
             {
                 menuActions.addAction("Clear selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::clearSelection }, CShortcut::keyClearSelection());
             }
-            if ((this->m_originalSelectionMode == MultiSelection || this->m_originalSelectionMode == ExtendedSelection) && this->m_menus.testFlag(MenuToggleSelectionMode))
+            if ((m_originalSelectionMode == MultiSelection || m_originalSelectionMode == ExtendedSelection) && m_menus.testFlag(MenuToggleSelectionMode))
             {
                 if (sm != MultiSelection)
                 {
@@ -408,7 +409,7 @@ namespace BlackGui
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
             const bool enabled = !this->reachedResizeThreshold();
-            const bool autoResize = this->m_resizeMode == ResizingAuto;
+            const bool autoResize = m_resizeMode == ResizingAuto;
 
             // when not auto let set how we want to resize rows
             if (m_rowResizeMode == Interactive)
@@ -493,7 +494,7 @@ namespace BlackGui
 
         bool CViewBaseNonTemplate::allowsMultipleSelectedRows() const
         {
-            return this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection;
+            return m_originalSelectionMode == ExtendedSelection || m_originalSelectionMode == MultiSelection;
         }
 
         bool CViewBaseNonTemplate::isCurrentlyAllowingMultipleRowSelections() const
@@ -510,7 +511,7 @@ namespace BlackGui
             this->verticalHeader()->setDefaultSectionSize(fh); // for height
             this->verticalHeader()->setMinimumSectionSize(fh); // for height
 
-            switch (this->m_rowResizeMode)
+            switch (m_rowResizeMode)
             {
             case Interactive: this->rowsResizeModeToInteractive(); break;
             case Content: this->rowsResizeModeToContent(); break;
@@ -532,7 +533,7 @@ namespace BlackGui
             }
 
             // Save file path
-            QString name(this->m_saveFileName);
+            QString name(m_saveFileName);
             if (name.isEmpty())
             {
                 // create a name
@@ -554,15 +555,15 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::menuRemoveItems(Menu menusToRemove)
         {
-            this->m_menus &= (~menusToRemove);
+            m_menus &= (~menusToRemove);
         }
 
         void CViewBaseNonTemplate::menuAddItems(Menu menusToAdd)
         {
-            this->m_menus |= menusToAdd;
+            m_menus |= menusToAdd;
             if (menusToAdd.testFlag(MenuRemoveSelectedRows))
             {
-                this->m_enableDeleteSelectedRows = true;
+                m_enableDeleteSelectedRows = true;
             }
         }
 
@@ -573,14 +574,14 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_displayFilterDialog()
         {
-            if (!this->m_menus.testFlag(MenuFilter)) { return; }
-            if (!this->m_filterWidget) { return; }
-            this->m_filterWidget->show();
+            if (!m_menus.testFlag(MenuFilter)) { return; }
+            if (!m_filterWidget) { return; }
+            m_filterWidget->show();
         }
 
         void CViewBaseNonTemplate::ps_loadJsonAction()
         {
-            if (!this->m_menus.testFlag(MenuLoad)) { return; }
+            if (!m_menus.testFlag(MenuLoad)) { return; }
             const CStatusMessage m = this->ps_loadJson();
             if (!m.isEmpty())
             {
@@ -591,7 +592,7 @@ namespace BlackGui
         void CViewBaseNonTemplate::ps_saveJsonAction()
         {
             if (this->isEmpty()) { return; }
-            if (!this->m_menus.testFlag(MenuSave)) { return; }
+            if (!m_menus.testFlag(MenuSave)) { return; }
             const CStatusMessage m = this->ps_saveJson();
             if (!m.isEmpty())
             {
@@ -601,13 +602,13 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_triggerReload()
         {
-            this->showLoadIndicatorWithTimeout(this->m_loadIndicatorTimeoutMsDefault);
+            this->showLoadIndicatorWithTimeout(m_loadIndicatorTimeoutMsDefault);
             emit this->requestUpdate();
         }
 
         void CViewBaseNonTemplate::ps_triggerReloadFromBackend()
         {
-            this->showLoadIndicatorWithTimeout(this->m_loadIndicatorTimeoutMsDefault);
+            this->showLoadIndicatorWithTimeout(m_loadIndicatorTimeoutMsDefault);
             emit this->requestNewBackendData();
         }
 
@@ -628,7 +629,7 @@ namespace BlackGui
             Q_ASSERT_X(verticalHeader, Q_FUNC_INFO, "Missing vertical header");
             verticalHeader->setSectionResizeMode(QHeaderView::Interactive);
             verticalHeader->setDefaultSectionSize(height);
-            this->m_rowResizeMode = Interactive;
+            m_rowResizeMode = Interactive;
         }
 
         void CViewBaseNonTemplate::rowsResizeModeToContent()
@@ -636,13 +637,13 @@ namespace BlackGui
             QHeaderView *verticalHeader = this->verticalHeader();
             Q_ASSERT(verticalHeader);
             verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
-            this->m_rowResizeMode = Content;
+            m_rowResizeMode = Content;
         }
 
         int CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, int timeoutMs, bool processEvents)
         {
-            if (!this->m_enabledLoadIndicator) { return -1; }
-            if (this->m_showingLoadIndicator) { return -1; }
+            if (!m_enabledLoadIndicator) { return -1; }
+            if (m_showingLoadIndicator) { return -1; }
             if (this->hasDockWidgetArea())
             {
                 if (!this->isVisibleWidget()) { return -1; }
@@ -653,15 +654,15 @@ namespace BlackGui
                 // really with indicator?
                 if (containerSizeDependent < ResizeSubsetThreshold) { return -1; }
             }
-            this->m_showingLoadIndicator = true;
-            emit loadIndicatorVisibilityChanged(this->m_showingLoadIndicator);
+            m_showingLoadIndicator = true;
+            emit loadIndicatorVisibilityChanged(m_showingLoadIndicator);
 
-            if (!this->m_loadIndicator)
+            if (!m_loadIndicator)
             {
-                this->m_loadIndicator = new CLoadIndicator(64, 64, this);
+                m_loadIndicator = new CLoadIndicator(64, 64, this);
             }
             this->centerLoadIndicator();
-            return this->m_loadIndicator->startAnimation(timeoutMs > 0 ? timeoutMs : this->m_loadIndicatorTimeoutMsDefault, processEvents);
+            return m_loadIndicator->startAnimation(timeoutMs > 0 ? timeoutMs : m_loadIndicatorTimeoutMsDefault, processEvents);
         }
 
         int CViewBaseNonTemplate::showLoadIndicatorWithTimeout(int timeoutMs, bool processEvents)
@@ -673,20 +674,21 @@ namespace BlackGui
         {
             if (!m_loadIndicator) { return; }
             const QPoint middle = this->viewport()->geometry().center();
-            this->m_loadIndicator->centerLoadIndicator(middle);
+            m_loadIndicator->centerLoadIndicator(middle);
         }
 
         void CViewBaseNonTemplate::hideLoadIndicator(int loadingId)
         {
-            if (!this->m_showingLoadIndicator) { return; }
-            this->m_showingLoadIndicator = false;
-            emit loadIndicatorVisibilityChanged(this->m_showingLoadIndicator);
-            if (!this->m_loadIndicator) { return; }
-            this->m_loadIndicator->stopAnimation(loadingId);
+            if (!m_showingLoadIndicator) { return; }
+            m_showingLoadIndicator = false;
+            emit loadIndicatorVisibilityChanged(m_showingLoadIndicator);
+            if (!m_loadIndicator) { return; }
+            m_loadIndicator->stopAnimation(loadingId);
         }
 
         bool CViewBaseNonTemplate::isResizeConditionMet(int containerSize) const
         {
+            if (m_resizeMode == ResizingAlways) { return true; }
             if (m_resizeMode == PresizeSubset) { return false; }
             if (m_resizeMode == ResizingOff) { return false; }
             if (m_resizeMode == ResizingOnce) { return m_resizeCount < 1; }
@@ -701,23 +703,27 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::fullResizeToContents()
         {
-            // magic trick from:
+            // resize to maximum magic trick from:
             // http://stackoverflow.com/q/3433664/356726
+            // vpNew.setWidth(std::numeric_limits<qint32>::max()); // largest finite value
             this->setVisible(false);
-            const QRect vpOriginal = this->viewport()->geometry();
-            QRect vpNew = vpOriginal;
-            vpNew.setWidth(std::numeric_limits<int>::max());
-            this->viewport()->setGeometry(vpNew);
 
-            this->m_resizeCount++;
+            const QRect vpOriginal = this->viewport()->geometry();
+            if (m_forceColumnsToMaxSize)
+            {
+                const QRect screenGeometry = QApplication::desktop()->screenGeometry();
+                QRect vpNew = vpOriginal;
+                vpNew.setWidth(screenGeometry.width());
+                this->viewport()->setGeometry(vpNew);
+            }
+
+            m_resizeCount++;
             this->resizeColumnsToContents(); // columns
             this->resizeRowsToContents(); // rows
-            if (m_forceStretchLastColumnWhenResized)
-            {
-                // re-stretch
-                this->horizontalHeader()->setStretchLastSection(true);
-            }
-            this->viewport()->setGeometry(vpOriginal);
+
+            // re-stretch
+            if (m_forceStretchLastColumnWhenResized) { this->horizontalHeader()->setStretchLastSection(true); }
+            if (m_forceColumnsToMaxSize) { this->viewport()->setGeometry(vpOriginal); }
 
             // if I store the original visibility and then
             // set it back here, the whole view disappears
@@ -750,11 +756,11 @@ namespace BlackGui
         {
             if (checked)
             {
-                this->m_resizeMode = ResizingAuto;
+                m_resizeMode = ResizingAuto;
             }
             else
             {
-                this->m_resizeMode = ResizingOff;
+                m_resizeMode = ResizingOff;
             }
         }
 
@@ -763,7 +769,7 @@ namespace BlackGui
             QAction *a = qobject_cast<QAction *>(QObject::sender());
             if (!a) { return; }
             Q_ASSERT_X(a->isCheckable(), Q_FUNC_INFO, "object not checkable");
-            this->m_displayAutomatically = a->isChecked();
+            m_displayAutomatically = a->isChecked();
         }
 
         void CViewBaseNonTemplate::ps_setSingleSelection()
@@ -839,7 +845,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         int CViewBase<ModelClass, ContainerType, ObjectType>::updateContainer(const ContainerType &container, bool sort, bool resize)
         {
-            Q_ASSERT_X(this->m_model, Q_FUNC_INFO, "Missing model");
+            Q_ASSERT_X(m_model, Q_FUNC_INFO, "Missing model");
             if (container.isEmpty())
             {
                 // shortcut
@@ -862,12 +868,12 @@ namespace BlackGui
                 const int presizeRandomElements = this->getPresizeRandomElementsSize(container.size());
                 if (presizeRandomElements > 0)
                 {
-                    this->m_model->update(container.sampleElements(presizeRandomElements), false);
+                    m_model->update(container.sampleElements(presizeRandomElements), false);
                     this->fullResizeToContents();
                 }
             }
 
-            const int c = this->m_model->update(container, sort);
+            const int c = m_model->update(container, sort);
 
             // resize after real update according to mode
             if (presizeThresholdReached)
@@ -943,7 +949,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ObjectType &value, bool resize)
         {
-            Q_ASSERT(this->m_model);
+            Q_ASSERT(m_model);
             if (this->rowCount() < 1)
             {
                 // this allows presizing
@@ -951,7 +957,7 @@ namespace BlackGui
             }
             else
             {
-                this->m_model->insert(value);
+                m_model->insert(value);
                 if (resize) { this->performModeBasedResizeToContent(); }
             }
         }
@@ -959,7 +965,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ContainerType &container, bool resize)
         {
-            Q_ASSERT(this->m_model);
+            Q_ASSERT(m_model);
             if (this->rowCount() < 1)
             {
                 // this allows presizing
@@ -967,7 +973,7 @@ namespace BlackGui
             }
             else
             {
-                this->m_model->insert(container);
+                m_model->insert(container);
                 if (resize) { this->performModeBasedResizeToContent(); }
             }
         }
@@ -975,22 +981,22 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         const ObjectType &CViewBase<ModelClass, ContainerType, ObjectType>::at(const QModelIndex &index) const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->at(index);
+            Q_ASSERT(m_model);
+            return m_model->at(index);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::container() const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->container();
+            Q_ASSERT(m_model);
+            return m_model->container();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::containerOrFilteredContainer(bool *filtered) const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->containerOrFilteredContainer(filtered);
+            Q_ASSERT(m_model);
+            return m_model->containerOrFilteredContainer(filtered);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1110,9 +1116,9 @@ namespace BlackGui
                 if (presizeRandomElements > 0)
                 {
                     const ContainerType containerBackup(this->container());
-                    this->m_model->update(containerBackup.sampleElements(presizeRandomElements), false);
+                    m_model->update(containerBackup.sampleElements(presizeRandomElements), false);
                     this->fullResizeToContents();
-                    this->m_model->update(containerBackup, false);
+                    m_model->update(containerBackup, false);
                 }
             }
             else
@@ -1124,17 +1130,17 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::clearHighlighting()
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->clearHighlighting();
+            Q_ASSERT(m_model);
+            return m_model->clearHighlighting();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::materializeFilter()
         {
-            Q_ASSERT(this->m_model);
-            if (!this->m_model->hasFilter()) { return; }
+            Q_ASSERT(m_model);
+            if (!m_model->hasFilter()) { return; }
             if (this->isEmpty()) { return; }
-            ContainerType filtered(this->m_model->containerFiltered());
+            ContainerType filtered(m_model->containerFiltered());
             this->removeFilter();
             this->updateContainerMaybeAsync(filtered);
         }
@@ -1142,91 +1148,91 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::clear()
         {
-            Q_ASSERT(this->m_model);
-            this->m_model->clear();
+            Q_ASSERT(m_model);
+            m_model->clear();
             this->hideLoadIndicator();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         int CViewBase<ModelClass, ContainerType, ObjectType>::rowCount() const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->rowCount();
+            Q_ASSERT(m_model);
+            return m_model->rowCount();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         int CViewBase<ModelClass, ContainerType, ObjectType>::columnCount() const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->columnCount(QModelIndex());
+            Q_ASSERT(m_model);
+            return m_model->columnCount(QModelIndex());
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         bool CViewBase<ModelClass, ContainerType, ObjectType>::isEmpty() const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->rowCount() < 1;
+            Q_ASSERT(m_model);
+            return m_model->rowCount() < 1;
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         bool CViewBase<ModelClass, ContainerType, ObjectType>::isOrderable() const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->isOrderable();
+            Q_ASSERT(m_model);
+            return m_model->isOrderable();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::allowDragDrop(bool allowDrag, bool allowDrop)
         {
-            Q_ASSERT(this->m_model);
+            Q_ASSERT(m_model);
 
             // see model for implementing logic of drag
             this->viewport()->setAcceptDrops(allowDrop);
             this->setDragEnabled(allowDrag);
             this->setDropIndicatorShown(allowDrag || allowDrop);
-            this->m_model->allowDrop(allowDrop);
+            m_model->allowDrop(allowDrop);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         bool CViewBase<ModelClass, ContainerType, ObjectType>::isDropAllowed() const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->isDropAllowed();
+            Q_ASSERT(m_model);
+            return m_model->isDropAllowed();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         bool CViewBase<ModelClass, ContainerType, ObjectType>::acceptDrop(const QMimeData *mimeData) const
         {
-            Q_ASSERT(this->m_model);
-            const bool a = this->m_model->acceptDrop(mimeData);
+            Q_ASSERT(m_model);
+            const bool a = m_model->acceptDrop(mimeData);
             return a;
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
-            Q_ASSERT(this->m_model);
-            this->m_model->setSorting(propertyIndex, order);
+            Q_ASSERT(m_model);
+            m_model->setSorting(propertyIndex, order);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::sortByPropertyIndex(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
-            this->m_model->sortByPropertyIndex(propertyIndex, order);
+            m_model->sortByPropertyIndex(propertyIndex, order);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         QJsonObject CViewBase<ModelClass, ContainerType, ObjectType>::toJson() const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->toJson();
+            Q_ASSERT(m_model);
+            return m_model->toJson();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         QString CViewBase<ModelClass, ContainerType, ObjectType>::toJsonString(QJsonDocument::JsonFormat format) const
         {
-            Q_ASSERT(this->m_model);
-            return this->m_model->toJsonString(format);
+            Q_ASSERT(m_model);
+            return m_model->toJsonString(format);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1235,8 +1241,8 @@ namespace BlackGui
             // then name here is mainly set for debugging purposes so each model can be identified
             Q_ASSERT(m_model);
             QTableView::setObjectName(name);
-            QString modelName = QString(name).append(':').append(this->m_model->getTranslationContext());
-            this->m_model->setObjectName(modelName);
+            QString modelName = QString(name).append(':').append(m_model->getTranslationContext());
+            m_model->setObjectName(modelName);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1260,8 +1266,8 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::addContainerTypesAsDropTypes(bool objectType, bool containerType)
         {
-            if (objectType) { this->m_model->addAcceptedMetaTypeId(qMetaTypeId<ObjectType>()); }
-            if (containerType) { this->m_model->addAcceptedMetaTypeId(qMetaTypeId<ContainerType>()); }
+            if (objectType) { m_model->addAcceptedMetaTypeId(qMetaTypeId<ObjectType>()); }
+            if (containerType) { m_model->addAcceptedMetaTypeId(qMetaTypeId<ContainerType>()); }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1277,43 +1283,43 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::setSortIndicator()
         {
-            if (this->m_model->hasValidSortColumn())
+            if (m_model->hasValidSortColumn())
             {
                 Q_ASSERT(this->horizontalHeader());
                 this->horizontalHeader()->setSortIndicator(
-                    this->m_model->getSortColumn(),
-                    this->m_model->getSortOrder());
+                    m_model->getSortColumn(),
+                    m_model->getSortOrder());
             }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::standardInit(ModelClass *model)
         {
-            Q_ASSERT_X(model || this->m_model, Q_FUNC_INFO, "Missing model");
+            Q_ASSERT_X(model || m_model, Q_FUNC_INFO, "Missing model");
             if (model)
             {
-                if (model == this->m_model) { return; }
-                if (this->m_model)
+                if (model == m_model) { return; }
+                if (m_model)
                 {
-                    this->m_model->disconnect();
+                    m_model->disconnect();
                 }
 
-                this->m_model = model;
-                this->m_model->setSelectionModel(this);
-                bool c = connect(this->m_model, &ModelClass::modelDataChanged, this, &CViewBase::modelDataChanged);
+                m_model = model;
+                m_model->setSelectionModel(this);
+                bool c = connect(m_model, &ModelClass::modelDataChanged, this, &CViewBase::modelDataChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-                c = connect(this->m_model, &ModelClass::modelDataChangedDigest, this, &CViewBase::modelDataChangedDigest);
+                c = connect(m_model, &ModelClass::modelDataChangedDigest, this, &CViewBase::modelDataChangedDigest);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-                c = connect(this->m_model, &ModelClass::objectChanged, this, &CViewBase::objectChanged);
+                c = connect(m_model, &ModelClass::objectChanged, this, &CViewBase::objectChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-                c = connect(this->m_model, &ModelClass::changed, this, &CViewBase::modelChanged);
+                c = connect(m_model, &ModelClass::changed, this, &CViewBase::modelChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-                c = connect(this->m_model, &ModelClass::changed, this, &CViewBase::onModelChanged);
+                c = connect(m_model, &ModelClass::changed, this, &CViewBase::onModelChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
                 Q_UNUSED(c);
             }
 
-            this->setModel(this->m_model); // via QTableView
+            this->setModel(m_model); // via QTableView
             CViewBaseNonTemplate::init();
             this->setSortIndicator();
         }
@@ -1336,7 +1342,7 @@ namespace BlackGui
             }
             else
             {
-                this->m_resizeCount++; // skipped resize
+                m_resizeCount++; // skipped resize
             }
         }
 
@@ -1369,7 +1375,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::drawDropIndicator(bool indicator)
         {
-            this->m_dropIndicator = indicator;
+            m_dropIndicator = indicator;
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1473,7 +1479,7 @@ namespace BlackGui
             const QDir fileDir(file.absoluteDir());
             if (fileDir.exists())
             {
-                this->m_dirSettings.setAndSave(fileDir.absolutePath());
+                m_dirSettings.setAndSave(fileDir.absolutePath());
             }
 
             // save file
@@ -1544,14 +1550,14 @@ namespace BlackGui
         {
             if (enabled)
             {
-                if (!this->m_filterWidget)
+                if (!m_filterWidget)
                 {
                     this->removeFilter();
                 }
                 else
                 {
                     // takes the filter and triggers the filtering
-                    IModelFilterProvider<ContainerType> *provider = dynamic_cast<IModelFilterProvider<ContainerType>*>(this->m_filterWidget);
+                    IModelFilterProvider<ContainerType> *provider = dynamic_cast<IModelFilterProvider<ContainerType>*>(m_filterWidget);
                     Q_ASSERT_X(provider, Q_FUNC_INFO, "Filter widget does not provide interface");
                     if (!provider) { return false; }
                     std::unique_ptr<IModelFilter<ContainerType>> f(provider->createModelFilter());

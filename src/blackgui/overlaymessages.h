@@ -75,7 +75,8 @@ namespace BlackGui
         void setConfirmationMessage(const QString &message);
 
         //! Show multiple messages with confirmation bar
-        void showOverlayMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages,
+        void showOverlayMessagesWithConfirmation(
+                const BlackMisc::CStatusMessageList &messages,
                 const QString &confirmationMessage,
                 std::function<void()> okLambda,
                 int defaultButton = QMessageBox::Cancel,

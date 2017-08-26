@@ -92,6 +92,7 @@ namespace BlackGui
                 ResizingAuto,    //!< resizing when below threshold, \sa m_resizeAutoNthTime forcing only every n-th update to be resized
                 ResizingOnce,    //!< only one time
                 PresizeSubset,   //!< use a subset of the data to resize
+                ResizingAlways,  //!< always resize
                 ResizingOff      //!< never
             };
 
@@ -177,7 +178,7 @@ namespace BlackGui
             void setResizeMode(ResizeMode mode) { m_resizeMode = mode; }
 
             //! In \sa ResizingAuto mode, how often to update. "1" updates every time, "2" every 2nd time, ..
-            void setAutoResizeFrequency(int updateEveryNthTime) { this->m_resizeAutoNthTime = updateEveryNthTime; }
+            void setAutoResizeFrequency(int updateEveryNthTime) { m_resizeAutoNthTime = updateEveryNthTime; }
 
             //! Display automatically (when models are loaded)
             bool displayAutomatically() const { return m_displayAutomatically; }
@@ -246,10 +247,10 @@ namespace BlackGui
             void menuAddItems(Menu menusToAdd);
 
             //! Set menu items
-            void setMenu(Menu menuItems) { this->m_menus = menuItems; }
+            void setMenu(Menu menuItems) { m_menus = menuItems; }
 
             //! Menus
-            Menu getMenu() const { return this->m_menus; }
+            Menu getMenu() const { return m_menus; }
 
             //! \copydoc QTableView::setSelectionModel
             virtual void setSelectionModel(QItemSelectionModel *model) override;
@@ -264,7 +265,11 @@ namespace BlackGui
             BlackMisc::CStatusMessage showFileSaveDialog();
 
             //! Save file name (optional)
-            void setSaveFileName(const QString &saveName) { this->m_saveFileName = saveName; }
+            void setSaveFileName(const QString &saveName) { m_saveFileName = saveName; }
+
+            //! Force that columns are extended to full viewport width.
+            //! Workaround as of https://stackoverflow.com/q/3433664/356726
+            void setForceColumnsToMaxSize (bool force) { m_forceColumnsToMaxSize = force; }
 
         signals:
             //! Ask for new data from currently loaded data
@@ -424,6 +429,7 @@ namespace BlackGui
             bool m_displayAutomatically               = true;                  //!< display directly when loaded
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
             bool m_dropIndicator                      = false;                 //!< draw indicator
+            bool m_forceColumnsToMaxSize              = true;                  //!< force that columns are extended to full viewport width
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
             Menu m_menus                              = MenuDefault;           //!< Default menu settings
             BlackGui::Menus::IMenuDelegate *m_menu    = nullptr;               //!< custom menu if any
@@ -537,13 +543,13 @@ namespace BlackGui
 
         public:
             //! Destructor
-            virtual ~CViewBase() { if (this->m_model) { this->m_model->markDestroyed(); }}
+            virtual ~CViewBase() { if (m_model) { m_model->markDestroyed(); }}
 
             //! Model
-            ModelClass *derivedModel() { return this->m_model; }
+            ModelClass *derivedModel() { return m_model; }
 
             //! Model
-            const ModelClass *derivedModel() const { return this->m_model; }
+            const ModelClass *derivedModel() const { return m_model; }
 
             //! Update whole container
             //! \return int size after update
@@ -658,7 +664,7 @@ namespace BlackGui
             void initAsOrderable();
 
             //! Drop actions
-            void setDropActions(Qt::DropActions dropActions) { Q_ASSERT(this->m_model); this->m_model->setDropActions(dropActions); }
+            void setDropActions(Qt::DropActions dropActions) { Q_ASSERT(m_model); m_model->setDropActions(dropActions); }
 
         protected:
             ModelClass *m_model = nullptr; //!< corresponding model
