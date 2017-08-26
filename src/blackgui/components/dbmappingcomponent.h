@@ -71,7 +71,7 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-            //! Tab index
+            //! Tab index.
             //! Must match real tab index
             enum TabIndex
             {
@@ -310,12 +310,12 @@ namespace BlackGui
             void ps_onCustomContextMenu(const QPoint &point);
 
         private:
-            QScopedPointer<Ui::CDbMappingComponent>                 ui;
-            QScopedPointer<CDbAutoStashingComponent>                m_autoStashDialog;     //!< dialog auto stashing
-            QScopedPointer<CDbAutoSimulatorStashingComponent>       m_autoSimulatorDialog; //!< dialog auto simulator update
-            QScopedPointer<CDbModelMappingModifyComponent>          m_modelModifyDialog;   //!< dialog when modifying models
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader     m_vPilotReader;        //!< read vPilot rules
-            BlackMisc::CDigestSignal                                m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
+            QScopedPointer<Ui::CDbMappingComponent>             ui;
+            QScopedPointer<CDbAutoStashingComponent>            m_autoStashDialog;     //!< dialog auto stashing
+            QScopedPointer<CDbAutoSimulatorStashingComponent>   m_autoSimulatorDialog; //!< dialog auto simulator update
+            QScopedPointer<CDbModelMappingModifyComponent>      m_modelModifyDialog;   //!< dialog when modifying models
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader;        //!< read vPilot rules
+            BlackMisc::CDigestSignal                            m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
             BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this };
             const bool vPilotSupport   = true;   //!< vPilot support (will be removed in future)
             bool m_vPilot1stInit       = true;   //!< vPilot extensions initalized?
