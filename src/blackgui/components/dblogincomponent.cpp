@@ -155,6 +155,8 @@ namespace BlackGui
             }
             else
             {
+                ui->le_Name->clear();
+                ui->te_Roles->clear();
                 this->setModeLogin(true);
             }
         }

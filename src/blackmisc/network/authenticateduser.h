@@ -144,7 +144,7 @@ namespace BlackMisc
             void setAuthenticated(bool authenticated) { m_authenticated = authenticated; }
 
             //! Authenticated
-            bool isAuthenticated() const { return m_authenticated; }
+            bool isAuthenticated() const;
 
             //! Enabled
             void setEnabled(bool enabled) { m_enabled = enabled; }

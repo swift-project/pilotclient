@@ -117,6 +117,11 @@ namespace BlackMisc
             return this->hasRole("BULKADD");
         }
 
+        bool CAuthenticatedUser::isAuthenticated() const
+        {
+            return this->isEnabled() && this->isValid() && m_authenticated;
+        }
+
         bool CAuthenticatedUser::canDirectlyWriteModels() const
         {
             return this->hasBulkRole() || this->hasBulkAddRole();
@@ -131,7 +136,7 @@ namespace BlackMisc
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexVatsimId:
@@ -153,7 +158,7 @@ namespace BlackMisc
         {
             if (index.isMyself()) { (*this) = variant.to<CAuthenticatedUser>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexVatsimId:

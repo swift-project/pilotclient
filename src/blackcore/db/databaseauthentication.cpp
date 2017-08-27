@@ -172,7 +172,7 @@ namespace BlackCore
 
         void CDatabaseAuthenticationService::userChanged()
         {
-            // code goes here
+            // this->logoff();
         }
     } // ns
 } // ns
