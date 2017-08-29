@@ -161,6 +161,8 @@ namespace BlackMisc
     void CContinuousWorker::quitAndWait() noexcept
     {
         Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
+        Q_ASSERT_X(!CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called by own thread, will deadlock");
+
         setEnabled(false);
         auto *ownThread = thread();
         quit();
