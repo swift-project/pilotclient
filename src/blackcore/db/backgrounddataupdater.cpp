@@ -88,10 +88,7 @@ namespace BlackCore
             if (!cacheTs.isValid()) { return; }
 
             QDateTime dbModelsLatestChange = m_dbModelsLatestChange.value(cache.getDescription());
-            if (dbModelsLatestChange.isValid() && dbModelsLatestChange <= cacheTs)
-            {
-                return;
-            }
+            if (dbModelsLatestChange.isValid() && dbModelsLatestChange <= cacheTs) { return; }
 
             m_dbModelsLatestChange[cache.getDescription()] = cacheTs;
             const CSimulatorInfo sims = cache.simulatorsWithInitializedCache(); // sims ever used
@@ -143,7 +140,7 @@ namespace BlackCore
 
         bool CBackgroundDataUpdater::doWorkCheck() const
         {
-            if (!sApp || !sApp->hasWebDataServices()) { return false; }
+            if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
             if (!isEnabled()) { return false; }
             return true;
         }
