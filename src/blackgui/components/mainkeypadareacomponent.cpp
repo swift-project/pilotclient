@@ -55,6 +55,7 @@ namespace BlackGui
 
             // non info areas
             connect(ui->pb_Connect, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_Connect, &QPushButton::pressed, this, &CMainKeypadAreaComponent::disableButtonBriefly);
             connect(ui->pb_CockpitIdent, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_Opacity050, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_Opacity100, &QPushButton::pressed, this, &CMainKeypadAreaComponent::buttonSelected);
@@ -251,6 +252,10 @@ namespace BlackGui
 
         void CMainKeypadAreaComponent::disableButtonBriefly()
         {
+            QPushButton *pb = qobject_cast<QPushButton *>(QObject::sender());
+            if (!pb) { return; }
+            pb->setEnabled(false);
+            QTimer::singleShot(750, [pb] { pb->setEnabled(true); });
         }
     } // namespace
 } // namespace

@@ -98,6 +98,9 @@ namespace BlackGui
             //! Info area buttons
             void unsetInfoAreaButtons();
 
+            //! Disable button for some (short) time to avoid double click
+            void disableButtonBriefly();
+
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
             BlackMisc::CIdentifier m_identifier { QStringLiteral("KEYPADAREACOMPONENT") };
         };
