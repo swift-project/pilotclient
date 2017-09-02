@@ -46,9 +46,6 @@ namespace BlackGui
             //! Destructor
             virtual ~CMainKeypadAreaComponent();
 
-            //! Identifier
-            BlackMisc::CIdentifier keypadIdentifier();
-
         signals:
             //! Button to select main info area has been pressed
             //! \sa CMainInfoAreaComponent
@@ -73,26 +70,25 @@ namespace BlackGui
             //! Main info area changed
             void onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes);
 
-        private slots:
+        private:
             //! Button was clicked
-            void ps_buttonSelected();
+            void buttonSelected();
 
             //! Command line entered
-            void ps_commandEntered();
+            void onCommandEntered();
 
             //! Display help as HTML
-            void ps_setCommandTooltip();
+            void setCommandTooltip();
 
             //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
-            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
-            void ps_ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc BlackCore::Context::IContextAudio::changedMute
-            void ps_muteChanged(bool muted);
+            void muteChanged(bool muted);
 
-        private:
             //! If button is info area, identify it
             CMainInfoAreaComponent::InfoArea buttonToMainInfoArea(const QObject *button) const;
 
@@ -103,7 +99,7 @@ namespace BlackGui
             void unsetInfoAreaButtons();
 
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
-            BlackMisc::CIdentifier m_identifier;
+            BlackMisc::CIdentifier m_identifier { QStringLiteral("KEYPADAREACOMPONENT") };
         };
     } // namespace
 } // namespace
