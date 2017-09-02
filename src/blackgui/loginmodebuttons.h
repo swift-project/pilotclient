@@ -14,7 +14,6 @@
 
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
-
 #include <QGroupBox>
 #include <QObject>
 #include <QScopedPointer>
@@ -22,7 +21,6 @@
 class QWidget;
 
 namespace Ui { class CLoginModeButtons; }
-
 namespace BlackGui
 {
     //! Display login modes (normal, stealth, ...)
@@ -35,7 +33,7 @@ namespace BlackGui
         explicit CLoginModeButtons(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CLoginModeButtons();
+        virtual ~CLoginModeButtons();
 
         //! Get login mode, \sa BlackCore::INetwork::LoginMode
         BlackCore::INetwork::LoginMode getLoginMode() const;
@@ -43,11 +41,14 @@ namespace BlackGui
         //! Set login mode
         void setLoginMode(BlackCore::INetwork::LoginMode mode);
 
+        //! Set to read only
+        void setReadOnly(bool readonly);
+
     private:
         void configureLoginModes();
 
         QScopedPointer<Ui::CLoginModeButtons> ui;
     };
-}
+} // ns
 
 #endif // guard

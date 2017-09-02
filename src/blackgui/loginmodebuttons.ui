@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>271</width>
-    <height>23</height>
+    <width>257</width>
+    <height>49</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
    <item>
     <widget class="QLabel" name="lbl_LognMode">
      <property name="text">
-      <string>Login mode</string>
+      <string>Mode</string>
      </property>
     </widget>
    </item>

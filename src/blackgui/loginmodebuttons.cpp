@@ -65,9 +65,16 @@ namespace BlackGui
         }
     }
 
+    void CLoginModeButtons::setReadOnly(bool readonly)
+    {
+        ui->rb_LoginNormal->setEnabled(!readonly);
+        ui->rb_LoginObserver->setEnabled(!readonly);
+        ui->rb_LoginStealth->setEnabled(!readonly);
+    }
+
     void CLoginModeButtons::configureLoginModes()
     {
-        if(CBuildConfig::isStableBranch() && !sGui->getIContextSimulator()->isSimulatorSimulating())
+        if (CBuildConfig::isStableBranch() && !sGui->getIContextSimulator()->isSimulatorSimulating())
         {
             // Disable pilot login modes
             ui->rb_LoginNormal->setEnabled(false);
@@ -85,4 +92,4 @@ namespace BlackGui
             ui->rb_LoginNormal->setChecked(true);
         }
     }
-}
+} // ns
