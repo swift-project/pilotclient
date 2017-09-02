@@ -67,6 +67,9 @@ namespace BlackMisc
         //! Set the severity to debug.
         Derived &debug() { return setSeverityAndMessage(SeverityDebug, ""); }
 
+        //! Set the severity to debug, providing a format string.
+        Derived &debug(const QString &format) { return setSeverityAndMessage(SeverityDebug, format); }
+
         //! Set the severity to info, providing a format string.
         Derived &info(const QString &format) { return setSeverityAndMessage(SeverityInfo, format); }
 
