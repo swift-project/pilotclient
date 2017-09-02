@@ -48,6 +48,9 @@ namespace BlackGui
             connect(ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
             connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
             connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
+
+            ui->led_ComPanelCom1->setShape(CLedWidget::Rounded);
+            ui->led_ComPanelCom2->setShape(CLedWidget::Rounded);
         }
 
         CCockpitComForm::~CCockpitComForm()
