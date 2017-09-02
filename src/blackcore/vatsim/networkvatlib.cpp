@@ -872,10 +872,10 @@ namespace BlackCore
             }
             else
             {
-                CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).warning("Wrong transponder code %1 for %2") << position->transponderCode << callsign;
+                CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).debug("Wrong transponder code '%1' for '%2'") << position->transponderCode << callsign;
 
-                // default
-                transponder = CTransponder(7000, mode);
+                // I set a default: IFR standby is a reasonable default
+                transponder = CTransponder(2000, CTransponder::StateStandby);
             }
             emit cbvar_cast(cbvar)->aircraftPositionUpdate(situation, transponder);
         }
