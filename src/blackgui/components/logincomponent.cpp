@@ -140,10 +140,14 @@ namespace BlackGui
                 connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::simulatorModelChanged);
             }
 
-            // server GUI element
+            // server and UI elements when in disconnect
             ui->frp_CurrentServer->setReadOnly(true);
             ui->frp_CurrentServer->showPasswordField(false);
+            ui->gbp_LoginWithMode->setReadOnly(true);
+            ui->tb_Timeout->setIcon(m_iconPause);
+            connect(ui->tb_Timeout, &QToolButton::clicked, this, &CLoginComponent::toggleTimeout);
 
+            // web service data
             connect(sGui->getIContextNetwork(), &IContextNetwork::webServiceDataRead, this, &CLoginComponent::onWebServiceDataRead);
 
             // inital setup, if data already available
@@ -243,7 +247,9 @@ namespace BlackGui
                 this->updateOwnAircaftIcaoValuesFromGuiValues();
 
                 // Login mode
-                INetwork::LoginMode mode = ui->gbp_LoginMode->getLoginMode();
+                const INetwork::LoginMode mode = ui->gbp_LoginMode->getLoginMode();
+                ui->gbp_LoginWithMode->setLoginMode(mode);
+                ui->gbp_LoginWithMode->setReadOnly(true); // need to be set after each change
                 switch (mode)
                 {
                 case INetwork::LoginStealth:
@@ -624,6 +630,20 @@ namespace BlackGui
                 this->m_mappingWizard->presetAircraftIcao(icao);
             }
             this->m_mappingWizard->show();
+        }
+
+        void CLoginComponent::toggleTimeout()
+        {
+            if (m_logoffCountdownTimer->isActive())
+            {
+                m_logoffCountdownTimer->stop();
+                ui->tb_Timeout->setIcon(m_iconPlay);
+            }
+            else
+            {
+                m_logoffCountdownTimer->start();
+                ui->tb_Timeout->setIcon(m_iconPause);
+            }
         }
 
         void CLoginComponent::initCompleters(CEntityFlags::Entity entity)

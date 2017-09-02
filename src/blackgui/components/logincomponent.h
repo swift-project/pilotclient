@@ -26,6 +26,7 @@
 #include "blackmisc/datacache.h"
 
 #include <QFrame>
+#include <QIcon>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
@@ -122,6 +123,9 @@ namespace BlackGui
             //! Launch mapping wizard
             void mappingWizard();
 
+            //! Pause/Continue timeout
+            void toggleTimeout();
+
             //! GUI aircraft values, formatted
             struct CGuiAircraftValues
             {
@@ -206,8 +210,10 @@ namespace BlackGui
             BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible = false; //!< is this component selected?
+            QIcon m_iconPlay {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
+            QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
             const int LogoffIntervalSeconds = 20; //!< time before logoff
-            QTimer *m_logoffCountdownTimer { nullptr }; //!< timer used logoff countdown
+            QTimer *m_logoffCountdownTimer { nullptr }; //!< timer for logoff countdown
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::reloadSettings };
             BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this }; //!< current settings of aircraft
             BlackMisc::CData<BlackCore::Data::TVatsimCurrentServer> m_currentVatsimServer { this }; //!< cache for current VATSIM server
