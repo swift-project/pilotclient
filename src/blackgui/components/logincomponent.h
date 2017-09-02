@@ -85,44 +85,43 @@ namespace BlackGui
             //! Main info area changed
             void mainInfoAreaChanged(const QWidget *currentWidget);
 
-        private slots:
+        private:
             //! Login cancelled
-            void ps_loginCancelled();
+            void loginCancelled();
 
             //! Login requested
-            void ps_toggleNetworkConnection();
+            void toggleNetworkConnection();
 
             //! VATSIM data file was loaded
-            void ps_onWebServiceDataRead(int entity, int stateInt, int number);
+            void onWebServiceDataRead(int entity, int stateInt, int number);
 
             //! Validate aircaft
-            bool ps_validateAircraftValues();
+            bool validateAircraftValues();
 
             //! Validate VATSIM credentials
-            bool ps_validateVatsimValues();
+            bool validateVatsimValues();
 
             //! Aircraft ICAO code has been changed
-            void ps_changedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            void changedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
             //! Airline ICAO code has been changed
-            void ps_changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+            void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
             //! Settings have been changed
-            void ps_reloadSettings();
+            void reloadSettings();
 
             //! Logoff countdown
-            void ps_logoffCountdown();
+            void logoffCountdown();
 
             //! Reverse lookup model
-            void ps_reverseLookupAircraftModel();
+            void reverseLookupAircraftModel();
 
             //! Simulator model has been changed
-            void ps_simulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
+            void simulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Launch mapping wizard
-            void ps_mappingWizard();
+            void mappingWizard();
 
-        private:
             //! GUI aircraft values, formatted
             struct CGuiAircraftValues
             {
@@ -209,7 +208,7 @@ namespace BlackGui
             bool m_visible = false; //!< is this component selected?
             const int LogoffIntervalSeconds = 20; //!< time before logoff
             QTimer *m_logoffCountdownTimer { nullptr }; //!< timer used logoff countdown
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::reloadSettings };
             BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this }; //!< current settings of aircraft
             BlackMisc::CData<BlackCore::Data::TVatsimCurrentServer> m_currentVatsimServer { this }; //!< cache for current VATSIM server
         };

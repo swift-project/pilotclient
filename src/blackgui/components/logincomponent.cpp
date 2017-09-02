@@ -79,7 +79,7 @@ namespace BlackGui
             this->m_logoffCountdownTimer->setObjectName("CLoginComponent:m_logoffCountdownTimer");
             ui->pb_LogoffTimeout->setMaximum(LogoffIntervalSeconds);
             ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
-            connect(this->m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::ps_logoffCountdown);
+            connect(this->m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
 
             ui->selector_AircraftIcao->displayWithIcaoDescription(false);
             ui->selector_AirlineIcao->displayWithIcaoDescription(false);
@@ -87,10 +87,10 @@ namespace BlackGui
             ui->selector_AirlineIcao->displayMode(CDbAirlineIcaoSelectorComponent::DisplayVDesignatorAndId);
 
             this->setOkButtonString(false);
-            connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CLoginComponent::ps_loginCancelled);
-            connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CLoginComponent::ps_toggleNetworkConnection);
+            connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CLoginComponent::loginCancelled);
+            connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CLoginComponent::toggleNetworkConnection);
             connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
-            connect(ui->tb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::ps_mappingWizard);
+            connect(ui->tb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
 
             ui->comp_FsdDetails->showEnableInfo(true);
             ui->comp_FsdDetails->setFsdSetupEnabled(false);
@@ -115,41 +115,41 @@ namespace BlackGui
 
             // VATSIM
             ui->le_VatsimId->setValidator(new QIntValidator(100000, 9999999, this));
-            connect(ui->le_VatsimId, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateVatsimValues);
+            connect(ui->le_VatsimId, &QLineEdit::editingFinished, this, &CLoginComponent::validateVatsimValues);
 
             ui->le_VatsimHomeAirport->setValidator(new CUpperCaseValidator(this));
-            connect(ui->le_VatsimHomeAirport, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateVatsimValues);
+            connect(ui->le_VatsimHomeAirport, &QLineEdit::editingFinished, this, &CLoginComponent::validateVatsimValues);
 
-            connect(ui->le_VatsimPassword, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateVatsimValues);
-            connect(ui->le_VatsimRealName, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateVatsimValues);
+            connect(ui->le_VatsimPassword, &QLineEdit::editingFinished, this, &CLoginComponent::validateVatsimValues);
+            connect(ui->le_VatsimRealName, &QLineEdit::editingFinished, this, &CLoginComponent::validateVatsimValues);
 
             // own aircraft
             ui->le_Callsign->setMaxLength(LogoffIntervalSeconds);
             ui->le_Callsign->setValidator(new CUpperCaseValidator(this));
-            connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
+            connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
 
             ui->le_AircraftCombinedType->setMaxLength(3);
             ui->le_AircraftCombinedType->setValidator(new CUpperCaseValidator(this));
-            connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
-            connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::ps_changedAircraftIcao);
-            connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::ps_changedAirlineIcao);
-            connect(ui->tb_SimulatorIcaoReverseLookup, &QToolButton::clicked, this, &CLoginComponent::ps_reverseLookupAircraftModel);
+            connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::validateAircraftValues);
+            connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::changedAircraftIcao);
+            connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::changedAirlineIcao);
+            connect(ui->tb_SimulatorIcaoReverseLookup, &QToolButton::clicked, this, &CLoginComponent::reverseLookupAircraftModel);
 
             if (sGui && sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::ps_simulatorModelChanged);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::simulatorModelChanged);
             }
 
             // server GUI element
             ui->frp_CurrentServer->setReadOnly(true);
             ui->frp_CurrentServer->showPasswordField(false);
 
-            connect(sGui->getIContextNetwork(), &IContextNetwork::webServiceDataRead, this, &CLoginComponent::ps_onWebServiceDataRead);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::webServiceDataRead, this, &CLoginComponent::onWebServiceDataRead);
 
             // inital setup, if data already available
-            this->ps_validateAircraftValues();
-            this->ps_validateVatsimValues();
-            this->ps_onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
+            this->validateAircraftValues();
+            this->validateVatsimValues();
+            this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
             CServerList otherServers(this->m_otherTrafficNetworkServers.getThreadLocal());
 
             // add a testserver when no servers can be loaded
@@ -192,7 +192,7 @@ namespace BlackGui
                 {
                     // already visible:
                     // re-trigger! treat as same as OK
-                    this->ps_toggleNetworkConnection();
+                    this->toggleNetworkConnection();
                 }
                 else
                 {
@@ -205,14 +205,14 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::ps_loginCancelled()
+        void CLoginComponent::loginCancelled()
         {
             this->m_logoffCountdownTimer->stop();
             ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
             emit this->loginOrLogoffCancelled();
         }
 
-        void CLoginComponent::ps_toggleNetworkConnection()
+        void CLoginComponent::toggleNetworkConnection()
         {
             if (ui->tw_Network->currentWidget() == ui->pg_FsdDetails)
             {
@@ -226,13 +226,13 @@ namespace BlackGui
             CStatusMessage msg;
             if (!isConnected)
             {
-                if (!this->ps_validateAircraftValues())
+                if (!this->validateAircraftValues())
                 {
                     CLogMessage(this).validationWarning("Invalid aircraft data, login not possible");
                     return;
                 }
 
-                if (vatsimLogin && !this->ps_validateVatsimValues())
+                if (vatsimLogin && !this->validateVatsimValues())
                 {
                     CLogMessage(this).validationWarning("Invalid VATSIM data, login not possible");
                     return;
@@ -316,7 +316,7 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::ps_onWebServiceDataRead(int entityInt, int stateInt, int number)
+        void CLoginComponent::onWebServiceDataRead(int entityInt, int stateInt, int number)
         {
             const CEntityFlags::EntityFlag entity = static_cast<CEntityFlags::EntityFlag>(entityInt);
             const CEntityFlags::ReadState state = static_cast<CEntityFlags::ReadState>(stateInt);
@@ -493,11 +493,11 @@ namespace BlackGui
                     changed = true;
                 }
             }
-            const bool valid = this->ps_validateAircraftValues();
+            const bool valid = this->validateAircraftValues();
             return valid ? changed : false;
         }
 
-        bool CLoginComponent::ps_validateAircraftValues()
+        bool CLoginComponent::validateAircraftValues()
         {
             const CGuiAircraftValues values = getAircraftValuesFromGui();
 
@@ -518,7 +518,7 @@ namespace BlackGui
             return validCombinedType && validAirlineDesignator && validAircraftDesignator && validCallsign;
         }
 
-        bool CLoginComponent::ps_validateVatsimValues()
+        bool CLoginComponent::validateVatsimValues()
         {
             CVatsimValues values = getVatsimValuesFromGui();
 
@@ -537,28 +537,28 @@ namespace BlackGui
             return validVatsimId && validHomeAirport && validVatsimPassword && validRealUserName;
         }
 
-        void CLoginComponent::ps_changedAircraftIcao(const CAircraftIcaoCode &icao)
+        void CLoginComponent::changedAircraftIcao(const CAircraftIcaoCode &icao)
         {
             if (icao.isLoadedFromDb())
             {
                 ui->le_AircraftCombinedType->setText(icao.getCombinedType());
             }
-            this->ps_validateAircraftValues();
+            this->validateAircraftValues();
         }
 
-        void CLoginComponent::ps_changedAirlineIcao(const CAirlineIcaoCode &icao)
+        void CLoginComponent::changedAirlineIcao(const CAirlineIcaoCode &icao)
         {
             Q_UNUSED(icao);
-            this->ps_validateAircraftValues();
+            this->validateAircraftValues();
         }
 
-        void CLoginComponent::ps_reloadSettings()
+        void CLoginComponent::reloadSettings()
         {
             CServerList otherServers(this->m_otherTrafficNetworkServers.getThreadLocal());
             ui->comp_OtherServers->setServers(otherServers);
         }
 
-        void CLoginComponent::ps_logoffCountdown()
+        void CLoginComponent::logoffCountdown()
         {
             int v = ui->pb_LogoffTimeout->value();
             v -= 1;
@@ -567,18 +567,18 @@ namespace BlackGui
             if (v <= 0)
             {
                 this->m_logoffCountdownTimer->stop();
-                this->ps_toggleNetworkConnection();
+                this->toggleNetworkConnection();
             }
         }
 
-        void CLoginComponent::ps_reverseLookupAircraftModel()
+        void CLoginComponent::reverseLookupAircraftModel()
         {
             if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
             const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
-            this->ps_simulatorModelChanged(model);
+            this->simulatorModelChanged(model);
         }
 
-        void CLoginComponent::ps_simulatorModelChanged(const CAircraftModel &model)
+        void CLoginComponent::simulatorModelChanged(const CAircraftModel &model)
         {
             Q_ASSERT_X(sGui && sGui->getIContextNetwork(), Q_FUNC_INFO, "Missing context");
             const bool isNetworkConnected = sGui && sGui->getIContextNetwork()->isConnected();
@@ -594,7 +594,7 @@ namespace BlackGui
             // open dialog for model mapping
             if (this->m_autoPopupWizard && !model.isLoadedFromDb())
             {
-                this->ps_mappingWizard();
+                this->mappingWizard();
             }
 
             // check state of own aircraft
@@ -604,7 +604,7 @@ namespace BlackGui
             this->m_changedLoginDataDigestSignal.inputSignal();
         }
 
-        void CLoginComponent::ps_mappingWizard()
+        void CLoginComponent::mappingWizard()
         {
             if (!this->m_mappingWizard)
             {
