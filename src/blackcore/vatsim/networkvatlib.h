@@ -115,6 +115,9 @@ namespace BlackCore
             virtual const BlackMisc::Aviation::CCallsignSet &getInterimPositionReceivers() const override;
             //! @}
 
+            //! Arguments to be passed to another swift appplication
+            static QStringList inheritedArguments();
+
             //! \name Weather functions
             //! @{
             virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
@@ -127,7 +130,7 @@ namespace BlackCore
             static int const c_interimPositionTimeOffsetMsec = 2000;    //!< offset time for received interim position updates
 
         private:
-            bool getCmdLineClientIdAndKey(int &id, QString &key) const;
+            static bool getCmdLineClientIdAndKey(int &id, QString &key);
 
             void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
             void replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign);

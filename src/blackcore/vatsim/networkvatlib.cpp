@@ -545,6 +545,17 @@ namespace BlackCore
             return m_interimPositionReceivers;
         }
 
+        QStringList CNetworkVatlib::inheritedArguments()
+        {
+            QStringList args;
+            int id = 0;
+            QString key;
+            if (!getCmdLineClientIdAndKey(id, key)) return args;
+            args << "--idAndKey";
+            args << sApp->getParserValue("clientIdAndKey"); // as typed in
+            return args;
+        }
+
         void CNetworkVatlib::sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
@@ -710,9 +721,9 @@ namespace BlackCore
             return (CBuildConfig::isStableBranch() && !CBuildConfig::isDevBranch()) ? e : opts;
         }
 
-        bool CNetworkVatlib::getCmdLineClientIdAndKey(int &id, QString &key) const
+        bool CNetworkVatlib::getCmdLineClientIdAndKey(int &id, QString &key)
         {
-            QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
+            const QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
             if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
             const auto stringList = clientIdAndKey.split(':');
             QString clientIdAsString = stringList[0];

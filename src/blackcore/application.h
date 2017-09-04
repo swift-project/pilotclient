@@ -303,6 +303,9 @@ namespace BlackCore
         //! Display error message
         virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const;
 
+        //! Arguments to be passed to another swift appplication
+        QStringList inheritedArguments(bool withVatlibArgs = true) const;
+
         // ----------------------- contexts ----------------------------------------
 
         //! \name Context / core facade related

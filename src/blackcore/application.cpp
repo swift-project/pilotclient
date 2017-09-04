@@ -1156,6 +1156,18 @@ namespace BlackCore
         return false;
     }
 
+    QStringList CApplication::inheritedArguments(bool withVatlibArgs) const
+    {
+        QStringList args;
+        if (this->isSet(m_cmdDevelopment))
+        {
+            args.append("--" + m_cmdDevelopment.names().first());
+            args.append("true");
+        }
+        if (withVatlibArgs) { args.append(CNetworkVatlib::inheritedArguments()); }
+        return args;
+    }
+
     void CApplication::cmdLineHelpMessage()
     {
         this->m_parser.showHelp(); // terminates

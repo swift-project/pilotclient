@@ -67,6 +67,10 @@ public:
     //! Current command line
     QString getCmdLine() const;
 
+    //! Start currently set application detached
+    //! \remark simplifies debugging
+    bool startDetached();
+
 protected:
     //! \copydoc QDialog::mousePressEvent
     virtual void mousePressEvent(QMouseEvent *event) override;

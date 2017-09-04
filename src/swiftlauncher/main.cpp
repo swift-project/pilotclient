@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
     QApplication qa(argc, argv); // needed
     Q_UNUSED(qa);
     CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Laucher, CIcons::swiftLauncher1024());
+    a.addVatlibOptions(); // so it can be passed to started applications
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup.") });
     if (!a.parseAndStartupCheck()) { return EXIT_FAILURE; }
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
@@ -49,12 +50,6 @@ int main(int argc, char *argv[])
     CGuiApplication::registerAsRunning(); // needed because own exec is called
     if (launcher.exec() == QDialog::Rejected) { return EXIT_SUCCESS; }
     launcher.close();
-
-    const QString exe(launcher.getExecutable());
-    const QStringList exeArgs(launcher.getExecutableArgs());
-    Q_ASSERT_X(!exe.isEmpty(), Q_FUNC_INFO, "Missing executable");
-    CLogMessage(QCoreApplication::instance()).info(launcher.getCmdLine());
-    QProcess::startDetached(exe, exeArgs);
-
-    return EXIT_SUCCESS;
+    const bool s = launcher.startDetached();
+    return s ? EXIT_SUCCESS : EXIT_FAILURE;
 }

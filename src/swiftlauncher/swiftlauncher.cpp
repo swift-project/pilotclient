@@ -81,7 +81,15 @@ CSwiftLauncher::~CSwiftLauncher()
 
 QString CSwiftLauncher::getCmdLine() const
 {
-    return toCmdLine(m_executable, m_executableArgs);
+    return this->toCmdLine(m_executable, m_executableArgs);
+}
+
+bool CSwiftLauncher::startDetached()
+{
+    if (m_executable.isEmpty()) { return false; }
+    const QString cmd = this->getCmdLine();
+    CLogMessage(this).info(cmd);
+    return QProcess::startDetached(m_executable, m_executableArgs);
 }
 
 CEnableForFramelessWindow::WindowMode CSwiftLauncher::getWindowMode() const
@@ -267,26 +275,20 @@ void CSwiftLauncher::startSwiftCore()
         args.append("--coreaudio");
     }
 
-    // I set this for debug purpose only
+    args.append(sGui->inheritedArguments(true));
     m_executableArgs = args;
-    m_executable.clear();
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
-    CLogMessage(this).info(this->getCmdLine());
-
-    // start
-    QProcess::startDetached(m_executable, m_executableArgs);
+    this->startDetached();
 }
 
 void CSwiftLauncher::setSwiftDataExecutable()
 {
-    m_executable.clear();
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftDataExecutableName());
-    m_executableArgs.clear();
+    m_executableArgs = sGui->inheritedArguments(false);
 }
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
-    m_executable.clear();
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftGuiExecutableName());
 
     QStringList args
@@ -315,6 +317,7 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
             return false;
         }
     }
+    args.append(sGui->inheritedArguments(true));
     m_executableArgs = args;
     return true;
 }
@@ -399,11 +402,8 @@ bool CSwiftLauncher::warnAboutOtherSwiftApplications()
 QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs)
 {
     if (exeArgs.isEmpty()) { return exe; }
-    QString cmd(exe);
-    for (const QString &a : exeArgs)
-    {
-        cmd = cmd.append(" ").append(a);
-    }
+    const QString exeArgsString = exeArgs.join(' ');
+    const QString cmd(exe + " " + exeArgsString);
     return cmd;
 }
 
