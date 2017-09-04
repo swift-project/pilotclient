@@ -51,7 +51,7 @@ namespace BlackCore
                 qulonglong m_contentLengthHeader = 0;  //!< content length
                 qint64     m_loadTimeMs = -1;          //!< how long did it take to load
                 BlackMisc::CStatusMessage m_message;   //!< last error or warning
-                BlackMisc::Network::CUrl  m_url;       //!< loaded url
+                BlackMisc::Network::CUrl  m_url;       //!< loaded URL
 
             public:
                 //! Any timestamp?
@@ -177,8 +177,20 @@ namespace BlackCore
             //! Get cache timestamp
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
 
+            //! Has entity a valid and newer timestamp
+            bool hasCacheTimestampNewerThan(BlackMisc::Network::CEntityFlags::Entity entity, const QDateTime &threshold) const;
+
             //! Cache`s number of entities
+            //! \remark this only works if the cache is admitted, DB caches are read deferred
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
+
+            //! Entities already having data in cache
+            //! \remark this only works if the cache is admitted, DB caches are read deferred
+            virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheCount() const = 0;
+
+            //! Entities already having data in cache (based on timestamp assumption)
+            //! \remark unlike getEntitiesWithCacheCount() this even works when the cache is not yet admitted
+            virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const = 0;
 
             //! DB info objects available?
             bool hasDbInfoObjects() const;
@@ -223,6 +235,9 @@ namespace BlackCore
             //! Status message (error message)
             const QString &getStatusMessage() const;
 
+            //! Severity used for log messages in case of no URLs
+            void setSeverityNoWorkingUrl(BlackMisc::CStatusMessage::StatusSeverity s) { m_severityNoWorkingUrl = s; }
+
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
@@ -253,6 +268,7 @@ namespace BlackCore
             mutable QReadWriteLock      m_statusLock;                //!< Lock
             QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError;     //!< Successful connection?
             QMap<BlackMisc::Network::CEntityFlags::Entity, HeaderResponse> m_sharedFileResponses; //!< file responses of the shared files
+            BlackMisc::CStatusMessage::StatusSeverity m_severityNoWorkingUrl = BlackMisc::CStatusMessage::SeverityError; //!< severity of message if there is no working URL
 
             //! Constructor
             CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name);
@@ -279,6 +295,9 @@ namespace BlackCore
 
             //! Get the service URL, individual for each reader
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const = 0;
+
+            //! Log if no working URL exists, using m_noWorkingUrlSeverity
+            void logNoWorkingUrl(BlackMisc::Network::CEntityFlags::Entity entity);
 
             //! Base URL
             BlackMisc::Network::CUrl getBaseUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;

@@ -65,11 +65,9 @@ namespace BlackCore
             //! Will read from swift DB
             bool possiblyReadsFromSwiftDb() const;
 
-            //! Needs the shared header
+            //! Needs the DB info file loaded
+            //! \remark a possible counterpart for the DB info file is possiblyReadsFromSwiftDb
             bool needsSharedInfoFile() const;
-
-            //! Needs the shared header loaded before it can be continued
-            bool needsSharedInfoFileLoaded() const;
 
             //! Will write to swift DB
             bool possiblyWritesToSwiftDb() const;
@@ -81,14 +79,14 @@ namespace BlackCore
             bool isValid() const;
 
         private:
-            int m_entities = BlackMisc::Network::CEntityFlags::NoEntity;  //!< BlackMisc::Network::CEntityFlags::Entity
-            int m_retrievalFlags = BlackMisc::Db::CDbFlags::DbReading;     //!< BlackMisc::Db::CDbFlags::DataRetrievalMode
+            int m_entities = BlackMisc::Network::CEntityFlags::NoEntity; //!< BlackMisc::Network::CEntityFlags::Entity
+            int m_retrievalMode = BlackMisc::Db::CDbFlags::DbReading;   //!< BlackMisc::Db::CDbFlags::DataRetrievalMode
             BlackMisc::PhysicalQuantities::CTime m_cacheLifetime;
 
             BLACK_METACLASS(
                 CDatabaseReaderConfig,
                 BLACK_METAMEMBER(entities),
-                BLACK_METAMEMBER(retrievalFlags),
+                BLACK_METAMEMBER(retrievalMode),
                 BLACK_METAMEMBER(cacheLifetime));
         };
 
@@ -106,7 +104,8 @@ namespace BlackCore
             //! Construct from a base class object.
             CDatabaseReaderConfigList(const CSequence<CDatabaseReaderConfig> &other);
 
-            //! FInd first one matching given
+            //! Find first one matching given
+            //! \remark works for single and multiple entities
             CDatabaseReaderConfig findFirstOrDefaultForEntity(const BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! DB is down
@@ -121,11 +120,17 @@ namespace BlackCore
             //! Will write to swift DB
             bool possiblyWritesToSwiftDb() const;
 
-            //! Needs any shared header
+            //! Needs any shared info object
             bool needsSharedInfoObjects(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
+            //! Needs any shared info object, but only if the cache is empty
+            //! \remark needs readers initialized
+            bool needsSharedInfoObjectsIfCachesEmpty(
+                BlackMisc::Network::CEntityFlags::Entity entities,
+                BlackMisc::Network::CEntityFlags::Entity cachedEntities) const;
+
             //! Needs any shared header loaded before continued
-            bool needsSharedInfoFileLoaded(BlackMisc::Network::CEntityFlags::Entity entities) const;
+            bool needsSharedInfoFile(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! Entities which will use cache or DB, so no canceled or ignored ones
             BlackMisc::Network::CEntityFlags::Entity getEntitesCachedOrReadFromDB() const;

@@ -179,7 +179,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::LiveryEntity);
+                    this->logNoWorkingUrl(CEntityFlags::LiveryEntity);
                 }
             }
 
@@ -194,7 +194,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::DistributorEntity);
+                    this->logNoWorkingUrl(CEntityFlags::DistributorEntity);
                 }
             }
 
@@ -209,7 +209,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::ModelEntity);
+                    this->logNoWorkingUrl(CEntityFlags::ModelEntity);
                 }
             }
 
@@ -567,6 +567,24 @@ namespace BlackCore
             case CEntityFlags::DistributorEntity: return this->m_distributorCache.get().size();
             default: return 0;
             }
+        }
+
+        CEntityFlags::Entity CModelDataReader::getEntitiesWithCacheCount() const
+        {
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            if (this->getCacheCount(CEntityFlags::LiveryEntity) > 0) entities |= CEntityFlags::LiveryEntity;
+            if (this->getCacheCount(CEntityFlags::ModelEntity) > 0) entities |= CEntityFlags::ModelEntity;
+            if (this->getCacheCount(CEntityFlags::DistributorEntity) > 0) entities |= CEntityFlags::DistributorEntity;
+            return entities;
+        }
+
+        CEntityFlags::Entity CModelDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
+        {
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::LiveryEntity, threshold)) entities |= CEntityFlags::LiveryEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::ModelEntity, threshold)) entities |= CEntityFlags::ModelEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::DistributorEntity, threshold)) entities |= CEntityFlags::DistributorEntity;
+            return entities;
         }
 
         bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const

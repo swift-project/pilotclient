@@ -152,7 +152,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::AircraftIcaoEntity);
+                    this->logNoWorkingUrl(CEntityFlags::AircraftIcaoEntity);
                 }
             }
 
@@ -167,7 +167,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::AirlineIcaoEntity);
+                    this->logNoWorkingUrl(CEntityFlags::AirlineIcaoEntity);
                 }
             }
 
@@ -182,7 +182,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::CountryEntity);
+                    this->logNoWorkingUrl(CEntityFlags::CountryEntity);
                 }
             }
 
@@ -555,6 +555,24 @@ namespace BlackCore
             case CEntityFlags::CountryEntity:      return this->m_countryCache.get().size();
             default: return 0;
             }
+        }
+
+        CEntityFlags::Entity CIcaoDataReader::getEntitiesWithCacheCount() const
+        {
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            if (this->getCacheCount(CEntityFlags::AircraftIcaoEntity) > 0) entities |= CEntityFlags::AircraftIcaoEntity;
+            if (this->getCacheCount(CEntityFlags::AirlineIcaoEntity) > 0) entities |= CEntityFlags::AirlineIcaoEntity;
+            if (this->getCacheCount(CEntityFlags::CountryEntity) > 0) entities |= CEntityFlags::CountryEntity;
+            return entities;
+        }
+
+        CEntityFlags::Entity CIcaoDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
+        {
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::AircraftIcaoEntity, threshold)) entities |= CEntityFlags::AircraftIcaoEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::AirlineIcaoEntity, threshold)) entities |= CEntityFlags::AirlineIcaoEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::CountryEntity, threshold)) entities |= CEntityFlags::CountryEntity;
+            return entities;
         }
 
         bool CIcaoDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const

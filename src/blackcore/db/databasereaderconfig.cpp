@@ -11,6 +11,7 @@
 // without the Doxygen exclusion I get a strange no matching class member found for warning in the gcc build
 
 #include "blackcore/db/databasereaderconfig.h"
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
@@ -22,19 +23,19 @@ namespace BlackCore
     namespace Db
     {
         CDatabaseReaderConfig::CDatabaseReaderConfig(CEntityFlags::Entity entities, CDbFlags::DataRetrievalMode retrievalFlags, const CTime &cacheLifetime) :
-            m_entities(entities), m_retrievalFlags(retrievalFlags), m_cacheLifetime(cacheLifetime)
+            m_entities(entities), m_retrievalMode(retrievalFlags), m_cacheLifetime(cacheLifetime)
         {
             // void
         }
 
         QString CDatabaseReaderConfig::convertToQString(bool i18n) const
         {
-            QString s(CDbFlags::flagToString(this->getRetrievalMode()));
-            s.append(" ");
-            s.append(CEntityFlags::flagToString(this->getEntities()));
-            s.append(" ");
-            s.append(this->m_cacheLifetime.toFormattedQString(i18n));
-            return s;
+            return
+                CDbFlags::flagToString(this->getRetrievalMode()) %
+                QStringLiteral(" ") %
+                CEntityFlags::flagToString(this->getEntities()) %
+                QStringLiteral(" ") %
+                this->m_cacheLifetime.toFormattedQString(i18n);
         }
 
         CEntityFlags::Entity CDatabaseReaderConfig::getEntities() const
@@ -52,14 +53,14 @@ namespace BlackCore
 
         CDbFlags::DataRetrievalMode CDatabaseReaderConfig::getRetrievalMode() const
         {
-            return static_cast<CDbFlags::DataRetrievalMode>(this->m_retrievalFlags);
+            return static_cast<CDbFlags::DataRetrievalMode>(this->m_retrievalMode);
         }
 
         void CDatabaseReaderConfig::markAsDbDown()
         {
             CDbFlags::DataRetrievalMode m = this->getRetrievalMode();
             m = CDbFlags::adjustWhenDbIsDown(m);
-            this->m_retrievalFlags = static_cast<int>(m);
+            this->m_retrievalMode = static_cast<int>(m);
         }
 
         void CDatabaseReaderConfig::setCacheLifetime(const CTime &time)
@@ -79,13 +80,6 @@ namespace BlackCore
             if (!this->isValid()) { return false; }
             if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
             return (this->getRetrievalMode().testFlag(CDbFlags::Shared) || this->getRetrievalMode().testFlag(CDbFlags::SharedInfoOnly));
-        }
-
-        bool CDatabaseReaderConfig::needsSharedInfoFileLoaded() const
-        {
-            if (!this->isValid()) { return false; }
-            if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
-            return (this->getRetrievalMode().testFlag(CDbFlags::Shared));
         }
 
         bool CDatabaseReaderConfig::possiblyWritesToSwiftDb() const
@@ -172,12 +166,27 @@ namespace BlackCore
             return false;
         }
 
-        bool CDatabaseReaderConfigList::needsSharedInfoFileLoaded(CEntityFlags::Entity entities) const
+        bool CDatabaseReaderConfigList::needsSharedInfoFile(CEntityFlags::Entity entities) const
         {
             for (const CDatabaseReaderConfig &config : *this)
             {
                 if (!config.supportsEntities(entities)) { continue; }
-                if (config.needsSharedInfoFileLoaded()) { return true; }
+                if (config.needsSharedInfoFile()) { return true; }
+            }
+            return false;
+        }
+
+        bool CDatabaseReaderConfigList::needsSharedInfoObjectsIfCachesEmpty(CEntityFlags::Entity entities, CEntityFlags::Entity cachedEntities) const
+        {
+            for (const CDatabaseReaderConfig &config : *this)
+            {
+                if (!config.supportsEntities(entities)) { continue; }
+                if (!config.needsSharedInfoFile()) { continue; }
+                if (!config.getRetrievalMode().testFlag(CDbFlags::Cached)) { return true; } // does not support caching
+
+                const CEntityFlags::Entity configEntities = config.getEntities();
+                const CEntityFlags::Entity configEntitiesNotCached = configEntities & ~cachedEntities;
+                if (configEntitiesNotCached != CEntityFlags::NoEntity) { return true; } // we have entities not yet cached
             }
             return false;
         }

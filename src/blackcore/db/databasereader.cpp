@@ -107,9 +107,8 @@ namespace BlackCore
                             if (changedUrl)
                             {
                                 CLogMessage(this).info("Data location for '%1' changed ('%2'->'%3'), will override cache for reading '%4'")
-                                        << currentEntityName
-                                        << oldUrlInfo.toQString() << newUrlInfo.toQString()
-                                        << rmDbOrSharedFlagString;
+                                        << currentEntityName << oldUrlInfo.toQString()
+                                        << newUrlInfo.toQString() << rmDbOrSharedFlagString;
                             }
                             else
                             {
@@ -483,6 +482,12 @@ namespace BlackCore
             CLogMessage(this).info("Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeString();
         }
 
+        void CDatabaseReader::logNoWorkingUrl(CEntityFlags::Entity entity)
+        {
+            const CStatusMessage msg = CStatusMessage(this, m_severityNoWorkingUrl, "No working URL for '%1'") << CEntityFlags::flagToString(entity);
+            CLogMessage::preformatted(msg);
+        }
+
         CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing app object, URLs cannot be obtained");
@@ -560,6 +565,13 @@ namespace BlackCore
         bool CDatabaseReader::supportsAnyOfEntities(CEntityFlags::Entity entities) const
         {
             return static_cast<int>(maskBySupportedEntities(entities)) > 0;
+        }
+
+        bool CDatabaseReader::hasCacheTimestampNewerThan(CEntityFlags::Entity entity, const QDateTime &threshold) const
+        {
+            const QDateTime ts = this->getCacheTimestamp(entity);
+            if (!ts.isValid()) return false;
+            return ts > threshold;
         }
 
         const QString &CDatabaseReader::getStatusMessage() const

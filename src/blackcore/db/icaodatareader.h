@@ -122,6 +122,8 @@ namespace BlackCore
             virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
+            virtual BlackMisc::Network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
             virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual void admitCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
 

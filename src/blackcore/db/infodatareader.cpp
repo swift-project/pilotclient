@@ -81,10 +81,25 @@ namespace BlackCore
             return 0;
         }
 
+        CEntityFlags::Entity CInfoDataReader::getEntitiesWithCacheCount() const
+        {
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            return entities;
+        }
+
+        CEntityFlags::Entity CInfoDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
+        {
+            Q_UNUSED(threshold);
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            return entities;
+        }
+
         bool CInfoDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
         {
             // not implemented
             Q_UNUSED(entity);
+
+            // init the URLs
             oldUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
             newUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
             return false;
@@ -106,7 +121,7 @@ namespace BlackCore
             }
             else
             {
-                CLogMessage(this).error("No URL for '%1'") << CEntityFlags::flagToString(this->getEntityForMode());
+                this->logNoWorkingUrl(this->getEntityForMode());
             }
         }
 
@@ -162,8 +177,7 @@ namespace BlackCore
             {
             case CDbFlags::DbReading: return getDbInfoObjectsUrl();
             case CDbFlags::Shared: return getSharedInfoObjectsUrl();
-            default:
-                qFatal("Wrong mode");
+            default: qFatal("Wrong mode");
             }
             return CUrl();
         }

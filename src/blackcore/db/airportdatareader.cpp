@@ -122,6 +122,20 @@ namespace BlackCore
             return entity == CEntityFlags::AirportEntity ? m_airportCache.get().size() : 0;
         }
 
+        CEntityFlags::Entity CAirportDataReader::getEntitiesWithCacheCount() const
+        {
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            if (this->getCacheCount(CEntityFlags::AirportEntity) > 0) { entities |= CEntityFlags::AirportEntity; }
+            return entities;
+        }
+
+        CEntityFlags::Entity CAirportDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
+        {
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            if (this->hasCacheTimestampNewerThan(CEntityFlags::AirportEntity, threshold)) { entities |= CEntityFlags::AirportEntity; }
+            return entities;
+        }
+
         void CAirportDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
             if (entities.testFlag(CEntityFlags::AirportEntity)) { this->m_airportCache.synchronize(); }
@@ -227,7 +241,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::AirportEntity);
+                    this->logNoWorkingUrl(CEntityFlags::AirportEntity);
                 }
             }
         }
