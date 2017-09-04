@@ -768,18 +768,9 @@ namespace BlackCore
     {
         // obtain entities from real readers (means when reader is really used)
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-        if (m_icaoDataReader)
-        {
-            entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::IcaoDataReader);
-        }
-        if (m_modelDataReader)
-        {
-            entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::ModelReader);
-        }
-        if (m_airportDataReader)
-        {
-            entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::AirportReader);
-        }
+        if (m_icaoDataReader)    { entities |= CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::IcaoDataReader); }
+        if (m_modelDataReader)   { entities |= CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::ModelReader); }
+        if (m_airportDataReader) { entities |= CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::AirportReader); }
 
         // when we have a config, we ignore the ones not from cache or DB
         if (!m_dbReaderConfig.isEmpty())
@@ -798,7 +789,7 @@ namespace BlackCore
         return cats;
     }
 
-    void CWebDataServices::initReaders(CWebReaderFlags::WebReader flags, CEntityFlags::Entity entities)
+    void CWebDataServices::initReaders(CWebReaderFlags::WebReader readersNeeded, CEntityFlags::Entity entities)
     {
         Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "shall run in main application thread");
 
@@ -817,7 +808,7 @@ namespace BlackCore
             const bool databaseUp = CInfoDataReader::canPingSwiftServer();
             if (!databaseUp) { dbReaderConfig.markAsDbDown(); }
 
-            if (anyDbEntities && flags.testFlag(CWebReaderFlags::WebReaderFlag::DbInfoDataReader))
+            if (anyDbEntities && readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::DbInfoDataReader))
             {
                 // info data reader has a special role, it will not be triggered in triggerRead()
                 if (databaseUp)
@@ -826,7 +817,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).warning("DB unreachable, skipping read from info data reader");
+                    CLogMessage(this).warning("DB unreachable, skipping read from DB info data reader");
                 }
             }
         }
@@ -839,7 +830,7 @@ namespace BlackCore
 
         // 2. Status file, updating the VATSIM related caches
         // Read as soon as initReaders is done
-        if (flags.testFlag(CWebReaderFlags::VatsimStatusReader) || flags.testFlag(CWebReaderFlags::VatsimDataReader) || flags.testFlag(CWebReaderFlags::VatsimMetarReader))
+        if (readersNeeded.testFlag(CWebReaderFlags::VatsimStatusReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimDataReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimMetarReader))
         {
             m_vatsimStatusReader = new CVatsimStatusFileReader(this);
             c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::dataFileRead, this, &CWebDataServices::vatsimStatusFileRead);
@@ -853,7 +844,7 @@ namespace BlackCore
         // ---- "normal data", triggerRead will start read, not starting directly
 
         // 3. VATSIM bookings
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
         {
             m_vatsimBookingReader = new CVatsimBookingReader(this);
             c = connect(m_vatsimBookingReader, &CVatsimBookingReader::atcBookingsRead, this, &CWebDataServices::receivedBookings);
@@ -866,7 +857,7 @@ namespace BlackCore
         }
 
         // 4. VATSIM data file
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             m_vatsimDataFileReader = new CVatsimDataFileReader(this);
             c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::vatsimDataFileRead);
@@ -879,7 +870,7 @@ namespace BlackCore
         }
 
         // 5. VATSIM METAR data
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
             m_vatsimMetarReader = new CVatsimMetarReader(this);
             c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars);
@@ -892,7 +883,7 @@ namespace BlackCore
         }
 
         // 6. ICAO data reader
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
             c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
@@ -903,7 +894,7 @@ namespace BlackCore
         }
 
         // 7. Model reader
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
             c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
@@ -913,8 +904,8 @@ namespace BlackCore
             m_modelDataReader->start(QThread::LowPriority);
         }
 
-        // 8. Airport list reader
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
+        // 8. Airport reader
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
             m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
             c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);

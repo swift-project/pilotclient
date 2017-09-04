@@ -476,7 +476,7 @@ namespace BlackCore
         void readFromSwiftReader(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
         //! Init the readers
-        void initReaders(CWebReaderFlags::WebReader flags, BlackMisc::Network::CEntityFlags::Entity entities);
+        void initReaders(CWebReaderFlags::WebReader readersNeeded, BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Init the info objects reader (DB web service)
         void initDbInfoObjectReaderAndTriggerRead();

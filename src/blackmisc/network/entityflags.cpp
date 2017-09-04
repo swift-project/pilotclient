@@ -132,7 +132,7 @@ namespace BlackMisc
 
         bool CEntityFlags::isWarningOrAbove(CEntityFlags::ReadState state)
         {
-            CStatusMessage::StatusSeverity s = flagToSeverity(state);
+            const CStatusMessage::StatusSeverity s = flagToSeverity(state);
             switch (s)
             {
             case CStatusMessage::SeverityError:
@@ -145,11 +145,8 @@ namespace BlackMisc
 
         bool CEntityFlags::anySwiftDbEntity(Entity entities)
         {
-            return
-                entities.testFlag(AirportEntity) ||
-                entities.testFlag(AircraftIcaoEntity) || entities.testFlag(AirlineIcaoEntity) ||
-                entities.testFlag(CountryEntity) || entities.testFlag(DistributorEntity) ||
-                entities.testFlag(ModelEntity) || entities.testFlag(LiveryEntity);
+            const Entity dbEntities = entities & AllDbEntitiesNoInfoObjects;
+            return dbEntities != CEntityFlags::NoEntity;
         }
 
         CEntityFlags::Entity CEntityFlags::singleEntityByName(const QString &name)
@@ -160,8 +157,8 @@ namespace BlackMisc
             if (name.contains("airline", Qt::CaseInsensitive)) { return AirlineIcaoEntity; }
             if (name.contains("airport", Qt::CaseInsensitive)) { return AirportEntity; }
             if (name.contains("distributor", Qt::CaseInsensitive)) { return DistributorEntity; }
-            if (name.contains("countr", Qt::CaseInsensitive)) { return CountryEntity; }
-            if (name.contains("liver", Qt::CaseInsensitive)) { return LiveryEntity; }
+            if (name.contains("countr", Qt::CaseInsensitive)) { return CountryEntity; } // singular/plural
+            if (name.contains("liver", Qt::CaseInsensitive)) { return LiveryEntity; } // singular/plural
             return NoEntity;
         }
 
