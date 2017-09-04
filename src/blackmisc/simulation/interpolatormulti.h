@@ -22,6 +22,7 @@ namespace BlackMisc
     {
         /*!
          * Multiplexed interpolator which allows switching between modes at runtime.
+         * \remark currently switching mode is only a developer feature, see https://swift-project.slack.com/archives/C04J6J76N/p1504536854000049
          */
         class BLACKMISC_EXPORT CInterpolatorMulti : public QObject
         {
@@ -82,6 +83,7 @@ namespace BlackMisc
             Mode m_mode = ModeSpline;
             CInterpolatorSpline m_spline;
 #ifdef QT_DEBUG
+            //! only in a dev.environment, otherwise replaced by low footprint dummy driver
             CInterpolatorLinear m_linear;
 #else
             CInterpolatorDummy m_linear;
