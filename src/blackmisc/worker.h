@@ -302,15 +302,15 @@ namespace BlackMisc
         //! \threadsafe
         void startUpdating(int updateTimeSecs);
 
+        //! Name of the worker
+        const QString &getName() { return m_name; }
+
     protected:
         //! Called when the thread is started.
         virtual void initialize() {}
 
         //! Called when the thread is finished.
         virtual void cleanup() {}
-
-        //! Name of the worker
-        const QString &getName() { return m_name; }
 
         QTimer m_updateTimer { this }; //!< timer which can be used by implementing classes
 
