@@ -29,9 +29,11 @@ namespace BlackGui
             ui(new Ui::CDbLoadOverviewComponent)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
-
             ui->setupUi(this);
-            this->admitCaches(); // in background
+
+            //! \fixme KB 201709 It is hard to judgte if it is a good idea to trigger cache admit in a UI component
+            //  althought admit happens in background, this component might trigger cache reads not needed (though it is not very likely)
+            this->admitCaches();
 
             ui->lbl_DatabaseUrl->setTextFormat(Qt::RichText);
             ui->lbl_DatabaseUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -187,7 +189,7 @@ namespace BlackGui
             static const QString imgFailed(":/diagona/icons/diagona/icons/cross-script.png");
             const QString dbUrlHtml("<img src=\"%1\">&nbsp;&nbsp;<a href=\"%2\">%3</a>");
             const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
-            bool canConnect = CNetworkUtils::canConnect(sGui->getGlobalSetup().getDbHomePageUrl());
+            bool canConnect = sGui->getWebDataServices() && sGui->getWebDataServices()->canConnectSwiftDb();
             ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(canConnect ? imgOk : imgFailed, url, url));
             ui->lbl_DatabaseUrl->setToolTip(url);
 
@@ -333,14 +335,16 @@ namespace BlackGui
         {
             if (m_loadInProgress) { return; }
             if (!sGui || !sGui->hasWebDataServices()) { return; }
+            if (sGui->isShuttingDown()) { return; }
             bool direct = false;
 
             if (sGui->getWebDataServices()->getDbInfoDataReader() && sGui->getWebDataServices()->getDbInfoDataReader()->getInfoObjectCount() > 0)
             {
                 direct = true;
             }
-            else
+            else if (sGui->getWebDataServices()->canConnectSwiftDb())
             {
+                // do not trigger if cannot be connected
                 sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
             }
 
