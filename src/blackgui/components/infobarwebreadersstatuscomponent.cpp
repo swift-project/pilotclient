@@ -79,7 +79,7 @@ namespace BlackGui
             const bool swift =
                 sGui &&
                 sGui->hasWebDataServices() &&
-                sGui->getWebDataServices()->canConnectSwiftDb();
+                sGui->getWebDataServices()->hasConnectedSwiftDb();
             this->led_SwiftDb->setOn(swift);
 
             bool allData = hasAllData();

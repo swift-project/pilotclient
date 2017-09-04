@@ -395,8 +395,11 @@ namespace BlackCore
         //! \threadsafe
         int getSharedInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
-        //! Can connect to swift DB?
-        bool canConnectSwiftDb() const;
+        //! Has already connect swift DB?
+        bool hasConnectedSwiftDb() const;
+
+        //! Can connect swift DB?
+        bool canConnectSwiftDb(bool strict = false) const;
 
         //! Reset the flags what was already signaled
         void resetSignalFlags();

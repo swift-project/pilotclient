@@ -21,6 +21,7 @@
 #include "blackcore/vatsim/vatsimmetarreader.h"
 #include "blackcore/vatsim/vatsimstatusfilereader.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -164,7 +165,7 @@ namespace BlackCore
         initSharedInfoObjectReaderAndTriggerRead();
     }
 
-    bool CWebDataServices::canConnectSwiftDb() const
+    bool CWebDataServices::hasConnectedSwiftDb() const
     {
         if (!m_icaoDataReader && !m_modelDataReader && !m_airportDataReader && !m_dbInfoDataReader) { return false; }
 
@@ -174,6 +175,12 @@ namespace BlackCore
         if (m_modelDataReader)   { return m_modelDataReader->hasReceivedOkReply(); }
         if (m_airportDataReader) { return m_airportDataReader->hasReceivedOkReply(); }
         return false;
+    }
+
+    bool CWebDataServices::canConnectSwiftDb(bool strict) const
+    {
+        if (!strict && this->hasConnectedSwiftDb()) { return true; }
+        return CNetworkUtils::canConnect(sApp->getGlobalSetup().getDbHomePageUrl());
     }
 
     void CWebDataServices::resetSignalFlags()
