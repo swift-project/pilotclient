@@ -208,6 +208,7 @@ namespace BlackCore
 
     CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
     {
+        if (m_shuttingDown) { return CEntityFlags::NoEntity; }
         m_initialRead = true; // read started
         Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront");
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
@@ -273,6 +274,7 @@ namespace BlackCore
 
     CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromDb(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
     {
+        if (m_shuttingDown) { return CEntityFlags::NoEntity; }
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (m_dbInfoDataReader)
         {
@@ -315,6 +317,7 @@ namespace BlackCore
 
     CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront)
     {
+        if (m_shuttingDown) { return CEntityFlags::NoEntity; }
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         this->triggerReadOfSharedInfoObjects(); // trigger reload of info objects (for shared)
 
@@ -745,6 +748,7 @@ namespace BlackCore
 
     void CWebDataServices::gracefulShutdown()
     {
+        m_shuttingDown = true;
         this->disconnect(); // all signals
         if (m_vatsimMetarReader)    { m_vatsimMetarReader->setEnabled(false); }
         if (m_vatsimBookingReader)  { m_vatsimBookingReader->setEnabled(false); }
@@ -797,8 +801,9 @@ namespace BlackCore
         // ---- "metadata" reader, 1 will trigger read directly during init
         //
         CDatabaseReaderConfigList dbReaderConfig(m_dbReaderConfig);
-        const bool anyDbEntities = CEntityFlags::anySwiftDbEntity(entities);
-        const bool needsSharedInfoObjects = dbReaderConfig.needsSharedInfoObjects(entities);
+        const CEntityFlags::Entity dbEntities = entities & CEntityFlags::AllDbEntitiesNoInfoObjects;
+        const bool anyDbEntities = CEntityFlags::anySwiftDbEntity(dbEntities); // contains any DB entities
+        const bool needsSharedInfoObjects = dbReaderConfig.needsSharedInfoObjects(dbEntities);
         const bool needsDbInfoObjects = dbReaderConfig.possiblyReadsFromSwiftDb();
         bool c = false; // for signal connect
 
@@ -914,13 +919,24 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_airportDataReader->start(QThread::LowPriority);
         }
-
         Q_UNUSED(c); // signal connect flag
+
+        const QDateTime threshold = QDateTime::currentDateTimeUtc().addDays(-365); // country and airports are "semi static"
+        const CEntityFlags::Entity cachedDbEntities = this->getDbEntitiesWithCachedData(); // those caches are already read
+        const CEntityFlags::Entity validTsDbEntities = this->getDbEntitiesWithTimestampNewerThan(threshold); // those caches are not read, but have a timestamp
+        const bool needsSharedInfoObjectsWithoutCache = dbReaderConfig.needsSharedInfoObjectsIfCachesEmpty(dbEntities, cachedDbEntities | validTsDbEntities);
+        if (m_sharedInfoDataReader && !needsSharedInfoObjectsWithoutCache)
+        {
+            // demote error message
+            // Rational: we cannot read shared info objects, but we have and use cached objects
+            m_sharedInfoDataReader->setSeverityNoWorkingUrl(CStatusMessage::SeverityWarning);
+        }
     }
 
     void CWebDataServices::initDbInfoObjectReaderAndTriggerRead()
     {
         // run in correct thread
+        if (m_shuttingDown) { return; }
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
             QTimer::singleShot(0, this, &CWebDataServices::initDbInfoObjectReaderAndTriggerRead);
@@ -957,6 +973,7 @@ namespace BlackCore
     void CWebDataServices::initSharedInfoObjectReaderAndTriggerRead()
     {
         // run in correct thread
+        if (m_shuttingDown) { return; }
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
             QTimer::singleShot(0, this, &CWebDataServices::initSharedInfoObjectReaderAndTriggerRead);
@@ -1035,6 +1052,24 @@ namespace BlackCore
             // non DB entities would go here
             return -1;
         }
+    }
+
+    CEntityFlags::Entity CWebDataServices::getDbEntitiesWithCachedData() const
+    {
+        CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+        if (m_airportDataReader) { entities |= m_airportDataReader->getEntitiesWithCacheCount(); }
+        if (m_icaoDataReader)    { entities |= m_icaoDataReader->getEntitiesWithCacheCount(); }
+        if (m_modelDataReader)   { entities |= m_modelDataReader->getEntitiesWithCacheCount(); }
+        return entities;
+    }
+
+    CEntityFlags::Entity CWebDataServices::getDbEntitiesWithTimestampNewerThan(const QDateTime &threshold) const
+    {
+        CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+        if (m_airportDataReader) { entities |= m_airportDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
+        if (m_icaoDataReader)    { entities |= m_icaoDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
+        if (m_modelDataReader)   { entities |= m_modelDataReader->getEntitiesWithCacheTimestampNewerThan(threshold); }
+        return entities;
     }
 
     void CWebDataServices::receivedBookings(const CAtcStationList &stations)
@@ -1130,7 +1165,7 @@ namespace BlackCore
                 if (!this->waitForDbInfoObjectsThenRead(entities)) { return; }
             }
 
-            const bool waitForSharedInfoFile = m_dbReaderConfig.needsSharedInfoFileLoaded(entities);
+            const bool waitForSharedInfoFile = m_dbReaderConfig.needsSharedInfoFile(entities);
             if (waitForSharedInfoFile)
             {
                 // do not read yet, will call this function again after some time
@@ -1145,6 +1180,7 @@ namespace BlackCore
 
     bool CWebDataServices::waitForDbInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
+        Q_ASSERT_X(m_dbInfoDataReader, Q_FUNC_INFO, "need reader");
         if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
         const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTimeout);
         if (read) { m_dbInfoObjectTimeout = QDateTime(); } // reset to null
@@ -1153,6 +1189,7 @@ namespace BlackCore
 
     bool CWebDataServices::waitForSharedInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
+        Q_ASSERT_X(m_sharedInfoDataReader, Q_FUNC_INFO, "need reader");
         if (!m_sharedInfoObjectsTimeout.isValid()) { m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
         const bool read = this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTimeout);
         if (read) { m_sharedInfoObjectsTimeout = QDateTime(); } // reset to null
@@ -1170,9 +1207,10 @@ namespace BlackCore
         if (QDateTime::currentDateTimeUtc() > timeOut)
         {
             const QString timeOutString = timeOut.toString();
-            CLogMessage(this).warning("Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader as failed and continue.")
+            CLogMessage(this).warning("Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader '%5' as failed and continue.")
                     << info << CEntityFlags::flagToString(entities)
-                    << reader->getInfoObjectsUrl().toQString() << timeOutString;
+                    << reader->getInfoObjectsUrl().toQString() << timeOutString
+                    << reader->getName();
 
             // continue here and read data without info objects
             reader->setMarkedAsFailed(true);
@@ -1218,24 +1256,24 @@ namespace BlackCore
     bool CWebDataServices::writeDbDataToDisk(const QString &dir) const
     {
         if (dir.isEmpty()) { return false; }
-        QDir directory(dir);
+        const QDir directory(dir);
         if (!directory.exists())
         {
-            bool s = directory.mkpath(dir);
+            const bool s = directory.mkpath(dir);
             if (!s) { return false; }
         }
 
         if (this->getModelsCount() > 0)
         {
-            QString json(QJsonDocument(this->getModels().toJson()).toJson());
-            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "models.json"));
+            const QString json(QJsonDocument(this->getModels().toJson()).toJson());
+            const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "models.json"));
             if (!s) { return false; }
         }
 
         if (this->getLiveriesCount() > 0)
         {
-            QString json(QJsonDocument(this->getLiveries().toJson()).toJson());
-            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json"));
+            const QString json(QJsonDocument(this->getLiveries().toJson()).toJson());
+            const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json"));
             if (!s) { return false; }
         }
 

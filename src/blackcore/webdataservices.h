@@ -496,6 +496,14 @@ namespace BlackCore
         //! Info object count from shared/DB info objects
         int getInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity, BlackCore::Db::CInfoDataReader *reader) const;
 
+        //! Entities from DB with cached data (i.e. count > 0)
+        //! \remark requires the caches already read
+        BlackMisc::Network::CEntityFlags::Entity getDbEntitiesWithCachedData() const;
+
+        //! Entities from DB with cache timestamp newer than given threshold
+        //! \remark unlike getDbEntitiesWithCachedData() this does not need the caches already being read
+        BlackMisc::Network::CEntityFlags::Entity getDbEntitiesWithTimestampNewerThan(const QDateTime &threshold) const;
+
         //! Wait for DB info objects to be read
         bool waitForDbInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities);
 
@@ -513,6 +521,7 @@ namespace BlackCore
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;           //!< how to read DB data
         bool                                     m_initialRead = false;      //!< initial read started
         bool                                     m_signalledHeaders = false; //!< haders loading has been signalled
+        bool                                     m_shuttingDown = false;     //!< shutting down?
         QDateTime                                m_dbInfoObjectTimeout;      //!< started reading DB info objects
         QDateTime                                m_sharedInfoObjectsTimeout; //!< started reading shared info objects
         QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;  //!< remember signalled entites
