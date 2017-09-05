@@ -89,8 +89,8 @@ namespace BlackCore
 
             QString query = params.toString();
             const QNetworkRequest request(CNetworkUtils::getNetworkRequest(url, CNetworkUtils::PostUrlEncoded));
-            sApp->postToNetwork(request, query.toUtf8(), { this, &CDatabaseAuthenticationService::parseServerResponse});
-            QString rm("Sent request to authentication server %1");
+            sApp->postToNetwork(request, CApplication::NoLogRequestId, query.toUtf8(), { this, &CDatabaseAuthenticationService::parseServerResponse});
+            static const QString rm("Sent request to authentication server '%1'");
             msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, rm.arg(url.toQString())));
             return msgs;
         }

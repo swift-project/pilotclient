@@ -625,8 +625,10 @@ namespace BlackGui
     {
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
-            QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(),
-                                     QGuiApplication::applicationDisplayName() + ' ' + QCoreApplication::applicationVersion());
+            QMessageBox::information(nullptr,
+                                     QGuiApplication::applicationDisplayName(),
+                                     QGuiApplication::applicationDisplayName() + ' ' +
+                                     QCoreApplication::applicationVersion());
         }
         else
         {

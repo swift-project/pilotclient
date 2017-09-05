@@ -601,10 +601,8 @@ namespace BlackCore
             Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "needs single entity");
             switch (mode)
             {
-            case CDbFlags::Shared:
-                return CDbInfo::entityToSharedName(entity);
-            case CDbFlags::SharedInfoOnly:
-                return CDbInfo::sharedInfoFileName();
+            case CDbFlags::Shared: return CDbInfo::entityToSharedName(entity);
+            case CDbFlags::SharedInfoOnly: return CDbInfo::sharedInfoFileName();
             default:
             case CDbFlags::DbReading:
                 return CDbInfo::entityToServiceName(entity);
@@ -613,7 +611,7 @@ namespace BlackCore
 
         QString CDatabaseReader::dateTimeToDbLatestTs(const QDateTime &ts)
         {
-            if (!ts.isValid()) return "";
+            if (!ts.isValid()) { return ""; }
             return ts.toUTC().toString(Qt::ISODate);
         }
 

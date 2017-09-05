@@ -227,6 +227,5 @@ namespace BlackMisc
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IDatastoreObjectList<BlackMisc::CCountry, BlackMisc::CCountryList, QString>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, int>;
         //! \endcond
-
     } // ns
 } // ns

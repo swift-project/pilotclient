@@ -7,23 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/metaclassprivate.h"
-
-#include <QString>
-#include <tuple>
-
-using namespace BlackMisc::Aviation;
+#include "clientlist.h"
 
 namespace BlackMisc
 {
     namespace Network
     {
-
         CClientList::CClientList() { }
 
         CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other)
         { }
-
     } // namespace
 } // namespace

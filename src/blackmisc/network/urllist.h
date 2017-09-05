@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_NETWORK_NETWORKLOCATIONLIST_H
-#define BLACKMISC_NETWORK_NETWORKLOCATIONLIST_H
+#ifndef BLACKMISC_NETWORK_URLLIST_H
+#define BLACKMISC_NETWORK_URLLIST_H
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
@@ -26,7 +26,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        //! Value object encapsulating a list of servers.
+        //! Value object encapsulating a list of URLs.
         class BLACKMISC_EXPORT CUrlList :
             public CSequence<CUrl>,
             public BlackMisc::Mixin::MetaType<CUrlList>

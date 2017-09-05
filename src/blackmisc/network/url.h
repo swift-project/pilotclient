@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_NETWORK_NETWORKLOCATION_H
-#define BLACKMISC_NETWORK_NETWORKLOCATION_H
+#ifndef BLACKMISC_NETWORK_URL_H
+#define BLACKMISC_NETWORK_URL_H
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"

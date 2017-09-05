@@ -61,9 +61,9 @@ namespace BlackCore
 
         private:
             BlackMisc::Network::CUrl m_modelPublishUrl;
-            QNetworkReply           *m_pendingReply = nullptr;
-            qint64                   m_replyPendingSince = -1;
-            bool                     m_shutdown = false;
+            QNetworkReply *m_pendingReply = nullptr;
+            qint64         m_replyPendingSince = -1;
+            bool           m_shutdown = false;
 
             //! Kill the pending reply
             bool killPendingReply();

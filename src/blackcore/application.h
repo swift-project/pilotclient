@@ -506,26 +506,26 @@ namespace BlackCore
                                        int maxRedirects,
                                        std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod);
 
-        QNetworkAccessManager                   *m_accessManager = nullptr;  //!< single network access manager
+        QNetworkAccessManager                   *m_accessManager = nullptr;   //!< single network access manager
         BlackMisc::CApplicationInfo::Application m_application = BlackMisc::CApplicationInfo::Unknown; //!< Application if specified
-        QScopedPointer<CCoreFacade>              m_coreFacade;              //!< core facade if any
-        QScopedPointer<CSetupReader>             m_setupReader;             //!< setup reader
-        QScopedPointer<CWebDataServices>         m_webDataServices;         //!< web data services
-        QScopedPointer<BlackMisc::CFileLogger>   m_fileLogger;              //!< file logger
-        CCookieManager                           m_cookieManager;           //!< single cookie manager for our access manager
-        QString                                  m_applicationName;         //!< application name
-        QReadWriteLock                           m_accessManagerLock;       //!< lock to make access manager access threadsafe
-        CCoreFacadeConfig                        m_coreFacadeConfig;        //!< Core facade config if any
-        CWebReaderFlags::WebReader               m_webReadersUsed;          //!< Readers to be used
-        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;          //!< Load or used caching?
-        std::atomic<bool>                        m_shutdown { false };      //!< is being shutdown?
+        QScopedPointer<CCoreFacade>              m_coreFacade;                //!< core facade if any
+        QScopedPointer<CSetupReader>             m_setupReader;               //!< setup reader
+        QScopedPointer<CWebDataServices>         m_webDataServices;           //!< web data services
+        QScopedPointer<BlackMisc::CFileLogger>   m_fileLogger;                //!< file logger
+        CCookieManager                           m_cookieManager;             //!< single cookie manager for our access manager
+        QString                                  m_applicationName;           //!< application name
+        QReadWriteLock                           m_accessManagerLock;         //!< lock to make access manager access threadsafe
+        CCoreFacadeConfig                        m_coreFacadeConfig;          //!< Core facade config if any
+        CWebReaderFlags::WebReader               m_webReadersUsed;            //!< Readers to be used
+        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;            //!< Load or used caching?
+        std::atomic<bool>                        m_shutdown { false };        //!< is being shutdown?
         QTimer                                   m_internetAccessTimer { this };
-        bool                                     m_useContexts = false;     //!< use contexts
-        bool                                     m_useWebData = false;      //!< use web data
-        bool                                     m_signalStartup = true;    //!< signal startup automatically
-        bool                                     m_devEnv = false;          //!< dev. environment
-        bool                                     m_unitTest = false;        //!< is UNIT test
-        bool                                     m_autoSaveSettings = true; //!< automatically saving all settings
+        bool                                     m_useContexts = false;       //!< use contexts
+        bool                                     m_useWebData = false;        //!< use web data
+        bool                                     m_signalStartup = true;      //!< signal startup automatically
+        bool                                     m_devEnv = false;            //!< dev. environment
+        bool                                     m_unitTest = false;          //!< is UNIT test
+        bool                                     m_autoSaveSettings = true;   //!< automatically saving all settings
         bool                                     m_internetAccessible = true; //!< Internet accessible
 
         // -------------- crashpad -----------------

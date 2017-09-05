@@ -234,48 +234,32 @@ namespace BlackMisc
             return q;
         }
 
-        CVariant CUrl::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CUrl::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexHost:
-                return CVariant::fromValue(this->m_host);
-            case IndexPort:
-                return CVariant::fromValue(this->m_port);
-            case IndexScheme:
-                return CVariant::fromValue(this->m_scheme);
-            case IndexPath:
-                return CVariant::fromValue(this->m_path);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexHost:   return CVariant::fromValue(this->m_host);
+            case IndexPort:   return CVariant::fromValue(this->m_port);
+            case IndexScheme: return CVariant::fromValue(this->m_scheme);
+            case IndexPath:   return CVariant::fromValue(this->m_path);
+            default:          return CValueObject::propertyByIndex(index);
             }
         }
 
         void CUrl::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CUrl>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexHost:
-                this->setHost(variant.value<QString>());
-                break;
-            case IndexPort:
-                this->setPort(variant.value<qint32>());
-                break;
-            case IndexPath:
-                this->setPath(variant.value<QString>());
-                break;
-            case IndexScheme:
-                this->setScheme(variant.value<QString>());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexHost: this->setHost(variant.value<QString>()); break;
+            case IndexPort: this->setPort(variant.value<qint32>());  break;
+            case IndexPath: this->setPath(variant.value<QString>()); break;
+            case IndexScheme: this->setScheme(variant.value<QString>()); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
-
     } // namespace
 } // namespace

@@ -58,7 +58,6 @@ namespace BlackMisc
             //! From our database JSON format
             static CRoleList fromDatabaseJson(const QJsonArray &array);
         };
-
     } //namespace
 } // namespace
 

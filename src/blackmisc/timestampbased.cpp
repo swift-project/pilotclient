@@ -174,7 +174,7 @@ namespace BlackMisc
     bool ITimestampBased::canHandleIndex(const CPropertyIndex &index)
     {
         if (index.isEmpty()) { return false; }
-        int i = index.frontCasted<int>();
+        const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexUtcTimestamp)) && (i <= static_cast<int>(IndexMSecsSinceEpoch));
     }
 
@@ -182,7 +182,7 @@ namespace BlackMisc
     {
         if (!index.isEmpty())
         {
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexUtcTimestamp:
@@ -212,7 +212,7 @@ namespace BlackMisc
     {
         if (!index.isEmpty())
         {
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexUtcTimestamp:

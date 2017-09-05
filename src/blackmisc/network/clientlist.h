@@ -18,7 +18,6 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
-
 #include <QMetaType>
 
 namespace BlackMisc
@@ -39,7 +38,6 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CClientList(const CSequence &other);
-
         };
     } //namespace
 } // namespace

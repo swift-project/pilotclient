@@ -73,10 +73,11 @@ namespace BlackCore
         void pauseReader();
 
         //! Used in unit test
+        //! \remark needs to be done before started in different thread
         void markAsUsedInUnitTest() { m_unitTest = true; }
 
     protected:
-        mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock which can be used from the derived classes
+        mutable QReadWriteLock m_lock { QReadWriteLock::Recursive }; //!< lock which can be used from the derived classes
 
         //! Constructor
         CThreadedReader(QObject *owner, const QString &name);
@@ -97,7 +98,7 @@ namespace BlackCore
         //! This method does the actual work in the derived class
         virtual void doWorkImpl() {}
 
-        //! Still enabled etc.
+        //! Still enabled etc.?
         bool doWorkCheck() const;
 
         //! Use this to log inconsistent data

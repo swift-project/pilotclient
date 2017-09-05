@@ -262,10 +262,10 @@ namespace BlackCore
             void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
 
         protected:
-            CDatabaseReaderConfigList   m_config;                    //!< DB reder configuration
-            QString                     m_statusMessage;             //!< Returned status message from watchdog
-            bool                        m_1stReplyReceived = false;  //!< Successful connection? Does not mean data / authorizations are correct
-            mutable QReadWriteLock      m_statusLock;                //!< Lock
+            CDatabaseReaderConfigList   m_config;                   //!< DB reder configuration
+            QString                     m_statusMessage;            //!< Returned status message from watchdog
+            bool                        m_1stReplyReceived = false; //!< Successful connection? Does not mean data / authorizations are correct
+            mutable QReadWriteLock      m_statusLock;               //!< Lock
             QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError;     //!< Successful connection?
             QMap<BlackMisc::Network::CEntityFlags::Entity, HeaderResponse> m_sharedFileResponses; //!< file responses of the shared files
             BlackMisc::CStatusMessage::StatusSeverity m_severityNoWorkingUrl = BlackMisc::CStatusMessage::SeverityError; //!< severity of message if there is no working URL

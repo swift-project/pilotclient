@@ -8,7 +8,6 @@
  */
 
 #include "blackcore/data/vatsimsetup.h"
-
 #include <QStringList>
 
 using namespace BlackMisc;
@@ -66,15 +65,12 @@ namespace BlackCore
             if (index.isMyself()) { return CVariant::from(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexFsdServers:
-                return CVariant::fromValue(this->m_fsdServers);
-            case IndexDataFiles:
-                return CVariant::fromValue(this->m_dataFileUrls);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexFsdServers: return CVariant::fromValue(this->m_fsdServers);
+            case IndexDataFiles:  return CVariant::fromValue(this->m_dataFileUrls);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -87,18 +83,12 @@ namespace BlackCore
                 return;
             }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexFsdServers:
-                this->m_fsdServers = variant.value<CServerList>();
-                break;
-            case IndexDataFiles:
-                this->m_dataFileUrls = variant.value<CUrlList>();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexFsdServers: this->m_fsdServers = variant.value<CServerList>(); break;
+            case IndexDataFiles:  this->m_dataFileUrls = variant.value<CUrlList>();  break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
     } // ns
