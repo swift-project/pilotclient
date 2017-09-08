@@ -113,6 +113,13 @@ namespace BlackSimPlugin
             resetData();
         }
 
+        void CSimulatorXPlane::unload()
+        {
+            CSimulatorCommon::unload();
+            delete m_watcher;
+            m_watcher = nullptr;
+        }
+
         // convert xplane squawk mode to swift squawk mode
         BlackMisc::Aviation::CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
         {
@@ -255,7 +262,7 @@ namespace BlackSimPlugin
                 connect(m_traffic, &CXSwiftBusTrafficProxy::installedModelsUpdated, this, &CSimulatorXPlane::ps_installedModelsUpdated);
                 m_service->updateAirportsInRange();
                 m_traffic->updateInstalledModels();
-                m_watcher->setConnection(m_conn);
+                if (m_watcher) { m_watcher->setConnection(m_conn); }
                 loadCslPackages();
                 emitSimulatorCombinedStatus();
                 return true;
@@ -276,7 +283,7 @@ namespace BlackSimPlugin
             }
 
             m_conn = QDBusConnection { "default" };
-            m_watcher->setConnection(m_conn);
+            if (m_watcher) { m_watcher->setConnection(m_conn); }
             delete m_service;
             delete m_traffic;
             delete m_weather;
@@ -290,7 +297,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::ps_serviceUnregistered()
         {
             m_conn = QDBusConnection { "default" };
-            m_watcher->setConnection(m_conn);
+            if (m_watcher) { m_watcher->setConnection(m_conn); }
             delete m_service;
             delete m_traffic;
             delete m_weather;
@@ -746,7 +753,7 @@ namespace BlackSimPlugin
         {
             if (m_watcher)
             {
-                m_watcher->deleteLater();
+                delete m_watcher;
                 m_watcher = nullptr;
             }
         }
