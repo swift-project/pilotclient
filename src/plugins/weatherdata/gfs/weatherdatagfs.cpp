@@ -99,16 +99,19 @@ namespace BlackWxPlugin
             emit fetchingFinished();
         }
 
-        void CWeatherDataGfs::ps_parseGfsFile(QNetworkReply *reply)
+        void CWeatherDataGfs::ps_parseGfsFile(QNetworkReply *nwReplyPtr)
         {
-            m_gribData = reply->readAll();
+            // wrap pointer, make sure any exit cleans up reply
+            // required to use delete later as object is created in a different thread
+            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+
+            m_gribData = nwReply->readAll();
             Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
             m_parseGribFileWorker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
             {
                 parseGfsFileImpl(m_gribData);
             });
             m_parseGribFileWorker->then(this, &CWeatherDataGfs::ps_fetchingWeatherDataFinished);
-            reply->deleteLater();
         }
 
         QUrl CWeatherDataGfs::getDownloadUrl() const
@@ -211,7 +214,7 @@ namespace BlackWxPlugin
             g2int iseek = 0;
             for (;;)
             {
-                if(QThread::currentThread()->isInterruptionRequested()) { return; }
+                if (QThread::currentThread()->isInterruptionRequested()) { return; }
 
                 // Search next grib field
                 g2int lskip = 0;
@@ -260,7 +263,7 @@ namespace BlackWxPlugin
 
             for (const GfsGridPoint &gfsGridPoint : as_const(m_gfsWeatherGrid))
             {
-                if(QThread::currentThread()->isInterruptionRequested()) { return; }
+                if (QThread::currentThread()->isInterruptionRequested()) { return; }
 
                 CTemperatureLayerList temperatureLayers;
 

@@ -58,7 +58,7 @@ namespace BlackWxPlugin
             void ps_fetchingWeatherDataFinished();
 
             //! Parsing
-            void ps_parseGfsFile(QNetworkReply *reply);
+            void ps_parseGfsFile(QNetworkReply *nwReplyPtr);
 
         private:
             enum Grib2CloudLevel
