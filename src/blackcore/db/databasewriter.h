@@ -14,6 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/url.h"
+#include "blackmisc/network/urlloglist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -48,6 +49,12 @@ namespace BlackCore
             //! Shutting down?
             bool isShuttingDown() const { return m_shutdown; }
 
+            //! Name of the worker
+            const QString &getName();
+
+            //! Write log
+            const BlackMisc::Network::CUrlLogList &getWriteLog() const { return m_writeLog; }
+
         signals:
             //! Published models, the response to \sa asyncPublishModels
             void publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
@@ -60,6 +67,7 @@ namespace BlackCore
             void ps_postModelsResponse(QNetworkReply *nwReplyPtr);
 
         private:
+            BlackMisc::Network::CUrlLogList m_writeLog;
             BlackMisc::Network::CUrl m_modelPublishUrl;
             QNetworkReply *m_pendingReply = nullptr;
             qint64         m_replyPendingSince = -1;

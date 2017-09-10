@@ -87,7 +87,8 @@ namespace BlackCore
             if (compress) { url.setQuery(CDatabaseUtils::getCompressedQuery()); }
             QNetworkRequest request(url);
             CNetworkUtils::ignoreSslVerification(request);
-            m_pendingReply = sApp->postToNetwork(request, multiPart, { this, &CDatabaseWriter::ps_postModelsResponse});
+            int logId = m_writeLog.addPendingUrl(url);
+            m_pendingReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::ps_postModelsResponse});
             m_replyPendingSince = QDateTime::currentMSecsSinceEpoch();
             return msgs;
         }
@@ -96,6 +97,12 @@ namespace BlackCore
         {
             m_shutdown = true;
             this->killPendingReply();
+        }
+
+        const QString &CDatabaseWriter::getName()
+        {
+            static const QString n("Database writer");
+            return n;
         }
 
         void CDatabaseWriter::ps_postModelsResponse(QNetworkReply *nwReplyPtr)
