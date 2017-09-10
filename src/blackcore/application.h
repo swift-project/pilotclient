@@ -365,42 +365,56 @@ namespace BlackCore
         //! Wait for setup data by calling the event loop and waiting until everything is ready
         BlackMisc::CStatusMessageList waitForSetup();
 
+    public:
+        static constexpr int NoRedirects = -1;        //!< network request not allowing redirects
+        static constexpr int NoLogRequestId = -1;     //!< network request without logging
+        static constexpr int DefaultMaxRedirects = 2; //!< network request, default for max.redirects
+
         //! Request to get network reply
         //! \threadsafe
         QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = 2);
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = DefaultMaxRedirects);
+
+        //! Request to get network reply, supporting BlackMisc::Network::CUrlLog
+        //! \threadsafe
+        QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url, int logId,
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply
         //! \threadsafe
         QNetworkReply *getFromNetwork(const QNetworkRequest &request,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = 2);
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = DefaultMaxRedirects);
+
+        //! Request to get network reply, supporting BlackMisc::Network::CUrlLog
+        //! \threadsafe
+        QNetworkReply *getFromNetwork(const QNetworkRequest &request, int logId,
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Post to network
         //! \threadsafe
-        QNetworkReply *postToNetwork(const QNetworkRequest &request, const QByteArray &data,
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data,
                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
 
         //! Post to network
         //! \note This method takes ownership over \c multiPart.
         //! \threadsafe
-        QNetworkReply *postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart,
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart,
                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
         QNetworkReply *headerFromNetwork(const BlackMisc::Network::CUrl &url,
-                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = -1);
+                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = NoRedirects);
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
         QNetworkReply *headerFromNetwork(const QNetworkRequest &request,
-                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = -1);
+                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = NoRedirects);
 
-    public: // downloadFromNetwork no slot to avoid issue with CSlot, see T125
         //! Download file from network and store it as passed
         //! \threadsafe
         QNetworkReply *downloadFromNetwork(const BlackMisc::Network::CUrl &url, const QString &saveAsFileName,
-                                           const BlackMisc::CSlot<void(const BlackMisc::CStatusMessage &)> &callback, int maxRedirects = 2);
+                                           const BlackMisc::CSlot<void(const BlackMisc::CStatusMessage &)> &callback, int maxRedirects = DefaultMaxRedirects);
 
     signals:
         //! Setup available (cache, web load, ..) or failed to load setup
@@ -501,7 +515,9 @@ namespace BlackCore
         BlackMisc::CStatusMessageList asyncWebAndContextStart();
 
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
+        //! \return QNetworkReply reply will only be returned, if the QNetworkAccessManager is in the same thread
         QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
+                                       int logId,
                                        const BlackMisc::CSlot<void(QNetworkReply *)> &callback,
                                        int maxRedirects,
                                        std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod);

@@ -395,6 +395,12 @@ namespace BlackCore
         //! \threadsafe
         int getSharedInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
+        //! For all available DB readers the log info is generated
+        QString getDbReadersLog(const QString separator = "\n") const;
+
+        //! For all available readers the log info is generated
+        QString getReadersLog(const QString separator = "\n") const;
+
         //! Has already connect swift DB?
         bool hasConnectedSwiftDb() const;
 
@@ -513,7 +519,7 @@ namespace BlackCore
 
         //! Wait for info objects to be read
         //! \return true means info objects available
-        bool waitForInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *reader, const QDateTime &timeOut);
+        bool waitForInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *infoReader, QDateTime &timeOut);
 
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers

@@ -616,20 +616,38 @@ namespace BlackCore
 
     QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CSlot<void(QNetworkReply *)> &callback, int maxRedirects)
     {
-        return httpRequestImpl(url.toNetworkRequest(), callback, maxRedirects, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.get(request); });
+        return getFromNetwork(url.toNetworkRequest(), NoLogRequestId, callback, maxRedirects);
+    }
+
+    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, int logId, const CSlot<void(QNetworkReply *)> &callback, int maxRedirects)
+    {
+        return getFromNetwork(url.toNetworkRequest(), logId, callback, maxRedirects);
     }
 
     QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, const CSlot<void(QNetworkReply *)> &callback, int maxRedirects)
     {
-        return httpRequestImpl(request, callback, maxRedirects, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.get(request); });
+        return getFromNetwork(request, NoLogRequestId, callback, maxRedirects);
     }
 
-    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, const QByteArray &data, const CSlot<void(QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, int logId, const CSlot<void (QNetworkReply *)> &callback, int maxRedirects)
     {
-        return httpRequestImpl(request, callback, -1, [ data ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.post(request, data); });
+        return httpRequestImpl(request, logId, callback, maxRedirects, [](QNetworkAccessManager & qam, const QNetworkRequest & request)
+        {
+            QNetworkReply *nr = qam.get(request);
+            return nr;
+        });
     }
 
-    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data, const CSlot<void(QNetworkReply *)> &callback)
+    {
+        return httpRequestImpl(request, logId, callback, NoRedirects, [ data ](QNetworkAccessManager & qam, const QNetworkRequest & request)
+        {
+            QNetworkReply *nr = qam.post(request, data);
+            return nr;
+        });
+    }
+
+    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
     {
         if (!this->isNetworkAccessible()) { return nullptr; }
         if (QThread::currentThread() != this->m_accessManager->thread())
@@ -637,23 +655,22 @@ namespace BlackCore
             multiPart->moveToThread(this->m_accessManager->thread());
         }
 
-        return httpRequestImpl(request, callback, -1, [ this, multiPart ](QNetworkAccessManager & qam, const QNetworkRequest & request)
+        return httpRequestImpl(request, logId, callback, NoRedirects, [ this, multiPart ](QNetworkAccessManager & qam, const QNetworkRequest & request)
         {
-            QNetworkReply *reply = qam.post(request, multiPart);
-            Q_ASSERT(reply);
-            multiPart->setParent(reply);
-            return reply;
+            QNetworkReply *nr = qam.post(request, multiPart);
+            multiPart->setParent(nr);
+            return nr;
         });
     }
 
     QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const CSlot<void (QNetworkReply *)> &callback, int maxRedirects)
     {
-        return httpRequestImpl(url.toNetworkRequest(), callback, maxRedirects, [ ](QNetworkAccessManager & qam, const QNetworkRequest & request) { return qam.head(request); });
+        return headerFromNetwork(url.toNetworkRequest(), callback, maxRedirects);
     }
 
     QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const CSlot<void (QNetworkReply *)> &callback, int maxRedirects)
     {
-        return httpRequestImpl(request, callback, maxRedirects, [ ](QNetworkAccessManager & qam, const QNetworkRequest & request) { return qam.head(request); });
+        return httpRequestImpl(request, NoLogRequestId, callback, maxRedirects, [ ](QNetworkAccessManager & qam, const QNetworkRequest & request) { return qam.head(request); });
     }
 
     QNetworkReply *CApplication::downloadFromNetwork(const CUrl &url, const QString &saveAsFileName, const BlackMisc::CSlot<void (const CStatusMessage &)> &callback, int maxRedirects)
@@ -1310,7 +1327,7 @@ namespace BlackCore
 
         if (!QFileInfo::exists(handler))
         {
-            return CStatusMessage(this).warning("%1 not found. Cannot init crash handler!") << handler;
+            return CStatusMessage(this).warning("Crashpad handler '%1' not found. Cannot init handler!") << handler;
         }
 
         const CUrl serverUrl = this->getGlobalSetup().getCrashReportServerUrl();
@@ -1342,7 +1359,9 @@ namespace BlackCore
 #endif
     }
 
-    QNetworkReply *CApplication::httpRequestImpl(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback, int maxRedirects, std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod)
+    QNetworkReply *CApplication::httpRequestImpl(
+        const QNetworkRequest &request, int logId,
+        const BlackMisc::CSlot<void (QNetworkReply *)> &callback, int maxRedirects, std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod)
     {
         if (this->isShuttingDown()) { return nullptr; }
         if (!this->isNetworkAccessible()) { return nullptr; }
@@ -1351,7 +1370,7 @@ namespace BlackCore
         if (QThread::currentThread() != this->m_accessManager->thread())
         {
             // run in QAM thread
-            QTimer::singleShot(0, this->m_accessManager, std::bind(&CApplication::httpRequestImpl, this, request, callback, maxRedirects, requestOrPostMethod));
+            QTimer::singleShot(0, this->m_accessManager, std::bind(&CApplication::httpRequestImpl, this, request, logId, callback, maxRedirects, requestOrPostMethod));
             return nullptr; // not yet started
         }
 
@@ -1360,11 +1379,12 @@ namespace BlackCore
         CNetworkUtils::ignoreSslVerification(copiedRequest);
         CNetworkUtils::setSwiftUserAgent(copiedRequest);
 
-        // If URL is one of the shared urls, add swift client SSL certificate
+        // If URL is one of the shared URLs, add swift client SSL certificate
         CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, getGlobalSetup().getSwiftSharedUrls());
 
         QNetworkReply *reply = requestOrPostMethod(*this->m_accessManager, copiedRequest);
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
+        reply->setProperty(CUrlLog::propertyNameId(), QVariant(logId));
         if (callback)
         {
             Q_ASSERT_X(callback.object(), Q_FUNC_INFO, "Need callback object (to determine thread)");
@@ -1381,7 +1401,7 @@ namespace BlackCore
                     {
                         QNetworkRequest redirectRequest(redirectUrl);
                         const int redirectsLeft = maxRedirects - 1;
-                        QTimer::singleShot(0, this, std::bind(&CApplication::httpRequestImpl, this, redirectRequest, callback, redirectsLeft, requestOrPostMethod));
+                        QTimer::singleShot(0, this, std::bind(&CApplication::httpRequestImpl, this, redirectRequest, logId, callback, redirectsLeft, requestOrPostMethod));
                         return;
                     }
                 }

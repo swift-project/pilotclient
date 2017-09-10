@@ -10,6 +10,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/webdataservices.h"
 #include "blackgui/components/applicationclosedialog.h"
 #include "blackgui/components/downloadandinstalldialog.h"
 #include "blackgui/components/aboutdialog.h"
@@ -56,6 +57,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackGui::Components;
+using namespace BlackCore;
 using namespace BlackCore::Data;
 
 BlackGui::CGuiApplication *sGui = nullptr; // set by constructor
@@ -456,6 +458,16 @@ namespace BlackGui
             this->displayTextInConsole(d.toJsonString());
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        if (this->hasWebDataServices())
+        {
+            a = menu.addAction("Services log");
+            c = connect(a, &QAction::triggered, this, [a, this]()
+            {
+                this->displayTextInConsole(this->getWebDataServices()->getReadersLog());
+            });
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        }
 
         a = menu.addAction("Metadata (slow)");
         c = connect(a, &QAction::triggered, this, [a, this]()

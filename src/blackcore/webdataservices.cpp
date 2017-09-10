@@ -412,6 +412,30 @@ namespace BlackCore
         return this->getInfoObjectCount(entity, m_sharedInfoDataReader);
     }
 
+    QString CWebDataServices::getDbReadersLog(const QString separator) const
+    {
+        QStringList report;
+        if (m_dbInfoDataReader)     { report << m_dbInfoDataReader->getName() + ": " + m_dbInfoDataReader->getReadLog().getSummary(); }
+        if (m_sharedInfoDataReader) { report << m_sharedInfoDataReader->getName() + ": " + m_sharedInfoDataReader->getReadLog().getSummary(); }
+
+        if (m_airportDataReader) { report << m_airportDataReader->getName() + ": " + m_airportDataReader->getReadLog().getSummary(); }
+        if (m_icaoDataReader)    { report << m_icaoDataReader->getName() + ": " + m_icaoDataReader->getReadLog().getSummary(); }
+        if (m_modelDataReader)   { report << m_modelDataReader->getName() + ": " + m_modelDataReader->getReadLog().getSummary(); }
+        if (m_databaseWriter)    { report << m_databaseWriter->getName() + ": " + m_databaseWriter->getWriteLog().getSummary(); }
+        return report.join(separator);
+    }
+
+    QString CWebDataServices::getReadersLog(const QString separator) const
+    {
+        const QString db = this->getDbReadersLog(separator);
+        QStringList report;
+        if (m_vatsimBookingReader) { report << m_vatsimBookingReader->getName() + ": " + m_vatsimBookingReader->getReadLog().getSummary(); }
+        if (m_vatsimMetarReader)   { report << m_vatsimMetarReader->getName() + ": " + m_vatsimMetarReader->getReadLog().getSummary(); }
+        if (m_vatsimStatusReader)  { report << m_vatsimStatusReader->getName() + ": " + m_vatsimStatusReader->getReadLog().getSummary(); }
+        if (report.isEmpty()) { return db; }
+        return report.join(separator) + separator + db;
+    }
+
     CDistributorList CWebDataServices::getDistributors() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getDistributors(); }
@@ -1165,7 +1189,7 @@ namespace BlackCore
                 if (!this->waitForDbInfoObjectsThenRead(entities)) { return; }
             }
 
-            const bool waitForSharedInfoFile = m_dbReaderConfig.needsSharedInfoFile(entities);
+            const bool waitForSharedInfoFile = m_dbReaderConfig.needsSharedInfoFile(entities) && !m_sharedInfoDataReader->areAllInfoObjectsRead();
             if (waitForSharedInfoFile)
             {
                 // do not read yet, will call this function again after some time
@@ -1181,67 +1205,68 @@ namespace BlackCore
     bool CWebDataServices::waitForDbInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
         Q_ASSERT_X(m_dbInfoDataReader, Q_FUNC_INFO, "need reader");
+        if (m_dbInfoDataReader->areAllInfoObjectsRead()) { return true; }
         if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
         const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTimeout);
-        if (read) { m_dbInfoObjectTimeout = QDateTime(); } // reset to null
         return read;
     }
 
     bool CWebDataServices::waitForSharedInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
         Q_ASSERT_X(m_sharedInfoDataReader, Q_FUNC_INFO, "need reader");
+        if (m_sharedInfoDataReader->areAllInfoObjectsRead()) { return true; }
         if (!m_sharedInfoObjectsTimeout.isValid()) { m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
         const bool read = this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTimeout);
-        if (read) { m_sharedInfoObjectsTimeout = QDateTime(); } // reset to null
         return read;
     }
 
-    bool CWebDataServices::waitForInfoObjectsThenRead(CEntityFlags::Entity entities, const QString &info, CInfoDataReader *reader, const QDateTime &timeOut)
+    bool CWebDataServices::waitForInfoObjectsThenRead(CEntityFlags::Entity entities, const QString &info, CInfoDataReader *infoReader, QDateTime &timeOut)
     {
-        Q_ASSERT_X(reader, Q_FUNC_INFO, "Need info data reader");
+        Q_ASSERT_X(infoReader, Q_FUNC_INFO, "Need info data reader");
 
         // this will called for each entity readers, i.e. model reader, ICAO reader ...
         const int waitForInfoObjectsMs = 1000; // ms
 
+        if (infoReader->areAllInfoObjectsRead())
+        {
+            // we have all data and carry on
+            CLogMessage(this).info("Info objects (%1) triggered for '%2' loaded from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+            timeOut = QDateTime(); // reset to null
+            return true; // no need to wait any longer
+        }
+
         // try to read if not timed out
-        if (QDateTime::currentDateTimeUtc() > timeOut)
+        if (timeOut.isValid() && QDateTime::currentDateTimeUtc() > timeOut)
         {
             const QString timeOutString = timeOut.toString();
             CLogMessage(this).warning("Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader '%5' as failed and continue.")
                     << info << CEntityFlags::flagToString(entities)
-                    << reader->getInfoObjectsUrl().toQString() << timeOutString
-                    << reader->getName();
+                    << infoReader->getInfoObjectsUrl().toQString() << timeOutString
+                    << infoReader->getName();
 
             // continue here and read data without info objects
-            reader->setMarkedAsFailed(true);
+            infoReader->setMarkedAsFailed(true);
+            // no timeout reset here
             return true; // carry on, regardless of situation
         }
-        else if (reader->hasReceivedFirstReply())
+
+        if (infoReader->hasReceivedFirstReply())
         {
-            if (reader->areAllInfoObjectsRead())
+            // we have received a response, but not all data yet
+            if (infoReader->hasReceivedOkReply())
             {
-                // we have all data and carry on
-                CLogMessage(this).info("Info objects (%1) for '%2' loaded from '%3'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString();
-                return true; // no need to wait any longer
+                // ok, this means we are parsing
+                this->readDeferredInBackground(entities, waitForInfoObjectsMs);
+                CLogMessage(this).info("Waiting for objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+                return false; // wait
             }
             else
             {
-                // we have received a response, but not all data yet
-                if (reader->hasReceivedOkReply())
-                {
-                    // ok, this means we are parsing
-                    this->readDeferredInBackground(entities, waitForInfoObjectsMs);
-                    CLogMessage(this).info("Waiting for objects (%1) for '%2' from '%3'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString();
-                    return false; // wait
-                }
-                else
-                {
-                    // we have a response, but a failure, means server is alive, but responded with error
-                    // such an error (access, ...) normally will not go away
-                    CLogMessage(this).error("Info objects (%1) loading for '%2' failed from '%3', '%4'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString() << reader->getStatusMessage();
-                    reader->setMarkedAsFailed(true);
-                    return true; // carry on, regardless of situation
-                }
+                // we have a response, but a failure, means server is alive, but responded with error
+                // such an error (access, ...) normally will not go away
+                CLogMessage(this).error("Info objects (%1) loading for '%2' failed from '%3', '%4'") << info << CEntityFlags::flagToString(entities) << infoReader->getInfoObjectsUrl().toQString() << infoReader->getStatusMessage();
+                infoReader->setMarkedAsFailed(true);
+                return true; // carry on, regardless of situation
             }
         }
         else
