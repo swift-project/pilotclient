@@ -32,6 +32,8 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/network/urllist.h"
+#include "blackmisc/network/urllog.h"
+#include "blackmisc/network/urlloglist.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"

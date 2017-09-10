@@ -32,6 +32,8 @@ namespace BlackMisc
             CUrl::registerMetadata();
             CUrlList::registerMetadata();
             CFailoverUrlList::registerMetadata();
+            CUrlLog::registerMetadata();
+            CUrlLogList::registerMetadata();
             CUser::registerMetadata();
             CUserList::registerMetadata();
             CVoiceCapabilities::registerMetadata();
