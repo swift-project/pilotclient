@@ -69,7 +69,7 @@ namespace BlackCore
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
             const QUrl url(sApp->getGlobalSetup().getVatsimBookingsUrl());
             if (url.isEmpty()) { return; }
-            sApp->getFromNetwork(url, { this, &CVatsimBookingReader::ps_parseBookings});
+            this->getFromNetworkAndLog(url, { this, &CVatsimBookingReader::ps_parseBookings});
         }
 
         void CVatsimBookingReader::ps_parseBookings(QNetworkReply *nwReplyPtr)
@@ -77,7 +77,6 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-
             this->threadAssertCheck();
 
             // Worker thread, make sure to write no members here od do it threadsafe
@@ -87,6 +86,7 @@ namespace BlackCore
                 return; // stop, terminate straight away, ending thread
             }
 
+            this->logNetworkReplyReceived(nwReplyPtr);
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 static const QString timestampFormat("yyyy-MM-dd HH:mm:ss");

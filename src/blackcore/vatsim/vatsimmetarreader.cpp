@@ -82,7 +82,7 @@ namespace BlackCore
             const CUrl url(urls.obtainNextWorkingUrl(true));
             if (url.isEmpty()) { return; }
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
-            sApp->getFromNetwork(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars});
+            this->getFromNetworkAndLog(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars});
         }
 
         void CVatsimMetarReader::decodeMetars(QNetworkReply *nwReplyPtr)
@@ -99,6 +99,7 @@ namespace BlackCore
                 return; // stop, terminate straight away, ending thread
             }
 
+            this->logNetworkReplyReceived(nwReplyPtr);
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 QString metarData = nwReply->readAll();
@@ -135,7 +136,7 @@ namespace BlackCore
             else
             {
                 // network error
-                CLogMessage(this).warning("Reading METARs failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
+                CLogMessage(this).warning("Reading METARs failed '%1' for '%2'") << nwReply->errorString() << nwReply->url().toString();
                 nwReply->abort();
                 emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0);
             }

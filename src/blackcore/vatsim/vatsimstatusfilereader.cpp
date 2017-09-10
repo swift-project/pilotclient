@@ -72,7 +72,7 @@ namespace BlackCore
             CFailoverUrlList urls(sApp->getGlobalSetup().getVatsimStatusFileUrls());
             const CUrl url(urls.obtainNextWorkingUrl(true)); // random working URL
             if (url.isEmpty()) { return; }
-            sApp->getFromNetwork(url, { this, &CVatsimStatusFileReader::ps_parseVatsimFile});
+            this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::ps_parseVatsimFile});
         }
 
         void CVatsimStatusFileReader::ps_parseVatsimFile(QNetworkReply *nwReplyPtr)
@@ -90,6 +90,7 @@ namespace BlackCore
                 return; // stop, terminate straight away, ending thread
             }
 
+            this->logNetworkReplyReceived(nwReplyPtr);
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 const QString dataFileData = nwReply->readAll();

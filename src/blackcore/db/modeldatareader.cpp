@@ -174,7 +174,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseLiveryData});
+                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::ps_parseLiveryData});
                     triggeredRead |= CEntityFlags::LiveryEntity;
                 }
                 else
@@ -189,7 +189,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseDistributorData});
+                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::ps_parseDistributorData});
                     triggeredRead |= CEntityFlags::DistributorEntity;
                 }
                 else
@@ -204,7 +204,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    sApp->getFromNetwork(url, { this, &CModelDataReader::ps_parseModelData});
+                    this->getFromNetworkAndLog(url, { this, &CModelDataReader::ps_parseModelData});
                     triggeredRead |= CEntityFlags::ModelEntity;
                 }
                 else

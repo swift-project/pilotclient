@@ -592,6 +592,7 @@ namespace BlackCore
             Q_ASSERT_X(nwReply, Q_FUNC_INFO, "Missing network reply");
             if (nwReply && nwReply->isFinished())
             {
+                this->logNetworkReplyReceived(nwReply);
                 this->setReplyStatus(nwReply->error(), nwReply->errorString());
             }
         }

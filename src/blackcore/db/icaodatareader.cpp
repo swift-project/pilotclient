@@ -147,7 +147,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseAircraftIcaoData });
+                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::ps_parseAircraftIcaoData });
                     entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
                 }
                 else
@@ -162,7 +162,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseAirlineIcaoData });
+                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::ps_parseAirlineIcaoData });
                     entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
                 }
                 else
@@ -177,7 +177,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    sApp->getFromNetwork(url, { this, &CIcaoDataReader::ps_parseCountryData });
+                    this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::ps_parseCountryData });
                     entitiesTriggered |= CEntityFlags::CountryEntity;
                 }
                 else

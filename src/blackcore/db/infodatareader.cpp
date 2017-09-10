@@ -116,7 +116,7 @@ namespace BlackCore
             const CUrl url(this->getInfoObjectsUrl());
             if (!url.isEmpty())
             {
-                sApp->getFromNetwork(url, { this, &CInfoDataReader::parseInfoObjectsData});
+                this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData});
                 emit dataRead(this->getEntityForMode(), CEntityFlags::StartRead, 0);
             }
             else

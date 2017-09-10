@@ -236,7 +236,7 @@ namespace BlackCore
                 if (!url.isEmpty())
                 {
                     url.appendQuery(queryLatestTimestamp(newerThan));
-                    sApp->getFromNetwork(url, { this, &CAirportDataReader::ps_parseAirportData });
+                    this->getFromNetworkAndLog(url, { this, &CAirportDataReader::ps_parseAirportData });
                     emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::StartRead, 0);
                 }
                 else

@@ -192,7 +192,7 @@ namespace BlackCore
             CFailoverUrlList urls(sApp->getVatsimDataFileUrls());
             const QUrl url(urls.obtainNextWorkingUrl(true));
             if (url.isEmpty()) { return; }
-            sApp->getFromNetwork(url, { this, &CVatsimDataFileReader::ps_parseVatsimFile});
+            this->getFromNetworkAndLog(url, { this, &CVatsimDataFileReader::ps_parseVatsimFile});
         }
 
         void CVatsimDataFileReader::ps_parseVatsimFile(QNetworkReply *nwReplyPtr)
@@ -200,15 +200,16 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            this->threadAssertCheck();
 
             // Worker thread, make sure to write only synced here!
-            this->threadAssertCheck();
             if (!this->doWorkCheck())
             {
                 CLogMessage(this).info("Terminated VATSIM file parsing process");
                 return; // stop, terminate straight away, ending thread
             }
 
+            this->logNetworkReplyReceived(nwReplyPtr);
             QStringList illegalIcaoCodes;
             if (nwReply->error() == QNetworkReply::NoError)
             {

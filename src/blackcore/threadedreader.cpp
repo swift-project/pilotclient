@@ -115,6 +115,12 @@ namespace BlackCore
         this->m_markedAsFailed = failed;
     }
 
+    CUrlLogList CThreadedReader::getReadLog() const
+    {
+        QReadLocker rl(&this->m_lock);
+        return m_urlReadLog;
+    }
+
     void CThreadedReader::threadAssertCheck() const
     {
         Q_ASSERT_X(QCoreApplication::instance()->thread() != QThread::currentThread(), Q_FUNC_INFO, "Needs to run in own thread");
@@ -146,10 +152,25 @@ namespace BlackCore
 
     bool CThreadedReader::doWorkCheck() const
     {
-        if (!m_unitTest && (!sApp || !sApp->hasWebDataServices())) { return false; }
-        if (!isEnabled()) { return false; }
+        // sApp->hasWebDataServices() cannot be used, as some readers are already used during init phase
+        if (!m_unitTest && (!sApp || sApp->isShuttingDown())) { return false; }
+        if (!isEnabled())  { return false; }
         if (isAbandoned()) { return false; }
         return true;
+    }
+
+    QNetworkReply *CThreadedReader::getFromNetworkAndLog(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    {
+        // returned QNetworkReply normally nullptr since QAM is in different thread
+        const int id = m_urlReadLog.addPendingUrl(url);
+        return sApp->getFromNetwork(url, id, callback);
+    }
+
+    void CThreadedReader::logNetworkReplyReceived(QNetworkReply *reply)
+    {
+        if (!reply) { return; }
+        QWriteLocker wl(&m_lock);
+        m_urlReadLog.markAsReceived(reply, reply->error() == QNetworkReply::NoError);
     }
 
     void CThreadedReader::logInconsistentData(const CStatusMessage &msg, const char *funcInfo)

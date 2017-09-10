@@ -14,6 +14,7 @@
 
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/blackcoreexport.h"
+#include "blackmisc/network/urlloglist.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/worker.h"
 
@@ -58,11 +59,17 @@ namespace BlackCore
 
         //! Is marked as read failed
         //! \threadsafe
+        //! \deprecated likely to be removed
         bool isMarkedAsFailed() const;
 
         //! Set marker for read failed
         //! \threadsafe
+        //! \deprecated likely to be removed
         void setMarkedAsFailed(bool failed);
+
+        //! Get the read log
+        //! \threadsafe
+        BlackMisc::Network::CUrlLogList getReadLog() const;
 
         //! Starts the reader
         //! \threadsafe
@@ -101,6 +108,13 @@ namespace BlackCore
         //! Still enabled etc.?
         bool doWorkCheck() const;
 
+        //! Get request from network, and log with m_urlReadLog
+        QNetworkReply *getFromNetworkAndLog(const BlackMisc::Network::CUrl &url, const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Network reply received, mark in m_urlReadLog
+        //! \threadsafe
+        void logNetworkReplyReceived(QNetworkReply *reply);
+
         //! Use this to log inconsistent data
         //! \remark here in a single place severity / format can be adjusted
         static void logInconsistentData(const BlackMisc::CStatusMessage &msg, const char *funcInfo = nullptr);
@@ -115,6 +129,7 @@ namespace BlackCore
         uint              m_contentHash = 0;          //!< has of the content given
         std::atomic<bool> m_markedAsFailed { false }; //!< marker if reading failed
         bool              m_unitTest { false };       //!< mark as unit test
+        BlackMisc::Network::CUrlLogList m_urlReadLog; //!< URL based reading can be logged
     };
 } // namespace
 
