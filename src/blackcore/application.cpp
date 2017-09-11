@@ -115,17 +115,17 @@ namespace BlackCore
         if (!sApp)
         {
             if (withMetadata) { CApplication::registerMetadata(); }
-            QCoreApplication::setApplicationName(this->m_applicationName);
+            QCoreApplication::setApplicationName(m_applicationName);
             QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
-            this->setObjectName(this->m_applicationName);
+            this->setObjectName(m_applicationName);
             const QString executable = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
             if (executable.startsWith("test"))
             {
-                this->m_unitTest = true;
+                m_unitTest = true;
                 const QString tempPath(this->getTemporaryDirectory());
                 BlackMisc::setMockCacheRootDirectory(tempPath);
             }
-            this->m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getSwiftApplication());
+            m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getSwiftApplication());
             this->initParser();
             this->initLogging();
 
@@ -141,20 +141,20 @@ namespace BlackCore
             // Init network
             Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
             m_internetAccessTimer.setObjectName("Application::m_internetAccessTimer");
-            this->m_cookieManager.setParent(this->m_accessManager);
-            this->m_accessManager->setCookieJar(&this->m_cookieManager);
-            connect(this->m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::networkAccessibleChanged, Qt::QueuedConnection);
-            connect(&this->m_internetAccessTimer, &QTimer::timeout, this, [this] { this->checkInternetAccessible(true); });
-            CLogMessage::preformatted(CNetworkUtils::createNetworkReport(this->m_accessManager));
+            m_cookieManager.setParent(m_accessManager);
+            m_accessManager->setCookieJar(&m_cookieManager);
+            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::networkAccessibleChanged, Qt::QueuedConnection);
+            connect(&m_internetAccessTimer, &QTimer::timeout, this, [this] { this->checkInternetAccessible(true); });
+            CLogMessage::preformatted(CNetworkUtils::createNetworkReport(m_accessManager));
             this->checkInternetAccessible();
 
             // global setup
             sApp = this;
-            this->m_setupReader.reset(new CSetupReader(this));
-            connect(this->m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingIsCompleted);
-            connect(this->m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable);
+            m_setupReader.reset(new CSetupReader(this));
+            connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingIsCompleted);
+            connect(m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable);
 
-            this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions()); // add options from reader
+            m_parser.addOptions(m_setupReader->getCmdLineOptions()); // add options from reader
 
             // startup done
             connect(this, &CApplication::startUpCompleted, this, &CApplication::startupCompleted);
@@ -241,13 +241,13 @@ namespace BlackCore
 
     void CApplication::setSingleApplication(bool singleApplication)
     {
-        this->m_singleApplication = singleApplication;
+        m_singleApplication = singleApplication;
     }
 
     CApplicationInfo::Application CApplication::getSwiftApplication() const
     {
         if (this->isUnitTest()) { return CApplicationInfo::UnitTest; }
-        if (this->m_application != CApplicationInfo::Unknown) { return this->m_application; }
+        if (m_application != CApplicationInfo::Unknown) { return m_application; }
 
         // if not set, guess
         BLACK_VERIFY_X(false, Q_FUNC_INFO, "Missing application");
@@ -291,31 +291,31 @@ namespace BlackCore
 
     bool CApplication::isUnitTest() const
     {
-        return this->m_unitTest;
+        return m_unitTest;
     }
 
     CGlobalSetup CApplication::getGlobalSetup() const
     {
-        if (this->m_shutdown) { return CGlobalSetup(); }
-        const CSetupReader *r = this->m_setupReader.data();
+        if (m_shutdown) { return CGlobalSetup(); }
+        const CSetupReader *r = m_setupReader.data();
         if (!r) { return CGlobalSetup(); }
         return r->getSetup();
     }
 
     CDistributionList CApplication::getDistributionInfo() const
     {
-        if (this->m_shutdown) { return CDistributionList(); }
-        const CSetupReader *r = this->m_setupReader.data();
+        if (m_shutdown) { return CDistributionList(); }
+        const CSetupReader *r = m_setupReader.data();
         if (!r) { return CDistributionList(); }
         return r->getDistributionInfo();
     }
 
     bool CApplication::start()
     {
-        this->m_started = false; // reset
+        m_started = false; // reset
 
         // parse if needed, parsing contains its own error handling
-        if (!this->m_parsed)
+        if (!m_parsed)
         {
             const bool s = this->parseAndStartupCheck();
             if (!s) { return false; }
@@ -326,7 +326,7 @@ namespace BlackCore
         do
         {
             // clear cache?
-            if (this->isSet(this->m_cmdClearCache))
+            if (this->isSet(m_cmdClearCache))
             {
                 const QStringList files(CApplication::clearCaches());
                 msgs.push_back(
@@ -335,7 +335,7 @@ namespace BlackCore
             }
 
             // crashpad dump
-            if (this->isSet(this->m_cmdTestCrashpad))
+            if (this->isSet(m_cmdTestCrashpad))
             {
                 QTimer::singleShot(10 * 1000, [ = ]
                 {
@@ -348,7 +348,7 @@ namespace BlackCore
             }
 
             // load setup
-            if (this->m_startSetupReader && !this->m_setupReader->isSetupAvailable())
+            if (m_startSetupReader && !m_setupReader->isSetupAvailable())
             {
                 msgs = this->requestReloadOfSetupAndVersion();
                 if (msgs.isFailure()) { break; }
@@ -360,7 +360,7 @@ namespace BlackCore
             if (msgs.isFailure()) { break; }
 
             // trigger loading and saving of settings in appropriate scenarios
-            if (this->m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
+            if (m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
             {
                 // facade running here locally
                 msgs.push_back(CSettingsCache::instance()->loadFromStore());
@@ -387,45 +387,45 @@ namespace BlackCore
             CLogMessage::preformatted(msgs);
         }
 
-        this->m_started = this->m_startSetupReader; // only if requested it will be started
-        return this->m_started;
+        m_started = m_startSetupReader; // only if requested it will be started
+        return m_started;
     }
 
     CStatusMessageList CApplication::waitForSetup()
     {
-        if (!this->m_setupReader) { return CStatusMessage(this).error("No setup reader"); }
+        if (!m_setupReader) { return CStatusMessage(this).error("No setup reader"); }
         CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, CNetworkUtils::getLongTimeoutMs(), [this]
         {
-            return this->m_setupReader->isSetupAvailable();
+            return m_setupReader->isSetupAvailable();
         });
 
         // setup handling completed with success or failure, or we run into time out
-        if (this->m_setupReader->isSetupAvailable()) { return CStatusMessage(this).info("Setup available"); }
+        if (m_setupReader->isSetupAvailable()) { return CStatusMessage(this).info("Setup available"); }
         CStatusMessageList msgs(CStatusMessage(this).error("Setup not available, setup reading failed or timed out."));
-        if (this->m_setupReader->getLastSetupReadErrorMessages().hasErrorMessages())
+        if (m_setupReader->getLastSetupReadErrorMessages().hasErrorMessages())
         {
-            msgs.push_back(this->m_setupReader->getLastSetupReadErrorMessages());
+            msgs.push_back(m_setupReader->getLastSetupReadErrorMessages());
         }
-        if (this->m_setupReader->hasCmdLineBootstrapUrl())
+        if (m_setupReader->hasCmdLineBootstrapUrl())
         {
-            msgs.push_back(CStatusMessage(this).info("Check cmd line argument '%1'") << this->m_setupReader->getCmdLineBootstrapUrl());
+            msgs.push_back(CStatusMessage(this).info("Check cmd line argument '%1'") << m_setupReader->getCmdLineBootstrapUrl());
         }
         return msgs;
     }
 
     bool CApplication::isSetupAvailable() const
     {
-        if (this->m_shutdown || !this->m_setupReader) { return false; }
-        return this->m_setupReader->isSetupAvailable();
+        if (m_shutdown || !m_setupReader) { return false; }
+        return m_setupReader->isSetupAvailable();
     }
 
     CStatusMessageList CApplication::requestReloadOfSetupAndVersion()
     {
-        if (!this->m_shutdown)
+        if (!m_shutdown)
         {
-            Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "Missing reader");
-            Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Not yet parsed");
-            return this->m_setupReader->asyncLoad();
+            Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "Missing reader");
+            Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
+            return m_setupReader->asyncLoad();
         }
         else
         {
@@ -436,15 +436,15 @@ namespace BlackCore
     bool CApplication::hasWebDataServices() const
     {
         if (this->isShuttingDown()) { return false; } // service will not survive for long
-        return this->m_webDataServices;
+        return m_webDataServices;
     }
 
     CWebDataServices *CApplication::getWebDataServices() const
     {
         // use hasWebDataServices() to test if services are available
 
-        Q_ASSERT_X(this->m_webDataServices, Q_FUNC_INFO, "Missing web data services, use hasWebDataServices to test if existing");
-        return this->m_webDataServices.data();
+        Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Missing web data services, use hasWebDataServices to test if existing");
+        return m_webDataServices.data();
     }
 
     bool CApplication::isApplicationThread() const
@@ -487,8 +487,8 @@ namespace BlackCore
     bool CApplication::initIsRunningInDeveloperEnvironment() const
     {
         if (!CBuildConfig::canRunInDeveloperEnvironment()) { return false; }
-        if (this->m_unitTest) { return true; }
-        if (this->isSet(this->m_cmdDevelopment)) { return true; }
+        if (m_unitTest) { return true; }
+        if (this->isSet(m_cmdDevelopment)) { return true; }
         if (this->isSetupAvailable())
         {
             // assume value from setup
@@ -497,43 +497,9 @@ namespace BlackCore
         return false;
     }
 
-    void CApplication::checkInternetAccessible(bool logWarning)
-    {
-        if (this->isShuttingDown()) { return; }
-
-        bool access = false;
-        if (this->isNetworkAccessible())
-        {
-            QString message1;
-            static const QString testHost1("www.google.com"); // what else?
-            access = CNetworkUtils::canConnect(testHost1, 443, message1);
-            if (!access)
-            {
-                QString message2;
-                static const QString testHost2("www.microsoft.com"); // secondary test
-                access = CNetworkUtils::canConnect(testHost2, 80, message2);
-                if (!access && logWarning) { CLogMessage(this).warning("Internet access problems: %1 based on testing '%2'") << message1 << testHost1; }
-            }
-        }
-        else
-        {
-            if (logWarning) { CLogMessage(this).warning("No network access"); }
-        }
-
-        if (m_internetAccessible != access)
-        {
-            m_internetAccessible = access;
-            emit this->internetAccessibleChanged(access);
-        }
-
-        constexpr int checkAgainSuccess = 60 * 1000;
-        constexpr int checkAgainFailure = 30 * 1000;
-        m_internetAccessTimer.start(access ? checkAgainSuccess : checkAgainFailure);
-    }
-
     void CApplication::setSignalStartupAutomatically(bool enabled)
     {
-        this->m_signalStartup = enabled;
+        m_signalStartup = enabled;
     }
 
     QString CApplication::getEnvironmentInfoString(const QString &separator) const
@@ -567,7 +533,7 @@ namespace BlackCore
 
     void CApplication::setSettingsAutoSave(bool autoSave)
     {
-        this->m_autoSaveSettings = autoSave;
+        m_autoSaveSettings = autoSave;
     }
 
     QStringList CApplication::getAllUnsavedSettings() const
@@ -650,9 +616,9 @@ namespace BlackCore
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
     {
         if (!this->isNetworkAccessible()) { return nullptr; }
-        if (QThread::currentThread() != this->m_accessManager->thread())
+        if (QThread::currentThread() != m_accessManager->thread())
         {
-            multiPart->moveToThread(this->m_accessManager->thread());
+            multiPart->moveToThread(m_accessManager->thread());
         }
 
         return httpRequestImpl(request, logId, callback, NoRedirects, [ this, multiPart ](QNetworkAccessManager & qam, const QNetworkRequest & request)
@@ -706,13 +672,13 @@ namespace BlackCore
 
     void CApplication::deleteAllCookies()
     {
-        this->m_cookieManager.deleteAllCookies();
+        m_cookieManager.deleteAllCookies();
     }
 
     bool CApplication::isNetworkAccessible() const
     {
-        if (!this->m_accessManager) { return false; }
-        const QNetworkAccessManager::NetworkAccessibility a = this->m_accessManager->networkAccessible();
+        if (!m_accessManager) { return false; }
+        const QNetworkAccessManager::NetworkAccessibility a = m_accessManager->networkAccessible();
         if (a == QNetworkAccessManager::Accessible) { return true; }
 
         // currently I also accept unknown because of that issue with Network Manager
@@ -769,13 +735,13 @@ namespace BlackCore
 
     CStatusMessageList CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
     {
-        Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");
+        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        this->m_useContexts = true;
-        this->m_coreFacadeConfig = coreConfig;
+        m_useContexts = true;
+        m_coreFacadeConfig = coreConfig;
 
         // if not yet initialized, init web data services
-        if (!this->m_useWebData)
+        if (!m_useWebData)
         {
             const CStatusMessageList msgs = this->useWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
             if (msgs.hasErrorMessages()) { return msgs; }
@@ -785,52 +751,52 @@ namespace BlackCore
 
     CStatusMessageList CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
     {
-        Q_ASSERT_X(this->m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
+        Q_ASSERT_X(m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
         BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
         if (!QSslSocket::supportsSsl())
         {
             return CStatusMessage(this).error("No SSL supported, can`t be used");
         }
 
-        this->m_webReadersUsed = webReaders;
-        this->m_dbReaderConfig = dbReaderConfig;
-        this->m_useWebData = true;
+        m_webReadersUsed = webReaders;
+        m_dbReaderConfig = dbReaderConfig;
+        m_useWebData = true;
         return this->startWebDataServices();
     }
 
     CStatusMessageList CApplication::startCoreFacadeAndWebDataServices()
     {
-        Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");
+        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        if (!this->m_useContexts) { return CStatusMessage(this).error("No need to start core facade"); } // we do not use context, so no need to startup
-        if (!this->m_setupReader || !this->m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error("No setup reader or setup available"); }
+        if (!m_useContexts) { return CStatusMessage(this).error("No need to start core facade"); } // we do not use context, so no need to startup
+        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error("No setup reader or setup available"); }
 
-        Q_ASSERT_X(this->m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
-        Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
-        Q_ASSERT_X(this->m_useWebData, Q_FUNC_INFO, "Need web data services");
+        Q_ASSERT_X(m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
+        Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
+        Q_ASSERT_X(m_useWebData, Q_FUNC_INFO, "Need web data services");
 
         this->startWebDataServices();
 
         const CStatusMessageList msgs(CStatusMessage(this).info("Will start core facade now"));
-        this->m_coreFacade.reset(new CCoreFacade(this->m_coreFacadeConfig));
+        m_coreFacade.reset(new CCoreFacade(m_coreFacadeConfig));
         emit this->coreFacadeStarted();
         return msgs;
     }
 
     CStatusMessageList CApplication::startWebDataServices()
     {
-        Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");
+        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        if (!this->m_useWebData) { return CStatusMessage(this).warning("No need to start web data services"); }
-        if (!this->m_setupReader || !this->m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error("No setup reader or setup available"); }
+        if (!m_useWebData) { return CStatusMessage(this).warning("No need to start web data services"); }
+        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error("No setup reader or setup available"); }
 
-        Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No web data services without setup possible");
+        Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No web data services without setup possible");
         CStatusMessageList msgs;
-        if (!this->m_webDataServices)
+        if (!m_webDataServices)
         {
             msgs.push_back(CStatusMessage(this).info("Will start web data services now"));
-            this->m_webDataServices.reset(
-                new CWebDataServices(this->m_webReadersUsed, this->m_dbReaderConfig, {}, this)
+            m_webDataServices.reset(
+                new CWebDataServices(m_webReadersUsed, m_dbReaderConfig, {}, this)
             );
             emit webDataServicesStarted(true);
         }
@@ -847,42 +813,42 @@ namespace BlackCore
         CLogHandler::instance()->install(); // make sure we have a log handler!
 
         // File logger
-        this->m_fileLogger.reset(new CFileLogger(executable(), CDirectoryUtils::logDirectory()));
-        this->m_fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
+        m_fileLogger.reset(new CFileLogger(executable(), CDirectoryUtils::logDirectory()));
+        m_fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
     }
 
     void CApplication::initParser()
     {
-        this->m_parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-        this->m_parser.setApplicationDescription(m_applicationName);
-        this->m_cmdHelp = this->m_parser.addHelpOption();
-        this->m_cmdVersion = this->m_parser.addVersionOption();
+        m_parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+        m_parser.setApplicationDescription(m_applicationName);
+        m_cmdHelp = m_parser.addHelpOption();
+        m_cmdVersion = m_parser.addVersionOption();
 
         // dev. system
-        this->m_cmdDevelopment = QCommandLineOption({ "dev", "development" },
+        m_cmdDevelopment = QCommandLineOption({ "dev", "development" },
                                  QCoreApplication::translate("application", "Dev. system features?"));
-        this->addParserOption(this->m_cmdDevelopment);
+        this->addParserOption(m_cmdDevelopment);
 
         // can read a local bootstrap file
-        this->m_cmdSharedDir = QCommandLineOption({ "shared", "shareddir" },
+        m_cmdSharedDir = QCommandLineOption({ "shared", "shareddir" },
                                QCoreApplication::translate("application", "Local shared directory."),
                                "shared");
-        this->addParserOption(this->m_cmdSharedDir);
+        this->addParserOption(m_cmdSharedDir);
 
         // reset caches upfront
-        this->m_cmdClearCache = QCommandLineOption({ "ccache", "clearcache" },
+        m_cmdClearCache = QCommandLineOption({ "ccache", "clearcache" },
                                 QCoreApplication::translate("application", "Clear (reset) the caches."));
-        this->addParserOption(this->m_cmdClearCache);
+        this->addParserOption(m_cmdClearCache);
 
         // test crashpad upload
-        this->m_cmdTestCrashpad = QCommandLineOption({ "testcp", "testcrashpad" },
+        m_cmdTestCrashpad = QCommandLineOption({ "testcp", "testcrashpad" },
                                   QCoreApplication::translate("application", "Simulate crashpad situation."));
-        this->addParserOption(this->m_cmdTestCrashpad);
+        this->addParserOption(m_cmdTestCrashpad);
     }
 
     bool CApplication::isSet(const QCommandLineOption &option) const
     {
-        return (this->m_parser.isSet(option));
+        return (m_parser.isSet(option));
     }
 
     void CApplication::registerMetadata()
@@ -900,14 +866,14 @@ namespace BlackCore
 
     void CApplication::gracefulShutdown()
     {
-        if (this->m_shutdown) { return; }
-        this->m_shutdown = true;
+        if (m_shutdown) { return; }
+        m_shutdown = true;
 
         // save settings (but only when application was really alive)
         CStatusMessage m;
-        if (this->m_parsed)
+        if (m_parsed)
         {
-            if (this->supportsContexts() && this->m_autoSaveSettings)
+            if (this->supportsContexts() && m_autoSaveSettings)
             {
                 // this will eventually also call saveToStore
                 m = this->getIContextApplication()->saveSettings();
@@ -927,23 +893,23 @@ namespace BlackCore
         if (this->supportsContexts())
         {
             // clean up facade
-            this->m_coreFacade->gracefulShutdown();
-            this->m_coreFacade.reset();
+            m_coreFacade->gracefulShutdown();
+            m_coreFacade.reset();
         }
 
-        if (this->m_webDataServices)
+        if (m_webDataServices)
         {
-            this->m_webDataServices->gracefulShutdown();
-            this->m_webDataServices.reset();
+            m_webDataServices->gracefulShutdown();
+            m_webDataServices.reset();
         }
 
-        if (this->m_setupReader)
+        if (m_setupReader)
         {
-            this->m_setupReader->gracefulShutdown();
-            this->m_setupReader.reset();
+            m_setupReader->gracefulShutdown();
+            m_setupReader.reset();
         }
 
-        this->m_fileLogger->close();
+        m_fileLogger->close();
     }
 
     void CApplication::setupHandlingIsCompleted(bool available)
@@ -952,14 +918,14 @@ namespace BlackCore
         {
             // start follow ups when setup is avaialable
             const CStatusMessageList msgs = this->asyncWebAndContextStart();
-            this->m_started = msgs.isSuccess();
+            m_started = msgs.isSuccess();
         }
 
         emit this->setupHandlingCompleted(available);
 
-        if (this->m_signalStartup)
+        if (m_signalStartup)
         {
-            emit this->startUpCompleted(this->m_started);
+            emit this->startUpCompleted(m_started);
         }
     }
 
@@ -973,7 +939,7 @@ namespace BlackCore
         switch (accessible)
         {
         case QNetworkAccessManager::Accessible:
-            this->m_accessManager->setNetworkAccessible(accessible); // for some reasons the queried value still is unknown
+            m_accessManager->setNetworkAccessible(accessible); // for some reasons the queried value still is unknown
             CLogMessage(this).info("Network is accessible");
             break;
         case QNetworkAccessManager::NotAccessible:
@@ -988,7 +954,7 @@ namespace BlackCore
 
     CStatusMessageList CApplication::asyncWebAndContextStart()
     {
-        if (this->m_started) { return CStatusMessage(this).info("Already started "); }
+        if (m_started) { return CStatusMessage(this).info("Already started "); }
 
         // follow up startups
         CStatusMessageList msgs = this->startWebDataServices();
@@ -1030,20 +996,20 @@ namespace BlackCore
 
     bool CApplication::addParserOption(const QCommandLineOption &option)
     {
-        return this->m_parser.addOption(option);
+        return m_parser.addOption(option);
     }
 
     bool CApplication::addParserOptions(const QList<QCommandLineOption> &options)
     {
-        return this->m_parser.addOptions(options);
+        return m_parser.addOptions(options);
     }
 
     void CApplication::addDBusAddressOption()
     {
-        this->m_cmdDBusAddress = QCommandLineOption({ "dbus", "dbusaddress" },
+        m_cmdDBusAddress = QCommandLineOption({ "dbus", "dbusaddress" },
                                  QCoreApplication::translate("application", "DBus address (session, system, P2P IP e.g. 192.168.23.5)"),
                                  "dbusaddress");
-        this->addParserOption(this->m_cmdDBusAddress);
+        this->addParserOption(m_cmdDBusAddress);
     }
 
     void CApplication::addVatlibOptions()
@@ -1053,7 +1019,7 @@ namespace BlackCore
 
     QString CApplication::getCmdDBusAddressValue() const
     {
-        if (this->isParserOptionSet(this->m_cmdDBusAddress))
+        if (this->isParserOptionSet(m_cmdDBusAddress))
         {
             const QString v(this->getParserValue(m_cmdDBusAddress));
             const QString dBusAddress(CDBusServer::normalizeAddress(v));
@@ -1067,12 +1033,12 @@ namespace BlackCore
 
     QString CApplication::getCmdSwiftPrivateSharedDir() const
     {
-        return this->m_parser.value(this->m_cmdSharedDir);
+        return m_parser.value(m_cmdSharedDir);
     }
 
     bool CApplication::isParserOptionSet(const QString &option) const
     {
-        return this->m_parser.isSet(option);
+        return m_parser.isSet(option);
     }
 
     bool CApplication::isInstallerOptionSet() const
@@ -1082,22 +1048,22 @@ namespace BlackCore
 
     bool CApplication::isParserOptionSet(const QCommandLineOption &option) const
     {
-        return this->m_parser.isSet(option);
+        return m_parser.isSet(option);
     }
 
     QString CApplication::getParserValue(const QString &option) const
     {
-        return this->m_parser.value(option).trimmed();
+        return m_parser.value(option).trimmed();
     }
 
     QString CApplication::getParserValue(const QCommandLineOption &option) const
     {
-        return this->m_parser.value(option).trimmed();
+        return m_parser.value(option).trimmed();
     }
 
     bool CApplication::parseAndStartupCheck()
     {
-        if (this->m_parsed) { return m_parsed; } // already done
+        if (m_parsed) { return m_parsed; } // already done
 
         // checks
         if (CBuildConfig::isLifetimeExpired())
@@ -1113,7 +1079,7 @@ namespace BlackCore
             return false;
         }
 
-        if (this->m_singleApplication && this->m_alreadyRunning)
+        if (m_singleApplication && m_alreadyRunning)
         {
             this->cmdLineErrorMessage("Program must only run once");
             return false;
@@ -1121,20 +1087,20 @@ namespace BlackCore
 
         // we call parse because we also want to display a GUI error message when applicable
         const QStringList args(QCoreApplication::instance()->arguments());
-        if (!this->m_parser.parse(args))
+        if (!m_parser.parse(args))
         {
-            this->cmdLineErrorMessage(this->m_parser.errorText());
+            this->cmdLineErrorMessage(m_parser.errorText());
             return false;
         }
 
         // help/version
-        if (this->m_parser.isSet(this->m_cmdHelp))
+        if (m_parser.isSet(m_cmdHelp))
         {
             // Important: parser help will already stop application
             this->cmdLineHelpMessage();
             return false;
         }
-        if (this->m_parser.isSet(this->m_cmdVersion))
+        if (m_parser.isSet(m_cmdVersion))
         {
             // Important: version will already stop application
             this->cmdLineVersionMessage();
@@ -1142,14 +1108,14 @@ namespace BlackCore
         }
 
         // dev.
-        this->m_devEnv = this->initIsRunningInDeveloperEnvironment();
+        m_devEnv = this->initIsRunningInDeveloperEnvironment();
 
         // Hookin, other parsing
         if (!this->parsingHookIn()) { return false; }
 
         // setup reader
-        this->m_startSetupReader = this->m_setupReader->parseCmdLineArguments();
-        this->m_parsed = true;
+        m_startSetupReader = m_setupReader->parseCmdLineArguments();
+        m_parsed = true;
         return true;
     }
 
@@ -1158,7 +1124,7 @@ namespace BlackCore
         Q_UNUSED(retry); // only works with UI version
         fputs(qPrintable(errorMessage), stderr);
         fputs("\n\n", stderr);
-        fputs(qPrintable(this->m_parser.helpText()), stderr);
+        fputs(qPrintable(m_parser.helpText()), stderr);
         return false;
     }
 
@@ -1187,7 +1153,7 @@ namespace BlackCore
 
     void CApplication::cmdLineHelpMessage()
     {
-        this->m_parser.showHelp(); // terminates
+        m_parser.showHelp(); // terminates
         Q_UNREACHABLE();
     }
 
@@ -1202,70 +1168,70 @@ namespace BlackCore
 
     bool CApplication::supportsContexts() const
     {
-        if (this->m_shutdown) { return false; }
-        if (this->m_coreFacade.isNull()) { return false; }
-        if (!this->m_coreFacade->getIContextApplication()) { return false; }
-        return (!this->m_coreFacade->getIContextApplication()->isEmptyObject());
+        if (m_shutdown) { return false; }
+        if (m_coreFacade.isNull()) { return false; }
+        if (!m_coreFacade->getIContextApplication()) { return false; }
+        return (!m_coreFacade->getIContextApplication()->isEmptyObject());
     }
 
     const IContextNetwork *CApplication::getIContextNetwork() const
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextNetwork();
+        return m_coreFacade->getIContextNetwork();
     }
 
     const IContextAudio *CApplication::getIContextAudio() const
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextAudio();
+        return m_coreFacade->getIContextAudio();
     }
 
     const IContextApplication *CApplication::getIContextApplication() const
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextApplication();
+        return m_coreFacade->getIContextApplication();
     }
 
     const IContextOwnAircraft *CApplication::getIContextOwnAircraft() const
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextOwnAircraft();
+        return m_coreFacade->getIContextOwnAircraft();
     }
 
     const IContextSimulator *CApplication::getIContextSimulator() const
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextSimulator();
+        return m_coreFacade->getIContextSimulator();
     }
 
     IContextNetwork *CApplication::getIContextNetwork()
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextNetwork();
+        return m_coreFacade->getIContextNetwork();
     }
 
     IContextAudio *CApplication::getIContextAudio()
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextAudio();
+        return m_coreFacade->getIContextAudio();
     }
 
     IContextApplication *CApplication::getIContextApplication()
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextApplication();
+        return m_coreFacade->getIContextApplication();
     }
 
     IContextOwnAircraft *CApplication::getIContextOwnAircraft()
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextOwnAircraft();
+        return m_coreFacade->getIContextOwnAircraft();
     }
 
     IContextSimulator *CApplication::getIContextSimulator()
     {
         if (!supportsContexts()) { return nullptr; }
-        return this->m_coreFacade->getIContextSimulator();
+        return m_coreFacade->getIContextSimulator();
     }
 
     // ---------------------------------------------------------------------------------
@@ -1274,30 +1240,30 @@ namespace BlackCore
 
     CUrlList CApplication::getVatsimMetarUrls() const
     {
-        if (this->m_shutdown) { return CUrlList(); }
-        if (this->m_webDataServices)
+        if (m_shutdown) { return CUrlList(); }
+        if (m_webDataServices)
         {
-            const CUrlList urls(this->m_webDataServices->getVatsimMetarUrls());
+            const CUrlList urls(m_webDataServices->getVatsimMetarUrls());
             if (!urls.empty()) { return urls; }
         }
-        if (this->m_setupReader)
+        if (m_setupReader)
         {
-            return this->m_setupReader->getSetup().getVatsimMetarsUrls();
+            return m_setupReader->getSetup().getVatsimMetarsUrls();
         }
         return CUrlList();
     }
 
     CUrlList CApplication::getVatsimDataFileUrls() const
     {
-        if (this->m_shutdown) { return CUrlList(); }
-        if (this->m_webDataServices)
+        if (m_shutdown) { return CUrlList(); }
+        if (m_webDataServices)
         {
-            const CUrlList urls(this->m_webDataServices->getVatsimDataFileUrls());
+            const CUrlList urls(m_webDataServices->getVatsimDataFileUrls());
             if (!urls.empty()) { return urls; }
         }
-        if (this->m_setupReader)
+        if (m_setupReader)
         {
-            return this->m_setupReader->getSetup().getVatsimDataFileUrls();
+            return m_setupReader->getSetup().getVatsimDataFileUrls();
         }
         return CUrlList();
     }
@@ -1367,10 +1333,10 @@ namespace BlackCore
         if (!this->isNetworkAccessible()) { return nullptr; }
         QWriteLocker locker(&m_accessManagerLock);
         Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager->thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
-        if (QThread::currentThread() != this->m_accessManager->thread())
+        if (QThread::currentThread() != m_accessManager->thread())
         {
             // run in QAM thread
-            QTimer::singleShot(0, this->m_accessManager, std::bind(&CApplication::httpRequestImpl, this, request, logId, callback, maxRedirects, requestOrPostMethod));
+            QTimer::singleShot(0, m_accessManager, std::bind(&CApplication::httpRequestImpl, this, request, logId, callback, maxRedirects, requestOrPostMethod));
             return nullptr; // not yet started
         }
 
@@ -1382,7 +1348,7 @@ namespace BlackCore
         // If URL is one of the shared URLs, add swift client SSL certificate
         CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, getGlobalSetup().getSwiftSharedUrls());
 
-        QNetworkReply *reply = requestOrPostMethod(*this->m_accessManager, copiedRequest);
+        QNetworkReply *reply = requestOrPostMethod(*m_accessManager, copiedRequest);
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
         reply->setProperty(CUrlLog::propertyNameId(), QVariant(logId));
         if (callback)
