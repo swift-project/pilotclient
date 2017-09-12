@@ -429,7 +429,11 @@ namespace BlackMisc
                 for (auto it = sessionIds.cbegin(); it != sessionIds.cend(); ++it)
                 {
                     m_sessionValues[it.key()] = it.value();
-                    if (it.value() != m_session->uuid()) { m_timestamps.remove(it.key()); }
+                    if (it.value() != m_session->uuid())
+                    {
+                        m_timestamps.remove(it.key());
+                        m_originalTimestamps.remove(it.key());
+                    }
                 }
             }
             else if (revisionFile.size() > 0)
