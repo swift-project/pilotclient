@@ -586,6 +586,11 @@ namespace BlackMisc
     // Private :: CValuePage
     ////////////////////////////////
 
+    const CLogCategoryList &CValuePage::getLogCategories()
+    {
+        return CValueCache::getLogCategories();
+    }
+
     CValuePage::CValuePage(QObject *parent, CValueCache *cache) :
         QObject(parent),
         m_cache(cache)
