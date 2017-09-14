@@ -81,7 +81,7 @@ namespace BlackCore
                       );
         if (this->m_bootstrapMode == CacheOnly)
         {
-            this->m_distributionUrls = cachedSetup.getDistributionUrls();
+            this->m_distributionUrls = cachedSetup.getSwiftDistributionFileUrls();
             msgs.push_back(cacheAvailable ?
                            CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is") :
                            CStatusMessage(this, CStatusMessage::SeverityError, "Cache only setup, but cache is empty")
@@ -105,7 +105,7 @@ namespace BlackCore
             if (this->m_bootstrapMode != Explicit)
             {
                 // also use previously cached URLs
-                const CUrlList bootstrapCacheUrls(cachedSetup.getBootstrapFileUrls());
+                const CUrlList bootstrapCacheUrls(cachedSetup.getSwiftBootstrapFileUrls());
                 this->m_bootstrapUrls.push_back(bootstrapCacheUrls);
                 msgs.push_back(bootstrapCacheUrls.isEmpty() ?
                                CStatusMessage(this, CStatusMessage::SeverityWarning, "No bootstrap URLs in cache") :
@@ -144,50 +144,63 @@ namespace BlackCore
 
     bool CSetupReader::parseCmdLineArguments()
     {
-        // bootstrap file URL where we can download the bootstrap file
-        const QString parserValueUrl = sApp->getParserValue(this->m_cmdBootstrapUrl);
-        this->m_bootstrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(parserValueUrl);
-        const QUrl url(this->m_bootstrapUrlFileValue);
+        // copy vars at beginning to simplify a threadsafe version in the future
+        const QString cmdLineBootstrapUrl = this->getCmdLineBootstrapUrl();
+        BootstrapMode bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
+        const bool ignoreCmdBootstrapUrl = m_ignoreCmdBootstrapUrl;
+        const bool checkCmdBootstrapUrl = m_checkCmdBootstrapUrl;
+        const QString bootstrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(cmdLineBootstrapUrl);
+        QString localSetupFileValue;
+        const QUrl url(bootstrapUrlFileValue);
         const QString urlString(url.toString());
-        this->m_bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
-        if (urlString.isEmpty() && this->m_bootstrapMode == Explicit)
+        bool ok = false;
+
+        if (urlString.isEmpty() && bootstrapMode == Explicit)
         {
-            this->m_bootstrapMode = Implicit; // no URL, we use implicit mode
+            bootstrapMode = Implicit; // no URL, we use implicit mode
         }
 
-        // check on local file
-        if (url.isLocalFile())
+        do
         {
-            this->m_localSetupFileValue = url.toLocalFile();
-            const QFile f(this->m_localSetupFileValue);
-            if (!f.exists())
+            // check on local file
+            if (url.isLocalFile())
             {
-                sApp->cmdLineErrorMessage(QString("File '%1' does not exist)").arg(this->m_localSetupFileValue));
-                return false;
-            }
-        }
-
-        // check on explicit URL
-        if (this->m_bootstrapMode == Explicit)
-        {
-            if (!url.isLocalFile())
-            {
-                bool retry = false;
-                bool ok = false;
-                do
+                localSetupFileValue = url.toLocalFile();
+                const QFile f(localSetupFileValue);
+                if (!f.exists())
                 {
-                    if (CNetworkUtils::canConnect(url, CNetworkUtils::getLongTimeoutMs()))
-                    {
-                        ok = true;
-                        break;
-                    }
-                    retry = sApp->cmdLineErrorMessage(QString("URL '%1' not reachable").arg(urlString), true);
+                    sApp->cmdLineErrorMessage(QString("File '%1' does not exist)").arg(localSetupFileValue));
+                    break;
                 }
-                while (retry);
-                if (!ok) { return false; }
+            }
+
+            // check on explicit URL
+            if (bootstrapMode == Explicit)
+            {
+                if (!url.isLocalFile())
+                {
+                    bool retry = false;
+
+                    // "retry" possible in some cases
+                    do
+                    {
+                        if (ignoreCmdBootstrapUrl || !checkCmdBootstrapUrl || CNetworkUtils::canConnect(url, CNetworkUtils::getLongTimeoutMs()))
+                        {
+                            ok = true;
+                            break;
+                        }
+                        retry = sApp->cmdLineErrorMessage(QString("URL '%1' not reachable").arg(urlString), true);
+                    }
+                    while (retry);
+                }
             }
         }
-        return true;
+        while (false);
+
+        m_localSetupFileValue = localSetupFileValue;
+        m_bootstrapUrlFileValue = bootstrapUrlFileValue;
+        m_bootstrapMode = bootstrapMode;
+        return ok;
     }
 
     void CSetupReader::gracefulShutdown()
@@ -332,11 +345,14 @@ namespace BlackCore
                     CGlobalSetup loadedSetup;
                     loadedSetup.convertFromJson(setupJson);
                     loadedSetup.markAsLoaded(true);
+                    const CUrl sharedUrl(loadedSetup.getCorrespondingSharedUrl(url));
+                    if (!sharedUrl.isEmpty()) { emit this->successfullyReadSharedUrl(sharedUrl); }
+
                     if (lastModified > 0 && lastModified > loadedSetup.getMSecsSinceEpoch()) { loadedSetup.setMSecsSinceEpoch(lastModified); }
                     bool sameVersionLoaded = (loadedSetup == currentSetup);
                     if (sameVersionLoaded)
                     {
-                        this->m_distributionUrls = currentSetup.getDistributionUrls(); // defaults
+                        this->m_distributionUrls = currentSetup.getSwiftDistributionFileUrls(); // defaults
                         CLogMessage(this).info("Same setup version loaded from '%1' as already in data cache '%2'") << urlString << m_setup.getFilename();
                         CLogMessage::preformatted(this->manageSetupAvailability(true));
                         return; // success
@@ -349,7 +365,7 @@ namespace BlackCore
                     if (m.isSeverityInfoOrLess())
                     {
                         // no issue with cache
-                        this->m_distributionUrls = loadedSetup.getDistributionUrls();
+                        this->m_distributionUrls = loadedSetup.getSwiftDistributionFileUrls();
                         CLogMessage(this).info("Loaded setup from '%1'") << urlString;
                         CLogMessage(this).info("Setup: Updated data cache in '%1'") << this->m_setup.getFilename();
                         {
@@ -490,12 +506,19 @@ namespace BlackCore
 
     bool CSetupReader::hasCmdLineBootstrapUrl() const
     {
-        return !sApp->getParserValue(this->m_cmdBootstrapUrl).isEmpty();
+        return !this->getCmdLineBootstrapUrl().isEmpty();
     }
 
     QString CSetupReader::getCmdLineBootstrapUrl() const
     {
+        if (m_ignoreCmdBootstrapUrl) return "";
         return sApp->getParserValue(this->m_cmdBootstrapUrl);
+    }
+
+    void CSetupReader::setIgnoreCmdLineBootstrapUrl(bool ignore)
+    {
+        m_ignoreCmdBootstrapUrl = ignore;
+        this->parseCmdLineArguments(); // T156 this part not threadsafe, currently not a real problem as setup reader runs in main thread
     }
 
     CGlobalSetup CSetupReader::getSetup() const
@@ -511,7 +534,7 @@ namespace BlackCore
         const bool cacheAvailable = cachedSetup.wasLoaded();
         if (cacheAvailable)
         {
-            CLogMessage(this).info("Setup (bootstrap already cached, no prefill needed");
+            CLogMessage(this).info("Setup cache prefill (bootstrap already cached, no prefill needed");
             return false;
         }
         const QString fn = CDirectoryUtils::bootstrapResourceFilePath();
@@ -541,6 +564,24 @@ namespace BlackCore
     {
         QReadLocker l(&m_lockSetup);
         return this->m_setupReadErrorMsgs;
+    }
+
+    const QString &CSetupReader::getBootstrapUrlFile() const
+    {
+        if (!m_localSetupFileValue.isEmpty()) { return m_localSetupFileValue; }
+        return m_bootstrapUrlFileValue;
+    }
+
+    QString CSetupReader::getBootstrapModeAsString() const
+    {
+        switch (m_bootstrapMode)
+        {
+        case CacheOnly: return "cache only";
+        case Explicit: return "explicit";
+        case Implicit: return "implicit";
+        default: break;
+        }
+        return "";
     }
 
     void CSetupReader::setLastSetupReadErrorMessages(const CStatusMessageList &messages)

@@ -59,12 +59,20 @@ namespace BlackCore
         //! CMD line argument for bootstrap URL
         QString getCmdLineBootstrapUrl() const;
 
+        //! Ignore the bootstrap URL
+        //! \threadsafe
+        void setIgnoreCmdLineBootstrapUrl(bool ignore);
+
+        //! Check connection of the bootstrap URL
+        //! \threadsafe
+        void setCheckCmdLineBootstrapUrl(bool check) { m_checkCmdBootstrapUrl = check; }
+
         //! Current setup (reader URLs, DB location, crash server)
         //! \remarks aka "bootstrap file"
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getSetup() const;
 
-        //! Load the cache file local boostrap file
+        //! Load the cache file local bootstrap file
         //! \remark can be used during installation as failover
         //! \threadsafe
         bool prefillCacheWithLocalResourceBootstrapFile();
@@ -84,12 +92,21 @@ namespace BlackCore
         //! Last setup parsing error messages (if any)
         BlackMisc::CStatusMessageList getLastSetupReadErrorMessages() const;
 
+        //! Get bootstrap URL, either m_bootstrapUrlFileValue or m_localSetupFileValue
+        const QString &getBootstrapUrlFile() const;
+
+        //! Mode as string
+        QString getBootstrapModeAsString() const;
+
     signals:
         //! Setup fetched or failed (from web, cache, or local file)
         void setupHandlingCompleted(bool available);
 
         //! Setup avialable (from web, cache
         void distributionInfoAvailable(bool available);
+
+        //! A shared URL was successfully read
+        void successfullyReadSharedUrl(const BlackMisc::Network::CUrl &sharedUrl);
 
     protected:
         //! Constructor
@@ -143,9 +160,11 @@ namespace BlackCore
         std::atomic<bool> m_shutdown { false };
         std::atomic<bool> m_setupAvailable { false };
         std::atomic<bool> m_distributionInfoAvailable { false };
-        QString m_localSetupFileValue;                           //! Local file for setup, passed by cmd line arguments
-        QString m_bootstrapUrlFileValue;                         //! Bootstrap URL if not local
-        BootstrapMode m_bootstrapMode = Explicit;                //! How to bootstrap
+        std::atomic<bool> m_ignoreCmdBootstrapUrl { false };     //!< ignore the explicitly set bootstrap URL
+        std::atomic<bool> m_checkCmdBootstrapUrl { true };       //!< check connection on CMD bootstrap URL
+        QString m_localSetupFileValue;                           //!< Local file for setup, passed by cmd line arguments
+        QString m_bootstrapUrlFileValue;                         //!< Bootstrap URL if not local
+        BootstrapMode m_bootstrapMode = Explicit;                //!< How to bootstrap
         BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;    //!< location of setup files
         BlackMisc::Network::CFailoverUrlList m_distributionUrls; //!< location of info files
         QCommandLineOption m_cmdBootstrapUrl;                    //!< bootstrap URL
