@@ -17,8 +17,9 @@
 #include "testblackcoremain.h"
 #include "blackcore/application.h"
 #include <QCoreApplication>
-#include <QtGlobal>
+#include <QDebug>
 
+using namespace BlackCore;
 using namespace BlackCoreTest;
 
 //! Starter for test cases
@@ -26,14 +27,18 @@ int main(int argc, char *argv[])
 {
     QCoreApplication qa(argc, argv);
     Q_UNUSED(qa);
-    BlackCore::CApplication a;
+    CApplication a;
     a.addVatlibOptions();
+    const bool setup = a.parseAndSynchronizeSetup();
+    if (!setup) { qWarning() << "No setup loaded"; }
     if (!a.start())
     {
         a.gracefulShutdown();
         return EXIT_FAILURE;
     }
-    return CBlackCoreTestMain::unitMain(argc, argv);
+    const int r = CBlackCoreTestMain::unitMain(argc, argv);
+    a.gracefulShutdown();
+    return r;
 }
 
 //! \endcond

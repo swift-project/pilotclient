@@ -18,6 +18,7 @@
 #include "testnetwork.h"
 #include "testreaders.h"
 #include "testcontext.h"
+#include "testconnectivity.h"
 #include "blackmisc/test/test.h"
 #include <QStringList>
 #include <QtTest>
@@ -28,6 +29,10 @@ namespace BlackCoreTest
     {
         BlackMisc::Test::CTest test(argc, argv);
         int status = 0;
+        {
+            CTestConnectivity connectivityTest;
+            status |= test.exec(&connectivityTest, "blackcore_network");
+        }
         {
             CTestContext contextTests;
             status |= test.exec(&contextTests, "blackcore_context");
