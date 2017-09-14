@@ -60,7 +60,7 @@ namespace BlackMisc
             if (flag.testFlag(NoEntity)) list << "no data";
             if (flag.testFlag(VatsimDataFile)) list << "VATSIM data file";
             if (flag.testFlag(VatsimStatusFile)) list << "VATSIM status file";
-            return list.join(',');
+            return list.join(", ");
         }
 
         bool CEntityFlags::isSingleEntity(BlackMisc::Network::CEntityFlags::Entity flag)

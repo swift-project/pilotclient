@@ -43,7 +43,7 @@ namespace BlackCore
             BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this }; //!< caches
             QMap<QString, QDateTime> m_dbModelsLatestChange;
 
-            //! Do the udpate checks
+            //! Do the update checks
             void doWork();
 
             //! Read of new DB data

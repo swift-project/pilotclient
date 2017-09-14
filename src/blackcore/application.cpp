@@ -826,23 +826,23 @@ namespace BlackCore
 
         // dev. system
         m_cmdDevelopment = QCommandLineOption({ "dev", "development" },
-                                 QCoreApplication::translate("application", "Dev. system features?"));
+                                              QCoreApplication::translate("application", "Dev. system features?"));
         this->addParserOption(m_cmdDevelopment);
 
         // can read a local bootstrap file
         m_cmdSharedDir = QCommandLineOption({ "shared", "shareddir" },
-                               QCoreApplication::translate("application", "Local shared directory."),
-                               "shared");
+                                            QCoreApplication::translate("application", "Local shared directory."),
+                                            "shared");
         this->addParserOption(m_cmdSharedDir);
 
         // reset caches upfront
         m_cmdClearCache = QCommandLineOption({ "ccache", "clearcache" },
-                                QCoreApplication::translate("application", "Clear (reset) the caches."));
+                                             QCoreApplication::translate("application", "Clear (reset) the caches."));
         this->addParserOption(m_cmdClearCache);
 
         // test crashpad upload
         m_cmdTestCrashpad = QCommandLineOption({ "testcp", "testcrashpad" },
-                                  QCoreApplication::translate("application", "Simulate crashpad situation."));
+                                               QCoreApplication::translate("application", "Simulate crashpad situation."));
         this->addParserOption(m_cmdTestCrashpad);
     }
 
@@ -1007,8 +1007,8 @@ namespace BlackCore
     void CApplication::addDBusAddressOption()
     {
         m_cmdDBusAddress = QCommandLineOption({ "dbus", "dbusaddress" },
-                                 QCoreApplication::translate("application", "DBus address (session, system, P2P IP e.g. 192.168.23.5)"),
-                                 "dbusaddress");
+                                              QCoreApplication::translate("application", "DBus address (session, system, P2P IP e.g. 192.168.23.5)"),
+                                              "dbusaddress");
         this->addParserOption(m_cmdDBusAddress);
     }
 

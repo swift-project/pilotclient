@@ -230,7 +230,7 @@ namespace BlackCore
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (!this->doWorkCheck()) { return; }
 
-            CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -280,7 +280,7 @@ namespace BlackCore
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (!this->doWorkCheck()) { return; }
 
-            CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -328,7 +328,7 @@ namespace BlackCore
         void CIcaoDataReader::ps_parseCountryData(QNetworkReply *nwReplyPtr)
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());

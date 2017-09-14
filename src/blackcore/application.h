@@ -252,9 +252,9 @@ namespace BlackCore
         //! \return all cache files
         static QStringList clearCaches();
 
-        // ----------------------- parsing ----------------------------------------
+        // ----------------------- cmd line args / parsing ----------------------------------------
 
-        //! \name parsing of command line options
+        //! \name cmd line args and parsing of command line options
         //! @{
 
         //! \copydoc QCommandLineParser::addOption
@@ -318,10 +318,12 @@ namespace BlackCore
 
         //! Init the contexts part and start core facade
         //! \sa coreFacadeStarted
+        //! \remark requires setup loaded
         BlackMisc::CStatusMessageList useContexts(const CCoreFacadeConfig &coreConfig);
 
         //! Init web data services and start them
         //! \sa webDataServicesStarted
+        //! \remark requires setup loaded
         BlackMisc::CStatusMessageList useWebDataServices(const CWebReaderFlags::WebReader webReader, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! Get the facade
