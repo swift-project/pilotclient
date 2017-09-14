@@ -177,12 +177,6 @@ namespace BlackCore
         return false;
     }
 
-    bool CWebDataServices::canConnectSwiftDb(bool strict) const
-    {
-        if (!strict && this->hasConnectedSwiftDb()) { return true; }
-        return CNetworkUtils::canConnect(sApp->getGlobalSetup().getDbHomePageUrl());
-    }
-
     void CWebDataServices::resetSignalFlags()
     {
         m_signalledEntities.clear();
@@ -787,11 +781,6 @@ namespace BlackCore
         if (m_databaseWriter)       { m_databaseWriter->gracefulShutdown(); }
     }
 
-    CUrl CWebDataServices::getDbReaderCurrentSharedDbDataUrl() const
-    {
-        return CDatabaseReader::getCurrentSharedDbDataUrl();
-    }
-
     CEntityFlags::Entity CWebDataServices::allDbEntitiesForUsedReaders() const
     {
         // obtain entities from real readers (means when reader is really used)
@@ -834,7 +823,7 @@ namespace BlackCore
         // 1a. If any DB data, read the info objects upfront
         if (needsDbInfoObjects)
         {
-            const bool databaseUp = CInfoDataReader::canPingSwiftServer();
+            const bool databaseUp = sApp->isSwiftDbAccessible();
             if (!databaseUp) { dbReaderConfig.markAsDbDown(); }
 
             if (anyDbEntities && readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::DbInfoDataReader))
@@ -919,6 +908,8 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
             c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
+            c = connect(m_icaoDataReader, &CIcaoDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_icaoDataReader->start(QThread::LowPriority);
         }
 
@@ -930,6 +921,8 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+            c = connect(m_modelDataReader, &CModelDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_modelDataReader->start(QThread::LowPriority);
         }
 
@@ -940,6 +933,8 @@ namespace BlackCore
             c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+            c = connect(m_airportDataReader, &CAirportDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_airportDataReader->start(QThread::LowPriority);
         }

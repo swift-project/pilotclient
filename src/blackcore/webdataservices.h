@@ -119,9 +119,6 @@ namespace BlackCore
         //! Reader flags
         CWebReaderFlags::WebReader getReaderFlags() const { return m_readers; }
 
-        //! Currently used URL for shared DB data
-        BlackMisc::Network::CUrl getDbReaderCurrentSharedDbDataUrl() const;
-
         //! All DB entities for those readers used and not ignored
         BlackMisc::Network::CEntityFlags::Entity allDbEntitiesForUsedReaders() const;
 
@@ -404,9 +401,6 @@ namespace BlackCore
         //! Has already connect swift DB?
         bool hasConnectedSwiftDb() const;
 
-        //! Can connect swift DB?
-        bool canConnectSwiftDb(bool strict = false) const;
-
         //! Reset the flags what was already signaled
         void resetSignalFlags();
 
@@ -425,6 +419,9 @@ namespace BlackCore
     signals:
         //! Combined read signal
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+
+        //! DB data read
+        void swiftDbDataRead(bool success);
 
         // simplified signals follow
         // 1) simple signature
