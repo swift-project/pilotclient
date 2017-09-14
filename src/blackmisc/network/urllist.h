@@ -53,7 +53,10 @@ namespace BlackMisc
             CUrl getRandomWithout(const CUrlList &exclude) const;
 
             //! Append path to all URLs
-            CUrlList appendPath(const QString &path) const;
+            CUrlList withAppendedPath(const QString &path) const;
+
+            //! Find by host
+            CUrlList findByHost(const QString &host, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
 
             //! To formatted String
             QString convertToQString(const QString &separator, bool i18n = false) const;
@@ -89,6 +92,15 @@ namespace BlackMisc
 
             //! Failed URL
             bool addFailedUrl(const CUrl &failedUrl);
+
+            //! Failed URLs
+            bool addFailedUrls(const CUrlList &failedUrls);
+
+            //! Failed host
+            bool addFailedHost(const CUrl &failedUrl);
+
+            //! Failed host
+            bool addFailedHost(const QString &host, Qt::CaseSensitivity cs = Qt::CaseInsensitive);
 
             //! More URLs to try
             bool hasMoreUrlsToTry() const;

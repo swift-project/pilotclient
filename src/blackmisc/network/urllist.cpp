@@ -8,8 +8,9 @@
  */
 
 #include "blackmisc/network/urllist.h"
-#include "blackmisc/math/mathutils.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/math/mathutils.h"
+#include "blackmisc/stringutils.h"
 
 #include <QtGlobal>
 #include <tuple>
@@ -68,7 +69,7 @@ namespace BlackMisc
             return copy.getRandomUrl();
         }
 
-        CUrlList CUrlList::appendPath(const QString &path) const
+        CUrlList CUrlList::withAppendedPath(const QString &path) const
         {
             if (path.isEmpty() || this->isEmpty()) { return (*this); }
             CUrlList urls;
@@ -77,6 +78,20 @@ namespace BlackMisc
                 urls.push_back(url.withAppendedPath(path));
             }
             return urls;
+        }
+
+        CUrlList CUrlList::findByHost(const QString &host, Qt::CaseSensitivity cs) const
+        {
+            CUrlList result;
+            if (host.isEmpty() || this->isEmpty()) { return result; }
+            for (const CUrl &url : *this)
+            {
+                if (stringCompare(url.getHost(), host, cs))
+                {
+                    result.push_back(url);
+                }
+            }
+            return result;
         }
 
         QString CUrlList::convertToQString(const QString &separator, bool i18n) const
@@ -134,6 +149,26 @@ namespace BlackMisc
             Q_ASSERT_X(!failedUrl.isEmpty(), Q_FUNC_INFO, "empty URL as failed");
             this->m_failedUrls.push_back(failedUrl);
             return hasMoreUrlsToTry();
+        }
+
+        bool CFailoverUrlList::addFailedUrls(const CUrlList &failedUrls)
+        {
+            this->m_failedUrls.push_back(failedUrls);
+            return hasMoreUrlsToTry();
+        }
+
+        bool CFailoverUrlList::addFailedHost(const CUrl &failedUrl)
+        {
+            Q_ASSERT_X(!failedUrl.isEmpty(), Q_FUNC_INFO, "empty URL as failed");
+            const QString host = failedUrl.getHost();
+            return CFailoverUrlList::addFailedHost(host);
+        }
+
+        bool CFailoverUrlList::addFailedHost(const QString &host, Qt::CaseSensitivity cs)
+        {
+            if (host.isEmpty()) { return this->hasMoreUrlsToTry(); }
+            const CUrlList failedUrls = this->findByHost(host, cs);
+            return addFailedUrls(failedUrls);
         }
 
         bool CFailoverUrlList::hasMoreUrlsToTry() const

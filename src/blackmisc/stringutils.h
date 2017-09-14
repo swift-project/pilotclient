@@ -160,6 +160,9 @@ namespace BlackMisc
     //! Case insensitive string compare
     BLACKMISC_EXPORT bool caseInsensitiveStringCompare(const QString &c1, const QString &c2);
 
+    //! String compare
+    BLACKMISC_EXPORT bool stringCompare(const QString &c1, const QString &c2, Qt::CaseSensitivity cs);
+
     //! Get a simplified upper case name for searching by removing all characters except A-Z
     BLACKMISC_EXPORT QString simplifyNameForSearch(const QString &name);
 

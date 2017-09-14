@@ -387,6 +387,7 @@ namespace BlackCore
         // try next one if any
         if (this->m_bootstrapUrls.addFailedUrl(url))
         {
+            m_distributionUrls.addFailedHost(url); // the same host will likely fail for distributions
             QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
         }
         else
