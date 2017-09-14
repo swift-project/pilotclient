@@ -30,6 +30,7 @@
 class QNetworkReply;
 
 namespace BlackMisc { class CLogCategoryList; }
+namespace BlackCoreTest { class CTestConnectivity; }
 namespace BlackCore
 {
     //! Read the central URLs / locations of our data / setup.
@@ -48,6 +49,7 @@ namespace BlackCore
     {
         Q_OBJECT
         friend class CApplication; //!< only using class
+        friend class BlackCoreTest::CTestConnectivity;
 
     public:
         //! Categories
