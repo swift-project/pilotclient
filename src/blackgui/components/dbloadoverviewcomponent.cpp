@@ -189,7 +189,7 @@ namespace BlackGui
             static const QString imgFailed(":/diagona/icons/diagona/icons/cross-script.png");
             const QString dbUrlHtml("<img src=\"%1\">&nbsp;&nbsp;<a href=\"%2\">%3</a>");
             const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
-            bool canConnect = sGui->getWebDataServices() && sGui->getWebDataServices()->canConnectSwiftDb();
+            bool canConnect = sGui->isSwiftDbAccessible();
             ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(canConnect ? imgOk : imgFailed, url, url));
             ui->lbl_DatabaseUrl->setToolTip(url);
 
@@ -213,7 +213,7 @@ namespace BlackGui
             }
             ui->lbl_SharedUrls->setText(tableHtml.arg(allRowsHtml.trimmed()));
             ui->lbl_SharedUrls->setMinimumHeight(10 + (18 * sharedUrls.size()));
-            const QString currentlyUsedSharedUrl = sGui->getWebDataServices()->getDbReaderCurrentSharedDbDataUrl().toQString();
+            const QString currentlyUsedSharedUrl = sGui->getWorkingSharedUrl().toQString();
             ui->lbl_SharedUrls->setToolTip(
                 currentlyUsedSharedUrl.isEmpty() ? "No shared URL" : "currently used: " + currentlyUsedSharedUrl
             );
@@ -343,7 +343,7 @@ namespace BlackGui
             {
                 direct = true;
             }
-            else if (sGui->getWebDataServices()->canConnectSwiftDb())
+            else if (sGui->isSwiftDbAccessible())
             {
                 // do not trigger if cannot be connected
                 sGui->getWebDataServices()->triggerReadOfDbInfoObjects();

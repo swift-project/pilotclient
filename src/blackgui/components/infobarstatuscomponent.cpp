@@ -52,7 +52,7 @@ namespace BlackGui
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::onSimulatorStatusChanged);
                 connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CInfoBarStatusComponent::onMapperReady);
-                connect(sGui, &CGuiApplication::internetAccessibleChanged, this, &CInfoBarStatusComponent::onInternetAccessibleChanged);
+                connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarStatusComponent::onInternetAccessibleChanged);
 
                 // initial values
                 this->onMapperReady();
