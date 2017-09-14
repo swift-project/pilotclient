@@ -77,6 +77,12 @@ namespace BlackMisc
             return exitCode == 0;
         }
 
+        bool CNetworkUtils::canPing(const CUrl &url)
+        {
+            if (url.isEmpty()) { return false; }
+            return CNetworkUtils::canPing(url.getHost());
+        }
+
         QStringList CNetworkUtils::getKnownLocalIpV4Addresses()
         {
             QStringList ips;
