@@ -60,7 +60,7 @@ namespace BlackCoreTest
         BlackCore::Db::CModelDataReader   *m_modelReader = nullptr;
 
         //! Test if server is available
-        static bool pingServer(const BlackMisc::Network::CUrl &url);
+        static bool connectServer(const BlackMisc::Network::CUrl &url);
     };
 } //namespace
 

@@ -65,7 +65,7 @@ namespace BlackCoreTest
     {
         const CUrl url(sApp->getGlobalSetup().getDbIcaoReaderUrl());
         qDebug() << "Reader URL" << url.toQString();
-        if (!this->pingServer(url)) { QSKIP("Server not reachable."); return; }
+        if (!this->connectServer(url)) { QSKIP("Server not reachable."); return; }
         m_icaoReader->start();
         m_icaoReader->readInBackgroundThread(CEntityFlags::AllIcaoEntities, QDateTime());
 
@@ -116,7 +116,7 @@ namespace BlackCoreTest
     {
         const CUrl url(sApp->getGlobalSetup().getDbModelReaderUrl());
         qDebug() << "Reader URL" << url.toQString();
-        if (!this->pingServer(url)) { QSKIP("Server not reachable."); return; }
+        if (!this->connectServer(url)) { QSKIP("Server not reachable."); return; }
         m_modelReader->start();
         m_modelReader->readInBackgroundThread(CEntityFlags::ModelEntity, QDateTime());
 
@@ -142,7 +142,7 @@ namespace BlackCoreTest
 
         const CUrl url(sApp->getGlobalSetup().getDbAirportReaderUrl());
         qDebug() << "Reader URL" << url.toQString();
-        if (!this->pingServer(url)) { QSKIP("Server not reachable."); return; }
+        if (!this->connectServer(url)) { QSKIP("Server not reachable."); return; }
         m_airportReader->start();
         m_airportReader->readInBackgroundThread(CEntityFlags::AirportEntity, QDateTime());
 
@@ -153,7 +153,7 @@ namespace BlackCoreTest
         }
 
         QVERIFY2(this->m_airportReader->getAirports().size() > 0, "No airports");
-        auto heathrow = this->m_airportReader->getAirports().findByIcao("EGLL");
+        const auto heathrow = this->m_airportReader->getAirports().findByIcao("EGLL");
         QVERIFY2(heathrow.size() == 1, "No Heathrow");
         QVERIFY2(heathrow[0].isOperating(), "Wrong airport data");
 
@@ -164,7 +164,7 @@ namespace BlackCoreTest
         CApplication::processEventsFor(2500); // make sure events are processed
     }
 
-    bool CTestReaders::pingServer(const CUrl &url)
+    bool CTestReaders::connectServer(const CUrl &url)
     {
         QString m;
         if (CNetworkUtils::canConnect(url, m, 2500))
