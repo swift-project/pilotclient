@@ -127,6 +127,9 @@ namespace BlackCore
                 //! Incremental data, restricted by query?
                 bool isRestricted() const { return m_restricted; }
 
+                //! Is loaded from database
+                bool isLoadedFromDb() const;
+
                 //! Mark as restricted
                 void setRestricted(bool restricted) { m_restricted = restricted; }
 
@@ -229,8 +232,9 @@ namespace BlackCore
             //! Those entities where the timestamp of shared info obejct is newer than the cache timestamp
             BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerSharedInfoObject(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
-            //! Request header of shared file
-            bool requestHeadersOfSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities);
+            //! Request headers of shared file
+            //! \return number of requested headers
+            int requestHeadersOfSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities);
 
             //! Status message (error message)
             const QString &getStatusMessage() const;
@@ -241,20 +245,14 @@ namespace BlackCore
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
-            //! swift DB server reachable?
-            static bool canPingSwiftServer();
-
-            //! Init the working URLs
-            static bool initWorkingUrls(bool force = false);
-
-            //! Currently used URL for shared DB data
-            static BlackMisc::Network::CUrl getCurrentSharedDbDataUrl();
-
             //! Transform JSON data to response struct data
             //! \private used also for samples, that`s why it is declared public
             static void stringToDatastoreResponse(const QString &jsonContent, CDatabaseReader::JsonDatastoreResponse &datastoreResponse);
 
         signals:
+            //! DB have been read
+            void swiftDbDataRead(bool success);
+
             //! Combined read signal
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
@@ -299,15 +297,14 @@ namespace BlackCore
             //! Log if no working URL exists, using m_noWorkingUrlSeverity
             void logNoWorkingUrl(BlackMisc::Network::CEntityFlags::Entity entity);
 
-            //! Base URL
+            //! Base URL for mode (either a shared or DB URL)
             BlackMisc::Network::CUrl getBaseUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
 
             //! DB base URL
             static const BlackMisc::Network::CUrl &getDbUrl();
 
-            //! Get the working shared URL, initialized by CDatabaseReader::initWorkingUrls
-            //! \remark normally constant after startup phase
-            static BlackMisc::Network::CUrl getWorkingDbDataFileLocationUrl();
+            //! Working shared "dbdata" directory URL
+            static BlackMisc::Network::CUrl getWorkingSharedDbdataDirectoryUrl();
 
             //! File name for given mode, either php service or shared file name
             static QString fileNameForMode(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode);
@@ -349,9 +346,6 @@ namespace BlackCore
             static bool isChangedUrl(const BlackMisc::Network::CUrl &oldUrl, const BlackMisc::Network::CUrl &currentUrl);
             //! @}
 
-        private:
-            static BlackMisc::Network::CUrl s_workingSharedDbData; //!< one choosen URL for all DB reader objects
-
             //! Start reading in own thread (without config/caching)
             //! \remarks can handle DB or shared file reads
             void startReadFromBackendInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan = QDateTime());
@@ -360,7 +354,7 @@ namespace BlackCore
             void receivedSharedFileHeader(QNetworkReply *nwReplyPtr);
 
             //! Received a reply of a header for a shared file
-            void receivedSharedFileHeaderNonClosing(QNetworkReply *nwReply);
+            void receivedSharedFileHeaderNonClosing(QNetworkReply *nwReplyPtr);
 
             //! Check if terminated or error, otherwise split into array of objects
             JsonDatastoreResponse transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const;

@@ -10,6 +10,7 @@
 #include "blackcore/db/databasereader.h"
 #include "blackcore/db/infodatareader.h"
 #include "blackcore/db/databaseutils.h"
+#include "blackcore/db/networkwatchdog.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
 #include "blackmisc/db/datastoreutility.h"
@@ -39,13 +40,9 @@ namespace BlackCore
 {
     namespace Db
     {
-        CUrl CDatabaseReader::s_workingSharedDbData;
-
         CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) :
             BlackCore::CThreadedReader(owner, name), m_config(config)
-        {
-            CDatabaseReader::initWorkingUrls();
-        }
+        { }
 
         void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
         {
@@ -291,6 +288,14 @@ namespace BlackCore
             {
                 this->receivedSharedFileHeaderNonClosing(nwReply);
             }
+            else
+            {
+                if (dsr.isLoadedFromDb())
+                {
+                    const bool s = !dsr.hasErrorMessage();
+                    emit this->swiftDbDataRead(s);
+                }
+            }
             return dsr;
         }
 
@@ -372,20 +377,25 @@ namespace BlackCore
             return m_sharedFileResponses[entity].getLastModifiedTimestamp();
         }
 
-        bool CDatabaseReader::requestHeadersOfSharedFiles(CEntityFlags::Entity entities)
+        int CDatabaseReader::requestHeadersOfSharedFiles(CEntityFlags::Entity entities)
         {
             if (!this->isInternetAccessible(QString("No network/internet access, will not read shared file headers for %1").arg(CEntityFlags::flagToString(entities)))) { return false; }
 
             CEntityFlags::Entity allEntities(this->maskBySupportedEntities(entities));
             CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);
-            const CUrl urlSharedData = CGlobalSetup::buildDbDataDirectory(getWorkingDbDataFileLocationUrl());
+            const CUrl urlSharedDbdata = CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
+            if (urlSharedDbdata.isEmpty())
+            {
+                CLogMessage(this).warning("No working shared URL, cannot request headers");
+                return 0;
+            }
 
             int c = 0;
             while (currentEntity != CEntityFlags::NoEntity)
             {
                 const QString fileName = CDbInfo::entityToSharedName(currentEntity);
                 Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "No file name for entity");
-                CUrl url = urlSharedData;
+                CUrl url = urlSharedDbdata;
                 url.appendPath(fileName);
 
                 const QString entityString = CEntityFlags::flagToString(currentEntity);
@@ -497,7 +507,7 @@ namespace BlackCore
                 return this->getDbServiceBaseUrl().withAppendedPath("/service");
             case CDbFlags::SharedInfoOnly:
             case CDbFlags::Shared:
-                return CDatabaseReader::getWorkingDbDataFileLocationUrl();
+                return CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
             default:
                 qFatal("Wrong mode");
                 break;
@@ -525,12 +535,12 @@ namespace BlackCore
             nwReply->close();
         }
 
-        void CDatabaseReader::receivedSharedFileHeaderNonClosing(QNetworkReply *nwReply)
+        void CDatabaseReader::receivedSharedFileHeaderNonClosing(QNetworkReply *nwReplyPtr)
         {
             if (this->isAbandoned()) { return; }
 
-            const HeaderResponse headerResponse = this->transformReplyIntoHeaderResponse(nwReply);
-            const QString fileName = nwReply->url().fileName();
+            const HeaderResponse headerResponse = this->transformReplyIntoHeaderResponse(nwReplyPtr);
+            const QString fileName = nwReplyPtr->url().fileName();
             const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(fileName);
             this->m_sharedFileResponses[entity] = headerResponse;
 
@@ -650,32 +660,15 @@ namespace BlackCore
             return dbUrl;
         }
 
-        CUrl CDatabaseReader::getWorkingDbDataFileLocationUrl()
+        CUrl CDatabaseReader::getWorkingSharedDbdataDirectoryUrl()
         {
-            return CDatabaseReader::s_workingSharedDbData;
+            const CUrl sharedUrl(sApp->getWorkingSharedUrl());
+            return CGlobalSetup::buildDbDataDirectoryUrl(sharedUrl);
         }
 
         void CDatabaseReader::cacheHasChanged(CEntityFlags::Entity entities)
         {
             this->emitReadSignalPerSingleCachedEntity(entities, false);
-        }
-
-        bool CDatabaseReader::canPingSwiftServer()
-        {
-            const CUrl url(getDbUrl());
-            return CNetworkUtils::canConnect(url);
-        }
-
-        bool CDatabaseReader::initWorkingUrls(bool force)
-        {
-            if (!force && !CDatabaseReader::s_workingSharedDbData.isEmpty()) { return false; }
-            CDatabaseReader::s_workingSharedDbData = sApp->getGlobalSetup().getSwiftDbDataFileLocationUrls().getRandomWorkingUrl();
-            return !CDatabaseReader::s_workingSharedDbData.isEmpty();
-        }
-
-        CUrl CDatabaseReader::getCurrentSharedDbDataUrl()
-        {
-            return CDatabaseReader::s_workingSharedDbData;
         }
 
         void CDatabaseReader::stringToDatastoreResponse(const QString &jsonContent, JsonDatastoreResponse &datastoreResponse)
@@ -707,6 +700,11 @@ namespace BlackCore
                 datastoreResponse.setLastModifiedTimestamp(ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts));
                 datastoreResponse.setRestricted(responseObject["restricted"].toBool());
             }
+        }
+
+        bool CDatabaseReader::JsonDatastoreResponse::isLoadedFromDb() const
+        {
+            return CNetworkWatchdog::isDbUrl(this->getUrl());
         }
 
         void CDatabaseReader::JsonDatastoreResponse::setJsonArray(const QJsonArray &value)
