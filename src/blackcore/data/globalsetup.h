@@ -51,10 +51,10 @@ namespace BlackCore
                 IndexSwiftDbFiles,
                 IndexSwiftMapUrls,
                 IndexBootstrapFileUrls,
+                IndexDistributionFileUrls,
                 IndexNewsUrls,
                 IndexOnlineHelpUrls,
                 IndexCrashReportServerUrl,
-                IndexUpdateInfo,
                 IndexWasLoaded,
                 IndexSharedUrls
             };
@@ -89,38 +89,54 @@ namespace BlackCore
             //! Crash report server url
             BlackMisc::Network::CUrl getCrashReportServerUrl() const { return m_crashReportServerUrl; }
 
+            //! Root directory of DB
+            const BlackMisc::Network::CUrl &getDbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
+
+            //! ICAO reader URL
+            //! \remark based on getDbRootDirectoryUrl
+            BlackMisc::Network::CUrl getDbIcaoReaderUrl() const;
+
+            //! Model reader URL
+            //! \remark based on getDbRootDirectoryUrl
+            BlackMisc::Network::CUrl getDbModelReaderUrl() const;
+
+            //! Airport reader URL
+            //! \remark based on getDbRootDirectoryUrl
+            BlackMisc::Network::CUrl getDbAirportReaderUrl() const;
+
+            //! Info data reader URL
+            //! \remark based on getDbRootDirectoryUrl
+            BlackMisc::Network::CUrl getDbInfoReaderUrl() const;
+
             //! Home page url
+            //! \remark based on getDbRootDirectoryUrl
             BlackMisc::Network::CUrl getDbHomePageUrl() const;
 
-            //! Help page URL
-            BlackMisc::Network::CUrl getHelpPageUrl() const;
-
             //! Legal directory URL
+            //! \remark based on getDbRootDirectoryUrl
             BlackMisc::Network::CUrl getLegalDirectoryUrl() const;
 
             //! Login service
+            //! \remark based on getDbRootDirectoryUrl
             BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
 
             //! alpha XSwiftBus files available
             BlackMisc::Network::CUrl getAlphaXSwiftBusFilesServiceUrl() const;
 
-            //! Root directory of DB
-            const BlackMisc::Network::CUrl &getDbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
-
-            //! ICAO reader URL
-            BlackMisc::Network::CUrl getDbIcaoReaderUrl() const;
-
-            //! Model reader URL
-            BlackMisc::Network::CUrl getDbModelReaderUrl() const;
-
-            //! Airport reader URL
-            BlackMisc::Network::CUrl getDbAirportReaderUrl() const;
-
-            //! Info data reader URL
-            BlackMisc::Network::CUrl getDbInfoReaderUrl() const;
-
             //! Shared URLs
             const BlackMisc::Network::CUrlList &getSwiftSharedUrls() const;
+
+            //! Get pure shared URL as in getSwiftSharedUrls from bootstrap, distribution or other shared URL
+            //! \remark normally based on one of the getSwiftSharedUrls
+            BlackMisc::Network::CUrl getCorrespondingSharedUrl(const BlackMisc::Network::CUrl &candidate) const;
+
+            //! Bootstrap URLs
+            //! \remark based on getSwiftSharedUrls
+            BlackMisc::Network::CUrlList getSwiftBootstrapFileUrls() const;
+
+            //! Distribution URLs
+            //! \remark based on getSwiftSharedUrls
+            BlackMisc::Network::CUrlList getSwiftDistributionFileUrls() const;
 
             //! URL to read VATSIM bookings
             const BlackMisc::Network::CUrl &getVatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
@@ -134,20 +150,15 @@ namespace BlackCore
             //! VATSIM data file URLs
             const BlackMisc::Network::CUrlList &getVatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
 
-            //! Bootstrap URLs (where the data for the setup itself can be downloaded)
-            BlackMisc::Network::CUrlList getBootstrapFileUrls() const;
-
-            //! Version and download locations
-            BlackMisc::Network::CUrlList getDistributionUrls() const;
-
-            //! Alternative locations of swift DB data files
-            BlackMisc::Network::CUrlList getSwiftDbDataFileLocationUrls() const;
-
             //! Locations of swift DB news
             const BlackMisc::Network::CUrlList &getSwiftLatestNewsUrls() const;
 
             //! Online help URLs
             const BlackMisc::Network::CUrlList &getOnlineHelpUrls() const;
+
+            //! Help page URL
+            //! \remark working URL evaluated at runtime, based on getOnlineHelpUrls
+            BlackMisc::Network::CUrl getHelpPageUrl() const;
 
             //! swift map URLs
             const BlackMisc::Network::CUrlList &getSwiftMapUrls() const;
@@ -179,11 +190,11 @@ namespace BlackCore
             //! Schema version
             static const QString &versionString();
 
-            //! Build bootstrap file URL
+            //! Build bootstrap file URL from shared URL
             static QString buildBootstrapFileUrl(const QString &candidate);
 
-            //! Build the full dbdata directory URL
-            static BlackMisc::Network::CUrl buildDbDataDirectory(const BlackMisc::Network::CUrl &candidate);
+            //! Build the full dbdata directory URL from shared URL
+            static BlackMisc::Network::CUrl buildDbDataDirectoryUrl(const BlackMisc::Network::CUrl &candidate);
 
             //! Object initialized by JSON file
             static CGlobalSetup fromJsonFile(const QString &fileNameAndPath);
