@@ -50,7 +50,7 @@ namespace BlackGui
     {
         if (messages.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
+        m_overlayMessages->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
         this->repaint();
     }
 
@@ -63,7 +63,7 @@ namespace BlackGui
     {
         if (message.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showOverlayMessage(message, timeOutMs);
+        m_overlayMessages->showOverlayMessage(message, timeOutMs);
         this->repaint();
     }
 
@@ -71,7 +71,7 @@ namespace BlackGui
     {
         if (messages.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showOverlayMessages(messages, appendOldMessages, timeOutMs);
+        m_overlayMessages->showOverlayMessages(messages, appendOldMessages, timeOutMs);
         this->repaint();
     }
 
@@ -79,21 +79,21 @@ namespace BlackGui
     {
         if (textMessage.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showOverlayTextMessage(textMessage, timeOutMs);
+        m_overlayMessages->showOverlayTextMessage(textMessage, timeOutMs);
         this->repaint();
     }
 
     void COverlayMessagesFrame::showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs)
     {
         this->initInnerFrame();
-        this->m_overlayMessages->showOverlayVariant(variant, timeOutMs);
+        m_overlayMessages->showOverlayVariant(variant, timeOutMs);
         this->repaint();
     }
 
     void COverlayMessagesFrame::showOverlayImage(const BlackMisc::CPixmap &pixmap, int timeOutMs)
     {
         this->initInnerFrame();
-        this->m_overlayMessages->showOverlayImage(pixmap, timeOutMs);
+        m_overlayMessages->showOverlayImage(pixmap, timeOutMs);
         this->repaint();
     }
 
@@ -113,7 +113,7 @@ namespace BlackGui
     void COverlayMessagesFrame::resizeEvent(QResizeEvent *event)
     {
         QFrame::resizeEvent(event);
-        if (this->m_overlayMessages && this->m_overlayMessages->isVisible())
+        if (m_overlayMessages && m_overlayMessages->isVisible())
         {
             this->initInnerFrame();
         }
@@ -125,8 +125,8 @@ namespace BlackGui
         const int w = std::max(this->width(), this->minimumWidth());
         const int h = std::max(this->height(), this->minimumHeight());
 
-        int wInner = this->m_widthFactor * w;
-        int hInner = this->m_heightFactor * h;
+        int wInner = m_widthFactor * w;
+        int hInner = m_heightFactor * h;
         if (wInner > this->maximumWidth()) wInner = this->maximumWidth();
         if (hInner > this->maximumHeight()) hInner = this->maximumHeight();
         return QSize(wInner, hInner);
@@ -135,15 +135,15 @@ namespace BlackGui
     void COverlayMessagesFrame::initInnerFrame()
     {
         const QSize inner(innerFrameSize());
-        if (!this->m_overlayMessages)
+        if (!m_overlayMessages)
         {
             // lazy init
-            this->m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
-            this->m_overlayMessages->addShadow();
-            this->m_overlayMessages->showKillButton(m_showKillButton);
+            m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
+            m_overlayMessages->addShadow();
+            m_overlayMessages->showKillButton(m_showKillButton);
         }
 
-        Q_ASSERT(this->m_overlayMessages);
+        Q_ASSERT(m_overlayMessages);
 
         const bool isFrameless = CGuiUtility::isMainWindowFrameless();
         const QPoint middle = this->geometry().center();
@@ -152,6 +152,6 @@ namespace BlackGui
         const int h = inner.height();
         const int x = middle.x() - w / 2;
         const int y = middle.y() - h / yFactor;
-        this->m_overlayMessages->setGeometry(x, y, w, h);
+        m_overlayMessages->setGeometry(x, y, w, h);
     }
 } // ns

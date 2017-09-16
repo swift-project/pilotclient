@@ -405,7 +405,7 @@ namespace BlackGui
 
         CAuthenticatedUser CDbStashComponent::getSwiftDbUser() const
         {
-            return this->m_swiftDbUser.get();
+            return m_swiftDbUser.get();
         }
 
         CAircraftModel CDbStashComponent::consolidateModel(const CAircraftModel &model) const

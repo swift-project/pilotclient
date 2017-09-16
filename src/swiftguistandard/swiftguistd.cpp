@@ -90,8 +90,8 @@ void SwiftGuiStd::mousePressEvent(QMouseEvent *event)
 
 void SwiftGuiStd::performGracefulShutdown()
 {
-    if (!this->m_init) { return; }
-    this->m_init = false;
+    if (!m_init) { return; }
+    m_init = false;
 
     Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Should shutdown in main thread");
 
@@ -99,11 +99,11 @@ void SwiftGuiStd::performGracefulShutdown()
     this->stopAllTimers(true);
 
     // if we have a context, we shut some things down
-    if (this->m_contextNetworkAvailable)
+    if (m_contextNetworkAvailable)
     {
         if (sGui && sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
         {
-            if (this->m_contextAudioAvailable)
+            if (m_contextAudioAvailable)
             {
                 sGui->getIContextAudio()->leaveAllVoiceRooms();
                 sGui->getIContextAudio()->disconnect(this); // break down signal / slots
@@ -216,25 +216,25 @@ void SwiftGuiStd::ps_loginRequested()
 
 bool SwiftGuiStd::isContextNetworkAvailableCheck()
 {
-    if (this->m_contextNetworkAvailable) return true;
+    if (m_contextNetworkAvailable) return true;
     CLogMessage(this).error("Network context not available, no updates this time");
     return false;
 }
 
 bool SwiftGuiStd::isContextAudioAvailableCheck()
 {
-    if (this->m_contextAudioAvailable) return true;
+    if (m_contextAudioAvailable) return true;
     CLogMessage(this).error("Audio context not available");
     return false;
 }
 
 void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
-    if (!this->m_init) { return; }
+    if (!m_init) { return; }
     // used with log subscriber
     if (statusMessage.wasHandledBy(this)) { return; }
     statusMessage.markAsHandledBy(this);
-    this->m_statusBar.displayStatusMessage(statusMessage);
+    m_statusBar.displayStatusMessage(statusMessage);
 
     // main info areas
     ui->comp_MainInfoArea->displayStatusMessage(statusMessage);
@@ -287,27 +287,27 @@ void SwiftGuiStd::ps_handleTimerBasedUpdates()
 
 void SwiftGuiStd::setContextAvailability()
 {
-    const bool corePreviouslyAvailable = this->m_coreAvailable;
+    const bool corePreviouslyAvailable = m_coreAvailable;
     if (sGui &&
             sGui->getIContextApplication() &&
             !sGui->isShuttingDown() &&
             !sGui->getIContextApplication()->isEmptyObject())
     {
         // ping to check if core is still alive
-        this->m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
+        m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
     }
     else
     {
-        this->m_coreAvailable = false;
+        m_coreAvailable = false;
     }
 
-    this->m_contextNetworkAvailable = this->m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
-    this->m_contextAudioAvailable = this->m_coreAvailable && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
+    m_contextNetworkAvailable = m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
+    m_contextAudioAvailable = m_coreAvailable && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
 
     // react to a change in core's availability
-    if (this->m_coreAvailable != corePreviouslyAvailable)
+    if (m_coreAvailable != corePreviouslyAvailable)
     {
-        if (this->m_coreAvailable)
+        if (m_coreAvailable)
         {
             // core has just become available (startup)
             sGui->getIContextApplication()->synchronizeLogSubscriptions();
@@ -320,7 +320,7 @@ void SwiftGuiStd::updateGuiStatusInformation()
 {
     const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
     QString network("unavailable");
-    if (this->m_contextNetworkAvailable)
+    if (m_contextNetworkAvailable)
     {
         bool dbus = !sGui->getIContextNetwork()->isUsingImplementingObject();
         network = dbus ? now : "local";
@@ -429,7 +429,7 @@ void SwiftGuiStd::ps_sharedInfoObjectsLoaded()
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
-    if (!this->m_contextAudioAvailable) { return; }
+    if (!m_contextAudioAvailable) { return; }
     if (!ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
     sGui->getIContextAudio()->playNotification(notification, true);
 }
