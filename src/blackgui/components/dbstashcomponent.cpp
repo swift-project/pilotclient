@@ -25,6 +25,7 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/verify.h"
+#include "dbstashcomponent.h"
 #include "ui_dbstashcomponent.h"
 
 #include <QCheckBox>
@@ -184,7 +185,7 @@ namespace BlackGui
         {
             if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
             CStatusMessageList msgs(livery.validate());
-            if (this->showMessages(msgs, acceptWarnings)) { return; }
+            if (this->showOverlayMessages(msgs, acceptWarnings)) { return; }
             ui->tvp_StashAircraftModels->applyToSelected(livery);
         }
 
@@ -192,7 +193,7 @@ namespace BlackGui
         {
             if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
             CStatusMessageList msgs(icao.validate());
-            if (this->showMessages(msgs, acceptWarnings)) { return; }
+            if (this->showOverlayMessages(msgs, acceptWarnings)) { return; }
             ui->tvp_StashAircraftModels->applyToSelected(icao);
         }
 
@@ -201,7 +202,7 @@ namespace BlackGui
             if (!icao.hasValidDesignator())
             {
                 static const CStatusMessage msg(CStatusMessage::SeverityError, "No valid designator");
-                this->showMessage(msg);
+                this->showOverlayMessage(msg);
                 return;
             }
 
@@ -210,7 +211,7 @@ namespace BlackGui
             if (!stdLivery.hasValidDbKey())
             {
                 static const CStatusMessage msg(CStatusMessage::SeverityError, "No valid standard livery for " + icao.getDesignator());
-                this->showMessage(msg);
+                this->showOverlayMessage(msg);
                 return;
             }
 
@@ -221,7 +222,7 @@ namespace BlackGui
         {
             if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
             CStatusMessageList msgs(distributor.validate());
-            if (this->showMessages(msgs, acceptWarnings)) { return; }
+            if (this->showOverlayMessages(msgs, acceptWarnings)) { return; }
             ui->tvp_StashAircraftModels->applyToSelected(distributor);
         }
 
@@ -256,7 +257,8 @@ namespace BlackGui
 
         void CDbStashComponent::ps_onPublishPressed()
         {
-            if (ui->tvp_StashAircraftModels->isEmpty()) {return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+            if (ui->tvp_StashAircraftModels->isEmpty()) { return; }
 
             // get models right here, because later steps might affect selection
             const CAircraftModelList models(getSelectedOrAllModels());
@@ -273,10 +275,10 @@ namespace BlackGui
                 msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, QString("More than %1 values, values skipped").arg(MaxModelPublished)));
             }
 
-            msgs.push_back(sApp->getWebDataServices()->asyncPublishModels(validModels));
+            msgs.push_back(sGui->getWebDataServices()->asyncPublishModels(validModels));
             if (msgs.hasWarningOrErrorMessages())
             {
-                this->showMessages(msgs);
+                this->showOverlayMessages(msgs);
             }
             else
             {
@@ -296,7 +298,7 @@ namespace BlackGui
             {
                 if (publishedModels.isEmpty())
                 {
-                    this->showMessages(msgs);
+                    this->showOverlayMessages(msgs, false, true); // show messages, keep old messages
                 }
                 else
                 {
@@ -305,7 +307,7 @@ namespace BlackGui
                     {
                         this->unstashModels(publishedModels.getModelStringList(false));
                     };
-                    this->showMessagesWithConfirmation(msgs, confirm.arg(publishedModels.size()), lambda, QMessageBox::Ok);
+                    this->showOverlayMessagesWithConfirmation(msgs, true, confirm.arg(publishedModels.size()), lambda, QMessageBox::Ok);
                 }
             }
 
@@ -341,7 +343,7 @@ namespace BlackGui
             const CStatusMessageList msgs(this->validate(validModels, invalidModels));
             if (msgs.hasWarningOrErrorMessages())
             {
-                this->showMessages(msgs);
+                this->showOverlayMessages(msgs);
                 ui->tvp_StashAircraftModels->setHighlightModelStrings(invalidModels.getModelStringList(false));
             }
             else
@@ -352,7 +354,7 @@ namespace BlackGui
                 {
                     const QString no = QString::number(this->getStashedModelsCount());
                     CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
-                    this->showMessage(msg);
+                    this->showOverlayMessage(msg);
                 }
             }
             return !validModels.isEmpty(); // at least some valid objects
@@ -445,7 +447,7 @@ namespace BlackGui
                     msgs.push_back(modelMsgs);
                 }
             }
-            this->showMessages(msgs);
+            this->showOverlayMessages(msgs);
         }
 
         void CDbStashComponent::ps_copyOverValuesToSelectedModels()
@@ -512,33 +514,43 @@ namespace BlackGui
             }
         }
 
-        bool CDbStashComponent::showMessages(const CStatusMessageList &msgs, bool onlyErrors, int timeoutMs)
+        bool CDbStashComponent::showOverlayMessages(const CStatusMessageList &msgs, bool onlyErrors, bool appendOldMessages, int timeoutMs)
         {
             if (msgs.isEmpty()) { return false; }
             if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
             BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             if (!this->getMappingComponent()) { return false; }
-            this->getMappingComponent()->showOverlayMessages(msgs, timeoutMs);
+
+            this->getMappingComponent()->showOverlayMessages(msgs, appendOldMessages, timeoutMs);
             return true;
         }
 
-        bool CDbStashComponent::showMessagesWithConfirmation(const CStatusMessageList &msgs, const QString &confirmation, std::function<void ()> okLambda, int defaultButton, bool onlyErrors, int timeoutMs)
+        bool CDbStashComponent::showOverlayMessagesWithConfirmation(
+            const CStatusMessageList &msgs, bool appendOldMessages,
+            const QString &confirmation, std::function<void ()> okLambda, int defaultButton, bool onlyErrors, int timeoutMs)
         {
             if (msgs.isEmpty()) { return false; }
             if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
             BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             if (!this->getMappingComponent()) { return false; }
-            this->getMappingComponent()->showOverlayMessagesWithConfirmation(msgs, confirmation, okLambda, defaultButton, timeoutMs);
+            this->getMappingComponent()->showOverlayMessagesWithConfirmation(msgs, appendOldMessages, confirmation, okLambda, defaultButton, timeoutMs);
             return true;
         }
 
-        bool CDbStashComponent::showMessage(const CStatusMessage &msg, int timeoutMs)
+        bool CDbStashComponent::showOverlayMessage(const CStatusMessage &msg, int timeoutMs)
         {
             if (msg.isEmpty()) { return false; }
             BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             if (!this->getMappingComponent()) { return false; }
             this->getMappingComponent()->showOverlayMessage(msg, timeoutMs);
             return true;
+        }
+
+        void CDbStashComponent::clearOverlayMessages()
+        {
+            BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+            if (!this->getMappingComponent()) { return; }
+            this->getMappingComponent()->clearOverlayMessages();
         }
     } // ns
 } // ns

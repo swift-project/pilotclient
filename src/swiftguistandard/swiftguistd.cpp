@@ -423,7 +423,7 @@ void SwiftGuiStd::ps_sharedInfoObjectsLoaded()
         {
             sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(newEntities, false);
         };
-        ui->fr_CentralFrameInside->showOverlayMessagesWithConfirmation(sms, "Load data?", lambda);
+        ui->fr_CentralFrameInside->showOverlayMessagesWithConfirmation(sms, false, "Load data?", lambda);
     });
 }
 

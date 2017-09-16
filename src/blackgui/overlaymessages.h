@@ -76,14 +76,18 @@ namespace BlackGui
 
         //! Show multiple messages with confirmation bar
         void showOverlayMessagesWithConfirmation(
-                const BlackMisc::CStatusMessageList &messages,
-                const QString &confirmationMessage,
-                std::function<void()> okLambda,
-                int defaultButton = QMessageBox::Cancel,
-                int timeOutMs = -1);
+            const BlackMisc::CStatusMessageList &messages,
+            bool appendOldMessages,
+            const QString &confirmationMessage,
+            std::function<void()> okLambda,
+            int defaultButton = QMessageBox::Cancel,
+            int timeOutMs = -1);
+
+        //! Clear the overlay messages
+        void clearOverlayMessages();
 
         //! Show multiple messages
-        void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
+        void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
 
         //! Show single message
         void showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);

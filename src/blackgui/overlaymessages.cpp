@@ -59,7 +59,7 @@ namespace BlackGui
         connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::ps_killClicked);
 
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAlways);
-        ui->tvp_StatusMessages->setForceColumnsToMaxSize(false); // problems with multinline entries, with T138 we need multiline messages
+        ui->tvp_StatusMessages->setForceColumnsToMaxSize(false); // problems with multiline entries, with T138 we need multiline messages
         ui->tvp_StatusMessages->setWordWrap(true);
         ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         ui->fr_Confirmation->setVisible(false);
@@ -145,7 +145,7 @@ namespace BlackGui
     COverlayMessages::~COverlayMessages()
     {}
 
-    void COverlayMessages::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
+    void COverlayMessages::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         if (!sApp || sApp->isShuttingDown()) { return; }
@@ -159,10 +159,19 @@ namespace BlackGui
             return;
         }
 
-        ui->tvp_StatusMessages->updateContainerMaybeAsync(messages);
-        ui->tvp_StatusMessages->resizeRowsToContents();
+        if (appendOldMessages && !ui->tvp_StatusMessages->isEmpty())
+        {
+            CStatusMessageList messagesWithOld(messages);
+            messagesWithOld.push_back(ui->tvp_StatusMessages->container());
+            ui->tvp_StatusMessages->updateContainerMaybeAsync(messagesWithOld);
+            this->setModeToMessages(messagesWithOld.hasErrorMessages());
+        }
+        else
+        {
+            ui->tvp_StatusMessages->updateContainerMaybeAsync(messages);
+            this->setModeToMessages(messages.hasErrorMessages());
+        }
         this->showKill(false);
-        this->setModeToMessages(messages.hasErrorMessages());
         this->display(timeOutMs);
     }
 
@@ -340,22 +349,27 @@ namespace BlackGui
         }
     }
 
-    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
+    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, bool appendOldMessages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
     {
         if (this->hasPendingConfirmation())
         {
             // defer message
             m_pendingMessageCalls.push_back([ = ]()
             {
-                this->showOverlayMessagesWithConfirmation(messages, confirmationMessage, okLambda, defaultButton, timeOutMs);
+                this->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
             });
             return;
         }
         this->setConfirmationMessage(confirmationMessage);
-        this->showOverlayMessages(messages, timeOutMs);
+        this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
         m_awaitingConfirmation = true; // needs to be after showOverlayMessages
         m_okLambda = okLambda;
         this->setDefaultConfirmationButton(defaultButton);
+    }
+
+    void COverlayMessages::clearOverlayMessages()
+    {
+        ui->tvp_StatusMessages->clear();
     }
 
     void COverlayMessages::setDefaultConfirmationButton(int button)

@@ -176,13 +176,19 @@ namespace BlackGui
             BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDbStashComponent::ps_userChanged}; //!< authenticated user
 
             //! Display messages
-            bool showMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false, int timeoutMs = -1);
+            bool showOverlayMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false, bool appendOldMessages = false, int timeoutMs = -1);
 
             //! Display messages with confirmation
-            bool showMessagesWithConfirmation(const BlackMisc::CStatusMessageList &msgs, const QString &confirmation, std::function<void()> okLambda, int defaultButton, bool onlyErrors = false, int timeoutMs = -1);
+            bool showOverlayMessagesWithConfirmation(
+                const BlackMisc::CStatusMessageList &msgs, bool appendOldMessages,
+                const QString &confirmation, std::function<void()> okLambda,
+                int defaultButton, bool onlyErrors = false, int timeoutMs = -1);
 
             //! Display message
-            bool showMessage(const BlackMisc::CStatusMessage &msg, int timeoutMs = -1);
+            bool showOverlayMessage(const BlackMisc::CStatusMessage &msg, int timeoutMs = -1);
+
+            //! Clear messages
+            void clearOverlayMessages();
 
             //! Validate
             BlackMisc::CStatusMessageList validate(BlackMisc::Simulation::CAircraftModelList &validModels, BlackMisc::Simulation::CAircraftModelList &invalidModels) const;

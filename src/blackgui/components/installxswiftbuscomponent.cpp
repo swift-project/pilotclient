@@ -204,7 +204,7 @@ namespace BlackGui
                 return;
             }
             static const QString confirm("Install in '%1'?");
-            this->showOverlayMessagesWithConfirmation(status, confirm.arg(ui->le_XSwiftBusPluginDir->text()), [ = ] { this->installXSwiftBus(); });
+            this->showOverlayMessagesWithConfirmation(status, false, confirm.arg(ui->le_XSwiftBusPluginDir->text()), [ = ] { this->installXSwiftBus(); });
         }
 
         CRemoteFile CInstallXSwiftBusComponent::getRemoteFileSelected() const

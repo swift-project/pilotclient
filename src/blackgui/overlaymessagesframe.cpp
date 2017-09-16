@@ -46,12 +46,17 @@ namespace BlackGui
         }
     }
 
-    void COverlayMessagesFrame::showOverlayMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showOverlayMessagesWithConfirmation(messages, confirmationMessage, okLambda, defaultButton, timeOutMs);
+        this->m_overlayMessages->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
         this->repaint();
+    }
+
+    void COverlayMessagesFrame::clearOverlayMessages()
+    {
+        m_overlayMessages->clearOverlayMessages();
     }
 
     void COverlayMessagesFrame::showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
@@ -62,11 +67,11 @@ namespace BlackGui
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showOverlayMessages(messages, timeOutMs);
+        this->m_overlayMessages->showOverlayMessages(messages, appendOldMessages, timeOutMs);
         this->repaint();
     }
 
