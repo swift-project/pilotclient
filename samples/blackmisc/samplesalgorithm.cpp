@@ -25,6 +25,7 @@
 #include <QtDebug>
 #include <algorithm>
 #include <cmath>
+#include <ctime>
 #include <numeric>
 
 namespace BlackSample
@@ -67,7 +68,7 @@ namespace BlackSample
         }
 
         QStringList src { "a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3" };
-        std::random_shuffle(src.begin(), src.end());
+        std::shuffle(src.begin(), src.end(), std::mt19937(static_cast<unsigned>(std::time(nullptr))));
         qDebug() << src;
         qDebug() << "topologicallySortedInsert";
         QStringList dst;
