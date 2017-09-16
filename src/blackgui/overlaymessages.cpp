@@ -61,6 +61,7 @@ namespace BlackGui
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAlways);
         ui->tvp_StatusMessages->setForceColumnsToMaxSize(false); // problems with multinline entries, with T138 we need multiline messages
         ui->tvp_StatusMessages->setWordWrap(true);
+        ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         ui->fr_Confirmation->setVisible(false);
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }

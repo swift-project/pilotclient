@@ -409,9 +409,9 @@ namespace BlackGui
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
             const bool enabled = !this->reachedResizeThreshold();
-            const bool autoResize = m_resizeMode == ResizingAuto;
+            const bool autoResize = (m_resizeMode == ResizingAuto);
 
-            // when not auto let set how we want to resize rows
+            // when not set to auto, then lets set how we want to resize rows
             if (m_rowResizeMode == Interactive)
             {
                 QAction *a = menuActions.addAction(BlackMisc::CIcons::resizeVertical16(), " Resize rows to content (auto)", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
@@ -419,7 +419,7 @@ namespace BlackGui
             }
             else
             {
-                QAction *a = menuActions.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
+                QAction *a = menuActions.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactively", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
                 a->setEnabled(!autoResize);
             }
 
