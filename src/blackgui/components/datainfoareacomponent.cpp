@@ -83,7 +83,7 @@ namespace BlackGui
 
         bool CDataInfoAreaComponent::writeDbDataToResourceDir() const
         {
-            if (!sGui || !sGui->getWebDataServices()->hasConnectedSwiftDb())
+            if (!sGui || !sGui->getWebDataServices()->hasSuccesfullyConnectedSwiftDb())
             {
                 CLogMessage(this).warning("No connection to DB yet, no new data loaded which can be written");
                 return false;

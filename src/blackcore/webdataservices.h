@@ -398,8 +398,8 @@ namespace BlackCore
         //! For all available readers the log info is generated
         QString getReadersLog(const QString separator = "\n") const;
 
-        //! Has already connect swift DB?
-        bool hasConnectedSwiftDb() const;
+        //! Has already successfully connect swift DB?
+        bool hasSuccesfullyConnectedSwiftDb() const;
 
         //! Reset the flags what was already signaled
         void resetSignalFlags();

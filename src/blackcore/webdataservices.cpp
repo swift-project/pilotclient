@@ -165,7 +165,7 @@ namespace BlackCore
         initSharedInfoObjectReaderAndTriggerRead();
     }
 
-    bool CWebDataServices::hasConnectedSwiftDb() const
+    bool CWebDataServices::hasSuccesfullyConnectedSwiftDb() const
     {
         if (!m_icaoDataReader && !m_modelDataReader && !m_airportDataReader && !m_dbInfoDataReader) { return false; }
 
