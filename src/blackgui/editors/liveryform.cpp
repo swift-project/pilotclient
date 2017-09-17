@@ -115,6 +115,7 @@ namespace BlackGui
 
         void CLiveryForm::jsonPasted(const QString &json)
         {
+            if (json.isEmpty()) { return; } // avoid unnecessary conversions
             try
             {
                 CVariant jsonVariant;

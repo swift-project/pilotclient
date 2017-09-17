@@ -157,6 +157,7 @@ namespace BlackGui
 
         void CAirlineIcaoForm::jsonPasted(const QString &json)
         {
+            if (json.isEmpty()) { return; } // avoid unnecessary conversions
             try
             {
                 CVariant jsonVariant;
@@ -183,7 +184,7 @@ namespace BlackGui
             }
             else if (variantDropped.canConvert<CAirlineIcaoCodeList>())
             {
-                CAirlineIcaoCodeList icaoList(variantDropped.value<CAirlineIcaoCodeList>());
+                const CAirlineIcaoCodeList icaoList(variantDropped.value<CAirlineIcaoCodeList>());
                 if (icaoList.isEmpty()) { return;  }
                 icao =  icaoList.front();
             }
