@@ -146,6 +146,9 @@ namespace BlackMisc
             //! Remove the HTML formatting from a PHP error message
             static QString removeHtmlPartsFromPhpErrorMessage(const QString &errorMessage);
 
+            //! Looks like PHP error messages
+            static bool looksLikePhpErrorMessage(const QString &errorMessage);
+
             //! Status about network
             static BlackMisc::CStatusMessageList createNetworkReport(const QNetworkAccessManager *am);
 

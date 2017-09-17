@@ -356,6 +356,13 @@ namespace BlackMisc
             return phpError.remove(regEx);
         }
 
+        bool CNetworkUtils::looksLikePhpErrorMessage(const QString &errorMessage)
+        {
+            if (errorMessage.length() < 50) { return false; }
+            if (errorMessage.contains("xdebug", Qt::CaseInsensitive)) { return true; }
+            return false;
+        }
+
         CStatusMessageList CNetworkUtils::createNetworkReport(const QNetworkAccessManager *am)
         {
             return CNetworkUtils::createNetworkReport(CUrl(), am);
