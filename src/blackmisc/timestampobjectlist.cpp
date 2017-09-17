@@ -187,25 +187,25 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
-    void ITimestampObjectList<OBJ, CONTAINER>::removeBefore(const QDateTime &dateTime)
+    int ITimestampObjectList<OBJ, CONTAINER>::removeBefore(const QDateTime &dateTime)
     {
-        this->removeBefore(dateTime.toMSecsSinceEpoch());
+        return this->removeBefore(dateTime.toMSecsSinceEpoch());
     }
 
     template <class OBJ, class CONTAINER>
-    void ITimestampObjectList<OBJ, CONTAINER>::removeBefore(qint64 msSinceEpoc)
+    int ITimestampObjectList<OBJ, CONTAINER>::removeBefore(qint64 msSinceEpoc)
     {
-        this->container().removeIf([&](const OBJ & obj)
+        return this->container().removeIf([&](const OBJ & obj)
         {
             return obj.isOlderThan(msSinceEpoc);
         });
     }
 
     template <class OBJ, class CONTAINER>
-    void ITimestampObjectList<OBJ, CONTAINER>::removeOlderThanNowMinusOffset(qint64 offsetMs)
+    int ITimestampObjectList<OBJ, CONTAINER>::removeOlderThanNowMinusOffset(qint64 offsetMs)
     {
         const qint64 epoch = QDateTime::currentMSecsSinceEpoch() - offsetMs;
-        this->container().removeIf([&](const OBJ & obj)
+        return this->container().removeIf([&](const OBJ & obj)
         {
             return obj.isOlderThan(epoch);
         });

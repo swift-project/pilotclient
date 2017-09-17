@@ -78,13 +78,13 @@ namespace BlackMisc
         OBJ oldestObject() const;
 
         //! Remove objects with timestamp before dateTime
-        void removeBefore(const QDateTime &dateTime);
+        int removeBefore(const QDateTime &dateTime);
 
         //! Remove objects with timestamp before dateTime
-        void removeBefore(qint64 msSinceEpoch);
+        int removeBefore(qint64 msSinceEpoch);
 
         //! Remove objects older than seconds
-        void removeOlderThanNowMinusOffset(qint64 offsetMs);
+        int removeOlderThanNowMinusOffset(qint64 offsetMs);
 
         //! Sort by timestamp
         void sortLatestFirst();
