@@ -83,7 +83,7 @@ namespace BlackMisc
 
             if (jsonResponse.isEmpty())
             {
-                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Empty JSON data"));
+                messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Empty JSON data for published models"));
                 return false;
             }
 

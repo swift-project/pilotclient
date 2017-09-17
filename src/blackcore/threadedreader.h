@@ -64,7 +64,7 @@ namespace BlackCore
 
         //! Set marker for read failed
         //! \threadsafe
-        //! \deprecated likely to be removed
+        //! \deprecated 2017-09 likely to be removed, using m_urlReadLog in future
         void setMarkedAsFailed(bool failed);
 
         //! Get the read log
@@ -116,7 +116,7 @@ namespace BlackCore
         void logNetworkReplyReceived(QNetworkReply *reply);
 
         //! Use this to log inconsistent data
-        //! \remark here in a single place severity / format can be adjusted
+        //! \remark here in a single function severity / format can be adjusted
         static void logInconsistentData(const BlackMisc::CStatusMessage &msg, const char *funcInfo = nullptr);
 
     private:
