@@ -141,6 +141,10 @@ namespace BlackGui
             //! When to use pre-sizing with random elements
             static constexpr int ResizeSubsetThreshold = 250;
 
+            //! When to use rows resizing (which is slow)
+            //! \see rowsResizeModeToContent
+            static constexpr int ResizeRowsToContentThreshold = 20;
+
             //! Clear data
             virtual void clear() = 0;
 
@@ -269,7 +273,7 @@ namespace BlackGui
 
             //! Force that columns are extended to full viewport width.
             //! Workaround as of https://stackoverflow.com/q/3433664/356726
-            void setForceColumnsToMaxSize (bool force) { m_forceColumnsToMaxSize = force; }
+            void setForceColumnsToMaxSize(bool force) { m_forceColumnsToMaxSize = force; }
 
         signals:
             //! Ask for new data from currently loaded data
@@ -322,7 +326,11 @@ namespace BlackGui
             void rowsResizeModeToInteractive();
 
             //! Resize mode to content
+            //! \remark extremely slow for larger views (means views with many rows)
             void rowsResizeModeToContent();
+
+            //! Set content/interactive mode based on ResizeRowsToContentThreshold
+            void rowsResizeModeBasedOnThreshold(int elements);
 
             //! Show loading indicator
             //! \param containerSizeDependent check against resize threshold if indicator makes sense

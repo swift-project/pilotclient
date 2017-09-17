@@ -112,6 +112,9 @@ namespace BlackGui
             connect(this, &QTableView::doubleClicked, this, &CViewBaseNonTemplate::ps_doubleClicked);
             this->horizontalHeader()->setSortIndicatorShown(true);
 
+            // setting resize mode rowsResizeModeToContent() causes extremly slow views
+            // default, see: m_rowResizeMode
+
             // scroll modes
             this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -414,12 +417,12 @@ namespace BlackGui
             // when not set to auto, then lets set how we want to resize rows
             if (m_rowResizeMode == Interactive)
             {
-                QAction *a = menuActions.addAction(BlackMisc::CIcons::resizeVertical16(), " Resize rows to content (auto)", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
+                QAction *a = menuActions.addAction(CIcons::resizeVertical16(), " Resize rows to content (auto), can be slow", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
                 a->setEnabled(enabled && !autoResize);
             }
             else
             {
-                QAction *a = menuActions.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactively", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
+                QAction *a = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows interactively", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
                 a->setEnabled(!autoResize);
             }
 
@@ -505,9 +508,9 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::init()
         {
-            const int fh = qRound(1.5 * this->getHorizontalHeaderFontHeight());
             this->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive); // faster mode
             this->horizontalHeader()->setStretchLastSection(true);
+            const int fh = qRound(1.5 * this->getHorizontalHeaderFontHeight());
             this->verticalHeader()->setDefaultSectionSize(fh); // for height
             this->verticalHeader()->setMinimumSectionSize(fh); // for height
 
@@ -640,6 +643,18 @@ namespace BlackGui
             m_rowResizeMode = Content;
         }
 
+        void CViewBaseNonTemplate::rowsResizeModeBasedOnThreshold(int elements)
+        {
+            if (elements > ResizeRowsToContentThreshold)
+            {
+                this->rowsResizeModeToInteractive();
+            }
+            else
+            {
+                this->rowsResizeModeToContent();
+            }
+        }
+
         int CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, int timeoutMs, bool processEvents)
         {
             if (!m_enabledLoadIndicator) { return -1; }
@@ -705,21 +720,25 @@ namespace BlackGui
         {
             // resize to maximum magic trick from:
             // http://stackoverflow.com/q/3433664/356726
-            // vpNew.setWidth(std::numeric_limits<qint32>::max()); // largest finite value
             this->setVisible(false);
-
             const QRect vpOriginal = this->viewport()->geometry();
             if (m_forceColumnsToMaxSize)
             {
+                // vpNew.setWidth(std::numeric_limits<qint32>::max()); // largest finite value
                 const QRect screenGeometry = QApplication::desktop()->screenGeometry();
                 QRect vpNew = vpOriginal;
                 vpNew.setWidth(screenGeometry.width());
                 this->viewport()->setGeometry(vpNew);
             }
 
-            m_resizeCount++;
             this->resizeColumnsToContents(); // columns
-            this->resizeRowsToContents(); // rows
+
+            // useless if mode is Interactive
+            if (m_rowResizeMode == Content)
+            {
+                this->resizeRowsToContents(); // rows
+            }
+            m_resizeCount++;
 
             // re-stretch
             if (m_forceStretchLastColumnWhenResized) { this->horizontalHeader()->setStretchLastSection(true); }
@@ -748,7 +767,7 @@ namespace BlackGui
                 dockWidget->addToContextMenu(dockWidgetSubMenu);
             }
 
-            QPoint globalPos = this->mapToGlobal(pos);
+            const QPoint globalPos = this->mapToGlobal(pos);
             menu.exec(globalPos);
         }
 
@@ -882,7 +901,7 @@ namespace BlackGui
             }
             else if (reallyResize)
             {
-                this->resizeToContents();
+                this->resizeToContents(); // mode based resize
             }
             else if (presize && !presizeThresholdReached)
             {

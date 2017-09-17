@@ -60,7 +60,6 @@ namespace BlackGui
 
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAlways);
         ui->tvp_StatusMessages->setForceColumnsToMaxSize(false); // problems with multiline entries, with T138 we need multiline messages
-        ui->tvp_StatusMessages->setWordWrap(true);
         ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         ui->fr_Confirmation->setVisible(false);
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
@@ -159,15 +158,18 @@ namespace BlackGui
             return;
         }
 
+        //! \fixme KB 2017-09 a possible alternative maybe is to resize rows always to content -> performance?
         if (appendOldMessages && !ui->tvp_StatusMessages->isEmpty())
         {
             CStatusMessageList messagesWithOld(messages);
             messagesWithOld.push_back(ui->tvp_StatusMessages->container());
+            ui->tvp_StatusMessages->rowsResizeModeBasedOnThreshold(messages.size());
             ui->tvp_StatusMessages->updateContainerMaybeAsync(messagesWithOld);
             this->setModeToMessages(messagesWithOld.hasErrorMessages());
         }
         else
         {
+            ui->tvp_StatusMessages->rowsResizeModeBasedOnThreshold(messages.size());
             ui->tvp_StatusMessages->updateContainerMaybeAsync(messages);
             this->setModeToMessages(messages.hasErrorMessages());
         }
