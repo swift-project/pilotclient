@@ -36,12 +36,16 @@ namespace BlackGui
             m_timer.setInterval(30 * 1000);
             m_timer.start();
             m_timer.setObjectName("CInfoBarWebReadersStatusBase::CheckSwiftDbTimer");
-            bool c = connect(&m_timer, &QTimer::timeout, this,  &CInfoBarWebReadersStatusBase::ps_checkServerAndData);
+            bool c = connect(&m_timer, &QTimer::timeout, this,  &CInfoBarWebReadersStatusBase::checkServerAndData);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
+            c = connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarWebReadersStatusBase::accessibilityChanged);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
+            c = connect(sGui, &CGuiApplication::changedSwiftDbAccessibility, this, &CInfoBarWebReadersStatusBase::accessibilityChanged);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
 
             if (sGui->hasWebDataServices())
             {
-                c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusBase::ps_dataRead);
+                c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusBase::dataRead);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
             }
 
@@ -67,22 +71,25 @@ namespace BlackGui
             this->led_Distributors->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
         }
 
-        void CInfoBarWebReadersStatusBase::ps_dataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CInfoBarWebReadersStatusBase::dataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
             QList<CLedWidget *> leds = this->entityToLeds(entity);
             if (!leds.isEmpty()) { this->setLedReadStates(leds, readState); }
         }
 
-        void CInfoBarWebReadersStatusBase::ps_checkServerAndData()
+        void CInfoBarWebReadersStatusBase::accessibilityChanged(bool accessible)
         {
-            const bool swift =
-                sGui &&
-                sGui->hasWebDataServices() &&
-                sGui->getWebDataServices()->hasConnectedSwiftDb();
+            Q_UNUSED(accessible);
+            this->checkServerAndData();
+        }
+
+        void CInfoBarWebReadersStatusBase::checkServerAndData()
+        {
+            const bool swift = sGui && sGui->isSwiftDbAccessible();
             this->led_SwiftDb->setOn(swift);
 
-            bool allData = hasAllData();
+            const bool allData = hasAllData();
             this->led_DataReady->setOn(allData);
         }
 
@@ -97,7 +104,7 @@ namespace BlackGui
         void CInfoBarWebReadersStatusBase::setLedReadState(CLedWidget *led, CEntityFlags::ReadState readState)
         {
             Q_ASSERT_X(led, Q_FUNC_INFO, "no LED");
-            int blinkTime = 2.5 * 1000;
+            const int blinkTime = 2.5 * 1000;
             switch (readState)
             {
             case CEntityFlags::ReadFinished:

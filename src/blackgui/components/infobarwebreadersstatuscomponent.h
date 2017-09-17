@@ -37,14 +37,12 @@ namespace BlackGui
 
         public:
             //!Destructor
-            ~CInfoBarWebReadersStatusBase();
+            virtual ~CInfoBarWebReadersStatusBase();
 
             //! Init the LEDs
             void initLeds();
 
         protected:
-            QTimer m_timer { this }; //!< check timer
-
             //! Constructor
             explicit CInfoBarWebReadersStatusBase(QWidget *parent = nullptr);
 
@@ -68,14 +66,17 @@ namespace BlackGui
                          BlackGui::CLedWidget *led_IcaoAircraft, BlackGui::CLedWidget *led_IcaoAirline, BlackGui::CLedWidget *led_Countries,
                          BlackGui::CLedWidget *led_Distributors, BlackGui::CLedWidget *led_Liveries, BlackGui::CLedWidget *led_Models);
 
-        private slots:
             //! Data have been read
-            void ps_dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! DB or network accessibility changed
+            void accessibilityChanged(bool accessible);
 
             //! Check server status
-            void ps_checkServerAndData();
+            void checkServerAndData();
 
         private:
+            QTimer m_timer { this }; //!< check timer
             BlackGui::CLedWidget *led_SwiftDb = nullptr;
             BlackGui::CLedWidget *led_DataReady = nullptr;
             BlackGui::CLedWidget *led_IcaoAircraft = nullptr;
@@ -96,7 +97,7 @@ namespace BlackGui
             explicit CInfoBarWebReadersStatusComponent(QWidget *parent = nullptr);
 
             //!Destructor
-            ~CInfoBarWebReadersStatusComponent();
+            virtual ~CInfoBarWebReadersStatusComponent();
 
         private:
             QScopedPointer<Ui::CInfoBarWebReadersStatusComponent> ui;
