@@ -249,20 +249,7 @@ namespace BlackCore
                 return false; // stop, terminate straight away, ending thread
             }
 
-            headerResponse.setUrl(nwReply->url());
-            const QVariant started = nwReply->property("started");
-            if (started.isValid() && started.canConvert<qint64>())
-            {
-                const qint64 now = QDateTime::currentMSecsSinceEpoch();
-                const qint64 start = started.value<qint64>();
-                headerResponse.setLoadTimeMs(now - start);
-            }
-
-            const QDateTime lastModified = nwReply->header(QNetworkRequest::LastModifiedHeader).toDateTime();
-            const qulonglong size = nwReply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
-            headerResponse.setLastModifiedTimestamp(lastModified);
-            headerResponse.setContentLengthHeader(size);
-
+            headerResponse.setValues(nwReply);
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 // do not close because of obtaining data
@@ -489,7 +476,7 @@ namespace BlackCore
         {
             // never emit when lock is held, deadlock
             emit dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number);
-            CLogMessage(this).info("Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeString();
+            CLogMessage(this).info("Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
         }
 
         void CDatabaseReader::logNoWorkingUrl(CEntityFlags::Entity entity)
@@ -717,6 +704,42 @@ namespace BlackCore
         {
             const QString fn(getUrl().getFileName());
             return CDbInfo::sharedFileNames().contains(fn, Qt::CaseInsensitive);
+        }
+
+        QString CDatabaseReader::HeaderResponse::getLoadTimeString() const
+        {
+            return QString("%1ms").arg(getLoadTimeMs());
+        }
+
+        QString CDatabaseReader::HeaderResponse::getLoadTimeStringWithStartedHint() const
+        {
+            if (m_requestStarted < 0) { return this->getLoadTimeString(); }
+            const qint64 diff = QDateTime::currentMSecsSinceEpoch() - this->m_requestStarted;
+            static const QString s("%1 load time, started %2ms before now");
+            return s.arg(this->getLoadTimeString()).arg(diff);
+        }
+
+        void CDatabaseReader::HeaderResponse::setValues(const QNetworkReply *nwReply)
+        {
+            Q_ASSERT_X(nwReply, Q_FUNC_INFO, "Need valid reply");
+            this->setUrl(nwReply->url());
+            const QVariant started = nwReply->property("started");
+            if (started.isValid() && started.canConvert<qint64>())
+            {
+                const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                const qint64 start = started.value<qint64>();
+                this->setLoadTimeMs(now - start);
+                m_requestStarted = start;
+                m_responseReceived = now;
+            }
+
+            const QVariant qvStatusCode = nwReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+            if (qvStatusCode.isValid() && qvStatusCode.canConvert<int>()) { m_httpStatusCode = qvStatusCode.toInt(); }
+
+            const QDateTime lastModified = nwReply->header(QNetworkRequest::LastModifiedHeader).toDateTime();
+            const qulonglong size = nwReply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
+            this->setLastModifiedTimestamp(lastModified);
+            this->setContentLengthHeader(size);
         }
     } // ns
 } // ns

@@ -48,7 +48,10 @@ namespace BlackCore
             {
             private:
                 QDateTime  m_lastModified;             //!< when was the latest update?
+                int        m_httpStatusCode = -1;      //!< HTTP status code
                 qulonglong m_contentLengthHeader = 0;  //!< content length
+                qint64     m_requestStarted = -1;      //!< when was request started
+                qint64     m_responseReceived = -1;    //!< response received
                 qint64     m_loadTimeMs = -1;          //!< how long did it take to load
                 BlackMisc::CStatusMessage m_message;   //!< last error or warning
                 BlackMisc::Network::CUrl  m_url;       //!< loaded URL
@@ -99,14 +102,26 @@ namespace BlackCore
                 //! Is a shared file?
                 bool isSharedFile() const;
 
+                //! Has HTTP status code?
+                bool hasHttpStatusCode() const { return m_httpStatusCode >= 0; }
+
+                //! HTTP status code
+                int getHttpStatusCode() const { return m_httpStatusCode; }
+
                 //! Load time in ms (from request to response)
                 qint64 getLoadTimeMs() const { return m_loadTimeMs; }
 
                 //! Load time as string
-                QString getLoadTimeString() const { return QString("%1ms").arg(getLoadTimeMs()); }
+                QString getLoadTimeString() const;
+
+                //! Load time as string
+                QString getLoadTimeStringWithStartedHint() const;
 
                 //! Set the load time (delta start -> response received)
                 void setLoadTimeMs(qint64 deltaTime) { m_loadTimeMs = deltaTime; }
+
+                //! Set reply values
+                void setValues(const QNetworkReply *nwReply);
             };
 
             //!  Response from our database (depending on JSON DB backend generates)
