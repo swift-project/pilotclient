@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Find pending log entries
             CUrlLogList findPending() const;
 
+            //! Find outdated pending log entries
+            CUrlLogList findOutdatedPending(int outdatedOffsetMs) const;
+
             //! Find log entries with errors (not pending)
             CUrlLogList findErrors() const;
 

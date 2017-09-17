@@ -113,7 +113,15 @@ namespace BlackCore
         void CInfoDataReader::read()
         {
             if (!this->doWorkCheck()) { return; }
+
             const CUrl url(this->getInfoObjectsUrl());
+            const CUrlLogList urlLogList(this->getUrlLogList()); // thread safe copy
+
+            if (urlLogList.hasPending())
+            {
+                CLogMessage(this).info("Info data reading still pending, summary: '%1'") << urlLogList.getSummary();
+                return;
+            }
             if (!url.isEmpty())
             {
                 this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData});

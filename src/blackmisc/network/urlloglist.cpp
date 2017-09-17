@@ -41,6 +41,12 @@ namespace BlackMisc
             return this->findBy(&CUrlLog::isPending, true);
         }
 
+        CUrlLogList CUrlLogList::findOutdatedPending(int outdatedOffsetMs) const
+        {
+            if (this->isEmpty()) { return CUrlLogList(); }
+            return this->findPending().findBeforeNowMinusOffset(outdatedOffsetMs);
+        }
+
         CUrlLogList CUrlLogList::findErrors() const
         {
             return this->findBy(&CUrlLog::isPending, false, &CUrlLog::isSuccess, false);

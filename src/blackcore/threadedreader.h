@@ -83,6 +83,14 @@ namespace BlackCore
         //! \remark needs to be done before started in different thread
         void markAsUsedInUnitTest() { m_unitTest = true; }
 
+        //! Has pending URLs?
+        //! \threadsafe
+        bool hasPendingUrls() const;
+
+        //! Get the URL log list
+        //! \threadsafe
+        BlackMisc::Network::CUrlLogList getUrlLogList() const;
+
     protected:
         mutable QReadWriteLock m_lock { QReadWriteLock::Recursive }; //!< lock which can be used from the derived classes
 
@@ -106,9 +114,11 @@ namespace BlackCore
         virtual void doWorkImpl() {}
 
         //! Still enabled etc.?
+        //! \threadsafe under normal conditions
         bool doWorkCheck() const;
 
         //! Get request from network, and log with m_urlReadLog
+        //! \threadsafe read log access is thread safe
         QNetworkReply *getFromNetworkAndLog(const BlackMisc::Network::CUrl &url, const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
 
         //! Network reply received, mark in m_urlReadLog
@@ -122,6 +132,8 @@ namespace BlackCore
     private:
         //! Trigger doWorkImpl
         void doWork();
+
+        static constexpr int OutdatedPendingCallMs = 30 * 1000; //!< when is a call considered "outdated"
 
         int               m_initialTime = -1;         //!< Initial start delay
         int               m_periodicTime = -1;        //!< Periodic time after which the task is repeated

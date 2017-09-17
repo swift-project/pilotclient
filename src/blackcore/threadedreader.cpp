@@ -89,6 +89,18 @@ namespace BlackCore
         QTimer::singleShot(0, &m_updateTimer, &QTimer::stop);
     }
 
+    bool CThreadedReader::hasPendingUrls() const
+    {
+        QReadLocker l(&m_lock);
+        return m_urlReadLog.hasPending();
+    }
+
+    CUrlLogList CThreadedReader::getUrlLogList() const
+    {
+        QReadLocker l(&m_lock);
+        return m_urlReadLog;
+    }
+
     bool CThreadedReader::didContentChange(const QString &content, int startPosition)
     {
         uint oldHash = 0;
@@ -162,7 +174,16 @@ namespace BlackCore
     QNetworkReply *CThreadedReader::getFromNetworkAndLog(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
     {
         // returned QNetworkReply normally nullptr since QAM is in different thread
+        QWriteLocker wl(&m_lock);
+        const CUrlLogList outdatedPendingUrls = m_urlReadLog.findOutdatedPending(OutdatedPendingCallMs);
+        if (!outdatedPendingUrls.isEmpty())
+        {
+            CLogMessage(this).warning("Detected outdated pending calls: '%1'") << outdatedPendingUrls.toQString(true);
+            m_urlReadLog.removeOlderThanNowMinusOffset(OutdatedPendingCallMs); // clean up
+        }
+
         const int id = m_urlReadLog.addPendingUrl(url);
+        wl.unlock();
         return sApp->getFromNetwork(url, id, callback);
     }
 
