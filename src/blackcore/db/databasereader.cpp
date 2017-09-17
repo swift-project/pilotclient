@@ -660,16 +660,34 @@ namespace BlackCore
 
         void CDatabaseReader::stringToDatastoreResponse(const QString &jsonContent, JsonDatastoreResponse &datastoreResponse)
         {
+            const int status = datastoreResponse.getHttpStatusCode();
             if (jsonContent.isEmpty())
             {
-                datastoreResponse.setMessage(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "Empty string, no data"));
+                static const QString errorMsg = "Empty JSON string, status: %1, URL: '%2', load time: %3";
+                datastoreResponse.setMessage(CStatusMessage(getLogCategories(),
+                                             CStatusMessage::SeverityError,
+                                             errorMsg.arg(status).arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
                 return;
             }
 
             const QJsonDocument jsonResponse = CDatabaseUtils::databaseJsonToQJsonDocument(jsonContent);
             if (jsonResponse.isEmpty())
             {
-                datastoreResponse.setMessage(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "Empty JSON, no data"));
+                if (CNetworkUtils::looksLikePhpErrorMessage(jsonContent))
+                {
+                    static const QString errorMsg = "Looks like PHP errror, status %1, URL: '%2', msg: %3";
+                    const QString phpErrorMessage = CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonContent);
+                    datastoreResponse.setMessage(CStatusMessage(getLogCategories(),
+                                                 CStatusMessage::SeverityError,
+                                                 errorMsg.arg(status).arg(datastoreResponse.getUrlString(), phpErrorMessage)));
+                }
+                else
+                {
+                    static const QString errorMsg = "Empty JSON document, URL: '%1', load time: %2";
+                    datastoreResponse.setMessage(CStatusMessage(getLogCategories(),
+                                                 CStatusMessage::SeverityError,
+                                                 errorMsg.arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
+                }
                 return;
             }
 
