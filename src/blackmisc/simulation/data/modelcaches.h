@@ -261,7 +261,7 @@ namespace BlackMisc
                 virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
                 virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual void admitCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-                virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
+                virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
@@ -304,7 +304,7 @@ namespace BlackMisc
                 virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
                 virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual void admitCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-                virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
+                virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
