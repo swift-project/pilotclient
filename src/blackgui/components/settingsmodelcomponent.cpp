@@ -15,6 +15,7 @@
 #include <QValidator>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackGui::Settings;
 
 namespace BlackGui
@@ -29,12 +30,14 @@ namespace BlackGui
             ui->le_ConsolidateSecs->setValidator(new QIntValidator(0, TBackgroundConsolidation::maxSecs(), ui->le_ConsolidateSecs));
 
             this->cacheChanged();
-            connect(ui->le_ConsolidateSecs, &QLineEdit::returnPressed, this, &CSettingsModelComponent::consolidationEntered);
             const QString lbl("Consolidate (%1-%2s):");
             ui->lbl_Consolidate->setText(lbl.arg(TBackgroundConsolidation::minSecs()).arg(TBackgroundConsolidation::maxSecs()));
 
+            connect(ui->le_ConsolidateSecs, &QLineEdit::returnPressed, this, &CSettingsModelComponent::consolidationEntered);
+            connect(ui->cb_AllowExcludeModels, &QCheckBox::toggled, this, &CSettingsModelComponent::allowExcludedModelsChanged);
+
             // start updater if not yet done
-            QTimer::singleShot(2000, this, &CSettingsModelComponent::consolidationEntered);
+            QTimer::singleShot(2500, this, &CSettingsModelComponent::consolidationEntered);
         }
 
         CSettingsModelComponent::~CSettingsModelComponent()
@@ -64,6 +67,15 @@ namespace BlackGui
             this->cacheChanged();
         }
 
+        void CSettingsModelComponent::allowExcludedModelsChanged(bool allow)
+        {
+            CModelSettings ms = m_modelSettings.get();
+            if (ms.getAllowExcludedModels() == allow) { return; }
+            ms.setAllowExcludedModels(allow);
+            const CStatusMessage msg = m_modelSettings.setAndSave(ms);
+            CLogMessage::preformatted(msg);
+        }
+
         void CSettingsModelComponent::cacheChanged()
         {
             const int v = m_consolidationSetting.get();
@@ -76,6 +88,13 @@ namespace BlackGui
                 sApp && !sApp->isShuttingDown() &&
                 this->m_updater && this->m_updater->isEnabled();
             ui->comp_Led->setOn(updater);
+
+            // avoid unnecessary roundtrips
+            const CModelSettings ms = m_modelSettings.get();
+            if (ui->cb_AllowExcludeModels->isChecked() != ms.getAllowExcludedModels())
+            {
+                ui->cb_AllowExcludeModels->setChecked(ms.getAllowExcludedModels());
+            }
         }
     } // ns
 } // ns

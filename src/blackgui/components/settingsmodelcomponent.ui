@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CSettingsModelComponent</class>
  <widget class="QFrame" name="CSettingsModelComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>390</width>
+    <height>28</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Models settings</string>
   </property>
@@ -24,7 +32,7 @@
       <string>Hint: This can cause wrong behaviour or violate 3rd parties copyright. You need to know what you are doing enabling the feature.</string>
      </property>
      <property name="text">
-      <string>allow &quot;exclude&quot; models in set</string>
+      <string>allow &quot;excluded&quot; models in set</string>
      </property>
     </widget>
    </item>
