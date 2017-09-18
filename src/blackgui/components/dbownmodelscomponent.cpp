@@ -210,7 +210,8 @@ namespace BlackGui
             }
             else
             {
-                bool c = connect(this->m_modelLoader.get(), &IAircraftModelLoader::loadingFinished, this, &CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished);
+                const bool c = connect(this->m_modelLoader.get(), &IAircraftModelLoader::loadingFinished,
+                                       this, &CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished, Qt::QueuedConnection);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect for model loader");
                 Q_UNUSED(c);
                 this->setSaveFileName(simulator);
@@ -440,7 +441,7 @@ namespace BlackGui
                 return;
             }
 
-            CLogMessage(this).info("Starting loading for %1") << simulator.toQString();
+            CLogMessage(this).info("Starting loading for '%1'") << simulator.toQString();
             ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
             this->m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), directory);

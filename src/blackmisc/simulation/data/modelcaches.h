@@ -318,7 +318,7 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_currentSimulator { this };                       //!< current simulator
 
-                //! Non virtaul version (can be used in ctor)
+                //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
                 //! Non virtual version (can be used in ctor)

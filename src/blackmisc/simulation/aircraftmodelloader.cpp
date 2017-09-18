@@ -29,11 +29,11 @@ namespace BlackMisc
         IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
-            this->m_caches.setCurrentSimulator(simulator);
+            m_caches.setCurrentSimulator(simulator);
 
             // first connect is an internal connection to log info about load status
             connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::ps_loadFinished);
-            connect(&this->m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::ps_cacheChanged);
+            connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::ps_cacheChanged);
         }
 
         IAircraftModelLoader::~IAircraftModelLoader()
@@ -50,14 +50,14 @@ namespace BlackMisc
         CStatusMessage IAircraftModelLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default value
-            return this->m_caches.setCachedModels(models, sim);
+            return m_caches.setCachedModels(models, sim);
         }
 
         CStatusMessage IAircraftModelLoader::replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default values
-            CAircraftModelList allModels(this->m_caches.getSynchronizedCachedModels(sim));
+            CAircraftModelList allModels(m_caches.getSynchronizedCachedModels(sim));
             const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
             {
@@ -75,11 +75,11 @@ namespace BlackMisc
 
             // remark: in the past status used to be bool, now it is CStatusMessage
             // so there is some redundancy here between status and m_loadingMessages
-            this->m_loadingInProgress = false;
+            m_loadingInProgress = false;
 
-            if (this->m_loadingMessages.hasWarningOrErrorMessages())
+            if (m_loadingMessages.hasWarningOrErrorMessages())
             {
-                CLogMessage::preformatted(this->m_loadingMessages);
+                CLogMessage::preformatted(m_loadingMessages);
             }
             else
             {
@@ -95,39 +95,39 @@ namespace BlackMisc
 
         QStringList IAircraftModelLoader::getModelDirectoriesOrDefault() const
         {
-            const QStringList mdirs = this->m_settings.getModelDirectoriesOrDefault(this->getSimulator());
+            const QStringList mdirs = m_settings.getModelDirectoriesOrDefault(this->getSimulator());
             return mdirs;
         }
 
         QString IAircraftModelLoader::getFirstModelDirectoryOrDefault() const
         {
-            const QString md = this->m_settings.getFirstModelDirectoryOrDefault(this->getSimulator());
+            const QString md = m_settings.getFirstModelDirectoryOrDefault(this->getSimulator());
             return md;
         }
 
         QStringList IAircraftModelLoader::getModelExcludeDirectoryPatterns() const
         {
-            return this->m_settings.getModelExcludeDirectoryPatternsOrDefault(this->getSimulator());
+            return m_settings.getModelExcludeDirectoryPatternsOrDefault(this->getSimulator());
         }
 
         CAircraftModelList IAircraftModelLoader::getAircraftModels() const
         {
-            return this->m_caches.getCurrentCachedModels();
+            return m_caches.getCurrentCachedModels();
         }
 
         CAircraftModelList IAircraftModelLoader::getCachedAircraftModels(const CSimulatorInfo &simulator) const
         {
-            return this->m_caches.getCachedModels(simulator);
+            return m_caches.getCachedModels(simulator);
         }
 
         QDateTime IAircraftModelLoader::getCacheTimestamp() const
         {
-            return this->m_caches.getCurrentCacheTimestamp();
+            return m_caches.getCurrentCacheTimestamp();
         }
 
         bool IAircraftModelLoader::hasCachedData() const
         {
-            return !this->m_caches.getCurrentCachedModels().isEmpty();
+            return !m_caches.getCurrentCachedModels().isEmpty();
         }
 
         CStatusMessage IAircraftModelLoader::clearCache()
@@ -137,12 +137,12 @@ namespace BlackMisc
 
         void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
         {
-            if (this->m_loadingInProgress) { return; }
-            this->m_loadingInProgress = true;
+            if (m_loadingInProgress) { return; }
+            m_loadingInProgress = true;
             const bool useCachedData = !mode.testFlag(CacheSkipped) && this->hasCachedData();
             if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
             {
-                // we just jus cache data
+                // we just just cache data
                 static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "Using cached data");
                 emit loadingFinished(status, this->getSimulator(), CacheLoaded);
                 return;
@@ -152,7 +152,7 @@ namespace BlackMisc
                 // only cache, but we did not find any data yet (still in progress?)
                 // here we rely on the cache load slot, no need to emit here, will
                 // be done later in ps_cacheChanged. An alternative was to sync cache here
-                this->m_loadingInProgress = false;
+                m_loadingInProgress = false;
                 return;
             }
 
@@ -162,7 +162,7 @@ namespace BlackMisc
 
         const CSimulatorInfo IAircraftModelLoader::getSimulator() const
         {
-            return this->m_caches.getCurrentSimulator();
+            return m_caches.getCurrentSimulator();
         }
 
         QString IAircraftModelLoader::getSimulatorAsString() const
@@ -177,8 +177,8 @@ namespace BlackMisc
 
         void IAircraftModelLoader::cancelLoading()
         {
-            this->m_cancelLoading = true;
-            this->m_loadingInProgress = true;
+            m_cancelLoading = true;
+            m_loadingInProgress = true;
         }
 
         void IAircraftModelLoader::gracefulShutdown()
@@ -188,12 +188,12 @@ namespace BlackMisc
 
         QString IAircraftModelLoader::getInfoString() const
         {
-            return this->m_caches.getInfoString();
+            return m_caches.getInfoString();
         }
 
         QString IAircraftModelLoader::getInfoStringFsFamily() const
         {
-            return this->m_caches.getInfoStringFsFamily();
+            return m_caches.getInfoStringFsFamily();
         }
 
         std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simulator)

@@ -49,7 +49,7 @@ namespace BlackMisc
 
             CSimulatorInfo IMultiSimulatorModelCaches::getSimulatorForFilename(const QString &filename) const
             {
-                if (filename.isEmpty()) return CSimulatorInfo();
+                if (filename.isEmpty()) { return CSimulatorInfo(); }
                 CSimulatorInfo sims;
                 const QString compareFileName(QFileInfo(filename).fileName());
                 for (const CSimulatorInfo &singleSim : CSimulatorInfo::allSimulatorsSet())
