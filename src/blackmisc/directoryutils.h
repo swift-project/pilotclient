@@ -112,6 +112,9 @@ namespace BlackMisc
         //! Check if the (most important) runtime directories are available
         static QStringList verifyRuntimeDirectoriesAndFiles();
 
+        //! Exists directory and does it contains files
+        static bool existsUnemptyDirectory(const QString &testDir);
+
         //! Result of directory comparison
         struct DirComparison
         {

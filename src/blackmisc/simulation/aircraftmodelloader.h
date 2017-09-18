@@ -68,9 +68,19 @@ namespace BlackMisc
             //! Load mode
             enum LoadFinishedInfo
             {
-                CacheLoaded, //!< cache was loaded
-                ParsedData   //!< parsed data
+                CacheLoaded,   //!< cache was loaded
+                ParsedData,    //!< parsed data
+                LoadingSkipped //!< Loading skipped (empty directory)
             };
+
+            //! Enum as string
+            static QString enumToString(LoadFinishedInfo info);
+
+            //! Enum as string
+            static QString enumToString(LoadModeFlag modeFlag);
+
+            //! Enum as string
+            static QString enumToString(LoadMode mode);
 
             //! Destructor
             virtual ~IAircraftModelLoader();
@@ -102,7 +112,13 @@ namespace BlackMisc
             BlackMisc::Simulation::CAircraftModelList getCachedAircraftModels(const CSimulatorInfo &simulator) const;
 
             //! Count of loaded models
+            //! \threadsafe
             int getAircraftModelsCount() const { return getAircraftModels().size(); }
+
+            //! Skip the loading of empty (model) directories
+            //! \remark loading of empty directories might erase the cache and is normally disable
+            //! \threadsafe
+            void setSkipLoadingOfEmptyDirectories(bool skip);
 
             //! Which simulator is supported by that very loader
             const CSimulatorInfo getSimulator() const;
@@ -122,7 +138,7 @@ namespace BlackMisc
             //! Exclude directories
             QStringList getModelExcludeDirectoryPatterns() const;
 
-            //! Cancel read
+            //! Cancel loading
             void cancelLoading();
 
             //! Shutdown
@@ -176,11 +192,12 @@ namespace BlackMisc
             //! Start the loading process from disk
             virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory) = 0;
 
-            std::atomic<bool> m_cancelLoading { false };                        //!< flag, requesting to cancel loading
-            std::atomic<bool> m_loadingInProgress { false };                    //!< Loading in progress
-            BlackMisc::Simulation::Data::CModelCaches m_caches { false, this }; //!< caches
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this }; //!< settings
-            BlackMisc::CStatusMessageList m_loadingMessages;                    //!< loading messages
+            std::atomic<bool> m_cancelLoading { false };            //!< flag, requesting to cancel loading
+            std::atomic<bool> m_loadingInProgress { false };        //!< Loading in progress
+            std::atomic<bool> m_skipLoadingEmptyModelDir { true };  //!< Loading empty model dirs might erase the cache, so normally we skip it
+            Data::CModelCaches m_caches { false, this };            //!< caches used with this loader
+            Settings::CMultiSimulatorSettings m_settings { this };  //!< settings
+            CStatusMessageList m_loadingMessages;                   //!< loading messages
 
         protected slots:
             //! Loading finished, also logs messages

@@ -360,6 +360,14 @@ namespace BlackMisc
         return failed;
     }
 
+    bool CDirectoryUtils::existsUnemptyDirectory(const QString &testDir)
+    {
+        if (testDir.isEmpty()) { return false; }
+        const QDir dir(testDir);
+        if (!dir.exists()) { return false; }
+        return !dir.isEmpty();
+    }
+
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         QSet<QString> sl;

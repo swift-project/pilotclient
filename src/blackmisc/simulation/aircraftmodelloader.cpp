@@ -11,6 +11,7 @@
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/logmessage.h"
 
@@ -18,6 +19,7 @@
 #include <Qt>
 #include <QtGlobal>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
@@ -34,6 +36,44 @@ namespace BlackMisc
             // first connect is an internal connection to log info about load status
             connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::ps_loadFinished);
             connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::ps_cacheChanged);
+        }
+
+        QString IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadFinishedInfo info)
+        {
+            switch (info)
+            {
+            case CacheLoaded: return "cache loaded";
+            case LoadingSkipped: return "loading skipped";
+            case ParsedData: return "parsed data";
+            default: break;
+            }
+            return "??";
+        }
+
+        QString IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadModeFlag modeFlag)
+        {
+            switch (modeFlag)
+            {
+            case NotSet: return "not set";
+            case LoadDirectly: return "load directly";
+            case LoadInBackground: return "load in background";
+            case CacheFirst: return "cache first";
+            case CacheSkipped: return "cache skipped";
+            case CacheOnly: return "cache only";
+            default: break;
+            }
+            return "??";
+        }
+
+        QString IAircraftModelLoader::enumToString(LoadMode mode)
+        {
+            QStringList modes;
+            if (mode.testFlag(NotSet)) modes << enumToString(NotSet);
+            if (mode.testFlag(LoadDirectly)) modes << enumToString(LoadDirectly);
+            if (mode.testFlag(LoadInBackground)) modes << enumToString(LoadInBackground);
+            if (mode.testFlag(CacheFirst)) modes << enumToString(CacheFirst);
+            if (mode.testFlag(CacheSkipped)) modes << enumToString(CacheSkipped);
+            return modes.join(", ");
         }
 
         IAircraftModelLoader::~IAircraftModelLoader()
@@ -139,6 +179,8 @@ namespace BlackMisc
         {
             if (m_loadingInProgress) { return; }
             m_loadingInProgress = true;
+            m_loadingMessages.clear();
+
             const bool useCachedData = !mode.testFlag(CacheSkipped) && this->hasCachedData();
             if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
             {
@@ -156,7 +198,16 @@ namespace BlackMisc
                 return;
             }
 
-            // really load from disk
+            // really load from disk?
+            if (m_skipLoadingEmptyModelDir && !CDirectoryUtils::existsUnemptyDirectory(directory))
+            {
+                const CStatusMessage status = CStatusMessage(this, CStatusMessage::SeverityWarning, "Empty or not existing %1 directory '%2', skipping read")
+                                              << this->getSimulator().toQString() << directory;
+                m_loadingMessages.push_back(status);
+                emit loadingFinished(status, this->getSimulator(), LoadingSkipped);
+                return;
+            }
+
             this->startLoadingFromDisk(mode, modelConsolidation, directory);
         }
 
@@ -177,13 +228,14 @@ namespace BlackMisc
 
         void IAircraftModelLoader::cancelLoading()
         {
+            if (!m_loadingInProgress) { return; }
             m_cancelLoading = true;
-            m_loadingInProgress = true;
         }
 
         void IAircraftModelLoader::gracefulShutdown()
         {
             this->cancelLoading();
+            m_loadingInProgress = true; // avoids further startups
         }
 
         QString IAircraftModelLoader::getInfoString() const
