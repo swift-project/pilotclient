@@ -52,12 +52,12 @@ namespace BlackGui
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::ps_requestOwnModelsUpdate);
 
             // Last selection isPinned -> no sync needed
-            const CSimulatorInfo simulator(this->m_simulatorSelection.get());
+            const CSimulatorInfo simulator(m_simulatorSelection.get());
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             const bool success = this->initModelLoader(simulator);
             if (success)
             {
-                this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
+                m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
             }
             else
             {
@@ -95,27 +95,27 @@ namespace BlackGui
 
         IAircraftModelLoader *CDbOwnModelsComponent::modelLoader() const
         {
-            return this->m_modelLoader.get();
+            return m_modelLoader.get();
         }
 
         CAircraftModel CDbOwnModelsComponent::getOwnModelForModelString(const QString &modelString) const
         {
-            if (!this->m_modelLoader) { return CAircraftModel(); }
-            return this->m_modelLoader->getAircraftModels().findFirstByModelStringOrDefault(modelString);
+            if (!m_modelLoader) { return CAircraftModel(); }
+            return m_modelLoader->getAircraftModels().findFirstByModelStringOrDefault(modelString);
         }
 
         CAircraftModelList CDbOwnModelsComponent::getOwnModels() const
         {
             static const CAircraftModelList empty;
-            if (!this->m_modelLoader) { return empty; }
-            return this->m_modelLoader->getAircraftModels();
+            if (!m_modelLoader) { return empty; }
+            return m_modelLoader->getAircraftModels();
         }
 
         CAircraftModelList CDbOwnModelsComponent::getOwnCachedModels(const CSimulatorInfo &simulator) const
         {
             static const CAircraftModelList empty;
-            if (!this->m_modelLoader) { return empty; }
-            return this->m_modelLoader->getCachedAircraftModels(simulator);
+            if (!m_modelLoader) { return empty; }
+            return m_modelLoader->getCachedAircraftModels(simulator);
         }
 
         CAircraftModelList CDbOwnModelsComponent::getOwnSelectedModels() const
@@ -126,8 +126,8 @@ namespace BlackGui
         const CSimulatorInfo CDbOwnModelsComponent::getOwnModelsSimulator() const
         {
             static const CSimulatorInfo noSim;
-            if (!this->m_modelLoader) { return noSim; }
-            return this->m_modelLoader->getSimulator();
+            if (!m_modelLoader) { return noSim; }
+            return m_modelLoader->getSimulator();
         }
 
         void CDbOwnModelsComponent::setSimulator(const CSimulatorInfo &simulator)
@@ -138,25 +138,25 @@ namespace BlackGui
 
         int CDbOwnModelsComponent::getOwnModelsCount() const
         {
-            if (!this->m_modelLoader) { return 0; }
-            return this->m_modelLoader->getAircraftModelsCount();
+            if (!m_modelLoader) { return 0; }
+            return m_modelLoader->getAircraftModelsCount();
         }
 
         QString CDbOwnModelsComponent::getInfoString() const
         {
-            if (!this->m_modelLoader) { return ""; }
-            return this->m_modelLoader->getInfoString();
+            if (!m_modelLoader) { return ""; }
+            return m_modelLoader->getInfoString();
         }
 
         QString CDbOwnModelsComponent::getInfoStringFsFamily() const
         {
-            if (!this->m_modelLoader) { return ""; }
-            return this->m_modelLoader->getInfoStringFsFamily();
+            if (!m_modelLoader) { return ""; }
+            return m_modelLoader->getInfoStringFsFamily();
         }
 
         CStatusMessage CDbOwnModelsComponent::updateViewAndCache(const CAircraftModelList &models)
         {
-            const CStatusMessage m  = this->m_modelLoader->setCachedModels(models, this->getOwnModelsSimulator());
+            const CStatusMessage m  = m_modelLoader->setCachedModels(models, this->getOwnModelsSimulator());
             if (m.isSuccess())
             {
                 ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
@@ -166,7 +166,7 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::gracefulShutdown()
         {
-            if (this->m_modelLoader) { this->m_modelLoader->gracefulShutdown(); }
+            if (m_modelLoader) { m_modelLoader->gracefulShutdown(); }
         }
 
         void CDbOwnModelsComponent::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
@@ -178,7 +178,7 @@ namespace BlackGui
         void CDbOwnModelsComponent::updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             this->modelLoader()->replaceOrAddCachedModels(models, simulator);
-            const CAircraftModelList allModels(this->m_modelLoader->getAircraftModels());
+            const CAircraftModelList allModels(m_modelLoader->getAircraftModels());
             ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(allModels);
         }
 
@@ -188,29 +188,29 @@ namespace BlackGui
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
 
             // already loaded
-            if (this->m_modelLoader && this->m_modelLoader->supportsSimulator(simulator))
+            if (m_modelLoader && m_modelLoader->supportsSimulator(simulator))
             {
                 this->setSaveFileName(simulator);
                 return true;
             }
 
             // mismatching loader
-            if (this->m_modelLoader)
+            if (m_modelLoader)
             {
-                this->m_modelLoader->gracefulShutdown();
+                m_modelLoader->gracefulShutdown();
             }
 
             // create loader, also synchronizes the caches
-            this->m_modelLoader = IAircraftModelLoader::createModelLoader(simulator); // last selected simulator or explicit given
-            if (!this->m_modelLoader || !this->m_modelLoader->supportsSimulator(simulator))
+            m_modelLoader = IAircraftModelLoader::createModelLoader(simulator); // last selected simulator or explicit given
+            if (!m_modelLoader || !m_modelLoader->supportsSimulator(simulator))
             {
                 CLogMessage(this).error("Failed to init model loader %1") << simulator.toQString();
-                this->m_modelLoader.reset();
+                m_modelLoader.reset();
                 return false;
             }
             else
             {
-                const bool c = connect(this->m_modelLoader.get(), &IAircraftModelLoader::loadingFinished,
+                const bool c = connect(m_modelLoader.get(), &IAircraftModelLoader::loadingFinished,
                                        this, &CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished, Qt::QueuedConnection);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect for model loader");
                 Q_UNUSED(c);
@@ -244,80 +244,80 @@ namespace BlackGui
                 CDbOwnModelsComponent *ownModelsComp = qobject_cast<CDbOwnModelsComponent *>(this->parent());
                 Q_ASSERT_X(ownModelsComp, Q_FUNC_INFO, "Cannot access parent");
 
-                if (this->m_loadActions.isEmpty()) { this->m_loadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
+                if (m_loadActions.isEmpty()) { m_loadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
                 menuActions.addMenuSimulator();
                 if (sims.fsx())
                 {
-                    if (!this->m_loadActions[0])
+                    if (!m_loadActions[0])
                     {
-                        this->m_loadActions[0] = new QAction(CIcons::appModels16(), "FSX models", this);
-                        connect(this->m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        m_loadActions[0] = new QAction(CIcons::appModels16(), "FSX models", this);
+                        connect(m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
                             ownModelsComp->ps_requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::FSX));
                         });
                     }
-                    menuActions.addAction(this->m_loadActions[0], CMenuAction::pathSimulator());
+                    menuActions.addAction(m_loadActions[0], CMenuAction::pathSimulator());
                 }
                 if (sims.p3d())
                 {
-                    if (!this->m_loadActions[1])
+                    if (!m_loadActions[1])
                     {
-                        this->m_loadActions[1] = new QAction(CIcons::appModels16(), "P3D models", this);
-                        connect(this->m_loadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        m_loadActions[1] = new QAction(CIcons::appModels16(), "P3D models", this);
+                        connect(m_loadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
                             ownModelsComp->ps_requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::P3D));
                         });
                     }
-                    menuActions.addAction(this->m_loadActions[1], CMenuAction::pathSimulator());
+                    menuActions.addAction(m_loadActions[1], CMenuAction::pathSimulator());
                 }
                 if (sims.fs9())
                 {
-                    if (!this->m_loadActions[2])
+                    if (!m_loadActions[2])
                     {
-                        this->m_loadActions[2] = new QAction(CIcons::appModels16(), "FS9 models", this);
-                        connect(this->m_loadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        m_loadActions[2] = new QAction(CIcons::appModels16(), "FS9 models", this);
+                        connect(m_loadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
                             ownModelsComp->ps_requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::FS9));
                         });
                     }
-                    menuActions.addAction(this->m_loadActions[2], CMenuAction::pathSimulator());
+                    menuActions.addAction(m_loadActions[2], CMenuAction::pathSimulator());
                 }
                 if (sims.xplane())
                 {
-                    if (!this->m_loadActions[3])
+                    if (!m_loadActions[3])
                     {
-                        this->m_loadActions[3] = new QAction(CIcons::appModels16(), "XPlane models", this);
-                        connect(this->m_loadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        m_loadActions[3] = new QAction(CIcons::appModels16(), "XPlane models", this);
+                        connect(m_loadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
                             ownModelsComp->ps_requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::XPLANE));
                         });
                     }
-                    menuActions.addAction(this->m_loadActions[3], CMenuAction::pathSimulator());
+                    menuActions.addAction(m_loadActions[3], CMenuAction::pathSimulator());
                 }
 
                 // with models loaded I allow a refresh reload
                 // I need those models because I want to merge with DM data in the loader
                 if (sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
                 {
-                    if (this->m_reloadActions.isEmpty()) { this->m_reloadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}); }
+                    if (m_reloadActions.isEmpty()) { m_reloadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}); }
                     menuActions.addMenu(CIcons::refresh16(), "Force model reload", CMenuAction::pathSimulatorModelsReload());
                     if (sims.fsx())
                     {
-                        if (!this->m_reloadActions[0])
+                        if (!m_reloadActions[0])
                         {
-                            this->m_reloadActions[0] = new QAction(CIcons::appModels16(), "FSX models", this);
-                            connect(this->m_reloadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            m_reloadActions[0] = new QAction(CIcons::appModels16(), "FSX models", this);
+                            connect(m_reloadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
-                            this->m_reloadActions[1] = new QAction(CIcons::appModels16(), "FSX models from directory", this);
-                            connect(this->m_reloadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            m_reloadActions[1] = new QAction(CIcons::appModels16(), "FSX models from directory", this);
+                            connect(m_reloadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 const CSimulatorInfo sim(CSimulatorInfo::FSX);
@@ -328,22 +328,22 @@ namespace BlackGui
                                 }
                             });
                         }
-                        menuActions.addAction(this->m_reloadActions[0], CMenuAction::pathSimulatorModelsReload());
-                        menuActions.addAction(this->m_reloadActions[1], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[0], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[1], CMenuAction::pathSimulatorModelsReload());
                     }
                     if (sims.p3d())
                     {
-                        if (!this->m_reloadActions[2])
+                        if (!m_reloadActions[2])
                         {
-                            this->m_reloadActions[2] = new QAction(CIcons::appModels16(), "P3D models", this);
-                            connect(this->m_reloadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            m_reloadActions[2] = new QAction(CIcons::appModels16(), "P3D models", this);
+                            connect(m_reloadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
-                            this->m_reloadActions[3] = new QAction(CIcons::appModels16(), "P3D models from directoy", this);
-                            connect(this->m_reloadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            m_reloadActions[3] = new QAction(CIcons::appModels16(), "P3D models from directoy", this);
+                            connect(m_reloadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 const CSimulatorInfo sim(CSimulatorInfo::P3D);
@@ -354,22 +354,22 @@ namespace BlackGui
                                 }
                             });
                         }
-                        menuActions.addAction(this->m_reloadActions[2], CMenuAction::pathSimulatorModelsReload());
-                        menuActions.addAction(this->m_reloadActions[3], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[2], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[3], CMenuAction::pathSimulatorModelsReload());
                     }
                     if (sims.fs9())
                     {
-                        if (!this->m_reloadActions[4])
+                        if (!m_reloadActions[4])
                         {
-                            this->m_reloadActions[4] = new QAction(CIcons::appModels16(), "FS9 models", this);
-                            connect(this->m_reloadActions[4], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            m_reloadActions[4] = new QAction(CIcons::appModels16(), "FS9 models", this);
+                            connect(m_reloadActions[4], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundNoCache);
                             });
 
-                            this->m_reloadActions[5] = new QAction(CIcons::appModels16(), "FS9 models from directoy", this);
-                            connect(this->m_reloadActions[5], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            m_reloadActions[5] = new QAction(CIcons::appModels16(), "FS9 models from directoy", this);
+                            connect(m_reloadActions[5], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 const CSimulatorInfo sim(CSimulatorInfo::FS9);
@@ -380,21 +380,21 @@ namespace BlackGui
                                 }
                             });
                         }
-                        menuActions.addAction(this->m_reloadActions[4], CMenuAction::pathSimulatorModelsReload());
-                        menuActions.addAction(this->m_reloadActions[5], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[4], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[5], CMenuAction::pathSimulatorModelsReload());
                     }
                     if (sims.xplane())
                     {
-                        if (!this->m_reloadActions[6])
+                        if (!m_reloadActions[6])
                         {
-                            this->m_reloadActions[6] = new QAction(CIcons::appModels16(), "XPlane models", this);
-                            connect(this->m_reloadActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            m_reloadActions[6] = new QAction(CIcons::appModels16(), "XPlane models", this);
+                            connect(m_reloadActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundNoCache);
                             });
-                            this->m_reloadActions[7] = new QAction(CIcons::appModels16(), "XPlane models from directoy", this);
-                            connect(this->m_reloadActions[7], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            m_reloadActions[7] = new QAction(CIcons::appModels16(), "XPlane models from directoy", this);
+                            connect(m_reloadActions[7], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 const CSimulatorInfo sim(CSimulatorInfo::XPLANE);
@@ -405,8 +405,8 @@ namespace BlackGui
                                 }
                             });
                         }
-                        menuActions.addAction(this->m_reloadActions[6], CMenuAction::pathSimulatorModelsReload());
-                        menuActions.addAction(this->m_reloadActions[7], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[6], CMenuAction::pathSimulatorModelsReload());
+                        menuActions.addAction(m_reloadActions[7], CMenuAction::pathSimulatorModelsReload());
                     }
                 }
                 else
@@ -421,9 +421,9 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::ps_requestOwnModelsUpdate()
         {
-            if (!this->m_modelLoader) { return; }
+            if (!m_modelLoader) { return; }
             ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(
-                this->m_modelLoader->getAircraftModels()
+                m_modelLoader->getAircraftModels()
             );
         }
 
@@ -435,7 +435,7 @@ namespace BlackGui
                 return;
             }
 
-            if (this->m_modelLoader->isLoadingInProgress())
+            if (m_modelLoader->isLoadingInProgress())
             {
                 CLogMessage(this).info("Loading for '%1' already in progress") << simulator.toQString();
                 return;
@@ -444,15 +444,15 @@ namespace BlackGui
             CLogMessage(this).info("Starting loading for '%1'") << simulator.toQString();
             ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
-            this->m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), directory);
+            m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), directory);
         }
 
         void CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished(const CStatusMessage &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
-            if (status.isSuccess() && this->m_modelLoader)
+            if (status.isSuccess() && m_modelLoader)
             {
-                const CAircraftModelList models(this->m_modelLoader->getAircraftModels());
+                const CAircraftModelList models(m_modelLoader->getAircraftModels());
                 const int modelsLoaded = models.size();
                 ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
                 if (modelsLoaded < 1)
@@ -487,9 +487,9 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::ps_onSimulatorChanged()
         {
-            const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
-            ui->tvp_OwnAircraftModels->setSimulatorForLoading(sim);
-            this->ps_requestSimulatorModelsWithCacheInBackground(sim);
+            const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
+            ui->tvp_OwnAircraftModels->setSimulatorForLoading(simulator);
+            this->ps_requestSimulatorModelsWithCacheInBackground(simulator);
         }
     } // ns
 } // ns

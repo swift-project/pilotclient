@@ -67,20 +67,20 @@ namespace BlackGui
             switch (mode)
             {
             case CAircraftModelListModel::StashModel:
-                this->m_menus = MenuDefaultNoClear;
+                m_menus = MenuDefaultNoClear;
                 break;
             case CAircraftModelListModel::Database:
-                this->m_menus = MenuDefaultDbViews;
+                m_menus = MenuDefaultDbViews;
                 break;
             case CAircraftModelListModel::VPilotRuleModel:
-                this->m_menus = MenuDefaultNoClear | MenuStashing;
+                m_menus = MenuDefaultNoClear | MenuStashing;
                 break;
             case CAircraftModelListModel::OwnAircraftModelMappingTool:
-                this->m_menus = MenuDefaultNoClear | MenuStashing | MenuLoadAndSave;
+                m_menus = MenuDefaultNoClear | MenuStashing | MenuLoadAndSave;
                 break;
             case CAircraftModelListModel::OwnAircraftModelClient:
             default:
-                this->m_menus = MenuDefaultNoClear | MenuBackend;
+                m_menus = MenuDefaultNoClear | MenuBackend;
                 break;
             }
         }
@@ -120,8 +120,8 @@ namespace BlackGui
 
         void CAircraftModelView::setAcceptedMetaTypeIds()
         {
-            Q_ASSERT(this->m_model);
-            this->m_model->setAcceptedMetaTypeIds(
+            Q_ASSERT(m_model);
+            m_model->setAcceptedMetaTypeIds(
             {
                 qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>(),
                 qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>(),
@@ -289,15 +289,15 @@ namespace BlackGui
         void CAircraftModelView::customMenu(CMenuActions &menuActions)
         {
             bool used = false;
-            if (this->m_menus.testFlag(MenuCanStashModels))
+            if (m_menus.testFlag(MenuCanStashModels))
             {
-                if (!this->m_menuFlagActions.contains(MenuCanStashModels))
+                if (!m_menuFlagActions.contains(MenuCanStashModels))
                 {
                     CMenuActions ma;
                     ma.addAction(CIcons::appDbStash16(), "Stash selected", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_requestStash });
                     QAction *added = ma.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_stashingClearsSelection });
                     added->setCheckable(true);
-                    this->m_menuFlagActions.insert(MenuCanStashModels, ma);
+                    m_menuFlagActions.insert(MenuCanStashModels, ma);
                 }
 
                 // modify menu items
@@ -310,15 +310,15 @@ namespace BlackGui
                 a->setChecked(m_stashingClearsSelection);
                 used = true;
             }
-            if (this->m_menus.testFlag(MenuHighlightStashed))
+            if (m_menus.testFlag(MenuHighlightStashed))
             {
                 // this function requires that someone provides the model strings to be highlighted
-                if (!this->m_menuFlagActions.contains(MenuHighlightStashed))
+                if (!m_menuFlagActions.contains(MenuHighlightStashed))
                 {
                     CMenuActions ma;
                     QAction *added = ma.addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_toggleHighlightStashedModels });
                     added->setCheckable(true);
-                    this->m_menuFlagActions.insert(MenuHighlightStashed, ma);
+                    m_menuFlagActions.insert(MenuHighlightStashed, ma);
                 }
                 QAction *a = menuActions.addActions(initMenuActions(CViewBaseNonTemplate::MenuHighlightStashed)).first();
                 a->setChecked(this->derivedModel()->highlightModelStrings());
@@ -330,22 +330,22 @@ namespace BlackGui
 
         CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const
         {
-            if (this->m_loadingRequiresSimulator.isNoSimulator()) { return {}; }
+            if (m_loadingRequiresSimulator.isNoSimulator()) { return {}; }
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Empty models", true); }
 
             // multiple sims with same count
-            const int removed = models.removeIfNotMatchingSimulator(this->m_loadingRequiresSimulator);
+            const int removed = models.removeIfNotMatchingSimulator(m_loadingRequiresSimulator);
             if (removed < 1) { return {}; }
-            return CStatusMessage(this, CStatusMessage::SeverityWarning, "Reduced by %1 model(s) to only use %2 models", true) << removed << this->m_loadingRequiresSimulator.toQString(true);
+            return CStatusMessage(this, CStatusMessage::SeverityWarning, "Reduced by %1 model(s) to only use %2 models", true) << removed << m_loadingRequiresSimulator.toQString(true);
         }
 
         CStatusMessage CAircraftModelView::validateLoadedJsonData(const CAircraftModelList &models) const
         {
             if (models.isEmpty()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
-            if (this->m_loadingRequiresSimulator.isNoSimulator()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
-            if (models.containsNotMatchingSimulator(this->m_loadingRequiresSimulator))
+            if (m_loadingRequiresSimulator.isNoSimulator()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
+            if (models.containsNotMatchingSimulator(m_loadingRequiresSimulator))
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError, "Found entry not matching %1 in model data", true) << this->m_loadingRequiresSimulator.toQString();
+                return CStatusMessage(this, CStatusMessage::SeverityError, "Found entry not matching %1 in model data", true) << m_loadingRequiresSimulator.toQString();
             }
             return COrderableViewWithDbObjects::validateLoadedJsonData(models);
         }
@@ -377,7 +377,7 @@ namespace BlackGui
 
         void CAircraftModelView::ps_stashingClearsSelection()
         {
-            this->m_stashingClearsSelection = !this->m_stashingClearsSelection;
+            m_stashingClearsSelection = !m_stashingClearsSelection;
         }
 
         void CAircraftModelView::ps_requestStash()
@@ -386,7 +386,7 @@ namespace BlackGui
             if (!this->hasSelection()) { return; }
             const CAircraftModelList models(this->selectedObjects());
             emit requestStash(models);
-            if (this->m_stashingClearsSelection)
+            if (m_stashingClearsSelection)
             {
                 this->clearSelection();
             }

@@ -231,14 +231,10 @@ namespace BlackGui
             const TabIndex tab = currentTabIndex();
             switch (tab)
             {
-            case TabOwnModels:
-                return ui->comp_OwnAircraftModels->view()->hasSelectedModelsToStash();
-            case TabOwnModelSet:
-                return ui->comp_OwnModelSet->view()->hasSelectedModelsToStash();
-            case TabVPilot:
-                return ui->tvp_AircraftModelsForVPilot->hasSelectedModelsToStash();
-            default:
-                break;
+            case TabOwnModels: return ui->comp_OwnAircraftModels->view()->hasSelectedModelsToStash();
+            case TabOwnModelSet: return ui->comp_OwnModelSet->view()->hasSelectedModelsToStash();
+            case TabVPilot: return ui->tvp_AircraftModelsForVPilot->hasSelectedModelsToStash();
+            default: break;
             }
             return false;
         }
@@ -248,16 +244,11 @@ namespace BlackGui
             const TabIndex tab = currentTabIndex();
             switch (tab)
             {
-            case TabOwnModels:
-                return ui->comp_OwnAircraftModels->view();
-            case TabVPilot:
-                return ui->tvp_AircraftModelsForVPilot;
-            case TabStash:
-                return ui->comp_StashAircraft->view();
-            case TabOwnModelSet:
-                return ui->comp_OwnModelSet->view();
-            default:
-                return nullptr;
+            case TabOwnModels: return ui->comp_OwnAircraftModels->view();
+            case TabVPilot: return ui->tvp_AircraftModelsForVPilot;
+            case TabStash: return ui->comp_StashAircraft->view();
+            case TabOwnModelSet: return ui->comp_OwnModelSet->view();
+            default: return nullptr;
             }
         }
 
@@ -308,14 +299,10 @@ namespace BlackGui
             const TabIndex tab = currentTabIndex();
             switch (tab)
             {
-            case TabOwnModels:
-                return ui->comp_OwnAircraftModels->view()->selectedObjects();
-            case TabOwnModelSet:
-                return ui->comp_OwnModelSet->view()->selectedObjects();
-            case TabVPilot:
-                return ui->tvp_AircraftModelsForVPilot->selectedObjects();
-            default:
-                break;
+            case TabOwnModels: return ui->comp_OwnAircraftModels->view()->selectedObjects();
+            case TabOwnModelSet: return ui->comp_OwnModelSet->view()->selectedObjects();
+            case TabVPilot: return ui->tvp_AircraftModelsForVPilot->selectedObjects();
+            default: break;
             }
             return CAircraftModelList();
         }
@@ -983,7 +970,10 @@ namespace BlackGui
             if (mapComp->canAddToModelSetTab())
             {
                 menuActions.addMenuModelSet();
-                m_menuAction = menuActions.addAction(m_menuAction, CIcons::appModels16(), "Add to own model set", CMenuAction::pathModelSet(), this, { mapComp, &CDbMappingComponent::ps_addToOwnModelSet });
+                m_menuAction = menuActions.addAction(m_menuAction, CIcons::appModels16(),
+                                                     "Add to own model set", CMenuAction::pathModelSet(),
+                                                     this, { mapComp, &CDbMappingComponent::ps_addToOwnModelSet },
+                                                     CShortcut::keyAddToModelSet());
             }
             this->nestedCustomMenu(menuActions);
         }
