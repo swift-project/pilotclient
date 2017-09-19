@@ -24,7 +24,7 @@ BLACK_CONFIG    *= Doxygen
 #BLACK_CONFIG    *= SwiftStableBranch
 BLACK_CONFIG    *= FSUIPC
 
-isEmpty(BLACK_EOL): BLACK_EOL = "20180101"
+isEmpty(BLACK_EOL): BLACK_EOL = "20180901"
 
 ## Private Area ##
 

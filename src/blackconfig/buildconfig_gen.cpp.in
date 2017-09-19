@@ -137,7 +137,7 @@ bool BlackConfig::CBuildConfig::isVatsimVersion()
 
 const QDateTime &BlackConfig::CBuildConfig::getEol()
 {
-    static const QString eol(\"$$BLACK_EOL\");
+    static const QString eol(\"$$BLACK_EOL\"); // config.pri
     static const QDateTime dt(eol.isEmpty() ? QDateTime() : QDateTime::fromString(eol, \"yyyyMMdd\"));
     return dt;
 }
