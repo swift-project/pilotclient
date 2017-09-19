@@ -27,6 +27,7 @@
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/shortcut.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/icons.h"
@@ -39,7 +40,7 @@
 #include <QAction>
 #include <QDialog>
 #include <QFrame>
-#include <QKeySequence>
+#include <QShortcut>
 #include <QMenu>
 #include <QModelIndex>
 #include <QPoint>
@@ -129,9 +130,10 @@ namespace BlackGui
             ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
             ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModelSet, CIcons::appModels16());
 
-            // custom menu
+            // custom menu and shortcut
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &CDbMappingComponent::customContextMenuRequested, this, &CDbMappingComponent::ps_onCustomContextMenu);
+            new QShortcut(CShortcut::keyAddToModelSet(), this, SLOT(ps_addToOwnModelSet()));
 
             // vPilot
             this->initVPilotLoading();

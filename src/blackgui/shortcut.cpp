@@ -22,6 +22,12 @@ namespace BlackGui
         return k;
     }
 
+    const QKeySequence &CShortcut::keyAddToModelSet()
+    {
+        static const QKeySequence k(Qt::ALT + Qt::Key_A);
+        return k;
+    }
+
     const QKeySequence &CShortcut::keyClearSelection()
     {
         static const QKeySequence k(Qt::CTRL + Qt::Key_Space);

@@ -32,6 +32,9 @@ namespace BlackGui
         //! For stashing models
         static const QKeySequence &keyStash();
 
+        //! Add to model set
+        static const QKeySequence &keyAddToModelSet();
+
         //! For deselecting all
         static const QKeySequence &keyClearSelection();
 
