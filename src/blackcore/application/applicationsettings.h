@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKCORE_APPLICATION_SETTINGS_H
-#define BLACKCORE_APPLICATION_SETTINGS_H
+#ifndef BLACKCORE_APPLICATION_APPLICATIONSETTINGS_H
+#define BLACKCORE_APPLICATION_APPLICATIONSETTINGS_H
 
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/settingscache.h"
