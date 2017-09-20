@@ -1,6 +1,6 @@
 {
     "crashReportServerUrl": {
-        "url": "http://crashreports.swift-project.org/crash_upload"
+        "url": "http://crashreports.swift-project.org/crashreports"
     },
     "dbDebugFlag": false,
     "dbHttpPort": 80,
