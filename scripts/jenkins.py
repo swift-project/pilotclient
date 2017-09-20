@@ -13,6 +13,7 @@ import multiprocessing
 import os
 import os.path as path
 import platform
+import requests
 import subprocess
 import sys
 import symbolstore
@@ -92,7 +93,7 @@ class Builder:
         content_path = path.abspath(path.join(os.curdir, 'dist', 'xswiftbus'))
         subprocess.check_call(['7z', 'a', '-mx=9', archive_path, content_path], env=dict(os.environ))
 
-    def symbols(self):
+    def symbols(self, upload_symbols):
         """
         Generates the binary symbols and archives them into a gzip archive, located in the swift source root.
         """
@@ -109,6 +110,8 @@ class Builder:
             tar_filename = '-'.join(['swift', 'symbols', platform.system(), self.word_size, self.version]) + '.tar.gz'
             tar_path = path.abspath(path.join(self._get_swift_source_path(), tar_filename))
             dumper.pack(tar_path)
+            if upload_symbols:
+                self.__upload_symbol_files(symbol_path)
 
     def _get_swift_source_path(self):
         return self.__source_path
@@ -207,6 +210,24 @@ class Builder:
         f.close()
         version = '.'.join([version_major, version_minor, version_micro])
         return version
+
+    def __upload_symbol_files(self, symbol_path):
+        print('Uploading symbols')
+        url = 'http://crashreports.swift-project.org/symfiles'
+
+        symbol_files = [os.path.join(root, name)
+                        for root, dirs, files in os.walk(symbol_path)
+                        for name in files
+                        if name.endswith('.sym')]
+
+        for symbol_file in symbol_files:
+            print ('Uploading ' + symbol_file)
+            files = [
+                ('symfile', open(symbol_file, 'rb')),
+            ]
+            data = {'release': self.version}
+            r = requests.post(url, files=files, data=data)
+            r.raise_for_status()
 
 
 class MSVCBuilder(Builder):
@@ -334,14 +355,15 @@ def main(argv):
     tool_chain = ''
     dev_build = False
     jobs = None
+    upload_symbols = False
 
     try:
-        opts, args = getopt.getopt(argv, 'hc:w:t:j:d', ['config=', 'wordsize=', 'toolchain=', 'jobs=', 'dev'])
+        opts, args = getopt.getopt(argv, 'hc:w:t:j:du', ['config=', 'wordsize=', 'toolchain=', 'jobs=', 'dev', 'upload'])
     except getopt.GetoptError:
         print_help()
         sys.exit(2)
 
-    if len(opts) < 2 or len(opts) > 4:
+    if len(opts) < 2 or len(opts) > 5:
         print_help()
         sys.exit(2)
 
@@ -362,6 +384,8 @@ def main(argv):
             jobs = arg
         elif opt in ('-d', '--dev'):
             dev_build = True
+        elif opt in ('-u', '--upload'):
+            upload_symbols = True
 
     if word_size not in ['32', '64']:
         print('Unsupported word size. Choose 32 or 64')
@@ -388,7 +412,7 @@ def main(argv):
     builder.checks()
     builder.install()
     builder.package_xswiftbus()
-    builder.symbols()
+    builder.symbols(upload_symbols)
 
 
 # run main if run directly
