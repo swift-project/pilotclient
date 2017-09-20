@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_DISTRIBUTIONINFOCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DISTRIBUTIONINFOCOMPONENT_H
 
+#include "blackcore/application/distributionsettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/settingscache.h"
@@ -56,7 +57,7 @@ namespace BlackGui
 
         private slots:
             //! Load latest version
-            void ps_loadSetup();
+            void ps_requestLoadOfSetup();
 
             //! Loaded latest version
             void ps_loadedDistributionInfo(bool success);
@@ -79,11 +80,14 @@ namespace BlackGui
             bool m_distributionsLoaded = false; //!< distribution info loaded
             QString m_newVersionAvailable; //!< new version number if any
             BlackMisc::Db::CDistribution m_currentDistribution; //!< current distribution
-            BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionInfo> m_distributionInfo { this, &CDistributionInfoComponent::ps_changedDistributionCache }; //!< version cache
-            BlackMisc::CSetting<BlackMisc::Db::TDistributionSetting> m_distributionSettings { this }; //!< channel/platform selected
+            BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionsInfo> m_distributionsInfo { this, &CDistributionInfoComponent::ps_changedDistributionCache }; //!< version cache
+            BlackMisc::CSetting<BlackCore::Application::TDistribution> m_distributionSetting { this }; //!< channel/platform selected
 
             //! Save the current settings
             void saveSettings();
+
+            //! Selected platform from UI or guessed platform
+            QString getSelectedOrGuessedPlatform() const;
         };
     } // ns
 } // ns

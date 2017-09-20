@@ -36,19 +36,21 @@ namespace BlackGui
             ui->lbl_NewVersionUrl->setOpenExternalLinks(true);
 
             // use version signal as trigger for completion
-            if (!m_distributionInfo.get().isEmpty())
+            if (!m_distributionsInfo.get().isEmpty())
             {
                 // we have at least cached data:
                 // in case CGuiApplication::distributionInfoAvailable never comes/was already sent
-                QTimer::singleShot(10 * 1000, this, [ = ]
+                QTimer::singleShot(15 * 1000, this, [ = ]
                 {
                     // use this as timeout failover with cached data
                     if (m_distributionsLoaded) { return; }
                     this->ps_loadedDistributionInfo(true);
                 });
             }
+
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
             connect(sGui, &CGuiApplication::distributionInfoAvailable, this, &CDistributionInfoComponent::ps_loadedDistributionInfo);
-            connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_loadSetup);
+            connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_requestLoadOfSetup);
             connect(ui->pb_InstallXSwiftBus, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_installXSwiftBusDialog);
         }
 
@@ -57,21 +59,25 @@ namespace BlackGui
 
         bool CDistributionInfoComponent::isNewVersionAvailable() const
         {
-            const QStringList channelPlatform = m_distributionSettings.get();
+            const QStringList channelPlatform = m_distributionSetting.get();
             Q_ASSERT_X(channelPlatform.size() == 2, Q_FUNC_INFO, "wrong setting");
-            const QVersionNumber vCurrentChannelPlatform = m_distributionInfo.get().getQVersionForChannelAndPlatform(channelPlatform);
+            const QVersionNumber vCurrentChannelPlatform = m_distributionsInfo.get().getQVersionForChannelAndPlatform(channelPlatform);
             if (vCurrentChannelPlatform.isNull() || vCurrentChannelPlatform.segmentCount() < 4) return false;
             const QVersionNumber vCurrent = CBuildConfig::getVersion();
             return (vCurrentChannelPlatform > vCurrent);
         }
 
-        void CDistributionInfoComponent::ps_loadSetup()
+        void CDistributionInfoComponent::ps_requestLoadOfSetup()
         {
-            if (!ui->le_LatestVersion->text().isEmpty())
+            if (sGui && !ui->le_LatestVersion->text().isEmpty())
             {
-                ui->le_LatestVersion->setText("");
-                const CStatusMessageList msgs(sApp->requestReloadOfSetupAndVersion());
+                const CStatusMessageList msgs(sGui->requestReloadOfSetupAndVersion());
                 CLogMessage::preformatted(msgs);
+                if (msgs.isSuccess())
+                {
+                    ui->le_LatestVersion->setText("");
+                    m_distributionsLoaded = false; // reset
+                }
             }
         }
 
@@ -115,7 +121,7 @@ namespace BlackGui
             const QString channel = ui->cb_Channels->currentText();
             const QString currentPlatform = ui->cb_Platforms->currentText();
             const QStringList settings({ channel, currentPlatform });
-            const CStatusMessage m = m_distributionSettings.setAndSave(settings);
+            const CStatusMessage m = m_distributionSetting.setAndSave(settings);
             if (m.isFailure())
             {
                 CLogMessage(this).preformatted(m);
@@ -124,17 +130,17 @@ namespace BlackGui
 
         void CDistributionInfoComponent::ps_channelChanged()
         {
-            const CDistributionList distributions(m_distributionInfo.get());
-            const QStringList channels = distributions.getChannels();
-            const QStringList settings = m_distributionSettings.get(); // channel / platform
-            Q_ASSERT_X(settings.size() == 2, Q_FUNC_INFO, "Settings");
+            const CDistributionList distributions(m_distributionsInfo.get());
+            const QStringList channels = distributions.getChannels().toList();
+            const QStringList channelPlatformSetting = m_distributionSetting.get(); // channel / platform
+            Q_ASSERT_X(channelPlatformSetting.size() == 2, Q_FUNC_INFO, "Settings");
 
             // default value
             QString channel = ui->cb_Channels->currentText();
-            if (channel.isEmpty()) { channel = settings.front(); }
+            if (channel.isEmpty()) { channel = channelPlatformSetting.front(); }
             if (channel.isEmpty() && !channels.isEmpty()) { channel = channels.front(); }
 
-            // channels
+            // channels (will be connected below)
             ui->cb_Channels->disconnect();
             ui->cb_Platforms->disconnect();
             ui->cb_Channels->clear();
@@ -149,8 +155,8 @@ namespace BlackGui
 
             // platforms
             QString platform = ui->cb_Platforms->currentText();
-            if (platform.isEmpty()) { platform = settings.last(); }
-            if (platform.isEmpty()) { platform = currentDistribution.guessPlatform(); }
+            if (platform.isEmpty()) { platform = channelPlatformSetting.last(); }
+            if (platform.isEmpty() || !platforms.contains(platform)) { platform = currentDistribution.guessMyPlatform(); }
 
             ui->cb_Platforms->clear();
             ui->cb_Platforms->insertItems(0, platforms);
@@ -173,7 +179,7 @@ namespace BlackGui
             ui->lbl_NewVersionUrl->clear();
             m_newVersionAvailable.clear();
 
-            const QString currentPlatform = ui->cb_Platforms->currentText();
+            const QString currentPlatform = this->getSelectedOrGuessedPlatform();
             if (!currentPlatform.isEmpty())
             {
                 const QVersionNumber latestVersion = m_currentDistribution.getQVersion(currentPlatform);
@@ -202,6 +208,17 @@ namespace BlackGui
 
                 emit selectionChanged();
             }
+        }
+
+        QString CDistributionInfoComponent::getSelectedOrGuessedPlatform() const
+        {
+            QString p = ui->cb_Platforms->currentText();
+            if (p.isEmpty())
+            {
+                const CDistributionList distributions = m_distributionsInfo.get();
+                p = distributions.findByChannelOrDefault(ui->cb_Channels->currentText()).guessMyPlatform();
+            }
+            return p;
         }
     } // ns
 } // ns
