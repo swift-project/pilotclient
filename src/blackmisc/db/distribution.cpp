@@ -38,7 +38,13 @@ namespace BlackMisc
             return platforms;
         }
 
-        QString CDistribution::guessPlatform() const
+        bool CDistribution::supportsPlatform(const QString &platform) const
+        {
+            QStringList platforms = m_platformFiles.keys();
+            return !platform.isEmpty() && platforms.contains(platform);
+        }
+
+        QString CDistribution::guessMyPlatform() const
         {
             const QStringList platforms(getPlatforms());
             if (platforms.isEmpty()) { return ""; }
@@ -55,7 +61,7 @@ namespace BlackMisc
                 }
                 else if (CBuildConfig::isRunningOnMacOSXPlatform())
                 {
-                    if (!p.contains("mac", Qt::CaseInsensitive) || !p.contains("osx", Qt::CaseInsensitive)) continue;
+                    if (!(p.contains("mac", Qt::CaseInsensitive) || p.contains("osx", Qt::CaseInsensitive))) continue;
                 }
                 reduced << p;
             }
@@ -74,6 +80,20 @@ namespace BlackMisc
                     {
                         if (!p.contains("vatsim")) { furtherReduced << p; }
                     }
+                }
+                if (!furtherReduced.isEmpty()) { reduced = furtherReduced; }
+            }
+
+            int wordSize = CBuildConfig::buildWordSize();
+            if (wordSize >= 32 && reduced.size() > 1)
+            {
+                // further reduce by word size 32/64
+                QStringList furtherReduced;
+                const QString wsString = QString::number(wordSize);
+                for (const QString &p : as_const(reduced))
+                {
+                    if (!p.contains(wsString)) { continue; }
+                    furtherReduced << p;
                 }
                 if (!furtherReduced.isEmpty()) { reduced = furtherReduced; }
             }
@@ -102,12 +122,12 @@ namespace BlackMisc
         void CDistribution::addDownloadUrl(const CUrl &url)
         {
             if (url.isEmpty()) { return; }
-            this->m_downloadUrls.push_back(url);
+            m_downloadUrls.push_back(url);
         }
 
         bool CDistribution::hasDownloadUrls() const
         {
-            return !this->m_downloadUrls.isEmpty();
+            return !m_downloadUrls.isEmpty();
         }
 
         QString CDistribution::convertToQString(bool i18n) const
@@ -138,18 +158,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexChannel:
-                return CVariant::fromValue(this->m_channel);
-            case IndexDownloadUrls:
-                return CVariant::fromValue(this->m_downloadUrls);
-            case IndexRestricted:
-                return CVariant::fromValue(this->m_restricted);
-            case IndexPlatforms:
-                return CVariant::fromValue(this->getPlatforms());
-            case IndexPlatformFiles:
-                return CVariant::fromValue(this->m_platformFiles);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexChannel: return CVariant::fromValue(m_channel);
+            case IndexDownloadUrls: return CVariant::fromValue(m_downloadUrls);
+            case IndexRestricted: return CVariant::fromValue(m_restricted);
+            case IndexPlatforms: return CVariant::fromValue(this->getPlatforms());
+            case IndexPlatformFiles: return CVariant::fromValue(m_platformFiles);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -165,21 +179,11 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexChannel:
-                this->setChannel(variant.value<QString>());
-                break;
-            case IndexDownloadUrls:
-                this->m_downloadUrls = variant.value<CUrlList>();
-                break;
-            case IndexRestricted:
-                this->m_restricted = variant.toBool();
-                break;
-            case IndexPlatformFiles:
-                this->m_platformFiles = variant.value<CPlatformDictionary>();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexChannel: this->setChannel(variant.value<QString>()); break;
+            case IndexDownloadUrls: m_downloadUrls = variant.value<CUrlList>(); break;
+            case IndexRestricted: m_restricted = variant.toBool(); break;
+            case IndexPlatformFiles: m_platformFiles = variant.value<CPlatformDictionary>(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 

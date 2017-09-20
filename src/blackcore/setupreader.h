@@ -176,8 +176,8 @@ namespace BlackCore
         QString m_lastSuccessfulSetupUrl;                        //!< last successful read setup URL
         QString m_lastSuccessfulDistributionUrl;                 //!< last successful read distribution URL
         BlackMisc::CStatusMessageList m_setupReadErrorMsgs;      //!< last parsing error messages
-        BlackMisc::CData<BlackCore::Data::TGlobalSetup>    m_setup {this, &CSetupReader::ps_setupChanged}; //!< data cache setup
-        BlackMisc::CData<BlackMisc::Db::TDistributionInfo> m_distributions {this};                         //!< data cache distributions
+        BlackMisc::CData<BlackCore::Data::TGlobalSetup>     m_setup {this, &CSetupReader::ps_setupChanged}; //!< data cache setup
+        BlackMisc::CData<BlackMisc::Db::TDistributionsInfo> m_distributions {this};                         //!< data cache distributions
 
         //! Read by local individual file and update cache from that
         BlackMisc::CStatusMessageList readLocalBootstrapFile(const QString &fileName);

@@ -32,7 +32,7 @@ namespace BlackMisc
         //! Dictionary for files per platform
         using CPlatformDictionary = BlackMisc::CDictionary<QString, QString>;
 
-        //! CDistribution for channel
+        //! Distributions for channel
         class BLACKMISC_EXPORT CDistribution :
             public BlackMisc::CValueObject<CDistribution>,
             public BlackMisc::Db::IDatastoreObjectWithIntegerKey
@@ -66,8 +66,11 @@ namespace BlackMisc
             //! Get platforms
             QStringList getPlatforms() const;
 
-            //! Guess platform
-            QString guessPlatform() const;
+            //! Supports platform?
+            bool supportsPlatform(const QString &platform) const;
+
+            //! Guess platform for this distribution channel and this version of swift
+            QString guessMyPlatform() const;
 
             //! Version for platform
             QString getVersionString(const QString &platform) const;
@@ -106,7 +109,7 @@ namespace BlackMisc
             static CDistribution fromDatabaseJson(const QJsonObject &json, const QString &prefix = {});
 
         private:
-            QString                      m_channel;            //!< for development
+            QString                      m_channel;            //!< channel the files belong to
             bool                         m_restricted = false; //!< restricted access (i.e. password for download needed)
             BlackMisc::Network::CUrlList m_downloadUrls;       //!< download URLs, here I get the installer
             CPlatformDictionary          m_platformFiles;      //!< the latest file version per platform
@@ -128,7 +131,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(platformVersions, 0, DisabledForComparison | DisabledForHashing)
             );
         };
-
         //! Distribution settings: channel/platform
         struct TDistributionSetting : public BlackMisc::TSettingTrait<QStringList>
         {

@@ -19,12 +19,16 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
+#include <QSet>
+#include <QString>
 
 namespace BlackMisc
 {
     namespace Db
     {
-        //! Value object encapsulating a list of aircraft models
+        //! Multiple distributions for different channels:
+        //! - one CDistribution objects contains all versions for a channel
+        //! - a distribution list normally contains all distributions for all channels
         class BLACKMISC_EXPORT CDistributionList :
             public BlackMisc::CSequence<CDistribution>,
             public BlackMisc::Db::IDatastoreObjectList<CDistribution, CDistributionList, int>,
@@ -40,7 +44,13 @@ namespace BlackMisc
             CDistributionList(const CSequence<CDistribution> &other);
 
             //! All channels
-            QStringList getChannels() const;
+            QSet<QString> getChannels() const;
+
+            //! Find channels for platform
+            QSet<QString> findChannelsForPlatform(const QString &platform) const;
+
+            //! All platforms for all channels
+            QSet<QString> getPlatforms() const;
 
             //! Find distribution by channels
             CDistribution findByChannelOrDefault(const QString &channel) const;
@@ -57,15 +67,18 @@ namespace BlackMisc
             //! Version for specific channel and platform
             QVersionNumber getQVersionForChannelAndPlatform(const QStringList &channelPlatform) const;
 
-            //! From database JSON
+            //! Guess the best channel/platform
+            QStringList guessMyDefaultChannelAndPlatform() const;
+
+            //! From database JSON by array
             static CDistributionList fromDatabaseJson(const QJsonArray &array);
 
-            //! From database JSON
+            //! From database JSON by string
             static CDistributionList fromDatabaseJson(const QString &json);
         };
 
-        //! Trait for global setup data
-        struct TDistributionInfo : public BlackMisc::TDataTrait<CDistributionList>
+        //! Trait for distributions
+        struct TDistributionsInfo : public BlackMisc::TDataTrait<CDistributionList>
         {
             //! Key in data cache
             static const char *key() { return "distributions"; }

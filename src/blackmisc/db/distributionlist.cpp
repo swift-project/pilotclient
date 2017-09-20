@@ -20,15 +20,41 @@ namespace BlackMisc
             CSequence<CDistribution>(other)
         { }
 
-        QStringList CDistributionList::getChannels() const
+        QSet<QString> CDistributionList::getChannels() const
         {
-            QStringList channels;
+            QSet<QString> channels;
             for (const CDistribution &distribution : *this)
             {
                 if (distribution.getChannel().isEmpty()) { continue; }
                 channels << distribution.getChannel();
             }
             return channels;
+        }
+
+        QSet<QString> CDistributionList::findChannelsForPlatform(const QString &platform) const
+        {
+            QSet<QString> channels;
+            if (platform.isEmpty()) { return channels; }
+            for (const CDistribution &distribution : *this)
+            {
+                if (distribution.getChannel().isEmpty()) { continue; }
+                if (distribution.supportsPlatform(platform))
+                {
+                    channels.insert(distribution.getChannel());
+                }
+            }
+            return channels;
+        }
+
+        QSet<QString> CDistributionList::getPlatforms() const
+        {
+            QSet<QString> platforms;
+            for (const CDistribution &distribution : *this)
+            {
+                if (distribution.getChannel().isEmpty()) { continue; }
+                platforms << distribution.getChannel();
+            }
+            return platforms;
         }
 
         CDistribution CDistributionList::findByChannelOrDefault(const QString &channel) const
@@ -58,6 +84,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(channelPlatform.length() == 2, Q_FUNC_INFO, "Wrong size");
             return this->getQVersionForChannelAndPlatform(channelPlatform.first(), channelPlatform.last());
+        }
+
+        QStringList CDistributionList::guessMyDefaultChannelAndPlatform() const
+        {
+            //! \fixme will be further improved when we have added a public server and have more channels
+            return QStringList({"ALPHA", BlackConfig::CBuildConfig::guessMyPlatformString()}); // guessing
         }
 
         CDistributionList CDistributionList::fromDatabaseJson(const QJsonArray &array)

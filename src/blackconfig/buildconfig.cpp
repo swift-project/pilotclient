@@ -19,6 +19,7 @@
 #include <QStandardPaths>
 #include <QStringList>
 #include <QtGlobal>
+#include <QSysInfo>
 
 namespace BlackConfig
 {
@@ -235,6 +236,44 @@ namespace BlackConfig
             return btsInt;
         }
         return 0; // intentionally 0 => 0.7.3.0 <-
+    }
+
+    const QStringList &CBuildConfig::getBuildAbiParts()
+    {
+        static const QStringList parts = QSysInfo::buildAbi().split('-');
+        return parts;
+    }
+
+    int buildWordSizeImpl()
+    {
+        if (CBuildConfig::getBuildAbiParts().length() < 3) { return -1; }
+        const QString abiWs = CBuildConfig::getBuildAbiParts()[2];
+        if (abiWs.contains("32")) { return 32; }
+        if (abiWs.contains("64")) { return 64; }
+        return -1;
+    }
+
+    int CBuildConfig::buildWordSize()
+    {
+        static const int bws = buildWordSizeImpl();
+        return bws;
+    }
+
+    QString CBuildConfig::guessMyPlatformString()
+    {
+        // 32/64 only matters on Windows
+        // 64 is default
+        QString p;
+        QString ws = (buildWordSize() == 32) ? "32" : "64";
+        if (BlackConfig::CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            p = "win-" + ws;
+        }
+        else if (BlackConfig::CBuildConfig::isRunningOnMacOSXPlatform()) { p = "macos-64"; }
+        else if (BlackConfig::CBuildConfig::isRunningOnLinuxPlatform()) { p = "linux-64"; }
+
+        if (!p.isEmpty() && BlackConfig::CBuildConfig::isVatsimVersion()) { p += "-vatsim"; }
+        return p;
     }
 } // ns
 
