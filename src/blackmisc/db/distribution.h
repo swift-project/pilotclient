@@ -131,32 +131,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(platformVersions, 0, DisabledForComparison | DisabledForHashing)
             );
         };
-        //! Distribution settings: channel/platform
-        struct TDistributionSetting : public BlackMisc::TSettingTrait<QStringList>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "distribution"; }
-
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static const QStringList &defaultValue()
-            {
-                // guessing / preseting some default values
-                static const QStringList d{"ALPHA", platformString()};
-                return d;
-            }
-
-            //! Guessed platform string
-            //! \todo this hardcoded stuff here is useful right now, but needs to go
-            static QString platformString()
-            {
-                QString p;
-                if (BlackConfig::CBuildConfig::isRunningOnWindowsNtPlatform()) { p = "win-64"; }
-                else  if (BlackConfig::CBuildConfig::isRunningOnMacOSXPlatform()) { p = "macos-64"; }
-                else if (BlackConfig::CBuildConfig::isRunningOnLinuxPlatform()) { p = "linux-64"; }
-                if (!p.isEmpty() && BlackConfig::CBuildConfig::isVatsimVersion()) { p += "-vatsim"; }
-                return p;
-            }
-        };
     } // ns
 } // ns
 
