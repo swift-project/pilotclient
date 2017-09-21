@@ -78,25 +78,34 @@ namespace BlackGui
         {
             //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "guigeneral"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("General GUI"); return name; }
         };
 
         //! Settings for last manual entries of own aircraft mode
         struct TOwnAircraftModel : public BlackMisc::TSettingTrait<BlackMisc::Simulation::CAircraftModel>
         {
-            //! Key in data cache
+            //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "guinownaircraftmodel"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Own aircraft"); return name; }
         };
 
         //! Settings for last manual entries of own aircraft mode
         struct TBackgroundConsolidation : public BlackMisc::TSettingTrait<int>
         {
-            //! Key in data cache
+            //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "backgroundconsolidation"; }
 
-            //! Validator function.
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Background consolidation"); return name; }
+
+            //! \copydoc BlackCore::TSettingTrait::isValid
             static bool isValid(const int &valueInSeconds) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
 
-            //! Default, not consolidating
+            //! \copydoc BlackCore::TSettingTrait::defaultValue
             static const int &defaultValue() { static const int i = 240; return i; }
 
             //! Minimum

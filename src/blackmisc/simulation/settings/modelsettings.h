@@ -65,12 +65,18 @@ namespace BlackMisc
             struct TModel : public BlackMisc::TSettingTrait<CModelSettings>
             {
                 //! Key in data cache
-                static const char *key() { return "settingsmodels"; }
+                static const char *key() { return "Models"; }
+
+                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("Current traffic servers"); return name; }
             };
 
             //! Mapping preferences for model distributor list
             struct TDistributorListPreferences : public BlackMisc::TSettingTrait<BlackMisc::Simulation::CDistributorListPreferences>
             {
+                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("Distributor preferences"); return name; }
+
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "mapping/distributorpreferences"; }
             };

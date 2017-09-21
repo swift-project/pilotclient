@@ -24,13 +24,16 @@ namespace BlackGui
         //! Trait for directory settings
         struct TViewDirectorySettings : public BlackMisc::TSettingTrait<QString>
         {
-            //! Key in data cache
+            //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "guiviewdirectory/%Application%"; }
 
-            //! Validator function.
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("View directory"); return name; }
+
+            //! \copydoc BlackCore::TSettingTrait::isValid
             static bool isValid(const QString &directory) { Q_UNUSED(directory); return true; }
 
-            //! Default, not consolidating
+            //! \copydoc BlackCore::TSettingTrait::defaultValue
             static const QString &defaultValue() { return BlackMisc::CDirectoryUtils::documentationDirectory(); }
         };
     } // ns

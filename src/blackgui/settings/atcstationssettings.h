@@ -63,6 +63,9 @@ namespace BlackGui
         {
             //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "atcstations"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("ATC stations"); return name; }
         };
     } // ns
 } // ns

@@ -125,8 +125,11 @@ namespace BlackGui
         //!          (of the parent object using this setting). If the object name is not set, it will not work correctly
         struct TDockWidget : public BlackMisc::TSettingTrait<CDockWidgetSettings>
         {
-            //! Key in data cache https://dev.vatsim-germany.org/issues/776
-            static const char *key() { return "guidockwidget/%Application%/%OwnerName%"; }
+            //! \copydoc BlackCore::TSettingTrait::key
+            static const char *key() { return "guidockwidget/%Application%/%OwnerName%"; } // Key in data cache https://dev.vatsim-germany.org/issues/776
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Dockable widgets"); return name; }
         };
     } // ns
 } // ns

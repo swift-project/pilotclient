@@ -29,6 +29,9 @@ namespace BlackCore
         {
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "network/trafficservers"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Traffic servers"); return name; }
         };
 
         /*!
@@ -38,6 +41,9 @@ namespace BlackCore
         {
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "network/currenttrafficserver"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Current traffic servers"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const BlackMisc::Network::CServer &defaultValue()
@@ -114,6 +120,9 @@ namespace BlackCore
             //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "vatsimreaders/bookings"; }
 
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("VATSIM bookings"); return name; }
+
             //! \copydoc BlackCore::TSettingTrait::defaultValue
             static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
@@ -128,6 +137,9 @@ namespace BlackCore
             //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "vatsimreaders/datafile"; }
 
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("VATSIM data file"); return name; }
+
             //! \copydoc BlackCore::TSettingTrait::defaultValue
             static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
@@ -141,6 +153,9 @@ namespace BlackCore
         {
             //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "vatsimreaders/metars"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("VATSIM METARs"); return name; }
 
             //! \copydoc BlackCore::TSettingTrait::defaultValue
             static const BlackCore::Vatsim::CReaderSettings &defaultValue()

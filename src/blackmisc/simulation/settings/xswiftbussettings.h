@@ -30,6 +30,9 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "xswiftbus/server"; }
 
+                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("XSwiftBus"); return name; }
+
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
                 static QString defaultValue() { return BlackMisc::CDBusServer::sessionBusAddress(); }
 

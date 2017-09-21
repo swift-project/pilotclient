@@ -26,6 +26,9 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "audio/setup"; }
 
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Audio"); return name; }
+
             //! \copydoc BlackMisc::TSettingTrait::isValid
             static bool isValid(const BlackMisc::Audio::CSettings &value) { Q_UNUSED(value); return true; }
         };
@@ -35,6 +38,9 @@ namespace BlackCore
         {
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "audio/inputdevice"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Input device"); return name; }
         };
 
         //! Audio input device settings
@@ -42,8 +48,10 @@ namespace BlackCore
         {
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "audio/outputdevice"; }
-        };
 
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Output device"); return name; }
+        };
     } // ns
 } // ns
 

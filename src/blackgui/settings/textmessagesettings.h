@@ -122,6 +122,9 @@ namespace BlackGui
         {
             //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "textmessages"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Text message"); return name; }
         };
     } // ns
 } // ns

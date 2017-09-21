@@ -28,6 +28,9 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "application/actionhotkeys"; }
 
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Hotkeys"); return name; }
+
             //! \copydoc BlackMisc::TSettingTrait::isValid
             static bool isValid(const BlackMisc::Input::CActionHotkeyList &value)
             {
@@ -47,6 +50,9 @@ namespace BlackCore
             //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "application/enabledsimulators"; }
 
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Enabled simulators"); return name; }
+
             //! \copydoc BlackCore::TSettingTrait::defaultValue
             static const QStringList &defaultValue()
             {
@@ -55,7 +61,7 @@ namespace BlackCore
                 return enabledSimulators;
             }
 
-            //! Simulator plugin identifiers valid?
+            //! \copydoc BlackCore::TSettingTrait::isValid
             static bool isValid(const QStringList &pluginIdentifiers)
             {
                 for (const QString &pluginIdentifier : pluginIdentifiers)
@@ -74,6 +80,9 @@ namespace BlackCore
         {
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "application/crashdumpuploadenabled"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Crash dumps"); return name; }
 
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static bool defaultValue() { return true; }

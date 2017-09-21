@@ -101,8 +101,11 @@ namespace BlackGui
         //! Trait for settings for navigator
         struct TNavigator : public BlackMisc::TSettingTrait<CNavigatorSettings>
         {
-            //! Key in data cache
+            //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "guinavigator"; }
+
+            //! \copydoc BlackCore::TSettingTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Navigator"); return name; }
         };
     } // ns
 } // ns

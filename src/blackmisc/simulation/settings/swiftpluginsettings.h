@@ -92,10 +92,13 @@ namespace BlackMisc
             //! Trait for swift plugin settings
             struct TSwiftPlugin : public BlackMisc::TSettingTrait<CSwiftPluginSettings>
             {
-                //! Key in data cache
+                //! \copydoc BlackCore::TSettingTrait::key
                 static const char *key() { return "settingsswiftplugin"; }
 
-                //! Validator function.
+                //! \copydoc BlackCore::TSettingTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("swift plugin"); return name; }
+
+                //! \copydoc BlackCore::TSettingTrait::isValid
                 static bool isValid(const CSwiftPluginSettings &value) { return value.getEmulatedSimulator().isSingleSimulator(); }
             };
         } // ns
