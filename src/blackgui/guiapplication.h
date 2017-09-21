@@ -143,7 +143,10 @@ namespace BlackGui
         void addMenuHelp(QMenu &menu);
 
         //! Show help page (online help)
-        void showHelp();
+        void showHelp(const QString &context = {}) const;
+
+        //! Show help page (online help), use QObject::objectName as 2nd level context
+        void showHelp(const QObject *qObject) const;
 
         //! Style sheet handling
         const CStyleSheetUtility &getStyleSheetUtility() const;

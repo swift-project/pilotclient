@@ -46,7 +46,10 @@ namespace BlackGui
             connect(this, &QWizard::accepted, this, &CConfigurationWizard::ended);
 
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
-            connect(this, &QWizard::helpRequested, sGui, &CGuiApplication::showHelp);
+            connect(this, &QWizard::helpRequested, sGui, [ = ]
+            {
+                sGui->showHelp(this);
+            });
         }
 
         CConfigurationWizard::~CConfigurationWizard()

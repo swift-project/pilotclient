@@ -556,16 +556,22 @@ namespace BlackGui
         Q_UNUSED(c);
     }
 
-    void CGuiApplication::showHelp()
+    void CGuiApplication::showHelp(const QString &context) const
     {
         const CGlobalSetup gs = this->getGlobalSetup();
-        const CUrl helpPage = gs.getHelpPageUrl();
+        const CUrl helpPage = gs.getHelpPageUrl(context);
         if (helpPage.isEmpty())
         {
             CLogMessage(this).warning("No help page");
             return;
         }
         QDesktopServices::openUrl(helpPage);
+    }
+
+    void CGuiApplication::showHelp(const QObject *qObject) const
+    {
+        if (!qObject || qObject->objectName().isEmpty()) { return this->showHelp(); }
+        return this->showHelp(qObject->objectName());
     }
 
     const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const

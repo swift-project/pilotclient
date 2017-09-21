@@ -100,15 +100,23 @@ namespace BlackCore
             return getDbRootDirectoryUrl().withAppendedPath("/page/index.php");
         }
 
-        CUrl CGlobalSetup::getHelpPageUrl() const
+        CUrl CGlobalSetup::getHelpPageUrl(const QString &context) const
         {
             const CUrlList urls(this->m_onlineHelpUrls);
-            CUrl url = urls.getRandomWorkingUrl();
-            if (sApp)
+
+            // we display in the standard browser, so the user will realize if the URL
+            // does not work
+            CUrl url = (urls.size() < 2) ? urls.frontOrDefault() : urls.getRandomUrl();
+            if (url.isEmpty()) { return url; }
+
+            // context string something like "application.moreSpecific.evenMoreSpecific"
+            QString c = "client";
+            if (QCoreApplication::instance())
             {
-                const QString a = sApp->getApplicationNameVersionBetaDev();
-                url.appendQuery("swift", a);
+                c = QCoreApplication::instance()->applicationName();
             }
+            if (!context.isEmpty()) { c += "." + context; }
+            url.appendQuery("context", c);
             return url;
         }
 
@@ -208,11 +216,6 @@ namespace BlackCore
             return m_newsUrls;
         }
 
-        const CUrlList &CGlobalSetup::getOnlineHelpUrls() const
-        {
-            return m_onlineHelpUrls;
-        }
-
         const CUrlList &CGlobalSetup::getSwiftMapUrls() const
         {
             return m_mapUrls;
@@ -255,7 +258,7 @@ namespace BlackCore
                 % getSwiftLatestNewsUrls().toQString(i18n)
                 % separator
                 % "Help URLs: "
-                % getOnlineHelpUrls().toQString(i18n)
+                % m_onlineHelpUrls.toQString(i18n)
                 % separator
                 % "swift map URLs: "
                 % getSwiftMapUrls().toQString(i18n)

@@ -153,12 +153,9 @@ namespace BlackCore
             //! Locations of swift DB news
             const BlackMisc::Network::CUrlList &getSwiftLatestNewsUrls() const;
 
-            //! Online help URLs
-            const BlackMisc::Network::CUrlList &getOnlineHelpUrls() const;
-
             //! Help page URL
             //! \remark working URL evaluated at runtime, based on getOnlineHelpUrls
-            BlackMisc::Network::CUrl getHelpPageUrl() const;
+            BlackMisc::Network::CUrl getHelpPageUrl(const QString &context = {}) const;
 
             //! swift map URLs
             const BlackMisc::Network::CUrlList &getSwiftMapUrls() const;
