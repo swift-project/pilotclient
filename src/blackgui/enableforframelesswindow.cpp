@@ -38,33 +38,33 @@ namespace BlackGui
     {
         Q_ASSERT(correspondingWidget);
         Q_ASSERT(!m_framelessPropertyName.isEmpty());
-        this->m_originalWindowMode = mode;
+        m_originalWindowMode = mode;
         this->setWindowAttributes(mode);
         this->windowFlagsChanged();
     }
 
     void CEnableForFramelessWindow::setMode(CEnableForFramelessWindow::WindowMode mode)
     {
-        if (mode == this->m_windowMode) { return; }
-        this->m_windowMode = mode;
+        if (mode == m_windowMode) { return; }
+        m_windowMode = mode;
 
         // set the main window or dock widget flags and attributes
-        this->m_widget->setWindowFlags(modeToWindowFlags(mode));
+        m_widget->setWindowFlags(modeToWindowFlags(mode));
         this->windowFlagsChanged();
         this->setWindowAttributes(mode);
-        this->m_widget->show();
+        m_widget->show();
     }
 
     void CEnableForFramelessWindow::setFrameless(bool frameless)
     {
-        WindowMode nonFrameLessMode = this->m_originalWindowMode;
+        WindowMode nonFrameLessMode = m_originalWindowMode;
         if (nonFrameLessMode == WindowFrameless) { nonFrameLessMode = WindowNormal; }
         setMode(frameless ? WindowFrameless : nonFrameLessMode);
     }
 
     void CEnableForFramelessWindow::alwaysOnTop(bool onTop)
     {
-        Qt::WindowFlags flags = this->m_widget->windowFlags();
+        Qt::WindowFlags flags = m_widget->windowFlags();
         if (onTop)
         {
             flags |= Qt::WindowStaysOnTopHint;
@@ -73,7 +73,7 @@ namespace BlackGui
         {
             flags &= ~Qt::WindowStaysOnTopHint;
         }
-        this->m_widget->setWindowFlags(flags);
+        m_widget->setWindowFlags(flags);
         this->windowFlagsChanged();
     }
 
@@ -106,17 +106,17 @@ namespace BlackGui
 
     void CEnableForFramelessWindow::setWindowAttributes(CEnableForFramelessWindow::WindowMode mode)
     {
-        Q_ASSERT_X(this->m_widget, "CEnableForFramelessWindow::setWindowAttributes", "Missing widget representing window");
-        Q_ASSERT_X(!this->m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setWindowAttributes", "Missing property name");
+        Q_ASSERT_X(m_widget, "CEnableForFramelessWindow::setWindowAttributes", "Missing widget representing window");
+        Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setWindowAttributes", "Missing property name");
 
         bool frameless = (mode == WindowFrameless);
         // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
-        this->m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
+        m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
 
         // https://bugreports.qt.io/browse/QTBUG-52206
-        if (CGuiUtility::isTopLevelWidget(this->m_widget))
+        if (CGuiUtility::isTopLevelWidget(m_widget))
         {
-            this->m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless);
+            m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless);
         }
 
         // Qt::WA_PaintOnScreen leads to a warning
@@ -127,17 +127,17 @@ namespace BlackGui
 
     void CEnableForFramelessWindow::setDynamicProperties(bool frameless)
     {
-        Q_ASSERT_X(this->m_widget, "CEnableForFramelessWindow::setDynamicProperties", "Missing widget representing window");
-        Q_ASSERT_X(!this->m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setDynamicProperties", "Missing property name");
+        Q_ASSERT_X(m_widget, "CEnableForFramelessWindow::setDynamicProperties", "Missing widget representing window");
+        Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setDynamicProperties", "Missing property name");
 
         // property selector will check on string, so I directly provide a string
         const QString f(BlackMisc::boolToTrueFalse(frameless));
-        this->m_widget->setProperty(this->m_framelessPropertyName.constData(), f);
-        for (QObject *w : this->m_widget->children())
+        m_widget->setProperty(m_framelessPropertyName.constData(), f);
+        for (QObject *w : m_widget->children())
         {
             if (w && w->isWidgetType())
             {
-                w->setProperty(this->m_framelessPropertyName.constData(), f);
+                w->setProperty(m_framelessPropertyName.constData(), f);
             }
         }
     }
@@ -145,21 +145,21 @@ namespace BlackGui
     void CEnableForFramelessWindow::showMinimizedModeChecked()
     {
         if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->toolToNormalWindow(); }
-        this->m_widget->showMinimized();
+        m_widget->showMinimized();
     }
 
     void CEnableForFramelessWindow::showNormalModeChecked()
     {
         if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->normalToToolWindow(); }
-        this->m_widget->showMinimized();
+        m_widget->showMinimized();
     }
 
     bool CEnableForFramelessWindow::handleMousePressEvent(QMouseEvent *event)
     {
-        Q_ASSERT(this->m_widget);
-        if (this->m_windowMode == WindowFrameless && event->button() == Qt::LeftButton)
+        Q_ASSERT(m_widget);
+        if (m_windowMode == WindowFrameless && event->button() == Qt::LeftButton)
         {
-            this->m_framelessDragPosition = event->globalPos() - this->m_widget->frameGeometry().topLeft();
+            m_framelessDragPosition = event->globalPos() - m_widget->frameGeometry().topLeft();
             event->accept();
             return true;
         }
@@ -168,10 +168,10 @@ namespace BlackGui
 
     bool CEnableForFramelessWindow::handleMouseMoveEvent(QMouseEvent *event)
     {
-        Q_ASSERT(this->m_widget);
-        if (this->m_windowMode == WindowFrameless && event->buttons() & Qt::LeftButton)
+        Q_ASSERT(m_widget);
+        if (m_windowMode == WindowFrameless && event->buttons() & Qt::LeftButton)
         {
-            this->m_widget->move(event->globalPos() - this->m_framelessDragPosition);
+            m_widget->move(event->globalPos() - m_framelessDragPosition);
             event->accept();
             return true;
         }
@@ -211,37 +211,37 @@ namespace BlackGui
     void CEnableForFramelessWindow::addFramelessSizeGripToStatusBar(QStatusBar *statusBar)
     {
         if (!statusBar) { return; }
-        if (!this->m_framelessSizeGrip)
+        if (!m_framelessSizeGrip)
         {
-            this->m_framelessSizeGrip = new QSizeGrip(this->m_widget);
-            this->m_framelessSizeGrip->setObjectName("sg_FramelessSizeGrip");
-            statusBar->addPermanentWidget(this->m_framelessSizeGrip);
+            m_framelessSizeGrip = new QSizeGrip(m_widget);
+            m_framelessSizeGrip->setObjectName("sg_FramelessSizeGrip");
+            statusBar->addPermanentWidget(m_framelessSizeGrip);
         }
         else
         {
-            this->m_framelessSizeGrip->show();
+            m_framelessSizeGrip->show();
         }
         statusBar->repaint();
     }
 
     void CEnableForFramelessWindow::hideFramelessSizeGripInStatusBar()
     {
-        if (!this->m_framelessSizeGrip) { return; }
-        this->m_framelessSizeGrip->hide();
+        if (!m_framelessSizeGrip) { return; }
+        m_framelessSizeGrip->hide();
     }
 
     QHBoxLayout *CEnableForFramelessWindow::addFramelessCloseButton(QMenuBar *menuBar)
     {
         Q_ASSERT(isFrameless());
         Q_ASSERT(menuBar);
-        Q_ASSERT(this->m_widget);
+        Q_ASSERT(m_widget);
 
         if (!m_framelessCloseButton)
         {
-            m_framelessCloseButton = new QPushButton(this->m_widget);
+            m_framelessCloseButton = new QPushButton(m_widget);
             m_framelessCloseButton->setObjectName("pb_FramelessCloseButton");
             m_framelessCloseButton->setIcon(CIcons::close16());
-            QObject::connect(m_framelessCloseButton, &QPushButton::clicked, this->m_widget, &QWidget::close);
+            QObject::connect(m_framelessCloseButton, &QPushButton::clicked, m_widget, &QWidget::close);
         }
 
         QHBoxLayout *menuBarLayout = new QHBoxLayout;
@@ -253,21 +253,21 @@ namespace BlackGui
 
     void CEnableForFramelessWindow::toolToNormalWindow()
     {
-        this->m_widget->setWindowFlags((this->m_widget->windowFlags() & (~Qt::Tool)) | Qt::Window);
+        m_widget->setWindowFlags((m_widget->windowFlags() & (~Qt::Tool)) | Qt::Window);
         this->windowFlagsChanged();
-        this->m_originalWindowMode = WindowNormal;
+        m_originalWindowMode = WindowNormal;
     }
 
     void CEnableForFramelessWindow::normalToToolWindow()
     {
-        this->m_widget->setWindowFlags(this->m_widget->windowFlags() | Qt::Tool);
+        m_widget->setWindowFlags(m_widget->windowFlags() | Qt::Tool);
         this->windowFlagsChanged();
-        this->m_originalWindowMode = WindowTool;
+        m_originalWindowMode = WindowTool;
     }
 
     bool CEnableForFramelessWindow::isToolWindow() const
     {
-        return (this->m_widget->windowFlags() & Qt::Tool) == Qt::Tool;
+        return (m_widget->windowFlags() & Qt::Tool) == Qt::Tool;
     }
 
     Qt::WindowFlags CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowMode mode)

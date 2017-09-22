@@ -89,7 +89,7 @@ namespace BlackGui
             this->setWindowIcon(icon);
             this->settingsChanged();
             sGui = this;
-            connect(&this->m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
+            connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
         }
     }
 
@@ -106,22 +106,22 @@ namespace BlackGui
 
     void CGuiApplication::addWindowModeOption()
     {
-        this->m_cmdWindowMode = QCommandLineOption(QStringList() << "w" << "window",
-                                QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."),
-                                "windowtype");
-        this->addParserOption(this->m_cmdWindowMode);
+        m_cmdWindowMode = QCommandLineOption(QStringList() << "w" << "window",
+                                             QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."),
+                                             "windowtype");
+        this->addParserOption(m_cmdWindowMode);
     }
 
     void CGuiApplication::addWindowStateOption()
     {
-        this->m_cmdWindowStateMinimized =  QCommandLineOption({{"m", "minimized"}, QCoreApplication::translate("main", "Start minimized in system tray.")});
-        this->addParserOption(this->m_cmdWindowStateMinimized);
+        m_cmdWindowStateMinimized =  QCommandLineOption({{"m", "minimized"}, QCoreApplication::translate("main", "Start minimized in system tray.")});
+        this->addParserOption(m_cmdWindowStateMinimized);
     }
 
     Qt::WindowState CGuiApplication::getWindowState() const
     {
-        if (this->m_cmdWindowStateMinimized.valueName() == "empty") { return Qt::WindowNoState; }
-        if (this->m_parser.isSet(this->m_cmdWindowStateMinimized)) { return Qt::WindowMinimized; }
+        if (m_cmdWindowStateMinimized.valueName() == "empty") { return Qt::WindowNoState; }
+        if (m_parser.isSet(m_cmdWindowStateMinimized)) { return Qt::WindowMinimized; }
         return Qt::WindowNoState;
     }
 
@@ -129,7 +129,7 @@ namespace BlackGui
     {
         if (this->isParserOptionSet(m_cmdWindowMode))
         {
-            const QString v(this->getParserValue(this->m_cmdWindowMode));
+            const QString v(this->getParserValue(m_cmdWindowMode));
             return CEnableForFramelessWindow::stringToWindowMode(v);
         }
         else
@@ -140,10 +140,10 @@ namespace BlackGui
 
     void CGuiApplication::splashScreen(const QString &resource)
     {
-        if (this->m_splashScreen)
+        if (m_splashScreen)
         {
             // delete old one
-            this->m_splashScreen.reset();
+            m_splashScreen.reset();
         }
         if (!resource.isEmpty())
         {
@@ -154,13 +154,13 @@ namespace BlackGui
 
     void CGuiApplication::splashScreen(const QPixmap &pixmap)
     {
-        if (this->m_splashScreen)
+        if (m_splashScreen)
         {
             // delete old one
-            this->m_splashScreen.reset();
+            m_splashScreen.reset();
         }
-        this->m_splashScreen.reset(new QSplashScreen(pixmap.scaled(256, 256)));
-        this->m_splashScreen->show();
+        m_splashScreen.reset(new QSplashScreen(pixmap.scaled(256, 256)));
+        m_splashScreen->show();
         this->processEventsToRefreshGui();
     }
 
@@ -183,8 +183,8 @@ namespace BlackGui
     void CGuiApplication::initMainApplicationWindow(QWidget *mainWindow)
     {
         if (!mainWindow) { return; }
-        if (this->m_uiSetupCompleted) { return; }
-        this->m_uiSetupCompleted = true;
+        if (m_uiSetupCompleted) { return; }
+        m_uiSetupCompleted = true;
         const QString name(this->getApplicationNameVersionBetaDev());
         mainWindow->setObjectName(QCoreApplication::applicationName());
         mainWindow->setWindowTitle(name);
@@ -213,10 +213,10 @@ namespace BlackGui
     void CGuiApplication::onStartUpCompleted()
     {
         CApplication::onStartUpCompleted();
-        if (this->m_splashScreen)
+        if (m_splashScreen)
         {
-            this->m_splashScreen->close();
-            this->m_splashScreen.reset();
+            m_splashScreen->close();
+            m_splashScreen.reset();
         }
     }
 
@@ -268,7 +268,7 @@ namespace BlackGui
 
     bool CGuiApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
     {
-        const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
+        const QString helpText(beautifyHelpMessage(m_parser.helpText()));
         constexpr int MaxLength = 60;
 
         QString htmlMsg;
@@ -295,7 +295,7 @@ namespace BlackGui
         if (!msgs.hasErrorMessages()) { return false; }
         static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
         static const CPropertyIndexList propertiesMulti({ CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
-        const QString helpText(CGuiApplication::beautifyHelpMessage(this->m_parser.helpText()));
+        const QString helpText(CGuiApplication::beautifyHelpMessage(m_parser.helpText()));
         const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
         const int r = QMessageBox::critical(nullptr,
                                             QGuiApplication::applicationDisplayName(),
@@ -576,7 +576,7 @@ namespace BlackGui
 
     const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const
     {
-        return this->m_styleSheetUtility;
+        return m_styleSheetUtility;
     }
 
     QString CGuiApplication::getWidgetStyle() const
@@ -648,17 +648,17 @@ namespace BlackGui
     {
         const bool needsDialog = this->hasUnsavedSettings();
         if (!needsDialog) { return QDialog::Accepted; }
-        if (!this->m_closeDialog)
+        if (!m_closeDialog)
         {
-            this->m_closeDialog = new CApplicationCloseDialog(mainWindow);
+            m_closeDialog = new CApplicationCloseDialog(mainWindow);
             if (mainWindow && !mainWindow->windowTitle().isEmpty())
             {
                 this->setSettingsAutoSave(false); // will be handled by dialog
-                this->m_closeDialog->setWindowTitle(mainWindow->windowTitle());
-                this->m_closeDialog->setModal(true);
+                m_closeDialog->setWindowTitle(mainWindow->windowTitle());
+                m_closeDialog->setModal(true);
             }
         }
-        const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(this->m_closeDialog->exec());
+        const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(m_closeDialog->exec());
         if (c == QDialog::Rejected)
         {
             if (closeEvent) { closeEvent->ignore(); }
@@ -670,7 +670,7 @@ namespace BlackGui
     {
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
-            const QString helpText(CGuiApplication::beautifyHelpMessage(this->m_parser.helpText()));
+            const QString helpText(CGuiApplication::beautifyHelpMessage(m_parser.helpText()));
             QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(),
                                      "<html><head/><body>" + helpText + "</body></html>");
         }
@@ -718,7 +718,7 @@ namespace BlackGui
         if (!m_updateSetting.get()) { return; }
         QTimer::singleShot(delayedMs, this, [ = ]
         {
-            if (this->m_installDialog) { return; }
+            if (m_installDialog) { return; }
             this->checkNewVersion(true);
         });
     }

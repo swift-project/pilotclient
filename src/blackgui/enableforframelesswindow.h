@@ -30,7 +30,6 @@ class QWidget;
 
 namespace BlackGui
 {
-
     //! Main window which can be frameless
     //! \details QMainWindows cannot be promoted. Hence a derived class does not work properly here.
     //!          Furthermore frameless functionality is also required for CDockWidgets as well.
@@ -60,7 +59,7 @@ namespace BlackGui
         virtual void setFrameless(bool frameless);
 
         //! Frameless?
-        bool isFrameless() const { return this->m_windowMode == WindowFrameless; }
+        bool isFrameless() const { return m_windowMode == WindowFrameless; }
 
         //! Is main application, explicitly set
         bool isMainApplicationWindow() const { return m_mainApplicationWindow; }
@@ -82,7 +81,7 @@ namespace BlackGui
         QPushButton *m_framelessCloseButton = nullptr;    //!< close button
         WindowMode   m_windowMode = WindowNormal;         //!< Window mode, \sa WindowMode
         WindowMode   m_originalWindowMode = WindowNormal; //!< mode when initialized
-        bool         m_mainApplicationWindow = false;     //!< is the main application window (only 1)
+        bool         m_mainApplicationWindow = false;     //!< is this the main application window (only 1)?
         QWidget     *m_widget = nullptr;                  //!< corresponding widget or dock widget
         QSizeGrip   *m_framelessSizeGrip = nullptr;       //!< size grip object
         QByteArray   m_framelessPropertyName;             //!< property name for frameless widgets
