@@ -68,6 +68,7 @@ namespace BlackCore
                 const CDbFlags::DataRetrievalModeFlag rmDbOrSharedFlag = CDbFlags::modeToModeFlag(rm & CDbFlags::DbReadingOrShared);
                 const QString rmDbOrSharedFlagString = CDbFlags::flagToString(rmDbOrSharedFlag);
                 const bool rmDbReadingOrShared = (rmDbOrSharedFlag == CDbFlags::DbReading || rmDbOrSharedFlag == CDbFlags::Shared);
+                const int currentEntityCount = this->getCacheCount(currentEntity);
 
                 if (rm.testFlag(CDbFlags::Ignore) || rm.testFlag(CDbFlags::Canceled))
                 {
@@ -115,15 +116,26 @@ namespace BlackCore
                     }
                     else
                     {
-                        // no info objects, server down or no shared/db read mode
-                        this->admitCaches(currentEntity);
-                        if (!rmDbReadingOrShared)
+                        if (!rmDbReadingOrShared) { CLogMessage(this).info("No DB or shared reading for '%1'") << currentEntityName; }
+                        if (!hasInfoObjects) { CLogMessage(this).info("No info objects for '%1'") << currentEntityName; }
+                        if (currentEntityCount > 0)
                         {
-                            CLogMessage(this).info("Triggered reading cache for '%1', read mode: %2") << currentEntityName << rmString;
+                            CLogMessage(this).info("Cache for '%1' already read, %2 entries") << currentEntityName << currentEntityCount;
                         }
                         else
                         {
-                            CLogMessage(this).info("No info object for '%1', triggered reading cache, read mode: %2") << currentEntityName << rmString;
+                            // no info objects, server down or no shared/db read mode
+                            this->admitCaches(currentEntity);
+                            if (!rmDbReadingOrShared)
+                            {
+                                // intentionally we do not want to read from DB/shared
+                                CLogMessage(this).info("Triggered reading cache for '%1', read mode: %2") << currentEntityName << rmString;
+                            }
+                            else
+                            {
+                                // we want to read from DB/shared, but have no info object
+                                CLogMessage(this).info("No info object for '%1', triggered reading cache, read mode: %2") << currentEntityName << rmString;
+                            }
                         }
                         cachedEntities |= currentEntity; // read from cache
                     }
