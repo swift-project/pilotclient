@@ -19,6 +19,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/registermetadata.h"
+#include "blackmisc/slot.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/logcategory.h"
@@ -192,6 +193,24 @@ namespace BlackGui
         mainWindow->setWindowIconText(name);
         CStyleSheetUtility::setQSysInfoProperties(CGuiApplication::mainApplicationWindow(), true);
         emit uiObjectTreeReady();
+    }
+
+    void CGuiApplication::addWindowFlags(Qt::WindowFlags flags)
+    {
+        QWidget *maw = this->mainApplicationWindow();
+        if (maw)
+        {
+            Qt::WindowFlags windowFlags = maw->windowFlags();
+            windowFlags |= flags;
+            maw->setWindowFlags(windowFlags);
+        }
+        else
+        {
+            connectOnce(this, &CGuiApplication::uiObjectTreeReady, this, [ = ]
+            {
+                this->addWindowFlags(flags);
+            });
+        }
     }
 
     void CGuiApplication::setWindowIcon(const QPixmap &icon)

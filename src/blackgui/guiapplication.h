@@ -111,6 +111,9 @@ namespace BlackGui
         //! Init the main application window based on information in this application
         void initMainApplicationWindow(QWidget *mainWindow);
 
+        //! Set window flag on main application window
+        void addWindowFlags(Qt::WindowFlags flags);
+
         //! \name print messages generated during parsing / cmd handling
         //! @{
         virtual bool cmdLineErrorMessage(const QString &cmdLineErrorMessage, bool retry = false) const override;
