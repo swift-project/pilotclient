@@ -526,6 +526,18 @@ namespace BlackCore
         return m_setup.get();
     }
 
+    bool CSetupReader::hasCachedSetup() const
+    {
+        const CGlobalSetup cachedSetup = m_setup.get();
+        const bool cacheAvailable = cachedSetup.wasLoaded();
+        return cacheAvailable;
+    }
+
+    QDateTime CSetupReader::getSetupCacheTimestamp() const
+    {
+        return m_setup.getTimestamp();
+    }
+
     bool CSetupReader::prefillCacheWithLocalResourceBootstrapFile()
     {
         if (m_shutdown) { return false; }
@@ -552,6 +564,17 @@ namespace BlackCore
     CDistributionList CSetupReader::getDistributionInfo() const
     {
         return m_distributions.get();
+    }
+
+    bool CSetupReader::hasCachedDistributionInfo() const
+    {
+        const CDistributionList distributions = m_distributions.get();
+        return !distributions.isEmpty();
+    }
+
+    QDateTime CSetupReader::getDistributionCacheTimestamp() const
+    {
+        return m_distributions.getTimestamp();
     }
 
     QString CSetupReader::getLastSuccessfulDistributionUrl() const

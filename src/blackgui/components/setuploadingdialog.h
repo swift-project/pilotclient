@@ -40,6 +40,12 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CSetupLoadingDialog> ui;
 
+            //! Cached setup available?
+            bool hasCachedSetup() const;
+
+            //! Setup reader?
+            bool hasSetupReader() const;
+
             //! Set info fields
             void displayBootstrapUrls();
 
@@ -51,6 +57,15 @@ namespace BlackGui
 
             //! Try again without explicit bootstrap URL
             void tryAgainWithoutBootstrapUrl();
+
+            //! Prefill setup cache
+            void prefillSetupCache();
+
+            //! Display the setup cache info
+            void displaySetupCacheInfo();
+
+            //! Setup loading has been completed
+            void onSetupHandlingCompleted(bool success);
         };
     } // ns
 } // ns
