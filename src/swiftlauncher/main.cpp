@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Laucher, CIcons::swiftLauncher1024());
     a.addVatlibOptions(); // so it can be passed to started applications
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup.") });
-    if (!a.parseAndStartupCheck()) { return EXIT_FAILURE; }
+    if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
     if (!a.start())
     {

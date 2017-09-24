@@ -356,8 +356,8 @@ namespace BlackCore
                 });
             }
 
-            // load setup
-            if (m_startSetupReader && !m_setupReader->isSetupAvailable())
+            //! \fixme KB 9/17 waiting for setup reader here is supposed to be replaced by explicitly waiting for reader
+            if (!m_setupReader->isSetupAvailable())
             {
                 msgs = this->requestReloadOfSetupAndVersion();
                 if (msgs.isFailure()) { break; }
@@ -396,14 +396,14 @@ namespace BlackCore
             CLogMessage::preformatted(msgs);
         }
 
-        m_started = m_startSetupReader; // only if requested it will be started
+        m_started = true;
         return m_started;
     }
 
-    CStatusMessageList CApplication::waitForSetup()
+    CStatusMessageList CApplication::waitForSetup(int timeoutMs)
     {
         if (!m_setupReader) { return CStatusMessage(this).error("No setup reader"); }
-        CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, CNetworkUtils::getLongTimeoutMs(), [this]
+        CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, timeoutMs, [this]
         {
             return m_setupReader->isSetupAvailable();
         });
@@ -718,28 +718,10 @@ namespace BlackCore
         return m_networkWatchDog && m_networkWatchDog->isSwiftDbAccessible();
     }
 
-    bool CApplication::hasSetupReader() const
-    {
-        // m_startSetupReader set to false, if something wrong with parsing
-        return m_setupReader && m_startSetupReader;
-    }
-
-    QString CApplication::getLastSuccesfulSetupUrl() const
-    {
-        if (!this->hasSetupReader()) { return ""; }
-        return m_setupReader->getLastSuccessfulSetupUrl();
-    }
-
     CUrl CApplication::getWorkingSharedUrl() const
     {
         if (!m_networkWatchDog || !this->isNetworkAccessible()) { return CUrl(); }
         return m_networkWatchDog->getWorkingSharedUrl();
-    }
-
-    QString CApplication::getLastSuccesfulDistributionUrl() const
-    {
-        if (!this->hasSetupReader()) { return ""; }
-        return m_setupReader->getLastSuccessfulDistributionUrl();
     }
 
     void CApplication::exit(int retcode)
@@ -1183,9 +1165,15 @@ namespace BlackCore
         if (!this->parsingHookIn()) { return false; }
 
         // setup reader
-        m_startSetupReader = m_setupReader->parseCmdLineArguments();
+        m_setupReader->parseCmdLineArguments();
         m_parsed = true;
         return true;
+    }
+
+    bool CApplication::parseAndSynchronizeSetup(int timeoutMs)
+    {
+        if (!this->parseAndStartupCheck()) return false;
+        return !this->synchronizeSetup(timeoutMs).hasErrorMessages();
     }
 
     bool CApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
@@ -1218,6 +1206,14 @@ namespace BlackCore
         }
         if (withVatlibArgs) { args.append(CNetworkVatlib::inheritedArguments()); }
         return args;
+    }
+
+    QString CApplication::cmdLineArgumentsAsString(bool withExecutable)
+    {
+        QStringList args = QCoreApplication::arguments();
+        if (!withExecutable && !args.isEmpty()) args.removeFirst();
+        if (args.isEmpty()) return "";
+        return args.join(' ');
     }
 
     void CApplication::cmdLineHelpMessage()
@@ -1306,6 +1302,34 @@ namespace BlackCore
     // ---------------------------------------------------------------------------------
     // Setup
     // ---------------------------------------------------------------------------------
+
+    bool CApplication::hasSetupReader() const
+    {
+        return m_setupReader;
+    }
+
+    CSetupReader *CApplication::getSetupReader() const
+    {
+        return m_setupReader.data();
+    }
+
+    QString CApplication::getLastSuccesfulSetupUrl() const
+    {
+        if (!this->hasSetupReader()) { return ""; }
+        return m_setupReader->getLastSuccessfulSetupUrl();
+    }
+
+    QString CApplication::getLastSuccesfulDistributionUrl() const
+    {
+        if (!this->hasSetupReader()) { return ""; }
+        return m_setupReader->getLastSuccessfulDistributionUrl();
+    }
+
+    CStatusMessageList CApplication::synchronizeSetup(int timeoutMs)
+    {
+        this->requestReloadOfSetupAndVersion();
+        return this->waitForSetup(timeoutMs);
+    }
 
     CUrlList CApplication::getVatsimMetarUrls() const
     {

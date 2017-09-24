@@ -19,6 +19,7 @@
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/settings/updatenotification.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/statusmessage.h"
 
@@ -162,6 +163,14 @@ namespace BlackGui
         //! Reset the font to default
         bool resetFont();
 
+        //! Wait for setup, in case it fails display a dialog how to continue
+        bool interactivelySynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
+
+        //! Combined function
+        //! \see parseAndStartupCheck
+        //! \see interactivelySynchronizeSetup
+        virtual bool parseAndSynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs()) override;
+
         //! Show close dialog
         QDialog::DialogCode showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent);
 
@@ -194,7 +203,7 @@ namespace BlackGui
 
     protected slots:
         //! Startup competed
-        virtual void startupCompleted() override;
+        virtual void onStartUpCompleted() override;
 
     protected:
         //! \name print messages generated during parsing / cmd handling
@@ -214,15 +223,15 @@ namespace BlackGui
 
     private:
         QPixmap m_windowIcon;
-        BlackGui::Components::CDownloadAndInstallDialog *m_installDialog = nullptr; //!< software installation dialog
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
         CStyleSheetUtility m_styleSheetUtility{{}, this};         //!< style sheet utility
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
         QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
-        BlackGui::Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
-        BlackMisc::CSettingReadOnly<BlackGui::Settings::TGeneralGui> m_guiSettings{ this, &CGuiApplication::settingsChanged };
-        BlackMisc::CSettingReadOnly<BlackGui::Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
+        Components::CDownloadAndInstallDialog *m_installDialog = nullptr; //!< software installation dialog
+        Components::CApplicationCloseDialog *m_closeDialog = nullptr;     //!< close dialog (no QScopedPointer because I need to set parent)
+        BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings{ this, &CGuiApplication::settingsChanged };
+        BlackMisc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
 
         //! Qt help message to formatted HTML
         static QString beautifyHelpMessage(const QString &helpText);

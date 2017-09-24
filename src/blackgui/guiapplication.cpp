@@ -9,11 +9,13 @@
 
 #include "blackconfig/buildconfig.h"
 #include "blackcore/context/contextnetwork.h"
+#include "blackcore/setupreader.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/applicationclosedialog.h"
 #include "blackgui/components/downloadandinstalldialog.h"
 #include "blackgui/components/aboutdialog.h"
+#include "blackgui/components/setuploadingdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/registermetadata.h"
@@ -82,6 +84,7 @@ namespace BlackGui
         {
             CGuiApplication::registerMetadata();
             CApplication::init(false); // base class without metadata
+            if (this->hasSetupReader()) { this->getSetupReader()->setCheckCmdLineBootstrapUrl(false); } // no connect checks on setup reader (handled with interactive setup loading)
             CGuiApplication::adjustPalette();
             this->setWindowIcon(icon);
             this->settingsChanged();
@@ -207,9 +210,9 @@ namespace BlackGui
         qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
     }
 
-    void CGuiApplication::startupCompleted()
+    void CGuiApplication::onStartUpCompleted()
     {
-        CApplication::startupCompleted();
+        CApplication::onStartUpCompleted();
         if (this->m_splashScreen)
         {
             this->m_splashScreen->close();
@@ -595,6 +598,44 @@ namespace BlackGui
     bool CGuiApplication::resetFont()
     {
         return m_styleSheetUtility.resetFont();
+    }
+
+    bool CGuiApplication::interactivelySynchronizeSetup(int timeoutMs)
+    {
+        bool ok = false;
+        do
+        {
+            const CStatusMessageList msgs = this->synchronizeSetup(timeoutMs);
+            if (msgs.hasErrorMessages())
+            {
+                static const QString style = sGui->getStyleSheetUtility().styles(
+                {
+                    CStyleSheetUtility::fileNameFonts(),
+                    CStyleSheetUtility::fileNameStandardWidget()
+                });
+                CSetupLoadingDialog dialog(msgs, this->mainApplicationWindow());
+                dialog.setStyleSheet(style);
+                const int r = dialog.exec();
+                if (r == QDialog::Rejected)
+                {
+                    ok = false;
+                    break;
+                }
+            }
+            else
+            {
+                ok = true;
+                break;
+            }
+        }
+        while (true);
+        return ok;
+    }
+
+    bool CGuiApplication::parseAndSynchronizeSetup(int timeoutMs)
+    {
+        if (!this->parseAndStartupCheck()) return false;
+        return this->interactivelySynchronizeSetup(timeoutMs);
     }
 
     QDialog::DialogCode CGuiApplication::showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent)

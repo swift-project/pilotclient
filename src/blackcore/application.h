@@ -181,9 +181,6 @@ namespace BlackCore
         //! \remark supposed to be used only in special cases
         const QNetworkAccessManager *getNetworkAccessManager() const { return m_accessManager; }
 
-        //! Setup reader?
-        bool hasSetupReader() const;
-
         //! Last setup URL (successfully read)
         //! \threadsafe
         QString getLastSuccesfulSetupUrl() const;
@@ -191,9 +188,6 @@ namespace BlackCore
         //! Last distribution URL (successfully read)
         //! \threadsafe
         QString getLastSuccesfulDistributionUrl() const;
-
-        //! Setup already synchronized
-        bool isSetupAvailable() const;
 
         //! Reload setup and version
         BlackMisc::CStatusMessageList requestReloadOfSetupAndVersion();
@@ -312,7 +306,11 @@ namespace BlackCore
         //! \sa parsingHookIn
         //! \return true means to continue, false to stop
         bool parseAndStartupCheck();
-        //! @}
+
+        //! Combined function
+        //! \see parseAndStartupCheck
+        //! \see synchronizeSetup
+        virtual bool parseAndSynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
 
         //! Display error message
         virtual bool cmdLineErrorMessage(const QString &cmdLineErrorMessage, bool retry = false) const;
@@ -322,6 +320,10 @@ namespace BlackCore
 
         //! Arguments to be passed to another swift appplication
         QStringList inheritedArguments(bool withVatlibArgs = true) const;
+
+        //! cmd line arguments as string
+        virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
+        //! @}
 
         // ----------------------- contexts ----------------------------------------
 
@@ -364,7 +366,20 @@ namespace BlackCore
         Context::IContextSimulator *getIContextSimulator();
         //! @}
 
-        // ----------------------- direct access to some setup data ---------------------------------
+        // ----------------------- setup data ---------------------------------
+        //! Read and wait for setup
+        //! \sa waitForSetup
+        BlackMisc::CStatusMessageList synchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
+
+        //! Setup reader?
+        bool hasSetupReader() const;
+
+        //! Access to setup reader
+        //! \remark supposed to be used only in special cases
+        BlackCore::CSetupReader *getSetupReader() const;
+
+        //! Setup already synchronized
+        bool isSetupAvailable() const;
 
         //! Consolidated version of METAR URLs, either from CGlobalSetup or CVatsimSetup
         //! \threadsafe
@@ -374,15 +389,13 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CUrlList getVatsimDataFileUrls() const;
 
-    public slots:
         //! Graceful shutdown
         virtual void gracefulShutdown();
 
         //! Start services, if not yet parsed call CApplication::parse
         virtual bool start();
 
-        //! Wait for setup data by calling the event loop and waiting until everything is ready
-        BlackMisc::CStatusMessageList waitForSetup();
+        // ------------------------- network -----------------------------------------------
 
     public:
         static constexpr int NoRedirects = -1;        //!< network request not allowing redirects
@@ -463,11 +476,12 @@ namespace BlackCore
         //! Setup read/synchronized
         void setupHandlingIsCompleted(bool available);
 
-        //! Startup completed
-        virtual void startupCompleted();
+        //! Wait for setup data by calling the event loop and waiting until everything is ready
+        //! \remark requires parsing upfront
+        BlackMisc::CStatusMessageList waitForSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
 
-        //! Problem with network access manager
-        virtual void networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible);
+        //! Startup completed
+        virtual void onStartUpCompleted();
 
         //! Init class, allows to init from BlackGui::CGuiApplication as well (pseudo virtual)
         void init(bool withMetadata);
@@ -516,7 +530,6 @@ namespace BlackCore
         QCommandLineOption m_cmdTestCrashpad {"testcrashpad"}; //!< Test a crasphpad upload
         bool               m_parsed  = false;                  //!< Parsing accomplished?
         bool               m_started = false;                  //!< started with success?
-        bool               m_startSetupReader = false;         //!< start the setup reader
         bool               m_singleApplication = true;         //!< only one instance of that application
         bool               m_alreadyRunning = false;           //!< Application already running
 
