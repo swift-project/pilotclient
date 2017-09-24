@@ -9,6 +9,7 @@
 
 #include "blackconfig/buildconfig.h"
 #include "blackcore/application.h"
+#include "blackcore/db/networkwatchdog.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacade.h"
@@ -139,25 +140,33 @@ namespace BlackCore
             QCoreApplication::instance()->installTranslator(&translator);
 
             // Init network
+            sApp = this;
             Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
-            m_internetAccessTimer.setObjectName("Application::m_internetAccessTimer");
+            m_networkWatchDog.reset(new CNetworkWatchdog(this)); // not yet started
             m_cookieManager.setParent(m_accessManager);
             m_accessManager->setCookieJar(&m_cookieManager);
-            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::networkAccessibleChanged, Qt::QueuedConnection);
-            connect(&m_internetAccessTimer, &QTimer::timeout, this, [this] { this->checkInternetAccessible(true); });
+            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::changedInternetAccessibility, Qt::QueuedConnection);
+            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::onChangedNetworkAccessibility, Qt::QueuedConnection);
+            connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, m_networkWatchDog.data(), &CNetworkWatchdog::onChangedNetworkAccessibility, Qt::QueuedConnection);
+            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedInternetAccessibility, this, &CApplication::onChangedInternetAccessibility, Qt::QueuedConnection);
+            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedSwiftDbAccessibility, this, &CApplication::onChangedSwiftDbAccessibility, Qt::QueuedConnection);
+            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedInternetAccessibility, this, &CApplication::changedInternetAccessibility, Qt::QueuedConnection);
+            connect(m_networkWatchDog.data(), &CNetworkWatchdog::changedSwiftDbAccessibility, this, &CApplication::changedSwiftDbAccessibility, Qt::QueuedConnection);
+
             CLogMessage::preformatted(CNetworkUtils::createNetworkReport(m_accessManager));
-            this->checkInternetAccessible();
+            m_networkWatchDog->start(QThread::LowestPriority);
+            m_networkWatchDog->startUpdating(10);
 
             // global setup
-            sApp = this;
             m_setupReader.reset(new CSetupReader(this));
-            connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingIsCompleted);
-            connect(m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable);
+            connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingIsCompleted, Qt::QueuedConnection);
+            connect(m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable, Qt::QueuedConnection);
+            connect(m_setupReader.data(), &CSetupReader::successfullyReadSharedUrl, m_networkWatchDog.data(), &CNetworkWatchdog::setWorkingSharedUrl, Qt::QueuedConnection);
 
             m_parser.addOptions(m_setupReader->getCmdLineOptions()); // add options from reader
 
             // startup done
-            connect(this, &CApplication::startUpCompleted, this, &CApplication::startupCompleted);
+            connect(this, &CApplication::startUpCompleted, this, &CApplication::onStartUpCompleted, Qt::QueuedConnection);
 
             // notify when app goes down
             connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
@@ -442,6 +451,7 @@ namespace BlackCore
     CWebDataServices *CApplication::getWebDataServices() const
     {
         // use hasWebDataServices() to test if services are available
+        // getting the assert means web services are accessed before the are initialized
 
         Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Missing web data services, use hasWebDataServices to test if existing");
         return m_webDataServices.data();
@@ -675,6 +685,17 @@ namespace BlackCore
         m_cookieManager.deleteAllCookies();
     }
 
+    CNetworkWatchdog *CApplication::getNetworkWatchdog() const
+    {
+        return m_networkWatchDog.data();
+    }
+
+    int CApplication::triggerNetworkChecks()
+    {
+        if (!m_networkWatchDog) { return -1; }
+        return m_networkWatchDog->triggerCheck();
+    }
+
     bool CApplication::isNetworkAccessible() const
     {
         if (!m_accessManager) { return false; }
@@ -687,7 +708,14 @@ namespace BlackCore
 
     bool CApplication::isInternetAccessible() const
     {
-        return this->isNetworkAccessible() && m_internetAccessible;
+        if (!this->isNetworkAccessible()) { return false; }
+        return m_networkWatchDog && m_networkWatchDog->isInternetAccessible();
+    }
+
+    bool CApplication::isSwiftDbAccessible() const
+    {
+        if (!this->isNetworkAccessible()) { return false; }
+        return m_networkWatchDog && m_networkWatchDog->isSwiftDbAccessible();
     }
 
     bool CApplication::hasSetupReader() const
@@ -700,6 +728,12 @@ namespace BlackCore
     {
         if (!this->hasSetupReader()) { return ""; }
         return m_setupReader->getLastSuccessfulSetupUrl();
+    }
+
+    CUrl CApplication::getWorkingSharedUrl() const
+    {
+        if (!m_networkWatchDog || !this->isNetworkAccessible()) { return CUrl(); }
+        return m_networkWatchDog->getWorkingSharedUrl();
     }
 
     QString CApplication::getLastSuccesfulDistributionUrl() const
@@ -798,6 +832,12 @@ namespace BlackCore
             m_webDataServices.reset(
                 new CWebDataServices(m_webReadersUsed, m_dbReaderConfig, {}, this)
             );
+
+            if (m_networkWatchDog)
+            {
+                connect(m_webDataServices.data(), &CWebDataServices::swiftDbDataRead, m_networkWatchDog.data(), &CNetworkWatchdog::setDbAccessibility);
+            }
+
             emit webDataServicesStarted(true);
         }
         else
@@ -909,6 +949,12 @@ namespace BlackCore
             m_setupReader.reset();
         }
 
+        if (m_networkWatchDog)
+        {
+            m_networkWatchDog->quitAndWait();
+            m_networkWatchDog.reset();
+        }
+
         m_fileLogger->close();
     }
 
@@ -929,12 +975,12 @@ namespace BlackCore
         }
     }
 
-    void CApplication::startupCompleted()
+    void CApplication::onStartUpCompleted()
     {
         // void
     }
 
-    void CApplication::networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible)
+    void CApplication::onChangedNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessible)
     {
         switch (accessible)
         {
@@ -949,7 +995,30 @@ namespace BlackCore
             CLogMessage(this).warning("Network accessibility unknown");
             break;
         }
-        this->checkInternetAccessible();
+    }
+
+    void CApplication::onChangedInternetAccessibility(bool accessible)
+    {
+        if (accessible)
+        {
+            CLogMessage(this).info("Internet reported accessible");
+        }
+        else
+        {
+            CLogMessage(this).warning("Internet not accessible");
+        }
+    }
+
+    void CApplication::onChangedSwiftDbAccessibility(bool accessible)
+    {
+        if (accessible)
+        {
+            CLogMessage(this).info("swift DB reported accessible");
+        }
+        else
+        {
+            CLogMessage(this).warning("swift DB not accessible");
+        }
     }
 
     CStatusMessageList CApplication::asyncWebAndContextStart()
@@ -1345,7 +1414,7 @@ namespace BlackCore
         CNetworkUtils::ignoreSslVerification(copiedRequest);
         CNetworkUtils::setSwiftUserAgent(copiedRequest);
 
-        // If URL is one of the shared URLs, add swift client SSL certificate
+        // If URL is one of the shared URLs, add swift client SSL certificate to request
         CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, getGlobalSetup().getSwiftSharedUrls());
 
         QNetworkReply *reply = requestOrPostMethod(*m_accessManager, copiedRequest);

@@ -21,6 +21,7 @@
 #include "blackcore/webreaderflags.h"
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/network/urllist.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/statusmessagelist.h"
@@ -71,6 +72,7 @@ namespace BlackCore
         class IContextOwnAircraft;
         class IContextSimulator;
     }
+    namespace Db { class CNetworkWatchdog; }
 
     /*!
      * Our runtime. Normally one instance is to be initialized at the beginning of main, and thereafter
@@ -156,13 +158,27 @@ namespace BlackCore
         //! Delete all cookies from cookie manager
         void deleteAllCookies();
 
-        //! Network accessible?
+        //! Get the watchdog
+        //! \remark mostly for UNIT tests etc, normally not meant to be used directly
+        Db::CNetworkWatchdog *getNetworkWatchdog() const;
+
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::triggerCheck
+        int triggerNetworkChecks();
+
+        //! Is network accessible
         bool isNetworkAccessible() const;
 
-        //! Internet accessible?
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::isInternetAccessible
         bool isInternetAccessible() const;
 
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::isSwiftDbAccessible
+        bool isSwiftDbAccessible() const;
+
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::getWorkingSharedUrl
+        BlackMisc::Network::CUrl getWorkingSharedUrl() const;
+
         //! Access to access manager
+        //! \remark supposed to be used only in special cases
         const QNetworkAccessManager *getNetworkAccessManager() const { return m_accessManager; }
 
         //! Setup reader?
@@ -186,6 +202,7 @@ namespace BlackCore
         bool hasWebDataServices() const;
 
         //! Get the web data services
+        //! \remark use hasWebDataServices to test if services are available
         CWebDataServices *getWebDataServices() const;
 
         //! Currently running in application thread?
@@ -436,8 +453,11 @@ namespace BlackCore
         //! Web data services started
         void webDataServicesStarted(bool success);
 
-        //! Internet accessinility changed
-        void internetAccessibleChanged(bool access);
+        //! Internet accessibility changed
+        void changedInternetAccessibility(bool accessible);
+
+        //! DB accessibility changed
+        void changedSwiftDbAccessibility(bool accessible);
 
     protected:
         //! Setup read/synchronized
@@ -501,6 +521,15 @@ namespace BlackCore
         bool               m_alreadyRunning = false;           //!< Application already running
 
     private:
+        //! Problem with network access manager
+        void onChangedNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessible);
+
+        //! Changed internet accessibility
+        void onChangedInternetAccessibility(bool accessible);
+
+        //! Changed swift DB accessibility
+        void onChangedSwiftDbAccessibility(bool accessible);
+
         //! init logging system
         void initLogging();
 
@@ -509,9 +538,6 @@ namespace BlackCore
 
         //! Dev.environment
         bool initIsRunningInDeveloperEnvironment() const;
-
-        //! Check that Internet is accessible
-        void checkInternetAccessible(bool logWarning = true);
 
         //! Async. start when setup is loaded
         BlackMisc::CStatusMessageList asyncWebAndContextStart();
@@ -529,22 +555,21 @@ namespace BlackCore
         QScopedPointer<CCoreFacade>              m_coreFacade;                //!< core facade if any
         QScopedPointer<CSetupReader>             m_setupReader;               //!< setup reader
         QScopedPointer<CWebDataServices>         m_webDataServices;           //!< web data services
+        QScopedPointer<Db::CNetworkWatchdog>     m_networkWatchDog;           //!< checking DB/internet access
         QScopedPointer<BlackMisc::CFileLogger>   m_fileLogger;                //!< file logger
         CCookieManager                           m_cookieManager;             //!< single cookie manager for our access manager
         QString                                  m_applicationName;           //!< application name
         QReadWriteLock                           m_accessManagerLock;         //!< lock to make access manager access threadsafe
         CCoreFacadeConfig                        m_coreFacadeConfig;          //!< Core facade config if any
         CWebReaderFlags::WebReader               m_webReadersUsed;            //!< Readers to be used
-        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;            //!< Load or used caching?
+        Db::CDatabaseReaderConfigList            m_dbReaderConfig;            //!< Load or used caching?
         std::atomic<bool>                        m_shutdown { false };        //!< is being shutdown?
-        QTimer                                   m_internetAccessTimer { this };
         bool                                     m_useContexts = false;       //!< use contexts
         bool                                     m_useWebData = false;        //!< use web data
         bool                                     m_signalStartup = true;      //!< signal startup automatically
         bool                                     m_devEnv = false;            //!< dev. environment
         bool                                     m_unitTest = false;          //!< is UNIT test
         bool                                     m_autoSaveSettings = true;   //!< automatically saving all settings
-        bool                                     m_internetAccessible = true; //!< Internet accessible
 
         // -------------- crashpad -----------------
         BlackMisc::CStatusMessageList initCrashHandler();
