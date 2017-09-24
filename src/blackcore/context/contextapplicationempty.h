@@ -56,7 +56,7 @@ namespace BlackCore
             }
 
             //! \copydoc IContextApplication::getAllLogSubscriptions
-            virtual CLogSubscriptionHash getAllLogSubscriptions() const override
+            virtual BlackCore::Context::CLogSubscriptionHash getAllLogSubscriptions() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return CLogSubscriptionHash();

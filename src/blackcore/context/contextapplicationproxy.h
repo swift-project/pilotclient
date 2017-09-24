@@ -54,7 +54,7 @@ namespace BlackCore
             virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) override;
             virtual void addLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override;
             virtual void removeLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override;
-            virtual CLogSubscriptionHash getAllLogSubscriptions() const override;
+            virtual BlackCore::Context::CLogSubscriptionHash getAllLogSubscriptions() const override;
             virtual void synchronizeLogSubscriptions() override;
             virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;
             virtual BlackMisc::CValueCachePacket getAllSettings() const override;
