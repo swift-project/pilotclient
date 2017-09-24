@@ -92,6 +92,15 @@ namespace BlackCore
             return CSettingsCache::instance()->getAllUnsavedKeys();
         }
 
+        CSettingsDictionary CContextApplication::getUnsavedSettingsKeysDescribed() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            const QStringList keys = CSettingsCache::instance()->getAllUnsavedKeys();
+            CSettingsDictionary result;
+            for (const QString &key : keys) { result.insert(key, CSettingsCache::instance()->getHumanReadableName(key)); }
+            return result;
+        }
+
         void CContextApplication::synchronizeLocalSettings()
         {
             // no-op: proxy implements this method by calling getAllSettings

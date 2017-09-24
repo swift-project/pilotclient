@@ -60,6 +60,9 @@ namespace BlackCore
         //! Used when marshalling CLogSubscriptionHash, as a QHash with CIdentifier keys can't be marshalled
         using CLogSubscriptionPair = QPair<BlackMisc::CIdentifier, QList<BlackMisc::CLogPattern>>;
 
+        //! Value type for settings keys with descriptions
+        using CSettingsDictionary = BlackMisc::CDictionary<QString, QString, QMap>;
+
         //! Application context interface
         class BLACKCORE_EXPORT IContextApplication : public CContext
         {
@@ -152,6 +155,9 @@ namespace BlackCore
             //! Get keys of all unsaved settings currently in core settings cache
             virtual QStringList getUnsavedSettingsKeys() const = 0;
 
+            //! Get keys and descriptions of all unsaved settings currently in core settings cache
+            virtual BlackCore::Context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const = 0;
+
             //! Update local settings with settings from core
             virtual void synchronizeLocalSettings() = 0;
 
@@ -219,5 +225,6 @@ const QDBusArgument &operator >>(const QDBusArgument &arg, BlackCore::Context::C
 
 Q_DECLARE_METATYPE(BlackCore::Context::CLogSubscriptionHash)
 Q_DECLARE_METATYPE(BlackCore::Context::CLogSubscriptionPair)
+Q_DECLARE_METATYPE(BlackCore::Context::CSettingsDictionary)
 
 #endif // guard

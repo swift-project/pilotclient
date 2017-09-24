@@ -30,6 +30,7 @@ namespace BlackCore
     {
         qDBusRegisterMetaType<BlackCore::Context::CLogSubscriptionHash>();
         qDBusRegisterMetaType<BlackCore::Context::CLogSubscriptionPair>();
+        qDBusRegisterMetaType<BlackCore::Context::CSettingsDictionary>();
         qDBusRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
         qDBusRegisterMetaType<BlackCore::INetwork::LoginMode>();
         qDBusRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();

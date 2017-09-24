@@ -90,6 +90,13 @@ namespace BlackCore
                 return QStringList();
             }
 
+            //! \copydoc IContextApplication::getUnsavedSettingsKeys
+            virtual BlackCore::Context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return CSettingsDictionary();
+            }
+
             //! \copydoc IContextApplication::synchronizeLocalSettings
             virtual void synchronizeLocalSettings() override
             {

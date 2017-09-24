@@ -54,6 +54,7 @@ namespace BlackCore
             virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;
             virtual BlackMisc::CValueCachePacket getAllSettings() const override;
             virtual QStringList getUnsavedSettingsKeys() const override;
+            virtual BlackCore::Context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const override;
             virtual void synchronizeLocalSettings() override;
             virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
             virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;

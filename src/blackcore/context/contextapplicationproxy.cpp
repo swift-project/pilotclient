@@ -111,6 +111,17 @@ namespace BlackCore
             return this->m_dBusInterface->callDBusRet<QStringList>(QLatin1String("getUnsavedSettingsKeys"));
         }
 
+        CSettingsDictionary CContextApplicationProxy::getUnsavedSettingsKeysDescribed() const
+        {
+            CSettingsDictionary result = this->m_dBusInterface->callDBusRet<CSettingsDictionary>(QLatin1String("getUnsavedSettingsKeysDescribed"));
+            for (auto it = result.begin(); it != result.end(); ++it)
+            {
+                // consolidate with local names to fill any gaps in remote names
+                if (it.value().isEmpty()) { it.value() = CSettingsCache::instance()->getHumanReadableName(it.key()); }
+            }
+            return result;
+        }
+
         void CContextApplicationProxy::synchronizeLocalSettings()
         {
             // note this proxy method does not call synchronizeLocalSettings in core
