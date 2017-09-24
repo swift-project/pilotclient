@@ -106,7 +106,7 @@ namespace BlackMisc
             static void ignoreSslVerification(QNetworkRequest &request);
 
             //! Set user agent for request
-            static void setSwiftUserAgent(QNetworkRequest &request);
+            static void setSwiftUserAgent(QNetworkRequest &request, const QString &userAgentDetails = {});
 
             //! Set swift client SSL certificate
             static void setSwiftClientSslCertificate(QNetworkRequest &request);
@@ -117,8 +117,11 @@ namespace BlackMisc
             //! Add debug flag
             static void addDebugFlag(QUrlQuery &qurl);
 
-            //! Our tweaked network request
-            static QNetworkRequest getNetworkRequest(const CUrl &url, RequestType type = Get);
+            //! Our tweaked network request with swift header
+            static QNetworkRequest getSwiftNetworkRequest(const CUrl &url, RequestType type = Get, const QString &userAgentDetails = {});
+
+            //! Get a copied network request with swift header
+            static QNetworkRequest getSwiftNetworkRequest(const QNetworkRequest &request, const QString &userAgentDetails = {});
 
             //! Last modified from reply
             static qint64 lastModifiedMsSinceEpoch(QNetworkReply *nwReply);

@@ -88,7 +88,7 @@ namespace BlackCore
             if (sApp->getGlobalSetup().dbDebugFlag()) { CNetworkUtils::addDebugFlag(params); }
 
             QString query = params.toString();
-            const QNetworkRequest request(CNetworkUtils::getNetworkRequest(url, CNetworkUtils::PostUrlEncoded));
+            const QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url, CNetworkUtils::PostUrlEncoded, sApp->getApplicationNameAndVersion()));
             sApp->postToNetwork(request, CApplication::NoLogRequestId, query.toUtf8(), { this, &CDatabaseAuthenticationService::parseServerResponse});
             static const QString rm("Sent request to authentication server '%1'");
             msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, rm.arg(url.toQString())));
@@ -99,7 +99,7 @@ namespace BlackCore
         {
             CUrl url(sApp->getGlobalSetup().getDbLoginServiceUrl());
             url.setQuery("logoff=true");
-            QNetworkRequest request(CNetworkUtils::getNetworkRequest(url));
+            QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url));
             sApp->getFromNetwork(request, { this, &CDatabaseAuthenticationService::parseServerResponse });
             this->m_swiftDbUser.set(CAuthenticatedUser());
         }

@@ -1434,12 +1434,10 @@ namespace BlackCore
         }
 
         Q_ASSERT_X(QThread::currentThread() == m_accessManager->thread(), Q_FUNC_INFO, "Network manager thread mismatch");
-        QNetworkRequest copiedRequest(request); // no QObject
-        CNetworkUtils::ignoreSslVerification(copiedRequest);
-        CNetworkUtils::setSwiftUserAgent(copiedRequest);
+        QNetworkRequest copiedRequest = CNetworkUtils::getSwiftNetworkRequest(request, this->getApplicationNameAndVersion());
 
         // If URL is one of the shared URLs, add swift client SSL certificate to request
-        CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, getGlobalSetup().getSwiftSharedUrls());
+        CNetworkUtils::setSwiftClientSslCertificate(copiedRequest, this->getGlobalSetup().getSwiftSharedUrls());
 
         QNetworkReply *reply = requestOrPostMethod(*m_accessManager, copiedRequest);
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));

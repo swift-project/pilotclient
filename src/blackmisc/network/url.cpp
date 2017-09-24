@@ -145,7 +145,7 @@ namespace BlackMisc
 
         QNetworkRequest CUrl::toNetworkRequest() const
         {
-            return CNetworkUtils::getNetworkRequest(*this);
+            return CNetworkUtils::getSwiftNetworkRequest(*this);
         }
 
         CUrl CUrl::withAppendedPath(const QString &path) const

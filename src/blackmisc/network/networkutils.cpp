@@ -225,10 +225,10 @@ namespace BlackMisc
             request.setSslConfiguration(conf);
         }
 
-        void CNetworkUtils::setSwiftUserAgent(QNetworkRequest &request)
+        void CNetworkUtils::setSwiftUserAgent(QNetworkRequest &request, const QString &userAgentDetails)
         {
-            static const QString userAgent("swift/" + CBuildConfig::getVersionString());
-            request.setRawHeader("User-Agent", userAgent.toLatin1());
+            static const QString defaultUserAgent("swift/" + CBuildConfig::getVersionString());
+            request.setRawHeader("User-Agent", userAgentDetails.isEmpty() ? defaultUserAgent.toLatin1() : QString("swift/" + userAgentDetails).toLatin1());
         }
 
         //! \cond PRIVATE
@@ -279,7 +279,7 @@ namespace BlackMisc
             qurl.addQueryItem("XDEBUG_SESSION_START", "ECLIPSE_DBGP");
         }
 
-        QNetworkRequest CNetworkUtils::getNetworkRequest(const CUrl &url, RequestType type)
+        QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const CUrl &url, RequestType type, const QString &userAgentDetails)
         {
             QNetworkRequest request(url.toQUrl());
             switch (type)
@@ -291,8 +291,16 @@ namespace BlackMisc
                 break;
             }
             CNetworkUtils::ignoreSslVerification(request);
-            CNetworkUtils::setSwiftUserAgent(request);
+            CNetworkUtils::setSwiftUserAgent(request, userAgentDetails);
             return request;
+        }
+
+        QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const QNetworkRequest &request, const QString &userAgentDetails)
+        {
+            QNetworkRequest req(request); // copy
+            CNetworkUtils::ignoreSslVerification(req);
+            CNetworkUtils::setSwiftUserAgent(req, userAgentDetails);
+            return req;
         }
 
         qint64 CNetworkUtils::lastModifiedMsSinceEpoch(QNetworkReply *nwReply)
