@@ -150,22 +150,6 @@ namespace BlackCore
         //! \threadsafe
         bool isUpdateInfoAvailable() const { return m_distributionInfoAvailable; }
 
-    private slots:
-        //! Setup has been read (aka bootstrap file)
-        void ps_parseSetupFile(QNetworkReply *nwReply);
-
-        //! Update info has been read
-        void ps_parseDistributionsFile(QNetworkReply *nwReplyPtr);
-
-        //! Do reading
-        void ps_readSetup();
-
-        //! Do reading of distributions
-        void ps_readDistributionInfo();
-
-        //! Setup has been changed
-        void ps_setupChanged();
-
     private:
         //! Bootstrap mode
         enum BootstrapMode
@@ -192,8 +176,23 @@ namespace BlackCore
         QString m_lastSuccessfulSetupUrl;                        //!< last successful read setup URL
         QString m_lastSuccessfulDistributionUrl;                 //!< last successful read distribution URL
         BlackMisc::CStatusMessageList m_setupReadErrorMsgs;      //!< last parsing error messages
-        BlackMisc::CData<BlackCore::Data::TGlobalSetup>     m_setup { this, &CSetupReader::ps_setupChanged }; //!< data cache setup
+        BlackMisc::CData<BlackCore::Data::TGlobalSetup>     m_setup { this, &CSetupReader::setupChanged }; //!< data cache setup
         BlackMisc::CData<BlackMisc::Db::TDistributionsInfo> m_distributions { this };                         //!< data cache distributions
+
+        //! Setup has been read (aka bootstrap file)
+        void parseSetupFile(QNetworkReply *nwReply);
+
+        //! Update info has been read
+        void parseDistributionsFile(QNetworkReply *nwReplyPtr);
+
+        //! Do reading
+        void readSetup();
+
+        //! Do reading of distributions
+        void readDistributionInfo();
+
+        //! Setup has been changed
+        void setupChanged();
 
         //! Read by local individual file and update cache from that
         BlackMisc::CStatusMessageList readLocalBootstrapFile(const QString &fileName);

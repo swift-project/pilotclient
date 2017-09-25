@@ -208,7 +208,7 @@ namespace BlackCore
         this->m_shutdown = true;
     }
 
-    void CSetupReader::ps_readSetup()
+    void CSetupReader::readSetup()
     {
         const CStatusMessageList msgs(this->triggerReadSetup());
         if (!msgs.isSuccess())
@@ -242,12 +242,12 @@ namespace BlackCore
             return msgs;
         }
         const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Start reading URL: " + url.toQString());
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseSetupFile });
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseSetupFile });
         this->setLastSetupReadErrorMessages(m); // clear errors
         return m;
     }
 
-    void CSetupReader::ps_readDistributionInfo()
+    void CSetupReader::readDistributionInfo()
     {
         const CUrl url(this->m_distributionUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
@@ -258,10 +258,10 @@ namespace BlackCore
             return;
         }
         if (m_shutdown) { return; }
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseDistributionsFile});
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseDistributionsFile});
     }
 
-    void CSetupReader::ps_setupChanged()
+    void CSetupReader::setupChanged()
     {
         // settings have changed on disk
     }
@@ -316,7 +316,7 @@ namespace BlackCore
         }
     }
 
-    void CSetupReader::ps_parseSetupFile(QNetworkReply *nwReplyPtr)
+    void CSetupReader::parseSetupFile(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
@@ -404,7 +404,7 @@ namespace BlackCore
         if (this->m_bootstrapUrls.addFailedUrl(url))
         {
             m_distributionUrls.addFailedHost(url); // the same host will likely fail for distributions
-            QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
+            QTimer::singleShot(500, this, &CSetupReader::readSetup);
         }
         else
         {
@@ -413,7 +413,7 @@ namespace BlackCore
         }
     }
 
-    void CSetupReader::ps_parseDistributionsFile(QNetworkReply *nwReplyPtr)
+    void CSetupReader::parseDistributionsFile(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
@@ -489,7 +489,7 @@ namespace BlackCore
         // try next one if any
         if (this->m_distributionUrls.addFailedUrl(url))
         {
-            QTimer::singleShot(500, this, &CSetupReader::ps_readDistributionInfo);
+            QTimer::singleShot(500, this, &CSetupReader::readDistributionInfo);
         }
         else
         {
@@ -620,12 +620,12 @@ namespace BlackCore
         if (webRead)
         {
             msgs.push_back(CStatusMessage(this).info("Setup loaded from web, will trigger read of distribution information"));
-            QTimer::singleShot(500, this, &CSetupReader::ps_readDistributionInfo);
+            QTimer::singleShot(500, this, &CSetupReader::readDistributionInfo);
         }
         if (localRead)
         {
             msgs.push_back(CStatusMessage(this).info("Setup loaded locally, will trigger read of distribution information"));
-            QTimer::singleShot(500, this, &CSetupReader::ps_readDistributionInfo);
+            QTimer::singleShot(500, this, &CSetupReader::readDistributionInfo);
         }
 
         bool available = false;
