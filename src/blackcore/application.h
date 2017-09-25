@@ -162,6 +162,10 @@ namespace BlackCore
         //! \remark mostly for UNIT tests etc, normally not meant to be used directly
         Db::CNetworkWatchdog *getNetworkWatchdog() const;
 
+        //! Allows to mark the DB as "up" or "down"
+        //! \see BlackCore::Db::CNetworkWatchdog::setDbAccessibility
+        void setSwiftDbAccessibility(bool accessible);
+
         //! \copydoc BlackCore::Db::CNetworkWatchdog::triggerCheck
         int triggerNetworkChecks();
 

@@ -79,6 +79,23 @@ namespace BlackCore
             //! Network status changed, use this function to inform the watchdog
             void onChangedNetworkAccessibility(QNetworkAccessManager::NetworkAccessibility accessible);
 
+            //! Graceful shutdown
+            void gracefulShutdown();
+
+            //! Add info when pinging
+            enum PingTypeFlag
+            {
+                PingUnspecific = 0,
+                PingLogoff     = 1 << 0,
+                PingStarted    = 1 << 1,
+                PingShutdown   = 1 << 2,
+                PingCompleteShutdown = PingLogoff | PingShutdown
+            };
+            Q_DECLARE_FLAGS(PingType, PingTypeFlag)
+
+            //! Ping the DB server, fire and forget (no feedback etc)
+            void pingDbClientService(PingType type = PingUnspecific);
+
             //! URL referring to the DB
             //! \remark depends on BlackCore::Application::getGlobalSetup()
             static bool isDbUrl(const BlackMisc::Network::CUrl &url);
@@ -102,6 +119,9 @@ namespace BlackCore
 
             //! Init a working shared URL
             void initWorkingSharedUrlFromSetup();
+
+            //! Received reply of client service ping
+            void replyPingClientService(QNetworkReply *nwReply);
 
             //! The URL being tested
             //! \remark depends on BlackCore::Application::getGlobalSetup()
@@ -127,4 +147,9 @@ namespace BlackCore
         };
     } // ns
 } // ns
+
+Q_DECLARE_METATYPE(BlackCore::Db::CNetworkWatchdog::PingTypeFlag)
+Q_DECLARE_METATYPE(BlackCore::Db::CNetworkWatchdog::PingType)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::Db::CNetworkWatchdog::PingType)
+
 #endif // guard

@@ -690,6 +690,12 @@ namespace BlackCore
         return m_networkWatchDog.data();
     }
 
+    void CApplication::setSwiftDbAccessibility(bool accessible)
+    {
+        if (!m_networkWatchDog) { return; }
+        m_networkWatchDog->setDbAccessibility(accessible);
+    }
+
     int CApplication::triggerNetworkChecks()
     {
         if (!m_networkWatchDog) { return -1; }
@@ -889,6 +895,14 @@ namespace BlackCore
     void CApplication::gracefulShutdown()
     {
         if (m_shutdown) { return; }
+
+        // before marked as shutdown
+        if (m_networkWatchDog)
+        {
+            m_networkWatchDog->gracefulShutdown();
+        }
+
+        // mark as shutdown
         m_shutdown = true;
 
         // save settings (but only when application was really alive)

@@ -9,10 +9,13 @@
 
 #include "networkwatchdog.h"
 #include "application.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/networkutils.h"
+#include <QNetworkReply>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackCore::Data;
 
 namespace BlackCore
 {
@@ -166,6 +169,37 @@ namespace BlackCore
                 m_networkAccessible = true;
                 QTimer::singleShot(0, this, &CNetworkWatchdog::doWork);
             }
+        }
+
+        void CNetworkWatchdog::gracefulShutdown()
+        {
+            this->pingDbClientService(PingCompleteShutdown);
+        }
+
+        void CNetworkWatchdog::pingDbClientService(CNetworkWatchdog::PingType type)
+        {
+            if (!this->isSwiftDbAccessible()) { return; }
+            if (!sApp) { return; }
+            const CGlobalSetup gs = sApp->getGlobalSetup();
+            if (!gs.wasLoaded()) { return; }
+            CUrl pingUrl = gs.getDbClientPingServiceUrl();
+            if (pingUrl.isEmpty()) { return; }
+
+            pingUrl.appendQuery("uuid", this->identifier().toUuidString());
+            pingUrl.appendQuery("application", sApp->getApplicationNameAndVersion());
+            if (type.testFlag(PingLogoff)) { pingUrl.appendQuery("logoff", "true"); }
+            if (type.testFlag(PingShutdown)) { pingUrl.appendQuery("shutdown", "true"); }
+            if (type.testFlag(PingStarted)) { pingUrl.appendQuery("started", "true"); }
+
+            sApp->getFromNetwork(pingUrl, { this, &CNetworkWatchdog::replyPingClientService });
+        }
+
+        void CNetworkWatchdog::replyPingClientService(QNetworkReply *nwReply)
+        {
+            QScopedPointer<QNetworkReply> nw(nwReply); // delete reply
+            if (!sApp || sApp->isShuttingDown()) { return; }
+            const bool ok = nw->error() == QNetworkReply::NoError;
+            this->setDbAccessibility(ok);
         }
 
         void CNetworkWatchdog::triggerChangedSignals(bool oldDbAccessible, bool oldInternetAccessible)
