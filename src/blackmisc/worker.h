@@ -17,6 +17,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/invoke.h"
 #include "blackmisc/stacktrace.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/variant.h"
 
 #include <QMetaObject>
@@ -266,7 +267,9 @@ namespace BlackMisc
     /*!
      * Base class for a long-lived worker object which lives in its own thread.
      */
-    class BLACKMISC_EXPORT CContinuousWorker : public CWorkerBase
+    class BLACKMISC_EXPORT CContinuousWorker :
+        public CWorkerBase,
+        public CIdentifiable
     {
         Q_OBJECT
 
@@ -276,7 +279,7 @@ namespace BlackMisc
          * \param owner Will be the parent of the new thread (the worker has no parent).
          * \param name A name for the worker, which will be used to create a name for the thread.
          */
-        CContinuousWorker(QObject *owner, const QString &name = "");
+        CContinuousWorker(QObject *owner, const QString &name);
 
         //! Starts a thread and moves the worker into it.
         void start(QThread::Priority priority = QThread::InheritPriority);

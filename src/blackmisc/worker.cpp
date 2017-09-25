@@ -117,9 +117,10 @@ namespace BlackMisc
     }
 
     CContinuousWorker::CContinuousWorker(QObject *owner, const QString &name) :
+        CIdentifiable(name),
         m_owner(owner), m_name(name)
     {
-        if (m_name.isEmpty()) { m_name = metaObject()->className(); }
+        Q_ASSERT_X(!name.isEmpty(), Q_FUNC_INFO, "Empty name");
         setObjectName(m_name);
         m_updateTimer.setObjectName(m_name + ":timer");
     }
@@ -208,5 +209,4 @@ namespace BlackMisc
         QMetaObject::invokeMethod(ownThread, "deleteLater");
         QMetaObject::invokeMethod(this, "deleteLater");
     }
-
 }
