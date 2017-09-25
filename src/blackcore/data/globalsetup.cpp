@@ -132,6 +132,13 @@ namespace BlackCore
                    withSwitchedScheme("https", m_dbHttpsPort);
         }
 
+        CUrl CGlobalSetup::getDbClientPingServiceUrl() const
+        {
+            return getDbRootDirectoryUrl().
+                   withAppendedPath("/service/clientping.php").
+                   withSwitchedScheme("https", m_dbHttpsPort);
+        }
+
         CUrl CGlobalSetup::getAlphaXSwiftBusFilesServiceUrl() const
         {
             return getDbRootDirectoryUrl().
@@ -280,7 +287,10 @@ namespace BlackCore
                 % getDbHomePageUrl().toQString(i18n)
                 % separator
                 % "DB login service: "
-                % getDbLoginServiceUrl().toQString(i18n);
+                % getDbLoginServiceUrl().toQString(i18n)
+                % separator
+                % "DB client ping service: "
+                % getDbClientPingServiceUrl().toQString(i18n);
             s +=
                 "VATSIM bookings: "
                 % getVatsimBookingsUrl().toQString(i18n)

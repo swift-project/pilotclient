@@ -44,6 +44,7 @@ namespace BlackCore
                 IndexDbHttpPort,
                 IndexDbHttpsPort,
                 IndexDbLoginService,
+                IndexDbClientPingService,
                 IndexVatsimStatus,
                 IndexVatsimBookings,
                 IndexVatsimMetars,
@@ -119,6 +120,10 @@ namespace BlackCore
             //! Login service
             //! \remark based on getDbRootDirectoryUrl
             BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
+
+            //! DB ping service
+            //! \remark based on getDbRootDirectoryUrl
+            BlackMisc::Network::CUrl getDbClientPingServiceUrl() const;
 
             //! alpha XSwiftBus files available
             BlackMisc::Network::CUrl getAlphaXSwiftBusFilesServiceUrl() const;
