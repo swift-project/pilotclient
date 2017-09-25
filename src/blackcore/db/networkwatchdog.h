@@ -40,7 +40,7 @@ namespace BlackCore
             //! Set DB as avialable (from external)
             //! \remark if data was read from DB, this can save another check
             //! \threadsafe
-            void setDbAccessibility(bool available);
+            void setDbAccessibility(bool accessible);
 
             //! DB is accessible
             //! \threadsafe

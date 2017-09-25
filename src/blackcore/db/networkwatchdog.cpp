@@ -35,9 +35,9 @@ namespace BlackCore
             connect(&m_updateTimer, &QTimer::timeout, this, &CNetworkWatchdog::doWork);
         }
 
-        void CNetworkWatchdog::setDbAccessibility(bool available)
+        void CNetworkWatchdog::setDbAccessibility(bool accessible)
         {
-            m_dbAccessible = available;
+            m_dbAccessible = accessible;
             m_internetAccessible = m_internetAccessible && m_networkAccessible;
             QTimer::singleShot(0, &m_updateTimer, [this] { this->m_updateTimer.start(); }); // restart
         }
@@ -52,7 +52,7 @@ namespace BlackCore
         int CNetworkWatchdog::triggerCheck()
         {
             if (!this->doWorkCheck()) return false; // senseless
-            if (m_checkInProgress) return -1;
+            if (m_checkInProgress) { return -1; }
 
             const int n = this->getCheckCount();
             QTimer::singleShot(0, this, &CNetworkWatchdog::doWork);

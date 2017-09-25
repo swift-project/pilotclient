@@ -107,31 +107,21 @@ namespace BlackMisc
     {
         if (index.isMyself()) { return CVariant::from(*this); }
 
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
         switch (i)
         {
-        case IndexName:
-            return CVariant::fromValue(m_name);
-        case IndexMachineIdBase64:
-            return CVariant::fromValue(m_machineIdBase64);
-        case IndexMachineName:
-            return CVariant::fromValue(getMachineName());
-        case IndexMachineId:
-            return CVariant::fromValue(getMachineId());
-        case IndexProcessId:
-            return CVariant::fromValue(m_processId);
-        case IndexProcessName:
-            return CVariant::fromValue(m_processName);
-        case IndexIsFromLocalMachine:
-            return CVariant::fromValue(isFromLocalMachine());
-        case IndexIsFromSameProcess:
-            return CVariant::fromValue(isFromSameProcess());
-        case IndexIsFromSameProcessName:
-            return CVariant::fromValue(isFromSameProcessName());
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexName: return CVariant::fromValue(m_name);
+        case IndexMachineIdBase64: return CVariant::fromValue(m_machineIdBase64);
+        case IndexMachineName: return CVariant::fromValue(getMachineName());
+        case IndexMachineId: return CVariant::fromValue(getMachineId());
+        case IndexProcessId: return CVariant::fromValue(m_processId);
+        case IndexProcessName: return CVariant::fromValue(m_processName);
+        case IndexIsFromLocalMachine: return CVariant::fromValue(isFromLocalMachine());
+        case IndexIsFromSameProcess: return CVariant::fromValue(isFromSameProcess());
+        case IndexIsFromSameProcessName: return CVariant::fromValue(isFromSameProcessName());
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 

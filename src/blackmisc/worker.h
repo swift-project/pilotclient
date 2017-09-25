@@ -410,7 +410,6 @@ namespace BlackMisc
         QPointer<T> m_weak;
         CConnectionGuard m_guard;
     };
-
 }
 
 #endif

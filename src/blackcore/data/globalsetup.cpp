@@ -310,40 +310,24 @@ namespace BlackCore
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbRootDirectory:
-                return CVariant::fromValue(this->m_dbRootDirectoryUrl);
-            case IndexDbHttpPort:
-                return CVariant::fromValue(this->m_dbHttpPort);
-            case IndexDbHttpsPort:
-                return CVariant::fromValue(this->m_dbHttpsPort);
-            case IndexDbLoginService:
-                return CVariant::fromValue(this->getDbLoginServiceUrl());
-            case IndexVatsimStatus:
-                return CVariant::fromValue(this->m_vatsimStatusFileUrls);
-            case IndexVatsimData:
-                return CVariant::fromValue(this->m_vatsimDataFileUrls);
-            case IndexVatsimBookings:
-                return CVariant::fromValue(this->m_vatsimDataFileUrls);
-            case IndexVatsimMetars:
-                return CVariant::fromValue(this->m_vatsimMetarsUrls);
-            case IndexBootstrapFileUrls:
-                return CVariant::fromValue(this->getSwiftBootstrapFileUrls());
-            case IndexDistributionFileUrls:
-                return CVariant::fromValue(this->getSwiftDistributionFileUrls());
-            case IndexSharedUrls:
-                return CVariant::fromValue(this->m_sharedUrls);
-            case IndexNewsUrls:
-                return CVariant::fromValue(this->m_newsUrls);
-            case IndexSwiftMapUrls:
-                return CVariant::fromValue(this->m_mapUrls);
-            case IndexOnlineHelpUrls:
-                return CVariant::fromValue(this->m_onlineHelpUrls);
-            case IndexCrashReportServerUrl:
-                return CVariant::fromValue(this->m_crashReportServerUrl);
-            case IndexWasLoaded:
-                return CVariant::fromValue(this->m_wasLoaded);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexDbRootDirectory: return CVariant::fromValue(this->m_dbRootDirectoryUrl);
+            case IndexDbHttpPort: return CVariant::fromValue(this->m_dbHttpPort);
+            case IndexDbHttpsPort: return CVariant::fromValue(this->m_dbHttpsPort);
+            case IndexDbLoginService: return CVariant::fromValue(this->getDbLoginServiceUrl());
+            case IndexDbClientPingService: return CVariant::fromValue(this->getDbClientPingServiceUrl());
+            case IndexVatsimStatus: return CVariant::fromValue(this->m_vatsimStatusFileUrls);
+            case IndexVatsimData: return CVariant::fromValue(this->m_vatsimDataFileUrls);
+            case IndexVatsimBookings: return CVariant::fromValue(this->m_vatsimDataFileUrls);
+            case IndexVatsimMetars: return CVariant::fromValue(this->m_vatsimMetarsUrls);
+            case IndexBootstrapFileUrls: return CVariant::fromValue(this->getSwiftBootstrapFileUrls());
+            case IndexDistributionFileUrls: return CVariant::fromValue(this->getSwiftDistributionFileUrls());
+            case IndexSharedUrls: return CVariant::fromValue(this->m_sharedUrls);
+            case IndexNewsUrls: return CVariant::fromValue(this->m_newsUrls);
+            case IndexSwiftMapUrls: return CVariant::fromValue(this->m_mapUrls);
+            case IndexOnlineHelpUrls: return CVariant::fromValue(this->m_onlineHelpUrls);
+            case IndexCrashReportServerUrl: return CVariant::fromValue(this->m_crashReportServerUrl);
+            case IndexWasLoaded: return CVariant::fromValue(this->m_wasLoaded);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -359,47 +343,21 @@ namespace BlackCore
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbRootDirectory:
-                this->m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexDbHttpPort:
-                this->m_dbHttpPort = variant.toInt();
-                break;
-            case IndexDbHttpsPort:
-                this->m_dbHttpsPort = variant.toInt();
-                break;
-            case IndexDbLoginService:
-                break;
-            case IndexVatsimData:
-                this->m_vatsimDataFileUrls = variant.value<CUrlList>();
-                break;
-            case IndexVatsimBookings:
-                this->m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexVatsimMetars:
-                this->m_vatsimMetarsUrls = variant.value<CUrlList>();
-                break;
-            case IndexSharedUrls:
-                this->m_sharedUrls = variant.value<CUrlList>();
-                break;
-            case IndexNewsUrls:
-                this->m_newsUrls = variant.value<CUrlList>();
-                break;
-            case IndexOnlineHelpUrls:
-                this->m_onlineHelpUrls = variant.value<CUrlList>();
-                break;
-            case IndexSwiftMapUrls:
-                this->m_mapUrls = variant.value<CUrlList>();
-                break;
-            case IndexCrashReportServerUrl:
-                this->m_crashReportServerUrl = variant.value<CUrl>();
-                break;
-            case IndexWasLoaded:
-                this->m_wasLoaded = variant.toBool();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexDbRootDirectory: this->m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexDbHttpPort: this->m_dbHttpPort = variant.toInt(); break;
+            case IndexDbHttpsPort: this->m_dbHttpsPort = variant.toInt(); break;
+            case IndexDbLoginService: break; // cannot be changed
+            case IndexDbClientPingService: break; // cannot be changed
+            case IndexVatsimData: this->m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
+            case IndexVatsimBookings: this->m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexVatsimMetars: this->m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
+            case IndexSharedUrls: this->m_sharedUrls = variant.value<CUrlList>(); break;
+            case IndexNewsUrls: this->m_newsUrls = variant.value<CUrlList>(); break;
+            case IndexOnlineHelpUrls: this->m_onlineHelpUrls = variant.value<CUrlList>(); break;
+            case IndexSwiftMapUrls: this->m_mapUrls = variant.value<CUrlList>(); break;
+            case IndexCrashReportServerUrl: this->m_crashReportServerUrl = variant.value<CUrl>(); break;
+            case IndexWasLoaded: this->m_wasLoaded = variant.toBool(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
