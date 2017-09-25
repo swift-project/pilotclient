@@ -62,6 +62,11 @@ namespace BlackMisc
         return QUuid::createUuidV5(ns, baseData);
     }
 
+    QString CIdentifier::toUuidString() const
+    {
+        return toUuid().toString();
+    }
+
     QByteArray CIdentifier::getMachineId() const
     {
         return QByteArray::fromBase64(m_machineIdBase64.toLocal8Bit());

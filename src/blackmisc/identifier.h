@@ -61,6 +61,9 @@ namespace BlackMisc
         //! Produces a UUID generated from the identifier.
         QUuid toUuid() const;
 
+        //! UUID string
+        QString toUuidString() const;
+
         //! Name
         QString getName() const { return m_name; }
 
