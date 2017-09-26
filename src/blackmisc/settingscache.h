@@ -24,7 +24,7 @@
 namespace BlackMisc
 {
     /*!
-     * Singleton derived class of CValueCache, for core settings.
+     * Singleton derived class of CValueCache, for settings.
      */
     class BLACKMISC_EXPORT CSettingsCache : public BlackMisc::CValueCache
     {
@@ -34,20 +34,20 @@ namespace BlackMisc
         //! Return the singleton instance.
         static CSettingsCache *instance();
 
-        //! The directory where core settings are stored.
+        //! The directory where settings are stored.
         static const QString &persistentStore();
 
-        //! Save core settings to disk.
+        //! Save settings to disk.
         BlackMisc::CStatusMessage saveToStore(const QString &keyPrefix = {});
 
-        //! Save core settings to disk.
+        //! Save settings to disk.
         BlackMisc::CStatusMessage saveToStore(const QStringList &keys);
 
         //! Connects signal CValueCache::valuesSaveRequested to a private slot that saves the values.
         //! In a dbus distributed scenario, only call this method in the core process.
         void enableLocalSave();
 
-        //! Load core settings from disk.
+        //! Load settings from disk.
         BlackMisc::CStatusMessage loadFromStore();
 
         //! Return the filename where the value with the given key may be stored.
