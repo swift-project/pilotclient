@@ -161,6 +161,7 @@ void CSwiftData::consolidationSettingChanged()
         if (m_updater)
         {
             ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(nullptr);
+            disconnect(m_updater.data());
             m_updater->abandonAndWait();
             m_updater = nullptr;
         }
@@ -170,6 +171,7 @@ void CSwiftData::consolidationSettingChanged()
         if (!m_updater)
         {
             m_updater = m_updater.create(this);
+            connect(m_updater.data(), &CBackgroundDataUpdater::consolidating, ui->comp_InfoBar, &CInfoBarWebReadersStatusComponent::consolidationRunning, Qt::QueuedConnection);
             m_updater->start(QThread::LowestPriority);
             ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(m_updater.data());
         }

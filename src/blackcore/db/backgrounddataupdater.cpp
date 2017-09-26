@@ -45,6 +45,7 @@ namespace BlackCore
             if (!this->doWorkCheck()) { return; }
             m_inWork = true;
 
+            emit this->consolidating(true);
             const int cycle = m_cycle;
             switch (cycle)
             {
@@ -72,6 +73,7 @@ namespace BlackCore
             }
             ++m_cycle %= 5;
             m_inWork = false;
+            emit this->consolidating(false);
         }
 
         void CBackgroundDataUpdater::triggerInfoReads()

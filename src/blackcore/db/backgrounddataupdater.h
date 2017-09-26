@@ -28,12 +28,18 @@ namespace BlackCore
          */
         class BLACKCORE_EXPORT CBackgroundDataUpdater : public BlackMisc::CContinuousWorker
         {
+            Q_OBJECT
+
         public:
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Constructor
             CBackgroundDataUpdater(QObject *owner);
+
+        signals:
+            //! Consolidation
+            void consolidating(bool started);
 
         private:
             int    m_cycle = 0;      //!< cycle

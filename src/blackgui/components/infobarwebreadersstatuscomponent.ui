@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
+    <width>691</width>
     <height>22</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Web reader status bar</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -57,6 +57,19 @@
    </item>
    <item>
     <widget class="BlackGui::CLedWidget" name="led_DataReady" native="true"/>
+   </item>
+   <item>
+    <widget class="QLabel" name="lbl_Consolidation">
+     <property name="toolTip">
+      <string>consolidation</string>
+     </property>
+     <property name="text">
+      <string>cons.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="BlackGui::CLedWidget" name="led_Consolidation" native="true"/>
    </item>
    <item>
     <spacer name="hs_Spacer">

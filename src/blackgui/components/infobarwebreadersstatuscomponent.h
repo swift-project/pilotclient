@@ -39,12 +39,15 @@ namespace BlackGui
             //!Destructor
             virtual ~CInfoBarWebReadersStatusBase();
 
-            //! Init the LEDs
-            void initLeds();
+            //! Consolidation is running
+            virtual void consolidationRunning(bool running);
 
         protected:
             //! Constructor
             explicit CInfoBarWebReadersStatusBase(QWidget *parent = nullptr);
+
+            //! Init the LEDs
+            void initLeds();
 
             //! Init
             void init();
@@ -62,7 +65,7 @@ namespace BlackGui
             bool hasAllData() const;
 
             //! Initial setup of leds
-            void setLeds(BlackGui::CLedWidget *ledDb, BlackGui::CLedWidget *dataReady,
+            void setLeds(BlackGui::CLedWidget *ledDb, BlackGui::CLedWidget *ledDataReady, CLedWidget *ledConsolidation,
                          BlackGui::CLedWidget *led_IcaoAircraft, BlackGui::CLedWidget *led_IcaoAirline, BlackGui::CLedWidget *led_Countries,
                          BlackGui::CLedWidget *led_Distributors, BlackGui::CLedWidget *led_Liveries, BlackGui::CLedWidget *led_Models);
 
@@ -75,10 +78,14 @@ namespace BlackGui
             //! Check server status
             void checkServerAndData();
 
+            //! Show the consolidation status
+            virtual void showConsolidationStatus(bool show);
+
         private:
             QTimer m_timer { this }; //!< check timer
             BlackGui::CLedWidget *led_SwiftDb = nullptr;
             BlackGui::CLedWidget *led_DataReady = nullptr;
+            BlackGui::CLedWidget *led_Consolidation = nullptr;
             BlackGui::CLedWidget *led_IcaoAircraft = nullptr;
             BlackGui::CLedWidget *led_IcaoAirline = nullptr;
             BlackGui::CLedWidget *led_Countries = nullptr;
@@ -98,6 +105,9 @@ namespace BlackGui
 
             //!Destructor
             virtual ~CInfoBarWebReadersStatusComponent();
+
+            //! Show the consolidation status
+            virtual void showConsolidationStatus(bool show) override;
 
         private:
             QScopedPointer<Ui::CInfoBarWebReadersStatusComponent> ui;
