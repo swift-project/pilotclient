@@ -197,6 +197,7 @@ namespace BlackCore
         BlackMisc::CStatusMessageList requestReloadOfSetupAndVersion();
 
         //! Web data services available?
+        //! \threadsafe
         bool hasWebDataServices() const;
 
         //! Get the web data services
@@ -234,7 +235,7 @@ namespace BlackCore
         void setSettingsAutoSave(bool autoSave);
 
         //! All unsaved settings
-        QStringList getAllUnsavedSettings() const;
+        QStringList getUnsavedSettingsKeys() const;
 
         //! Save all settings
         BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys);

@@ -15,6 +15,7 @@
 #include <QDialog>
 #include <QScopedPointer>
 #include <QAbstractButton>
+#include "blackcore/context/contextapplication.h"
 
 namespace Ui { class CApplicationCloseDialog; }
 namespace BlackGui
@@ -35,19 +36,19 @@ namespace BlackGui
             //! Destructor
             virtual ~CApplicationCloseDialog();
 
-        private slots:
-            //! Accepted
-            void ps_onAccepted();
-
-            //! Rejected
-            void ps_onRejected();
-
-            //! Button pressed
-            void ps_buttonClicked(QAbstractButton *button);
-
         private:
             QScopedPointer<Ui::CApplicationCloseDialog> ui;
-            QStringList m_settingskeys;
+            QStringList m_settingsDescriptions; //!< values as displayed
+            BlackCore::Context::CSettingsDictionary m_settingsDictionary; //!< values and descriptions, unsorted
+
+            //! Accepted
+            void onAccepted();
+
+            //! Rejected
+            void onRejected();
+
+            //! Button pressed
+            void buttonClicked(QAbstractButton *button);
 
             //! Init the settings view
             void initSettingsView();

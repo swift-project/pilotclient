@@ -21,6 +21,7 @@
 
 using namespace BlackMisc;
 using namespace BlackGui;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -35,35 +36,37 @@ namespace BlackGui
             this->initSettingsView();
             ui->bb_ApplicationCloseDialog->button(QDialogButtonBox::Save)->setDefault(true);
 
-            connect(this, &CApplicationCloseDialog::accepted, this, &CApplicationCloseDialog::ps_onAccepted);
-            connect(this, &CApplicationCloseDialog::rejected, this, &CApplicationCloseDialog::ps_onRejected);
-            connect(ui->bb_ApplicationCloseDialog, &QDialogButtonBox::clicked, this, &CApplicationCloseDialog::ps_buttonClicked);
+            connect(this, &CApplicationCloseDialog::accepted, this, &CApplicationCloseDialog::onAccepted);
+            connect(this, &CApplicationCloseDialog::rejected, this, &CApplicationCloseDialog::onRejected);
+            connect(ui->bb_ApplicationCloseDialog, &QDialogButtonBox::clicked, this, &CApplicationCloseDialog::buttonClicked);
         }
 
         CApplicationCloseDialog::~CApplicationCloseDialog()
         { }
 
-        void CApplicationCloseDialog::ps_onAccepted()
+        void CApplicationCloseDialog::onAccepted()
         {
             const QModelIndexList indexes = ui->lv_UnsavedSettings->selectionModel()->selectedIndexes();
             if (indexes.isEmpty()) { return; }
-            const QList<int> rows = CGuiUtility::indexToUniqueRows(indexes);
             QStringList saveKeys;
+            const QList<int> rows = CGuiUtility::indexToUniqueRows(indexes);
             for (int r : rows)
             {
-                const QString key = this->m_settingskeys.at(r);
-                saveKeys.append(key);
+                const QString description = m_settingsDescriptions[r];
+                const QString key = m_settingsDictionary.key(description);
+                if (!key.isEmpty()) { saveKeys.append(description); }
             }
+            if (saveKeys.isEmpty()) { return; }
             CStatusMessage msg = sApp->saveSettingsByKey(saveKeys);
             if (msg.isFailure()) { CLogMessage::preformatted(msg); }
         }
 
-        void CApplicationCloseDialog::ps_onRejected()
+        void CApplicationCloseDialog::onRejected()
         {
             // void
         }
 
-        void CApplicationCloseDialog::ps_buttonClicked(QAbstractButton *button)
+        void CApplicationCloseDialog::buttonClicked(QAbstractButton *button)
         {
             if (button == ui->bb_ApplicationCloseDialog->button(QDialogButtonBox::Discard))
             {
@@ -74,13 +77,15 @@ namespace BlackGui
 
         void CApplicationCloseDialog::initSettingsView()
         {
-            QStringList settings(sApp->getIContextApplication()->getUnsavedSettingsKeys());
-            settings.sort();
-            QStringListModel *model = new QStringListModel(settings, this);
+            const CSettingsDictionary settingsDictionary(sApp->getIContextApplication()->getUnsavedSettingsKeysDescribed());
+            QStringList descriptions = settingsDictionary.values();
+            descriptions.sort();
+            QStringListModel *model = new QStringListModel(descriptions, this);
             ui->lv_UnsavedSettings->setModel(model);
             ui->lv_UnsavedSettings->selectAll();
 
-            this->m_settingskeys = settings;
+            m_settingsDictionary = settingsDictionary;
+            m_settingsDescriptions = descriptions;
         }
     } // ns
 } // ns

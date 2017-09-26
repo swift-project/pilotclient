@@ -538,7 +538,7 @@ namespace BlackCore
 
     bool CApplication::hasUnsavedSettings() const
     {
-        return !this->getAllUnsavedSettings().isEmpty();
+        return !this->getUnsavedSettingsKeys().isEmpty();
     }
 
     void CApplication::setSettingsAutoSave(bool autoSave)
@@ -546,23 +546,19 @@ namespace BlackCore
         m_autoSaveSettings = autoSave;
     }
 
-    QStringList CApplication::getAllUnsavedSettings() const
+    QStringList CApplication::getUnsavedSettingsKeys() const
     {
-        if (this->supportsContexts())
-        {
-            return this->getIContextApplication()->getUnsavedSettingsKeys();
-        }
-        return {};
+        return this->supportsContexts() ?
+               this->getIContextApplication()->getUnsavedSettingsKeys() :
+               CSettingsCache::instance()->getAllUnsavedKeys();
     }
 
     CStatusMessage CApplication::saveSettingsByKey(const QStringList &keys)
     {
         if (keys.isEmpty()) { return CStatusMessage(); }
-        if (this->supportsContexts())
-        {
-            return this->getIContextApplication()->saveSettingsByKey(keys);
-        }
-        return CSettingsCache::instance()->saveToStore(keys);
+        return this->supportsContexts() ?
+               this->getIContextApplication()->saveSettingsByKey(keys) :
+               CSettingsCache::instance()->saveToStore(keys);
     }
 
     QString CApplication::getTemporaryDirectory() const
