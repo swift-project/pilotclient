@@ -426,10 +426,17 @@ namespace BlackGui
     void CGuiApplication::addMenuForStyleSheets(QMenu &menu)
     {
         QMenu *sm = menu.addMenu("Style sheet");
-        QAction *a = sm->addAction(CIcons::refresh16(), "Reload");
-        bool c = connect(a, &QAction::triggered, this, [a, this]()
+        QAction *aReload = sm->addAction(CIcons::refresh16(), "Reload");
+        bool c = connect(aReload, &QAction::triggered, this, [aReload, this]()
         {
             this->reloadStyleSheets();
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        QAction *aOpen = sm->addAction(CIcons::text16(), "Open qss file");
+        c = connect(aOpen, &QAction::triggered, this, [aOpen, this]()
+        {
+            this->openStandardWidgetStyleSheet();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c);
@@ -608,6 +615,12 @@ namespace BlackGui
     bool CGuiApplication::reloadStyleSheets()
     {
         return m_styleSheetUtility.read();
+    }
+
+    bool CGuiApplication::openStandardWidgetStyleSheet()
+    {
+        const QString fn = CStyleSheetUtility::fileNameAndPathStandardWidget();
+        return QDesktopServices::openUrl(QUrl::fromLocalFile(fn));
     }
 
     bool CGuiApplication::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)

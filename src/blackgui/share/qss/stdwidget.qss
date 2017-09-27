@@ -176,6 +176,14 @@ QPushButton::disabled {
   qproperty-textElideMode: ElideMiddle;
 }
 
+QPushButton:pressed{ background-color: lightblue; }
+/**
+QPushButton:focus:pressed{ background-color: black; }
+QPushButton:focus{ background-color: green; }
+QPushButton:hover{ background-color: red; }
+QPushButton:checked{ background-color: pink; }
+**/
+
 QProgressBar {
   border: 1px solid green;
   border-radius: 5px;

@@ -315,6 +315,12 @@ namespace BlackGui
         return f;
     }
 
+    const QString &CStyleSheetUtility::fileNameAndPathSwiftStandardGui()
+    {
+        static const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::stylesheetsDirectory(), CStyleSheetUtility::fileNameSwiftStandardGui());
+        return fn;
+    }
+
     const QString &CStyleSheetUtility::fileNameInfoBar()
     {
         static const QString f(getQssFileName("infobar"));
@@ -337,6 +343,12 @@ namespace BlackGui
     {
         static const QString f(getQssFileName("stdwidget"));
         return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameAndPathStandardWidget()
+    {
+        static const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::stylesheetsDirectory(), CStyleSheetUtility::fileNameStandardWidget());
+        return fn;
     }
 
     const QString &CStyleSheetUtility::fileNameTextMessage()

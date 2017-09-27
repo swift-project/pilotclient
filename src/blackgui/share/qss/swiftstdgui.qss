@@ -22,7 +22,7 @@ QAbstractScrollArea #qw_RemarksGenerator  { background-color: transparent; backg
 /* in log component */
 /**
 QAbstractScrollArea #pg_StatusPageMessages { background-color: black; }
-QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
+QAbstractScrollArea #pg_StatusPageConsole  { background-color: black; }
 **/
 
 /* main GUI parts */
@@ -90,6 +90,10 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   border-color: green;
   font: bold;
   color: yellow;
+}
+
+#wi_MainKeypadArea QPushButton::pressed {
+  background-color: lightblue;
 }
 
 /* cockpit needs to come after sw_MainMiddle */

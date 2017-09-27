@@ -160,6 +160,9 @@ namespace BlackGui
         //! Reload style sheets
         bool reloadStyleSheets();
 
+        //! Opens the standard stylesheet
+        bool openStandardWidgetStyleSheet();
+
         //! Update the fonts
         bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
 
@@ -231,12 +234,12 @@ namespace BlackGui
         QPixmap m_windowIcon;
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
-        CStyleSheetUtility m_styleSheetUtility{{}, this};         //!< style sheet utility
+        CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
         QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
         Components::CDownloadAndInstallDialog *m_installDialog = nullptr; //!< software installation dialog
         Components::CApplicationCloseDialog *m_closeDialog = nullptr;     //!< close dialog (no QScopedPointer because I need to set parent)
-        BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings{ this, &CGuiApplication::settingsChanged };
+        BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
         BlackMisc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
 
         //! Qt help message to formatted HTML
