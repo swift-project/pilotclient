@@ -16,6 +16,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/digestsignal.h"
 #include <QFrame>
 
 namespace Ui { class CDistributionInfoComponent; }
@@ -77,14 +78,17 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDistributionInfoComponent> ui;
             QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
-            bool m_distributionsLoaded = false; //!< distribution info loaded
             QString m_newVersionAvailable; //!< new version number if any
             BlackMisc::Db::CDistribution m_currentDistribution; //!< current distribution
             BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionsInfo> m_distributionsInfo { this, &CDistributionInfoComponent::ps_changedDistributionCache }; //!< version cache
             BlackMisc::CSetting<BlackCore::Application::TDistribution> m_distributionSetting { this }; //!< channel/platform selected
+            BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CDistributionInfoComponent::triggerInfoAvailableSignal, 10000, 2 };
 
             //! Save the current settings
             void saveSettings();
+
+            //! Trigger the CDistributionInfoComponent::distributionInfoAvailable signal
+            void triggerInfoAvailableSignal();
 
             //! Selected platform from UI or guessed platform
             QString getSelectedOrGuessedPlatform() const;

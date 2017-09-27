@@ -36,16 +36,14 @@ namespace BlackGui
             ui->lbl_NewVersionUrl->setOpenExternalLinks(true);
 
             // use version signal as trigger for completion
-            if (!m_distributionsInfo.get().isEmpty())
+            const CDistributionList distributions = m_distributionsInfo.get();
+            if (!distributions.isEmpty())
             {
                 // we have at least cached data:
                 // in case CGuiApplication::distributionInfoAvailable never comes/was already sent
-                QTimer::singleShot(15 * 1000, this, [ = ]
-                {
-                    // use this as timeout failover with cached data
-                    if (m_distributionsLoaded) { return; }
-                    this->ps_loadedDistributionInfo(true);
-                });
+                // 1) we do not know if we missed the signal, the server is down etc
+                // 2) for better user experience we display straight away, it will overridden if the signal will br received
+                this->ps_loadedDistributionInfo(true);
             }
 
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
@@ -76,7 +74,6 @@ namespace BlackGui
                 if (msgs.isSuccess())
                 {
                     ui->le_LatestVersion->setText("");
-                    m_distributionsLoaded = false; // reset
                 }
             }
         }
@@ -85,20 +82,16 @@ namespace BlackGui
         {
             if (!success)
             {
-                m_distributionsLoaded = false;
                 ui->pb_CheckForUpdates->setToolTip("");
                 CLogMessage(this).warning("Loading setup or distribution information failed");
                 return;
             }
 
-            // only emit once
-            if (m_distributionsLoaded) { return; }
-            m_distributionsLoaded = true;
             this->ps_channelChanged();
             ui->pb_CheckForUpdates->setToolTip(sApp->getLastSuccesfulDistributionUrl());
 
-            // emit only after all has been set
-            emit this->distributionInfoAvailable(success);
+            // emit via digest signal
+            m_dsDistributionAvailable.inputSignal();
         }
 
         void CDistributionInfoComponent::ps_changedDistributionCache()
@@ -126,6 +119,11 @@ namespace BlackGui
             {
                 CLogMessage(this).preformatted(m);
             }
+        }
+
+        void CDistributionInfoComponent::triggerInfoAvailableSignal()
+        {
+            emit this->distributionInfoAvailable(true);
         }
 
         void CDistributionInfoComponent::ps_channelChanged()
