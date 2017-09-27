@@ -46,7 +46,8 @@ else:unix: {
     QT5_LIBRARIES *= libQt5Widgets.so.5
     QT5_LIBRARIES *= libQt5XcbQpa.so.5
     QT5_LIBRARIES *= libQt5Xml.so.5
-    QT5_LIBRARIES *= libqgsttools_p.so.1
+    greaterThan(QT_MINOR_VERSION, 9): QT5_LIBRARIES *= libQt5MultimediaGstTools.so.5
+    else: QT5_LIBRARIES *= libqgsttools_p.so.1
 
     ICU_LIBRARIES *= libicui18n.so.56
     ICU_LIBRARIES *= libicuuc.so.56
