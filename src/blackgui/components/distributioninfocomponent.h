@@ -56,33 +56,32 @@ namespace BlackGui
             //! New platfrom or channel
             void selectionChanged();
 
-        private slots:
-            //! Load latest version
-            void ps_requestLoadOfSetup();
-
-            //! Loaded latest version
-            void ps_loadedDistributionInfo(bool success);
-
-            //! Channel has been changed
-            void ps_channelChanged();
-
-            //! Platform changed
-            void ps_platformChanged();
-
-            //! Cache values have been changed
-            void ps_changedDistributionCache();
-
-            //! Install XSwiftBus dialog
-            void ps_installXSwiftBusDialog();
-
         private:
             QScopedPointer<Ui::CDistributionInfoComponent> ui;
             QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
             QString m_newVersionAvailable; //!< new version number if any
             BlackMisc::Db::CDistribution m_currentDistribution; //!< current distribution
-            BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionsInfo> m_distributionsInfo { this, &CDistributionInfoComponent::ps_changedDistributionCache }; //!< version cache
+            BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionsInfo> m_distributionsInfo { this, &CDistributionInfoComponent::changedDistributionCache }; //!< version cache
             BlackMisc::CSetting<BlackCore::Application::TDistribution> m_distributionSetting { this }; //!< channel/platform selected
             BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CDistributionInfoComponent::triggerInfoAvailableSignal, 10000, 2 };
+
+            //! Load latest version
+            void requestLoadOfSetup();
+
+            //! Loaded latest version
+            void loadedDistributionInfo(bool success);
+
+            //! Channel has been changed
+            void channelChanged();
+
+            //! Platform changed
+            void platformChanged();
+
+            //! Cache values have been changed
+            void changedDistributionCache();
+
+            //! Install XSwiftBus dialog
+            void installXSwiftBusDialog();
 
             //! Save the current settings
             void saveSettings();
