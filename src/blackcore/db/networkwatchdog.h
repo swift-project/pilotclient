@@ -62,6 +62,10 @@ namespace BlackCore
             //! \threadsafe
             bool isInternetAccessible() const { return m_internetAccessible; }
 
+            //! Has working shared URL?
+            //! \threadsafe
+            bool hasWorkingSharedUrl() const;
+
             //! A working shared URL
             //! \threadsafe
             BlackMisc::Network::CUrl getWorkingSharedUrl() const;

@@ -523,7 +523,7 @@ namespace BlackCore
         BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead      = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;           //!< how to read DB data
         bool                                     m_initialRead = false;      //!< initial read started
-        bool                                     m_signalledHeaders = false; //!< haders loading has been signalled
+        bool                                     m_signalledHeaders = false; //!< headers loading has been signalled
         bool                                     m_shuttingDown = false;     //!< shutting down?
         QDateTime                                m_dbInfoObjectTimeout;      //!< started reading DB info objects
         QDateTime                                m_sharedInfoObjectsTimeout; //!< started reading shared info objects

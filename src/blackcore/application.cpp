@@ -35,6 +35,7 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
+#include "application.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -718,6 +719,12 @@ namespace BlackCore
     {
         if (!this->isNetworkAccessible()) { return false; }
         return m_networkWatchDog && m_networkWatchDog->isSwiftDbAccessible();
+    }
+
+    bool CApplication::hasWorkingSharedUrl() const
+    {
+        if (!this->isNetworkAccessible()) { return false; }
+        return m_networkWatchDog && m_networkWatchDog->hasWorkingSharedUrl();
     }
 
     CUrl CApplication::getWorkingSharedUrl() const

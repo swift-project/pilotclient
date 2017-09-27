@@ -45,16 +45,22 @@ namespace BlackCore
             QTimer::singleShot(0, &m_updateTimer, [this] { this->m_updateTimer.start(); }); // restart
         }
 
+        bool CNetworkWatchdog::hasWorkingSharedUrl() const
+        {
+            if (!m_networkAccessible) { return false; }
+            return !this->getWorkingSharedUrl().isEmpty();
+        }
+
         CUrl CNetworkWatchdog::getWorkingSharedUrl() const
         {
-            if (!m_networkAccessible) return CUrl();
+            if (!m_networkAccessible) { return CUrl(); }
             QReadLocker l(&m_lockSharedUrl);
             return m_workingSharedUrl;
         }
 
         int CNetworkWatchdog::triggerCheck()
         {
-            if (!this->doWorkCheck()) return false; // senseless
+            if (!this->doWorkCheck()) { return false; } // senseless
             if (m_checkInProgress) { return -1; }
 
             const int n = this->getCheckCount();

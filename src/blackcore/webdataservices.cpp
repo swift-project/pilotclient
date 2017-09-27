@@ -269,6 +269,13 @@ namespace BlackCore
     CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromDb(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
+        if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
+        if (!sApp->isSwiftDbAccessible())
+        {
+            CLogMessage(this).warning("Not triggering load of '%1' because swift DB is not accessible") << CEntityFlags::flagToString(whatToRead);
+            return CEntityFlags::NoEntity;
+        }
+
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (m_dbInfoDataReader)
         {
@@ -312,6 +319,13 @@ namespace BlackCore
     CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront)
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
+        if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
+        if (!sApp->hasWorkingSharedUrl())
+        {
+            CLogMessage(this).warning("Not triggering load of '%1' because no working shared URL") << CEntityFlags::flagToString(whatToRead);
+            return CEntityFlags::NoEntity;
+        }
+
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         this->triggerReadOfSharedInfoObjects(); // trigger reload of info objects (for shared)
 
