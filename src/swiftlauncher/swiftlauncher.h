@@ -153,7 +153,7 @@ private slots:
     void ps_displayLatestNews(QNetworkReply *reply);
 
     //! Distribution info is available
-    void ps_distributionInfoAvailable(bool success);
+    void ps_distributionInfoAvailable();
 
     //! Start button pressed
     void ps_startButtonPressed();

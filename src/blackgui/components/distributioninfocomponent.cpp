@@ -37,19 +37,10 @@ namespace BlackGui
 
             // use version signal as trigger for completion
             const CDistributionList distributions = m_distributionsInfo.get();
-            if (!distributions.isEmpty())
-            {
-                // we have at least cached data:
-                // in case CGuiApplication::distributionInfoAvailable never comes/was already sent
-                // 1) we do not know if we missed the signal, the server is down etc
-                // 2) for better user experience we display straight away, it will overridden if the signal will br received
-                this->ps_loadedDistributionInfo(true);
-            }
+            if (!distributions.isEmpty()) { this->changedDistributionInfo(); }
 
-            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
-            connect(sGui, &CGuiApplication::distributionInfoAvailable, this, &CDistributionInfoComponent::ps_loadedDistributionInfo);
-            connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_requestLoadOfSetup);
-            connect(ui->pb_InstallXSwiftBus, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_installXSwiftBusDialog);
+            connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CDistributionInfoComponent::requestLoadOfSetup);
+            connect(ui->pb_InstallXSwiftBus, &QPushButton::pressed, this, &CDistributionInfoComponent::installXSwiftBusDialog);
         }
 
         CDistributionInfoComponent::~CDistributionInfoComponent()
@@ -65,7 +56,7 @@ namespace BlackGui
             return (vCurrentChannelPlatform > vCurrent);
         }
 
-        void CDistributionInfoComponent::ps_requestLoadOfSetup()
+        void CDistributionInfoComponent::requestLoadOfSetup()
         {
             if (sGui && !ui->le_LatestVersion->text().isEmpty())
             {
@@ -78,28 +69,16 @@ namespace BlackGui
             }
         }
 
-        void CDistributionInfoComponent::ps_loadedDistributionInfo(bool success)
+        void CDistributionInfoComponent::changedDistributionInfo()
         {
-            if (!success)
-            {
-                ui->pb_CheckForUpdates->setToolTip("");
-                CLogMessage(this).warning("Loading setup or distribution information failed");
-                return;
-            }
-
-            this->ps_channelChanged();
+            this->channelChanged();
             ui->pb_CheckForUpdates->setToolTip(sApp->getLastSuccesfulDistributionUrl());
 
             // emit via digest signal
             m_dsDistributionAvailable.inputSignal();
         }
 
-        void CDistributionInfoComponent::ps_changedDistributionCache()
-        {
-            this->ps_loadedDistributionInfo(true);
-        }
-
-        void CDistributionInfoComponent::ps_installXSwiftBusDialog()
+        void CDistributionInfoComponent::installXSwiftBusDialog()
         {
             if (!m_installXSwiftBusDialog)
             {
@@ -121,12 +100,7 @@ namespace BlackGui
             }
         }
 
-        void CDistributionInfoComponent::triggerInfoAvailableSignal()
-        {
-            emit this->distributionInfoAvailable(true);
-        }
-
-        void CDistributionInfoComponent::ps_channelChanged()
+        void CDistributionInfoComponent::channelChanged()
         {
             const CDistributionList distributions(m_distributionsInfo.get());
             const QStringList channels = distributions.getChannels().toList();
@@ -161,12 +135,12 @@ namespace BlackGui
             if (!platform.isEmpty()) { ui->cb_Platforms->setCurrentText(platform); }
 
             // platform dependent stuff
-            this->ps_platformChanged();
-            connect(ui->cb_Channels, &QComboBox::currentTextChanged, this, &CDistributionInfoComponent::ps_channelChanged);
-            connect(ui->cb_Platforms, &QComboBox::currentTextChanged, this, &CDistributionInfoComponent::ps_platformChanged);
+            this->platformChanged();
+            connect(ui->cb_Channels, &QComboBox::currentTextChanged, this, &CDistributionInfoComponent::channelChanged);
+            connect(ui->cb_Platforms, &QComboBox::currentTextChanged, this, &CDistributionInfoComponent::platformChanged);
         }
 
-        void CDistributionInfoComponent::ps_platformChanged()
+        void CDistributionInfoComponent::platformChanged()
         {
             this->saveSettings();
 

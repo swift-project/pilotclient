@@ -51,7 +51,7 @@ namespace BlackGui
 
         signals:
             //! Distribution info loaded
-            void distributionInfoAvailable(bool success);
+            void distributionInfoAvailable();
 
             //! New platfrom or channel
             void selectionChanged();
@@ -61,15 +61,15 @@ namespace BlackGui
             QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
             QString m_newVersionAvailable; //!< new version number if any
             BlackMisc::Db::CDistribution m_currentDistribution; //!< current distribution
-            BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionsInfo> m_distributionsInfo { this, &CDistributionInfoComponent::changedDistributionCache }; //!< version cache
+            BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionsInfo> m_distributionsInfo { this, &CDistributionInfoComponent::changedDistributionInfo }; //!< version cache
             BlackMisc::CSetting<BlackCore::Application::TDistribution> m_distributionSetting { this }; //!< channel/platform selected
-            BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CDistributionInfoComponent::triggerInfoAvailableSignal, 10000, 2 };
+            BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CDistributionInfoComponent::distributionInfoAvailable, 10000, 2 };
 
             //! Load latest version
             void requestLoadOfSetup();
 
             //! Loaded latest version
-            void loadedDistributionInfo(bool success);
+            void changedDistributionInfo();
 
             //! Channel has been changed
             void channelChanged();
@@ -77,17 +77,11 @@ namespace BlackGui
             //! Platform changed
             void platformChanged();
 
-            //! Cache values have been changed
-            void changedDistributionCache();
-
             //! Install XSwiftBus dialog
             void installXSwiftBusDialog();
 
             //! Save the current settings
             void saveSettings();
-
-            //! Trigger the CDistributionInfoComponent::distributionInfoAvailable signal
-            void triggerInfoAvailableSignal();
 
             //! Selected platform from UI or guessed platform
             QString getSelectedOrGuessedPlatform() const;

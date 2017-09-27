@@ -145,16 +145,9 @@ void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
     }
 }
 
-void CSwiftLauncher::ps_distributionInfoAvailable(bool success)
+void CSwiftLauncher::ps_distributionInfoAvailable()
 {
-    if (success)
-    {
-        this->setHeaderInfo(ui->comp_DistributionInfo->getNewAvailableVersionForSelection());
-    }
-    else
-    {
-        this->setHeaderInfo("");
-    }
+    this->setHeaderInfo(ui->comp_DistributionInfo->getNewAvailableVersionForSelection());
     this->loadLatestNews();
     this->loadAbout();
 }
