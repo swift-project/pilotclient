@@ -9,6 +9,7 @@
 
 #include "downloadandinstalldialog.h"
 #include "ui_downloadandinstalldialog.h"
+#include "blackgui/guiapplication.h"
 #include <QPushButton>
 #include <QDesktopServices>
 
@@ -16,8 +17,6 @@ using namespace BlackMisc::Db;
 
 namespace BlackGui
 {
-    class COverlayMessagesFrame;
-
     namespace Components
     {
         CDownloadAndInstallDialog::CDownloadAndInstallDialog(QWidget *parent) :
@@ -55,6 +54,13 @@ namespace BlackGui
             return QDialog::Rejected;
         }
 
+        bool CDownloadAndInstallDialog::event(QEvent *event)
+        {
+            if (event->type() != QEvent::EnterWhatsThisMode) { return QDialog::event(event); }
+            QTimer::singleShot(0, this, &CDownloadAndInstallDialog::requestHelp);
+            return true;
+        }
+
         void CDownloadAndInstallDialog::onDontShowAgain(bool dontShowAgain)
         {
             m_setting.setAndSave(!dontShowAgain);
@@ -64,6 +70,11 @@ namespace BlackGui
         {
             const bool nv = ui->comp_DistributionInfo->isNewVersionAvailable();
             ui->bb_DownloadInstallDialog->button(QDialogButtonBox::Ok)->setEnabled(nv);
+        }
+
+        void CDownloadAndInstallDialog::requestHelp()
+        {
+            if (sGui) { sGui->showHelp(this); }
         }
     } // ns
 } // ns

@@ -41,6 +41,9 @@ namespace BlackGui
             //! \copydoc QDialog::exec
             virtual int exec() override;
 
+            //! \copydoc QObject::event
+            virtual bool event(QEvent *event) override;
+
         private:
             QScopedPointer<Ui::CDownloadAndInstallDialog> ui;
             BlackMisc::CSetting<BlackGui::Settings::TUpdateNotificationSettings> m_setting { this }; //!< show again?
@@ -50,6 +53,9 @@ namespace BlackGui
 
             //! Selection in distribution component changed
             void selectionChanged();
+
+            //! Request context help
+            void requestHelp();
         };
     } // ns
 } // ns
