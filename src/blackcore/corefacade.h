@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_COREFACADE_H
 #define BLACKCORE_COREFACADE_H
 
+#include "corefacadeconfig.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/vatsim/vatsimsettings.h"
@@ -24,12 +25,8 @@
 #include <QString>
 
 namespace BlackMisc { class CDBusServer; }
-
 namespace BlackCore
 {
-    // forward declaration, see review
-    // https://dev.vatsim-germany.org/boards/22/topics/1350?r=1359#message-1359
-    class CCoreFacadeConfig;
     namespace Context
     {
         class CContextApplication;
@@ -65,6 +62,9 @@ namespace BlackCore
 
         //! DBus server (if applicable)
         const BlackMisc::CDBusServer *getDBusServer() const { return this->m_dbusServer; }
+
+        //! In case connection between DBus parties is lost, try to reconnect
+        bool tryToReconnectWithDBus();
 
         //! DBus connection (if applicable)
         const QDBusConnection &getDBusConnection() const { return this->m_dbusConnection; }
@@ -150,7 +150,7 @@ namespace BlackCore
         const Context::CContextSimulator *getCContextSimulator() const;
 
         //! Init
-        void init(const CCoreFacadeConfig &config);
+        void init();
 
         //! Remote application context, indicates distributed environment
         bool hasRemoteApplicationContext() const;
@@ -165,7 +165,8 @@ namespace BlackCore
     private:
         bool m_initalized = false;   //!< flag if already initialized
         bool m_shuttingDown = false; //!< flag if shutting down
-        BlackMisc::CData<Data::TLauncherSetup> m_launcherSetup { this };
+        const CCoreFacadeConfig m_config; //!< used config
+        BlackMisc::CData<Data::TLauncherSetup> m_launcherSetup { this }; //!< updating DBus
 
         // DBus
         BlackMisc::CDBusServer *m_dbusServer = nullptr;

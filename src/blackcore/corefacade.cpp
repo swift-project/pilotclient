@@ -48,12 +48,22 @@ using namespace BlackCore::Context;
 
 namespace BlackCore
 {
-    CCoreFacade::CCoreFacade(const CCoreFacadeConfig &config, QObject *parent) : QObject(parent)
+    CCoreFacade::CCoreFacade(const CCoreFacadeConfig &config, QObject *parent) :
+        QObject(parent), m_config(config)
     {
-        this->init(config);
+        this->init();
     }
 
-    void CCoreFacade::init(const CCoreFacadeConfig &config)
+    bool CCoreFacade::tryToReconnectWithDBus()
+    {
+        if (m_shuttingDown) { return false; }
+        if (!m_config.requiresDBusConnection()) { return false; }
+        m_initalized = false;
+        this->init();
+        return true;
+    }
+
+    void CCoreFacade::init()
     {
         if (m_initalized || m_shuttingDown) { return; }
 
@@ -63,9 +73,9 @@ namespace BlackCore
 
         // either use explicit setting or last value
         QString dbusAddress;
-        if (config.hasDBusAddress())
+        if (m_config.hasDBusAddress())
         {
-            dbusAddress = config.getDBusAddress();
+            dbusAddress = m_config.getDBusAddress();
             m_launcherSetup.setProperty(CLauncherSetup::IndexDBusAddress, dbusAddress);
         }
         else
@@ -75,8 +85,8 @@ namespace BlackCore
         }
 
         // DBus
-        if (config.requiresDBusSever()) { this->initDBusServer(dbusAddress); }
-        if (config.requiresDBusConnection())
+        if (m_config.requiresDBusSever()) { this->initDBusServer(dbusAddress); }
+        if (m_config.requiresDBusConnection())
         {
             this->initDBusConnection(dbusAddress);
             if (!m_dbusConnection.isConnected())
@@ -91,19 +101,24 @@ namespace BlackCore
         times.insert("DBus", time.restart());
 
         // contexts
-        m_contextApplication = IContextApplication::create(this, config.getModeApplication(), m_dbusServer, m_dbusConnection);
+        if (m_contextApplication) { m_contextApplication->deleteLater(); }
+        m_contextApplication = IContextApplication::create(this, m_config.getModeApplication(), m_dbusServer, m_dbusConnection);
         times.insert("Application", time.restart());
 
-        m_contextAudio = IContextAudio::create(this, config.getModeAudio(), m_dbusServer, m_dbusConnection);
+        if (m_contextAudio) { m_contextAudio->deleteLater(); }
+        m_contextAudio = IContextAudio::create(this, m_config.getModeAudio(), m_dbusServer, m_dbusConnection);
         times.insert("Audio", time.restart());
 
-        m_contextOwnAircraft = IContextOwnAircraft::create(this, config.getModeOwnAircraft(), m_dbusServer, m_dbusConnection);
+        if (m_contextOwnAircraft) { m_contextOwnAircraft->deleteLater(); }
+        m_contextOwnAircraft = IContextOwnAircraft::create(this, m_config.getModeOwnAircraft(), m_dbusServer, m_dbusConnection);
         times.insert("Own aircraft", time.restart());
 
-        m_contextNetwork = IContextNetwork::create(this, config.getModeNetwork(), m_dbusServer, m_dbusConnection);
+        if (m_contextNetwork) { m_contextNetwork->deleteLater(); }
+        m_contextNetwork = IContextNetwork::create(this, m_config.getModeNetwork(), m_dbusServer, m_dbusConnection);
         times.insert("Network", time.restart());
 
-        m_contextSimulator = IContextSimulator::create(this, config.getModeSimulator(), m_dbusServer, m_dbusConnection);
+        if (m_contextSimulator) { m_contextSimulator->deleteLater(); }
+        m_contextSimulator = IContextSimulator::create(this, m_config.getModeSimulator(), m_dbusServer, m_dbusConnection);
         times.insert("Simulator", time.restart());
 
         // checks --------------
@@ -148,8 +163,8 @@ namespace BlackCore
 
     void CCoreFacade::initDBusServer(const QString &dBusAddress)
     {
-        if (m_dbusServer) { return; }
         Q_ASSERT(!dBusAddress.isEmpty());
+        if (m_dbusServer) { m_dbusServer->deleteLater(); } // delete if there was an existing one
         m_dbusServer = new CDBusServer(dBusAddress, this);
         CLogMessage(this).info("DBus server on address: %1") << dBusAddress;
     }
@@ -317,15 +332,19 @@ namespace BlackCore
         if (m_initDBusConnection) { return; }
         if (address.isEmpty() || address == CDBusServer::sessionBusAddress())
         {
+            QDBusConnection::disconnectFromBus(m_dbusConnection.name());
             m_dbusConnection = QDBusConnection::sessionBus();
         }
         else if (address == CDBusServer::systemBusAddress())
         {
-            m_dbusConnection = QDBusConnection::sessionBus();
+            QDBusConnection::disconnectFromBus(m_dbusConnection.name());
+            m_dbusConnection = QDBusConnection::systemBus();
         }
         else
         {
-            m_dbusConnection = QDBusConnection::connectToPeer(address, "BlackBoxRuntime");
+            const QString name("BlackBoxRuntime");
+            QDBusConnection::disconnectFromPeer(name);
+            m_dbusConnection = QDBusConnection::connectToPeer(address, name);
         }
     }
 
