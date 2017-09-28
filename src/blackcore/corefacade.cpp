@@ -138,7 +138,8 @@ namespace BlackCore
     bool CCoreFacade::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         bool handled = false;
-        if (this->getIContextAudio()) { handled = handled || this->getIContextAudio()->parseCommandLine(commandLine, originator); }
+        // audio can be empty depending on whre it runs
+        if (this->getIContextAudio() && !this->getIContextAudio()->isEmptyObject()) { handled = handled || this->getIContextAudio()->parseCommandLine(commandLine, originator); }
         if (this->getIContextNetwork()) { handled = handled || this->getIContextNetwork()->parseCommandLine(commandLine, originator); }
         if (this->getIContextOwnAircraft()) { handled = handled || this->getIContextOwnAircraft()->parseCommandLine(commandLine, originator); }
         if (this->getIContextSimulator()) { handled = handled || this->getIContextSimulator()->parseCommandLine(commandLine, originator); }
