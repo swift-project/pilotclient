@@ -36,6 +36,7 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+#include <QMessageBox>
 
 class QCloseEvent;
 class QEvent;
@@ -214,20 +215,6 @@ void SwiftGuiStd::ps_loginRequested()
     }
 }
 
-bool SwiftGuiStd::isContextNetworkAvailableCheck()
-{
-    if (m_contextNetworkAvailable) return true;
-    CLogMessage(this).error("Network context not available, no updates this time");
-    return false;
-}
-
-bool SwiftGuiStd::isContextAudioAvailableCheck()
-{
-    if (m_contextAudioAvailable) return true;
-    CLogMessage(this).error("Audio context not available");
-    return false;
-}
-
 void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
     if (!m_init) { return; }
@@ -288,10 +275,8 @@ void SwiftGuiStd::ps_handleTimerBasedUpdates()
 void SwiftGuiStd::setContextAvailability()
 {
     const bool corePreviouslyAvailable = m_coreAvailable;
-    if (sGui &&
-            sGui->getIContextApplication() &&
-            !sGui->isShuttingDown() &&
-            !sGui->getIContextApplication()->isEmptyObject())
+    const bool isShuttingDown = !sGui || sGui->isShuttingDown();
+    if (!isShuttingDown && sGui->getIContextApplication() && !sGui->getIContextApplication()->isEmptyObject())
     {
         // ping to check if core is still alive
         m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
@@ -300,7 +285,19 @@ void SwiftGuiStd::setContextAvailability()
     {
         m_coreAvailable = false;
     }
-
+    if (isShuttingDown) { return; }
+    if (m_coreAvailable && m_coreFailures > 0)
+    {
+        m_coreFailures--;
+    }
+    else if (!m_coreAvailable && m_coreFailures < MaxCoreFailures)
+    {
+        m_coreFailures++;
+    }
+    else if (!m_coreAvailable && !m_displayingDBusReconnect)
+    {
+        this->displayDBusReconnectDialog();
+    }
     m_contextNetworkAvailable = m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
     m_contextAudioAvailable = m_coreAvailable && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
 
@@ -442,4 +439,27 @@ void SwiftGuiStd::displayConsole()
 void SwiftGuiStd::displayLog()
 {
     ui->comp_MainInfoArea->displayLog();
+}
+
+void SwiftGuiStd::displayDBusReconnectDialog()
+{
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui->getCoreFacade()) { return; }
+    if (m_displayingDBusReconnect) { return; }
+    m_displayingDBusReconnect = true;
+    QMessageBox msgBox(this);
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.setText("swift core not reachable.");
+    msgBox.setInformativeText("Do you want to try to reconnect? 'Abort' will close the GUI.");
+    msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Abort);
+    msgBox.setDefaultButton(QMessageBox::Retry);
+    const int ret = msgBox.exec();
+    m_displayingDBusReconnect = false;
+    m_coreFailures = 0;
+    if (ret == QMessageBox::Abort)
+    {
+        this->close();
+        return;
+    }
+    sGui->getCoreFacade()->tryToReconnectWithDBus();
 }

@@ -111,10 +111,13 @@ private:
     bool                        m_init = false;
 
     // contexts
-    bool m_coreAvailable           = false;
-    bool m_contextNetworkAvailable = false;
-    bool m_contextAudioAvailable   = false;
-    QTimer *m_timerContextWatchdog = nullptr;                //!< core available?
+    static constexpr int MaxCoreFailures  = 5; //!< Failures counted before reconnecting
+    int  m_coreFailures            = 0;        //!< failed access to core
+    bool m_coreAvailable           = false;    //!< core already available?
+    bool m_contextNetworkAvailable = false;    //!< network context available?
+    bool m_contextAudioAvailable   = false;    //!< audio context available?
+    bool m_displayingDBusReconnect = false;    //!< currently displaying reconnect dialog
+    QTimer *m_timerContextWatchdog = nullptr;  //!< core available?
     BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
 
     //! GUI status update
@@ -137,12 +140,6 @@ private:
 
     //! Graceful shutdown
     void performGracefulShutdown();
-
-    //! Context network availability check, otherwise status message
-    bool isContextNetworkAvailableCheck();
-
-    //! Context voice availability check, otherwise status message
-    bool isContextAudioAvailableCheck();
 
     //! Audio device lists
     void setAudioDeviceLists();
@@ -173,6 +170,9 @@ private:
     //! Display log
     void displayLog();
 
+    //! Display a reconnect dialog
+    void displayDBusReconnectDialog();
+
 private slots:
     //
     // Data received related slots
@@ -185,8 +185,8 @@ private slots:
     void ps_displayStatusMessageInGui(const BlackMisc::CStatusMessage &statusMessage);
 
     //! Connection status changed
-    //! \param from  old status, as int so it is compliant with DBus
-    //! \param to    new status, as int so it is compliant with DBus
+    //! \param from old status
+    //! \param to   new status
     void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
     //

@@ -34,7 +34,7 @@ using namespace BlackMisc::Audio;
 
 bool SwiftGuiStd::ps_reloadOwnAircraft()
 {
-    if (!this->isContextNetworkAvailableCheck()) { return false; }
+    if (!this->m_contextNetworkAvailable) { return false; }
 
     // check for changed aircraft
     bool changed = false;
