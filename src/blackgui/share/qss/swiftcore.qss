@@ -1,4 +1,4 @@
-#le_CommandLineInput {
+#lep_CommandLineInput {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
   margin-bottom: 5px;
   padding: 3px;

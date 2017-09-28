@@ -57,6 +57,10 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     initDBusMode();
     initMenus();
 
+    // command line
+    ui->lep_CommandLineInput->setIdentifier(this->identifier());
+    connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
+
     if (sGui->isParserOptionSet("start")) { startCore(sGui->getCmdDBusAddressValue()); }
 }
 
@@ -173,9 +177,6 @@ void CSwiftCore::startCore(const QString &dBusAdress)
     ui->pb_StopCore->setEnabled(true);
     ui->gb_DBusMode->setDisabled(true);
     sGui->processEventsToRefreshGui();
-
-    // context
-    connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
 }
 
 void CSwiftCore::stopCore()

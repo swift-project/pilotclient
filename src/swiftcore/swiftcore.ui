@@ -125,7 +125,7 @@ QTextEdit {
      </widget>
     </item>
     <item row="4" column="0" colspan="3">
-     <widget class="BlackGui::Components::CCommandInput" name="le_CommandLineInput"/>
+     <widget class="BlackGui::Components::CCommandInput" name="lep_CommandLineInput"/>
     </item>
     <item row="3" column="0" colspan="3">
      <widget class="BlackGui::Components::CCoreInfoAreaComponent" name="comp_InfoArea" native="true"/>
