@@ -74,12 +74,6 @@ namespace BlackGui
             //! Button was clicked
             void buttonSelected();
 
-            //! Command line entered
-            void onCommandEntered();
-
-            //! Display help as HTML
-            void setCommandTooltip();
-
             //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
             void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 

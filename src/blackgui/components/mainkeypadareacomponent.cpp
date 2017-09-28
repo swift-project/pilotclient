@@ -64,15 +64,13 @@ namespace BlackGui
             connect(ui->pb_Audio, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
 
             // command line
-            this->connect(ui->lep_CommandLineInput, &QLineEdit::returnPressed, this, &CMainKeypadAreaComponent::onCommandEntered);
+            ui->lep_CommandLineInput->setIdentifier(m_identifier);
+            this->connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, this, &CMainKeypadAreaComponent::commandEntered);
 
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ownAircraftCockpitChanged);
             connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CMainKeypadAreaComponent::muteChanged);
             connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
-
-            this->setCommandTooltip();
-            QTimer::singleShot(15000, this, &CMainKeypadAreaComponent::setCommandTooltip);
         }
 
         CMainKeypadAreaComponent::~CMainKeypadAreaComponent()
@@ -159,23 +157,6 @@ namespace BlackGui
                 ui->pb_Connect->setText("Connect");
                 ui->pb_Connect->setStyleSheet("background-color: ");
             }
-        }
-
-        void CMainKeypadAreaComponent::onCommandEntered()
-        {
-            const QString c(ui->lep_CommandLineInput->getLastEnteredLineFormatted());
-            if (c.isEmpty()) { return; }
-            if (c.toLower().trimmed().contains("help"))
-            {
-                this->setCommandTooltip();
-                return;
-            }
-            emit this->commandEntered(c, m_identifier);
-        }
-
-        void CMainKeypadAreaComponent::setCommandTooltip()
-        {
-            ui->lep_CommandLineInput->setToolTip(sGui->getIContextApplication()->dotCommandsHtmlHelp());
         }
 
         void CMainKeypadAreaComponent::ownAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)

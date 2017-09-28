@@ -443,7 +443,7 @@
        </widget>
       </item>
       <item row="0" column="0" colspan="5">
-       <widget class="BlackGui::CLineEditHistory" name="lep_CommandLineInput">
+       <widget class="BlackGui::Components::CCommandInput" name="lep_CommandLineInput">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -465,9 +465,10 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CLineEditHistory</class>
+   <class>BlackGui::Components::CCommandInput</class>
    <extends>QLineEdit</extends>
-   <header>blackgui/lineedithistory.h</header>
+   <header>blackgui/components/commandinput.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
