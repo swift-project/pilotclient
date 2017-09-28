@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_COMMANDINPUT_H
 #define BLACKGUI_COMPONENTS_COMMANDINPUT_H
 
+#include "blackgui/lineedithistory.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
@@ -26,9 +27,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        //! Specialized LineEdit for command inputs
+        //! Specialized line edit for command inputs
         class BLACKGUI_EXPORT CCommandInput :
-            public QLineEdit,
+            public BlackGui::CLineEditHistory,
             public BlackMisc::CIdentifiable
         {
             Q_OBJECT
@@ -38,15 +39,18 @@ namespace BlackGui
             CCommandInput(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CCommandInput() {}
+            virtual ~CCommandInput() {}
 
         signals:
             //! Command was entered
             void commandEntered(const QString &command, const BlackMisc::CIdentifier &originator);
 
-        private slots:
+        private:
             //! Basic command validation
-            void ps_validateCommand();
+            void validateCommand();
+
+            //! Command tooltip
+            void setCommandTooltip();
         };
     } // ns
 } // ns

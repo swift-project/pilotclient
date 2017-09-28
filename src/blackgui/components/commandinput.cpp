@@ -8,8 +8,9 @@
  */
 
 #include "blackgui/components/commandinput.h"
-
-class QWidget;
+#include "blackgui/guiapplication.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackmisc/simplecommandparser.h"
 
 using namespace BlackMisc;
 
@@ -18,20 +19,42 @@ namespace BlackGui
     namespace Components
     {
         CCommandInput::CCommandInput(QWidget *parent) :
-            QLineEdit(parent),
+            CLineEditHistory(parent),
             CIdentifiable(this)
         {
-            connect(this, &CCommandInput::returnPressed, this, &CCommandInput::ps_validateCommand);
+            if (this->placeholderText().isEmpty())
+            {
+                this->setPlaceholderText(".dot commands");
+            }
+
+            connect(this, &CCommandInput::returnPressed, this, &CCommandInput::validateCommand);
+
+            // set tooltip: shorty after, and later when application is initialized
+            QTimer::singleShot(5000, this, &CCommandInput::setCommandTooltip);
+            QTimer::singleShot(30000, this, &CCommandInput::setCommandTooltip);
         }
 
-        void CCommandInput::ps_validateCommand()
+        void CCommandInput::validateCommand()
         {
-            QString commandLine(this->text().trimmed());
-            this->setText(QString());
-            if (commandLine.startsWith('.'))
+            const QString c(this->getLastEnteredLineFormatted());
+            if (c.isEmpty()) { return; }
+            if (c.toLower().contains("help"))
             {
-                emit commandEntered(commandLine, identifier());
+                this->setCommandTooltip();
+                return;
             }
+            if (c.startsWith('.'))
+            {
+                emit this->commandEntered(c, this->identifier());
+            }
+        }
+
+        void CCommandInput::setCommandTooltip()
+        {
+            const bool context = (sGui && sGui->getIContextApplication());
+            this->setToolTip(context ?
+                             sGui->getIContextApplication()->dotCommandsHtmlHelp() :
+                             CSimpleCommandParser::commandsHtmlHelp());
         }
     } // ns
 } // ns

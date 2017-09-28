@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_LINEEDITHISTORY_H
 #define BLACKGUI_LINEEDITHISTORY_H
 
+#include "blackgui/blackguiexport.h"
 #include <QLineEdit>
 #include <QStringList>
 
@@ -20,7 +21,7 @@ namespace BlackGui
     /*!
      * Line edit with history
      */
-    class CLineEditHistory : public QLineEdit
+    class BLACKGUI_EXPORT CLineEditHistory : public QLineEdit
     {
     public:
         //! Constructors
@@ -41,4 +42,5 @@ namespace BlackGui
         int m_position = 0;
     };
 } // ns
+
 #endif // guard
