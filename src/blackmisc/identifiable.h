@@ -32,6 +32,9 @@ namespace BlackMisc
         //! Get identifier
         const CIdentifier &identifier() const { return m_identifier; }
 
+        //! Set identifier, allows to set an external identifier
+        void setIdentifier(const CIdentifier &identifier) { m_identifier = identifier; }
+
         //! Identifier with current timestamp
         CIdentifier getCurrentTimestampIdentifier() const;
 
