@@ -315,13 +315,17 @@ void SwiftGuiStd::setContextAvailability()
 
 void SwiftGuiStd::updateGuiStatusInformation()
 {
-    const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
     QString network("unavailable");
-    if (m_contextNetworkAvailable)
+    if (m_coreAvailable)
     {
-        bool dbus = !sGui->getIContextNetwork()->isUsingImplementingObject();
-        network = dbus ? now : "local";
-        ui->comp_InfoBarStatus->setDBusStatus(dbus);
+        const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
+        bool dBus = sGui->getCoreFacadeConfig().requiresDBusConnection();
+        network = dBus ? now : "local";
+        ui->comp_InfoBarStatus->setDBusStatus(dBus && m_coreAvailable);
+    }
+    else
+    {
+        ui->comp_InfoBarStatus->setDBusStatus(false);
     }
 
     // update status fields
