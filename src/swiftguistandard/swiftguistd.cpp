@@ -242,6 +242,14 @@ void SwiftGuiStd::onConnectionTerminated()
     this->updateGuiStatusInformation();
 }
 
+void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
+{
+    this->updateGuiStatusInformation();
+    this->displayInOverlayWindow(CStatusMessage(
+                                     this, CStatusMessage::SeverityError,
+                                     kickMessage.isEmpty() ? "You have been kicked from the network" : kickMessage));
+}
+
 void SwiftGuiStd::onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
 {
     Q_UNUSED(from);

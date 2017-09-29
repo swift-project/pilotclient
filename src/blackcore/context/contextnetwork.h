@@ -144,6 +144,9 @@ namespace BlackCore
             //! Terminated connection
             void connectionTerminated();
 
+            //! User has been kicked from network
+            void kicked(const QString &kickMessage);
+
             //! Connection status changed
             void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 

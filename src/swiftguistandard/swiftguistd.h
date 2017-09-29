@@ -210,6 +210,9 @@ private:
     //! Terminated connection
     void onConnectionTerminated();
 
+    //! Kicked from network
+    void onKickedFromNetwork(const QString &kickMessage);
+
     //! Update timer
     void handleTimerBasedUpdates();
 

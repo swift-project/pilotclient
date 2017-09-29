@@ -123,7 +123,7 @@ namespace BlackCore
             virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
             //! @}
 
-            //! Cmd. line options this library can handle
+            //! Command line options this library can handle
             static const QList<QCommandLineOption> &getCmdLineOptions();
 
             static int const c_positionTimeOffsetMsec = 6000;           //!< offset time for received position updates
@@ -206,18 +206,18 @@ namespace BlackCore
             };
 
             QScopedPointer<PCSBClient, VatlibQScopedPointerDeleter> m_net;
-            LoginMode                      m_loginMode;
-            VatConnectionStatus            m_status;
-            BlackMisc::Network::CServer    m_server;
-            QTextCodec                    *m_fsdTextCodec = nullptr;
-            BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;
+            LoginMode                    m_loginMode;
+            VatConnectionStatus          m_status;
+            BlackMisc::Network::CServer  m_server;
+            QTextCodec                  *m_fsdTextCodec = nullptr;
+            BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;             //!< used simulator
             BlackMisc::Aviation::CCallsign              m_ownCallsign;               //!< "buffered callsign", as this must not change when connected
             BlackMisc::Aviation::CAircraftIcaoCode      m_ownAircraftIcaoCode;       //!< "buffered icao", as this must not change when connected
             BlackMisc::Aviation::CAirlineIcaoCode       m_ownAirlineIcaoCode;        //!< "buffered icao", as this must not change when connected
             QString                                     m_ownLiveryDescription;      //!< "buffered livery", as this must not change when connected
-            BlackMisc::Aviation::CCallsignSet           m_interimPositionReceivers;
-            BlackMisc::Aviation::CAircraftParts         m_sentAircraftConfig;
-            CTokenBucket                                m_tokenBucket;
+            BlackMisc::Aviation::CCallsignSet           m_interimPositionReceivers;  //!< all aircraft receiving interim positions
+            BlackMisc::Aviation::CAircraftParts         m_sentAircraftConfig;        //!< aircraft parts sent
+            CTokenBucket                                m_tokenBucket;               //!< used with aircraft parts messages
 
             QTimer m_scheduledConfigUpdate;
             QTimer m_processingTimer;

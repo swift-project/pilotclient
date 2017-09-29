@@ -67,6 +67,7 @@ namespace BlackCore
             // 1. Init by "network driver"
             m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);
             connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::ps_fsdConnectionStatusChanged);
+            connect(m_network, &INetwork::kicked, this, &CContextNetwork::kicked);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_checkForSupervisiorTextMessage);
             connect(m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);

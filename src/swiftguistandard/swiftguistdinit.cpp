@@ -124,6 +124,7 @@ void SwiftGuiStd::init()
     connect(sGui->getWebDataServices(), &CWebDataServices::sharedInfoObjectsRead, this, &SwiftGuiStd::sharedInfoObjectsLoaded);
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::onConnectionTerminated);
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::onConnectionStatusChanged);
+    connect(sGui->getIContextNetwork(), &IContextNetwork::kicked, this, &SwiftGuiStd::onKickedFromNetwork);
     connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
     connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
     connect(m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
