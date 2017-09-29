@@ -451,19 +451,26 @@ void SwiftGuiStd::displayDBusReconnectDialog()
     if (!sGui->getCoreFacade()) { return; }
     if (m_displayingDBusReconnect) { return; }
     m_displayingDBusReconnect = true;
+    const QString dBusAddress = sGui->getCoreFacade()->getDBusAddress();
+    static const QString informativeText("Do you want to try to reconnect? 'Abort' will close the GUI. DBus: '%1'");
     QMessageBox msgBox(this);
     msgBox.setIcon(QMessageBox::Critical);
-    msgBox.setText("swift core not reachable.");
-    msgBox.setInformativeText("Do you want to try to reconnect? 'Abort' will close the GUI.");
+    msgBox.setText("swift core not reachable!");
+    msgBox.setInformativeText(informativeText.arg(dBusAddress));
     msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Abort);
     msgBox.setDefaultButton(QMessageBox::Retry);
     const int ret = msgBox.exec();
-    m_displayingDBusReconnect = false;
-    m_coreFailures = 0;
     if (ret == QMessageBox::Abort)
     {
-        this->close();
+        m_coreFailures = 0;
+        sGui->gracefulShutdown();
+        CGuiApplication::exit(EXIT_FAILURE);
         return;
     }
-    sGui->getCoreFacade()->tryToReconnectWithDBus();
+
+    m_displayingDBusReconnect = false;
+    CStatusMessage msg = sGui->getCoreFacade()->tryToReconnectWithDBus();
+    if (msg.isSuccess()) { m_coreFailures = 0; }
+    msg.clampSeverity(CStatusMessage::SeverityWarning);
+    CLogMessage::preformatted(msg);
 }

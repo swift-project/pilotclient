@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/context/contextapplicationimpl.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextaudioimpl.h"
@@ -54,13 +55,25 @@ namespace BlackCore
         this->init();
     }
 
-    bool CCoreFacade::tryToReconnectWithDBus()
+    CStatusMessage CCoreFacade::tryToReconnectWithDBus()
     {
-        if (m_shuttingDown) { return false; }
-        if (!m_config.requiresDBusConnection()) { return false; }
+        if (m_shuttingDown) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "Shutdown"); }
+        if (!m_config.requiresDBusConnection()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "Not DBus based"); }
+        const QString dBusAddress = this->getDBusAddress();
+        if (dBusAddress.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "Not DBus based, no address"); }
+        QString connectMsg;
+        if (!CContextApplicationProxy::isContextResponsive(dBusAddress, connectMsg))
+        {
+            return CStatusMessage(this, CStatusMessage::SeverityError,
+                                  "Cannot connect DBus at '" + dBusAddress + "', reason: " + connectMsg);
+        }
+
+        // re-init
         m_initalized = false;
         this->init();
-        return true;
+
+        // success
+        return CStatusMessage(this, CStatusMessage::SeverityInfo, "Re-initialized via '%1'") << dBusAddress;
     }
 
     void CCoreFacade::init()
@@ -72,17 +85,8 @@ namespace BlackCore
         registerMetadata();
 
         // either use explicit setting or last value
-        QString dbusAddress;
-        if (m_config.hasDBusAddress())
-        {
-            dbusAddress = m_config.getDBusAddress();
-            m_launcherSetup.setProperty(CLauncherSetup::IndexDBusAddress, dbusAddress);
-        }
-        else
-        {
-            CLauncherSetup setup = m_launcherSetup.get();
-            dbusAddress = setup.getDBusAddress();
-        }
+        const QString dbusAddress = this->getDBusAddress();
+        m_launcherSetup.setProperty(CLauncherSetup::IndexDBusAddress, dbusAddress);
 
         // DBus
         if (m_config.requiresDBusSever()) { this->initDBusServer(dbusAddress); }
@@ -258,6 +262,21 @@ namespace BlackCore
             Q_ASSERT(c);
             times.insert("Post setup, connects audio", time.restart());
         }
+    }
+
+    QString CCoreFacade::getDBusAddress() const
+    {
+        QString dbusAddress;
+        if (m_config.hasDBusAddress())
+        {
+            dbusAddress = m_config.getDBusAddress();
+        }
+        else
+        {
+            const CLauncherSetup setup = m_launcherSetup.get();
+            dbusAddress = setup.getDBusAddress();
+        }
+        return dbusAddress;
     }
 
     void CCoreFacade::gracefulShutdown()

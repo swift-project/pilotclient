@@ -64,7 +64,7 @@ namespace BlackCore
         const BlackMisc::CDBusServer *getDBusServer() const { return this->m_dbusServer; }
 
         //! In case connection between DBus parties is lost, try to reconnect
-        bool tryToReconnectWithDBus();
+        BlackMisc::CStatusMessage tryToReconnectWithDBus();
 
         //! DBus connection (if applicable)
         const QDBusConnection &getDBusConnection() const { return this->m_dbusConnection; }
@@ -149,8 +149,8 @@ namespace BlackCore
         //! \remarks only applicable for local object
         const Context::CContextSimulator *getCContextSimulator() const;
 
-        //! Init
-        void init();
+        //! DBus address if any
+        QString getDBusAddress() const;
 
         //! Remote application context, indicates distributed environment
         bool hasRemoteApplicationContext() const;
@@ -181,6 +181,9 @@ namespace BlackCore
         Context::IContextNetwork     *m_contextNetwork     = nullptr;
         Context::IContextOwnAircraft *m_contextOwnAircraft = nullptr;
         Context::IContextSimulator   *m_contextSimulator   = nullptr;
+
+        //! Init
+        void init();
 
         //! initialization of DBus connection (where applicable)
         void initDBusConnection(const QString &address);
