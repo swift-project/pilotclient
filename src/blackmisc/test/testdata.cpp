@@ -81,7 +81,8 @@ namespace BlackMisc
 
         const CFlightPlan &CTestData::getFlightPlan()
         {
-            static const CFlightPlan fp("T/A320/F", "EDDF", "EDDM", "EDDN",
+            static const CFlightPlan fp(CCallsign("DAMBZ", CCallsign::Aircraft),
+                                        "T/A320/F", "EDDF", "EDDM", "EDDN",
                                         QDateTime::currentDateTimeUtc(), QDateTime::currentDateTime().addSecs(600),
                                         CTime(1.0, CTimeUnit::h()), CTime(2.0, CTimeUnit::h()),
                                         CAltitude(10000, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CSpeed(400, CSpeedUnit::kts()), CFlightPlan::IFR,

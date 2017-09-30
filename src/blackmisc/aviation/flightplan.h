@@ -12,15 +12,17 @@
 #ifndef BLACKMISC_AVIATION_FLIGHTPLAN_H
 #define BLACKMISC_AVIATION_FLIGHTPLAN_H
 
-#include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/metaclass.h"
+#include "airporticaocode.h"
+#include "altitude.h"
+#include "callsign.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QDateTime>
 #include <QMetaType>
@@ -33,7 +35,9 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object for a flight plan
-        class BLACKMISC_EXPORT CFlightPlan : public CValueObject<CFlightPlan>
+        class BLACKMISC_EXPORT CFlightPlan :
+            public CValueObject<CFlightPlan>,
+            public ITimestampBased
         {
         public:
             //! Flight rules (VFR or IFR)
@@ -45,6 +49,16 @@ namespace BlackMisc
                 DVFR        //!< Defense VFR
             };
 
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexCallsign = CPropertyIndex::GlobalIndexCFlightPlan,
+                IndexOriginAirportIcao,
+                IndexDestinationAirportIcao,
+                IndexAlternateAirportIcao,
+                IndexRemarks
+            };
+
             static constexpr int MaxRemarksLength = 150; //!< Max remarks length
             static constexpr int MaxRouteLength = 150; //!< Max route length
 
@@ -52,9 +66,13 @@ namespace BlackMisc
             CFlightPlan();
 
             //! Constructor
-            CFlightPlan(const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao,
+            CFlightPlan(const CCallsign &callsign,
+                        const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao,
                         const QDateTime &takeoffTimePlanned, const QDateTime &takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
                         const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks);
+
+            //! Callsign (of aircraft)
+            void setCallsign(const CCallsign &callsign);
 
             //! Set ICAO aircraft equipment code string (e.g. "T/A320/F")
             void setEquipmentIcao(const QString &equipmentIcao) { m_equipmentIcao = equipmentIcao; }
@@ -114,7 +132,13 @@ namespace BlackMisc
             void setRemarks(const QString &remarks) { m_remarks = remarks.trimmed().left(MaxRemarksLength).toUpper(); }
 
             //! When last sent
-            void setWhenLastSentOrLoaded(const QDateTime &dateTime) { m_lastSentOrLoaded = dateTime; }
+            void setWhenLastSentOrLoaded(const QDateTime &dateTime) { this->setUtcTimestamp(dateTime); }
+
+            //! Aircraft callsign
+            const CCallsign &getCallsign() const { return m_callsign; }
+
+            //! Has callsign?
+            bool hasCallsign() const { return !m_callsign.isEmpty(); }
 
             //! Get ICAO aircraft equipment code string
             const QString &getEquipmentIcao() const { return m_equipmentIcao; }
@@ -165,19 +189,22 @@ namespace BlackMisc
             const QString &getRoute() const { return m_route; }
 
             //! When last sent
-            const QDateTime &whenLastSentOrLoaded() const { return m_lastSentOrLoaded; }
+            const QDateTime whenLastSentOrLoaded() const { return this->getUtcTimestamp() ; }
 
             //! Flight plan already sent
-            bool wasSentOrLoaded() const { return m_lastSentOrLoaded.isValid() && !m_lastSentOrLoaded.isNull(); }
+            bool wasSentOrLoaded() const { return this->hasValidTimestamp(); }
 
             //! Received before n ms
-            qint64 timeDiffSentOrLoadedMs() const
-            {
-                return this->m_lastSentOrLoaded.msecsTo(QDateTime::currentDateTimeUtc());
-            }
+            qint64 timeDiffSentOrLoadedMs() const { return this->msecsToNow(); }
 
             //! Get remarks string
             const QString &getRemarks() const { return m_remarks; }
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
             CIcon toIcon() const;
@@ -189,6 +216,7 @@ namespace BlackMisc
             static const QString flightRuleToString(FlightRules rule);
 
         private:
+            CCallsign m_callsign;
             QString m_equipmentIcao; //!< e.g. "T/A320/F"
             CAirportIcaoCode m_originAirportIcao;
             CAirportIcaoCode m_destinationAirportIcao;
@@ -202,7 +230,6 @@ namespace BlackMisc
             FlightRules m_flightRules;
             QString m_route;
             QString m_remarks;
-            QDateTime m_lastSentOrLoaded;
 
             BLACK_METACLASS(
                 CFlightPlan,
@@ -219,7 +246,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(flightRules),
                 BLACK_METAMEMBER(route),
                 BLACK_METAMEMBER(remarks),
-                BLACK_METAMEMBER(lastSentOrLoaded)
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch)
             );
         };
     } // namespace

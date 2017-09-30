@@ -272,19 +272,19 @@ namespace BlackSample
         args >> equipmentIcao >> originAirportIcao >> destinationAirportIcao >> alternateAirportIcao >> takeoffTimePlanned >> takeoffTimeActual
              >> enrouteTime >> fuelTime >> cruiseAltitude >> cruiseTrueAirspeed >> flightRulesString >> route;
 
-        BlackMisc::Aviation::CFlightPlan::FlightRules flightRules;
-        if (flightRulesString == "IFR") { flightRules = BlackMisc::Aviation::CFlightPlan::IFR; }
-        else if (flightRulesString == "SVFR") { flightRules = BlackMisc::Aviation::CFlightPlan::SVFR; }
+        CFlightPlan::FlightRules flightRules;
+        if (flightRulesString == "IFR") { flightRules = CFlightPlan::IFR; }
+        else if (flightRulesString == "SVFR") { flightRules = CFlightPlan::SVFR; }
         else { flightRules = BlackMisc::Aviation::CFlightPlan::VFR; }
 
-        BlackMisc::Aviation::CFlightPlan
-        fp(equipmentIcao, originAirportIcao, destinationAirportIcao, alternateAirportIcao,
-           QDateTime::fromString(takeoffTimePlanned, "hhmm"), QDateTime::fromString(takeoffTimeActual, "hhmm"),
-           BlackMisc::PhysicalQuantities::CTime(enrouteTime, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()),
-           BlackMisc::PhysicalQuantities::CTime(fuelTime, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()),
-           BlackMisc::Aviation::CAltitude(cruiseAltitude, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
-           BlackMisc::PhysicalQuantities::CSpeed(cruiseTrueAirspeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
-           flightRules, route, args.readAll());
+        const CCallsign callsign("DAMBZ");
+        CFlightPlan fp(callsign, equipmentIcao, originAirportIcao, destinationAirportIcao, alternateAirportIcao,
+                       QDateTime::fromString(takeoffTimePlanned, "hhmm"), QDateTime::fromString(takeoffTimeActual, "hhmm"),
+                       CTime(enrouteTime, CTimeUnit::hrmin()),
+                       CTime(fuelTime, CTimeUnit::hrmin()),
+                       CAltitude(cruiseAltitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
+                       CSpeed(cruiseTrueAirspeed, CSpeedUnit::kts()),
+                       flightRules, route, args.readAll());
         emit sendFlightPlan(fp);
     }
 
@@ -352,12 +352,12 @@ namespace BlackSample
         QString xpdrMode;
         args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs >> com1 >> com2 >> xpdrCode >> xpdrMode;
         BlackMisc::Simulation::CSimulatedAircraft aircraft("", BlackMisc::Network::CUser(), BlackMisc::Aviation::CAircraftSituation(
-                BlackMisc::Geo::CCoordinateGeodetic(lat, lon, alt),
-                BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-                BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
-                                                ));
+                    BlackMisc::Geo::CCoordinateGeodetic(lat, lon, alt),
+                    BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                    BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                    BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                    BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
+                ));
         updateCockpit(
             BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
             BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),

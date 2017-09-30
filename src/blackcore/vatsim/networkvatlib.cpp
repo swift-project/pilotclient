@@ -1089,7 +1089,9 @@ namespace BlackCore
             const QString depTimePlanned = QString("0000").append(QString::number(fp->departTime)).right(4);
             const QString depTimeActual = QString("0000").append(QString::number(fp->departTimeActual)).right(4);
 
+            const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
             const CFlightPlan flightPlan(
+                callsign,
                 self->fromFSD(fp->aircraftType),
                 self->fromFSD(fp->departAirport),
                 self->fromFSD(fp->destAirport),
@@ -1105,7 +1107,6 @@ namespace BlackCore
                 self->fromFSD(fp->remarks)
             );
 
-            const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
             emit self->flightPlanReplyReceived(callsign, flightPlan);
         }
 

@@ -93,6 +93,7 @@ namespace BlackMisc
             GlobalIndexCAircraftParts                   =  1400,
             GlobalIndexCAircraftLights                  =  1500,
             GlobalIndexCLivery                          =  1600,
+            GlobalIndexCFlightPlan                      =  1700,
             GlobalIndexCComSystem                       =  2000,
             GlobalIndexCModulator                       =  2100,
             GlobalIndexCTransponder                     =  2200,
