@@ -142,6 +142,12 @@ namespace BlackMisc
             return nw;
         }
 
+        void CAircraftModel::setCallsign(const CCallsign &callsign)
+        {
+            this->m_callsign = callsign;
+            this->m_callsign.setTypeHint(CCallsign::Aircraft);
+        }
+
         QString CAircraftModel::getModelStringAndDbKey() const
         {
             if (this->hasValidDbKey())
@@ -247,6 +253,7 @@ namespace BlackMisc
                 break;
             case IndexCallsign:
                 this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                this->m_callsign.setTypeHint(CCallsign::Aircraft);
                 break;
             case IndexFileName:
                 this->m_fileName = variant.toQString();
