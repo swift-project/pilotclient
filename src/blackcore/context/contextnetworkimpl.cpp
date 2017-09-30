@@ -138,7 +138,7 @@ namespace BlackCore
         QList<QMetaObject::Connection> CContextNetwork::connectRemoteAircraftProviderSignals(
             QObject *receiver,
             std::function<void (const CAircraftSituation &)> situationSlot,
-            std::function<void (const BlackMisc::Aviation::CCallsign &, const CAircraftParts &)> partsSlot,
+            std::function<void (const CCallsign &, const CAircraftParts &)> partsSlot,
             std::function<void (const CCallsign &)> removedAircraftSlot,
             std::function<void (const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
         {
@@ -344,7 +344,7 @@ namespace BlackCore
             m_network->sendFlightPlanQuery(this->ownAircraft().getCallsign());
         }
 
-        CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
+        CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->loadFlightPlanFromNetwork(callsign);
@@ -515,7 +515,7 @@ namespace BlackCore
             return m_airspace->getAircraftInRangeForCallsign(callsign);
         }
 
-        CAircraftModel CContextNetwork::getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
+        CAircraftModel CContextNetwork::getAircraftInRangeModelForCallsign(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
             return m_airspace->getAircraftInRangeModelForCallsign(callsign);
@@ -696,7 +696,7 @@ namespace BlackCore
             m_airspace->testCreateDummyOnlineAtcStations(number);
         }
 
-        void CContextNetwork::testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
+        void CContextNetwork::testAddAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool incremental)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << parts << incremental; }
             m_airspace->testAddAircraftParts(callsign, parts, incremental);
@@ -711,7 +711,7 @@ namespace BlackCore
             }
         }
 
-        CMetar CContextNetwork::getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const
+        CMetar CContextNetwork::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
             return sApp->getWebDataServices()->getMetarForAirport(airportIcaoCode);
