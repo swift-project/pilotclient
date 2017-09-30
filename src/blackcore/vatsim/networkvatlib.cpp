@@ -179,7 +179,7 @@ namespace BlackCore
             if (isConnected())
             {
                 CSimulatedAircraft myAircraft(getOwnAircraft());
-                if (this->m_loginMode == LoginAsObserver)
+                if (m_loginMode == LoginAsObserver)
                 {
                     // Observer
                     VatAtcPosition pos;
@@ -225,7 +225,7 @@ namespace BlackCore
             if (isConnected())
             {
                 CSimulatedAircraft myAircraft(getOwnAircraft());
-                if (this->m_loginMode == LoginNormal)
+                if (m_loginMode == LoginNormal)
                 {
                     VatInterimPilotPosition pos;
                     pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
@@ -398,8 +398,8 @@ namespace BlackCore
             m_server = server;
             const QString codecName(server.getFsdSetup().getTextCodec());
             Q_ASSERT_X(!codecName.isEmpty(), Q_FUNC_INFO, "Missing code name");
-            this->m_fsdTextCodec = QTextCodec::codecForName(codecName.toLocal8Bit());
-            if (!this->m_fsdTextCodec) { this->m_fsdTextCodec = QTextCodec::codecForName("latin1"); }
+            m_fsdTextCodec = QTextCodec::codecForName(codecName.toLocal8Bit());
+            if (!m_fsdTextCodec) { m_fsdTextCodec = QTextCodec::codecForName("latin1"); }
         }
 
         void CNetworkVatlib::presetSimulatorInfo(const CSimulatorPluginInfo &simInfo)
@@ -440,7 +440,7 @@ namespace BlackCore
                                         m_ownCallsign.asString());
             QByteArray name = toFSD(m_server.getUser().getRealName());
 
-            if (this->m_loginMode == LoginAsObserver)
+            if (m_loginMode == LoginAsObserver)
             {
                 // Observer mode
                 VatAtcConnection info;
@@ -726,7 +726,7 @@ namespace BlackCore
             const QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
             if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
             const auto stringList = clientIdAndKey.split(':');
-            QString clientIdAsString = stringList[0];
+            const QString clientIdAsString = stringList[0];
             bool ok = true;
             id = clientIdAsString.toInt(&ok, 0);
             if (!ok) { return false; }
@@ -737,7 +737,7 @@ namespace BlackCore
         void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
-            CSimulatedAircraft myAircraft(getOwnAircraft());
+            const CSimulatedAircraft myAircraft(getOwnAircraft());
             QString modelString = myAircraft.getModel().getModelString();
             if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
@@ -754,7 +754,7 @@ namespace BlackCore
         void CNetworkVatlib::sendCustomFsinnReponse(const BlackMisc::Aviation::CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
-            CSimulatedAircraft myAircraft(getOwnAircraft());
+            const CSimulatedAircraft myAircraft(getOwnAircraft());
             QString modelString = myAircraft.getModel().getModelString();
             if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
@@ -794,28 +794,22 @@ namespace BlackCore
 
         void CNetworkVatlib::onConnectionStatusChanged(VatSessionID, VatConnectionStatus, VatConnectionStatus newStatus, void *cbvar)
         {
-            if (newStatus == vatStatusError)
-            {
-                cbvar_cast(cbvar)->changeConnectionStatus(newStatus);
-            }
-            else
-            {
-                cbvar_cast(cbvar)->changeConnectionStatus(newStatus);
-            }
+            cbvar_cast(cbvar)->changeConnectionStatus(newStatus);
         }
 
         void CNetworkVatlib::onTextMessageReceived(VatSessionID, const char *from, const char *to, const char *msg, void *cbvar)
         {
             CTextMessage tm(cbvar_cast(cbvar)->fromFSD(msg), CCallsign(cbvar_cast(cbvar)->fromFSD(from)), CCallsign(cbvar_cast(cbvar)->fromFSD(to)));
             tm.setCurrentUtcTime();
-            CTextMessageList messages(tm);
+            const CTextMessageList messages(tm);
             emit cbvar_cast(cbvar)->textMessagesReceived(messages);
         }
 
         void CNetworkVatlib::onRadioMessageReceived(VatSessionID, const char *from, int numFreq, int *freqList, const char *msg, void *cbvar)
         {
-            int com1 = cbvar_cast(cbvar)->getOwnAircraft().getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
-            int com2 = cbvar_cast(cbvar)->getOwnAircraft().getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            auto *self = cbvar_cast(cbvar);
+            const int com1 = self->getOwnAircraft().getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            const int com2 = self->getOwnAircraft().getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
             QList<CFrequency> frequencies;
             for (int i = 0; i < numFreq; ++i)
             {
@@ -825,14 +819,15 @@ namespace BlackCore
                 }
             }
             if (frequencies.isEmpty()) { return; }
-            BlackMisc::Network::CTextMessageList messages(cbvar_cast(cbvar)->fromFSD(msg), frequencies, CCallsign(cbvar_cast(cbvar)->fromFSD(from)));
+            CTextMessageList messages(self->fromFSD(msg), frequencies, CCallsign(self->fromFSD(from)));
             messages.setCurrentUtcTime();
             emit cbvar_cast(cbvar)->textMessagesReceived(messages);
         }
 
         void CNetworkVatlib::onPilotDisconnected(VatSessionID, const char *callsign, void *cbvar)
         {
-            emit cbvar_cast(cbvar)->pilotDisconnected(CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Aircraft));
+            auto *self = cbvar_cast(cbvar);
+            emit self->pilotDisconnected(CCallsign(self->fromFSD(callsign), CCallsign::Aircraft));
         }
 
         void CNetworkVatlib::onControllerDisconnected(VatSessionID, const char *callsign, void *cbvar)
@@ -860,18 +855,10 @@ namespace BlackCore
             CTransponder::TransponderMode mode = CTransponder::StateStandby;
             switch (position->transponderMode)
             {
-            case vatTransponderModeCharlie:
-                mode = CTransponder::ModeC;
-                break;
-            case vatTransponderModeStandby:
-                mode = CTransponder::StateStandby;
-                break;
-            case vatTransponderModeIdent:
-                mode = CTransponder::StateIdent;
-                break;
-            default:
-                mode = CTransponder::StateStandby;
-                break;
+            case vatTransponderModeCharlie: mode = CTransponder::ModeC; break;
+            case vatTransponderModeStandby: mode = CTransponder::StateStandby; break;
+            case vatTransponderModeIdent:   mode = CTransponder::StateIdent; break;
+            default: break;
             }
 
             // I did have a situation where I got wrong transponder codes (KB)
@@ -891,37 +878,38 @@ namespace BlackCore
             emit cbvar_cast(cbvar)->aircraftPositionUpdate(situation, transponder);
         }
 
-        void CNetworkVatlib::onAircraftConfigReceived(VatSessionID, const char *callsign, const char *aircraftConfig, void *cbvar)
+        void CNetworkVatlib::onAircraftConfigReceived(VatSessionID, const char *callsignChar, const char *aircraftConfig, void *cbvar)
         {
-            QByteArray json = cbvar_cast(cbvar)->fromFSD(aircraftConfig).toUtf8();
+            const QByteArray json = cbvar_cast(cbvar)->fromFSD(aircraftConfig).toUtf8();
             QJsonParseError parserError;
-            QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
-            CCallsign cs(callsign, CCallsign::Aircraft);
+            const QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
 
             if (parserError.error != QJsonParseError::NoError)
             {
                 CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).warning("Failed to parse aircraft config packet: %1") << parserError.errorString();
             }
 
-            QJsonObject packet = doc.object();
-
+            auto *self = cbvar_cast(cbvar);
+            CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
+            const QJsonObject packet = doc.object();
             if (packet == JsonPackets::aircraftConfigRequest())
             {
-                cbvar_cast(cbvar)->replyToConfigQuery(cbvar_cast(cbvar)->fromFSD(callsign));
+                self->replyToConfigQuery(callsign);
                 return;
             }
 
             QJsonObject config = doc.object().value("config").toObject();
             if (config.empty()) return;
 
-            bool isFull = config.take("is_full_data").toBool(false);
-            emit cbvar_cast(cbvar)->aircraftConfigPacketReceived(cs, config, isFull);
+            const bool isFull = config.take("is_full_data").toBool(false);
+            emit self->aircraftConfigPacketReceived(callsign, config, isFull);
         }
 
         void CNetworkVatlib::onInterimPilotPositionUpdate(VatSessionID, const char *sender, const VatInterimPilotPosition *position, void *cbvar)
         {
+            auto *self = cbvar_cast(cbvar);
             CAircraftSituation situation(
-                CCallsign(sender),
+                CCallsign(self->fromFSD(sender), CCallsign::Aircraft),
                 CCoordinateGeodetic(position->latitude, position->longitude, position->altitudeTrue),
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
@@ -933,12 +921,12 @@ namespace BlackCore
             situation.setTimeOffsetMs(c_interimPositionTimeOffsetMsec);
             situation.setInterimFlag(true);
 
-            emit cbvar_cast(cbvar)->aircraftInterimPositionUpdate(situation);
+            emit self->aircraftInterimPositionUpdate(situation);
         }
 
         void CNetworkVatlib::onAtcPositionUpdate(VatSessionID, const char *callsign, const VatAtcPosition *pos, void *cbvar)
         {
-            int frequencyKHz = pos->frequency;
+            const int frequencyKHz = pos->frequency;
             CFrequency freq(frequencyKHz, CFrequencyUnit::kHz());
             freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
             emit cbvar_cast(cbvar)->atcPositionUpdate(
@@ -1002,23 +990,21 @@ namespace BlackCore
 
         void CNetworkVatlib::onMetarReceived(VatSessionID, const char *data, void *cbvar)
         {
-            emit cbvar_cast(cbvar)->metarReplyReceived(cbvar_cast(cbvar)->fromFSD(data));
+            auto *self = cbvar_cast(cbvar);
+            emit self->metarReplyReceived(self->fromFSD(data));
         }
 
         void CNetworkVatlib::onInfoQueryRequestReceived(VatSessionID, const char *callsignString, VatClientQueryType type, const char *, void *cbvar)
         {
-            auto timer = new QTimer(cbvar_cast(cbvar));
-            timer->setSingleShot(true);
-            timer->start(0);
-
-            BlackMisc::Aviation::CCallsign callsign(callsignString);
+            auto *self = cbvar_cast(cbvar);
+            const CCallsign callsign(self->fromFSD(callsignString));
             switch (type)
             {
             case vatClientQueryFreq:
-                connect(timer, &QTimer::timeout, [ = ]() { cbvar_cast(cbvar)->replyToFrequencyQuery(callsign); });
+                QTimer::singleShot(0, self, [ = ]() { self->replyToFrequencyQuery(callsign); });
                 break;
             case vatClientQueryName:
-                connect(timer, &QTimer::timeout, [ = ]() { cbvar_cast(cbvar)->replyToNameQuery(callsign); });
+                QTimer::singleShot(0, self, [ = ]() { self->replyToNameQuery(callsign); });
                 break;
             default:
                 break;
@@ -1027,13 +1013,14 @@ namespace BlackCore
 
         void CNetworkVatlib::onInfoQueryReplyReceived(VatSessionID, const char *callsign, VatClientQueryType type, const char *data, const char *data2, void *cbvar)
         {
+            auto *self = cbvar_cast(cbvar);
             switch (type)
             {
-            case vatClientQueryFreq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
-            case vatClientQueryServer: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-            case vatClientQueryAtc:    emit cbvar_cast(cbvar)->atcReplyReceived(CCallsign(cbvar_cast(cbvar)->fromFSD(data2), CCallsign::Atc), *data == 'Y'); break;
-            case vatClientQueryName:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-            case vatClientQueryIP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
+            case vatClientQueryFreq:   emit self->frequencyReplyReceived(self->fromFSD(callsign), CFrequency(self->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
+            case vatClientQueryServer: emit self->serverReplyReceived(self->fromFSD(callsign), self->fromFSD(data)); break;
+            case vatClientQueryAtc:    emit self->atcReplyReceived(CCallsign(self->fromFSD(data2), CCallsign::Atc), *data == 'Y'); break;
+            case vatClientQueryName:   emit self->realNameReplyReceived(self->fromFSD(callsign), self->fromFSD(data)); break;
+            case vatClientQueryIP:     emit self->ipReplyReceived(self->fromFSD(data)); break;
             default: break;
             }
         }
@@ -1045,13 +1032,15 @@ namespace BlackCore
             if (capabilityFlags & vatCapsFastPos) { flags |= SupportsInterimPosUpdates; }
             if (capabilityFlags & vatCapsAircraftInfo) { flags |= SupportsIcaoCodes; }
             if (capabilityFlags & vatCapsAircraftConfig) { flags |= SupportsAircraftConfigs; }
-            emit cbvar_cast(cbvar)->capabilitiesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), flags);
+            auto *self = cbvar_cast(cbvar);
+            emit self->capabilitiesReplyReceived(self->fromFSD(callsign), flags);
         }
 
         void CNetworkVatlib::onAtisReplyReceived(VatSessionID, const char *callsign, const VatControllerAtis *atis, void *cbvar)
         {
-            emit cbvar_cast(cbvar)->atisVoiceRoomReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(atis->voiceRoom));
-            emit cbvar_cast(cbvar)->atisLogoffTimeReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(atis->zuluLogoff));
+            auto *self = cbvar_cast(cbvar);
+            emit self->atisVoiceRoomReplyReceived(self->fromFSD(callsign), self->fromFSD(atis->voiceRoom));
+            emit self->atisLogoffTimeReplyReceived(self->fromFSD(callsign), self->fromFSD(atis->zuluLogoff));
 
             CInformationMessage atisMessage;
             atisMessage.setType(CInformationMessage::ATIS);
@@ -1073,49 +1062,51 @@ namespace BlackCore
                 }
             }
 
-            emit cbvar_cast(cbvar)->atisReplyReceived(CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Atc), atisMessage);
+            emit self->atisReplyReceived(CCallsign(self->fromFSD(callsign), CCallsign::Atc), atisMessage);
         }
 
-        void CNetworkVatlib::onFlightPlanReceived(VatSessionID, const char *callsign, const VatFlightPlan *fp, void *cbvar)
+        void CNetworkVatlib::onFlightPlanReceived(VatSessionID, const char *callsignChar, const VatFlightPlan *fp, void *cbvar)
         {
-            BlackMisc::Aviation::CFlightPlan::FlightRules rules = BlackMisc::Aviation::CFlightPlan::VFR;
+            CFlightPlan::FlightRules rules = CFlightPlan::VFR;
             switch (fp->flightType)
             {
             default:
-            case vatFlightTypeVFR:   rules = BlackMisc::Aviation::CFlightPlan::VFR;  break;
-            case vatFlightTypeIFR:   rules = BlackMisc::Aviation::CFlightPlan::IFR;  break;
+            case vatFlightTypeVFR:   rules = CFlightPlan::VFR;  break;
+            case vatFlightTypeIFR:   rules = CFlightPlan::IFR;  break;
                 // case Cvatlib_Network::fpRuleType_SVFR:  rules = BlackMisc::Aviation::CFlightPlan::SVFR; break;
             }
 
-            auto cruiseAltString = cbvar_cast(cbvar)->fromFSD(fp->cruiseAltitude);
+            auto *self = cbvar_cast(cbvar);
+            QString cruiseAltString = self->fromFSD(fp->cruiseAltitude);
             thread_local const QRegularExpression withUnit("\\D+");
             if (!cruiseAltString.isEmpty() && !withUnit.match(cruiseAltString).hasMatch())
             {
                 cruiseAltString += "ft";
             }
-            BlackMisc::Aviation::CAltitude cruiseAlt;
+            CAltitude cruiseAlt;
             cruiseAlt.parseFromString(cruiseAltString);
 
-            QString depTimePlanned = QString("0000").append(QString::number(fp->departTime)).right(4);
-            QString depTimeActual = QString("0000").append(QString::number(fp->departTimeActual)).right(4);
+            const QString depTimePlanned = QString("0000").append(QString::number(fp->departTime)).right(4);
+            const QString depTimeActual = QString("0000").append(QString::number(fp->departTimeActual)).right(4);
 
-            BlackMisc::Aviation::CFlightPlan flightPlan(
-                cbvar_cast(cbvar)->fromFSD(fp->aircraftType),
-                cbvar_cast(cbvar)->fromFSD(fp->departAirport),
-                cbvar_cast(cbvar)->fromFSD(fp->destAirport),
-                cbvar_cast(cbvar)->fromFSD(fp->alternateAirport),
+            const CFlightPlan flightPlan(
+                self->fromFSD(fp->aircraftType),
+                self->fromFSD(fp->departAirport),
+                self->fromFSD(fp->destAirport),
+                self->fromFSD(fp->alternateAirport),
                 QDateTime::fromString(depTimePlanned, "hhmm"),
                 QDateTime::fromString(depTimeActual, "hhmm"),
-                BlackMisc::PhysicalQuantities::CTime(fp->enrouteHrs * 60 + fp->enrouteMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
-                BlackMisc::PhysicalQuantities::CTime(fp->fuelHrs * 60 + fp->fuelMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
+                CTime(fp->enrouteHrs * 60 + fp->enrouteMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
+                CTime(fp->fuelHrs * 60 + fp->fuelMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
                 cruiseAlt,
-                BlackMisc::PhysicalQuantities::CSpeed(fp->trueCruisingSpeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
+                CSpeed(fp->trueCruisingSpeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
                 rules,
-                cbvar_cast(cbvar)->fromFSD(fp->route),
-                cbvar_cast(cbvar)->fromFSD(fp->remarks)
+                self->fromFSD(fp->route),
+                self->fromFSD(fp->remarks)
             );
 
-            emit cbvar_cast(cbvar)->flightPlanReplyReceived(CCallsign(callsign, CCallsign::Atc), flightPlan);
+            const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
+            emit self->flightPlanReplyReceived(callsign, flightPlan);
         }
 
         void CNetworkVatlib::onErrorReceived(VatSessionID, VatServerError error, const char *msg, const char *data, void *cbvar)
@@ -1148,23 +1139,22 @@ namespace BlackCore
             }
         }
 
-        void CNetworkVatlib::onPilotInfoRequestReceived(VatSessionID, const char *callsignString, void *cbvar)
+        void CNetworkVatlib::onPilotInfoRequestReceived(VatSessionID, const char *callsignChar, void *cbvar)
         {
-            auto timer = new QTimer(cbvar_cast(cbvar));
-            timer->setSingleShot(true);
-            timer->start(0);
-
-            BlackMisc::Aviation::CCallsign callsign(callsignString);
-            connect(timer, &QTimer::timeout, [ = ]() { cbvar_cast(cbvar)->sendAircraftInfo(callsign); });
+            auto *self = cbvar_cast(cbvar);
+            const CCallsign callsign(self->fromFSD(callsignChar));
+            QTimer::singleShot(0, self, [ = ]() { self->sendAircraftInfo(callsign); });
         }
 
-        void CNetworkVatlib::onPilotInfoReceived(VatSessionID, const char *callsign, const VatAircraftInfo *aircraftInfo, void *cbvar)
+        void CNetworkVatlib::onPilotInfoReceived(VatSessionID, const char *callsignChar, const VatAircraftInfo *aircraftInfo, void *cbvar)
         {
-            emit cbvar_cast(cbvar)->icaoCodesReplyReceived(
-                cbvar_cast(cbvar)->fromFSD(callsign),
-                cbvar_cast(cbvar)->fromFSD(aircraftInfo->aircraftType).trimmed().toUpper(),
-                cbvar_cast(cbvar)->fromFSD(aircraftInfo->airline).trimmed().toUpper(),
-                cbvar_cast(cbvar)->fromFSD(aircraftInfo->livery).trimmed().toUpper()
+            auto *self = cbvar_cast(cbvar);
+            const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
+            emit self->icaoCodesReplyReceived(
+                callsign,
+                self->fromFSD(aircraftInfo->aircraftType).trimmed().toUpper(),
+                self->fromFSD(aircraftInfo->airline).trimmed().toUpper(),
+                self->fromFSD(aircraftInfo->livery).trimmed().toUpper()
             );
         }
 
