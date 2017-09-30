@@ -80,6 +80,9 @@ namespace BlackMisc
         //! Time difference
         qint64 absMsecsTo(const ITimestampBased &otherTimestampObj) const;
 
+        //! Milliseconds to now
+        qint64 msecsToNow() const;
+
         //! Set the current time as timestamp
         void setCurrentUtcTime();
 

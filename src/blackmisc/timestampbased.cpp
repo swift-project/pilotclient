@@ -126,6 +126,12 @@ namespace BlackMisc
         return dt > 0 ? dt : dt * -1;
     }
 
+    qint64 ITimestampBased::msecsToNow() const
+    {
+        if (this->m_timestampMSecsSinceEpoch < 0) return QDateTime::currentMSecsSinceEpoch();
+        return QDateTime::currentMSecsSinceEpoch() - this->m_timestampMSecsSinceEpoch;
+    }
+
     void ITimestampBased::setCurrentUtcTime()
     {
         this->m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
