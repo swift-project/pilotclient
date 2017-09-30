@@ -42,12 +42,12 @@ namespace BlackMisc
 
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
-            const QString s = (this->m_position.toQString(i18n)) %
-                              QLatin1String(" bank: ") % (this->m_bank.toQString(i18n)) %
-                              QLatin1String(" pitch: ") % (this->m_pitch.toQString(i18n)) %
-                              QLatin1String(" gs: ") % (this->m_groundSpeed.toQString(i18n)) %
-                              QLatin1String(" elevation: ") % (this->m_groundElevation.toQString(i18n)) %
-                              QLatin1String(" heading: ") % (this->m_heading.toQString(i18n)) %
+            const QString s = (m_position.toQString(i18n)) %
+                              QLatin1String(" bank: ") % (m_bank.toQString(i18n)) %
+                              QLatin1String(" pitch: ") % (m_pitch.toQString(i18n)) %
+                              QLatin1String(" gs: ") % (m_groundSpeed.toQString(i18n)) %
+                              QLatin1String(" elevation: ") % (m_groundElevation.toQString(i18n)) %
+                              QLatin1String(" heading: ") % (m_heading.toQString(i18n)) %
                               QLatin1String(" timestamp: ") % (this->hasValidTimestamp() ? this->getFormattedUtcTimestampDhms() : QStringLiteral("-"));
             return s;
         }
@@ -97,36 +97,21 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexPosition:
-                return this->m_position.propertyByIndex(index.copyFrontRemoved());
-            case IndexLatitude:
-                return this->latitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexLongitude:
-                return this->longitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexAltitude:
-                return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexHeading:
-                return this->m_heading.propertyByIndex(index.copyFrontRemoved());
-            case IndexPitch:
-                return this->m_pitch.propertyByIndex(index.copyFrontRemoved());
-            case IndexBank:
-                return this->m_bank.propertyByIndex(index.copyFrontRemoved());
-            case IndexGroundSpeed:
-                return this->m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
-            case IndexGroundElevation:
-                return this->m_groundElevation.propertyByIndex(index.copyFrontRemoved());
-            case IndexCallsign:
-                return this->m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsOnGround:
-                return CVariant::fromValue(m_isOnGround);
-            case IndexIsOnGroundString:
-                return CVariant::fromValue(this->isOnGroundAsString());
-            case IndexOnGroundReliability:
-                return CVariant::fromValue(m_onGroundReliability);
-            case IndexOnGroundReliabilityString:
-                return CVariant::fromValue(this->getOnGroundReliabilityAsString());
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
+            case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexAltitude: return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexHeading: return m_heading.propertyByIndex(index.copyFrontRemoved());
+            case IndexPitch: return m_pitch.propertyByIndex(index.copyFrontRemoved());
+            case IndexBank: return m_bank.propertyByIndex(index.copyFrontRemoved());
+            case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
+            case IndexGroundElevation: return m_groundElevation.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsOnGround: return CVariant::fromValue(m_isOnGround);
+            case IndexIsOnGroundString: return CVariant::fromValue(this->isOnGroundAsString());
+            case IndexOnGroundReliability: return CVariant::fromValue(m_onGroundReliability);
+            case IndexOnGroundReliabilityString: return CVariant::fromValue(this->getOnGroundReliabilityAsString());
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -142,33 +127,15 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexPosition:
-                this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexPitch:
-                this->m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexBank:
-                this->m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexGroundSpeed:
-                this->m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexGroundElevation:
-                this->m_groundElevation.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexCallsign:
-                this->m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexIsOnGround:
-                this->m_isOnGround = variant.toInt();
-                break;
-            case IndexOnGroundReliability:
-                this->m_onGroundReliability = variant.toInt();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexPosition: m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexPitch: m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexBank: m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexGroundSpeed: m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexGroundElevation: m_groundElevation.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexIsOnGround: m_isOnGround = variant.toInt(); break;
+            case IndexOnGroundReliability: m_onGroundReliability = variant.toInt(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -179,28 +146,20 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexPosition:
-                return this->m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
-            case IndexAltitude:
-                return this->getAltitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
-            case IndexPitch:
-                return this->m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
-            case IndexBank:
-                return this->m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
-            case IndexGroundSpeed:
-                return this->m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
-            case IndexGroundElevation:
-                return this->m_groundElevation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundElevation());
-            case IndexCallsign:
-                return this->m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+            case IndexPosition: return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
+            case IndexAltitude: return this->getAltitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
+            case IndexPitch: return m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
+            case IndexBank: return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
+            case IndexGroundSpeed: return m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
+            case IndexGroundElevation: return m_groundElevation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundElevation());
+            case IndexCallsign: return m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexIsOnGround:
             case IndexIsOnGroundString:
-                return Compare::compare(this->m_isOnGround, compareValue.m_isOnGround);
+                return Compare::compare(m_isOnGround, compareValue.m_isOnGround);
             case IndexOnGroundReliability:
             case IndexOnGroundReliabilityString:
-                return Compare::compare(this->m_onGroundReliability, compareValue.m_onGroundReliability);
-            default:
-                break;
+                return Compare::compare(m_onGroundReliability, compareValue.m_onGroundReliability);
+            default: break;
             }
             const QString assertMsg("No comparison for index " + index.toQString());
             BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(assertMsg));
@@ -262,8 +221,8 @@ namespace BlackMisc
 
         void CAircraftSituation::setCallsign(const CCallsign &callsign)
         {
-            this->m_correspondingCallsign = callsign;
-            this->m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
+            m_correspondingCallsign = callsign;
+            m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
         }
     } // namespace
 } // namespace

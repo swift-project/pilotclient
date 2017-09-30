@@ -42,21 +42,15 @@ namespace BlackMisc
             if (index.isMyself()) { return CVariant::from(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEngines:
-                return CVariant::fromValue(this->m_engines);
-            case IndexFlapsPercentage:
-                return CVariant::fromValue(this->m_flapsPercentage);
-            case IndexGearDown:
-                return CVariant::fromValue(this->m_gearDown);
-            case IndexLights:
-                return this->m_lights.propertyByIndex(index.copyFrontRemoved());
-            case IndexSpoilersOut:
-                return CVariant::fromValue(this->m_spoilersOut);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexEngines: return CVariant::fromValue(m_engines);
+            case IndexFlapsPercentage: return CVariant::fromValue(m_flapsPercentage);
+            case IndexGearDown: return CVariant::fromValue(m_gearDown);
+            case IndexLights: return m_lights.propertyByIndex(index.copyFrontRemoved());
+            case IndexSpoilersOut: return CVariant::fromValue(m_spoilersOut);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -65,27 +59,15 @@ namespace BlackMisc
             if (index.isMyself()) { (*this) = variant.to<CAircraftParts>(); return; }
             if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEngines:
-                this->m_engines = variant.to < decltype(this->m_engines) > ();
-                break;
-            case IndexFlapsPercentage:
-                this->m_flapsPercentage = variant.toInt();
-                break;
-            case IndexGearDown:
-                this->m_gearDown = variant.toBool();
-                break;
-            case IndexLights:
-                this->m_lights.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexSpoilersOut:
-                this->m_spoilersOut = variant.toBool();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexEngines: m_engines = variant.to < decltype(m_engines) > (); break;
+            case IndexFlapsPercentage: m_flapsPercentage = variant.toInt(); break;
+            case IndexGearDown: m_gearDown = variant.toBool(); break;
+            case IndexLights: m_lights.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSpoilersOut: m_spoilersOut = variant.toBool(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -94,21 +76,15 @@ namespace BlackMisc
             if (index.isMyself()) { return ITimestampBased::comparePropertyByIndex(CPropertyIndex(), compareValue); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEngines:
-                return Compare::compare(this->getEnginesCount(), compareValue.getEnginesCount());
-            case IndexFlapsPercentage:
-                return Compare::compare(this->m_flapsPercentage, compareValue.getFlapsPercent());
-            case IndexGearDown:
-                return Compare::compare(this->m_gearDown, compareValue.isGearDown());
+            case IndexEngines: return Compare::compare(this->getEnginesCount(), compareValue.getEnginesCount());
+            case IndexFlapsPercentage: return Compare::compare(m_flapsPercentage, compareValue.getFlapsPercent());
+            case IndexGearDown: return Compare::compare(m_gearDown, compareValue.isGearDown());
+            case IndexSpoilersOut: return Compare::compare(m_spoilersOut, compareValue.isSpoilersOut());
             case IndexLights:
-                break;
-            case IndexSpoilersOut:
-                return Compare::compare(this->m_spoilersOut, compareValue.isSpoilersOut());
-            default:
-                break;
+            default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
             return 0;
@@ -126,26 +102,26 @@ namespace BlackMisc
 
         CAircraftEngine CAircraftParts::getEngine(int number) const
         {
-            return this->m_engines.getEngine(number);
+            return m_engines.getEngine(number);
         }
 
         bool CAircraftParts::isEngineOn(int number) const
         {
-            return this->m_engines.isEngineOn(number);
+            return m_engines.isEngineOn(number);
         }
 
         bool CAircraftParts::isAnyEngineOn() const
         {
-            return this->m_engines.isAnyEngineOn();
+            return m_engines.isAnyEngineOn();
         }
 
         double CAircraftParts::isOnGroundInterpolated() const
         {
-            if (this->m_isOnGroundInterpolated < 0)
+            if (m_isOnGroundInterpolated < 0)
             {
-                return this->m_isOnGround ? 1.0 : 0.0;
+                return m_isOnGround ? 1.0 : 0.0;
             }
-            return this->m_isOnGroundInterpolated;
+            return m_isOnGroundInterpolated;
         }
 
     } // namespace

@@ -32,7 +32,7 @@ namespace BlackMisc
         //! Value object encapsulating information of aircraft's parts
         class BLACKMISC_EXPORT CAircraftParts :
             public CValueObject<CAircraftParts>,
-            public BlackMisc::ITimestampBased
+            public ITimestampBased
         {
         public:
             //! Properties by index
@@ -126,10 +126,10 @@ namespace BlackMisc
             void setOnGroundInterpolated(double onGround) { m_isOnGroundInterpolated = onGround; }
 
             //! Milliseconds to add to timestamp for interpolation
-            void setTimeOffsetMs(qint64 offset) { this->m_timeOffsetMs = offset; }
+            void setTimeOffsetMs(qint64 offset) { m_timeOffsetMs = offset; }
 
             //! Milliseconds to add to timestamp for interpolation
-            qint64 getTimeOffsetMs() const { return this->m_timeOffsetMs; }
+            qint64 getTimeOffsetMs() const { return m_timeOffsetMs; }
 
             //! Timestamp with offset added for interpolation
             qint64 getAdjustedMSecsSinceEpoch() const { return this->getMSecsSinceEpoch() + this->getTimeOffsetMs(); }

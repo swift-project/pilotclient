@@ -40,13 +40,13 @@ namespace BlackMisc
         //! Value object encapsulating information of an aircraft's situation
         class BLACKMISC_EXPORT CAircraftSituation :
             public CValueObject<CAircraftSituation>,
-            public BlackMisc::Geo::ICoordinateGeodetic, public BlackMisc::ITimestampBased
+            public Geo::ICoordinateGeodetic, public ITimestampBased
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexPosition = BlackMisc::CPropertyIndex::GlobalIndexCAircraftSituation,
+                IndexPosition = CPropertyIndex::GlobalIndexCAircraftSituation,
                 IndexLatitude,
                 IndexLongitude,
                 IndexAltitude,
@@ -84,42 +84,42 @@ namespace BlackMisc
             CAircraftSituation();
 
             //! Comprehensive constructor
-            CAircraftSituation(const BlackMisc::Geo::CCoordinateGeodetic &position,
-                               const BlackMisc::Aviation::CHeading &heading = {},
-                               const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
-                               const BlackMisc::PhysicalQuantities::CAngle &bank = {},
-                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {},
-                               const BlackMisc::Aviation::CAltitude &groundElevation = { 0, nullptr });
+            CAircraftSituation(const Geo::CCoordinateGeodetic &position,
+                               const CHeading &heading = {},
+                               const PhysicalQuantities::CAngle &pitch = {},
+                               const PhysicalQuantities::CAngle &bank = {},
+                               const PhysicalQuantities::CSpeed &gs = {},
+                               const CAltitude &groundElevation = { 0, nullptr });
 
             //! Comprehensive constructor
-            CAircraftSituation(const BlackMisc::Aviation::CCallsign &correspondingCallsign,
-                               const BlackMisc::Geo::CCoordinateGeodetic &position,
-                               const BlackMisc::Aviation::CHeading &heading = {},
-                               const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
-                               const BlackMisc::PhysicalQuantities::CAngle &bank = {},
-                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {},
-                               const BlackMisc::Aviation::CAltitude &groundElevation = { 0, nullptr });
+            CAircraftSituation(const CCallsign &correspondingCallsign,
+                               const Geo::CCoordinateGeodetic &position,
+                               const CHeading &heading = {},
+                               const PhysicalQuantities::CAngle &pitch = {},
+                               const PhysicalQuantities::CAngle &bank = {},
+                               const PhysicalQuantities::CSpeed &gs = {},
+                               const CAltitude &groundElevation = { 0, nullptr });
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            //! \copydoc Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            //! \copydoc Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Compare by index
             int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituation &compareValue) const;
 
             //! Get position
-            const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return this->m_position; }
+            const Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
 
             //! Set position
-            void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
+            void setPosition(const Geo::CCoordinateGeodetic &position) { m_position = position; }
 
             //! \copydoc Geo::ICoordinateGeodetic::latitude()
-            virtual BlackMisc::Geo::CLatitude latitude() const override { return this->m_position.latitude(); }
+            virtual Geo::CLatitude latitude() const override { return m_position.latitude(); }
 
             //! \copydoc Geo::ICoordinateGeodetic::longitude()
-            virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_position.longitude(); }
+            virtual Geo::CLongitude longitude() const override { return m_position.longitude(); }
 
             //! On ground?
             IsOnGround isOnGround() const { return static_cast<CAircraftSituation::IsOnGround>(m_isOnGround); }
@@ -149,81 +149,81 @@ namespace BlackMisc
             QString getOnGroundInfo() const;
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
-            const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
+            const CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
 
             //! \copydoc Geo::ICoordinateGeodetic::normalVector
-            virtual QVector3D normalVector() const override { return this->m_position.normalVector(); }
+            virtual QVector3D normalVector() const override { return m_position.normalVector(); }
 
             //! \copydoc Geo::ICoordinateGeodetic::normalVectorDouble
-            virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
+            virtual std::array<double, 3> normalVectorDouble() const override { return m_position.normalVectorDouble(); }
 
             //! Elevation of the ground directly beneath
-            const BlackMisc::Aviation::CAltitude &getGroundElevation() const { return this->m_groundElevation; }
+            const CAltitude &getGroundElevation() const { return m_groundElevation; }
 
             //! Is ground elevation value available
             bool hasGroundElevation() const;
 
             //! Elevation of the ground directly beneath
-            void setGroundElevation(const BlackMisc::Aviation::CAltitude &elevation) { this->m_groundElevation = elevation; }
+            void setGroundElevation(const CAltitude &elevation) { m_groundElevation = elevation; }
 
             //! Height above ground.
-            BlackMisc::PhysicalQuantities::CLength getHeightAboveGround() const;
+            PhysicalQuantities::CLength getHeightAboveGround() const;
 
             //! Get heading
-            const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_heading; }
+            const CHeading &getHeading() const { return m_heading; }
 
             //! Set heading
-            void setHeading(const BlackMisc::Aviation::CHeading &heading) { this->m_heading = heading; }
+            void setHeading(const CHeading &heading) { m_heading = heading; }
 
             //! Get altitude
-            const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_position.geodeticHeight(); }
+            const CAltitude &getAltitude() const { return m_position.geodeticHeight(); }
 
             //! Get altitude under consideration of ground elevation
-            BlackMisc::Aviation::CAltitude getCorrectedAltitude() const;
+            CAltitude getCorrectedAltitude() const;
 
             //! Set altitude
-            void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_position.setGeodeticHeight(altitude); }
+            void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
 
             //! Get pitch
-            const BlackMisc::PhysicalQuantities::CAngle &getPitch() const { return this->m_pitch; }
+            const PhysicalQuantities::CAngle &getPitch() const { return m_pitch; }
 
             //! Set pitch
-            void setPitch(const BlackMisc::PhysicalQuantities::CAngle &pitch) { this->m_pitch = pitch; }
+            void setPitch(const PhysicalQuantities::CAngle &pitch) { m_pitch = pitch; }
 
             //! Get bank (angle)
-            const BlackMisc::PhysicalQuantities::CAngle &getBank() const { return this->m_bank; }
+            const PhysicalQuantities::CAngle &getBank() const { return m_bank; }
 
             //! Set bank (angle)
-            void setBank(const BlackMisc::PhysicalQuantities::CAngle &bank) { this->m_bank = bank; }
+            void setBank(const PhysicalQuantities::CAngle &bank) { m_bank = bank; }
 
             //! Get ground speed
-            const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_groundSpeed; }
+            const PhysicalQuantities::CSpeed &getGroundSpeed() const { return m_groundSpeed; }
 
             //! Set ground speed
-            void setGroundSpeed(const BlackMisc::PhysicalQuantities::CSpeed &groundspeed) { this->m_groundSpeed = groundspeed; }
+            void setGroundSpeed(const PhysicalQuantities::CSpeed &groundspeed) { m_groundSpeed = groundspeed; }
 
             //! Corresponding callsign
-            const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_correspondingCallsign; }
+            const CCallsign &getCallsign() const { return m_correspondingCallsign; }
 
             //! Corresponding callsign
-            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            void setCallsign(const CCallsign &callsign);
 
             //! Milliseconds to add to timestamp for interpolation
-            void setTimeOffsetMs(qint64 offset) { this->m_timeOffsetMs = offset; }
+            void setTimeOffsetMs(qint64 offset) { m_timeOffsetMs = offset; }
 
             //! Milliseconds to add to timestamp for interpolation
-            qint64 getTimeOffsetMs() const { return this->m_timeOffsetMs; }
+            qint64 getTimeOffsetMs() const { return m_timeOffsetMs; }
 
             //! Timestamp with offset added for interpolation
             qint64 getAdjustedMSecsSinceEpoch() const { return this->getMSecsSinceEpoch() + this->getTimeOffsetMs(); }
 
             //! Set flag indicating this is an interim position update
-            void setInterimFlag(bool flag) { this->m_isInterim = flag; }
+            void setInterimFlag(bool flag) { m_isInterim = flag; }
 
             //! Get flag indicating this is an interim position update
-            bool isInterim() const { return this->m_isInterim; }
+            bool isInterim() const { return m_isInterim; }
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
+            //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Enum to string
@@ -234,12 +234,12 @@ namespace BlackMisc
 
         private:
             CCallsign m_correspondingCallsign;
-            BlackMisc::Geo::CCoordinateGeodetic m_position;
-            BlackMisc::Aviation::CHeading  m_heading;
-            BlackMisc::PhysicalQuantities::CAngle m_pitch;
-            BlackMisc::PhysicalQuantities::CAngle m_bank;
-            BlackMisc::PhysicalQuantities::CSpeed m_groundSpeed;
-            BlackMisc::Aviation::CAltitude m_groundElevation{0, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()};
+            Geo::CCoordinateGeodetic m_position;
+            CHeading m_heading;
+            PhysicalQuantities::CAngle m_pitch;
+            PhysicalQuantities::CAngle m_bank;
+            PhysicalQuantities::CSpeed m_groundSpeed;
+            CAltitude m_groundElevation{0, CAltitude::MeanSeaLevel, PhysicalQuantities::CLengthUnit::nullUnit()};
             int m_isOnGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundReliability = static_cast<int>(CAircraftSituation::OnGroundReliabilityNoSet);
             qint64 m_timeOffsetMs = 0;
