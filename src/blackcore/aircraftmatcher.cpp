@@ -49,8 +49,8 @@ namespace BlackCore
 
     CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
     {
-        const CAircraftModelList modelSet(this->m_modelSet); // Models for this matching
-        const MatchingMode mode = this->m_matchingMode;
+        const CAircraftModelList modelSet(m_modelSet); // Models for this matching
+        const MatchingMode mode = m_matchingMode;
 
         static const QString format("hh:mm:ss.zzz");
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Start matching: UTC %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
@@ -248,7 +248,7 @@ namespace BlackCore
     CAircraftIcaoCode CAircraftMatcher::reverseLookupAircraftIcao(const CAircraftIcaoCode &icaoCandidate, const CCallsign &logCallsign, CStatusMessageList *log)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
-        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+        Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
 
         const QString designator(icaoCandidate.getDesignator());
         CAircraftIcaoCodeList foundIcaos = sApp->getWebDataServices()->getAircraftIcaoCodesForDesignator(designator);
@@ -414,9 +414,9 @@ namespace BlackCore
         {
             CLogMessage(this).info("Set %1 models in matcher, simulator '%2'") << modelsCleaned.size() << simulatorHint.toQString();
         }
-        this->m_modelSet = modelsCleaned;
-        this->m_simulator = simulatorHint;
-        this->m_modelSetInfo = QString("Set: '%1' entries: %2").arg(simulatorHint.toQString()).arg(modelsCleaned.size());
+        m_modelSet = modelsCleaned;
+        m_simulator = simulatorHint;
+        m_modelSetInfo = QString("Set: '%1' entries: %2").arg(simulatorHint.toQString()).arg(modelsCleaned.size());
         return models.size();
     }
 
@@ -433,19 +433,19 @@ namespace BlackCore
 
     CMatchingStatistics CAircraftMatcher::getCurrentStatistics() const
     {
-        return this->m_statistics;
+        return m_statistics;
     }
 
     void CAircraftMatcher::clearMatchingStatistics()
     {
-        this->m_statistics.clear();
+        m_statistics.clear();
     }
 
     void CAircraftMatcher::evaluateStatisticsEntry(const QString &sessionId, const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
     {
         Q_UNUSED(livery);
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
-        if (this->m_modelSet.isEmpty()) { return; } // ignore empty sets to not create silly stats
+        if (m_modelSet.isEmpty()) { return; } // ignore empty sets to not create silly stats
         if (sessionId.isEmpty()) { return; }
         if (aircraftIcao.isEmpty()) { return; }
 
@@ -455,7 +455,7 @@ namespace BlackCore
             description = QString("ICAO: '%1' not known, typo?").arg(aircraftIcao);
         }
 
-        // resolve airline, mostly needed because of vPilot not sending airline icao codes in version 1
+        // resolve airline, mostly needed because of vPilot not sending airline ICAO codes in version 1
         CAirlineIcaoCode airlineIcaoChecked(airlineIcao);
         if (airlineIcao.isEmpty())
         {
@@ -469,18 +469,18 @@ namespace BlackCore
         CMatchingStatisticsEntry::EntryType type = CMatchingStatisticsEntry::Missing;
         if (airlineIcaoChecked.hasValidDesignator())
         {
-            type = this->m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
+            type = m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
                    CMatchingStatisticsEntry::Found :
                    CMatchingStatisticsEntry::Missing;
         }
         else
         {
-            type = this->m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
+            type = m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
                    CMatchingStatisticsEntry::Found :
                    CMatchingStatisticsEntry::Missing;
 
         }
-        this->m_statistics.addAircraftAirlineCombination(type, sessionId, this->m_modelSetInfo, description, aircraftIcao, airlineIcao);
+        m_statistics.addAircraftAirlineCombination(type, sessionId, m_modelSetInfo, description, aircraftIcao, airlineIcao);
     }
 
     CAircraftModel CAircraftMatcher::getClosestMatchSearchImplementation(MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const

@@ -74,10 +74,10 @@ namespace BlackCore
     void CAirspaceAnalyzer::setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
     {
         QWriteLocker l(&m_lockRestrictions);
-        this->m_simulatorRenderedAircraftRestricted = restricted;
-        this->m_simulatorRenderingEnabled = enabled;
-        this->m_simulatorMaxRenderedAircraft = maxAircraft;
-        this->m_simulatorMaxRenderedDistance = maxRenderedDistance;
+        m_simulatorRenderedAircraftRestricted = restricted;
+        m_simulatorRenderingEnabled = enabled;
+        m_simulatorMaxRenderedAircraft = maxAircraft;
+        m_simulatorMaxRenderedDistance = maxRenderedDistance;
     }
 
     CAirspaceAnalyzer::~CAirspaceAnalyzer()
@@ -104,11 +104,11 @@ namespace BlackCore
         if (newStatus == INetwork::Disconnected)
         {
             this->clear();
-            this->m_updateTimer.stop();
+            m_updateTimer.stop();
         }
         else if (newStatus == INetwork::Connected)
         {
-            this->m_updateTimer.start();
+            m_updateTimer.start();
         }
     }
 
@@ -181,10 +181,10 @@ namespace BlackCore
         CLength maxRenderedDistance;
         {
             QReadLocker l(&m_lockRestrictions);
-            restricted = this->m_simulatorRenderedAircraftRestricted;
-            enabled = this->m_simulatorRenderingEnabled,
-            maxAircraft = this->m_simulatorMaxRenderedAircraft;
-            maxRenderedDistance = this->m_simulatorMaxRenderedDistance;
+            restricted = m_simulatorRenderedAircraftRestricted;
+            enabled = m_simulatorRenderingEnabled,
+            maxAircraft = m_simulatorMaxRenderedAircraft;
+            maxRenderedDistance = m_simulatorMaxRenderedDistance;
         }
 
         // remark for simulation snapshot is used when there are restrictions
