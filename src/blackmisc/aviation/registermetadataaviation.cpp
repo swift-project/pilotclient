@@ -40,6 +40,7 @@ namespace BlackMisc
             CCallsignSet::registerMetadata();
             CComSystem::registerMetadata();
             CFlightPlan::registerMetadata();
+            CFlightPlanList::registerMetadata();
             CHeading::registerMetadata();
             CInformationMessage::registerMetadata();
             CLivery::registerMetadata();

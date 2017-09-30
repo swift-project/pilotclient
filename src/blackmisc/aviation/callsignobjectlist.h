@@ -25,6 +25,8 @@ namespace BlackMisc
         class CAircraftSituationList;
         class CAtcStation;
         class CAtcStationList;
+        class CFlightPlan;
+        class CFlightPlanList;
     }
 
     namespace Simulation
@@ -111,6 +113,7 @@ namespace BlackMisc
         //! \cond PRIVATE
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CFlightPlan, BlackMisc::Aviation::CFlightPlanList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
         //! \endcond

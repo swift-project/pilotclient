@@ -12,7 +12,7 @@
 #include "blackmisc/predicates.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/aviation/flightplanlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/network/clientlist.h"
 
@@ -235,6 +235,7 @@ namespace BlackMisc
         //! \cond PRIVATE
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CFlightPlan, BlackMisc::Aviation::CFlightPlanList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
         //! \endcond
