@@ -153,16 +153,16 @@ namespace BlackMisc
             void setAircraftIcaoDesignator(const QString &designator);
 
             //! Has valid realname?
-            bool hasValidRealName() const { return this->m_pilot.hasValidRealName(); }
+            bool hasValidRealName() const { return m_pilot.hasValidRealName(); }
 
             //! Has valid id?
-            bool hasValidId() const { return this->m_pilot.hasValidId(); }
+            bool hasValidId() const { return m_pilot.hasValidId(); }
 
             //! Valid designator?
             bool hasAircraftDesignator() const;
 
             //! Valid airline designator
-            bool hasAirlineDesignator() const { return this->m_models[CurrentModel].getLivery().hasValidAirlineDesignator(); }
+            bool hasAirlineDesignator() const { return m_models[CurrentModel].getLivery().hasValidAirlineDesignator(); }
 
             //! Valid designators?
             bool hasAircraftAndAirlineDesignator() const;
@@ -174,55 +174,55 @@ namespace BlackMisc
             bool hasCallsign() const { return !getCallsign().isEmpty(); }
 
             //! Get position
-            BlackMisc::Geo::CCoordinateGeodetic getPosition() const { return this->m_situation.getPosition(); }
+            BlackMisc::Geo::CCoordinateGeodetic getPosition() const { return m_situation.getPosition(); }
 
             //! Set position
-            void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_situation.setPosition(position); }
+            void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { m_situation.setPosition(position); }
 
             //! Get altitude
-            const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_situation.getAltitude(); }
+            const BlackMisc::Aviation::CAltitude &getAltitude() const { return m_situation.getAltitude(); }
 
             //! Set altitude
-            void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_situation.setAltitude(altitude); }
+            void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { m_situation.setAltitude(altitude); }
 
             //! Get groundspeed
-            const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_situation.getGroundSpeed(); }
+            const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return m_situation.getGroundSpeed(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::latitude
-            virtual BlackMisc::Geo::CLatitude latitude() const override { return this->m_situation.latitude(); }
+            virtual BlackMisc::Geo::CLatitude latitude() const override { return m_situation.latitude(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::longitude
-            virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_situation.longitude(); }
+            virtual BlackMisc::Geo::CLongitude longitude() const override { return m_situation.longitude(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::geodeticHeight
-            const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_situation.geodeticHeight(); }
+            const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return m_situation.geodeticHeight(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::normalVector
-            virtual QVector3D normalVector() const override { return this->m_situation.normalVector(); }
+            virtual QVector3D normalVector() const override { return m_situation.normalVector(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::normalVectorDouble
-            virtual std::array<double, 3> normalVectorDouble() const override { return this->m_situation.normalVectorDouble(); }
+            virtual std::array<double, 3> normalVectorDouble() const override { return m_situation.normalVectorDouble(); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituation::getGroundElevation
-            const BlackMisc::Aviation::CAltitude &getGroundElevation() const { return this->m_situation.getGroundElevation(); }
+            const BlackMisc::Aviation::CAltitude &getGroundElevation() const { return m_situation.getGroundElevation(); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituation::setGroundElevation
-            void setGroundElevation(const BlackMisc::Aviation::CAltitude &elevation) { this->m_situation.setGroundElevation(elevation); }
+            void setGroundElevation(const BlackMisc::Aviation::CAltitude &elevation) { m_situation.setGroundElevation(elevation); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituation::getHeading
-            const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_situation.getHeading(); }
+            const BlackMisc::Aviation::CHeading &getHeading() const { return m_situation.getHeading(); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituation::getPitch
-            const BlackMisc::PhysicalQuantities::CAngle &getPitch() const { return this->m_situation.getPitch(); }
+            const BlackMisc::PhysicalQuantities::CAngle &getPitch() const { return m_situation.getPitch(); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituation::getBank
-            const BlackMisc::PhysicalQuantities::CAngle &getBank() const { return this->m_situation.getBank(); }
+            const BlackMisc::PhysicalQuantities::CAngle &getBank() const { return m_situation.getBank(); }
 
             //! Get COM1 system
-            const BlackMisc::Aviation::CComSystem &getCom1System() const { return this->m_com1system; }
+            const BlackMisc::Aviation::CComSystem &getCom1System() const { return m_com1system; }
 
             //! Get COM2 system
-            const BlackMisc::Aviation::CComSystem &getCom2System() const { return this->m_com2system; }
+            const BlackMisc::Aviation::CComSystem &getCom2System() const { return m_com2system; }
 
             //! Get COM unit
             const BlackMisc::Aviation::CComSystem getComSystem(BlackMisc::Aviation::CComSystem::ComUnit unit) const;
@@ -231,10 +231,10 @@ namespace BlackMisc
             void setComSystem(const BlackMisc::Aviation::CComSystem &com, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
             //! Set COM1 system
-            void setCom1System(const BlackMisc::Aviation::CComSystem &comSystem) { this->m_com1system = comSystem; }
+            void setCom1System(const BlackMisc::Aviation::CComSystem &comSystem) { m_com1system = comSystem; }
 
             //! Set COM2 system
-            void setCom2System(const BlackMisc::Aviation::CComSystem &comSystem) { this->m_com2system = comSystem; }
+            void setCom2System(const BlackMisc::Aviation::CComSystem &comSystem) { m_com2system = comSystem; }
 
             //! Set COM1 frequency
             bool setCom1ActiveFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
@@ -246,10 +246,10 @@ namespace BlackMisc
             bool setComActiveFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
             //! Given SELCAL selected?
-            bool isSelcalSelected(const BlackMisc::Aviation::CSelcal &selcal) const { return this->m_selcal == selcal; }
+            bool isSelcalSelected(const BlackMisc::Aviation::CSelcal &selcal) const { return m_selcal == selcal; }
 
             //! Valid SELCAL?
-            bool hasValidSelcal() const { return this->m_selcal.isValid(); }
+            bool hasValidSelcal() const { return m_selcal.isValid(); }
 
             //! SELCAL
             const BlackMisc::Aviation::CSelcal getSelcal() const { return m_selcal; }
@@ -264,7 +264,7 @@ namespace BlackMisc
             void setCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, int transponderCode, BlackMisc::Aviation::CTransponder::TransponderMode mode);
 
             //! Own SELCAL code
-            void setSelcal(const BlackMisc::Aviation::CSelcal &selcal) { this->m_selcal = selcal; }
+            void setSelcal(const BlackMisc::Aviation::CSelcal &selcal) { m_selcal = selcal; }
 
             //! Changed cockpit data?
             bool hasChangedCockpitData(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) const;
@@ -279,25 +279,25 @@ namespace BlackMisc
             bool isActiveFrequencyWithin25kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const;
 
             //! Get transponder
-            const BlackMisc::Aviation::CTransponder &getTransponder() const { return this->m_transponder; }
+            const BlackMisc::Aviation::CTransponder &getTransponder() const { return m_transponder; }
 
             //! Set transponder
-            void setTransponder(const BlackMisc::Aviation::CTransponder &transponder) { this->m_transponder = transponder; }
+            void setTransponder(const BlackMisc::Aviation::CTransponder &transponder) { m_transponder = transponder; }
 
             //! Set transponder mode
-            void setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) { this->m_transponder.setTransponderMode(mode); }
+            void setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) { m_transponder.setTransponderMode(mode); }
 
             //! Set transponder code
-            void setTransponderCode(int code) { this->m_transponder.setTransponderCode(code); }
+            void setTransponderCode(int code) { m_transponder.setTransponderCode(code); }
 
             //! Get transponder code
-            QString getTransponderCodeFormatted() const { return this->m_transponder.getTransponderCodeFormatted(); }
+            QString getTransponderCodeFormatted() const { return m_transponder.getTransponderCodeFormatted(); }
 
             //! Get transponder code
-            qint32 getTransponderCode() const { return this->m_transponder.getTransponderCode(); }
+            qint32 getTransponderCode() const { return m_transponder.getTransponderCode(); }
 
             //! Get transponder mode
-            BlackMisc::Aviation::CTransponder::TransponderMode getTransponderMode() const { return this->m_transponder.getTransponderMode(); }
+            BlackMisc::Aviation::CTransponder::TransponderMode getTransponderMode() const { return m_transponder.getTransponderMode(); }
 
             //! Is valid for login?
             bool isValidForLogin() const;
@@ -414,7 +414,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
+            BlackMisc::CIcon toIcon() const { return m_callsign.toIcon(); }
 
         private:
             static constexpr int CurrentModel = 0; //!< m_models

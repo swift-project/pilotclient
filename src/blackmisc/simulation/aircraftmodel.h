@@ -143,49 +143,49 @@ namespace BlackMisc
             bool canInitializeFromFsd() const;
 
             //! Corresponding callsign if applicable
-            const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_callsign; }
+            const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
             //! Corresponding callsign if applicable
-            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { this->m_callsign = callsign; }
+            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Callsign empty
-            bool isCallsignEmpty() const { return this->m_callsign.isEmpty(); }
+            bool isCallsignEmpty() const { return m_callsign.isEmpty(); }
 
             //! Model key, either queried or loaded from simulator model
-            const QString &getModelString() const { return this->m_modelString; }
+            const QString &getModelString() const { return m_modelString; }
 
             //! Model string and DB key (if available)
             QString getModelStringAndDbKey() const;
 
             //! Model string
-            void setModelString(const QString &modelString) { this->m_modelString = modelString.trimmed().toUpper(); }
+            void setModelString(const QString &modelString) { m_modelString = modelString.trimmed().toUpper(); }
 
             //! Descriptive text
-            const QString &getDescription() const { return this->m_description; }
+            const QString &getDescription() const { return m_description; }
 
             //! Descriptive text
-            void setDescription(const QString &description) { this->m_description = description.trimmed(); }
+            void setDescription(const QString &description) { m_description = description.trimmed(); }
 
             //! Set queried model string
-            void setQueriedModelString(const QString &model) { this->m_modelString = model; this->m_modelType = TypeQueriedFromNetwork; }
+            void setQueriedModelString(const QString &model) { m_modelString = model; m_modelType = TypeQueriedFromNetwork; }
 
             //! Aircraft ICAO code
-            const BlackMisc::Aviation::CAircraftIcaoCode &getAircraftIcaoCode() const { return this->m_aircraftIcao; }
+            const BlackMisc::Aviation::CAircraftIcaoCode &getAircraftIcaoCode() const { return m_aircraftIcao; }
 
             //! Aircraft ICAO code designator
-            const QString &getAircraftIcaoCodeDesignator() const { return this->m_aircraftIcao.getDesignator(); }
+            const QString &getAircraftIcaoCodeDesignator() const { return m_aircraftIcao.getDesignator(); }
 
             //! VTOL aircraft?
             bool isVtol() const;
 
             //! Airline ICAO code
-            const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcaoCode() const { return this->m_livery.getAirlineIcaoCode(); }
+            const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcaoCode() const { return m_livery.getAirlineIcaoCode(); }
 
             //! Airline ICAO code designator
-            const QString &getAirlineIcaoCodeDesignator() const { return this->m_livery.getAirlineIcaoCode().getDesignator(); }
+            const QString &getAirlineIcaoCodeDesignator() const { return m_livery.getAirlineIcaoCode().getDesignator(); }
 
             //! Airline ICAO code designator
-            const QString getAirlineIcaoCodeVDesignator() const { return this->m_livery.getAirlineIcaoCode().getVDesignator(); }
+            const QString getAirlineIcaoCodeVDesignator() const { return m_livery.getAirlineIcaoCode().getVDesignator(); }
 
             //! Set aircraft ICAO code
             bool setAircraftIcaoCode(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode);
@@ -218,7 +218,7 @@ namespace BlackMisc
             const BlackMisc::Aviation::CLivery &getLivery() const { return m_livery; }
 
             //! Livery
-            void setLivery(const BlackMisc::Aviation::CLivery &livery) { this->m_livery = livery; }
+            void setLivery(const BlackMisc::Aviation::CLivery &livery) { m_livery = livery; }
 
             //! Livery available?
             bool hasLivery() const { return m_livery.hasCompleteData();}
@@ -251,10 +251,10 @@ namespace BlackMisc
             bool matchesAnyDbDistributor(const CDistributorList &distributors) const;
 
             //! Name
-            const QString &getName() const { return this->m_name; }
+            const QString &getName() const { return m_name; }
 
             //! Name
-            void setName(const QString &name) { this->m_name = name.trimmed(); }
+            void setName(const QString &name) { m_name = name.trimmed(); }
 
             //! Model type
             ModelType getModelType() const { return m_modelType; }
@@ -263,7 +263,7 @@ namespace BlackMisc
             QString getModelTypeAsString() const { return modelTypeToString(getModelType()); }
 
             //! Set type
-            void setModelType(ModelType type) { this->m_modelType = type; }
+            void setModelType(ModelType type) { m_modelType = type; }
 
             //! Model mode
             ModelMode getModelMode() const { return m_modelMode; }
@@ -284,10 +284,10 @@ namespace BlackMisc
             void setModelModeAsString(const QString &mode);
 
             //! Simulator info
-            CSimulatorInfo getSimulator() const { return this->m_simulator; }
+            CSimulatorInfo getSimulator() const { return m_simulator; }
 
             //! Set simulator info
-            void setSimulator(const CSimulatorInfo &simulator) { this->m_simulator = simulator; }
+            void setSimulator(const CSimulatorInfo &simulator) { m_simulator = simulator; }
 
             //! Matches given simulator?
             bool matchesSimulator(const CSimulatorInfo &simulator) const;

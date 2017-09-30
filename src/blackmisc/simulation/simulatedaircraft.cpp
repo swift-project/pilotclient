@@ -73,8 +73,8 @@ namespace BlackMisc
         {
             this->setCom1System(com1);
             this->setCom2System(com2);
-            this->m_transponder.setTransponderCode(transponderCode);
-            this->m_transponder.setTransponderMode(transponderMode);
+            m_transponder.setTransponderCode(transponderCode);
+            m_transponder.setTransponderMode(transponderMode);
         }
 
         bool CSimulatedAircraft::hasChangedCockpitData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder) const
@@ -89,8 +89,8 @@ namespace BlackMisc
 
         bool CSimulatedAircraft::isValidForLogin() const
         {
-            if (this->m_callsign.asString().isEmpty()) { return false; }
-            if (!this->m_pilot.isValid()) { return false; }
+            if (m_callsign.asString().isEmpty()) { return false; }
+            if (!m_pilot.isValid()) { return false; }
             return true;
         }
 
@@ -107,8 +107,8 @@ namespace BlackMisc
 
         void CSimulatedAircraft::setPilot(const Network::CUser &user)
         {
-            this->m_pilot = user;
-            this->m_pilot.setCallsign(this->m_callsign);
+            m_pilot = user;
+            m_pilot.setCallsign(m_callsign);
         }
 
         bool CSimulatedAircraft::isEnabled() const
@@ -133,14 +133,14 @@ namespace BlackMisc
             {
                 // create a dummy livery for given ICAO code
                 CLivery newLivery(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode, "Standard auto generated");
-                this->m_models[CurrentModel].setLivery(newLivery);
+                m_models[CurrentModel].setLivery(newLivery);
             }
-            return this->m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode);
+            return m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode);
         }
 
         const CAirlineIcaoCode &CSimulatedAircraft::getAirlineIcaoCode() const
         {
-            return this->m_models[CurrentModel].getAirlineIcaoCode();
+            return m_models[CurrentModel].getAirlineIcaoCode();
         }
 
         const QString &CSimulatedAircraft::getAirlineIcaoCodeDesignator() const
@@ -150,7 +150,7 @@ namespace BlackMisc
 
         void CSimulatedAircraft::setAircraftIcaoDesignator(const QString &designator)
         {
-            this->m_models[CurrentModel].setAircraftIcaoDesignator(designator);
+            m_models[CurrentModel].setAircraftIcaoDesignator(designator);
         }
 
         bool CSimulatedAircraft::hasAircraftDesignator() const
@@ -194,14 +194,14 @@ namespace BlackMisc
         bool CSimulatedAircraft::setCom1ActiveFrequency(const CFrequency &frequency)
         {
             if (!CComSystem::isValidComFrequency(frequency)) { return false; }
-            this->m_com1system.setFrequencyActive(frequency);
+            m_com1system.setFrequencyActive(frequency);
             return true;
         }
 
         bool CSimulatedAircraft::setCom2ActiveFrequency(const CFrequency &frequency)
         {
             if (!CComSystem::isValidComFrequency(frequency)) { return false; }
-            this->m_com2system.setFrequencyActive(frequency);
+            m_com2system.setFrequencyActive(frequency);
             return true;
         }
 
@@ -297,50 +297,28 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexModel:
-                return this->getModel().propertyByIndex(index.copyFrontRemoved());
-            case IndexNetworkModel:
-                return this->getNetworkModel().propertyByIndex(index.copyFrontRemoved());
-            case IndexNetworkModelAircraftIcaoDifference:
-                return this->getNetworkModelAircraftIcaoDifference();
-            case IndexNetworkModelAirlineIcaoDifference:
-                return this->getNetworkModelAirlineIcaoDifference();
-            case IndexNetworkModelLiveryDifference:
-                return this->getNetworkModelLiveryDifference();
-            case IndexEnabled:
-                return CVariant::fromValue(this->isEnabled());
-            case IndexRendered:
-                return CVariant::fromValue(this->isRendered());
-            case IndexPartsSynchronized:
-                return CVariant::fromValue(this->isPartsSynchronized());
-            case IndexFastPositionUpdates:
-                return CVariant::fromValue(this->fastPositionUpdates());
-            case IndexCallsign:
-                return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexPilot:
-                return this->m_pilot.propertyByIndex(index.copyFrontRemoved());
-            case IndexRelativeDistance:
-                return this->m_relativeDistance.propertyByIndex(index.copyFrontRemoved());
-            case IndexCom1System:
-                return this->m_com1system.propertyByIndex(index.copyFrontRemoved());
-            case IndexCom2System:
-                return this->m_com2system.propertyByIndex(index.copyFrontRemoved());
-            case IndexTransponder:
-                return this->m_transponder.propertyByIndex(index.copyFrontRemoved());
-            case IndexSituation:
-                return this->m_situation.propertyByIndex(index.copyFrontRemoved());
-            case IndexAircraftIcaoCode:
-                return this->getAircraftIcaoCode().propertyByIndex(index.copyFrontRemoved());
-            case IndexLivery:
-                return this->getLivery().propertyByIndex(index.copyFrontRemoved());
-            case IndexParts:
-                return this->m_parts.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsVtol:
-                return CVariant::fromValue(this->isVtol());
-            case IndexCombinedIcaoLiveryString:
-                return CVariant::fromValue(this->getCombinedIcaoLiveryString(false));
-            case IndexCombinedIcaoLiveryStringNetworkModel:
-                return CVariant::fromValue(this->getCombinedIcaoLiveryString(true));
+            case IndexModel: return this->getModel().propertyByIndex(index.copyFrontRemoved());
+            case IndexNetworkModel: return this->getNetworkModel().propertyByIndex(index.copyFrontRemoved());
+            case IndexNetworkModelAircraftIcaoDifference: return this->getNetworkModelAircraftIcaoDifference();
+            case IndexNetworkModelAirlineIcaoDifference: return this->getNetworkModelAirlineIcaoDifference();
+            case IndexNetworkModelLiveryDifference: return this->getNetworkModelLiveryDifference();
+            case IndexEnabled: return CVariant::fromValue(this->isEnabled());
+            case IndexRendered: return CVariant::fromValue(this->isRendered());
+            case IndexPartsSynchronized: return CVariant::fromValue(this->isPartsSynchronized());
+            case IndexFastPositionUpdates: return CVariant::fromValue(this->fastPositionUpdates());
+            case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexPilot: return m_pilot.propertyByIndex(index.copyFrontRemoved());
+            case IndexRelativeDistance: return m_relativeDistance.propertyByIndex(index.copyFrontRemoved());
+            case IndexCom1System: return m_com1system.propertyByIndex(index.copyFrontRemoved());
+            case IndexCom2System: return m_com2system.propertyByIndex(index.copyFrontRemoved());
+            case IndexTransponder: return m_transponder.propertyByIndex(index.copyFrontRemoved());
+            case IndexSituation: return m_situation.propertyByIndex(index.copyFrontRemoved());
+            case IndexAircraftIcaoCode: return this->getAircraftIcaoCode().propertyByIndex(index.copyFrontRemoved());
+            case IndexLivery: return this->getLivery().propertyByIndex(index.copyFrontRemoved());
+            case IndexParts: return m_parts.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsVtol: return CVariant::fromValue(this->isVtol());
+            case IndexCombinedIcaoLiveryString: return CVariant::fromValue(this->getCombinedIcaoLiveryString(false));
+            case IndexCombinedIcaoLiveryStringNetworkModel: return CVariant::fromValue(this->getCombinedIcaoLiveryString(true));
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -351,54 +329,26 @@ namespace BlackMisc
         void CSimulatedAircraft::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CSimulatedAircraft>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsign:
-                this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexPilot:
-                this->m_pilot.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexRelativeDistance:
-                this->m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexCom1System:
-                this->m_com1system.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexCom2System:
-                this->m_com2system.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexTransponder:
-                this->m_transponder.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexSituation:
-                this->m_situation.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexParts:
-                this->m_parts.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
+            case IndexCallsign: m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexPilot: m_pilot.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexRelativeDistance: m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCom1System: m_com1system.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCom2System: m_com2system.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexTransponder: m_transponder.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSituation: m_situation.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexParts: m_parts.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexNetworkModel: m_models[NetworkModel].setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexEnabled: m_enabled = variant.toBool(); break;
+            case IndexRendered: m_rendered = variant.toBool(); break;
+            case IndexPartsSynchronized: m_partsSynchronized = variant.toBool(); break;
+            case IndexFastPositionUpdates: m_fastPositionUpdates = variant.toBool(); break;
+            case IndexLivery: Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported"); break;
             case IndexModel:
-                this->m_models[CurrentModel].setPropertyByIndex(index.copyFrontRemoved(), variant);
-                this->setModel(this->m_models[CurrentModel]); // sync some values such as callsign
-                break;
-            case IndexNetworkModel:
-                this->m_models[NetworkModel].setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexEnabled:
-                this->m_enabled = variant.toBool();
-                break;
-            case IndexRendered:
-                this->m_rendered = variant.toBool();
-                break;
-            case IndexPartsSynchronized:
-                this->m_partsSynchronized = variant.toBool();
-                break;
-            case IndexFastPositionUpdates:
-                this->m_fastPositionUpdates = variant.toBool();
-                break;
-            case IndexLivery:
-                Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported");
+                m_models[CurrentModel].setPropertyByIndex(index.copyFrontRemoved(), variant);
+                this->setModel(m_models[CurrentModel]); // sync some values such as callsign
                 break;
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
@@ -415,48 +365,29 @@ namespace BlackMisc
 
         int CSimulatedAircraft::comparePropertyByIndex(const CPropertyIndex &index, const CSimulatedAircraft &compareValue) const
         {
-            if (index.isMyself()) { return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign()); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            if (index.isMyself()) { return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign()); }
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsign:
-                return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-            case IndexPilot:
-                return this->m_pilot.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPilot());
-            case IndexSituation:
-                return this->m_situation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSituation());
-            case IndexRelativeDistance:
-                return this->m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
-            case IndexCom1System:
-                return this->m_com1system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom1System());
-            case IndexCom2System:
-                return this->m_com2system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom2System());
-            case IndexTransponder:
-                return Compare::compare(m_transponder.getTransponderCode(), compareValue.getTransponder().getTransponderCode());
-            case IndexLivery:
-                return this->getLivery().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
-            case IndexParts:
-                return this->m_parts.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getParts());
-            case IndexModel:
-                return m_models[CurrentModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
-            case IndexNetworkModel:
-                return m_models[NetworkModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
-            case IndexNetworkModelAircraftIcaoDifference:
-                return this->getNetworkModelAircraftIcaoDifference().compare(compareValue.getNetworkModelAircraftIcaoDifference());
-            case IndexNetworkModelAirlineIcaoDifference:
-                return this->getNetworkModelAirlineIcaoDifference().compare(compareValue.getNetworkModelAirlineIcaoDifference());
-            case IndexNetworkModelLiveryDifference:
-                return this->getNetworkModelLiveryDifference().compare(compareValue.getNetworkModelLiveryDifference());
-            case IndexRendered:
-                return Compare::compare(this->m_rendered, compareValue.isRendered());
-            case IndexPartsSynchronized:
-                return Compare::compare(this->m_partsSynchronized, compareValue.isPartsSynchronized());
-            case IndexFastPositionUpdates:
-                return Compare::compare(this->m_fastPositionUpdates, compareValue.fastPositionUpdates());
-            case IndexCombinedIcaoLiveryString:
-                return this->getCombinedIcaoLiveryString(false).compare(compareValue.getCombinedIcaoLiveryString(false));
-            case IndexCombinedIcaoLiveryStringNetworkModel:
-                return this->getCombinedIcaoLiveryString(true).compare(compareValue.getCombinedIcaoLiveryString(true));
+            case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+            case IndexPilot: return m_pilot.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPilot());
+            case IndexSituation: return m_situation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSituation());
+            case IndexRelativeDistance: return m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
+            case IndexCom1System: return m_com1system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom1System());
+            case IndexCom2System: return m_com2system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom2System());
+            case IndexTransponder: return Compare::compare(m_transponder.getTransponderCode(), compareValue.getTransponder().getTransponderCode());
+            case IndexLivery: return this->getLivery().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
+            case IndexParts: return m_parts.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getParts());
+            case IndexModel: return m_models[CurrentModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
+            case IndexNetworkModel: return m_models[NetworkModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
+            case IndexNetworkModelAircraftIcaoDifference: return this->getNetworkModelAircraftIcaoDifference().compare(compareValue.getNetworkModelAircraftIcaoDifference());
+            case IndexNetworkModelAirlineIcaoDifference: return this->getNetworkModelAirlineIcaoDifference().compare(compareValue.getNetworkModelAirlineIcaoDifference());
+            case IndexNetworkModelLiveryDifference: return this->getNetworkModelLiveryDifference().compare(compareValue.getNetworkModelLiveryDifference());
+            case IndexRendered: return Compare::compare(m_rendered, compareValue.isRendered());
+            case IndexPartsSynchronized: return Compare::compare(m_partsSynchronized, compareValue.isPartsSynchronized());
+            case IndexFastPositionUpdates: return Compare::compare(m_fastPositionUpdates, compareValue.fastPositionUpdates());
+            case IndexCombinedIcaoLiveryString: return this->getCombinedIcaoLiveryString(false).compare(compareValue.getCombinedIcaoLiveryString(false));
+            case IndexCombinedIcaoLiveryStringNetworkModel: return this->getCombinedIcaoLiveryString(true).compare(compareValue.getCombinedIcaoLiveryString(true));
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
                 {
@@ -471,13 +402,13 @@ namespace BlackMisc
         const CAircraftModel &CSimulatedAircraft::getNetworkModelOrModel() const
         {
             Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
-            return this->hasNetworkModel() ? this->m_models[NetworkModel] : this->m_models[CurrentModel];
+            return this->hasNetworkModel() ? m_models[NetworkModel] : m_models[CurrentModel];
         }
 
         bool CSimulatedAircraft::hasNetworkModel() const
         {
             Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
-            return this->m_models[NetworkModel].hasModelString() || !this->m_models[NetworkModel].getCallsign().isEmpty();
+            return m_models[NetworkModel].hasModelString() || !m_models[NetworkModel].getCallsign().isEmpty();
         }
 
         QString CSimulatedAircraft::getNetworkModelAircraftIcaoDifference() const
@@ -514,7 +445,7 @@ namespace BlackMisc
             Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
 
             // sync the callsigns
-            this->m_models[CurrentModel] = model;
+            m_models[CurrentModel] = model;
             this->setCallsign(this->hasValidCallsign() ? this->getCallsign() : model.getCallsign());
             this->setIcaoCodes(model.getAircraftIcaoCode(), model.getAirlineIcaoCode());
         }
@@ -522,44 +453,44 @@ namespace BlackMisc
         void CSimulatedAircraft::setNetworkModel(const CAircraftModel &model)
         {
             Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
-            this->m_models[NetworkModel] = model;
+            m_models[NetworkModel] = model;
         }
 
         void CSimulatedAircraft::setModelString(const QString &modelString)
         {
             Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
-            this->m_models[CurrentModel].setModelString(modelString);
+            m_models[CurrentModel].setModelString(modelString);
         }
 
         void CSimulatedAircraft::setCallsign(const CCallsign &callsign)
         {
             Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
-            this->m_callsign = callsign;
-            this->m_models[CurrentModel].setCallsign(callsign);
-            this->m_models[NetworkModel].setCallsign(callsign);
-            this->m_pilot.setCallsign(callsign);
+            m_callsign = callsign;
+            m_models[CurrentModel].setCallsign(callsign);
+            m_models[NetworkModel].setCallsign(callsign);
+            m_pilot.setCallsign(callsign);
         }
 
         bool CSimulatedAircraft::isActiveFrequencyWithin8_33kHzChannel(const CFrequency &comFrequency) const
         {
-            return this->m_com1system.isActiveFrequencyWithin8_33kHzChannel(comFrequency) ||
-                   this->m_com2system.isActiveFrequencyWithin8_33kHzChannel(comFrequency);
+            return m_com1system.isActiveFrequencyWithin8_33kHzChannel(comFrequency) ||
+                   m_com2system.isActiveFrequencyWithin8_33kHzChannel(comFrequency);
         }
 
         bool CSimulatedAircraft::isActiveFrequencyWithin25kHzChannel(const CFrequency &comFrequency) const
         {
-            return this->m_com1system.isActiveFrequencyWithin25kHzChannel(comFrequency) ||
-                   this->m_com2system.isActiveFrequencyWithin25kHzChannel(comFrequency);
+            return m_com1system.isActiveFrequencyWithin25kHzChannel(comFrequency) ||
+                   m_com2system.isActiveFrequencyWithin25kHzChannel(comFrequency);
         }
 
         QString CSimulatedAircraft::convertToQString(bool i18n) const
         {
-            const QString s = this->m_callsign.toQString(i18n) %
-                              QLatin1Char(' ') % this->m_pilot.toQString(i18n) %
-                              QLatin1Char(' ') % this->m_situation.toQString(i18n) %
-                              QLatin1Char(' ') % this->m_com1system.toQString(i18n) %
-                              QLatin1Char(' ') % this->m_com2system.toQString(i18n) %
-                              QLatin1Char(' ') % this->m_transponder.toQString(i18n) %
+            const QString s = m_callsign.toQString(i18n) %
+                              QLatin1Char(' ') % m_pilot.toQString(i18n) %
+                              QLatin1Char(' ') % m_situation.toQString(i18n) %
+                              QLatin1Char(' ') % m_com1system.toQString(i18n) %
+                              QLatin1Char(' ') % m_com2system.toQString(i18n) %
+                              QLatin1Char(' ') % m_transponder.toQString(i18n) %
                               QLatin1String(" enabled: ") % BlackMisc::boolToYesNo(this->isEnabled()) %
                               QLatin1String(" rendered: ") % BlackMisc::boolToYesNo(this->isRendered()) %
                               QLatin1Char(' ') % this->getModel().toQString(i18n);
