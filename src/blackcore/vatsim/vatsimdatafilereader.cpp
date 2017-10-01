@@ -212,7 +212,7 @@ namespace BlackCore
             }
 
             this->logNetworkReplyReceived(nwReplyPtr);
-            QStringList illegalIcaoCodes;
+            QStringList illegalEquipmentCodes;
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 const QString dataFileData = nwReply->readAll();
@@ -307,20 +307,17 @@ namespace BlackCore
                                 situation.setGroundSpeed(CSpeed(groundspeedKts, CSpeedUnit::kts()));
                                 CSimulatedAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
 
-                                QString aircraftIcaoCode = clientPartsMap["planned_aircraft"];
-                                if (!aircraftIcaoCode.isEmpty())
+                                const QString equipmentCodeAndAircraft = clientPartsMap["planned_aircraft"].trimmed();
+                                if (!equipmentCodeAndAircraft.isEmpty())
                                 {
-                                    // http://uk.flightaware.com/about/faq_aircraft_flight_plan_suffix.rvt
-                                    // we expect something like H/B772/F B773 B773/F
-                                    thread_local const QRegularExpression reg("/.");
-                                    aircraftIcaoCode = aircraftIcaoCode.replace(reg, "").trimmed().toUpper();
+                                    const QString aircraftIcaoCode = CFlightPlanUtils::aircraftIcaoCodeFromEquipmentCode(equipmentCodeAndAircraft);
                                     if (CAircraftIcaoCode::isValidDesignator(aircraftIcaoCode))
                                     {
                                         currentAircraft.setAircraftIcaoDesignator(aircraftIcaoCode);
                                     }
                                     else
                                     {
-                                        illegalIcaoCodes.append(aircraftIcaoCode);
+                                        illegalEquipmentCodes.append(equipmentCodeAndAircraft);
                                     }
                                 }
 
@@ -413,10 +410,10 @@ namespace BlackCore
                 }
 
                 // warnings, if required
-                if (!illegalIcaoCodes.isEmpty())
+                if (!illegalEquipmentCodes.isEmpty())
                 {
                     logInconsistentData(
-                        CStatusMessage(this, CStatusMessage::SeverityInfo, "Illegal / ignored ICAO code(s) in VATSIM data file: " + illegalIcaoCodes.join(", "))
+                        CStatusMessage(this, CStatusMessage::SeverityInfo, "Illegal / ignored equipment code(s) in VATSIM data file: " + illegalEquipmentCodes.join(", "))
                     );
                 }
 
