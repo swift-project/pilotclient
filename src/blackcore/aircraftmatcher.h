@@ -73,34 +73,48 @@ namespace BlackCore
 
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModel reverselLookupModel(const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftIcaoCode &networkAircraftIcao, const BlackMisc::Aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
-                BlackMisc::Simulation::CAircraftModel::ModelType type,
-                BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModel reverselLookupModel(
+            const BlackMisc::Aviation::CCallsign &callsign,
+            const BlackMisc::Aviation::CAircraftIcaoCode &networkAircraftIcao,
+            const BlackMisc::Aviation::CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString,
+            BlackMisc::Simulation::CAircraftModel::ModelType type,
+            BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModel reverselLookupModel(const BlackMisc::Simulation::CAircraftModel &modelToLookup, const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModel reverselLookupModel(
+            const BlackMisc::Simulation::CAircraftModel &modelToLookup,
+            const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
-        static BlackMisc::Aviation::CAircraftIcaoCode reverseLookupAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icaoDesignator, const BlackMisc::Aviation::CCallsign &logCallsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Aviation::CAircraftIcaoCode reverseLookupAircraftIcao(
+            const BlackMisc::Aviation::CAircraftIcaoCode &icaoDesignator,
+            const BlackMisc::Aviation::CCallsign &logCallsign = BlackMisc::Aviation::CCallsign(),
+            BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
-        static BlackMisc::Aviation::CAirlineIcaoCode reverseLookupAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Aviation::CAirlineIcaoCode reverseLookupAirlineIcao(
+            const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern,
+            const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of standard livery
         //! \threadsafe
-        static BlackMisc::Aviation::CLivery reverseLookupStandardLivery(const BlackMisc::Aviation::CAirlineIcaoCode &airline, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Aviation::CLivery reverseLookupStandardLivery(
+            const BlackMisc::Aviation::CAirlineIcaoCode &airline,
+            const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of airline name
         //! \threadsafe
-        static QString reverseLookupAirlineName(const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {}, BlackMisc::CStatusMessageList *log = nullptr);
+        static QString reverseLookupAirlineName(
+            const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {}, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of telephony designator
         //! \threadsafe
-        static QString reverseLookupTelephonyDesignator(const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {}, BlackMisc::CStatusMessageList *log = nullptr);
+        static QString reverseLookupTelephonyDesignator(
+            const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {},
+            BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Turn callsign into airline
         //! \threadsafe
