@@ -113,6 +113,10 @@ namespace BlackCore
             //! \threadsafe
             QString getFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
+            //! Parsed flight plan remarks for callsign
+            //! \threadsafe
+            BlackMisc::Aviation::CFlightPlanUtils::FlightPlanRemarks getParsedFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
             //! Update aircraft with VATSIM aircraft data from data file
             //! \threadsafe
             void updateWithVatsimDataFileData(BlackMisc::Simulation::CSimulatedAircraft &aircraftToBeUdpated) const;

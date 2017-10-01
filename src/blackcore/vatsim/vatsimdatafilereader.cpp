@@ -135,6 +135,14 @@ namespace BlackCore
             return m_flightPlanRemarks.value(callsign);
         }
 
+        CFlightPlanUtils::FlightPlanRemarks CVatsimDataFileReader::getParsedFlightPlanRemarksForCallsign(const CCallsign &callsign) const
+        {
+            if (callsign.isEmpty()) return CFlightPlanUtils::parseFlightPlanRemarks("");
+            const QString remarks = this->getFlightPlanRemarksForCallsign(callsign);
+            const CVoiceCapabilities vc = this->getVoiceCapabilityForCallsign(callsign);
+            return CFlightPlanUtils::parseFlightPlanRemarks(remarks, vc);
+        }
+
         void CVatsimDataFileReader::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUdpated) const
         {
             this->getAircraft().updateWithVatsimDataFileData(aircraftToBeUdpated);
