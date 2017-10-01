@@ -18,6 +18,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/flightplanutils.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
@@ -74,43 +75,43 @@ namespace BlackCore
 
             //! Users for callsign(s)
             //! \threadsafe
-            BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
             //! User for callsign
             //! \threadsafe
-            BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Controllers for callsigns
             //! \threadsafe
-            BlackMisc::Network::CUserList getControllersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            BlackMisc::Network::CUserList getControllersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
             //! Controllers for callsign
             //! \threadsafe
-            BlackMisc::Network::CUserList getControllersForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            BlackMisc::Network::CUserList getControllersForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Users for callsigns
             //! \threadsafe
-            BlackMisc::Network::CUserList getPilotsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
+            BlackMisc::Network::CUserList getPilotsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
 
             //! Users for callsign
             //! \threadsafe
-            BlackMisc::Network::CUserList getPilotsForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            BlackMisc::Network::CUserList getPilotsForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Aircraft ICAO info for callsign
             //! \threadsafe
-            BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCode(const BlackMisc::Aviation::CCallsign &callsign);
+            BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCode(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Airline ICAO info for callsign
             //! \threadsafe
-            BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCode(const BlackMisc::Aviation::CCallsign &callsign);
+            BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCode(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Voice capability for callsign
             //! \threadsafe
-            BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Flight plan remarks for callsign
             //! \threadsafe
-            QString getFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            QString getFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Update aircraft with VATSIM aircraft data from data file
             //! \threadsafe

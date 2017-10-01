@@ -96,30 +96,30 @@ namespace BlackCore
             return m_lastGoodSetup.get().getFsdServers();
         }
 
-        CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns)
+        CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns) const
         {
             return this->getAircraft().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CSimulatedAircraft::getPilot));
         }
 
-        CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign)
+        CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign) const
         {
             const CCallsignSet callsigns({callsign});
             return this->getPilotsForCallsigns(callsigns);
         }
 
-        CAirlineIcaoCode CVatsimDataFileReader::getAirlineIcaoCode(const CCallsign &callsign)
+        CAirlineIcaoCode CVatsimDataFileReader::getAirlineIcaoCode(const CCallsign &callsign) const
         {
             const CSimulatedAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
             return aircraft.getAirlineIcaoCode();
         }
 
-        CAircraftIcaoCode CVatsimDataFileReader::getAircraftIcaoCode(const CCallsign &callsign)
+        CAircraftIcaoCode CVatsimDataFileReader::getAircraftIcaoCode(const CCallsign &callsign) const
         {
             const CSimulatedAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
             return aircraft.getAircraftIcaoCode();
         }
 
-        CVoiceCapabilities CVatsimDataFileReader::getVoiceCapabilityForCallsign(const CCallsign &callsign)
+        CVoiceCapabilities CVatsimDataFileReader::getVoiceCapabilityForCallsign(const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return CVoiceCapabilities(); }
             QReadLocker rl(&m_lock);
@@ -128,7 +128,7 @@ namespace BlackCore
                    CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Unknown);
         }
 
-        QString CVatsimDataFileReader::getFlightPlanRemarksForCallsign(const CCallsign &callsign)
+        QString CVatsimDataFileReader::getFlightPlanRemarksForCallsign(const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return QString(); }
             QReadLocker rl(&m_lock);
@@ -140,24 +140,24 @@ namespace BlackCore
             this->getAircraft().updateWithVatsimDataFileData(aircraftToBeUdpated);
         }
 
-        CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign)
+        CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign) const
         {
             const CCallsignSet cs({callsign});
             return this->getControllersForCallsigns(cs);
         }
 
-        CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignSet &callsigns)
+        CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignSet &callsigns) const
         {
             return this->getAtcStations().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAtcStation::getController));
         }
 
-        CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign)
+        CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign) const
         {
             const CCallsignSet callsigns({callsign});
             return this->getUsersForCallsigns(callsigns);
         }
 
-        CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignSet &callsigns)
+        CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignSet &callsigns) const
         {
             CUserList users;
             if (callsigns.isEmpty()) { return users; }
