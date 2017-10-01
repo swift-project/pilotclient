@@ -12,9 +12,8 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/aviation/flightplanutils.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/url.h"
@@ -24,6 +23,8 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -59,24 +60,24 @@ namespace BlackCore
         CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) :
             CThreadedReader(owner, "CVatsimDataFileReader")
         {
-            reloadSettings();
+            this->reloadSettings();
         }
 
         CSimulatedAircraftList CVatsimDataFileReader::getAircraft() const
         {
-            QReadLocker rl(&this->m_lock);
-            return this->m_aircraft;
+            QReadLocker rl(&m_lock);
+            return m_aircraft;
         }
 
         CAtcStationList CVatsimDataFileReader::getAtcStations() const
         {
-            QReadLocker rl(&this->m_lock);
-            return this->m_atcStations;
+            QReadLocker rl(&m_lock);
+            return m_atcStations;
         }
 
         CAtcStationList CVatsimDataFileReader::getAtcStationsForCallsign(const CCallsign &callsign) const
         {
-            CCallsignSet cs({callsign});
+            const CCallsignSet cs({callsign});
             return this->getAtcStationsForCallsigns(cs);
         }
 
@@ -87,12 +88,12 @@ namespace BlackCore
 
         CServerList CVatsimDataFileReader::getVoiceServers() const
         {
-            return this->m_lastGoodSetup.get().getVoiceServers();
+            return m_lastGoodSetup.get().getVoiceServers();
         }
 
         CServerList CVatsimDataFileReader::getFsdServers() const
         {
-            return this->m_lastGoodSetup.get().getFsdServers();
+            return m_lastGoodSetup.get().getFsdServers();
         }
 
         CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns)
@@ -102,35 +103,36 @@ namespace BlackCore
 
         CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign)
         {
-            CCallsignSet callsigns({callsign});
+            const CCallsignSet callsigns({callsign});
             return this->getPilotsForCallsigns(callsigns);
         }
 
         CAirlineIcaoCode CVatsimDataFileReader::getAirlineIcaoCode(const CCallsign &callsign)
         {
-            CSimulatedAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
+            const CSimulatedAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
             return aircraft.getAirlineIcaoCode();
         }
 
         CAircraftIcaoCode CVatsimDataFileReader::getAircraftIcaoCode(const CCallsign &callsign)
         {
-            CSimulatedAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
+            const CSimulatedAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
             return aircraft.getAircraftIcaoCode();
         }
 
         CVoiceCapabilities CVatsimDataFileReader::getVoiceCapabilityForCallsign(const CCallsign &callsign)
         {
-            QReadLocker rl(&this->m_lock);
-            return (this->m_voiceCapabilities.contains(callsign)) ?
+            if (callsign.isEmpty()) { return CVoiceCapabilities(); }
+            QReadLocker rl(&m_lock);
+            return m_voiceCapabilities.contains(callsign) ?
                    m_voiceCapabilities[callsign] :
                    CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Unknown);
         }
 
         QString CVatsimDataFileReader::getFlightPlanRemarksForCallsign(const CCallsign &callsign)
         {
-            QReadLocker rl(&this->m_lock);
-            return (this->m_flightPlanRemarks.contains(callsign)) ?
-                   m_flightPlanRemarks[callsign] : "";
+            if (callsign.isEmpty()) { return QString(); }
+            QReadLocker rl(&m_lock);
+            return m_flightPlanRemarks.value(callsign);
         }
 
         void CVatsimDataFileReader::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUdpated) const
@@ -140,7 +142,7 @@ namespace BlackCore
 
         CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign)
         {
-            CCallsignSet cs({callsign});
+            const CCallsignSet cs({callsign});
             return this->getControllersForCallsigns(cs);
         }
 
@@ -151,7 +153,7 @@ namespace BlackCore
 
         CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign)
         {
-            CCallsignSet callsigns({callsign});
+            const CCallsignSet callsigns({callsign});
             return this->getUsersForCallsigns(callsigns);
         }
 
@@ -169,14 +171,14 @@ namespace BlackCore
 
         void CVatsimDataFileReader::readInBackgroundThread()
         {
-            bool s = QMetaObject::invokeMethod(this, "ps_read");
+            const bool s = QMetaObject::invokeMethod(this, "ps_read");
             Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
             Q_UNUSED(s);
         }
 
         void CVatsimDataFileReader::doWorkImpl()
         {
-            ps_read();
+            this->ps_read();
         }
 
         void CVatsimDataFileReader::ps_read()
@@ -393,21 +395,21 @@ namespace BlackCore
 
                 // this part needs to be synchronized
                 {
-                    QWriteLocker wl(&this->m_lock);
+                    QWriteLocker wl(&m_lock);
                     this->setUpdateTimestamp(updateTimestampFromFile);
-                    this->m_aircraft = aircraft;
-                    this->m_atcStations = atcStations;
-                    this->m_voiceCapabilities = voiceCapabilitiesMap;
-                    this->m_flightPlanRemarks = flightPlanRemarksMap;
+                    m_aircraft = aircraft;
+                    m_atcStations = atcStations;
+                    m_voiceCapabilities = voiceCapabilitiesMap;
+                    m_flightPlanRemarks = flightPlanRemarksMap;
                 }
 
                 // update cache itself is thread safe
-                CVatsimSetup vs(this->m_lastGoodSetup.get());
+                CVatsimSetup vs(m_lastGoodSetup.get());
                 const bool changedSetup = vs.setServers(fsdServers, voiceServers);
                 if (changedSetup)
                 {
                     vs.setUtcTimestamp(updateTimestampFromFile);
-                    this->m_lastGoodSetup.set(vs);
+                    m_lastGoodSetup.set(vs);
                 }
 
                 // warnings, if required

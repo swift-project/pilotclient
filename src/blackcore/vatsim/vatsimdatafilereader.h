@@ -17,14 +17,13 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/datacache.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/datacache.h"
 #include "blackcore/threadedreader.h"
 
 #include <QMap>
@@ -141,19 +140,6 @@ namespace BlackCore
             void ps_read();
 
         private:
-            void reloadSettings();
-
-            BlackMisc::Aviation::CAtcStationList m_atcStations;
-            BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
-            BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile> m_settings { this, &CVatsimDataFileReader::reloadSettings };
-            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities; //!< voice capabilities
-            QMap<BlackMisc::Aviation::CCallsign, QString> m_flightPlanRemarks; //!< cache for flight plan remarks
-
-            //! Split line and assign values to their corresponding attribute names
-            //! \remark attributes expected as lower case
-            static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes);
-
             //! Section in file
             enum Section
             {
@@ -163,6 +149,20 @@ namespace BlackCore
                 SectionClients,
                 SectionGeneral
             };
+
+            BlackMisc::Aviation::CAtcStationList m_atcStations;
+            BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
+            BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile> m_settings { this, &CVatsimDataFileReader::reloadSettings };
+            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities; //!< voice capabilities
+            QMap<BlackMisc::Aviation::CCallsign, QString> m_flightPlanRemarks; //!< cache for flight plan remarks
+
+            //! Reload the reader settings
+            void reloadSettings();
+
+            //! Split line and assign values to their corresponding attribute names
+            //! \remark attributes expected as lower case
+            static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes);
 
             //! Get current section
             static Section currentLineToSection(const QString &currentLine);
