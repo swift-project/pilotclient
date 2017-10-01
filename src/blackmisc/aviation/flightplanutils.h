@@ -13,6 +13,8 @@
 #define BLACKMISC_AVIATION_FLIGHTPLANUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/network/voicecapabilities.h"
+#include "callsign.h"
 #include <QString>
 
 namespace BlackMisc
@@ -23,24 +25,37 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CFlightPlanUtils
         {
         public:
-            //! Useful value in flight plan remarks
-            struct AirlineRemarks
+            //! Useful values in flight plan remarks
+            struct BLACKMISC_EXPORT FlightPlanRemarks
             {
                 QString radioTelephony; //!< radio telephony designator
                 QString flightOperator; //!< operator, i.e. normally the airline name
+                QString airlineIcao;    //!< airline ICAO as provided in flightplan
+                QString selcal;         //!< SELCAL
+                CCallsign callsign;     //!< callsign of other pilot
+                bool isNull = true;     //!< marked as NULL
+                Network::CVoiceCapabilities voiceCapabilities; //!< voice capabilities
 
-                //! Any remarks available
-                bool hasAnyRemarks() const
-                {
-                    return !radioTelephony.isEmpty() || !flightOperator.isEmpty();
-                }
+                //! Any remarks available?
+                bool hasAnyRemarks() const;
+
+                //! Airline remarks
+                bool hasAirlineRemarks() const;
+
+                //! Valid airline ICAO?
+                //! \remark valid here means valid syntax, no guarantee it really exists
+                bool hasValidAirlineIcao() const;
             };
 
             //! Constructor
             CFlightPlanUtils() = delete;
 
             //! Parse remarks from a flight plan
-            static AirlineRemarks parseFlightPlanAirlineRemarks(const QString &remarks);
+            static FlightPlanRemarks parseFlightPlanRemarks(const QString &remarks, const Network::CVoiceCapabilities voiceCapabilities = {});
+
+            //! Get aircraft ICAO code from equipment code like
+            //! \remark we expect something like H/B772/F B773 B773/F
+            static QString aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft);
 
         private:
             //! Cut the remarks part

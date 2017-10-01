@@ -923,8 +923,8 @@ namespace BlackCore
         CAirlineIcaoCode airlineIcao(airlineIcaoString);
         if (!fpRemarks.isEmpty())
         {
-            const CFlightPlanUtils::AirlineRemarks ar = CFlightPlanUtils::parseFlightPlanAirlineRemarks(fpRemarks);
-            if (ar.hasAnyRemarks())
+            const CFlightPlanUtils::FlightPlanRemarks ar = CFlightPlanUtils::parseFlightPlanRemarks(fpRemarks);
+            if (ar.hasAirlineRemarks())
             {
                 const QString airlineName = CAircraftMatcher::reverseLookupAirlineName(ar.flightOperator, callsign, log);
                 if (!airlineName.isEmpty())
