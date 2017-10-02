@@ -111,11 +111,7 @@ namespace BlackCore
 
             //! Flight plan remarks for callsign
             //! \threadsafe
-            QString getFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-            //! Parsed flight plan remarks for callsign
-            //! \threadsafe
-            BlackMisc::Aviation::CFlightPlanRemarks getParsedFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            BlackMisc::Aviation::CFlightPlanRemarks getFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Update aircraft with VATSIM aircraft data from data file
             //! \threadsafe
@@ -159,8 +155,7 @@ namespace BlackCore
             BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
             BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile> m_settings { this, &CVatsimDataFileReader::reloadSettings };
-            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities; //!< voice capabilities
-            QMap<BlackMisc::Aviation::CCallsign, QString> m_flightPlanRemarks; //!< cache for flight plan remarks
+            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlanRemarks> m_flightPlanRemarks; //!< cache for flight plan remarks
 
             //! Reload the reader settings
             void reloadSettings();

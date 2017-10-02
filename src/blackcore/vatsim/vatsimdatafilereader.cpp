@@ -122,24 +122,14 @@ namespace BlackCore
         {
             if (callsign.isEmpty()) { return CVoiceCapabilities(); }
             QReadLocker rl(&m_lock);
-            return m_voiceCapabilities.contains(callsign) ?
-                   m_voiceCapabilities[callsign] :
-                   CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Unknown);
+            return m_flightPlanRemarks.value(callsign).getVoiceCapabilities();
         }
 
-        QString CVatsimDataFileReader::getFlightPlanRemarksForCallsign(const CCallsign &callsign) const
+        CFlightPlanRemarks CVatsimDataFileReader::getFlightPlanRemarksForCallsign(const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return QString(); }
             QReadLocker rl(&m_lock);
             return m_flightPlanRemarks.value(callsign);
-        }
-
-        CFlightPlanRemarks CVatsimDataFileReader::getParsedFlightPlanRemarksForCallsign(const CCallsign &callsign) const
-        {
-            if (callsign.isEmpty()) { return CFlightPlanRemarks(); }
-            const QString remarks = this->getFlightPlanRemarksForCallsign(callsign);
-            const CVoiceCapabilities vc = this->getVoiceCapabilityForCallsign(callsign);
-            return CFlightPlanRemarks(remarks, vc);
         }
 
         void CVatsimDataFileReader::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUdpated) const
@@ -239,8 +229,7 @@ namespace BlackCore
                 CServerList                         fsdServers;
                 CAtcStationList                     atcStations;
                 CSimulatedAircraftList              aircraft;
-                QMap<CCallsign, CVoiceCapabilities> voiceCapabilitiesMap;
-                QMap<CCallsign, QString>            flightPlanRemarksMap;
+                QMap<CCallsign, CFlightPlanRemarks> flightPlanRemarksMap;
                 QDateTime                           updateTimestampFromFile;
 
                 QStringList clientSectionAttributes;
@@ -263,7 +252,7 @@ namespace BlackCore
                         if (clientSectionAttributes.isEmpty() && currentLine.contains("!CLIENTS SECTION", Qt::CaseInsensitive))
                         {
                             // ; !CLIENTS section
-                            int i = currentLine.lastIndexOf(' ');
+                            const int i = currentLine.lastIndexOf(' ');
                             const QVector<QStringRef> attributes = currentLine.midRef(i).trimmed().split(':', QString::SkipEmptyParts);
                             for (const QStringRef &attr : attributes) { clientSectionAttributes.push_back(attr.toString().trimmed().toLower()); }
                             section = SectionNone; // reset
@@ -297,21 +286,17 @@ namespace BlackCore
                             // Voice capabilities
                             if (!flightPlanRemarks.isEmpty())
                             {
-                                flightPlanRemarksMap[callsign] = flightPlanRemarks;
-                                const CVoiceCapabilities vc(flightPlanRemarks);
-                                if (!vc.isUnknown())
-                                {
-                                    voiceCapabilitiesMap.insert(callsign, vc);
-                                }
+                                // CFlightPlanRemarks contains voice capabilities and other parsed values
+                                flightPlanRemarksMap[callsign] = CFlightPlanRemarks(flightPlanRemarks);
                             }
 
                             // set as per ATC/pilot
                             if (clientType.startsWith('p'))
                             {
                                 // Pilot section
-                                const double groundspeedKts = clientPartsMap["groundspeed"].toDouble();
+                                const double groundSpeedKts = clientPartsMap["groundspeed"].toDouble();
                                 CAircraftSituation situation(position);
-                                situation.setGroundSpeed(CSpeed(groundspeedKts, CSpeedUnit::kts()));
+                                situation.setGroundSpeed(CSpeed(groundSpeedKts, CSpeedUnit::kts()));
                                 CSimulatedAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
 
                                 const QString equipmentCodeAndAircraft = clientPartsMap["planned_aircraft"].trimmed();
@@ -327,7 +312,6 @@ namespace BlackCore
                                         illegalEquipmentCodes.append(equipmentCodeAndAircraft);
                                     }
                                 }
-
                                 aircraft.push_back(currentAircraft);
                             }
                             else if (clientType.startsWith('a'))
@@ -403,7 +387,6 @@ namespace BlackCore
                     this->setUpdateTimestamp(updateTimestampFromFile);
                     m_aircraft = aircraft;
                     m_atcStations = atcStations;
-                    m_voiceCapabilities = voiceCapabilitiesMap;
                     m_flightPlanRemarks = flightPlanRemarksMap;
                 }
 
