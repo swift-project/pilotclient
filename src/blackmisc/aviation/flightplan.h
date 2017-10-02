@@ -13,8 +13,10 @@
 #define BLACKMISC_AVIATION_FLIGHTPLAN_H
 
 #include "airporticaocode.h"
+#include "aircrafticaocode.h"
 #include "altitude.h"
 #include "callsign.h"
+#include "flightplanutils.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
@@ -75,7 +77,7 @@ namespace BlackMisc
             void setCallsign(const CCallsign &callsign);
 
             //! Set ICAO aircraft equipment code string (e.g. "T/A320/F")
-            void setEquipmentIcao(const QString &equipmentIcao) { m_equipmentIcao = equipmentIcao; }
+            void setEquipmentIcao(const QString &equipmentIcao);
 
             //! Set origin airport ICAO code
             void setOriginAirportIcao(const QString &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
@@ -200,6 +202,16 @@ namespace BlackMisc
             //! Get remarks string
             const QString &getRemarks() const { return m_remarks; }
 
+            //! Get the parsed remarks
+            //! \remark parsing when calling the function, so avoid unnecessary calls
+            CFlightPlanUtils::FlightPlanRemarks getParsedRemarks() const;
+
+            //! Get aircraft ICAO, derived from equipment ICAO as in getEquipmentIcao()
+            const CAircraftIcaoCode &getAircraftIcao() const { return m_aircraftIcao; }
+
+            //! Has aircraft ICAO?
+            bool hasAircraftIcao() const { return m_aircraftIcao.hasDesignator(); }
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
 
@@ -218,6 +230,7 @@ namespace BlackMisc
         private:
             CCallsign m_callsign;
             QString m_equipmentIcao; //!< e.g. "T/A320/F"
+            CAircraftIcaoCode m_aircraftIcao; //!< Aircraft ICAO code derived from equipment ICAO
             CAirportIcaoCode m_originAirportIcao;
             CAirportIcaoCode m_destinationAirportIcao;
             CAirportIcaoCode m_alternateAirportIcao;

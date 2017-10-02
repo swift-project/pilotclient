@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/flightplan.h"
+#include "flightplan.h"
+#include "flightplanutils.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
 #include <QStringBuilder>
@@ -37,6 +38,18 @@ namespace BlackMisc
         {
             m_callsign = callsign;
             m_callsign.setTypeHint(CCallsign::Aircraft);
+        }
+
+        void CFlightPlan::setEquipmentIcao(const QString &equipmentIcao)
+        {
+            m_equipmentIcao = equipmentIcao;
+            const QString aircraftIcao = CFlightPlanUtils::aircraftIcaoCodeFromEquipmentCode(equipmentIcao);
+            m_aircraftIcao = CAircraftIcaoCode::isValidDesignator(aircraftIcao) ? aircraftIcao : "";
+        }
+
+        CFlightPlanUtils::FlightPlanRemarks CFlightPlan::getParsedRemarks() const
+        {
+            return CFlightPlanUtils::parseFlightPlanRemarks(this->getRemarks());
         }
 
         CVariant CFlightPlan::propertyByIndex(const CPropertyIndex &index) const
