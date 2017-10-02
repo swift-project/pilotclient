@@ -22,7 +22,6 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/modulator.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/aviation/flightplanutils.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -923,17 +922,17 @@ namespace BlackCore
         CAirlineIcaoCode airlineIcao(airlineIcaoString);
         if (!fpRemarks.isEmpty())
         {
-            const CFlightPlanUtils::FlightPlanRemarks ar = CFlightPlanUtils::parseFlightPlanRemarks(fpRemarks);
-            if (ar.hasAirlineRemarks())
+            const CFlightPlanRemarks ar(fpRemarks);
+            if (ar.hasParsedAirlineRemarks())
             {
-                const QString airlineName = CAircraftMatcher::reverseLookupAirlineName(ar.flightOperator, callsign, log);
+                const QString airlineName = CAircraftMatcher::reverseLookupAirlineName(ar.getFlightOperator(), callsign, log);
                 if (!airlineName.isEmpty())
                 {
                     airlineIcao.setName(airlineName);
                     this->addReverseLookupMessage(callsign, QString("Setting airline name '%1'").arg(airlineName));
                 }
 
-                const QString telephony = CAircraftMatcher::reverseLookupTelephonyDesignator(ar.radioTelephony, callsign, log);
+                const QString telephony = CAircraftMatcher::reverseLookupTelephonyDesignator(ar.getRadioTelephony(), callsign, log);
                 if (!telephony.isEmpty())
                 {
                     airlineIcao.setTelephonyDesignator(telephony);

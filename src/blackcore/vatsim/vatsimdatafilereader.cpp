@@ -12,7 +12,6 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/flightplanutils.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/server.h"
@@ -135,12 +134,12 @@ namespace BlackCore
             return m_flightPlanRemarks.value(callsign);
         }
 
-        CFlightPlanUtils::FlightPlanRemarks CVatsimDataFileReader::getParsedFlightPlanRemarksForCallsign(const CCallsign &callsign) const
+        CFlightPlanRemarks CVatsimDataFileReader::getParsedFlightPlanRemarksForCallsign(const CCallsign &callsign) const
         {
-            if (callsign.isEmpty()) return CFlightPlanUtils::parseFlightPlanRemarks("");
+            if (callsign.isEmpty()) { return CFlightPlanRemarks(); }
             const QString remarks = this->getFlightPlanRemarksForCallsign(callsign);
             const CVoiceCapabilities vc = this->getVoiceCapabilityForCallsign(callsign);
-            return CFlightPlanUtils::parseFlightPlanRemarks(remarks, vc);
+            return CFlightPlanRemarks(remarks, vc);
         }
 
         void CVatsimDataFileReader::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUdpated) const
@@ -318,7 +317,7 @@ namespace BlackCore
                                 const QString equipmentCodeAndAircraft = clientPartsMap["planned_aircraft"].trimmed();
                                 if (!equipmentCodeAndAircraft.isEmpty())
                                 {
-                                    const QString aircraftIcaoCode = CFlightPlanUtils::aircraftIcaoCodeFromEquipmentCode(equipmentCodeAndAircraft);
+                                    const QString aircraftIcaoCode = CFlightPlanRemarks::aircraftIcaoCodeFromEquipmentCode(equipmentCodeAndAircraft);
                                     if (CAircraftIcaoCode::isValidDesignator(aircraftIcaoCode))
                                     {
                                         currentAircraft.setAircraftIcaoDesignator(aircraftIcaoCode);

@@ -16,7 +16,7 @@
 #include "aircrafticaocode.h"
 #include "altitude.h"
 #include "callsign.h"
-#include "flightplanutils.h"
+#include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
@@ -36,6 +36,88 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        //! Flight plan remarks, parsed values
+        class BLACKMISC_EXPORT CFlightPlanRemarks : public CValueObject<CFlightPlanRemarks>
+        {
+        public:
+            //! Ctor
+            CFlightPlanRemarks();
+
+            //! Ctor
+            CFlightPlanRemarks(const QString &remarks, bool parse = true);
+
+            //! Ctor
+            CFlightPlanRemarks(const QString &remarks, Network::CVoiceCapabilities voiceCapabilities, bool parse = true);
+
+            //! The unparsed remarks
+            const QString &getRemarks() const { return m_remarks; }
+
+            //! Radio telephony designator
+            const QString &getRadioTelephony() const { return m_radioTelephony; }
+
+            //! Operator, i.e. normally the airline name
+            const QString &getFlightOperator() const { return m_flightOperator; }
+
+            //! Airline ICAO if provided in flight plan
+            const QString &getAirlineIcao() const { return m_airlineIcao; }
+
+            //! SELCAL code
+            const QString &getSelcalCode() const { return m_selcalCode; }
+
+            //! Get SELCAL
+            const CCallsign &getCallsign() const { return m_callsign; }
+
+            //! Voice capabilities
+            const Network::CVoiceCapabilities &getVoiceCapabilities() const { return m_voiceCapabilities; }
+
+            //! Any remarks available?
+            bool hasAnyParsedRemarks() const;
+
+            //! Airline remarks
+            bool hasParsedAirlineRemarks() const;
+
+            //! Parse remarks from a flight plan
+            void parseFlightPlanRemarks();
+
+            //! Valid airline ICAO?
+            //! \remark valid here means valid syntax, no guarantee it really exists
+            bool hasValidAirlineIcao() const { return !m_airlineIcao.isEmpty(); }
+
+            //! Not initialized
+            bool isNull() const { return m_isNull; }
+
+            //! \copydoc BlackMisc::Mixin::String::toQString()
+            QString convertToQString(bool i18n = false) const;
+
+            //! Get aircraft ICAO code from equipment code like
+            //! \remark we expect something like H/B772/F B773 B773/F
+            static QString aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft);
+
+        private:
+            QString m_remarks;        //!< the unparsed string
+            QString m_radioTelephony; //!< radio telephony designator
+            QString m_flightOperator; //!< operator, i.e. normally the airline name
+            QString m_airlineIcao;    //!< airline ICAO if provided in flight plan
+            QString m_selcalCode;     //!< SELCAL code
+            CCallsign m_callsign;     //!< callsign of other pilot
+            bool m_isNull = true;     //!< marked as NULL
+            Network::CVoiceCapabilities m_voiceCapabilities; //!< voice capabilities
+
+            BLACK_METACLASS(
+                CFlightPlanRemarks,
+                BLACK_METAMEMBER(radioTelephony),
+                BLACK_METAMEMBER(flightOperator),
+                BLACK_METAMEMBER(airlineIcao),
+                BLACK_METAMEMBER(selcalCode),
+                BLACK_METAMEMBER(callsign),
+                BLACK_METAMEMBER(isNull),
+                BLACK_METAMEMBER(voiceCapabilities)
+            );
+
+            //! Cut the remarks part
+            static QString cut(const QString &remarks, const QString &marker);
+        };
+
         //! Value object for a flight plan
         class BLACKMISC_EXPORT CFlightPlan :
             public CValueObject<CFlightPlan>,
@@ -131,7 +213,7 @@ namespace BlackMisc
             void setRoute(const QString &route) { m_route = route.trimmed().left(MaxRouteLength).toUpper(); }
 
             //! Set remarks string (max 100 characters)
-            void setRemarks(const QString &remarks) { m_remarks = remarks.trimmed().left(MaxRemarksLength).toUpper(); }
+            void setRemarks(const QString &remarks);
 
             //! When last sent
             void setWhenLastSentOrLoaded(const QDateTime &dateTime) { this->setUtcTimestamp(dateTime); }
@@ -200,11 +282,10 @@ namespace BlackMisc
             qint64 timeDiffSentOrLoadedMs() const { return this->msecsToNow(); }
 
             //! Get remarks string
-            const QString &getRemarks() const { return m_remarks; }
+            const QString &getRemarks() const { return m_remarks.getRemarks(); }
 
-            //! Get the parsed remarks
-            //! \remark parsing when calling the function, so avoid unnecessary calls
-            CFlightPlanUtils::FlightPlanRemarks getParsedRemarks() const;
+            //! Get the parsable remarks
+            const CFlightPlanRemarks &getFlightPlanRemarks() const { return m_remarks; }
 
             //! Get aircraft ICAO, derived from equipment ICAO as in getEquipmentIcao()
             const CAircraftIcaoCode &getAircraftIcao() const { return m_aircraftIcao; }
@@ -229,6 +310,7 @@ namespace BlackMisc
 
         private:
             CCallsign m_callsign;
+            CFlightPlanRemarks m_remarks;
             QString m_equipmentIcao; //!< e.g. "T/A320/F"
             CAircraftIcaoCode m_aircraftIcao; //!< Aircraft ICAO code derived from equipment ICAO
             CAirportIcaoCode m_originAirportIcao;
@@ -242,7 +324,6 @@ namespace BlackMisc
             PhysicalQuantities::CSpeed m_cruiseTrueAirspeed;
             FlightRules m_flightRules;
             QString m_route;
-            QString m_remarks;
 
             BLACK_METACLASS(
                 CFlightPlan,
@@ -265,6 +346,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CFlightPlanRemarks)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CFlightPlan)
 
 #endif // guard

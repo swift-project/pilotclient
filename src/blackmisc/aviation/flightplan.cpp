@@ -8,15 +8,108 @@
  */
 
 #include "flightplan.h"
-#include "flightplanutils.h"
+#include "airlineicaocode.h"
+#include "flightplan.h"
+#include "selcal.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
 #include <QStringBuilder>
+#include <QRegularExpression>
+
+using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
     namespace Aviation
     {
+        CFlightPlanRemarks::CFlightPlanRemarks()
+        { }
+
+        CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, bool parse) : m_remarks(remarks)
+        {
+            if (parse) { this->parseFlightPlanRemarks(); }
+            m_isNull = false;
+        }
+
+        CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, CVoiceCapabilities voiceCapabilities, bool parse) :
+            m_remarks(remarks), m_voiceCapabilities(voiceCapabilities)
+        {
+            if (parse) { this->parseFlightPlanRemarks(); }
+            m_isNull = false;
+        }
+
+        bool CFlightPlanRemarks::hasAnyParsedRemarks() const
+        {
+            return this->hasParsedAirlineRemarks() || !m_selcalCode.isEmpty() || !m_voiceCapabilities.isUnknown();
+        }
+
+        bool CFlightPlanRemarks::hasParsedAirlineRemarks() const
+        {
+            return !m_radioTelephony.isEmpty() || !m_flightOperator.isEmpty() || !m_airlineIcao.isEmpty();
+        }
+
+        QString CFlightPlanRemarks::convertToQString(bool i18n) const
+        {
+            const QString s = m_callsign.toQString(i18n)
+                              % QLatin1Char(' ') % m_airlineIcao
+                              % QLatin1Char(' ') % m_radioTelephony
+                              % QLatin1Char(' ') % m_flightOperator
+                              % QLatin1Char(' ') % m_selcalCode
+                              % QLatin1Char(' ') % m_voiceCapabilities.toQString(i18n);
+            return s;
+        }
+
+        void CFlightPlanRemarks::parseFlightPlanRemarks()
+        {
+            // examples: VFPS = VATSIM Flightplan Prefile System
+            // 1) RT/KESTREL OPR/MYTRAVEL REG/G-DAJC SEL/FP-ES PER/C NAV/RNP10
+            // 2) OPR/UAL CALLSIGN/UNITED
+            // 3) /v/FPL-VIR9-IS-A346/DEP/S-EGLL/ARR/KJFK/REG/G-VGAS/TCAS RVR/200 OPR/VIRGI
+
+            if (m_isParsed) { return; }
+            m_isParsed = true;
+            if (m_remarks.isEmpty()) { return; }
+            const QString remarks = m_remarks.toUpper();
+            const QString callsign = CCallsign::unifyCallsign(this->cut(remarks, "REG/")); // registration is a callsign
+            if (CCallsign::isValidAircraftCallsign(callsign)) { m_registration = CCallsign(callsign, CCallsign::Aircraft); }
+            m_voiceCapabilities = m_voiceCapabilities.isUnknown() ? CVoiceCapabilities(m_remarks) : m_voiceCapabilities;
+            m_flightOperator = this->cut(r, "OPR/"); // operator, e.g. British airways, sometimes people use ICAO code here
+            const QString selcal = this->cut(r, "SEL/"); // SELCAL
+            if (CSelcal::isValidCode(selcal)) m_selcalCode = selcal;
+            m_radioTelephony = cut(r, "CALLSIGN/"); // used similar to radio telephony
+            if (m_radioTelephony.isEmpty()) { m_radioTelephony = cut(r, "RT/"); }
+            if (!m_flightOperator.isEmpty() && CAirlineIcaoCode::isValidAirlineDesignator(m_flightOperator))
+            {
+                // if people use ICAO as flight operator move to airline ICAO
+                qSwap(m_flightOperator, m_airlineIcao);
+            }
+            m_isNull = false;
+        }
+
+        QString CFlightPlanRemarks::aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft)
+        {
+            // http://uk.flightaware.com/about/faq_aircraft_flight_plan_suffix.rvt
+            // we expect something like H/B772/F B773 B773/F
+            thread_local const QRegularExpression reg("/.");
+            QString aircraftIcaoCode(equipmentCodeAndAircraft);
+            aircraftIcaoCode = aircraftIcaoCode.replace(reg, "").trimmed().toUpper();
+            return aircraftIcaoCode;
+        }
+
+        QString CFlightPlanRemarks::cut(const QString &remarks, const QString &marker)
+        {
+            const int maxIndex = remarks.size() - 1;
+            int f = remarks.indexOf(marker);
+            if (f < 0) { return ""; }
+            f += marker.length();
+            if (maxIndex <= f) { return ""; }
+            int to = remarks.indexOf(' ', f + 1);
+            if (to < 0) { to = maxIndex; } // no more spaces
+            const QString cut = remarks.mid(f, to - f).replace('/', ' '); // variations like /OPR/EASYJET/
+            // problem is that this cuts something like "Uzbekistan Airways"
+            return cut;
+        }
+
         CFlightPlan::CFlightPlan() { }
 
         CFlightPlan::CFlightPlan(const CCallsign &callsign, const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao,
@@ -43,13 +136,13 @@ namespace BlackMisc
         void CFlightPlan::setEquipmentIcao(const QString &equipmentIcao)
         {
             m_equipmentIcao = equipmentIcao;
-            const QString aircraftIcao = CFlightPlanUtils::aircraftIcaoCodeFromEquipmentCode(equipmentIcao);
+            const QString aircraftIcao = CFlightPlanRemarks::aircraftIcaoCodeFromEquipmentCode(equipmentIcao);
             m_aircraftIcao = CAircraftIcaoCode::isValidDesignator(aircraftIcao) ? aircraftIcao : "";
         }
 
-        CFlightPlanUtils::FlightPlanRemarks CFlightPlan::getParsedRemarks() const
+        void CFlightPlan::setRemarks(const QString &remarks)
         {
-            return CFlightPlanUtils::parseFlightPlanRemarks(this->getRemarks());
+            m_remarks = CFlightPlanRemarks(remarks, true);
         }
 
         CVariant CFlightPlan::propertyByIndex(const CPropertyIndex &index) const
@@ -104,7 +197,7 @@ namespace BlackMisc
                               % QLatin1Char(' ') % m_cruiseAltitude.toQString(i18n)
                               % QLatin1Char(' ') % m_cruiseTrueAirspeed.toQString(i18n)
                               % QLatin1Char(' ') % m_route
-                              % QLatin1Char(' ') % m_remarks;
+                              % QLatin1Char(' ') % this->getRemarks();
             return s;
         }
 

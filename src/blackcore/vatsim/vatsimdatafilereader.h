@@ -18,7 +18,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/aviation/flightplanutils.h"
+#include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
@@ -115,7 +115,7 @@ namespace BlackCore
 
             //! Parsed flight plan remarks for callsign
             //! \threadsafe
-            BlackMisc::Aviation::CFlightPlanUtils::FlightPlanRemarks getParsedFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            BlackMisc::Aviation::CFlightPlanRemarks getParsedFlightPlanRemarksForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Update aircraft with VATSIM aircraft data from data file
             //! \threadsafe
