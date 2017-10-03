@@ -47,10 +47,13 @@ namespace BlackCore
     CAircraftMatcher::~CAircraftMatcher()
     { }
 
-    CAirlineIcaoCode CAircraftMatcher::failoverValidAirlineIcao(const CCallsign &callsign, const QString &primaryIcao, const QString &secondaryIcao, bool airlineFromCallsign, CStatusMessageList *log)
+    CAirlineIcaoCode CAircraftMatcher::failoverValidAirlineIcaoDesignator(
+        const CCallsign &callsign, const QString &primaryIcao, const QString &secondaryIcao,
+        bool airlineFromCallsign, bool useWebServices, CStatusMessageList *log)
     {
-        if (CAirlineIcaoCode::isValidAirlineDesignator(primaryIcao)) { return CAirlineIcaoCode(primaryIcao); }
-        if (CAirlineIcaoCode::isValidAirlineDesignator(secondaryIcao))
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Find airline designator from 1st: '%1' 2nd: '%2', callsign airline: %3 web service: %4").arg(primaryIcao, secondaryIcao, boolToYesNo(airlineFromCallsign), boolToYesNo(useWebServices)), getLogCategories());
+        if (CAircraftMatcher::isValidAirlineIcaoDesignator(primaryIcao, useWebServices)) { return CAirlineIcaoCode(primaryIcao); }
+        if (CAircraftMatcher::isValidAirlineIcaoDesignator(secondaryIcao, useWebServices))
         {
             CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using secondary airline ICAO '%1', primary '%2' not valid").arg(secondaryIcao, primaryIcao), getLogCategories());
             return CAirlineIcaoCode(secondaryIcao);
@@ -58,7 +61,7 @@ namespace BlackCore
         if (airlineFromCallsign)
         {
             const QString airlineSuffix = callsign.getAirlineSuffix();
-            if (CAirlineIcaoCode::isValidAirlineDesignator(airlineSuffix))
+            if (CAircraftMatcher::isValidAirlineIcaoDesignator(airlineSuffix, useWebServices))
             {
                 CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using airline from callsign '%1', suffix: '%2'").arg(callsign.toQString(), airlineSuffix), getLogCategories());
                 return CAirlineIcaoCode(airlineSuffix);
@@ -1005,5 +1008,13 @@ namespace BlackCore
                    QLatin1Char('\'');
         }
         return str;
+    }
+
+    bool CAircraftMatcher::isValidAirlineIcaoDesignator(const QString &designator, bool checkAgainstSwiftDb)
+    {
+        if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return false; }
+        if (!checkAgainstSwiftDb) { return true; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return true; }
+        return (sApp->getWebDataServices()->containsAirlineIcaoDesignator(designator));
     }
 } // namespace

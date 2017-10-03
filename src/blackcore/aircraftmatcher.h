@@ -75,10 +75,10 @@ namespace BlackCore
 
         //! Return the airline ICAO being valid
         //! \threadsafe
-        static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcao(
+        static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignator(
             const BlackMisc::Aviation::CCallsign &callsign,
             const QString &primaryIcao, const QString &secondaryIcao,
-            bool airlineFromCallsign, BlackMisc::CStatusMessageList *log = nullptr);
+            bool airlineFromCallsign, bool useWebServices, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
@@ -206,7 +206,12 @@ namespace BlackCore
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByMilitaryFlag(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! Scores to string for debugging
+        //! \threadsafe
         static QString scoresToString(const BlackMisc::Simulation::ScoredModels &scores, int lastElements = 5);
+
+        //! Valid designator, allows to check against swift DB
+        //! \threadsafe
+        static bool isValidAirlineIcaoDesignator(const QString &designator, bool checkAgainstSwiftDb);
 
         MatchingMode                               m_matchingMode = All;
         BlackMisc::Simulation::CAircraftModel      m_defaultModel;       //!< model to be used as default model

@@ -926,7 +926,8 @@ namespace BlackCore
         CAircraftModel::ModelType type, CStatusMessageList *log)
     {
         const CFlightPlanRemarks fpRemarks = this->tryToGetFlightPlanRemarks(callsign);
-        CAirlineIcaoCode airlineIcao = CAircraftMatcher::failoverValidAirlineIcao(callsign, airlineIcaoString, fpRemarks.getAirlineIcao(), true, log);
+        CAirlineIcaoCode airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, airlineIcaoString, fpRemarks.getAirlineIcao(), true, true, log);
+
         CAircraftIcaoCode aircraftIcao(aircraftIcaoString);
         if (fpRemarks.hasParsedAirlineRemarks())
         {
@@ -934,16 +935,17 @@ namespace BlackCore
             if (!airlineName.isEmpty())
             {
                 airlineIcao.setName(airlineName);
-                this->addReverseLookupMessage(callsign, QString("Setting airline name '%1'").arg(airlineName));
+                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Setting airline name '%1'").arg(airlineName), getLogCategories());
             }
 
             const QString telephony = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
             if (!telephony.isEmpty())
             {
                 airlineIcao.setTelephonyDesignator(telephony);
-                this->addReverseLookupMessage(callsign, QString("Setting telephoy designator '%1'").arg(telephony));
+                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Setting telephoy designator '%1'").arg(telephony), getLogCategories());
             }
         }
+
         return CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
     }
 
