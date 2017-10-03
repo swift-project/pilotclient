@@ -50,20 +50,17 @@ namespace BlackMisc
             //! Is capability known
             bool isUnknown() const { return m_voiceCapabilities == Unknown; }
 
-            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const;
-
             //! From enum
             static const CVoiceCapabilities &fromVoiceCapabilities(VoiceCapabilities capabilities);
 
             //! From flight plan remarks
-            static CVoiceCapabilities fromFlightPlanRemarks(const QString &remarks)
-            {
-                return CVoiceCapabilities(remarks);
-            }
+            static CVoiceCapabilities fromFlightPlanRemarks(const QString &remarks);
 
             //! All capabilities as list
             static const QList<CVoiceCapabilities> &allCapabilities();
+
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+            CIcon toIcon() const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

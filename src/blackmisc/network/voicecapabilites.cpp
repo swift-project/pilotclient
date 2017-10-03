@@ -30,60 +30,35 @@ namespace BlackMisc
         QString CVoiceCapabilities::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
+            static const QString v("voice");
+            static const QString t("text only");
+            static const QString r("voice listening only");
+            static const QString u("unknown");
+
             switch (this->m_voiceCapabilities)
             {
-            case Voice:
-                {
-                    static const QString v("voice");
-                    return v;
-                }
-            case TextOnly:
-                {
-                    static const QString t("text only");
-                    return t;
-                }
-            case VoiceReceivingOnly:
-                {
-                    static const QString r("voice listening only");
-                    return r;
-                }
-            case Unknown:
-            default:
-                {
-                    static const QString u("unknown");
-                    return u;
-                }
+            case Voice: return v;
+            case TextOnly: return t;
+            case VoiceReceivingOnly: return r;
+            case Unknown: return u;
+            default: break;
             }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal mode");
+            return u;
         }
 
         void CVoiceCapabilities::setFromFlightPlanRemarks(const QString &flightPlanRemarks)
         {
             // http://www.vatpac.org/cms/index.php?option=com_content&view=article&id=608&Itemid=213
-            if (flightPlanRemarks.isEmpty())
-            {
-                this->setCapabilities(Unknown);
-                return;
-            }
 
-            const QString r = flightPlanRemarks.toUpper(); // normally already upper case
-            if (r.contains("/V/") || r.contains("/VOICE/"))
-            {
-                this->setCapabilities(Voice);
-                return;
-            }
-
-            if (r.contains("/T/"))
-            {
-                this->setCapabilities(TextOnly);
-                return;
-            }
-
-            if (r.contains("/R/"))
-            {
-                this->setCapabilities(VoiceReceivingOnly);
-                return;
-            }
-
+            // this function is very frequently called, so I put the most likely scenarios on top
+            const QString r = flightPlanRemarks.toUpper().trimmed();
+            if (flightPlanRemarks.isEmpty()) { this->setCapabilities(Unknown); return; }
+            if (r.contains("/V/")) { this->setCapabilities(Voice); return; }
+            if (r.contains("/T/")) { this->setCapabilities(TextOnly); return; }
+            if (r.contains("/R/")) { this->setCapabilities(VoiceReceivingOnly); return; }
+            if (r.contains("/VOICE/")) { this->setCapabilities(Voice); return; }
+            if (r.contains("/TEXT/")) { this->setCapabilities(TextOnly); return; }
             this->setCapabilities(Unknown);
         }
 
@@ -91,18 +66,13 @@ namespace BlackMisc
         {
             switch (this->m_voiceCapabilities)
             {
-            case Voice:
-                return CIcon::iconByIndex(CIcons::NetworkCapabilityVoiceBackground);
-            case TextOnly:
-                return CIcon::iconByIndex(CIcons::NetworkCapabilityTextOnly);
-            case Unknown:
-                return CIcon::iconByIndex(CIcons::NetworkCapabilityUnknown);
-            case VoiceReceivingOnly:
-                return CIcon::iconByIndex(CIcons::NetworkCapabilityVoiceReceiveOnlyBackground);
-            default:
-                break;
+            case Voice: return CIcon::iconByIndex(CIcons::NetworkCapabilityVoiceBackground);
+            case TextOnly: return CIcon::iconByIndex(CIcons::NetworkCapabilityTextOnly);
+            case VoiceReceivingOnly: return CIcon::iconByIndex(CIcons::NetworkCapabilityVoiceReceiveOnlyBackground);
+            case Unknown: return CIcon::iconByIndex(CIcons::NetworkCapabilityUnknown);
+            default: break;
             }
-            Q_ASSERT(false);
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal mode");
             return CIcon::iconByIndex(CIcons::NetworkCapabilityUnknown); // never reached
         }
 
@@ -118,9 +88,16 @@ namespace BlackMisc
             case CVoiceCapabilities::TextOnly: return to;
             case CVoiceCapabilities::Voice: return v;
             case CVoiceCapabilities::VoiceReceivingOnly: return vro;
-            case CVoiceCapabilities::Unknown:
-            default: return u;
+            case CVoiceCapabilities::Unknown: return u;
+            default: break;
             }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal mode");
+            return u; // normally never reached
+        }
+
+        CVoiceCapabilities CVoiceCapabilities::fromFlightPlanRemarks(const QString &remarks)
+        {
+            return CVoiceCapabilities(remarks);
         }
 
         const QList<CVoiceCapabilities> &CVoiceCapabilities::allCapabilities()
