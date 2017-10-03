@@ -123,9 +123,9 @@ namespace BlackCore
         BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Try to get flight plan remarks
-        //! \remarks returns a value only if the flight plan is already cached
+        //! \remarks returns a value only if the flight plan is already cached or can be obtained from VATSIM reader
         //! \threadsafe
-        QString tryToGetFlightPlanRemarks(const BlackMisc::Aviation::CCallsign &callsign) const;
+        BlackMisc::Aviation::CFlightPlanRemarks tryToGetFlightPlanRemarks(const BlackMisc::Aviation::CCallsign &callsign) const;
 
         //! Returns this list of other clients we know about
         //! \threadsafe
@@ -220,7 +220,7 @@ namespace BlackCore
         void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
     private:
-        //! Used to temp store FsInn data
+        //! Used to temporary store FsInn data
         struct FsInnPacket
         {
             //! Default ctor
@@ -250,7 +250,7 @@ namespace BlackCore
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
 
-        INetwork          *m_network = nullptr;   //!< corresponding network interface
+        INetwork          *m_network  = nullptr;  //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
         bool m_enableReverseLookupMsgs = false;   //!< shall we log. information about the matching process
         bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts

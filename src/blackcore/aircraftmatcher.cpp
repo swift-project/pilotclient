@@ -47,6 +47,27 @@ namespace BlackCore
     CAircraftMatcher::~CAircraftMatcher()
     { }
 
+    CAirlineIcaoCode CAircraftMatcher::failoverValidAirlineIcao(const CCallsign &callsign, const QString &primaryIcao, const QString &secondaryIcao, bool airlineFromCallsign, CStatusMessageList *log)
+    {
+        if (CAirlineIcaoCode::isValidAirlineDesignator(primaryIcao)) { return CAirlineIcaoCode(primaryIcao); }
+        if (CAirlineIcaoCode::isValidAirlineDesignator(secondaryIcao))
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using secondary airline ICAO '%1', primary '%2' not valid").arg(secondaryIcao, primaryIcao), getLogCategories());
+            return CAirlineIcaoCode(secondaryIcao);
+        }
+        if (airlineFromCallsign)
+        {
+            const QString airlineSuffix = callsign.getAirlineSuffix();
+            if (CAirlineIcaoCode::isValidAirlineDesignator(airlineSuffix))
+            {
+                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using airline from callsign '%1', suffix: '%2'").arg(callsign.toQString(), airlineSuffix), getLogCategories());
+                return CAirlineIcaoCode(airlineSuffix);
+            }
+        }
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Two invalid airline ICAO codes '%1', '%2'").arg(primaryIcao, secondaryIcao), getLogCategories());
+        return CAirlineIcaoCode();
+    }
+
     CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
     {
         const CAircraftModelList modelSet(m_modelSet); // Models for this matching

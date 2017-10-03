@@ -69,7 +69,16 @@ namespace BlackCore
         //! Result depends on enabled modes.
         //! \sa MatchingModeFlag
         //! \threadsafe
-        BlackMisc::Simulation::CAircraftModel getClosestMatch(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
+        BlackMisc::Simulation::CAircraftModel getClosestMatch(
+            const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
+            BlackMisc::CStatusMessageList *log = nullptr) const;
+
+        //! Return the airline ICAO being valid
+        //! \threadsafe
+        static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcao(
+            const BlackMisc::Aviation::CCallsign &callsign,
+            const QString &primaryIcao, const QString &secondaryIcao,
+            bool airlineFromCallsign, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
