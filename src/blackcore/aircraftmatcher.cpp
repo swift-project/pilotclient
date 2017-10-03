@@ -135,17 +135,17 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::reverselLookupModel(const CCallsign &callsign, const CAircraftIcaoCode &networkAircraftIcao, const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, CAircraftModel::ModelType type, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverseLookupModel(const CCallsign &callsign, const CAircraftIcaoCode &networkAircraftIcao, const CAirlineIcaoCode &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
         CLivery livery;
         livery.setAirlineIcaoCode(networkAirlineIcao);
         CAircraftModel model(networkModelString, type, "", networkAircraftIcao, livery);
         model.setCallsign(callsign);
-        model = CAircraftMatcher::reverselLookupModel(model, networkLiveryInfo, log);
+        model = CAircraftMatcher::reverseLookupModel(model, networkLiveryInfo, log);
         return model;
     }
 
-    CAircraftModel CAircraftMatcher::reverselLookupModel(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverseLookupModel(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, CStatusMessageList *log)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");

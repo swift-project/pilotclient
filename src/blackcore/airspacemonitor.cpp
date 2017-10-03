@@ -945,7 +945,7 @@ namespace BlackCore
                 this->addReverseLookupMessage(callsign, QString("Setting telephoy designator '%1'").arg(telephony));
             }
         }
-        return CAircraftMatcher::reverselLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
+        return CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
     }
 
     bool CAirspaceMonitor::addNewAircraftInRange(const CSimulatedAircraft &aircraft)
@@ -1069,9 +1069,8 @@ namespace BlackCore
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
-        CAircraftSituation fullSituation(situation);
-
         // store situation history
+        CAircraftSituation fullSituation(situation);
         this->storeAircraftSituation(fullSituation);
         {
             //! \fixme Workaround to consolidate time offset from storeAircraftSituation
