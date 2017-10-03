@@ -600,6 +600,12 @@ namespace BlackCore
         return CAirlineIcaoCodeList();
     }
 
+    bool CWebDataServices::containsAirlineIcaoDesignator(const QString &designator) const
+    {
+        if (designator.isEmpty()) { return false; }
+        return this->getAirlineIcaoCodes().containsDesignator(designator);
+    }
+
     int CWebDataServices::getAirlineIcaoCodesCount() const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodesCount(); }

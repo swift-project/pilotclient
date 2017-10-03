@@ -256,5 +256,11 @@ namespace BlackMisc
             if (sort) { c.sort(); }
             return c;
         }
+
+        bool CAirlineIcaoCodeList::containsDesignator(const QString &designator) const
+        {
+            if (designator.isEmpty()) { return false; }
+            return this->contains(&CAirlineIcaoCode::getDesignator, designator.toUpper());
+        }
     } // ns
 } // ns

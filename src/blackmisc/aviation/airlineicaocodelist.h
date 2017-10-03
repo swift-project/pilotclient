@@ -95,6 +95,9 @@ namespace BlackMisc
             //! String list for completion by name
             QStringList toNameCompleterStrings(bool sort = true) const;
 
+            //! Contains given designator?
+            bool containsDesignator(const QString &designator) const;
+
             //! From our DB JSON
             static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true, CAirlineIcaoCodeList *inconsistent = nullptr);
         };
