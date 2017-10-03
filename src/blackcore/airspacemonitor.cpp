@@ -382,8 +382,7 @@ namespace BlackCore
             const CUserList usersByCallsign = sApp->getWebDataServices()->getUsersForCallsign(callsign);
             if (usersByCallsign.isEmpty())
             {
-                CUser user;
-                user.setCallsign(callsign);
+                const CUser user(callsign);
                 users.push_back(user);
             }
             else
@@ -1040,9 +1039,11 @@ namespace BlackCore
         this->onCustomFSInnPacketReceived(callsign, packet.airlineIcaoDesignator, packet.aircraftIcaoDesignator, packet.combinedCode, packet.modelString);
     }
 
-    CSimulatedAircraft CAirspaceMonitor::addOrUpdateAircraftInRange(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, CAircraftModel::ModelType type, CStatusMessageList *log)
+    CSimulatedAircraft CAirspaceMonitor::addOrUpdateAircraftInRange(
+        const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery,
+        const QString &modelString, CAircraftModel::ModelType modelType, CStatusMessageList *log)
     {
-        CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
+        CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, modelType, log);
         const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
 
         if (aircraft.hasValidCallsign())
@@ -1367,5 +1368,4 @@ namespace BlackCore
     CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &combinedCode, const QString &modelString) :
         aircraftIcaoDesignator(aircraftIcaoDesignator.trimmed().toUpper()), airlineIcaoDesignator(airlineIcaoDesignator.trimmed().toUpper()), combinedCode(combinedCode.trimmed().toUpper()), modelString(modelString.trimmed())
     { }
-
 } // namespace

@@ -315,7 +315,7 @@ namespace BlackCore
         BlackMisc::Simulation::CSimulatedAircraft addOrUpdateAircraftInRange(
             const BlackMisc::Aviation::CCallsign &callsign,
             const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString,
-            BlackMisc::Simulation::CAircraftModel::ModelType,
+            BlackMisc::Simulation::CAircraftModel::ModelType modelType,
             BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Update aircraft

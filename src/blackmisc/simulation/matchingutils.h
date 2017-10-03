@@ -40,7 +40,6 @@ namespace BlackMisc
                 const QString &message, const BlackMisc::CLogCategoryList &categories = {},
                 BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
 
-
             //! Specialized log message for matching / reverse lookup
             //! \threadsafe
             static BlackMisc::CStatusMessage logMessage(
