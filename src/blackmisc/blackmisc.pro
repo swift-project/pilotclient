@@ -70,7 +70,24 @@ win32-g++ {
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
-OTHER_FILES += $$TRANSLATIONS readme.txt buildconfig.cpp.in
+OTHER_FILES += $$TRANSLATIONS readme.txt share/dbus-1/session.conf.in
+
+win32 {
+    DBUS_SESSION_BUS_LISTEN_ADDRESS = "autolaunch:"
+    DBUS_SESSION_CONF_MAYBE_AUTH_EXTERNAL = "<!--<auth>EXTERNAL</auth>-->"
+}
+
+macx {
+    DBUS_SESSION_BUS_LISTEN_ADDRESS = "launchd:env=DBUS_LAUNCHD_SESSION_BUS_SOCKET"
+    DBUS_SESSION_CONF_MAYBE_AUTH_EXTERNAL = "<auth>EXTERNAL</auth>"
+}
+
+win32|macx {
+    dbus_session_conf.input = share/dbus-1/session.conf.in
+    dbus_session_conf.output = $$DestRoot/share/dbus-1/session.conf
+    QMAKE_SUBSTITUTES += dbus_session_conf
+}
+
 
 win32 {
     dlltarget.path = $$PREFIX/bin
@@ -79,5 +96,9 @@ win32 {
     target.path = $$PREFIX/lib
     INSTALLS += target
 }
+
+package_dbus_conf.path = $$PREFIX/share/dbus-1
+package_dbus_conf.files += $$DestRoot/share/dbus-1/*.conf
+INSTALLS += package_dbus_conf
 
 load(common_post)
