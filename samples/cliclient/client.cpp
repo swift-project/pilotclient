@@ -272,11 +272,7 @@ namespace BlackSample
         args >> equipmentIcao >> originAirportIcao >> destinationAirportIcao >> alternateAirportIcao >> takeoffTimePlanned >> takeoffTimeActual
              >> enrouteTime >> fuelTime >> cruiseAltitude >> cruiseTrueAirspeed >> flightRulesString >> route;
 
-        CFlightPlan::FlightRules flightRules;
-        if (flightRulesString == "IFR") { flightRules = CFlightPlan::IFR; }
-        else if (flightRulesString == "SVFR") { flightRules = CFlightPlan::SVFR; }
-        else { flightRules = BlackMisc::Aviation::CFlightPlan::VFR; }
-
+        const CFlightPlan::FlightRules flightRules = CFlightPlan::stringToFlightRules(flightRulesString);
         const CCallsign callsign("DAMBZ");
         CFlightPlan fp(callsign, equipmentIcao, originAirportIcao, destinationAirportIcao, alternateAirportIcao,
                        QDateTime::fromString(takeoffTimePlanned, "hhmm"), QDateTime::fromString(takeoffTimeActual, "hhmm"),
@@ -510,23 +506,15 @@ namespace BlackSample
         std::cout << "METAR " << data.toStdString() << std::endl;
     }
 
-    void Client::flightPlanReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan)
+    void Client::flightPlanReplyReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
     {
-        std::string rules;
-        switch (flightPlan.getFlightRules())
-        {
-        default:
-        case BlackMisc::Aviation::CFlightPlan::IFR:  rules = "IFR"; break;
-        case BlackMisc::Aviation::CFlightPlan::VFR:  rules = "VFR"; break;
-        case BlackMisc::Aviation::CFlightPlan::SVFR: rules = "SVFR"; break;
-        }
-
+        const QString rules = flightPlan.getFlightRulesAsString();
         std::cout << "FLIGHTPLAN "  << callsign
                   << flightPlan.getEquipmentIcao().toStdString() << " " << flightPlan.getOriginAirportIcao() << " "
                   << flightPlan.getDestinationAirportIcao() << " " << flightPlan.getAlternateAirportIcao() << " "
                   << flightPlan.getTakeoffTimePlannedHourMin().toStdString() << " " << flightPlan.getTakeoffTimeActualHourMin().toStdString() << " "
                   << flightPlan.getEnrouteTime() << " " << flightPlan.getFuelTime() << " "
-                  << flightPlan.getCruiseAltitude() << " " << flightPlan.getCruiseTrueAirspeed() << " " << rules << " "
+                  << flightPlan.getCruiseAltitude() << " " << flightPlan.getCruiseTrueAirspeed() << " " << rules.toStdString() << " "
                   << flightPlan.getRoute().toStdString() << " " << flightPlan.getRemarks().toStdString() << "\n";
     }
 

@@ -120,7 +120,8 @@ namespace BlackMisc
               m_equipmentIcao(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
               m_takeoffTimePlanned(takeoffTimePlanned), m_takeoffTimeActual(takeoffTimeActual), m_enrouteTime(enrouteTime), m_fuelTime(fuelTime),
               m_cruiseAltitude(cruiseAltitude), m_cruiseTrueAirspeed(cruiseTrueAirspeed), m_flightRules(flightRules),
-              m_route(route.trimmed().left(MaxRouteLength).toUpper()), m_remarks(remarks.trimmed().left(MaxRemarksLength).toUpper())
+              m_route(route.trimmed().left(MaxRouteLength).toUpper()),
+              m_remarks(remarks.trimmed().left(MaxRemarksLength).toUpper())
         {
             m_callsign.setTypeHint(CCallsign::Aircraft);
             m_enrouteTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());
@@ -143,6 +144,24 @@ namespace BlackMisc
         void CFlightPlan::setRemarks(const QString &remarks)
         {
             m_remarks = CFlightPlanRemarks(remarks, true);
+        }
+
+        CFlightPlan::FlightRules CFlightPlan::getFlightRulesAsVFRorIFR() const
+        {
+            switch (getFlightRules())
+            {
+            case IFR:
+                return IFR;
+            case VFR:
+            case SVFR:
+            case DVFR:
+                return VFR;
+            case UNKNOWN:
+            default:
+                break;
+            }
+            return UNKNOWN;
+
         }
 
         CVariant CFlightPlan::propertyByIndex(const CPropertyIndex &index) const
@@ -205,11 +224,24 @@ namespace BlackMisc
         {
             switch (rule)
             {
-            case VFR:   return QLatin1String("VFR");
-            case IFR:   return QLatin1String("IFR");
-            case SVFR:  return QLatin1String("SVFR");
-            default:    return QLatin1String("???");
+            case VFR:  return QLatin1String("VFR");
+            case IFR:  return QLatin1String("IFR");
+            case SVFR: return QLatin1String("SVFR");
+            case DVFR: return QLatin1String("DVFR");
+            case UNKNOWN:
+            default:   return QLatin1String("???");
             }
+        }
+
+        CFlightPlan::FlightRules CFlightPlan::stringToFlightRules(const QString &flightRules)
+        {
+            if (flightRules.length() < 3) { return UNKNOWN; }
+            const QString fr(flightRules.toUpper().trimmed());
+            if (fr.startsWith("DVFR")) { return DVFR; }
+            if (fr.startsWith("SVFR")) { return SVFR; }
+            if (fr.startsWith("VFR"))  { return VFR; }
+            if (fr.startsWith("IFR"))  { return IFR; }
+            return UNKNOWN;
         }
 
         CIcon CFlightPlan::toIcon() const

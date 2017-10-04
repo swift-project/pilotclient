@@ -183,6 +183,14 @@ namespace BlackGui
             else
             {
                 ui->le_CrusingAltitude->setText(cruiseAlt.valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CLengthUnit::ft(), 0));
+            switch (flightPlan.getFlightRulesAsVFRorIFR())
+            {
+            case CFlightPlan::VFR:
+                ui->rb_TypeVfr->setChecked(true);
+                break;
+            default:
+                ui->rb_TypeIfr->setChecked(true);
+                break;
             }
         }
 

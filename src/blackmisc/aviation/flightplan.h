@@ -130,7 +130,8 @@ namespace BlackMisc
                 VFR = 0,    //!< Visual flight rules
                 IFR,        //!< Instrument flight rules
                 SVFR,       //!< Special VFR (reserved for ATC use),
-                DVFR        //!< Defense VFR
+                DVFR,       //!< Defense VFR
+                UNKNOWN     //!< Unknown
             };
 
             //! Properties by index
@@ -143,8 +144,10 @@ namespace BlackMisc
                 IndexRemarks
             };
 
-            static constexpr int MaxRemarksLength = 150; //!< Max remarks length
-            static constexpr int MaxRouteLength = 150; //!< Max route length
+            //! \fixme max.length of complete flight plan is 768 characters, this here is an assumption and should be part of the underlying network layers
+            //  https://forums.vatsim.net/viewtopic.php?f=6&t=63416
+            static constexpr int MaxRemarksLength = 256; //!< Max.remarks length
+            static constexpr int MaxRouteLength = 256; //!< Max.route length
 
             //! Default constructor
             CFlightPlan();
@@ -266,8 +269,14 @@ namespace BlackMisc
             //! Get planned cruise TAS
             const PhysicalQuantities::CSpeed &getCruiseTrueAirspeed() const { return m_cruiseTrueAirspeed; }
 
-            //! Get flight rules (VFR or IFR)
+            //! Get flight rules as in FlightRules
             FlightRules getFlightRules() const { return m_flightRules; }
+
+            //! Rules only as IFR or VFR
+            FlightRules getFlightRulesAsVFRorIFR() const;
+
+            //! Get flight rules as in FlightRules as string
+            QString getFlightRulesAsString() const { return flightRuleToString(this->getFlightRules()); }
 
             //! Get route string
             const QString &getRoute() const { return m_route; }
@@ -308,9 +317,11 @@ namespace BlackMisc
             //! Rules to string
             static const QString flightRuleToString(FlightRules rule);
 
+            //! String to flight rules
+            static FlightRules stringToFlightRules(const QString &flightRules);
+
         private:
-            CCallsign m_callsign;
-            CFlightPlanRemarks m_remarks;
+            CCallsign m_callsign; //!< aircraft callsign
             QString m_equipmentIcao; //!< e.g. "T/A320/F"
             CAircraftIcaoCode m_aircraftIcao; //!< Aircraft ICAO code derived from equipment ICAO
             CAirportIcaoCode m_originAirportIcao;
@@ -324,6 +335,7 @@ namespace BlackMisc
             PhysicalQuantities::CSpeed m_cruiseTrueAirspeed;
             FlightRules m_flightRules;
             QString m_route;
+            CFlightPlanRemarks m_remarks;
 
             BLACK_METACLASS(
                 CFlightPlan,
