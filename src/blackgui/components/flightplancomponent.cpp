@@ -119,7 +119,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::loginDataSet()
         {
-            if (this->m_flightPlan.wasSentOrLoaded()) { return; } // when loaded or sent do not override
+            if (m_flightPlan.wasSentOrLoaded()) { return; } // when loaded or sent do not override
             if (!sGui->getIContextOwnAircraft()) { return; }
 
             const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
@@ -129,7 +129,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
         {
-            if (this->m_flightPlan.wasSentOrLoaded()) { return; }
+            if (m_flightPlan.wasSentOrLoaded()) { return; }
 
             // only override with valid values
             if (CCallsign::isValidAircraftCallsign(ownAircraft.getCallsignAsString()))
@@ -148,7 +148,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::prefillWithUserData(const Network::CUser &user)
         {
-            if (this->m_flightPlan.wasSentOrLoaded()) { return; }
+            if (m_flightPlan.wasSentOrLoaded()) { return; }
             if (user.hasValidRealName())
             {
                 ui->le_PilotsName->setText(user.getRealName());
@@ -173,7 +173,7 @@ namespace BlackGui
             ui->le_TakeOffTimePlanned->setText(flightPlan.getTakeoffTimePlannedHourMin());
             ui->le_FuelOnBoard->setText(flightPlan.getFuelTimeHourMin());
             ui->le_EstimatedTimeEnroute->setText(flightPlan.getEnrouteTimeHourMin());
-            ui->le_CruiseTrueAirspeed->setText(flightPlan.getCruiseTrueAirspeed().valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0));
+            ui->le_CruiseTrueAirspeed->setText(flightPlan.getCruiseTrueAirspeed().valueRoundedWithUnit(CSpeedUnit::kts(), 0));
 
             const CAltitude cruiseAlt = flightPlan.getCruiseAltitude();
             if (cruiseAlt.isFlightLevel())
@@ -182,7 +182,9 @@ namespace BlackGui
             }
             else
             {
-                ui->le_CrusingAltitude->setText(cruiseAlt.valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CLengthUnit::ft(), 0));
+                ui->le_CrusingAltitude->setText(cruiseAlt.valueRoundedWithUnit(CLengthUnit::ft(), 0));
+            }
+
             switch (flightPlan.getFlightRulesAsVFRorIFR())
             {
             case CFlightPlan::VFR:
@@ -196,10 +198,10 @@ namespace BlackGui
 
         CFlightPlan CFlightPlanComponent::getFlightPlan() const
         {
-            return this->m_flightPlan;
+            return m_flightPlan;
         }
 
-        BlackMisc::CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &flightPlan)
+        BlackMisc::CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(CFlightPlan &flightPlan)
         {
             BlackMisc::CStatusMessageList messages;
             QString v;
@@ -309,7 +311,7 @@ namespace BlackGui
             }
 
             v = ui->le_CruiseTrueAirspeed->text();
-            BlackMisc::PhysicalQuantities::CSpeed cruiseTAS;
+            CSpeed cruiseTAS;
             cruiseTAS.parseFromString(v, CPqString::SeparatorsLocale);
             if (cruiseTAS.isNull())
             {
@@ -375,7 +377,7 @@ namespace BlackGui
                     ui->le_LastSent->clear();
                     CLogMessage(this).error("No errors, but not connected, cannot send flight plan");
                 }
-                this->m_flightPlan = flightPlan; // last valid FP
+                m_flightPlan = flightPlan; // last valid FP
             }
         }
 

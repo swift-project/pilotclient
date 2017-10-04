@@ -27,8 +27,8 @@
 
 class QWidget;
 
-namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace Ui { class CFlightPlanComponent; }
+namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace BlackGui
 {
     namespace Components
