@@ -88,6 +88,50 @@ win32|macx {
     QMAKE_SUBSTITUTES += dbus_session_conf
 }
 
+# Copy externals to build directory
+
+win32 {
+    !isEmpty(QMAKE_POST_LINK): QMAKE_POST_LINK += &&
+    # Kill all dbus sessions before trying to copy. Otherwise copy fails if the executable is in use
+    QMAKE_POST_LINK += taskkill /f /fi \"Imagename eq dbus-daemon.exe\" > nul
+
+    copy_command = xcopy /Y
+    source_path = $$EXTERNALS_BIN_DIR/*.exe
+    dest_path = $$DestRoot/bin
+}
+else:macx {
+    copy_command = cp
+    source_path = $$EXTERNALS_BIN_DIR/*
+    dest_path = $$DestRoot/bin
+}
+else:unix {
+    copy_command = cp
+    source_path = $$EXTERNALS_BIN_DIR/*
+    dest_path = $$DestRoot/bin
+}
+# Currently there is no bin folder in linux externals
+win32|macx {
+    !isEmpty(QMAKE_POST_LINK): QMAKE_POST_LINK += &&
+    QMAKE_POST_LINK += $$copy_command $$shell_path($$source_path) $$shell_path($$dest_path)
+}
+
+win32 {
+    copy_command = xcopy /Y
+    source_path = $$EXTERNALS_LIB_DIR/*.dll
+    dest_path = $$DestRoot/bin
+}
+else:macx {
+    copy_command = cp
+    source_path = $$EXTERNALS_LIB_DIR/*.dylib
+    dest_path = $$DestRoot/lib
+}
+else:unix {
+    copy_command = cp
+    source_path = $$EXTERNALS_LIB_DIR/*.so*
+    dest_path = $$DestRoot/lib
+}
+!isEmpty(QMAKE_POST_LINK): QMAKE_POST_LINK += &&
+QMAKE_POST_LINK += $$copy_command $$shell_path($$source_path) $$shell_path($$dest_path)
 
 win32 {
     dlltarget.path = $$PREFIX/bin

@@ -141,68 +141,6 @@ unix:!macx {
     INSTALLS += qt5_xcbglintegrations_plugins_target
 }
 
-############### Install DBus ##############
-
-win32-g++ {
-    DBUS_BINARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
-    DBUS_BINARIES *= dbus-daemon.exe
-    dbus_binary_target.path = $${PREFIX}/bin
-
-    DBUS_LIBARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
-    DBUS_LIBRARIES *= libdbus-1-3.dll
-    dbus_library_target.path = $${PREFIX}/bin
-
-    DBUS_CONFIG_SOURCE_DIR = $$SourceRoot
-    DBUS_CONFIG_FILES *= etc/dbus-1/*
-    dbus_config_target.path = $${PREFIX}/share/dbus-1
-}
-
-win32-msvc2015 {
-    DBUS_BINARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
-    DBUS_BINARIES *= dbus-daemon.exe
-    dbus_binary_target.path = $${PREFIX}/bin
-
-    DBUS_LIBARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
-    DBUS_LIBRARIES *= expat.dll
-    DBUS_LIBRARIES *= dbus-1-3.dll
-    dbus_library_target.path = $${PREFIX}/bin
-
-    DBUS_CONFIG_SOURCE_DIR = $$SourceRoot
-    DBUS_CONFIG_FILES *= etc/dbus-1/*
-    dbus_config_target.path = $${PREFIX}/share/dbus-1
-}
-
-macx {
-    # Binaries are copied from externals
-    dbus_binary_target.path = $${PREFIX}/bin
-    dbus_library_target.path = $${PREFIX}/lib
-
-    DBUS_CONFIG_SOURCE_DIR = /usr/local/share/dbus-1
-    DBUS_CONFIG_FILES *= session.conf
-    DBUS_CONFIG_FILES *= system.conf
-    dbus_config_target.path = $${PREFIX}/share/dbus-1
-}
-
-for (BINARY, DBUS_BINARIES) {
-    BINARY_PATH = $${DBUS_BINARY_SOURCE_DIR}/$${BINARY}
-    !exists($$BINARY_PATH): error("Cannot find $${BINARY_PATH}")
-    dbus_binary_target.files *= $${BINARY_PATH}
-}
-
-for (LIBRARY, DBUS_LIBRARIES) {
-    LIBRARY_PATH = $${DBUS_LIBARY_SOURCE_DIR}/$${LIBRARY}
-    !exists($$LIBRARY_PATH): error("Cannot find $${LIBRARY_PATH}")
-    dbus_library_target.files *= $${LIBRARY_PATH}
-}
-
-for (DBUS_CONFIG_FILE, DBUS_CONFIG_FILES) {
-    DBUS_CONFIG_FILE_PATH = $${DBUS_CONFIG_SOURCE_DIR}/$${DBUS_CONFIG_FILE}
-    !exists($$DBUS_CONFIG_FILE_PATH): error("Cannot find $${DBUS_CONFIG_FILE_PATH}")
-    dbus_config_target.files *= $${DBUS_CONFIG_FILE_PATH}
-}
-
-win32|macx: INSTALLS += dbus_binary_target dbus_library_target dbus_config_target
-
 ############### Install VC runtime ##############
 
 win32-msvc2015 {
