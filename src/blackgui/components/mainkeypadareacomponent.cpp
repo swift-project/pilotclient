@@ -89,7 +89,7 @@ namespace BlackGui
                 }
             }
 
-            foreach (int floatingIndex, floatingIndexes)
+            for (int floatingIndex : floatingIndexes)
             {
                 QPushButton *pb = this->mainInfoAreaToButton(static_cast<CMainInfoAreaComponent::InfoArea>(floatingIndex));
                 if (pb) { pb->setChecked(true); }
