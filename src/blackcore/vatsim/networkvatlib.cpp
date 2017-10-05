@@ -1070,10 +1070,11 @@ namespace BlackCore
             CFlightPlan::FlightRules rules = CFlightPlan::VFR;
             switch (fp->flightType)
             {
-            default:
-            case vatFlightTypeVFR:   rules = CFlightPlan::VFR;  break;
-            case vatFlightTypeIFR:   rules = CFlightPlan::IFR;  break;
-                // case Cvatlib_Network::fpRuleType_SVFR:  rules = CFlightPlan::SVFR; break;
+            case vatFlightTypeVFR:  rules = CFlightPlan::VFR;  break;
+            case vatFlightTypeIFR:  rules = CFlightPlan::IFR;  break;
+            case vatFlightTypeDVFR: rules = CFlightPlan::DVFR; break;
+            case vatFlightTypeSVFR: rules = CFlightPlan::SVFR; break;
+            default: rules = CFlightPlan::UNKNOWN; break;
             }
 
             auto *self = cbvar_cast(cbvar);
