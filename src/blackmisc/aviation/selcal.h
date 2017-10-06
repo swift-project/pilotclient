@@ -40,13 +40,10 @@ namespace BlackMisc
             CSelcal() = default;
 
             //! Constructor.
-            CSelcal(const QString &code) : m_code(code.trimmed().toUpper()) {}
+            CSelcal(const QString &code) : m_code(unifyCode(code)) {}
 
-            /*!
-             * Constructor.
-             * Needed to disambiguate implicit conversion from string literal.
-             */
-            CSelcal(const char *code) : m_code(QString(code).trimmed().toUpper()) {}
+            //! Constructor needed to disambiguate implicit conversion from string literal.
+            CSelcal(const char *code) : m_code(unifyCode(code)) {}
 
             //! Is valid?
             bool isValid() const { return isValidCode(m_code); }
@@ -76,14 +73,17 @@ namespace BlackMisc
             //! Audio frequency for character
             static const PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
 
+            //! All audio frequencies
+            static const QList<PhysicalQuantities::CFrequency> &audioFrequencyEquivalents();
+
             //! All valid code pairs: AB, AC, AD ...
             static const QStringList &codePairs();
 
+            //! Unify SELCAL code by removing illegal characters
+            static QString unifyCode(const QString &selcalCandidate);
 
         private:
             QString m_code;
-            static QList<BlackMisc::PhysicalQuantities::CFrequency> frequencyEquivalents;
-            static QStringList allCodePairs;
 
             BLACK_METACLASS(
                 CSelcal,

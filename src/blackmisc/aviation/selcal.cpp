@@ -21,13 +21,19 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
-        QList<CFrequency> CSelcal::frequencyEquivalents = QList<CFrequency>();
-        QStringList CSelcal::allCodePairs = QStringList();
-
         QString CSelcal::convertToQString(bool /** i18n **/) const
         {
             return m_code;
+        }
+
+        QString CSelcal::unifyCode(const QString &selcalCandidate)
+        {
+            QString s;
+            for (QChar c : selcalCandidate)
+            {
+                if (CSelcal::isValidCharacter(c)) { s += c;}
+            }
+            return s.length() == 4 ? s : QString("");
         }
 
         bool CSelcal::equalsString(const QString &code) const
@@ -75,37 +81,39 @@ namespace BlackMisc
 
         const PhysicalQuantities::CFrequency &CSelcal::audioFrequencyEquivalent(QChar c)
         {
-            if (CSelcal::frequencyEquivalents.isEmpty())
-            {
-                QList<CFrequency> frequencies;
-                frequencies
-                        << CFrequency(312.7, CFrequencyUnit::Hz())
-                        << CFrequency(346.7, CFrequencyUnit::Hz())
-                        << CFrequency(384.6, CFrequencyUnit::Hz())
-                        << CFrequency(426.6, CFrequencyUnit::Hz())
-                        << CFrequency(473.2, CFrequencyUnit::Hz())
-                        << CFrequency(524.8, CFrequencyUnit::Hz())
-                        << CFrequency(582.1, CFrequencyUnit::Hz())
-                        << CFrequency(645.7, CFrequencyUnit::Hz())
-                        << CFrequency(716.1, CFrequencyUnit::Hz())
-                        << CFrequency(794.3, CFrequencyUnit::Hz())
-                        << CFrequency(881.0, CFrequencyUnit::Hz())
-                        << CFrequency(977.2, CFrequencyUnit::Hz())
-                        << CFrequency(1083.9, CFrequencyUnit::Hz())
-                        << CFrequency(1202.3, CFrequencyUnit::Hz())
-                        << CFrequency(1333.5, CFrequencyUnit::Hz())
-                        << CFrequency(1479.1, CFrequencyUnit::Hz());
-                CSelcal::frequencyEquivalents = frequencies;
-            }
             int pos = CSelcal::validCharacters().indexOf(c);
             Q_ASSERT(pos >= 0);
             Q_ASSERT(CSelcal::frequencyEquivalents.size() > pos);
-            return CSelcal::frequencyEquivalents.at(pos);
+            return CSelcal::frequencyEquivalents[pos];
         }
 
-        const QStringList &CSelcal::codePairs()
+        const QList<CFrequency> &CSelcal::audioFrequencyEquivalents()
         {
-            if (CSelcal::allCodePairs.isEmpty())
+            static const QList<CFrequency> frequencies(
+            {
+                CFrequency(312.7, CFrequencyUnit::Hz()),
+                CFrequency(346.7, CFrequencyUnit::Hz()),
+                CFrequency(384.6, CFrequencyUnit::Hz()),
+                CFrequency(426.6, CFrequencyUnit::Hz()),
+                CFrequency(473.2, CFrequencyUnit::Hz()),
+                CFrequency(524.8, CFrequencyUnit::Hz()),
+                CFrequency(582.1, CFrequencyUnit::Hz()),
+                CFrequency(645.7, CFrequencyUnit::Hz()),
+                CFrequency(716.1, CFrequencyUnit::Hz()),
+                CFrequency(794.3, CFrequencyUnit::Hz()),
+                CFrequency(881.0, CFrequencyUnit::Hz()),
+                CFrequency(977.2, CFrequencyUnit::Hz()),
+                CFrequency(1083.9, CFrequencyUnit::Hz()),
+                CFrequency(1202.3, CFrequencyUnit::Hz()),
+                CFrequency(1333.5, CFrequencyUnit::Hz()),
+                CFrequency(1479.1, CFrequencyUnit::Hz())
+            });
+            return frequencies;
+        }
+
+        namespace Private
+        {
+            QStringList selcalCodePairs()
             {
                 QStringList pairs;
                 for (int p1 = 0; p1 < (CSelcal::validCharacters().length() - 1); p1++)
@@ -117,10 +125,14 @@ namespace BlackMisc
                         pairs.append(pair);
                     }
                 }
-                CSelcal::allCodePairs = pairs;
+                return pairs;
             }
-            return CSelcal::allCodePairs;
         }
 
+        const QStringList &CSelcal::codePairs()
+        {
+            static const QStringList allCodePairs = Private::selcalCodePairs();
+            return allCodePairs;
+        }
     } // namespace
 } // namespace
