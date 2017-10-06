@@ -26,7 +26,6 @@ class QStringList;
 namespace BlackMisc
 {
     namespace PhysicalQuantities { class CFrequency; }
-
     namespace Aviation
     {
         /*!
@@ -50,19 +49,20 @@ namespace BlackMisc
             CSelcal(const char *code) : m_code(QString(code).trimmed().toUpper()) {}
 
             //! Is valid?
-            bool isValid() const { return isValidCode(this->m_code); }
+            bool isValid() const { return isValidCode(m_code); }
 
             //! Get SELCAL code
-            const QString &getCode() const { return this->m_code; }
+            const QString &getCode() const { return m_code; }
 
-            /*!
-             * List of 4 frequencies, if list is empty SELCAL code is not valid
-             * \return  either 4 frequencies, or empty list
-             */
-            QList<BlackMisc::PhysicalQuantities::CFrequency> getFrequencies() const;
+            //! List of 4 frequencies, if list is empty SELCAL code is not valid
+            //! \return  either 4 frequencies, or empty list
+            QList<PhysicalQuantities::CFrequency> getFrequencies() const;
 
             //! Equals given string
             bool equalsString(const QString &code) const;
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
 
             //! Valid SELCAL characters
             static const QString &validCharacters();
@@ -74,13 +74,11 @@ namespace BlackMisc
             static bool isValidCode(const QString &code);
 
             //! Audio frequency for character
-            static const BlackMisc::PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
+            static const PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
 
             //! All valid code pairs: AB, AC, AD ...
             static const QStringList &codePairs();
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
 
         private:
             QString m_code;

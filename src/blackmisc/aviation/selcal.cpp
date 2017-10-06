@@ -27,23 +27,23 @@ namespace BlackMisc
 
         QString CSelcal::convertToQString(bool /** i18n **/) const
         {
-            return this->m_code;
+            return m_code;
         }
 
         bool CSelcal::equalsString(const QString &code) const
         {
             if (code.isEmpty()) return false;
-            return (this->m_code.compare(code, Qt::CaseInsensitive) == 0);
+            return (m_code.compare(code, Qt::CaseInsensitive) == 0);
         }
 
         QList<CFrequency> CSelcal::getFrequencies() const
         {
             QList<CFrequency> f;
-            if (!CSelcal::isValidCode(this->m_code)) return f;
-            f.reserve(this->m_code.length());
-            for (int pos = 0; pos < this->m_code.length(); pos++)
+            if (!CSelcal::isValidCode(m_code)) return f;
+            f.reserve(m_code.length());
+            for (int pos = 0; pos < m_code.length(); pos++)
             {
-                f.append(CSelcal::audioFrequencyEquivalent(this->m_code.at(pos)));
+                f.append(CSelcal::audioFrequencyEquivalent(m_code.at(pos)));
             }
             return f;
         }
