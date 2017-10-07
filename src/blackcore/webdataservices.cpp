@@ -603,7 +603,22 @@ namespace BlackCore
     bool CWebDataServices::containsAirlineIcaoDesignator(const QString &designator) const
     {
         if (designator.isEmpty()) { return false; }
-        return this->getAirlineIcaoCodes().containsDesignator(designator);
+        if (m_icaoDataReader) { return m_icaoDataReader->containsAirlineIcaoDesignator(designator); }
+        return false;
+    }
+
+    CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const
+    {
+        if (designator.isEmpty()) { return CAirlineIcaoCode(); }
+        if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForUniqueDesignatorOrDefault(designator, preferOperatingAirlines); }
+        return CAirlineIcaoCode();
+    }
+
+    CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const
+    {
+        if (iataCode.isEmpty()) { return CAirlineIcaoCode(); }
+        if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForUniqueIataCodeOrDefault(iataCode); }
+        return CAirlineIcaoCode();
     }
 
     int CWebDataServices::getAirlineIcaoCodesCount() const

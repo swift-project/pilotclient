@@ -49,6 +49,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodes() const;
 
+            //! Get aircraft ICAO information count
+            //! \threadsafe
+            int getAircraftIcaoCodesCount() const;
+
             //! Get aircraft ICAO information for designator
             //! \threadsafe
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
@@ -57,13 +61,13 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForDesignator(const QString &designator) const;
 
+            //! Get aircraft ICAO information for IATA code
+            //! \threadsafe
+            BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForIataCode(const QString &iataCode) const;
+
             //! Get aircraft ICAO information for key
             //! \threadsafe
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int key) const;
-
-            //! Get airline ICAO information
-            //! \threadsafe
-            BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
 
             //! Get best match for incomplete aircraft ICAO code
             //! \threadsafe
@@ -85,25 +89,41 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::CCountry getCountryForName(const QString &name) const;
 
-            //! Get airline ICAO information for designator
+            //! Get airline ICAO information
+            //! \threadsafe
+            BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
+
+            //! Get airline ICAO information count
+            //! \threadsafe
+            int getAirlineIcaoCodesCount() const;
+
+            //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByVDesignator
             //! \threadsafe
             BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
+
+            //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByVDesignator
+            //! \threadsafe
+            bool containsAirlineIcaoDesignator(const QString &designator) const;
+
+            //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByUniqueVDesignatorOrDefault
+            //! \threadsafe
+            BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
+
+            //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByIataCode
+            //! \threadsafe
+            BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForIataCode(const QString &iataCode) const;
+
+            //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByUniqueIataCodeOrDefault
+            //! \threadsafe
+            BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const;
 
             //! Get airline ICAO information for key
             //! \threadsafe
             BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int key) const;
 
-            //! Get best match for incomplete airline ICAO code
+            //! Get best match for airline ICAO code
             //! \threadsafe
             BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign()) const;
-
-            //! Get aircraft ICAO information count
-            //! \threadsafe
-            int getAircraftIcaoCodesCount() const;
-
-            //! Get airline ICAO information count
-            //! \threadsafe
-            int getAirlineIcaoCodesCount() const;
 
             //! All data read?
             //! \threadsafe

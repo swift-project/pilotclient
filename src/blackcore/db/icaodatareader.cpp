@@ -62,6 +62,11 @@ namespace BlackCore
             return getAircraftIcaoCodes().findByDesignator(designator);
         }
 
+        CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodesForIataCode(const QString &iataCode) const
+        {
+            return getAircraftIcaoCodes().findByIataCode(iataCode);
+        }
+
         CAircraftIcaoCode CIcaoDataReader::getAircraftIcaoCodeForDbKey(int key) const
         {
             return getAircraftIcaoCodes().findByKey(key);
@@ -96,6 +101,26 @@ namespace BlackCore
         CAirlineIcaoCodeList CIcaoDataReader::getAirlineIcaoCodesForDesignator(const QString &designator) const
         {
             return this->getAirlineIcaoCodes().findByVDesignator(designator);
+        }
+
+        bool CIcaoDataReader::containsAirlineIcaoDesignator(const QString &designator) const
+        {
+            return this->getAirlineIcaoCodes().containsVDesignator(designator);
+        }
+
+        CAirlineIcaoCode CIcaoDataReader::getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const
+        {
+            return this->getAirlineIcaoCodes().findByUniqueVDesignatorOrDefault(designator, preferOperatingAirlines);
+        }
+
+        CAirlineIcaoCodeList CIcaoDataReader::getAirlineIcaoCodesForIataCode(const QString &iataCode) const
+        {
+            return this->getAirlineIcaoCodes().findByIataCode(iataCode);
+        }
+
+        CAirlineIcaoCode CIcaoDataReader::getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const
+        {
+            return this->getAirlineIcaoCodes().findByUniqueIataCodeOrDefault(iataCode);
         }
 
         CAirlineIcaoCode CIcaoDataReader::getAirlineIcaoCodeForDbKey(int key) const

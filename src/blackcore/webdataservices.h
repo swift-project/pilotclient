@@ -266,6 +266,14 @@ namespace BlackCore
         //! \threadsafe
         bool containsAirlineIcaoDesignator(const QString &designator) const;
 
+        //! ICAO code if unique, otherwise default
+        //! \threadsafe
+        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
+
+        //! ICAO code if unique, otherwise default
+        //! \threadsafe
+        BlackMisc::Aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const;
+
         //! Airline names
         //! \threadsafe
         QStringList getAirlineNames() const;
