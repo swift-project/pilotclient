@@ -10,7 +10,6 @@
 #include "flightplan.h"
 #include "airlineicaocode.h"
 #include "flightplan.h"
-#include "selcal.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
 #include <QStringBuilder>
@@ -28,35 +27,36 @@ namespace BlackMisc
         CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, bool parse) : m_remarks(remarks)
         {
             if (parse) { this->parseFlightPlanRemarks(); }
-            m_isNull = false;
         }
 
         CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, CVoiceCapabilities voiceCapabilities, bool parse) :
             m_remarks(remarks), m_voiceCapabilities(voiceCapabilities)
         {
             if (parse) { this->parseFlightPlanRemarks(); }
-            m_isNull = false;
         }
 
         bool CFlightPlanRemarks::hasAnyParsedRemarks() const
         {
-            return this->hasParsedAirlineRemarks() || !m_selcalCode.isEmpty() || !m_voiceCapabilities.isUnknown();
+            if (!this->m_isParsed) { return false; }
+            return this->hasParsedAirlineRemarks() || m_selcalCode.isValid() || !m_voiceCapabilities.isUnknown();
         }
 
         bool CFlightPlanRemarks::hasParsedAirlineRemarks() const
         {
-            return !m_radioTelephony.isEmpty() || !m_flightOperator.isEmpty() || !m_airlineIcao.isEmpty();
+            if (!this->m_isParsed) { return false; }
+            return !m_radioTelephony.isEmpty() || !m_flightOperator.isEmpty() || m_airlineIcao.hasValidDesignator();
         }
 
         QString CFlightPlanRemarks::convertToQString(bool i18n) const
         {
-            const QString s = m_callsign.toQString(i18n)
-                              % QLatin1Char(' ') % m_airlineIcao
-                              % QLatin1Char(' ') % m_radioTelephony
-                              % QLatin1Char(' ') % m_flightOperator
-                              % QLatin1Char(' ') % m_selcalCode
-                              % QLatin1Char(' ') % m_voiceCapabilities.toQString(i18n);
-            return s;
+            const QString s =
+                (m_registration.isEmpty() ? QStringLiteral("") : QStringLiteral("reg.: ") % m_registration.toQString(i18n))
+                % (!this->hasValidAirlineIcao() ? QStringLiteral("") : QStringLiteral(" airline: ") % m_airlineIcao.getDesignator())
+                % (m_radioTelephony.isEmpty() ?  QStringLiteral("") : QStringLiteral(" radio tel.:") % m_radioTelephony)
+                % (m_flightOperator.isEmpty() ? QStringLiteral("") : QStringLiteral(" operator: ") % m_flightOperator)
+                % (!m_selcalCode.isValid() ? QStringLiteral("") : QStringLiteral(" SELCAL: ") % m_selcalCode.getCode())
+                % QStringLiteral(" voice: ") % m_voiceCapabilities.toQString(i18n);
+            return s.simplified().trimmed();
         }
 
         void CFlightPlanRemarks::parseFlightPlanRemarks()
@@ -64,7 +64,7 @@ namespace BlackMisc
             // examples: VFPS = VATSIM Flightplan Prefile System
             // 1) RT/KESTREL OPR/MYTRAVEL REG/G-DAJC SEL/FP-ES PER/C NAV/RNP10
             // 2) OPR/UAL CALLSIGN/UNITED
-            // 3) /v/FPL-VIR9-IS-A346/DEP/S-EGLL/ARR/KJFK/REG/G-VGAS/TCAS RVR/200 OPR/VIRGI
+            // 3) /v/FPL-VIR9-IS-A346/DEP/S-EGLL/ARR/KJFK/REG/G-VGAS/TCAS RVR/200 OPR/VIRGIN AIRLINES
 
             if (m_isParsed) { return; }
             m_isParsed = true;
@@ -73,17 +73,16 @@ namespace BlackMisc
             const QString callsign = CCallsign::unifyCallsign(this->cut(remarks, "REG/")); // registration is a callsign
             if (CCallsign::isValidAircraftCallsign(callsign)) { m_registration = CCallsign(callsign, CCallsign::Aircraft); }
             m_voiceCapabilities = m_voiceCapabilities.isUnknown() ? CVoiceCapabilities(m_remarks) : m_voiceCapabilities;
-            m_flightOperator = this->cut(r, "OPR/"); // operator, e.g. British airways, sometimes people use ICAO code here
-            const QString selcal = this->cut(r, "SEL/"); // SELCAL
-            if (CSelcal::isValidCode(selcal)) m_selcalCode = selcal;
-            m_radioTelephony = cut(r, "CALLSIGN/"); // used similar to radio telephony
-            if (m_radioTelephony.isEmpty()) { m_radioTelephony = cut(r, "RT/"); }
+            m_flightOperator = this->cut(remarks, "OPR/"); // operator, e.g. British airways, sometimes people use ICAO code here
+            m_selcalCode = CSelcal(this->cut(remarks, "SEL/"));
+            m_radioTelephony = cut(remarks, "CALLSIGN/"); // used similar to radio telephony
+            if (m_radioTelephony.isEmpty()) { m_radioTelephony = cut(remarks, "RT/"); }
             if (!m_flightOperator.isEmpty() && CAirlineIcaoCode::isValidAirlineDesignator(m_flightOperator))
             {
-                // if people use ICAO as flight operator move to airline ICAO
-                qSwap(m_flightOperator, m_airlineIcao);
+                // if people use ICAO code as flight operator swap with airline ICAO
+                m_airlineIcao = CAirlineIcaoCode(m_flightOperator);
+                m_flightOperator.clear();
             }
-            m_isNull = false;
         }
 
         QString CFlightPlanRemarks::aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft)
@@ -103,10 +102,19 @@ namespace BlackMisc
             if (f < 0) { return ""; }
             f += marker.length();
             if (maxIndex <= f) { return ""; }
-            int to = remarks.indexOf(' ', f + 1);
-            if (to < 0) { to = maxIndex; } // no more spaces
-            const QString cut = remarks.mid(f, to - f).replace('/', ' '); // variations like /OPR/EASYJET/
-            // problem is that this cuts something like "Uzbekistan Airways"
+
+            // the remarks are poorly formatted:
+            // 1) sometimes the values are enclosed in "/", like "/REG/D-AMBZ/"
+            // 2) sometimes the values are containing space, like "/OPR/DELTA AIRLINES"
+            // 3) in many cases the end delimiter is a new marker or the EOL (otherwise 1 applies)
+
+            thread_local const QRegularExpression nextMarker("\\s+\\w*/|$");
+            int to1 = remarks.indexOf(nextMarker, f + 1); // for case 2,3
+            if (to1 < 0) { to1 = maxIndex + 1; }
+            int to2 = remarks.indexOf('/', f + 1); // for case 1
+            if (to2 < 0) { to2 = maxIndex + 1; } // no more end markes, ends after last character
+            const int to = qMin(to1, to2);
+            const QString cut = remarks.mid(f, to - f).simplified();
             return cut;
         }
 

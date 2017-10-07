@@ -15,7 +15,9 @@
 #include "airporticaocode.h"
 #include "aircrafticaocode.h"
 #include "altitude.h"
+#include "airlineicaocode.h"
 #include "callsign.h"
+#include "selcal.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/time.h"
@@ -37,6 +39,10 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Flight plan remarks, parsed values
+        //! \remark Actually the term "remarks" is not accurate, as the FP remarks are normally only the /RMK part of a flight plan.
+        //!         But on flight sim. networks "remarks" is used to fill in all parts not fitting in other fields.
+        //!         The correct term would be ITEM18 ("OTHER INFORMATION") or ITEM19 ("SUPPLEMENTARY INFORMATION")
+        //!         according to https://www.skybrary.aero/index.php/Flight_Plan_Filling
         class BLACKMISC_EXPORT CFlightPlanRemarks : public CValueObject<CFlightPlanRemarks>
         {
         public:
@@ -59,13 +65,13 @@ namespace BlackMisc
             const QString &getFlightOperator() const { return m_flightOperator; }
 
             //! Airline ICAO if provided in flight plan
-            const QString &getAirlineIcao() const { return m_airlineIcao; }
+            const CAirlineIcaoCode &getAirlineIcao() const { return m_airlineIcao; }
 
             //! SELCAL code
-            const QString &getSelcalCode() const { return m_selcalCode; }
+            const CSelcal &getSelcalCode() const { return m_selcalCode; }
 
-            //! Get SELCAL
-            const CCallsign &getCallsign() const { return m_callsign; }
+            //! Get registration (a callsign, but normally not the flight callsign)
+            const CCallsign &getRegistration() const { return m_registration; }
 
             //! Voice capabilities
             const Network::CVoiceCapabilities &getVoiceCapabilities() const { return m_voiceCapabilities; }
@@ -81,10 +87,13 @@ namespace BlackMisc
 
             //! Valid airline ICAO?
             //! \remark valid here means valid syntax, no guarantee it really exists
-            bool hasValidAirlineIcao() const { return !m_airlineIcao.isEmpty(); }
+            bool hasValidAirlineIcao() const { return m_airlineIcao.hasValidDesignator(); }
 
-            //! Not initialized
-            bool isNull() const { return m_isNull; }
+            //! Empty remarks?
+            bool isEmpty() const { return m_remarks.isEmpty(); }
+
+            //! Already parsed?
+            bool isParsed() const { return m_isParsed; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
@@ -97,11 +106,11 @@ namespace BlackMisc
             QString m_remarks;        //!< the unparsed string
             QString m_radioTelephony; //!< radio telephony designator
             QString m_flightOperator; //!< operator, i.e. normally the airline name
-            QString m_airlineIcao;    //!< airline ICAO if provided in flight plan
-            QString m_selcalCode;     //!< SELCAL code
-            CCallsign m_callsign;     //!< callsign of other pilot
-            bool m_isNull = true;     //!< marked as NULL
+            CCallsign m_registration; //!< callsign of other pilot
+            CSelcal m_selcalCode;     //!< SELCAL code
+            CAirlineIcaoCode m_airlineIcao; //!< airline ICAO if provided in flight plan
             Network::CVoiceCapabilities m_voiceCapabilities; //!< voice capabilities
+            bool m_isParsed = false;  //!< marked as parsed
 
             BLACK_METACLASS(
                 CFlightPlanRemarks,
@@ -109,8 +118,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(flightOperator),
                 BLACK_METAMEMBER(airlineIcao),
                 BLACK_METAMEMBER(selcalCode),
-                BLACK_METAMEMBER(callsign),
-                BLACK_METAMEMBER(isNull),
+                BLACK_METAMEMBER(registration),
+                BLACK_METAMEMBER(isParsed),
                 BLACK_METAMEMBER(voiceCapabilities)
             );
 

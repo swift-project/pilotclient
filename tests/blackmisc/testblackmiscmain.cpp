@@ -29,6 +29,7 @@
 #include "testvariantandmap.h"
 #include "testweather.h"
 #include "testdbus.h"
+#include "testflightplan.h"
 #include "blackmisc/test/test.h"
 
 #include <QStringList>
@@ -59,6 +60,10 @@ namespace BlackMiscTest
         {
             CTestGeo geoTests;
             status |= test.exec(&geoTests, "blackmisc_geo");
+        }
+        {
+            CTestFlightPlan fpTests;
+            status |= test.exec(&fpTests, "blackmisc_flightplan");
         }
         {
             CTestContainers containerTests;
