@@ -926,26 +926,43 @@ namespace BlackCore
         CAircraftModel::ModelType type, CStatusMessageList *log)
     {
         const CFlightPlanRemarks fpRemarks = this->tryToGetFlightPlanRemarks(callsign);
-        CAirlineIcaoCode airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, airlineIcaoString, fpRemarks.getAirlineIcao(), true, true, log);
+        if (fpRemarks.isEmpty())
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QStringLiteral("No flight plan remarks"));
+        }
+        else
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("FP remarks: '%1'").arg(fpRemarks.getRemarks()));
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
+        }
 
-        CAircraftIcaoCode aircraftIcao(aircraftIcaoString);
-        if (fpRemarks.hasParsedAirlineRemarks())
+        CAirlineIcaoCode airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignator(callsign, airlineIcaoString, fpRemarks.getAirlineIcao().getDesignator(), true, true, log);
+        if (!airlineIcao.isLoadedFromDb() && fpRemarks.hasParsedAirlineRemarks())
         {
             const QString airlineName = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
             if (!airlineName.isEmpty())
             {
-                airlineIcao.setName(airlineName);
-                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Setting airline name '%1'").arg(airlineName), getLogCategories());
+                const QString resolvedAirlineName = CAircraftMatcher::reverseLookupAirlineName(airlineName);
+                airlineIcao.setName(resolvedAirlineName);
+                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Setting resolved airline name '%1' from '%2'").arg(resolvedAirlineName, airlineName), getLogCategories());
             }
 
             const QString telephony = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
             if (!telephony.isEmpty())
             {
-                airlineIcao.setTelephonyDesignator(telephony);
-                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Setting telephoy designator '%1'").arg(telephony), getLogCategories());
+                const QString resolvedTelephony = CAircraftMatcher::reverseLookupTelephonyDesignator(telephony);
+                airlineIcao.setTelephonyDesignator(resolvedTelephony);
+                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Setting resolved telephoy designator '%1' from '%2'").arg(resolvedTelephony, telephony), getLogCategories());
             }
         }
 
+        if (!airlineIcao.isLoadedFromDb())
+        {
+            // already try to resolve at this stage by a smart lookup with all the filled data from above
+            airlineIcao = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign, log);
+        }
+
+        const CAircraftIcaoCode aircraftIcao(aircraftIcaoString);
         return CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
     }
 

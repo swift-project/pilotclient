@@ -51,24 +51,39 @@ namespace BlackCore
         const CCallsign &callsign, const QString &primaryIcao, const QString &secondaryIcao,
         bool airlineFromCallsign, bool useWebServices, CStatusMessageList *log)
     {
-        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Find airline designator from 1st: '%1' 2nd: '%2', callsign airline: %3 web service: %4").arg(primaryIcao, secondaryIcao, boolToYesNo(airlineFromCallsign), boolToYesNo(useWebServices)), getLogCategories());
-        if (CAircraftMatcher::isValidAirlineIcaoDesignator(primaryIcao, useWebServices)) { return CAirlineIcaoCode(primaryIcao); }
-        if (CAircraftMatcher::isValidAirlineIcaoDesignator(secondaryIcao, useWebServices))
+        CMatchingUtils::addLogDetailsToList(log, callsign,
+                                            QString("Find airline designator from 1st: '%1' 2nd: '%2' callsign: '%3', use airline callsign: %4, use web service: %5").
+                                            arg(primaryIcao, secondaryIcao, callsign.getAirlineSuffix(), boolToYesNo(airlineFromCallsign), boolToYesNo(useWebServices)), getLogCategories());
+        CAirlineIcaoCode code;
+        do
         {
-            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using secondary airline ICAO '%1', primary '%2' not valid").arg(secondaryIcao, primaryIcao), getLogCategories());
-            return CAirlineIcaoCode(secondaryIcao);
-        }
-        if (airlineFromCallsign)
-        {
-            const QString airlineSuffix = callsign.getAirlineSuffix();
-            if (CAircraftMatcher::isValidAirlineIcaoDesignator(airlineSuffix, useWebServices))
+            if (CAircraftMatcher::isValidAirlineIcaoDesignator(primaryIcao, useWebServices))
             {
-                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using airline from callsign '%1', suffix: '%2'").arg(callsign.toQString(), airlineSuffix), getLogCategories());
-                return CAirlineIcaoCode(airlineSuffix);
+                code = stringToAirlineIcaoObject(primaryIcao, useWebServices);
+                break;
+            }
+            if (CAircraftMatcher::isValidAirlineIcaoDesignator(secondaryIcao, useWebServices))
+            {
+                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using secondary airline ICAO '%1', primary '%2' not valid").arg(secondaryIcao, primaryIcao), getLogCategories());
+                code = stringToAirlineIcaoObject(secondaryIcao, useWebServices);
+                break;
+            }
+
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Two invalid airline ICAO codes '%1', '%2'").arg(primaryIcao, secondaryIcao), getLogCategories());
+            if (airlineFromCallsign)
+            {
+                const QString airlineSuffix = callsign.getAirlineSuffix();
+                if (CAircraftMatcher::isValidAirlineIcaoDesignator(airlineSuffix, useWebServices))
+                {
+                    CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using airline from callsign '%1', suffix: '%2'").arg(callsign.toQString(), airlineSuffix), getLogCategories());
+                    code = stringToAirlineIcaoObject(airlineSuffix, useWebServices);
+                    break;
+                }
             }
         }
-        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Two invalid airline ICAO codes '%1', '%2'").arg(primaryIcao, secondaryIcao), getLogCategories());
-        return CAirlineIcaoCode();
+        while (false);
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Resolved to airline designator: %1").arg(code.toQString(true)));
+        return code;
     }
 
     CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
@@ -318,7 +333,7 @@ namespace BlackCore
         else if (foundIcaos.size() == 1)
         {
             const CAircraftIcaoCode icao(foundIcaos.front());
-            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of aircraft ICAO '%1'', found one manufacturer '%2'").arg(designator, icao.getDesignatorManufacturer()), CAircraftMatcher::getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, logCallsign, QString("Reverse lookup of aircraft ICAO '%1'', found one manufacturer '%2' in DB").arg(designator, icao.getDesignatorManufacturer()), CAircraftMatcher::getLogCategories());
             return icao;
         }
         else
@@ -347,8 +362,8 @@ namespace BlackCore
         const CAirlineIcaoCode icao = sApp->getWebDataServices()->smartAirlineIcaoSelector(icaoPattern, callsign);
         if (log)
         {
-            if (icao.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline ICAO '%1' and callsign '%2' found '%3' '%4'").arg(icaoPattern.getDesignator(), callsign.asString(), icao.getVDesignatorDbKey(), icao.getName()), CAircraftMatcher::getLogCategories()); }
-            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline ICAO '%1' and callsign '%2', nothing found").arg(icaoPattern.getDesignator(), callsign.asString()), CAircraftMatcher::getLogCategories()); }
+            if (icao.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline ICAO '%1' and callsign '%2' found '%3' '%4' in DB").arg(icaoPattern.getDesignator(), callsign.asString(), icao.getVDesignatorDbKey(), icao.getName()), CAircraftMatcher::getLogCategories()); }
+            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline ICAO '%1' and callsign '%2', nothing found in DB").arg(icaoPattern.getDesignator(), callsign.asString()), CAircraftMatcher::getLogCategories()); }
         }
         return icao;
     }
@@ -368,7 +383,7 @@ namespace BlackCore
         if (log)
         {
             if (livery.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of standard livery for '%1' found '%2'").arg(airline.getDesignator(), livery.getCombinedCode()), CAircraftMatcher::getLogCategories()); }
-            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Not standard livery for airline '%1'").arg(airline.getDesignator()), CAircraftMatcher::getLogCategories()); }
+            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Not standard livery for airline '%1' in DB").arg(airline.getDesignator()), CAircraftMatcher::getLogCategories()); }
         }
         return livery;
     }
@@ -381,11 +396,11 @@ namespace BlackCore
         const QStringList names = sApp->getWebDataServices()->getAirlineNames();
         if (names.contains(candidate, Qt::CaseInsensitive))
         {
-            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Airline name '%1' found").arg(candidate));
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Airline name '%1' found in DB").arg(candidate));
             return candidate;
         }
 
-        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Airline name '%1' not found").arg(candidate));
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Airline name '%1' not found in DB").arg(candidate));
         return "";
     }
 
@@ -1008,6 +1023,14 @@ namespace BlackCore
                    QLatin1Char('\'');
         }
         return str;
+    }
+
+    CAirlineIcaoCode CAircraftMatcher::stringToAirlineIcaoObject(const QString &designator, bool useSwiftDbData)
+    {
+        if (!useSwiftDbData) { return CAirlineIcaoCode(designator); }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return CAirlineIcaoCode(designator); }
+        CAirlineIcaoCode code = sApp->getWebDataServices()->getAirlineIcaoCodeForUniqueDesignatorOrDefault(designator, true);
+        return code.isLoadedFromDb() ? code : CAirlineIcaoCode(designator);
     }
 
     bool CAircraftMatcher::isValidAirlineIcaoDesignator(const QString &designator, bool checkAgainstSwiftDb)

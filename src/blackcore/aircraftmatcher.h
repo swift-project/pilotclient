@@ -209,6 +209,10 @@ namespace BlackCore
         //! \threadsafe
         static QString scoresToString(const BlackMisc::Simulation::ScoredModels &scores, int lastElements = 5);
 
+        //! Designator to object
+        //! \threadsafe
+        static BlackMisc::Aviation::CAirlineIcaoCode stringToAirlineIcaoObject(const QString &designator, bool useSwiftDbData);
+
         //! Valid designator, allows to check against swift DB
         //! \threadsafe
         static bool isValidAirlineIcaoDesignator(const QString &designator, bool checkAgainstSwiftDb);
