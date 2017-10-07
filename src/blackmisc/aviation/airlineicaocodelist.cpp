@@ -36,11 +36,17 @@ namespace BlackMisc
 
         CAirlineIcaoCodeList CAirlineIcaoCodeList::findByIataCode(const QString &iata) const
         {
-            if (iata.isEmpty()) { return CAirlineIcaoCodeList(); }
+            if (!CAirlineIcaoCode::isValidIataCode(iata)) { return CAirlineIcaoCodeList(); }
             return this->findBy([&](const CAirlineIcaoCode & code)
             {
                 return code.matchesIataCode(iata);
             });
+        }
+
+        CAirlineIcaoCode CAirlineIcaoCodeList::findByUniqueIataCodeOrDefault(const QString &iata) const
+        {
+            const CAirlineIcaoCodeList codes = this->findByIataCode(iata);
+            return codes.size() == 1 ? codes.front() : CAirlineIcaoCode();
         }
 
         CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignatorOrIataCode(const QString &designatorOrIata) const
@@ -59,6 +65,16 @@ namespace BlackMisc
             {
                 return code.matchesVDesignator(designator);
             });
+        }
+
+        CAirlineIcaoCode CAirlineIcaoCodeList::findByUniqueVDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const
+        {
+            CAirlineIcaoCodeList codes = this->findByVDesignator(designator);
+            if (codes.size() > 1 && preferOperatingAirlines)
+            {
+                codes.removeIf(&CAirlineIcaoCode::isOperating, false);
+            }
+            return codes.size() == 1 ? codes.front() : CAirlineIcaoCode();
         }
 
         CAirlineIcaoCodeList CAirlineIcaoCodeList::findByVDesignatorOrIataCode(const QString &designatorOrIata) const
@@ -261,6 +277,13 @@ namespace BlackMisc
         {
             if (designator.isEmpty()) { return false; }
             return this->contains(&CAirlineIcaoCode::getDesignator, designator.toUpper());
+        }
+
+        bool CAirlineIcaoCodeList::containsVDesignator(const QString &vDesignator) const
+        {
+            if (vDesignator.isEmpty()) { return false; }
+            if (vDesignator.length() < 4) { return this->containsDesignator(vDesignator); }
+            return this->contains(&CAirlineIcaoCode::getVDesignator, vDesignator.toUpper());
         }
     } // ns
 } // ns

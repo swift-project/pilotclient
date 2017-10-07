@@ -33,7 +33,7 @@ namespace BlackMisc
             {
                 if (CSelcal::isValidCharacter(c)) { s += c;}
             }
-            return s.length() == 4 ? s : QString("");
+            return CSelcal::isValidCode(s) ? s : QString("");
         }
 
         bool CSelcal::equalsString(const QString &code) const
@@ -83,8 +83,8 @@ namespace BlackMisc
         {
             int pos = CSelcal::validCharacters().indexOf(c);
             Q_ASSERT(pos >= 0);
-            Q_ASSERT(CSelcal::frequencyEquivalents.size() > pos);
-            return CSelcal::frequencyEquivalents[pos];
+            Q_ASSERT(CSelcal::audioFrequencyEquivalents().size() > pos);
+            return CSelcal::audioFrequencyEquivalents()[pos];
         }
 
         const QList<CFrequency> &CSelcal::audioFrequencyEquivalents()

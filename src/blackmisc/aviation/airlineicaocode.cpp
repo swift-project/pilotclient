@@ -317,11 +317,17 @@ namespace BlackMisc
 
         bool CAirlineIcaoCode::isValidAirlineDesignator(const QString &airline)
         {
-            // allow 2 chars for IATA
+            // allow 2 chars for special codes like "VV"
             if (airline.length() < 2 || airline.length() > 5) { return false; }
             const auto chars = makeRange(airline.begin(), airline.end());
             if (chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); })) { return false; }
             return true;
+        }
+
+        bool CAirlineIcaoCode::isValidIataCode(const QString &iataCode)
+        {
+            if (iataCode.length() != 2) { return false; }
+            return isValidAirlineDesignator(iataCode); // allow some chars as in IACO
         }
 
         QSet<QString> CAirlineIcaoCode::specialValidDesignators()

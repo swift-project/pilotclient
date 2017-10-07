@@ -70,12 +70,6 @@ namespace BlackMisc
             //! Valid SELCAL code?
             static bool isValidCode(const QString &code);
 
-            //! Audio frequency for character
-            static const PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
-
-            //! All audio frequencies
-            static const QList<PhysicalQuantities::CFrequency> &audioFrequencyEquivalents();
-
             //! All valid code pairs: AB, AC, AD ...
             static const QStringList &codePairs();
 
@@ -83,6 +77,12 @@ namespace BlackMisc
             static QString unifyCode(const QString &selcalCandidate);
 
         private:
+            //! Audio frequency for character
+            static const PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
+
+            //! All audio frequencies
+            static const QList<PhysicalQuantities::CFrequency> &audioFrequencyEquivalents();
+
             QString m_code;
 
             BLACK_METACLASS(

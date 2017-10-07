@@ -52,9 +52,15 @@ namespace BlackMisc
             //! Find by v-designator, this should be unique
             CAirlineIcaoCodeList findByVDesignator(const QString &designator) const;
 
+            //! Find by ICAO code if this is unique, otherwise return default object
+            CAirlineIcaoCode findByUniqueVDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
+
             //! Find by IATA code
-            //! Not unique because of virtual airlines
+            //! Not unique because of virtual airlines and ceased airlines
             CAirlineIcaoCodeList findByIataCode(const QString &iata) const;
+
+            //! Find by IATA code if this is unique, otherwise return default object
+            CAirlineIcaoCode findByUniqueIataCodeOrDefault(const QString &iata) const;
 
             //! Find by designator or IATA code
             CAirlineIcaoCodeList findByDesignatorOrIataCode(const QString &designatorOrIata) const;
@@ -97,6 +103,9 @@ namespace BlackMisc
 
             //! Contains given designator?
             bool containsDesignator(const QString &designator) const;
+
+            //! Contains given designator?
+            bool containsVDesignator(const QString &vDesignator) const;
 
             //! From our DB JSON
             static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true, CAirlineIcaoCodeList *inconsistent = nullptr);

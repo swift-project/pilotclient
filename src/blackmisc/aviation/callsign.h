@@ -134,6 +134,9 @@ namespace BlackMisc
             //! Valid callsign?
             static bool isValidAtcCallsign(const CCallsign &callsign);
 
+            //! Unify the callsign by removing illegal characters
+            static QString unifyCallsign(const QString &callsign);
+
             //! List of real ATC suffixes (e.g. TWR);
             static const QStringList &atcCallsignSuffixes();
 
@@ -160,10 +163,6 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
-
-        protected:
-            //! Unify the callsign
-            static QString unifyCallsign(const QString &callsign);
 
         private:
             QString  m_callsignAsSet;
