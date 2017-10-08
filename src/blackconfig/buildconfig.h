@@ -119,9 +119,6 @@ namespace BlackConfig
         //! Returns SHA-1 of git HEAD at build time
         static const QString &gitHeadSha1();
 
-        //! Version info 3 segments e.g. 0.8.3
-        static const QString &versionMajorMinorPatch(); // defined in buildconfig_gen.cpp.in
-
         //! Build timestamp
         static const QDateTime &buildTimestamp();
 
