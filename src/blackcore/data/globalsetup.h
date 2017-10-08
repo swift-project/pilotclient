@@ -70,7 +70,7 @@ namespace BlackCore
             bool wasLoaded() const { return m_wasLoaded; }
 
             //! Mark as loaded
-            void markAsLoaded(bool loaded) { this->m_wasLoaded = loaded; }
+            void markAsLoaded(bool loaded) { m_wasLoaded = loaded; }
 
             //! Http port
             int getDbHttpPort() const { return m_dbHttpPort; }
@@ -147,7 +147,7 @@ namespace BlackCore
             const BlackMisc::Network::CUrl &getVatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
 
             //! VATSIM METAR URL
-            const BlackMisc::Network::CUrlList &getVatsimMetarsUrls() const { return this->m_vatsimMetarsUrls; }
+            const BlackMisc::Network::CUrlList &getVatsimMetarsUrls() const { return m_vatsimMetarsUrls; }
 
             //! VATSIM status file URLs
             const BlackMisc::Network::CUrlList &getVatsimStatusFileUrls() const { return m_vatsimStatusFileUrls; }
@@ -180,7 +180,7 @@ namespace BlackCore
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
-            //! To string
+            //! To string with separator
             QString convertToQString(const QString &separator, bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex

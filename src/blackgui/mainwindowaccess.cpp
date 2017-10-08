@@ -12,6 +12,8 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/overlaymessagesframe.h"
 
+using namespace BlackMisc;
+
 namespace BlackGui
 {
     IMainWindowAccess::~IMainWindowAccess()
@@ -22,26 +24,25 @@ namespace BlackGui
     bool IMainWindowAccess::displayTextInConsole(const QString &message)
     {
         if (message.isEmpty()) { return false; }
-        if (!this->m_mwaLogComponent) { return false; }
-        this->m_mwaLogComponent->appendPlainTextToConsole(message);
-        this->m_mwaLogComponent->displayConsole(true);
+        if (!m_mwaLogComponent) { return false; }
+        m_mwaLogComponent->appendPlainTextToConsole(message);
+        m_mwaLogComponent->displayConsole(true);
         return true;
     }
 
-    bool IMainWindowAccess::displayInStatusBar(const BlackMisc::CStatusMessage &message)
+    bool IMainWindowAccess::displayInStatusBar(const CStatusMessage &message)
     {
         if (message.isEmpty()) { return false; }
-        if (!this->m_mwaStatusBar) { return false; }
-        this->m_mwaStatusBar->displayStatusMessage(message);
+        if (!m_mwaStatusBar) { return false; }
+        m_mwaStatusBar->displayStatusMessage(message);
         return true;
     }
 
-    bool IMainWindowAccess::displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs)
+    bool IMainWindowAccess::displayInOverlayWindow(const CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return false; }
-        if (!this->m_mwaOverlayFrame) { return false; }
-        this->m_mwaOverlayFrame->showOverlayMessage(message, timeOutMs);
+        if (!m_mwaOverlayFrame) { return false; }
+        m_mwaOverlayFrame->showOverlayMessage(message, timeOutMs);
         return true;
     }
-
 } // ns

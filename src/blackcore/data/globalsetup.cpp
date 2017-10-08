@@ -76,7 +76,7 @@ namespace BlackCore
 
         const CUrlList &CGlobalSetup::getSwiftSharedUrls() const
         {
-            return this->m_sharedUrls;
+            return m_sharedUrls;
         }
 
         CUrl CGlobalSetup::getCorrespondingSharedUrl(const CUrl &candidate) const
@@ -102,7 +102,7 @@ namespace BlackCore
 
         CUrl CGlobalSetup::getHelpPageUrl(const QString &context) const
         {
-            const CUrlList urls(this->m_onlineHelpUrls);
+            const CUrlList urls(m_onlineHelpUrls);
 
             // we display in the standard browser,
             // so the user will realize if the URL does not work
@@ -320,23 +320,23 @@ namespace BlackCore
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbRootDirectory: return CVariant::fromValue(this->m_dbRootDirectoryUrl);
-            case IndexDbHttpPort: return CVariant::fromValue(this->m_dbHttpPort);
-            case IndexDbHttpsPort: return CVariant::fromValue(this->m_dbHttpsPort);
+            case IndexDbRootDirectory: return CVariant::fromValue(m_dbRootDirectoryUrl);
+            case IndexDbHttpPort: return CVariant::fromValue(m_dbHttpPort);
+            case IndexDbHttpsPort: return CVariant::fromValue(m_dbHttpsPort);
             case IndexDbLoginService: return CVariant::fromValue(this->getDbLoginServiceUrl());
             case IndexDbClientPingService: return CVariant::fromValue(this->getDbClientPingServiceUrl());
-            case IndexVatsimStatus: return CVariant::fromValue(this->m_vatsimStatusFileUrls);
-            case IndexVatsimData: return CVariant::fromValue(this->m_vatsimDataFileUrls);
-            case IndexVatsimBookings: return CVariant::fromValue(this->m_vatsimDataFileUrls);
-            case IndexVatsimMetars: return CVariant::fromValue(this->m_vatsimMetarsUrls);
+            case IndexVatsimStatus: return CVariant::fromValue(m_vatsimStatusFileUrls);
+            case IndexVatsimData: return CVariant::fromValue(m_vatsimDataFileUrls);
+            case IndexVatsimBookings: return CVariant::fromValue(m_vatsimDataFileUrls);
+            case IndexVatsimMetars: return CVariant::fromValue(m_vatsimMetarsUrls);
             case IndexBootstrapFileUrls: return CVariant::fromValue(this->getSwiftBootstrapFileUrls());
             case IndexDistributionFileUrls: return CVariant::fromValue(this->getSwiftDistributionFileUrls());
-            case IndexSharedUrls: return CVariant::fromValue(this->m_sharedUrls);
-            case IndexNewsUrls: return CVariant::fromValue(this->m_newsUrls);
-            case IndexSwiftMapUrls: return CVariant::fromValue(this->m_mapUrls);
-            case IndexOnlineHelpUrls: return CVariant::fromValue(this->m_onlineHelpUrls);
-            case IndexCrashReportServerUrl: return CVariant::fromValue(this->m_crashReportServerUrl);
-            case IndexWasLoaded: return CVariant::fromValue(this->m_wasLoaded);
+            case IndexSharedUrls: return CVariant::fromValue(m_sharedUrls);
+            case IndexNewsUrls: return CVariant::fromValue(m_newsUrls);
+            case IndexSwiftMapUrls: return CVariant::fromValue(m_mapUrls);
+            case IndexOnlineHelpUrls: return CVariant::fromValue(m_onlineHelpUrls);
+            case IndexCrashReportServerUrl: return CVariant::fromValue(m_crashReportServerUrl);
+            case IndexWasLoaded: return CVariant::fromValue(m_wasLoaded);
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -353,20 +353,20 @@ namespace BlackCore
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbRootDirectory: this->m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexDbHttpPort: this->m_dbHttpPort = variant.toInt(); break;
-            case IndexDbHttpsPort: this->m_dbHttpsPort = variant.toInt(); break;
+            case IndexDbRootDirectory: m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexDbHttpPort: m_dbHttpPort = variant.toInt(); break;
+            case IndexDbHttpsPort: m_dbHttpsPort = variant.toInt(); break;
             case IndexDbLoginService: break; // cannot be changed
             case IndexDbClientPingService: break; // cannot be changed
-            case IndexVatsimData: this->m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
-            case IndexVatsimBookings: this->m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexVatsimMetars: this->m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
-            case IndexSharedUrls: this->m_sharedUrls = variant.value<CUrlList>(); break;
-            case IndexNewsUrls: this->m_newsUrls = variant.value<CUrlList>(); break;
-            case IndexOnlineHelpUrls: this->m_onlineHelpUrls = variant.value<CUrlList>(); break;
-            case IndexSwiftMapUrls: this->m_mapUrls = variant.value<CUrlList>(); break;
-            case IndexCrashReportServerUrl: this->m_crashReportServerUrl = variant.value<CUrl>(); break;
-            case IndexWasLoaded: this->m_wasLoaded = variant.toBool(); break;
+            case IndexVatsimData: m_vatsimDataFileUrls = variant.value<CUrlList>(); break;
+            case IndexVatsimBookings: m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexVatsimMetars: m_vatsimMetarsUrls = variant.value<CUrlList>(); break;
+            case IndexSharedUrls: m_sharedUrls = variant.value<CUrlList>(); break;
+            case IndexNewsUrls: m_newsUrls = variant.value<CUrlList>(); break;
+            case IndexOnlineHelpUrls: m_onlineHelpUrls = variant.value<CUrlList>(); break;
+            case IndexSwiftMapUrls: m_mapUrls = variant.value<CUrlList>(); break;
+            case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
+            case IndexWasLoaded: m_wasLoaded = variant.toBool(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }

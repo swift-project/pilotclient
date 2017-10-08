@@ -97,9 +97,9 @@ void CSwiftData::init()
     sGui->initMainApplicationWindow(this);
     this->initLogDisplay();
 
-    this->m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
-    this->m_mwaStatusBar = &this->m_statusBar;
-    this->m_mwaOverlayFrame = ui->comp_MainInfoArea->getMappingComponent();
+    m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
+    m_mwaStatusBar = &m_statusBar;
+    m_mwaOverlayFrame = ui->comp_MainInfoArea->getMappingComponent();
 
     this->initStyleSheet();
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::onStyleSheetsChanged);
@@ -118,7 +118,7 @@ void CSwiftData::init()
 
 void CSwiftData::initLogDisplay()
 {
-    this->m_statusBar.initStatusBar(ui->sb_SwiftData);
+    m_statusBar.initStatusBar(ui->sb_SwiftData);
 
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
@@ -147,7 +147,7 @@ void CSwiftData::initMenu()
 
 void CSwiftData::performGracefulShutdown()
 {
-    if (this->m_updater)
+    if (m_updater)
     {
         m_updater->abandonAndWait();
     }
