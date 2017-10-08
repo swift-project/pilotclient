@@ -112,7 +112,8 @@ void CSwiftData::init()
         this->setWindowTitle(QString("%1 %2").arg(this->windowTitle(), s.getDbHomePageUrl().toQString(true)));
     }
 
-    sGui->triggerNewVersionCheck(10 * 1000);
+    sGui->triggerNewVersionCheck(15 * 1000);
+    QTimer::singleShot(15 * 1000, this, &CSwiftData::checkMinimumVersion);
     emit sGui->startUpCompleted(true);
 }
 
@@ -187,4 +188,19 @@ void CSwiftData::displayConsole()
 void CSwiftData::displayLog()
 {
     ui->comp_MainInfoArea->displayLog();
+}
+
+void CSwiftData::checkMinimumVersion()
+{
+    Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
+    if (sApp->getGlobalSetup().isSwiftVersionMinimumMappingVersion())
+    {
+        CLogMessage(this).info("Checked mapping tool version, required '%1', this version '%2'") << sApp->getGlobalSetup().getMappingMinimumVersionString() << CBuildConfig::getVersionString();
+    }
+    else
+    {
+        const CStatusMessage sm = CStatusMessage(this, CStatusMessage::SeverityWarning, "Your are using swift version: '%1'. Creating mappings requires at least '%2'.") << CBuildConfig::getVersionString() << sApp->getGlobalSetup().getMappingMinimumVersionString();
+        CLogMessage::preformatted(sm);
+        this->displayInOverlayWindow(sm);
+    }
 }

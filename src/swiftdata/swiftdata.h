@@ -73,6 +73,7 @@ private:
 
     void displayConsole();
     void displayLog();
+    void checkMinimumVersion();
 
     BlackGui::CManagedStatusBar m_statusBar;
     QScopedPointer<Ui::CSwiftData> ui;

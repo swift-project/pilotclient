@@ -15,6 +15,7 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/stringutils.h"
 
+#include <QVersionNumber>
 #include <QJsonObject>
 #include <QStringList>
 #include <QStringBuilder>
@@ -31,11 +32,12 @@ namespace BlackCore
         CGlobalSetup::CGlobalSetup() :
             ITimestampBased(0)
         {
-            this->initDefaultUrls();
+            this->initDefaultValues();
         }
 
-        void CGlobalSetup::initDefaultUrls()
+        void CGlobalSetup::initDefaultValues()
         {
+            m_mappingMinimumVersion = CBuildConfig::getVersionString();
             m_dbRootDirectoryUrl = CUrl("https://datastore.swift-project.org/");
             m_vatsimBookingsUrl = CUrl("http://vatbook.euroutepro.com/xml2.php");
             m_vatsimMetarsUrls = CUrlList({"http://metar.vatsim.net/metar.php"});
@@ -87,12 +89,12 @@ namespace BlackCore
 
         CUrlList CGlobalSetup::getSwiftBootstrapFileUrls() const
         {
-            return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::versionString() + "/bootstrap/bootstrap.json");
+            return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/bootstrap/bootstrap.json");
         }
 
         CUrlList CGlobalSetup::getSwiftDistributionFileUrls() const
         {
-            return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::versionString() + "/updateinfo/distribution.json");
+            return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/updateinfo/distribution.json");
         }
 
         CUrl CGlobalSetup::getDbHomePageUrl() const
@@ -168,24 +170,24 @@ namespace BlackCore
         QString CGlobalSetup::buildBootstrapFileUrl(const QString &candidate)
         {
             if (candidate.isEmpty()) return ""; // not possible
-            static const QString version(QString(CGlobalSetup::versionString()).append("/"));
+            static const QString version(QString(CGlobalSetup::schemaVersionString()).append("/"));
             if (candidate.endsWith("bootstrap.json")) { return candidate; }
             CUrl url(candidate);
             if (candidate.contains("/bootstrap"))
             {
                 url.appendPath("bootstrap.json");
             }
-            else if (candidate.endsWith(CGlobalSetup::versionString()) || candidate.endsWith(version))
+            else if (candidate.endsWith(CGlobalSetup::schemaVersionString()) || candidate.endsWith(version))
             {
                 url.appendPath("/bootstrap/bootstrap.json");
             }
             else if (candidate.endsWith("shared") || candidate.endsWith("shared/"))
             {
-                url.appendPath(CGlobalSetup::versionString() + "/bootstrap/bootstrap.json");
+                url.appendPath(CGlobalSetup::schemaVersionString() + "/bootstrap/bootstrap.json");
             }
             else
             {
-                url.appendPath("shared/" + CGlobalSetup::versionString() + "/bootstrap/bootstrap.json");
+                url.appendPath("shared/" + CGlobalSetup::schemaVersionString() + "/bootstrap/bootstrap.json");
             }
             return url.getFullUrl();
         }
@@ -193,20 +195,20 @@ namespace BlackCore
         CUrl CGlobalSetup::buildDbDataDirectoryUrl(const CUrl &candidate)
         {
             if (candidate.isEmpty()) return CUrl(); // not possible
-            static const QString version(QString(versionString()).append("/"));
+            static const QString version(QString(schemaVersionString()).append("/"));
             if (candidate.pathEndsWith("dbdata") || candidate.pathEndsWith("dbdata/")) { return candidate; }
             CUrl url(candidate);
-            if (candidate.pathEndsWith(versionString()) || candidate.pathEndsWith(version))
+            if (candidate.pathEndsWith(schemaVersionString()) || candidate.pathEndsWith(version))
             {
                 url.appendPath("/dbdata");
             }
             else if (candidate.pathEndsWith("shared") || candidate.pathEndsWith("shared/"))
             {
-                url.appendPath(CGlobalSetup::versionString() + "/dbdata/");
+                url.appendPath(CGlobalSetup::schemaVersionString() + "/dbdata/");
             }
             else
             {
-                url.appendPath("shared/" + CGlobalSetup::versionString() + "/dbdata/");
+                url.appendPath("shared/" + CGlobalSetup::schemaVersionString() + "/dbdata/");
             }
             return url;
         }
@@ -236,6 +238,14 @@ namespace BlackCore
             return testServers;
         }
 
+        bool CGlobalSetup::isSwiftVersionMinimumMappingVersion() const
+        {
+            if (!this->wasLoaded()) { return false; }
+            if (m_mappingMinimumVersion.isEmpty()) { return false; }
+            const QVersionNumber min = QVersionNumber::fromString(this->getMappingMinimumVersionString());
+            return CBuildConfig::getVersion() >= min;
+        }
+
         QString CGlobalSetup::convertToQString(bool i18n) const
         {
             return convertToQString(", ", i18n);
@@ -253,6 +263,10 @@ namespace BlackCore
 
                 % "For development: "
                 % boolToYesNo(isDevelopment())
+                % separator
+
+                % "Mapping min.version: "
+                % this->getMappingMinimumVersionString()
                 % separator
 
                 % "Distribution URLs: "
@@ -337,6 +351,7 @@ namespace BlackCore
             case IndexOnlineHelpUrls: return CVariant::fromValue(m_onlineHelpUrls);
             case IndexCrashReportServerUrl: return CVariant::fromValue(m_crashReportServerUrl);
             case IndexWasLoaded: return CVariant::fromValue(m_wasLoaded);
+            case IndexMappingMinimumVersion: return CVariant::fromValue(m_mappingMinimumVersion);
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -367,11 +382,12 @@ namespace BlackCore
             case IndexSwiftMapUrls: m_mapUrls = variant.value<CUrlList>(); break;
             case IndexCrashReportServerUrl: m_crashReportServerUrl = variant.value<CUrl>(); break;
             case IndexWasLoaded: m_wasLoaded = variant.toBool(); break;
+            case IndexMappingMinimumVersion: m_mappingMinimumVersion = variant.toQString(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
-        const QString &CGlobalSetup::versionString()
+        const QString &CGlobalSetup::schemaVersionString()
         {
             // This is not the current swift version, but the schema version
             static const QString v("0.7.0");

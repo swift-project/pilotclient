@@ -57,7 +57,8 @@ namespace BlackCore
                 IndexOnlineHelpUrls,
                 IndexCrashReportServerUrl,
                 IndexWasLoaded,
-                IndexSharedUrls
+                IndexSharedUrls,
+                IndexMappingMinimumVersion
             };
 
             //! Default constructor
@@ -174,6 +175,14 @@ namespace BlackCore
             //! Is server a development server?
             bool isDevelopment() const { return m_development; }
 
+            //! Creating mappings requires at least this version or higher
+            //! \remark only valid if wasLoaded() is \c true
+            const QString &getMappingMinimumVersionString() const { return m_mappingMinimumVersion; }
+
+            //! Meets the minimum mapping version
+            //! \remark only valid if wasLoaded() is \c true
+            bool isSwiftVersionMinimumMappingVersion() const;
+
             //! Productive settings?
             void setDevelopment(bool development) { m_development  = development; }
 
@@ -189,8 +198,8 @@ namespace BlackCore
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
 
-            //! Schema version
-            static const QString &versionString();
+            //! Schema version (shared files, bootstrap file)
+            static const QString &schemaVersionString();
 
             //! Build bootstrap file URL from shared URL
             static QString buildBootstrapFileUrl(const QString &candidate);
@@ -202,27 +211,28 @@ namespace BlackCore
             static CGlobalSetup fromJsonFile(const QString &fileNameAndPath);
 
         private:
-            bool                            m_wasLoaded = false;    //!< Loaded from web
-            int                             m_dbHttpPort = 80;      //!< port
-            int                             m_dbHttpsPort = 443;    //!< SSL port
-            bool                            m_development = false;  //!< dev. version?
-            BlackMisc::Network::CUrl        m_crashReportServerUrl; //!< crash report server
-            BlackMisc::Network::CUrl        m_dbRootDirectoryUrl;   //!< Root directory of DB
-            BlackMisc::Network::CUrl        m_vatsimBookingsUrl;    //!< ATC bookings
-            BlackMisc::Network::CUrlList    m_vatsimMetarsUrls;     //!< METAR data
-            BlackMisc::Network::CUrlList    m_vatsimStatusFileUrls; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
-            BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;   //!< Overall VATSIM data file / merely for bootstrapping the first time
-            BlackMisc::Network::CUrlList    m_sharedUrls;           //!< where we can obtain shared info files such as bootstrap, ..
-            BlackMisc::Network::CUrlList    m_newsUrls;             //!< where we can obtain latest news
-            BlackMisc::Network::CUrlList    m_onlineHelpUrls;       //!< online help URLs
-            BlackMisc::Network::CUrlList    m_mapUrls;              //!< swift map URLs
-            BlackMisc::Network::CServerList m_fsdTestServers;       //!< FSD test servers
+            bool                            m_wasLoaded = false;     //!< Loaded from web
+            int                             m_dbHttpPort = 80;       //!< port
+            int                             m_dbHttpsPort = 443;     //!< SSL port
+            bool                            m_development = false;   //!< dev. version?
+            QString                         m_mappingMinimumVersion; //!< minimum version
+            BlackMisc::Network::CUrl        m_crashReportServerUrl;  //!< crash report server
+            BlackMisc::Network::CUrl        m_dbRootDirectoryUrl;    //!< Root directory of DB
+            BlackMisc::Network::CUrl        m_vatsimBookingsUrl;     //!< ATC bookings
+            BlackMisc::Network::CUrlList    m_vatsimMetarsUrls;      //!< METAR data
+            BlackMisc::Network::CUrlList    m_vatsimStatusFileUrls;  //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
+            BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;    //!< Overall VATSIM data file / merely for bootstrapping the first time
+            BlackMisc::Network::CUrlList    m_sharedUrls;            //!< where we can obtain shared info files such as bootstrap, ..
+            BlackMisc::Network::CUrlList    m_newsUrls;              //!< where we can obtain latest news
+            BlackMisc::Network::CUrlList    m_onlineHelpUrls;        //!< online help URLs
+            BlackMisc::Network::CUrlList    m_mapUrls;               //!< swift map URLs
+            BlackMisc::Network::CServerList m_fsdTestServers;        //!< FSD test servers
 
             // transient members, to be switched on/off via GUI or set from reader
             bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
 
             //! Set the default URLs
-            void initDefaultUrls();
+            void initDefaultValues();
 
             BLACK_METACLASS(
                 CGlobalSetup,
@@ -242,6 +252,7 @@ namespace BlackCore
                 BLACK_METAMEMBER(mapUrls),
                 BLACK_METAMEMBER(fsdTestServers),
                 BLACK_METAMEMBER(development),
+                BLACK_METAMEMBER(mappingMinimumVersion),
                 BLACK_METAMEMBER(dbDebugFlag, BlackMisc::DisabledForJson)
             );
         };
