@@ -228,7 +228,10 @@ namespace BlackMisc
         void CNetworkUtils::setSwiftUserAgent(QNetworkRequest &request, const QString &userAgentDetails)
         {
             static const QString defaultUserAgent("swift/" + CBuildConfig::getVersionString());
-            request.setRawHeader("User-Agent", userAgentDetails.isEmpty() ? defaultUserAgent.toLatin1() : QString("swift/" + userAgentDetails).toLatin1());
+
+            // User-Agent is known header, we use high level setHeader not setRawHeader
+            const QVariant agent = QVariant::fromValue(userAgentDetails.isEmpty() ? defaultUserAgent : defaultUserAgent + "/" + userAgentDetails);
+            request.setHeader(QNetworkRequest::UserAgentHeader, agent);
         }
 
         //! \cond PRIVATE
