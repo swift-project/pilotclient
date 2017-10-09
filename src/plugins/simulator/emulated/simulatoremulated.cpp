@@ -282,8 +282,8 @@ namespace BlackSimPlugin
         {
             if (m_monitorWidget && parser.isKnownCommand())
             {
-                if (parser.matchesPart(1, "show")) { this->m_monitorWidget->show(); return true; }
-                if (parser.matchesPart(1, "hide")) { this->m_monitorWidget->hide(); return true; }
+                if (parser.matchesPart(1, "show")) { m_monitorWidget->show(); return true; }
+                if (parser.matchesPart(1, "hide")) { m_monitorWidget->hide(); return true; }
             }
             return false;
         }
