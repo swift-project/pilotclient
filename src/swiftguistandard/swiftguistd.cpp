@@ -391,7 +391,7 @@ void SwiftGuiStd::navigatorClosed()
     this->showNormal();
 }
 
-void SwiftGuiStd::verifyDataAvailability()
+void SwiftGuiStd::verifyModelSet()
 {
     const CSimulatorInfo sims = sGui->getIContextSimulator()->simulatorsWithInitializedModelSet();
     if (sims.isNoSimulator())

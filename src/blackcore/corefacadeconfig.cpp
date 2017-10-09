@@ -15,12 +15,12 @@ namespace BlackCore
     {
         return (
                    // those 3 should decide whether we are running the server
-                   this->m_network == LocalInDbusServer ||
-                   this->m_ownAircraft == LocalInDbusServer ||
-                   this->m_simulator == LocalInDbusServer ||
+                   this->m_network == LocalInDBusServer ||
+                   this->m_ownAircraft == LocalInDBusServer ||
+                   this->m_simulator == LocalInDBusServer ||
 
                    // added as work around
-                   this->m_audio == LocalInDbusServer
+                   this->m_audio == LocalInDBusServer
                );
     }
 
@@ -61,7 +61,7 @@ namespace BlackCore
     CCoreFacadeConfig CCoreFacadeConfig::remoteLocalAudio(const QString &dbusBootstrapAddress)
     {
         CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::Remote, dbusBootstrapAddress));
-        cfg.m_audio = CCoreFacadeConfig::LocalInDbusServer;
+        cfg.m_audio = CCoreFacadeConfig::LocalInDBusServer;
         return cfg;
     }
 

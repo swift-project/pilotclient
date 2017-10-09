@@ -37,7 +37,7 @@ namespace BlackCore
             switch (mode)
             {
             case CCoreFacadeConfig::Local:
-            case CCoreFacadeConfig::LocalInDbusServer:
+            case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextApplication(mode, parent))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
                 return new CContextApplicationProxy(BlackMisc::CDBusServer::coreServiceName(), connection, mode, parent);

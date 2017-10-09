@@ -70,7 +70,7 @@ namespace BlackCore
 
         CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
         {
-            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
+            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDBusServer) return this;
             server->addObject(CContextSimulator::ObjectPath(), this);
             return this;
         }

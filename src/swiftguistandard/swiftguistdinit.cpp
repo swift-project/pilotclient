@@ -154,7 +154,7 @@ void SwiftGuiStd::init()
 
     emit sGui->startUpCompleted(true);
     m_init = true;
-    QTimer::singleShot(2500, this, &SwiftGuiStd::verifyDataAvailability);
+    QTimer::singleShot(2500, this, &SwiftGuiStd::verifyModelSet);
 
     if (!sGui->isNetworkAccessible())
     {

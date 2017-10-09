@@ -50,7 +50,7 @@ namespace BlackCore
             switch (mode)
             {
             case CCoreFacadeConfig::Local:
-            case CCoreFacadeConfig::LocalInDbusServer:
+            case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextAudio(mode, runtime))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
                 return new CContextAudioProxy(BlackMisc::CDBusServer::coreServiceName(), conn, mode, runtime);

@@ -30,7 +30,7 @@ namespace BlackCore
             switch (mode)
             {
             case CCoreFacadeConfig::Local:
-            case CCoreFacadeConfig::LocalInDbusServer:
+            case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextOwnAircraft(mode, parent))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
                 return new CContextOwnAircraftProxy(BlackMisc::CDBusServer::coreServiceName(), conn, mode, parent);

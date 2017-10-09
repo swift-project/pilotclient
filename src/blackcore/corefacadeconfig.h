@@ -27,7 +27,7 @@ namespace BlackCore
         {
             NotUsed,           //!< during shutdown or not used at all
             Local,             //!< in same process
-            LocalInDbusServer, //!< in same process, also registered in DBus, will be accessed by proxy objects too
+            LocalInDBusServer, //!< in same process, also registered in DBus, will be accessed by proxy objects too
             Remote             //!< proxy object
         };
 
@@ -72,7 +72,7 @@ namespace BlackCore
         ContextMode getModeSimulator() const { return this->m_simulator; }
 
         //! local settings?
-        bool hasLocalSettings() const { return this->m_settings == Local || this->m_settings == LocalInDbusServer; }
+        bool hasLocalSettings() const { return this->m_settings == Local || this->m_settings == LocalInDBusServer; }
 
         //! requires server (at least one in server)?
         bool requiresDBusSever() const;

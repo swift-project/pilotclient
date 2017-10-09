@@ -45,7 +45,7 @@ namespace BlackCore
             switch (mode)
             {
             case CCoreFacadeConfig::Local:
-            case CCoreFacadeConfig::LocalInDbusServer:
+            case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextSimulator(mode, parent))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
                 return new CContextSimulatorProxy(BlackMisc::CDBusServer::coreServiceName(), conn, mode, parent);

@@ -50,7 +50,7 @@ namespace BlackCore
             //! Using local implementing object?
             bool isUsingImplementingObject() const
             {
-                return m_mode == CCoreFacadeConfig::Local || m_mode == CCoreFacadeConfig::LocalInDbusServer;
+                return m_mode == CCoreFacadeConfig::Local || m_mode == CCoreFacadeConfig::LocalInDBusServer;
             }
 
             //! Local or remote object?

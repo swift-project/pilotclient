@@ -246,8 +246,8 @@ private:
     //! Navigator dialog has been closed
     void navigatorClosed();
 
-    //! Checks if data such as model set etc. are available
-    void verifyDataAvailability();
+    //! Checks if model set is available
+    void verifyModelSet();
 
     //! The shared info objects have been loaded
     void sharedInfoObjectsLoaded();

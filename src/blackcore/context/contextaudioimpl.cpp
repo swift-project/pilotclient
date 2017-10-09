@@ -94,7 +94,7 @@ namespace BlackCore
 
         CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
         {
-            if (!server || m_mode != CCoreFacadeConfig::LocalInDbusServer) { return this; }
+            if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) { return this; }
             server->addObject(IContextAudio::ObjectPath(), this);
             return this;
         }
