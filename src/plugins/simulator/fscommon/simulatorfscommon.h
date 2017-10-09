@@ -48,10 +48,6 @@ namespace BlackSimPlugin
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             // ---------------------- ISimulator ------------------
 
-        protected slots:
-            //! \copydoc BlackCore::CSimulatorCommon::ps_allSwiftDataRead
-            virtual void ps_airportsRead() override;
-
         protected:
             //! Constructor
             CSimulatorFsCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -62,6 +58,11 @@ namespace BlackSimPlugin
 
             //! Init the internal objects
             virtual void initSimulatorInternals();
+
+            //! \name When swift DB data are read
+            //! @{
+            virtual void onSwiftDbAirportsRead() override;
+            //! @}
 
             //! \addtogroup swiftdotcommands
             //! @{

@@ -526,7 +526,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+        void CSimulatorXPlane::onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
         {
             if (!isConnected()) { return; } //! \fixme why is this method called when not connected?
             using namespace BlackMisc::PhysicalQuantities;
@@ -567,11 +567,11 @@ namespace BlackSimPlugin
                 {
                     parts.setLights({ true, false, false, true, true, true, true, true });
                 }
-                ps_remoteProviderAddAircraftParts(situation.getCallsign(), parts);
+                onRemoteProviderAddedAircraftParts(situation.getCallsign(), parts);
             }
         }
 
-        void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
+        void CSimulatorXPlane::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
         {
             if (!isConnected()) { return; } //! \fixme why is this method called when not connected?
             m_traffic->addPlaneSurfaces(callsign.asString(), parts.isGearDown() ? 1 : 0,
@@ -582,7 +582,7 @@ namespace BlackSimPlugin
             m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false);
         }
 
-        void CSimulatorXPlane::ps_remoteProviderRemovedAircraft(const CCallsign &callsign)
+        void CSimulatorXPlane::onRemoteProviderRemovedAircraft(const CCallsign &callsign)
         {
             Q_UNUSED(callsign);
             //! \todo call removeRemoteAircraft or just let removeRemoteAircraft handle it?

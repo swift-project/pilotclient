@@ -417,14 +417,14 @@ namespace BlackSimPlugin
             m_fsuipc->write(weatherGrid);
         }
 
-        void CSimulatorFs9::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)
+        void CSimulatorFs9::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
         {
             const auto it = m_hashFs9Clients.find(situation.getCallsign());
             if (it == m_hashFs9Clients.end()) { return; }
             QTimer::singleShot(0, it->data(), [client = *it, situation] { client->getInterpolator()->addAircraftSituation(situation); });
         }
 
-        void CSimulatorFs9::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
+        void CSimulatorFs9::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
         {
             const auto it = m_hashFs9Clients.find(callsign);
             if (it == m_hashFs9Clients.end()) { return; }

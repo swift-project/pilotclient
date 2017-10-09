@@ -460,10 +460,10 @@ namespace BlackCore
         void swiftDbAirportsRead();
 
         //! All ICAO entities
-        void swiftDbAllIcaoEntities();
+        void swiftDbAllIcaoEntitiesRead();
 
         //! All entities needed for model matching
-        void swiftDbModelMatchingEntities();
+        void swiftDbModelMatchingEntitiesRead();
         //! @}
 
     public slots:

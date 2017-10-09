@@ -1434,13 +1434,13 @@ namespace BlackSimPlugin
             CSimulatorFsCommon::clearAllAircraft();
         }
 
-        void CSimulatorFsxCommon::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)
+        void CSimulatorFsxCommon::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
         {
             if (!m_simConnectObjects.contains(situation.getCallsign())) { return; }
             m_simConnectObjects[situation.getCallsign()].addAircraftSituation(situation);
         }
 
-        void CSimulatorFsxCommon::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
+        void CSimulatorFsxCommon::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
         {
             if (!m_simConnectObjects.contains(callsign)) { return; }
             m_simConnectObjects[callsign].addAircraftParts(parts);

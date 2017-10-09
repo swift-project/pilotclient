@@ -106,34 +106,6 @@ namespace BlackCore
 
         // --------- ISimulator implementations ------------
 
-    protected slots:
-        //! \name Connected with remote aircraft provider signals
-        //! @{
-        //! Slow timer used to highlight aircraft, can be used for other things too
-        virtual void ps_oneSecondTimer();
-
-        //! Recalculate the rendered aircraft, this happens when restrictions are applied (max. aircraft, range)
-        virtual void ps_recalculateRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
-
-        //! Provider added situation
-        virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-
-        //! Provider added parts
-        virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
-
-        //! Provider removed aircraft
-        virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
-        //! @}
-
-        //! All swift data read from DB
-        virtual void ps_allSwiftDataRead();
-
-        //! DB models read
-        virtual void ps_modelMatchingEntities();
-
-        //! DB Airports read
-        virtual void ps_airportsRead();
-
     protected:
         //! Constructor
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -146,6 +118,28 @@ namespace BlackCore
         //! @{
         virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
         virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+        //! @}
+
+        //! \name When swift DB data are read
+        //! @{
+        virtual void onSwiftDbAllDataRead();
+        virtual void onSwiftDbModelMatchingEntitiesRead();
+        virtual void onSwiftDbAirportsRead();
+        //! @}
+
+        //! \name Connected with remote aircraft provider signals
+        //! @{
+        //! Recalculate the rendered aircraft, this happens when restrictions are applied (max. aircraft, range)
+        virtual void onRecalculatedRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
+
+        //! Provider added situation
+        virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! Provider added parts
+        virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
+
+        //! Provider removed aircraft
+        virtual void onRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
         //! @}
 
         //! New plugin info
@@ -197,12 +191,15 @@ namespace BlackCore
         //! Show log messages?
         bool showDebugLogMessage() const;
 
+        //! Slow timer used to highlight aircraft, can be used for other things too
+        virtual void oneSecondTimerTimeout();
+
         bool m_pausedSimFreezesInterpolation = false;                      //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool m_autoCalcAirportDistance = true;                             //!< automatically calculate airport distance and bearing
-        BlackMisc::Simulation::CAircraftModel m_defaultModel;              //!< default model
         int    m_statsUpdateAircraftCountMs = 0;                           //!< statistics update count
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;                       //!< statistics update time
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;                         //!< statistics update time
+        BlackMisc::Simulation::CAircraftModel m_defaultModel;              //!< default model
         BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals;   //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log interpolation
         mutable QReadWriteLock m_interpolationRenderingSetupMutex;         //!< mutex protecting setup object

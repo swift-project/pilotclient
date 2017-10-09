@@ -106,17 +106,14 @@ namespace BlackSimPlugin
             //! Creates an appropriate dbus connection from the string describing it
             static QDBusConnection connectionFromString(const QString &str);
 
-        protected slots:
-            //! \copydoc BlackCore::CSimulatorCommon::ps_remoteProviderAddAircraftSituation
-            virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-
-            //! \copydoc BlackCore::CSimulatorCommon::ps_remoteProviderAddAircraftParts
-            virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
-
-            //! \copydoc BlackCore::CSimulatorCommon::ps_remoteProviderRemovedAircraft
-            virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-
         protected:
+            //! \name Remote aircraft provider overrides
+            //! @{
+            virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+            virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
+            virtual void onRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            //! @}
+
             //! \copydoc BlackCore::ISimulator::isConnected
             virtual bool isConnected() const override;
 

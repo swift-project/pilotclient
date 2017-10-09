@@ -59,23 +59,23 @@ namespace BlackCore
         m_remoteAircraftProviderConnections.append(
             m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
-                std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
-                std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
-                std::bind(&CSimulatorCommon::ps_remoteProviderRemovedAircraft, this, std::placeholders::_1),
-                std::bind(&CSimulatorCommon::ps_recalculateRenderedAircraft, this, std::placeholders::_1))
+                std::bind(&CSimulatorCommon::onRemoteProviderAddedAircraftSituation, this, std::placeholders::_1),
+                std::bind(&CSimulatorCommon::onRemoteProviderAddedAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
+                std::bind(&CSimulatorCommon::onRemoteProviderRemovedAircraft, this, std::placeholders::_1),
+                std::bind(&CSimulatorCommon::onRecalculatedRenderedAircraft, this, std::placeholders::_1))
         );
 
         // timer
-        connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
+        connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::oneSecondTimerTimeout);
         this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
         this->m_oneSecondTimer.start(1000);
 
         // swift data
-        if (sApp && sApp->getWebDataServices())
+        if (sApp && sApp->hasWebDataServices())
         {
-            connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CSimulatorCommon::ps_allSwiftDataRead);
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &CSimulatorCommon::ps_airportsRead);
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntities, this, &CSimulatorCommon::ps_modelMatchingEntities);
+            connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CSimulatorCommon::onSwiftDbAllDataRead, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &CSimulatorCommon::onSwiftDbAirportsRead, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, &CSimulatorCommon::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
         }
 
         // info
@@ -243,7 +243,7 @@ namespace BlackCore
             else
             {
                 // we wait for the data
-                connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntities, this, [ = ]
+                connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, [ = ]
                 {
                     this->reverseLookupAndUpdateOwnAircraftModel(model);
                 });
@@ -286,17 +286,17 @@ namespace BlackCore
         return reverseModel;
     }
 
-    void CSimulatorCommon::ps_allSwiftDataRead()
+    void CSimulatorCommon::onSwiftDbAllDataRead()
     {
         // void, can be overridden in specialized drivers
     }
 
-    void CSimulatorCommon::ps_modelMatchingEntities()
+    void CSimulatorCommon::onSwiftDbModelMatchingEntitiesRead()
     {
         // void, can be overridden in specialized drivers
     }
 
-    void CSimulatorCommon::ps_airportsRead()
+    void CSimulatorCommon::onSwiftDbAirportsRead()
     {
         // void, can be overridden in specialized drivers
     }
@@ -461,12 +461,12 @@ namespace BlackCore
         CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
     }
 
-    void CSimulatorCommon::ps_oneSecondTimer()
+    void CSimulatorCommon::oneSecondTimerTimeout()
     {
         this->blinkHighlightedAircraft();
     }
 
-    void CSimulatorCommon::ps_recalculateRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
+    void CSimulatorCommon::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
         if (!snapshot.isValidSnapshot()) { return;}
 
@@ -516,18 +516,18 @@ namespace BlackCore
         }
     }
 
-    void CSimulatorCommon::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)
+    void CSimulatorCommon::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
     {
         Q_UNUSED(situation);
     }
 
-    void CSimulatorCommon::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
+    void CSimulatorCommon::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
     {
         Q_UNUSED(callsign);
         Q_UNUSED(parts);
     }
 
-    void CSimulatorCommon::ps_remoteProviderRemovedAircraft(const CCallsign &callsign)
+    void CSimulatorCommon::onRemoteProviderRemovedAircraft(const CCallsign &callsign)
     {
         Q_UNUSED(callsign);
     }

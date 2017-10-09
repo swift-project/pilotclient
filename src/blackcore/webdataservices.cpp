@@ -1187,11 +1187,11 @@ namespace BlackCore
 
             if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::AllIcaoEntities) && signalEntitiesAlreadyRead(CEntityFlags::AllIcaoEntities))
             {
-                emit swiftDbAllIcaoEntities();
+                emit swiftDbAllIcaoEntitiesRead();
             }
             if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::ModelMatchingEntities) && signalEntitiesAlreadyRead(CEntityFlags::ModelMatchingEntities))
             {
-                emit swiftDbModelMatchingEntities();
+                emit swiftDbModelMatchingEntitiesRead();
             }
         }
     }
