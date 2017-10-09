@@ -97,10 +97,10 @@ namespace BlackSimPlugin
             DWORD getObjectId() const { return m_objectId; }
 
             //! Valid request id?
-            bool hasValidRequestId() const { return this->m_validRequestId; }
+            bool hasValidRequestId() const { return m_validRequestId; }
 
             //! Valid object id?
-            bool hasValidObjectId() const { return this->m_validObjectId; }
+            bool hasValidObjectId() const { return m_validObjectId; }
 
             //! Object is requested, not yet added
             bool isPendingAdded() const;

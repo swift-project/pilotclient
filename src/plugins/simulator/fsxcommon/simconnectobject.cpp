@@ -50,7 +50,7 @@ namespace BlackSimPlugin
 
         bool CSimConnectObject::isPendingAdded() const
         {
-            return !this->hasValidRequestAndObjectId() || !this->m_confirmedAdded;
+            return !this->hasValidRequestAndObjectId() || !m_confirmedAdded;
         }
 
         bool CSimConnectObject::isConfirmedAdded() const
@@ -79,13 +79,13 @@ namespace BlackSimPlugin
         void CSimConnectObject::toggleInterpolatorMode()
         {
             Q_ASSERT(m_interpolator);
-            this->m_interpolator->toggleMode();
+            m_interpolator->toggleMode();
         }
 
         bool CSimConnectObject::setInterpolatorMode(CInterpolatorMulti::Mode mode)
         {
             Q_ASSERT(m_interpolator);
-            return this->m_interpolator->setMode(mode);
+            return m_interpolator->setMode(mode);
         }
 
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts)

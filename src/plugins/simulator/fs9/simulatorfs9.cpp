@@ -208,7 +208,7 @@ namespace BlackSimPlugin
         int CSimulatorFs9::physicallyRemoveAllRemoteAircraft()
         {
             if (m_hashFs9Clients.isEmpty()) { return 0; }
-            QList<CCallsign> callsigns(this->m_hashFs9Clients.keys());
+            QList<CCallsign> callsigns(m_hashFs9Clients.keys());
             int r = 0;
             for (const CCallsign &cs : callsigns)
             {
@@ -234,31 +234,31 @@ namespace BlackSimPlugin
             const CTransponder newTransponder = ownAircraft.getTransponder();
 
             bool changed = false;
-            if (newCom1.getFrequencyActive() != this->m_simCom1.getFrequencyActive())
+            if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive())
             {
                 changed = true;
 
             }
-            if (newCom1.getFrequencyStandby() != this->m_simCom1.getFrequencyStandby())
+            if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby())
             {
                 changed = true;
             }
 
-            if (newCom2.getFrequencyActive() != this->m_simCom2.getFrequencyActive())
+            if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive())
             {
                 changed = true;
             }
-            if (newCom2.getFrequencyStandby() != this->m_simCom2.getFrequencyStandby())
-            {
-                changed = true;
-            }
-
-            if (newTransponder.getTransponderCode() != this->m_simTransponder.getTransponderCode())
+            if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby())
             {
                 changed = true;
             }
 
-            if (newTransponder.getTransponderMode() != this->m_simTransponder.getTransponderMode())
+            if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode())
+            {
+                changed = true;
+            }
+
+            if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode())
             {
                 changed = true;
             }
@@ -275,7 +275,7 @@ namespace BlackSimPlugin
             if (!this->isSimulating()) { return false; }
 
             bool changed = false;
-            if (selcal != this->m_selcal)
+            if (selcal != m_selcal)
             {
                 changed = true;
             }

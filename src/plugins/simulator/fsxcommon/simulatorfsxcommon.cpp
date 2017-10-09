@@ -89,7 +89,7 @@ namespace BlackSimPlugin
                 // reset state as expected for unconnected
                 return false;
             }
-            if (m_useFsuipc) { this->m_fsuipc->connect(); } // FSUIPC too
+            if (m_useFsuipc) { m_fsuipc->connect(); } // FSUIPC too
 
             // set structures and move on
             initEvents();
@@ -135,7 +135,7 @@ namespace BlackSimPlugin
             const CTransponder newTransponder = ownAircraft.getTransponder();
 
             bool changed = false;
-            if (newCom1.getFrequencyActive() != this->m_simCom1.getFrequencyActive())
+            if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive())
             {
                 const CFrequency newFreq = newCom1.getFrequencyActive();
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Active,
@@ -143,7 +143,7 @@ namespace BlackSimPlugin
                 changed = true;
 
             }
-            if (newCom1.getFrequencyStandby() != this->m_simCom1.getFrequencyStandby())
+            if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby())
             {
                 const CFrequency newFreq = newCom1.getFrequencyStandby();
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Standby,
@@ -151,14 +151,14 @@ namespace BlackSimPlugin
                 changed = true;
             }
 
-            if (newCom2.getFrequencyActive() != this->m_simCom2.getFrequencyActive())
+            if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive())
             {
                 const CFrequency newFreq = newCom2.getFrequencyActive();
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Active,
                                                CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 changed = true;
             }
-            if (newCom2.getFrequencyStandby() != this->m_simCom2.getFrequencyStandby())
+            if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby())
             {
                 const CFrequency newFreq = newCom2.getFrequencyStandby();
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Standby,
@@ -166,14 +166,14 @@ namespace BlackSimPlugin
                 changed = true;
             }
 
-            if (newTransponder.getTransponderCode() != this->m_simTransponder.getTransponderCode())
+            if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode())
             {
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTransponderCode,
                                                CBcdConversions::transponderCodeToBcd(newTransponder), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 changed = true;
             }
 
-            if (newTransponder.getTransponderMode() != this->m_simTransponder.getTransponderMode())
+            if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode())
             {
                 if (m_useSbOffsets)
                 {
@@ -233,15 +233,15 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
-            return this->m_simConnectObjects.contains(callsign);
+            return m_simConnectObjects.contains(callsign);
         }
 
         CCallsignSet CSimulatorFsxCommon::physicallyRenderedAircraft() const
         {
-            CCallsignSet callsigns(this->m_simConnectObjects.keys());
+            CCallsignSet callsigns(m_simConnectObjects.keys());
             callsigns.push_back(m_aircraftToAddAgainWhenRemoved.getCallsigns()); // not really rendered right now, but very soon
             callsigns.push_back(m_addPendingAircraft.getCallsigns()); // not really rendered, but for the logic it should look like it is
-            return CCallsignSet(this->m_simConnectObjects.keys());
+            return CCallsignSet(m_simConnectObjects.keys());
         }
 
         bool CSimulatorFsxCommon::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
@@ -416,12 +416,12 @@ namespace BlackSimPlugin
                 com1.setFrequencyActive(CFrequency(simulatorOwnAircraft.com1ActiveMHz, CFrequencyUnit::MHz()));
                 com1.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com1StandbyMHz, CFrequencyUnit::MHz()));
                 const bool changedCom1 = myAircraft.getCom1System() != com1;
-                this->m_simCom1 = com1;
+                m_simCom1 = com1;
 
                 com2.setFrequencyActive(CFrequency(simulatorOwnAircraft.com2ActiveMHz, CFrequencyUnit::MHz()));
                 com2.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
                 const bool changedCom2 = myAircraft.getCom2System() != com2;
-                this->m_simCom2 = com2;
+                m_simCom2 = com2;
 
                 transponder.setTransponderCode(simulatorOwnAircraft.transponderCode);
                 const bool changedXpr = (myAircraft.getTransponderCode() != transponder.getTransponderCode());
@@ -502,7 +502,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
         {
-            const CSimConnectObject simObject = this->m_simConnectObjects.getSimObjectForObjectId(objectId);
+            const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectId);
             const CCallsign callsign(simObject.getCallsign());
             if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty()) { return false; }
 
@@ -650,13 +650,13 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::removeAsPendingAndAddAgain(const CCallsign &callsign)
         {
             if (callsign.isEmpty()) { return; }
-            this->m_addPendingAircraft.removeByCallsign(callsign);
-            this->m_aircraftToAddAgainWhenRemoved.removeByCallsign(callsign);
+            m_addPendingAircraft.removeByCallsign(callsign);
+            m_aircraftToAddAgainWhenRemoved.removeByCallsign(callsign);
         }
 
         bool CSimulatorFsxCommon::simulatorReportedObjectRemoved(DWORD objectID)
         {
-            const CSimConnectObject simObject = this->m_simConnectObjects.getSimObjectForObjectId(objectID);
+            const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectID);
             if (!simObject.hasValidRequestAndObjectId()) { return false; } // object id from somewhere else
             const CCallsign callsign(simObject.getCallsign());
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
@@ -676,7 +676,7 @@ namespace BlackSimPlugin
                 // 3) Simulator not running (ie in stopped mode)
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
-                    this->m_addPendingAircraft.push_back(simObject.getAircraft());
+                    m_addPendingAircraft.push_back(simObject.getAircraft());
                     CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
                 else
@@ -709,7 +709,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::setSimConnectObjectId(DWORD requestId, DWORD objectId)
         {
-            return this->m_simConnectObjects.setSimConnectObjectIdForRequestId(requestId, objectId, true);
+            return m_simConnectObjects.setSimConnectObjectIdForRequestId(requestId, objectId, true);
         }
 
         bool CSimulatorFsxCommon::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
@@ -1025,19 +1025,19 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
             // nothing to do, reset request id and exit
-            if (this->isPaused() && this->m_pausedSimFreezesInterpolation) { return; } // no interpolation while paused
+            if (this->isPaused() && m_pausedSimFreezesInterpolation) { return; } // no interpolation while paused
             const int remoteAircraftNo = this->getAircraftInRangeCount();
             if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
 
             // interpolate and send to simulator
-            this->m_interpolationRequest++;
-            const bool enableAircraftParts = this->m_interpolationRenderingSetup.isAircraftPartsEnabled();
+            m_interpolationRequest++;
+            const bool enableAircraftParts = m_interpolationRenderingSetup.isAircraftPartsEnabled();
             const CCallsignSet aircraftWithParts = enableAircraftParts ? this->remoteAircraftSupportingParts() : CCallsignSet(); // optimization, fetch all parts supporting aircraft in one step (one lock)
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
             const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
-            const CCallsignSet callsignsToLog(this->m_interpolationRenderingSetup.getLogCallsigns());
+            const CCallsignSet callsignsToLog(m_interpolationRenderingSetup.getLogCallsigns());
 
             // interpolation for all remote aircraft
             for (const CSimConnectObject &simObj : simObjects)
@@ -1318,7 +1318,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::synchronizeTime(const CTime &zuluTimeSim, const CTime &localTimeSim)
         {
-            if (!this->m_simTimeSynced) { return; }
+            if (!m_simTimeSynced) { return; }
             if (!this->isConnected())   { return; }
             if (m_syncDeferredCounter > 0)
             {
@@ -1327,9 +1327,9 @@ namespace BlackSimPlugin
             Q_UNUSED(localTimeSim);
 
             QDateTime myDateTime = QDateTime::currentDateTimeUtc();
-            if (!this->m_syncTimeOffset.isZeroEpsilonConsidered())
+            if (!m_syncTimeOffset.isZeroEpsilonConsidered())
             {
-                int offsetSeconds = this->m_syncTimeOffset.valueRounded(CTimeUnit::s(), 0);
+                int offsetSeconds = m_syncTimeOffset.valueRounded(CTimeUnit::s(), 0);
                 myDateTime = myDateTime.addSecs(offsetSeconds);
             }
             const QTime myTime = myDateTime.time();
@@ -1402,13 +1402,13 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::initSimulatorInternals()
         {
             CSimulatorFsCommon::initSimulatorInternals();
-            CSimulatorInternals s = this->m_simulatorInternals;
+            CSimulatorInternals s = m_simulatorInternals;
             const QString fsxPath = CFsCommonUtil::fsxDirFromRegistry(); // can be empty for remote FSX
             if (!fsxPath.isEmpty()) { s.setSimulatorInstallationDirectory(fsxPath); }
 
             s.setValue("fsx/simConnectCfgFilename", CSimConnectUtilities::getLocalSimConnectCfgFilename());
-            s.setValue("fsx/simConnectVersion", this->m_simConnectVersion);
-            this->m_simulatorInternals = s;
+            s.setValue("fsx/simConnectVersion", m_simConnectVersion);
+            m_simulatorInternals = s;
         }
 
         void CSimulatorFsxCommon::reset()

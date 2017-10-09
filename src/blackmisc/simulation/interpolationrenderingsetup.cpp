@@ -38,7 +38,7 @@ namespace BlackMisc
 
         bool CInterpolationAndRenderingSetup::isAircraftPartsEnabled() const
         {
-            return this->m_enabledAircraftParts;
+            return m_enabledAircraftParts;
         }
 
         int CInterpolationAndRenderingSetup::getMaxRenderedAircraft() const
@@ -88,7 +88,7 @@ namespace BlackMisc
 
         bool CInterpolationAndRenderingSetup::setEnabledAircraftParts(bool enabled)
         {
-            if (this->m_enabledAircraftParts == enabled) { return false; }
+            if (m_enabledAircraftParts == enabled) { return false; }
             m_enabledAircraftParts = enabled;
             return true;
         }
@@ -105,14 +105,14 @@ namespace BlackMisc
 
         void CInterpolationAndRenderingSetup::clearAllRenderingRestrictions()
         {
-            this->m_maxRenderedDistance = CLength(0, nullptr);
-            this->m_maxRenderedAircraft = InfiniteAircraft();
+            m_maxRenderedDistance = CLength(0, nullptr);
+            m_maxRenderedAircraft = InfiniteAircraft();
         }
 
         void CInterpolationAndRenderingSetup::disableRendering()
         {
-            this->m_maxRenderedAircraft = 0;
-            this->m_maxRenderedDistance = CLength(0, CLengthUnit::NM()); // zero distance
+            m_maxRenderedAircraft = 0;
+            m_maxRenderedDistance = CLength(0, CLengthUnit::NM()); // zero distance
         }
 
         bool CInterpolationAndRenderingSetup::isMaxDistanceRestricted() const
@@ -160,11 +160,11 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             QString s("Setup: debug sim: ");
-            s += boolToYesNo(this->m_simulatorDebugMessages);
+            s += boolToYesNo(m_simulatorDebugMessages);
             s += " debug interpolator: ";
-            s += boolToYesNo(this->m_interpolatorDebugMessage);
+            s += boolToYesNo(m_interpolatorDebugMessage);
             s += " force full interpolation: ";
-            s += boolToYesNo(this->m_forceFullInterpolation);
+            s += boolToYesNo(m_forceFullInterpolation);
             s += " max.aircraft:";
             s += QString::number(m_maxRenderedAircraft);
             s += " max.distance:";
@@ -206,22 +206,22 @@ namespace BlackMisc
             switch (i)
             {
             case IndexInterpolatorDebugMessages:
-                this->m_interpolatorDebugMessage = variant.toBool();
+                m_interpolatorDebugMessage = variant.toBool();
                 break;
             case IndexSimulatorDebugMessages:
-                this->m_simulatorDebugMessages = variant.toBool();
+                m_simulatorDebugMessages = variant.toBool();
                 break;
             case IndexForceFullInterpolation:
-                this->m_forceFullInterpolation = variant.toBool();
+                m_forceFullInterpolation = variant.toBool();
                 break;
             case IndexMaxRenderedAircraft:
-                this->m_maxRenderedAircraft = variant.toInt();
+                m_maxRenderedAircraft = variant.toInt();
                 break;
             case IndexMaxRenderedDistance:
-                this->m_maxRenderedDistance = variant.value<CLength>();
+                m_maxRenderedDistance = variant.value<CLength>();
                 break;
             case IndexEnabledAircraftParts:
-                this->m_enabledAircraftParts = variant.toBool();
+                m_enabledAircraftParts = variant.toBool();
                 break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);

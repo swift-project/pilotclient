@@ -95,7 +95,7 @@ namespace BlackCore
         //! .drv logint off                no log information for interpolator     BlackCore::CSimulatorCommon
         //! .drv logint write              write interpolator log to file          BlackCore::CSimulatorCommon
         //! .drv logint clear              clear current log                       BlackCore::CSimulatorCommon
-        //! .drv spline|linear callsign    interpolator spline                     BlackCore::CSimulatorCommon
+        //! .drv spline|linear callsign    interpolator spline or linear           BlackCore::CSimulatorCommon
         //! </pre>
         //! @}
         //! \copydoc ISimulator::parseCommandLine
@@ -142,7 +142,7 @@ namespace BlackCore
                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                          QObject *parent);
 
-        //! \name Interface implementations
+        //! \name Interface implementations, called from context
         //! @{
         virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
         virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -225,7 +225,7 @@ namespace BlackCore
         bool m_blinkCycle = false;            //!< used for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         int m_timerCounter = 0;               //!< allows to calculate n seconds
-        QTimer                                        m_oneSecondTimer {this};              //!< multi purpose timer
+        QTimer m_oneSecondTimer { this };     //!< multi purpose timer
         BlackMisc::Simulation::CSimulatorPluginInfo   m_simulatorPluginInfo;                //!< info object
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;                //!< all other aircraft are to be ignored
         BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;              //!< callsigns which will be rendered

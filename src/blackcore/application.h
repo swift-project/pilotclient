@@ -220,7 +220,7 @@ namespace BlackCore
         const char *swiftVersionChar();
 
         //! Running in dev.environment?
-        bool isRunningInDeveloperEnvironment() const { return this->m_devEnv; }
+        bool isRunningInDeveloperEnvironment() const { return m_devEnv; }
 
         //! Signal startup automatically or individually
         void setSignalStartupAutomatically(bool enabled);

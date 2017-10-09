@@ -25,7 +25,6 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-
         //! Class faking a FS9 multiplayer client connection
         class CFs9Client : public CDirectPlayPeer
         {
@@ -111,4 +110,4 @@ namespace BlackSimPlugin
 
 Q_DECLARE_METATYPE(BlackSimPlugin::Fs9::CFs9Client::ClientStatus)
 
-#endif // DIRECTPLAY_CLIENT_H
+#endif // guard

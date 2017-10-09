@@ -157,6 +157,7 @@ namespace BlackSimPlugin
             const QString &modeToString(AircraftAddMode mode);
 
             //! Dispatch SimConnect messages
+            //! \remark very frequently called
             void dispatch();
 
             //! Implementation of add remote aircraft, which also handles FSX specific adding one by one

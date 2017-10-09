@@ -60,12 +60,9 @@ namespace BlackSimPlugin
                     ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
                     switch (exceptionId)
                     {
-                    case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE:
-                        break;
-                    case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID:
-                        break;
-                    default:
-                        break;
+                    case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE: break;
+                    case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID: break;
+                    default: break;
                     }
                     CLogMessage(simulatorFsx).warning("Caught FSX simConnect exception: %1 %2") << exStr << ex;
                     break;
@@ -293,10 +290,8 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_EVENT_FILENAME *event = static_cast<SIMCONNECT_RECV_EVENT_FILENAME *>(pData);
                     switch (event->uEventID)
                     {
-                    case SystemEventFlightLoaded:
-                        break;
-                    default:
-                        break;
+                    case SystemEventFlightLoaded: break;
+                    default: break;
                     }
                     break;
                 }

@@ -43,16 +43,16 @@ namespace BlackSimPlugin
         void CSimulatorFsCommon::initSimulatorInternals()
         {
             CSimulatorInternals s;
-            s.setSimulatorName(this->m_simulatorName);
-            s.setSimulatorVersion(this->m_simulatorVersion);
-            s.setValue("fscommon/fsuipc", boolToOnOff(this->m_useFsuipc));
-            if (this->m_fsuipc)
+            s.setSimulatorName(m_simulatorName);
+            s.setSimulatorVersion(m_simulatorVersion);
+            s.setValue("fscommon/fsuipc", boolToOnOff(m_useFsuipc));
+            if (m_fsuipc)
             {
-                const QString v(this->m_fsuipc->getVersion());
+                const QString v(m_fsuipc->getVersion());
                 if (!v.isEmpty()) { s.setValue("fscommon/fsuipcversion", v); }
-                s.setValue("fscommon/fsuipcconnect", boolToYesNo(this->m_fsuipc->isConnected()));
+                s.setValue("fscommon/fsuipcconnect", boolToYesNo(m_fsuipc->isConnected()));
             }
-            this->m_simulatorInternals = s;
+            m_simulatorInternals = s;
         }
 
         bool CSimulatorFsCommon::parseDetails(const CSimpleCommandParser &parser)
@@ -69,14 +69,14 @@ namespace BlackSimPlugin
 
         void CSimulatorFsCommon::registerHelp()
         {
-            if (BlackMisc::CSimpleCommandParser::registered("BlackSimPlugin::FsCommon::CSimulatorFsCommon")) { return; }
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "FSUIPC on|off if applicable"});
+            if (CSimpleCommandParser::registered("BlackSimPlugin::FsCommon::CSimulatorFsCommon")) { return; }
+            CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+            CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "FSUIPC on|off if applicable"});
         }
 
         bool CSimulatorFsCommon::disconnectFrom()
         {
-            if (this->m_fsuipc) { this->m_fsuipc->disconnect(); }
+            if (m_fsuipc) { m_fsuipc->disconnect(); }
 
             // reset flags
             m_simPaused = false;
@@ -109,10 +109,10 @@ namespace BlackSimPlugin
             return m_syncTimeOffset;
         }
 
-        bool CSimulatorFsCommon::setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset)
+        bool CSimulatorFsCommon::setTimeSynchronization(bool enable, const PhysicalQuantities::CTime &offset)
         {
-            this->m_simTimeSynced = enable;
-            this->m_syncTimeOffset = offset;
+            m_simTimeSynced = enable;
+            m_syncTimeOffset = offset;
             return true;
         }
 
@@ -128,8 +128,8 @@ namespace BlackSimPlugin
         bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             // remove upfront, and then enable / disable again
-            const auto callsign = aircraft.getCallsign();
-            if (!isPhysicallyRenderedAircraft(callsign)) { return false; }
+            const CCallsign callsign = aircraft.getCallsign();
+            if (!this->isPhysicallyRenderedAircraft(callsign)) { return false; }
             this->physicallyRemoveRemoteAircraft(callsign);
             return this->changeRemoteAircraftEnabled(aircraft);
         }
@@ -152,7 +152,7 @@ namespace BlackSimPlugin
             const CAirportList webServiceAirports = this->getWebServiceAirports();
             if (!webServiceAirports.isEmpty())
             {
-                this->m_airportsInRangeFromSimulator.updateMissingParts(webServiceAirports);
+                m_airportsInRangeFromSimulator.updateMissingParts(webServiceAirports);
             }
             CSimulatorCommon::ps_airportsRead();
         }

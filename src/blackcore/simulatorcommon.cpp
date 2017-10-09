@@ -57,7 +57,7 @@ namespace BlackCore
 
         // provider signals, hook up with remote aircraft provider
         m_remoteAircraftProviderConnections.append(
-            this->m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
+            m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftSituation, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::ps_remoteProviderAddAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
@@ -102,7 +102,7 @@ namespace BlackCore
         // if not restriced, directly change
         if (!renderingRestricted) { this->physicallyAddRemoteAircraft(remoteAircraft); return true; }
 
-        // restricted -> will be added with next snapshot ps_recalculateRenderedAircraft
+        // restricted -> will be added with next snapshot onRecalculatedRenderedAircraft
         return false;
     }
 
@@ -135,7 +135,7 @@ namespace BlackCore
         if (QDateTime::currentMSecsSinceEpoch() < m_highlightEndTimeMsEpoch)
         {
             // blink mode, toggle aircraft
-            for (const CSimulatedAircraft &aircraft : m_highlightedAircraft)
+            for (const CSimulatedAircraft &aircraft : as_const(m_highlightedAircraft))
             {
                 if (m_blinkCycle)
                 {
@@ -150,12 +150,12 @@ namespace BlackCore
         else
         {
             // restore
-            for (const CSimulatedAircraft &aircraft : m_highlightedAircraft)
+            for (const CSimulatedAircraft &aircraft : as_const(m_highlightedAircraft))
             {
                 // get the current state for this aircraft
                 // it might has been removed in the meantime
                 const CCallsign cs(aircraft.getCallsign());
-                resetAircraftFromProvider(cs);
+                this->resetAircraftFromProvider(cs);
             }
             m_highlightedAircraft.clear();
             m_highlightEndTimeMsEpoch = 0;
@@ -164,8 +164,8 @@ namespace BlackCore
 
     void CSimulatorCommon::resetAircraftFromProvider(const CCallsign &callsign)
     {
-        CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-        bool enabled = aircraft.isEnabled();
+        const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
+        const bool enabled = aircraft.isEnabled();
         if (enabled)
         {
             // are we already visible?
@@ -187,7 +187,7 @@ namespace BlackCore
         if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
         {
             m_lastWeatherPosition = {};
-            injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
+            this->injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
         }
     }
 
@@ -274,7 +274,7 @@ namespace BlackCore
             if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
             {
                 m_lastWeatherPosition = {};
-                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
+                this->injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
             }
         }
     }
@@ -288,17 +288,17 @@ namespace BlackCore
 
     void CSimulatorCommon::ps_allSwiftDataRead()
     {
-        // void
+        // void, can be overridden in specialized drivers
     }
 
     void CSimulatorCommon::ps_modelMatchingEntities()
     {
-        // void
+        // void, can be overridden in specialized drivers
     }
 
     void CSimulatorCommon::ps_airportsRead()
     {
-        // void
+        // void, can be overridden in specialized drivers
     }
 
     CAircraftModel CSimulatorCommon::getDefaultModel() const
@@ -319,7 +319,7 @@ namespace BlackCore
     void CSimulatorCommon::unload()
     {
         this->disconnectFrom(); // disconnect from simulator
-        this->m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
+        m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
     }
 
     bool CSimulatorCommon::isShuttingDown() const
@@ -330,9 +330,9 @@ namespace BlackCore
     void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
     {
         {
-            QWriteLocker lock(&this->m_interpolationRenderingSetupMutex);
-            if (this->m_interpolationRenderingSetup == setup) { return; }
-            this->m_interpolationRenderingSetup = setup;
+            QWriteLocker lock(&m_interpolationRenderingSetupMutex);
+            if (m_interpolationRenderingSetup == setup) { return; }
+            m_interpolationRenderingSetup = setup;
         }
 
         const bool r = setup.isRenderingRestricted();
@@ -343,19 +343,19 @@ namespace BlackCore
 
     CInterpolationAndRenderingSetup CSimulatorCommon::getInterpolationAndRenderingSetup() const
     {
-        QReadLocker lock(&this->m_interpolationRenderingSetupMutex);
+        QReadLocker lock(&m_interpolationRenderingSetupMutex);
         return m_interpolationRenderingSetup;
     }
 
     void CSimulatorCommon::highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime)
     {
         const CCallsign cs(aircraftToHighlight.getCallsign());
-        this->m_highlightedAircraft.removeByCallsign(cs);
+        m_highlightedAircraft.removeByCallsign(cs);
         if (enableHighlight)
         {
             const qint64 deltaT = displayTime.valueRounded(CTimeUnit::ms(), 0);
-            this->m_highlightEndTimeMsEpoch = QDateTime::currentMSecsSinceEpoch() + deltaT;
-            this->m_highlightedAircraft.push_back(aircraftToHighlight);
+            m_highlightEndTimeMsEpoch = QDateTime::currentMSecsSinceEpoch() + deltaT;
+            m_highlightedAircraft.push_back(aircraftToHighlight);
         }
     }
 
@@ -364,7 +364,7 @@ namespace BlackCore
         int removed = 0;
         for (const CCallsign &callsign : callsigns)
         {
-            physicallyRemoveRemoteAircraft(callsign);
+            this->physicallyRemoveRemoteAircraft(callsign);
             removed++;
         }
         return removed;
@@ -395,23 +395,23 @@ namespace BlackCore
             const QString part2 = parser.part(2).toLower();
             if (part2 == "off" || part2 == "false")
             {
-                this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
+                m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
                 CStatusMessage(this).info("Disabled interpolation logging");
                 return true;
             }
             if (part2 == "clear" || part2 == "clr")
             {
-                this->m_interpolationLogger.clearLog();
+                m_interpolationLogger.clearLog();
                 CStatusMessage(this).info("Cleared interpolation logging");
                 return true;
             }
             if (part2 == "write" || part2 == "save")
             {
-                // stop logging
-                this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
+                // stop logging of other log
+                m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
 
                 // write
-                this->m_interpolationLogger.writeLogInBackground();
+                m_interpolationLogger.writeLogInBackground();
                 CLogMessage(this).info("Started writing interpolation log");
                 return true;
             }
@@ -420,7 +420,7 @@ namespace BlackCore
             if (!CCallsign::isValidAircraftCallsign(cs)) { return false; }
             if (this->getAircraftInRangeCallsigns().contains(cs))
             {
-                this->m_interpolationRenderingSetup.addCallsignToLog(CCallsign(cs));
+                m_interpolationRenderingSetup.addCallsignToLog(CCallsign(cs));
                 CLogMessage(this).info("Will log interpolation for '%1'") << cs;
                 return true;
             }
@@ -433,7 +433,7 @@ namespace BlackCore
 
         if (part1.startsWith("spline") || part1.startsWith("linear"))
         {
-            CCallsign cs(parser.hasPart(2) ? parser.part(2) : "");
+            const CCallsign cs(parser.hasPart(2) ? parser.part(2) : "");
             const bool changed = this->setInterpolatorMode(CInterpolatorMulti::modeFromString(part1), cs);
             if (changed)
             {
@@ -452,18 +452,18 @@ namespace BlackCore
 
     void CSimulatorCommon::registerHelp()
     {
-        if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CSimulatorCommon")) { return; }
-        BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-        BlackMisc::CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
-        BlackMisc::CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
-        BlackMisc::CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
-        BlackMisc::CSimpleCommandParser::registerCommand({".drv logint clear", "clear current log"});
-        BlackMisc::CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
+        if (CSimpleCommandParser::registered("BlackCore::CSimulatorCommon")) { return; }
+        CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+        CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
+        CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
+        CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
+        CSimpleCommandParser::registerCommand({".drv logint clear", "clear current log"});
+        CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
     }
 
     void CSimulatorCommon::ps_oneSecondTimer()
     {
-        blinkHighlightedAircraft();
+        this->blinkHighlightedAircraft();
     }
 
     void CSimulatorCommon::ps_recalculateRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
@@ -481,9 +481,9 @@ namespace BlackCore
         bool changed = false;
         if (snapshot.isRenderingEnabled())
         {
-            CCallsignSet callsignsInSimulator(physicallyRenderedAircraft()); // state in simulator
-            CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(snapshot.getEnabledAircraftCallsignsByDistance()));
-            CCallsignSet callsignsToBeAdded(snapshot.getEnabledAircraftCallsignsByDistance().difference(callsignsInSimulator));
+            const CCallsignSet callsignsInSimulator(this->physicallyRenderedAircraft()); // state in simulator
+            const CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(snapshot.getEnabledAircraftCallsignsByDistance()));
+            const CCallsignSet callsignsToBeAdded(snapshot.getEnabledAircraftCallsignsByDistance().difference(callsignsInSimulator));
             if (!callsignsToBeRemoved.isEmpty())
             {
                 const int r = this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
@@ -492,7 +492,7 @@ namespace BlackCore
 
             if (!callsignsToBeAdded.isEmpty())
             {
-                CSimulatedAircraftList aircraftToBeAdded(getAircraftInRange().findByCallsigns(callsignsToBeAdded)); // thread safe copy
+                CSimulatedAircraftList aircraftToBeAdded(this->getAircraftInRange().findByCallsigns(callsignsToBeAdded)); // thread safe copy
                 for (const CSimulatedAircraft &aircraft : aircraftToBeAdded)
                 {
                     Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
@@ -512,7 +512,7 @@ namespace BlackCore
         // we have handled snapshot
         if (changed)
         {
-            emit airspaceSnapshotHandled();
+            emit this->airspaceSnapshotHandled();
         }
     }
 
