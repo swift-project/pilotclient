@@ -40,6 +40,51 @@
                 </platformTest>
             </ruleList>
         </runProgram>
+        <writeFile>
+            <path>${user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
+            <encoding>utf-8</encoding>
+            <text><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.freedesktop.dbus-session.plist</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>${installdir}/bin/dbus-daemon</string>
+        <string>--nofork</string>
+        <string>--config-file=${installdir}/share/dbus-1/session.conf</string>
+    </array>
+
+    <key>Sockets</key>
+    <dict>
+        <key>unix_domain_listener</key>
+        <dict>
+            <key>SecureSocketWithKey</key>
+            <string>DBUS_LAUNCHD_SESSION_BUS_SOCKET</string>
+        </dict>
+    </dict>
+</dict>
+</plist>]]></text>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </writeFile>
+        <runProgram>
+            <program>launchctl</program>
+            <programArguments>load -w ${user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</programArguments>
+            <workingDirectory>${installdir}</workingDirectory>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+
     </postInstallationActionList>
     <preUninstallationActionList>
         <deleteFile>
