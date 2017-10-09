@@ -31,14 +31,6 @@ namespace BlackMisc
         {
         case SERVERMODE_SESSIONBUS:
             {
-                QDBusConnection testConnection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
-                if (! testConnection.isConnected()) { launchDBusDaemon(); }
-                testConnection.disconnectFromBus(coreServiceName());
-
-                // Sleep for 200 ms in order for dbus-daemon to finish loading.
-                // FIXME: Dirty workaround. Instead polling the server up to x times every 50 ms until its connection is accepted.
-                QThread::msleep(200);
-
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
                 if (! connection.isConnected() || ! connection.registerService(service))
                 {
@@ -50,13 +42,6 @@ namespace BlackMisc
             break;
         case SERVERMODE_SYSTEMBUS:
             {
-                QDBusConnection testConnection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
-                if (! testConnection.isConnected()) { launchDBusDaemon(); }
-                testConnection.disconnectFromBus(coreServiceName());
-
-                // Sleep for 200 ms in order for dbus-daemon to finish loading.
-                QThread::msleep(200);
-
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
                 if (! connection.isConnected() || ! connection.registerService(service))
                 {
@@ -101,14 +86,6 @@ namespace BlackMisc
     {
         static const QString sn = SWIFT_SERVICENAME;
         return sn;
-    }
-
-    void CDBusServer::launchDBusDaemon()
-    {
-        static const QString program = QStringLiteral("dbus-daemon");
-        static const QStringList arguments = { QStringLiteral("--session") };
-        const bool success = CProcessCtrl::startDetached(program, arguments, false);
-        if (!success) { CLogMessage(this).error("Failed to launch dbus-daemon!"); }
     }
 
     bool CDBusServer::isP2PAddress(const QString &address)

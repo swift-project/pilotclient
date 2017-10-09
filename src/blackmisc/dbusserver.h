@@ -137,7 +137,6 @@ namespace BlackMisc
         QMap<QString, QObject *> m_objects;
         QMap<QString, QDBusConnection> m_connections;
 
-        void launchDBusDaemon();
         static QString getDBusInterfaceFromClassInfo(QObject *object);
 
         //! Register options with connection
