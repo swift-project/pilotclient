@@ -133,14 +133,7 @@ namespace BlackMisc
         QDir dir(CDirectoryUtils::binDirectory());
         bool success = true;
 
-        if (CDirectoryUtils::isMacOSXAppBundle())
-        {
-            success = dir.cd("../../../../share");
-        }
-        else
-        {
-            success = dir.cd("../share");
-        }
+        success = dir.cd("../share");
 
         if (success)
         {
