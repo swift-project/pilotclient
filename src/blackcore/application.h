@@ -343,6 +343,9 @@ namespace BlackCore
         //! \sa m_useContexts we use or we will use contexts
         bool supportsContexts() const;
 
+        //! The core facade config
+        const CCoreFacadeConfig &getCoreFacadeConfig() const { return m_coreFacadeConfig; }
+
         //! Init the contexts part and start core facade
         //! \sa coreFacadeStarted
         //! \remark requires setup loaded

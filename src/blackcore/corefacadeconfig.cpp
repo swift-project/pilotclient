@@ -26,22 +26,37 @@ namespace BlackCore
 
     bool CCoreFacadeConfig::requiresDBusConnection() const
     {
-        return (this->m_application == Remote ||
-                this->m_audio == Remote ||
-                this->m_network == Remote ||
-                this->m_ownAircraft == Remote ||
-                this->m_simulator == Remote);
+        return this->any(Remote);
+    }
+
+    bool CCoreFacadeConfig::any(CCoreFacadeConfig::ContextMode mode) const
+    {
+        return (this->m_application == mode ||
+                this->m_audio == mode ||
+                this->m_network == mode ||
+                this->m_ownAircraft == mode ||
+                this->m_simulator == mode);
+    }
+
+    bool CCoreFacadeConfig::anyRemote() const
+    {
+        return this->any(Remote);
+    }
+
+    bool CCoreFacadeConfig::anyLocalInDBusServer() const
+    {
+        return this->any(LocalInDBusServer);
     }
 
     CCoreFacadeConfig CCoreFacadeConfig::forCoreAllLocalInDBus(const QString &dbusBootstrapAddress)
     {
-        const CCoreFacadeConfig cfg(CCoreFacadeConfig::LocalInDbusServer, dbusBootstrapAddress);
+        const CCoreFacadeConfig cfg(CCoreFacadeConfig::LocalInDBusServer, dbusBootstrapAddress);
         return cfg;
     }
 
     CCoreFacadeConfig CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress)
     {
-        CCoreFacadeConfig cfg(CCoreFacadeConfig::LocalInDbusServer, dbusBootstrapAddress);
+        CCoreFacadeConfig cfg(CCoreFacadeConfig::LocalInDBusServer, dbusBootstrapAddress);
         cfg.m_audio = CCoreFacadeConfig::NotUsed;
         return cfg;
     }

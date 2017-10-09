@@ -86,6 +86,15 @@ namespace BlackCore
         //! DBus address?
         bool hasDBusAddress() const { return !this->m_dbusAddress.isEmpty(); }
 
+        //! Any context in given mode
+        bool any(ContextMode mode) const;
+
+        //! Any remote context?
+        bool anyRemote() const;
+
+        //! Any local in DBus context?
+        bool anyLocalInDBusServer() const;
+
         //! Predefined for Core
         static CCoreFacadeConfig forCoreAllLocalInDBus(const QString &dbusBootstrapAddress = "");
 

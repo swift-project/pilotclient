@@ -13,6 +13,7 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/network.h"
 #include "blackcore/webdataservices.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/settingscomponent.h"
@@ -447,12 +448,13 @@ void SwiftGuiStd::displayLog()
 
 void SwiftGuiStd::displayDBusReconnectDialog()
 {
+    if (m_displayingDBusReconnect) { return; }
     if (!sGui || sGui->isShuttingDown()) { return; }
     if (!sGui->getCoreFacade()) { return; }
-    if (m_displayingDBusReconnect) { return; }
+    if (!sGui->getCoreFacadeConfig().requiresDBusConnection()) { return; }
     m_displayingDBusReconnect = true;
     const QString dBusAddress = sGui->getCoreFacade()->getDBusAddress();
-    static const QString informativeText("Do you want to try to reconnect? 'Abort' will close the GUI. DBus: '%1'");
+    static const QString informativeText("Do you want to try to reconnect? 'Abort' will close the GUI.\n\nDBus: '%1'");
     QMessageBox msgBox(this);
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setText("swift core not reachable!");
