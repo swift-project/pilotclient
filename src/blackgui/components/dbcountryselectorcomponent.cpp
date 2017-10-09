@@ -167,7 +167,7 @@ namespace BlackGui
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);
                     c->setMaxVisibleItems(10);
-                    this->connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbCountrySelectorComponent::ps_completerActivated);
+                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbCountrySelectorComponent::ps_completerActivated);
 
                     ui->le_CountryName->setCompleter(c);
                     this->m_completerCountryNames.reset(c); // deletes any old completer

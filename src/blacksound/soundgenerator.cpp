@@ -74,9 +74,9 @@ namespace BlackSound
             if (!this->m_pushTimer)
             {
                 this->m_pushTimer = new QTimer(this);
-                bool connect = this->connect(this->m_pushTimer, &QTimer::timeout, this, &CSoundGenerator::pushTimerExpired);
-                Q_ASSERT(connect);
-                Q_UNUSED(connect); // suppress Clang warning in release build
+                bool ok = connect(this->m_pushTimer, &QTimer::timeout, this, &CSoundGenerator::pushTimerExpired);
+                Q_ASSERT(ok);
+                Q_UNUSED(ok); // suppress Clang warning in release build
                 this->m_pushTimer->start(20);
             }
             this->m_pushModeIODevice = this->m_audioOutput->start(); // push, IO device not owned

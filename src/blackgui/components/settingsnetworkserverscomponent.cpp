@@ -45,9 +45,9 @@ namespace BlackGui
             ui->setupUi(this);
 
             // Settings server
-            this->connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            this->connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            this->connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_serverSelected);
+            connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
+            connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
+            connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_serverSelected);
             this->ps_reloadSettings();
         }
 

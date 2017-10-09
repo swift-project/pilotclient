@@ -57,7 +57,7 @@ namespace BlackGui
             completer->setMaxVisibleItems(10);
             completer->setCompletionMode(QCompleter::PopupCompletion);
             ui->le_Color->setCompleter(completer);
-            this->connect(completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CColorSelector::ps_colorName);
+            connect(completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CColorSelector::ps_colorName);
         }
 
         CColorSelector::~CColorSelector() { }

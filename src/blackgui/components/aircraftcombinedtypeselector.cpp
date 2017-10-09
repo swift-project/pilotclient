@@ -28,12 +28,12 @@ namespace BlackGui
             ui(new Ui::CAircraftCombinedTypeSelector)
         {
             ui->setupUi(this);
-            this->connect(ui->le_CombinedType, &QLineEdit::editingFinished, this, &CAircraftCombinedTypeSelector::ps_CombinedTypeEntered);
-            this->connect(ui->le_CombinedType, &QLineEdit::returnPressed, this, &CAircraftCombinedTypeSelector::ps_CombinedTypeEntered);
+            connect(ui->le_CombinedType, &QLineEdit::editingFinished, this, &CAircraftCombinedTypeSelector::ps_CombinedTypeEntered);
+            connect(ui->le_CombinedType, &QLineEdit::returnPressed, this, &CAircraftCombinedTypeSelector::ps_CombinedTypeEntered);
 
-            this->connect(ui->cb_EngineCount, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
-            this->connect(ui->cb_EngineType, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
-            this->connect(ui->cb_Type, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
+            connect(ui->cb_EngineCount, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
+            connect(ui->cb_EngineType, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
+            connect(ui->cb_Type, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
 
             ui->le_CombinedType->setValidator(new CUpperCaseValidator(this));
         }

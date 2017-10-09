@@ -75,23 +75,23 @@ namespace BlackCore
         this->setObjectName("CAirspaceMonitor");
         m_enableReverseLookupMsgs = sApp->isRunningInDeveloperEnvironment();
 
-        this->connect(m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::onAtcPositionUpdate);
-        this->connect(m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::onAtisReceived);
-        this->connect(m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
-        this->connect(m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
-        this->connect(m_network, &INetwork::flightPlanReplyReceived, this, &CAirspaceMonitor::onFlightPlanReceived);
-        this->connect(m_network, &INetwork::realNameReplyReceived, this, &CAirspaceMonitor::onRealNameReplyReceived);
-        this->connect(m_network, &INetwork::icaoCodesReplyReceived, this, &CAirspaceMonitor::onIcaoCodesReceived);
-        this->connect(m_network, &INetwork::pilotDisconnected, this, &CAirspaceMonitor::onPilotDisconnected);
-        this->connect(m_network, &INetwork::atcDisconnected, this, &CAirspaceMonitor::onAtcControllerDisconnected);
-        this->connect(m_network, &INetwork::aircraftPositionUpdate, this, &CAirspaceMonitor::onAircraftUpdateReceived);
-        this->connect(m_network, &INetwork::aircraftInterimPositionUpdate, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
-        this->connect(m_network, &INetwork::frequencyReplyReceived, this, &CAirspaceMonitor::onFrequencyReceived);
-        this->connect(m_network, &INetwork::capabilitiesReplyReceived, this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
-        this->connect(m_network, &INetwork::customFSInnPacketReceived, this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
-        this->connect(m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::onServerReplyReceived);
-        this->connect(m_network, &INetwork::aircraftConfigPacketReceived, this, &CAirspaceMonitor::onAircraftConfigReceived);
-        this->connect(m_network, &INetwork::connectionStatusChanged, this, &CAirspaceMonitor::onConnectionStatusChanged);
+        connect(m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::onAtcPositionUpdate);
+        connect(m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::onAtisReceived);
+        connect(m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CAirspaceMonitor::onAtisVoiceRoomReceived);
+        connect(m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
+        connect(m_network, &INetwork::flightPlanReplyReceived, this, &CAirspaceMonitor::onFlightPlanReceived);
+        connect(m_network, &INetwork::realNameReplyReceived, this, &CAirspaceMonitor::onRealNameReplyReceived);
+        connect(m_network, &INetwork::icaoCodesReplyReceived, this, &CAirspaceMonitor::onIcaoCodesReceived);
+        connect(m_network, &INetwork::pilotDisconnected, this, &CAirspaceMonitor::onPilotDisconnected);
+        connect(m_network, &INetwork::atcDisconnected, this, &CAirspaceMonitor::onAtcControllerDisconnected);
+        connect(m_network, &INetwork::aircraftPositionUpdate, this, &CAirspaceMonitor::onAircraftUpdateReceived);
+        connect(m_network, &INetwork::aircraftInterimPositionUpdate, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
+        connect(m_network, &INetwork::frequencyReplyReceived, this, &CAirspaceMonitor::onFrequencyReceived);
+        connect(m_network, &INetwork::capabilitiesReplyReceived, this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
+        connect(m_network, &INetwork::customFSInnPacketReceived, this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
+        connect(m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::onServerReplyReceived);
+        connect(m_network, &INetwork::aircraftConfigPacketReceived, this, &CAirspaceMonitor::onAircraftConfigReceived);
+        connect(m_network, &INetwork::connectionStatusChanged, this, &CAirspaceMonitor::onConnectionStatusChanged);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
@@ -99,21 +99,21 @@ namespace BlackCore
         // optional readers
         if (sApp->getWebDataServices()->getBookingReader())
         {
-            this->connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::onReceivedAtcBookings);
-            this->connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsReadUnchanged, this, &CAirspaceMonitor::onReadUnchangedAtcBookings);
+            connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::onReceivedAtcBookings);
+            connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsReadUnchanged, this, &CAirspaceMonitor::onReadUnchangedAtcBookings);
         }
 
         if (this->supportsVatsimDataFile())
         {
-            this->connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::onReceivedDataFile);
+            connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::onReceivedDataFile);
         }
 
         // Force snapshot in the main event loop
-        this->connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
 
         // Analyzer
-        this->connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected, Qt::QueuedConnection);
-        this->connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected, Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
     }
 
     const CLogCategoryList &CAirspaceMonitor::getLogCategories()
@@ -217,7 +217,7 @@ namespace BlackCore
         Q_ASSERT_X(c3, Q_FUNC_INFO, "connect failed");
         // trick is to use the Queued signal here
         // analyzer (own thread) -> airspaceAircraftSnapshot -> AirspaceMonitor -> airspaceAircraftSnapshot queued in main thread
-        const QMetaObject::Connection c4 = this->connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot, Qt::QueuedConnection);
+        const QMetaObject::Connection c4 = connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot, Qt::QueuedConnection);
         Q_ASSERT_X(c4, Q_FUNC_INFO, "connect failed");
         return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
     }

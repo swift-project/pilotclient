@@ -244,8 +244,8 @@ namespace BlackCore
         // -> in the core or an all local implementation
         if (m_contextNetwork && m_contextOwnAircraft && m_contextNetwork->isUsingImplementingObject() && m_contextOwnAircraft->isUsingImplementingObject())
         {
-            c = this->connect(m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
-                              this->getCContextOwnAircraft(),  &CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus);
+            c = connect(m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
+                        this->getCContextOwnAircraft(),  &CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
             times.insert("Post setup, connects network", time.restart());
         }
@@ -255,10 +255,10 @@ namespace BlackCore
         {
             Q_ASSERT(m_contextApplication);
             Q_ASSERT(m_contextOwnAircraft);
-            c = this->connect(m_contextApplication, &IContextApplication::fakedSetComVoiceRoom,
-                              this->getCContextAudio(),  &CContextAudio::setComVoiceRooms);
+            c = connect(m_contextApplication, &IContextApplication::fakedSetComVoiceRoom,
+                        this->getCContextAudio(),  &CContextAudio::setComVoiceRooms);
             Q_ASSERT(c);
-            c = this->connect(m_contextOwnAircraft, &IContextOwnAircraft::changedCallsign, this->getCContextAudio(), &IContextAudio::setOwnCallsignForRooms);
+            c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedCallsign, this->getCContextAudio(), &IContextAudio::setOwnCallsignForRooms);
             Q_ASSERT(c);
             times.insert("Post setup, connects audio", time.restart());
         }

@@ -276,7 +276,7 @@ namespace BlackGui
             newTab->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
             const int index = ui->tw_TextMessages->addTab(newTab, tabName);
-            this->connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::ps_closeTextMessageTab);
+            connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::ps_closeTextMessageTab);
             ui->tw_TextMessages->setCurrentIndex(index);
 
             if (sGui && sGui->getIContextNetwork())

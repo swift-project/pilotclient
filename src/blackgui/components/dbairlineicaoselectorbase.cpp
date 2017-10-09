@@ -143,7 +143,7 @@ namespace BlackGui
                 {
                     QCompleter *c = this->createCompleter();
                     Q_ASSERT_X(c, Q_FUNC_INFO, "missing converter");
-                    this->connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbAirlineIcaoSelectorBase::ps_completerActivated);
+                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbAirlineIcaoSelectorBase::ps_completerActivated);
                     m_completer.reset(c); // deletes any old completer
                 }
                 else
