@@ -32,7 +32,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 
-bool SwiftGuiStd::ps_reloadOwnAircraft()
+bool SwiftGuiStd::reloadOwnAircraft()
 {
     if (!this->m_contextNetworkAvailable) { return false; }
 

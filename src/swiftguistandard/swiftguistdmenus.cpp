@@ -32,7 +32,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 
-void SwiftGuiStd::ps_onMenuClicked()
+void SwiftGuiStd::onMenuClicked()
 {
     QObject *sender = QObject::sender();
     if (sender == ui->menu_TestLocationsEDRY)
@@ -57,7 +57,7 @@ void SwiftGuiStd::ps_onMenuClicked()
     }
     else if (sender == ui->menu_WindowFont)
     {
-        this->ps_setMainPageToInfoArea();
+        this->setMainPageToInfoArea();
         ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
     }
     else if (sender == ui->menu_InternalsPage)

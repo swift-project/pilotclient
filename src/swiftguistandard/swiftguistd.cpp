@@ -139,7 +139,7 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
         {
             // we do not just logoff, but give the user a chance to respond
             event->ignore();
-            QTimer::singleShot(500, this, &SwiftGuiStd::ps_loginRequested);
+            QTimer::singleShot(500, this, &SwiftGuiStd::loginRequested);
             return;
         }
 
@@ -158,7 +158,7 @@ QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarMinButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Window minimized", parent);
-    connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_showMinimized);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::showMinimized);
     return a;
 }
 
@@ -166,7 +166,7 @@ QAction *SwiftGuiStd::getWindowNormalAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarNormalButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Window normal", parent);
-    connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_showNormal);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::showNormal);
     return a;
 }
 
@@ -174,7 +174,7 @@ QAction *SwiftGuiStd::getToggleWindowVisibilityAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarShadeButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Toogle main window visibility", parent);
-    connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_toggleWindowVisibility);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::toggleWindowVisibility);
     return a;
 }
 
@@ -182,18 +182,18 @@ QAction *SwiftGuiStd::getToggleStayOnTopAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarUnshadeButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Toogle main window on top", parent);
-    connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_toogleWindowStayOnTop);
+    connect(a, &QAction::triggered, this, &SwiftGuiStd::toogleWindowStayOnTop);
     return a;
 }
 
-void SwiftGuiStd::ps_setMainPage(SwiftGuiStd::MainPageIndex mainPage)
+void SwiftGuiStd::setMainPage(SwiftGuiStd::MainPageIndex mainPage)
 {
     ui->sw_MainMiddle->setCurrentIndex(mainPage);
 }
 
-void SwiftGuiStd::ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
+void SwiftGuiStd::setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
 {
-    this->ps_setMainPageToInfoArea();
+    this->setMainPageToInfoArea();
     ui->comp_MainInfoArea->selectArea(infoArea);
 }
 
@@ -202,7 +202,7 @@ bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
     return ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
 }
 
-void SwiftGuiStd::ps_loginRequested()
+void SwiftGuiStd::loginRequested()
 {
     if (ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
     {
@@ -211,11 +211,11 @@ void SwiftGuiStd::ps_loginRequested()
     }
     else
     {
-        this->ps_setMainPage(MainPageLogin);
+        this->setMainPage(MainPageLogin);
     }
 }
 
-void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
+void SwiftGuiStd::displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
     if (!m_init) { return; }
     // used with log subscriber
@@ -236,12 +236,12 @@ void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessa
     }
 }
 
-void SwiftGuiStd::ps_onConnectionTerminated()
+void SwiftGuiStd::onConnectionTerminated()
 {
     this->updateGuiStatusInformation();
 }
 
-void SwiftGuiStd::ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+void SwiftGuiStd::onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
 {
     Q_UNUSED(from);
     this->updateGuiStatusInformation();
@@ -263,13 +263,13 @@ void SwiftGuiStd::ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionSt
     }
 }
 
-void SwiftGuiStd::ps_handleTimerBasedUpdates()
+void SwiftGuiStd::handleTimerBasedUpdates()
 {
     this->setContextAvailability();
     this->updateGuiStatusInformation();
 
     // own aircraft
-    this->ps_reloadOwnAircraft();
+    this->reloadOwnAircraft();
 }
 
 void SwiftGuiStd::setContextAvailability()
@@ -329,7 +329,7 @@ void SwiftGuiStd::updateGuiStatusInformation()
     ui->comp_InfoBarStatus->setDBusTooltip(s);
 }
 
-void SwiftGuiStd::ps_onChangedWindowOpacity(int opacity)
+void SwiftGuiStd::onChangedWindowOpacity(int opacity)
 {
     qreal o = opacity / 100.0;
     o = o < 0.3 ? 0.3 : o;
@@ -338,12 +338,12 @@ void SwiftGuiStd::ps_onChangedWindowOpacity(int opacity)
     ui->comp_MainInfoArea->getSettingsComponent()->setGuiOpacity(o * 100.0);
 }
 
-void SwiftGuiStd::ps_toogleWindowStayOnTop()
+void SwiftGuiStd::toogleWindowStayOnTop()
 {
     CGuiUtility::toggleStayOnTop(this);
 }
 
-void SwiftGuiStd::ps_toggleWindowVisibility()
+void SwiftGuiStd::toggleWindowVisibility()
 {
     if (this->isVisible())
     {
@@ -355,39 +355,39 @@ void SwiftGuiStd::ps_toggleWindowVisibility()
     }
 }
 
-void SwiftGuiStd::ps_onStyleSheetsChanged()
+void SwiftGuiStd::onStyleSheetsChanged()
 {
     this->initStyleSheet();
 }
 
-void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
+void SwiftGuiStd::onCurrentMainWidgetChanged(int currentIndex)
 {
     emit currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
     Q_UNUSED(currentIndex);
 }
 
-void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
+void SwiftGuiStd::onChangedMainInfoAreaFloating(bool floating)
 {
     // code for whole floating area goes here
     Q_UNUSED(floating);
 }
 
-void SwiftGuiStd::ps_showMinimized()
+void SwiftGuiStd::showMinimized()
 {
     this->showMinimizedModeChecked();
 }
 
-void SwiftGuiStd::ps_showNormal()
+void SwiftGuiStd::showNormal()
 {
     this->showNormalModeChecked();
 }
 
-void SwiftGuiStd::ps_navigatorClosed()
+void SwiftGuiStd::navigatorClosed()
 {
     this->showNormal();
 }
 
-void SwiftGuiStd::ps_verifyDataAvailability()
+void SwiftGuiStd::verifyDataAvailability()
 {
     const CSimulatorInfo sims = sGui->getIContextSimulator()->simulatorsWithInitializedModelSet();
     if (sims.isNoSimulator())
@@ -396,7 +396,7 @@ void SwiftGuiStd::ps_verifyDataAvailability()
     }
 }
 
-void SwiftGuiStd::ps_sharedInfoObjectsLoaded()
+void SwiftGuiStd::sharedInfoObjectsLoaded()
 {
     Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
     Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread");

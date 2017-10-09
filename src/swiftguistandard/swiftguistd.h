@@ -107,7 +107,7 @@ private:
     QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{new BlackGui::Components::CNavigatorDialog()}; // if I pass the parent, the dialog is always centered over the parent
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
-    BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
+    BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::displayStatusMessageInGui };
     bool                        m_init = false;
 
     // contexts
@@ -173,85 +173,84 @@ private:
     //! Display a reconnect dialog
     void displayDBusReconnectDialog();
 
-private slots:
     //
-    // Data received related slots
+    // Data receiving related funtions
     //
 
     //! Reload own aircraft
-    bool ps_reloadOwnAircraft();
+    bool reloadOwnAircraft();
 
     //! Display status message
-    void ps_displayStatusMessageInGui(const BlackMisc::CStatusMessage &statusMessage);
+    void displayStatusMessageInGui(const BlackMisc::CStatusMessage &statusMessage);
 
     //! Connection status changed
     //! \param from old status
     //! \param to   new status
-    void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+    void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
     //
     // GUI related slots
     //
 
     //! Set \sa MainPageInfoArea
-    void ps_setMainPageToInfoArea() { this->ps_setMainPage(MainPageInfoArea); }
+    void setMainPageToInfoArea() { this->setMainPage(MainPageInfoArea); }
 
     //! Set one of the main pages
-    void ps_setMainPage(MainPageIndex mainPage);
+    void setMainPage(MainPageIndex mainPage);
 
     //! Set the main info area
-    void ps_setMainPageInfoArea(BlackGui::Components::CMainInfoAreaComponent::InfoArea infoArea);
+    void setMainPageInfoArea(BlackGui::Components::CMainInfoAreaComponent::InfoArea infoArea);
 
     //! Login requested
-    void ps_loginRequested();
+    void loginRequested();
 
     //! Menu item clicked
-    void ps_onMenuClicked();
+    void onMenuClicked();
 
     //! Terminated connection
-    void ps_onConnectionTerminated();
+    void onConnectionTerminated();
 
     //! Update timer
-    void ps_handleTimerBasedUpdates();
+    void handleTimerBasedUpdates();
 
     //! Change opacity 0-100
-    void ps_onChangedWindowOpacityTo50(bool) { ps_onChangedWindowOpacity(50); }
+    void onChangedWindowOpacityTo50(bool) { onChangedWindowOpacity(50); }
 
     //! Change opacity 0-100
-    void ps_onChangedWindowOpacityTo100(bool) { ps_onChangedWindowOpacity(100); }
+    void onChangedWindowOpacityTo100(bool) { onChangedWindowOpacity(100); }
 
     //! Change opacity 0-100
-    void ps_onChangedWindowOpacity(int opacity = -1);
+    void onChangedWindowOpacity(int opacity = -1);
 
     //! Toogle if windows stays on top
-    void ps_toogleWindowStayOnTop();
+    void toogleWindowStayOnTop();
 
     //! Toggle window visibility
-    void ps_toggleWindowVisibility();
+    void toggleWindowVisibility();
 
     //! Style sheet has been changed
-    void ps_onStyleSheetsChanged();
+    void onStyleSheetsChanged();
 
     //! Main info area current widget changed
-    void ps_onCurrentMainWidgetChanged(int currentIndex);
+    void onCurrentMainWidgetChanged(int currentIndex);
 
     //! Whole main info area floating
-    void ps_onChangedMainInfoAreaFloating(bool floating);
+    void onChangedMainInfoAreaFloating(bool floating);
 
     //! Show window minimized
-    void ps_showMinimized();
+    void showMinimized();
 
     //! Show window normal
-    void ps_showNormal();
+    void showNormal();
 
     //! Navigator dialog has been closed
-    void ps_navigatorClosed();
+    void navigatorClosed();
 
     //! Checks if data such as model set etc. are available
-    void ps_verifyDataAvailability();
+    void verifyDataAvailability();
 
-    //! The shared headers have been loaded
-    void ps_sharedInfoObjectsLoaded();
+    //! The shared info objects have been loaded
+    void sharedInfoObjectsLoaded();
 };
 
 #pragma pop_macro("interface")
