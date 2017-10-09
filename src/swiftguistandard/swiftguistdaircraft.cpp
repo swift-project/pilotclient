@@ -39,9 +39,9 @@ bool SwiftGuiStd::ps_reloadOwnAircraft()
     // check for changed aircraft
     bool changed = false;
     CSimulatedAircraft loadedAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
-    if (loadedAircraft != this->m_ownAircraft)
+    if (loadedAircraft != m_ownAircraft)
     {
-        this->m_ownAircraft = loadedAircraft;
+        m_ownAircraft = loadedAircraft;
         changed = true;
     }
     return changed;
@@ -54,7 +54,7 @@ void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgs
         CLongitude::fromWgs84(wgsLongitude),
         CAltitude(0, CLengthUnit::m()));
 
-    this->m_ownAircraft.setPosition(coordinate);
-    this->m_ownAircraft.setAltitude(altitude);
+    m_ownAircraft.setPosition(coordinate);
+    m_ownAircraft.setAltitude(altitude);
     sGui->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude);
 }

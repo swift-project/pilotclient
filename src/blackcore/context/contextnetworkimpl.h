@@ -205,10 +205,10 @@ namespace BlackCore
             CAirspaceMonitor *airspace() const { return m_airspace; }
 
         private:
-            CAirspaceMonitor              *m_airspace = nullptr;
-            INetwork                      *m_network  = nullptr;
-            INetwork::ConnectionStatus     m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
-            QTimer                        *m_networkDataUpdateTimer = nullptr;       //!< general updates such as ATIS, frequencies, see requestDataUpdates()
+            CAirspaceMonitor           *m_airspace = nullptr;
+            INetwork                   *m_network  = nullptr;
+            INetwork::ConnectionStatus  m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
+            QTimer                     *m_networkDataUpdateTimer = nullptr;       //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
             // Digest signals, only sending after some time
             BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };

@@ -73,40 +73,40 @@ namespace BlackCore
 
         CContextOwnAircraft *CContextOwnAircraft::registerWithDBus(CDBusServer *server)
         {
-            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
+            if (!server || m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
             server->addObject(IContextOwnAircraft::ObjectPath(), this);
             return this;
         }
 
         CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
         {
-            if (this->m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             QReadLocker l(&m_lockAircraft);
-            return this->m_ownAircraft;
+            return m_ownAircraft;
         }
 
         CCoordinateGeodetic CContextOwnAircraft::getOwnAircraftPosition() const
         {
             QReadLocker l(&m_lockAircraft);
-            return this->m_ownAircraft.getPosition();
+            return m_ownAircraft.getPosition();
         }
 
         CAircraftSituation CContextOwnAircraft::getOwnAircraftSituation() const
         {
             QReadLocker l(&m_lockAircraft);
-            return this->m_ownAircraft.getSituation();
+            return m_ownAircraft.getSituation();
         }
 
         CAircraftParts CContextOwnAircraft::getOwnAircraftParts() const
         {
             QReadLocker l(&m_lockAircraft);
-            return this->m_ownAircraft.getParts();
+            return m_ownAircraft.getParts();
         }
 
         CAircraftModel CContextOwnAircraft::getOwnAircraftModel() const
         {
             QReadLocker l(&m_lockAircraft);
-            return this->m_ownAircraft.getModel();
+            return m_ownAircraft.getModel();
         }
 
         CLength CContextOwnAircraft::getDistanceToOwnAircraft(const ICoordinateGeodetic &position) const
@@ -121,13 +121,13 @@ namespace BlackCore
             {
                 // use copy to minimize lock time
                 QReadLocker rl(&m_lockAircraft);
-                ownAircraft = this->m_ownAircraft;
+                ownAircraft = m_ownAircraft;
             }
 
             ownAircraft.initComSystems();
             ownAircraft.initTransponder();
             ownAircraft.setSituation(getDefaultSituation());
-            ownAircraft.setPilot(this->m_currentNetworkServer.get().getUser());
+            ownAircraft.setPilot(m_currentNetworkServer.get().getUser());
 
             // If we already have a model from somehwere, keep it, otherwise init default
             ownAircraft.setModel(this->reverseLookupModel(ownAircraft.getModel()));
@@ -163,16 +163,16 @@ namespace BlackCore
             if (!this->getIContextNetwork() || !this->getIContextAudio() || !this->getIContextApplication()) { return; } // no chance to resolve rooms
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
 
-            if (this->m_voiceRoom1UrlOverride.isEmpty() && this->m_voiceRoom2UrlOverride.isEmpty() && !this->m_automaticVoiceRoomResolution) { return; }
-            if (!this->m_automaticVoiceRoomResolution) { return; } // not responsible
+            if (m_voiceRoom1UrlOverride.isEmpty() && m_voiceRoom2UrlOverride.isEmpty() && !m_automaticVoiceRoomResolution) { return; }
+            if (!m_automaticVoiceRoomResolution) { return; } // not responsible
 
             // requires correct frequencies set
             // but local network uses exactly this object here, so if frequencies are set here,
             // they are for network context as well
             CVoiceRoomList rooms = this->getIContextNetwork()->getSelectedVoiceRooms();
 
-            if (!this->m_voiceRoom1UrlOverride.isEmpty()) rooms[0] = CVoiceRoom(this->m_voiceRoom1UrlOverride);
-            if (!this->m_voiceRoom2UrlOverride.isEmpty()) rooms[1] = CVoiceRoom(this->m_voiceRoom2UrlOverride);
+            if (!m_voiceRoom1UrlOverride.isEmpty()) rooms[0] = CVoiceRoom(m_voiceRoom1UrlOverride);
+            if (!m_voiceRoom2UrlOverride.isEmpty()) rooms[1] = CVoiceRoom(m_voiceRoom2UrlOverride);
 
             // set the rooms
             emit this->getIContextApplication()->fakedSetComVoiceRoom(rooms);
@@ -189,9 +189,9 @@ namespace BlackCore
         {
             CAircraftModel updateModel(this->reverseLookupModel(model));
             QWriteLocker l(&m_lockAircraft);
-            const bool changed = (this->m_ownAircraft.getModel() != updateModel);
+            const bool changed = (m_ownAircraft.getModel() != updateModel);
             if (!changed) { return false; }
-            this->m_ownAircraft.setModel(updateModel);
+            m_ownAircraft.setModel(updateModel);
             return true;
         }
 
@@ -199,46 +199,46 @@ namespace BlackCore
         {
             QWriteLocker l(&m_lockAircraft);
             // there is intentionally no equal check
-            this->m_ownAircraft.setSituation(situation);
+            m_ownAircraft.setSituation(situation);
             return true;
         }
 
         bool CContextOwnAircraft::updateOwnParts(const CAircraftParts &parts)
         {
             QWriteLocker l(&m_lockAircraft);
-            bool changed = (this->m_ownAircraft.getParts() != parts);
+            bool changed = (m_ownAircraft.getParts() != parts);
             if (!changed) { return false; }
-            this->m_ownAircraft.setParts(parts);
+            m_ownAircraft.setParts(parts);
             return true;
         }
 
         bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
         {
-            if (this->m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
             QWriteLocker l(&m_lockAircraft);
-            bool changed = (this->m_ownAircraft.getPosition() != position);
-            if (changed) { this->m_ownAircraft.setPosition(position); }
+            bool changed = (m_ownAircraft.getPosition() != position);
+            if (changed) { m_ownAircraft.setPosition(position); }
 
-            if (this->m_ownAircraft.getAltitude() != altitude)
+            if (m_ownAircraft.getAltitude() != altitude)
             {
                 changed = true;
-                this->m_ownAircraft.setAltitude(altitude);
+                m_ownAircraft.setAltitude(altitude);
             }
             return changed;
         }
 
         bool CContextOwnAircraft::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const CIdentifier &originator)
         {
-            if (this->m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
             bool changed;
             {
                 QWriteLocker l(&m_lockAircraft);
-                changed = this->m_ownAircraft.hasChangedCockpitData(com1, com2, transponder);
-                if (changed) { this->m_ownAircraft.setCockpit(com1, com2, transponder); }
+                changed = m_ownAircraft.hasChangedCockpitData(com1, com2, transponder);
+                if (changed) { m_ownAircraft.setCockpit(com1, com2, transponder); }
             }
             if (changed)
             {
-                emit this->changedAircraftCockpit(this->m_ownAircraft, originator);
+                emit this->changedAircraftCockpit(m_ownAircraft, originator);
                 this->resolveVoiceRooms();
             }
             return changed;
@@ -252,9 +252,9 @@ namespace BlackCore
             CTransponder xpdr;
             {
                 QReadLocker l(&m_lockAircraft);
-                com1 = this->m_ownAircraft.getCom1System();
-                com2 = this->m_ownAircraft.getCom2System();
-                xpdr = this->m_ownAircraft.getTransponder();
+                com1 = m_ownAircraft.getCom1System();
+                com2 = m_ownAircraft.getCom2System();
+                xpdr = m_ownAircraft.getTransponder();
             }
             if (unit == CComSystem::Com1)
             {
@@ -271,8 +271,8 @@ namespace BlackCore
         {
             {
                 QWriteLocker l(&m_lockAircraft);
-                if (this->m_ownAircraft.getPilot() == pilot) { return false; }
-                this->m_ownAircraft.setPilot(pilot);
+                if (m_ownAircraft.getPilot() == pilot) { return false; }
+                m_ownAircraft.setPilot(pilot);
             }
             emit this->changedPilot(pilot);
             return true;
@@ -282,8 +282,8 @@ namespace BlackCore
         {
             {
                 QWriteLocker l(&m_lockAircraft);
-                if (this->m_ownAircraft.getCallsign() == callsign) { return false; }
-                this->m_ownAircraft.setCallsign(callsign);
+                if (m_ownAircraft.getCallsign() == callsign) { return false; }
+                m_ownAircraft.setCallsign(callsign);
             }
             emit this->changedCallsign(callsign);
             return true;
@@ -293,7 +293,7 @@ namespace BlackCore
         {
             {
                 QWriteLocker l(&m_lockAircraft);
-                if (!this->m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode)) { return false; }
+                if (!m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode)) { return false; }
             }
             emit this->changedAircraftIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
             return true;
@@ -303,8 +303,8 @@ namespace BlackCore
         {
             {
                 QWriteLocker l(&m_lockAircraft);
-                if (this->m_ownAircraft.getSelcal() == selcal) { return false; }
-                this->m_ownAircraft.setSelcal(selcal);
+                if (m_ownAircraft.getSelcal() == selcal) { return false; }
+                m_ownAircraft.setSelcal(selcal);
             }
             emit this->changedSelcal(selcal, originator);
             return true;
@@ -338,16 +338,16 @@ namespace BlackCore
 
         void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
         {
-            if (this->m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << voiceRoom1Url << voiceRoom2Url; }
-            this->m_voiceRoom1UrlOverride = voiceRoom1Url.trimmed();
-            this->m_voiceRoom2UrlOverride = voiceRoom2Url.trimmed();
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << voiceRoom1Url << voiceRoom2Url; }
+            m_voiceRoom1UrlOverride = voiceRoom1Url.trimmed();
+            m_voiceRoom2UrlOverride = voiceRoom2Url.trimmed();
             this->resolveVoiceRooms();
         }
 
         void CContextOwnAircraft::enableAutomaticVoiceRoomResolution(bool enable)
         {
-            if (this->m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable; }
-            this->m_automaticVoiceRoomResolution = enable;
+            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable; }
+            m_automaticVoiceRoomResolution = enable;
         }
 
         bool CContextOwnAircraft::parseCommandLine(const QString &commandLine, const CIdentifier &originator)

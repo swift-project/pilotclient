@@ -104,8 +104,8 @@ namespace BlackCore
         {
             const CUrlList urls(this->m_onlineHelpUrls);
 
-            // we display in the standard browser, so the user will realize if the URL
-            // does not work
+            // we display in the standard browser,
+            // so the user will realize if the URL does not work
             CUrl url = (urls.size() < 2) ? urls.frontOrDefault() : urls.getRandomUrl();
             if (url.isEmpty()) { return url; }
 

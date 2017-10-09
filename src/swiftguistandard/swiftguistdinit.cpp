@@ -62,12 +62,12 @@ void SwiftGuiStd::init()
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
     Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "Missing web services");
 
-    if (this->m_init) { return; }
+    if (m_init) { return; }
 
     this->setVisible(false); // hide all, so no flashing windows during init
-    this->m_mwaStatusBar = &this->m_statusBar;
-    this->m_mwaOverlayFrame = ui->fr_CentralFrameInside;
-    this->m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
+    m_mwaStatusBar = &m_statusBar;
+    m_mwaOverlayFrame = ui->fr_CentralFrameInside;
+    m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
 
     sGui->initMainApplicationWindow(this);
 
@@ -98,24 +98,24 @@ void SwiftGuiStd::init()
     }
 
     // timers
-    if (this->m_timerContextWatchdog == nullptr)
+    if (m_timerContextWatchdog == nullptr)
     {
-        this->m_timerContextWatchdog = new QTimer(this);
-        this->m_timerContextWatchdog->setObjectName(this->objectName().append(":m_timerContextWatchdog"));
+        m_timerContextWatchdog = new QTimer(this);
+        m_timerContextWatchdog->setObjectName(this->objectName().append(":m_timerContextWatchdog"));
     }
 
     // info bar and status bar
-    this->m_statusBar.initStatusBar(ui->sb_MainStatusBar);
+    m_statusBar.initStatusBar(ui->sb_MainStatusBar);
     ui->dw_InfoBarStatus->allowStatusBar(false);
     ui->dw_InfoBarStatus->setPreferredSizeWhenFloating(ui->dw_InfoBarStatus->size()); // set floating size
 
     // navigator
-    this->m_navigator->addAction(this->getToggleWindowVisibilityAction(this->m_navigator.data()));
-    this->m_navigator->addActions(ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(this->m_navigator.data()));
-    this->m_navigator->addAction(this->getWindowNormalAction(this->m_navigator.data()));
-    this->m_navigator->addAction(this->getWindowMinimizeAction(this->m_navigator.data()));
-    this->m_navigator->addAction(this->getToggleStayOnTopAction(this->m_navigator.data()));
-    this->m_navigator->buildNavigator(1);
+    m_navigator->addAction(this->getToggleWindowVisibilityAction(m_navigator.data()));
+    m_navigator->addActions(ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(m_navigator.data()));
+    m_navigator->addAction(this->getWindowNormalAction(m_navigator.data()));
+    m_navigator->addAction(this->getWindowMinimizeAction(m_navigator.data()));
+    m_navigator->addAction(this->getToggleStayOnTopAction(m_navigator.data()));
+    m_navigator->buildNavigator(1);
 
     // wire GUI signals
     this->initGuiSignals();
@@ -126,10 +126,10 @@ void SwiftGuiStd::init()
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
     connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
     connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
-    connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
+    connect(m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
 
     // start timers, update timers will be started when network is connected
-    this->m_timerContextWatchdog->start(2500);
+    m_timerContextWatchdog->start(2500);
 
     // init availability
     this->setContextAvailability();
@@ -153,7 +153,7 @@ void SwiftGuiStd::init()
     this->setVisible(true);
 
     emit sGui->startUpCompleted(true);
-    this->m_init = true;
+    m_init = true;
     QTimer::singleShot(2500, this, &SwiftGuiStd::ps_verifyDataAvailability);
 
     if (!sGui->isNetworkAccessible())
@@ -205,8 +205,8 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(ui->menu_WindowToggleNavigator, &QAction::triggered, this->m_navigator.data(), &CNavigatorDialog::toggleNavigator);
-    connect(this->m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::ps_navigatorClosed);
+    connect(ui->menu_WindowToggleNavigator, &QAction::triggered, m_navigator.data(), &CNavigatorDialog::toggleNavigator);
+    connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::ps_navigatorClosed);
     connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(ui->menu_MovingMap, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
@@ -241,7 +241,7 @@ void SwiftGuiStd::initGuiSignals()
 void SwiftGuiStd::initialDataReads()
 {
     this->setContextAvailability();
-    if (!this->m_coreAvailable)
+    if (!m_coreAvailable)
     {
         CLogMessage(this).error("No initial data read as network context is not available");
         return;
@@ -253,7 +253,7 @@ void SwiftGuiStd::initialDataReads()
 
 void SwiftGuiStd::stopAllTimers(bool disconnectSignalSlots)
 {
-    this->m_timerContextWatchdog->stop();
+    m_timerContextWatchdog->stop();
     if (!disconnectSignalSlots) { return; }
-    this->disconnect(this->m_timerContextWatchdog);
+    this->disconnect(m_timerContextWatchdog);
 }

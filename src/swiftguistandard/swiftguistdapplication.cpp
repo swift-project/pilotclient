@@ -22,7 +22,7 @@ using namespace BlackCore;
 CSwiftGuiStdApplication::CSwiftGuiStdApplication() :
     CGuiApplication(CApplicationInfo::swiftPilotClientGui(), CApplicationInfo::PilotClientGui, CIcons::swift1024())
 {
-    this->addParserOption(this->m_cmdFacadeMode);
+    this->addParserOption(m_cmdFacadeMode);
     this->addWindowModeOption();
     this->addDBusAddressOption();
     this->addVatlibOptions();
@@ -33,9 +33,9 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed cmd line arguments");
     CoreModes::CoreMode coreMode = CoreModes::CoreInGuiProcess;
     const QString dBusAddress(this->getCmdDBusAddressValue());
-    if (this->isParserOptionSet(this->m_cmdFacadeMode))
+    if (this->isParserOptionSet(m_cmdFacadeMode))
     {
-        const QString v(this->getParserValue(this->m_cmdFacadeMode));
+        const QString v(this->getParserValue(m_cmdFacadeMode));
         coreMode = CoreModes::stringToCoreMode(v);
     }
 

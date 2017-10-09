@@ -86,22 +86,22 @@ namespace BlackCore
         //! DBus address?
         bool hasDBusAddress() const { return !this->m_dbusAddress.isEmpty(); }
 
-        //! predefined for Core
+        //! Predefined for Core
         static CCoreFacadeConfig forCoreAllLocalInDBus(const QString &dbusBootstrapAddress = "");
 
-        //! predefined for Core
+        //! Predefined for Core
         static CCoreFacadeConfig forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress = "");
 
-        //! predefined, completely local (e.g. for unit tests)
+        //! Predefined, completely local (e.g. for unit tests)
         static CCoreFacadeConfig local(const QString &dbusBootstrapAddress = "");
 
-        //! predefined, completely remote (e.g. for GUI with core)
+        //! Predefined, completely remote (e.g. for GUI with core)
         static CCoreFacadeConfig remote(const QString &dbusBootstrapAddress = "");
 
-        //! predefined, remote with local audio (e.g. Aduio in GUI)
+        //! Predefined, remote with local audio (e.g. Aduio in GUI)
         static CCoreFacadeConfig remoteLocalAudio(const QString &dbusBootstrapAddress = "");
 
-        //! predefined all empty config (normlly used when the real config can only be determined later)
+        //! Predefined, all empty configs (normally used when the real config can only be determined later)
         static CCoreFacadeConfig allEmpty();
     };
 }

@@ -65,36 +65,36 @@ namespace BlackCore
             CContextNetwork::registerHelp();
 
             // 1. Init by "network driver"
-            this->m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);
-            connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::ps_fsdConnectionStatusChanged);
-            connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
-            connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_checkForSupervisiorTextMessage);
-            connect(this->m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
+            m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);
+            connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::ps_fsdConnectionStatusChanged);
+            connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
+            connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_checkForSupervisiorTextMessage);
+            connect(m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
 
             // 2. Update timer for data (network data such as frequency)
-            this->m_networkDataUpdateTimer = new QTimer(this);
-            connect(this->m_networkDataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
-            this->m_networkDataUpdateTimer->start(30 * 1000);
+            m_networkDataUpdateTimer = new QTimer(this);
+            connect(m_networkDataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
+            m_networkDataUpdateTimer->start(30 * 1000);
 
             // 3. data reader, start reading when setup is synced with xx delay
-            Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing web data services");
+            Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
             connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CContextNetwork::webServiceDataRead);
 
             // 4. Airspace contents
             Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
-            this->m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), this->m_network, this);
-            connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
-            connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
-            connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
-            connect(this->m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
-            connect(this->m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft); // DBus
-            connect(this->m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
-            connect(this->m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft);
+            m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), m_network, this);
+            connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
+            connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
+            connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
+            connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange);
+            connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft); // DBus
+            connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
+            connect(m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft);
         }
 
         CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
         {
-            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
+            if (!server || m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
             server->addObject(IContextNetwork::ObjectPath(), this);
             return this;
         }
@@ -106,31 +106,31 @@ namespace BlackCore
 
         CAircraftSituationList CContextNetwork::remoteAircraftSituations(const CCallsign &callsign) const
         {
-            Q_ASSERT(this->m_airspace);
+            Q_ASSERT(m_airspace);
             return m_airspace->remoteAircraftSituations(callsign);
         }
 
         CAircraftPartsList CContextNetwork::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeBefore) const
         {
-            Q_ASSERT(this->m_airspace);
+            Q_ASSERT(m_airspace);
             return m_airspace->remoteAircraftParts(callsign, cutoffTimeBefore);
         }
 
         int CContextNetwork::remoteAircraftSituationsCount(const CCallsign &callsign) const
         {
-            Q_ASSERT(this->m_airspace);
+            Q_ASSERT(m_airspace);
             return m_airspace->remoteAircraftSituationsCount(callsign);
         }
 
         bool CContextNetwork::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
         {
-            Q_ASSERT(this->m_airspace);
+            Q_ASSERT(m_airspace);
             return m_airspace->isRemoteAircraftSupportingParts(callsign);
         }
 
         CCallsignSet CContextNetwork::remoteAircraftSupportingParts() const
         {
-            Q_ASSERT(this->m_airspace);
+            Q_ASSERT(m_airspace);
             return m_airspace->remoteAircraftSupportingParts();
         }
 
@@ -141,15 +141,15 @@ namespace BlackCore
             std::function<void (const CCallsign &)> removedAircraftSlot,
             std::function<void (const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
         {
-            Q_ASSERT_X(this->m_airspace, Q_FUNC_INFO, "Missing airspace");
-            return this->m_airspace->connectRemoteAircraftProviderSignals(receiver, situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
+            Q_ASSERT_X(m_airspace, Q_FUNC_INFO, "Missing airspace");
+            return m_airspace->connectRemoteAircraftProviderSignals(receiver, situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
         }
 
         void CContextNetwork::gracefulShutdown()
         {
             this->disconnect(); // all signals
             if (this->isConnected()) { this->disconnectFromNetwork(); }
-            if (this->m_airspace) { this->m_airspace->gracefulShutdown(); }
+            if (m_airspace) { m_airspace->gracefulShutdown(); }
         }
 
         CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, INetwork::LoginMode mode)
@@ -168,7 +168,7 @@ namespace BlackCore
             {
                 return CStatusMessage(CStatusMessage::SeverityError, msg);
             }
-            else if (this->m_network->isConnected())
+            else if (m_network->isConnected())
             {
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Already connected");
             }
@@ -178,10 +178,10 @@ namespace BlackCore
             }
             else
             {
-                this->m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
+                m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
                 this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
                 const CSimulatedAircraft ownAircraft(this->ownAircraft());
-                this->m_network->presetServer(server);
+                m_network->presetServer(server);
 
                 // Fall back to observer mode, if no simulator is available or not simulating
                 if (CBuildConfig::isStableBranch() && !this->getIContextSimulator()->isSimulatorSimulating())
@@ -190,18 +190,18 @@ namespace BlackCore
                     mode = INetwork::LoginAsObserver;
                 }
 
-                this->m_network->presetLoginMode(mode);
-                this->m_network->presetCallsign(ownAircraft.getCallsign());
-                this->m_network->presetIcaoCodes(ownAircraft);
+                m_network->presetLoginMode(mode);
+                m_network->presetCallsign(ownAircraft.getCallsign());
+                m_network->presetIcaoCodes(ownAircraft);
                 if (getIContextSimulator())
                 {
-                    this->m_network->presetSimulatorInfo(getIContextSimulator()->getSimulatorPluginInfo());
+                    m_network->presetSimulatorInfo(getIContextSimulator()->getSimulatorPluginInfo());
                 }
                 else
                 {
-                    this->m_network->presetSimulatorInfo(CSimulatorPluginInfo());
+                    m_network->presetSimulatorInfo(CSimulatorPluginInfo());
                 }
-                this->m_network->initiateConnection();
+                m_network->initiateConnection();
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection pending " + server.getAddress() + " " + QString::number(server.getPort()));
             }
         }
@@ -209,17 +209,17 @@ namespace BlackCore
         CServer CContextNetwork::getConnectedServer() const
         {
             return this->isConnected() ?
-                   this->m_network->getPresetServer() :
+                   m_network->getPresetServer() :
                    CServer();
         }
 
         CStatusMessage CContextNetwork::disconnectFromNetwork()
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (this->m_network->isConnected() || this->m_network->isPendingConnection())
+            if (m_network->isConnected() || m_network->isPendingConnection())
             {
-                this->m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
-                this->m_network->terminateConnection();
+                m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
+                m_network->terminateConnection();
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection terminating");
             }
             else
@@ -231,16 +231,16 @@ namespace BlackCore
         bool CContextNetwork::isConnected() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_network->isConnected();
+            return m_network->isConnected();
         }
 
         bool CContextNetwork::isPendingConnection() const
         {
             // if underlying class says pending, we believe it. But not all states (e.g. disconnecting) are covered
-            if (this->m_network->isPendingConnection()) return true;
+            if (m_network->isPendingConnection()) return true;
 
             // now check out own extra states, e.g. disconnecting
-            return INetwork::isPendingStatus(this->m_currentStatus);
+            return INetwork::isPendingStatus(m_currentStatus);
         }
 
         bool CContextNetwork::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
@@ -333,26 +333,26 @@ namespace BlackCore
         void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << textMessages; }
-            this->m_network->sendTextMessages(textMessages);
+            m_network->sendTextMessages(textMessages);
         }
 
         void CContextNetwork::sendFlightPlan(const CFlightPlan &flightPlan)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << flightPlan; }
-            this->m_network->sendFlightPlan(flightPlan);
-            this->m_network->sendFlightPlanQuery(this->ownAircraft().getCallsign());
+            m_network->sendFlightPlan(flightPlan);
+            m_network->sendFlightPlanQuery(this->ownAircraft().getCallsign());
         }
 
         CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->loadFlightPlanFromNetwork(callsign);
+            return m_airspace->loadFlightPlanFromNetwork(callsign);
         }
 
         CUserList CContextNetwork::getUsers() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->getUsers();
+            return m_airspace->getUsers();
         }
 
         CUserList CContextNetwork::getUsersForCallsigns(const CCallsignSet &callsigns) const
@@ -360,7 +360,7 @@ namespace BlackCore
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CUserList users;
             if (callsigns.isEmpty()) return users;
-            return this->m_airspace->getUsersForCallsigns(callsigns);
+            return m_airspace->getUsersForCallsigns(callsigns);
         }
 
         CUser CContextNetwork::getUserForCallsign(const CCallsign &callsign) const
@@ -376,13 +376,13 @@ namespace BlackCore
         CClientList CContextNetwork::getOtherClients() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->getOtherClients();
+            return m_airspace->getOtherClients();
         }
 
         CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignSet &callsigns) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->getOtherClientsForCallsigns(callsigns);
+            return m_airspace->getOtherClientsForCallsigns(callsigns);
         }
 
         CServerList CContextNetwork::getVatsimFsdServers() const
@@ -402,8 +402,8 @@ namespace BlackCore
         void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to; }
-            auto fromOld = this->m_currentStatus; // own status cached
-            this->m_currentStatus = to;
+            auto fromOld = m_currentStatus; // own status cached
+            m_currentStatus = to;
 
             if (fromOld == INetwork::Disconnecting)
             {
@@ -475,125 +475,125 @@ namespace BlackCore
         CAtcStationList CContextNetwork::getAtcStationsOnline() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->getAtcStationsOnline();
+            return m_airspace->getAtcStationsOnline();
         }
 
         CAtcStationList CContextNetwork::getAtcStationsBooked() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->getAtcStationsBooked();
+            return m_airspace->getAtcStationsBooked();
         }
 
         CSimulatedAircraftList CContextNetwork::getAircraftInRange() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->getAircraftInRange();
+            return m_airspace->getAircraftInRange();
         }
 
         CCallsignSet CContextNetwork::getAircraftInRangeCallsigns() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->getAircraftInRangeCallsigns();
+            return m_airspace->getAircraftInRangeCallsigns();
         }
 
         int CContextNetwork::getAircraftInRangeCount() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->getAircraftInRangeCount();
+            return m_airspace->getAircraftInRangeCount();
         }
 
         bool CContextNetwork::isAircraftInRange(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->isAircraftInRange(callsign);
+            return m_airspace->isAircraftInRange(callsign);
         }
 
         CSimulatedAircraft CContextNetwork::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            return this->m_airspace->getAircraftInRangeForCallsign(callsign);
+            return m_airspace->getAircraftInRangeForCallsign(callsign);
         }
 
         CAircraftModel CContextNetwork::getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            return this->m_airspace->getAircraftInRangeModelForCallsign(callsign);
+            return m_airspace->getAircraftInRangeModelForCallsign(callsign);
         }
 
         CStatusMessageList CContextNetwork::getReverseLookupMessages(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            return this->m_airspace->getReverseLookupMessages(callsign);
+            return m_airspace->getReverseLookupMessages(callsign);
         }
 
         bool CContextNetwork::isReverseLookupMessagesEnabled() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->isReverseLookupMessagesEnabled();
+            return m_airspace->isReverseLookupMessagesEnabled();
         }
 
         void CContextNetwork::enableReverseLookupMessages(bool enabled)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
-            if (this->m_airspace->isReverseLookupMessagesEnabled() == enabled) { return; }
-            this->m_airspace->enableReverseLookupMessages(enabled);
+            if (m_airspace->isReverseLookupMessagesEnabled() == enabled) { return; }
+            m_airspace->enableReverseLookupMessages(enabled);
             emit CContext::changedLogOrDebugSettings();
         }
 
         CStatusMessageList CContextNetwork::getAircraftPartsHistory(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            return this->m_airspace->getAircraftPartsHistory(callsign);
+            return m_airspace->getAircraftPartsHistory(callsign);
         }
 
         CAircraftPartsList CContextNetwork::getRemoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            return this->m_airspace->remoteAircraftParts(callsign, cutoffTimeValuesBefore);
+            return m_airspace->remoteAircraftParts(callsign, cutoffTimeValuesBefore);
         }
 
         bool CContextNetwork::isAircraftPartsHistoryEnabled() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return this->m_airspace->isAircraftPartsHistoryEnabled();
+            return m_airspace->isAircraftPartsHistoryEnabled();
         }
 
         void CContextNetwork::enableAircraftPartsHistory(bool enabled)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
-            this->m_airspace->enableAircraftPartsHistory(enabled);
+            m_airspace->enableAircraftPartsHistory(enabled);
             emit CContext::changedLogOrDebugSettings();
         }
 
         CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            return this->m_airspace->getAtcStationsOnline().findFirstByCallsign(callsign);
+            return m_airspace->getAtcStationsOnline().findFirstByCallsign(callsign);
         }
 
         void CContextNetwork::requestDataUpdates()
         {
-            Q_ASSERT(this->m_network);
+            Q_ASSERT(m_network);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!this->isConnected()) { return; }
 
             this->requestAtisUpdates();
-            this->m_airspace->requestDataUpdates();
+            m_airspace->requestDataUpdates();
         }
 
         void CContextNetwork::requestAtisUpdates()
         {
-            Q_ASSERT(this->m_network);
+            Q_ASSERT(m_network);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!this->isConnected()) { return; }
 
-            this->m_airspace->requestAtisUpdates();
+            m_airspace->requestAtisUpdates();
         }
 
         bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRendering; }
-            bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
+            bool c = m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
             if (c)
             {
                 CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -606,7 +606,7 @@ namespace BlackCore
         bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
-            bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
+            bool c = m_airspace->updateAircraftModel(callsign, model, originator);
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -619,7 +619,7 @@ namespace BlackCore
         bool CContextNetwork::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
-            const bool c = this->m_airspace->updateAircraftNetworkModel(callsign, model, originator);
+            const bool c = m_airspace->updateAircraftNetworkModel(callsign, model, originator);
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -631,7 +631,7 @@ namespace BlackCore
         bool CContextNetwork::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enableFastPositonUpdates; }
-            bool c = this->m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates);
+            bool c = m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates);
             if (c)
             {
                 CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -644,61 +644,61 @@ namespace BlackCore
         void CContextNetwork::requestAtcBookingsUpdate() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            this->m_airspace->requestAtcBookingsUpdate();
+            m_airspace->requestAtcBookingsUpdate();
         }
 
         bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
-            bool c = this->m_airspace->updateAircraftRendered(callsign, rendered);
+            bool c = m_airspace->updateAircraftRendered(callsign, rendered);
             return c;
         }
 
         bool CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
-            return this->m_airspace->updateAircraftGroundElevation(callsign, elevation);
+            return m_airspace->updateAircraftGroundElevation(callsign, elevation);
         }
 
         void CContextNetwork::updateMarkAllAsNotRendered()
         {
-            this->m_airspace->updateMarkAllAsNotRendered();
+            m_airspace->updateMarkAllAsNotRendered();
         }
 
         CAirspaceAircraftSnapshot CContextNetwork::getLatestAirspaceAircraftSnapshot() const
         {
-            return this->m_airspace->getLatestAirspaceAircraftSnapshot();
+            return m_airspace->getLatestAirspaceAircraftSnapshot();
         }
 
         void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsigns; }
-            Q_ASSERT(this->m_network);
-            this->m_network->setInterimPositionReceivers(callsigns);
+            Q_ASSERT(m_network);
+            m_network->setInterimPositionReceivers(callsigns);
         }
 
         CCallsignSet CContextNetwork::getFastPositionEnabledCallsigns() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            Q_ASSERT(this->m_network);
-            return this->m_network->getInterimPositionReceivers();
+            Q_ASSERT(m_network);
+            return m_network->getInterimPositionReceivers();
         }
 
         void CContextNetwork::testRequestAircraftConfig(const CCallsign &callsign)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            Q_ASSERT(this->m_network);
-            this->m_network->sendAircraftConfigQuery(callsign);
+            Q_ASSERT(m_network);
+            m_network->sendAircraftConfigQuery(callsign);
         }
 
         void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << number; }
-            this->m_airspace->testCreateDummyOnlineAtcStations(number);
+            m_airspace->testCreateDummyOnlineAtcStations(number);
         }
 
         void CContextNetwork::testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << parts << incremental; }
-            this->m_airspace->testAddAircraftParts(callsign, parts, incremental);
+            m_airspace->testAddAircraftParts(callsign, parts, incremental);
         }
 
         void CContextNetwork::testReceivedTextMessages(const CTextMessageList &textMessages)
@@ -719,8 +719,8 @@ namespace BlackCore
         CAtcStationList CContextNetwork::getSelectedAtcStations() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            CAtcStation com1Station = this->m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom1System());
-            CAtcStation com2Station = this->m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom2System());
+            CAtcStation com1Station = m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom1System());
+            CAtcStation com2Station = m_airspace->getAtcStationForComUnit(this->ownAircraft().getCom2System());
 
             CAtcStationList selectedStations;
             selectedStations.push_back(com1Station);

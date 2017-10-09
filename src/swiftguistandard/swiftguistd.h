@@ -147,12 +147,12 @@ private:
     //! Audio device lists
     void setAudioDeviceLists();
 
-    //! Context availability, used by watchdog
+    //! Context and DBus availability, used by watchdog
     void setContextAvailability();
 
     //! Position of own plane for testing
-    //! \param wgsLatitude   WGS latitude
-    //! \param wgsLongitude  WGS longitude
+    //! \param wgsLatitude  WGS latitude
+    //! \param wgsLongitude WGS longitude
     //! \param altitude
     void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
 

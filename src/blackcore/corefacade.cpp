@@ -79,10 +79,10 @@ namespace BlackCore
         if (config.requiresDBusConnection())
         {
             this->initDBusConnection(dbusAddress);
-            if (!this->m_dbusConnection.isConnected())
+            if (!m_dbusConnection.isConnected())
             {
                 QString notConnected("DBus connection failed: ");
-                const QString e = this->m_dbusConnection.lastError().message();
+                const QString e = m_dbusConnection.lastError().message();
                 if (!e.isEmpty()) { notConnected.append(e); }
                 Q_ASSERT_X(false, "CRuntime::init", notConnected.toUtf8().constData());
                 CLogMessage(this).error(notConnected);
@@ -91,27 +91,27 @@ namespace BlackCore
         times.insert("DBus", time.restart());
 
         // contexts
-        this->m_contextApplication = IContextApplication::create(this, config.getModeApplication(), this->m_dbusServer, this->m_dbusConnection);
+        m_contextApplication = IContextApplication::create(this, config.getModeApplication(), m_dbusServer, m_dbusConnection);
         times.insert("Application", time.restart());
 
-        this->m_contextAudio = IContextAudio::create(this, config.getModeAudio(), this->m_dbusServer, this->m_dbusConnection);
+        m_contextAudio = IContextAudio::create(this, config.getModeAudio(), m_dbusServer, m_dbusConnection);
         times.insert("Audio", time.restart());
 
-        this->m_contextOwnAircraft = IContextOwnAircraft::create(this, config.getModeOwnAircraft(), this->m_dbusServer, this->m_dbusConnection);
+        m_contextOwnAircraft = IContextOwnAircraft::create(this, config.getModeOwnAircraft(), m_dbusServer, m_dbusConnection);
         times.insert("Own aircraft", time.restart());
 
-        this->m_contextNetwork = IContextNetwork::create(this, config.getModeNetwork(), this->m_dbusServer, this->m_dbusConnection);
+        m_contextNetwork = IContextNetwork::create(this, config.getModeNetwork(), m_dbusServer, m_dbusConnection);
         times.insert("Network", time.restart());
 
-        this->m_contextSimulator = IContextSimulator::create(this, config.getModeSimulator(), this->m_dbusServer, this->m_dbusConnection);
+        m_contextSimulator = IContextSimulator::create(this, config.getModeSimulator(), m_dbusServer, m_dbusConnection);
         times.insert("Simulator", time.restart());
 
         // checks --------------
         // 1. own aircraft and simulator should reside in same location
-        Q_ASSERT(!this->m_contextSimulator || (this->m_contextOwnAircraft->isUsingImplementingObject() == this->m_contextSimulator->isUsingImplementingObject()));
+        Q_ASSERT(!m_contextSimulator || (m_contextOwnAircraft->isUsingImplementingObject() == m_contextSimulator->isUsingImplementingObject()));
 
         // 2. own aircraft and network should reside in same location
-        Q_ASSERT(!this->m_contextNetwork || (this->m_contextOwnAircraft->isUsingImplementingObject() == this->m_contextNetwork->isUsingImplementingObject()));
+        Q_ASSERT(!m_contextNetwork || (m_contextOwnAircraft->isUsingImplementingObject() == m_contextNetwork->isUsingImplementingObject()));
 
         // post inits, wiring things among context (e.g. signal slots)
         time.restart();
@@ -125,8 +125,8 @@ namespace BlackCore
 
     bool CCoreFacade::hasRemoteApplicationContext() const
     {
-        Q_ASSERT(this->m_contextApplication);
-        return !this->m_contextApplication->isUsingImplementingObject();
+        Q_ASSERT(m_contextApplication);
+        return !m_contextApplication->isUsingImplementingObject();
     }
 
     void CCoreFacade::registerMetadata()
@@ -148,9 +148,9 @@ namespace BlackCore
 
     void CCoreFacade::initDBusServer(const QString &dBusAddress)
     {
-        if (this->m_dbusServer) { return; }
+        if (m_dbusServer) { return; }
         Q_ASSERT(!dBusAddress.isEmpty());
-        this->m_dbusServer = new CDBusServer(dBusAddress, this);
+        m_dbusServer = new CDBusServer(dBusAddress, this);
         CLogMessage(this).info("DBus server on address: %1") << dBusAddress;
     }
 
@@ -164,35 +164,35 @@ namespace BlackCore
         times.insert("Post setup, connects first", time.restart());
 
         // local simulator?
-        if (this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject())
+        if (m_contextSimulator && m_contextSimulator->isUsingImplementingObject())
         {
             // only connect if network runs locally, no round trips
             // remark: from a design perspective it would be nice if those could be avoided (seperation of concerns)
             //         those connects here reprent cross context dependencies
-            if (this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject())
+            if (m_contextNetwork && m_contextNetwork->isUsingImplementingObject())
             {
                 Q_ASSERT_X(this->getCContextNetwork(), Q_FUNC_INFO, "No local network object");
                 Q_ASSERT_X(this->getCContextNetwork()->airspace(), Q_FUNC_INFO, "No airspace object");
 
-                c = connect(this->m_contextNetwork, &IContextNetwork::textMessagesReceived,
+                c = connect(m_contextNetwork, &IContextNetwork::textMessagesReceived,
                             this->getCContextSimulator(), &CContextSimulator::ps_textMessagesReceived);
                 Q_ASSERT(c);
 
                 // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
                 // ready for model matching is sent delayed when all information are available
-                c = connect(this->m_contextNetwork, &IContextNetwork::readyForModelMatching,
+                c = connect(m_contextNetwork, &IContextNetwork::readyForModelMatching,
                             this->getCContextSimulator(), &CContextSimulator::ps_addedRemoteAircraft);
                 Q_ASSERT(c);
-                c = connect(this->m_contextNetwork, &IContextNetwork::removedAircraft,
+                c = connect(m_contextNetwork, &IContextNetwork::removedAircraft,
                             this->getCContextSimulator(), &CContextSimulator::ps_removedRemoteAircraft);
                 Q_ASSERT(c);
-                c = connect(this->m_contextNetwork, &IContextNetwork::changedRemoteAircraftModel,
+                c = connect(m_contextNetwork, &IContextNetwork::changedRemoteAircraftModel,
                             this->getCContextSimulator(), &CContextSimulator::ps_changedRemoteAircraftModel);
                 Q_ASSERT(c);
-                c = connect(this->m_contextNetwork, &IContextNetwork::changedRemoteAircraftEnabled,
+                c = connect(m_contextNetwork, &IContextNetwork::changedRemoteAircraftEnabled,
                             this->getCContextSimulator(), &CContextSimulator::ps_changedRemoteAircraftEnabled);
                 Q_ASSERT(c);
-                c = connect(this->m_contextNetwork, &IContextNetwork::connectionStatusChanged,
+                c = connect(m_contextNetwork, &IContextNetwork::connectionStatusChanged,
                             this->getCContextSimulator(), &CContextSimulator::ps_networkConnectionStatusChanged);
                 Q_ASSERT(c);
                 c = connect(this->getCContextNetwork()->airspace(), &CAirspaceMonitor::requestedNewAircraft,
@@ -204,12 +204,12 @@ namespace BlackCore
             }
 
             // only if own aircraft runs locally
-            if (this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject())
+            if (m_contextOwnAircraft && m_contextOwnAircraft->isUsingImplementingObject())
             {
-                c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
+                c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
                             this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorCockpitFromContext);
                 Q_ASSERT(c);
-                c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedSelcal,
+                c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedSelcal,
                             this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorSelcalFromContext);
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
@@ -223,23 +223,23 @@ namespace BlackCore
 
         // only where network and(!) own aircraft run locally
         // -> in the core or an all local implementation
-        if (this->m_contextNetwork && this->m_contextOwnAircraft && this->m_contextNetwork->isUsingImplementingObject() && this->m_contextOwnAircraft->isUsingImplementingObject())
+        if (m_contextNetwork && m_contextOwnAircraft && m_contextNetwork->isUsingImplementingObject() && m_contextOwnAircraft->isUsingImplementingObject())
         {
-            c = this->connect(this->m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
+            c = this->connect(m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
                               this->getCContextOwnAircraft(),  &CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
             times.insert("Post setup, connects network", time.restart());
         }
 
         // fake signals to work around setting values in audio context for local audio with remote core
-        if (this->m_contextAudio && this->m_contextAudio->isUsingImplementingObject())
+        if (m_contextAudio && m_contextAudio->isUsingImplementingObject())
         {
-            Q_ASSERT(this->m_contextApplication);
-            Q_ASSERT(this->m_contextOwnAircraft);
-            c = this->connect(this->m_contextApplication, &IContextApplication::fakedSetComVoiceRoom,
+            Q_ASSERT(m_contextApplication);
+            Q_ASSERT(m_contextOwnAircraft);
+            c = this->connect(m_contextApplication, &IContextApplication::fakedSetComVoiceRoom,
                               this->getCContextAudio(),  &CContextAudio::setComVoiceRooms);
             Q_ASSERT(c);
-            c = this->connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedCallsign, this->getCContextAudio(), &IContextAudio::setOwnCallsignForRooms);
+            c = this->connect(m_contextOwnAircraft, &IContextOwnAircraft::changedCallsign, this->getCContextAudio(), &IContextAudio::setOwnCallsignForRooms);
             Q_ASSERT(c);
             times.insert("Post setup, connects audio", time.restart());
         }
@@ -247,15 +247,15 @@ namespace BlackCore
 
     void CCoreFacade::gracefulShutdown()
     {
-        if (!this->m_initalized) { return; }
+        if (!m_initalized) { return; }
         if (m_shuttingDown) { return; }
-        this->m_shuttingDown = true;
+        m_shuttingDown = true;
 
         // disable all signals towards runtime
         disconnect(this);
 
         // unregister all from DBus
-        if (this->m_dbusServer) { this->m_dbusServer->removeAllObjects(); }
+        if (m_dbusServer) { m_dbusServer->removeAllObjects(); }
 
         // handle contexts
         if (this->getIContextSimulator())
@@ -268,7 +268,7 @@ namespace BlackCore
             }
             this->getIContextSimulator()->deleteLater();
             QDBusConnection defaultConnection("default");
-            this->m_contextSimulator = IContextSimulator::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
+            m_contextSimulator = IContextSimulator::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         // log off from network, if connected
@@ -276,14 +276,14 @@ namespace BlackCore
         {
             disconnect(this->getIContextNetwork());
             this->getIContextNetwork()->disconnectFromNetwork();
-            if (this->m_contextNetwork->isUsingImplementingObject())
+            if (m_contextNetwork->isUsingImplementingObject())
             {
                 this->getCContextNetwork()->gracefulShutdown(); // for threads
             }
             this->getIContextNetwork()->deleteLater();
             // replace by dummy object avoiding nullptr issues during shutdown phase
             QDBusConnection defaultConnection("default");
-            this->m_contextNetwork = IContextNetwork::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
+            m_contextNetwork = IContextNetwork::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextAudio())
@@ -292,7 +292,7 @@ namespace BlackCore
             this->getIContextAudio()->deleteLater();
             // replace by dummy object avoiding nullptr issues during shutdown phase
             QDBusConnection defaultConnection("default");
-            this->m_contextAudio = IContextAudio::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
+            m_contextAudio = IContextAudio::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextOwnAircraft())
@@ -300,7 +300,7 @@ namespace BlackCore
             disconnect(this->getIContextOwnAircraft());
             this->getIContextOwnAircraft()->deleteLater();
             QDBusConnection defaultConnection("default");
-            this->m_contextOwnAircraft = IContextOwnAircraft::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
+            m_contextOwnAircraft = IContextOwnAircraft::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
 
         if (this->getIContextApplication())
@@ -308,134 +308,134 @@ namespace BlackCore
             disconnect(this->getIContextApplication());
             this->getIContextApplication()->deleteLater();
             QDBusConnection defaultConnection("default");
-            this->m_contextApplication = IContextApplication::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
+            m_contextApplication = IContextApplication::create(this, CCoreFacadeConfig::NotUsed, nullptr, defaultConnection);
         }
     }
 
     void CCoreFacade::initDBusConnection(const QString &address)
     {
-        if (this->m_initDBusConnection) { return; }
+        if (m_initDBusConnection) { return; }
         if (address.isEmpty() || address == CDBusServer::sessionBusAddress())
         {
-            this->m_dbusConnection = QDBusConnection::sessionBus();
+            m_dbusConnection = QDBusConnection::sessionBus();
         }
         else if (address == CDBusServer::systemBusAddress())
         {
-            this->m_dbusConnection = QDBusConnection::sessionBus();
+            m_dbusConnection = QDBusConnection::sessionBus();
         }
         else
         {
-            this->m_dbusConnection = QDBusConnection::connectToPeer(address, "BlackBoxRuntime");
+            m_dbusConnection = QDBusConnection::connectToPeer(address, "BlackBoxRuntime");
         }
     }
 
     const IContextApplication *CCoreFacade::getIContextApplication() const
     {
-        return this->m_contextApplication;
+        return m_contextApplication;
     }
 
     IContextApplication *CCoreFacade::getIContextApplication()
     {
-        return this->m_contextApplication;
+        return m_contextApplication;
     }
 
     IContextAudio *CCoreFacade::getIContextAudio()
     {
-        return this->m_contextAudio;
+        return m_contextAudio;
     }
 
     const IContextAudio *CCoreFacade::getIContextAudio() const
     {
-        return this->m_contextAudio;
+        return m_contextAudio;
     }
 
     IContextNetwork *CCoreFacade::getIContextNetwork()
     {
-        return this->m_contextNetwork;
+        return m_contextNetwork;
     }
 
     const IContextNetwork *CCoreFacade::getIContextNetwork() const
     {
-        return this->m_contextNetwork;
+        return m_contextNetwork;
     }
 
     IContextOwnAircraft *CCoreFacade::getIContextOwnAircraft()
     {
-        return this->m_contextOwnAircraft;
+        return m_contextOwnAircraft;
     }
 
     const IContextOwnAircraft *CCoreFacade::getIContextOwnAircraft() const
     {
-        return this->m_contextOwnAircraft;
+        return m_contextOwnAircraft;
     }
 
     const IContextSimulator *CCoreFacade::getIContextSimulator() const
     {
-        return this->m_contextSimulator;
+        return m_contextSimulator;
     }
 
     IContextSimulator *CCoreFacade::getIContextSimulator()
     {
-        return this->m_contextSimulator;
+        return m_contextSimulator;
     }
 
     CContextAudio *CCoreFacade::getCContextAudio()
     {
-        Q_ASSERT_X(this->m_contextAudio && this->m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextAudio *>(this->m_contextAudio);
+        Q_ASSERT_X(m_contextAudio && m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextAudio *>(m_contextAudio);
     }
 
     const CContextAudio *CCoreFacade::getCContextAudio() const
     {
-        Q_ASSERT_X(this->m_contextAudio && this->m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextAudio *>(this->m_contextAudio);
+        Q_ASSERT_X(m_contextAudio && m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextAudio *>(m_contextAudio);
     }
 
     CContextApplication *CCoreFacade::getCContextApplication()
     {
-        Q_ASSERT_X(this->m_contextApplication && this->m_contextApplication->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextApplication *>(this->m_contextApplication);
+        Q_ASSERT_X(m_contextApplication && m_contextApplication->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextApplication *>(m_contextApplication);
     }
 
     const CContextApplication *CCoreFacade::getCContextApplication() const
     {
-        Q_ASSERT_X(this->m_contextApplication && this->m_contextApplication->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextApplication *>(this->m_contextApplication);
+        Q_ASSERT_X(m_contextApplication && m_contextApplication->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextApplication *>(m_contextApplication);
     }
 
     CContextNetwork *CCoreFacade::getCContextNetwork()
     {
-        Q_ASSERT_X(this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextNetwork *>(this->m_contextNetwork);
+        Q_ASSERT_X(m_contextNetwork && m_contextNetwork->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextNetwork *>(m_contextNetwork);
     }
 
     const CContextNetwork *CCoreFacade::getCContextNetwork() const
     {
-        Q_ASSERT_X(this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextNetwork *>(this->m_contextNetwork);
+        Q_ASSERT_X(m_contextNetwork && m_contextNetwork->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextNetwork *>(m_contextNetwork);
     }
 
     CContextOwnAircraft *CCoreFacade::getCContextOwnAircraft()
     {
-        Q_ASSERT_X(this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextOwnAircraft *>(this->m_contextOwnAircraft);
+        Q_ASSERT_X(m_contextOwnAircraft && m_contextOwnAircraft->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextOwnAircraft *>(m_contextOwnAircraft);
     }
 
     const CContextOwnAircraft *CCoreFacade::getCContextOwnAircraft() const
     {
-        Q_ASSERT_X(this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextOwnAircraft *>(this->m_contextOwnAircraft);
+        Q_ASSERT_X(m_contextOwnAircraft && m_contextOwnAircraft->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextOwnAircraft *>(m_contextOwnAircraft);
     }
 
     CContextSimulator *CCoreFacade::getCContextSimulator()
     {
-        Q_ASSERT_X(this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextSimulator *>(this->m_contextSimulator);
+        Q_ASSERT_X(m_contextSimulator && m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextSimulator *>(m_contextSimulator);
     }
 
     const CContextSimulator *CCoreFacade::getCContextSimulator() const
     {
-        Q_ASSERT_X(this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
-        return static_cast<CContextSimulator *>(this->m_contextSimulator);
+        Q_ASSERT_X(m_contextSimulator && m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextSimulator *>(m_contextSimulator);
     }
 } // namespace

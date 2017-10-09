@@ -34,7 +34,7 @@ namespace BlackCore
 
         CContextApplication *CContextApplication::registerWithDBus(BlackMisc::CDBusServer *server)
         {
-            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) { return this; }
+            if (!server || m_mode != CCoreFacadeConfig::LocalInDbusServer) { return this; }
             server->addObject(IContextApplication::ObjectPath(), this);
             return this;
         }
@@ -173,7 +173,7 @@ namespace BlackCore
         void CContextApplication::unregisterApplication(const CIdentifier &application)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << application; }
-            int r = this->m_registeredApplications.remove(application);
+            int r = m_registeredApplications.remove(application);
             if (r > 0) { emit registrationChanged(); }
         }
 
