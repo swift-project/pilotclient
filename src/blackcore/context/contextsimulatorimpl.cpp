@@ -70,7 +70,7 @@ namespace BlackCore
 
         CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
         {
-            if (!server || this->m_mode != CCoreFacadeConfig::LocalInDBusServer) return this;
+            if (!server || m_mode != CCoreFacadeConfig::LocalInDBusServer) return this;
             server->addObject(CContextSimulator::ObjectPath(), this);
             return this;
         }
@@ -500,12 +500,12 @@ namespace BlackCore
             const INetwork::ConnectionStatus statusTo = static_cast<INetwork::ConnectionStatus>(to);
             if (statusTo == INetwork::Connected && this->getIContextNetwork())
             {
-                this->m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId();
+                m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId();
             }
             else if (!m_networkSessionId.isEmpty())
             {
-                this->m_networkSessionId.clear();
-                this->m_aircraftMatcher.clearMatchingStatistics();
+                m_networkSessionId.clear();
+                m_aircraftMatcher.clearMatchingStatistics();
             }
         }
 
@@ -583,7 +583,7 @@ namespace BlackCore
         {
             if (m_simulatorPlugin.first.isUnspecified()) { return CPixmap(); }
             Q_ASSERT_X(m_simulatorPlugin.second, Q_FUNC_INFO, "Missing simulator");
-            const CAircraftModel model(this->m_modelSetLoader.getModelForModelString(modelString));
+            const CAircraftModel model(m_modelSetLoader.getModelForModelString(modelString));
 
             // load from file
             CStatusMessage msg;
@@ -615,7 +615,7 @@ namespace BlackCore
         CMatchingStatistics CContextSimulator::getCurrentMatchingStatistics(bool missingOnly) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << missingOnly; }
-            const CMatchingStatistics statistics = this->m_aircraftMatcher.getCurrentStatistics();
+            const CMatchingStatistics statistics = m_aircraftMatcher.getCurrentStatistics();
             return missingOnly ?
                    statistics.findMissingOnly() :
                    statistics;
@@ -635,8 +635,8 @@ namespace BlackCore
 
             if (parser.matchesCommand("plugin") || parser.matchesCommand("drv") || parser.matchesCommand("driver"))
             {
-                if (!this->m_simulatorPlugin.second) { return false; }
-                return this->m_simulatorPlugin.second->parseCommandLine(commandLine, originator);
+                if (!m_simulatorPlugin.second) { return false; }
+                return m_simulatorPlugin.second->parseCommandLine(commandLine, originator);
             }
             return false;
         }
@@ -696,15 +696,15 @@ namespace BlackCore
         {
             if (callsign.isEmpty()) { return; }
             if (messages.isEmpty()) { return; }
-            if (!this->m_enableMatchingMessages) { return; }
-            if (this->m_matchingMessages.contains(callsign))
+            if (!m_enableMatchingMessages) { return; }
+            if (m_matchingMessages.contains(callsign))
             {
-                CStatusMessageList &msgs = this->m_matchingMessages[callsign];
+                CStatusMessageList &msgs = m_matchingMessages[callsign];
                 msgs.push_back(messages);
             }
             else
             {
-                this->m_matchingMessages.insert(callsign, messages);
+                m_matchingMessages.insert(callsign, messages);
             }
         }
 
