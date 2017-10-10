@@ -18,110 +18,110 @@ namespace BlackMisc
     {
         CSimulatedAircraftList CRemoteAircraftAware::getAircraftInRange() const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->getAircraftInRange();
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->getAircraftInRange();
         }
 
         bool CRemoteAircraftAware::isAircraftInRange(const CCallsign &callsign) const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->isAircraftInRange(callsign);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->isAircraftInRange(callsign);
         }
 
         int CRemoteAircraftAware::getAircraftInRangeCount() const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->getAircraftInRangeCount();
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->getAircraftInRangeCount();
         }
 
         CCallsignSet CRemoteAircraftAware::getAircraftInRangeCallsigns() const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->getAircraftInRangeCallsigns();
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->getAircraftInRangeCallsigns();
         }
 
         CSimulatedAircraft CRemoteAircraftAware::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->getAircraftInRangeForCallsign(callsign);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->getAircraftInRangeForCallsign(callsign);
         }
 
         CAircraftModel CRemoteAircraftAware::getAircraftInRangeModelForCallsign(const CCallsign &callsign) const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->getAircraftInRangeModelForCallsign(callsign);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->getAircraftInRangeModelForCallsign(callsign);
         }
 
         CAirspaceAircraftSnapshot CRemoteAircraftAware::getLatestAirspaceAircraftSnapshot() const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->getLatestAirspaceAircraftSnapshot();
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->getLatestAirspaceAircraftSnapshot();
         }
 
         CAircraftSituationList CRemoteAircraftAware::remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->remoteAircraftSituations(callsign);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->remoteAircraftSituations(callsign);
         }
 
         CAircraftPartsList CRemoteAircraftAware::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeBefore) const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->remoteAircraftParts(callsign, cutoffTimeBefore);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->remoteAircraftParts(callsign, cutoffTimeBefore);
         }
 
         CCallsignSet CRemoteAircraftAware::remoteAircraftSupportingParts() const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->remoteAircraftSupportingParts();
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->remoteAircraftSupportingParts();
         }
 
         int CRemoteAircraftAware::remoteAircraftSituationsCount(const CCallsign &callsign) const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->remoteAircraftSituationsCount(callsign);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->remoteAircraftSituationsCount(callsign);
         }
 
         bool CRemoteAircraftAware::updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->updateAircraftModel(callsign, model, originator);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->updateAircraftModel(callsign, model, originator);
         }
 
         bool CRemoteAircraftAware::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->updateAircraftNetworkModel(callsign, model, originator);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->updateAircraftNetworkModel(callsign, model, originator);
         }
 
         bool CRemoteAircraftAware::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->updateAircraftRendered(callsign, rendered);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->updateAircraftRendered(callsign, rendered);
         }
 
         bool CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->updateAircraftGroundElevation(callsign, elevation);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->updateAircraftGroundElevation(callsign, elevation);
         }
 
         void CRemoteAircraftAware::updateMarkAllAsNotRendered()
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            this->m_remoteAircraftProvider->updateMarkAllAsNotRendered();
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            m_remoteAircraftProvider->updateMarkAllAsNotRendered();
         }
 
         bool CRemoteAircraftAware::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->isRemoteAircraftSupportingParts(callsign);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->isRemoteAircraftSupportingParts(callsign);
         }
 
         bool CRemoteAircraftAware::updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering)
         {
-            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->updateAircraftEnabled(callsign, enabledForRedering);
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->updateAircraftEnabled(callsign, enabledForRedering);
         }
 
         void IRemoteAircraftProvider::removeOutdatedParts(CAircraftPartsList &partsList)
