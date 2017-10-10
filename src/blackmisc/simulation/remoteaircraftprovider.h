@@ -100,6 +100,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
+            //! Number of aircraft supporting parts
+            //! \threadsafe
+            virtual int getRemoteAircraftSupportingPartsCount() const = 0;
+
             //! Remote aircraft supporting parts.
             //! \threadsafe
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const = 0;
@@ -213,6 +217,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
             bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+            //! \copydoc IRemoteAircraftProvider::getRemoteAircraftSupportingPartsCount
+            int getRemoteAircraftSupportingPartsCount() const;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
             bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering);

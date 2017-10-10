@@ -195,5 +195,35 @@ namespace BlackMisc
             this->push_back(aircraft);
             return true;
         }
+
+        int CSimulatedAircraftList::countEnabled() const
+        {
+            int c = 0;
+            for (const CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.isEnabled()) { c++; }
+            }
+            return c;
+        }
+
+        int CSimulatedAircraftList::countRendered() const
+        {
+            int c = 0;
+            for (const CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.isRendered()) { c++; }
+            }
+            return c;
+        }
+
+        int CSimulatedAircraftList::countAircraftPartsSyncronized() const
+        {
+            int c = 0;
+            for (const CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.isPartsSynchronized()) { c++; }
+            }
+            return c;
+        }
     } // namespace
 } // namespace

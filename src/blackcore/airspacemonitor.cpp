@@ -192,6 +192,12 @@ namespace BlackCore
         return m_aircraftSupportingParts.contains(callsign);
     }
 
+    int CAirspaceMonitor::getRemoteAircraftSupportingPartsCount() const
+    {
+        QReadLocker l(&m_lockParts);
+        return m_aircraftSupportingParts.size();
+    }
+
     CCallsignSet CAirspaceMonitor::remoteAircraftSupportingParts() const
     {
         QReadLocker l(&m_lockParts);

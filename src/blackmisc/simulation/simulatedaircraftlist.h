@@ -100,6 +100,15 @@ namespace BlackMisc
 
             //! Replace or add by callsign
             bool replaceOrAddByCallsign(const CSimulatedAircraft &aircraft);
+
+            //! Number of enabled aircraft
+            int countEnabled() const;
+
+            //! Number of rendered aircraft
+            int countRendered() const;
+
+            //! Number of aircraft with parts
+            int countAircraftPartsSyncronized() const;
         };
     } //namespace
 } // namespace

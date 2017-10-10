@@ -553,6 +553,12 @@ namespace BlackCore
             return m_airspace->remoteAircraftParts(callsign, cutoffTimeValuesBefore);
         }
 
+        int CContextNetwork::getRemoteAircraftSupportingPartsCount() const
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_airspace->getRemoteAircraftSupportingPartsCount();
+        }
+
         bool CContextNetwork::isAircraftPartsHistoryEnabled() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

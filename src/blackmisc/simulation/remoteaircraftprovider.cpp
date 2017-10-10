@@ -118,6 +118,12 @@ namespace BlackMisc
             return m_remoteAircraftProvider->isRemoteAircraftSupportingParts(callsign);
         }
 
+        int CRemoteAircraftAware::getRemoteAircraftSupportingPartsCount() const
+        {
+            Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_remoteAircraftProvider->getRemoteAircraftSupportingPartsCount();
+        }
+
         bool CRemoteAircraftAware::updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering)
         {
             Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
