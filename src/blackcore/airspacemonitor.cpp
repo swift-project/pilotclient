@@ -1335,10 +1335,7 @@ namespace BlackCore
         IRemoteAircraftProvider::removeOutdatedParts(partsList);
 
         // aircraft supporting parts
-        if (!m_aircraftSupportingParts.contains(callsign))
-        {
-            m_aircraftSupportingParts.push_back(callsign); // mark as callsign which supports parts
-        }
+        m_aircraftSupportingParts.insert(callsign); // mark as callsign which supports parts
 
         // check sort order
         Q_ASSERT_X(partsList.size() < 2 || partsList[0].getMSecsSinceEpoch() >= partsList[1].getMSecsSinceEpoch(), Q_FUNC_INFO, "wrong sort order");
