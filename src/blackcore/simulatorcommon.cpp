@@ -59,10 +59,10 @@ namespace BlackCore
         m_remoteAircraftProviderConnections.append(
             m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
-                std::bind(&CSimulatorCommon::onRemoteProviderAddedAircraftSituation, this, std::placeholders::_1),
-                std::bind(&CSimulatorCommon::onRemoteProviderAddedAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
-                std::bind(&CSimulatorCommon::onRemoteProviderRemovedAircraft, this, std::placeholders::_1),
-                std::bind(&CSimulatorCommon::onRecalculatedRenderedAircraft, this, std::placeholders::_1))
+                std::bind(&CSimulatorCommon::rapOnRemoteProviderAddedAircraftSituation, this, std::placeholders::_1),
+                std::bind(&CSimulatorCommon::rapOnRemoteProviderAddedAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
+                std::bind(&CSimulatorCommon::rapOnRemoteProviderRemovedAircraft, this, std::placeholders::_1),
+                std::bind(&CSimulatorCommon::rapOnRecalculatedRenderedAircraft, this, std::placeholders::_1))
         );
 
         // timer
@@ -559,5 +559,29 @@ namespace BlackCore
     {
         if (!sApp->hasWebDataServices()) { return CAirport(); }
         return sApp->getWebDataServices()->getAirports().findFirstByIcao(icao);
+    }
+
+    void CSimulatorCommon::rapOnRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
+    {
+        if (!this->isConnected()) return;
+        this->onRecalculatedRenderedAircraft(snapshot);
+    }
+
+    void CSimulatorCommon::rapOnRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
+    {
+        if (!this->isConnected()) return;
+        this->onRemoteProviderAddedAircraftSituation(situation);
+    }
+
+    void CSimulatorCommon::rapOnRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
+    {
+        if (!this->isConnected()) return;
+        this->onRemoteProviderAddedAircraftParts(callsign, parts);
+    }
+
+    void CSimulatorCommon::rapOnRemoteProviderRemovedAircraft(const CCallsign &callsign)
+    {
+        if (!this->isConnected()) return;
+        this->onRemoteProviderRemovedAircraft(callsign);
     }
 } // namespace

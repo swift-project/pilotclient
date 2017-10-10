@@ -219,6 +219,12 @@ namespace BlackCore
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
     private:
+        // remote aircraft provider ("rap") bound
+        void rapOnRecalculatedRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
+        void rapOnRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+        void rapOnRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
+        void rapOnRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+
         bool m_blinkCycle = false;            //!< used for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         int m_timerCounter = 0;               //!< allows to calculate n seconds
