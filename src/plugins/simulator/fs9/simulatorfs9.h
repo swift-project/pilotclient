@@ -86,14 +86,14 @@ namespace BlackSimPlugin
             virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
             //! @}
 
-        private slots:
-            //! Dispatch SimConnect messages
-            void ps_dispatch();
+        private:
+            //! Dispatch FSUIPC reading
+            //! \remark very frequently called
+            void dispatch();
 
             //! Process incoming FS9 message
-            void ps_processFs9Message(const QByteArray &message);
+            void processFs9Message(const QByteArray &message);
 
-        private:
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 

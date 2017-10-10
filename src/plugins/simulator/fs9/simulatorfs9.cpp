@@ -137,7 +137,7 @@ namespace BlackSimPlugin
             if (!m_fs9Host->isConnected()) { return false; } // host not available, we quit
 
             Q_ASSERT_X(m_fsuipc,  Q_FUNC_INFO, "No FSUIPC");
-            m_connectionHostMessages = connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
+            m_connectionHostMessages = connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::processFs9Message);
 
             if (m_useFsuipc)
             {
@@ -321,10 +321,10 @@ namespace BlackSimPlugin
         void CSimulatorFs9::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
-            ps_dispatch();
+            dispatch();
         }
 
-        void CSimulatorFs9::ps_dispatch()
+        void CSimulatorFs9::dispatch()
         {
             if (m_useFsuipc && m_fsuipc && m_fsuipc->isConnected())
             {
@@ -337,7 +337,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFs9::ps_processFs9Message(const QByteArray &message)
+        void CSimulatorFs9::processFs9Message(const QByteArray &message)
         {
             if (!m_simConnected)
             {
