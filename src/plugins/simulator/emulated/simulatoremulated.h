@@ -76,9 +76,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
-            //! Register help
-            static void registerHelp();
-
             //! UI setter
             void setCombinedStatus(bool connected, bool simulating, bool paused);
 
@@ -102,6 +99,12 @@ namespace BlackSimPlugin
             //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
             bool changeInternalParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
+            //! Reset statistics
+            void resetStatistics();
+
+            //! Register help
+            static void registerHelp();
+
         signals:
             //! Internal aircraft changed
             void internalAircraftChanged();
@@ -112,6 +115,8 @@ namespace BlackSimPlugin
             virtual bool isSimulating() const override;
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+            virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
 
             // just logged
             virtual int physicallyRemoveAllRemoteAircraft() override;
@@ -140,9 +145,13 @@ namespace BlackSimPlugin
             bool m_connected = true;
             bool m_simulating = true;
             bool m_timeSyncronized = false;
+            int  m_physicallyAdded = 0;   //!< statistics, how often called
+            int  m_physicallyRemoved = 0; //!< statistics, how often called
+            int  m_partsAdded = 0;
+            int  m_situationAdded = 0;
             BlackMisc::PhysicalQuantities::CTime m_offsetTime;
             BlackMisc::Simulation::CSimulatedAircraft m_myAircraft; //!< represents own aircraft of simulator
-            BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents other aircraft of simulator
+            BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
 
             QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSimulatorEmulated::onSettingsChanged };

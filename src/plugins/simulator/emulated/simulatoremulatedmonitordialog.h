@@ -12,11 +12,13 @@
 #ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 
-#include <QDialog>
-#include <QScopedPointer>
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logcategorylist.h"
+
+#include <QDialog>
+#include <QScopedPointer>
+#include <QTimer>
 
 namespace Ui { class CSimulatorEmulatedMonitorDialog; }
 namespace BlackSimPlugin
@@ -85,10 +87,17 @@ namespace BlackSimPlugin
             void setSimulatorUiValues();
 
             //! Set values from internal aircraft
-            void setInteralAircraftUiValues();
+            void setInternalAircraftUiValues();
+
+            //! Timer based UI updates (pulling)
+            void timerBasedUiUpdates();
+
+            //! Reset statistics
+            void resetStatistics();
 
             QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
             CSimulatorEmulated *m_simulator = nullptr;
+            QTimer m_uiUpdateTimer { this };
         };
     } // ns
 } // ns

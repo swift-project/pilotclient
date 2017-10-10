@@ -33,13 +33,17 @@ namespace BlackSimPlugin
         {
             Q_ASSERT_X(simulator, Q_FUNC_INFO, "Need simulator");
 
-            m_simulator = simulator;
-            connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this, &CSimulatorEmulatedMonitorDialog::setInteralAircraftUiValues, Qt::QueuedConnection);
-
             ui->setupUi(this);
             ui->tw_SwiftMonitorDialog->setCurrentIndex(0);
             ui->comp_LogComponent->setMaxLogMessages(500);
             this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+            m_simulator = simulator;
+            m_uiUpdateTimer.setObjectName(this->objectName() + ":uiUpdateTimer");
+            m_uiUpdateTimer.start(2.5 * 1000);
+            connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this, &CSimulatorEmulatedMonitorDialog::setInternalAircraftUiValues, Qt::QueuedConnection);
+            connect(&m_uiUpdateTimer, &QTimer::timeout, this, &CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates);
+            connect(ui->pb_ResetStatistics, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
 
             connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
@@ -56,7 +60,7 @@ namespace BlackSimPlugin
             ui->wi_LedSending->setShape(CLedWidget::Rounded);
 
             this->setSimulatorUiValues();
-            this->setInteralAircraftUiValues();
+            this->setInternalAircraftUiValues();
         }
 
         CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog()
@@ -165,12 +169,32 @@ namespace BlackSimPlugin
             ui->le_SimulatorPlugin->setText(m_simulator->getSimulatorPluginInfo().toQString(true));
         }
 
-        void CSimulatorEmulatedMonitorDialog::setInteralAircraftUiValues()
+        void CSimulatorEmulatedMonitorDialog::setInternalAircraftUiValues()
         {
             const CSimulatedAircraft internal(m_simulator->getInternalOwnAircraft());
             ui->editor_Situation->setSituation(internal.getSituation());
             ui->editor_AircraftParts->setAircraftParts(internal.getParts());
             ui->editor_Com->setValue(internal);
+        }
+
+        void CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates()
+        {
+            if (!m_simulator) { return; }
+            ui->le_PhysicallyAddedAircraft->setText(QString::number(m_simulator->m_physicallyAdded));
+            ui->le_PhysicallyRemovedAircraft->setText(QString::number(m_simulator->m_physicallyRemoved));
+            ui->le_SituationAdded->setText(QString::number(m_simulator->m_situationAdded));
+            ui->le_PartsAdded->setText(QString::number(m_simulator->m_partsAdded));
+            ui->le_AircraftRendered->setText(QString::number(m_simulator->m_renderedAircraft.size()));
+            ui->le_PartsEnabledAircraft->setText(QString::number(m_simulator->getRemoteAircraftSupportingPartsCount()));
+        }
+
+        void CSimulatorEmulatedMonitorDialog::resetStatistics()
+        {
+            if (!m_simulator) { m_simulator->resetStatistics(); }
+            ui->le_PhysicallyAddedAircraft->clear();
+            ui->le_PhysicallyRemovedAircraft->clear();
+            ui->le_SituationAdded->clear();
+            ui->le_PartsAdded->clear();
         }
     } // ns
 } // ns

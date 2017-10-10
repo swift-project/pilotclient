@@ -62,7 +62,7 @@
    <item>
     <widget class="QTabWidget" name="tw_SwiftMonitorDialog">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tb_AircraftSituation">
       <attribute name="title">
@@ -286,7 +286,113 @@
       </attribute>
       <layout class="QVBoxLayout" name="vl_LogInformation">
        <item>
+        <widget class="QGroupBox" name="gb_Statistics">
+         <property name="title">
+          <string>Statistics</string>
+         </property>
+         <layout class="QGridLayout" name="gl_Statistics">
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_SituationAdded">
+            <property name="text">
+             <string>Situation added:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_SituationAdded">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="le_PartsAdded">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="lbl_PartsAdded">
+            <property name="text">
+             <string>Parts added:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="lbl_AircraftRendered">
+            <property name="text">
+             <string>Aircraft rendered:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8">
+           <widget class="QLineEdit" name="le_AircraftRendered">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_PhysicallyAddedAircraft">
+            <property name="text">
+             <string>Phy.added aircraft:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="le_PhysicallyAddedAircraft">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="le_PhysicallyRemovedAircraft">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="9">
+           <widget class="QPushButton" name="pb_ResetStatistics">
+            <property name="text">
+             <string>reset</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="lbl_PhysicallyRemovedAircraft">
+            <property name="text">
+             <string>Phy.removed aircraft:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="8">
+           <widget class="QLineEdit" name="le_PartsEnabledAircraft">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLabel" name="lbl_PartsEnabledAircraft">
+            <property name="text">
+             <string>Parts enabled:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="gb_LogMessages">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Simulator API calls</string>
          </property>

@@ -107,7 +107,10 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString());
-            const int c = m_renderedAircraft.setEnabled(aircraft.getCallsign(), aircraft.isEnabled(), true);
+            const int c = m_renderedAircraft.setEnabled(aircraft.getCallsign(), aircraft.isEnabled(), true); // my own simulator list
+            const CCallsign cs = aircraft.getCallsign();
+            const bool rendered = aircraft.isEnabled();
+            this->updateAircraftRendered(cs, rendered); // in provider
             emit this->aircraftRenderingChanged(m_renderedAircraft.findFirstByCallsign(aircraft.getCallsign(), aircraft));
             return c > 0;
         }
@@ -231,6 +234,14 @@ namespace BlackSimPlugin
             return this->updateOwnParts(parts);
         }
 
+        void CSimulatorEmulated::resetStatistics()
+        {
+            m_physicallyAdded = 0;
+            m_physicallyRemoved = 0;
+            m_partsAdded = 0;
+            m_situationAdded = 0;
+        }
+
         bool CSimulatorEmulated::isConnected() const
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
@@ -254,7 +265,10 @@ namespace BlackSimPlugin
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString());
             CSimulatedAircraft aircraft(remoteAircraft);
             aircraft.setRendered(true);
-            m_renderedAircraft.push_back(aircraft);
+            m_renderedAircraft.push_back(aircraft); // my simulator list
+            const CCallsign cs = aircraft.getCallsign();
+            this->updateAircraftRendered(cs, true); // in provider
+            m_physicallyAdded++;
             emit this->aircraftRenderingChanged(aircraft);
             return true;
         }
@@ -262,8 +276,22 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString());
+            m_physicallyRemoved++;
             const int c = m_renderedAircraft.removeByCallsign(callsign);
             return c > 0;
+        }
+
+        void CSimulatorEmulated::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
+        {
+            Q_UNUSED(situation);
+            m_situationAdded++;
+        }
+
+        void CSimulatorEmulated::onRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
+        {
+            Q_UNUSED(callsign);
+            Q_UNUSED(parts);
+            m_partsAdded++;
         }
 
         bool CSimulatorEmulated::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
@@ -329,38 +357,38 @@ namespace BlackSimPlugin
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("simulatorStatusChanged", CSimulatorEmulated::statusToString(status));
-            }));
+            }, Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::ownAircraftModelChanged, this, [ = ](CAircraftModel model)
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("ownAircraftModelChanged", model.toQString());
-            }));
+            }, Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::renderRestrictionsChanged, this, [ = ](bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength & maxRenderedDistance)
             {
                 if (!m_monitorWidget) return;
                 static const QString params("restricted: %1 enabled: %2 max aircraft: %3");
                 m_monitorWidget->appendSendingCall("renderRestrictionsChanged", params.arg(boolToYesNo(restricted), boolToYesNo(enabled)).arg(maxAircraft), maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::m(), 1));
-            }));
+            }, Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::aircraftRenderingChanged, this, [ = ](const CSimulatedAircraft & aircraft)
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("aircraftRenderingChanged", aircraft.toQString());
-            }));
+            }, Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::physicallyAddingRemoteModelFailed, this, [ = ](const CSimulatedAircraft & aircraft)
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("physicallyAddingRemoteModelFailed", aircraft.toQString());
-            }));
+            }, Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::airspaceSnapshotHandled, this, [ = ]
             {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("airspaceSnapshotHandled");
-            }));
+            }, Qt::QueuedConnection));
         }
 
         CSimulatorEmulatedListener::CSimulatorEmulatedListener(const CSimulatorPluginInfo &info)
