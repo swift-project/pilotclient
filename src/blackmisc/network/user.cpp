@@ -148,21 +148,31 @@ namespace BlackMisc
 
         QString CUser::beautifyRealName(const QString &realName)
         {
-            QString newRealName(realName.simplified().trimmed().toLower());
-            if (newRealName.isEmpty()) { return ""; }
+            QString newRealName(realName.simplified().trimmed());
+            if (newRealName.isEmpty()) { return newRealName; }
 
-            // simple title case
+            int uc = 0;
+            int lc = 0;
+            for (const QChar ch : realName)
+            {
+                if (uc > 1 && lc > 1) { return newRealName; } // mixed case name, no need to beautify
+                if (ch.isLower()) { lc++; continue; }
+                if (ch.isUpper()) { uc++; continue;}
+            }
+
+            // simple title case beautifying
+            newRealName = newRealName.toLower();
             QString::Iterator i = newRealName.begin();
             bool upperNextChar = true;
             while (i != newRealName.end())
             {
-                if (i->isSpace())
+                if (i->isSpace() || *i == '-')
                 {
                     upperNextChar = true;
                 }
                 else if (upperNextChar)
                 {
-                    QChar u(i->toUpper());
+                    const QChar u(i->toUpper());
                     *i = u;
                     upperNextChar = false;
                 }
