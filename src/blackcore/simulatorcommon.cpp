@@ -100,7 +100,7 @@ namespace BlackCore
         if (!remoteAircraft.isEnabled()) { return false; }
 
         // if not restriced, directly change
-        if (!renderingRestricted) { this->physicallyAddRemoteAircraft(remoteAircraft); return true; }
+        if (!renderingRestricted) { this->callPhysicallyAddRemoteAircraft(remoteAircraft); return true; }
 
         // restricted -> will be added with next snapshot onRecalculatedRenderedAircraft
         return false;
@@ -109,7 +109,11 @@ namespace BlackCore
     bool CSimulatorCommon::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
         // if not restriced, directly change
-        if (!m_interpolationRenderingSetup.isRenderingRestricted()) { this->physicallyRemoveRemoteAircraft(callsign); return true; }
+        if (!m_interpolationRenderingSetup.isRenderingRestricted())
+        {
+            m_statsPhysicallyAddedAircraft++;
+            this->callPhysicallyRemoveRemoteAircraft(callsign); return true;
+        }
 
         // will be added with next snapshot ps_recalculateRenderedAircraft
         return false;
@@ -139,11 +143,11 @@ namespace BlackCore
             {
                 if (m_blinkCycle)
                 {
-                    this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
+                    this->callPhysicallyRemoveRemoteAircraft(aircraft.getCallsign());
                 }
                 else
                 {
-                    this->physicallyAddRemoteAircraft(aircraft); // blink
+                    this->callPhysicallyAddRemoteAircraft(aircraft); // blink
                 }
             }
         }
@@ -171,12 +175,12 @@ namespace BlackCore
             // are we already visible?
             if (!this->isPhysicallyRenderedAircraft(callsign))
             {
-                this->physicallyAddRemoteAircraft(aircraft); // enable/disable
+                this->callPhysicallyAddRemoteAircraft(aircraft); // enable/disable
             }
         }
         else
         {
-            this->physicallyRemoveRemoteAircraft(callsign);
+            this->callPhysicallyRemoveRemoteAircraft(callsign);
         }
     }
 
@@ -364,7 +368,7 @@ namespace BlackCore
         int removed = 0;
         for (const CCallsign &callsign : callsigns)
         {
-            this->physicallyRemoveRemoteAircraft(callsign);
+            this->callPhysicallyRemoveRemoteAircraft(callsign);
             removed++;
         }
         return removed;
@@ -461,6 +465,14 @@ namespace BlackCore
         CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
     }
 
+    void CSimulatorCommon::resetStatistics()
+    {
+        m_statsPhysicallyAddedAircraft = 0;
+        m_statsPhysicallyRemovedAircraft = 0;
+        m_statsPartsAdded = 0;
+        m_statsSituationAdded = 0;
+    }
+
     void CSimulatorCommon::oneSecondTimerTimeout()
     {
         this->blinkHighlightedAircraft();
@@ -497,7 +509,7 @@ namespace BlackCore
                 {
                     Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
                     Q_ASSERT_X(aircraft.hasModelString(), Q_FUNC_INFO, "Missing model string");
-                    this->physicallyAddRemoteAircraft(aircraft); // recalcuate snapshot
+                    this->callPhysicallyAddRemoteAircraft(aircraft); // recalcuate snapshot
                     changed = true;
                 }
             }
@@ -539,6 +551,7 @@ namespace BlackCore
         m_statsUpdateAircraftTimeTotalMs = 0;
         m_blinkCycle = false;
         m_highlightEndTimeMsEpoch = false;
+        this->resetStatistics();
         this->clearAllAircraft();
     }
 
@@ -570,12 +583,14 @@ namespace BlackCore
     void CSimulatorCommon::rapOnRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
     {
         if (!this->isConnected()) return;
+        m_statsSituationAdded++;
         this->onRemoteProviderAddedAircraftSituation(situation);
     }
 
     void CSimulatorCommon::rapOnRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
     {
         if (!this->isConnected()) return;
+        m_statsPartsAdded++;
         this->onRemoteProviderAddedAircraftParts(callsign, parts);
     }
 
@@ -584,4 +599,18 @@ namespace BlackCore
         if (!this->isConnected()) return;
         this->onRemoteProviderRemovedAircraft(callsign);
     }
+
+    void CSimulatorCommon::callPhysicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+    {
+        m_statsPhysicallyAddedAircraft++;
+        this->physicallyAddRemoteAircraft(remoteAircraft);
+    }
+
+    void CSimulatorCommon::callPhysicallyRemoveRemoteAircraft(const CCallsign &remoteCallsign)
+    {
+        m_statsPhysicallyRemovedAircraft++;
+        this->physicallyRemoveRemoteAircraft(remoteCallsign);
+    }
+
+
 } // namespace

@@ -180,10 +180,10 @@ namespace BlackSimPlugin
         void CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates()
         {
             if (!m_simulator) { return; }
-            ui->le_PhysicallyAddedAircraft->setText(QString::number(m_simulator->m_physicallyAdded));
-            ui->le_PhysicallyRemovedAircraft->setText(QString::number(m_simulator->m_physicallyRemoved));
-            ui->le_SituationAdded->setText(QString::number(m_simulator->m_situationAdded));
-            ui->le_PartsAdded->setText(QString::number(m_simulator->m_partsAdded));
+            ui->le_PhysicallyAddedAircraft->setText(QString::number(m_simulator->getStatisticsPhysicallyAddedAircraft()));
+            ui->le_PhysicallyRemovedAircraft->setText(QString::number(m_simulator->getStatisticsPhysicallyRemovedAircraft()));
+            ui->le_SituationAdded->setText(QString::number(m_simulator->getStatisticsSituationAdded()));
+            ui->le_PartsAdded->setText(QString::number(m_simulator->getStatisticsPartsAdded()));
             ui->le_AircraftRendered->setText(QString::number(m_simulator->m_renderedAircraft.size()));
             ui->le_PartsEnabledAircraft->setText(QString::number(m_simulator->getRemoteAircraftSupportingPartsCount()));
         }

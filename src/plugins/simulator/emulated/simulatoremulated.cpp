@@ -234,14 +234,6 @@ namespace BlackSimPlugin
             return this->updateOwnParts(parts);
         }
 
-        void CSimulatorEmulated::resetStatistics()
-        {
-            m_physicallyAdded = 0;
-            m_physicallyRemoved = 0;
-            m_partsAdded = 0;
-            m_situationAdded = 0;
-        }
-
         bool CSimulatorEmulated::isConnected() const
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
@@ -268,7 +260,6 @@ namespace BlackSimPlugin
             m_renderedAircraft.push_back(aircraft); // my simulator list
             const CCallsign cs = aircraft.getCallsign();
             this->updateAircraftRendered(cs, true); // in provider
-            m_physicallyAdded++;
             emit this->aircraftRenderingChanged(aircraft);
             return true;
         }
@@ -276,22 +267,8 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString());
-            m_physicallyRemoved++;
             const int c = m_renderedAircraft.removeByCallsign(callsign);
             return c > 0;
-        }
-
-        void CSimulatorEmulated::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
-        {
-            Q_UNUSED(situation);
-            m_situationAdded++;
-        }
-
-        void CSimulatorEmulated::onRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
-        {
-            Q_UNUSED(callsign);
-            Q_UNUSED(parts);
-            m_partsAdded++;
         }
 
         bool CSimulatorEmulated::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)

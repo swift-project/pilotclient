@@ -106,6 +106,21 @@ namespace BlackCore
 
         // --------- ISimulator implementations ------------
 
+        //! Reset the statistics counters
+        void resetStatistics();
+
+        //!  Counter added aircraft
+        int getStatisticsPhysicallyAddedAircraft() const { return m_statsPhysicallyAddedAircraft; }
+
+        //!  Counter removed aircraft
+        int getStatisticsPhysicallyRemovedAircraft() const { return m_statsPhysicallyRemovedAircraft; }
+
+        //!  Counter situation added
+        int getStatisticsSituationAdded() const { return m_statsSituationAdded; }
+
+        //!  Counter added parts
+        int getStatisticsPartsAdded() const { return m_statsPartsAdded; }
+
     protected:
         //! Constructor
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -225,6 +240,9 @@ namespace BlackCore
         void rapOnRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
         void rapOnRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
+        void callPhysicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+        void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign);
+
         bool m_blinkCycle = false;            //!< used for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         int m_timerCounter = 0;               //!< allows to calculate n seconds
@@ -233,6 +251,13 @@ namespace BlackCore
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;                //!< all other aircraft are to be ignored
         BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;              //!< callsigns which will be rendered
         BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections;  //!< connected signal/slots
+
+        // statistics values of how often those functions are called
+        // those are the added counters, overflow will not be an issue here (discussed in T171 review)
+        int  m_statsPhysicallyAddedAircraft = 0;   //!< statistics, how many aircraft added
+        int  m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
+        int  m_statsPartsAdded = 0;                //!< statistics, how many aircraft parts added
+        int  m_statsSituationAdded = 0;            //!< statistics, how many situations added
     };
 } // namespace
 
