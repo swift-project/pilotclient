@@ -186,10 +186,10 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulated::registerHelp()
         {
-            if (BlackMisc::CSimpleCommandParser::registered("BlackSimPlugin::Swift::CSimulatorEmulated")) { return; }
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv show", "show swift driver window"});
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv hide", "hide swift driver window"});
+            if (CSimpleCommandParser::registered("BlackSimPlugin::Swift::CSimulatorEmulated")) { return; }
+            CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+            CSimpleCommandParser::registerCommand({".drv show", "show emulated driver window"});
+            CSimpleCommandParser::registerCommand({".drv hide", "hide emulated driver window"});
         }
 
         void CSimulatorEmulated::setCombinedStatus(bool connected, bool simulating, bool paused)

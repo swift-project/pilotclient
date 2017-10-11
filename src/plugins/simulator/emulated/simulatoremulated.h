@@ -69,8 +69,8 @@ namespace BlackSimPlugin
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
-            //! .drv show   show swift driver window     BlackSimPlugin::Swift::CSimulatorEmulated
-            //! .drv hide   hide swift driver window     BlackSimPlugin::Swift::CSimulatorEmulated
+            //! .drv show   show emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
+            //! .drv hide   hide emulated driver window     BlackSimPlugin::Swift::CSimulatorEmulated
             //! </pre>
             //! @}
             //! \copydoc BlackCore::ISimulator::parseCommandLine

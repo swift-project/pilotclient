@@ -277,7 +277,7 @@ namespace BlackCore
 
             setRemoteAircraftProvider(renderedAircraftProvider);
 
-            // use sim info from ISimulator as it can access the swift driver settings
+            // use sim info from ISimulator as it can access the emulated driver settings
             const CSimulatorInfo simInfo = simulator->getSimulatorInfo();
             m_modelSetLoader.changeSimulator(simInfo);
             m_aircraftMatcher.setModelSet(m_modelSetLoader.getAircraftModels(), simInfo);

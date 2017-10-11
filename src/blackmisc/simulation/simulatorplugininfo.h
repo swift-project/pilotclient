@@ -62,7 +62,7 @@ namespace BlackMisc
             //! Simulator info object
             BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
 
-            //! Is this the pseudo swift driver?
+            //! Is this the emulated driver?
             bool isEmulatedPlugin() const;
 
             //! Description
