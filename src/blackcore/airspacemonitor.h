@@ -174,10 +174,10 @@ namespace BlackCore
         //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
         virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             QObject *receiver,
-            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,
-            std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)> addedPartsSlot,
-            std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot,
-            std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
+            std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> situationFunction,
+            std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)> partsFunction,
+            std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftFunction,
+            std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotFunction
         ) override;
 
         //! Analyzer
