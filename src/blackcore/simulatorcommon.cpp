@@ -539,11 +539,6 @@ namespace BlackCore
         Q_UNUSED(parts);
     }
 
-    void CSimulatorCommon::onRemoteProviderRemovedAircraft(const CCallsign &callsign)
-    {
-        Q_UNUSED(callsign);
-    }
-
     void CSimulatorCommon::reset()
     {
         m_statsUpdateAircraftCountMs = 0;
@@ -596,8 +591,8 @@ namespace BlackCore
 
     void CSimulatorCommon::rapOnRemoteProviderRemovedAircraft(const CCallsign &callsign)
     {
-        if (!this->isConnected()) return;
-        this->onRemoteProviderRemovedAircraft(callsign);
+        Q_UNUSED(callsign);
+        // currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft
     }
 
     void CSimulatorCommon::callPhysicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)

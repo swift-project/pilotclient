@@ -582,12 +582,6 @@ namespace BlackSimPlugin
             m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false);
         }
 
-        void CSimulatorXPlane::onRemoteProviderRemovedAircraft(const CCallsign &callsign)
-        {
-            Q_UNUSED(callsign);
-            //! \todo call removeRemoteAircraft or just let removeRemoteAircraft handle it?
-        }
-
         bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
             if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?

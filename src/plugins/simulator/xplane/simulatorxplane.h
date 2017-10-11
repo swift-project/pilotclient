@@ -111,7 +111,6 @@ namespace BlackSimPlugin
             //! @{
             virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
             virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
-            virtual void onRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             //! @}
 
             //! \copydoc BlackCore::ISimulator::isConnected

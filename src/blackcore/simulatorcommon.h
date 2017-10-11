@@ -152,9 +152,6 @@ namespace BlackCore
 
         //! Provider added parts
         virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
-
-        //! Provider removed aircraft
-        virtual void onRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
         //! @}
 
         //! New plugin info
@@ -240,6 +237,7 @@ namespace BlackCore
         void rapOnRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
         void rapOnRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
+        // call with counters updated
         void callPhysicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
         void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign);
 
