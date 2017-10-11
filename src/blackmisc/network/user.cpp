@@ -184,76 +184,48 @@ namespace BlackMisc
         CVariant CUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEmail:
-                return CVariant(this->m_email);
-            case IndexId:
-                return CVariant(this->m_id);
-            case IndexPassword:
-                return CVariant(this->m_password);
-            case IndexRealName:
-                return CVariant(this->m_realname);
-            case IndexHomebase:
-                return this->m_homebase.propertyByIndex(index.copyFrontRemoved());
-            case IndexCallsign:
-                return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexEmail: return CVariant(this->m_email);
+            case IndexId: return CVariant(this->m_id);
+            case IndexPassword: return CVariant(this->m_password);
+            case IndexRealName: return CVariant(this->m_realname);
+            case IndexHomebase: return this->m_homebase.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsign: return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
         void CUser::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CUser>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEmail:
-                this->setEmail(variant.value<QString>());
-                break;
-            case IndexId:
-                this->setId(variant.value<QString>());
-                break;
-            case IndexPassword:
-                this->setPassword(variant.value<QString>());
-                break;
-            case IndexRealName:
-                this->setRealName(variant.value<QString>());
-                break;
-            case IndexHomebase:
-                this->m_homebase.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexCallsign:
-                this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexEmail: this->setEmail(variant.value<QString>()); break;
+            case IndexId: this->setId(variant.value<QString>()); break;
+            case IndexPassword: this->setPassword(variant.value<QString>()); break;
+            case IndexRealName: this->setRealName(variant.value<QString>()); break;
+            case IndexHomebase: this->m_homebase.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCallsign: this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
         int CUser::comparePropertyByIndex(const CPropertyIndex &index, const CUser &compareValue) const
         {
             if (index.isMyself()) { return this->getRealName().compare(compareValue.getRealName(), Qt::CaseInsensitive); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEmail:
-                return this->m_email.compare(compareValue.getEmail(), Qt::CaseInsensitive);
-            case IndexId:
-                return this->m_id.compare(compareValue.getId(), Qt::CaseInsensitive);
-            case IndexPassword:
-                break;
-            case IndexRealName:
-                return this->m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
-            case IndexHomebase:
-                return this->m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
-            case IndexCallsign:
-                return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-            default:
-                break;
+            case IndexEmail: return this->m_email.compare(compareValue.getEmail(), Qt::CaseInsensitive);
+            case IndexId: return this->m_id.compare(compareValue.getId(), Qt::CaseInsensitive);
+            case IndexRealName: return this->m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
+            case IndexHomebase: return this->m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
+            case IndexCallsign: return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+            case IndexPassword: break;
+            default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "compare failed");
             return 0;
