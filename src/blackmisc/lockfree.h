@@ -293,12 +293,12 @@ namespace BlackMisc
         template <typename F>
         auto operator ()(F &&function) &&
         {
-            return call(std::forward<F>(function), Private::make_index_sequence<sizeof...(Ts)>());
+            return call(std::forward<F>(function), std::make_index_sequence<sizeof...(Ts)>());
         }
 
     private:
         template <typename F, size_t... Is>
-        auto call(F &&function, Private::index_sequence<Is...>)
+        auto call(F &&function, std::index_sequence<Is...>)
         {
             return std::forward<F>(function)(std::get<Is>(m_tup).get()...);
         }

@@ -270,10 +270,10 @@ namespace BlackMisc
 
     private:
         template <bool... Mask>
-        using MaskSequence = Private::MaskSequence<Private::index_sequence<Is...>, Mask...>;
+        using MaskSequence = Private::MaskSequence<std::index_sequence<Is...>, Mask...>;
 
         template <size_t... Js>
-        static auto filter(Private::index_sequence<Js...>) { return CMetaClassIntrospector<T, MetaClass, Js...>(); }
+        static auto filter(std::index_sequence<Js...>) { return CMetaClassIntrospector<T, MetaClass, Js...>(); }
 
         template <size_t I>
         using index = std::integral_constant<size_t, I>;
@@ -287,7 +287,7 @@ namespace BlackMisc
         struct CMetaClassAccessor
         {
             template <typename T, size_t... Is>
-            static auto getIntrospector(index_sequence<Is...>)
+            static auto getIntrospector(std::index_sequence<Is...>)
             {
                 return CMetaClassIntrospector<T, typename T::MetaClass, Is...>();
             }
@@ -295,7 +295,7 @@ namespace BlackMisc
             template <typename T>
             static auto getIntrospector()
             {
-                return getIntrospector<T>(Private::make_index_sequence<T::MetaClass::getMemberList().c_size>());
+                return getIntrospector<T>(std::make_index_sequence<T::MetaClass::getMemberList().c_size>());
             }
 
             template <typename T>

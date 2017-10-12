@@ -145,7 +145,7 @@ namespace BlackMisc
     {
         //! \private
         template <typename T, typename F, size_t... Is>
-        void tupleForEachImpl(T &&tuple, F &&visitor, index_sequence<Is...>)
+        void tupleForEachImpl(T &&tuple, F &&visitor, std::index_sequence<Is...>)
         {
             // parameter pack swallow idiom
             static_cast<void>(std::initializer_list<int>
@@ -155,7 +155,7 @@ namespace BlackMisc
         }
         //! \private
         template <typename T, typename F, size_t... Is>
-        void tupleForEachPairImpl(T &&tuple, F &&visitor, index_sequence<Is...>)
+        void tupleForEachPairImpl(T &&tuple, F &&visitor, std::index_sequence<Is...>)
         {
             // parameter pack swallow idiom
             static_cast<void>(std::initializer_list<int>
@@ -171,7 +171,7 @@ namespace BlackMisc
     template <typename T, typename F>
     void tupleForEach(T &&tuple, F &&visitor)
     {
-        using seq = Private::make_index_sequence<std::tuple_size<std::decay_t<T>>::value>;
+        using seq = std::make_index_sequence<std::tuple_size<std::decay_t<T>>::value>;
         return Private::tupleForEachImpl(std::forward<T>(tuple), std::forward<F>(visitor), seq());
     }
 
@@ -181,7 +181,7 @@ namespace BlackMisc
     template <typename T, typename F>
     void tupleForEachPair(T &&tuple, F &&visitor)
     {
-        using seq = Private::make_index_sequence<std::tuple_size<std::decay_t<T>>::value / 2>;
+        using seq = std::make_index_sequence<std::tuple_size<std::decay_t<T>>::value / 2>;
         return Private::tupleForEachPairImpl(std::forward<T>(tuple), std::forward<F>(visitor), seq());
     }
 }

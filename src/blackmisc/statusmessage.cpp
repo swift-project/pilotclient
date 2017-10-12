@@ -23,8 +23,8 @@ namespace BlackMisc
     {
         namespace
         {
-            template <size_t... Is> QString arg(index_sequence<Is...>, const QString &format, const QStringList &args) { return format.arg(args[Is]...); }
-            QString arg(index_sequence<>, const QString &format, const QStringList &) { return format; }
+            template <size_t... Is> QString arg(std::index_sequence<Is...>, const QString &format, const QStringList &args) { return format.arg(args[Is]...); }
+            QString arg(std::index_sequence<>, const QString &format, const QStringList &) { return format; }
         }
 
         QString arg(const QString &format, const QStringList &args)
@@ -37,17 +37,17 @@ namespace BlackMisc
             {
                 switch (args.size())
                 {
-                case 0: return arg(Private::make_index_sequence<0>(), format, args);
-                case 1: return arg(Private::make_index_sequence<1>(), format, args);
-                case 2: return arg(Private::make_index_sequence<2>(), format, args);
-                case 3: return arg(Private::make_index_sequence<3>(), format, args);
-                case 4: return arg(Private::make_index_sequence<4>(), format, args);
-                case 5: return arg(Private::make_index_sequence<5>(), format, args);
-                case 6: return arg(Private::make_index_sequence<6>(), format, args);
-                case 7: return arg(Private::make_index_sequence<7>(), format, args);
-                case 8: return arg(Private::make_index_sequence<8>(), format, args);
+                case 0: return arg(std::make_index_sequence<0>(), format, args);
+                case 1: return arg(std::make_index_sequence<1>(), format, args);
+                case 2: return arg(std::make_index_sequence<2>(), format, args);
+                case 3: return arg(std::make_index_sequence<3>(), format, args);
+                case 4: return arg(std::make_index_sequence<4>(), format, args);
+                case 5: return arg(std::make_index_sequence<5>(), format, args);
+                case 6: return arg(std::make_index_sequence<6>(), format, args);
+                case 7: return arg(std::make_index_sequence<7>(), format, args);
+                case 8: return arg(std::make_index_sequence<8>(), format, args);
                 default: qWarning("Too many arguments to BlackMisc::Private::arg"); // intentional fall-through
-                case 9: return arg(Private::make_index_sequence<9>(), format, args);
+                case 9: return arg(std::make_index_sequence<9>(), format, args);
                 }
             }
         }
