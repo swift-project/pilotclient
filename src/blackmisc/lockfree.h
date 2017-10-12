@@ -29,11 +29,6 @@
 #include <type_traits>
 #include <utility>
 
-#if ! (defined(Q_CC_GNU) && __GNUC__ <= 4)
-//! \private
-#define BLACK_HAS_ATOMIC_SHARED_PTR
-#endif
-
 // http://www.drdobbs.com/lock-free-data-structures/184401865
 // http://en.cppreference.com/w/cpp/memory/shared_ptr/atomic
 
@@ -49,39 +44,6 @@ namespace BlackMisc
         //! \private
         BLACKMISC_EXPORT QMutex *atomicSharedPtrMutex();
         //! \endcond
-
-        //! \private
-        template <typename T>
-        std::shared_ptr<T> atomic_load(const std::shared_ptr<T>* ptr)
-        {
-#ifdef BLACK_HAS_ATOMIC_SHARED_PTR
-            return std::atomic_load(ptr);
-#else
-            QMutexLocker lock(BlackMisc::Private::atomicSharedPtrMutex());
-            return *ptr;
-#endif
-        }
-
-        //! \private
-        template <typename T>
-        bool atomic_compare_exchange_strong(std::shared_ptr<T>* ptr, std::shared_ptr<T>* exp, std::shared_ptr<T> des)
-        {
-#ifdef BLACK_HAS_ATOMIC_SHARED_PTR
-            return std::atomic_compare_exchange_strong(ptr, exp, des);
-#else
-            std::shared_ptr<T> tmp;
-            QMutexLocker lock(BlackMisc::Private::atomicSharedPtrMutex());
-            if (*ptr == *exp && ! ptr->owner_before(*exp) && ! exp->owner_before(*ptr))
-            {
-                tmp = std::move(*ptr);
-                *ptr = std::move(des);
-                return true;
-            }
-            tmp = std::move(*exp);
-            *exp = *ptr;
-            return false;
-#endif
-        }
     }
 
     /*!
@@ -154,7 +116,7 @@ namespace BlackMisc
         ~LockFreeUniqueWriter()
         {
             if (m_ptr.use_count() == 0) { return; } // *this has been moved from
-            bool success = Private::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr));
+            bool success = std::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr));
             Q_ASSERT_X(success, qPrintable(name()), "UniqueWriter detected simultaneous writes");
             Q_UNUSED(success);
         }
@@ -200,13 +162,13 @@ namespace BlackMisc
         operator bool()
         {
             Q_ASSERT_X(m_ptr.use_count() > 0, qPrintable(name()), "SharedWriter tried to commit changes twice");
-            if (Private::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr)))
+            if (std::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr)))
             {
                 m_ptr.reset();
                 return true;
             }
             QThread::msleep(1);
-            m_old = Private::atomic_load(m_now);
+            m_old = std::atomic_load(m_now);
             m_ptr = std::make_shared<T>(*m_old);
             return false;
         }
@@ -273,19 +235,19 @@ namespace BlackMisc
         //! Return an object which can read the current value.
         LockFreeReader<const T> read() const
         {
-            return { Private::atomic_load(&m_ptr) };
+            return { std::atomic_load(&m_ptr) };
         }
 
         //! Return an object which can write a new value, as long as there are no other writes.
         LockFreeUniqueWriter<T> uniqueWrite()
         {
-            return { Private::atomic_load(&m_ptr), &m_ptr };
+            return { std::atomic_load(&m_ptr), &m_ptr };
         }
 
         //! Return an object which can write a new value, even if there are other writes.
         LockFreeSharedWriter<T> sharedWrite()
         {
-            return { Private::atomic_load(&m_ptr), &m_ptr };
+            return { std::atomic_load(&m_ptr), &m_ptr };
         }
 
         //! Pass the current value to the functor inspector, and return whatever inspector returns.
