@@ -9,7 +9,6 @@
 
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/metaclassprivate.h"
 
 #include <tuple>
 

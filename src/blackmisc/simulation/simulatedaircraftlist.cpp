@@ -13,7 +13,6 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"

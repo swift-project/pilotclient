@@ -9,7 +9,6 @@
 
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/iterator.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/range.h"
 

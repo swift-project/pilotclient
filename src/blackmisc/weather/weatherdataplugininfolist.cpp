@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/range.h"
 #include "blackmisc/weather/weatherdataplugininfo.h"
 #include "blackmisc/weather/weatherdataplugininfolist.h"

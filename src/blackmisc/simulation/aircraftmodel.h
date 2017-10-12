@@ -21,7 +21,6 @@
 #include "blackmisc/dictionary.h"
 #include "blackmisc/memotable.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/orderable.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/propertyindex.h"

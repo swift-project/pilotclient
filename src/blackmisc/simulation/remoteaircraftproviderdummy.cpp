@@ -13,7 +13,6 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dictionary.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/variant.h"
 

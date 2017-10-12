@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/metaclassprivate.h"
 
 #include <QString>
 #include <tuple>

@@ -14,7 +14,6 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 

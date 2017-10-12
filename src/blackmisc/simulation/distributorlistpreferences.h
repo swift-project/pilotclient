@@ -16,7 +16,6 @@
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/valueobject.h"

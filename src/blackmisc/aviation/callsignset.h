@@ -16,7 +16,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/compare.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/sequence.h"
 
 #include <QMetaType>

@@ -12,14 +12,36 @@
 #ifndef BLACKMISC_METACLASS_H
 #define BLACKMISC_METACLASS_H
 
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/invoke.h"
+#include "blackmisc/integersequence.h"
+#include <type_traits>
+#include <functional>
+#include <QString>
 
 /*!
  * \defgroup MetaClass Metaclass system
  * Compile-time reflection toolkit for iterating over
  * members of value classes.
  */
+
+//! \cond PRIVATE
+
+// Work around MinGW problem with combination of constexpr and extern template
+#if defined(Q_OS_WIN) && defined(Q_CC_GNU)
+#define BLACK_NO_EXPORT_CONSTEXPR constexpr inline __attribute__((gnu_inline))
+#else
+#define BLACK_NO_EXPORT_CONSTEXPR constexpr
+#endif
+
+// MSVC, GCC, Clang all have non-standard extensions for skipping trailing
+// commas in variadic macros, but the MSVC extension differs from the others.
+#ifdef Q_CC_MSVC
+#define BLACK_TRAILING_VA_ARGS(...) ,__VA_ARGS__
+#else
+#define BLACK_TRAILING_VA_ARGS(...) ,##__VA_ARGS__
+#endif
+
+//! \endcond
 
 /*!
  * Macro to define a nested metaclass that describes the attributes of its
@@ -142,7 +164,7 @@ namespace BlackMisc
         }
 
         //! Return name as QLatin1String.
-        Q_DECL_CONSTEXPR auto latin1Name() const { return QLatin1String(m_name); }
+        constexpr auto latin1Name() const { return QLatin1String(m_name); }
     };
 
     /*!
@@ -153,16 +175,16 @@ namespace BlackMisc
     struct CMetaMemberList
     {
         //! Tuple of CMetaMember.
-        const Private::tuple<Members...> m_members;
+        const std::tuple<Members...> m_members;
 
         //! Number of members.
         static constexpr size_t c_size = sizeof...(Members);
 
         //! Convenience method returning the member at index I.
         template <size_t I>
-        constexpr auto at(std::integral_constant<size_t, I> = {}) const BLACK_TRAILING_RETURN(Private::get<I>(m_members))
+        constexpr auto at(std::integral_constant<size_t, I> = {}) const
         {
-            return Private::get<I>(m_members);
+            return std::get<I>(m_members);
         }
     };
 
@@ -203,7 +225,7 @@ namespace BlackMisc
         template <typename... Members>
         constexpr static CMetaMemberList<Members...> makeMetaMemberList(Members... members)
         {
-            return { Private::tuple<Members...>(members...) };
+            return { std::tuple<Members...>(members...) };
         }
 
         //! Return a CMetaMethod of type deduced from the type of the member.
@@ -256,7 +278,7 @@ namespace BlackMisc
         template <size_t I>
         using index = std::integral_constant<size_t, I>;
 
-        constexpr static auto members() BLACK_TRAILING_RETURN(MetaClass::getMemberList()) { return MetaClass::getMemberList(); }
+        constexpr static auto members() { return MetaClass::getMemberList(); }
     };
 
     namespace Private

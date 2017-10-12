@@ -10,7 +10,6 @@
 #include "distributorlist.h"
 #include "simulatorinfo.h"
 #include "aircraftmodel.h"
-#include "blackmisc/metaclassprivate.h"
 
 #include <tuple>
 

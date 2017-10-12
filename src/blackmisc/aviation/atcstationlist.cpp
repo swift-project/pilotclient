@@ -12,7 +12,6 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"

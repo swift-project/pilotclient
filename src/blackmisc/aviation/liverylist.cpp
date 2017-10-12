@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"
 

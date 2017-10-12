@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/network/serverlist.h"
-#include "blackmisc/metaclassprivate.h"
 #include <tuple>
 
 namespace BlackMisc

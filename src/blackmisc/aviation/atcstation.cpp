@@ -11,7 +11,6 @@
 #include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/compare.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"

@@ -9,7 +9,6 @@
 
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/pq/constants.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/propertyindex.h"

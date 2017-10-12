@@ -10,7 +10,6 @@
 #include "flightplanlist.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/range.h"
 
