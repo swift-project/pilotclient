@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>276</width>
-    <height>260</height>
+    <height>252</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -77,13 +77,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QLineEdit" name="le_Callsign">
-        <property name="placeholderText">
-         <string>callsign</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="2">
        <widget class="QCheckBox" name="cb_LogMatchingMessages">
         <property name="toolTip">
@@ -91,6 +84,16 @@
         </property>
         <property name="text">
          <string>matching msgs.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
         </property>
        </widget>
       </item>
@@ -112,6 +115,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CCallsignCompleter</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/callsigncompleter.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

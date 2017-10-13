@@ -35,17 +35,12 @@ namespace BlackGui
             ui(new Ui::CAircraftPartsHistory)
         {
             ui->setupUi(this);
-            ui->le_Callsign->setValidator(new CUpperCaseValidator(this));
-            ui->le_Callsign->setCompleter(new QCompleter(ui->le_Callsign));
             ui->cb_PartsHistoryEnabled->setChecked(sApp && sApp->isRunningInDeveloperEnvironment()); // default
 
-            this->m_timerCallsignUpdate.setInterval(20 * 1000);
-            this->m_timerUpdateHistory.setInterval(2 * 1000);
-
+            m_timerUpdateHistory.setInterval(2 * 1000);
             this->initGui();
-            this->m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
-            connect(ui->le_Callsign, &QLineEdit::textEdited, this, &CAircraftPartsHistory::callsignModified);
-            connect(ui->le_Callsign, &QLineEdit::returnPressed, this, &CAircraftPartsHistory::callsignEntered);
+            m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
+            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CAircraftPartsHistory::callsignEntered);
             connect(ui->cb_PartsHistoryEnabled, &QCheckBox::toggled, this, &CAircraftPartsHistory::toggleHistoryEnabled);
 
             if (this->hasContexts())
@@ -53,8 +48,7 @@ namespace BlackGui
                 connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CAircraftPartsHistory::valuesChanged);
                 connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftPartsHistory::connectionStatusChanged);
             }
-            connect(&this->m_timerCallsignUpdate, &QTimer::timeout, this, &CAircraftPartsHistory::updateCallsignCompleter);
-            connect(&this->m_timerUpdateHistory, &QTimer::timeout, this, &CAircraftPartsHistory::updatePartsHistory);
+            connect(&m_timerUpdateHistory, &QTimer::timeout, this, &CAircraftPartsHistory::updatePartsHistory);
         }
 
         CAircraftPartsHistory::~CAircraftPartsHistory()
@@ -63,20 +57,17 @@ namespace BlackGui
         void CAircraftPartsHistory::initGui()
         {
             const bool needCallsigns = this->partsHistoryEnabled();
-            if (needCallsigns && !m_timerCallsignUpdate.isActive() && !m_timerUpdateHistory.isActive())
+            if (needCallsigns && !m_timerUpdateHistory.isActive())
             {
-                this->m_timerCallsignUpdate.start();
-                this->m_timerUpdateHistory.start();
-                this->updateCallsignCompleter();
+                m_timerUpdateHistory.start();
             }
             else if (!needCallsigns)
             {
-                this->m_timerCallsignUpdate.stop();
-                this->m_timerUpdateHistory.stop();
+                m_timerUpdateHistory.stop();
             }
 
             // avoid signal roundtrip
-            bool c = sGui->getIContextNetwork()->isAircraftPartsHistoryEnabled();
+            const bool c = sGui->getIContextNetwork()->isAircraftPartsHistoryEnabled();
             ui->cb_PartsHistoryEnabled->setChecked(c);
         }
 
@@ -90,30 +81,12 @@ namespace BlackGui
             return this->hasContexts();
         }
 
-        void CAircraftPartsHistory::updateCallsignCompleter()
-        {
-            if (!this->hasContexts() || !sGui->getIContextNetwork()->isConnected()) { return; }
-
-            const QStringList callsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns().toStringList(false);
-            QCompleter *completer = ui->le_Callsign->completer();
-            Q_ASSERT_X(completer, Q_FUNC_INFO, "missing completer");
-            if (!completer->model())
-            {
-                completer->setModel(new QStringListModel(callsigns, completer));
-            }
-            else
-            {
-                qobject_cast<QStringListModel *>(completer->model())->setStringList(callsigns);
-            }
-        }
-
         void CAircraftPartsHistory::updatePartsHistory()
         {
             if (!this->hasContexts()) { return; }
             if (!this->isVisible()) { return; }
-            if (m_isBeingModified) { return; }
-            const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
-            if (cs.isEmpty()) { return; }
+            const CCallsign cs(ui->comp_CallsignCompleter->getCallsign());
+            if (cs.isEmpty()) { return; } // no or invalid callsign
             const auto currentAircraftParts = sGui->getIContextNetwork()->getRemoteAircraftParts(cs, -1).frontOrDefault();
             const auto aircraftPartsHistory = sGui->getIContextNetwork()->getAircraftPartsHistory(cs);
 
@@ -154,11 +127,11 @@ namespace BlackGui
                 }
             }
 
-            uint hash = qHash(html);
+            const uint hash = qHash(html);
             if (hash == m_htmlHash) { return; } // avoid to always scroll to the end when there is no update
             m_htmlHash = hash;
-            this->m_text.setHtml(html);
-            ui->te_Messages->setDocument(&this->m_text);
+            m_text.setHtml(html);
+            ui->te_Messages->setDocument(&m_text);
 
             if (ui->cb_AutoScrollEnabled->isChecked())
             {
@@ -170,14 +143,8 @@ namespace BlackGui
 
         void CAircraftPartsHistory::callsignEntered()
         {
-            m_isBeingModified = false;
-            updatePartsHistory();
+            this->updatePartsHistory();
             m_timerUpdateHistory.start();
-        }
-
-        void CAircraftPartsHistory::callsignModified()
-        {
-            m_isBeingModified = true;
         }
 
         void CAircraftPartsHistory::valuesChanged()

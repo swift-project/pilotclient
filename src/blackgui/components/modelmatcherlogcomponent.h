@@ -39,7 +39,6 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CModelMatcherLogComponent> ui;
-            QTimer m_updateCompleterTimer { this };
             QTextDocument m_text { this };
 
             //! Init
@@ -51,21 +50,17 @@ namespace BlackGui
             //! Enabled messages
             bool enabledMessages() const;
 
-        private slots:
-            //! Update the completer
-            void ps_updateCallsignCompleter();
-
             //! Callsign was entered
-            void ps_callsignEntered();
+            void callsignEntered();
 
             //! When values changed elsewhere
-            void ps_valuesChanged();
+            void valuesChanged();
 
             //! Flag changed
-            void ps_enabledCheckboxChanged(bool enabled);
+            void enabledCheckboxChanged(bool enabled);
 
             //! Connection status changed
-            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
         };
     } // ns
 } // ns

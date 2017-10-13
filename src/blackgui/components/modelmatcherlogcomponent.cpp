@@ -33,22 +33,18 @@ namespace BlackGui
             ui(new Ui::CModelMatcherLogComponent)
         {
             ui->setupUi(this);
-            ui->le_Callsign->setValidator(new CUpperCaseValidator(this));
-            ui->le_Callsign->setCompleter(new QCompleter(ui->le_Callsign));
-            this->m_updateCompleterTimer.setInterval(20 * 1000);
             this->initGui();
             this->m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
-            connect(ui->le_Callsign, &QLineEdit::returnPressed, this, &CModelMatcherLogComponent::ps_callsignEntered);
-            connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogComponent::ps_enabledCheckboxChanged);
-            connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogComponent::ps_enabledCheckboxChanged);
+            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CModelMatcherLogComponent::callsignEntered);
+            connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogComponent::enabledCheckboxChanged);
+            connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogComponent::enabledCheckboxChanged);
 
             if (this->hasContexts())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::ps_valuesChanged);
-                connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::ps_valuesChanged);
-                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CModelMatcherLogComponent::ps_connectionStatusChanged);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::valuesChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::valuesChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CModelMatcherLogComponent::connectionStatusChanged, Qt::QueuedConnection);
             }
-            connect(&this->m_updateCompleterTimer, &QTimer::timeout, this, &CModelMatcherLogComponent::ps_updateCallsignCompleter);
         }
 
         CModelMatcherLogComponent::~CModelMatcherLogComponent()
@@ -56,17 +52,6 @@ namespace BlackGui
 
         void CModelMatcherLogComponent::initGui()
         {
-            const bool needCallsigns = this->enabledMessages();
-            if (needCallsigns && !this->m_updateCompleterTimer.isActive())
-            {
-                this->m_updateCompleterTimer.start();
-                this->ps_updateCallsignCompleter();
-            }
-            else if (!needCallsigns)
-            {
-                this->m_updateCompleterTimer.stop();
-            }
-
             // avoid signal roundtrip
             bool c = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
             ui->cb_LogReverseLookup->setChecked(c);
@@ -85,27 +70,11 @@ namespace BlackGui
             return this->hasContexts() && (ui->cb_LogMatchingMessages->isChecked() || ui->cb_LogReverseLookup->isChecked());
         }
 
-        void CModelMatcherLogComponent::ps_updateCallsignCompleter()
-        {
-            if (!this->hasContexts() || !sGui->getIContextNetwork()->isConnected()) { return; }
-
-            const QStringList callsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns().toStringList(false);
-            QCompleter *completer = ui->le_Callsign->completer();
-            Q_ASSERT_X(completer, Q_FUNC_INFO, "missing completer");
-            if (!completer->model())
-            {
-                completer->setModel(new QStringListModel(callsigns, completer));
-            }
-            else
-            {
-                qobject_cast<QStringListModel *>(completer->model())->setStringList(callsigns);
-            }
-        }
-
-        void CModelMatcherLogComponent::ps_callsignEntered()
+        void CModelMatcherLogComponent::callsignEntered()
         {
             if (!this->hasContexts()) { return; }
-            const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
+            const CCallsign cs(ui->comp_CallsignCompleter->getCallsign());
+            if (cs.isEmpty()) { return; }
             const CStatusMessageList reverseLookupMessages = sGui->getIContextNetwork()->getReverseLookupMessages(cs);
             const CStatusMessageList matchingMessages = sGui->getIContextSimulator()->getMatchingMessages(cs);
 
@@ -117,12 +86,12 @@ namespace BlackGui
             ui->te_Messages->setDocument(&this->m_text);
         }
 
-        void CModelMatcherLogComponent::ps_valuesChanged()
+        void CModelMatcherLogComponent::valuesChanged()
         {
             this->initGui();
         }
 
-        void CModelMatcherLogComponent::ps_enabledCheckboxChanged(bool enabled)
+        void CModelMatcherLogComponent::enabledCheckboxChanged(bool enabled)
         {
             if (!sGui || !sGui->getIContextNetwork() || !sGui->getIContextSimulator()) { return; }
             const QObject *sender = QObject::sender();
@@ -136,7 +105,7 @@ namespace BlackGui
             }
         }
 
-        void CModelMatcherLogComponent::ps_connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CModelMatcherLogComponent::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
             if (to == INetwork::Connected || to == INetwork::Disconnected)

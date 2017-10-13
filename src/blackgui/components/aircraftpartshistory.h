@@ -39,11 +39,9 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAircraftPartsHistory> ui;
-            QTimer m_timerCallsignUpdate { this };
             QTimer m_timerUpdateHistory { this };
             QTextDocument m_text { this };
             uint m_htmlHash = 0;
-            bool m_isBeingModified = false;
 
             //! Init
             void initGui();
@@ -55,17 +53,11 @@ namespace BlackGui
             bool partsHistoryEnabled() const;
 
         private:
-            //! Update the completer
-            void updateCallsignCompleter();
-
             //! Update parts history
             void updatePartsHistory();
 
             //! Callsign was entered
             void callsignEntered();
-
-            //! Callsign was modified
-            void callsignModified();
 
             //! When values changed elsewhere
             void valuesChanged();
