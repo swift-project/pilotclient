@@ -34,7 +34,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->initGui();
-            this->m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
+            m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
             connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CModelMatcherLogComponent::callsignEntered);
             connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogComponent::enabledCheckboxChanged);
             connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogComponent::enabledCheckboxChanged);
@@ -82,8 +82,8 @@ namespace BlackGui
             allMessages.push_back(matchingMessages);
 
             const QString html = allMessages.toHtml();
-            this->m_text.setHtml(html);
-            ui->te_Messages->setDocument(&this->m_text);
+            m_text.setHtml(html);
+            ui->te_Messages->setDocument(&m_text);
         }
 
         void CModelMatcherLogComponent::valuesChanged()
