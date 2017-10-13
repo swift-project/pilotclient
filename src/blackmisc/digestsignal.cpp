@@ -25,11 +25,11 @@ namespace BlackMisc
         m_inputsCount++;
         if (m_inputsCount >= m_maxInputsPerDigest)
         {
-            ps_timeout();
+            timerTimeout();
         }
     }
 
-    void CDigestSignal::ps_timeout()
+    void CDigestSignal::timerTimeout()
     {
         m_timer.stop();
         m_inputsCount = 0;
@@ -38,7 +38,7 @@ namespace BlackMisc
 
     void CDigestSignal::init(int maxDelayMs)
     {
-        QObject::connect(&m_timer, &QTimer::timeout, this, &CDigestSignal::ps_timeout);
+        QObject::connect(&m_timer, &QTimer::timeout, this, &CDigestSignal::timerTimeout);
         m_timer.setSingleShot(true);
         m_timer.setInterval(maxDelayMs);
     }

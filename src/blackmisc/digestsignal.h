@@ -55,11 +55,10 @@ namespace BlackMisc
         //! Received input signal, or manually trigger
         void inputSignal();
 
-    private slots:
-        //! Timer timed out
-        void ps_timeout();
-
     private:
+        //! Timer timed out
+        void timerTimeout();
+
         //! Init in ctor
         void init(int maxDelayMs);
 

@@ -21,7 +21,6 @@
 class QWidget;
 
 namespace Ui { class CAudioVolumeComponent; }
-
 namespace BlackGui
 {
     namespace Components
