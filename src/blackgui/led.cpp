@@ -54,27 +54,27 @@ namespace BlackGui
 
     void CLedWidget::setLed(LedColor ledColor)
     {
-        Q_ASSERT_X(!this->m_renderer.isNull(), Q_FUNC_INFO, "no renderer");
-        if (!this->m_renderer) { return; }
+        Q_ASSERT_X(!m_renderer.isNull(), Q_FUNC_INFO, "no renderer");
+        if (!m_renderer) { return; }
 
         // load image, init renderer
-        QString ledShapeAndColor(shapes().at(static_cast<int>(this->m_shape)));
+        QString ledShapeAndColor(shapes().at(static_cast<int>(m_shape)));
         if (ledColor == NoColor)
         {
             switch (m_state)
             {
             case On:
-                this->m_currentToolTip = this->m_tooltipOn;
-                ledShapeAndColor.append(CLedWidget::colorString(this->m_colorOn));
+                m_currentToolTip = m_tooltipOn;
+                ledShapeAndColor.append(CLedWidget::colorString(m_colorOn));
                 break;
             case TriState:
-                this->m_currentToolTip = this->m_tooltipTriState;
-                ledShapeAndColor.append(CLedWidget::colorString(this->m_colorTriState));
+                m_currentToolTip = m_tooltipTriState;
+                ledShapeAndColor.append(CLedWidget::colorString(m_colorTriState));
                 break;
             case Off:
             default:
-                this->m_currentToolTip = this->m_tooltipOff;
-                ledShapeAndColor.append(CLedWidget::colorString(this->m_colorOff));
+                m_currentToolTip = m_tooltipOff;
+                ledShapeAndColor.append(CLedWidget::colorString(m_colorOff));
                 break;
             }
         }
@@ -82,50 +82,50 @@ namespace BlackGui
         {
             if (ledColor == m_colorOn)
             {
-                this->m_currentToolTip = this->m_tooltipOn;
-                ledShapeAndColor.append(CLedWidget::colorString(this->m_colorOn));
+                m_currentToolTip = m_tooltipOn;
+                ledShapeAndColor.append(CLedWidget::colorString(m_colorOn));
             }
             else if (ledColor == m_colorOff)
             {
-                this->m_currentToolTip = this->m_tooltipOff;
-                ledShapeAndColor.append(CLedWidget::colorString(this->m_colorOff));
+                m_currentToolTip = m_tooltipOff;
+                ledShapeAndColor.append(CLedWidget::colorString(m_colorOff));
             }
             else
             {
-                this->m_currentToolTip = this->m_tooltipTriState;
-                ledShapeAndColor.append(CLedWidget::colorString(this->m_colorTriState));
+                m_currentToolTip = m_tooltipTriState;
+                ledShapeAndColor.append(CLedWidget::colorString(m_colorTriState));
             }
         }
-        this->setToolTip(this->m_currentToolTip); // for widget
+        this->setToolTip(m_currentToolTip); // for widget
 
         // init renderer, load led.
         m_renderer->load(ledShapeAndColor); // load by filename
 
         // original size
         const QSize s = m_renderer->defaultSize();
-        this->m_whRatio = s.width() / s.height();
+        m_whRatio = s.width() / s.height();
 
         // size
-        if (this->m_widthTarget < 0) { this->m_widthTarget = widths().at(static_cast<int>(m_shape)); }
-        const double h = this->m_widthTarget / this->m_whRatio;
-        this->m_heightCalculated = qRound(h);
+        if (m_widthTarget < 0) { m_widthTarget = widths().at(static_cast<int>(m_shape)); }
+        const double h = m_widthTarget / m_whRatio;
+        m_heightCalculated = qRound(h);
 
-        this->setFixedHeight(this->m_heightCalculated);
-        this->setFixedWidth(this->m_widthTarget);
+        this->setFixedHeight(m_heightCalculated);
+        this->setFixedWidth(m_widthTarget);
         this->update();
     }
 
     QPixmap CLedWidget::renderToPixmap() const
     {
-        Q_ASSERT(!this->m_renderer.isNull());
+        Q_ASSERT(!m_renderer.isNull());
 
         // Prepare a QImage with desired characteritiscs
-        QImage image(QSize(this->m_widthTarget, this->m_heightCalculated), QImage::Format_ARGB32);
+        QImage image(QSize(m_widthTarget, m_heightCalculated), QImage::Format_ARGB32);
         image.fill(qRgba(0, 0, 0, 0)); // transparent background
 
         // Get QPainter that paints to the image
         QPainter painter(&image);
-        this->m_renderer->render(&painter);
+        m_renderer->render(&painter);
         return QPixmap::fromImage(image);
     }
 
@@ -145,56 +145,56 @@ namespace BlackGui
 
     void CLedWidget::setToolTips(const QString &on, const QString &off, const QString &triState)
     {
-        this->m_tooltipOn = on;
-        this->m_tooltipOff = off;
-        this->m_tooltipTriState = triState;
+        m_tooltipOn = on;
+        m_tooltipOff = off;
+        m_tooltipTriState = triState;
         this->setLed();
     }
 
     void CLedWidget::setOnToolTip(const QString &on)
     {
-        this->m_tooltipOn = on;
+        m_tooltipOn = on;
         this->setLed();
     }
 
     void CLedWidget::setOffToolTip(const QString &off)
     {
-        this->m_tooltipOff = off;
+        m_tooltipOff = off;
         this->setLed();
     }
 
     void CLedWidget::setTriStateToolTip(const QString &triState)
     {
-        this->m_tooltipTriState = triState;
+        m_tooltipTriState = triState;
         this->setLed();
     }
 
     void CLedWidget::setOnColor(LedColor color)
     {
-        if (color == this->m_colorOn) return;
+        if (color == m_colorOn) return;
         m_colorOn = color;
-        setLed();
+        this->setLed();
     }
 
     void CLedWidget::setOffColor(LedColor color)
     {
-        if (color == this->m_colorOff) return;
+        if (color == m_colorOff) return;
         m_colorOff = color;
-        setLed();
+        this->setLed();
     }
 
     void CLedWidget::setTriStateColor(CLedWidget::LedColor color)
     {
-        if (color == this->m_colorOff) return;
+        if (color == m_colorOff) return;
         m_colorTriState = color;
-        setLed();
+        this->setLed();
     }
 
     void CLedWidget::setShape(LedShape newShape)
     {
-        if (newShape == this->m_shape) return;
+        if (newShape == m_shape) return;
         m_shape = newShape;
-        setLed();
+        this->setLed();
     }
 
     void CLedWidget::setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, int width)
@@ -205,7 +205,7 @@ namespace BlackGui
         m_tooltipOn = toolTipOn;
         m_tooltipOff = toolTipOff;
         m_widthTarget = width;
-        setLed();
+        this->setLed();
     }
 
     void CLedWidget::setValues(LedColor onColor, LedColor offColor, LedColor triStateColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, const QString &toolTipTriState, int width)
@@ -218,7 +218,7 @@ namespace BlackGui
         m_tooltipOff = toolTipOff;
         m_tooltipTriState = toolTipTriState;
         m_widthTarget = width;
-        setLed();
+        this->setLed();
     }
 
     QPixmap CLedWidget::asPixmap() const
@@ -240,7 +240,7 @@ namespace BlackGui
         }
         if (m_state == s) { return; }
         m_state = s;
-        setLed();
+        this->setLed();
     }
 
     void CLedWidget::blink(int resetTimeMs)
@@ -262,13 +262,13 @@ namespace BlackGui
         }
         if (m_state == TriState) { return; }
         m_state = TriState;
-        setLed();
+        this->setLed();
     }
 
     void CLedWidget::toggleValue()
     {
         m_state = (m_state == Off) ? On : Off;
-        setLed();
+        this->setLed();
     }
 
     void CLedWidget::paintEvent(QPaintEvent *)
@@ -311,7 +311,7 @@ namespace BlackGui
 
     const QList<int> &CLedWidget::widths()
     {
-        static const QList<int> widths({ 16, 16, 16, 16});
+        static const QList<int> widths({ 16, 16, 16, 16 });
         return widths;
     }
 } // ns
