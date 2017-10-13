@@ -27,6 +27,9 @@
 #include <QDateTime>
 #include <QString>
 #include <QThread>
+#include <QDir>
+#include <QUrl>
+#include <QDesktopServices>
 #include <functional>
 
 using namespace BlackMisc;
@@ -419,6 +422,20 @@ namespace BlackCore
                 CLogMessage(this).info("Started writing interpolation log");
                 return true;
             }
+            if (part2 == "show")
+            {
+                QDir dir(CInterpolationLogger::getLogDirectory());
+                if (dir.exists())
+                {
+                    const QUrl dirUrl = QUrl::fromLocalFile(dir.absolutePath());
+                    QDesktopServices::openUrl(dirUrl); // show dir in browser
+                }
+                else
+                {
+                    CLogMessage(this).warning("No interpolation log directory");
+                }
+                return true;
+            }
 
             const QString cs = part2.toUpper();
             if (!CCallsign::isValidAircraftCallsign(cs)) { return false; }
@@ -606,6 +623,4 @@ namespace BlackCore
         m_statsPhysicallyRemovedAircraft++;
         this->physicallyRemoveRemoteAircraft(remoteCallsign);
     }
-
-
 } // namespace
