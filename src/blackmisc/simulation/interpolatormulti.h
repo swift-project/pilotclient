@@ -58,7 +58,7 @@ namespace BlackMisc
             {
                 ModeSpline, //!< spline interpolation mode
                 ModeLinear, //!< linear interpolation mode
-                ModeUnkown
+                ModeUnknown
             };
 
             //! Set interpolation mode. Return true if mode was changed. Mode will not be changed in release build.

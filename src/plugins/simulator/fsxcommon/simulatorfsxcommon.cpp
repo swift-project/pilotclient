@@ -246,7 +246,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
         {
-            if (mode == CInterpolatorMulti::ModeUnkown) { return false; }
+            if (mode == CInterpolatorMulti::ModeUnknown) { return false; }
             if (callsign.isEmpty())
             {
                 const int c = m_simConnectObjects.setInterpolatorModes(mode);

@@ -108,7 +108,7 @@ namespace BlackMisc
         bool CInterpolatorMulti::setMode(const QString &mode)
         {
             Mode m = modeFromString(mode);
-            if (m == ModeUnkown) { return false; }
+            if (m == ModeUnknown) { return false; }
             return setMode(m);
         }
 
@@ -126,7 +126,7 @@ namespace BlackMisc
         {
             if (mode.contains("spli"), Qt::CaseInsensitive) { return ModeSpline; }
             if (mode.contains("lin"), Qt::CaseInsensitive) { return ModeLinear; }
-            return ModeUnkown;
+            return ModeUnknown;
         }
 
         const QString &CInterpolatorMulti::modeToString(CInterpolatorMulti::Mode mode)
@@ -139,7 +139,7 @@ namespace BlackMisc
             {
             case ModeLinear: return l;
             case ModeSpline: return s;
-            case ModeUnkown:
+            case ModeUnknown:
             default: return u;
             }
         }

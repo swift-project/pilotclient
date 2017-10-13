@@ -240,8 +240,8 @@ namespace BlackMisc
         void CInterpolationLogger::clearLog()
         {
             QWriteLocker l(&m_lockLogs);
-            this->m_partsLogs.clear();
-            this->m_situationLogs.clear();
+            m_partsLogs.clear();
+            m_situationLogs.clear();
         }
 
         QString CInterpolationLogger::msSinceEpochToTime(qint64 ms)
