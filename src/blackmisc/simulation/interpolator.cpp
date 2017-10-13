@@ -45,8 +45,10 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(qint64 currentTimeMsSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status)
+        CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(
+            qint64 currentTimeMsSinceEpoc,
+            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints,
+            CInterpolationStatus &status)
         {
             status.reset();
             CInterpolationLogger::SituationLog log;

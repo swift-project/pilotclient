@@ -58,15 +58,15 @@ namespace BlackMisc
                 double groundFactor = -1;    //!< current ground factor
                 double vtolAircraft = false; //!< VTOL aircraft
                 double deltaTimeMs = 0;      //!< delta time to last situation
-                double simulationTimeFraction = -1;        //!< time fraction, normally 0..1
-                double deltaTimeFractionMs = -1;           //!< delta time fraction
-                bool useParts = false;                     //!< supporting aircraft parts
-                BlackMisc::Aviation::CCallsign callsign;   //!< current callsign
-                BlackMisc::Aviation::CAircraftParts parts; //!< corresponding parts used in interpolator
-                BlackMisc::Aviation::CAircraftSituation oldSituation;     //!< old situation
-                BlackMisc::Aviation::CAircraftSituation newSituation;     //!< new situation
-                BlackMisc::Aviation::CAircraftSituation currentSituation; //!< interpolated situation
-                BlackMisc::PhysicalQuantities::CLength cgAboveGround;     //!< center of gravity
+                double simulationTimeFraction = -1; //!< time fraction, normally 0..1
+                double deltaTimeFractionMs = -1;    //!< delta time fraction
+                bool useParts = false;              //!< supporting aircraft parts
+                Aviation::CCallsign callsign;       //!< current callsign
+                Aviation::CAircraftParts parts;     //!< corresponding parts used in interpolator
+                Aviation::CAircraftSituation oldSituation;     //!< old situation
+                Aviation::CAircraftSituation newSituation;     //!< new situation
+                Aviation::CAircraftSituation currentSituation; //!< interpolated situation
+                PhysicalQuantities::CLength cgAboveGround;     //!< center of gravity
             };
 
             //! Log entry for parts interpolation
@@ -74,8 +74,8 @@ namespace BlackMisc
             {
                 qint64 timestamp = -1; //!< current timestamp
                 bool empty = false;    //!< empty parts?
-                BlackMisc::Aviation::CCallsign callsign;   //!< current callsign
-                BlackMisc::Aviation::CAircraftParts parts; //!< parts to be logged
+                Aviation::CCallsign callsign;   //!< current callsign
+                Aviation::CAircraftParts parts; //!< parts to be logged
             };
 
             //! Log current interpolation cycle, only stores in memory, for performance reasons
@@ -107,7 +107,7 @@ namespace BlackMisc
             //! Create readable time
             static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
 
-            mutable QReadWriteLock  m_lockLogs;  //!< lock logging
+            mutable QReadWriteLock m_lockLogs;   //!< lock logging
             QList<PartsLog> m_partsLogs;         //!< logs of parts
             QList<SituationLog> m_situationLogs; //!< logs of interpolation
         };

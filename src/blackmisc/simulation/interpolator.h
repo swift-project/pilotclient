@@ -74,6 +74,8 @@ namespace BlackMisc
             }
 
             //! Attach an observer to read the interpolator's state for debugging
+            //! \remark situation logging requires CInterpolationHints::isLoggingInterpolation to be \c true
+            //! \remark parts logging has a \c bool \c log flag
             void attachLogger(CInterpolationLogger *logger) { m_logger = logger; }
 
         protected:

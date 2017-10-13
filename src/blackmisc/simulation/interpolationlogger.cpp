@@ -110,14 +110,9 @@ namespace BlackMisc
 
         CStatusMessage CInterpolationLogger::logStatusFileWriting(bool success, const QString &fileName)
         {
-            if (success)
-            {
-                return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).info("Written log file '%1'") << fileName;
-            }
-            else
-            {
-                return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).error("Failed to write log file '%1'") << fileName;
-            }
+            return success ?
+                   CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).info("Written log file '%1'") << fileName :
+                   CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).error("Failed to write log file '%1'") << fileName;
         }
 
         void CInterpolationLogger::logInterpolation(const CInterpolationLogger::SituationLog &log)

@@ -26,12 +26,9 @@ namespace BlackMisc
         {
             switch (m_mode)
             {
-            case ModeLinear:
-                return m_linear.getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
-            case ModeSpline:
-                return m_spline.getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
-            default:
-                break;
+            case ModeLinear: return m_linear.getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
+            case ModeSpline: return m_spline.getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
+            default: break;
             }
             return {};
         }
@@ -41,12 +38,9 @@ namespace BlackMisc
         {
             switch (m_mode)
             {
-            case ModeLinear:
-                return m_linear.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-            case ModeSpline:
-                return m_spline.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-            default:
-                break;
+            case ModeLinear: return m_linear.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            case ModeSpline: return m_spline.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            default: break;
             }
             return {};
         }
