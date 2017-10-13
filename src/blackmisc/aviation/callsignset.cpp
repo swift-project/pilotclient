@@ -26,13 +26,14 @@ namespace BlackMisc
             CCollection<CCallsign>(other)
         { }
 
-        QStringList CCallsignSet::getCallsignStrings() const
+        QStringList CCallsignSet::getCallsignStrings(bool sorted) const
         {
             QStringList callsigns;
             for (const CCallsign &cs : *this)
             {
                 callsigns.push_back(cs.asString());
             }
+            if (sorted) { callsigns.sort(); }
             return callsigns;
         }
 

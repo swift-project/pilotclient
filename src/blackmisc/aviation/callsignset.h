@@ -40,7 +40,7 @@ namespace BlackMisc
             CCallsignSet(const CCollection<CCallsign> &other);
 
             //! The callsign strings
-            QStringList getCallsignStrings() const;
+            QStringList getCallsignStrings(bool sorted = false) const;
 
             //! Register metadata
             static void registerMetadata();
