@@ -60,7 +60,7 @@ namespace BlackGui
         virtual ~CLedWidget();
 
         //! Value
-        bool value() const { return m_value; }
+        bool value() const { return m_state; }
 
         //! Allows to set the led value {true, false}
         void setOn(bool on, int resetTimeMs = -1);
@@ -135,8 +135,9 @@ namespace BlackGui
         //! LED clicked
         void clicked();
 
-    protected:
-        State m_value = Off;             //!< current value
+    private:
+        State m_state = Off;             //!< current state, can be different from value when blinking
+        State m_value = Off;             //!< explicit value
         LedColor m_colorOn = Yellow;     //!< On color
         LedColor m_colorOff = Black;     //!< Off color
         LedColor m_colorTriState = Blue; //!< tri-state color
@@ -154,6 +155,9 @@ namespace BlackGui
 
         //! Init
         void init();
+
+        //! Reset the state
+        void resetState();
 
         //! Paint event
         virtual void paintEvent(QPaintEvent *event) override;
@@ -178,10 +182,6 @@ namespace BlackGui
 
         //! Color string
         static const QString &colorString(LedColor color); //!< Color string
-
-    private slots:
-        //! Reset state
-        void ps_resetState();
     };
 }
 #endif

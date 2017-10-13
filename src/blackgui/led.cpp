@@ -33,7 +33,7 @@ namespace BlackGui
 
     CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName, const QString &offName, int targetWidth, QWidget *parent) :
         QWidget(parent),
-        m_value(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
+        m_state(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
         m_shape(shape), m_widthTarget(targetWidth), m_tooltipOn(onName), m_tooltipOff(offName),
         m_renderer(new QSvgRenderer(this))
     {
@@ -61,7 +61,7 @@ namespace BlackGui
         QString ledShapeAndColor(shapes().at(static_cast<int>(this->m_shape)));
         if (ledColor == NoColor)
         {
-            switch (m_value)
+            switch (m_state)
             {
             case On:
                 this->m_currentToolTip = this->m_tooltipOn;
@@ -102,12 +102,12 @@ namespace BlackGui
         m_renderer->load(ledShapeAndColor); // load by filename
 
         // original size
-        QSize s = m_renderer->defaultSize();
+        const QSize s = m_renderer->defaultSize();
         this->m_whRatio = s.width() / s.height();
 
         // size
         if (this->m_widthTarget < 0) { this->m_widthTarget = widths().at(static_cast<int>(m_shape)); }
-        double h = this->m_widthTarget / this->m_whRatio;
+        const double h = this->m_widthTarget / this->m_whRatio;
         this->m_heightCalculated = qRound(h);
 
         this->setFixedHeight(this->m_heightCalculated);
@@ -136,9 +136,11 @@ namespace BlackGui
         return colorFiles().at(static_cast<int>(color));
     }
 
-    void CLedWidget::ps_resetState()
+    void CLedWidget::resetState()
     {
-        this->setOn(false);
+        if (m_value == m_state) { return; }
+        m_state = m_value;
+        this->setLed();
     }
 
     void CLedWidget::setToolTips(const QString &on, const QString &off, const QString &triState)
@@ -227,36 +229,45 @@ namespace BlackGui
     void CLedWidget::setOn(bool on, int resetTimeMs)
     {
         State s = on ? On : Off;
-        if (resetTimeMs < 0 && m_resetTimer.isActive()) { m_resetTimer.stop();}
         if (resetTimeMs > 0)
         {
-            m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::ps_resetState);
+            m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::resetState);
         }
-        if (m_value == s) { return; }
-        m_value = s;
+        else
+        {
+            m_resetTimer.stop();
+            m_value = s;
+        }
+        if (m_state == s) { return; }
+        m_state = s;
         setLed();
     }
 
     void CLedWidget::blink(int resetTimeMs)
     {
+        m_value = Off;
         this->setOn(true, resetTimeMs);
     }
 
     void CLedWidget::setTriState(int resetTimeMs)
     {
-        if (resetTimeMs < 0 && m_resetTimer.isActive()) { m_resetTimer.stop();}
         if (resetTimeMs > 0)
         {
-            m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::ps_resetState);
+            m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::resetState);
         }
-        if (m_value == TriState) { return; }
-        m_value = TriState;
+        else
+        {
+            m_resetTimer.stop();
+            m_value = TriState;
+        }
+        if (m_state == TriState) { return; }
+        m_state = TriState;
         setLed();
     }
 
     void CLedWidget::toggleValue()
     {
-        m_value = (m_value == Off) ? On : Off;
+        m_state = (m_state == Off) ? On : Off;
         setLed();
     }
 
