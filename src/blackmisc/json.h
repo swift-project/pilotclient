@@ -47,10 +47,10 @@ namespace BlackMisc
         const QLatin1String m_latin1;
 
         //! Implicit constructor.
-        Q_DECL_CONSTEXPR CExplicitLatin1String(QLatin1String s) : m_latin1(s) {}
+        constexpr CExplicitLatin1String(QLatin1String s) : m_latin1(s) {}
 
         //! Implicit conversion.
-        Q_DECL_CONSTEXPR operator QLatin1String() const { return m_latin1; }
+        constexpr operator QLatin1String() const { return m_latin1; }
     };
 }
 

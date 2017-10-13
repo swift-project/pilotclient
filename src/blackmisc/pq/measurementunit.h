@@ -209,12 +209,12 @@ namespace BlackMisc
             {
                 //! Construct a unit with custom conversion
                 template <class Converter>
-                Q_DECL_CONSTEXPR Data(QLatin1String name, QLatin1String symbol, Converter, int displayDigits = 2, double epsilon = 1e-9)
+                constexpr Data(QLatin1String name, QLatin1String symbol, Converter, int displayDigits = 2, double epsilon = 1e-9)
                     : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_toDefault(Converter::toDefault), m_fromDefault(Converter::fromDefault)
                 {}
 
                 //! Construct a null unit
-                Q_DECL_CONSTEXPR Data(QLatin1String name, QLatin1String symbol)
+                constexpr Data(QLatin1String name, QLatin1String symbol)
                     : m_name(name), m_symbol(symbol)
                 {}
 
@@ -228,7 +228,7 @@ namespace BlackMisc
 
             //! Workaround to constant-initialize QLatin1String on platforms without constexpr strlen.
             template <int N>
-            static Q_DECL_CONSTEXPR QLatin1String constQLatin1(const char (&str)[N])
+            static constexpr QLatin1String constQLatin1(const char (&str)[N])
             {
                 return QLatin1String(str, N - 1); // -1 because N includes the null terminator
             }
