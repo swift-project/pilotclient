@@ -19,7 +19,7 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 
 #include <QObject>
-#include <QString>
+#include <QStringList>
 #include <QtGlobal>
 
 namespace BlackMisc
@@ -87,6 +87,15 @@ namespace BlackMisc
             //! \remark const to allow const interpolator functions
             //! \threadsafe
             void logParts(const PartsLog &parts);
+
+            //! File pattern for interpolation log
+            static const QString &filePatternInterpolationLog();
+
+            //! File pattern for parts log
+            static const QString &filePatternPartsLog();
+
+            //! All log.file patterns
+            static const QStringList &filePatterns();
 
         private:
             //! Get log as HTML table

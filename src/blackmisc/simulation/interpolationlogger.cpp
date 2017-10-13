@@ -63,13 +63,13 @@ namespace BlackMisc
             const QString logDir = CDirectoryUtils::logDirectory();
             QDir logs(logDir);
             if (!logs.exists()) { return files; }
-            logs.setNameFilters(QStringList() << "*interpolation.html" << "*parts.html");
-            const QStringList interpolations = logs.entryList(QStringList({"*interpolation.html"}), QDir::NoFilter, QDir::Time);
+            logs.setNameFilters(filePatterns());
+            const QStringList interpolations = logs.entryList(QStringList({filePatternInterpolationLog()}), QDir::NoFilter, QDir::Time);
             if (!interpolations.isEmpty())
             {
                 files[0] = CFileUtils::appendFilePaths(logDir, interpolations.first());
             }
-            const QStringList parts = logs.entryList(QStringList({"*parts.html"}), QDir::NoFilter, QDir::Time);
+            const QStringList parts = logs.entryList(QStringList({filePatternPartsLog()}), QDir::NoFilter, QDir::Time);
             if (!parts.isEmpty())
             {
                 files[1] = CFileUtils::appendFilePaths(logDir, parts.first());
@@ -93,7 +93,9 @@ namespace BlackMisc
             const QString htmlInterpolation = CInterpolationLogger::getHtmlInterpolationLog(interpolation);
             if (!htmlInterpolation.isEmpty())
             {
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QString("%1 interpolation.html").arg(ts));
+                QString file = filePatternInterpolationLog();
+                file.remove('*');
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QString("%1 %2").arg(ts, file));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(interpolation.size()).arg(htmlInterpolation)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -101,7 +103,9 @@ namespace BlackMisc
             const QString htmlParts = CInterpolationLogger::getHtmlPartsLog(parts);
             if (!htmlParts.isEmpty())
             {
-                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QString("%1 parts.html").arg(ts));
+                QString file = filePatternPartsLog();
+                file.remove('*');
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::logDirectory(), QString("%1 %2").arg(ts, file));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(parts.size()).arg(htmlParts)), fn);
                 msgs.push_back(CInterpolationLogger::logStatusFileWriting(s, fn));
             }
@@ -125,6 +129,24 @@ namespace BlackMisc
         {
             QWriteLocker l(&m_lockLogs);
             m_partsLogs.append(parts);
+        }
+
+        const QString &CInterpolationLogger::filePatternInterpolationLog()
+        {
+            static const QString p("*interpolation.html");
+            return p;
+        }
+
+        const QString &CInterpolationLogger::filePatternPartsLog()
+        {
+            static const QString p("*parts.html");
+            return p;
+        }
+
+        const QStringList &CInterpolationLogger::filePatterns()
+        {
+            static const QStringList l({ filePatternInterpolationLog(), filePatternPartsLog() });
+            return l;
         }
 
         QString CInterpolationLogger::getHtmlInterpolationLog(const QList<SituationLog> &logs)
