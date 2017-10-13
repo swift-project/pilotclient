@@ -77,6 +77,11 @@ namespace BlackMisc
             return files;
         }
 
+        QString CInterpolationLogger::getLogDirectory()
+        {
+            return CDirectoryUtils::logDirectory();
+        }
+
         CStatusMessageList CInterpolationLogger::writeLogFile(const QList<SituationLog> &interpolation, const QList<PartsLog> &parts)
         {
             if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).warning("No data for log"); }

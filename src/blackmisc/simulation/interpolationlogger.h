@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Latest log files: 0: Interpolation / 1: Parts
             static QStringList getLatestLogFiles();
 
+            //! Get the log directory
+            static QString getLogDirectory();
+
             //! Log entry for situation interpolation
             struct SituationLog
             {
