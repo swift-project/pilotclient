@@ -32,6 +32,7 @@ namespace BlackMisc
         case SERVERMODE_SESSIONBUS:
             {
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
+                connection.unregisterService(service); // allow reconnecting by removing still registered service
                 if (! connection.isConnected() || ! connection.registerService(service))
                 {
                     // registration fails can either mean something wrong with DBus or service already exists
@@ -43,6 +44,7 @@ namespace BlackMisc
         case SERVERMODE_SYSTEMBUS:
             {
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
+                connection.unregisterService(service); // allow reconnecting by removing still registered service
                 if (! connection.isConnected() || ! connection.registerService(service))
                 {
                     // registration fails can either mean something wrong with DBus or service already exists
@@ -70,7 +72,7 @@ namespace BlackMisc
                 {
                     CLogMessage(this).warning("DBus P2P connection failed: %1") << lastQDBusServerError().message();
                 }
-                connect(m_busServer.data(), &QDBusServer::newConnection, this, &CDBusServer::ps_registerObjectsWithP2PConnection);
+                connect(m_busServer.data(), &QDBusServer::newConnection, this, &CDBusServer::registerObjectsWithP2PConnection);
             }
             break;
         }
@@ -154,7 +156,7 @@ namespace BlackMisc
         return "";
     }
 
-    bool CDBusServer::ps_registerObjectsWithP2PConnection(QDBusConnection connection)
+    bool CDBusServer::registerObjectsWithP2PConnection(QDBusConnection connection)
     {
         Q_ASSERT(! m_objects.isEmpty());
         m_connections.insert(connection.name(), connection);
@@ -236,7 +238,7 @@ namespace BlackMisc
 
     bool CDBusServer::hasQDBusServer() const
     {
-        return ! m_busServer.isNull();
+        return !m_busServer.isNull();
     }
 
     void CDBusServer::removeAllObjects()

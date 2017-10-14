@@ -145,9 +145,8 @@ namespace BlackMisc
             return QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
         }
 
-    private slots:
         //! Called when a new DBus client has connected in P2P mode
-        bool ps_registerObjectsWithP2PConnection(QDBusConnection connection);
+        bool registerObjectsWithP2PConnection(QDBusConnection connection);
     };
 }
 
