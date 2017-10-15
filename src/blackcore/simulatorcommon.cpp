@@ -402,8 +402,9 @@ namespace BlackCore
             const QString part2 = parser.part(2).toLower();
             if (part2 == "off" || part2 == "false")
             {
-                m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
                 CStatusMessage(this).info("Disabled interpolation logging");
+                QWriteLocker l(&m_interpolationRenderingSetupMutex);
+                m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
                 return true;
             }
             if (part2 == "clear" || part2 == "clr")
@@ -415,7 +416,10 @@ namespace BlackCore
             if (part2 == "write" || part2 == "save")
             {
                 // stop logging of other log
-                m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
+                {
+                    QWriteLocker l(&m_interpolationRenderingSetupMutex);
+                    m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
+                }
 
                 // write
                 m_interpolationLogger.writeLogInBackground();
@@ -441,8 +445,9 @@ namespace BlackCore
             if (!CCallsign::isValidAircraftCallsign(cs)) { return false; }
             if (this->getAircraftInRangeCallsigns().contains(cs))
             {
-                m_interpolationRenderingSetup.addCallsignToLog(CCallsign(cs));
                 CLogMessage(this).info("Will log interpolation for '%1'") << cs;
+                QWriteLocker l(&m_interpolationRenderingSetupMutex);
+                m_interpolationRenderingSetup.addCallsignToLog(CCallsign(cs));
                 return true;
             }
             else
