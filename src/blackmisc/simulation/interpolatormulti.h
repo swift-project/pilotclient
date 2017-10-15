@@ -91,7 +91,47 @@ namespace BlackMisc
             CInterpolatorDummy m_linear;
 #endif
         };
-    }
-}
+
+        /**
+         * CInterpolatorMulti which can be used with QMap/QHash
+         */
+        class BLACKMISC_EXPORT CInterpolatorMultiWrapper
+        {
+        public:
+            //! Default ctor, needed for QMap/QHash
+            CInterpolatorMultiWrapper();
+
+            //! Constructor
+            CInterpolatorMultiWrapper(const Aviation::CCallsign &callsign, QObject *parent = nullptr);
+
+            //! Constructor
+            CInterpolatorMultiWrapper(const Aviation::CCallsign &callsign, CInterpolationLogger *logger, QObject *parent = nullptr);
+
+            //! Has interpolator initialized?
+            bool hasInterpolator() const { return m_interpolator; }
+
+            //! Interpolator
+            CInterpolatorMulti *interpolator() const { return m_interpolator.data(); }
+
+            //! Allows implicit conversion
+            operator CInterpolatorMulti *() const { return this->interpolator(); }
+
+            //! Bool conversion
+            operator bool() const { return this->hasInterpolator(); }
+
+            //! Bool conversion
+            bool operator !() const { return !this->hasInterpolator(); }
+
+            //! * operator
+            CInterpolatorMulti &operator *() const { return *this->interpolator(); }
+
+            //! -> operator
+            CInterpolatorMulti *operator ->() const { return this->interpolator(); }
+
+        private:
+            QSharedPointer<CInterpolatorMulti> m_interpolator; //!< shared pointer because CInterpolatorMultiWrapper can be copied
+        };
+    } // ns
+} // ns
 
 #endif

@@ -11,6 +11,8 @@
 
 #include "blackmisc/simulation/interpolatormulti.h"
 
+using namespace BlackMisc::Aviation;
+
 namespace BlackMisc
 {
     namespace Simulation
@@ -137,5 +139,19 @@ namespace BlackMisc
             default: return u;
             }
         }
-    }
-}
+
+        CInterpolatorMultiWrapper::CInterpolatorMultiWrapper()
+        { }
+
+        CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const CCallsign &callsign, QObject *parent)
+        {
+            m_interpolator.reset(new CInterpolatorMulti(callsign, parent));
+        }
+
+        CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const CCallsign &callsign, CInterpolationLogger *logger, QObject *parent)
+        {
+            m_interpolator.reset(new CInterpolatorMulti(callsign, parent));
+            m_interpolator->attachLogger(logger);
+        }
+    } // ns
+} // ns
