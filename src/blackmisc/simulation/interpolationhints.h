@@ -41,6 +41,9 @@ namespace BlackMisc
             //! Constructor
             CInterpolationHints(bool isVtolAircraft);
 
+            //! Constructor
+            CInterpolationHints(bool isVtolAircraft, bool hasParts, bool log);
+
             //! Get elevation
             const BlackMisc::Geo::CElevationPlane &getElevationPlane() const { return m_elevationPlane;}
 
@@ -116,9 +119,9 @@ namespace BlackMisc
             bool m_isVtol = false;           //!< VTOL aircraft?
             bool m_hasParts = false;         //!< Has valid aircraft parts?
             bool m_logInterpolation = false; //!< log interpolation
-            BlackMisc::Aviation::CAircraftParts m_aircraftParts; //!< Aircraft parts
-            BlackMisc::Geo::CElevationPlane m_elevationPlane;    //!< aircraft's elevation if available
-            ElevationProvider m_elevationProvider;               //!< Provider of ground elevation (lazy computation)
+            BlackMisc::Aviation::CAircraftParts    m_aircraftParts;     //!< Aircraft parts
+            BlackMisc::Geo::CElevationPlane        m_elevationPlane;    //!< aircraft's elevation if available
+            ElevationProvider                      m_elevationProvider; //!< Provider of ground elevation (lazy computation)
             BlackMisc::PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
 
             BLACK_METACLASS(

@@ -156,6 +156,11 @@ namespace BlackMisc
             return m_callsignsToLog;
         }
 
+        bool CInterpolationAndRenderingSetup::logCallsign(const Aviation::CCallsign &callsign) const
+        {
+            return m_callsignsToLog.contains(callsign);
+        }
+
         QString CInterpolationAndRenderingSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

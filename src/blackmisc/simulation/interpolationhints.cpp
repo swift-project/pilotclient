@@ -23,6 +23,10 @@ namespace BlackMisc
         CInterpolationHints::CInterpolationHints(bool isVtolAircraft) : m_isVtol(isVtolAircraft)
         { }
 
+        CInterpolationHints::CInterpolationHints(bool isVtolAircraft, bool hasParts, bool log) :
+            m_isVtol(isVtolAircraft), m_hasParts(hasParts), m_logInterpolation(log)
+        { }
+
         CAltitude CInterpolationHints::getGroundElevation(const Aviation::CAircraftSituation &situation) const
         {
             if (m_elevationProvider) { return m_elevationProvider(situation); }
