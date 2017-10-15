@@ -37,11 +37,11 @@ namespace BlackMisc
     namespace Simulation
     {
         template <typename Derived>
-        CInterpolator<Derived>::CInterpolator(const QString &objectName, const BlackMisc::Aviation::CCallsign &callsign, QObject *parent) :
+        CInterpolator<Derived>::CInterpolator(const QString &objectName, const CCallsign &callsign, QObject *parent) :
             QObject(parent),
             m_callsign(callsign)
         {
-            this->setObjectName(objectName);
+            this->setObjectName(objectName + " for " + callsign.asString());
         }
 
         template <typename Derived>

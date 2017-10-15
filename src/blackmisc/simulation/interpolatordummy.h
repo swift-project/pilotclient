@@ -31,7 +31,10 @@ namespace BlackMisc
         {
         public:
             //! Constructor
-            CInterpolatorDummy(const BlackMisc::Aviation::CCallsign &, QObject *parent) : QObject(parent) {}
+            CInterpolatorDummy(const BlackMisc::Aviation::CCallsign &callsign, QObject *parent) : QObject(parent)
+            {
+                this->setObjectName("CInterpolatorDummy for " + callsign.asString());
+            }
 
             //! \copydoc CInterpolator::getInterpolatedSituation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
