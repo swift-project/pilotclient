@@ -99,15 +99,26 @@ INSTALLS += target
 dep_target.path = $$PREFIX/$$XSWIFTBUS_DIR
 win32 {
     dep_target.files *= $$DestRoot/lib/blackmisc.dll
+    dep_target.files *= $$DestRoot/bin/dbus-daemon.exe
+    win32-g++ {
+        dep_target.files *= $$DestRoot/bin/libdbus-1-3.dll
+    }
+    else {
+        dep_target.files *= $$DestRoot/bin/dbus-1-3.dll
+        dep_target.files *= $$DestRoot/bin/expat.dll
+    }
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Core$${DLL_DEBUG_SUFFIX}.dll
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Gui$${DLL_DEBUG_SUFFIX}.dll
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Widgets$${DLL_DEBUG_SUFFIX}.dll
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5DBus$${DLL_DEBUG_SUFFIX}.dll
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Network$${DLL_DEBUG_SUFFIX}.dll
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Xml$${DLL_DEBUG_SUFFIX}.dll
-    win32-g++: dep_target.files *= $$[QT_INSTALL_BINS]/libdbus-1-3.dll
-    else: dep_target.files *= $$[QT_INSTALL_BINS]/dbus-1-3.dll
     dep_target.CONFIG += no_check_exist
+
+    dbus_share.path = $$PREFIX/$$XSWIFTBUS_DIR/share/dbus-1
+    dbus_share.files = $$DestRoot/share/dbus-1/session.conf
+    dbus_share.CONFIG = no_check_exist
+    INSTALLS += dbus_share
 
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
