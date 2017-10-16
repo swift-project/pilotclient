@@ -33,6 +33,7 @@ namespace BlackGui
             ui->setupUi(this);
             CUpperCaseValidator *ucv = new CUpperCaseValidator(ui->le_Callsign);
             ui->le_Callsign->setValidator(ucv);
+            ui->le_Callsign->setCompleter(*completer());
             ui->led_Status->setToolTips("connected", "disconnected");
             ui->led_Status->setShape(CLedWidget::Rounded);
             ui->led_Status->setToolTips("network connected", "network disconnected", "data");
@@ -68,19 +69,10 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (!sGui->getIContextNetwork()) { return; }
+            if (completer()->wasUpdatedWithinTime(1500)) { return; } // avoid context call via DBus
             m_validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns();
             const QStringList modelData = m_validCallsigns.getCallsignStrings(true);
-            if (!m_currentCompleter)
-            {
-                m_currentCompleter = new QCompleter(modelData, ui->le_Callsign);
-                ui->le_Callsign->setCompleter(m_currentCompleter);
-            }
-            else
-            {
-                QStringListModel *model = qobject_cast<QStringListModel *>(m_currentCompleter->model());
-                Q_ASSERT(model);
-                model->setStringList(modelData);
-            }
+            completer()->updateData(modelData, 2000);
             ui->led_Status->setTriState(500);
         }
 
@@ -102,15 +94,13 @@ namespace BlackGui
         void CCallsignCompleter::onChangedConnectionStatus(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
-            const bool on = (INetwork::Connected == to);
-            ui->led_Status->setOn(on);
+            const bool connected = (INetwork::Connected == to);
+            ui->led_Status->setOn(connected);
             ui->le_Callsign->clear();
-            ui->le_Callsign->setEnabled(on);
-            if (!on)
+            ui->le_Callsign->setEnabled(connected);
+            if (!connected)
             {
-                QStringListModel *model = qobject_cast<QStringListModel *>(m_currentCompleter->model());
-                Q_ASSERT(model);
-                model->setStringList(QStringList());
+                completer()->clearData();
             }
         }
 
@@ -119,6 +109,12 @@ namespace BlackGui
             if (m_validCallsigns.isEmpty()) { return false; }
             if (!CCallsign::isValidAircraftCallsign(callsignString)) { return false; }
             return m_validCallsigns.contains(CCallsign(callsignString));
+        }
+
+        CSharedStringListCompleter *CCallsignCompleter::completer()
+        {
+            static CSharedStringListCompleter *c = new CSharedStringListCompleter();
+            return c;
         }
     } // ns
 } // ns
