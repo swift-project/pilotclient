@@ -10,6 +10,8 @@
 #include "simulatoremulatedmonitordialog.h"
 #include "simulatoremulated.h"
 #include "ui_simulatoremulatedmonitordialog.h"
+#include "blackmisc/logmessage.h"
+#include <QIntValidator>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -29,6 +31,7 @@ namespace BlackSimPlugin
 
         CSimulatorEmulatedMonitorDialog::CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent) :
             QDialog(parent),
+            CIdentifiable("Emulated driver dialog"),
             ui(new Ui::CSimulatorEmulatedMonitorDialog)
         {
             Q_ASSERT_X(simulator, Q_FUNC_INFO, "Need simulator");
@@ -41,9 +44,9 @@ namespace BlackSimPlugin
             m_simulator = simulator;
             m_uiUpdateTimer.setObjectName(this->objectName() + ":uiUpdateTimer");
             m_uiUpdateTimer.start(2.5 * 1000);
+
             connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this, &CSimulatorEmulatedMonitorDialog::setInternalAircraftUiValues, Qt::QueuedConnection);
             connect(&m_uiUpdateTimer, &QTimer::timeout, this, &CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates);
-            connect(ui->pb_ResetStatistics, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
 
             connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
             connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
@@ -54,11 +57,24 @@ namespace BlackSimPlugin
             connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CSimulatorEmulatedMonitorDialog::changeComFromUi);
             connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CSimulatorEmulatedMonitorDialog::changeSelcalFromUi);
 
-            ui->wi_LedReceiving->setToolTips("receiving", "idle");
-            ui->wi_LedReceiving->setShape(CLedWidget::Rounded);
-            ui->wi_LedSending->setToolTips("sending", "idle");
-            ui->wi_LedSending->setShape(CLedWidget::Rounded);
+            connect(ui->pb_ResetStatistics, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
+            connect(ui->pb_InterpolatorStopLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+            connect(ui->pb_InterpolatorWriteLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+            connect(ui->pb_InterpolatorClearLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+            connect(ui->pb_InterpolatorShowLogs, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+            connect(ui->pb_InterpolatorStartLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+            connect(ui->pb_InterpolatorFetch, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
 
+            ui->led_Receiving->setToolTips("receiving", "idle");
+            ui->led_Receiving->setShape(CLedWidget::Rounded);
+            ui->led_Sending->setToolTips("sending", "idle");
+            ui->led_Sending->setShape(CLedWidget::Rounded);
+            ui->led_Fetching->setToolTips("fetching interpolated", "not fetching interpolated");
+            ui->led_Fetching->setShape(CLedWidget::Rounded);
+
+            ui->le_InterpolatorTimeMs->setValidator(new QIntValidator(10, 20000, ui->le_InterpolatorTimeMs));
+
+            this->enableInterpolationLogButtons(false);
             this->setSimulatorUiValues();
             this->setInternalAircraftUiValues();
         }
@@ -78,13 +94,13 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::appendReceivingCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
         {
-            ui->wi_LedReceiving->blink();
+            ui->led_Receiving->blink();
             this->appendFunctionCall(function, p1, p2, p3);
         }
 
         void CSimulatorEmulatedMonitorDialog::appendSendingCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
         {
-            ui->wi_LedSending->blink();
+            ui->led_Sending->blink();
             this->appendFunctionCall(function, p1, p2, p3);
         }
 
@@ -195,6 +211,65 @@ namespace BlackSimPlugin
             ui->le_PhysicallyRemovedAircraft->clear();
             ui->le_SituationAdded->clear();
             ui->le_PartsAdded->clear();
+        }
+
+        void CSimulatorEmulatedMonitorDialog::interpolatorLogButton()
+        {
+            const QObject *sender = QObject::sender();
+            bool ok = false;
+            if (sender == ui->pb_InterpolatorStopLog)
+            {
+                ok = m_simulator->parseCommandLine(".drv logint off", this->identifier());
+            }
+            else if (sender == ui->pb_InterpolatorWriteLog)
+            {
+                ok = m_simulator->parseCommandLine(".drv logint write", this->identifier());
+            }
+            else if (sender == ui->pb_InterpolatorClearLog)
+            {
+                ok = m_simulator->parseCommandLine(".drv logint clear", this->identifier());
+            }
+            else if (sender == ui->pb_InterpolatorShowLogs)
+            {
+                ok = m_simulator->parseCommandLine(".drv logint show", this->identifier());
+            }
+            else if (sender == ui->pb_InterpolatorStartLog)
+            {
+                const CCallsign cs = ui->comp_LogInterpolatorCallsign->getCallsign();
+                if (cs.isValid())
+                {
+                    ok = m_simulator->parseCommandLine(".drv logint " + cs.asString(), this->identifier());
+                }
+                else
+                {
+                    CLogMessage(this).warning("Need a (valid) callsign to write a log");
+                    ok = true; // already a warning
+                }
+            }
+            else if (sender == ui->pb_InterpolatorFetch)
+            {
+                // toggle fetching
+                const int timeMs = m_simulator->isInterpolatorFetching() ? -1 : ui->le_InterpolatorTimeMs->text().toInt();
+                const bool fetching = m_simulator->setInterpolatorFetchTime(timeMs);
+                ui->led_Fetching->setOn(fetching);
+                ui->pb_InterpolatorFetch->setText(fetching ? "Stop" : "Fetch");
+                this->enableInterpolationLogButtons(fetching);
+                ok = true;
+            }
+            else
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unhandled button");
+            }
+            if (!ok) { CLogMessage(this).warning("Cannot parse command for button: %1") << sender->objectName(); }
+        }
+
+        void CSimulatorEmulatedMonitorDialog::enableInterpolationLogButtons(bool enable)
+        {
+            ui->pb_InterpolatorClearLog->setEnabled(enable);
+            ui->pb_InterpolatorShowLogs->setEnabled(enable);
+            ui->pb_InterpolatorStartLog->setEnabled(enable);
+            ui->pb_InterpolatorStopLog->setEnabled(enable);
+            ui->pb_InterpolatorWriteLog->setEnabled(enable);
         }
     } // ns
 } // ns

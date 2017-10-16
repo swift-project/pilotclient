@@ -40,11 +40,13 @@ namespace BlackSimPlugin
             Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
 
             CSimulatorEmulated::registerHelp();
+            this->setObjectName(info.getSimulatorInfo());
             m_myAircraft = this->getOwnAircraft(); // sync with provider
-
             m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWindow()));
-            connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
             this->onSettingsChanged();
+
+            connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
+            connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::fetchFromInterpolator);
 
             // connect own signals for monitoring
             this->connectOwnSignals();
@@ -234,6 +236,24 @@ namespace BlackSimPlugin
             return this->updateOwnParts(parts);
         }
 
+        bool CSimulatorEmulated::setInterpolatorFetchTime(int timeMs)
+        {
+            if (timeMs < 1)
+            {
+                m_interpolatorFetchTimer.stop();
+            }
+            else
+            {
+                m_interpolatorFetchTimer.start(timeMs);
+            }
+            return m_interpolatorFetchTimer.isActive();
+        }
+
+        bool CSimulatorEmulated::isInterpolatorFetching() const
+        {
+            return m_interpolatorFetchTimer.isActive();
+        }
+
         bool CSimulatorEmulated::isConnected() const
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
@@ -257,8 +277,9 @@ namespace BlackSimPlugin
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString());
             CSimulatedAircraft aircraft(remoteAircraft);
             aircraft.setRendered(true);
-            m_renderedAircraft.push_back(aircraft); // my simulator list
             const CCallsign cs = aircraft.getCallsign();
+            m_interpolators.insert(cs, CInterpolatorMultiWrapper(cs, &m_interpolationLogger, this));
+            m_renderedAircraft.push_back(aircraft); // my simulator list
             this->updateAircraftRendered(cs, true); // in provider
             emit this->aircraftRenderingChanged(aircraft);
             return true;
@@ -267,6 +288,7 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString());
+            m_interpolators.remove(callsign);
             const int c = m_renderedAircraft.removeByCallsign(callsign);
             return c > 0;
         }
@@ -274,13 +296,32 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, CInterpolatorMulti::modeToString(mode), callsign.toQString());
-            return false;
+            if (!m_interpolators.contains(callsign)) { return false; }
+            CInterpolatorMulti *im = m_interpolators[callsign];
+            return im->setMode(mode);
         }
 
         int CSimulatorEmulated::physicallyRemoveAllRemoteAircraft()
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
             return CSimulatorCommon::physicallyRemoveAllRemoteAircraft();
+        }
+
+        void CSimulatorEmulated::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
+        {
+            const CCallsign cs = situation.getCallsign();
+            if (!m_interpolators.contains(cs)) { return; }
+            CInterpolatorMulti *im = m_interpolators[cs];
+            Q_ASSERT_X(im, Q_FUNC_INFO, "no interpolator");
+            im->addAircraftSituation(situation);
+        }
+
+        void BlackSimPlugin::Emulated::CSimulatorEmulated::onRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
+        {
+            if (!m_interpolators.contains(callsign)) { return; }
+            CInterpolatorMulti *im = m_interpolators[callsign];
+            Q_ASSERT_X(im, Q_FUNC_INFO, "no interpolator");
+            im->addAircraftParts(parts);
         }
 
         bool CSimulatorEmulated::parseDetails(const CSimpleCommandParser &parser)
@@ -291,6 +332,12 @@ namespace BlackSimPlugin
                 if (parser.matchesPart(1, "hide")) { m_monitorWidget->hide(); return true; }
             }
             return false;
+        }
+
+        void CSimulatorEmulated::setObjectName(const CSimulatorInfo &info)
+        {
+            QObject::setObjectName("Emulated driver for " + info.getSimulator());
+            m_interpolatorFetchTimer.setObjectName(this->objectName() + ":interpolatorFetchTimer");
         }
 
         bool CSimulatorEmulated::canLog() const
@@ -311,8 +358,9 @@ namespace BlackSimPlugin
             const CSwiftPluginSettings settings(m_settings.get());
             m_log = settings.isLoggingFunctionCalls();
 
+            const CSimulatorInfo simulator = settings.getEmulatedSimulator();
             const CSimulatorPluginInfoList plugins = sApp->getIContextSimulator()->getAvailableSimulatorPlugins();
-            const CSimulatorPluginInfo plugin = plugins.findBySimulator(settings.getEmulatedSimulator());
+            const CSimulatorPluginInfo plugin = plugins.findBySimulator(simulator);
             if (plugin.isValid())
             {
                 // ? restart driver, disconnect/reconnect
@@ -325,6 +373,9 @@ namespace BlackSimPlugin
 
             // update provider
             this->updateOwnModel(settings.getOwnModel());
+
+            // own name
+            this->setObjectName(simulator);
         }
 
         void CSimulatorEmulated::connectOwnSignals()
@@ -366,6 +417,31 @@ namespace BlackSimPlugin
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("airspaceSnapshotHandled");
             }, Qt::QueuedConnection));
+        }
+
+        void CSimulatorEmulated::fetchFromInterpolator()
+        {
+            const qint64 now = QDateTime::currentMSecsSinceEpoch();
+            const CInterpolationAndRenderingSetup setup = this->getInterpolationAndRenderingSetup(); // threadsafe copy
+            for (const CSimulatedAircraft &aircraft : m_renderedAircraft)
+            {
+                const CCallsign cs = aircraft.getCallsign();
+                if (!m_interpolators.contains(cs)) { continue; }
+                const bool log = setup.logCallsign(cs);
+                CInterpolatorMulti *im = m_interpolators[cs];
+                CInterpolationStatus statusInterpolation;
+                CPartsStatus statusParts;
+                CInterpolationHints hints;
+                Q_ASSERT_X(im, Q_FUNC_INFO, "interpolator missing");
+                if (m_hints.contains(cs)) { hints = m_hints[cs]; }
+                hints.setLoggingInterpolation(log);
+                const CAircraftSituation s = im->getInterpolatedSituation(now, setup, hints, statusInterpolation);
+                const CAircraftParts p = im->getInterpolatedParts(now, setup, statusParts, log);
+                m_countInterpolatedParts++;
+                m_countInterpolatedSituations++;
+                Q_UNUSED(s);
+                Q_UNUSED(p);
+            }
         }
 
         CSimulatorEmulatedListener::CSimulatorEmulatedListener(const CSimulatorPluginInfo &info)

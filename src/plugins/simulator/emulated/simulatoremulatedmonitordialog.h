@@ -15,6 +15,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logcategorylist.h"
+#include "blackmisc/identifiable.h"
 
 #include <QDialog>
 #include <QScopedPointer>
@@ -30,7 +31,7 @@ namespace BlackSimPlugin
         /**
          * Monitor widget for the pseudo driver
          */
-        class CSimulatorEmulatedMonitorDialog : public QDialog
+        class CSimulatorEmulatedMonitorDialog : public QDialog, public BlackMisc::CIdentifiable
         {
             Q_OBJECT
 
@@ -94,6 +95,12 @@ namespace BlackSimPlugin
 
             //! Reset statistics
             void resetStatistics();
+
+            //! Interpolator log button pressed
+            void interpolatorLogButton();
+
+            //! Enable/disable the interpolation log buttons
+            void enableInterpolationLogButtons(bool enable);
 
             QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
             CSimulatorEmulated *m_simulator = nullptr;

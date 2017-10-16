@@ -13,12 +13,17 @@
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 
 #include "blackcore/simulatorcommon.h"
+#include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/settings/swiftpluginsettings.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/connectionguard.h"
 #include "simulatoremulatedmonitordialog.h"
 
+#include <QMap>
+#include <QTimer>
 #include <QScopedPointer>
 
 namespace BlackSimPlugin
@@ -99,6 +104,12 @@ namespace BlackSimPlugin
             //! \remark normally used by corresponding BlackSimPlugin::Emulated::CSimulatorEmulatedMonitorDialog
             bool changeInternalParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
+            //! Interpolator fetch time, <=0 stops
+            bool setInterpolatorFetchTime(int timeMs);
+
+            //! Is fetching from interpolator
+            bool isInterpolatorFetching() const;
+
             //! Register help
             static void registerHelp();
 
@@ -116,10 +127,19 @@ namespace BlackSimPlugin
             // just logged
             virtual int physicallyRemoveAllRemoteAircraft() override;
 
+            //! \name Remote aircraft provider overrides
+            //! @{
+            virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+            virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
+            //! @}
+
             //! \copydoc BlackCore::CSimulatorCommon::parseDetails
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
         private:
+            //! Set object name
+            void setObjectName(const BlackMisc::Simulation::CSimulatorInfo &info);
+
             //! Can append log messages?
             bool canLog() const;
 
@@ -135,18 +155,25 @@ namespace BlackSimPlugin
             //! Connect own signals for monitoring
             void connectOwnSignals();
 
+            //! Fetch data from interpolator
+            //! \remarks basically does the same as a real driver, obtains data from the interpolator
+            void fetchFromInterpolator();
+
             bool m_log = false; //!< from settings
             bool m_paused = false;
             bool m_connected = true;
             bool m_simulating = true;
             bool m_timeSyncronized = false;
+            int m_countInterpolatedSituations = 0;
+            int m_countInterpolatedParts = 0;
+            QTimer m_interpolatorFetchTimer { this }; //!< fetch data from interpolator
             BlackMisc::PhysicalQuantities::CTime m_offsetTime;
-            BlackMisc::Simulation::CSimulatedAircraft m_myAircraft; //!< represents own aircraft of simulator
+            BlackMisc::Simulation::CSimulatedAircraft m_myAircraft;           //!< represents own aircraft of simulator
             BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
-
-            QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
+            QScopedPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget;  //!< parent will be main window, so we need to destroy widget when destroyed
+            BlackMisc::CConnectionGuard m_connectionGuard;                    //!< connected with provider
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSwiftPlugin> m_settings { this, &CSimulatorEmulated::onSettingsChanged };
-            BlackMisc::CConnectionGuard m_connectionGuard;
+            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
         };
 
         //! Listener for swift

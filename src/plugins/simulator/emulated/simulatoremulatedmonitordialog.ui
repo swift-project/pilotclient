@@ -31,7 +31,7 @@
        </widget>
       </item>
       <item>
-       <widget class="BlackGui::CLedWidget" name="wi_LedReceiving" native="true"/>
+       <widget class="BlackGui::CLedWidget" name="led_Receiving" native="true"/>
       </item>
       <item>
        <widget class="QLabel" name="lbl_Sending">
@@ -41,7 +41,7 @@
        </widget>
       </item>
       <item>
-       <widget class="BlackGui::CLedWidget" name="wi_LedSending" native="true"/>
+       <widget class="BlackGui::CLedWidget" name="led_Sending" native="true"/>
       </item>
       <item>
        <spacer name="hs_LedHeader">
@@ -90,6 +90,19 @@
           </size>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="vs_Situation">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -386,6 +399,83 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="gb_Interpolator">
+         <property name="title">
+          <string>Interpolator</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="6">
+           <widget class="QPushButton" name="pb_InterpolatorStartLog">
+            <property name="text">
+             <string> start log. </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="pb_InterpolatorClearLog">
+            <property name="text">
+             <string> clear log </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pb_InterpolatorStopLog">
+            <property name="text">
+             <string> stop logging </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pb_InterpolatorWriteLog">
+            <property name="text">
+             <string> write log.file </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QPushButton" name="pb_InterpolatorShowLogs">
+            <property name="text">
+             <string> log.files </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="BlackGui::Components::CCallsignCompleter" name="comp_LogInterpolatorCallsign">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="pb_InterpolatorFetch">
+            <property name="text">
+             <string>fetch</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QLineEdit" name="le_InterpolatorTimeMs">
+            <property name="text">
+             <string>40</string>
+            </property>
+            <property name="maxLength">
+             <number>10</number>
+            </property>
+            <property name="placeholderText">
+             <string>fetch time ms</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="BlackGui::CLedWidget" name="led_Fetching" native="true"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="gb_LogMessages">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
@@ -425,19 +515,6 @@
       </layout>
      </widget>
     </widget>
-   </item>
-   <item>
-    <spacer name="vs_Situation">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="bb_SwiftMonitorDialog">
@@ -486,6 +563,12 @@
    <class>BlackGui::CLedWidget</class>
    <extends>QWidget</extends>
    <header>blackgui/led.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCallsignCompleter</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/callsigncompleter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
