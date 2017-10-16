@@ -54,6 +54,7 @@ namespace BlackMisc
             //! Log entry for situation interpolation
             struct SituationLog
             {
+                QChar interpolator;          //!< what interpolator is used
                 qint64 timestamp = -1;       //!< current timestamp
                 double groundFactor = -1;    //!< current ground factor
                 double vtolAircraft = false; //!< VTOL aircraft

@@ -154,7 +154,8 @@ namespace BlackMisc
             if (logs.isEmpty()) { return {}; }
             const QString tableHeader =
                 QLatin1String("<thead><tr>") %
-                QLatin1String("<th title=\"changed situation\">cs.</th><th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>") %
+                QLatin1String("<th title=\"changed situation\">cs.</th><th>Int</th>") %
+                QLatin1String("<th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>") %
                 QLatin1String("<th>ts old</th><th>ts new</th><th>ts cur</th>") %
                 QLatin1String("<th>&Delta;t</th><th>&Delta;t fr.</th><th>fraction</th>") %
                 QLatin1String("<th>lat.old</th><th>lat.new</th><th>lat.cur</th>") %
@@ -184,6 +185,7 @@ namespace BlackMisc
                 tableRows +=
                     QLatin1String("<tr>") %
                     (changedNewPosition ? QLatin1String("<td class=\"changed\">*</td>") : QLatin1String("<td></td>")) %
+                    QLatin1String("<td>") % log.interpolator % QLatin1String("</td>") %
                     QLatin1String("<td>") % log.callsign.asString() % QLatin1String("</td>") %
                     QLatin1String("<td>") % boolToYesNo(log.vtolAircraft) % QLatin1String("</td>") %
                     QLatin1String("<td>") % msSinceEpochToTime(log.timestamp) % QLatin1String("</td>") %

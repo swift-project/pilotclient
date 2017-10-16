@@ -36,7 +36,7 @@ namespace BlackMisc
     namespace Simulation
     {
         CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log) const
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log) const
         {
             Q_UNUSED(setup);
             Q_UNUSED(hints);
@@ -94,11 +94,11 @@ namespace BlackMisc
             }
 
             CAircraftSituation currentSituation(oldSituation); // also sets ground elevation if available
-            CCoordinateGeodetic currentPosition;
 
             // Time between start and end packet
             const double deltaTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - oldSituation.getAdjustedMSecsSinceEpoch();
             Q_ASSERT_X(deltaTimeMs >= 0, Q_FUNC_INFO, "Negative delta time");
+            log.interpolator = 'l';
             log.deltaTimeMs = deltaTimeMs;
 
             // Fraction of the deltaTime, ideally [0.0 - 1.0]

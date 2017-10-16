@@ -128,12 +128,19 @@ namespace BlackMisc
                 m_altitudeUnit = situationsOlder.begin()->getAltitude().getUnit();
                 m_pbh = { *situationsOlder.begin(), *(situationsNewer.end() - 1) };
             }
+            log.interpolator = 's';
             log.oldSituation = m_pbh.getOldSituation();
             log.newSituation = m_pbh.getNewSituation();
 
             status.setInterpolationSucceeded(true);
             status.setChangedPosition(true);
-            m_pbh.setTimeFraction(static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleTime) / static_cast<double>(m_nextSampleTime - m_prevSampleTime));
+            const double dt1 = static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleTime);
+            const double dt2 = static_cast<double>(m_nextSampleTime - m_prevSampleTime);
+            const double timeFraction = dt1 / dt2;
+            log.deltaTimeMs = dt1;
+            log.deltaTimeFractionMs = dt2;
+            log.simulationTimeFraction = timeFraction;
+            m_pbh.setTimeFraction(timeFraction);
 
             return { *this, currentTimeMsSinceEpoc };
         }
