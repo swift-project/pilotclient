@@ -39,4 +39,13 @@ namespace BlackGui
     {
         return (QDateTime::currentMSecsSinceEpoch() - m_lastUpdated) <= checkTimeMs;
     }
+
+    void CompleterUtils::setCompleterParameters(QCompleter *completer)
+    {
+        Q_ASSERT_X(completer, Q_FUNC_INFO, "Need completer");
+        completer->setCaseSensitivity(Qt::CaseInsensitive);
+        completer->setWrapAround(true);
+        completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+        completer->setCompletionMode(QCompleter::InlineCompletion);
+    }
 } // ns

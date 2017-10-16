@@ -49,6 +49,19 @@ namespace BlackGui
         qint64 m_lastUpdated = 0;
         QScopedPointer<QCompleter> m_completer { new QCompleter(QStringList()) }; // empty list required to init model
     };
+
+    /**
+     * Utility functions
+     */
+    class BLACKGUI_EXPORT CompleterUtils
+    {
+    public:
+        //! No Ctor
+        CompleterUtils() = delete;
+
+        //! How completer behaves
+        static void setCompleterParameters(QCompleter *completer);
+    };
 } // ns
 
 #endif // guard
