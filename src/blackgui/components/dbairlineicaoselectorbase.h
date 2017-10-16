@@ -90,12 +90,12 @@ namespace BlackGui
             QScopedPointer<QCompleter>            m_completer;   //!< completer used
             BlackMisc::Aviation::CAirlineIcaoCode m_currentIcao; //!< current ICAO object
 
-        private slots:
+        private:
             //! Airlines have been read
-            void ps_codesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void onCodesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! Data have been changed
-            void ps_completerActivated(const QString &icaoString);
+            void onCompleterActivated(const QString &icaoString);
         };
     } // ns
 } // ns

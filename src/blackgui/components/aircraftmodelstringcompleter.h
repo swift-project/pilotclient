@@ -47,7 +47,7 @@ namespace BlackGui
             explicit CAircraftModelStringCompleter(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAircraftModelStringCompleter();
+            virtual ~CAircraftModelStringCompleter();
 
             //! The model string
             QString getModelString() const;
@@ -78,21 +78,17 @@ namespace BlackGui
             //! Set the completer
             void setCompleter();
 
-            //! How completer behaves
-            static void setCompleterParameters(QCompleter *completer);
-
-        private slots:
-            //! Value has been changed
-            void ps_textChanged();
-
             //! Init the GUI
-            void ps_initGui();
+            void initGui();
+
+            //! Value has been changed
+            void onTextChanged();
 
             //! Simulator connected
-            void ps_simulatorConnected(int status);
+            void onSimulatorConnected(int status);
 
             //! All swift data have been read
-            void ps_swiftModelDataRead();
+            void onSwiftModelDataRead();
 
         private:
             QScopedPointer <Ui::CAircraftModelStringCompleter> ui;

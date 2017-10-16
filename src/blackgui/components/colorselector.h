@@ -83,22 +83,21 @@ namespace BlackGui
             //! For dragging the color
             virtual void mousePressEvent(QMouseEvent *event) override;
 
-        private slots:
+        private:
             //! Open up a color dilaog
-            void ps_colorDialog();
+            void colorDialog();
 
             //! Enter pressed
-            void ps_returnPressed();
+            void onReturnPressed();
 
             //! Set color by color name
-            void ps_colorName(const QString &colorName);
-
-        private:
-            QScopedPointer<Ui::CColorSelector> ui;
-            BlackMisc::CRgbColor m_lastColor;
+            void setColorByName(const QString &colorName);
 
             //! Reset to last valid color
             void resetToLastValidColor();
+
+            QScopedPointer<Ui::CColorSelector> ui;
+            BlackMisc::CRgbColor m_lastColor;
         };
     } // ns
 } // ns

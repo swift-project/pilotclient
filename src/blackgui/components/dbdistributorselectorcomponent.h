@@ -31,7 +31,6 @@ class QDropEvent;
 class QWidget;
 
 namespace Ui { class CDbDistributorSelectorComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -50,7 +49,7 @@ namespace BlackGui
             explicit CDbDistributorSelectorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbDistributorSelectorComponent();
+            virtual ~CDbDistributorSelectorComponent();
 
             //! Current distributor
             void setDistributor(const BlackMisc::Simulation::CDistributor &distributor);
@@ -90,17 +89,16 @@ namespace BlackGui
             //! \copydoc QWidget::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
 
-        private slots:
-            //! Distributors have been read
-            void ps_distributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
-
-            //! Data have been changed
-            void ps_dataChanged();
-
-            //! Data have been changed
-            void ps_completerActivated(const QString &distributorKeyOrAlias);
-
         private:
+            //! Distributors have been read
+            void onDistributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! Data have been changed
+            void onDataChanged();
+
+            //! Data have been changed
+            void onCompleterActivated(const QString &distributorKeyOrAlias);
+
             QScopedPointer<Ui::CDbDistributorSelectorComponent> ui;
             QScopedPointer<QCompleter>          m_completerDistributors;
             QMetaObject::Connection             m_signalConnection;

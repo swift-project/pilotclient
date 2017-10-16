@@ -30,7 +30,6 @@ class QDropEvent;
 class QWidget;
 
 namespace Ui { class CDbCountrySelectorComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -86,17 +85,16 @@ namespace BlackGui
             //! \copydoc QWidget::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
 
-        private slots:
-            //! Countries have been read
-            void ps_CountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
-
-            //! Data have been changed
-            void ps_dataChanged();
-
-            //! Data have been changed
-            void ps_completerActivated(const QString &countryName);
-
         private:
+            //! Countries have been read
+            void onCountriesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! Data have been changed
+            void onDataChanged();
+
+            //! Data have been changed
+            void onCompleterActivated(const QString &countryName);
+
             QScopedPointer<Ui::CDbCountrySelectorComponent> ui;
             QScopedPointer<QCompleter> m_completerCountryNames;
             BlackMisc::CCountry m_currentCountry;

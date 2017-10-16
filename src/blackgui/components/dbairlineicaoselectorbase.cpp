@@ -42,7 +42,7 @@ namespace BlackGui
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::ps_codesRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::onCodesRead);
 
             // when we already have data, init completers. This can not be done directly in the
             // constructor due to virtual functions
@@ -51,7 +51,7 @@ namespace BlackGui
             {
                 QTimer::singleShot(500, [this, c]()
                 {
-                    this->ps_codesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
+                    this->onCodesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
                 });
             }
         }
@@ -64,13 +64,13 @@ namespace BlackGui
             if (icao == m_currentIcao) { return false; }
             if (icao.isLoadedFromDb())
             {
-                this->m_currentIcao = icao;
+                m_currentIcao = icao;
             }
             else
             {
-                this->m_currentIcao = sGui->getWebDataServices()->smartAirlineIcaoSelector(icao);
+                m_currentIcao = sGui->getWebDataServices()->smartAirlineIcaoSelector(icao);
             }
-            emit changedAirlineIcao(this->m_currentIcao);
+            emit changedAirlineIcao(m_currentIcao);
             return true;
         }
 
@@ -134,7 +134,7 @@ namespace BlackGui
             }
         }
 
-        void CDbAirlineIcaoSelectorBase::ps_codesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CDbAirlineIcaoSelectorBase::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             if (!sGui) { return; }
             if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && readState == CEntityFlags::ReadFinished)
@@ -143,19 +143,19 @@ namespace BlackGui
                 {
                     QCompleter *c = this->createCompleter();
                     Q_ASSERT_X(c, Q_FUNC_INFO, "missing converter");
-                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbAirlineIcaoSelectorBase::ps_completerActivated);
+                    connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbAirlineIcaoSelectorBase::onCompleterActivated);
                     m_completer.reset(c); // deletes any old completer
                 }
                 else
                 {
-                    this->m_completer.reset(nullptr);
+                    m_completer.reset(nullptr);
                 }
             }
         }
 
-        void CDbAirlineIcaoSelectorBase::ps_completerActivated(const QString &icaoString)
+        void CDbAirlineIcaoSelectorBase::onCompleterActivated(const QString &icaoString)
         {
-            int dbKey = CDatastoreUtility::extractIntegerKey(icaoString);
+            const int dbKey = CDatastoreUtility::extractIntegerKey(icaoString);
             if (dbKey < 0) { return; }
             this->setAirlineIcao(dbKey);
         }

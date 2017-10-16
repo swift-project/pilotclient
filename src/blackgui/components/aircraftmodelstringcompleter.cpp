@@ -35,19 +35,19 @@ namespace BlackGui
             ui->setupUi(this);
             ui->le_modelString->setValidator(new CUpperCaseValidator(ui->le_modelString));
 
-            connect(ui->le_modelString, &QLineEdit::editingFinished, this, &CAircraftModelStringCompleter::ps_textChanged);
-            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this, &CAircraftModelStringCompleter::ps_swiftModelDataRead);
-            connect(ui->rb_Db, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::ps_initGui);
-            connect(ui->rb_ModelSet, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::ps_initGui);
-            connect(ui->rb_OwnModels, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::ps_initGui);
+            connect(ui->le_modelString, &QLineEdit::editingFinished, this, &CAircraftModelStringCompleter::onTextChanged);
+            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this, &CAircraftModelStringCompleter::onSwiftModelDataRead);
+            connect(ui->rb_Db, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
+            connect(ui->rb_ModelSet, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
+            connect(ui->rb_OwnModels, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
 
             if (sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CAircraftModelStringCompleter::ps_simulatorConnected);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CAircraftModelStringCompleter::onSimulatorConnected);
                 const CSimulatorInfo sim(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator());
                 if (sim.isSingleSimulator())
                 {
-                    this->m_modelCaches.setCurrentSimulator(sim);
+                    m_modelCaches.setCurrentSimulator(sim);
                 }
                 else
                 {
@@ -109,56 +109,48 @@ namespace BlackGui
             CompleterSourceFlag sourceWithData = None;
             if (ui->rb_Db->isChecked())
             {
-                if (this->m_currentSourceWithData == DB) { return; }
+                if (m_currentSourceWithData == DB) { return; }
                 modelStrings = sGui->getWebDataServices()->getModelCompleterStrings();
                 if (!modelStrings.isEmpty()) { sourceWithData = DB; }
             }
             else if (ui->rb_ModelSet->isChecked())
             {
-                if (this->m_currentSourceWithData == ModelSet) { return; }
+                if (m_currentSourceWithData == ModelSet) { return; }
                 modelStrings = sGui->getIContextSimulator()->getModelSetCompleterStrings(true);
                 if (!modelStrings.isEmpty()) { sourceWithData = ModelSet; }
             }
             else if (ui->rb_OwnModels->isChecked())
             {
-                if (this->m_currentSourceWithData == OwnModels) { return; }
-                modelStrings = this->m_modelCaches.getCurrentCachedModels().toCompleterStrings();
+                if (m_currentSourceWithData == OwnModels) { return; }
+                modelStrings = m_modelCaches.getCurrentCachedModels().toCompleterStrings();
                 if (!modelStrings.isEmpty()) { sourceWithData = OwnModels; }
             }
 
-            this->m_currentSourceWithData = sourceWithData;
+            m_currentSourceWithData = sourceWithData;
             ui->le_modelString->setCompleter(new QCompleter(modelStrings, this));
             ui->le_modelString->setPlaceholderText(QString("model strings (%1)").arg(modelStrings.size()));
         }
 
-        void CAircraftModelStringCompleter::setCompleterParameters(QCompleter *completer)
-        {
-            completer->setCaseSensitivity(Qt::CaseInsensitive);
-            completer->setWrapAround(true);
-            completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-            completer->setCompletionMode(QCompleter::InlineCompletion);
-        }
-
-        void CAircraftModelStringCompleter::ps_textChanged()
+        void CAircraftModelStringCompleter::onTextChanged()
         {
             emit this->modelStringChanged();
         }
 
-        void CAircraftModelStringCompleter::ps_initGui()
+        void CAircraftModelStringCompleter::initGui()
         {
             this->setCompleter();
         }
 
-        void CAircraftModelStringCompleter::ps_simulatorConnected(int status)
+        void CAircraftModelStringCompleter::onSimulatorConnected(int status)
         {
             // reinit because sim changed
             Q_UNUSED(status);
-            this->ps_initGui();
+            this->initGui();
         }
 
-        void CAircraftModelStringCompleter::ps_swiftModelDataRead()
+        void CAircraftModelStringCompleter::onSwiftModelDataRead()
         {
-            this->ps_initGui();
+            this->initGui();
         }
     } // ns
 } // ns

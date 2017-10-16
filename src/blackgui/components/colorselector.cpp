@@ -48,16 +48,16 @@ namespace BlackGui
             ui->setupUi(this);
             ui->tb_ColorDialog->setIcon(CIcons::color16());
             this->setAcceptDrops(true);
-            connect(ui->tb_ColorDialog, &QToolButton::clicked, this, &CColorSelector::ps_colorDialog);
-            connect(ui->le_Color, &QLineEdit::editingFinished, this, &CColorSelector::ps_returnPressed);
-            connect(ui->le_Color, &QLineEdit::returnPressed, this, &CColorSelector::ps_returnPressed);
+            connect(ui->tb_ColorDialog, &QToolButton::clicked, this, &CColorSelector::colorDialog);
+            connect(ui->le_Color, &QLineEdit::editingFinished, this, &CColorSelector::onReturnPressed);
+            connect(ui->le_Color, &QLineEdit::returnPressed, this, &CColorSelector::onReturnPressed);
 
             QCompleter *completer = new QCompleter(QColor::colorNames(), this);
             completer->setCaseSensitivity(Qt::CaseInsensitive);
             completer->setMaxVisibleItems(10);
             completer->setCompletionMode(QCompleter::PopupCompletion);
             ui->le_Color->setCompleter(completer);
-            connect(completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CColorSelector::ps_colorName);
+            connect(completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CColorSelector::setColorByName);
         }
 
         CColorSelector::~CColorSelector() { }
@@ -129,24 +129,24 @@ namespace BlackGui
 
             if (mime->hasColor())
             {
-                QColor color = qvariant_cast<QColor>(event->mimeData()->colorData());
+                const QColor color = qvariant_cast<QColor>(event->mimeData()->colorData());
                 if (!color.isValid()) { return; }
                 this->setColor(color);
             }
             else if (CGuiUtility::hasSwiftVariantMimeType(mime))
             {
-                CVariant valueVariant(CGuiUtility::fromSwiftDragAndDropData(mime));
+                const CVariant valueVariant(CGuiUtility::fromSwiftDragAndDropData(mime));
                 if (valueVariant.isValid())
                 {
                     if (valueVariant.canConvert<CRgbColor>())
                     {
-                        CRgbColor rgb(valueVariant.value<CRgbColor>());
+                        const CRgbColor rgb(valueVariant.value<CRgbColor>());
                         if (!rgb.isValid()) { return; }
                         this->setColor(rgb);
                     }
                     else if (valueVariant.canConvert<QColor>())
                     {
-                        QColor qColor(valueVariant.value<QColor>());
+                        const QColor qColor(valueVariant.value<QColor>());
                         if (!qColor.isValid()) { return; }
                         this->setColor(qColor);
                     }
@@ -154,12 +154,12 @@ namespace BlackGui
             }
             else if (mime->hasText())
             {
-                QString t = mime->text();
+                const QString t = mime->text();
                 if (t.isEmpty()) { return; }
                 if (!t.contains("{"))
                 {
                     // we assume a color string, not an object (because there are no {})
-                    CRgbColor c(t);
+                    const CRgbColor c(t);
                     if (!c.isValid()) { return; }
                     this->setColor(c);
                 }
@@ -169,7 +169,7 @@ namespace BlackGui
         void CColorSelector::mousePressEvent(QMouseEvent *event)
         {
             if (!event || event->button() != Qt::LeftButton) { QFrame::mousePressEvent(event); }
-            CRgbColor c(this->getColor());
+            const CRgbColor c(this->getColor());
             if (!c.isValid()) { return; }
 
             QDrag *drag = new QDrag(this);
@@ -183,7 +183,7 @@ namespace BlackGui
             Q_UNUSED(dropAction);
         }
 
-        void CColorSelector::ps_colorDialog()
+        void CColorSelector::colorDialog()
         {
             QColor q = this->getColor().toQColor();
             if (!q.isValid()) { q = m_lastColor.toQColor(); }
@@ -192,26 +192,26 @@ namespace BlackGui
             this->setColor(newColor);
         }
 
-        void CColorSelector::ps_returnPressed()
+        void CColorSelector::onReturnPressed()
         {
-            CRgbColor color = this->getColor();
+            const CRgbColor color = this->getColor();
             if (color.isValid())
             {
                 this->setColor(color);
             }
         }
 
-        void CColorSelector::ps_colorName(const QString &colorName)
+        void CColorSelector::setColorByName(const QString &colorName)
         {
             if (colorName.isEmpty()) { return; }
-            CRgbColor c(colorName, true);
+            const CRgbColor c(colorName, true);
             if (c.isValid()) { this->setColor(c); }
         }
 
         void CColorSelector::resetToLastValidColor()
         {
             if (!m_lastColor.isValid()) { return; }
-            this->setColor(this->m_lastColor);
+            this->setColor(m_lastColor);
         }
     } // ns
 } // ns
