@@ -90,6 +90,19 @@
         <deleteFile>
             <path>${installdir}/update.ini</path>
         </deleteFile>
+        <runProgram>
+            <program>launchctl</program>
+            <programArguments>remove org.freedesktop.dbus-session.plist</programArguments>
+            <workingDirectory>${installdir}</workingDirectory>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+        <deleteFile>
+            <path>${user_home_directory}/Library/LaunchAgents/org.freedesktop.dbus-session.plist</path>
+        </deleteFile>
     </preUninstallationActionList>
     <allowComponentSelection>1</allowComponentSelection>
     <compressionAlgorithm>lzma</compressionAlgorithm>
