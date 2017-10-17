@@ -217,15 +217,15 @@ namespace BlackCore
         // bind does not allow to define connection type, so we use receiver as workaround
         const QMetaObject::Connection uc; // unconnected
         const QMetaObject::Connection c1 = situationFunction ? connect(this, &CAirspaceMonitor::addedAircraftSituation, receiver, situationFunction) : uc;
-        Q_ASSERT_X(c1, Q_FUNC_INFO, "connect failed");
+        Q_ASSERT_X(c1 || !situationFunction, Q_FUNC_INFO, "connect failed");
         const QMetaObject::Connection c2 = partsFunction ? connect(this, &CAirspaceMonitor::addedAircraftParts, receiver, partsFunction) : uc;
-        Q_ASSERT_X(c2, Q_FUNC_INFO, "connect failed");
+        Q_ASSERT_X(c2 || !partsFunction, Q_FUNC_INFO, "connect failed");
         const QMetaObject::Connection c3 = removedAircraftFunction ? connect(this, &CAirspaceMonitor::removedAircraft, receiver, removedAircraftFunction) : uc;
-        Q_ASSERT_X(c3, Q_FUNC_INFO, "connect failed");
+        Q_ASSERT_X(c3 || !removedAircraftFunction, Q_FUNC_INFO, "connect failed");
         // trick is to use the Qt::QueuedConnection signal here
         // analyzer (own thread) -> airspaceAircraftSnapshot -> AirspaceMonitor -> airspaceAircraftSnapshot queued in main thread
         const QMetaObject::Connection c4 = aircraftSnapshotFunction ? connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, receiver, aircraftSnapshotFunction, Qt::QueuedConnection) : uc;
-        Q_ASSERT_X(c4, Q_FUNC_INFO, "connect failed");
+        Q_ASSERT_X(c4 || !aircraftSnapshotFunction, Q_FUNC_INFO, "connect failed");
         return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
     }
 
