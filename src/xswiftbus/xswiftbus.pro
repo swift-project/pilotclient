@@ -123,6 +123,7 @@ win32 {
     legacy_data_target.path = $$PREFIX/xswiftbus
     legacy_data_target.files *= LegacyData
 } else:macx: {
+    dep_target.files *= $$DestRoot/lib/libdbus-1.3.dylib
     dep_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtCore.framework/ &&
     dep_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtGui.framework/ &&
     dep_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtWidgets.framework/ &&
