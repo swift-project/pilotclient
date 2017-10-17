@@ -131,10 +131,7 @@ namespace BlackMisc
     QString getSwiftShareDirImpl()
     {
         QDir dir(CDirectoryUtils::binDirectory());
-        bool success = true;
-
-        success = dir.cd("../share");
-
+        const bool success = dir.cd("../share");
         if (success)
         {
             Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
