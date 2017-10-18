@@ -322,7 +322,6 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
             // No assert here as status message may come because of network problems
-            //! \fixme comment above assumes other methods Q_ASSERT(isConnected())
             if (!isConnected()) { return; }
 
             // avoid infinite recursion in case this function is called due to a message caused by this very function
@@ -345,7 +344,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
         {
-            if (!isConnected()) { return; }
+            Q_ASSERT(isConnected());
 
             QColor color;
             if (message.isServerMessage()) { color = "orchid"; }
@@ -422,7 +421,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?
+            Q_ASSERT(isConnected());
             if (originator == this->identifier()) { return false; }
             auto com1 = CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
             auto com2 = CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
@@ -450,7 +449,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?
+            Q_ASSERT(isConnected());
             if (originator == this->identifier()) { return false; }
             Q_UNUSED(selcal);
 
@@ -504,7 +503,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
-            if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?
+            Q_ASSERT(isConnected());
             //! \todo XPlane driver check if already exists, how?
             //! \todo XPlane driver set correct return value
 
@@ -528,7 +527,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
         {
-            if (!isConnected()) { return; } //! \fixme why is this method called when not connected?
+            Q_ASSERT(isConnected());
             using namespace BlackMisc::PhysicalQuantities;
             m_traffic->addPlanePosition(situation.getCallsign().asString(),
                                         situation.latitude().value(CAngleUnit::deg()),
@@ -573,7 +572,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
         {
-            if (!isConnected()) { return; } //! \fixme why is this method called when not connected?
+            Q_ASSERT(isConnected());
             m_traffic->addPlaneSurfaces(callsign.asString(), parts.isGearDown() ? 1 : 0,
                                         parts.getFlapsPercent() / 100.0, parts.isSpoilersOut() ? 1 : 0, parts.isSpoilersOut() ? 1 : 0, parts.getFlapsPercent() / 100.0,
                                         0, parts.isAnyEngineOn() ? 0 : 0.75, 0, 0, 0,
@@ -584,7 +583,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
-            if (!isConnected()) { return false; } //! \fixme why is this method called when not connected?
+            Q_ASSERT(isConnected());
             m_traffic->removePlane(callsign.asString());
             updateAircraftRendered(callsign, false);
             CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
@@ -593,6 +592,7 @@ namespace BlackSimPlugin
 
         int CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
         {
+            Q_ASSERT(isConnected());
             //! \todo XP driver obtain number of removed aircraft
             int r = getAircraftInRangeCount();
             m_traffic->removeAllPlanes();
@@ -631,6 +631,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
         {
+            Q_ASSERT(isConnected());
             m_weather->setUseRealWeather(false);
 
             // todo: find the closest
