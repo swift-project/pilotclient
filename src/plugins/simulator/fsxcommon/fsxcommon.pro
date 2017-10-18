@@ -12,7 +12,7 @@ DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
 equals(WORD_SIZE,64) {
-    INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/P3D-v4
+    INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/P3D-v4.1
 }
 equals(WORD_SIZE,32) {
     INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/FSX-XPack

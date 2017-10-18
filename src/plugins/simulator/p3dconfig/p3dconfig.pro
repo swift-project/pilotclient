@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core widgets dbus network
+QT += core widgets dbus network
 
 TARGET = simulatorp3dconfig
 TEMPLATE = lib
