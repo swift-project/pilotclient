@@ -336,7 +336,7 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulated::setObjectName(const CSimulatorInfo &info)
         {
-            QObject::setObjectName("Emulated driver for " + info.getSimulator());
+            QObject::setObjectName("Emulated driver for " + info.toQString());
             m_interpolatorFetchTimer.setObjectName(this->objectName() + ":interpolatorFetchTimer");
         }
 
