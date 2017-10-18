@@ -14,12 +14,8 @@
 
 #include <QtGlobal>
 
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
 #include "blackmisc/aviation/aircraftlights.h"
-#include <SimConnect.h>
-#include <windows.h>
+#include "../fsx/simconnectwindows.h"
 #include <algorithm>
 #include <QString>
 

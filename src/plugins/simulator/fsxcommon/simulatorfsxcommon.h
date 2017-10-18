@@ -14,6 +14,7 @@
 
 #include "simconnectdatadefinition.h"
 #include "simconnectobject.h"
+#include "../fsx/simconnectwindows.h"
 #include "../fscommon/simulatorfscommon.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
@@ -26,16 +27,10 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
 
-#include <SimConnect.h>
 #include <QObject>
 #include <QtPlugin>
 #include <QHash>
 #include <QFutureWatcher>
-
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <windows.h>
 
 namespace BlackSimPlugin
 {
