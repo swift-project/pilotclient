@@ -324,7 +324,7 @@ namespace BlackGui
                                 const QString dir = CDbOwnModelsComponent::directorySelector(sim);
                                 if (!dir.isEmpty())
                                 {
-                                    ownModelsComp->ps_requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, dir);
+                                    ownModelsComp->ps_requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
                                 }
                             });
                         }
@@ -350,7 +350,7 @@ namespace BlackGui
                                 const QString dir = CDbOwnModelsComponent::directorySelector(sim);
                                 if (!dir.isEmpty())
                                 {
-                                    ownModelsComp->ps_requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, dir);
+                                    ownModelsComp->ps_requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
                                 }
                             });
                         }
@@ -376,7 +376,7 @@ namespace BlackGui
                                 const QString dir = CDbOwnModelsComponent::directorySelector(sim);
                                 if (!dir.isEmpty())
                                 {
-                                    ownModelsComp->ps_requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, dir);
+                                    ownModelsComp->ps_requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
                                 }
                             });
                         }
@@ -401,7 +401,7 @@ namespace BlackGui
                                 const QString dir = CDbOwnModelsComponent::directorySelector(sim);
                                 if (!dir.isEmpty())
                                 {
-                                    ownModelsComp->ps_requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, dir);
+                                    ownModelsComp->ps_requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
                                 }
                             });
                         }
@@ -427,7 +427,7 @@ namespace BlackGui
             );
         }
 
-        void CDbOwnModelsComponent::ps_loadInstalledModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QString &directory)
+        void CDbOwnModelsComponent::ps_loadInstalledModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories)
         {
             if (!this->initModelLoader(simulator))
             {
@@ -444,7 +444,7 @@ namespace BlackGui
             CLogMessage(this).info("Starting loading for '%1'") << simulator.toQString();
             ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
-            m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), directory);
+            m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), modelDirectories);
         }
 
         void CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished(const CStatusMessage &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
@@ -475,9 +475,9 @@ namespace BlackGui
             ui->comp_SimulatorSelector->setValue(simulator);
         }
 
-        void CDbOwnModelsComponent::ps_requestSimulatorModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QString &directory)
+        void CDbOwnModelsComponent::ps_requestSimulatorModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories)
         {
-            this->ps_loadInstalledModels(simulator, mode, directory);
+            this->ps_loadInstalledModels(simulator, mode, modelDirectories);
         }
 
         void CDbOwnModelsComponent::ps_requestSimulatorModelsWithCacheInBackground(const CSimulatorInfo &simulator)

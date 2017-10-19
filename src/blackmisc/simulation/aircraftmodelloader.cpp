@@ -182,7 +182,7 @@ namespace BlackMisc
             return this->setCachedModels(CAircraftModelList());
         }
 
-        void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
+        void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories)
         {
             if (m_loadingInProgress) { return; }
             m_loadingInProgress = true;
@@ -206,16 +206,18 @@ namespace BlackMisc
             }
 
             // really load from disk?
-            if (m_skipLoadingEmptyModelDir && !CDirectoryUtils::existsUnemptyDirectory(directory))
+            const CSimulatorInfo simulator = this->getSimulator();
+            const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
+            if (m_skipLoadingEmptyModelDir && modelDirs.isEmpty())
             {
                 const CStatusMessage status = CStatusMessage(this, CStatusMessage::SeverityWarning, "Empty or not existing %1 directory '%2', skipping read")
-                                              << this->getSimulator().toQString() << directory;
+                                              << simulator.toQString() << modelDirectories.join(", ");
                 m_loadingMessages.push_back(status);
-                emit loadingFinished(status, this->getSimulator(), LoadingSkipped);
+                emit loadingFinished(status, simulator, LoadingSkipped);
                 return;
             }
 
-            this->startLoadingFromDisk(mode, modelConsolidation, directory);
+            this->startLoadingFromDisk(mode, modelConsolidation, modelDirs);
         }
 
         const CSimulatorInfo IAircraftModelLoader::getSimulator() const

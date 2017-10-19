@@ -63,26 +63,24 @@ namespace BlackMisc
                 if (m_parserWorker) { m_parserWorker->waitForFinished(); }
             }
 
-            void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
+            void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories)
             {
                 static const CStatusMessage statusLoadingOk(this, CStatusMessage::SeverityInfo, "Aircraft config parser loaded data");
                 static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError, "Aircraft config parser did not load data");
 
                 const CSimulatorInfo simulator = this->getSimulator();
-                const QString modelDirectory = CFileUtils::fixWindowsUncPath(
-                                                   directory.isEmpty() ? m_settings.getFirstModelDirectoryOrDefault(simulator) : directory
-                                               ); // expect only one directory
+                const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
                 const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (mode.testFlag(LoadInBackground))
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
-                                     [this, modelDirectory, excludedDirectoryPatterns, simulator, modelConsolidation]()
+                                     [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]()
                     {
                         bool ok = false;
                         CStatusMessageList msgs;
-                        const auto aircraftCfgEntriesList = this->performParsing(modelDirectory, excludedDirectoryPatterns, msgs, &ok);
+                        const auto aircraftCfgEntriesList = this->performParsing(modelDirs, excludedDirectoryPatterns, msgs, &ok);
                         CAircraftModelList models;
                         if (ok)
                         {
@@ -119,13 +117,13 @@ namespace BlackMisc
                 {
                     bool ok;
                     CStatusMessageList msgs;
-                    m_parsedCfgEntriesList = performParsing(modelDirectory, excludedDirectoryPatterns, msgs, &ok);
-                    CAircraftModelList models(m_parsedCfgEntriesList.toAircraftModelList(simulator, true, msgs));
+                    m_parsedCfgEntriesList = performParsing(modelDirs, excludedDirectoryPatterns, msgs, &ok);
+                    const CAircraftModelList models(m_parsedCfgEntriesList.toAircraftModelList(simulator, true, msgs));
                     m_loadingMessages = msgs;
                     const bool hasData = !models.isEmpty();
                     if (hasData)
                     {
-                        this->setCachedModels(models); // not thread safe
+                        this->setCachedModels(models);
                     }
                     // currently I treat no data as error
                     emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator, ParsedData);
@@ -135,6 +133,20 @@ namespace BlackMisc
             bool CAircraftCfgParser::isLoadingFinished() const
             {
                 return !m_parserWorker || m_parserWorker->isFinished();
+            }
+
+            CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QStringList &directories, const QStringList &excludeDirectories, CStatusMessageList &messages, bool *ok)
+            {
+                CAircraftCfgEntriesList entries;
+                bool dirOk = false;
+                bool success = true;
+                for (const QString &dir : directories)
+                {
+                    entries.push_back(performParsing(dir, excludeDirectories, messages, &dirOk));
+                    success &= dirOk;
+                }
+                *ok = success;
+                return entries;
             }
 
             CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, CStatusMessageList &messages, bool *ok)

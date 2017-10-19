@@ -26,7 +26,7 @@
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
-#include <QString>
+#include <QStringList>
 #include <memory>
 
 class QAction;
@@ -121,13 +121,13 @@ namespace BlackGui
             void ps_requestOwnModelsUpdate();
 
             //! Load the models
-            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QString &directory = "");
+            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
 
             //! Model loading finished
             void ps_onOwnModelsLoadingFinished(const BlackMisc::CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
 
             //! Request simulator models
-            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QString &directory = "");
+            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
 
             //! Request simulator models from cache
             void ps_requestSimulatorModelsWithCacheInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator);

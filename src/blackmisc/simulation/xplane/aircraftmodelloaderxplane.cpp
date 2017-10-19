@@ -11,6 +11,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
@@ -122,17 +123,16 @@ namespace BlackMisc
                 if (m_parserWorker) { m_parserWorker->waitForFinished(); }
             }
 
-            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
+            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories)
             {
-                //! \todo KB/MS 2017-09 not high prio, but still needed: according to meeting XP needs to support multiple directories
                 const CSimulatorInfo simulator = this->getSimulator();
-                const QString modelDirectory(!directory.isEmpty() ? directory : this->getFirstModelDirectoryOrDefault()); // directory
+                const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
                 const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
-                if (modelDirectory.isEmpty())
+                if (modelDirs.isEmpty())
                 {
                     this->clearCache();
-                    emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directory '%1' is empty") << modelDirectory, simulator, ParsedData);
+                    emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
                     return;
                 }
 
@@ -140,8 +140,11 @@ namespace BlackMisc
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
-                                     [this, modelDirectory, excludedDirectoryPatterns, modelConsolidation]()
+                                     [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]()
                     {
+                        //! \todo KB/MS 2017-09 not high prio, but still needed: according to meeting XP needs to support multiple directories
+                        //! \todo KB with T118 now model directories are passed (changed signatures) but the code below needs to support multiple dirs
+                        const QString modelDirectory = modelDirs.front();
                         auto models = performParsing(modelDirectory, excludedDirectoryPatterns);
                         if (modelConsolidation) { modelConsolidation(models, true); }
                         return models;

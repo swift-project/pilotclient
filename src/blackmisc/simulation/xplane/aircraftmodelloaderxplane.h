@@ -61,7 +61,7 @@ namespace BlackMisc
             protected:
                 //! \name Interface functions
                 //! @{
-                virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory) override;
+                virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories) override;
                 //! @}
 
             private:

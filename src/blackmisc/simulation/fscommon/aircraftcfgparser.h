@@ -60,7 +60,7 @@ namespace BlackMisc
             protected:
                 //! \name Interface functions
                 //! @{
-                virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory) override;
+                virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories) override;
                 //! @}
 
             private:
@@ -72,7 +72,13 @@ namespace BlackMisc
                     Unknown
                 };
 
-                //! Perform the parsing
+                //! Perform the parsing for all directories
+                //! \threadsafe
+                CAircraftCfgEntriesList performParsing(
+                    const QStringList &directories, const QStringList &excludeDirectories,
+                    BlackMisc::CStatusMessageList &messages, bool *ok);
+
+                //! Perform the parsing for one directory
                 //! \threadsafe
                 CAircraftCfgEntriesList performParsing(
                     const QString &directory, const QStringList &excludeDirectories,
