@@ -198,6 +198,9 @@ namespace BlackMisc
             //! A cache has been changed
             void cacheChanged(const CSimulatorInfo &simInfo);
 
+            //! Get model directories from settings if empty, otherwise checked and UNC path fixed
+            QStringList getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const;
+
             std::atomic<bool> m_cancelLoading { false };            //!< flag, requesting to cancel loading
             std::atomic<bool> m_loadingInProgress { false };        //!< Loading in progress
             std::atomic<bool> m_skipLoadingEmptyModelDir { true };  //!< Loading empty model dirs might erase the cache, so normally we skip it

@@ -133,6 +133,13 @@ namespace BlackMisc
             emit this->loadingFinished(status, simInfo, CacheLoaded);
         }
 
+        QStringList IAircraftModelLoader::getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const
+        {
+            QStringList modelDirs = modelDirectories.isEmpty() ? m_settings.getModelDirectoriesOrDefault(simulator) : modelDirectories;
+            modelDirs = CFileUtils::fixWindowsUncPaths(modelDirs);
+            return CDirectoryUtils::getExistingUnemptyDirectories(modelDirs);
+        }
+
         QStringList IAircraftModelLoader::getModelDirectoriesOrDefault() const
         {
             const QStringList mdirs = m_settings.getModelDirectoriesOrDefault(this->getSimulator());
