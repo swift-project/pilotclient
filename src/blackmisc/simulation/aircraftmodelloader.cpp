@@ -34,8 +34,8 @@ namespace BlackMisc
             m_caches.setCurrentSimulator(simulator);
 
             // first connect is an internal connection to log info about load status
-            connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::ps_loadFinished);
-            connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::ps_cacheChanged);
+            connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::loadFinished);
+            connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::cacheChanged);
         }
 
         QString IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadFinishedInfo info)
@@ -109,7 +109,7 @@ namespace BlackMisc
             }
         }
 
-        void IAircraftModelLoader::ps_loadFinished(const CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, LoadFinishedInfo info)
+        void IAircraftModelLoader::loadFinished(const CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, LoadFinishedInfo info)
         {
             Q_UNUSED(info);
 
@@ -127,7 +127,7 @@ namespace BlackMisc
             }
         }
 
-        void IAircraftModelLoader::ps_cacheChanged(const CSimulatorInfo &simInfo)
+        void IAircraftModelLoader::cacheChanged(const CSimulatorInfo &simInfo)
         {
             static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "Cached changed");
             emit this->loadingFinished(status, simInfo, CacheLoaded);

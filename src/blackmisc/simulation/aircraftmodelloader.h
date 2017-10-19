@@ -94,7 +94,7 @@ namespace BlackMisc
 
             //! Start the loading process from disk.
             //! Optional DB models can be passed and used for data consolidation.
-            void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidation &modelConsolidation = {}, const QString &directory = {});
+            void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidation &modelConsolidation = {}, const QStringList &modelDirectories = {});
 
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;
@@ -190,7 +190,13 @@ namespace BlackMisc
             BlackMisc::CStatusMessage clearCache();
 
             //! Start the loading process from disk
-            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory) = 0;
+            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories) = 0;
+
+            //! Loading finished, also logs messages
+            void loadFinished(const CStatusMessage &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
+
+            //! A cache has been changed
+            void cacheChanged(const CSimulatorInfo &simInfo);
 
             std::atomic<bool> m_cancelLoading { false };            //!< flag, requesting to cancel loading
             std::atomic<bool> m_loadingInProgress { false };        //!< Loading in progress
@@ -198,13 +204,6 @@ namespace BlackMisc
             Data::CModelCaches m_caches { false, this };            //!< caches used with this loader
             Settings::CMultiSimulatorSettings m_settings { this };  //!< settings
             CStatusMessageList m_loadingMessages;                   //!< loading messages
-
-        protected slots:
-            //! Loading finished, also logs messages
-            void ps_loadFinished(const CStatusMessage &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
-
-            //! A cache has been changed
-            void ps_cacheChanged(const CSimulatorInfo &simInfo);
         };
     } // ns
 } // ns
