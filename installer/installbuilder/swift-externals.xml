@@ -60,6 +60,18 @@
                 <distributionFile>
                     <origin>../../dist/lib/libvatlib.so</origin>
                 </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libopus.so.*</origin>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libportaudio.so.*</origin>
+                </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libspeexdsp.so.*</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
