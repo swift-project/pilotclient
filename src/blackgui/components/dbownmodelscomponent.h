@@ -38,7 +38,6 @@ namespace BlackGui
     namespace Menus { class CMenuActions; }
     namespace Models { class CAircraftModelListModel; }
     namespace Views { class CAircraftModelView; }
-
     namespace Components
     {
         /*!

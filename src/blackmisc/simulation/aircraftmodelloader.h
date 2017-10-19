@@ -55,7 +55,7 @@ namespace BlackMisc
             enum LoadModeFlag
             {
                 NotSet                = 0,
-                LoadDirectly          = 1 << 0,   //!< load syncronously (blocking), normally for testing
+                LoadDirectly          = 1 << 0,   //!< load synchronously (blocking), normally for testing
                 LoadInBackground      = 1 << 1,   //!< load in background, asyncronously
                 CacheFirst            = 1 << 2,   //!< always use cache (if it has data)
                 CacheSkipped          = 1 << 3,   //!< ignore cache

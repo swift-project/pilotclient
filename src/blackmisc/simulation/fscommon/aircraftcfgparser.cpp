@@ -60,7 +60,7 @@ namespace BlackMisc
             CAircraftCfgParser::~CAircraftCfgParser()
             {
                 // that should be safe as long as the worker uses deleteLater (which it does)
-                if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
+                if (m_parserWorker) { m_parserWorker->waitForFinished(); }
             }
 
             void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
@@ -70,9 +70,9 @@ namespace BlackMisc
 
                 const CSimulatorInfo simulator = this->getSimulator();
                 const QString modelDirectory = CFileUtils::fixWindowsUncPath(
-                                                   directory.isEmpty() ? this->m_settings.getFirstModelDirectoryOrDefault(simulator) : directory
+                                                   directory.isEmpty() ? m_settings.getFirstModelDirectoryOrDefault(simulator) : directory
                                                ); // expect only one directory
-                const QStringList excludedDirectoryPatterns(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
+                const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (mode.testFlag(LoadInBackground))
                 {
@@ -94,10 +94,10 @@ namespace BlackMisc
                     m_parserWorker->thenWithResult<LoaderResponse>(this, [this, simulator](const LoaderResponse & tuple)
                     {
                         const bool ok = std::get<3>(tuple);
-                        this->m_loadingMessages = std::get<2>(tuple);
+                        m_loadingMessages = std::get<2>(tuple);
                         if (ok)
                         {
-                            this->m_parsedCfgEntriesList = std::get<0>(tuple);
+                            m_parsedCfgEntriesList = std::get<0>(tuple);
                             const CAircraftModelList models(std::get<1>(tuple));
                             const bool hasData = !models.isEmpty();
                             if (hasData)
@@ -109,7 +109,7 @@ namespace BlackMisc
                         }
                         else
                         {
-                            CStatusMessage status = this->m_loadingMessages.toSingleMessage();
+                            CStatusMessage status = m_loadingMessages.toSingleMessage();
                             status.setSeverity(CStatusMessage::SeverityError);
                             emit this->loadingFinished(status, simulator, ParsedData);
                         }
@@ -119,9 +119,9 @@ namespace BlackMisc
                 {
                     bool ok;
                     CStatusMessageList msgs;
-                    this->m_parsedCfgEntriesList = performParsing(modelDirectory, excludedDirectoryPatterns, msgs, &ok);
-                    CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(simulator, true, msgs));
-                    this->m_loadingMessages = msgs;
+                    m_parsedCfgEntriesList = performParsing(modelDirectory, excludedDirectoryPatterns, msgs, &ok);
+                    CAircraftModelList models(m_parsedCfgEntriesList.toAircraftModelList(simulator, true, msgs));
+                    m_loadingMessages = msgs;
                     const bool hasData = !models.isEmpty();
                     if (hasData)
                     {

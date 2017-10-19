@@ -353,7 +353,7 @@ namespace BlackGui
                 if (displayInfo)
                 {
                     const QString no = QString::number(this->getStashedModelsCount());
-                    CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
+                    const CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
                     this->showOverlayMessage(msg);
                 }
             }

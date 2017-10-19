@@ -88,14 +88,14 @@ namespace BlackGui
         int CAircraftModelView::applyToSelected(const CLivery &livery)
         {
             if (!hasSelection()) { return 0; }
-            int c = this->updateSelected(CVariant::from(livery), CAircraftModel::IndexLivery);
+            const int c = this->updateSelected(CVariant::from(livery), CAircraftModel::IndexLivery);
             return c;
         }
 
         int CAircraftModelView::applyToSelected(const CAircraftIcaoCode &icao)
         {
             if (!hasSelection()) { return 0; }
-            int c = this->updateSelected(CVariant::from(icao), CAircraftModel::IndexAircraftIcaoCode);
+            const int c = this->updateSelected(CVariant::from(icao), CAircraftModel::IndexAircraftIcaoCode);
             return c;
         }
 
@@ -109,7 +109,7 @@ namespace BlackGui
         int CAircraftModelView::applyToSelected(const CPropertyIndexVariantMap &vm)
         {
             if (!hasSelection()) { return 0; }
-            int c = this->updateSelected(vm);
+            const int c = this->updateSelected(vm);
             return c;
         }
 

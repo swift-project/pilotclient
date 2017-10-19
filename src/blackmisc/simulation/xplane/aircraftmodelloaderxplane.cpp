@@ -119,7 +119,7 @@ namespace BlackMisc
             CAircraftModelLoaderXPlane::~CAircraftModelLoaderXPlane()
             {
                 // that should be safe as long as the worker uses deleteLater (which it does)
-                if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
+                if (m_parserWorker) { m_parserWorker->waitForFinished(); }
             }
 
             void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
@@ -127,7 +127,7 @@ namespace BlackMisc
                 //! \todo KB/MS 2017-09 not high prio, but still needed: according to meeting XP needs to support multiple directories
                 const CSimulatorInfo simulator = this->getSimulator();
                 const QString modelDirectory(!directory.isEmpty() ? directory : this->getFirstModelDirectoryOrDefault()); // directory
-                const QStringList excludedDirectoryPatterns(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
+                const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (modelDirectory.isEmpty())
                 {
