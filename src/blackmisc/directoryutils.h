@@ -115,6 +115,9 @@ namespace BlackMisc
         //! Exists directory and does it contains files
         static bool existsUnemptyDirectory(const QString &testDir);
 
+        //! Get the existing directories
+        static QStringList getExistingUnemptyDirectories(const QStringList &directories);
+
         //! Result of directory comparison
         struct DirComparison
         {

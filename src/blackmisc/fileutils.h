@@ -134,6 +134,9 @@ namespace BlackMisc
         //! \remark On Windows starting with "/" means an UNC path, on UNIX it varies, see http://unix.stackexchange.com/a/12291/19428
         static QString fixWindowsUncPath(const QString &filePath);
 
+        //! Fix UNC file paths
+        static QStringList fixWindowsUncPaths(const QStringList &filePaths);
+
         //! Human readable (GB, MB, ..) file size
         static QString humanReadableFileSize(qint64 size);
     };

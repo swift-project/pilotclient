@@ -367,6 +367,16 @@ namespace BlackMisc
         return f.arg(filePath);
     }
 
+    QStringList CFileUtils::fixWindowsUncPaths(const QStringList &filePaths)
+    {
+        QStringList fixedPaths;
+        for (const QString &path : filePaths)
+        {
+            fixedPaths << fixWindowsUncPath(path);
+        }
+        return fixedPaths;
+    }
+
     QString CFileUtils::humanReadableFileSize(qint64 size)
     {
         // from https://stackoverflow.com/a/30958189/356726

@@ -358,6 +358,16 @@ namespace BlackMisc
         return !dir.isEmpty();
     }
 
+    QStringList CDirectoryUtils::getExistingUnemptyDirectories(const QStringList &directories)
+    {
+        QStringList dirs;
+        for (const QString &dir : directories)
+        {
+            if (existsUnemptyDirectory(dir)) { dirs << dir; }
+        }
+        return dirs;
+    }
+
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         QSet<QString> sl;
