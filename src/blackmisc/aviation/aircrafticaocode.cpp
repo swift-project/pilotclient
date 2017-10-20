@@ -110,6 +110,13 @@ namespace BlackMisc
         {
             static const CLogCategoryList cats({ CLogCategory("swift.blackmisc.aircrafticao"), CLogCategory::validation()});
             CStatusMessageList msg;
+            if (this->isLoadedFromDb())
+            {
+                // actually we would expect all DB data to be valid, however right now
+                // we only check special cases
+                if (this->getDesignator() == this->getUnassignedDesignator()) { return msg; } // DB ZZZZ
+            }
+
             if (!hasKnownDesignator()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: unknown designator")); }
             if (!hasValidCombinedType()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: invalid combined type")); }
             if (!hasValidWtc()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Aircraft ICAO: wrong WTC")); }
