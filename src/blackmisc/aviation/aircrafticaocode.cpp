@@ -93,11 +93,11 @@ namespace BlackMisc
             if (!this->hasValidDesignator() && otherIcaoCode.hasValidDesignator()) { this->setDesignator(otherIcaoCode.getDesignator()); }
             if (!this->hasValidWtc() && otherIcaoCode.hasValidWtc()) { this->setWtc(otherIcaoCode.getDesignator()); }
             if (!this->hasValidCombinedType() && otherIcaoCode.hasValidCombinedType()) { this->setCombinedType(otherIcaoCode.getCombinedType()); }
-            if (this->m_manufacturer.isEmpty()) { this->setManufacturer(otherIcaoCode.getManufacturer());}
-            if (this->m_modelDescription.isEmpty()) { this->setModelDescription(otherIcaoCode.getModelDescription()); }
-            if (this->m_modelIataDescription.isEmpty()) { this->setModelIataDescription(otherIcaoCode.getModelIataDescription()); }
-            if (this->m_modelSwiftDescription.isEmpty()) { this->setModelSwiftDescription(otherIcaoCode.getModelSwiftDescription()); }
-            if (this->m_family.isEmpty()) { this->setFamily(otherIcaoCode.getFamily()); }
+            if (m_manufacturer.isEmpty()) { this->setManufacturer(otherIcaoCode.getManufacturer());}
+            if (m_modelDescription.isEmpty()) { this->setModelDescription(otherIcaoCode.getModelDescription()); }
+            if (m_modelIataDescription.isEmpty()) { this->setModelIataDescription(otherIcaoCode.getModelIataDescription()); }
+            if (m_modelSwiftDescription.isEmpty()) { this->setModelSwiftDescription(otherIcaoCode.getModelSwiftDescription()); }
+            if (m_family.isEmpty()) { this->setFamily(otherIcaoCode.getFamily()); }
             if (!this->hasValidDbKey())
             {
                 // need to observe if it makes sense to copy the key but not copying the whole object
@@ -181,12 +181,12 @@ namespace BlackMisc
 
         bool CAircraftIcaoCode::hasDesignator() const
         {
-            return !this->m_designator.isEmpty();
+            return !m_designator.isEmpty();
         }
 
         bool CAircraftIcaoCode::hasValidDesignator() const
         {
-            return isValidDesignator(this->m_designator);
+            return isValidDesignator(m_designator);
         }
 
         bool CAircraftIcaoCode::hasKnownDesignator() const
@@ -217,14 +217,14 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getEngineType() const
         {
-            if (this->m_combinedType.length() != 3) return "";
-            return this->m_combinedType.right(1);
+            if (m_combinedType.length() != 3) return "";
+            return m_combinedType.right(1);
         }
 
         int CAircraftIcaoCode::getEngineCount() const
         {
-            if (this->m_combinedType.length() < 2) { return -1; }
-            const QString c(this->m_combinedType.mid(1, 1));
+            if (m_combinedType.length() < 2) { return -1; }
+            const QString c(m_combinedType.mid(1, 1));
             if (c == "-") { return -1; }
             bool ok;
             int ec = c.toInt(&ok);
@@ -234,14 +234,14 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getEngineCountString() const
         {
-            if (this->m_combinedType.length() < 2) { return ""; }
-            return this->m_combinedType.mid(1, 1);
+            if (m_combinedType.length() < 2) { return ""; }
+            return m_combinedType.mid(1, 1);
         }
 
         QString CAircraftIcaoCode::getAircraftType() const
         {
-            if (this->m_combinedType.length() < 1) { return ""; }
-            QString c(this->m_combinedType.at(0));
+            if (m_combinedType.length() < 1) { return ""; }
+            QString c(m_combinedType.at(0));
             if (c == "-") { return ""; }
             return c;
         }
@@ -315,28 +315,28 @@ namespace BlackMisc
         bool CAircraftIcaoCode::matchesManufacturer(const QString &manufacturer) const
         {
             if (manufacturer.isEmpty()) { return false; }
-            return (manufacturer.length() == this->m_manufacturer.length() && this->m_manufacturer.startsWith(manufacturer, Qt::CaseInsensitive));
+            return (manufacturer.length() == m_manufacturer.length() && m_manufacturer.startsWith(manufacturer, Qt::CaseInsensitive));
         }
 
         bool CAircraftIcaoCode::isVtol() const
         {
             // special designators
-            if (this->m_designator.length() == 4)
+            if (m_designator.length() == 4)
             {
                 if (
-                    this->m_designator == "BALL" ||
-                    this->m_designator == "SHIP" ||
-                    this->m_designator == "GYRO" ||
-                    this->m_designator == "UHEL"
+                    m_designator == "BALL" ||
+                    m_designator == "SHIP" ||
+                    m_designator == "GYRO" ||
+                    m_designator == "UHEL"
                 ) { return true; }
             }
 
             if (!m_combinedType.isEmpty())
             {
                 if (
-                    this->m_combinedType.startsWith('G') || // gyrocopter
-                    this->m_combinedType.startsWith('H') || // helicopter
-                    this->m_combinedType.startsWith('T')    // tilt wing
+                    m_combinedType.startsWith('G') || // gyrocopter
+                    m_combinedType.startsWith('H') || // helicopter
+                    m_combinedType.startsWith('T')    // tilt wing
                 ) { return true; }
             }
             return false;
@@ -494,35 +494,35 @@ namespace BlackMisc
             switch (i)
             {
             case IndexAircraftDesignator:
-                return CVariant::fromValue(this->m_designator);
+                return CVariant::fromValue(m_designator);
             case IndexIataCode:
-                return CVariant::fromValue(this->m_iataCode);
+                return CVariant::fromValue(m_iataCode);
             case IndexFamily:
-                return CVariant::fromValue(this->m_family);
+                return CVariant::fromValue(m_family);
             case IndexCombinedAircraftType:
-                return CVariant::fromValue(this->m_combinedType);
+                return CVariant::fromValue(m_combinedType);
             case IndexModelDescription:
-                return CVariant::fromValue(this->m_modelDescription);
+                return CVariant::fromValue(m_modelDescription);
             case IndexModelIataDescription:
-                return CVariant::fromValue(this->m_modelIataDescription);
+                return CVariant::fromValue(m_modelIataDescription);
             case IndexModelSwiftDescription:
-                return CVariant::fromValue(this->m_modelSwiftDescription);
+                return CVariant::fromValue(m_modelSwiftDescription);
             case IndexCombinedDescription:
                 return CVariant::fromValue(this->getCombinedModelDescription());
             case IndexManufacturer:
-                return CVariant::fromValue(this->m_manufacturer);
+                return CVariant::fromValue(m_manufacturer);
             case IndexWtc:
-                return CVariant::fromValue(this->m_wtc);
+                return CVariant::fromValue(m_wtc);
             case IndexIsVtol:
                 return CVariant::fromValue(this->isVtol());
             case IndexIsLegacy:
-                return CVariant::fromValue(this->m_legacy);
+                return CVariant::fromValue(m_legacy);
             case IndexIsMilitary:
-                return CVariant::fromValue(this->m_military);
+                return CVariant::fromValue(m_military);
             case IndexIsRealworld:
-                return CVariant::fromValue(this->m_realWorld);
+                return CVariant::fromValue(m_realWorld);
             case IndexRank:
-                return CVariant::fromValue(this->m_rank);
+                return CVariant::fromValue(m_rank);
             case IndexDesignatorManufacturer:
                 return CVariant::fromValue(this->getDesignatorManufacturer());
             default:
@@ -565,13 +565,13 @@ namespace BlackMisc
                 this->setWtc(variant.value<QString>());
                 break;
             case IndexIsLegacy:
-                this->m_legacy = variant.toBool();
+                m_legacy = variant.toBool();
                 break;
             case IndexIsMilitary:
-                this->m_military = variant.toBool();
+                m_military = variant.toBool();
                 break;
             case IndexRank:
-                this->m_rank = variant.toInt();
+                m_rank = variant.toInt();
                 break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
