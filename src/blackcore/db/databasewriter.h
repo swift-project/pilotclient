@@ -62,16 +62,15 @@ namespace BlackCore
                                  const BlackMisc::CStatusMessageList &messages,
                                  bool sendingSuccessful, bool directWrite);
 
-        private slots:
-            //! Post response
-            void ps_postModelsResponse(QNetworkReply *nwReplyPtr);
-
         private:
             BlackMisc::Network::CUrlLogList m_writeLog;
             BlackMisc::Network::CUrl m_modelPublishUrl;
             QNetworkReply *m_pendingReply = nullptr;
             qint64         m_replyPendingSince = -1;
             bool           m_shutdown = false;
+
+            //! Post response
+            void postedModelsResponse(QNetworkReply *nwReplyPtr);
 
             //! Kill the pending reply
             bool killPendingReply();

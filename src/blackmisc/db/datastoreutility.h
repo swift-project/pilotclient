@@ -20,8 +20,8 @@
 namespace BlackMisc
 {
     class CStatusMessageList;
-    namespace Simulation { class CAircraftModelList; }
 
+    namespace Simulation { class CAircraftModelList; }
     namespace Db
     {
         /*!

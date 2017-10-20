@@ -78,7 +78,7 @@ namespace BlackMisc
 
         bool CDatastoreUtility::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,  CAircraftModelList &skippedModels, CStatusMessageList &messages, bool &directWrite)
         {
-            static const CLogCategoryList cats({ CLogCategory::swiftDbWebservice()});
+            static const CLogCategoryList cats({CLogCategory::swiftDbWebservice()});
             directWrite = false;
 
             if (jsonResponse.isEmpty())
@@ -92,7 +92,7 @@ namespace BlackMisc
             // array of messages only
             if (jsonDoc.isArray())
             {
-                CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(jsonDoc.array()));
+                const CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(jsonDoc.array()));
                 messages.push_back(msgs);
                 return true;
             }
@@ -110,8 +110,8 @@ namespace BlackMisc
             bool hasData = false;
             if (json.contains("msgs"))
             {
-                QJsonValue msgJson(json.take("msgs"));
-                CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(msgJson.toArray()));
+                const QJsonValue msgJson(json.take("msgs"));
+                const CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(msgJson.toArray()));
                 if (!msgs.isEmpty())
                 {
                     messages.push_back(msgs);
@@ -122,14 +122,14 @@ namespace BlackMisc
             // direct write means models written, otherwise CRs
             if (json.contains("directWrite"))
             {
-                QJsonValue dw(json.take("directWrite"));
+                const QJsonValue dw(json.take("directWrite"));
                 directWrite = dw.toBool(false);
             }
 
             if (json.contains("publishedModels"))
             {
-                QJsonValue publishedJson(json.take("publishedModels"));
-                CAircraftModelList published = CAircraftModelList::fromDatabaseJson(publishedJson.toArray(), "");
+                const QJsonValue publishedJson(json.take("publishedModels"));
+                const CAircraftModelList published = CAircraftModelList::fromDatabaseJson(publishedJson.toArray(), "");
                 if (!published.isEmpty())
                 {
                     publishedModels.push_back(published);
@@ -139,8 +139,8 @@ namespace BlackMisc
 
             if (json.contains("skippedModels"))
             {
-                QJsonValue skippedJson(json.take("skippedModels"));
-                CAircraftModelList skipped = CAircraftModelList::fromDatabaseJson(skippedJson.toArray(), "");
+                const QJsonValue skippedJson(json.take("skippedModels"));
+                const CAircraftModelList skipped = CAircraftModelList::fromDatabaseJson(skippedJson.toArray(), "");
                 if (!skipped.isEmpty())
                 {
                     skippedModels.push_back(skipped);

@@ -59,7 +59,7 @@ namespace BlackCore
 
             if (this->isReplyOverdue())
             {
-                bool killed = this->killPendingReply();
+                const bool killed = this->killPendingReply();
                 if (killed)
                 {
                     const CStatusMessage msg(CStatusMessage::SeverityWarning, "Aborted outdated pending reply");
@@ -88,7 +88,7 @@ namespace BlackCore
             QNetworkRequest request(url);
             CNetworkUtils::ignoreSslVerification(request);
             const int logId = m_writeLog.addPendingUrl(url);
-            m_pendingReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::ps_postModelsResponse});
+            m_pendingReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedModelsResponse});
             m_replyPendingSince = QDateTime::currentMSecsSinceEpoch();
             return msgs;
         }
@@ -105,7 +105,7 @@ namespace BlackCore
             return n;
         }
 
-        void CDatabaseWriter::ps_postModelsResponse(QNetworkReply *nwReplyPtr)
+        void CDatabaseWriter::postedModelsResponse(QNetworkReply *nwReplyPtr)
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::swiftDbWebservice()}));
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
@@ -125,7 +125,7 @@ namespace BlackCore
                 if (dataFileData.isEmpty())
                 {
                     const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, "No response data from " + urlString)});
-                    emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
+                    emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
                     return;
                 }
 
@@ -134,14 +134,14 @@ namespace BlackCore
                 CStatusMessageList msgs;
                 bool directWrite;
                 const bool sendingSuccessful = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs, directWrite);
-                emit publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
+                emit this->publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
             }
             else
             {
                 const QString error = nwReply->errorString();
                 nwReply->close(); // close asap
                 const CStatusMessageList msgs( {CStatusMessage(cats, CStatusMessage::SeverityError, "HTTP error: " + error)});
-                emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
+                emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
             }
         }
 
