@@ -288,6 +288,7 @@ namespace BlackGui
 
         void CDbStashComponent::ps_publishedModelsResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite)
         {
+            Q_UNUSED(skippedModels);
             ui->tvp_StashAircraftModels->hideLoadIndicator();
             if (!publishedModels.isEmpty() && sendingSuccesful)
             {
@@ -298,7 +299,7 @@ namespace BlackGui
             {
                 if (publishedModels.isEmpty())
                 {
-                    this->showOverlayMessages(msgs, false, true); // show messages, keep old messages
+                    this->showOverlayMessages(msgs, false, false);
                 }
                 else
                 {
@@ -307,12 +308,9 @@ namespace BlackGui
                     {
                         this->unstashModels(publishedModels.getModelStringList(false));
                     };
-                    this->showOverlayMessagesWithConfirmation(msgs, true, confirm.arg(publishedModels.size()), lambda, QMessageBox::Ok);
+                    this->showOverlayMessagesWithConfirmation(msgs, false, confirm.arg(publishedModels.size()), lambda, QMessageBox::Ok);
                 }
             }
-
-            Q_UNUSED(publishedModels);
-            Q_UNUSED(skippedModels);
         }
 
         CStatusMessageList CDbStashComponent::validate(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
