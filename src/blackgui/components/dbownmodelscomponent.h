@@ -116,29 +116,28 @@ namespace BlackGui
             virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             //! @}
 
-        private slots:
-            //! Request own models
-            void ps_requestOwnModelsUpdate();
-
-            //! Load the models
-            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
-
-            //! Model loading finished
-            void ps_onOwnModelsLoadingFinished(const BlackMisc::CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
-
-            //! Request simulator models
-            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
-
-            //! Request simulator models from cache
-            void ps_requestSimulatorModelsWithCacheInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-            //! Own simulator changed
-            void ps_onSimulatorChanged();
-
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader; //!< read own aircraft models, aka models on disk
             BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection { this }; //!< last selection
+
+            //! Request own models
+            void requestOwnModelsUpdate();
+
+            //! Load the models
+            void loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
+
+            //! Model loading finished
+            void onOwnModelsLoadingFinished(const BlackMisc::CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
+
+            //! Request simulator models
+            void requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
+
+            //! Request simulator models from cache
+            void requestSimulatorModelsWithCacheInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Own simulator changed
+            void onSimulatorChanged();
 
             //! Init or change model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
