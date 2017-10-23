@@ -16,6 +16,7 @@ import platform
 import requests
 import subprocess
 import sys
+import datastore
 import symbolstore
 from lib.util import get_vs_env
 
@@ -35,6 +36,13 @@ class Builder:
         print('Preparing environment ...')
         os.environ['PATH'] += os.pathsep + self._get_qt_binary_path()
         self._specific_prepare()
+
+        print('Updating from datastore ...')
+        host = 'https://datastore.swift-project.org'
+        datastore_version = self.__config.get('General', 'datastore_version')
+        source_path = self._get_swift_source_path()
+        shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))
+        datastore.update_shared(host, datastore_version, shared_path)
 
     def build(self, jobs, dev_build):
         """
@@ -60,7 +68,7 @@ class Builder:
         """
         Runs build checks.
         """
-        print('Installing ...')
+        print('Running checks ...')
         build_path = self._get_swift_build_path()
         os.chdir(build_path)
         if self._should_run_checks():
@@ -71,7 +79,7 @@ class Builder:
         """
         Installs all products to the default path.
         """
-        print('Running install()')
+        print('Running install ...')
         build_path = self._get_swift_build_path()
         os.chdir(build_path)
         if self._should_run_publish():
