@@ -241,6 +241,8 @@ namespace BlackGui
             const QString s = this->m_settings.getDefaultSimulatorDirectory(simulator);
             ui->le_SimulatorDirectory->setPlaceholderText(s.isEmpty() ? "Simulator directory" : s);
 
+            //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
+            constexpr bool BrokenMultilinePlaceholder = true;
             const QStringList m = this->m_settings.getDefaultModelDirectories(simulator);
             if (m.isEmpty())
             {
@@ -249,9 +251,8 @@ namespace BlackGui
             else
             {
                 const QString ms(m.join("<br>"));
-                if (m.size() > 1)
+                if (BrokenMultilinePlaceholder && m.size() > 1)
                 {
-                    //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
                     ui->pte_ModelDirectories->setToolTip(ms);
                     ui->pte_ModelDirectories->setPlaceholderText("See tooltip for defaults");
                 }
@@ -269,7 +270,7 @@ namespace BlackGui
             else
             {
                 const QString es(e.join("<br>"));
-                if (e.size() > 1)
+                if (BrokenMultilinePlaceholder && e.size() > 1)
                 {
                     //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
                     ui->pte_ExcludeDirectories->setToolTip(es);
