@@ -135,6 +135,10 @@ namespace BlackCore
                 bool directWrite;
                 const bool sendingSuccessful = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs, directWrite);
                 emit this->publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
+                if (!modelsPublished.isEmpty())
+                {
+                    emit this->publishedModelsSimplified(modelsPublished);
+                }
             }
             else
             {

@@ -62,6 +62,9 @@ namespace BlackCore
                                  const BlackMisc::CStatusMessageList &messages,
                                  bool sendingSuccessful, bool directWrite);
 
+            //! Published models, simplified version of publishedModels
+            void publishedModelsSimplified(const BlackMisc::Simulation::CAircraftModelList &modelsPublished);
+
         private:
             BlackMisc::Network::CUrlLogList m_writeLog;
             BlackMisc::Network::CUrl m_modelPublishUrl;
