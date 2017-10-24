@@ -173,7 +173,7 @@ namespace BlackMisc
 
     const QString &CDirectoryUtils::staticDbFilesDirectory()
     {
-        static QString s(getSwiftStaticDbFilesDirImpl());
+        static const QString s(getSwiftStaticDbFilesDirImpl());
         return s;
     }
 
@@ -188,7 +188,7 @@ namespace BlackMisc
 
     const QString &CDirectoryUtils::soundFilesDirectory()
     {
-        static QString s(getSoundFilesDirImpl());
+        static const QString s(getSoundFilesDirImpl());
         return s;
     }
 
@@ -203,7 +203,7 @@ namespace BlackMisc
 
     const QString &CDirectoryUtils::stylesheetsDirectory()
     {
-        static QString s(getStylesheetsDirImpl());
+        static const QString s(getStylesheetsDirImpl());
         return s;
     }
 

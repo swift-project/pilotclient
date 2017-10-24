@@ -17,6 +17,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Settings;
 using namespace BlackGui::Settings;
+using namespace BlackCore::Db;
 
 namespace BlackGui
 {
@@ -52,7 +53,7 @@ namespace BlackGui
             return ok ? secs : -1;
         }
 
-        void CSettingsModelComponent::setBackgroundUpdater(const BlackCore::Db::CBackgroundDataUpdater *updater)
+        void CSettingsModelComponent::setBackgroundUpdater(const CBackgroundDataUpdater *updater)
         {
             m_updater = updater;
         }
@@ -86,7 +87,7 @@ namespace BlackGui
             const bool updater =
                 on &&
                 sApp && !sApp->isShuttingDown() &&
-                this->m_updater && this->m_updater->isEnabled();
+                m_updater && m_updater->isEnabled();
             ui->comp_Led->setOn(updater);
 
             // avoid unnecessary roundtrips

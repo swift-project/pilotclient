@@ -24,7 +24,6 @@ class QPixmap;
 class QWidget;
 
 namespace Ui { class CDataInfoAreaComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -62,7 +61,7 @@ namespace BlackGui
             explicit CDataInfoAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDataInfoAreaComponent();
+            virtual ~CDataInfoAreaComponent();
 
             //! DB model component
             CDbModelComponent *getModelComponent() const;
@@ -105,7 +104,6 @@ namespace BlackGui
         private:
             QScopedPointer <Ui::CDataInfoAreaComponent> ui;
         };
-
     } // ns
 } // ns
 

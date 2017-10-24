@@ -90,19 +90,19 @@ namespace BlackGui
                 if (model.hasFileName())
                 {
                     menuActions.addMenuSimulator();
-                    this->m_fileAction = menuActions.addAction(this->m_fileAction, CIcons::text16(), "Open simulator file", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::showSimulatorFile });
+                    m_fileAction = menuActions.addAction(m_fileAction, CIcons::text16(), "Open simulator file", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::showSimulatorFile });
                     added = true;
                     if (CModelConverterX::supportsModelConverterX())
                     {
-                        this->m_modelConverterX = menuActions.addAction(this->m_modelConverterX, CIcons::modelConverterX(), "ModelConverterX", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::startModelConverterX });
+                        m_modelConverterX = menuActions.addAction(m_modelConverterX, CIcons::modelConverterX(), "ModelConverterX", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::startModelConverterX });
                     }
                 }
 
-                if (this->m_messageFrame && !model.getIconPath().isEmpty())
+                if (m_messageFrame && !model.getIconPath().isEmpty())
                 {
                     added = true;
                     menuActions.addMenuSimulator();
-                    this->m_iconAction = menuActions.addAction(this->m_iconAction, CIcons::appAircraft16(), "Display icon", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::displayIcon });
+                    m_iconAction = menuActions.addAction(m_iconAction, CIcons::appAircraft16(), "Display icon", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::displayIcon });
                 }
 
                 if (added)
@@ -136,7 +136,7 @@ namespace BlackGui
             const CPixmap pm(model.loadIcon(msg));
             if (msg.isSuccess())
             {
-                this->m_messageFrame->showOverlayImage(pm);
+                m_messageFrame->showOverlayImage(pm);
             }
             else
             {
@@ -181,10 +181,10 @@ namespace BlackGui
 
             menuActions.addMenuConsolidateModels();
 
-            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, CIcons::databaseEdit16(), "All with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateData });
+            m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::databaseEdit16(), "All with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateData });
             if (mv->hasSelection())
             {
-                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateSelectedData });
+                m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }
@@ -252,12 +252,12 @@ namespace BlackGui
 
         IModelsSetable *CConsolidateWithDbDataMenu::modelsTargetSetable() const
         {
-            return qobject_cast<IModelsSetable *>(this->m_modelsTarget);
+            return qobject_cast<IModelsSetable *>(m_modelsTarget);
         }
 
         IModelsUpdatable *CConsolidateWithDbDataMenu::modelsTargetUpdatable() const
         {
-            return qobject_cast<IModelsUpdatable *>(this->m_modelsTarget);
+            return qobject_cast<IModelsUpdatable *>(m_modelsTarget);
         }
 
         // --------------------------------- with simulator models ---------------------------------
@@ -288,10 +288,10 @@ namespace BlackGui
 
             menuActions.addMenuConsolidateModels();
 
-            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateData });
+            m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateData });
             if (mv->hasSelection())
             {
-                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateSelectedData });
+                m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }
@@ -362,31 +362,31 @@ namespace BlackGui
 
         IModelsPerSimulatorSetable *CConsolidateWithSimulatorModels::modelsTargetSetable() const
         {
-            return qobject_cast<IModelsPerSimulatorSetable *>(this->m_modelsTarget);
+            return qobject_cast<IModelsPerSimulatorSetable *>(m_modelsTarget);
         }
 
         IModelsPerSimulatorUpdatable *CConsolidateWithSimulatorModels::modelsTargetUpdatable() const
         {
-            return qobject_cast<IModelsPerSimulatorUpdatable *>(this->m_modelsTarget);
+            return qobject_cast<IModelsPerSimulatorUpdatable *>(m_modelsTarget);
         }
 
         ISimulatorSelectable *CConsolidateWithSimulatorModels::simulatorSelectable() const
         {
-            return qobject_cast<ISimulatorSelectable *>(this->m_modelsTarget);
+            return qobject_cast<ISimulatorSelectable *>(m_modelsTarget);
         }
 
         Components::CDbMappingComponent *CConsolidateWithSimulatorModels::getMappingComponent() const
         {
             // try to cast target
             CDbMappingComponent *mc = nullptr;
-            CDbMappingComponentAware *mca = qobject_cast<CDbMappingComponentAware *>(this->m_modelsTarget);
+            CDbMappingComponentAware *mca = qobject_cast<CDbMappingComponentAware *>(m_modelsTarget);
             if (mca)
             {
                 mc = mca->getMappingComponent();
             }
             if (!mc)
             {
-                mc = qobject_cast<CDbMappingComponent *>(this->m_modelsTarget);
+                mc = qobject_cast<CDbMappingComponent *>(m_modelsTarget);
             }
             return mc;
         }

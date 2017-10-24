@@ -90,7 +90,7 @@ namespace BlackGui
             }
 
             // write to disk
-            bool s = sGui->getWebDataServices()->writeDbDataToDisk(CDirectoryUtils::staticDbFilesDirectory());
+            const bool s = sGui->getWebDataServices()->writeDbDataToDisk(CDirectoryUtils::staticDbFilesDirectory());
             if (s)
             {
                 CLogMessage(this).info("Written DB data");
@@ -104,8 +104,8 @@ namespace BlackGui
 
         bool CDataInfoAreaComponent::readDbDataFromResourceDir()
         {
-            bool s = sGui &&
-                     sGui->getWebDataServices()->readDbDataFromDisk(CDirectoryUtils::staticDbFilesDirectory(), true);
+            const bool s = sGui &&
+                           sGui->getWebDataServices()->readDbDataFromDisk(CDirectoryUtils::staticDbFilesDirectory(), true);
 
             // info
             if (s)

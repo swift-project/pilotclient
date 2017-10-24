@@ -48,7 +48,7 @@ namespace BlackMisc
     {
         QString s(string.trimmed().toLower());
         if (s.isEmpty()) { return false; }
-        QChar c = s.at(0);
+        const QChar c = s.at(0);
 
         // explicit values
         if (c == '1' || c == 't' || c == 'y' || c == 'x') { return true; }

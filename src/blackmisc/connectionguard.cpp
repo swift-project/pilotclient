@@ -14,17 +14,17 @@ namespace BlackMisc
 {
     CConnectionGuard::CConnectionGuard(const QMetaObject::Connection &connection)
     {
-        this->m_connections.append(connection);
+        m_connections.append(connection);
     }
 
     void CConnectionGuard::append(const QMetaObject::Connection &connection)
     {
-        this->m_connections.append(connection);
+        m_connections.append(connection);
     }
 
     void CConnectionGuard::append(const QList<QMetaObject::Connection> &connections)
     {
-        this->m_connections.append(connections);
+        m_connections.append(connections);
     }
 
     CConnectionGuard::~CConnectionGuard()
@@ -34,13 +34,13 @@ namespace BlackMisc
 
     int CConnectionGuard::disconnectAll()
     {
-        if (this->m_connections.isEmpty()) { return 0; }
+        if (m_connections.isEmpty()) { return 0; }
         int c = 0;
-        for (const QMetaObject::Connection &con : as_const(this->m_connections))
+        for (const QMetaObject::Connection &con : as_const(m_connections))
         {
             if (QObject::disconnect(con)) { c++; }
         }
-        this->m_connections.clear();
+        m_connections.clear();
         return c;
     }
 } // ns
