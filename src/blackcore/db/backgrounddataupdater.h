@@ -39,15 +39,16 @@ namespace BlackCore
 
         signals:
             //! Consolidation
-            void consolidating(bool started);
+            void consolidating(bool running);
 
         private:
-            int    m_cycle = 0;      //!< cycle
-            bool   m_inWork = false; //!< indicates a running update
+            int  m_cycle = 0;      //!< cycle
+            bool m_inWork = false; //!< indicates a running update
+            bool m_updatePublishedModels = true; //!< update when models have been updated
 
             BlackMisc::Simulation::Data::CModelCaches    m_modelCaches { false, this };    //!< caches
             BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this }; //!< caches
-            QMap<QString, QDateTime> m_dbModelsLatestChange;
+            QMap<QString, QDateTime> m_syncedModelsLatestChange; //! timestamp per cache
 
             //! Do the update checks
             void doWork();
@@ -55,14 +56,18 @@ namespace BlackCore
             //! Read of new DB data
             void triggerInfoReads();
 
-            //! Sync the model cache
-            void syncModelOrModelSetCacheWithDbData(BlackMisc::Simulation::Data::IMultiSimulatorModelCaches &cache);
+            //! Sync the model cache, normally model set or simulator models cache
+            void syncModelOrModelSetCacheWithDbData(BlackMisc::Simulation::Data::IMultiSimulatorModelCaches &cache,
+                                                    const BlackMisc::Simulation::CAircraftModelList &dbModelsConsidered = {});
 
             //! Sync DB entity
             void syncDbEntity(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
             //! Still enabled etc.
             bool doWorkCheck() const;
+
+            //! Models have been published
+            void onModelsPublished(const BlackMisc::Simulation::CAircraftModelList &modelsPublished);
         };
     } // ns
 } // ns

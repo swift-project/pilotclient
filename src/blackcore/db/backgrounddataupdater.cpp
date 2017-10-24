@@ -9,6 +9,7 @@
 
 #include "backgrounddataupdater.h"
 #include "blackcore/db/databaseutils.h"
+#include "blackcore/db/databasewriter.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -38,6 +39,10 @@ namespace BlackCore
         {
             connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundDataUpdater::doWork);
             m_updateTimer.setInterval(60 * 1000);
+            if (sApp && sApp->hasWebDataServices())
+            {
+                connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModelsSimplified, this, &CBackgroundDataUpdater::onModelsPublished);
+            }
         }
 
         void CBackgroundDataUpdater::doWork()
@@ -83,20 +88,24 @@ namespace BlackCore
             sApp->getWebDataServices()->triggerReadOfSharedInfoObjects();
         }
 
-        void CBackgroundDataUpdater::syncModelOrModelSetCacheWithDbData(Simulation::Data::IMultiSimulatorModelCaches &cache)
+        void CBackgroundDataUpdater::syncModelOrModelSetCacheWithDbData(IMultiSimulatorModelCaches &cache, const CAircraftModelList &dbModelsConsidered)
         {
             if (!this->doWorkCheck()) { return; }
-            const QDateTime cacheTs = sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity);
-            if (!cacheTs.isValid()) { return; }
+            const QDateTime latestDbModelsTs = dbModelsConsidered.isEmpty() ?
+                                               sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity) :
+                                               dbModelsConsidered.latestTimestamp();
+            if (!latestDbModelsTs.isValid()) { return; }
 
-            QDateTime dbModelsLatestChange = m_dbModelsLatestChange.value(cache.getDescription());
-            if (dbModelsLatestChange.isValid() && dbModelsLatestChange <= cacheTs) { return; }
+            const QDateTime dbModelsLatestSync = m_syncedModelsLatestChange.value(cache.getDescription());
+            if (dbModelsLatestSync.isValid() && latestDbModelsTs <= dbModelsLatestSync) { return; }
 
-            m_dbModelsLatestChange[cache.getDescription()] = cacheTs;
+            m_syncedModelsLatestChange[cache.getDescription()] = latestDbModelsTs;
             const CSimulatorInfo sims = cache.simulatorsWithInitializedCache(); // sims ever used
             if (sims.isNoSimulator()) { return; }
 
-            const CAircraftModelList dbModels = sApp->getWebDataServices()->getModels();
+            const CAircraftModelList dbModels = dbModelsConsidered.isEmpty() ?
+                                                sApp->getWebDataServices()->getModels() :
+                                                dbModelsConsidered;
             if (dbModels.isEmpty()) { return; }
             const QSet<CSimulatorInfo> simSet = sims.asSingleSimulatorSet();
             for (const CSimulatorInfo &singleInfo : simSet)
@@ -117,9 +126,9 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).info("Syncronize, no changes for '%1'") << singleInfo.convertToQString();
+                    CLogMessage(this).info("Synchronized, no changes for '%1'") << singleInfo.convertToQString();
                 }
-                if (simSet.size() > 1) { CEventLoop::processEventsFor(5000); } // just give the system some time to relax, consolidate is time consuming
+                if (simSet.size() > 1) { CEventLoop::processEventsFor(5000); } // just give the system some time to relax, consolidation is time consuming
             }
         }
 
@@ -145,6 +154,18 @@ namespace BlackCore
             if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
             if (!isEnabled()) { return false; }
             return true;
+        }
+
+        void CBackgroundDataUpdater::onModelsPublished(const CAircraftModelList &modelsPublished)
+        {
+            if (!this->doWorkCheck()) { return; }
+            if (modelsPublished.isEmpty()) { return; }
+            if (!m_updatePublishedModels)  { return; }
+
+            emit this->consolidating(true);
+            this->syncModelOrModelSetCacheWithDbData(m_modelCaches, modelsPublished);
+            this->syncModelOrModelSetCacheWithDbData(m_modelSetCaches, modelsPublished);
+            emit this->consolidating(false);
         }
     } // ns
 } // ns
