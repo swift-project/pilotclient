@@ -74,6 +74,7 @@ namespace BlackGui
                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             if (dir.isEmpty()) { return; }
             ui->le_SimulatorDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(dir));
+            this->ps_adjustModelDirectory();
         }
 
         void CSettingsSimulatorBasicsComponent::ps_modelFileDialog()
@@ -148,8 +149,15 @@ namespace BlackGui
             {
                 simDir = CFsCommonUtil::fs9AircraftDirFromSimDir(simDir);
             }
-
-            //! \todo counterpart function for XP
+            else if (simulator.xplane())
+            {
+                // There is not really a fixed place in the X-Plane install directory where models are put.
+                // We just treat the whole X-Plane directory as model directory and search for models in all subdirectories recursively.
+            }
+            else
+            {
+                return;
+            }
 
             const QStringList newDirs = this->addDirectory(simDir, this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
             this->displayModelDirectories(newDirs);
