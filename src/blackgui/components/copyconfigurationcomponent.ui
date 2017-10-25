@@ -59,7 +59,7 @@
       <item>
        <widget class="QPushButton" name="pb_ClearSelection">
         <property name="text">
-         <string>clear selection</string>
+         <string> clear selection </string>
         </property>
        </widget>
       </item>
