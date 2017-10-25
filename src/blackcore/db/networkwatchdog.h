@@ -58,6 +58,10 @@ namespace BlackCore
             //! \threadsafe
             void setCheckSharedUrl(bool check) { m_checkSharedUrl = check; }
 
+            //! Do a detailed check via HTTP
+            //! \threadsafe
+            void setDoDetailedCheck(bool check) { m_doDetailedCheck = check; }
+
             //! Internet available?
             //! \threadsafe
             bool isInternetAccessible() const { return m_internetAccessible; }
@@ -98,7 +102,7 @@ namespace BlackCore
             Q_DECLARE_FLAGS(PingType, PingTypeFlag)
 
             //! Ping the DB server, fire and forget (no feedback etc)
-            void pingDbClientService(PingType type = PingUnspecific);
+            void pingDbClientService(PingType type = PingUnspecific, bool force = false);
 
             //! URL referring to the DB
             //! \remark depends on BlackCore::Application::getGlobalSetup()
@@ -139,9 +143,11 @@ namespace BlackCore
             //! \remark depends on BlackCore::Application::getGlobalSetup()
             static BlackMisc::Network::CUrl workingSharedUrlFromSetup();
 
+            std::atomic_bool m_doDetailedCheck { true };
             std::atomic_bool m_networkAccessible { true };
             std::atomic_bool m_internetAccessible { true };
             std::atomic_bool m_dbAccessible { true };
+            std::atomic_bool m_lastClientPingSuccess { true };
             std::atomic_bool m_checkDbAccessibility { true };
             std::atomic_bool m_checkSharedUrl { true };
             std::atomic_bool m_checkInProgress { false }; //!< a check is currently in progress

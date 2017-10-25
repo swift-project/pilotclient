@@ -42,7 +42,7 @@ namespace BlackCore
         {
             m_dbAccessible = accessible;
             m_internetAccessible = m_internetAccessible && m_networkAccessible;
-            QTimer::singleShot(0, &m_updateTimer, [this] { this->m_updateTimer.start(); }); // restart
+            QTimer::singleShot(0, &m_updateTimer, [this] { m_updateTimer.start(); }); // restart
         }
 
         bool CNetworkWatchdog::hasWorkingSharedUrl() const
@@ -91,8 +91,25 @@ namespace BlackCore
                 const bool wasDbAvailable = m_dbAccessible;
                 const bool wasInternetAvailable = m_internetAccessible;
                 const bool networkAccess = m_networkAccessible;
-                const bool canConnectDb = m_checkDbAccessibility && networkAccess &&
-                                          CNetworkUtils::canConnect(dbTestUrl()); // running in background worker
+                bool canConnectDb = m_checkDbAccessibility && networkAccess &&
+                                    CNetworkUtils::canConnect(dbTestUrl()); // running here in background worker
+                if (m_checkDbAccessibility && m_doDetailedCheck && canConnectDb)
+                {
+                    // test against real HTTP response
+                    const bool lastHttpSuccess = m_lastClientPingSuccess;
+                    if (lastHttpSuccess && m_checkCount % 10 == 0)
+                    {
+                        // seems to be OK, from time to time ping
+                        this->pingDbClientService(PingStarted);
+                    }
+                    else if (!lastHttpSuccess && m_checkCount % 3 == 0)
+                    {
+                        // not OK, retry more frequently
+                        this->pingDbClientService(PingStarted, true);
+                    }
+                    canConnectDb = lastHttpSuccess;
+                }
+
                 bool canConnectInternet = canConnectDb;
                 bool checkInternetAccess = !canConnectDb;
 
@@ -140,12 +157,12 @@ namespace BlackCore
                 m_internetAccessible = networkAccess && canConnectInternet;
 
                 // signals
-                m_checkCount++;
                 this->triggerChangedSignals(wasDbAvailable, wasInternetAvailable);
             }
             while (false);
 
             m_updateTimer.start(); // restart
+            m_checkCount++;
             m_checkInProgress = false;
         }
 
@@ -182,9 +199,9 @@ namespace BlackCore
             this->pingDbClientService(PingCompleteShutdown);
         }
 
-        void CNetworkWatchdog::pingDbClientService(CNetworkWatchdog::PingType type)
+        void CNetworkWatchdog::pingDbClientService(CNetworkWatchdog::PingType type, bool force)
         {
-            if (!this->isSwiftDbAccessible()) { return; }
+            if (!force && !this->isSwiftDbAccessible()) { return; }
             if (!sApp) { return; }
             const CGlobalSetup gs = sApp->getGlobalSetup();
             if (!gs.wasLoaded()) { return; }
@@ -202,9 +219,11 @@ namespace BlackCore
 
         void CNetworkWatchdog::replyPingClientService(QNetworkReply *nwReply)
         {
-            QScopedPointer<QNetworkReply> nw(nwReply); // delete reply
+            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nw(nwReply); // delete reply
+            const bool ok = (nw->error() == QNetworkReply::NoError);
+            nw->close();
             if (!sApp || sApp->isShuttingDown()) { return; }
-            const bool ok = nw->error() == QNetworkReply::NoError;
+            m_lastClientPingSuccess = ok;
             this->setDbAccessibility(ok);
         }
 
