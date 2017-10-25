@@ -186,6 +186,9 @@ namespace BlackCore
             //! Productive settings?
             void setDevelopment(bool development) { m_development  = development; }
 
+            //! NCEP GFS Forecasts (0.50 degree grid) data url
+            BlackMisc::Network::CUrl getNcepGlobalForecastSystemUrl() const { return m_ncepGlobalForecastSystemUrl; }
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -227,6 +230,7 @@ namespace BlackCore
             BlackMisc::Network::CUrlList    m_onlineHelpUrls;        //!< online help URLs
             BlackMisc::Network::CUrlList    m_mapUrls;               //!< swift map URLs
             BlackMisc::Network::CServerList m_fsdTestServers;        //!< FSD test servers
+            BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl;     //!< NCEP GFS url
 
             // transient members, to be switched on/off via GUI or set from reader
             bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
@@ -253,6 +257,7 @@ namespace BlackCore
                 BLACK_METAMEMBER(fsdTestServers),
                 BLACK_METAMEMBER(development),
                 BLACK_METAMEMBER(mappingMinimumVersion),
+                BLACK_METAMEMBER(ncepGlobalForecastSystemUrl),
                 BLACK_METAMEMBER(dbDebugFlag, BlackMisc::DisabledForJson)
             );
         };

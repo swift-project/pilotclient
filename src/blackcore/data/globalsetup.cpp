@@ -54,6 +54,7 @@ namespace BlackCore
             m_newsUrls = CUrlList({ "http://swift-project.org/" });
             m_onlineHelpUrls = CUrlList({ "help.swift-project.org/" });
             m_mapUrls = CUrlList({ "map.swift-project.org/" });
+            m_ncepGlobalForecastSystemUrl = CUrl("http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl");
         }
 
         CUrl CGlobalSetup::getDbIcaoReaderUrl() const

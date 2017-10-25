@@ -24,6 +24,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Weather;
 using namespace BlackMisc::Math;
+using namespace BlackMisc::Network;
 
 namespace BlackWxPlugin
 {
@@ -71,7 +72,7 @@ namespace BlackWxPlugin
                     return;
                 }
 
-                const QUrl url = getDownloadUrl();
+                const QUrl url = getDownloadUrl().toQUrl();
                 CLogMessage(this).debug() << "Started to download GFS data from" << url.toString();
                 QNetworkRequest request(url);
                 sApp->getFromNetwork(request, { this, &CWeatherDataGfs::ps_parseGfsFile });
@@ -114,9 +115,9 @@ namespace BlackWxPlugin
             m_parseGribFileWorker->then(this, &CWeatherDataGfs::ps_fetchingWeatherDataFinished);
         }
 
-        QUrl CWeatherDataGfs::getDownloadUrl() const
+        CUrl CWeatherDataGfs::getDownloadUrl() const
         {
-            QString baseurl = "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl?";
+            CUrl downloadUrl = sApp->getGlobalSetup().getNcepGlobalForecastSystemUrl();
 
             static const QStringList grib2Levels =
             {
@@ -183,24 +184,21 @@ namespace BlackWxPlugin
             directory = directory.arg(cnow.toString("yyyyMMdd"));
             directory = directory.arg(hourLastPublishedCycle, 2, 10, QLatin1Char('0'));
 
-            QStringList params;
-            params.reserve(grib2Levels.size() + grib2Variables.size() + 6);
-            params.append("file=" + filename);
+            downloadUrl.appendQuery("file", filename);
             for (const auto &level : grib2Levels)
             {
-                params.append("lev_" + level + "=on");
+                downloadUrl.appendQuery("lev_" + level, "on");
             }
             for (const auto &variable : grib2Variables)
             {
-                params.append("var_" + variable + "=on");
+                downloadUrl.appendQuery("var_" + variable, "on");
             }
-            params.append("leftlon=0");
-            params.append("rightlon=360");
-            params.append("toplat=90");
-            params.append("bottomlat=-90");
-            params.append("dir=%2F" + directory);
-
-            return QUrl(baseurl + params.join('&'));
+            downloadUrl.appendQuery("leftlon", "0");
+            downloadUrl.appendQuery("rightlon", "360");
+            downloadUrl.appendQuery("toplat", "90");
+            downloadUrl.appendQuery("bottomlat", "-90");
+            downloadUrl.appendQuery("dir", "%2F" + directory);
+            return downloadUrl;
         }
 
         void CWeatherDataGfs::parseGfsFileImpl(const QByteArray &gribData)

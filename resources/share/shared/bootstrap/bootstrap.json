@@ -58,5 +58,8 @@
             "url": "https://status.vatsim.net"
         }]
     },
-    "wasLoaded": true
+    "wasLoaded": true,
+    "ncepGlobalForecastSystemUrl": {
+        "url": "http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl"
+    }
 }

@@ -10,6 +10,7 @@
 //! \file
 //! \ingroup sampleweatherdata
 
+#include "blackcore/application.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/registermetadata.h"
@@ -23,11 +24,13 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackCore;
 
 //! main
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QCoreApplication qa(argc, argv);
+    CApplication a(CApplicationInfo::Sample);
     BlackMisc::registerMetadata();
     CLogHandler::instance()->install(true);
 //    CLogHandler::instance()->enableConsoleOutput(false); // default disable

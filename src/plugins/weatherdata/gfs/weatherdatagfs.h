@@ -13,6 +13,7 @@
 #define BLACKWXPLUGIN_GFS_H
 
 #include "g2clib/grib2.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/worker.h"
 #include "blackcore/weatherdata.h"
@@ -136,7 +137,7 @@ namespace BlackWxPlugin
                 double surfaceTemperature = 0;
             };
 
-            QUrl getDownloadUrl() const;
+            BlackMisc::Network::CUrl getDownloadUrl() const;
 
             void parseGfsFileImpl(const QByteArray &gribData);
             void findNextGribMessage(unsigned char *buffer, g2int size, g2int iseek, g2int *lskip, g2int *lgrib);

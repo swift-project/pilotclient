@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core dbus
+QT       += core dbus network
 
 TARGET = sampleweatherdata
 TEMPLATE = app
