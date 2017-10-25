@@ -85,6 +85,13 @@ namespace BlackCore
             return m_distributorCache.get();
         }
 
+        CDistributor CModelDataReader::getDistributorForDbKey(const QString &dbKey) const
+        {
+            if (dbKey.isEmpty()) { return CDistributor(); }
+            const CDistributorList distributors(getDistributors());
+            return distributors.findByKeyOrAlias(dbKey);
+        }
+
         CAircraftModelList CModelDataReader::getModels() const
         {
             return m_modelCache.get();

@@ -118,6 +118,45 @@ namespace BlackCore
             return CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, force, false);
         }
 
+        int CDatabaseUtils::fillInMissingAircraftAndLiveryEntities(CAircraftModelList &models)
+        {
+            // fill in those entities which have only an id (key), but no data yet
+            int c = 0;
+            for (CAircraftModel &model : models)
+            {
+                bool changed = false;
+                if (model.getLivery().hasValidDbKey() && !model.getLivery().hasCompleteData())
+                {
+                    const CLivery livery = sApp->getWebDataServices()->getLiveryForDbKey(model.getLivery().getDbKey());
+                    if (livery.isLoadedFromDb())
+                    {
+                        model.setLivery(livery);
+                        changed = true;
+                    }
+                }
+                if (model.getAircraftIcaoCode().hasValidDbKey() && !model.getAircraftIcaoCode().hasCompleteData())
+                {
+                    const CAircraftIcaoCode icao = sApp->getWebDataServices()->getAircraftIcaoCodeForDbKey(model.getAircraftIcaoCode().getDbKey());
+                    if (icao.isLoadedFromDb())
+                    {
+                        model.setAircraftIcaoCode(icao);
+                        changed = true;
+                    }
+                }
+                if (model.getDistributor().hasValidDbKey() && !model.getDistributor().hasCompleteData())
+                {
+                    const CDistributor distributor = sApp->getWebDataServices()->getDistributorForDbKey(model.getDistributor().getDbKey());
+                    if (distributor.isLoadedFromDb())
+                    {
+                        model.setDistributor(distributor);
+                        changed = true;
+                    }
+                }
+                if (changed) { c++; }
+            }
+            return c;
+        }
+
         CAircraftModelList CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const CAircraftModelList &models, const CAircraftModelList &simulatorModels, bool processEvents)
         {
             if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }

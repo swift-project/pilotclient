@@ -712,9 +712,36 @@ namespace BlackMisc
             const QString modelMode(json.value(prefix + "mode").toString());
 
             const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
-            const CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, "ac_"));
-            const CLivery livery(CLivery::fromDatabaseJson(json, "liv_"));
-            const CDistributor distributor(CDistributor::fromDatabaseJson(json, "dist_"));
+            CDistributor distributor(CDistributor::fromDatabaseJson(json, "dist_"));
+            CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, "ac_"));
+            CLivery livery(CLivery::fromDatabaseJson(json, "liv_"));
+
+            if (!aircraftIcao.isLoadedFromDb())
+            {
+                const int idAircraftIcao = json.value(prefix + "idaircrafticao").toInt(-1);
+                if (idAircraftIcao >= 0)
+                {
+                    aircraftIcao.setDbKey(idAircraftIcao);
+                }
+            }
+
+            if (!livery.isLoadedFromDb())
+            {
+                const int idLivery = json.value(prefix + "idlivery").toInt(-1);
+                if (idLivery >= 0)
+                {
+                    livery.setDbKey(idLivery);
+                }
+            }
+
+            if (!distributor.isLoadedFromDb())
+            {
+                const QString idDistributor = json.value(prefix + "iddistributor").toString();
+                if (!idDistributor.isEmpty())
+                {
+                    distributor.setDbKey(idDistributor);
+                }
+            }
 
             CAircraftModel model(
                 modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription, aircraftIcao, livery

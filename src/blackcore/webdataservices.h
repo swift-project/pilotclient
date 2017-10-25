@@ -162,6 +162,10 @@ namespace BlackCore
         //! \threadsafe
         int getDistributorsCount() const;
 
+        //! Distributor for key
+        //! \threadsafe
+        BlackMisc::Simulation::CDistributor getDistributorForDbKey(const QString &key) const;
+
         //! Use distributor object to select the best complete distributor from DB
         //! \threadsafe
         BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const;

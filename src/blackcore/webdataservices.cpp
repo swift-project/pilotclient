@@ -456,6 +456,12 @@ namespace BlackCore
         return 0;
     }
 
+    CDistributor CWebDataServices::getDistributorForDbKey(const QString &key) const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->getDistributorForDbKey(key); }
+        return CDistributor();
+    }
+
     CDistributor CWebDataServices::smartDistributorSelector(const CDistributor &distributor) const
     {
         if (m_modelDataReader) { return m_modelDataReader->smartDistributorSelector(distributor); }

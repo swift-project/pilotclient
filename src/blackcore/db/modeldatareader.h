@@ -71,6 +71,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Simulation::CDistributorList getDistributors() const;
 
+            //! Get distributor for id
+            //! \threadsafe
+            BlackMisc::Simulation::CDistributor getDistributorForDbKey(const QString &dbKey) const;
+
             //! Get models
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getModels() const;

@@ -134,11 +134,13 @@ namespace BlackCore
                 CStatusMessageList msgs;
                 bool directWrite;
                 const bool sendingSuccessful = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs, directWrite);
+                const int c = CDatabaseUtils::fillInMissingAircraftAndLiveryEntities(modelsPublished);
                 emit this->publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
                 if (!modelsPublished.isEmpty())
                 {
                     emit this->publishedModelsSimplified(modelsPublished);
                 }
+                Q_UNUSED(c);
             }
             else
             {
