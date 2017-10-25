@@ -81,13 +81,13 @@ namespace BlackMisc
             void setPassword(const QString &pw) { m_password = pw.trimmed(); }
 
             //! Valid user object?
-            bool isValid() const { return !this->m_realname.isEmpty() && this->hasValidDbKey(); }
+            bool isValid() const { return !m_realname.isEmpty() && this->hasValidDbKey(); }
 
             //! Valid credentials?
-            bool hasValidCredentials() const { return this->isValid() && !this->m_password.isEmpty(); }
+            bool hasValidCredentials() const { return this->isValid() && !m_password.isEmpty(); }
 
             //! Valid real name?
-            bool hasValidRealName() const { return !this->m_realname.isEmpty(); }
+            bool hasValidRealName() const { return !m_realname.isEmpty(); }
 
             //! Validate, provide details about issues
             BlackMisc::CStatusMessageList validate() const;
@@ -99,7 +99,7 @@ namespace BlackMisc
             void setEmail(const QString &email) { m_email = email.trimmed(); }
 
             //! Valid email?
-            bool hasValidEmail() const { return !this->m_email.isEmpty(); }
+            bool hasValidEmail() const { return !m_email.isEmpty(); }
 
             //! Get id.
             int getVatsimId() const { return m_vatsimId; }
@@ -150,7 +150,7 @@ namespace BlackMisc
             void setEnabled(bool enabled) { m_enabled = enabled; }
 
             //! Enabled
-            bool isEnabled() const { return this->m_enabled; }
+            bool isEnabled() const { return m_enabled; }
 
             //! Entitled to directly update models
             bool canDirectlyWriteModels() const;

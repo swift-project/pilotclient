@@ -49,8 +49,8 @@ namespace BlackMisc
         QString CAuthenticatedUser::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            if (this->m_realname.isEmpty()) return "<no realname>";
-            QString s = this->m_realname;
+            if (m_realname.isEmpty()) return "<no realname>";
+            QString s = m_realname;
             if (this->hasValidDbKey())
             {
                 s.append(this->getDbKeyAsStringInParentheses(" "));
@@ -77,13 +77,13 @@ namespace BlackMisc
         void CAuthenticatedUser::setRealName(const QString &realname)
         {
             const QString rn(realname.trimmed().simplified());
-            this->m_realname = rn;
+            m_realname = rn;
         }
 
         void CAuthenticatedUser::setUsername(const QString &username)
         {
             const QString un(username.trimmed().simplified().toUpper());
-            this->m_username = un;
+            m_username = un;
         }
 
         CStatusMessageList CAuthenticatedUser::validate() const
@@ -139,18 +139,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexVatsimId:
-                return CVariant::fromValue(this->m_vatsimId);
-            case IndexEmail:
-                return CVariant::fromValue(this->m_email);
-            case IndexPassword:
-                return CVariant::fromValue(this->m_password);
-            case IndexRealName:
-                return CVariant::fromValue(this->m_realname);
-            case IndexUsername:
-                return CVariant::fromValue(this->m_username);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexVatsimId: return CVariant::fromValue(m_vatsimId);
+            case IndexEmail: return CVariant::fromValue(m_email);
+            case IndexPassword: return CVariant::fromValue(m_password);
+            case IndexRealName: return CVariant::fromValue(m_realname);
+            case IndexUsername: return CVariant::fromValue(m_username);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -161,24 +155,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexVatsimId:
-                this->setVatsimId(variant.toInt());
-                break;
-            case IndexEmail:
-                this->setEmail(variant.value<QString>());
-                break;
-            case IndexPassword:
-                this->setPassword(variant.value<QString>());
-                break;
-            case IndexRealName:
-                this->setRealName(variant.value<QString>());
-                break;
-            case IndexUsername:
-                this->setUsername(variant.value<QString>());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexVatsimId: this->setVatsimId(variant.toInt()); break;
+            case IndexEmail: this->setEmail(variant.value<QString>()); break;
+            case IndexPassword: this->setPassword(variant.value<QString>()); break;
+            case IndexRealName: this->setRealName(variant.value<QString>()); break;
+            case IndexUsername: this->setUsername(variant.value<QString>()); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
     } // namespace
