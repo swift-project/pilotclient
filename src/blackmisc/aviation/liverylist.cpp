@@ -91,7 +91,8 @@ namespace BlackMisc
             double bestDistance = 1.0;
             for (const CLivery &livery : *this)
             {
-                double d = livery.getColorDistance(fuselage, tail);
+                if (!livery.isColorLivery()) { continue; }
+                const double d = livery.getColorDistance(fuselage, tail);
                 if (d == 0.0) { return livery; } // exact match
                 if (d < bestDistance)
                 {
