@@ -91,9 +91,9 @@ namespace BlackGui
 
         bool CLiveryForm::setValue(const CLivery &livery)
         {
-            if (this->m_originalLivery == livery) { return false; }
+            if (m_originalLivery == livery) { return false; }
 
-            this->m_originalLivery = livery;
+            m_originalLivery = livery;
             ui->comp_LiverySelector->setLivery(livery);
             ui->le_Id->setText(livery.getDbKeyAsString());
             ui->le_Description->setText(livery.getDescription());
@@ -172,7 +172,7 @@ namespace BlackGui
 
         void CLiveryForm::setReadOnly(bool readOnly)
         {
-            this->m_readOnly = readOnly;
+            m_readOnly = readOnly;
             ui->le_Id->setReadOnly(readOnly);
             ui->comp_LiverySelector->setReadOnly(readOnly);
             ui->le_Description->setReadOnly(readOnly);
@@ -249,14 +249,14 @@ namespace BlackGui
 
         void CLiveryForm::ps_searchForColor()
         {
-            if (!this->m_colorSearch)
+            if (!m_colorSearch)
             {
-                this->m_colorSearch = new CDbLiveryColorSearchDialog(this);
-                this->m_colorSearch->setModal(true);
+                m_colorSearch = new CDbLiveryColorSearchDialog(this);
+                m_colorSearch->setModal(true);
             }
-            const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(this->m_colorSearch->exec());
+            const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(m_colorSearch->exec());
             if (c == QDialog::Rejected) { return; }
-            const CLivery found = this->m_colorSearch->getLivery();
+            const CLivery found = m_colorSearch->getLivery();
             if (found.isLoadedFromDb())
             {
                 this->setValue(found);

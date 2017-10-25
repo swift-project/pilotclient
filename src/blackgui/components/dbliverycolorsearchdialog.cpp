@@ -25,7 +25,7 @@ namespace BlackGui
             ui(new Ui::CDbLiveryColorSearchDialog)
         {
             ui->setupUi(this);
-            connect(this, &CDbLiveryColorSearchDialog::accepted, this, &CDbLiveryColorSearchDialog::ps_onAccepted);
+            connect(this, &CDbLiveryColorSearchDialog::accepted, this, &CDbLiveryColorSearchDialog::onAccepted);
         }
 
         CDbLiveryColorSearchDialog::~CDbLiveryColorSearchDialog()
@@ -33,12 +33,12 @@ namespace BlackGui
 
         const CLivery &CDbLiveryColorSearchDialog::getLivery() const
         {
-            return this->m_foundLivery;
+            return m_foundLivery;
         }
 
-        void CDbLiveryColorSearchDialog::ps_onAccepted()
+        void CDbLiveryColorSearchDialog::onAccepted()
         {
-            this->m_foundLivery = ui->comp_LiverySearch->getLivery();
+            m_foundLivery = ui->comp_LiverySearch->getLivery();
         }
     } // ns
 } // ns

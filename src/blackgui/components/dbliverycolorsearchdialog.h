@@ -33,14 +33,14 @@ namespace BlackGui
             explicit CDbLiveryColorSearchDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbLiveryColorSearchDialog();
+            virtual ~CDbLiveryColorSearchDialog();
 
             //! Found livery if any, otherwise default
             const BlackMisc::Aviation::CLivery &getLivery() const;
 
         private:
             //! Dialog has been accepted
-            void ps_onAccepted();
+            void onAccepted();
 
             BlackMisc::Aviation::CLivery m_foundLivery; //!< last livery found
 
