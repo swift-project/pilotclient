@@ -56,34 +56,34 @@ namespace BlackMisc
             CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const BlackMisc::Simulation::CSimulatorInfo &simulator = BlackMisc::Simulation::CSimulatorInfo());
 
             //! Get description
-            const QString &getDescription() const { return this->m_description;}
+            const QString &getDescription() const { return m_description;}
 
             //! Get id and description
             const QString getIdAndDescription() const;
 
             //! Set description
-            void setDescription(const QString &description) { this->m_description = description.trimmed(); }
+            void setDescription(const QString &description) { m_description = description.trimmed(); }
 
             //! Has description
-            bool hasDescription() const { return !this->m_description.isEmpty(); }
+            bool hasDescription() const { return !m_description.isEmpty(); }
 
             //! Get alias1
-            const QString &getAlias1() const { return this->m_alias1;}
+            const QString &getAlias1() const { return m_alias1;}
 
             //! Get alias2
-            const QString &getAlias2() const { return this->m_alias2;}
+            const QString &getAlias2() const { return m_alias2;}
 
             //! Set alias1
-            void setAlias1(const QString &alias) { this->m_alias1 = alias.trimmed().toUpper(); }
+            void setAlias1(const QString &alias) { m_alias1 = alias.trimmed().toUpper(); }
 
             //! Set alias2
-            void setAlias2(const QString &alias) { this->m_alias2 = alias.trimmed().toUpper(); }
+            void setAlias2(const QString &alias) { m_alias2 = alias.trimmed().toUpper(); }
 
             //! Alias 1?
-            bool hasAlias1() const { return !this->m_alias1.isEmpty(); }
+            bool hasAlias1() const { return !m_alias1.isEmpty(); }
 
             //! Alias 2?
-            bool hasAlias2() const { return !this->m_alias2.isEmpty(); }
+            bool hasAlias2() const { return !m_alias2.isEmpty(); }
 
             //! Simulator
             const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }

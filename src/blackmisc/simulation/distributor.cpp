@@ -59,7 +59,7 @@ namespace BlackMisc
 
         bool CDistributor::matchesSimulator(const CSimulatorInfo &simulator) const
         {
-            return this->m_simulator.matchesAny(simulator);
+            return m_simulator.matchesAny(simulator);
         }
 
         CVariant CDistributor::propertyByIndex(const CPropertyIndex &index) const
@@ -71,9 +71,9 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAlias1: return CVariant::from(this->m_alias1);
-            case IndexAlias2: return CVariant::from(this->m_alias2);
-            case IndexDescription: return CVariant::from(this->m_description);
+            case IndexAlias1: return CVariant::from(m_alias1);
+            case IndexAlias2: return CVariant::from(m_alias2);
+            case IndexDescription: return CVariant::from(m_description);
             case IndexSimulator: return m_simulator.propertyByIndex(index.copyFrontRemoved());
             default:
                 return CValueObject::propertyByIndex(index);
@@ -89,21 +89,11 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAlias1:
-                this->m_alias1 = variant.value<QString>();
-                break;
-            case IndexAlias2:
-                this->m_alias2 = variant.value<QString>();
-                break;
-            case IndexDescription:
-                this->m_description = variant.value<QString>();
-                break;
-            case IndexSimulator:
-                this->m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexAlias1: m_alias1 = variant.value<QString>(); break;
+            case IndexAlias2: m_alias2 = variant.value<QString>(); break;
+            case IndexDescription: m_description = variant.value<QString>(); break;
+            case IndexSimulator: m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -115,10 +105,10 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAlias1: return this->m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
-            case IndexAlias2: return this->m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
-            case IndexDescription: return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-            case IndexSimulator: return this->m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
+            case IndexAlias1: return m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
+            case IndexAlias2: return m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
+            case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexSimulator: return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
             default:
                 break;
             }
@@ -137,7 +127,7 @@ namespace BlackMisc
 
         bool CDistributor::hasCompleteData() const
         {
-            return !this->m_description.isEmpty() && !this->m_dbKey.isEmpty();
+            return !m_description.isEmpty() && !m_dbKey.isEmpty();
         }
 
         CStatusMessageList CDistributor::validate() const
