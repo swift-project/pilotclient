@@ -289,10 +289,16 @@ namespace BlackMisc
 
         CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
-            const bool fsx = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfsx").toString());
-            const bool fs9 = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfs9").toString());
-            const bool xp = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simxplane").toString());
-            const bool p3d = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simp3d").toString());
+            const QJsonValue jfsx = json.value(prefix + "simfsx");
+            const QJsonValue jfs9 = json.value(prefix + "simfs9");
+            const QJsonValue jxp  = json.value(prefix + "simxplane");
+            const QJsonValue jp3d = json.value(prefix + "simp3d");
+
+            // we handle bool JSON values and bool as string
+            const bool fsx = jfsx.isBool() ? jfsx.toBool() : CDatastoreUtility::dbBoolStringToBool(jfsx.toString());
+            const bool fs9 = jfs9.isBool() ? jfs9.toBool() : CDatastoreUtility::dbBoolStringToBool(jfs9.toString());
+            const bool xp  = jxp.isBool()  ? jxp.toBool()  : CDatastoreUtility::dbBoolStringToBool(jxp.toString());
+            const bool p3d = jp3d.isBool() ? jp3d.toBool() : CDatastoreUtility::dbBoolStringToBool(jp3d.toString());
 
             const CSimulatorInfo simInfo(fsx, fs9, xp, p3d);
             return simInfo;
