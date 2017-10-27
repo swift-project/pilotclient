@@ -5,7 +5,7 @@ QT       += core widgets dbus network
 TARGET = simulatorfsxconfig
 TEMPLATE = lib
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore blackgui
+CONFIG += blackconfig blackmisc blackcore blackgui
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src

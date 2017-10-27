@@ -15,12 +15,14 @@
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 #include <QFileInfo>
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QStringBuilder>
 #include <QDir>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackMisc::Network;
@@ -110,7 +112,7 @@ namespace BlackSimPlugin
                 QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Invalid port!"));
                 return;
             }
-            int p = port.toInt();
+            const int p = port.toInt();
             QString msg;
             if (!CNetworkUtils::canConnect(address, p, msg))
             {
@@ -175,8 +177,15 @@ namespace BlackSimPlugin
 
         void CSimConnectSettingsComponent::setSimConnectInfo()
         {
-            const CWinDllUtils::DLLInfo simConnectInfo = CSimConnectUtilities::simConnectDllInfo();
-            ui->lbl_SimConnectInfo->setText(simConnectInfo.summary());
+            if (CBuildConfig::isCompiledWithP3DSupport() && CBuildConfig::buildWordSize() == 64)
+            {
+                ui->lbl_SimConnectInfo->setText("Static linking P3Dv4 x64");
+            }
+            else
+            {
+                const CWinDllUtils::DLLInfo simConnectInfo = CSimConnectUtilities::simConnectDllInfo();
+                ui->lbl_SimConnectInfo->setText(simConnectInfo.summary());
+            }
             this->checkSimConnectCfgFile();
         }
     } // ns
