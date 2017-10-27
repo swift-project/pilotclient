@@ -50,7 +50,7 @@ namespace BlackMisc
         }
 #endif
         quit();
-        wait();
+        wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
     }
 
     CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
