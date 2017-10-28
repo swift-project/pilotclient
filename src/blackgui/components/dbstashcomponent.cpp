@@ -97,12 +97,13 @@ namespace BlackGui
             return CStatusMessage();
         }
 
-        CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace, bool consolidateWithDbData)
+        CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace, bool consolidateWithDbData, bool clearHighlighting)
         {
             const CAircraftModel stashModel(consolidateWithDbData ? this->consolidateModel(model) : model);
-            const CStatusMessage m(validateStashModel(stashModel, replace));
+            const CStatusMessage m(this->validateStashModel(stashModel, replace));
             if (!m.isWarningOrAbove())
             {
+                if (clearHighlighting) { this->clearValidationHighlighting(); }
                 if (replace)
                 {
                     ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, stashModel.getModelString(), stashModel);
@@ -115,15 +116,24 @@ namespace BlackGui
             return m;
         }
 
-        CStatusMessageList CDbStashComponent::stashModels(const CAircraftModelList &models)
+        CStatusMessageList CDbStashComponent::stashModels(const CAircraftModelList &models, bool replace, bool consolidateWithDbData, bool clearHighlighting)
         {
             if (models.isEmpty()) { return CStatusMessageList(); }
             CStatusMessageList msgs;
+            int successfullyAdded = 0;
             for (const CAircraftModel &model : models)
             {
-                const CStatusMessage m(stashModel(model));
-                if (m.isWarningOrAbove()) { msgs.push_back(m); }
+                const CStatusMessage m(this->stashModel(model, replace, consolidateWithDbData, false));
+                if (m.isWarningOrAbove())
+                {
+                    msgs.push_back(m);
+                }
+                else
+                {
+                    successfullyAdded++;
+                }
             }
+            if (successfullyAdded > 0 && clearHighlighting) { this->clearValidationHighlighting(); }
             return msgs;
         }
 
@@ -446,6 +456,11 @@ namespace BlackGui
                 }
             }
             this->showOverlayMessages(msgs);
+        }
+
+        void CDbStashComponent::clearValidationHighlighting()
+        {
+            ui->tvp_StashAircraftModels->clearHighlighting();
         }
 
         void CDbStashComponent::ps_copyOverValuesToSelectedModels()
