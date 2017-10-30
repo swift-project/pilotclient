@@ -48,11 +48,10 @@ namespace BlackGui
             //! Change the windows opacity 0..100
             void changedWindowsOpacity(int opacity);
 
-        private slots:
-            //! Selection radio buttons changed
-            void ps_selectionChanged();
-
         private:
+            //! Selection radio buttons changed
+            void selectionChanged();
+
             //! GUI settings changed
             void guiSettingsChanged();
 
@@ -60,7 +59,7 @@ namespace BlackGui
             void widgetStyleChanged(const QString &widgetStyle);
 
             QScopedPointer<Ui::CSettingsGuiComponent> ui;
-            BlackMisc::CSetting<BlackGui::Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
+            BlackMisc::CSetting<Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
         };
     } // ns
 } // ns

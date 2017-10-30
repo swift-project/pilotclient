@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>130</width>
-    <height>35</height>
+    <width>176</width>
+    <height>40</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,6 +20,13 @@
    <enum>QFrame::Raised</enum>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_EnableWebServerDebugging">
+     <property name="text">
+      <string>Server debug flag:</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="1" alignment="Qt::AlignLeft">
     <widget class="QCheckBox" name="cb_EnableServerDebugging">
      <property name="text">
@@ -27,12 +34,18 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_EnableWebServerDebugging">
-     <property name="text">
-      <string>Server debug flag:</string>
+   <item row="0" column="2">
+    <spacer name="hs_DebugDatabaseSetup">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-    </widget>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

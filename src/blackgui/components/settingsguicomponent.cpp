@@ -41,8 +41,8 @@ namespace BlackGui
                     this, &CSettingsGuiComponent::widgetStyleChanged);
 
             // selection
-            connect(ui->rb_PreferExtendedSelection, &QRadioButton::released, this, &CSettingsGuiComponent::ps_selectionChanged);
-            connect(ui->rb_PreferMultiSelection, &QRadioButton::released, this, &CSettingsGuiComponent::ps_selectionChanged);
+            connect(ui->rb_PreferExtendedSelection, &QRadioButton::released, this, &CSettingsGuiComponent::selectionChanged);
+            connect(ui->rb_PreferMultiSelection, &QRadioButton::released, this, &CSettingsGuiComponent::selectionChanged);
 
             this->guiSettingsChanged();
         }
@@ -61,7 +61,7 @@ namespace BlackGui
             ui->hs_SettingsGuiOpacity->setValue(static_cast<int>(value));
         }
 
-        void CSettingsGuiComponent::ps_selectionChanged()
+        void CSettingsGuiComponent::selectionChanged()
         {
             QAbstractItemView::SelectionMode sm = QAbstractItemView::NoSelection;
             if (ui->rb_PreferExtendedSelection->isChecked())
@@ -72,8 +72,8 @@ namespace BlackGui
             {
                 sm = QAbstractItemView::MultiSelection;
             }
-            if (sm == this->m_guiSettings.get().getPreferredSelection()) { return; }
-            const CStatusMessage m = this->m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexPreferredSelection, CVariant::fromValue(sm));
+            if (sm == m_guiSettings.get().getPreferredSelection()) { return; }
+            const CStatusMessage m = m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexPreferredSelection, CVariant::fromValue(sm));
             CLogMessage::preformatted(m);
         }
 
@@ -105,7 +105,7 @@ namespace BlackGui
                 ui->cb_SettingsGuiWidgetStyle->setCurrentText(settings.getWidgetStyle());
                 return;
             }
-            const CStatusMessage m = this->m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexWidgetStyle, widgetStyle);
+            const CStatusMessage m = m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexWidgetStyle, widgetStyle);
             CLogMessage::preformatted(m);
         }
     } // ns
