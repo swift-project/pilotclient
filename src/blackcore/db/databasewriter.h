@@ -63,7 +63,7 @@ namespace BlackCore
                                  bool sendingSuccessful, bool directWrite);
 
             //! Published models, simplified version of publishedModels
-            void publishedModelsSimplified(const BlackMisc::Simulation::CAircraftModelList &modelsPublished);
+            void publishedModelsSimplified(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, bool directWrite);
 
         private:
             BlackMisc::Network::CUrlLogList m_writeLog;

@@ -67,7 +67,7 @@ namespace BlackCore
             bool doWorkCheck() const;
 
             //! Models have been published
-            void onModelsPublished(const BlackMisc::Simulation::CAircraftModelList &modelsPublished);
+            void onModelsPublished(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, bool directWrite);
         };
     } // ns
 } // ns

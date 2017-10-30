@@ -156,11 +156,12 @@ namespace BlackCore
             return true;
         }
 
-        void CBackgroundDataUpdater::onModelsPublished(const CAircraftModelList &modelsPublished)
+        void CBackgroundDataUpdater::onModelsPublished(const CAircraftModelList &modelsPublished, bool directWrite)
         {
             if (!this->doWorkCheck()) { return; }
             if (modelsPublished.isEmpty()) { return; }
             if (!m_updatePublishedModels)  { return; }
+            if (!directWrite) { return; } // those models are CRs and have to be released first
 
             emit this->consolidating(true);
             this->syncModelOrModelSetCacheWithDbData(m_modelCaches, modelsPublished);

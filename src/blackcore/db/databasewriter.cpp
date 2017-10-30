@@ -138,7 +138,7 @@ namespace BlackCore
                 emit this->publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
                 if (!modelsPublished.isEmpty())
                 {
-                    emit this->publishedModelsSimplified(modelsPublished);
+                    emit this->publishedModelsSimplified(modelsPublished, directWrite);
                 }
                 Q_UNUSED(c);
             }
