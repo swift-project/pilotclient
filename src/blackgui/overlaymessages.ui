@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>487</width>
+    <height>337</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,12 +34,6 @@
    </property>
    <item>
     <widget class="QFrame" name="fr_StatusMessagesComponentsInner">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
      <layout class="QVBoxLayout" name="vl_StatusMessagesComponentInner">
       <property name="leftMargin">
        <number>0</number>
@@ -55,12 +49,6 @@
       </property>
       <item>
        <widget class="QFrame" name="fr_Header">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
         <layout class="QHBoxLayout" name="hl_Header">
          <property name="spacing">
           <number>10</number>
@@ -229,14 +217,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="BlackGui::Components::CStatusMessageFormSmall" name="form_StatusMessageSmall">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-           </widget>
+           <widget class="BlackGui::Components::CStatusMessageFormSmall" name="form_StatusMessageSmall"/>
           </item>
          </layout>
         </widget>
@@ -314,12 +295,6 @@
    </item>
    <item>
     <widget class="QFrame" name="fr_Confirmation">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
      <layout class="QHBoxLayout" name="hl_ConfirmationFrame">
       <property name="leftMargin">
        <number>3</number>
@@ -356,6 +331,19 @@
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="hs_Confirmation">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>

@@ -80,7 +80,7 @@ namespace BlackGui
             bool appendOldMessages,
             const QString &confirmationMessage,
             std::function<void()> okLambda,
-            int defaultButton = QMessageBox::Cancel,
+            QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
             int timeOutMs = -1);
 
         //! Clear the overlay messages
@@ -130,19 +130,6 @@ namespace BlackGui
         //! \copydoc QFrame::keyPressEvent
         virtual void keyPressEvent(QKeyEvent *event) override;
 
-    private slots:
-        //! Stylesheet changed
-        void ps_onStyleSheetsChanged();
-
-        //! OK clicked (only when confirmation bar is active)
-        void ps_okClicked();
-
-        //! Cancel clicked (only when confirmation bar is active)
-        void ps_cancelClicked();
-
-        //! Kill clicked (only when errors)
-        void ps_killClicked();
-
     private:
         QScopedPointer<Ui::COverlayMessages> ui;
         BlackMisc::CSettingReadOnly<BlackGui::Settings::TextMessageSettings> m_messageSettings { this };
@@ -153,6 +140,18 @@ namespace BlackGui
         std::function<void()>        m_okLambda;
         QTimer                       m_autoCloseTimer { this };
         QList<std::function<void()>> m_pendingMessageCalls;
+
+        //! Stylesheet changed
+        void onStyleSheetsChanged();
+
+        //! OK clicked (only when confirmation bar is active)
+        void onOkClicked();
+
+        //! Cancel clicked (only when confirmation bar is active)
+        void onCancelClicked();
+
+        //! Kill clicked (only when errors)
+        void onKillClicked();
 
         //! Init widget
         void init(int w, int h);

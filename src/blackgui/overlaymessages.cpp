@@ -53,10 +53,10 @@ namespace BlackGui
     {
         this->init(w, h);
         this->showKillButton(false);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
-        connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::ps_okClicked);
-        connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
-        connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::ps_killClicked);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::onStyleSheetsChanged);
+        connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::onOkClicked);
+        connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::onCancelClicked);
+        connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::onKillClicked);
 
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAlways);
         ui->tvp_StatusMessages->setForceColumnsToMaxSize(false); // problems with multiline entries, with T138 we need multiline messages
@@ -89,25 +89,25 @@ namespace BlackGui
         ui->lbl_Header->setText(m_header.isEmpty() ? header : m_header);
     }
 
-    void COverlayMessages::ps_onStyleSheetsChanged()
+    void COverlayMessages::onStyleSheetsChanged()
     {
-        // stlye sheet
+        // stylesheet
     }
 
-    void COverlayMessages::ps_okClicked()
+    void COverlayMessages::onOkClicked()
     {
         m_lastConfirmation = QMessageBox::Ok;
         if (m_okLambda) { m_okLambda(); }
         this->close();
     }
 
-    void COverlayMessages::ps_cancelClicked()
+    void COverlayMessages::onCancelClicked()
     {
         m_lastConfirmation = QMessageBox::Cancel;
         this->close();
     }
 
-    void COverlayMessages::ps_killClicked()
+    void COverlayMessages::onKillClicked()
     {
         QMessageBox msgBox;
         msgBox.setText("Shutdown the application.");
@@ -134,10 +134,10 @@ namespace BlackGui
 
     bool COverlayMessages::displayTextMessage(const CTextMessage &textMessage) const
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->getIContextOwnAircraft()) { return false; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return false; }
         const CTextMessageSettings s = m_messageSettings.getThreadLocal();
         if (s.popup(textMessage)) { return true; } // fast check without needing own aircraft
-        const CSimulatedAircraft ownAircraft(sApp->getIContextOwnAircraft()->getOwnAircraft());
+        const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
         return s.popup(textMessage, ownAircraft);
     }
 
@@ -147,7 +147,7 @@ namespace BlackGui
     void COverlayMessages::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
-        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
         if (this->hasPendingConfirmation())
         {
             // defer message
@@ -180,7 +180,7 @@ namespace BlackGui
     void COverlayMessages::showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
-        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
         if (this->hasPendingConfirmation())
         {
             // defer message
@@ -208,7 +208,7 @@ namespace BlackGui
     {
         if (textMessage.isEmpty()) { return; }
         if (!displayTextMessage(textMessage)) { return; }
-        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown()) { return; }
 
         if (this->hasPendingConfirmation())
         {
@@ -351,7 +351,7 @@ namespace BlackGui
         }
     }
 
-    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, bool appendOldMessages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
+    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, bool appendOldMessages, const QString &confirmationMessage, std::function<void ()> okLambda, QMessageBox::StandardButton defaultButton, int timeOutMs)
     {
         if (this->hasPendingConfirmation())
         {
@@ -363,10 +363,10 @@ namespace BlackGui
             return;
         }
         this->setConfirmationMessage(confirmationMessage);
+        this->setDefaultConfirmationButton(defaultButton);
         this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
         m_awaitingConfirmation = true; // needs to be after showOverlayMessages
         m_okLambda = okLambda;
-        this->setDefaultConfirmationButton(defaultButton);
     }
 
     void COverlayMessages::clearOverlayMessages()

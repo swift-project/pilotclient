@@ -55,17 +55,13 @@ namespace BlackGui
         //! Show kill button
         void showKillButton(bool killButton);
 
-        //! Inner frame factors 0..1
-        //! \remarks can also be restricted by maximumHeight() / maximumWidth()
-        void setInnerFrameFactor(double xFactor, double yFactor);
-
         //! \copydoc COverlayMessages::showOverlayMessagesWithConfirmation
         void showOverlayMessagesWithConfirmation(
             const BlackMisc::CStatusMessageList &messages,
             bool                                appendOldMessages,
             const QString                       &confirmationMessage,
             std::function<void()>               okLambda,
-            int                                 defaultButton = QMessageBox::Cancel,
+            QMessageBox::StandardButton         defaultButton = QMessageBox::Cancel,
             int                                 timeOutMs = -1
         );
 

@@ -29,7 +29,7 @@
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
-#include <QString>
+#include <QMessageBox>
 #include <QStringList>
 #include <functional>
 
@@ -185,7 +185,7 @@ namespace BlackGui
             bool showOverlayMessagesWithConfirmation(
                 const BlackMisc::CStatusMessageList &msgs, bool appendOldMessages,
                 const QString &confirmation, std::function<void()> okLambda,
-                int defaultButton, bool onlyErrors = false, int timeoutMs = -1);
+                QMessageBox::StandardButton defaultButton, bool onlyErrors = false, int timeoutMs = -1);
 
             //! Display message
             bool showOverlayMessage(const BlackMisc::CStatusMessage &msg, int timeoutMs = -1);

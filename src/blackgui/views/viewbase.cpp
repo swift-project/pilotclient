@@ -317,14 +317,12 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::settingsChanged()
         {
-            if (this->allowsMultipleSelectedRows())
+            if (!this->allowsMultipleSelectedRows()) { return; }
+            const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
+            m_originalSelectionMode = settings.getPreferredSelection();
+            if (this->isCurrentlyAllowingMultipleRowSelections())
             {
-                const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
-                m_originalSelectionMode = settings.getPreferredSelection();
-                if (this->isCurrentlyAllowingMultipleRowSelections())
-                {
-                    this->setSelectionMode(settings.getPreferredSelection());
-                }
+                this->setSelectionMode(settings.getPreferredSelection());
             }
         }
 
@@ -793,10 +791,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_setSingleSelection()
         {
-            if (this->allowsMultipleSelectedRows())
-            {
-                this->setSelectionMode(SingleSelection);
-            }
+            this->setSelectionMode(SingleSelection);
         }
 
         void CViewBaseNonTemplate::ps_setExtendedSelection()

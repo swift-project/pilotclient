@@ -540,7 +540,7 @@ namespace BlackGui
 
         bool CDbStashComponent::showOverlayMessagesWithConfirmation(
             const CStatusMessageList &msgs, bool appendOldMessages,
-            const QString &confirmation, std::function<void ()> okLambda, int defaultButton, bool onlyErrors, int timeoutMs)
+            const QString &confirmation, std::function<void ()> okLambda, QMessageBox::StandardButton defaultButton, bool onlyErrors, int timeoutMs)
         {
             if (msgs.isEmpty()) { return false; }
             if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
