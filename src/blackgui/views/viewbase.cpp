@@ -521,7 +521,9 @@ namespace BlackGui
                 break;
             }
 
-            this->settingsChanged();
+            // call this deferred, otherwise the values are overridden with any values
+            // from the UI builder
+            QTimer::singleShot(500, this, &CViewBaseNonTemplate::settingsChanged);
         }
 
         QString CViewBaseNonTemplate::getSettingsFileName(bool load) const
