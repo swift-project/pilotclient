@@ -11,13 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
+   <string>Overlay messages</string>
   </property>
   <layout class="QVBoxLayout" name="vl_StatusMessages">
    <property name="leftMargin">
@@ -118,9 +112,6 @@
       </item>
       <item>
        <widget class="QStackedWidget" name="sw_StatusMessagesComponent">
-        <property name="currentIndex">
-         <number>3</number>
-        </property>
         <widget class="QWidget" name="pg_StatusMessages">
          <layout class="QVBoxLayout" name="vl_PgStatusMessages">
           <property name="spacing">
@@ -140,11 +131,8 @@
           </property>
           <item>
            <widget class="BlackGui::Views::CStatusMessageView" name="tvp_StatusMessages">
-            <property name="selectionMode">
-             <enum>QAbstractItemView::NoSelection</enum>
-            </property>
-            <property name="selectionBehavior">
-             <enum>QAbstractItemView::SelectRows</enum>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOn</enum>
             </property>
             <attribute name="verticalHeaderVisible">
              <bool>false</bool>
