@@ -45,7 +45,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexLatitude = BlackMisc::CPropertyIndex::GlobalIndexICoordinateGeodetic,
+                IndexLatitude = CPropertyIndex::GlobalIndexICoordinateGeodetic,
                 IndexLongitude,
                 IndexLatitudeAsString,
                 IndexLongitudeAsString,
@@ -72,7 +72,7 @@ namespace BlackMisc
             //! By a similar convention, "elevation" is commonly used for objects that are fixed to the ground.
             //! \sa see http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf page 5
             //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
-            virtual const BlackMisc::Aviation::CAltitude &geodeticHeight() const = 0;
+            virtual const Aviation::CAltitude &geodeticHeight() const = 0;
 
             //! Normal vector
             //! \note QVector3D uses floats, so don't use if double precision is needed
@@ -92,31 +92,34 @@ namespace BlackMisc
             //! Height as string
             QString geodeticHeightAsString() const { return this->geodeticHeight().toQString(true); }
 
+            //! Geodetic height null?
+            bool isGeodeticHeightNull() { return this->geodeticHeight().isNull(); }
+
             //! Great circle distance
-            BlackMisc::PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
+            PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
 
             //! Initial bearing
-            BlackMisc::PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &otherCoordinate) const;
+            PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &otherCoordinate) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            //! \copydoc Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! Compare by index
             int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateGeodetic &compareValue) const;
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
+            //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         protected:
             //! Can given index be handled?
-            static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
+            static bool canHandleIndex(const CPropertyIndex &index);
         };
 
         //! Great circle distance between points
-        BLACKMISC_EXPORT BlackMisc::PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        BLACKMISC_EXPORT PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
         //! Initial bearing
-        BLACKMISC_EXPORT BlackMisc::PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        BLACKMISC_EXPORT PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
         //! Euclidean distance between normal vectors
         BLACKMISC_EXPORT double calculateEuclideanDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
@@ -131,44 +134,44 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexRelativeDistance = BlackMisc::CPropertyIndex::GlobalIndexICoordinateWithRelativePosition,
+                IndexRelativeDistance = CPropertyIndex::GlobalIndexICoordinateWithRelativePosition,
                 IndexRelativeBearing
             };
 
             //! Get the distance
-            const BlackMisc::PhysicalQuantities::CLength &getRelativeDistance() const { return m_relativeDistance; }
+            const PhysicalQuantities::CLength &getRelativeDistance() const { return m_relativeDistance; }
 
             //! Set relative distance
-            void setRelativeDistance(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_relativeDistance = distance; }
+            void setRelativeDistance(const PhysicalQuantities::CLength &distance) { m_relativeDistance = distance; }
 
             //! Get the relative bearing
-            const BlackMisc::PhysicalQuantities::CAngle &getRelativeBearing() const { return m_relativeBearing; }
+            const PhysicalQuantities::CAngle &getRelativeBearing() const { return m_relativeBearing; }
 
             //! Set bearing to own plane
-            void setRelativeBearing(const BlackMisc::PhysicalQuantities::CAngle &angle) { this->m_relativeBearing = angle; }
+            void setRelativeBearing(const PhysicalQuantities::CAngle &angle) { m_relativeBearing = angle; }
 
             //! Valid distance?
-            bool hasValidRelativeDistance() const { return !this->m_relativeDistance.isNull();}
+            bool hasValidRelativeDistance() const { return !m_relativeDistance.isNull();}
 
             //! Valid bearing?
-            bool hasValidRelativeBearing() const { return !this->m_relativeBearing.isNull();}
+            bool hasValidRelativeBearing() const { return !m_relativeBearing.isNull();}
 
             //! Calculcate distance, set it, and return distance
-            BlackMisc::PhysicalQuantities::CLength calculcateAndUpdateRelativeDistance(const BlackMisc::Geo::ICoordinateGeodetic &position);
+            PhysicalQuantities::CLength calculcateAndUpdateRelativeDistance(const Geo::ICoordinateGeodetic &position);
 
             //! Calculcate distance and bearing to plane, set it, and return distance
-            BlackMisc::PhysicalQuantities::CLength calculcateAndUpdateRelativeDistanceAndBearing(const BlackMisc::Geo::ICoordinateGeodetic &position);
+            PhysicalQuantities::CLength calculcateAndUpdateRelativeDistanceAndBearing(const Geo::ICoordinateGeodetic &position);
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            //! \copydoc Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            //! \copydoc Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Compare by index
             int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateWithRelativePosition &compareValue) const;
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
+            //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         protected:
@@ -176,10 +179,10 @@ namespace BlackMisc
             ICoordinateWithRelativePosition();
 
             //! Can given index be handled?
-            static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
+            static bool canHandleIndex(const CPropertyIndex &index);
 
-            BlackMisc::PhysicalQuantities::CAngle  m_relativeBearing  { 0, nullptr }; //!< temporary stored value
-            BlackMisc::PhysicalQuantities::CLength m_relativeDistance { 0, nullptr }; //!< temporary stored value
+            PhysicalQuantities::CAngle  m_relativeBearing  { 0, nullptr }; //!< temporary stored value
+            PhysicalQuantities::CLength m_relativeDistance { 0, nullptr }; //!< temporary stored value
         };
 
         //! Geodetic coordinate
@@ -193,7 +196,7 @@ namespace BlackMisc
             CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
 
             //! Constructor by values
-            CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const BlackMisc::Aviation::CAltitude &geodeticHeight);
+            CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const Aviation::CAltitude &geodeticHeight);
 
             //! Constructor by double values, but no geodetic height
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees);
@@ -211,7 +214,7 @@ namespace BlackMisc
             virtual CLongitude longitude() const override;
 
             //! \copydoc ICoordinateGeodetic::geodeticHeight
-            virtual const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_geodeticHeight; }
+            virtual const Aviation::CAltitude &geodeticHeight() const override { return m_geodeticHeight; }
 
             //! \copydoc ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override;
@@ -219,14 +222,14 @@ namespace BlackMisc
             //! \copydoc ICoordinateGeodetic::normalVectorDouble
             virtual std::array<double, 3> normalVectorDouble() const override;
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            //! \copydoc Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            //! \copydoc Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Switch unit of height
-            CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit);
+            CCoordinateGeodetic &switchUnit(const PhysicalQuantities::CLengthUnit &unit);
 
             //! Set latitude
             void setLatitude(const CLatitude &latitude);
@@ -238,25 +241,28 @@ namespace BlackMisc
             void setLatLong(const CLatitude &latitude, const CLongitude &longitude);
 
             //! Set height (ellipsoidal or geodetic height)
-            void setGeodeticHeight(const BlackMisc::Aviation::CAltitude &height) { this->m_geodeticHeight = height; }
+            void setGeodeticHeight(const Aviation::CAltitude &height) { m_geodeticHeight = height; }
 
             //! Set normal vector
-            void setNormalVector(const QVector3D &normal) { this->m_x = normal.x(); this->m_y = normal.y(); this->m_z = normal.z(); }
+            void setNormalVector(const QVector3D &normal) { m_x = normal.x(); m_y = normal.y(); m_z = normal.z(); }
 
             //! Set normal vector
-            void setNormalVector(double x, double y, double z) { this->m_x = x; this->m_y = y; this->m_z = z; }
+            void setNormalVector(double x, double y, double z) { m_x = x; m_y = y; m_z = z; }
 
             //! Coordinate by WGS84 position data
-            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::Aviation::CAltitude &geodeticHeight = {});
+            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const Aviation::CAltitude &geodeticHeight = {});
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
+            //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
         private:
-            double m_x = 0; //!< normal vector
-            double m_y = 0; //!< normal vector
-            double m_z = 0; //!< normal vector
-            BlackMisc::Aviation::CAltitude m_geodeticHeight { 0, nullptr }; //!< height, ellipsoidal or geodetic height
+            // Coordinates are stored using `double` internally and use `double` for most calculations.
+            // They use `double` when converting to and from lat/lon representation.
+            // `QVector3D` is only used for calculating distance and bearing.
+            double m_x = 0; //!< normal vector [-1,1]
+            double m_y = 0; //!< normal vector [-1,1]
+            double m_z = 0; //!< normal vector [-1,1]
+            Aviation::CAltitude m_geodeticHeight { 0, nullptr }; //!< height, ellipsoidal or geodetic height
 
             BLACK_METACLASS(
                 CCoordinateGeodetic,

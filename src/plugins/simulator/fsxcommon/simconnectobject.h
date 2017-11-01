@@ -138,10 +138,10 @@ namespace BlackSimPlugin
             bool m_confirmedAdded = false;
             bool m_pendingRemoved = false;
             int m_lightsRequestedAt = -1;
-            DataDefinitionRemoteAircraftPartsWithoutLights m_partsAsSent {}; //!< parts as sent
-            BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr }; //!< current lights to know state for toggling
-            BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };       //!< lights as sent to simulator
-            SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;    //!< how often do we query ground elevation
+            DataDefinitionRemoteAircraftPartsWithoutLights m_partsAsSent {};          //!< parts as sent
+            BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr };    //!< current lights to know state for toggling
+            BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };          //!< lights as sent to simulator
+            SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;       //!< how often do we query ground elevation
             QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
         };
 

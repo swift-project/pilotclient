@@ -55,16 +55,16 @@ namespace BlackSimPlugin
                     const DWORD sendId = exception->dwSendID;
                     const DWORD index = exception->dwIndex;
                     const DWORD data = cbData;
-                    const QString exStr(CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException));
-                    QString ex;
-                    ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
                     switch (exceptionId)
                     {
                     case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE: break;
                     case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID: break;
                     default: break;
                     }
-                    CLogMessage(simulatorFsx).warning("Caught FSX simConnect exception: %1 %2") << exStr << ex;
+                    QString ex;
+                    ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
+                    const QString exStr(CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException));
+                    CLogMessage(simulatorFsx).warning("Caught simConnect exception: %1 %2") << exStr << ex;
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:
@@ -74,7 +74,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EVENT:
                 {
-                    SIMCONNECT_RECV_EVENT *event = static_cast<SIMCONNECT_RECV_EVENT *>(pData);
+                    const SIMCONNECT_RECV_EVENT *event = static_cast<SIMCONNECT_RECV_EVENT *>(pData);
                     switch (event->uEventID)
                     {
                     case SystemEventSimStatus:
@@ -117,7 +117,7 @@ namespace BlackSimPlugin
 
                     // such an object is not necessarily one of ours
                     // for instance, I always see object "5" when I start the simulator
-                    if (!simulatorFsx->getSimConnectObjects().isKnownSimObjectId(objectId)) break;
+                    if (!simulatorFsx->getSimConnectObjects().isKnownSimObjectId(objectId)) { break; }
                     switch (event->uEventID)
                     {
                     case SystemEventObjectAdded:
@@ -133,7 +133,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EVENT_FRAME:
                 {
-                    SIMCONNECT_RECV_EVENT_FRAME *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
+                    const SIMCONNECT_RECV_EVENT_FRAME *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
                     switch (event->uEventID)
                     {
                     case SystemEventFrame:
@@ -147,7 +147,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
-                    SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
+                    const SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
                     const DWORD requestId = event->dwRequestID;
                     const DWORD objectId = event->dwObjectID;
                     bool success = simulatorFsx->setSimConnectObjectId(requestId, objectId);
@@ -170,7 +170,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
                 {
-                    SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA *) pData;
+                    const SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA *) pData;
                     const DWORD requestId = pObjData->dwRequestID;
                     switch (requestId)
                     {
@@ -249,10 +249,10 @@ namespace BlackSimPlugin
                 {
                     static const CLength maxDistance(200.0, CLengthUnit::NM());
                     const CCoordinateGeodetic posAircraft(simulatorFsx->getOwnAircraftPosition());
-                    SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
+                    const SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
                     for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
                     {
-                        SIMCONNECT_DATA_FACILITY_AIRPORT *pFacilityAirport = pAirportList->rgData + i;
+                        const SIMCONNECT_DATA_FACILITY_AIRPORT *pFacilityAirport = pAirportList->rgData + i;
                         if (!pFacilityAirport) { break; }
                         const QString icao(pFacilityAirport->Icao);
                         if (icao.isEmpty()) { continue; } // airfield without ICAO code
@@ -276,7 +276,7 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_CLIENT_DATA:
                 {
                     if (!simulatorFsx->m_useSbOffsets) { break; }
-                    SIMCONNECT_RECV_CLIENT_DATA *clientData = (SIMCONNECT_RECV_CLIENT_DATA *)pData;
+                    const SIMCONNECT_RECV_CLIENT_DATA *clientData = (SIMCONNECT_RECV_CLIENT_DATA *)pData;
                     if (simulatorFsx->m_useSbOffsets && clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)
                     {
                         //! \fixme FSUIPC vs SimConnect why is offset 19 ident 2/0? In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here. Whoever knows, add comment or fix if wrong
@@ -287,7 +287,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EVENT_FILENAME:
                 {
-                    SIMCONNECT_RECV_EVENT_FILENAME *event = static_cast<SIMCONNECT_RECV_EVENT_FILENAME *>(pData);
+                    const SIMCONNECT_RECV_EVENT_FILENAME *event = static_cast<SIMCONNECT_RECV_EVENT_FILENAME *>(pData);
                     switch (event->uEventID)
                     {
                     case SystemEventFlightLoaded: break;

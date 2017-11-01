@@ -75,11 +75,11 @@ namespace BlackGui
             ui(new Ui::CLoginComponent)
         {
             ui->setupUi(this);
-            this->m_logoffCountdownTimer = new QTimer(this);
-            this->m_logoffCountdownTimer->setObjectName("CLoginComponent:m_logoffCountdownTimer");
+            m_logoffCountdownTimer = new QTimer(this);
+            m_logoffCountdownTimer->setObjectName("CLoginComponent:m_logoffCountdownTimer");
             ui->pb_LogoffTimeout->setMaximum(LogoffIntervalSeconds);
             ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
-            connect(this->m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
+            connect(m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
 
             ui->selector_AircraftIcao->displayWithIcaoDescription(false);
             ui->selector_AirlineIcao->displayWithIcaoDescription(false);
@@ -154,7 +154,7 @@ namespace BlackGui
             this->validateAircraftValues();
             this->validateVatsimValues();
             this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
-            CServerList otherServers(this->m_otherTrafficNetworkServers.getThreadLocal());
+            CServerList otherServers(m_otherTrafficNetworkServers.getThreadLocal());
 
             // add a testserver when no servers can be loaded
             if (otherServers.isEmpty() && (sGui->isRunningInDeveloperEnvironment() || CBuildConfig::isDevBranch()))
@@ -176,12 +176,12 @@ namespace BlackGui
 
         void CLoginComponent::mainInfoAreaChanged(const QWidget *currentWidget)
         {
-            this->m_logoffCountdownTimer->stop(); // in any case stop the timer
+            m_logoffCountdownTimer->stop(); // in any case stop the timer
             if (currentWidget != this && currentWidget != this->parentWidget())
             {
-                const bool wasVisible = this->m_visible;
-                this->m_visible = false;
-                this->m_logoffCountdownTimer->stop();
+                const bool wasVisible = m_visible;
+                m_visible = false;
+                m_logoffCountdownTimer->stop();
 
                 if (wasVisible)
                 {
@@ -192,7 +192,7 @@ namespace BlackGui
             else
             {
                 this->setOwnModelAndIcaoValues();
-                if (this->m_visible)
+                if (m_visible)
                 {
                     // already visible:
                     // re-trigger! treat as same as OK
@@ -200,7 +200,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    this->m_visible = true;
+                    m_visible = true;
                     const bool isConnected = sGui->getIContextNetwork()->isConnected();
                     this->setGuiVisibility(isConnected);
                     this->setOkButtonString(isConnected);
@@ -211,7 +211,7 @@ namespace BlackGui
 
         void CLoginComponent::loginCancelled()
         {
-            this->m_logoffCountdownTimer->stop();
+            m_logoffCountdownTimer->stop();
             ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
             emit this->loginOrLogoffCancelled();
         }
@@ -293,8 +293,8 @@ namespace BlackGui
                 if (msg.isSuccess() && vatsimLogin)
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
-                    this->m_currentVatsimServer.set(currentServer);
-                    this->m_currentAircraftModel.setAndSave(ownAircraft.getModel());
+                    m_currentVatsimServer.set(currentServer);
+                    m_currentAircraftModel.setAndSave(ownAircraft.getModel());
                 }
             }
             else
@@ -334,7 +334,7 @@ namespace BlackGui
                 CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
                 if (vatsimFsdServers.isEmpty()) { return; }
                 vatsimFsdServers.sortBy(&CServer::getName);
-                const CServer currentServer = this->m_currentVatsimServer.get();
+                const CServer currentServer = m_currentVatsimServer.get();
                 ui->comp_VatsimServer->setServers(vatsimFsdServers, true);
                 ui->comp_VatsimServer->preSelect(currentServer.getName());
             }
@@ -346,7 +346,7 @@ namespace BlackGui
 
         void CLoginComponent::loadRememberedVatsimData()
         {
-            const CServer lastServer = this->m_currentVatsimServer.get();
+            const CServer lastServer = m_currentVatsimServer.get();
             const CUser lastUser = lastServer.getUser();
             if (lastUser.hasValidCallsign())
             {
@@ -429,8 +429,8 @@ namespace BlackGui
         void CLoginComponent::startLogoffTimerCountdown()
         {
             ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
-            this->m_logoffCountdownTimer->setInterval(1000);
-            this->m_logoffCountdownTimer->start();
+            m_logoffCountdownTimer->setInterval(1000);
+            m_logoffCountdownTimer->start();
         }
 
         void CLoginComponent::setOwnModelAndIcaoValues()
@@ -474,7 +474,7 @@ namespace BlackGui
             const bool changedOwnAircraftIcaoValues = this->updateOwnAircaftIcaoValuesFromGuiValues();
             if (changedOwnAircraftIcaoValues || changedOwnAircraftCallsignPilot)
             {
-                this->m_changedLoginDataDigestSignal.inputSignal();
+                m_changedLoginDataDigestSignal.inputSignal();
             }
         }
 
@@ -560,7 +560,7 @@ namespace BlackGui
 
         void CLoginComponent::reloadSettings()
         {
-            CServerList otherServers(this->m_otherTrafficNetworkServers.getThreadLocal());
+            CServerList otherServers(m_otherTrafficNetworkServers.getThreadLocal());
             ui->comp_OtherServers->setServers(otherServers);
         }
 
@@ -572,7 +572,7 @@ namespace BlackGui
             ui->pb_LogoffTimeout->setValue(v);
             if (v <= 0)
             {
-                this->m_logoffCountdownTimer->stop();
+                m_logoffCountdownTimer->stop();
                 this->toggleNetworkConnection();
             }
         }
@@ -598,7 +598,7 @@ namespace BlackGui
             this->setOwnModelAndIcaoValues();
 
             // open dialog for model mapping
-            if (this->m_autoPopupWizard && !model.isLoadedFromDb())
+            if (m_autoPopupWizard && !model.isLoadedFromDb())
             {
                 this->mappingWizard();
             }
@@ -607,29 +607,29 @@ namespace BlackGui
             this->updateOwnAircraftCallsignAndPilotFromGuiValues();
 
             // let others know data changed
-            this->m_changedLoginDataDigestSignal.inputSignal();
+            m_changedLoginDataDigestSignal.inputSignal();
         }
 
         void CLoginComponent::mappingWizard()
         {
-            if (!this->m_mappingWizard)
+            if (!m_mappingWizard)
             {
-                this->m_mappingWizard.reset(new CDbQuickMappingWizard(this));
+                m_mappingWizard.reset(new CDbQuickMappingWizard(this));
             }
 
             if (sGui->getIContextSimulator()->isSimulatorAvailable())
             {
                 // preset on model
                 const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
-                this->m_mappingWizard->presetModel(model);
+                m_mappingWizard->presetModel(model);
             }
             else
             {
                 // preset on GUI values only
                 const CAircraftIcaoCode icao(ui->selector_AircraftIcao->getAircraftIcao());
-                this->m_mappingWizard->presetAircraftIcao(icao);
+                m_mappingWizard->presetAircraftIcao(icao);
             }
-            this->m_mappingWizard->show();
+            m_mappingWizard->show();
         }
 
         void CLoginComponent::toggleTimeout()
@@ -691,7 +691,7 @@ namespace BlackGui
 
         CAircraftModel CLoginComponent::getPrefillModel() const
         {
-            CAircraftModel model = this->m_currentAircraftModel.get();
+            CAircraftModel model = m_currentAircraftModel.get();
             if (model.hasAircraftDesignator()) { return model; }
             return IContextOwnAircraft::getDefaultOwnAircraftModel();
         }

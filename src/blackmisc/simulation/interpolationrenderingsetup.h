@@ -127,9 +127,9 @@ namespace BlackMisc
 
         private:
             bool m_interpolatorDebugMessage = false; //! Debug messages in interpolator
-            bool m_simulatorDebugMessages = false;   //! Debug messages of simulator (aka plugin)
-            bool m_forceFullInterpolation = false;   //! always do a full interpolation, even if aircraft is not moving
-            bool m_enabledAircraftParts   = true;    //! Update aircraft parts
+            bool m_simulatorDebugMessages   = false; //! Debug messages of simulator (aka plugin)
+            bool m_forceFullInterpolation   = false; //! always do a full interpolation, even if aircraft is not moving
+            bool m_enabledAircraftParts     = true;  //! Update aircraft parts
             int  m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
             BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0, nullptr }; //!< max.distance for rendering
             BlackMisc::Aviation::CCallsignSet m_callsignsToLog;

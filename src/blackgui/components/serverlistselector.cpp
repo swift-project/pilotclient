@@ -31,7 +31,7 @@ namespace BlackGui
 
         void CServerListSelector::setServers(const BlackMisc::Network::CServerList &servers, bool nameIsCountry)
         {
-            if (this->m_servers == servers) { return; }
+            if (m_servers == servers) { return; }
             this->setServerItems(servers, nameIsCountry);
             if (!servers.isEmpty() && !m_pendingPreselect.isEmpty())
             {
@@ -70,8 +70,8 @@ namespace BlackGui
         {
             QString currentlySelected(this->currentText());
             int index = -1;
-            this->m_servers = servers;
-            this->m_items.clear();
+            m_servers = servers;
+            m_items.clear();
             this->clear(); // ui
 
             nameToCountry = nameToCountry && knowsAllCountries();
@@ -86,7 +86,7 @@ namespace BlackGui
 
                 if (nameToCountry)
                 {
-                    const CCountry country(findCountry(server));
+                    const CCountry country(this->findCountry(server));
                     if (country.getName().isEmpty())
                     {
                         this->addItem(d);
@@ -103,8 +103,8 @@ namespace BlackGui
             }
 
             // reselect
-            if (this->m_items.isEmpty()) { return; }
-            if (this->m_items.size() == 1)
+            if (m_items.isEmpty()) { return; }
+            if (m_items.size() == 1)
             {
                 this->setCurrentIndex(0);
             }
@@ -121,7 +121,7 @@ namespace BlackGui
 
         CCountry CServerListSelector::findCountry(const CServer &server)
         {
-            if (!knowsAllCountries()) { return CCountry(); }
+            if (!CServerListSelector::knowsAllCountries()) { return CCountry(); }
             static const CCountryList countries(sGui->getWebDataServices()->getCountries());
             return countries.findBestMatchByCountryName(server.getName());
         }

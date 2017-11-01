@@ -13,6 +13,7 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/sequence.h"
 
+#include <QStringBuilder>
 #include <QtGlobal>
 
 namespace BlackMisc
@@ -30,7 +31,7 @@ namespace BlackMisc
 
     CIcons::IconIndex CIcon::getIndex() const
     {
-        return this->m_index;
+        return m_index;
     }
 
     bool CIcon::isIndexBased() const
@@ -40,17 +41,17 @@ namespace BlackMisc
 
     bool CIcon::isGenerated() const
     {
-        return getIndex() == CIcons::IconIsGenerated;
+        return this->getIndex() == CIcons::IconIsGenerated;
     }
 
     bool CIcon::isFileBased() const
     {
-        return getIndex() == CIcons::IconIsFile;
+        return this->getIndex() == CIcons::IconIsFile;
     }
 
     bool CIcon::isSet() const
     {
-        return (this->m_index != CIcons::NotSet);
+        return (m_index != CIcons::NotSet);
     }
 
     QPixmap CIcon::toPixmap() const
@@ -59,7 +60,7 @@ namespace BlackMisc
         {
             if (this->isGenerated()) { return m_pixmap; }
             if (this->isFileBased()) { return m_pixmap; }
-            return CIcons::pixmapByIndex(getIndex(), this->m_rotateDegrees);
+            return CIcons::pixmapByIndex(getIndex(), m_rotateDegrees);
         }
         else
         {
@@ -74,13 +75,13 @@ namespace BlackMisc
 
     void CIcon::setRotation(const PhysicalQuantities::CAngle &rotate)
     {
-        this->m_rotateDegrees = static_cast<int>(rotate.valueRounded(PhysicalQuantities::CAngleUnit::deg(), 0));
+        m_rotateDegrees = static_cast<int>(rotate.valueRounded(PhysicalQuantities::CAngleUnit::deg(), 0));
     }
 
     QString CIcon::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        QString s = QString(this->m_descriptiveText).append(" ").append(this->m_index);
+        const QString s = m_descriptiveText % QStringLiteral(" ") % QString::number(m_index);
         return s;
     }
 

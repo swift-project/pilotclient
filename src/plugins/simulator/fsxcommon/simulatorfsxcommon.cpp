@@ -66,7 +66,7 @@ namespace BlackSimPlugin
 
         CSimulatorFsxCommon::~CSimulatorFsxCommon()
         {
-            disconnectFrom();
+            this->disconnectFrom();
             // fsuipc is disconnected in CSimulatorFsCommon
         }
 
@@ -92,8 +92,8 @@ namespace BlackSimPlugin
             if (m_useFsuipc) { m_fsuipc->connect(); } // FSUIPC too
 
             // set structures and move on
-            initEvents();
-            initDataDefinitionsWhenConnected();
+            this->initEvents();
+            this->initDataDefinitionsWhenConnected();
             m_simConnectTimerId = startTimer(DispatchIntervalMs);
             // do not start m_addPendingAircraftTimer here, it will be started when object was added
 
@@ -105,14 +105,14 @@ namespace BlackSimPlugin
             if (!m_simConnected) { return true; }
             if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
             m_simConnectTimerId = -1;
-            this->onSimStopped(); // treat as stopped
+            m_simSimulating = false; // treat as stopped, just setting the flag here avoids overhead of on onSimStopped
             if (m_hSimConnect)
             {
                 SimConnect_Close(m_hSimConnect);
                 m_hSimConnect = nullptr;
             }
 
-            reset();
+            this->reset(); // mark as disconnected and reset all values
 
             // emit status and disconnect FSUIPC
             CSimulatorFsCommon::disconnectFrom();
@@ -327,15 +327,15 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::onSimStopped()
         {
             // stopping events in FSX: Load menu, weather and season
-            const SimulatorStatus oldStatus = getSimulatorStatus();
+            const SimulatorStatus oldStatus = this->getSimulatorStatus();
             m_simSimulating = false;
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
-            emitSimulatorCombinedStatus(oldStatus);
+            this->emitSimulatorCombinedStatus(oldStatus);
         }
 
         void CSimulatorFsxCommon::onSimFrame()
         {
-            updateRemoteAircraft();
+            this->updateRemoteAircraft();
         }
 
         void CSimulatorFsxCommon::onSimExit()
@@ -559,7 +559,7 @@ namespace BlackSimPlugin
                 simObject.setConfirmedAdded(true);
 
                 // P3D also has SimConnect_AIReleaseControlEx;
-                const DWORD requestId = obtainRequestIdSimData();
+                const DWORD requestId = this->obtainRequestIdSimData();
                 const DWORD objectId = simObject.getObjectId();
                 HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
                 hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1,
@@ -729,7 +729,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
-            dispatch();
+            this->dispatch();
         }
 
         const QString &CSimulatorFsxCommon::modeToString(CSimulatorFsxCommon::AircraftAddMode mode)
@@ -841,8 +841,8 @@ namespace BlackSimPlugin
             const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
             CSimulatedAircraft addedAircraft(newRemoteAircraft);
 
-            const DWORD requestId = obtainRequestIdSimData();
-            SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
+            const DWORD requestId = this->obtainRequestIdSimData();
+            const SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
             const QString modelString(addedAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
@@ -851,7 +851,7 @@ namespace BlackSimPlugin
             {
                 const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << aircraftModel.getModelString();
                 CLogMessage::preformatted(msg);
-                emit physicallyAddingRemoteModelFailed(addedAircraft, msg);
+                emit this->physicallyAddingRemoteModelFailed(addedAircraft, msg);
             }
             else
             {
@@ -1424,7 +1424,7 @@ namespace BlackSimPlugin
             m_requestIdSimData = RequestSimDataStart;
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
-            CSimulatorFsCommon::reset();
+            CSimulatorFsCommon::reset(); // clears all pending aircraft etc
         }
 
         void CSimulatorFsxCommon::clearAllAircraft()

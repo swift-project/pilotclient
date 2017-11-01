@@ -24,7 +24,9 @@ namespace BlackMisc
         {}
 
         BlackMisc::Aviation::CAircraftSituation CInterpolatorMulti::getInterpolatedSituation(
-            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status)
+            qint64 currentTimeSinceEpoc,
+            const CInterpolationAndRenderingSetup &setup,
+            const CInterpolationHints &hints, CInterpolationStatus &status)
         {
             switch (m_mode)
             {

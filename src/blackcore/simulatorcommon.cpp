@@ -70,8 +70,8 @@ namespace BlackCore
 
         // timer
         connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::oneSecondTimerTimeout);
-        this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
-        this->m_oneSecondTimer.start(1000);
+        m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
+        m_oneSecondTimer.start(1000);
 
         // swift data
         if (sApp && sApp->hasWebDataServices())
@@ -213,14 +213,14 @@ namespace BlackCore
 
     void CSimulatorCommon::debugLogMessage(const QString &msg) const
     {
-        if (!showDebugLogMessage()) { return; }
+        if (!this->showDebugLogMessage()) { return; }
         if (msg.isEmpty()) { return; }
         CLogMessage(this).info(msg);
     }
 
     void CSimulatorCommon::debugLogMessage(const QString &funcInfo, const QString &msg) const
     {
-        if (!showDebugLogMessage()) { return; }
+        if (!this->showDebugLogMessage()) { return; }
         if (msg.isEmpty()) { return; }
         CLogMessage(this).info("%1 %2") << msg << funcInfo;
     }

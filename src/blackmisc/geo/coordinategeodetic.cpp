@@ -28,7 +28,7 @@ namespace BlackMisc
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
             static const QString s = "Geodetic: {%1, %2, %3}";
-            return s.arg(this->latitude().valueRoundedWithUnit(6, i18n), this->longitude().valueRoundedWithUnit(6, i18n), this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
+            return s.arg(this->latitude().valueRoundedWithUnit(6, i18n), this->longitude().valueRoundedWithUnit(6, i18n), m_geodeticHeight.valueRoundedWithUnit(6, i18n));
         }
 
         CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CAltitude &geodeticHeight)
@@ -81,7 +81,7 @@ namespace BlackMisc
 
         bool ICoordinateGeodetic::canHandleIndex(const CPropertyIndex &index)
         {
-            int i = index.frontCasted<int>();
+            const int i = index.frontCasted<int>();
             return (i >= static_cast<int>(IndexLatitude)) && (i <= static_cast<int>(IndexNormalVector));
         }
 
@@ -92,22 +92,14 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexLatitude:
-                    return this->latitude().propertyByIndex(index.copyFrontRemoved());
-                case IndexLongitude:
-                    return this->longitude().propertyByIndex(index.copyFrontRemoved());
-                case IndexLatitudeAsString:
-                    return CVariant(this->latitudeAsString());
-                case IndexLongitudeAsString:
-                    return CVariant(this->longitudeAsString());
-                case IndexGeodeticHeight:
-                    return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
-                case IndexGeodeticHeightAsString:
-                    return CVariant(this->geodeticHeightAsString());
-                case IndexNormalVector:
-                    return CVariant::fromValue(this->normalVector());
-                default:
-                    break;
+                case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
+                case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
+                case IndexLatitudeAsString: return CVariant(this->latitudeAsString());
+                case IndexLongitudeAsString: return CVariant(this->longitudeAsString());
+                case IndexGeodeticHeight: return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
+                case IndexGeodeticHeightAsString: return CVariant(this->geodeticHeightAsString());
+                case IndexNormalVector: return CVariant::fromValue(this->normalVector());
+                default: break;
                 }
             }
 
@@ -123,20 +115,13 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexLatitude:
-                    return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
-                case IndexLongitude:
-                    return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
-                case IndexLatitudeAsString:
-                    return this->latitudeAsString().compare(compareValue.latitudeAsString());
-                case IndexLongitudeAsString:
-                    return this->longitudeAsString().compare(compareValue.longitudeAsString());
-                case IndexGeodeticHeight:
-                    return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.geodeticHeight());
-                case IndexGeodeticHeightAsString:
-                    return this->geodeticHeightAsString().compare(compareValue.geodeticHeightAsString());
-                default:
-                    break;
+                case IndexLatitude: return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+                case IndexLongitude: return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
+                case IndexLatitudeAsString: return this->latitudeAsString().compare(compareValue.latitudeAsString());
+                case IndexLongitudeAsString: return this->longitudeAsString().compare(compareValue.longitudeAsString());
+                case IndexGeodeticHeight: return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.geodeticHeight());
+                case IndexGeodeticHeightAsString: return this->geodeticHeightAsString().compare(compareValue.geodeticHeightAsString());
+                default: break;
                 }
             }
 
@@ -173,7 +158,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexGeodeticHeight:
-                this->m_geodeticHeight.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_geodeticHeight.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexLatitude:
                 this->setLatitude(variant.value<CLatitude>());
@@ -188,7 +173,7 @@ namespace BlackMisc
                 this->setLongitude(CLongitude::fromWgs84(variant.toQString()));
                 break;
             case IndexGeodeticHeightAsString:
-                this->m_geodeticHeight.parseFromString(variant.toQString());
+                m_geodeticHeight.parseFromString(variant.toQString());
                 break;
             case IndexNormalVector:
                 this->setNormalVector(variant.value<QVector3D>());
@@ -226,6 +211,7 @@ namespace BlackMisc
 
         CLongitude CCoordinateGeodetic::longitude() const
         {
+            // in mathematics atan2 of 0,0 is undefined, with IEEE floating-point atan2(0,0) is either 0 or ±180°
             return { std::atan2(m_y, m_x), PhysicalQuantities::CAngleUnit::rad() };
         }
 
@@ -233,15 +219,15 @@ namespace BlackMisc
         {
             return
             {
-                static_cast<float>(this->m_x),
-                static_cast<float>(this->m_y),
-                static_cast<float>(this->m_z)
+                static_cast<float>(m_x),
+                static_cast<float>(m_y),
+                static_cast<float>(m_z)
             };
         }
 
         std::array<double, 3> CCoordinateGeodetic::normalVectorDouble() const
         {
-            return { { this->m_x, this->m_y, this->m_z } };
+            return { { m_x, m_y, m_z } };
         }
 
         void CCoordinateGeodetic::setLatitude(const CLatitude &latitude)
@@ -256,28 +242,28 @@ namespace BlackMisc
 
         void CCoordinateGeodetic::setLatLong(const CLatitude &latitude, const CLongitude &longitude)
         {
-            this->m_x = latitude.cos() * longitude.cos();
-            this->m_y = latitude.cos() * longitude.sin();
-            this->m_z = latitude.sin();
+            m_x = latitude.cos() * longitude.cos();
+            m_y = latitude.cos() * longitude.sin();
+            m_z = latitude.sin();
         }
 
         CCoordinateGeodetic &CCoordinateGeodetic::switchUnit(const CLengthUnit &unit)
         {
-            this->m_geodeticHeight.switchUnit(unit);
+            m_geodeticHeight.switchUnit(unit);
             return *this;
         }
 
         CLength ICoordinateWithRelativePosition::calculcateAndUpdateRelativeDistance(const ICoordinateGeodetic &position)
         {
-            this->m_relativeDistance = Geo::calculateGreatCircleDistance(*this, position);
-            return this->m_relativeDistance;
+            m_relativeDistance = Geo::calculateGreatCircleDistance(*this, position);
+            return m_relativeDistance;
         }
 
         CLength ICoordinateWithRelativePosition::calculcateAndUpdateRelativeDistanceAndBearing(const ICoordinateGeodetic &position)
         {
-            this->m_relativeDistance = Geo::calculateGreatCircleDistance(*this, position);
-            this->m_relativeBearing = Geo::calculateBearing(*this, position);
-            return this->m_relativeDistance;
+            m_relativeDistance = Geo::calculateGreatCircleDistance(*this, position);
+            m_relativeBearing = Geo::calculateBearing(*this, position);
+            return m_relativeDistance;
         }
 
         CVariant ICoordinateWithRelativePosition::propertyByIndex(const CPropertyIndex &index) const
@@ -288,12 +274,9 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexRelativeBearing:
-                    return this->getRelativeBearing().propertyByIndex(index.copyFrontRemoved());
-                case IndexRelativeDistance:
-                    return this->getRelativeDistance().propertyByIndex(index.copyFrontRemoved());
-                default:
-                    break;
+                case IndexRelativeBearing: return this->getRelativeBearing().propertyByIndex(index.copyFrontRemoved());
+                case IndexRelativeDistance: return this->getRelativeDistance().propertyByIndex(index.copyFrontRemoved());
+                default: break;
                 }
             }
             const QString m = QString("no property, index ").append(index.toQString());
@@ -310,10 +293,10 @@ namespace BlackMisc
                 switch (i)
                 {
                 case IndexRelativeBearing:
-                    this->m_relativeBearing.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                    m_relativeBearing.setPropertyByIndex(index.copyFrontRemoved(), variant);
                     break;
                 case IndexRelativeDistance:
-                    this->m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                    m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant);
                     break;
                 default:
                     const QString m = QString("no property, index ").append(index.toQString());
@@ -331,10 +314,8 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexRelativeBearing:
-                    return this->m_relativeBearing.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeBearing());
-                case IndexRelativeDistance:
-                    return this->m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
+                case IndexRelativeBearing: return m_relativeBearing.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeBearing());
+                case IndexRelativeDistance: return m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
                 default:
                     const QString m = QString("no property, index ").append(index.toQString());
                     Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
@@ -357,7 +338,7 @@ namespace BlackMisc
         bool ICoordinateWithRelativePosition::canHandleIndex(const CPropertyIndex &index)
         {
             if (ICoordinateGeodetic::canHandleIndex(index)) { return true; }
-            int i = index.frontCasted<int>();
+            const int i = index.frontCasted<int>();
             return (i >= static_cast<int>(IndexRelativeDistance)) && (i <= static_cast<int>(IndexRelativeBearing));
         }
     } // namespace

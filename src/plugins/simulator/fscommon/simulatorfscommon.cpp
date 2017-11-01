@@ -80,7 +80,7 @@ namespace BlackSimPlugin
 
             // reset flags
             m_simPaused = false;
-            emitSimulatorCombinedStatus();
+            this->emitSimulatorCombinedStatus();
             return true;
         }
 

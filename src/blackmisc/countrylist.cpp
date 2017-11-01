@@ -37,7 +37,7 @@ namespace BlackMisc
         thread_local const QRegularExpression reg("^[a-z]+", QRegularExpression::CaseInsensitiveOption);
         QRegularExpressionMatch match = reg.match(countryName);
         const QString cn(match.hasMatch() ? match.captured(0) : countryName);
-        CCountryList countries = this->findBy([&](const CCountry & country)
+        const CCountryList countries = this->findBy([&](const CCountry & country)
         {
             return country.matchesCountryName(cn);
         });

@@ -67,11 +67,11 @@ namespace BlackCore
 
     void ISimulator::emitSimulatorCombinedStatus(SimulatorStatus oldStatus)
     {
-        const SimulatorStatus newStatus = getSimulatorStatus();
+        const SimulatorStatus newStatus = this->getSimulatorStatus();
         if (oldStatus != newStatus)
         {
             // decouple, follow up of signal can include unloading
-            // simulator so this should happen asyncronously (which is like forcing Qt::QueuedConnection)
+            // simulator so this should happen strictly asyncronously (which is like forcing Qt::QueuedConnection)
             QTimer::singleShot(0, this, [ = ]
             {
                 emit this->simulatorStatusChanged(newStatus);
@@ -85,7 +85,7 @@ namespace BlackCore
         this->setObjectName("ISimulatorListener:" + info.toQString());
 
         // stop listener after it reports simulator ready
-        bool s = connect(this, &ISimulatorListener::simulatorStarted, this, &ISimulatorListener::stop, Qt::QueuedConnection);
+        const bool s = connect(this, &ISimulatorListener::simulatorStarted, this, &ISimulatorListener::stop, Qt::QueuedConnection);
         Q_ASSERT_X(s, Q_FUNC_INFO, "connect failed");
         Q_UNUSED(s)
     }
@@ -104,13 +104,13 @@ namespace BlackCore
     {
         if (m_isRunning) { return; }
         m_isRunning = true;
-        startImpl();
+        this->startImpl();
     }
 
     void ISimulatorListener::stop()
     {
         if (!m_isRunning) { return; }
-        stopImpl();
+        this->stopImpl();
         m_isRunning = false;
     }
 

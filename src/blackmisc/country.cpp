@@ -95,9 +95,10 @@ namespace BlackMisc
     {
         if (name.isEmpty() || m_name.isEmpty()) { return false; }
         if (caseInsensitiveStringCompare(name, this->getDbKey())) { return true; } // exact ISO match
-        if (caseInsensitiveStringCompare(name, this->getIso3Code())) { return true; } // exact ISO match
+        if (caseInsensitiveStringCompare(name, this->getIso3Code())) { return true; } // exact ISO3 match
         if (name.length() < 5)
         {
+            // contains would be too fuzzy for short names
             return caseInsensitiveStringCompare(name, m_name) || caseInsensitiveStringCompare(name, m_simplifiedName);
         }
         else

@@ -180,23 +180,16 @@ namespace BlackMisc
         CVariant CInterpolationAndRenderingSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexInterpolatorDebugMessages:
-                return CVariant::fromValue(m_interpolatorDebugMessage);
-            case IndexSimulatorDebugMessages:
-                return CVariant::fromValue(m_simulatorDebugMessages);
-            case IndexForceFullInterpolation:
-                return CVariant::fromValue(m_forceFullInterpolation);
-            case IndexMaxRenderedAircraft:
-                return CVariant::fromValue(m_maxRenderedAircraft);
-            case IndexMaxRenderedDistance:
-                return CVariant::fromValue(m_maxRenderedDistance);
-            case IndexEnabledAircraftParts:
-                return CVariant::fromValue(m_enabledAircraftParts);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexInterpolatorDebugMessages: return CVariant::fromValue(m_interpolatorDebugMessage);
+            case IndexSimulatorDebugMessages: return CVariant::fromValue(m_simulatorDebugMessages);
+            case IndexForceFullInterpolation: return CVariant::fromValue(m_forceFullInterpolation);
+            case IndexMaxRenderedAircraft: return CVariant::fromValue(m_maxRenderedAircraft);
+            case IndexMaxRenderedDistance: return CVariant::fromValue(m_maxRenderedDistance);
+            case IndexEnabledAircraftParts: return CVariant::fromValue(m_enabledAircraftParts);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -207,30 +200,16 @@ namespace BlackMisc
                 *this = variant.value<CInterpolationAndRenderingSetup>();
                 return;
             }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexInterpolatorDebugMessages:
-                m_interpolatorDebugMessage = variant.toBool();
-                break;
-            case IndexSimulatorDebugMessages:
-                m_simulatorDebugMessages = variant.toBool();
-                break;
-            case IndexForceFullInterpolation:
-                m_forceFullInterpolation = variant.toBool();
-                break;
-            case IndexMaxRenderedAircraft:
-                m_maxRenderedAircraft = variant.toInt();
-                break;
-            case IndexMaxRenderedDistance:
-                m_maxRenderedDistance = variant.value<CLength>();
-                break;
-            case IndexEnabledAircraftParts:
-                m_enabledAircraftParts = variant.toBool();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexInterpolatorDebugMessages: m_interpolatorDebugMessage = variant.toBool(); break;
+            case IndexSimulatorDebugMessages: m_simulatorDebugMessages = variant.toBool(); break;
+            case IndexForceFullInterpolation: m_forceFullInterpolation = variant.toBool(); break;
+            case IndexMaxRenderedAircraft: m_maxRenderedAircraft = variant.toInt(); break;
+            case IndexMaxRenderedDistance: m_maxRenderedDistance = variant.value<CLength>(); break;
+            case IndexEnabledAircraftParts: m_enabledAircraftParts = variant.toBool(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
     } // ns
