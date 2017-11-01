@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>276</width>
-    <height>252</height>
+    <width>320</width>
+    <height>256</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,13 +34,7 @@
    </property>
    <item>
     <widget class="QFrame" name="fr_DataEntry">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QGridLayout" name="gl_MatcherSelection">
+     <layout class="QFormLayout" name="fl_MatcherLog">
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -60,34 +54,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="cb_LogReverseLookup">
-        <property name="toolTip">
-         <string>enable logging of reverse lookup messages</string>
-        </property>
-        <property name="text">
-         <string>rev. lookup msgs.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_Enable">
-        <property name="text">
-         <string>Enable:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QCheckBox" name="cb_LogMatchingMessages">
-        <property name="toolTip">
-         <string>enable matching messages</string>
-        </property>
-        <property name="text">
-         <string>matching msgs.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="2">
+      <item row="0" column="1">
        <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -95,6 +62,64 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Enable">
+        <property name="text">
+         <string>Enable:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QWidget" name="wi_CheckBoxes" native="true">
+        <layout class="QHBoxLayout" name="hl_CheckBoxes">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="cb_LogReverseLookup">
+           <property name="toolTip">
+            <string>enable logging of reverse lookup messages</string>
+           </property>
+           <property name="text">
+            <string>rev. lookup msgs.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb_LogMatchingMessages">
+           <property name="toolTip">
+            <string>enable matching messages</string>
+           </property>
+           <property name="text">
+            <string>matching msgs.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="hs_CheckBoxes">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
