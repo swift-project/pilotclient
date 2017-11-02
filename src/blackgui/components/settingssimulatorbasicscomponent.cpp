@@ -141,7 +141,7 @@ namespace BlackGui
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             QString simDir = this->getFileBrowserSimulatorDirectory();
-            if (simulator.isFsxFamily())
+            if (simulator.isFsxP3DFamily())
             {
                 simDir = CFsCommonUtil::fsxSimObjectsDirFromSimDir(simDir);
             }

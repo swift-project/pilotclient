@@ -115,7 +115,7 @@ namespace BlackMisc
             bool isMicrosoftOrPrepare3DSimulator() const;
 
             //! FSX family, i.e. FSX or P3D?
-            bool isFsxFamily() const;
+            bool isFsxP3DFamily() const;
 
             //! Number simulators selected
             int numberSimulators() const;
