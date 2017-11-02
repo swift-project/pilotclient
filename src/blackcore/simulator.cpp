@@ -24,10 +24,11 @@ namespace BlackCore
 {
     ISimulator::SimulatorStatus ISimulator::getSimulatorStatus() const
     {
+        if (!this->isConnected()) { return Disconnected; }
         const SimulatorStatus status =
-            (isConnected() ? Connected : static_cast<ISimulator::SimulatorStatusFlag>(0))
-            | (isSimulating() ? Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0))
-            | (isPaused() ? Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
+            Connected
+            | (this->isSimulating() ? Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0))
+            | (this->isPaused() ? Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
         return status;
     }
 
