@@ -342,7 +342,10 @@ namespace BlackSimPlugin
         {
             // reset complete state, we are going down
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
-            disconnectFrom();
+            if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
+
+            // if called from dispatch function, avoid that SimConnectProc disconnects itself while in SimConnectProc
+            QTimer::singleShot(0, this, &CSimulatorFsxCommon::disconnectFrom);
         }
 
         DWORD CSimulatorFsxCommon::obtainRequestIdSimData()
@@ -761,11 +764,12 @@ namespace BlackSimPlugin
                 {
                     // 2nd time, an error / avoid multiple messages
                     // idea: if it happens once ignore
-                    CLogMessage(this).error("FSX: Dispatch error");
+                    CLogMessage(this).error("FSX/P3D: Dispatch error");
                 }
                 else if (m_dispatchErrors > 5)
                 {
                     // this normally happens during a FSX crash or shutdown
+                    CLogMessage(this).error("FSX/P3D: Multiple dispatch errors, disconnecting");
                     this->disconnectFrom();
                 }
                 return;
