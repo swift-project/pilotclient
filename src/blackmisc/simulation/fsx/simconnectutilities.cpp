@@ -17,6 +17,7 @@
 #include <QMetaEnum>
 #include <QMetaObject>
 #include <QTextStream>
+#include <QStandardPaths>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -36,14 +37,27 @@ namespace BlackMisc
                 return fn;
             }
 
-            QString CSimConnectUtilities::getLocalSimConnectCfgFilename()
+            const QString &CSimConnectUtilities::getSwiftLocalSimConnectCfgFilename()
             {
-                return CFileUtils::appendFilePaths(QCoreApplication::applicationDirPath(), simConnectFilename());
+                static const QString n = CFileUtils::appendFilePaths(QCoreApplication::applicationDirPath(), simConnectFilename());
+                return n;
             }
 
-            bool CSimConnectUtilities::hasLocalSimConnectCfgFilename()
+            const QString &CSimConnectUtilities::getUserSimConnectCfgFilename()
             {
-                const QFile f(getLocalSimConnectCfgFilename());
+                static const QString n = CFileUtils::appendFilePaths(QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory), simConnectFilename());
+                return n;
+            }
+
+            bool CSimConnectUtilities::hasSwiftLocalSimConnectCfgFile()
+            {
+                const QFile f(getSwiftLocalSimConnectCfgFilename());
+                return f.exists();
+            }
+
+            bool CSimConnectUtilities::hasUserSimConnectCfgFile()
+            {
+                const QFile f(getUserSimConnectCfgFilename());
                 return f.exists();
             }
 
@@ -89,13 +103,19 @@ namespace BlackMisc
                 return sc;
             }
 
-            const QString CSimConnectUtilities::resolveEnumToString(const DWORD id, const char *enumName)
+            QString CSimConnectUtilities::resolveEnumToString(const DWORD id, const char *enumName)
             {
                 const int i = CSimConnectUtilities::staticMetaObject.indexOfEnumerator(enumName);
                 if (i < 0) return QString("No enumerator for %1").arg(enumName);
                 const QMetaEnum m = CSimConnectUtilities::staticMetaObject.enumerator(i);
                 const char *k = m.valueToKey(id);
                 return (k) ? QLatin1String(k) : QString("Id %1 not found for %2").arg(id).arg(enumName);
+            }
+
+            const QString &CSimConnectUtilities::simConnectIniFilename()
+            {
+                static const QString n("SimConnect.ini");
+                return n;
             }
 
             const QString CSimConnectUtilities::simConnectExceptionToString(const DWORD id)
@@ -107,6 +127,64 @@ namespace BlackMisc
             {
                 QString sf = CSimConnectUtilities::resolveEnumToString(type, "SIMCONNECT_SURFACE");
                 return beautify ? sf.replace('_', ' ') : sf;
+            }
+
+            QStringList CSimConnectUtilities::getSimConnectIniFileDirectories()
+            {
+                const QString docDir = QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory);
+                if (docDir.isEmpty()) return QStringList();
+
+                QDir directory(docDir);
+                directory.setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
+                const QStringList dirList = directory.entryList();
+                QStringList simDirs;
+                for (const QString &dir : dirList)
+                {
+                    if (dir.contains("Flight Simulator", Qt::CaseInsensitive) || dir.contains("Prepar3D", Qt::CaseInsensitive))
+                    {
+                        simDirs.push_back(CFileUtils::appendFilePaths(docDir, dir));
+                    }
+                }
+
+                // gets the latest P3D as first
+                simDirs.sort();
+                std::reverse(std::begin(simDirs), std::end(simDirs));
+                return simDirs;
+            }
+
+            QStringList CSimConnectUtilities::getSimConnectIniFiles()
+            {
+                QStringList files;
+                for (const QString &dir : getSimConnectIniFileDirectories())
+                {
+                    const QFileInfo f(CFileUtils::appendFilePaths(dir, simConnectIniFilename()));
+                    if (f.exists()) { files.push_back(f.absoluteFilePath()); }
+                }
+                return files;
+            }
+
+            QString CSimConnectUtilities::getSimConnectIniFileDirectory(CSimulatorInfo &simulator)
+            {
+                static const QString docDir = QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory);
+                if (docDir.isEmpty()) { return ""; }
+                if (!simulator.isSingleSimulator() || !simulator.isFsxP3DFamily()) return "";
+
+                const QString iniDir = CFileUtils::appendFilePaths(docDir, simulator.p3d() ? "Prepar3D v4 Files" : "Flight Simulator X Files");
+                if (getSimConnectIniFileDirectories().isEmpty()) { return iniDir; }
+
+                for (const QString &dir : getSimConnectIniFileDirectories())
+                {
+                    if (simulator.p3d())
+                    {
+                        if (dir.contains("Prepar3D", Qt::CaseInsensitive)) { return dir; }
+                    }
+                    else if (simulator.fsx())
+                    {
+                        if (dir.contains("Flight Simulator", Qt::CaseInsensitive)) { return dir; }
+                    }
+                }
+
+                return iniDir;
             }
 
             int CSimConnectUtilities::lightsToLightStates(const CAircraftLights &lights)

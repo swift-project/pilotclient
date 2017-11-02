@@ -1409,7 +1409,7 @@ namespace BlackSimPlugin
             const QString fsxPath = CFsCommonUtil::fsxDirFromRegistry(); // can be empty for remote FSX
             if (!fsxPath.isEmpty()) { s.setSimulatorInstallationDirectory(fsxPath); }
 
-            s.setValue("fsx/simConnectCfgFilename", CSimConnectUtilities::getLocalSimConnectCfgFilename());
+            s.setValue("fsx/simConnectCfgFilename", CSimConnectUtilities::getSwiftLocalSimConnectCfgFilename());
             s.setValue("fsx/simConnectVersion", m_simConnectVersion);
             m_simulatorInternals = s;
         }
