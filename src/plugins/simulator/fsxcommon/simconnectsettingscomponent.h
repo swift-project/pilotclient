@@ -12,6 +12,7 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 
+#include "blackmisc/simulation/simulatorinfo.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -34,27 +35,33 @@ namespace BlackSimPlugin
             //! Dtor
             virtual ~CSimConnectSettingsComponent();
 
-        private slots:
+        private:
             //! Open simConnect.cfg using default application
-            void openSimConnectCfgFile();
+            void openSwiftSimConnectCfgFile();
+
+            //! Open simConnect.cfg using default application
+            void openUserSimConnectCfgFile();
 
             //! Delete simConnect.cfg file
-            void deleteSimConnectCfgFile();
+            void deleteSwiftSimConnectCfgFile();
 
             //! Check whether the simConnect.cfg file exists
-            void checkSimConnectCfgFile();
+            void checkSwiftSimConnectCfgFile();
 
             //! Test the SimConnect connectivity
-            void testConnection();
+            void testSwiftSimConnectConnection();
 
-            //! Save a simconnect.cfg file for FSX
+            //! Save a SimConnect.cfg file for FSX/P3D
             void saveSimConnectCfgFile();
 
-        private:
-            QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
+            //! Save dialog for a SimConnect.ini file
+            void saveSimConnectIniFileDialog();
 
             //! Set the simconnect info
             void setSimConnectInfo();
+
+            BlackMisc::Simulation::CSimulatorInfo m_simulator { BlackMisc::Simulation::CSimulatorInfo::FSX };
+            QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
         };
     } // ns
 } // ns
