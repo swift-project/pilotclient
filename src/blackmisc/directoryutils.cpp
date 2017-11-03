@@ -151,8 +151,8 @@ namespace BlackMisc
     {
         const QString d(CDirectoryUtils::shareDirectory());
         if (d.isEmpty()) { return ""; }
-        const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/boostrap/boostrap.json"));
-        Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing dir");
+        const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/bootstrap.json"));
+        Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing bootstrap file");
         return QFileInfo(file).absoluteFilePath();
     }
 
