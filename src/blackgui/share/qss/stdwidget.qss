@@ -77,6 +77,20 @@ BlackGui--Components--CCopyConfigurationComponent {
 }
 */
 
+/* setup load dialog */
+BlackGui--Components--CSetupLoadingDialog {
+  background: black; /* background is background color here */
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
+/* setup load dialog details frame */
+/*
+BlackGui--Components--CSetupLoadingDialog #fr_Details {
+  background-image: url(:/textures/icons/textures/texture-outer.jpg);
+  background-color: darkslategray;
+}
+*/
+
 QFileDialog #sidebar {
   background: black;
 }

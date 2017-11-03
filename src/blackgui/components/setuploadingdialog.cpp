@@ -105,6 +105,7 @@ namespace BlackGui
             if (!sApp || sApp->isShuttingDown()) { return; }
             if (!this->hasSetupReader()) { return; }
             sApp->getSetupReader()->prefillCacheWithLocalResourceBootstrapFile();
+            this->displaySetupCacheInfo();
         }
 
         void CSetupLoadingDialog::displaySetupCacheInfo()

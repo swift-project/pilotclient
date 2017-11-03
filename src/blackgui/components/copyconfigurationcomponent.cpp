@@ -16,6 +16,7 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/slot.h"
 
 #include <QDirIterator>
 #include <QFileInfoList>
@@ -179,9 +180,9 @@ namespace BlackGui
         void CCopyConfigurationComponent::initCurrentDirectories(bool preselectMissingOrOutdated)
         {
             const QString destinationDir = this->getThisVersionDirectory(); // cache or settings dir
-            if (this->m_initializedDestinationDir != destinationDir)
+            if (m_initializedDestinationDir != destinationDir)
             {
-                this->m_initializedDestinationDir = destinationDir;
+                m_initializedDestinationDir = destinationDir;
                 const QDir thisVersionDirectory(destinationDir);
                 if (!thisVersionDirectory.exists())
                 {
@@ -204,7 +205,9 @@ namespace BlackGui
                     destinationModel->setNameFilters(this->getSourceFileFilter());
                     ui->tv_Destination->setModel(destinationModel);
                     ui->tv_Destination->setSortingEnabled(true);
-                    connect(destinationModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
+
+                    // disconnect when done, there have been problems that the lambda was called when the view was already destroyed
+                    connectOnce(destinationModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
                     {
                         Q_UNUSED(path);
                         ui->tv_Destination->resizeColumnToContents(0);
@@ -217,9 +220,9 @@ namespace BlackGui
 
             // source
             const QString sourceDir = this->getOtherVersionsSelectedDirectory();
-            if (this->m_initializedSourceDir != sourceDir)
+            if (m_initializedSourceDir != sourceDir)
             {
-                this->m_initializedSourceDir = sourceDir;
+                m_initializedSourceDir = sourceDir;
                 QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
                 if (!sourceModel)
                 {
@@ -229,7 +232,7 @@ namespace BlackGui
                     sourceModel->setNameFilters(this->getSourceFileFilter());
                     ui->tv_Source->setModel(sourceModel);
                     ui->tv_Source->setSortingEnabled(true); // hide/disable only
-                    connect(sourceModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
+                    connectOnce(sourceModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
                     {
                         Q_UNUSED(path);
                         ui->tv_Source->resizeColumnToContents(0);

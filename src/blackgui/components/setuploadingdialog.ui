@@ -36,7 +36,10 @@
     <number>6</number>
    </property>
    <item>
-    <widget class="QFrame" name="fr_Details">
+    <widget class="QGroupBox" name="gb_Details">
+     <property name="title">
+      <string>Setup and caches</string>
+     </property>
      <layout class="QGridLayout" name="gl_Details" columnstretch="0,3,0,0,0">
       <property name="topMargin">
        <number>6</number>
@@ -49,15 +52,11 @@
       </property>
       <item row="3" column="1">
        <widget class="QLineEdit" name="le_SetupCache">
+        <property name="whatsThis">
+         <string>Timestamp of the setup cache.</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="pb_LoadFromDisk">
-        <property name="text">
-         <string> load from disk </string>
         </property>
        </widget>
       </item>
@@ -70,6 +69,9 @@
       </item>
       <item row="2" column="4">
        <widget class="QLineEdit" name="le_BootstrapMode">
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The mode, implicit means no URL is provided and the value is obtained from an existing setup.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -77,6 +79,9 @@
       </item>
       <item row="1" column="1" colspan="4">
        <widget class="QLineEdit" name="le_CmdLine">
+        <property name="whatsThis">
+         <string>The command line.</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -101,6 +106,9 @@
       </item>
       <item row="2" column="1">
        <widget class="QLineEdit" name="le_BootstrapUrl">
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The bootstrap URL provided by command line options. This is where the setup data are loaded from.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -133,23 +141,39 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="pb_LoadFromDisk">
+        <property name="text">
+         <string> load from disk </string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::Components::CLogComponent" name="comp_Messages">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+    <widget class="QGroupBox" name="gb_Log">
+     <property name="title">
+      <string>Log messages</string>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>200</height>
-      </size>
-     </property>
+     <layout class="QVBoxLayout" name="vl_LogMessages">
+      <item>
+       <widget class="BlackGui::Components::CLogComponent" name="comp_Messages">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>200</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
