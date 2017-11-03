@@ -77,6 +77,9 @@ namespace BlackMisc
             //! Toogle interpolator Mode
             void toggleMode();
 
+            //! Info string
+            QString getInterpolatorInfo() const;
+
             //! Mode from string
             static Mode modeFromString(const QString &mode);
 
@@ -96,6 +99,7 @@ namespace BlackMisc
 
         /**
          * CInterpolatorMulti which can be used with QMap/QHash
+         * \remark Use case is emulated driver
          */
         class BLACKMISC_EXPORT CInterpolatorMultiWrapper
         {

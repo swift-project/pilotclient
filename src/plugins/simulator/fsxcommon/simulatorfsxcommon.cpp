@@ -680,17 +680,19 @@ namespace BlackSimPlugin
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
                     m_addPendingAircraft.push_back(simObject.getAircraft());
-                    CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: %4")
+                            << callsign.toQString() << simObject.getAircraftModelString()
+                            << objectID << simObject.getInterpolatorInfo();
                 }
                 else
                 {
-                    CLogMessage(this).warning("Removed %1 from simulator, but was not initiated by us: %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    CLogMessage(this).warning("Removed '%1' from simulator, but was not initiated by us: %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
             }
 
             // in all cases we remove
             const int c = m_simConnectObjects.remove(callsign);
-            const bool removed = (c > 0);
+            const bool removedAny = (c > 0);
             const bool updated = this->updateAircraftRendered(simObject.getCallsign(), false);
             if (updated)
             {
@@ -702,12 +704,12 @@ namespace BlackSimPlugin
             {
                 const CSimulatedAircraft aircraftAddAgain = m_aircraftToAddAgainWhenRemoved.findFirstByCallsign(callsign);
                 m_aircraftToAddAgainWhenRemoved.removeByCallsign(callsign);
-                QTimer::singleShot(1000, this,  [ = ]
+                QTimer::singleShot(2500, this,  [ = ]
                 {
                     this->physicallyAddRemoteAircraftImpl(aircraftAddAgain, AddedAfterRemoved);
                 });
             }
-            return removed;
+            return removedAny;
         }
 
         bool CSimulatorFsxCommon::setSimConnectObjectId(DWORD requestId, DWORD objectId)

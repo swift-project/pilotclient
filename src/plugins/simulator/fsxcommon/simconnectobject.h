@@ -129,6 +129,9 @@ namespace BlackSimPlugin
             //! Set interpolator mode
             bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode);
 
+            //! Interpolator info
+            QString getInterpolatorInfo() const;
+
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
             DWORD m_requestId = 0;

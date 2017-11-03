@@ -20,7 +20,7 @@ namespace BlackSimPlugin
         CSimConnectObject::CSimConnectObject()
         { }
 
-        CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
+        CSimConnectObject::CSimConnectObject(const CSimulatedAircraft &aircraft,
                                              DWORD requestId,
                                              CInterpolationLogger *logger) :
             m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
@@ -90,6 +90,12 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(m_interpolator);
             return m_interpolator->setMode(mode);
+        }
+
+        QString CSimConnectObject::getInterpolatorInfo() const
+        {
+            Q_ASSERT(m_interpolator);
+            return m_interpolator->getInterpolatorInfo();
         }
 
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts)

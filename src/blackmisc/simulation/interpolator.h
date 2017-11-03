@@ -78,6 +78,9 @@ namespace BlackMisc
             //! \remark parts logging has a \c bool \c log flag
             void attachLogger(CInterpolationLogger *logger) { m_logger = logger; }
 
+            //! Get an interpolator info string (for debug info)
+            QString getInterpolatorInfo() const;
+
         protected:
             BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
             BlackMisc::Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts for one aircraft

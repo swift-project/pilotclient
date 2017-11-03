@@ -275,6 +275,19 @@ namespace BlackMisc
             m_aircraftParts.front().setTimeOffsetMs(offset);
         }
 
+        template<typename Derived>
+        QString CInterpolator<Derived>::getInterpolatorInfo() const
+        {
+            return QStringLiteral("Callsign: ") %
+                   m_callsign.asString() %
+                   QStringLiteral(" situations: ") %
+                   QString::number(m_aircraftSituations.size()) %
+                   QStringLiteral(" parts: ") %
+                   QString::number(m_aircraftParts.size()) %
+                   QStringLiteral(" 1st interpolation: ") %
+                   boolToYesNo(m_isFirstInterpolation);
+        }
+
         template <typename Derived>
         void CInterpolator<Derived>::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation, bool override)
         {

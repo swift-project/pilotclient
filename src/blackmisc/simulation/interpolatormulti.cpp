@@ -120,6 +120,17 @@ namespace BlackMisc
             }
         }
 
+        QString CInterpolatorMulti::getInterpolatorInfo() const
+        {
+            switch (m_mode)
+            {
+            case ModeSpline: return m_spline.getInterpolatorInfo();
+            case ModeLinear: return m_linear.getInterpolatorInfo();
+            default: break;
+            }
+            return ("Illegal mode");
+        }
+
         CInterpolatorMulti::Mode CInterpolatorMulti::modeFromString(const QString &mode)
         {
             if (mode.contains("spli"), Qt::CaseInsensitive) { return ModeSpline; }

@@ -56,10 +56,13 @@ namespace BlackMisc
             //! \copydoc CInterpolator::hasAircraftParts
             bool hasAircraftParts() const { return false; }
 
+            //! \copydoc CInterpolator::getInterpolatorInfo
+            QString getInterpolatorInfo() const { return this->objectName(); }
+
             //! \copydoc CInterpolator::attachLogger
             void attachLogger(CInterpolationLogger *) {}
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif
