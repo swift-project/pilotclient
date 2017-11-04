@@ -1068,7 +1068,7 @@ namespace BlackSimPlugin
                 CInterpolationHints hints(m_hints[callsign]);
                 hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
                 hints.setLoggingInterpolation(logInterpolationAndParts);
-                const CAircraftSituation interpolatedSituation = simObj.getInterpolator()->getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
+                const CAircraftSituation interpolatedSituation = simObj.getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
 
                 if (interpolatorStatus.allTrue())
                 {

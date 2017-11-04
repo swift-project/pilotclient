@@ -45,9 +45,6 @@ namespace BlackSimPlugin
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
 
-            //! Interpolator
-            BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
-
             //! Add parts for interpolator
             void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
@@ -131,6 +128,16 @@ namespace BlackSimPlugin
 
             //! Interpolator info
             QString getInterpolatorInfo() const;
+
+            //! Interpolator
+            BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
+
+            //! Get interpolated situation
+            //! \remark return original position if interpolation fails for some reason
+            BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+                qint64 currentTimeSinceEpoc,
+                const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup,
+                const BlackMisc::Simulation::CInterpolationHints &hints, BlackMisc::Simulation::CInterpolationStatus &status) const;
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
