@@ -93,7 +93,7 @@ namespace BlackMisc
             QString geodeticHeightAsString() const { return this->geodeticHeight().toQString(true); }
 
             //! Geodetic height null?
-            bool isGeodeticHeightNull() { return this->geodeticHeight().isNull(); }
+            bool isGeodeticHeightNull() const { return this->geodeticHeight().isNull(); }
 
             //! Great circle distance
             PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
@@ -248,6 +248,12 @@ namespace BlackMisc
 
             //! Set normal vector
             void setNormalVector(double x, double y, double z) { m_x = x; m_y = y; m_z = z; }
+
+            //! Set to null
+            void setNull() { this->setNormalVector(0, 0, 0); }
+
+            //! Is null?
+            bool isNull() const { return m_x == 0 && m_y == 0 && m_z == 0; }
 
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const Aviation::CAltitude &geodeticHeight = {});

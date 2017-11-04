@@ -112,6 +112,9 @@ namespace BlackMisc
             //! Get position
             const Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
 
+            //! Position null?
+            bool isPositionNull() const { return m_position.isNull(); }
+
             //! Set position
             void setPosition(const Geo::CCoordinateGeodetic &position) { m_position = position; }
 
