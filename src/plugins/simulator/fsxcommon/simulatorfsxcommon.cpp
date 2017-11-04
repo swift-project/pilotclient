@@ -1082,7 +1082,6 @@ namespace BlackSimPlugin
                     {
                         CLogMessage(this).warning("Failed so set position on SimObject '%1' callsign: '%2'") << simObj.getObjectId() << callsign;
                     }
-
                 } // interpolation data
 
                 if (useAircraftParts)
@@ -1301,6 +1300,9 @@ namespace BlackSimPlugin
 
         SIMCONNECT_DATA_INITPOSITION CSimulatorFsxCommon::aircraftSituationToFsxPosition(const CAircraftSituation &situation)
         {
+            Q_ASSERT_X(!situation.isGeodeticHeightNull(), Q_FUNC_INFO, "Missing height");
+            Q_ASSERT_X(!situation.isPositionNull(), Q_FUNC_INFO,  "Missing position");
+
             SIMCONNECT_DATA_INITPOSITION position;
             position.Latitude = situation.latitude().value(CAngleUnit::deg());
             position.Longitude = situation.longitude().value(CAngleUnit::deg());
