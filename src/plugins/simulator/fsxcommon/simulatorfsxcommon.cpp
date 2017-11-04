@@ -55,13 +55,7 @@ namespace BlackSimPlugin
             connect(&m_addPendingAircraftTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::addPendingAircraftByTimer);
 
             m_useFsuipc = false;
-            m_defaultModel =
-            {
-                "Boeing 737-800 Paint1",
-                CAircraftModel::TypeModelMatchingDefaultModel,
-                "B737-800 default model",
-                CAircraftIcaoCode("B738", "L2J")
-            };
+            // default model will be set in derived class
         }
 
         CSimulatorFsxCommon::~CSimulatorFsxCommon()
@@ -348,7 +342,7 @@ namespace BlackSimPlugin
             QTimer::singleShot(0, this, &CSimulatorFsxCommon::disconnectFrom);
         }
 
-        DWORD CSimulatorFsxCommon::obtainRequestIdSimData()
+        DWORD CSimulatorFsxCommon::obtainRequestIdForSimData()
         {
             const DWORD id = m_requestIdSimData++;
             if (id > RequestSimDataEnd) { m_requestIdSimData = RequestSimDataStart; }
@@ -562,7 +556,7 @@ namespace BlackSimPlugin
                 simObject.setConfirmedAdded(true);
 
                 // P3D also has SimConnect_AIReleaseControlEx;
-                const DWORD requestId = this->obtainRequestIdSimData();
+                const DWORD requestId = this->obtainRequestIdForSimData();
                 const DWORD objectId = simObject.getObjectId();
                 HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
                 hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1,
@@ -815,9 +809,9 @@ namespace BlackSimPlugin
             // do we need to remove/add again because something has changed
             if (m_simConnectObjects.contains(callsign))
             {
-                const CSimConnectObject simObj = m_simConnectObjects[callsign];
+                const CSimConnectObject simObject = m_simConnectObjects[callsign];
                 const QString newModelString(newRemoteAircraft.getModelString());
-                const QString simObjModelString(simObj.getAircraftModelString());
+                const QString simObjModelString(simObject.getAircraftModelString());
                 const bool sameModel = (simObjModelString == newModelString); // compare on string only (other attributes might change such as mode)
 
                 // same model, nothing will change, otherwise add again when removed
@@ -847,7 +841,7 @@ namespace BlackSimPlugin
             const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
             CSimulatedAircraft addedAircraft(newRemoteAircraft);
 
-            const DWORD requestId = this->obtainRequestIdSimData();
+            const DWORD requestId = this->obtainRequestIdForSimData();
             const SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
             const QString modelString(addedAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
@@ -1045,30 +1039,30 @@ namespace BlackSimPlugin
             const CCallsignSet callsignsToLog(m_interpolationRenderingSetup.getLogCallsigns());
 
             // interpolation for all remote aircraft
-            for (const CSimConnectObject &simObj : simObjects)
+            for (const CSimConnectObject &simObject : simObjects)
             {
                 // happening if aircraft is not yet added to simulator or to be deleted
-                if (simObj.isPendingAdded()) { continue; }
-                if (simObj.isPendingRemoved()) { continue; }
-                if (!simObj.hasCurrentLightsInSimulator()) { continue; } // wait until we have light state
+                if (simObject.isPendingAdded()) { continue; }
+                if (simObject.isPendingRemoved()) { continue; }
+                if (!simObject.hasCurrentLightsInSimulator()) { continue; } // wait until we have light state
 
-                const CCallsign callsign(simObj.getCallsign());
+                const CCallsign callsign(simObject.getCallsign());
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
-                Q_ASSERT_X(simObj.hasValidRequestAndObjectId(), Q_FUNC_INFO, "Missing ids");
+                Q_ASSERT_X(simObject.hasValidRequestAndObjectId(), Q_FUNC_INFO, "Missing ids");
 
                 // fetch parts, as they are needed for ground interpolation
                 const bool useAircraftParts = enableAircraftParts && aircraftWithParts.contains(callsign);
                 const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
                 const CInterpolationAndRenderingSetup setup(getInterpolationAndRenderingSetup());
                 CPartsStatus partsStatus(useAircraftParts);
-                const CAircraftParts parts = useAircraftParts ? simObj.getInterpolator()->getInterpolatedParts(-1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
+                const CAircraftParts parts = useAircraftParts ? simObject.getInterpolator()->getInterpolatedParts(-1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
                 // get interpolated situation
                 CInterpolationStatus interpolatorStatus;
                 CInterpolationHints hints(m_hints[callsign]);
                 hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
                 hints.setLoggingInterpolation(logInterpolationAndParts);
-                const CAircraftSituation interpolatedSituation = simObj.getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
+                const CAircraftSituation interpolatedSituation = simObject.getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
 
                 if (interpolatorStatus.allTrue())
                 {
@@ -1086,14 +1080,14 @@ namespace BlackSimPlugin
 
                 if (useAircraftParts)
                 {
-                    this->updateRemoteAircraftParts(simObj, parts, partsStatus);
+                    this->updateRemoteAircraftParts(simObject, parts, partsStatus);
                 }
                 else
                 {
                     // guess on position, but not every frame
                     if (m_interpolationRequest % GuessRemoteAircraftPartsCycle == 0)
                     {
-                        this->guessAndUpdateRemoteAircraftParts(simObj, interpolatedSituation, interpolatorStatus);
+                        this->guessAndUpdateRemoteAircraftParts(simObject, interpolatedSituation, interpolatorStatus);
                     }
                 }
             } // all callsigns
@@ -1198,14 +1192,14 @@ namespace BlackSimPlugin
             return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftPartsWithoutLights, parts.getLights());
         }
 
-        bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftPartsWithoutLights, const CAircraftLights &lights)
+        bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftPartsWithoutLights, const CAircraftLights &lights)
         {
             Q_ASSERT(m_hSimConnect);
-            const DWORD objectId = simObj.getObjectId();
+            const DWORD objectId = simObject.getObjectId();
 
             // same as in simulator or same as already send to simulator?
-            const CAircraftLights sentLights(simObj.getLightsAsSent());
-            if (simObj.getPartsAsSent() == ddRemoteAircraftPartsWithoutLights && sentLights == lights)
+            const CAircraftLights sentLights(simObject.getLightsAsSent());
+            if (simObject.getPartsAsSent() == ddRemoteAircraftPartsWithoutLights && sentLights == lights)
             {
                 return true;
             }
@@ -1215,15 +1209,15 @@ namespace BlackSimPlugin
                                objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights);
 
-            if (hr == S_OK && m_simConnectObjects.contains(simObj.getCallsign()))
+            if (hr == S_OK && m_simConnectObjects.contains(simObject.getCallsign()))
             {
                 // Update data
-                CSimConnectObject &objUdpate = m_simConnectObjects[simObj.getCallsign()];
+                CSimConnectObject &objUdpate = m_simConnectObjects[simObject.getCallsign()];
                 objUdpate.setPartsAsSent(ddRemoteAircraftPartsWithoutLights);
             }
             else
             {
-                CLogMessage(this).warning("Failed so set parts on SimObject '%1' callsign: '%2'") << simObj.getObjectId() << simObj.getCallsign();
+                CLogMessage(this).warning("Failed so set parts on SimObject '%1' callsign: '%2'") << simObject.getObjectId() << simObject.getCallsign();
             }
 
             // lights we can set directly
@@ -1232,7 +1226,7 @@ namespace BlackSimPlugin
 
             // lights we need to toggle
             // (potential risk with quickly changing values that we accidentally toggle back, also we need the light state before we can toggle)
-            sendToggledLightsToSimulator(simObj, lights);
+            this->sendToggledLightsToSimulator(simObject, lights);
 
             // done
             return hr == S_OK;
@@ -1290,11 +1284,11 @@ namespace BlackSimPlugin
             QTimer::singleShot(DeferResendingLights, this, [ = ]
             {
                 if (!m_simConnectObjects.contains(callsign)) { return; }
-                const CSimConnectObject currentSimObj = m_simConnectObjects[callsign];
-                if (!currentSimObj.hasValidRequestAndObjectId()) { return; } // stale
-                if (lightsWanted != currentSimObj.getLightsAsSent())  { return; } // changed in between, so another call sendToggledLightsToSimulator is pending
+                const CSimConnectObject currentSimObject = m_simConnectObjects[callsign];
+                if (!currentSimObject.hasValidRequestAndObjectId()) { return; } // stale
+                if (lightsWanted != currentSimObject.getLightsAsSent())  { return; } // changed in between, so another call sendToggledLightsToSimulator is pending
                 if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Resending light state for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
-                this->sendToggledLightsToSimulator(currentSimObj, lightsWanted, true);
+                this->sendToggledLightsToSimulator(currentSimObject, lightsWanted, true);
             });
         }
 
@@ -1366,7 +1360,7 @@ namespace BlackSimPlugin
             // So far, there is only global weather
             auto glob = weatherGrid.frontOrDefault();
             glob.setIdentifier("GLOB");
-            QString metar = CSimConnectUtilities::convertToSimConnectMetar(glob);
+            const QString metar = CSimConnectUtilities::convertToSimConnectMetar(glob);
             SimConnect_WeatherSetModeCustom(m_hSimConnect);
             SimConnect_WeatherSetModeGlobal(m_hSimConnect);
             SimConnect_WeatherSetObservation(m_hSimConnect, 0, qPrintable(metar));
@@ -1482,13 +1476,12 @@ namespace BlackSimPlugin
         }
 
         CSimulatorFsxCommonListener::CSimulatorFsxCommonListener(const CSimulatorPluginInfo &info) :
-            ISimulatorListener(info),
-            m_timer(new QTimer(this))
+            ISimulatorListener(info)
         {
             constexpr int QueryInterval = 5 * 1000; // 5 seconds
-            m_timer->setInterval(QueryInterval);
-            m_timer->setObjectName(this->objectName().append(":m_timer"));
-            connect(m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::checkConnection);
+            m_timer.setInterval(QueryInterval);
+            m_timer.setObjectName(this->objectName().append(":m_timer"));
+            connect(&m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::checkConnection);
         }
 
         void CSimulatorFsxCommonListener::startImpl()
@@ -1497,12 +1490,12 @@ namespace BlackSimPlugin
             m_simConnectVersion.clear();
             m_simulatorName.clear();
             m_simulatorDetails.clear();
-            m_timer->start();
+            m_timer.start();
         }
 
         void CSimulatorFsxCommonListener::stopImpl()
         {
-            m_timer->stop();
+            m_timer.stop();
         }
 
         QString CSimulatorFsxCommonListener::backendInfo() const
@@ -1533,7 +1526,7 @@ namespace BlackSimPlugin
 
             if (check)
             {
-                emit simulatorStarted(this->getPluginInfo());
+                emit this->simulatorStarted(this->getPluginInfo());
             }
         }
 

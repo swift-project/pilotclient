@@ -61,7 +61,7 @@ namespace BlackSimPlugin
             if (parser.matchesPart(1, "fsuipc") && parser.hasPart(2))
             {
                 const bool on = parser.toBool(2);
-                const bool s = useFsuipc(on);
+                const bool s = this->useFsuipc(on);
                 return s;
             }
             return false;

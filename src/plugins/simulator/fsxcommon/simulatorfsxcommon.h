@@ -140,6 +140,7 @@ namespace BlackSimPlugin
 
             //! Timer event (our SimConnect event loop), runs dispatch
             //! \sa m_simconnectTimerId
+            //! \sa CSimulatorFsxCommon::dispatch
             virtual void timerEvent(QTimerEvent *event) override;
 
         private:
@@ -215,6 +216,7 @@ namespace BlackSimPlugin
             HRESULT initDataDefinitionsWhenConnected();
 
             //! Update remote aircraft
+            //! \remark this is where the interpolated data are set
             void updateRemoteAircraft();
 
             //! Update remote aircraft parts (send to FSX)
@@ -222,16 +224,16 @@ namespace BlackSimPlugin
                                            const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Simulation::CPartsStatus &partsStatus);
 
             //! Update remote aircraft parts by guessing (send to FSX)
-            bool guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj,
+            bool guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObject,
                                                    const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, const BlackMisc::Simulation::CInterpolationStatus &interpolationStatus);
 
             //! Send parts to simulator
-            bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
+            bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
 
             //! Send lights to simulator (those which have to be toggled)
             //! \remark challenge here is that I can only sent those value if I have already obtained the current light state from simulator
             //! \param force send lights even if they appear to be the same
-            void sendToggledLightsToSimulator(const CSimConnectObject &simObj, const BlackMisc::Aviation::CAircraftLights &lightsWanted, bool force = false);
+            void sendToggledLightsToSimulator(const CSimConnectObject &simObject, const BlackMisc::Aviation::CAircraftLights &lightsWanted, bool force = false);
 
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
@@ -281,10 +283,10 @@ namespace BlackSimPlugin
             //! Get the callsigns which are no longer in the provider, but still in m_simConnectObjects
             BlackMisc::Aviation::CCallsignSet getCallsignsMissingInProvider() const;
 
-            //! Request for sim data?
+            //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestSimDataOffset) && requestId < (RequestSimDataStart + RequestSimDataOffset + MaxSimObjects); }
 
-            //! Request for sim data?
+            //! Request for lights (request in range of lights)?
             static bool isRequestForLights(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestLightsOffset) && requestId < (RequestSimDataStart + RequestLightsOffset + MaxSimObjects); }
 
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
@@ -337,7 +339,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorListener::stopImpl
             virtual void stopImpl() override;
 
-        protected:
             //! Test if connection can be established
             void checkConnection();
 
@@ -348,7 +349,7 @@ namespace BlackSimPlugin
             bool checkSimConnectDll() const;
 
         private:
-            QTimer *m_timer { nullptr };
+            QTimer  m_timer { this };
             QString m_simulatorVersion;
             QString m_simConnectVersion;
             QString m_simulatorName;

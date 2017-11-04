@@ -63,8 +63,9 @@ namespace BlackSimPlugin
                     }
                     QString ex;
                     ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
-                    const QString exStr(CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException));
-                    CLogMessage(simulatorFsx).warning("Caught simConnect exception: %1 %2") << exStr << ex;
+                    const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException));
+                    const QString sendIdDetails = simulatorFsx->getSendIdTraceDetails(sendId);
+                    CLogMessage(simulatorFsx).warning("Caught simConnect exception: '%1' '%2' '%3'") << exceptionString << ex << sendIdDetails;
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:
@@ -208,7 +209,7 @@ namespace BlackSimPlugin
                     default:
                         {
                             const DWORD objectId = pObjData->dwObjectID;
-                            if (isRequestForSimData(requestId))
+                            if (CSimulatorFsxCommon::isRequestForSimData(requestId))
                             {
                                 static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
                                 const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
@@ -220,7 +221,7 @@ namespace BlackSimPlugin
                                     simulatorFsx->updateRemoteAircraftFromSimulator(simObj, *remoteAircraftSimData);
                                 }
                             }
-                            else if (isRequestForLights(requestId))
+                            else if (CSimulatorFsxCommon::isRequestForLights(requestId))
                             {
                                 static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
                                 const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
