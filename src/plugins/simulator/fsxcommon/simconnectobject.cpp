@@ -27,6 +27,10 @@ namespace BlackSimPlugin
             m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign()))
         {
             m_interpolator->attachLogger(logger);
+
+            // if available set situation and parts
+            if (aircraft.isPartsSynchronized()) { this->addAircraftParts(aircraft.getParts()); }
+            if (aircraft.getSituation().hasValidTimestamp()) { this->addAircraftSituation(aircraft.getSituation()); }
         }
 
         void CSimConnectObject::addAircraftParts(const CAircraftParts &parts)
