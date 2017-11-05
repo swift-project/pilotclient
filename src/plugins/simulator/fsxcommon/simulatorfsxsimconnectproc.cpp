@@ -65,7 +65,9 @@ namespace BlackSimPlugin
                     ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
                     const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException));
                     const QString sendIdDetails = simulatorFsx->getSendIdTraceDetails(sendId);
-                    CLogMessage(simulatorFsx).warning("Caught simConnect exception: '%1' '%2' '%3'") << exceptionString << ex << sendIdDetails;
+                    CLogMessage(simulatorFsx).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
+                            << exceptionString << ex
+                            << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:

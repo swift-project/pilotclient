@@ -30,6 +30,7 @@
 #include <QObject>
 #include <QtPlugin>
 #include <QHash>
+#include <QList>
 #include <QFutureWatcher>
 
 namespace BlackSimPlugin
@@ -79,6 +80,19 @@ namespace BlackSimPlugin
             EventToggleRecognitionLights,
             EventToggleTaxiLights,
             EventToggleWingLights
+        };
+
+        //! Struct to trace send ids
+        struct TraceFsxSendId
+        {
+            //! Ctor
+            TraceFsxSendId(DWORD sendId, DWORD simObjectId, const QString &comment) :
+                sendId(sendId), simObjectId(simObjectId), comment(comment)
+            { }
+
+            DWORD sendId = -1;      //!< the send id
+            DWORD simObjectId = -1; //!< corresponding CSimConnectObject
+            QString comment;        //!< where sent
         };
 
         //! FSX Simulator Implementation
@@ -143,6 +157,17 @@ namespace BlackSimPlugin
             //! \sa CSimulatorFsxCommon::dispatch
             virtual void timerEvent(QTimerEvent *event) override;
 
+            //! \addtogroup swiftdotcommands
+            //! @{
+            //! <pre>
+            //! .drv sendid  on|off      tracing simCOnnect sendId on/off
+            //! </pre>
+            //! @}
+            virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
+
+            //! Register help
+            static void registerHelp();
+
         private:
             //! Reason for adding an aircraft
             enum AircraftAddMode
@@ -204,7 +229,7 @@ namespace BlackSimPlugin
             void onSimExit();
 
             //! Get new request id, overflow safe
-            DWORD obtainRequestIdSimData();
+            DWORD obtainRequestIdForSimData();
 
             //! Init when connected
             HRESULT initWhenConnected();
@@ -283,6 +308,15 @@ namespace BlackSimPlugin
             //! Get the callsigns which are no longer in the provider, but still in m_simConnectObjects
             BlackMisc::Aviation::CCallsignSet getCallsignsMissingInProvider() const;
 
+            //! Set tracing on/off
+            void setTraceSendId(bool traceSendId) { m_traceSendId = traceSendId; }
+
+            //! Trace the send id
+            void traceSendId(DWORD simObjectId, const QString &comment);
+
+            //! Get the trace details, otherwise empty string
+            QString getSendIdTraceDetails(DWORD sendId) const;
+
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestSimDataOffset) && requestId < (RequestSimDataStart + RequestSimDataOffset + MaxSimObjects); }
 
@@ -293,6 +327,7 @@ namespace BlackSimPlugin
             static constexpr int SkipUpdateCyclesForCockpit = 10;    //!< skip x cycles before updating cockpit again
             static constexpr int IgnoreReceiveExceptions = 10;       //!< skip exceptions when displayed more than x times
             static constexpr int MaxSimObjects = 10000;              //!< max.number of SimObjects at the same time
+            static constexpr int MaxSendIdTraces = 10000;            //!< max.traces of send id
             static constexpr int RequestSimDataStart = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
             static constexpr int RequestSimDataEnd = RequestSimDataStart + MaxSimObjects - 1;
             static constexpr int RequestSimDataOffset = 0 * MaxSimObjects;
@@ -306,6 +341,7 @@ namespace BlackSimPlugin
             bool m_simConnected  = false;           //!< Is simulator connected?
             bool m_simSimulating = false;           //!< Simulator running?
             bool m_useSbOffsets  = true;            //!< with SB offsets
+            bool m_traceSendId   = false;           //!< trace the send ids, meant for dedugging
             qint64 m_simulatingChangedTs = -1;      //!< timestamp, when simulating changed (used to avoid jitter)
             int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
             int  m_simConnectTimerId = -1;          //!< Timer identifier
@@ -315,6 +351,7 @@ namespace BlackSimPlugin
             int  m_receiveExceptionCount = 0;       //!< exceptions
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
+            QList<TraceFsxSendId> m_sendIdTraces;  //!< Send id traces for debugging
             QTimer m_addPendingAircraftTimer { this };      //!< updating of aircraft awaiting add
             DWORD m_requestIdSimData = RequestSimDataStart; //!< request id, use obtainRequestId() to get id
             BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
