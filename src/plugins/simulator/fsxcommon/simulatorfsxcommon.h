@@ -14,7 +14,7 @@
 
 #include "simconnectdatadefinition.h"
 #include "simconnectobject.h"
-#include "../fsx/simconnectwindows.h"
+#include "../fsxcommon/simconnectwindows.h"
 #include "../fscommon/simulatorfscommon.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolatorlinear.h"

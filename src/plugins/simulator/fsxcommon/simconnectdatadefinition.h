@@ -15,7 +15,7 @@
 #include <QtGlobal>
 
 #include "blackmisc/aviation/aircraftlights.h"
-#include "../fsx/simconnectwindows.h"
+#include "../fsxcommon/simconnectwindows.h"
 #include <algorithm>
 #include <QString>
 

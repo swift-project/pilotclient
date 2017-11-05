@@ -44,6 +44,7 @@ namespace BlackMisc
         namespace Fsx
         {
             //! Utilities for SimConnect
+            //! \remark not using the simconnect.h headers as BlackMisc classes are not driver aware
             class BLACKMISC_EXPORT CSimConnectUtilities : public QObject
             {
                 Q_OBJECT
