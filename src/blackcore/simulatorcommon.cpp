@@ -577,6 +577,7 @@ namespace BlackCore
         m_aircraftToAddAgainWhenRemoved.clear();
         m_highlightedAircraft.clear();
         m_callsignsToBeRendered.clear();
+        m_hints.clear();
     }
 
     CAirportList CSimulatorCommon::getWebServiceAirports() const
