@@ -129,18 +129,17 @@ namespace BlackGui
             //! Handle a text message entered
             void handleEnteredTextMessage(const QString &textMessage);
 
-        private slots:
             //! Cockpit values changed, used to updated some components
-            void ps_onChangedAircraftCockpit();
+            void onChangedAircraftCockpit();
 
             //! Close text message tab
-            void ps_closeTextMessageTab();
+            void closeTextMessageTab();
 
             //! Top level was changed (used to enable elements when floating)
-            void ps_topLevelChanged(QWidget *widget, bool topLevel);
+            void topLevelChanged(QWidget *widget, bool topLevel);
 
             //! Command line entered
-            void ps_textMessageEntered();
+            void textMessageEntered();
         };
     } // ns
 } // ns

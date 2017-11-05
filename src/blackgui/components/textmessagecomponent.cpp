@@ -68,9 +68,9 @@ namespace BlackGui
             ui->le_textMessages->setVisible(false);
             ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
 
-            bool c = connect(ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::ps_textMessageEntered);
+            bool c = connect(ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::textMessageEntered);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::ps_onChangedAircraftCockpit);
+            c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             c = connect(this, &CTextMessageComponent::commandEntered, sApp->getCoreFacade(), &CCoreFacade::parseCommandLine);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
@@ -83,7 +83,7 @@ namespace BlackGui
         bool CTextMessageComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
             bool c = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-            c = c && connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::ps_topLevelChanged);
+            c = c && connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::topLevelChanged);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             return c;
         }
@@ -201,7 +201,7 @@ namespace BlackGui
             return m_identifier;
         }
 
-        void CTextMessageComponent::ps_onChangedAircraftCockpit()
+        void CTextMessageComponent::onChangedAircraftCockpit()
         {
             this->showCurrentFrequenciesFromCockpit();
         }
@@ -276,7 +276,7 @@ namespace BlackGui
             newTab->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
             const int index = ui->tw_TextMessages->addTab(newTab, tabName);
-            connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::ps_closeTextMessageTab);
+            connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::closeTextMessageTab);
             ui->tw_TextMessages->setCurrentIndex(index);
 
             if (sGui && sGui->getIContextNetwork())
@@ -350,7 +350,7 @@ namespace BlackGui
             return nullptr;
         }
 
-        void CTextMessageComponent::ps_closeTextMessageTab()
+        void CTextMessageComponent::closeTextMessageTab()
         {
             QObject *sender = QObject::sender();
             QWidget *parentWidget = qobject_cast<QWidget *>(sender->parent());
@@ -365,14 +365,14 @@ namespace BlackGui
             if (index >= 0) { ui->tw_TextMessages->removeTab(index); }
         }
 
-        void CTextMessageComponent::ps_topLevelChanged(QWidget *widget, bool topLevel)
+        void CTextMessageComponent::topLevelChanged(QWidget *widget, bool topLevel)
         {
             // own input field if floating window
             Q_UNUSED(widget);
             ui->le_textMessages->setVisible(topLevel);
         }
 
-        void CTextMessageComponent::ps_textMessageEntered()
+        void CTextMessageComponent::textMessageEntered()
         {
             if (!ui->le_textMessages->isVisible()) { return; }
             if (!this->isVisible()) { return; }
@@ -470,8 +470,8 @@ namespace BlackGui
             if (originator == componentIdentifier()) { return false; }
             if (commandLine.isEmpty() || commandLine.startsWith(".")) { return false; }
 
-            // non command input
-            if (!this->isVisibleWidget()) { return false; } // invisble, do ignore
+            // no "dot" command input
+            if (!this->isVisibleWidget()) { return false; } // invisible, do ignore
             this->handleEnteredTextMessage(commandLine); // handle as it was entered by own command line
 
             return false; // we never handle the message directly, but forward it
