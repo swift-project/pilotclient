@@ -539,7 +539,7 @@ namespace BlackSimPlugin
                     }
                     else
                     {
-                        this->removeAsPendingAndAddAgain(callsign);
+                        this->removeFromPendingAndAddAgainAircraft(callsign);
                         msg = CLogMessage(this).info("Callsign '%1' removed in meantime and no longer in range") << callsign.toQString();
                     }
                     break;
@@ -578,7 +578,7 @@ namespace BlackSimPlugin
                 this->requestDataForSimObject(simObject);
                 this->requestLightsForSimObject(simObject);
 
-                this->removeAsPendingAndAddAgain(callsign); // no longer try to add
+                this->removeFromPendingAndAddAgainAircraft(callsign); // no longer try to add
                 const bool updated = this->updateAircraftRendered(callsign, true);
                 if (updated)
                 {
@@ -646,7 +646,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsxCommon::removeAsPendingAndAddAgain(const CCallsign &callsign)
+        void CSimulatorFsxCommon::removeFromPendingAndAddAgainAircraft(const CCallsign &callsign)
         {
             if (callsign.isEmpty()) { return; }
             m_addPendingAircraft.removeByCallsign(callsign);
@@ -855,7 +855,7 @@ namespace BlackSimPlugin
                 return false;
             }
 
-            this->removeAsPendingAndAddAgain(callsign);
+            this->removeFromPendingAndAddAgainAircraft(callsign);
 
             // create AI
             bool adding = false;
@@ -891,7 +891,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
-            this->removeAsPendingAndAddAgain(callsign);
+            this->removeFromPendingAndAddAgainAircraft(callsign);
             if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
 
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
