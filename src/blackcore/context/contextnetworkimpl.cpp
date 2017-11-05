@@ -427,13 +427,14 @@ namespace BlackCore
             }
 
             // send as message
+            static const QString chgMsg("Connection status changed from '%1' to '%2'");
             if (to == INetwork::DisconnectedError)
             {
-                CLogMessage(this).error("Connection status changed from %1 to %2") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to);
+                CLogMessage(this).error(chgMsg) << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to);
             }
             else
             {
-                CLogMessage(this).info("Connection status changed from %1 to %2") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to);
+                CLogMessage(this).info(chgMsg) << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to);
             }
 
             // send as own signal
