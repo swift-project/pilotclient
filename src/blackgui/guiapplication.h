@@ -224,6 +224,9 @@ namespace BlackGui
         //! Handle parsing of special GUI cmd arguments
         virtual bool parsingHookIn() override;
 
+        //! \copydoc BlackCore::CApplication::onCoreFacadeStarted
+        virtual void onCoreFacadeStarted() override;
+
         //! Check for a new version (update)
         void checkNewVersion(bool onlyIfNew);
 

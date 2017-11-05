@@ -168,6 +168,7 @@ namespace BlackCore
 
             // startup done
             connect(this, &CApplication::startUpCompleted, this, &CApplication::onStartUpCompleted, Qt::QueuedConnection);
+            connect(this, &CApplication::coreFacadeStarted, this, &CApplication::onCoreFacadeStarted, Qt::QueuedConnection);
 
             // notify when app goes down
             connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
@@ -1314,6 +1315,11 @@ namespace BlackCore
     {
         if (!supportsContexts()) { return nullptr; }
         return m_coreFacade->getIContextSimulator();
+    }
+
+    void CApplication::onCoreFacadeStarted()
+    {
+        // void
     }
 
     // ---------------------------------------------------------------------------------

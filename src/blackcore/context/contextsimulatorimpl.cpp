@@ -61,6 +61,7 @@ namespace BlackCore
             m_plugins->collectPlugins();
             restoreSimulatorPlugins();
 
+            CContextSimulator::registerHelp();
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CContextSimulator::ps_modelSetChanged);
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::ps_modelSetChanged);
 
@@ -626,12 +627,32 @@ namespace BlackCore
             if (commandLine.isEmpty()) { return false; }
             CSimpleCommandParser parser(
             {
-                ".plugin",
-                ".drv", ".driver"    // forwarded to driver
+                ".plugin", ".drv", ".driver", // forwarded to driver
+                ".ris" // rendering interpolator setup
             });
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
-
+            if (parser.matchesCommand("ris"))
+            {
+                CInterpolationAndRenderingSetup rs = this->getInterpolationAndRenderingSetup();
+                const QString p1 = parser.part(1);
+                if (p1 == "show")
+                {
+                    if (this->getIContextApplication())
+                    {
+                        emit this->getIContextApplication()->requestDisplayOnConsole(rs.toQString(true));
+                    }
+                    return true;
+                }
+                if (!parser.hasPart(2)) { return false; }
+                const bool on = stringToBool(parser.part(2));
+                if (p1 == "debug") { rs.setDriverDebuggingMessages(on); }
+                else if (p1 == "parts") { rs.setEnabledAircraftParts(on); }
+                else { return false; }
+                this->setInterpolationAndRenderingSetup(rs);
+                CLogMessage(this, CLogCategory::cmdLine()).info("Setup is: '%1'") << rs.toQString(true);
+                return true;
+            }
             if (parser.matchesCommand("plugin") || parser.matchesCommand("drv") || parser.matchesCommand("driver"))
             {
                 if (!m_simulatorPlugin.second) { return false; }

@@ -107,12 +107,26 @@ namespace BlackCore
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
-            //! .plugin        forwarded to plugin, see details there
-            //! .driver .drv   forwarded to plugin (same as above)
+            //! .plugin           forwarded to plugin, see details there
+            //! .driver .drv      forwarded to plugin (same as above)
+            //! .ris show         show interpolation setup in console
+            //! .ris debug on|off interpolation/rendering setup, debug messages
+            //! .ris parts on|off interpolation/rendering setup, aircraft parts
             //! </pre>
             //! @}
             //! \copydoc IContextSimulator::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
+            //! Register dot commands
+            static void registerHelp()
+            {
+                if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CContextSimulator")) { return; }
+                BlackMisc::CSimpleCommandParser::registerCommand({".ris", "rendering/interpolation setup"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".ris show", "display rendering/interpolation setup on console"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".ris debug on|off", "rendering/interpolation debug messages"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".ris parts on|off", "aircraft parts"});
+            }
+
             // ----------------------------- context interface -----------------------------
 
         protected:

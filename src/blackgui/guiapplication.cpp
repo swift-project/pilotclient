@@ -62,6 +62,7 @@ using namespace BlackMisc::Network;
 using namespace BlackGui::Components;
 using namespace BlackCore;
 using namespace BlackCore::Data;
+using namespace BlackCore::Context;
 
 BlackGui::CGuiApplication *sGui = nullptr; // set by constructor
 
@@ -730,6 +731,14 @@ namespace BlackGui
     bool CGuiApplication::parsingHookIn()
     {
         return true;
+    }
+
+    void CGuiApplication::onCoreFacadeStarted()
+    {
+        if (this->supportsContexts())
+        {
+            connect(this->getIContextApplication(), &IContextApplication::requestDisplayOnConsole, this, &CGuiApplication::displayTextInConsole);
+        }
     }
 
     void CGuiApplication::checkNewVersion(bool onlyIfNew)

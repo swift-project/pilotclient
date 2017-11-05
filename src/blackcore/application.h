@@ -506,6 +506,9 @@ namespace BlackCore
         //! Can be used to parse specialized arguments
         virtual bool parsingHookIn() { return true; }
 
+        //! Called when facade/contexts have been started
+        virtual void onCoreFacadeStarted();
+
         //! Can be used to start special services
         virtual BlackMisc::CStatusMessageList startHookIn() { return BlackMisc::CStatusMessageList(); }
 
