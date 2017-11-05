@@ -51,7 +51,7 @@ namespace BlackGui
         {
             const QString csString = ui->le_Callsign->text().trimmed().toUpper();
             if (!this->isValidKnownCallsign(csString)) { return CCallsign(); }
-            return CCallsign(csString);
+            return CCallsign(csString, CCallsign::Aircraft);
         }
 
         QString CCallsignCompleter::getRawCallsignString() const
@@ -70,8 +70,8 @@ namespace BlackGui
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (!sGui->getIContextNetwork()) { return; }
             if (completer()->wasUpdatedWithinTime(1500)) { return; } // avoid context call via DBus
-            m_validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns();
-            const QStringList modelData = m_validCallsigns.getCallsignStrings(true);
+            const CCallsignSet validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns();
+            const QStringList modelData = validCallsigns.getCallsignStrings(true);
             completer()->updateData(modelData, 2000);
             ui->led_Status->setTriState(500);
         }
@@ -79,6 +79,8 @@ namespace BlackGui
         void CCallsignCompleter::onEditingFinished()
         {
             const CCallsign cs = this->getCallsign();
+            if (cs.asString() == m_lastValue) { return; } // avoid unnecessary signals
+            m_lastValue = cs.asString();
             emit this->editingFinished();
             if (cs.isValid())
             {
@@ -106,9 +108,9 @@ namespace BlackGui
 
         bool CCallsignCompleter::isValidKnownCallsign(const QString &callsignString) const
         {
-            if (m_validCallsigns.isEmpty()) { return false; }
             if (!CCallsign::isValidAircraftCallsign(callsignString)) { return false; }
-            return m_validCallsigns.contains(CCallsign(callsignString));
+            if (!completer()) { return false; }
+            return completer()->contains(callsignString);
         }
 
         CSharedStringListCompleter *CCallsignCompleter::completer()

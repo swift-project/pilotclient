@@ -68,8 +68,8 @@ namespace BlackGui
             static CSharedStringListCompleter *completer();
 
             QScopedPointer <Ui::CCallsignCompleter> ui;
-            BlackMisc::Aviation::CCallsignSet m_validCallsigns;
             BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &CCallsignCompleter::onChangedAircraftInRange, 5000, 5 };
+            QString m_lastValue;
         };
     } // ns
 } // ns
