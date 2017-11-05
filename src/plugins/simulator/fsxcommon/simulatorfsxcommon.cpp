@@ -344,9 +344,9 @@ namespace BlackSimPlugin
             QTimer::singleShot(0, this, &CSimulatorFsxCommon::disconnectFrom);
         }
 
-        DWORD CSimulatorFsxCommon::obtainRequestIdForSimData()
+        SIMCONNECT_DATA_REQUEST_ID CSimulatorFsxCommon::obtainRequestIdForSimData()
         {
-            const DWORD id = m_requestIdSimData++;
+            const SIMCONNECT_DATA_REQUEST_ID id = m_requestIdSimData++;
             if (id > RequestSimDataEnd) { m_requestIdSimData = RequestSimDataStart; }
             return id;
         }
@@ -557,10 +557,10 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(simObject.isPendingAdded(), Q_FUNC_INFO, "already confirmed, this should be the only place");
                 simObject.setConfirmedAdded(true);
 
-                // P3D also has SimConnect_AIReleaseControlEx;
-                const DWORD requestId = this->obtainRequestIdForSimData();
+                // P3D also has SimConnect_AIReleaseControlEx which also allows to destroy the aircraft
+                const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
                 const DWORD objectId = simObject.getObjectId();
-                HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
+                HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, requestId);
                 hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1,
                                                      SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 hr += SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1,
@@ -860,13 +860,12 @@ namespace BlackSimPlugin
             // create AI
             bool adding = false;
             CSimulatedAircraft addedAircraft(newRemoteAircraft);
-
-            const DWORD requestId = this->obtainRequestIdForSimData();
+            const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
             const SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
             const QString modelString(addedAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
-            const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
+            const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
             if (hr != S_OK)
             {
                 const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << modelString;
@@ -912,7 +911,7 @@ namespace BlackSimPlugin
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' request/object id: %2/%3").arg(callsign.toQString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
 
             // call in SIM
-            SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_requestIdSimData++));
+            const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
             m_hints.remove(simObject.getCallsign());
 
             // mark in provider
@@ -1003,7 +1002,8 @@ namespace BlackSimPlugin
             }
 
             // facility
-            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_requestIdSimData++));
+            SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
+            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, requestId);
             if (hr != S_OK)
             {
                 CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToFacilities failed";
@@ -1454,7 +1454,7 @@ namespace BlackSimPlugin
             m_syncDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
             m_interpolationRequest  = 0;
-            m_requestIdSimData = RequestSimDataStart;
+            m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimDataStart);
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
             m_sendIdTraces.clear();

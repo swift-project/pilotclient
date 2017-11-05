@@ -229,7 +229,7 @@ namespace BlackSimPlugin
             void onSimExit();
 
             //! Get new request id, overflow safe
-            DWORD obtainRequestIdForSimData();
+            SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimData();
 
             //! Init when connected
             HRESULT initWhenConnected();
@@ -351,10 +351,10 @@ namespace BlackSimPlugin
             int  m_receiveExceptionCount = 0;       //!< exceptions
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
-            QList<TraceFsxSendId> m_sendIdTraces;  //!< Send id traces for debugging
-            QTimer m_addPendingAircraftTimer { this };      //!< updating of aircraft awaiting add
-            DWORD m_requestIdSimData = RequestSimDataStart; //!< request id, use obtainRequestId() to get id
-            BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
+            QList<TraceFsxSendId> m_sendIdTraces;   //!< Send id traces for debugging
+            QTimer m_addPendingAircraftTimer { this }; //!< updating of aircraft awaiting add
+            SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimDataStart); //!< request id, use obtainRequestId() to get id
+            BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft;  //!< aircraft awaiting to be added
         };
 
         //! Listener for FSX
