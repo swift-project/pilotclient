@@ -15,7 +15,7 @@
 #include "blackgui/blackguiexport.h"
 
 #include <QCompleter>
-#include <QStringList>
+#include <QStringListModel>
 #include <QScopedPointer>
 
 namespace BlackGui
@@ -39,6 +39,12 @@ namespace BlackGui
         //! Was updated within check time
         bool wasUpdatedWithinTime(int checkTimeMs) const;
 
+        //! Contains the string completer the given value
+        bool contains(const QString &value, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
+
+        //! Values
+        QStringList stringList() const;
+
         //! Completer
         QCompleter *completer() const { return m_completer.data(); }
 
@@ -48,6 +54,7 @@ namespace BlackGui
     private:
         qint64 m_lastUpdated = 0;
         QScopedPointer<QCompleter> m_completer { new QCompleter(QStringList()) }; // empty list required to init model
+        QStringListModel *getCompleterModel() const;
     };
 
     /**

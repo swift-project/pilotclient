@@ -8,14 +8,13 @@
  */
 
 #include "sharedstringlistcompleter.h"
-#include <QStringListModel>
 #include <QDateTime>
 
 namespace BlackGui
 {
     bool CSharedStringListCompleter::updateData(const QStringList &data, int cacheTimeMs)
     {
-        QStringListModel *model = qobject_cast<QStringListModel *>(m_completer->model());
+        QStringListModel *model = this->getCompleterModel();
         Q_ASSERT_X(model, Q_FUNC_INFO, "Model missing");
         bool updated = false;
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
@@ -38,6 +37,23 @@ namespace BlackGui
     bool CSharedStringListCompleter::wasUpdatedWithinTime(int checkTimeMs) const
     {
         return (QDateTime::currentMSecsSinceEpoch() - m_lastUpdated) <= checkTimeMs;
+    }
+
+    bool CSharedStringListCompleter::contains(const QString &value, Qt::CaseSensitivity cs) const
+    {
+        return this->stringList().contains(value, cs);
+    }
+
+    QStringList CSharedStringListCompleter::stringList() const
+    {
+        const QStringListModel *model = this->getCompleterModel();
+        if (!model) { return QStringList(); }
+        return model->stringList();
+    }
+
+    QStringListModel *CSharedStringListCompleter::getCompleterModel() const
+    {
+        return qobject_cast<QStringListModel *>(m_completer->model());
     }
 
     void CompleterUtils::setCompleterParameters(QCompleter *completer)
