@@ -48,11 +48,14 @@ namespace BlackMisc
     {
         QString s(string.trimmed().toLower());
         if (s.isEmpty()) { return false; }
-        const QChar c = s.at(0);
 
-        // explicit values
+        // 1 char values
+        const QChar c = s.at(0);
         if (c == '1' || c == 't' || c == 'y' || c == 'x') { return true; }
         if (c == '0' || c == 'f' || c == 'n' || c == '_') { return false; }
+
+        // full words
+        if (s == "on") { return true; }
         return false;
     }
 
