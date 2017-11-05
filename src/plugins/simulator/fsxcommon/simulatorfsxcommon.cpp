@@ -908,11 +908,16 @@ namespace BlackSimPlugin
             }
 
             simObject.setPendingRemoved(true);
+            m_hints.remove(simObject.getCallsign());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' request/object id: %2/%3").arg(callsign.toQString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
 
             // call in SIM
             const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
-            m_hints.remove(simObject.getCallsign());
+            const HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), requestId);
+            if (result != S_OK)
+            {
+                CLogMessage(this).warning("Removing aircraft '%1' from simulator failed") << callsign.asString();
+            }
 
             // mark in provider
             const bool updated = this->updateAircraftRendered(callsign, false);
