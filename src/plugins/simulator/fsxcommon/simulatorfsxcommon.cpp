@@ -265,7 +265,7 @@ namespace BlackSimPlugin
         {
             m_simConnected = true;
             this->initSimulatorInternals();
-            emitSimulatorCombinedStatus();
+            this->emitSimulatorCombinedStatus();
 
             // Internals depends on sim data which take a while to be read
             // this is a trich and I re-init again after a while (which is not really expensive)
@@ -317,7 +317,7 @@ namespace BlackSimPlugin
                 return;
             }
 
-            emitSimulatorCombinedStatus(); // force sending status
+            this->emitSimulatorCombinedStatus(); // force sending status
         }
 
         void CSimulatorFsxCommon::onSimStopped()
@@ -676,7 +676,7 @@ namespace BlackSimPlugin
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
                     m_addPendingAircraft.push_back(simObject.getAircraft());
-                    CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: %4")
+                    CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: '%4'")
                             << callsign.toQString() << simObject.getAircraftModelString()
                             << objectID << simObject.getInterpolatorInfo();
                 }
@@ -686,13 +686,13 @@ namespace BlackSimPlugin
                 }
             }
 
-            // in all cases we remove
+            // in all cases we remove the object
             const int c = m_simConnectObjects.remove(callsign);
             const bool removedAny = (c > 0);
             const bool updated = this->updateAircraftRendered(simObject.getCallsign(), false);
             if (updated)
             {
-                emit aircraftRenderingChanged(simObject.getAircraft());
+                emit this->aircraftRenderingChanged(simObject.getAircraft());
             }
 
             // models we have to add again after removing
@@ -900,7 +900,7 @@ namespace BlackSimPlugin
             if (simObject.isPendingAdded())
             {
                 // problem: we try to delete an aircraft just requested to be added
-                // best solution so far, call remove again with a delays
+                // best solution so far, call remove again with a delay
                 QTimer::singleShot(2000, this, [ = ]
                 {
                     this->physicallyRemoveRemoteAircraft(callsign);
@@ -916,12 +916,12 @@ namespace BlackSimPlugin
             m_hints.remove(simObject.getCallsign());
 
             // mark in provider
-            const bool updated = updateAircraftRendered(callsign, false);
+            const bool updated = this->updateAircraftRendered(callsign, false);
             if (updated)
             {
                 CSimulatedAircraft aircraft(simObject.getAircraft());
                 aircraft.setRendered(false);
-                emit aircraftRenderingChanged(aircraft);
+                emit this->aircraftRenderingChanged(aircraft);
             }
 
             // cleanup function, actually this should not be needed

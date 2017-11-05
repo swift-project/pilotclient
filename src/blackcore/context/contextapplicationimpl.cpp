@@ -159,7 +159,7 @@ namespace BlackCore
             if (!m_registeredApplications.contains(application))
             {
                 m_registeredApplications.push_back(application);
-                emit registrationChanged();
+                emit this->registrationChanged();
                 emit this->hotkeyActionsRegistered(CInputManager::instance()->allAvailableActions(), {});
             }
             else

@@ -221,7 +221,7 @@ namespace BlackGui
         virtual void cmdLineVersionMessage() const override;
         //! @}
 
-        //! Handle paring of special GUI cmd arguments
+        //! Handle parsing of special GUI cmd arguments
         virtual bool parsingHookIn() override;
 
         //! Check for a new version (update)

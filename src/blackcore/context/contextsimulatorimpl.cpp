@@ -372,7 +372,6 @@ namespace BlackCore
             for (const CSimulatorPluginInfo &p : plugins)
             {
                 Q_ASSERT(!p.isUnspecified());
-
                 if (p.isValid())
                 {
                     listenForSimulator(p);

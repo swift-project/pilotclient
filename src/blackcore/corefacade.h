@@ -170,7 +170,7 @@ namespace BlackCore
 
         // DBus
         BlackMisc::CDBusServer *m_dbusServer = nullptr;
-        bool m_initDBusConnection            = false;
+        bool m_initDBusConnection = false;
         QDBusConnection m_dbusConnection { "default" };
 
         // contexts:

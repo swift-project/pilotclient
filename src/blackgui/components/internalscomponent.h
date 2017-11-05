@@ -22,7 +22,6 @@
 class QShowEvent;
 
 namespace Ui { class CInternalsComponent; }
-
 namespace BlackGui
 {
     namespace Components

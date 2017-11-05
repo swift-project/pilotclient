@@ -124,6 +124,10 @@ namespace BlackCore
             //! Work around for audio context, #382
             void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
 
+            //! Request a message to be displayed on console, whatever the console is
+            //! \note no guarantee it is really written to console
+            void requestDisplayOnConsole(const QString &message);
+
         public slots:
             //! Log a log message
             //! \note Not pure because it can be called from the base class constructor.
@@ -192,13 +196,13 @@ namespace BlackCore
             //! Remote enabled version of writing a text file
             virtual bool writeToFile(const QString &fileName, const QString &content) = 0;
 
-            //!  Remote enabled version of reading a text file
+            //! Remote enabled version of reading a text file
             virtual QString readFromFile(const QString &fileName) const = 0;
 
-            //!  Remote enabled version of deleting a file
+            //! Remote enabled version of deleting a file
             virtual bool removeFile(const QString &fileName) = 0;
 
-            //!  Remote enabled version of file exists
+            //! Remote enabled version of file exists
             virtual bool existsFile(const QString &fileName) const = 0;
 
             //! The HTML help for dot commands
