@@ -105,11 +105,7 @@ namespace BlackSimPlugin
             const CInterpolationHints &hints, CInterpolationStatus &status) const
         {
             Q_ASSERT(m_interpolator);
-            const CAircraftSituation s = m_interpolator->getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
-
-            // return original position if interpolation fails for some reason
-            const bool valid = status.allTrue() && !s.isPositionNull() && !s.isGeodeticHeightNull();
-            return valid ? m_aircraft.getSituation() : s;
+            return m_interpolator->getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
         }
 
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts)
