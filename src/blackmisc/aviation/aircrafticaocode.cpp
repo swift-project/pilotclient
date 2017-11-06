@@ -138,6 +138,7 @@ namespace BlackMisc
             int score = 0;
             if (this->hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
             {
+                // 0..65
                 score += 50; // same designator
 
                 if (this->getRank() == 0) { score += 15; }

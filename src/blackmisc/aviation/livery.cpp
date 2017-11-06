@@ -114,7 +114,7 @@ namespace BlackMisc
         {
             if (candidate.isEmpty() || !this->hasCombinedCode()) { return false; }
             QString c(candidate.trimmed().toUpper());
-            return c == this->m_combinedCode;
+            return c == m_combinedCode;
         }
 
         bool CLivery::matchesColors(const CRgbColor &fuselage, const CRgbColor &tail) const
@@ -179,13 +179,13 @@ namespace BlackMisc
 
         bool CLivery::isAirlineLivery() const
         {
-            return (this->m_airline.hasValidDesignator());
+            return (m_airline.hasValidDesignator());
         }
 
         bool CLivery::isAirlineStandardLivery() const
         {
             if (isColorLivery()) { return false; }
-            return (this->m_airline.hasValidDesignator() && this->m_combinedCode.endsWith(standardLiveryMarker()));
+            return (m_airline.hasValidDesignator() && m_combinedCode.endsWith(standardLiveryMarker()));
         }
 
         bool CLivery::isColorLivery() const
@@ -289,23 +289,16 @@ namespace BlackMisc
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDescription:
-                return CVariant::fromValue(m_description);
-            case IndexAirlineIcaoCode:
-                return m_airline.propertyByIndex(index.copyFrontRemoved());
-            case IndexColorFuselage:
-                return this->m_colorFuselage.propertyByIndex(index.copyFrontRemoved());;
-            case IndexColorTail:
-                return this->m_colorTail.propertyByIndex(index.copyFrontRemoved());
-            case IndexCombinedCode:
-                return CVariant::fromValue(this->m_combinedCode);
-            case IndexIsMilitary:
-                return CVariant::fromValue(this->m_military);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexDescription: return CVariant::fromValue(m_description);
+            case IndexAirlineIcaoCode: return m_airline.propertyByIndex(index.copyFrontRemoved());
+            case IndexColorFuselage: return m_colorFuselage.propertyByIndex(index.copyFrontRemoved());;
+            case IndexColorTail: return m_colorTail.propertyByIndex(index.copyFrontRemoved());
+            case IndexCombinedCode: return CVariant::fromValue(m_combinedCode);
+            case IndexIsMilitary: return CVariant::fromValue(m_military);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -313,30 +306,16 @@ namespace BlackMisc
         {
             if (index.isMyself()) { (*this) = variant.to<CLivery>(); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDescription:
-                this->m_description = variant.toQString(false);
-                break;
-            case IndexAirlineIcaoCode:
-                this->m_airline.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexColorFuselage:
-                this->m_colorFuselage.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexColorTail:
-                this->m_colorTail.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexCombinedCode:
-                this->setCombinedCode(variant.toQString(false));
-                break;
-            case IndexIsMilitary:
-                this->setMilitary(variant.toBool());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexDescription: m_description = variant.toQString(false); break;
+            case IndexAirlineIcaoCode: m_airline.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexColorFuselage: m_colorFuselage.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexColorTail: m_colorTail.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCombinedCode: this->setCombinedCode(variant.toQString(false)); break;
+            case IndexIsMilitary: this->setMilitary(variant.toBool()); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -344,23 +323,16 @@ namespace BlackMisc
         {
             if (index.isMyself()) { return this->getCombinedCode().compare(compareValue.getCombinedCode()); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDescription:
-                return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-            case IndexAirlineIcaoCode:
-                return this->m_airline.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAirlineIcaoCode());
-            case IndexColorFuselage:
-                return this->m_colorFuselage.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getColorFuselage());
-            case IndexColorTail:
-                return this->m_colorTail.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getColorTail());
-            case IndexCombinedCode:
-                return this->getCombinedCode().compare(compareValue.getCombinedCode());
-            case IndexIsMilitary:
-                return Compare::compare(this->isMilitary(), compareValue.isMilitary());
-            default:
-                break;
+            case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexAirlineIcaoCode: return m_airline.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAirlineIcaoCode());
+            case IndexColorFuselage: return m_colorFuselage.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getColorFuselage());
+            case IndexColorTail: return m_colorTail.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getColorTail());
+            case IndexCombinedCode: return this->getCombinedCode().compare(compareValue.getCombinedCode());
+            case IndexIsMilitary: return Compare::compare(this->isMilitary(), compareValue.isMilitary());
+            default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "No compare function");
             return 0;
@@ -378,12 +350,12 @@ namespace BlackMisc
                 return;
             }
 
-            if (!this->m_colorFuselage.isValid()) { this->setColorFuselage(otherLivery.getColorFuselage()); }
-            if (!this->m_colorTail.isValid()) { this->setColorTail(otherLivery.getColorTail()); }
-            if (this->m_combinedCode.isEmpty()) { this->setCombinedCode(otherLivery.getCombinedCode());}
-            if (this->m_description.isEmpty()) { this->setDescription(otherLivery.getDescription());}
+            if (!m_colorFuselage.isValid()) { this->setColorFuselage(otherLivery.getColorFuselage()); }
+            if (!m_colorTail.isValid()) { this->setColorTail(otherLivery.getColorTail()); }
+            if (m_combinedCode.isEmpty()) { this->setCombinedCode(otherLivery.getCombinedCode());}
+            if (m_description.isEmpty()) { this->setDescription(otherLivery.getDescription());}
 
-            this->m_airline.updateMissingParts(otherLivery.getAirlineIcaoCode());
+            m_airline.updateMissingParts(otherLivery.getAirlineIcaoCode());
             if (!this->hasValidDbKey())
             {
                 this->setDbKey(otherLivery.getDbKey());
@@ -415,9 +387,9 @@ namespace BlackMisc
 
             // max. 0..35 so far
             if (score == 0) { return 0; }
-            if (this->isAirlineStandardLivery() && !preferColorLiveries) { score += 10; }
 
             // overrate non airline liveries / color liveries
+            if (this->isAirlineStandardLivery() && !preferColorLiveries) { score += 10; }
             if (preferColorLiveries)
             {
                 if (this->isColorLivery() || !this->hasValidAirlineDesignator())

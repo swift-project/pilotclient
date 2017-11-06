@@ -33,13 +33,13 @@ namespace BlackMisc
         //! Value object encapsulating information about an airpot.
         class BLACKMISC_EXPORT CLivery :
             public CValueObject<CLivery>,
-            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
+            public Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexDescription = BlackMisc::CPropertyIndex::GlobalIndexCLivery,
+                IndexDescription = CPropertyIndex::GlobalIndexCLivery,
                 IndexAirlineIcaoCode,
                 IndexCombinedCode,
                 IndexColorFuselage,
@@ -57,13 +57,13 @@ namespace BlackMisc
             CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const QString &colorFuselage, const QString &colorTail, bool isMilitary);
 
             //! Constructor
-            CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const BlackMisc::CRgbColor &colorFuselage, const BlackMisc::CRgbColor &colorTail, bool isMilitary);
+            CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const CRgbColor &colorFuselage, const CRgbColor &colorTail, bool isMilitary);
 
             //! Constructor
             CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const QString &colorFuselage, const QString &colorTail, bool isMilitary);
 
             //! Constructor
-            CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const BlackMisc::CRgbColor &colorFuselage, const BlackMisc::CRgbColor &colorTail, bool isMilitary);
+            CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const CRgbColor &colorFuselage, const CRgbColor &colorTail, bool isMilitary);
 
             //! Corresponding airline, if any
             const CAirlineIcaoCode &getAirlineIcaoCode() const { return m_airline; }
@@ -90,10 +90,10 @@ namespace BlackMisc
             bool isContainedInSimplifiedAirlineName(const QString &candidate) const;
 
             //! Get fuselage color.
-            const BlackMisc::CRgbColor &getColorFuselage() const { return m_colorFuselage; }
+            const CRgbColor &getColorFuselage() const { return m_colorFuselage; }
 
             //! Get tail color.
-            const BlackMisc::CRgbColor &getColorTail() const { return m_colorTail; }
+            const CRgbColor &getColorTail() const { return m_colorTail; }
 
             //! Military livery
             bool isMilitary() const { return m_military; }
@@ -105,10 +105,10 @@ namespace BlackMisc
             void setCombinedCode(const QString &code) { m_combinedCode = code.trimmed().toUpper(); }
 
             //! Set fuselage color
-            void setColorFuselage(const BlackMisc::CRgbColor &color) { this->m_colorFuselage = color; }
+            void setColorFuselage(const CRgbColor &color) { m_colorFuselage = color; }
 
             //! Set tail color
-            void setColorTail(const BlackMisc::CRgbColor &color) { this->m_colorTail = color; }
+            void setColorTail(const CRgbColor &color) { m_colorTail = color; }
 
             //! Fuselage color set?
             bool hasColorFuselage() const;
@@ -120,34 +120,34 @@ namespace BlackMisc
             bool hasValidColors() const;
 
             //! Set description
-            void setDescription(const QString &description) { this->m_description = description; }
+            void setDescription(const QString &description) { m_description = description; }
 
             //! Military aircraft?
-            void setMilitary(bool isMilitary) { this->m_military = isMilitary; }
+            void setMilitary(bool isMilitary) { m_military = isMilitary; }
 
             //! Matches combined code
             bool matchesCombinedCode(const QString &candidate) const;
 
             //! Matches colors
-            bool matchesColors(const BlackMisc::CRgbColor &fuselage, const BlackMisc::CRgbColor &tail) const;
+            bool matchesColors(const CRgbColor &fuselage, const CRgbColor &tail) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            //! \copydoc Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            //! \copydoc Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Compare for index
             int comparePropertyByIndex(const CPropertyIndex &index, const CLivery &compareValue) const;
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
+            //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Complete data?
             bool hasCompleteData() const;
 
             //! Validate data
-            BlackMisc::CStatusMessageList validate() const;
+            CStatusMessageList validate() const;
 
             //! Airline available?
             bool hasValidAirlineDesignator() const;
@@ -168,7 +168,7 @@ namespace BlackMisc
             double getColorDistance(const CLivery &otherLivery) const;
 
             //! Combined color distance (fuselage/tail): 0..1 (0 is best)
-            double getColorDistance(const BlackMisc::CRgbColor &fuselage, const BlackMisc::CRgbColor &tail) const;
+            double getColorDistance(const CRgbColor &fuselage, const CRgbColor &tail) const;
 
             //! Update missing parts
             void updateMissingParts(const CLivery &otherLivery);
@@ -190,7 +190,7 @@ namespace BlackMisc
             static const QString &standardLiveryMarker();
 
             //! Standard code for
-            static QString getStandardCode(const BlackMisc::Aviation::CAirlineIcaoCode &airline);
+            static QString getStandardCode(const Aviation::CAirlineIcaoCode &airline);
 
             //! Color livery marker
             static const QString &colorLiveryMarker();
@@ -199,12 +199,12 @@ namespace BlackMisc
             static const QString &tempLiveryCode();
 
         private:
-            CAirlineIcaoCode m_airline;           //!< corresponding airline, if any
-            QString m_combinedCode;               //!< livery code and pseudo airline ICAO code
-            QString m_description;                //!< describes the livery
-            BlackMisc::CRgbColor m_colorFuselage; //!< color of fuselage
-            BlackMisc::CRgbColor m_colorTail;     //!< color of tail
-            bool m_military = false;              //!< military livery?
+            CAirlineIcaoCode m_airline; //!< corresponding airline, if any
+            QString m_combinedCode;     //!< livery code and pseudo airline ICAO code
+            QString m_description;      //!< describes the livery
+            CRgbColor m_colorFuselage;  //!< color of fuselage
+            CRgbColor m_colorTail;      //!< color of tail
+            bool m_military = false;    //!< military livery?
 
             BLACK_METACLASS(
                 CLivery,

@@ -40,25 +40,25 @@ namespace BlackMisc
         CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator)
             : m_designator(airlineDesignator.trimmed().toUpper())
         {
-            if (this->m_designator.length() == 4)
+            if (m_designator.length() == 4)
             {
-                this->setDesignator(this->m_designator);
+                this->setDesignator(m_designator);
             }
         }
 
         CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const BlackMisc::CCountry &country, const QString &telephony, bool virtualAirline, bool operating)
             : m_designator(airlineDesignator.trimmed().toUpper()), m_name(airlineName), m_telephonyDesignator(telephony), m_country(country), m_isVa(virtualAirline), m_isOperating(operating)
         {
-            if (this->m_designator.length() == 4)
+            if (m_designator.length() == 4)
             {
-                this->setDesignator(this->m_designator);
+                this->setDesignator(m_designator);
             }
         }
 
         const QString CAirlineIcaoCode::getVDesignator() const
         {
-            if (!isVirtualAirline()) { return this->m_designator; }
-            return QLatin1Char('V') % this->m_designator;
+            if (!isVirtualAirline()) { return m_designator; }
+            return QLatin1Char('V') % m_designator;
         }
 
         QString CAirlineIcaoCode::getVDesignatorDbKey() const
@@ -70,12 +70,12 @@ namespace BlackMisc
 
         void CAirlineIcaoCode::setDesignator(const QString &icaoDesignator)
         {
-            this->m_designator = icaoDesignator.trimmed().toUpper();
-            if (this->m_designator.length() == 4 && this->m_designator.startsWith("V"))
+            m_designator = icaoDesignator.trimmed().toUpper();
+            if (m_designator.length() == 4 && m_designator.startsWith("V"))
             {
                 // a virtual designator was provided
                 this->setVirtualAirline(true);
-                this->m_designator = this->m_designator.right(3);
+                m_designator = m_designator.right(3);
             }
         }
 
@@ -94,7 +94,7 @@ namespace BlackMisc
 
         bool CAirlineIcaoCode::hasValidCountry() const
         {
-            return this->m_country.isValid();
+            return m_country.isValid();
         }
 
         bool CAirlineIcaoCode::hasValidDesignator() const
@@ -104,13 +104,13 @@ namespace BlackMisc
 
         bool CAirlineIcaoCode::hasIataCode() const
         {
-            return !this->m_iataCode.isEmpty();
+            return !m_iataCode.isEmpty();
         }
 
         bool CAirlineIcaoCode::matchesDesignator(const QString &designator) const
         {
             if (designator.isEmpty()) { return false; }
-            return designator.trimmed().toUpper() == this->m_designator;
+            return designator.trimmed().toUpper() == m_designator;
         }
 
         bool CAirlineIcaoCode::matchesVDesignator(const QString &designator) const
@@ -122,7 +122,7 @@ namespace BlackMisc
         bool CAirlineIcaoCode::matchesIataCode(const QString &iata) const
         {
             if (iata.isEmpty()) { return false; }
-            return iata.trimmed().toUpper() == this->m_iataCode;
+            return iata.trimmed().toUpper() == m_iataCode;
         }
 
         bool CAirlineIcaoCode::matchesDesignatorOrIataCode(const QString &candidate) const
@@ -190,34 +190,20 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAirlineDesignator:
-                return CVariant::fromValue(this->m_designator);
-            case IndexIataCode:
-                return CVariant::fromValue(this->m_iataCode);
-            case IndexAirlineCountryIso:
-                return CVariant::fromValue(this->getCountryIso());
-            case IndexAirlineCountry:
-                return this->m_country.propertyByIndex(index.copyFrontRemoved());
-            case IndexAirlineName:
-                return CVariant::fromValue(this->m_name);
-            case IndexTelephonyDesignator:
-                return CVariant::fromValue(this->m_telephonyDesignator);
-            case IndexIsVirtualAirline:
-                return CVariant::fromValue(this->m_isVa);
-            case IndexIsOperating:
-                return CVariant::fromValue(this->m_isOperating);
-            case IndexIsMilitary:
-                return CVariant::fromValue(this->m_isMilitary);
-            case IndexDesignatorNameCountry:
-                return CVariant::fromValue(this->getDesignatorNameCountry());
-            case IndexGroupDesignator:
-                return CVariant::fromValue(this->getGroupDesignator());
-            case IndexGroupName:
-                return CVariant::fromValue(this->getGroupName());
-            case IndexGroupId:
-                return CVariant::fromValue(this->getGroupId());
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexAirlineDesignator: return CVariant::fromValue(m_designator);
+            case IndexIataCode: return CVariant::fromValue(m_iataCode);
+            case IndexAirlineCountryIso: return CVariant::fromValue(this->getCountryIso());
+            case IndexAirlineCountry: return m_country.propertyByIndex(index.copyFrontRemoved());
+            case IndexAirlineName: return CVariant::fromValue(m_name);
+            case IndexTelephonyDesignator: return CVariant::fromValue(m_telephonyDesignator);
+            case IndexIsVirtualAirline: return CVariant::fromValue(m_isVa);
+            case IndexIsOperating: return CVariant::fromValue(m_isOperating);
+            case IndexIsMilitary: return CVariant::fromValue(m_isMilitary);
+            case IndexDesignatorNameCountry: return CVariant::fromValue(this->getDesignatorNameCountry());
+            case IndexGroupDesignator: return CVariant::fromValue(this->getGroupDesignator());
+            case IndexGroupName: return CVariant::fromValue(this->getGroupName());
+            case IndexGroupId: return CVariant::fromValue(this->getGroupId());
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -228,42 +214,18 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAirlineDesignator:
-                this->setDesignator(variant.value<QString>());
-                break;
-            case IndexIataCode:
-                this->setIataCode(variant.value<QString>());
-                break;
-            case IndexAirlineCountry:
-                this->setCountry(variant.value<CCountry>());
-                break;
-            case IndexAirlineName:
-                this->setName(variant.value<QString>());
-                break;
-            case IndexTelephonyDesignator:
-                this->setTelephonyDesignator(variant.value<QString>());
-                break;
-            case IndexIsVirtualAirline:
-                this->setVirtualAirline(variant.toBool());
-                break;
-            case IndexIsOperating:
-                this->setOperating(variant.toBool());
-                break;
-            case IndexIsMilitary:
-                this->setMilitary(variant.toBool());
-                break;
-            case IndexGroupDesignator:
-                this->setGroupDesignator(variant.toQString());
-                break;
-            case IndexGroupName:
-                this->setGroupName(variant.toQString());
-                break;
-            case IndexGroupId:
-                this->setGroupId(variant.toInt());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexAirlineDesignator: this->setDesignator(variant.value<QString>()); break;
+            case IndexIataCode: this->setIataCode(variant.value<QString>()); break;
+            case IndexAirlineCountry: this->setCountry(variant.value<CCountry>()); break;
+            case IndexAirlineName: this->setName(variant.value<QString>()); break;
+            case IndexTelephonyDesignator: this->setTelephonyDesignator(variant.value<QString>()); break;
+            case IndexIsVirtualAirline: this->setVirtualAirline(variant.toBool()); break;
+            case IndexIsOperating: this->setOperating(variant.toBool()); break;
+            case IndexIsMilitary: this->setMilitary(variant.toBool()); break;
+            case IndexGroupDesignator: this->setGroupDesignator(variant.toQString()); break;
+            case IndexGroupName: this->setGroupName(variant.toQString()); break;
+            case IndexGroupId: this->setGroupId(variant.toInt()); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -274,32 +236,19 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAirlineDesignator:
-                return this->m_designator.compare(compareValue.getDesignator());
-            case IndexIataCode:
-                return this->m_iataCode.compare(compareValue.getIataCode());
-            case IndexAirlineCountry:
-                return this->m_country.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCountry());
-            case IndexDesignatorNameCountry:
-                return this->m_country.getName().compare(compareValue.getCountry().getName(), Qt::CaseInsensitive);
-            case IndexAirlineName:
-                return this->m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
-            case IndexTelephonyDesignator:
-                return this->m_telephonyDesignator.compare(compareValue.getTelephonyDesignator(), Qt::CaseInsensitive);
-            case IndexIsVirtualAirline:
-                return Compare::compare(this->isVirtualAirline(), compareValue.isVirtualAirline());
-            case IndexIsOperating:
-                return Compare::compare(this->isOperating(), compareValue.isOperating());
-            case IndexIsMilitary:
-                return Compare::compare(this->isMilitary(), compareValue.isMilitary());
-            case IndexGroupDesignator:
-                return this->m_groupDesignator.compare(compareValue.getGroupDesignator(), Qt::CaseInsensitive);
-            case IndexGroupName:
-                return this->m_groupName.compare(compareValue.getGroupName(), Qt::CaseInsensitive);
-            case IndexGroupId:
-                return Compare::compare(this->m_groupId, compareValue.getGroupId());
-            default:
-                break;
+            case IndexAirlineDesignator: return m_designator.compare(compareValue.getDesignator());
+            case IndexIataCode: return m_iataCode.compare(compareValue.getIataCode());
+            case IndexAirlineCountry: return m_country.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCountry());
+            case IndexDesignatorNameCountry: return m_country.getName().compare(compareValue.getCountry().getName(), Qt::CaseInsensitive);
+            case IndexAirlineName: return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
+            case IndexTelephonyDesignator: return m_telephonyDesignator.compare(compareValue.getTelephonyDesignator(), Qt::CaseInsensitive);
+            case IndexIsVirtualAirline: return Compare::compare(this->isVirtualAirline(), compareValue.isVirtualAirline());
+            case IndexIsOperating: return Compare::compare(this->isOperating(), compareValue.isOperating());
+            case IndexIsMilitary: return Compare::compare(this->isMilitary(), compareValue.isMilitary());
+            case IndexGroupDesignator: return m_groupDesignator.compare(compareValue.getGroupDesignator(), Qt::CaseInsensitive);
+            case IndexGroupName: return m_groupName.compare(compareValue.getGroupName(), Qt::CaseInsensitive);
+            case IndexGroupId: return Compare::compare(m_groupId, compareValue.getGroupId());
+            default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "No compare function");
             return 0;
@@ -357,16 +306,16 @@ namespace BlackMisc
             if (callsign.isEmpty()) { return *this; }
             const QString callsignAirline = callsign.getAirlineSuffix();
             if (callsignAirline.isEmpty()) { return *this; }
-            if (callsignAirline == this->m_designator) { return *this; }
+            if (callsignAirline == m_designator) { return *this; }
 
             const CAirlineIcaoCode callsignIcao(callsignAirline);
-            if (this->m_designator.isEmpty()) { return callsignIcao; }
+            if (m_designator.isEmpty()) { return callsignIcao; }
 
             // here we have 2 possible codes
             if (callsignIcao.isVirtualAirline())
             {
 
-                if (callsignIcao.getDesignator().endsWith(this->m_designator))
+                if (callsignIcao.getDesignator().endsWith(m_designator))
                 {
                     // callsign ICAO is virtual airline of myself, this is more accurate
                     return callsignIcao;

@@ -36,13 +36,13 @@ namespace BlackMisc
         //! Value object for ICAO classification
         class BLACKMISC_EXPORT CAirlineIcaoCode :
             public CValueObject<CAirlineIcaoCode>,
-            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
+            public Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAirlineDesignator = BlackMisc::CPropertyIndex::GlobalIndexCAirlineIcaoCode,
+                IndexAirlineDesignator = CPropertyIndex::GlobalIndexCAirlineIcaoCode,
                 IndexIataCode,
                 IndexAirlineName,
                 IndexAirlineCountryIso,
@@ -64,10 +64,10 @@ namespace BlackMisc
             CAirlineIcaoCode(const QString &airlineDesignator);
 
             //! Constructor.
-            CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const BlackMisc::CCountry &country, const QString &telephony, bool virtualAirline, bool operating);
+            CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const CCountry &country, const QString &telephony, bool virtualAirline, bool operating);
 
             //! Get airline, e.g. "DLH"
-            const QString &getDesignator() const { return this->m_designator; }
+            const QString &getDesignator() const { return m_designator; }
 
             //! Get airline, e.g. "DLH", but "VMVA" for virtual airlines
             const QString getVDesignator() const;
@@ -82,37 +82,37 @@ namespace BlackMisc
             const QString &getIataCode() const { return m_iataCode; }
 
             //! Set IATA code
-            void setIataCode(const QString &iataCode) { this->m_iataCode = iataCode.trimmed().toUpper(); }
+            void setIataCode(const QString &iataCode) { m_iataCode = iataCode.trimmed().toUpper(); }
 
             //! Get country, e.g. "FR"
-            const QString &getCountryIso() const { return this->m_country.getIsoCode(); }
+            const QString &getCountryIso() const { return m_country.getIsoCode(); }
 
             //! Get country, e.g. "FRANCE"
-            const BlackMisc::CCountry &getCountry() const { return this->m_country; }
+            const CCountry &getCountry() const { return m_country; }
 
             //! Combined string designator, name, country
             QString getDesignatorNameCountry() const;
 
             //! Set country
-            void setCountry(const BlackMisc::CCountry &country) { this->m_country = country; }
+            void setCountry(const CCountry &country) { m_country = country; }
 
             //! Get name, e.g. "Lufthansa"
-            const QString &getName() const { return this->m_name; }
+            const QString &getName() const { return m_name; }
 
-            //! \copydoc BlackMisc::simplifyNameForSearch
+            //! \copydoc simplifyNameForSearch
             QString getSimplifiedName() const;
 
             //! Name plus key, e.g. "Lufthansa (3421)"
             QString getNameWithKey() const;
 
             //! Set name
-            void setName(const QString &name) { this->m_name = name.trimmed(); }
+            void setName(const QString &name) { m_name = name.trimmed(); }
 
             //! Telephony designator such as "Speedbird"
-            const QString &getTelephonyDesignator() const { return this->m_telephonyDesignator; }
+            const QString &getTelephonyDesignator() const { return m_telephonyDesignator; }
 
             //! Telephony designator such as "Speedbird"
-            void setTelephonyDesignator(const QString &telephony) { this->m_telephonyDesignator = telephony.trimmed().toUpper(); }
+            void setTelephonyDesignator(const QString &telephony) { m_telephonyDesignator = telephony.trimmed().toUpper(); }
 
             //! Group designator
             const QString &getGroupDesignator() const { return m_groupDesignator; }
@@ -181,7 +181,7 @@ namespace BlackMisc
             bool isContainedInSimplifiedName(const QString &candidate) const;
 
             //! Telephony designator?
-            bool hasTelephonyDesignator() const { return !this->m_telephonyDesignator.isEmpty(); }
+            bool hasTelephonyDesignator() const { return !m_telephonyDesignator.isEmpty(); }
 
             //! Has (airline) name?
             bool hasName() const { return !m_name.isEmpty(); }
@@ -198,23 +198,23 @@ namespace BlackMisc
             //! What is better, the callsign airline code or this code. Return the better one.
             CAirlineIcaoCode thisOrCallsignCode(const CCallsign &callsign) const;
 
-            //! \copydoc BlackMisc::Mixin::Icon::toIcon
+            //! \copydoc Mixin::Icon::toIcon
             CIcon toIcon() const;
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
+            //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            //! \copydoc Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            //! \copydoc Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Compare for index
             int comparePropertyByIndex(const CPropertyIndex &index, const CAirlineIcaoCode &compareValue) const;
 
             //! Validate data
-            BlackMisc::CStatusMessageList validate() const;
+            CStatusMessageList validate() const;
 
             //! Update missing parts
             void updateMissingParts(const CAirlineIcaoCode &otherIcaoCode);
@@ -250,7 +250,7 @@ namespace BlackMisc
             QString m_telephonyDesignator;  //!< "Speedbird"
             QString m_groupDesignator;      //!< Group designator
             QString m_groupName;            //!< Group name
-            BlackMisc::CCountry m_country;  //!< Country
+            CCountry m_country;             //!< Country
             int m_groupId = -1;             //!< Group id
             bool m_isVa = false;            //!< virtual airline
             bool m_isOperating = true;      //!< still operating?
