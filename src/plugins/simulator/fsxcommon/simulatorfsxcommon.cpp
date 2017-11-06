@@ -915,7 +915,11 @@ namespace BlackSimPlugin
             // call in SIM
             const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
             const HRESULT result = SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), requestId);
-            if (result != S_OK)
+            if (result == S_OK)
+            {
+                if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
+            }
+            else
             {
                 CLogMessage(this).warning("Removing aircraft '%1' from simulator failed") << callsign.asString();
             }
@@ -938,14 +942,19 @@ namespace BlackSimPlugin
 
         int CSimulatorFsxCommon::physicallyRemoveAllRemoteAircraft()
         {
-            if (m_simConnectObjects.isEmpty()) { return 0; }
-            const QList<CCallsign> callsigns(m_simConnectObjects.keys());
+            // make sure they are not added again
+            // cleaning here is somewhat redundant, but double checks
+            m_addPendingAircraft.clear();
+            m_addAgainAircraftWhenRemoved.clear();
+
+            // remove one by one
             int r = 0;
+            const CCallsignSet callsigns = m_simConnectObjects.getAllCallsigns();
             for (const CCallsign &cs : callsigns)
             {
-                if (physicallyRemoveRemoteAircraft(cs)) { r++; }
+                if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
             }
-            clearAllAircraft();
+            this->clearAllAircraft();
             return r;
         }
 

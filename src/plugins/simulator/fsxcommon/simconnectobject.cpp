@@ -8,6 +8,7 @@
  */
 
 #include "simconnectobject.h"
+#include "simconnectobject.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 
 using namespace BlackMisc::Aviation;
@@ -126,6 +127,11 @@ namespace BlackSimPlugin
         CCallsign CSimConnectObjects::getCallsignForObjectId(DWORD objectId) const
         {
             return getSimObjectForObjectId(objectId).getCallsign();
+        }
+
+        CCallsignSet CSimConnectObjects::getAllCallsigns() const
+        {
+            return CCallsignSet(this->keys());
         }
 
         CSimConnectObject CSimConnectObjects::getSimObjectForObjectId(DWORD objectId) const

@@ -186,6 +186,9 @@ namespace BlackSimPlugin
             //! Number of pending removed
             int countPendingRemoved() const;
 
+            //! Get all callsigns
+            BlackMisc::Aviation::CCallsignSet getAllCallsigns() const;
+
             //! Callsigns of pending added callsigns
             BlackMisc::Aviation::CCallsignSet getPendingAddedCallsigns() const;
 
