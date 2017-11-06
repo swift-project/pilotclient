@@ -124,6 +124,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Cmd.line parsing
+        static const CLogCategory &cmdLine()
+        {
+            static const CLogCategory cat { "swift.cmdLine" };
+            return cat;
+        }
+
         //! Driver
         static const CLogCategory &driver()
         {
@@ -244,6 +251,7 @@ namespace BlackMisc
             {
                 uncategorized(),
                 cache(),
+                cmdLine(),
                 context(),
                 contextSlot(),
                 dataInconsistency(),

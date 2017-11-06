@@ -740,6 +740,7 @@ namespace BlackSimPlugin
             {
                 const bool trace = parser.toBool(2);
                 this->setTraceSendId(trace);
+                CLogMessage(this, CLogCategory::cmdLine()).info("Tracing FSX/P3D driver sendIds is '%1'") << boolToOnOff(trace);
                 return true;
             }
             return CSimulatorFsCommon::parseDetails(parser);
