@@ -64,7 +64,11 @@ namespace BlackMisc
             const auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, hints, status, log);
 
             // succeeded so far?
-            if (!status.didInterpolationSucceed()) { return currentSituation; }
+            if (!status.didInterpolationSucceed())
+            {
+                status.setValidSituation(currentSituation);
+                return currentSituation;
+            }
 
             // use derived interpolant function
             currentSituation.setPosition(interpolant.interpolatePosition(setup, hints));
@@ -112,7 +116,7 @@ namespace BlackMisc
                 currentSituation.setGroundSpeed(pbh.getGroundSpeed());
                 status.setChangedPosition(true);
             }
-            status.setInterpolationSucceeded(true);
+            status.setInterpolationSucceeded(true, currentSituation);
             m_isFirstInterpolation = false;
 
             if (m_logger && hints.isLoggingInterpolation())
@@ -348,15 +352,39 @@ namespace BlackMisc
             situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
         }
 
-        bool CInterpolationStatus::allTrue() const
+        void CInterpolationStatus::setInterpolationSucceeded(bool succeeded, const CAircraftSituation &situation)
         {
-            return m_interpolationSucceeded && m_changedPosition;
+            m_interpolationSucceeded = succeeded;
+            this->setValidSituation(situation);
+        }
+
+        void CInterpolationStatus::setValidSituation(const CAircraftSituation &situation)
+        {
+            m_validSituation = !situation.isGeodeticHeightNull() && !situation.isPositionNull();
+        }
+
+        bool CInterpolationStatus::validAndChangedInterpolatedSituation() const
+        {
+            return m_interpolationSucceeded && m_changedPosition && m_validSituation;
+        }
+
+        bool CInterpolationStatus::validInterpolatedSituation() const
+        {
+            return m_interpolationSucceeded && m_validSituation;
         }
 
         void CInterpolationStatus::reset()
         {
+            m_validSituation = false;
             m_changedPosition = false;
             m_interpolationSucceeded = false;
+        }
+
+        QString CInterpolationStatus::toQString() const
+        {
+            return "Interpolation: " % boolToYesNo(m_interpolationSucceeded) %
+                   " situation valid: " % boolToYesNo(m_interpolationSucceeded) %
+                   " changed pos.: " % boolToYesNo(m_changedPosition);
         }
 
         bool CPartsStatus::allTrue() const

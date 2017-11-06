@@ -69,10 +69,20 @@ namespace BlackMisc
             if (situationsOlder.isEmpty() || situationsNewer.isEmpty())
             {
                 // no before situations
-                if (situationsOlder.isEmpty()) { return *(situationsNewer.end() - 1); } // oldest newest
+                if (situationsOlder.isEmpty())
+                {
+                    const CAircraftSituation currentSituation(*(situationsNewer.end() - 1)); // oldest newest
+                    status.setInterpolationSucceeded(false, currentSituation);
+                    return currentSituation;
+                }
 
                 // only one before situation
-                if (situationsOlder.size() < 2) { return situationsOlder.front(); } // latest older
+                if (situationsOlder.size() < 2)
+                {
+                    const CAircraftSituation currentSituation(situationsOlder.front()); // latest oldest
+                    status.setInterpolationSucceeded(false, currentSituation);
+                    return currentSituation;
+                }
 
                 // extrapolate from two before situations
                 oldSituation = *(situationsOlder.begin() + 1); // before newest
@@ -115,7 +125,7 @@ namespace BlackMisc
             currentSituation.setMSecsSinceEpoch(oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs);
 
             status.setChangedPosition(m_isFirstInterpolation || oldSituation.getPosition() != newSituation.getPosition() || oldSituation.getAltitude() != newSituation.getAltitude());
-            status.setInterpolationSucceeded(true);
+            status.setInterpolationSucceeded(true, currentSituation);
 
             log.oldSituation = oldSituation;
             log.newSituation = newSituation;

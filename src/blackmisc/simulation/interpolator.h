@@ -151,21 +151,37 @@ namespace BlackMisc
             //! Set succeeded
             void setInterpolationSucceeded(bool succeeded) { m_interpolationSucceeded = succeeded; }
 
+            //! Set succeeded
+            void setInterpolationSucceeded(bool succeeded, const Aviation::CAircraftSituation &situation);
+
             //! Changed position?
             bool hasChangedPosition() const { return m_changedPosition; }
+
+            //! Is the corresponding position valid?
+            bool hasValidSituation() const { return m_validSituation; }
+
+            //! Is that a valid position?
+            void setValidSituation(const Aviation::CAircraftSituation &situation);
 
             //! Set as changed
             void setChangedPosition(bool changed) { m_changedPosition = changed; }
 
-            //! all OK
-            bool allTrue() const;
+            //! Valid interpolated situation which also changed
+            bool validAndChangedInterpolatedSituation() const;
+
+            //! Valid interpolated situation
+            bool validInterpolatedSituation() const;
 
             //! Reset to default values
             void reset();
 
+            //! Info string
+            QString toQString() const;
+
         private:
             bool m_changedPosition = false;        //!< position was changed
             bool m_interpolationSucceeded = false; //!< interpolation succeeded (means enough values, etc.)
+            bool m_validSituation = false;         //!< is valid situation
         };
 
         //! Status regarding parts

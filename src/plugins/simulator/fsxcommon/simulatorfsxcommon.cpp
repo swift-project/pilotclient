@@ -1100,7 +1100,7 @@ namespace BlackSimPlugin
                 hints.setLoggingInterpolation(logInterpolationAndParts);
                 const CAircraftSituation interpolatedSituation = simObject.getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
 
-                if (interpolatorStatus.allTrue())
+                if (interpolatorStatus.validAndChangedInterpolatedSituation())
                 {
                     // update situation
                     SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(interpolatedSituation);

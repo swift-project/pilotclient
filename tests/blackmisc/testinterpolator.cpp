@@ -127,7 +127,7 @@ namespace BlackMiscTest
                 CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
                                                     (currentTime, setup, hints, status)
                                                    );
-                QVERIFY2(status.allTrue(), "Failed interpolation");
+                QVERIFY2(status.validAndChangedInterpolatedSituation(), "Failed interpolation");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");
                 double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
                 double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
