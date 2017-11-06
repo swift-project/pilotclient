@@ -40,6 +40,7 @@ namespace BlackMisc
         {
             Q_UNUSED(setup);
             Q_UNUSED(hints);
+            status.reset();
 
             // find the first situation not in the correct order, keep only the situations before that one
             // any updates in wrong chronological order are discounted
