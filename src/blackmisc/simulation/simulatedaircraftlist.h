@@ -89,6 +89,9 @@ namespace BlackMisc
             //! Set aircraft parts
             int setAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool onlyFirst = true);
 
+            //! Set aircraft parts
+            int setAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, bool onlyFirst = true);
+
             //! Set ground elevation
             int setGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAltitude &elevation, bool onlyFirst = true);
 

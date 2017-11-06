@@ -1485,14 +1485,28 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
         {
-            if (!m_simConnectObjects.contains(situation.getCallsign())) { return; }
-            m_simConnectObjects[situation.getCallsign()].addAircraftSituation(situation);
+            if (m_simConnectObjects.contains(situation.getCallsign()))
+            {
+                m_simConnectObjects[situation.getCallsign()].addAircraftSituation(situation);
+            }
+            else
+            {
+                // update if in pending
+                m_addPendingAircraft.setAircraftSituation(situation.getCallsign(), situation);
+            }
         }
 
-        void CSimulatorFsxCommon::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
+        void CSimulatorFsxCommon::onRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
         {
-            if (!m_simConnectObjects.contains(callsign)) { return; }
-            m_simConnectObjects[callsign].addAircraftParts(parts);
+            if (m_simConnectObjects.contains(callsign))
+            {
+                m_simConnectObjects[callsign].addAircraftParts(parts);
+            }
+            else
+            {
+                // update if in pending
+                m_addPendingAircraft.setAircraftParts(callsign, parts);
+            }
         }
 
         QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)

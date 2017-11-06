@@ -149,6 +149,18 @@ namespace BlackMisc
             return c;
         }
 
+        int CSimulatedAircraftList::setAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation, bool onlyFirst)
+        {
+            int c = 0;
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                aircraft.setSituation(situation);
+                if (onlyFirst) break;
+            }
+            return c;
+        }
+
         int CSimulatedAircraftList::setGroundElevation(const CCallsign &callsign, const CAltitude &elevation, bool onlyFirst)
         {
             int c = 0;
