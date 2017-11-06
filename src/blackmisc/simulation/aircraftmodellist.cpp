@@ -281,6 +281,14 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByVtolFlag(bool vtol) const
+        {
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return (model.isVtol() == vtol);
+            });
+        }
+
         CAircraftModelList CAircraftModelList::getAllFsFamilyModels() const
         {
             return this->findBy([](const CAircraftModel & model)
@@ -347,6 +355,35 @@ namespace BlackMisc
             return this->containsBy([ & ](const CAircraftModel & model)
             {
                 return !model.matchesSimulator(simulators);
+            });
+        }
+
+        bool CAircraftModelList::containsMilitary() const
+        {
+            return this->containsBy([ & ](const CAircraftModel & model)
+            {
+                return model.isMilitary();
+            });
+        }
+
+        bool CAircraftModelList::containsCivilian() const
+        {
+            return this->containsBy([ & ](const CAircraftModel & model)
+            {
+                return model.isCivilian();
+            });
+        }
+
+        bool CAircraftModelList::containsCivilianAndMilitary() const
+        {
+            return this->containsMilitary() && this->containsCivilian();
+        }
+
+        bool CAircraftModelList::containsVtol() const
+        {
+            return this->containsBy([ & ](const CAircraftModel & model)
+            {
+                return model.isVtol();
             });
         }
 

@@ -214,6 +214,9 @@ namespace BlackMisc
             //! Military model?
             bool isMilitary() const;
 
+            //! Civilian model?
+            bool isCivilian() const;
+
             //! Get livery
             const BlackMisc::Aviation::CLivery &getLivery() const { return m_livery; }
 

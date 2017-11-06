@@ -62,29 +62,41 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAircraftModelList(const CSequence<CAircraftModel> &other);
 
-            //! Contains model string
+            //! Contains model string?
             bool containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
-            //! Contains model with model string or id
+            //! Contains model with model string or id?
             bool containsModelStringOrDbKey(const BlackMisc::Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
-            //! Contains model for callsign
+            //! Contains model for callsign?
             bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-            //! Contains given combined type
+            //! Contains given combined type?
             bool containsCombinedType(const QString &combinedType) const;
 
-            //! Contains any model with aircraft ICAO designator
+            //! Contains any model with aircraft ICAO designator?
             bool containsModelsWithAircraftIcaoDesignator(const QString &aircraftDesignator) const;
 
-            //! Contains any model with aircraft and airline ICAO designator
+            //! Contains any model with aircraft and airline ICAO designator?
             bool containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const;
 
-            //! Contains any model matching any of of passed simulators
+            //! Contains any model matching any of of passed simulators?
             bool containsMatchingSimulator(const CSimulatorInfo &simulators) const;
 
-            //! Contains any model not matching any of of passed simulators
+            //! Contains any model not matching any of of passed simulators?
             bool containsNotMatchingSimulator(const CSimulatorInfo &simulators) const;
+
+            //! Contains military models?
+            bool containsMilitary() const;
+
+            //! Contains civilian models?
+            bool containsCivilian() const;
+
+            //! Contains both, military and civilian models?
+            bool containsCivilianAndMilitary() const;
+
+            //! Contains VTOL models?
+            bool containsVtol() const;
 
             //! Find by model string
             //! \remark normally CAircraftModelList::findFirstByModelStringOrDefault would be used
@@ -156,8 +168,11 @@ namespace BlackMisc
             //! Find models with color liveries
             CAircraftModelList findColorLiveries() const;
 
-            //! Find by military flag
+            //! Find by military flag, \c false returns civilian models
             CAircraftModelList findByMilitaryFlag(bool military) const;
+
+            //! Find by VTOL flag, \c false returns non VTOL models
+            CAircraftModelList findByVtolFlag(bool vtol) const;
 
             //! Model icon path
             QString findModelIconPathByModelString(const QString &modelString) const;

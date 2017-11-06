@@ -623,9 +623,9 @@ namespace BlackCore
 
         // VTOL
         ScoredModels map;
-        if (remoteAircraft.isVtol() && modelSet.contains(&CAircraftModel::isVtol, true))
+        if (remoteAircraft.isVtol() && modelSet.containsVtol())
         {
-            usedModelSet = modelSet.findBy(&CAircraftModel::isVtol, true);
+            usedModelSet = modelSet.findByVtolFlag(true);
         }
         else
         {

@@ -328,6 +328,11 @@ namespace BlackMisc
                    this->getLivery().isMilitary();
         }
 
+        bool CAircraftModel::isCivilian() const
+        {
+            return !this->isMilitary();
+        }
+
         bool CAircraftModel::setDistributorOrder(int order)
         {
             if (order < 0) { return false; }
