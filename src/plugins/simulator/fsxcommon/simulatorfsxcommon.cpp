@@ -235,7 +235,7 @@ namespace BlackSimPlugin
         CCallsignSet CSimulatorFsxCommon::physicallyRenderedAircraft() const
         {
             CCallsignSet callsigns(m_simConnectObjects.keys());
-            callsigns.push_back(m_aircraftToAddAgainWhenRemoved.getCallsigns()); // not really rendered right now, but very soon
+            callsigns.push_back(m_addAgainAircraftWhenRemoved.getCallsigns()); // not really rendered right now, but very soon
             callsigns.push_back(m_addPendingAircraft.getCallsigns()); // not really rendered, but for the logic it should look like it is
             return CCallsignSet(m_simConnectObjects.keys());
         }
@@ -539,7 +539,7 @@ namespace BlackSimPlugin
                     }
                     else
                     {
-                        this->removeFromPendingAndAddAgainAircraft(callsign);
+                        this->removeFromAddPendingAndAddAgainAircraft(callsign);
                         msg = CLogMessage(this).info("Callsign '%1' removed in meantime and no longer in range") << callsign.toQString();
                     }
                     break;
@@ -578,7 +578,7 @@ namespace BlackSimPlugin
                 this->requestDataForSimObject(simObject);
                 this->requestLightsForSimObject(simObject);
 
-                this->removeFromPendingAndAddAgainAircraft(callsign); // no longer try to add
+                this->removeFromAddPendingAndAddAgainAircraft(callsign); // no longer try to add
                 const bool updated = this->updateAircraftRendered(callsign, true);
                 if (updated)
                 {
@@ -633,7 +633,7 @@ namespace BlackSimPlugin
 
             // no longer required to be added
             m_addPendingAircraft.removeByCallsigns(toBeRemovedCallsigns);
-            m_aircraftToAddAgainWhenRemoved.removeByCallsigns(toBeRemovedCallsigns);
+            m_addAgainAircraftWhenRemoved.removeByCallsigns(toBeRemovedCallsigns);
 
             // add aircraft, but "non blocking"
             if (!toBeAddedAircraft.isEmpty())
@@ -646,11 +646,11 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsxCommon::removeFromPendingAndAddAgainAircraft(const CCallsign &callsign)
+        void CSimulatorFsxCommon::removeFromAddPendingAndAddAgainAircraft(const CCallsign &callsign)
         {
             if (callsign.isEmpty()) { return; }
             m_addPendingAircraft.removeByCallsign(callsign);
-            m_aircraftToAddAgainWhenRemoved.removeByCallsign(callsign);
+            m_addAgainAircraftWhenRemoved.removeByCallsign(callsign);
         }
 
         bool CSimulatorFsxCommon::simulatorReportedObjectRemoved(DWORD objectID)
@@ -696,10 +696,10 @@ namespace BlackSimPlugin
             }
 
             // models we have to add again after removing
-            if (m_aircraftToAddAgainWhenRemoved.containsCallsign(callsign))
+            if (m_addAgainAircraftWhenRemoved.containsCallsign(callsign))
             {
-                const CSimulatedAircraft aircraftAddAgain = m_aircraftToAddAgainWhenRemoved.findFirstByCallsign(callsign);
-                m_aircraftToAddAgainWhenRemoved.removeByCallsign(callsign);
+                const CSimulatedAircraft aircraftAddAgain = m_addAgainAircraftWhenRemoved.findFirstByCallsign(callsign);
+                m_addAgainAircraftWhenRemoved.removeByCallsign(callsign);
                 QTimer::singleShot(2500, this,  [ = ]
                 {
                     this->physicallyAddRemoteAircraftImpl(aircraftAddAgain, AddedAfterRemoved);
@@ -844,7 +844,7 @@ namespace BlackSimPlugin
                 }
 
                 this->physicallyRemoveRemoteAircraft(newRemoteAircraft.getCallsign());
-                m_aircraftToAddAgainWhenRemoved.replaceOrAddByCallsign(newRemoteAircraft);
+                m_addAgainAircraftWhenRemoved.replaceOrAddByCallsign(newRemoteAircraft);
                 if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' re-added changed model '%2', will be added again").arg(newRemoteAircraft.getCallsignAsString(), newModelString)); }
                 return false;
             }
@@ -856,7 +856,7 @@ namespace BlackSimPlugin
                 return false;
             }
 
-            this->removeFromPendingAndAddAgainAircraft(callsign);
+            this->removeFromAddPendingAndAddAgainAircraft(callsign);
 
             // create AI
             bool adding = false;
@@ -892,7 +892,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
-            this->removeFromPendingAndAddAgainAircraft(callsign);
+            this->removeFromAddPendingAndAddAgainAircraft(callsign);
             if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
 
             CSimConnectObject &simObject = m_simConnectObjects[callsign];

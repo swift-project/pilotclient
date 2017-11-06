@@ -22,7 +22,7 @@ namespace BlackMisc
             for (CAircraftModel &simModel : modelToBeModified)
             {
                 if (!force && simModel.hasValidAircraftAndAirlineDesignator()) { continue; }  // already done
-                CAircraftModel vPilotModel(vPilotModels.findFirstByModelStringOrDefault(simModel.getModelString()));
+                const CAircraftModel vPilotModel(vPilotModels.findFirstByModelStringOrDefault(simModel.getModelString()));
                 if (!vPilotModel.hasValidDbKey())
                 {
                     continue; // not found

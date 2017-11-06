@@ -208,7 +208,7 @@ namespace BlackSimPlugin
             void addPendingAircraft(AircraftAddMode mode);
 
             //! Remove as m_addPendingAircraft and m_aircraftToAddAgainWhenRemoved
-            void removeFromPendingAndAddAgainAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+            void removeFromAddPendingAndAddAgainAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Call this method to declare the simulator connected
             void setSimConnected();

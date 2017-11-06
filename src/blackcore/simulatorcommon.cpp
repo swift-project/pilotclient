@@ -574,7 +574,7 @@ namespace BlackCore
 
     void CSimulatorCommon::clearAllAircraft()
     {
-        m_aircraftToAddAgainWhenRemoved.clear();
+        m_addAgainAircraftWhenRemoved.clear();
         m_highlightedAircraft.clear();
         m_callsignsToBeRendered.clear();
         m_hints.clear();

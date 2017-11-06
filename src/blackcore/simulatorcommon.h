@@ -220,7 +220,7 @@ namespace BlackCore
         BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
 
         // some optional functionality which can be used by the sims as needed
-        BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved;             //!< add this model again when removed, normally used to change model
+        BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< last ground elevation fetched
 
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?
