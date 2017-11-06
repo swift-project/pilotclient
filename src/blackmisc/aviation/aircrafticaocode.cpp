@@ -132,8 +132,7 @@ namespace BlackMisc
 
         int CAircraftIcaoCode::calculateScore(const CAircraftIcaoCode &otherCode) const
         {
-            const bool bothFromDb = this->isLoadedFromDb() && otherCode.isLoadedFromDb();
-            if (bothFromDb && otherCode.getDbKey() == this->getDbKey()) { return 100; }
+            if (this->isDbEqual(otherCode)) { return 100; }
 
             int score = 0;
             if (this->hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
@@ -163,18 +162,21 @@ namespace BlackMisc
                 }
             }
 
-            // score needs to higher than ranking
+            // 0..65 so far
             if (this->hasManufacturer() && otherCode.hasManufacturer())
             {
                 if (this->matchesManufacturer(otherCode.getManufacturer()))
                 {
-                    score += 20;
+                    score += 10;
                 }
                 else if (this->getManufacturer().contains(otherCode.getManufacturer(), Qt::CaseInsensitive))
                 {
-                    score += 15;
+                    score += 5;
                 }
             }
+
+            // 0..75 so far
+            if (this->isMilitary() == otherCode.isMilitary()) { score += 10; }
 
             // 0..85
             return score;

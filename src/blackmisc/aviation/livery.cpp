@@ -374,40 +374,38 @@ namespace BlackMisc
 
         int CLivery::calculateScore(const CLivery &otherLivery, bool preferColorLiveries) const
         {
+            if (this->isDbEqual(otherLivery)) { return 100; }
+
+            // get a level
+            static const int sameAirlineIcaoLevel = CAirlineIcaoCode("DLH").calculateScore(CAirlineIcaoCode("DLH"));
+            Q_ASSERT_X(sameAirlineIcaoLevel == 60, Q_FUNC_INFO, "airline scoring changed");
+
             int score = 0;
-            if (this->isLoadedFromDb() && otherLivery.isLoadedFromDb() && (this->getCombinedCode() == otherLivery.getCombinedCode()))
+            const double colorMultiplier = 1.0 - this->getColorDistance(otherLivery);
+            if (this->isColorLivery() && otherLivery.isColorLivery())
             {
-                return 100; // exact
+                // 2 color liveries 25..85
+                score = 25;
+                score += 60 * colorMultiplier;
             }
-            else
+            else if (this->isAirlineLivery() && otherLivery.isAirlineLivery())
             {
-                const double multiplier = preferColorLiveries ? 0.10 : 0.35;
-                score += multiplier * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode());
+                // 2 airline liveries 0..85
+                // 0..50 based on ICAO
+                // 0..25 based on color distance
+                // 0..10 based on mil.flag
+                // same ICAO at least means 30, max 50
+                score = 0.5 * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode());
+                score += 25 * colorMultiplier;
+                if (this->isMilitary() == otherLivery.isMilitary()) { score += 10; }
             }
-
-            // max. 0..35 so far
-            if (score == 0) { return 0; }
-
-            // overrate non airline liveries / color liveries
-            if (this->isAirlineStandardLivery() && !preferColorLiveries) { score += 10; }
-            if (preferColorLiveries)
+            else if ((this->isColorLivery() && otherLivery.isAirlineLivery()) || (otherLivery.isColorLivery() && this->isAirlineLivery()))
             {
-                if (this->isColorLivery() || !this->hasValidAirlineDesignator())
-                {
-                    score += 20;
-                }
-            }
-
-            // 0..45 so far
-            if (!this->hasValidColors()) { return score; }
-            const double cd = this->getColorDistance(otherLivery); // 0..1
-            if (cd == 0)
-            {
-                score += 40;
-            }
-            else
-            {
-                score += (1.0 - cd) * 25; // 0..25
+                // 1 airline, 1 color livery
+                // 0 .. 50
+                // 25 is weaker as same ICAO code / 2 from above
+                score = preferColorLiveries ? 25 : 0;
+                score += 25 * colorMultiplier; // needs to be the same as in 2 airlines
             }
             return score;
         }

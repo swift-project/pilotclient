@@ -362,21 +362,21 @@ namespace BlackMisc
 
         int CAirlineIcaoCode::calculateScore(const CAirlineIcaoCode &otherCode) const
         {
-            const bool bothFromDb = otherCode.isLoadedFromDb() && this->isLoadedFromDb();
-            if (bothFromDb && this->getDbKey() == otherCode.getDbKey())
-            {
-                return 100;
-            }
+            if (this->isDbEqual(otherCode)) { return 100; }
+            const bool bothFromDb = this->isLoadedFromDb() && otherCode.isLoadedFromDb();
             int score = 0;
             if (otherCode.hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
             {
                 score += 60;
             }
 
+            // only for DB values we check VA
             if (bothFromDb && this->isVirtualAirline() == otherCode.isVirtualAirline())
             {
                 score += 20;
             }
+
+            // consider the various names
             if (this->hasName() && this->getName() == otherCode.getName())
             {
                 score += 20;
