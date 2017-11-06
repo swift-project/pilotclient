@@ -17,13 +17,13 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CInterpolatorMulti::CInterpolatorMulti(const BlackMisc::Aviation::CCallsign &callsign, QObject *parent) :
+        CInterpolatorMulti::CInterpolatorMulti(const CCallsign &callsign, QObject *parent) :
             QObject(parent),
             m_spline(callsign, this),
             m_linear(callsign, this)
         {}
 
-        BlackMisc::Aviation::CAircraftSituation CInterpolatorMulti::getInterpolatedSituation(
+        CAircraftSituation CInterpolatorMulti::getInterpolatedSituation(
             qint64 currentTimeSinceEpoc,
             const CInterpolationAndRenderingSetup &setup,
             const CInterpolationHints &hints, CInterpolationStatus &status)
@@ -37,7 +37,7 @@ namespace BlackMisc
             return {};
         }
 
-        BlackMisc::Aviation::CAircraftParts CInterpolatorMulti::getInterpolatedParts(
+        CAircraftParts CInterpolatorMulti::getInterpolatedParts(
             qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log)
         {
             switch (m_mode)
@@ -49,7 +49,7 @@ namespace BlackMisc
             return {};
         }
 
-        void CInterpolatorMulti::addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+        void CInterpolatorMulti::addAircraftSituation(const CAircraftSituation &situation)
         {
             m_linear.addAircraftSituation(situation);
             m_spline.addAircraftSituation(situation);
@@ -66,7 +66,7 @@ namespace BlackMisc
             return false;
         }
 
-        void CInterpolatorMulti::addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
+        void CInterpolatorMulti::addAircraftParts(const CAircraftParts &parts)
         {
             m_linear.addAircraftParts(parts);
             m_spline.addAircraftParts(parts);

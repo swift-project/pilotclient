@@ -7,13 +7,14 @@
  * contained in the LICENSE file.
  */
 
+#include "matchingutils.h"
+#include "aircraftmodel.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
 

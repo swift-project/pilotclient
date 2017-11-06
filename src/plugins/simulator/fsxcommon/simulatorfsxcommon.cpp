@@ -362,7 +362,7 @@ namespace BlackSimPlugin
             {
                 CLogMessage(this).warning("FSX: Pitch value (own aircraft) out of limits: %1") << simulatorOwnAircraft.pitch;
             }
-            BlackMisc::Aviation::CAircraftSituation aircraftSituation;
+            CAircraftSituation aircraftSituation;
             aircraftSituation.setPosition(position);
             // MSFS has inverted pitch and bank angles
             aircraftSituation.setPitch(CAngle(-simulatorOwnAircraft.pitch, CAngleUnit::deg()));

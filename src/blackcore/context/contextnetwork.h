@@ -148,7 +148,7 @@ namespace BlackCore
             void kicked(const QString &kickMessage);
 
             //! Connection status changed
-            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
             //! Text messages received (also private chat messages, radio channel messages)
             void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
@@ -225,7 +225,7 @@ namespace BlackCore
 
             //! Connect to Network
             //! \return messages generated during connecting
-            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode loginMode) = 0;
+            virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, INetwork::LoginMode loginMode) = 0;
 
             //! Server which is connected, if not connected empty default object.
             virtual BlackMisc::Network::CServer getConnectedServer() const = 0;

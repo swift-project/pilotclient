@@ -36,15 +36,14 @@ namespace BlackMisc
         class CAircraftModel;
         class CSimulatedAircraft;
     }
-
     namespace Simulation
     {
         //! Value object encapsulating a list of aircraft.
         class BLACKMISC_EXPORT CSimulatedAircraftList :
-            public BlackMisc::CSequence<CSimulatedAircraft>,
-            public BlackMisc::Aviation::ICallsignObjectList<CSimulatedAircraft, CSimulatedAircraftList>,
-            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CSimulatedAircraft, CSimulatedAircraftList>,
-            public BlackMisc::Mixin::MetaType<CSimulatedAircraftList>
+            public CSequence<CSimulatedAircraft>,
+            public Aviation::ICallsignObjectList<CSimulatedAircraft, CSimulatedAircraftList>,
+            public Geo::IGeoObjectWithRelativePositionList<CSimulatedAircraft, CSimulatedAircraftList>,
+            public Mixin::MetaType<CSimulatedAircraftList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSimulatedAircraftList)
@@ -56,7 +55,7 @@ namespace BlackMisc
             CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other);
 
             //! All pilots (with valid data)
-            BlackMisc::Network::CUserList getPilots() const;
+            Network::CUserList getPilots() const;
 
             //! Enabled / disabled aircraft
             CSimulatedAircraftList findByEnabled(bool enabled) const;
@@ -68,7 +67,7 @@ namespace BlackMisc
             CSimulatedAircraftList findByVtol(bool vtol) const;
 
             //! Callsigns of aircraft with synchronized parts
-            BlackMisc::Aviation::CCallsignSet getCallsignsWithSynchronizedParts() const;
+            Aviation::CCallsignSet getCallsignsWithSynchronizedParts() const;
 
             //! Update aircraft with data from VATSIM data file
             //! \remarks The list used ("this") needs to contain the VATSIM data file objects
@@ -78,28 +77,28 @@ namespace BlackMisc
             void markAllAsNotRendered();
 
             //! Mark given callsign as rendered
-            int setRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, bool onlyFirst = true);
+            int setRendered(const Aviation::CCallsign &callsign, bool rendered, bool onlyFirst = true);
 
             //! Mark given callsign as enabled
-            int setEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabled, bool onlyFirst = true);
+            int setEnabled(const Aviation::CCallsign &callsign, bool enabled, bool onlyFirst = true);
 
             //! Set model
-            int setAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftModel &model, bool onlyFirst = true);
+            int setAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, bool onlyFirst = true);
 
             //! Set aircraft parts
-            int setAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool onlyFirst = true);
+            int setAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool onlyFirst = true);
 
             //! Set aircraft parts
-            int setAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, bool onlyFirst = true);
+            int setAircraftSituation(const Aviation::CCallsign &callsign, const Aviation::CAircraftSituation &situation, bool onlyFirst = true);
 
             //! Set ground elevation
-            int setGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAltitude &elevation, bool onlyFirst = true);
+            int setGroundElevation(const Aviation::CCallsign &callsign, const Aviation::CAltitude &elevation, bool onlyFirst = true);
 
             //! Enabled?
-            bool isEnabled(const BlackMisc::Aviation::CCallsign &callsign) const;
+            bool isEnabled(const Aviation::CCallsign &callsign) const;
 
             //! Rendered?
-            bool isRendered(const BlackMisc::Aviation::CCallsign &callsign) const;
+            bool isRendered(const Aviation::CCallsign &callsign) const;
 
             //! Replace or add by callsign
             bool replaceOrAddByCallsign(const CSimulatedAircraft &aircraft);

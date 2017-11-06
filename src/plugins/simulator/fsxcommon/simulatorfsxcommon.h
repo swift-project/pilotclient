@@ -333,9 +333,9 @@ namespace BlackSimPlugin
             static constexpr int RequestSimDataOffset = 0 * MaxSimObjects;
             static constexpr int RequestLightsOffset  = 1 * MaxSimObjects;
             static constexpr int AddPendingAircraftIntervalMs = 20 * 1000;
-            static constexpr int DispatchIntervalMs = 10; //!< how often with run the FSX event queue
-            static constexpr int DeferSimulatingFlagMs = 1500; //! simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we defer detection
-            static constexpr int DeferResendingLights = 2500;  //! Resend light state when aircraft light state was not yet available
+            static constexpr int DispatchIntervalMs = 10;      //!< how often with run the FSX event queue
+            static constexpr int DeferSimulatingFlagMs = 1500; //!< simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we defer detection
+            static constexpr int DeferResendingLights = 2500;  //!< Resend light state when aircraft light state was not yet available
 
             QString m_simConnectVersion;            //!< SimConnect version
             bool m_simConnected  = false;           //!< Is simulator connected?

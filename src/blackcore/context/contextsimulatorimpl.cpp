@@ -55,13 +55,14 @@ namespace BlackCore
             CIdentifiable(this),
             m_plugins(new CPluginManagerSimulator(this))
         {
-            setObjectName("CContextSimulator");
-            m_enableMatchingMessages = sApp->isRunningInDeveloperEnvironment();
-            connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
-            m_plugins->collectPlugins();
-            restoreSimulatorPlugins();
-
+            this->setObjectName("CContextSimulator");
             CContextSimulator::registerHelp();
+
+            m_enableMatchingMessages = sApp->isRunningInDeveloperEnvironment();
+            m_plugins->collectPlugins();
+            this->restoreSimulatorPlugins();
+
+            connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CContextSimulator::ps_modelSetChanged);
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::ps_modelSetChanged);
 

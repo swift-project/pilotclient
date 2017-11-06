@@ -107,7 +107,10 @@ namespace BlackMisc
                 const auto situationsNewer = makeRange(validSituations.begin(), pivot);
                 const auto situationsOlder = makeRange(pivot, validSituations.end());
 
-                if (situationsNewer.isEmpty() || situationsOlder.size() < 2) { return { *this, 0 }; }
+                if (situationsNewer.isEmpty() || situationsOlder.size() < 2)
+                {
+                    return { *this, 0 };
+                }
 
                 const std::array<CAircraftSituation, 3> s {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
 

@@ -12,12 +12,13 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 #define BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 
+#include "blackcore/corefacadeconfig.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackcore/application/applicationsettings.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/context/contextsimulator.h"
-#include "blackcore/corefacadeconfig.h"
-#include "blackcore/application/applicationsettings.h"
 #include "blackcore/weathermanager.h"
+#include "blackcore/network.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/textmessagelist.h"

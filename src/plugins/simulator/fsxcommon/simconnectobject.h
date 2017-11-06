@@ -105,13 +105,13 @@ namespace BlackSimPlugin
             //! Adding is confirmed
             bool isConfirmedAdded() const;
 
-            //! Marked as confirmed
+            //! Marked as confirmed, means the simulator has "confirmed" the objectId as added and not instantly removed the object
             void setConfirmedAdded(bool confirm);
 
             //! Removing is pending
             bool isPendingRemoved() const { return m_pendingRemoved; }
 
-            //! Marked as confirmed
+            //! Marked as pending for removal
             void setPendingRemoved(bool pending);
 
             //! VTOL?
