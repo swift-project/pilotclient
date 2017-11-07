@@ -576,11 +576,13 @@ namespace BlackMisc
                    m_modelString.startsWith(modelString, sensitivity);
         }
 
-        int CAircraftModel::calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries) const
+        int CAircraftModel::calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries, CStatusMessageList *log) const
         {
-            int score = this->getAircraftIcaoCode().calculateScore(compareModel.getAircraftIcaoCode());
-            score += this->getLivery().calculateScore(compareModel.getLivery(), preferColorLiveries);
-            return 0.5 * score;
+            const int icaoScore = this->getAircraftIcaoCode().calculateScore(compareModel.getAircraftIcaoCode());
+            CMatchingUtils::addLogDetailsToList(log, this->getCallsign(), QString("ICAO score: ").arg(icaoScore));
+            const int liveryScore = this->getLivery().calculateScore(compareModel.getLivery(), preferColorLiveries);
+            CMatchingUtils::addLogDetailsToList(log, this->getCallsign(), QString("Livery score: ").arg(liveryScore));
+            return 0.5 * (icaoScore + liveryScore);
         }
 
         CStatusMessageList CAircraftModel::validate(bool withNestedObjects) const

@@ -364,7 +364,7 @@ namespace BlackMisc
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
             //! Calculate score
-            int calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries) const;
+            int calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries, CStatusMessageList *log = nullptr) const;
 
             //! Validate
             CStatusMessageList validate(bool withNestedObjects) const;

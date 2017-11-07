@@ -723,7 +723,7 @@ namespace BlackMisc
 
             for (const CAircraftModel &model : *this)
             {
-                const int score = model.calculateScore(remoteModel, preferColorLiveries);
+                const int score = model.calculateScore(remoteModel, preferColorLiveries, log);
                 if (ignoreZeroScores && score < 1) { continue; }
                 scoreMap.insertMulti(score, model);
             }
