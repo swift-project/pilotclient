@@ -494,12 +494,11 @@ namespace BlackCore
             m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
         }
 
-        void CContextSimulator::ps_networkConnectionStatusChanged(int from, int to)
+        void CContextSimulator::ps_networkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
             BLACK_VERIFY_X(getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
-            const INetwork::ConnectionStatus statusTo = static_cast<INetwork::ConnectionStatus>(to);
-            if (statusTo == INetwork::Connected && this->getIContextNetwork())
+            if (to == INetwork::Connected && this->getIContextNetwork())
             {
                 m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId();
             }
@@ -507,6 +506,7 @@ namespace BlackCore
             {
                 m_networkSessionId.clear();
                 m_aircraftMatcher.clearMatchingStatistics();
+                m_matchingMessages.clear();
             }
         }
 

@@ -155,7 +155,7 @@ namespace BlackCore
             void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Network connection status
-            void ps_networkConnectionStatusChanged(int from, int to);
+            void ps_networkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
             //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
             void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
@@ -169,7 +169,7 @@ namespace BlackCore
             //  ------------ slots connected with network or other contexts ---------
 
             //! Handle new connection status of simulator
-            void ps_onSimulatorStatusChanged(BlackCore::ISimulator::SimulatorStatus status);
+            void ps_onSimulatorStatusChanged(ISimulator::SimulatorStatus status);
 
             //! Model set from model set loader changed
             void ps_modelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -220,13 +220,13 @@ namespace BlackCore
             QPair<BlackMisc::Simulation::CSimulatorPluginInfo, ISimulator *> m_simulatorPlugin; //!< Currently loaded simulator plugin
             CPluginManagerSimulator *m_plugins = nullptr;
             BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
-            BlackCore::CWeatherManager m_weatherManager { this };
-            BlackCore::CAircraftMatcher m_aircraftMatcher; //!< Model matcher
+            CWeatherManager m_weatherManager { this };
+            CAircraftMatcher m_aircraftMatcher; //!< Model matcher
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
-            BlackMisc::CSettingReadOnly<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
-            QString m_networkSessionId; //! Network session, if not connected empty
+            BlackMisc::CSettingReadOnly<Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
+            QString m_networkSessionId; //! Network session of CServer, if not connected empty
             bool m_initallyAddAircrafts = false;
             bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated = false;
