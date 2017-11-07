@@ -1116,7 +1116,16 @@ namespace BlackSimPlugin
                     {
                         CLogMessage(this).warning("Failed so set position on SimObject '%1' callsign: '%2'") << simObject.getObjectId() << callsign;
                     }
-                } // interpolation data
+                }
+                else
+                {
+                    if (!interpolatorStatus.validInterpolatedSituation())
+                    {
+//                        CLogMessage(this).warning("Invalid interpolation for SimObject '%1' callsign: '%2' info: '%3'")
+//                                << simObject.getObjectId() << callsign
+//                                << interpolatorStatus.toQString();
+                    }
+                }
 
                 if (useAircraftParts)
                 {
