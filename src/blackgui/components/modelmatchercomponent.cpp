@@ -67,12 +67,12 @@ namespace BlackGui
             ui->le_Manufacturer->setValidator(validator);
             ui->le_Callsign->setValidator(validator);
 
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::ps_simulatorChanged);
-            connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::ps_testModelMatching);
-            connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::ps_reverseLookup);
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::ps_webDataRed);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::onSimulatorChanged);
+            connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::testModelMatching);
+            connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRed);
 
-            const CSimulatorInfo sim(this->m_modelSetLoader.getSimulator());
+            const CSimulatorInfo sim(m_modelSetLoader.getSimulator());
             ui->comp_SimulatorSelector->setValue(sim);
             this->redisplay();
         }
@@ -91,25 +91,25 @@ namespace BlackGui
             this->redisplay();
         }
 
-        void CModelMatcherComponent::ps_simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator)
+        void CModelMatcherComponent::onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            this->m_modelSetLoader.changeSimulator(simulator);
-            this->m_matcher.setModelSet(this->m_modelSetLoader.getAircraftModels(), simulator);
+            m_modelSetLoader.changeSimulator(simulator);
+            m_matcher.setModelSet(m_modelSetLoader.getAircraftModels(), simulator);
             this->redisplay();
         }
 
-        void CModelMatcherComponent::ps_cacheChanged(CSimulatorInfo &simulator)
+        void CModelMatcherComponent::onCacheChanged(CSimulatorInfo &simulator)
         {
             Q_UNUSED(simulator);
             this->redisplay();
         }
 
-        void CModelMatcherComponent::ps_testModelMatching()
+        void CModelMatcherComponent::testModelMatching()
         {
             ui->te_Results->clear();
             CStatusMessageList msgs;
-            this->ps_simulatorChanged(ui->comp_SimulatorSelector->getValue()); // update model set to latest version
+            this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue()); // update model set to latest version
             CSimulatedAircraft remoteAircraft(createAircraft());
             if (ui->cb_withReverseLookup->isChecked())
             {
@@ -118,17 +118,17 @@ namespace BlackGui
                 remoteAircraft.setModel(reverseModel);
             }
 
-            this->m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
-            const CAircraftModel matched = this->m_matcher.getClosestMatch(remoteAircraft, &msgs); // test model matching
+            m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
+            const CAircraftModel matched = m_matcher.getClosestMatch(remoteAircraft, &msgs); // test model matching
             ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
         }
 
-        void CModelMatcherComponent::ps_reverseLookup()
+        void CModelMatcherComponent::reverseLookup()
         {
             ui->te_Results->clear();
             CStatusMessageList msgs;
-            this->m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
+            m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
             const CSimulatedAircraft remoteAircraft(createAircraft());
             const QString livery(ui->comp_LiverySelector->getRawCombinedCode());
             const CAircraftModel matched = CAircraftMatcher::reverseLookupModel(remoteAircraft.getModel(), livery, &msgs);
@@ -136,7 +136,7 @@ namespace BlackGui
             ui->tvp_ResultMessages->updateContainer(msgs);
         }
 
-        void CModelMatcherComponent::ps_webDataRed(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+        void CModelMatcherComponent::onWebDataRed(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
         {
             if (number > 0 && entity.testFlag(CEntityFlags::ModelEntity) && state == CEntityFlags::ReadFinished)
             {
@@ -148,7 +148,7 @@ namespace BlackGui
 
         void CModelMatcherComponent::redisplay()
         {
-            const int c = this->m_modelSetLoader.getAircraftModelsCount();
+            const int c = m_modelSetLoader.getAircraftModelsCount();
             ui->le_ModelSetCount->setText(QString::number(c));
         }
 

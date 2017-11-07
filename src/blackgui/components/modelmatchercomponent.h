@@ -43,29 +43,28 @@ namespace BlackGui
             explicit CModelMatcherComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CModelMatcherComponent();
+            virtual ~CModelMatcherComponent();
 
         public slots:
-            //! Tab where this is embedded has been changed
+            //! Tab (where this component is embedded) has been changed
             void tabIndexChanged(int index);
 
-        private slots:
+        private:
             //! Simulator switched
-            void ps_simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Cache changed
-            void ps_cacheChanged(BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-            //! Run the matcher
-            void ps_testModelMatching();
-
-            //! Reverse lookup
-            void ps_reverseLookup();
+            void onCacheChanged(BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Web data have been read
-            void ps_webDataRed(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void onWebDataRed(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
-        private:
+            //! Run the matcher
+            void testModelMatching();
+
+            //! Reverse lookup
+            void reverseLookup();
+
             //! Init
             void redisplay();
 
