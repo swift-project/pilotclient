@@ -65,10 +65,12 @@ namespace BlackGui
             int                                 timeOutMs = -1
         );
 
-        //! Clear the overlay messages
+        //! \copydoc COverlayMessages::clearOverlayMessages
         void clearOverlayMessages();
 
-    public slots:
+        //! \copydoc COverlayMessages::close
+        void closeOverlay();
+
         //! \copydoc COverlayMessages::showOverlayMessages
         void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
 

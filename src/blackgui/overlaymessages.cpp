@@ -302,6 +302,7 @@ namespace BlackGui
     void COverlayMessages::showKillButton(bool killButton)
     {
         m_hasKillButton = killButton;
+        this->showKill(killButton);
     }
 
     void COverlayMessages::setModeToMessages(bool withKillButton)

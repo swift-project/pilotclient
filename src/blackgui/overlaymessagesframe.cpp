@@ -21,6 +21,8 @@
 #include <Qt>
 #include <algorithm>
 
+using namespace BlackMisc;
+
 namespace BlackGui
 {
     COverlayMessagesFrame::COverlayMessagesFrame(QWidget *parent) :
@@ -59,10 +61,17 @@ namespace BlackGui
 
     void COverlayMessagesFrame::clearOverlayMessages()
     {
+        if (!m_overlayMessages) { return; }
         m_overlayMessages->clearOverlayMessages();
     }
 
-    void COverlayMessagesFrame::showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
+    void COverlayMessagesFrame::closeOverlay()
+    {
+        if (!m_overlayMessages) { return; }
+        m_overlayMessages->close();
+    }
+
+    void COverlayMessagesFrame::showOverlayMessage(const CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
         this->initInnerFrame();
