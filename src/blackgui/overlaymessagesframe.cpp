@@ -47,7 +47,7 @@ namespace BlackGui
     }
 
     void COverlayMessagesFrame::showOverlayMessagesWithConfirmation(
-        const BlackMisc::CStatusMessageList &messages, bool appendOldMessages,
+        const CStatusMessageList &messages, bool appendOldMessages,
         const QString &confirmationMessage, std::function<void ()> okLambda,
         QMessageBox::StandardButton defaultButton, int timeOutMs)
     {
@@ -70,7 +70,7 @@ namespace BlackGui
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayMessages(const CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         this->initInnerFrame();
@@ -78,7 +78,7 @@ namespace BlackGui
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayTextMessage(const Network::CTextMessage &textMessage, int timeOutMs)
     {
         if (textMessage.isEmpty()) { return; }
         this->initInnerFrame();
@@ -86,14 +86,14 @@ namespace BlackGui
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayVariant(const CVariant &variant, int timeOutMs)
     {
         this->initInnerFrame();
         m_overlayMessages->showOverlayVariant(variant, timeOutMs);
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showOverlayImage(const BlackMisc::CPixmap &pixmap, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayImage(const CPixmap &pixmap, int timeOutMs)
     {
         this->initInnerFrame();
         m_overlayMessages->showOverlayImage(pixmap, timeOutMs);
@@ -130,8 +130,8 @@ namespace BlackGui
 
         int wInner = m_widthFactor * w;
         int hInner = m_heightFactor * h;
-        if (wInner > this->maximumWidth()) wInner = this->maximumWidth();
-        if (hInner > this->maximumHeight()) hInner = this->maximumHeight();
+        if (wInner > this->maximumWidth())  { wInner = this->maximumWidth();  }
+        if (hInner > this->maximumHeight()) { hInner = this->maximumHeight(); }
         return QSize(wInner, hInner);
     }
 

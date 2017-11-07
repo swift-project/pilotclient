@@ -88,8 +88,8 @@ namespace BlackGui
             connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onResetAircraft);
             connect(ui->pb_LoadModels, &QPushButton::clicked, this, &CMappingComponent::ps_onModelsUpdateRequested);
 
-            this->m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
-            ui->tvp_RenderedAircraft->setItemDelegateForColumn(0, this->m_currentMappingsViewDelegate);
+            m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
+            ui->tvp_RenderedAircraft->setItemDelegateForColumn(0, m_currentMappingsViewDelegate);
 
             // Aircraft previews
             connect(ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this, &CMappingComponent::ps_onModelPreviewChanged);
@@ -439,15 +439,15 @@ namespace BlackGui
 
         void CMappingComponent::ps_tokenBucketUpdate()
         {
-            if (!this->m_bucket.tryConsume()) { return; }
+            if (!m_bucket.tryConsume()) { return; }
             this->updateRenderedAircraftView(true); // forced update
         }
 
         void CMappingComponent::ps_settingsChanged()
         {
-            const CViewUpdateSettings settings = this->m_settings.get();
+            const CViewUpdateSettings settings = m_settings.get();
             const int ms = settings.getRenderingUpdateTime().toMs();
-            this->m_updateTimer.setInterval(ms);
+            m_updateTimer.setInterval(ms);
         }
 
         void CMappingComponent::ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
@@ -456,11 +456,11 @@ namespace BlackGui
             if (INetwork::isDisconnectedStatus(to))
             {
                 ui->tvp_RenderedAircraft->clear();
-                this->m_updateTimer.stop();
+                m_updateTimer.stop();
             }
             else if (INetwork::isConnectedStatus(to))
             {
-                this->m_updateTimer.start();
+                m_updateTimer.start();
             }
         }
     } // namespace
