@@ -34,16 +34,32 @@ namespace BlackSimPlugin
             if (aircraft.getSituation().hasValidTimestamp()) { this->addAircraftSituation(aircraft.getSituation()); }
         }
 
+        CSimConnectObject::CSimConnectObject(const CAircraftSituation &situation) :
+            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(situation.getCallsign()))
+        {
+            if (situation.hasValidTimestamp()) { this->addAircraftSituation(situation); }
+        }
+
+        CSimConnectObject::CSimConnectObject(const CAircraftParts &parts, const CCallsign &callsign) :
+            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(callsign))
+        {
+            if (parts.hasValidTimestamp()) { this->addAircraftParts(parts); }
+        }
+
         void CSimConnectObject::addAircraftParts(const CAircraftParts &parts)
         {
             Q_ASSERT(m_interpolator);
+            Q_ASSERT(parts.hasValidTimestamp());
             m_interpolator->addAircraftParts(parts);
+            m_aircraft.setParts(parts);
         }
 
         void CSimConnectObject::addAircraftSituation(const CAircraftSituation &situation)
         {
             Q_ASSERT(m_interpolator);
+            Q_ASSERT(situation.hasValidTimestamp());
             m_interpolator->addAircraftSituation(situation);
+            m_aircraft.setSituation(situation); // update with last situation
         }
 
         void CSimConnectObject::invalidatePartsAsSent()
@@ -51,6 +67,12 @@ namespace BlackSimPlugin
             DataDefinitionRemoteAircraftPartsWithoutLights dd;
             dd.resetToInvalid();
             m_partsAsSent = dd;
+        }
+
+        void CSimConnectObject::setObjectId(DWORD id)
+        {
+            m_objectId = id;
+            m_validObjectId = true;
         }
 
         bool CSimConnectObject::isPendingAdded() const
@@ -76,6 +98,20 @@ namespace BlackSimPlugin
             m_aircraft.setRendered(false);
         }
 
+        void CSimConnectObject::resetState()
+        {
+            m_pendingRemoved = false;
+            m_confirmedAdded = false;
+            m_currentLightsInSim = CAircraftLights();
+            m_lightsAsSent = CAircraftLights();
+            m_partsAsSent = DataDefinitionRemoteAircraftPartsWithoutLights {}; // init with 0s
+            m_requestId = -1;
+            m_objectId = -1;
+            m_lightsRequestedAt = -1;
+            m_validRequestId = false;
+            m_validObjectId = false;
+        }
+
         bool CSimConnectObject::hasValidRequestAndObjectId() const
         {
             return this->hasValidRequestId() && this->hasValidObjectId();
@@ -99,6 +135,12 @@ namespace BlackSimPlugin
             return m_interpolator->getInterpolatorInfo();
         }
 
+        void CSimConnectObject::attachInterpolatorLogger(CInterpolationLogger *logger)
+        {
+            Q_ASSERT(m_interpolator);
+            return m_interpolator->attachLogger(logger);
+        }
+
         CAircraftSituation CSimConnectObject::getInterpolatedSituation(
             qint64 currentTimeSinceEpoc,
             const CInterpolationAndRenderingSetup &setup,
@@ -106,6 +148,14 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(m_interpolator);
             return m_interpolator->getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
+        }
+
+        CAircraftParts CSimConnectObject::getInterpolatedParts(
+            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
+            CPartsStatus &partsStatus, bool log) const
+        {
+            Q_ASSERT(m_interpolator);
+            return m_interpolator->getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
         }
 
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts)

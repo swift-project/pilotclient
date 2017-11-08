@@ -1093,7 +1093,7 @@ namespace BlackSimPlugin
                 const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
                 const CInterpolationAndRenderingSetup setup(this->getInterpolationAndRenderingSetup());
                 CPartsStatus partsStatus(useAircraftParts);
-                const CAircraftParts parts = useAircraftParts ? simObject.getInterpolator()->getInterpolatedParts(-1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
+                const CAircraftParts parts = useAircraftParts ? simObject.getInterpolatedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
                 // get interpolated situation
                 CInterpolationStatus interpolatorStatus;

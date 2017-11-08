@@ -33,6 +33,12 @@ namespace BlackSimPlugin
                               DWORD requestId,
                               BlackMisc::Simulation::CInterpolationLogger *logger);
 
+            //! Constructor providing initial situation
+            CSimConnectObject(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+            //! Constructor providing initial parts
+            CSimConnectObject(const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Aviation::CCallsign &callsign);
+
             //! Destructor
             ~CSimConnectObject() {}
 
@@ -44,6 +50,9 @@ namespace BlackSimPlugin
 
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
+
+            //! Set the aircraft
+            void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) { m_aircraft = aircraft; }
 
             //! Add parts for interpolator
             void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
@@ -88,7 +97,7 @@ namespace BlackSimPlugin
             DWORD getRequestId() const { return m_requestId; }
 
             //! Set Simconnect object id
-            void setObjectId(DWORD id) { m_objectId = id; m_validObjectId = true; }
+            void setObjectId(DWORD id);
 
             //! Set Simconnect object id
             DWORD getObjectId() const { return m_objectId; }
@@ -114,6 +123,9 @@ namespace BlackSimPlugin
             //! Marked as pending for removal
             void setPendingRemoved(bool pending);
 
+            //! Reset the state (like it was a new onject) without affecting interpolator and aircraft
+            void resetState();
+
             //! VTOL?
             bool isVtol() const { return m_aircraft.isVtol(); }
 
@@ -137,6 +149,12 @@ namespace BlackSimPlugin
                 qint64 currentTimeSinceEpoc,
                 const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup,
                 const BlackMisc::Simulation::CInterpolationHints &hints, BlackMisc::Simulation::CInterpolationStatus &status) const;
+
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedParts
+            BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
+                qint64 currentTimeSinceEpoc,
+                const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup,
+                BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;
 
             //! Interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
