@@ -190,7 +190,8 @@ namespace BlackGui
         void ps_toggleTabBarLocked(bool locked);
 
     private:
-        QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas ;
+        QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas;
+        QList<CInfoArea *> m_childInfoAreas;
         QTabBar *m_tabBar = nullptr;
         bool m_showTabTexts     = true;   //!< texts for tabs
         bool m_infoAreaFloating = false;  //!< whole info area floating?
@@ -234,10 +235,12 @@ namespace BlackGui
         void connectTopLevelChanged();
 
         //! Nested info areas
+        //! \remark weak performance as discussed in T184
+        //! \remark result stored in m_childInfoAreas
         QList<CInfoArea *> getChildInfoAreas() const { return this->findChildren<CInfoArea *>(); }
 
         //! Direct dock widget areas, not the nested dock widget areas
-        //! \remarks result stored in m_dockableWidgets
+        //! \remark result stored in m_dockableWidgets
         QList<CDockWidgetInfoArea *> findOwnDockWidgetInfoAreas() const;
 
     private slots:

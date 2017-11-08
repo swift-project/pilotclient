@@ -51,7 +51,12 @@ namespace BlackGui
 
     void CInfoArea::initInfoArea()
     {
-        // after(!) GUI is setup
+        // initInfoArea() needs be called after(!) GUI is setup
+
+        // Ref T184, child areas are now "cached" in m_childInfoAreas
+        // 1) the original version did always use "getChildInfoAreas", so if there are ever any issues T184 might be reverted
+        // 2) m_childInfoAreas needs to be initialized before findOwnDockWidgetInfoAreas
+        m_childInfoAreas = this->getChildInfoAreas();
         if (m_dockWidgetInfoAreas.isEmpty())
         {
             m_dockWidgetInfoAreas = this->findOwnDockWidgetInfoAreas();
@@ -476,7 +481,7 @@ namespace BlackGui
         {
             dw->displayStatusMessage(statusMessage);
         }
-        for (CInfoArea *ia : this->getChildInfoAreas())
+        for (CInfoArea *ia : m_childInfoAreas)
         {
             ia->displayStatusMessage(statusMessage);
         }
@@ -488,7 +493,7 @@ namespace BlackGui
         {
             dw->displayStatusMessages(statusMessages);
         }
-        for (CInfoArea *ia : this->getChildInfoAreas())
+        for (CInfoArea *ia : m_childInfoAreas)
         {
             ia->displayStatusMessages(statusMessages);
         }
@@ -642,11 +647,10 @@ namespace BlackGui
         if (infoAreas.isEmpty()) { return infoAreas; }
 
         // nested info areas?
-        QList<CInfoArea *> childInfoAreas = this->getChildInfoAreas();
-        if (childInfoAreas.isEmpty()) { return infoAreas; }
+        if (m_childInfoAreas.isEmpty()) { return infoAreas; }
 
         // we have child info areas (nested), we need to remove those from the list
-        for (CInfoArea *ia : childInfoAreas)
+        for (CInfoArea *ia : m_childInfoAreas)
         {
             QList<CDockWidgetInfoArea *> nestedDockWidgets = ia->m_dockWidgetInfoAreas;
             if (nestedDockWidgets.isEmpty()) { continue; }
