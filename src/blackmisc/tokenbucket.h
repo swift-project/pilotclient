@@ -47,7 +47,7 @@ namespace BlackMisc
 
         int m_capacity = 10;        //!< Maximum capacity of tokens
         int m_availableTokens = 10; //!< Currently available tokens. The initial value is 10
-        PhysicalQuantities::CTime m_interval; //!< Refill interval, e.g. every 5 secs
+        double m_intervalSecs = 5;  //!< Refill interval, e.g. every 5 secs
         int m_numTokensToRefill;    //!< Number of tokens to be refilled each interval
         QDateTime m_lastReplenishmentTime = QDateTime::currentDateTime(); //!< Last time
     };
