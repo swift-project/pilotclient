@@ -15,7 +15,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
 #include "blackcore/vatsim/vatsimsettings.h"
-#include "blackcore/tokenbucket.h"
+#include "blackmisc/tokenbucket.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
@@ -217,7 +217,7 @@ namespace BlackCore
             QString                                     m_ownLiveryDescription;      //!< "buffered livery", as this must not change when connected
             BlackMisc::Aviation::CCallsignSet           m_interimPositionReceivers;  //!< all aircraft receiving interim positions
             BlackMisc::Aviation::CAircraftParts         m_sentAircraftConfig;        //!< aircraft parts sent
-            CTokenBucket                                m_tokenBucket;               //!< used with aircraft parts messages
+            BlackMisc::CTokenBucket                     m_tokenBucket;               //!< used with aircraft parts messages
 
             QTimer m_scheduledConfigUpdate;
             QTimer m_processingTimer;

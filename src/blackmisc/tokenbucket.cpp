@@ -7,14 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/tokenbucket.h"
+#include "blackmisc/tokenbucket.h"
 #include "blackmisc/pq/units.h"
 
 #include <QtGlobal>
 
-namespace BlackCore
+using namespace BlackMisc::PhysicalQuantities;
+
+namespace BlackMisc
 {
-    CTokenBucket::CTokenBucket(int capacity, const BlackMisc::PhysicalQuantities::CTime &interval, int numTokensToRefill)
+    CTokenBucket::CTokenBucket(int capacity, const CTime &interval, int numTokensToRefill)
         : m_capacity(capacity), m_interval(interval), m_numTokensToRefill(numTokensToRefill) {}
 
     bool CTokenBucket::tryConsume(int numTokens)
@@ -50,7 +52,7 @@ namespace BlackCore
     {
         const auto now = QDateTime::currentDateTime();
         const auto deltaSeconds = m_lastReplenishmentTime.secsTo(now);
-        const int numberOfTokens = static_cast<int>(m_numTokensToRefill * deltaSeconds / m_interval.value(BlackMisc::PhysicalQuantities::CTimeUnit::s()));
+        const int numberOfTokens = static_cast<int>(m_numTokensToRefill * deltaSeconds / m_interval.value(CTimeUnit::s()));
 
         // Update the time only when replenishment actually took place. We will end up in a infinite loop otherwise.
         if (numberOfTokens > 0) { m_lastReplenishmentTime = now; }

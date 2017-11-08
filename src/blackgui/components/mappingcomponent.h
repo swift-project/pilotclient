@@ -13,11 +13,11 @@
 #define BLACKGUI_COMPONENTS_MAPPINGCOMPONENT_H
 
 #include "blackcore/network.h"
-#include "blackcore/tokenbucket.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/settings/viewupdatesettings.h"
+#include "blackmisc/tokenbucket.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/propertyindex.h"
@@ -150,7 +150,7 @@ namespace BlackGui
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::ps_settingsChanged }; //!< settings changed
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
             QTimer m_updateTimer { this };
-            BlackCore::CTokenBucket m_bucket { 3, BlackMisc::PhysicalQuantities::CTime(5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()), 1};
+            BlackMisc::CTokenBucket m_bucket { 3, BlackMisc::PhysicalQuantities::CTime(5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()), 1};
             BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
             BlackMisc::CIdentifier m_identifier;
         };

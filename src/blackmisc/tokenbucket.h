@@ -7,14 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKCORE_TOKENBUCKET_H
-#define BLACKCORE_TOKENBUCKET_H
+#ifndef BLACKMISC_TOKENBUCKET_H
+#define BLACKMISC_TOKENBUCKET_H
 
-#include "blackcore/blackcoreexport.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/time.h"
 #include <QDateTime>
 
-namespace BlackCore
+namespace BlackMisc
 {
     /*!
      * \brief Token bucket algorithm
@@ -23,11 +23,11 @@ namespace BlackCore
      *   generation. Each time a packet needs to be generated and sent a token is consumed. If no token is available, consumption
      *   will fail the the packet cannot be sent.
      */
-    class BLACKCORE_EXPORT CTokenBucket
+    class BLACKMISC_EXPORT CTokenBucket
     {
     public:
         //! Constructor for given replenishment policy
-        CTokenBucket(int capacity, const BlackMisc::PhysicalQuantities::CTime &interval, int numTokensToRefill);
+        CTokenBucket(int capacity, const PhysicalQuantities::CTime &interval, int numTokensToRefill);
 
         //! Try to consume a number of tokens
         bool tryConsume(int numTokens = 1);
@@ -47,7 +47,7 @@ namespace BlackCore
 
         int m_capacity = 10;        //!< Maximum capacity of tokens
         int m_availableTokens = 10; //!< Currently available tokens. The initial value is 10
-        BlackMisc::PhysicalQuantities::CTime m_interval; //!< Refill interval, e.g. every 5 secs
+        PhysicalQuantities::CTime m_interval; //!< Refill interval, e.g. every 5 secs
         int m_numTokensToRefill;    //!< Number of tokens to be refilled each interval
         QDateTime m_lastReplenishmentTime = QDateTime::currentDateTime(); //!< Last time
     };
