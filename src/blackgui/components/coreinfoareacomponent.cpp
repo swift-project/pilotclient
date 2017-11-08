@@ -25,7 +25,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             initInfoArea();
-            ps_toggleTabBarLocked(true);
+            toggleTabBarLocked(true);
         }
 
         CCoreInfoAreaComponent::~CCoreInfoAreaComponent()

@@ -43,7 +43,7 @@ namespace BlackGui
         QMainWindow(parent),
         CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessInfoArea", this)
     {
-        this->ps_setWholeInfoAreaFloating(m_infoAreaFloating);
+        this->setWholeInfoAreaFloating(m_infoAreaFloating);
     }
 
     CInfoArea::~CInfoArea()
@@ -63,18 +63,18 @@ namespace BlackGui
             Q_ASSERT(!m_dockWidgetInfoAreas.isEmpty());
         }
 
-        this->ps_setDockArea(Qt::TopDockWidgetArea);
+        this->setDockArea(Qt::TopDockWidgetArea);
         this->connectTopLevelChanged();
         this->setFeaturesForDockableWidgets(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
         this->tabifyAllWidgets();
 
         // context menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(this, &CInfoArea::customContextMenuRequested, this, &CInfoArea::ps_showContextMenu);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CInfoArea::ps_onStyleSheetChanged);
+        connect(this, &CInfoArea::customContextMenuRequested, this, &CInfoArea::showContextMenu);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CInfoArea::onStyleSheetChanged);
 
         // initial style sheet setting
-        this->ps_onStyleSheetChanged();
+        this->onStyleSheetChanged();
 
         // status bar
         if (this->statusBar())
@@ -100,7 +100,7 @@ namespace BlackGui
             lockTabBarMenuAction->setCheckable(true);
             lockTabBarMenuAction->setChecked(m_lockTabBar);
             menu->addAction(lockTabBarMenuAction);
-            connect(lockTabBarMenuAction, &QAction::toggled, this, &CInfoArea::ps_toggleTabBarLocked);
+            connect(lockTabBarMenuAction, &QAction::toggled, this, &CInfoArea::toggleTabBarLocked);
 
             menu->addSeparator();
             QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
@@ -152,7 +152,7 @@ namespace BlackGui
             showMenuText->setCheckable(true);
             showMenuText->setChecked(m_showTabTexts);
             menu->addAction(showMenuText);
-            connect(showMenuText, &QAction::toggled, this, &CInfoArea::ps_showTabTexts);
+            connect(showMenuText, &QAction::toggled, this, &CInfoArea::showTabTexts);
 
             // auto adjust floating widgets
             QAction *showTabbar = new QAction(menu);
@@ -162,10 +162,10 @@ namespace BlackGui
             showTabbar->setCheckable(true);
             showTabbar->setChecked(m_showTabBar);
             menu->addAction(showTabbar);
-            connect(showTabbar, &QAction::toggled, this, &CInfoArea::ps_showTabBar);
+            connect(showTabbar, &QAction::toggled, this, &CInfoArea::showTabBar);
 
             // tab bar position
-            menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, SLOT(ps_toggleTabBarPosition()));
+            menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, SLOT(toggleTabBarPosition()));
             Q_UNUSED(c);
         }
     }
@@ -354,7 +354,7 @@ namespace BlackGui
 
     void CInfoArea::toggleFloatingWholeInfoArea()
     {
-        this->ps_setWholeInfoAreaFloating(!m_infoAreaFloating);
+        this->setWholeInfoAreaFloating(!m_infoAreaFloating);
     }
 
     void CInfoArea::toggleFloatingByIndex(int areaIndex)
@@ -499,7 +499,7 @@ namespace BlackGui
         }
     }
 
-    void CInfoArea::ps_setDockArea(Qt::DockWidgetArea area)
+    void CInfoArea::setDockArea(Qt::DockWidgetArea area)
     {
         for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
         {
@@ -511,7 +511,7 @@ namespace BlackGui
         }
     }
 
-    void CInfoArea::ps_setWholeInfoAreaFloating(bool floating)
+    void CInfoArea::setWholeInfoAreaFloating(bool floating)
     {
         // float whole info area
         m_infoAreaFloating = floating;
@@ -599,8 +599,8 @@ namespace BlackGui
                 m_tabBar->setShape(QTabBar::TriangularSouth);
 
                 // signals
-                connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::ps_tabBarDoubleClicked);
-                connect(m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::ps_onTabBarIndexChanged);
+                connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::onTabBarDoubleClicked);
+                connect(m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::onTabBarIndexChanged);
             }
             else
             {
@@ -637,7 +637,7 @@ namespace BlackGui
     {
         for (CDockWidgetInfoArea *dw : m_dockWidgetInfoAreas)
         {
-            connect(dw, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CInfoArea::ps_onWidgetTopLevelChanged);
+            connect(dw, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CInfoArea::onWidgetTopLevelChanged);
         }
     }
 
@@ -664,7 +664,7 @@ namespace BlackGui
         return infoAreas;
     }
 
-    void CInfoArea::ps_emitInfoAreaStatus()
+    void CInfoArea::emitInfoAreaStatus()
     {
         int sia = this->getSelectedDockInfoAreaIndex();
         QList<int> floating = this->getAreaIndexesDockedOrFloating(true);
@@ -672,10 +672,10 @@ namespace BlackGui
         emit changedInfoAreaStatus(sia, docked, floating);
     }
 
-    void CInfoArea::ps_onTabBarIndexChanged(int tabBarIndex)
+    void CInfoArea::onTabBarIndexChanged(int tabBarIndex)
     {
         emit changedInfoAreaTabBarIndex(tabBarIndex);
-        ps_emitInfoAreaStatus();
+        emitInfoAreaStatus();
     }
 
     int CInfoArea::countDockedWidgetInfoAreas() const
@@ -776,7 +776,7 @@ namespace BlackGui
         }
     }
 
-    void CInfoArea::ps_tabBarDoubleClicked(int tabBarIndex)
+    void CInfoArea::onTabBarDoubleClicked(int tabBarIndex)
     {
         if (m_lockTabBar)
         {
@@ -788,7 +788,7 @@ namespace BlackGui
         dw->toggleFloating();
     }
 
-    void CInfoArea::ps_onWidgetTopLevelChanged(CDockWidget *dockWidget, bool topLevel)
+    void CInfoArea::onWidgetTopLevelChanged(CDockWidget *dockWidget, bool topLevel)
     {
         Q_ASSERT(dockWidget);
         Q_UNUSED(topLevel);
@@ -806,10 +806,10 @@ namespace BlackGui
 
         // when toplevel is changed, I need a round in the event loop until
         // current tab bar widget is visible
-        QTimer::singleShot(250, this, &CInfoArea::ps_emitInfoAreaStatus);
+        QTimer::singleShot(250, this, &CInfoArea::emitInfoAreaStatus);
     }
 
-    void CInfoArea::ps_onStyleSheetChanged()
+    void CInfoArea::onStyleSheetChanged()
     {
         if (m_tabBar)
         {
@@ -818,7 +818,7 @@ namespace BlackGui
         }
     }
 
-    void CInfoArea::ps_showContextMenu(const QPoint &pos)
+    void CInfoArea::showContextMenu(const QPoint &pos)
     {
         QPoint globalPos = this->mapToGlobal(pos);
         QScopedPointer<QMenu> contextMenu(new QMenu(this));
@@ -828,7 +828,7 @@ namespace BlackGui
         Q_UNUSED(selectedItem);
     }
 
-    void CInfoArea::ps_showTabTexts(bool show)
+    void CInfoArea::showTabTexts(bool show)
     {
         if (show == m_showTabTexts) { return; }
         m_showTabTexts = show;
@@ -838,7 +838,7 @@ namespace BlackGui
         }
     }
 
-    void CInfoArea::ps_showTabBar(bool show)
+    void CInfoArea::showTabBar(bool show)
     {
         if (show == m_showTabBar) return;
         m_showTabBar = show;
@@ -848,22 +848,22 @@ namespace BlackGui
         this->adjustSizeForAllDockWidgets();
     }
 
-    void CInfoArea::ps_toggleTabBarLocked(bool locked)
+    void CInfoArea::toggleTabBarLocked(bool locked)
     {
         m_lockTabBar = locked;
     }
 
-    void CInfoArea::ps_setTabBarPosition(QTabWidget::TabPosition position)
+    void CInfoArea::setTabBarPosition(QTabWidget::TabPosition position)
     {
         Q_ASSERT_X(position == QTabWidget::North || position == QTabWidget::South, Q_FUNC_INFO, "Wrong tabbar position");
         this->setTabPosition(Qt::TopDockWidgetArea, position);
     }
 
-    void CInfoArea::ps_toggleTabBarPosition()
+    void CInfoArea::toggleTabBarPosition()
     {
         QTabWidget::TabPosition p = (this->tabPosition(Qt::TopDockWidgetArea) == QTabWidget::North) ?
                                     QTabWidget::South : QTabWidget::North;
-        this->ps_setTabBarPosition(p);
+        this->setTabBarPosition(p);
     }
 
     void CInfoArea::closeEvent(QCloseEvent *event)

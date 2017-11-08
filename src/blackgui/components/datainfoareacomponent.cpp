@@ -45,7 +45,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->initInfoArea(); // init base class
             this->setWindowIcon(CIcons::swiftDatabase24());
-            this->ps_setTabBarPosition(QTabWidget::North);
+            this->setTabBarPosition(QTabWidget::North);
         }
 
         CDataInfoAreaComponent::~CDataInfoAreaComponent()

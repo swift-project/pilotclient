@@ -181,13 +181,12 @@ namespace BlackGui
         //! Init area after(!) GUI is initialized
         void initInfoArea();
 
-    protected slots:
         //! Tab position for docked widgets tab
         //! \remarks North or South working, East / West not
-        void ps_setTabBarPosition(QTabWidget::TabPosition position);
+        void setTabBarPosition(QTabWidget::TabPosition position);
 
         //! Toogle lock tabbar
-        void ps_toggleTabBarLocked(bool locked);
+        void toggleTabBarLocked(bool locked);
 
     private:
         QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas;
@@ -234,6 +233,39 @@ namespace BlackGui
         //! Connect all widgets
         void connectTopLevelChanged();
 
+        //! Tab bar has been double clicked
+        void onTabBarDoubleClicked(int tabBarIndex);
+
+        //! A widget has changed its top level
+        void onWidgetTopLevelChanged(CDockWidget *dockWidget, bool topLevel);
+
+        //! Style sheet has been changed
+        void onStyleSheetChanged();
+
+        //! Context menu
+        void showContextMenu(const QPoint &pos);
+
+        //! Show the tab texts, or just the icons
+        void showTabTexts(bool show);
+
+        //! Show tab bar
+        void showTabBar(bool show);
+
+        //! Toggle tab position North - South
+        void toggleTabBarPosition();
+
+        //! Set dock area used
+        void setDockArea(Qt::DockWidgetArea area);
+
+        //! Dock / floating of the whole info area
+        void setWholeInfoAreaFloating(bool floating);
+
+        //! Emit current status, \sa changedInfoAreaStatus
+        void emitInfoAreaStatus();
+
+        //! Tab bar index changed
+        void onTabBarIndexChanged(int tabBarIndex);
+
         //! Nested info areas
         //! \remark weak performance as discussed in T184
         //! \remark result stored in m_childInfoAreas
@@ -242,40 +274,6 @@ namespace BlackGui
         //! Direct dock widget areas, not the nested dock widget areas
         //! \remark result stored in m_dockableWidgets
         QList<CDockWidgetInfoArea *> findOwnDockWidgetInfoAreas() const;
-
-    private slots:
-        //! Tab bar has been double clicked
-        void ps_tabBarDoubleClicked(int tabBarIndex);
-
-        //! A widget has changed its top level
-        void ps_onWidgetTopLevelChanged(CDockWidget *dockWidget, bool topLevel);
-
-        //! Style sheet has been changed
-        void ps_onStyleSheetChanged();
-
-        //! Context menu
-        void ps_showContextMenu(const QPoint &pos);
-
-        //! Show the tab texts, or just the icons
-        void ps_showTabTexts(bool show);
-
-        //! Show tab bar
-        void ps_showTabBar(bool show);
-
-        //! Toggle tab position North - South
-        void ps_toggleTabBarPosition();
-
-        //! Set dock area used
-        void ps_setDockArea(Qt::DockWidgetArea area);
-
-        //! Dock / floating of the whole info area
-        void ps_setWholeInfoAreaFloating(bool floating);
-
-        //! Emit current status, \sa changedInfoAreaStatus
-        void ps_emitInfoAreaStatus();
-
-        //! Tab bar index changed
-        void ps_onTabBarIndexChanged(int tabBarIndex);
     };
 } // namespace
 
