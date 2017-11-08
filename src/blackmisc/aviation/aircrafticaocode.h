@@ -289,7 +289,7 @@ namespace BlackMisc
 
             //! Considers rank, manufacturer and family 0..100
             //! \remark normally used with a selected set of ICAO codes or combined types
-            int calculateScore(const CAircraftIcaoCode &otherCode) const;
+            int calculateScore(const CAircraftIcaoCode &otherCode, CStatusMessageList *log = nullptr) const;
 
             //! Valid designator?
             static bool isValidDesignator(const QString &designator);

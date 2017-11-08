@@ -9,6 +9,7 @@
 
 #include "airlineicaocode.h"
 #include "callsign.h"
+#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/icons.h"
@@ -32,6 +33,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
+using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -46,7 +48,7 @@ namespace BlackMisc
             }
         }
 
-        CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const BlackMisc::CCountry &country, const QString &telephony, bool virtualAirline, bool operating)
+        CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const CCountry &country, const QString &telephony, bool virtualAirline, bool operating)
             : m_designator(airlineDesignator.trimmed().toUpper()), m_name(airlineName), m_telephonyDesignator(telephony), m_country(country), m_isVa(virtualAirline), m_isOperating(operating)
         {
             if (m_designator.length() == 4)
@@ -57,7 +59,7 @@ namespace BlackMisc
 
         const QString CAirlineIcaoCode::getVDesignator() const
         {
-            if (!isVirtualAirline()) { return m_designator; }
+            if (!this->isVirtualAirline()) { return m_designator; }
             return QLatin1Char('V') % m_designator;
         }
 
@@ -89,7 +91,7 @@ namespace BlackMisc
 
         QString CAirlineIcaoCode::getSimplifiedName() const
         {
-            return BlackMisc::simplifyNameForSearch(this->getName());
+            return simplifyNameForSearch(this->getName());
         }
 
         bool CAirlineIcaoCode::hasValidCountry() const
@@ -183,7 +185,7 @@ namespace BlackMisc
                    QLatin1String(" Mil: ") % boolToYesNo(this->isMilitary());
         }
 
-        CVariant CAirlineIcaoCode::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAirlineIcaoCode::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
@@ -297,7 +299,7 @@ namespace BlackMisc
             QString s(getVDesignator());
             if (s.isEmpty()) s = "????";
             if (hasName()) { s = s.append(" ").append(getName()); }
-            return s.append(getDbKeyAsStringInParentheses(" "));
+            return s.append(this->getDbKeyAsStringInParentheses(" "));
         }
 
         CAirlineIcaoCode CAirlineIcaoCode::thisOrCallsignCode(const CCallsign &callsign) const
@@ -360,34 +362,43 @@ namespace BlackMisc
             return this->getCombinedStringWithKey();
         }
 
-        int CAirlineIcaoCode::calculateScore(const CAirlineIcaoCode &otherCode) const
+        int CAirlineIcaoCode::calculateScore(const CAirlineIcaoCode &otherCode, CStatusMessageList *log) const
         {
-            if (this->isDbEqual(otherCode)) { return 100; }
+            if (this->isDbEqual(otherCode))
+            {
+                CMatchingUtils::addLogDetailsToList(log, *this, QStringLiteral("DB equal score: 100"));
+                return 100;
+            }
             const bool bothFromDb = this->isLoadedFromDb() && otherCode.isLoadedFromDb();
             int score = 0;
             if (otherCode.hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
             {
                 score += 60;
+                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same designator: %1").arg(score));
             }
 
             // only for DB values we check VA
             if (bothFromDb && this->isVirtualAirline() == otherCode.isVirtualAirline())
             {
                 score += 20;
+                CMatchingUtils::addLogDetailsToList(log, *this, QString("VA equality: %1").arg(score));
             }
 
             // consider the various names
             if (this->hasName() && this->getName() == otherCode.getName())
             {
                 score += 20;
+                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same name '%1': %2").arg(this->getName()).arg(score));
             }
             else if (this->hasTelephonyDesignator() && this->getTelephonyDesignator() == otherCode.getTelephonyDesignator())
             {
                 score += 15;
+                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same telephony '%1': %2").arg(this->getTelephonyDesignator()).arg(score));
             }
             else if (this->hasSimplifiedName() && this->getSimplifiedName() == otherCode.getSimplifiedName())
             {
                 score += 10;
+                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same simplified name '%1': %2").arg(this->getSimplifiedName()).arg(score));
             }
             return score;
         }

@@ -178,7 +178,7 @@ namespace BlackMisc
 
             //! Score by comparison to another livery 0..100
             //! \remark normally used with liveries preselect by airline ICAO code
-            int calculateScore(const CLivery &otherLivery, bool preferColorLiveries = false) const;
+            int calculateScore(const CLivery &otherLivery, bool preferColorLiveries = false, CStatusMessageList *log = nullptr) const;
 
             //! Object from JSON
             static CLivery fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("liv_"));

@@ -578,10 +578,9 @@ namespace BlackMisc
 
         int CAircraftModel::calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries, CStatusMessageList *log) const
         {
-            const int icaoScore = this->getAircraftIcaoCode().calculateScore(compareModel.getAircraftIcaoCode());
-            CMatchingUtils::addLogDetailsToList(log, this->getCallsign(), QString("ICAO score: ").arg(icaoScore));
-            const int liveryScore = this->getLivery().calculateScore(compareModel.getLivery(), preferColorLiveries);
-            CMatchingUtils::addLogDetailsToList(log, this->getCallsign(), QString("Livery score: ").arg(liveryScore));
+            const int icaoScore = this->getAircraftIcaoCode().calculateScore(compareModel.getAircraftIcaoCode(), log);
+            const int liveryScore = this->getLivery().calculateScore(compareModel.getLivery(), preferColorLiveries, log);
+            CMatchingUtils::addLogDetailsToList(log, this->getCallsign(), QString("ICAO score: %1 | livery score: %2").arg(icaoScore).arg(liveryScore));
             return 0.5 * (icaoScore + liveryScore);
         }
 

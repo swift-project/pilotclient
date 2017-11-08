@@ -223,7 +223,7 @@ namespace BlackMisc
             QString asHtmlSummary() const;
 
             //! Score against other code 0..100
-            int calculateScore(const CAirlineIcaoCode &otherCode) const;
+            int calculateScore(const CAirlineIcaoCode &otherCode, CStatusMessageList *log = nullptr) const;
 
             //! Valid designator?
             static bool isValidAirlineDesignator(const QString &airline);

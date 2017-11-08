@@ -718,15 +718,23 @@ namespace BlackMisc
             ScoredModels scoreMap;
 
             // normally prefer colors if there is no airline
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: %1, airline: '%2', ignore zero scores: %3").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Scoring in list with %1 models, airline liveries: %2, color liveries: %3").arg(this->size()).arg(this->countModelsWithAirlineLivery()).arg(this->countModelsWithColorLivery()));
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- Start scoring in list with %1 models, airline liveries: %2, color liveries: %3").arg(this->size()).arg(this->countModelsWithAirlineLivery()).arg(this->countModelsWithColorLivery()));
 
+            int c = 1;
             for (const CAircraftModel &model : *this)
             {
-                const int score = model.calculateScore(remoteModel, preferColorLiveries, log);
+                CStatusMessageList subMsgs;
+                const int score = model.calculateScore(remoteModel, preferColorLiveries, log ? &subMsgs : nullptr);
                 if (ignoreZeroScores && score < 1) { continue; }
+
+                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- Calculating #%1 '%2'---").arg(c++).arg(model.getModelStringAndDbKey()));
+                if (log) { log->push_back(subMsgs); }
+                CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- End calculating #%1 ---").arg(c));
+
                 scoreMap.insertMulti(score, model);
             }
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End scoring ---"));
             return scoreMap;
         }
 

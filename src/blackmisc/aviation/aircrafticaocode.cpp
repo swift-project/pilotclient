@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/comparefunctions.h"
 #include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/logcategory.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
@@ -28,6 +28,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
+using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -130,35 +131,48 @@ namespace BlackMisc
             return this->getCombinedIcaoStringWithKey();
         }
 
-        int CAircraftIcaoCode::calculateScore(const CAircraftIcaoCode &otherCode) const
+        int CAircraftIcaoCode::calculateScore(const CAircraftIcaoCode &otherCode, CStatusMessageList *log) const
         {
-            if (this->isDbEqual(otherCode)) { return 100; }
+            if (this->isDbEqual(otherCode))
+            {
+                CMatchingUtils::addLogDetailsToList(log, *this, QString("Equal DB code: 100"));
+                return 100;
+            }
 
             int score = 0;
             if (this->hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
             {
                 // 0..65
                 score += 50; // same designator
+                CMatchingUtils::addLogDetailsToList(log, *this, QString("Same designator: %1").arg(score));
 
+                int scoreOld = score;
                 if (this->getRank() == 0) { score += 15; }
                 else if (this->getRank() == 1) { score += 12; }
                 else if (this->getRank() < 10) { score += (10 - this->getRank()); }
+                if (score > scoreOld)
+                {
+                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Added rank: %1").arg(score));
+                }
             }
             else
             {
                 if (this->hasFamily() && this->getFamily() == otherCode.getFamily())
                 {
                     score += 30;
+                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Added family: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType() && otherCode.getCombinedType() == this->getCombinedType())
                 {
                     score += 20;
+                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Added combined code: %1").arg(score));
                 }
                 else if (this->hasValidCombinedType())
                 {
                     if (this->getEngineCount() == otherCode.getEngineCount()) { score += 2; }
                     if (this->getEngineType() == otherCode.getEngineType()) { score += 2; }
                     if (this->getAircraftType() == otherCode.getAircraftType()) { score += 2; }
+                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Added combined code parts: %1").arg(score));
                 }
             }
 
@@ -168,16 +182,21 @@ namespace BlackMisc
                 if (this->matchesManufacturer(otherCode.getManufacturer()))
                 {
                     score += 10;
+                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                 }
                 else if (this->getManufacturer().contains(otherCode.getManufacturer(), Qt::CaseInsensitive))
                 {
+                    CMatchingUtils::addLogDetailsToList(log, *this, QString("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                     score += 5;
                 }
             }
 
             // 0..75 so far
-            if (this->isMilitary() == otherCode.isMilitary()) { score += 10; }
-
+            if (this->isMilitary() == otherCode.isMilitary())
+            {
+                score += 10;
+                CMatchingUtils::addLogDetailsToList(log, *this, QString("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+            }
             // 0..85
             return score;
         }
