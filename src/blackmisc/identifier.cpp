@@ -14,13 +14,20 @@
 #include <QHostInfo>
 #include <QStringBuilder>
 
+//! \private
+const QString &cachedLocalHostName()
+{
+    static const QString hostName = QHostInfo::localHostName();
+    return hostName;
+}
+
 namespace BlackMisc
 {
     CIdentifier::CIdentifier(const QString &name)
         : ITimestampBased(QDateTime::currentMSecsSinceEpoch()),
           m_name(name.trimmed()),
           m_machineIdBase64(QDBusConnection::localMachineId().toBase64()),
-          m_machineName(QHostInfo::localHostName()),
+          m_machineName(cachedLocalHostName()),
           m_processName(QCoreApplication::applicationName()),
           m_processId(QCoreApplication::applicationPid())
     { }
