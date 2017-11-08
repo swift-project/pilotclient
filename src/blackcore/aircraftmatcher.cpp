@@ -27,15 +27,15 @@
 #include <QStringBuilder>
 
 using namespace BlackMisc;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
     const CLogCategoryList &CAircraftMatcher::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { CLogCategory::matching() };
+        static const CLogCategoryList cats { CLogCategory::matching() };
         return cats;
     }
 
@@ -464,7 +464,7 @@ namespace BlackCore
         return m_defaultModel;
     }
 
-    void CAircraftMatcher::setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel)
+    void CAircraftMatcher::setDefaultModel(const CAircraftModel &defaultModel)
     {
         m_defaultModel = defaultModel;
         m_defaultModel.setModelType(CAircraftModel::TypeModelMatchingDefaultModel);
@@ -522,9 +522,9 @@ namespace BlackCore
         m_statistics.addAircraftAirlineCombination(type, sessionId, m_modelSetInfo, description, aircraftIcao, airlineIcao);
     }
 
-    CAircraftModel CAircraftMatcher::getClosestMatchSearchImplementation(MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
+    CAircraftModel CAircraftMatcher::getClosestMatchSearchImplementation(MatchingMode mode, const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
     {
-        BlackMisc::Simulation::CAircraftModelList matchedModels(modelSet);
+        CAircraftModelList matchedModels(modelSet);
         CAircraftModel matchedModel(remoteAircraft.getModel());
         // primary reduction
         bool reduced = false;
@@ -796,9 +796,9 @@ namespace BlackCore
             return inList;
         }
 
-        BlackMisc::Simulation::CAircraftModelList searchModels(inList.findByIcaoDesignators(
-                    remoteAircraft.getAircraftIcaoCode(),
-                    ignoreAirline ? CAirlineIcaoCode() : remoteAircraft.getAirlineIcaoCode()));
+        CAircraftModelList searchModels(inList.findByIcaoDesignators(
+                                            remoteAircraft.getAircraftIcaoCode(),
+                                            ignoreAirline ? CAirlineIcaoCode() : remoteAircraft.getAirlineIcaoCode()));
 
         const bool searchModelsEmpty = searchModels.isEmpty();
         if (!searchModelsEmpty)
@@ -970,7 +970,7 @@ namespace BlackCore
         return byCombinedCode;
     }
 
-    CAircraftModelList CAircraftMatcher::ifPossibleReduceByMilitaryFlag(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, bool &reduced, CStatusMessageList *log)
+    CAircraftModelList CAircraftMatcher::ifPossibleReduceByMilitaryFlag(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, bool &reduced, CStatusMessageList *log)
     {
         reduced = false;
         const bool military = remoteAircraft.getModel().isMilitary();
