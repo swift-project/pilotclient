@@ -121,7 +121,7 @@ namespace BlackSimPlugin
             virtual bool disconnectFrom() override;
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-            virtual int physicallyRemoveAllRemoteAircraft() override;
+            virtual int  physicallyRemoveAllRemoteAircraft() override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateOwnSimulatorSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
@@ -299,7 +299,7 @@ namespace BlackSimPlugin
             //! Request data for a simObject (aka remote aircraft)
             bool requestDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
 
-            //! Request lights for a simObject
+            //! Request lights for a CSimConnectObject
             bool requestLightsForSimObject(const CSimConnectObject &simObject);
 
             //! FSX position as string

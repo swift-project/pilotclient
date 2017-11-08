@@ -40,7 +40,7 @@ namespace BlackMisc
             static QString getLogCategory() { return "swift.interpolationlogger"; }
 
             //! Write a log in background
-            BlackMisc::CWorker *writeLogInBackground();
+            CWorker *writeLogInBackground();
 
             //! Clear log file
             void clearLog();

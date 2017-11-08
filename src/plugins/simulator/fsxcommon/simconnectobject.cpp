@@ -122,7 +122,7 @@ namespace BlackSimPlugin
 
         CCallsign CSimConnectObjects::getCallsignForObjectId(DWORD objectId) const
         {
-            return getSimObjectForObjectId(objectId).getCallsign();
+            return this->getSimObjectForObjectId(objectId).getCallsign();
         }
 
         CCallsignSet CSimConnectObjects::getAllCallsigns() const

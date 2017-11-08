@@ -508,7 +508,7 @@ namespace BlackSimPlugin
             // we know the object has been created. But it can happen it is directly removed afterwards
             QTimer::singleShot(500, this, [ = ]
             {
-                // also triggers new add
+                // also triggers new add if required
                 this->verifyAddedRemoteAircraft(simObject.getAircraft());
             });
             return true;
@@ -1059,8 +1059,10 @@ namespace BlackSimPlugin
             static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 10, "DataDefinitionRemoteAircraftPartsWithoutLights has an incorrect size.");
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
+            // Freeze interpolation while paused
+            if (this->isPaused() && m_pausedSimFreezesInterpolation) { return; }
+
             // nothing to do, reset request id and exit
-            if (this->isPaused() && m_pausedSimFreezesInterpolation) { return; } // no interpolation while paused
             const int remoteAircraftNo = this->getAircraftInRangeCount();
             if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
 
@@ -1071,10 +1073,10 @@ namespace BlackSimPlugin
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
-            const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
             const CCallsignSet callsignsToLog(m_interpolationRenderingSetup.getLogCallsigns());
 
             // interpolation for all remote aircraft
+            const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
             for (const CSimConnectObject &simObject : simObjects)
             {
                 // happening if aircraft is not yet added to simulator or to be deleted
@@ -1089,7 +1091,7 @@ namespace BlackSimPlugin
                 // fetch parts, as they are needed for ground interpolation
                 const bool useAircraftParts = enableAircraftParts && aircraftWithParts.contains(callsign);
                 const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
-                const CInterpolationAndRenderingSetup setup(getInterpolationAndRenderingSetup());
+                const CInterpolationAndRenderingSetup setup(this->getInterpolationAndRenderingSetup());
                 CPartsStatus partsStatus(useAircraftParts);
                 const CAircraftParts parts = useAircraftParts ? simObject.getInterpolator()->getInterpolatedParts(-1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
@@ -1110,7 +1112,7 @@ namespace BlackSimPlugin
                                                         sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
                     if (hr == S_OK)
                     {
-                        if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
+                        if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO); }
                     }
                     else
                     {
@@ -1565,7 +1567,7 @@ namespace BlackSimPlugin
             if (toBeRemoved.isEmpty()) { return toBeRemoved; }
             for (const CCallsign &callsign : toBeRemoved)
             {
-                physicallyRemoveRemoteAircraft(callsign);
+                this->physicallyRemoveRemoteAircraft(callsign);
             }
 
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1'").arg(toBeRemoved.toStringList().join(", "))); }

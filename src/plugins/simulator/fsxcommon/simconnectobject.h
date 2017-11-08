@@ -28,7 +28,7 @@ namespace BlackSimPlugin
             //! Constructor
             CSimConnectObject();
 
-            //! Constructor, providing initial situation/parts
+            //! Constructor providing initial situation/parts
             CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
                               DWORD requestId,
                               BlackMisc::Simulation::CInterpolationLogger *logger);
@@ -99,7 +99,7 @@ namespace BlackSimPlugin
             //! Valid object id?
             bool hasValidObjectId() const { return m_validObjectId; }
 
-            //! Object is requested, not yet added
+            //! Object is requested in simulator, not yet confirmed added
             bool isPendingAdded() const;
 
             //! Adding is confirmed
@@ -117,27 +117,29 @@ namespace BlackSimPlugin
             //! VTOL?
             bool isVtol() const { return m_aircraft.isVtol(); }
 
-            //! Was the object really added to SIM
+            //! Was the object really added to simulator
             bool hasValidRequestAndObjectId() const;
 
-            //! Toggle interpolator mode
+            //! \copydoc BlackMisc::Simulation::CInterpolatorMulti::toggleMode
             void toggleInterpolatorMode();
 
-            //! Set interpolator mode
+            //! \copydoc BlackMisc::Simulation::CInterpolatorMulti::setMode
             bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode);
 
-            //! Interpolator info
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
             QString getInterpolatorInfo() const;
 
-            //! Interpolator
-            BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
+            //! \copydoc BlackMisc::Simulation::CInterpolator::attachLogger
+            void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger);
 
-            //! Get interpolated situation
-            //! \remark return original position if interpolation fails for some reason
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedSituation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 qint64 currentTimeSinceEpoc,
                 const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup,
                 const BlackMisc::Simulation::CInterpolationHints &hints, BlackMisc::Simulation::CInterpolationStatus &status) const;
+
+            //! Interpolator
+            BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
