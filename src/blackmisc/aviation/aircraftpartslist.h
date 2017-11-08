@@ -39,6 +39,9 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CAircraftPartsList(const CSequence<CAircraftParts> &other);
+
+            //! Construct from initializer list.
+            CAircraftPartsList(std::initializer_list<CAircraftParts> il);
         };
 
     } //namespace

@@ -27,5 +27,9 @@ namespace BlackMisc
             CSequence<CAircraftSituation>(other)
         { }
 
+        CAircraftSituationList::CAircraftSituationList(std::initializer_list<CAircraftSituation> il) :
+            CSequence<CAircraftSituation>(il)
+        { }
+
     } // namespace
 } // namespace

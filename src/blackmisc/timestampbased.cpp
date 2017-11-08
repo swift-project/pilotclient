@@ -137,6 +137,11 @@ namespace BlackMisc
         this->m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
     }
 
+    void ITimestampBased::addMsecs(qint64 ms)
+    {
+        this->m_timestampMSecsSinceEpoch += ms;
+    }
+
     QString ITimestampBased::getFormattedUtcTimestampDhms() const
     {
         return this->hasValidTimestamp() ?

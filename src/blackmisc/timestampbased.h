@@ -86,6 +86,9 @@ namespace BlackMisc
         //! Set the current time as timestamp
         void setCurrentUtcTime();
 
+        //! Add the given number of milliseconds to the timestamp.
+        void addMsecs(qint64 ms);
+
         //! Formatted timestamp
         QString getFormattedUtcTimestampDhms() const;
 

@@ -265,12 +265,26 @@ namespace BlackMisc
         template <typename Derived>
         void CInterpolator<Derived>::addAircraftSituation(const CAircraftSituation &situation)
         {
+            if (m_aircraftSituations.isEmpty())
+            {
+                // make sure we have enough situations to do start interpolating immediately without waiting for more updates
+                m_aircraftSituations = { situation, situation };
+                m_aircraftSituations.back().addMsecs(-10000); // number here does
+                m_aircraftSituations.front().addMsecs(-5000); // not really matter
+            }
             m_aircraftSituations.push_frontMaxElements(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
         }
 
         template <typename Derived>
         void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts)
         {
+            if (m_aircraftParts.isEmpty())
+            {
+                // make sure we have enough parts to do start interpolating immediately without waiting for more updates
+                m_aircraftParts = { parts, parts };
+                m_aircraftParts.back().addMsecs(-10000); // number here does
+                m_aircraftParts.front().addMsecs(-5000); // not really matter
+            }
             m_aircraftParts.push_front(parts);
             IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
 
