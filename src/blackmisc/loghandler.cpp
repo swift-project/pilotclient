@@ -126,6 +126,25 @@ namespace BlackMisc
 
     void CLogHandler::logLocalMessage(const CStatusMessage &statusMessage)
     {
+        using namespace BlackMisc::PhysicalQuantities;
+        auto bucket = m_tokenBuckets.find(statusMessage);
+        if (bucket == m_tokenBuckets.end()) { bucket = m_tokenBuckets.insert(statusMessage, { { 5, CTime(1, CTimeUnit::s()), 1 }, 0 }); }
+        if (! bucket->first.tryConsume())
+        {
+            bucket->second++;
+            return;
+        }
+        if (bucket->second > 0)
+        {
+            auto copy = statusMessage;
+            copy.appendMessage(QStringLiteral(" (+%1 identical messages)").arg(bucket->second));
+            bucket->second = 0;
+
+            logMessage(copy);
+            emit localMessageLogged(copy);
+            return;
+        }
+
         logMessage(statusMessage);
         emit localMessageLogged(statusMessage);
     }

@@ -16,8 +16,10 @@
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logpattern.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/tokenbucket.h"
 
 #include <QList>
+#include <QHash>
 #include <QMetaMethod>
 #include <QMetaObject>
 #include <QObject>
@@ -105,6 +107,7 @@ namespace BlackMisc
         QList<PatternPair> m_patternHandlers;
         QList<CLogPatternHandler *> handlersForMessage(const CStatusMessage &message) const;
         void removePatternHandler(CLogPatternHandler *);
+        QHash<CStatusMessage, std::pair<CTokenBucket, int>> m_tokenBuckets;
     };
 
     /*!

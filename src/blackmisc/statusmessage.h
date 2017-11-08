@@ -362,7 +362,7 @@ namespace BlackMisc
             BLACK_METAMEMBER(severity),
             BLACK_METAMEMBER(message),
             BLACK_METAMEMBER(args),
-            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
+            BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForHashing | DisabledForComparison)
         );
     };
 
