@@ -57,7 +57,7 @@ namespace BlackGui
     namespace Components
     {
         CMappingComponent::CMappingComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             CIdentifiable(this),
             ui(new Ui::CMappingComponent)
         {
@@ -90,10 +90,10 @@ namespace BlackGui
 
             m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
             ui->tvp_RenderedAircraft->setItemDelegateForColumn(0, m_currentMappingsViewDelegate);
+            this->showKillButton(false);
 
             // Aircraft previews
             connect(ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this, &CMappingComponent::ps_onModelPreviewChanged);
-            ui->lbl_AircraftIconDisplayed->setText("[icon]");
 
             // model string completer
             ui->completer_ModelStrings->setSourceVisible(CAircraftModelStringCompleter::OwnModels, false);
@@ -170,7 +170,7 @@ namespace BlackGui
             ui->tw_ListViews->tabBar()->setTabText(cm, c);
         }
 
-        void CMappingComponent::ps_onChangedSimulatedAircraftInView(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &index)
+        void CMappingComponent::ps_onChangedSimulatedAircraftInView(const CVariant &object, const CPropertyIndex &index)
         {
             const CSimulatedAircraft sa = object.to<CSimulatedAircraft>(); // changed in GUI
             const CSimulatedAircraft saFromBackend = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(sa.getCallsign());
@@ -203,23 +203,15 @@ namespace BlackGui
 
             if (ui->cb_AircraftIconDisplayed->isChecked())
             {
-                const int MaxHeight = 125;
-                ui->lbl_AircraftIconDisplayed->setText("");
-                ui->lbl_AircraftIconDisplayed->setToolTip(model.getDescription());
                 const QString modelString(model.getModelString());
                 const CPixmap pm = sGui->getIContextSimulator()->iconForModel(modelString);
                 if (pm.isNull())
                 {
-                    ui->lbl_AircraftIconDisplayed->setPixmap(CIcons::crossWhite16());
+                    this->closeOverlay();
                 }
                 else
                 {
-                    QPixmap qpm = pm.pixmap();
-                    if (qpm.height() > MaxHeight && !qpm.isNull())
-                    {
-                        qpm = qpm.scaledToWidth(MaxHeight, Qt::SmoothTransformation);
-                    }
-                    ui->lbl_AircraftIconDisplayed->setPixmap(qpm);
+                    this->showOverlayImage(pm);
                 }
             }
             else
@@ -327,18 +319,8 @@ namespace BlackGui
 
         void CMappingComponent::ps_onModelPreviewChanged(int state)
         {
-            static const QPixmap empty;
-            Qt::CheckState s = static_cast<Qt::CheckState>(state);
-            if (s == Qt::Unchecked)
-            {
-                ui->lbl_AircraftIconDisplayed->setPixmap(empty);
-                ui->lbl_AircraftIconDisplayed->setText("Icon disabled");
-            }
-            else if (s == Qt::Checked)
-            {
-                ui->lbl_AircraftIconDisplayed->setPixmap(empty);
-                ui->lbl_AircraftIconDisplayed->setText("Icon will go here");
-            }
+            Q_UNUSED(state);
+            this->closeOverlay();
         }
 
         void CMappingComponent::ps_onModelsUpdateRequested()

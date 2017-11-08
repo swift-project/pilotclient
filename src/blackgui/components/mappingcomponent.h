@@ -14,6 +14,7 @@
 
 #include "blackcore/network.h"
 #include "blackcore/tokenbucket.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/settings/viewupdatesettings.h"
@@ -47,7 +48,7 @@ namespace BlackGui
     {
         //! Mappings, models etc.
         class BLACKGUI_EXPORT CMappingComponent :
-            public QFrame,
+            public COverlayMessagesFrame,
             public CEnableForDockWidgetInfoArea,
             public BlackMisc::CIdentifiable
         {
