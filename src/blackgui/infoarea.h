@@ -55,7 +55,7 @@ namespace BlackGui
         void addToContextMenu(QMenu *menu) const;
 
         //! Is the area floating?
-        bool isFloating() const { return this->m_infoAreaFloating; }
+        bool isFloating() const { return m_infoAreaFloating; }
 
         //! Is given widget selected. Means it is not floating, and the one selected
         bool isSelectedDockWidgetInfoArea(const CDockWidgetInfoArea *infoArea) const;
