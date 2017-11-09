@@ -1458,6 +1458,27 @@ namespace BlackSimPlugin
             return false;
         }
 
+        bool CSimulatorFsxCommon::stopRequestingDataForSimObject(const CSimConnectObject &simObject)
+        {
+            if (!simObject.hasValidRequestAndObjectId()) { return false; }
+            if (!m_hSimConnect) { return false; }
+
+            // always request, not only when something has changed
+            HRESULT result = SimConnect_RequestDataOnSimObject(
+                                 m_hSimConnect, simObject.getRequestId() + RequestSimDataOffset,
+                                 CSimConnectDefinitions::DataRemoteAircraftGetPosition,
+                                 simObject.getObjectId(), SIMCONNECT_PERIOD_NEVER);
+            if (result == S_OK)  { if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO, "Position");} }
+
+            result = SimConnect_RequestDataOnSimObject(
+                         m_hSimConnect, simObject.getRequestId() + RequestLightsOffset,
+                         CSimConnectDefinitions::DataRemoteAircraftLights, simObject.getObjectId(),
+                         SIMCONNECT_PERIOD_NEVER);
+            if (result == S_OK)  { if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO, "Lights");} }
+            Q_UNUSED(result);
+            return true;
+        }
+
         void CSimulatorFsxCommon::initSimulatorInternals()
         {
             CSimulatorFsCommon::initSimulatorInternals();
@@ -1550,7 +1571,7 @@ namespace BlackSimPlugin
             return simObjectCallsigns.difference(providerCallsigns);
         }
 
-        void CSimulatorFsxCommon::traceSendId(DWORD simObjectId, const QString &comment)
+        void CSimulatorFsxCommon::traceSendId(DWORD simObjectId, const QString &function, const QString &details)
         {
             if (!m_traceSendId) { return; }
             if (MaxSendIdTraces < 1) { return; }
@@ -1558,8 +1579,9 @@ namespace BlackSimPlugin
             const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);
             if (hr != S_OK || dwLastId < 0) { return; }
             if (m_sendIdTraces.size() > MaxSendIdTraces) { m_sendIdTraces.removeFirst(); }
-            const TraceFsxSendId t(dwLastId, simObjectId, comment);
-            m_sendIdTraces.push_back(t);
+            const TraceFsxSendId trace(dwLastId, simObjectId,
+                                       details.isEmpty() ? function : details + ", " + function);
+            m_sendIdTraces.push_back(trace);
         }
 
         QString CSimulatorFsxCommon::getSendIdTraceDetails(DWORD sendId) const

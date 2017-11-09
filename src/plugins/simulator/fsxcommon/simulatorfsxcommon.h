@@ -302,6 +302,9 @@ namespace BlackSimPlugin
             //! Request lights for a CSimConnectObject
             bool requestLightsForSimObject(const CSimConnectObject &simObject);
 
+            //! Stop requesting data for CSimConnectObject
+            bool stopRequestingDataForSimObject(const CSimConnectObject &simObject);
+
             //! FSX position as string
             static QString fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position);
 
@@ -312,7 +315,7 @@ namespace BlackSimPlugin
             void setTraceSendId(bool traceSendId) { m_traceSendId = traceSendId; }
 
             //! Trace the send id
-            void traceSendId(DWORD simObjectId, const QString &comment);
+            void traceSendId(DWORD simObjectId, const QString &function, const QString &details = {});
 
             //! Get the trace details, otherwise empty string
             QString getSendIdTraceDetails(DWORD sendId) const;
