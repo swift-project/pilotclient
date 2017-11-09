@@ -169,7 +169,9 @@ namespace BlackGui
     {
         if (!infoArea) { return false; }
         if (infoArea->isFloating()) { return false; }
-        return infoArea == this->getSelectedDockInfoArea();
+        if (!infoArea->isWidgetVisible()) { return false; }
+        if (!m_tabBar || m_tabBar->count() < 1) { return false; }
+        return true;
     }
 
     const CDockWidgetInfoArea *CInfoArea::getSelectedDockInfoArea() const
