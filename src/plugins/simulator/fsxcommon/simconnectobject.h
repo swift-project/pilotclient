@@ -69,6 +69,9 @@ namespace BlackSimPlugin
             //! Set current lights when received from simulator
             void setCurrentLightsInSimulator(const BlackMisc::Aviation::CAircraftLights &lights) { m_currentLightsInSim = lights; }
 
+            //! Pretend to have received lights from simulator
+            void fakeCurrentLightsInSimulator() { m_currentLightsInSim.setNull(false); }
+
             //! Parts as sent to simulator
             const DataDefinitionRemoteAircraftPartsWithoutLights &getPartsAsSent() const { return m_partsAsSent; }
 

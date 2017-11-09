@@ -895,10 +895,17 @@ namespace BlackSimPlugin
 
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
             if (simObject.isPendingRemoved()) { return true; }
-            if (simObject.isPendingAdded())
+
+            // avoid further data from simulator
+            this->stopRequestingDataForSimObject(simObject);
+
+            const bool pendingAdded = simObject.isPendingAdded();
+            const bool stillWaitingForLights = !simObject.hasCurrentLightsInSimulator();
+            if (pendingAdded || stillWaitingForLights)
             {
                 // problem: we try to delete an aircraft just requested to be added
                 // best solution so far, call remove again with a delay
+                simObject.fakeCurrentLightsInSimulator(); // next time looks like we have lights
                 QTimer::singleShot(2000, this, [ = ]
                 {
                     this->physicallyRemoveRemoteAircraft(callsign);
@@ -1443,6 +1450,8 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::requestLightsForSimObject(const CSimConnectObject &simObject)
         {
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
+            if (simObject.isPendingRemoved()) { return false; }
+            if (!m_hSimConnect) { return false; }
 
             // always request, not only when something has changed
             const HRESULT result = SimConnect_RequestDataOnSimObject(
