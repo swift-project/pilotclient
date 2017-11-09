@@ -877,9 +877,7 @@ namespace BlackSimPlugin
             {
                 // we will request a new aircraft by request ID, later we will receive its object id
                 // so far this object id is -1
-                addedAircraft.setRendered(false);
-                const CSimConnectObject simObject(addedAircraft, requestId, &m_interpolationLogger);
-                m_simConnectObjects.insert(callsign, simObject);
+                const CSimConnectObject simObject = this->insertNewSimConnectObject(addedAircraft, requestId);
                 if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
                 adding = true;
             }
@@ -1491,6 +1489,7 @@ namespace BlackSimPlugin
         {
             m_simConnectObjects.clear();
             m_addPendingAircraft.clear();
+            m_simConnectObjectsPositionAndPartsTraces.clear();
             CSimulatorFsCommon::clearAllAircraft();
         }
 
@@ -1502,8 +1501,15 @@ namespace BlackSimPlugin
             }
             else
             {
-                // update if in pending
-                m_addPendingAircraft.setAircraftSituation(situation.getCallsign(), situation);
+                // trace for future usage
+                if (m_simConnectObjectsPositionAndPartsTraces.contains(situation.getCallsign()))
+                {
+                    m_simConnectObjectsPositionAndPartsTraces[situation.getCallsign()].addAircraftSituation(situation);
+                }
+                else
+                {
+                    m_simConnectObjectsPositionAndPartsTraces.insert(situation.getCallsign(), CSimConnectObject(situation));
+                }
             }
         }
 
@@ -1515,14 +1521,21 @@ namespace BlackSimPlugin
             }
             else
             {
-                // update if in pending
-                m_addPendingAircraft.setAircraftParts(callsign, parts);
+                // trace for future usage
+                if (m_simConnectObjectsPositionAndPartsTraces.contains(callsign))
+                {
+                    m_simConnectObjectsPositionAndPartsTraces[callsign].addAircraftParts(parts);
+                }
+                else
+                {
+                    m_simConnectObjectsPositionAndPartsTraces.insert(callsign, CSimConnectObject(parts, callsign));
+                }
             }
         }
 
         QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
         {
-            const QString positionStr("Lat: %1deg lng: %2deg alt: %3ft pitch: %4deg bank: %5deg hdg: %6deg airspeed: %7kts onGround: %8");
+            static const QString positionStr("Lat: %1deg lng: %2deg alt: %3ft pitch: %4deg bank: %5deg hdg: %6deg airspeed: %7kts onGround: %8");
             return positionStr.
                    arg(position.Latitude).arg(position.Longitude).arg(position.Altitude).
                    arg(position.Pitch).arg(position.Bank).arg(position.Heading).arg(position.Airspeed).arg(position.OnGround);
@@ -1549,16 +1562,42 @@ namespace BlackSimPlugin
 
         QString CSimulatorFsxCommon::getSendIdTraceDetails(DWORD sendId) const
         {
-            for (const TraceFsxSendId &t : m_sendIdTraces)
+            for (const TraceFsxSendId &trace : m_sendIdTraces)
             {
-                if (t.sendId == sendId)
+                if (trace.sendId == sendId)
                 {
                     static const QString d("Send id: %1 obj.id.: %2 cs.: %4 '%3'");
-                    const CCallsign cs = m_simConnectObjects.getCallsignForObjectId(t.simObjectId);
-                    return d.arg(sendId).arg(t.simObjectId).arg(cs.asString(), t.comment);
+                    const CCallsign cs = m_simConnectObjects.getCallsignForObjectId(trace.simObjectId);
+                    return d.arg(sendId).arg(trace.simObjectId).arg(cs.asString(), trace.comment);
                 }
             }
             return "";
+        }
+
+        CSimConnectObject CSimulatorFsxCommon::insertNewSimConnectObject(const CSimulatedAircraft &aircraft, DWORD requestId)
+        {
+            if (m_simConnectObjects.contains(aircraft.getCallsign()))
+            {
+                // error, ...?
+                return m_simConnectObjects[aircraft.getCallsign()];
+            }
+
+            CSimConnectObject simObject;
+            if (m_simConnectObjectsPositionAndPartsTraces.contains(aircraft.getCallsign()))
+            {
+                simObject = m_simConnectObjectsPositionAndPartsTraces[aircraft.getCallsign()];
+                m_simConnectObjectsPositionAndPartsTraces.remove(aircraft.getCallsign());
+                simObject.resetState();
+                simObject.setRequestId(requestId);
+                simObject.setAircraft(aircraft);
+                simObject.attachInterpolatorLogger(&m_interpolationLogger); // setting a logger does not start logging
+            }
+            else
+            {
+                simObject = CSimConnectObject(aircraft, requestId, &m_interpolationLogger);
+            }
+            m_simConnectObjects.insert(aircraft.getCallsign(), simObject);
+            return simObject;
         }
 
         CCallsignSet CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider()

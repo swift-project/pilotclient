@@ -317,6 +317,9 @@ namespace BlackSimPlugin
             //! Get the trace details, otherwise empty string
             QString getSendIdTraceDetails(DWORD sendId) const;
 
+            //! Insert an new SimConnect object
+            CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId);
+
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestSimDataOffset) && requestId < (RequestSimDataStart + RequestSimDataOffset + MaxSimObjects); }
 
@@ -350,11 +353,12 @@ namespace BlackSimPlugin
             int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa dispatch
             int  m_receiveExceptionCount = 0;       //!< exceptions
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
-            CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             QList<TraceFsxSendId> m_sendIdTraces;   //!< Send id traces for debugging
-            QTimer m_addPendingAircraftTimer { this }; //!< updating of aircraft awaiting add
+            CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
+            CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimDataStart); //!< request id, use obtainRequestId() to get id
-            BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft;  //!< aircraft awaiting to be added
+            BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
+            QTimer m_addPendingAircraftTimer { this }; //!< updating of aircraft awaiting to be added
         };
 
         //! Listener for FSX
