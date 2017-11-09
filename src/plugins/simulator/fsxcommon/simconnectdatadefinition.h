@@ -179,8 +179,8 @@ namespace BlackSimPlugin
                 DataOwnAircraftTitle,
                 DataRemoteAircraftLights,
                 DataRemoteAircraftParts,
-                DataRemoteAircraftPosition,
-                DataRemoteAircraftSimData,
+                DataRemoteAircraftSetPosition, //!< the position which will be set
+                DataRemoteAircraftGetPosition, //!< get position to evaluate altitude / AGL
                 DataSimEnvironment,
                 DataClientAreaSb,       //!< whole SB area
                 DataClientAreaSbIdent,  //!< ident single value

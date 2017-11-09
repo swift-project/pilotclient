@@ -456,7 +456,7 @@ namespace BlackSimPlugin
                 // switch to fast updates
                 if (simObject.getSimDataPeriod() != SIMCONNECT_PERIOD_VISUAL_FRAME)
                 {
-                    this->requestDataForSimObject(simObject, SIMCONNECT_PERIOD_VISUAL_FRAME);
+                    this->requestPositionDataForSimObject(simObject, SIMCONNECT_PERIOD_VISUAL_FRAME);
                 }
             }
             else
@@ -464,7 +464,7 @@ namespace BlackSimPlugin
                 // switch to slow updates
                 if (simObject.getSimDataPeriod() != SIMCONNECT_PERIOD_SECOND)
                 {
-                    this->requestDataForSimObject(simObject, SIMCONNECT_PERIOD_SECOND);
+                    this->requestPositionDataForSimObject(simObject, SIMCONNECT_PERIOD_SECOND);
                 }
             }
 
@@ -575,7 +575,7 @@ namespace BlackSimPlugin
                 }
 
                 // request data on object
-                this->requestDataForSimObject(simObject);
+                this->requestPositionDataForSimObject(simObject);
                 this->requestLightsForSimObject(simObject);
 
                 this->removeFromAddPendingAndAddAgainAircraft(callsign); // no longer try to add
@@ -1105,7 +1105,7 @@ namespace BlackSimPlugin
                     // update situation
                     SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(interpolatedSituation);
                     HRESULT hr = S_OK;
-                    hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPosition,
+                    hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                                         static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
                                                         sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
                     if (hr == S_OK)
@@ -1417,15 +1417,17 @@ namespace BlackSimPlugin
             SimConnect_WeatherSetObservation(m_hSimConnect, 0, qPrintable(metar));
         }
 
-        bool CSimulatorFsxCommon::requestDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)
+        bool CSimulatorFsxCommon::requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)
         {
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
+            if (simObject.isPendingRemoved()) { return false; }
+            if (!m_hSimConnect) { return false; }
             if (simObject.getSimDataPeriod() == period) { return true; } // already queried like this
 
             // always request, not only when something has changed
             const HRESULT result = SimConnect_RequestDataOnSimObject(
                                        m_hSimConnect, simObject.getRequestId() + RequestSimDataOffset,
-                                       CSimConnectDefinitions::DataRemoteAircraftSimData,
+                                       CSimConnectDefinitions::DataRemoteAircraftGetPosition,
                                        simObject.getObjectId(), period);
 
             if (result == S_OK && m_simConnectObjects.contains(simObject.getCallsign()))
@@ -1434,7 +1436,7 @@ namespace BlackSimPlugin
                 m_simConnectObjects[simObject.getCallsign()].setSimDataPeriod(period);
                 return true;
             }
-            CLogMessage(this).error("Cannot request sim data on object '%1'") << simObject.getObjectId();
+            CLogMessage(this).error("Cannot request simulator data on object '%1'") << simObject.getObjectId();
             return false;
         }
 

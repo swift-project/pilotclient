@@ -77,7 +77,7 @@ namespace BlackSimPlugin
         {
             HRESULT hr = S_OK;
             // Position
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPosition, "Initial Position", NULL, SIMCONNECT_DATATYPE_INITPOSITION);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition, "Initial Position", NULL, SIMCONNECT_DATATYPE_INITPOSITION);
 
             // Hint: "Bool" and "Percent .." are units name
             // default data type is SIMCONNECT_DATATYPE_FLOAT64 -> double
@@ -119,11 +119,11 @@ namespace BlackSimPlugin
         HRESULT CSimConnectDefinitions::initRemoteAircraftSimData(const HANDLE hSimConnect)
         {
             HRESULT hr = S_OK;
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "PLANE LATITUDE", "degrees");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "PLANE LONGITUDE", "degrees");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "PLANE ALTITUDE", "Feet");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "GROUND ALTITUDE", "Feet");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "STATIC CG TO GROUND", "Feet");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "PLANE LATITUDE", "degrees");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "PLANE LONGITUDE", "degrees");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "PLANE ALTITUDE", "Feet");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "GROUND ALTITUDE", "Feet");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "STATIC CG TO GROUND", "Feet");
             if (hr != S_OK)
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData %1") << hr;
