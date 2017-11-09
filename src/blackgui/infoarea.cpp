@@ -197,12 +197,7 @@ namespace BlackGui
 
     QList<const CDockWidgetInfoArea *> CInfoArea::getDockWidgetInfoAreas() const
     {
-        QList<const CDockWidgetInfoArea *> constDockWidgets;
-        for (const CDockWidgetInfoArea *dockWidgetInfoArea : m_dockWidgetInfoAreas)
-        {
-            constDockWidgets.append(dockWidgetInfoArea);
-        }
-        return constDockWidgets;
+        return makeRange(m_dockWidgetInfoAreas);
     }
 
     QList<QAction *> CInfoArea::getInfoAreaSelectActions(bool withShortcut, QWidget *parent) const
