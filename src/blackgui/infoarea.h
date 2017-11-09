@@ -188,6 +188,10 @@ namespace BlackGui
         //! Toogle lock tabbar
         void toggleTabBarLocked(bool locked);
 
+    private slots:
+        //! Toggle tab position North - South
+        void toggleTabBarPosition();
+
     private:
         QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas;
         QList<CInfoArea *> m_childInfoAreas;
@@ -250,9 +254,6 @@ namespace BlackGui
 
         //! Show tab bar
         void showTabBar(bool show);
-
-        //! Toggle tab position North - South
-        void toggleTabBarPosition();
 
         //! Set dock area used
         void setDockArea(Qt::DockWidgetArea area);
