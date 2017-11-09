@@ -180,30 +180,6 @@ namespace XSwiftBus
         return XPMPDrawingAircraftLabels();
     }
 
-    void CTraffic::updateInstalledModels()
-    {
-        int numberOfModels = XPMPGetNumberOfInstalledModels();
-        QStringList modelNames;
-        QStringList icaos;
-        QStringList airlines;
-        QStringList liveries;
-
-        for (int i = 0; i < numberOfModels; ++i)
-        {
-            const char *modelName = nullptr;
-            const char *icao = nullptr;
-            const char *airline = nullptr;
-            const char *livery = nullptr;
-            XPMPGetModelInfo(i, &modelName, &icao, &airline, &livery);
-            modelNames.append(QString::fromLocal8Bit(modelName));
-            icaos.append(QString::fromLocal8Bit(icao));
-            airlines.append(QString::fromLocal8Bit(airline));
-            liveries.append(QString::fromLocal8Bit(livery));
-        }
-
-        emit installedModelsUpdated(modelNames, icaos, airlines, liveries);
-    }
-
     void CTraffic::setMaxPlanes(int planes)
     {
         g_maxPlanes = planes;

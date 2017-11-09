@@ -138,7 +138,6 @@ namespace BlackSimPlugin
                                                 const QString &modelString, const QString &name, const QString &distributor, const QString &description);
             void ps_fastTimerTimeout();
             void ps_slowTimerTimeout();
-            void ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
 
         private:
             void loadCslPackages();
@@ -152,7 +151,6 @@ namespace BlackSimPlugin
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
             BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft
-            BlackMisc::Simulation::CAircraftModelList m_installedModels; //!< \todo Do we still need this, as we now focus on model set
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?

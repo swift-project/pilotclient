@@ -222,25 +222,6 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorXPlane::ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries)
-        {
-            m_installedModels.clear();
-            auto modelStringsIt = modelStrings.begin();
-            auto icaosIt = icaos.begin();
-            auto airlinesIt = airlines.begin();
-            auto liveriesIt = liveries.begin();
-            for (; modelStringsIt != modelStrings.end() && icaosIt != icaos.end() && airlinesIt != airlines.end() && liveriesIt != liveries.end(); ++modelStringsIt, ++icaosIt, ++airlinesIt, ++liveriesIt)
-            {
-                Q_UNUSED(liveriesIt);
-                using namespace BlackMisc::Simulation;
-                CAircraftIcaoCode aircraftIcao(*icaosIt);
-                CLivery livery;   //! \todo resolve livery
-                livery.setAirlineIcaoCode(CAirlineIcaoCode(*airlinesIt));
-                CAircraftModel aircraftModel(*modelStringsIt, CAircraftModel::TypeDatabaseEntry, QString(), aircraftIcao, livery);
-                m_installedModels.push_back(aircraftModel);
-            }
-        }
-
         bool CSimulatorXPlane::isConnected() const
         {
             return m_service && m_traffic && m_weather;
@@ -256,12 +237,9 @@ namespace BlackSimPlugin
 
             if (m_service->isValid() && m_traffic->isValid() && m_weather->isValid() && m_traffic->initialize())
             {
-                // FIXME duplication
                 connect(m_service, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
                 connect(m_service, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
-                connect(m_traffic, &CXSwiftBusTrafficProxy::installedModelsUpdated, this, &CSimulatorXPlane::ps_installedModelsUpdated);
                 m_service->updateAirportsInRange();
-                m_traffic->updateInstalledModels();
                 if (m_watcher) { m_watcher->setConnection(m_conn); }
                 loadCslPackages();
                 emitSimulatorCombinedStatus();

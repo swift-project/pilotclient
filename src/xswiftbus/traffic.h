@@ -65,10 +65,6 @@ namespace XSwiftBus
         //! Called by XPluginStart
         static void initLegacyData();
 
-    signals:
-        //! Installed models updated.
-        void installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
-
     public slots:
         //! Initialize the multiplayer planes rendering and return true if successful
         bool initialize();
@@ -87,9 +83,6 @@ namespace XSwiftBus
 
         //! Get whether the plugin draws type and callsign labels above aircraft
         bool isDrawingLabels() const;
-
-        //! Called by newly connected client to cause installedModelsUpdated to be emitted.
-        void updateInstalledModels();
 
         //! Set the maximum number of aircraft.
         void setMaxPlanes(int planes);

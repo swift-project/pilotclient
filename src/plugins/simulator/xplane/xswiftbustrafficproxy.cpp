@@ -56,11 +56,6 @@ namespace BlackSimPlugin
             return m_dbusInterface->callDBusRet<bool>(QLatin1String("isDrawingLabels"));
         }
 
-        void CXSwiftBusTrafficProxy::updateInstalledModels() const
-        {
-            m_dbusInterface->callDBus(QLatin1String("updateInstalledModels"));
-        }
-
         void CXSwiftBusTrafficProxy::setMaxPlanes(int planes)
         {
             m_dbusInterface->callDBus(QLatin1String("setMaxPlanes"), planes);

@@ -61,10 +61,6 @@ namespace BlackSimPlugin
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
 
-        signals:
-            //! \copydoc XSwiftBus::CTraffic::installedModelsUpdated
-            void installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
-
         public slots:
             //! \copydoc XSwiftBus::CTraffic::initialize
             bool initialize();
@@ -83,9 +79,6 @@ namespace BlackSimPlugin
 
             //! \copydoc XSwiftBus::CTraffic::isDrawingLabels
             bool isDrawingLabels() const;
-
-            //! \copydoc XSwiftBus::CTraffic::updateInstalledModels
-            void updateInstalledModels() const;
 
             //! \copydoc XSwiftBus::CTraffic::setMaxPlanes
             void setMaxPlanes(int planes);
