@@ -223,6 +223,9 @@ namespace BlackMisc
             //! Sorted (ascending) per simulator
             QMultiMap<int, CSimulatorInfo> countPerSimulator() const;
 
+            //! As QString
+            QString toQString() const;
+
         private:
             QList<int> m_counts;
             static int internalIndex(const CSimulatorInfo &simulator);

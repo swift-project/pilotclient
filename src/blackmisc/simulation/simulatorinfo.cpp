@@ -14,8 +14,10 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/comparefunctions.h"
+
 #include <QJsonValue>
 #include <QtGlobal>
+#include <QStringBuilder>
 #include <algorithm>
 
 using namespace BlackConfig;
@@ -148,8 +150,8 @@ namespace BlackMisc
             QString str;
             if (s.testFlag(FSX)) { str.append("FSX "); }
             if (s.testFlag(FS9)) { str.append("FS9 "); }
-            if (s.testFlag(XPLANE)) { str.append("XPlane "); }
             if (s.testFlag(P3D)) { str.append("P3D "); }
+            if (s.testFlag(XPLANE)) { str.append("XPlane"); }
             return str.trimmed();
         }
 
@@ -353,6 +355,14 @@ namespace BlackMisc
             return counts;
         }
 
+        QString CCountPerSimulator::toQString() const
+        {
+            return "FSX: " % QString::number(m_counts[0]) %
+                   " P3D: " % QString::number(m_counts[1]) %
+                   " FS9: " % QString::number(m_counts[2]) %
+                   " XPlane: " % QString::number(m_counts[3]);
+        }
+
         void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)
         {
             this->m_counts[internalIndex(simulator)] = count;
@@ -366,10 +376,10 @@ namespace BlackMisc
                 m_counts[4] = m_counts[4] + 1;
                 return;
             }
-            if (simulator.fsx()) { m_counts[0] = m_counts[0] + 1; }
-            if (simulator.p3d()) { m_counts[1] = m_counts[1] + 1; }
-            if (simulator.fs9()) { m_counts[2] = m_counts[2] + 1; }
-            if (simulator.xplane()) { m_counts[3] = m_counts[3] + 1; }
+            if (simulator.fsx())    { m_counts[0]++; }
+            if (simulator.p3d())    { m_counts[1]++; }
+            if (simulator.fs9())    { m_counts[2]++; }
+            if (simulator.xplane()) { m_counts[3]++;  }
         }
 
         int CCountPerSimulator::internalIndex(const CSimulatorInfo &simulator)
