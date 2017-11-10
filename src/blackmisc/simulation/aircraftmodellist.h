@@ -48,10 +48,10 @@ namespace BlackMisc
 
         //! Value object encapsulating a list of aircraft models
         class BLACKMISC_EXPORT CAircraftModelList :
-            public BlackMisc::CSequence<CAircraftModel>,
-            public BlackMisc::Db::IDatastoreObjectList<CAircraftModel, CAircraftModelList, int>,
-            public BlackMisc::IOrderableList<CAircraftModel, CAircraftModelList>,
-            public BlackMisc::Mixin::MetaType<CAircraftModelList>
+            public CSequence<CAircraftModel>,
+            public Db::IDatastoreObjectList<CAircraftModel, CAircraftModelList, int>,
+            public IOrderableList<CAircraftModel, CAircraftModelList>,
+            public Mixin::MetaType<CAircraftModelList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftModelList)
@@ -66,10 +66,10 @@ namespace BlackMisc
             bool containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Contains model with model string or id?
-            bool containsModelStringOrDbKey(const BlackMisc::Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            bool containsModelStringOrDbKey(const Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Contains model for callsign?
-            bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            bool containsCallsign(const Aviation::CCallsign &callsign) const;
 
             //! Contains given combined type?
             bool containsCombinedType(const QString &combinedType) const;
@@ -106,7 +106,7 @@ namespace BlackMisc
             CAircraftModel findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find first by callsign
-            CAircraftModel findFirstByCallsignOrDefault(const BlackMisc::Aviation::CCallsign &callsign) const;
+            CAircraftModel findFirstByCallsignOrDefault(const Aviation::CCallsign &callsign) const;
 
             //! Find models starting with
             CAircraftModelList findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
@@ -118,13 +118,13 @@ namespace BlackMisc
             CAircraftModelList findByNotInModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const;
 
             //! Find by model string
-            CAircraftModelList findByIcaoDesignators(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode) const;
+            CAircraftModelList findByIcaoDesignators(const Aviation::CAircraftIcaoCode &aircraftIcaoCode, const Aviation::CAirlineIcaoCode &airlineIcaoCode) const;
 
             //! Find by model string
             CAircraftModelList findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
 
             //! Find by livery code
-            CAircraftModelList findByLiveryCode(const BlackMisc::Aviation::CLivery &livery) const;
+            CAircraftModelList findByLiveryCode(const Aviation::CLivery &livery) const;
 
             //! With file name
             CAircraftModelList findWithFileName() const;
@@ -178,7 +178,7 @@ namespace BlackMisc
             QString findModelIconPathByModelString(const QString &modelString) const;
 
             //! Model icon path
-            QString findModelIconPathByCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            QString findModelIconPathByCallsign(const Aviation::CCallsign &callsign) const;
 
             //! All models of the FS (FSX, P3D, FS9) family
             CAircraftModelList getAllFsFamilyModels() const;
@@ -187,19 +187,19 @@ namespace BlackMisc
             CAircraftModelList getAllIncludedModels() const;
 
             //! Take a designator and find its family
-            QString designatorToFamily(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode) const;
+            QString designatorToFamily(const Aviation::CAircraftIcaoCode &aircraftIcaoCode) const;
 
             //! Find for given simulator
-            CAircraftModelList matchesSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            CAircraftModelList matchesSimulator(const Simulation::CSimulatorInfo &simulator) const;
 
             //! Set simulator for all elements
-            int setSimulatorInfo(const BlackMisc::Simulation::CSimulatorInfo &info);
+            int setSimulatorInfo(const Simulation::CSimulatorInfo &info);
 
             //! Which simulators are supported in that model list
             CSimulatorInfo simulatorsSupported() const;
 
             //! Set mode for all elements
-            int setModelMode(BlackMisc::Simulation::CAircraftModel::ModelMode mode);
+            int setModelMode(Simulation::CAircraftModel::ModelMode mode);
 
             //! Keep only those models with given model strings
             //! \return number of elements removed
@@ -280,10 +280,10 @@ namespace BlackMisc
             QString getCombinedTypesAsString(const QString &separator = ", ") const;
 
             //! Update aircraft ICAO
-            void updateAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            void updateAircraftIcao(const Aviation::CAircraftIcaoCode &icao);
 
             //! Update livery
-            void updateLivery(const BlackMisc::Aviation::CLivery &livery);
+            void updateLivery(const Aviation::CLivery &livery);
 
             //! From given CDistributorList update the model`s distributor order
             int updateDistributorOrder(const CDistributorList &distributors);
@@ -295,7 +295,7 @@ namespace BlackMisc
             ScoredModels scoreFull(const CAircraftModel &remoteModel, bool preferColorLiveries, bool ignoreZeroScores = true, CStatusMessageList *log = nullptr) const;
 
             //! Completer strings
-            QStringList toCompleterStrings(bool sorted = true, const BlackMisc::Simulation::CSimulatorInfo &simulator = { BlackMisc::Simulation::CSimulatorInfo::All }) const;
+            QStringList toCompleterStrings(bool sorted = true, const Simulation::CSimulatorInfo &simulator = { Simulation::CSimulatorInfo::All }) const;
 
             //! Validate for publishing
             CStatusMessageList validateForPublishing() const;
@@ -304,7 +304,7 @@ namespace BlackMisc
             CStatusMessageList validateForPublishing(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
             //! Validate distributors
-            CStatusMessageList validateDistributors(const BlackMisc::Simulation::CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
+            CStatusMessageList validateDistributors(const Simulation::CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
             //! To compact JSON format
             QJsonObject toMemoizedJson() const;

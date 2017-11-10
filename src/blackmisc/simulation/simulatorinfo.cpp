@@ -129,18 +129,18 @@ namespace BlackMisc
 
         bool CSimulatorInfo::matchesAll(const CSimulatorInfo &otherInfo) const
         {
-            return (this->m_simulator & otherInfo.m_simulator) == otherInfo.m_simulator;
+            return (m_simulator & otherInfo.m_simulator) == otherInfo.m_simulator;
         }
 
         bool CSimulatorInfo::matchesAny(const CSimulatorInfo &otherInfo) const
         {
-            return (this->m_simulator & otherInfo.m_simulator) > 0;
+            return (m_simulator & otherInfo.m_simulator) > 0;
         }
 
         int CSimulatorInfo::comparePropertyByIndex(const CPropertyIndex &index, const CSimulatorInfo &compareValue) const
         {
             Q_UNUSED(index);
-            return Compare::compare(this->m_simulator, compareValue.m_simulator);
+            return Compare::compare(m_simulator, compareValue.m_simulator);
         }
 
         QString CSimulatorInfo::convertToQString(bool i18n) const
@@ -164,10 +164,10 @@ namespace BlackMisc
         QSet<CSimulatorInfo> CSimulatorInfo::asSingleSimulatorSet() const
         {
             QSet<CSimulatorInfo> set;
-            if (this->m_simulator & FSX) { set.insert(CSimulatorInfo(FSX)); }
-            if (this->m_simulator & FS9) { set.insert(CSimulatorInfo(FS9)); }
-            if (this->m_simulator & P3D) { set.insert(CSimulatorInfo(P3D)); }
-            if (this->m_simulator & XPLANE) { set.insert(CSimulatorInfo(XPLANE)); }
+            if (m_simulator & FSX) { set.insert(CSimulatorInfo(FSX)); }
+            if (m_simulator & FS9) { set.insert(CSimulatorInfo(FS9)); }
+            if (m_simulator & P3D) { set.insert(CSimulatorInfo(P3D)); }
+            if (m_simulator & XPLANE) { set.insert(CSimulatorInfo(XPLANE)); }
             return set;
         }
 
@@ -308,21 +308,21 @@ namespace BlackMisc
 
         CCountPerSimulator::CCountPerSimulator()
         {
-            this->m_counts.reserve(CSimulatorInfo::NumberOfSimulators + 1);
+            m_counts.reserve(CSimulatorInfo::NumberOfSimulators + 1);
             for (int i = 0; i < CSimulatorInfo::NumberOfSimulators + 1; i++)
             {
-                this->m_counts.push_back(0);
+                m_counts.push_back(0);
             }
         }
 
         int CCountPerSimulator::getCount(const CSimulatorInfo &simulator) const
         {
-            return this->m_counts[internalIndex(simulator)];
+            return m_counts[internalIndex(simulator)];
         }
 
         int CCountPerSimulator::getCountForUnknownSimulators() const
         {
-            return this->m_counts[CSimulatorInfo::NumberOfSimulators];
+            return m_counts[CSimulatorInfo::NumberOfSimulators];
         }
 
         int CCountPerSimulator::getMaximum() const
@@ -338,9 +338,9 @@ namespace BlackMisc
         int CCountPerSimulator::simulatorsRepresented() const
         {
             int c = 0;
-            for (int i = 0; i < this->m_counts.size() - 1; i++)
+            for (int i = 0; i < m_counts.size() - 1; i++)
             {
-                if (this->m_counts[i] > 0) { c++; }
+                if (m_counts[i] > 0) { c++; }
             }
             return c;
         }
@@ -348,9 +348,9 @@ namespace BlackMisc
         QMultiMap<int, CSimulatorInfo> CCountPerSimulator::countPerSimulator() const
         {
             QMultiMap<int, CSimulatorInfo> counts;
-            for (int i = 0; i < this->m_counts.size(); i++)
+            for (int i = 0; i < m_counts.size(); i++)
             {
-                counts.insertMulti(this->m_counts[i], simulator(i));
+                counts.insertMulti(m_counts[i], simulator(i));
             }
             return counts;
         }
@@ -365,7 +365,7 @@ namespace BlackMisc
 
         void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)
         {
-            this->m_counts[internalIndex(simulator)] = count;
+            m_counts[internalIndex(simulator)] = count;
         }
 
         void CCountPerSimulator::increaseSimulatorCounts(const CSimulatorInfo &simulator)
@@ -391,8 +391,7 @@ namespace BlackMisc
             case CSimulatorInfo::P3D: return 1;
             case CSimulatorInfo::FS9: return 2;
             case CSimulatorInfo::XPLANE: return 3;
-            default:
-                return CSimulatorInfo::NumberOfSimulators; // unknown
+            default: return CSimulatorInfo::NumberOfSimulators; // unknown
             }
         }
 
@@ -404,8 +403,7 @@ namespace BlackMisc
             case 1: return CSimulatorInfo(CSimulatorInfo::P3D);
             case 2: return CSimulatorInfo(CSimulatorInfo::FS9);
             case 3: return CSimulatorInfo(CSimulatorInfo::XPLANE);
-            default:
-                return CSimulatorInfo(CSimulatorInfo::None);
+            default: return CSimulatorInfo(CSimulatorInfo::None);
             }
         }
     } // ns

@@ -40,7 +40,7 @@ namespace BlackMisc
         //!    but need to handle XP data from the swift data store
         //! If someone manages to remove this hardocded simulator information and makes it entirely flexible
         //! based upon the plugin metadata feel free.
-        class BLACKMISC_EXPORT CSimulatorInfo : public BlackMisc::CValueObject<CSimulatorInfo>
+        class BLACKMISC_EXPORT CSimulatorInfo : public CValueObject<CSimulatorInfo>
         {
         public:
             //! Simulator
@@ -144,7 +144,7 @@ namespace BlackMisc
             //! Compare for index
             int comparePropertyByIndex(const CPropertyIndex &index, const CSimulatorInfo &compareValue) const;
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
+            //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Add simulator
