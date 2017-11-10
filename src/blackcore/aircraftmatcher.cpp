@@ -93,8 +93,8 @@ namespace BlackCore
 
         static const QString format("hh:mm:ss.zzz");
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Start matching: UTC %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models").arg(modelSet.size()), getLogCategories());
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()), getLogCategories());
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models\n%2").arg(modelSet.size()).arg(modelSet.coverageSummary()));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()));
 
         // Before I really search I check some special conditions
         // 1) Manually set model (by user)
