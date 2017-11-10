@@ -41,7 +41,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;
         };
-
     } // namespace
 } // namespace
 

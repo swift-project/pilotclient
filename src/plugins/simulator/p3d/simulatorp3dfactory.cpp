@@ -11,20 +11,23 @@
 #include "simulatorp3d.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Weather;
+
 namespace BlackSimPlugin
 {
     namespace P3D
     {
-        BlackCore::ISimulator *CSimulatorP3DFactory::create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider)
+        BlackCore::ISimulator *CSimulatorP3DFactory::create(const CSimulatorPluginInfo &info,
+                IOwnAircraftProvider *ownAircraftProvider,
+                IRemoteAircraftProvider *remoteAircraftProvider,
+                IWeatherGridProvider *weatherGridProvider)
         {
             Q_ASSERT(ownAircraftProvider);
             return new CSimulatorP3D(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, this);
         }
 
-        BlackCore::ISimulatorListener *CSimulatorP3DFactory::createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info)
+        BlackCore::ISimulatorListener *CSimulatorP3DFactory::createListener(const CSimulatorPluginInfo &info)
         {
             return new CSimulatorP3DListener(info);
         }
