@@ -18,6 +18,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
 
+#include <QStringBuilder>
 #include <QJsonValue>
 #include <QList>
 #include <QMultiMap>
@@ -623,6 +624,46 @@ namespace BlackMisc
             return count;
         }
 
+        int CAircraftModelList::countVtolAircraft() const
+        {
+            int count = 0;
+            for (const CAircraftModel &model : (*this))
+            {
+                if (model.isVtol()) { count++; }
+            }
+            return count;
+        }
+
+        int CAircraftModelList::countMilitaryAircraft() const
+        {
+            int count = 0;
+            for (const CAircraftModel &model : (*this))
+            {
+                if (model.isMilitary()) { count++; }
+            }
+            return count;
+        }
+
+        int CAircraftModelList::countCivilianAircraft() const
+        {
+            int count = 0;
+            for (const CAircraftModel &model : (*this))
+            {
+                if (model.isCivilian()) { count++; }
+            }
+            return count;
+        }
+
+        int CAircraftModelList::countDifferentAirlines() const
+        {
+            return this->getAirlineVDesignators().size();
+        }
+
+        int CAircraftModelList::countCombinedTypes() const
+        {
+            return this->getCombinedTypes().size();
+        }
+
         void CAircraftModelList::updateDistributor(const CDistributor &distributor)
         {
             for (CAircraftModel &model : *this)
@@ -678,6 +719,23 @@ namespace BlackMisc
             return designators;
         }
 
+        QSet<QString> CAircraftModelList::getCombinedTypes() const
+        {
+            QSet<QString> combinedCodes;
+            for (const CAircraftModel &model : *this)
+            {
+                const QString ct = model.getAircraftIcaoCode().getCombinedType();
+                if (ct.isEmpty()) { continue; }
+                combinedCodes.insert(ct);
+            }
+            return combinedCodes;
+        }
+
+        QString CAircraftModelList::getCombinedTypesAsString(const QString &separator) const
+        {
+            return this->getCombinedTypes().values().join(separator);
+        }
+
         void CAircraftModelList::updateAircraftIcao(const CAircraftIcaoCode &icao)
         {
             for (CAircraftModel &model : *this)
@@ -719,7 +777,8 @@ namespace BlackMisc
 
             // normally prefer colors if there is no airline
             CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- Start scoring in list with %1 models, airline liveries: %2, color liveries: %3").arg(this->size()).arg(this->countModelsWithAirlineLivery()).arg(this->countModelsWithColorLivery()));
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- Start scoring in list with %1 models").arg(this->size()));
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), this->coverageSummary());
 
             int c = 1;
             for (const CAircraftModel &model : *this)
@@ -911,6 +970,21 @@ namespace BlackMisc
                 html += model.asHtmlSummary(" ");
             }
             return html;
+        }
+
+        QString CAircraftModelList::coverageSummary(const QString &separator) const
+        {
+            return
+                QStringLiteral("Entries: ") % QString::number(this->size()) %
+                QStringLiteral(" valid DB keys: ") % QString::number(this->countWithValidDbKey()) % separator %
+                QStringLiteral("color liveries: ") % QString::number(this->countModelsWithColorLivery()) %
+                QStringLiteral(" airline liveries: ") % QString::number(this->countModelsWithAirlineLivery()) % separator %
+                QStringLiteral("VTOL: ") % QString::number(this->countVtolAircraft()) % separator %
+                QStringLiteral("Simulators: ") % this->countPerSimulator().toQString() % separator %
+                QStringLiteral("Military: ") % QString::number(this->countMilitaryAircraft()) %
+                QStringLiteral(" civilian: ") % QString::number(this->countCivilianAircraft()) % separator %
+                QStringLiteral("Different airlines: ") % QString::number(this->countDifferentAirlines()) % separator %
+                QStringLiteral("Combined types: ") % this->getCombinedTypesAsString();
         }
     } // namespace
 } // namespace

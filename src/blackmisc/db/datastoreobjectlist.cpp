@@ -184,6 +184,17 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>
+        int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::countWithValidDbKey() const
+        {
+            int count = 0;
+            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+            {
+                if (obj.hasValidDbKey()) { count++; }
+            }
+            return count;
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
         QDateTime IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::latestDbTimestamp() const
         {
             CONTAINER objs(this->container());

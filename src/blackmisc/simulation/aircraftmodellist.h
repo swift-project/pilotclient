@@ -243,6 +243,21 @@ namespace BlackMisc
             //! Models with an airline livery
             int countModelsWithAirlineLivery() const;
 
+            //! Count VTOL aircraft
+            int countVtolAircraft() const;
+
+            //! Count military aircraft
+            int countMilitaryAircraft() const;
+
+            //! Count civilian aircraft
+            int countCivilianAircraft() const;
+
+            //! Number of different airlines
+            int countDifferentAirlines() const;
+
+            //! Count different combined types
+            int countCombinedTypes() const;
+
             //! Update distributor, all models in list are set to given distributor
             void updateDistributor(const CDistributor &distributor);
 
@@ -257,6 +272,12 @@ namespace BlackMisc
 
             //! Airline virtual designators
             QSet<QString> getAirlineVDesignators() const;
+
+            //! All combined types
+            QSet<QString> getCombinedTypes() const;
+
+            //! All combined types as string
+            QString getCombinedTypesAsString(const QString &separator = ", ") const;
 
             //! Update aircraft ICAO
             void updateAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
@@ -299,6 +320,9 @@ namespace BlackMisc
 
             //! As HTML summary
             QString asHtmlSummary() const;
+
+            //! What kind of models are represented here
+            QString coverageSummary(const QString &separator = "\n") const;
         };
     } // ns
 } // ns

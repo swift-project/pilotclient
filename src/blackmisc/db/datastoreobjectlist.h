@@ -38,7 +38,7 @@ namespace BlackMisc
             //! All keys as set
             QSet<KEYTYPE> toDbKeySet() const;
 
-            //! All keys as string set (also int keys will be converted to string)
+            //! All keys as string set (also integer keys will be converted to string)
             QSet<QString> toDbKeyStringSet() const;
 
             //! The DB keys as string
@@ -61,6 +61,9 @@ namespace BlackMisc
 
             //! Latest DB timestamp (means objects with DB key)
             QDateTime oldestDbTimestamp() const;
+
+            //! Number of entries with valid DB key
+            int countWithValidDbKey() const;
 
             //! From DB JSON with default prefixes
             //! \remark Specialized classes might have their own fromDatabaseJson implementation
