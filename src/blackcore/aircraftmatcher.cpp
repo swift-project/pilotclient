@@ -92,7 +92,8 @@ namespace BlackCore
         const MatchingMode mode = m_matchingMode;
 
         static const QString format("hh:mm:ss.zzz");
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Start matching: UTC %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
+        const QDateTime startTime = QDateTime::currentDateTimeUtc();
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Start matching: UTC %1 ---").arg(startTime.toString(format)));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models\n%2").arg(modelSet.size()).arg(modelSet.coverageSummary()));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()));
 
@@ -149,7 +150,9 @@ namespace BlackCore
         Q_ASSERT_X(matchedModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
         Q_ASSERT_X(matchedModel.getModelType() != CAircraftModel::TypeUnknown, Q_FUNC_INFO, "Missing model type");
 
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching end: UTC %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
+        QDateTime endTime = QDateTime::currentDateTimeUtc();
+        qint64 matchingTime = startTime.msecsTo(endTime);
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching end: UTC %1, time %2ms ---").arg(endTime.toString(format)).arg(matchingTime));
         return matchedModel;
     }
 
