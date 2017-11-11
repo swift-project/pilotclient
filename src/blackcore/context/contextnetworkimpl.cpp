@@ -66,10 +66,10 @@ namespace BlackCore
 
             // 1. Init by "network driver"
             m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);
-            connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::ps_fsdConnectionStatusChanged);
+            connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::fsdConnectionStatusChanged);
             connect(m_network, &INetwork::kicked, this, &CContextNetwork::kicked);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
-            connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_checkForSupervisiorTextMessage);
+            connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::checkForSupervisiorTextMessage);
             connect(m_network, &INetwork::textMessageSent, this, &CContextNetwork::textMessageSent);
 
             // 2. Update timer for data (network data such as frequency)
@@ -400,7 +400,7 @@ namespace BlackCore
             return sApp->getWebDataServices()->getVatsimVoiceServers();
         }
 
-        void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CContextNetwork::fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to; }
             auto fromOld = m_currentStatus; // own status cached
@@ -441,7 +441,7 @@ namespace BlackCore
             emit this->connectionStatusChanged(from, to);
         }
 
-        void CContextNetwork::ps_simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
+        void CContextNetwork::simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
         {
             // mainly passing changed restrictions from simulator to network
             if (!m_airspace) { return; }
@@ -449,20 +449,20 @@ namespace BlackCore
             m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft, maxRenderedDistance);
         }
 
-        void CContextNetwork::ps_updateMetars(const BlackMisc::Weather::CMetarList &metars)
+        void CContextNetwork::updateMetars(const BlackMisc::Weather::CMetarList &metars)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CLogMessage(this).info("%1 METARs updated") << metars.size();
         }
 
-        void CContextNetwork::ps_checkForSupervisiorTextMessage(const CTextMessageList &messages)
+        void CContextNetwork::checkForSupervisiorTextMessage(const CTextMessageList &messages)
         {
             if (messages.containsPrivateMessages())
             {
                 CTextMessageList supMessages(messages.getSupervisorMessages());
                 for (const CTextMessage &m : supMessages)
                 {
-                    emit supervisorTextMessageReceived(m);
+                    emit this->supervisorTextMessageReceived(m);
                 }
             }
         }

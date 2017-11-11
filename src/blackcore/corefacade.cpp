@@ -218,7 +218,7 @@ namespace BlackCore
                             this->getCContextSimulator(), &CContextSimulator::ps_networkRequestedNewAircraft);
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::renderRestrictionsChanged,
-                            this->getCContextNetwork(), &CContextNetwork::ps_simulatorRenderRestrictionsChanged);
+                            this->getCContextNetwork(), &CContextNetwork::simulatorRenderRestrictionsChanged);
                 Q_ASSERT(c);
             }
 

@@ -219,19 +219,18 @@ namespace BlackCore
             //! Own aircraft from \sa CContextOwnAircraft
             const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
 
-        private slots:
             //! Update METAR collection
-            void ps_updateMetars(const BlackMisc::Weather::CMetarList &metars);
+            void updateMetars(const BlackMisc::Weather::CMetarList &metars);
 
             //! Check if a supervisor message was received
-            void ps_checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
+            void checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
 
             //! Connection status changed
-            void ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
+            void fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
             //! Render restrictions have been changed, used with analyzer
             //! \sa CAirspaceAnalyzer
-            void ps_simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
+            void simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
         };
     } // ns
 } // ns
