@@ -850,8 +850,6 @@ namespace BlackCore
             situation.setCurrentUtcTime();
             situation.setTimeOffsetMs(c_positionTimeOffsetMsec);
 
-            QString transponderName("transponder ");
-            transponderName.append(callsign.asString());
             CTransponder::TransponderMode mode = CTransponder::StateStandby;
             switch (position->transponderMode)
             {
