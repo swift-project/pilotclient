@@ -37,13 +37,13 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CTextMessage :
             public CValueObject<CTextMessage>,
-            public BlackMisc::ITimestampBased
+            public ITimestampBased
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexSenderCallsign = BlackMisc::CPropertyIndex::GlobalIndexCTextMessage,
+                IndexSenderCallsign = CPropertyIndex::GlobalIndexCTextMessage,
                 IndexRecipientCallsign,
                 IndexRecipientCallsignOrFrequency,
                 IndexMessage
@@ -53,33 +53,33 @@ namespace BlackMisc
             CTextMessage() {}
 
             //! Constructor, radio message
-            CTextMessage(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &senderCallsign = BlackMisc::Aviation::CCallsign())
+            CTextMessage(const QString &message, const PhysicalQuantities::CFrequency &frequency, const Aviation::CCallsign &senderCallsign = {})
                 : m_message(message), m_senderCallsign(senderCallsign), m_frequency(frequency)
             {
-                this->m_frequency.switchUnit(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
+                m_frequency.switchUnit(PhysicalQuantities::CFrequencyUnit::MHz());
             }
 
             //! Constructor, private message
-            CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign = BlackMisc::Aviation::CCallsign())
+            CTextMessage(const QString &message, const Aviation::CCallsign &senderCallsign, const Aviation::CCallsign &recipientCallsign = {})
                 : m_message(message), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr) {}
 
             //! Get callsign (from)
-            const BlackMisc::Aviation::CCallsign &getSenderCallsign() const { return m_senderCallsign; }
+            const Aviation::CCallsign &getSenderCallsign() const { return m_senderCallsign; }
 
             //! Set callsign (from)
-            void setSenderCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_senderCallsign = callsign;}
+            void setSenderCallsign(const Aviation::CCallsign &callsign) { m_senderCallsign = callsign;}
 
             //! Get callsign (to)
-            const BlackMisc::Aviation::CCallsign &getRecipientCallsign() const { return m_recipientCallsign; }
+            const Aviation::CCallsign &getRecipientCallsign() const { return m_recipientCallsign; }
 
             //! Set callsign (recipient)
-            void setRecipientCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_recipientCallsign = callsign; }
+            void setRecipientCallsign(const Aviation::CCallsign &callsign) { m_recipientCallsign = callsign; }
 
             //! Get recipient or frequency
             QString getRecipientCallsignOrFrequency() const;
 
             //! Send to particular frequency?
-            bool isSendToFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const;
+            bool isSendToFrequency(const PhysicalQuantities::CFrequency &frequency) const;
 
             //! Send to UNICOM?
             bool isSendToUnicom() const;
@@ -97,10 +97,10 @@ namespace BlackMisc
             void setMessage(const QString &message) { m_message = message.trimmed(); }
 
             //! Get frequency
-            const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
+            const PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
 
             //! Set frequency
-            void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) {  m_frequency = frequency; }
+            void setFrequency(const PhysicalQuantities::CFrequency &frequency) {  m_frequency = frequency; }
 
             //! Is private message?
             bool isPrivateMessage() const;
@@ -129,7 +129,7 @@ namespace BlackMisc
              * \param separator         values separated by given value
              * \return
              */
-            BlackMisc::CStatusMessage asStatusMessage(bool withSender, bool withRecipient, const QString &separator = ", ") const;
+            CStatusMessage asStatusMessage(bool withSender, bool withRecipient, const QString &separator = ", ") const;
 
             //! Toggle sender receiver, can be used to ping my own message
             void toggleSenderRecipient();
@@ -173,9 +173,9 @@ namespace BlackMisc
 
         private:
             QString m_message;
-            BlackMisc::Aviation::CCallsign m_senderCallsign;
-            BlackMisc::Aviation::CCallsign m_recipientCallsign;
-            BlackMisc::PhysicalQuantities::CFrequency m_frequency { 0, nullptr };
+            Aviation::CCallsign m_senderCallsign;
+            Aviation::CCallsign m_recipientCallsign;
+            PhysicalQuantities::CFrequency m_frequency { 0, nullptr };
             bool m_wasSent = false;
 
             BLACK_METACLASS(

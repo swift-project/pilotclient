@@ -34,8 +34,8 @@ namespace BlackMisc
         //! Value object encapsulating a list of text messages
         class BLACKMISC_EXPORT CTextMessageList :
             public CSequence<CTextMessage>,
-            public BlackMisc::ITimestampObjectList<CTextMessage, CTextMessageList>,
-            public BlackMisc::Mixin::MetaType<CTextMessageList>
+            public ITimestampObjectList<CTextMessage, CTextMessageList>,
+            public Mixin::MetaType<CTextMessageList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CTextMessageList)
@@ -44,19 +44,19 @@ namespace BlackMisc
             CTextMessageList();
 
             //! Constructor, single private message
-            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &recipientCallsign);
+            CTextMessageList(const QString &message, const Aviation::CCallsign &recipientCallsign);
 
             //! Constructor, single private message
-            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign);
+            CTextMessageList(const QString &message, const Aviation::CCallsign &senderCallsign, const Aviation::CCallsign &recipientCallsign);
 
             //! Constructor, single radio message
-            CTextMessageList(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &senderCallsign = BlackMisc::Aviation::CCallsign());
+            CTextMessageList(const QString &message, const PhysicalQuantities::CFrequency &frequency, const Aviation::CCallsign &senderCallsign = Aviation::CCallsign());
 
             //! Constructor, single message
             CTextMessageList(const CTextMessage &message);
 
             //! Constructor, multi-frequency radio messages
-            CTextMessageList(const QString &message, const QList<BlackMisc::PhysicalQuantities::CFrequency> &frequencies, const BlackMisc::Aviation::CCallsign &sender = BlackMisc::Aviation::CCallsign());
+            CTextMessageList(const QString &message, const QList<PhysicalQuantities::CFrequency> &frequencies, const Aviation::CCallsign &sender = Aviation::CCallsign());
 
             //! Construct from a base class object.
             CTextMessageList(const CSequence<CTextMessage> &other);
@@ -80,7 +80,7 @@ namespace BlackMisc
             CTextMessageList containsSupervisorMessages() const;
 
             //! Find by frequency
-            CTextMessageList findByFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const;
+            CTextMessageList findByFrequency(const PhysicalQuantities::CFrequency &frequency) const;
 
             //! Toggle all sender receivers
             void toggleSenderRecipients();
