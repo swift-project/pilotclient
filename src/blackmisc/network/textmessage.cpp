@@ -65,6 +65,31 @@ namespace BlackMisc
             }
         }
 
+        bool CTextMessage::canBeAppended(const CTextMessage &textMessage) const
+        {
+            if (textMessage.isEmpty()) { return false; }
+            if (this->getSenderCallsign() != textMessage.getSenderCallsign()) { return false; }
+            if (this->isRadioMessage() && textMessage.isRadioMessage())
+            {
+                if (this->getFrequency() != textMessage.getFrequency()) { return false; }
+                return true;
+            }
+            else if (this->isPrivateMessage() && textMessage.isPrivateMessage())
+            {
+                if (this->getRecipientCallsign() != textMessage.getRecipientCallsign()) { return false; }
+                return true;
+            }
+            return false;
+        }
+
+        bool CTextMessage::appendIfPossible(const CTextMessage &textMessage)
+        {
+            if (textMessage.isEmpty()) { return false; }
+            if (!this->canBeAppended(textMessage)) { return false; }
+            m_message += " " + textMessage.getMessage();
+            return true;
+        }
+
         QString CTextMessage::getRecipientCallsignOrFrequency() const
         {
             if (!m_recipientCallsign.isEmpty()) { return m_recipientCallsign.asString(); }

@@ -109,5 +109,14 @@ namespace BlackMisc
             std::for_each(this->begin(), this->end(), [](CTextMessage & tm) { tm.markAsSent(); });
         }
 
+        void CTextMessageList::addConsolidatedTextMessage(const CTextMessage &message)
+        {
+            if (message.isEmpty()) { return; }
+            for (CTextMessage &tm : *this)
+            {
+                if (tm.appendIfPossible(message)) { return; }
+            }
+            this->push_back(message);
+        }
     } // namespace
 } // namespace

@@ -153,6 +153,12 @@ namespace BlackMisc
             //! \remark also sets current timestamp if there is no valid timestamp
             void markAsSent();
 
+            //! Can another message be appended
+            bool canBeAppended(const CTextMessage &textMessage) const;
+
+            //! Append if possible
+            bool appendIfPossible(const CTextMessage &textMessage);
+
             //! Get SELCAL code (if applicable, e.g. ABCD), otherwise ""
             QString getSelcalCode() const;
 
