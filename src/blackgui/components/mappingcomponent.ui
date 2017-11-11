@@ -33,7 +33,7 @@
      </property>
      <widget class="QTabWidget" name="tw_ListViews">
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tb_CurrentMappings">
        <attribute name="title">

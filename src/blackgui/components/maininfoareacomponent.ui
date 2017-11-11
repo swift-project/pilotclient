@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1629</width>
+    <width>1630</width>
     <height>79</height>
    </rect>
   </property>
@@ -176,14 +176,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CAircraftComponent" name="comp_Aircraft">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CAircraftComponent" name="comp_Aircraft"/>
         </item>
        </layout>
       </widget>
@@ -261,14 +254,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CAtcStationComponent" name="comp_AtcStations">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CAtcStationComponent" name="comp_AtcStations"/>
         </item>
        </layout>
       </widget>
@@ -512,14 +498,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CFlightPlanComponent" name="comp_FlightPlan">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CFlightPlanComponent" name="comp_FlightPlan"/>
         </item>
        </layout>
       </widget>
@@ -568,15 +547,6 @@
      </property>
      <item>
       <widget class="QFrame" name="fr_WeatherInner">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
-       </property>
-       <property name="lineWidth">
-        <number>0</number>
-       </property>
        <layout class="QVBoxLayout" name="vl_WeatherInner">
         <property name="spacing">
          <number>0</number>
@@ -603,12 +573,6 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Rendering">
-   <property name="minimumSize">
-    <size>
-     <width>165</width>
-     <height>66</height>
-    </size>
-   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -697,15 +661,6 @@
      </property>
      <item>
       <widget class="QFrame" name="fr_LogInner">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
-       </property>
-       <property name="lineWidth">
-        <number>0</number>
-       </property>
        <layout class="QVBoxLayout" name="vl_LogInner">
         <property name="spacing">
          <number>0</number>
