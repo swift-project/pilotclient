@@ -801,8 +801,7 @@ namespace BlackCore
         {
             CTextMessage tm(cbvar_cast(cbvar)->fromFSD(msg), CCallsign(cbvar_cast(cbvar)->fromFSD(from)), CCallsign(cbvar_cast(cbvar)->fromFSD(to)));
             tm.setCurrentUtcTime();
-            const CTextMessageList messages(tm);
-            emit cbvar_cast(cbvar)->textMessagesReceived(messages);
+            cbvar_cast(cbvar)->consolidateTextMessage(tm);
         }
 
         void CNetworkVatlib::onRadioMessageReceived(VatSessionID, const char *from, int numFreq, int *freqList, const char *msg, void *cbvar)
@@ -984,6 +983,25 @@ namespace BlackCore
             {
                 CLogMessage(this).warning("Unknown custom packet from %1 - id: %2") << callsign.toQString() << packetId;
             }
+        }
+
+        void CNetworkVatlib::consolidateTextMessage(const CTextMessage &textMessage)
+        {
+            if (textMessage.isSupervisorMessage())
+            {
+                emit this->textMessagesReceived(textMessage);
+            }
+            else
+            {
+                m_textMessagesToConsolidate.addConsolidatedTextMessage(textMessage);
+                m_dsSendTextMessage.inputSignal(); // trigger
+            }
+        }
+
+        void CNetworkVatlib::emitConsolidatedTextMessages()
+        {
+            emit this->textMessagesReceived(m_textMessagesToConsolidate);
+            m_textMessagesToConsolidate.clear();
         }
 
         void CNetworkVatlib::onMetarReceived(VatSessionID, const char *data, void *cbvar)

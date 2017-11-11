@@ -27,6 +27,7 @@
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/digestsignal.h"
 
 #include <stdbool.h>
 #include <vatlib/vatlib.h>
@@ -199,6 +200,13 @@ namespace BlackCore
             void terminate(); //!< \private
 
         private:
+            //! Consolidate text messages if we receive multiple messages which belong together
+            //! \remark causes a slight delay
+            void consolidateTextMessage(const BlackMisc::Network::CTextMessage &textMessage);
+
+            //! Send the consolidatedTextMessages
+            void emitConsolidatedTextMessages();
+
             //! Deletion policy for QScopedPointer
             struct VatlibQScopedPointerDeleter
             {
@@ -219,6 +227,9 @@ namespace BlackCore
             BlackMisc::Aviation::CCallsignSet           m_interimPositionReceivers;  //!< all aircraft receiving interim positions
             BlackMisc::Aviation::CAircraftParts         m_sentAircraftConfig;        //!< aircraft parts sent
             BlackMisc::CTokenBucket                     m_tokenBucket;               //!< used with aircraft parts messages
+
+            BlackMisc::CDigestSignal m_dsSendTextMessage  { this, &CNetworkVatlib::emitConsolidatedTextMessages, 500, 10 };
+            BlackMisc::Network::CTextMessageList m_textMessagesToConsolidate;
 
             QTimer m_scheduledConfigUpdate;
             QTimer m_processingTimer;
