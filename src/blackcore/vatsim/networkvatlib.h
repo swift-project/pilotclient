@@ -179,14 +179,15 @@ namespace BlackCore
             static void networkLogHandler(SeverityLevel severity, const char *message);
             void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
-            inline QString defaultModelString()
+            static const QString &defaultModelString()
             {
-                return QStringLiteral("Cessna Skyhawk 172SP");
+                static const QString dm("Cessna Skyhawk 172SP");
+                return dm;
             }
 
             struct JsonPackets
             {
-                static QJsonObject aircraftConfigRequest();
+                static const QJsonObject &aircraftConfigRequest();
             };
 
             void process();

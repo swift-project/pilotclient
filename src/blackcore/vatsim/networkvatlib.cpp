@@ -770,16 +770,16 @@ namespace BlackCore
 
         void CNetworkVatlib::broadcastAircraftConfig(const QJsonObject &config)
         {
-            QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
-            data = convertToUnicodeEscaped(data);
-            Vat_SendAircraftConfigBroadcast(m_net.data(), toFSD(data));
+            static const QString dataStr = convertToUnicodeEscaped(QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact));
+            static const QByteArray data(toFSD(dataStr));
+            Vat_SendAircraftConfigBroadcast(m_net.data(), data);
         }
 
         void CNetworkVatlib::sendAircraftConfigQuery(const CCallsign &callsign)
         {
-            const QJsonDocument doc(JsonPackets::aircraftConfigRequest());
-            const QString data { doc.toJson(QJsonDocument::Compact) };
-            Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));
+            static const QString dataStr { QJsonDocument(JsonPackets::aircraftConfigRequest()).toJson(QJsonDocument::Compact) };
+            static const QByteArray data(toFSD(dataStr));
+            Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), data);
         }
 
         /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -1163,9 +1163,10 @@ namespace BlackCore
             CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).error(message);
         }
 
-        QJsonObject CNetworkVatlib::JsonPackets::aircraftConfigRequest()
+        const QJsonObject &CNetworkVatlib::JsonPackets::aircraftConfigRequest()
         {
-            return { { "request", "full" } };
+            static const QJsonObject jsonObject{ { "request", "full" } };
+            return jsonObject;
         }
     } // namespace
 } // namespace
