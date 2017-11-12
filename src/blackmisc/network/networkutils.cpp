@@ -61,20 +61,20 @@ namespace BlackMisc
         bool CNetworkUtils::canPing(const QString &hostAddress)
         {
             if (hostAddress.isEmpty()) { return false; }
-            QStringList params;
+            QProcess process;
+            process.setProgram("ping");
             if (CBuildConfig::isRunningOnWindowsNtPlatform())
             {
-                params << "-n" << "1";
+                process.setArguments({ "-n", "1", hostAddress });
             }
             else
             {
                 // all UNIX alike
-                params << "-c" << "1";
+                process.setArguments({ "-c", "1", hostAddress });
             }
-            params << hostAddress;
-
-            const int exitCode = QProcess::execute("ping", params);
-            return exitCode == 0;
+            process.start();
+            process.waitForFinished();
+            return process.exitCode() == 0;
         }
 
         bool CNetworkUtils::canPing(const CUrl &url)
