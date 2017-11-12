@@ -97,8 +97,10 @@ namespace BlackGui
     void CDockWidgetInfoArea::initialFloating()
     {
         CDockWidget::initialFloating(); // initial floating to init position & size
+
+        // set the top level dock widget area to all children
         QList<CEnableForDockWidgetInfoArea *> infoAreaDockWidgets = this->findEmbeddedDockWidgetInfoAreaComponents();
-        for(CEnableForDockWidgetInfoArea *dwia : infoAreaDockWidgets)
+        for (CEnableForDockWidgetInfoArea *dwia : infoAreaDockWidgets)
         {
             Q_ASSERT_X(dwia, Q_FUNC_INFO, "Missing info area");
             dwia->setParentDockWidgetInfoArea(this);
@@ -107,12 +109,14 @@ namespace BlackGui
 
     QList<CEnableForDockWidgetInfoArea *> CDockWidgetInfoArea::findEmbeddedDockWidgetInfoAreaComponents()
     {
-        QList<QWidget *> widgets = this->findChildren<QWidget *>();
+        QList<QWidget *> widgets = this->findChildren<QWidget *>(); // must not use Qt::FindDirectChildrenOnly here
         QList<CEnableForDockWidgetInfoArea *> widgetsWithDockWidgetInfoAreaComponent;
-        for(QWidget *w : widgets)
+        for (QWidget *w : widgets)
         {
             Q_ASSERT(w);
-            CEnableForDockWidgetInfoArea *dwc = dynamic_cast<Components::CEnableForDockWidgetInfoArea *>(w);
+
+            // CEnableForDockWidgetInfoArea is no QObject, so we use dynamic_cast
+            CEnableForDockWidgetInfoArea *dwc = dynamic_cast<CEnableForDockWidgetInfoArea *>(w);
             if (dwc)
             {
                 widgetsWithDockWidgetInfoAreaComponent.append(dwc);
@@ -122,13 +126,13 @@ namespace BlackGui
         if (nestedInfoAreas.isEmpty()) return widgetsWithDockWidgetInfoAreaComponent;
 
         // we have to exclude the nested embedded areas
-        for(CDockWidgetInfoArea *ia : nestedInfoAreas)
+        for (CDockWidgetInfoArea *ia : nestedInfoAreas)
         {
             QList<CEnableForDockWidgetInfoArea *> nestedInfoAreaComponents = ia->findEmbeddedDockWidgetInfoAreaComponents();
             if (nestedInfoAreaComponents.isEmpty()) { continue; }
-            for(CEnableForDockWidgetInfoArea *iac : nestedInfoAreaComponents)
+            for (CEnableForDockWidgetInfoArea *iac : nestedInfoAreaComponents)
             {
-                bool r = widgetsWithDockWidgetInfoAreaComponent.removeOne(iac);
+                const bool r = widgetsWithDockWidgetInfoAreaComponent.removeOne(iac);
                 Q_ASSERT(r); // why is the nested component not in the child list?
                 Q_UNUSED(r);
             }
@@ -138,6 +142,7 @@ namespace BlackGui
 
     QList<CDockWidgetInfoArea *> CDockWidgetInfoArea::findNestedInfoAreas()
     {
+        // must not use Qt::FindDirectChildrenOnly here
         QList<CDockWidgetInfoArea *> nestedInfoAreas = this->findChildren<CDockWidgetInfoArea *>();
         return nestedInfoAreas;
     }

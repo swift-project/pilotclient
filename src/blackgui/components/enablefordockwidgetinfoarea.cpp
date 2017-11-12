@@ -28,49 +28,49 @@ namespace BlackGui
         {
             // it the parent is already an info area at this time, we keep it
             // otherwise we expect the info area to set it later
-            this->m_parentDockableInfoArea = parentInfoArea;
+            m_parentDockableInfoArea = parentInfoArea;
         }
 
         bool CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
             // sanity check
-            if (this->m_parentDockableInfoArea)
+            if (m_parentDockableInfoArea)
             {
                 // we already have a value
                 // changes should not happen
-                Q_ASSERT_X(this->m_parentDockableInfoArea == parentDockableWidget, Q_FUNC_INFO, "Reassigned parent dock widget area");
-                return this->m_parentDockableInfoArea == parentDockableWidget;
+                Q_ASSERT_X(m_parentDockableInfoArea == parentDockableWidget, Q_FUNC_INFO, "Reassigned parent dock widget area");
+                return m_parentDockableInfoArea == parentDockableWidget;
             }
 
             m_parentDockableInfoArea = parentDockableWidget;
             QMetaObject::Connection con = QDockWidget::connect(parentDockableWidget, &QDockWidget::destroyed, [this]
             {
                 // break dependency to dockable widget
-                this->m_parentDockableInfoArea = nullptr;
+                m_parentDockableInfoArea = nullptr;
             });
             Q_ASSERT_X(con, Q_FUNC_INFO, "Connection failed");
-            this->m_connections.append(con);
+            m_connections.append(con);
             return true;
         }
 
         CInfoArea *CEnableForDockWidgetInfoArea::getParentInfoArea() const
         {
-            Q_ASSERT(this->m_parentDockableInfoArea);
-            if (!this->m_parentDockableInfoArea) return nullptr;
-            return this->m_parentDockableInfoArea->getParentInfoArea();
+            Q_ASSERT(m_parentDockableInfoArea);
+            if (!m_parentDockableInfoArea) return nullptr;
+            return m_parentDockableInfoArea->getParentInfoArea();
         }
 
         bool CEnableForDockWidgetInfoArea::isParentDockWidgetFloating() const
         {
-            Q_ASSERT(this->m_parentDockableInfoArea);
-            if (!this->m_parentDockableInfoArea) { return false; }
-            return this->m_parentDockableInfoArea->isFloating();
+            Q_ASSERT(m_parentDockableInfoArea);
+            if (!m_parentDockableInfoArea) { return false; }
+            return m_parentDockableInfoArea->isFloating();
         }
 
         bool CEnableForDockWidgetInfoArea::isVisibleWidget() const
         {
-            if (!this->m_parentDockableInfoArea) { return false; } // can happen function is used while dock widget not yet fully initialized
-            return this->m_parentDockableInfoArea->isVisibleWidget();
+            if (!m_parentDockableInfoArea) { return false; } // can happen function is used while dock widget not yet fully initialized
+            return m_parentDockableInfoArea->isVisibleWidget();
         }
 
         CEnableForFramelessWindow *CEnableForDockWidgetInfoArea::mainApplicationWindow() const

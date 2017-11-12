@@ -582,7 +582,7 @@ namespace BlackGui
             // if we have > 1 docked widgets, we have a tab bar
             if (m_tabBar)
             {
-                QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameDockWidgetTab());
+                const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameDockWidgetTab());
                 m_tabBar->setStyleSheet(qss);
                 m_tabBar->setObjectName("comp_MainInfoAreaDockWidgetTab");
                 m_tabBar->setMovable(false);
@@ -649,9 +649,9 @@ namespace BlackGui
 
     void CInfoArea::emitInfoAreaStatus()
     {
-        int sia = this->getSelectedDockInfoAreaIndex();
-        QList<int> floating = this->getAreaIndexesDockedOrFloating(true);
-        QList<int> docked = this->getAreaIndexesDockedOrFloating(false);
+        const int sia = this->getSelectedDockInfoAreaIndex();
+        const QList<int> floating = this->getAreaIndexesDockedOrFloating(true);
+        const QList<int> docked = this->getAreaIndexesDockedOrFloating(false);
         emit changedInfoAreaStatus(sia, docked, floating);
     }
 
