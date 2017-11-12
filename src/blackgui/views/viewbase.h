@@ -221,16 +221,16 @@ namespace BlackGui
             bool isCurrentlyAllowingMultipleRowSelections() const;
 
             //! Filter dialog
-            void setFilterDialog(BlackGui::Filters::CFilterDialog *filterDialog);
+            void setFilterDialog(Filters::CFilterDialog *filterDialog);
 
             //! Filter widget if any
             QWidget *getFilterWidget() const { return m_filterWidget; }
 
             //! Set filter widget
-            void setFilterWidget(BlackGui::Filters::CFilterWidget *filterWidget);
+            void setFilterWidget(Filters::CFilterWidget *filterWidget);
 
             //! Set custom menu if applicable
-            BlackGui::Menus::IMenuDelegate *setCustomMenu(BlackGui::Menus::IMenuDelegate *menu, bool nestPreviousMenu = true);
+            Menus::IMenuDelegate *setCustomMenu(Menus::IMenuDelegate *menu, bool nestPreviousMenu = true);
 
             //! Enable loading indicator
             void enableLoadIndicator(bool enable);
@@ -366,7 +366,7 @@ namespace BlackGui
             //! Method creating the menu
             //! \remarks override this method to contribute to the menu
             //! \sa BlackGui::Views::CViewBaseNonTemplate::ps_customMenuRequested
-            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions);
+            virtual void customMenu(Menus::CMenuActions &menuActions);
 
             //! \name Functions from QTableView
             //! @{
@@ -406,7 +406,7 @@ namespace BlackGui
             QString getSettingsFileName(bool load) const;
 
             //! Init menu actions
-            BlackGui::Menus::CMenuActions initMenuActions(MenuFlag menu);
+            Menus::CMenuActions initMenuActions(MenuFlag menu);
 
             //! Set the sort indicator to the current sort column
             virtual void updateSortIndicator() = 0;
@@ -440,12 +440,12 @@ namespace BlackGui
             bool m_forceColumnsToMaxSize              = true;                  //!< force that columns are extended to full viewport width
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
             Menu m_menus                              = MenuDefault;           //!< Default menu settings
-            BlackGui::Menus::IMenuDelegate *m_menu    = nullptr;               //!< custom menu if any
-            BlackGui::Menus::CFontMenu *m_fontMenu    = nullptr;               //!< font menu if applicable
-            BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if needed
-            QMap<MenuFlag, BlackGui::Menus::CMenuActions> m_menuFlagActions;   //!< initialized actions
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
-            BlackMisc::CSetting<BlackGui::Settings::TViewDirectorySettings> m_dirSettings { this }; //!< directory for load/save
+            Menus::IMenuDelegate *m_menu    = nullptr;                         //!< custom menu if any
+            Menus::CFontMenu *m_fontMenu    = nullptr;                         //!< font menu if applicable
+            CLoadIndicator *m_loadIndicator = nullptr;                         //!< load indicator if needed
+            QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions
+            BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
+            BlackMisc::CSetting<Settings::TViewDirectorySettings> m_dirSettings { this }; //!< directory for load/save
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
@@ -544,7 +544,7 @@ namespace BlackGui
         //! Base class for views
         template <class ModelClass, class ContainerType, class ObjectType> class CViewBase :
             public CViewBaseNonTemplate,
-            public BlackGui::Models::ISelectionModel<ContainerType>
+            public Models::ISelectionModel<ContainerType>
         {
             // I cannot use Q_OBJECT here, because: Template classes are not supported by Q_OBJECT
             // and I cannot declare slots as SLOT because I have no Q_OBJECT macro
@@ -657,7 +657,7 @@ namespace BlackGui
             virtual void setObjectName(const QString &name);
 
             //! Set filter and take ownership, any previously set filter will be destroyed
-            void takeFilterOwnership(std::unique_ptr<BlackGui::Models::IModelFilter<ContainerType>> &filter);
+            void takeFilterOwnership(std::unique_ptr<Models::IModelFilter<ContainerType>> &filter);
 
             //! Removes filter and destroys filter object
             void removeFilter();
@@ -707,7 +707,7 @@ namespace BlackGui
             virtual void jsonLoadedAndModelUpdated(const ContainerType &data);
 
             //! \copydoc CViewBaseNonTemplate::customMenu
-            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+            virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             // --------------------------------------------- SLOTS start here -----------------------------------------
 

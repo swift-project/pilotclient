@@ -1509,14 +1509,9 @@ namespace BlackGui
 
             // save file
             const bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
-            if (ok)
-            {
-                return CStatusMessage(this, CStatusMessage::SeverityInfo, "Writing " + fileName + " in progress", true);
-            }
-            else
-            {
-                return CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
-            }
+            return ok ?
+                   CStatusMessage(this, CStatusMessage::SeverityInfo, "Writing " + fileName + " in progress", true) :
+                   CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
         }
 
         template<class ModelClass, class ContainerType, class ObjectType>

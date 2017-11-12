@@ -74,7 +74,7 @@ namespace BlackGui
         int CListModelBaseNonTemplate::columnCount(const QModelIndex &modelIndex) const
         {
             Q_UNUSED(modelIndex);
-            int c = this->m_columns.size();
+            int c = m_columns.size();
             return c;
         }
 
@@ -89,19 +89,19 @@ namespace BlackGui
             {
                 return QVariant();
             }
-            if (section < 0 || section >= this->m_columns.size())
+            if (section < 0 || section >= m_columns.size())
             {
                 return QVariant();
             }
 
             if (role == Qt::DisplayRole)
             {
-                QString header = this->m_columns.at(section).getColumnName(false);
+                QString header = m_columns.at(section).getColumnName(false);
                 return QVariant(header);
             }
             else if (role == Qt::ToolTipRole)
             {
-                QString header = this->m_columns.at(section).getColumnToolTip(false);
+                QString header = m_columns.at(section).getColumnToolTip(false);
                 return header.isEmpty() ? QVariant() : QVariant(header);
             }
             return QVariant();
@@ -121,7 +121,7 @@ namespace BlackGui
 
         BlackMisc::CPropertyIndex CListModelBaseNonTemplate::columnToPropertyIndex(int column) const
         {
-            return this->m_columns.columnToPropertyIndex(column);
+            return m_columns.columnToPropertyIndex(column);
         }
 
         int CListModelBaseNonTemplate::propertyIndexToColumn(const CPropertyIndex &propertyIndex) const
@@ -142,31 +142,31 @@ namespace BlackGui
 
         void CListModelBaseNonTemplate::setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex)
         {
-            this->m_sortColumn = this->m_columns.propertyIndexToColumn(propertyIndex);
+            m_sortColumn = m_columns.propertyIndexToColumn(propertyIndex);
         }
 
         void CListModelBaseNonTemplate::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
             this->setSortColumnByPropertyIndex(propertyIndex);
-            this->m_sortOrder = order;
+            m_sortOrder = order;
         }
 
         bool CListModelBaseNonTemplate::hasValidSortColumn() const
         {
 
-            if (!(this->m_sortColumn >= 0 && this->m_sortColumn < this->m_columns.size())) { return false; }
-            return this->m_columns.isSortable(this->m_sortColumn);
+            if (!(m_sortColumn >= 0 && m_sortColumn < m_columns.size())) { return false; }
+            return m_columns.isSortable(m_sortColumn);
         }
 
         Qt::ItemFlags CListModelBaseNonTemplate::flags(const QModelIndex &index) const
         {
             Qt::ItemFlags f = QStandardItemModel::flags(index);
             if (!index.isValid()) { return f; }
-            const bool editable = this->m_columns.isEditable(index);
+            const bool editable = m_columns.isEditable(index);
             f = editable ? (f | Qt::ItemIsEditable) : (f & ~Qt::ItemIsEditable);
 
             // flags from formatter
-            const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
+            const CDefaultFormatter *formatter = m_columns.getFormatter(index);
             if (formatter) { f = formatter->flags(f, editable); }
 
             // drag and drop
@@ -186,7 +186,7 @@ namespace BlackGui
 
         Qt::DropActions CListModelBaseNonTemplate::supportedDropActions() const
         {
-            return this->m_dropActions;
+            return m_dropActions;
         }
 
         QStringList CListModelBaseNonTemplate::mimeTypes() const
@@ -197,7 +197,7 @@ namespace BlackGui
 
         void CListModelBaseNonTemplate::markDestroyed()
         {
-            this->m_modelDestroyed = true;
+            m_modelDestroyed = true;
         }
 
         bool CListModelBaseNonTemplate::isModelDestroyed()
@@ -305,7 +305,7 @@ namespace BlackGui
             }
 
             // Formatter
-            const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
+            const CDefaultFormatter *formatter = m_columns.getFormatter(index);
             Q_ASSERT_X(formatter, Q_FUNC_INFO, "Missing formatter");
 
             // Upfront checking avoids unnecessary data fetching
@@ -333,12 +333,12 @@ namespace BlackGui
 
             // check / init
             if (!this->isValidIndex(index)) { return false; }
-            if (!this->m_columns.isEditable(index)) { return false; }
-            const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
+            if (!m_columns.isEditable(index)) { return false; }
+            const CDefaultFormatter *formatter = m_columns.getFormatter(index);
             Q_ASSERT(formatter);
             if (!formatter) { return false; }
 
-            ObjectType obj = this->m_container[index.row()];
+            ObjectType obj = m_container[index.row()];
             ObjectType currentObject(obj);
             BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
             obj.setPropertyByIndex(propertyIndex, value);
@@ -347,7 +347,7 @@ namespace BlackGui
             {
                 const QModelIndex topLeft = index.sibling(index.row(), 0);
                 const QModelIndex bottomRight = index.sibling(index.row(), this->columnCount() - 1);
-                this->m_container[index.row()] = obj;
+                m_container[index.row()] = obj;
                 const CVariant co = CVariant::fromValue(obj);
                 emit objectChanged(co, propertyIndex);
                 emit this->dataChanged(topLeft, bottomRight);
@@ -375,29 +375,29 @@ namespace BlackGui
             // Keep sorting out of begin/end reset model
             ContainerType sortedContainer;
             ContainerType selection;
-            if (this->m_selectionModel)
+            if (m_selectionModel)
             {
-                selection = this->m_selectionModel->selectedObjects();
+                selection = m_selectionModel->selectedObjects();
             }
-            const int oldSize = this->m_container.size();
+            const int oldSize = m_container.size();
             const bool performSort = sort && container.size() > 1 && this->hasValidSortColumn();
             if (performSort)
             {
                 const int sortColumn = this->getSortColumn();
-                sortedContainer = this->sortContainerByColumn(container, sortColumn, this->m_sortOrder);
+                sortedContainer = this->sortContainerByColumn(container, sortColumn, m_sortOrder);
             }
 
             this->beginResetModel();
-            this->m_container = performSort ? sortedContainer : container;
+            m_container = performSort ? sortedContainer : container;
             this->updateFilteredContainer();
             this->endResetModel();
 
             if (!selection.isEmpty())
             {
-                this->m_selectionModel->selectObjects(selection);
+                m_selectionModel->selectObjects(selection);
             }
 
-            const int newSize = this->m_container.size();
+            const int newSize = m_container.size();
             Q_UNUSED(oldSize);
             // I have to update even with same size because I cannot tell what/if data are changed
             this->emitModelDataChanged();
@@ -408,8 +408,8 @@ namespace BlackGui
         void CListModelBase<ObjectType, ContainerType, UseCompare>::update(const QModelIndex &index, const ObjectType &object)
         {
             if (m_modelDestroyed) { return; }
-            if (index.row() >= this->m_container.size()) { return; }
-            this->m_container[index.row()] = object;
+            if (index.row() >= m_container.size()) { return; }
+            m_container[index.row()] = object;
 
             QModelIndex i1 = index.sibling(index.row(), 0);
             QModelIndex i2 = index.sibling(index.row(), this->columnCount(index) - 1);
@@ -435,7 +435,7 @@ namespace BlackGui
             });
             worker->thenWithResult<ContainerType>(this, [this](const ContainerType & sortedContainer)
             {
-                if (this->m_modelDestroyed) { return;  }
+                if (m_modelDestroyed) { return;  }
                 this->update(sortedContainer, false);
             });
             worker->then(this, &CListModelBase::asyncUpdateFinished);
@@ -468,7 +468,7 @@ namespace BlackGui
         void CListModelBase<ObjectType, ContainerType, UseCompare>::removeFilter()
         {
             if (!this->hasFilter()) { return; }
-            this->m_filter.reset(nullptr);
+            m_filter.reset(nullptr);
             this->beginResetModel();
             this->updateFilteredContainer();
             this->endResetModel();
@@ -485,7 +485,7 @@ namespace BlackGui
             }
             if (filter->isValid())
             {
-                this->m_filter = std::move(filter);
+                m_filter = std::move(filter);
                 this->beginResetModel();
                 this->updateFilteredContainer();
                 this->endResetModel();
@@ -515,13 +515,13 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::container() const
         {
-            return this->m_container;
+            return m_container;
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerFiltered() const
         {
-            return this->m_containerFiltered;
+            return m_containerFiltered;
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -530,20 +530,20 @@ namespace BlackGui
             if (this->hasFilter())
             {
                 if (filtered) { *filtered = true; }
-                return this->m_containerFiltered;
+                return m_containerFiltered;
             }
             else
             {
                 if (filtered) { *filtered = false; }
-                return this->m_container;
+                return m_container;
             }
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         void CListModelBase<ObjectType, ContainerType, UseCompare>::push_back(const ObjectType &object)
         {
-            beginInsertRows(QModelIndex(), this->m_container.size(), this->m_container.size());
-            this->m_container.push_back(object);
+            beginInsertRows(QModelIndex(), m_container.size(), m_container.size());
+            m_container.push_back(object);
             endInsertRows();
             this->updateFilteredContainer();
             this->emitModelDataChanged();
@@ -553,7 +553,7 @@ namespace BlackGui
         void CListModelBase<ObjectType, ContainerType, UseCompare>::insert(const ObjectType &object)
         {
             beginInsertRows(QModelIndex(), 0, 0);
-            this->m_container.insert(this->m_container.begin(), object);
+            m_container.insert(m_container.begin(), object);
             endInsertRows();
 
             if (this->hasFilter())
@@ -570,7 +570,7 @@ namespace BlackGui
         {
             if (container.isEmpty()) { return; }
             beginInsertRows(QModelIndex(), 0, 0);
-            this->m_container.insert(container);
+            m_container.insert(container);
             endInsertRows();
 
             if (this->hasFilter())
@@ -585,11 +585,11 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         void CListModelBase<ObjectType, ContainerType, UseCompare>::remove(const ObjectType &object)
         {
-            int oldSize = this->m_container.size();
+            int oldSize = m_container.size();
             beginRemoveRows(QModelIndex(), 0, 0);
-            this->m_container.remove(object);
+            m_container.remove(object);
             endRemoveRows();
-            int newSize = this->m_container.size();
+            int newSize = m_container.size();
             if (oldSize != newSize)
             {
                 this->emitModelDataChanged();
@@ -606,8 +606,8 @@ namespace BlackGui
         void CListModelBase<ObjectType, ContainerType, UseCompare>::clear()
         {
             beginResetModel();
-            this->m_container.clear();
-            this->m_containerFiltered.clear();
+            m_container.clear();
+            m_containerFiltered.clear();
             endResetModel();
             this->emitModelDataChanged();
         }
@@ -615,7 +615,7 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         bool CListModelBase<ObjectType, ContainerType, UseCompare>::isEmpty() const
         {
-            return this->m_container.isEmpty();
+            return m_container.isEmpty();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -623,11 +623,11 @@ namespace BlackGui
         {
             if (this->hasFilter())
             {
-                this->m_containerFiltered = this->m_filter->filter(this->m_container);
+                m_containerFiltered = m_filter->filter(m_container);
             }
             else
             {
-                this->m_containerFiltered.clear();
+                m_containerFiltered.clear();
             }
         }
 
@@ -674,18 +674,18 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         void CListModelBase<ObjectType, ContainerType, UseCompare>::sort(int column, Qt::SortOrder order)
         {
-            if (column == this->m_sortColumn && order == this->m_sortOrder) { return; }
+            if (column == m_sortColumn && order == m_sortOrder) { return; }
 
             // new order
-            this->m_sortColumn = column;
-            this->m_sortOrder  = order;
-            if (this->m_container.size() < 2)
+            m_sortColumn = column;
+            m_sortOrder  = order;
+            if (m_container.size() < 2)
             {
                 return; // nothing to do
             }
 
             // sort the values
-            this->updateContainerMaybeAsync(this->m_container, true);
+            this->updateContainerMaybeAsync(m_container, true);
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -705,13 +705,13 @@ namespace BlackGui
         ContainerType CListModelBase<ObjectType, ContainerType, UseCompare>::sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const
         {
             if (m_modelDestroyed) { return container; }
-            if (container.size() < 2 || !this->m_columns.isSortable(column))
+            if (container.size() < 2 || !m_columns.isSortable(column))
             {
                 return container;    // nothing to do
             }
 
             // this is the only part not really thread safe, but columns do not change so far
-            BlackMisc::CPropertyIndex propertyIndex = this->m_columns.columnToSortPropertyIndex(column);
+            BlackMisc::CPropertyIndex propertyIndex = m_columns.columnToSortPropertyIndex(column);
             Q_ASSERT(!propertyIndex.isEmpty());
             if (propertyIndex.isEmpty())
             {

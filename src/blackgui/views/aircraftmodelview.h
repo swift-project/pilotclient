@@ -112,7 +112,7 @@ namespace BlackGui
             //! Request to stash if applicable
             void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
 
-            //! Highligh stashed models has been toggled
+            //! Highlight stashed models has been toggled
             void toggledHighlightStashedModels();
 
             //! Request further handling of drops I cannot handle on my own

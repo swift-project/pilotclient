@@ -48,6 +48,12 @@ namespace BlackGui
                 CListModelBase<ObjectType, ContainerType, UseCompare>::clearHighlighting();
             }
 
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::hasHighlightedRows
+            virtual bool hasHighlightedRows() const override
+            {
+                return !m_highlightKeys.isEmpty();
+            }
+
             //! Set color for highlighting
             void setHighlightColor(QColor color) { m_highlightColor = color; }
 
