@@ -270,7 +270,7 @@ namespace BlackGui
         //! Nested info areas
         //! \remark weak performance as discussed in T184
         //! \remark result stored in m_childInfoAreas
-        QList<CInfoArea *> getChildInfoAreas() const { return this->findChildren<CInfoArea *>(); }
+        QList<CInfoArea *> findOwnChildInfoAreas() const;
 
         //! Direct dock widget areas, not the nested dock widget areas
         //! \remark result stored in m_dockableWidgets

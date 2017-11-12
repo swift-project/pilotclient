@@ -54,14 +54,9 @@ namespace BlackGui
         // initInfoArea() needs be called after(!) GUI is setup
 
         // Ref T184, child areas are now "cached" in m_childInfoAreas
-        // 1) the original version did always use "getChildInfoAreas", so if there are ever any issues T184 might be reverted
-        // 2) m_childInfoAreas needs to be initialized before findOwnDockWidgetInfoAreas
-        m_childInfoAreas = this->getChildInfoAreas();
-        if (m_dockWidgetInfoAreas.isEmpty())
-        {
-            m_dockWidgetInfoAreas = this->findOwnDockWidgetInfoAreas();
-            Q_ASSERT(!m_dockWidgetInfoAreas.isEmpty());
-        }
+        // The original version did always use "findChildInfoAreas", so if there are ever any issues T184 might be reverted
+        m_childInfoAreas = this->findOwnChildInfoAreas();
+        m_dockWidgetInfoAreas = this->findOwnDockWidgetInfoAreas();
 
         this->setDockArea(Qt::TopDockWidgetArea);
         this->connectTopLevelChanged();
@@ -643,25 +638,13 @@ namespace BlackGui
 
     QList<CDockWidgetInfoArea *> CInfoArea::findOwnDockWidgetInfoAreas() const
     {
-        QList<CDockWidgetInfoArea *> infoAreas = this->findChildren<CDockWidgetInfoArea *>();
-        if (infoAreas.isEmpty()) { return infoAreas; }
+        // own dock widget areas without nested ones
+        return this->findChildren<CDockWidgetInfoArea *>(QString(), Qt::FindDirectChildrenOnly);
+    }
 
-        // nested info areas?
-        if (m_childInfoAreas.isEmpty()) { return infoAreas; }
-
-        // we have child info areas (nested), we need to remove those from the list
-        for (CInfoArea *ia : m_childInfoAreas)
-        {
-            QList<CDockWidgetInfoArea *> nestedDockWidgets = ia->m_dockWidgetInfoAreas;
-            if (nestedDockWidgets.isEmpty()) { continue; }
-            for (CDockWidgetInfoArea *ndw : nestedDockWidgets)
-            {
-                bool r = infoAreas.removeOne(ndw); // remove nested
-                Q_ASSERT(r);
-                Q_UNUSED(r);
-            }
-        }
-        return infoAreas;
+    QList<CInfoArea *> CInfoArea::findOwnChildInfoAreas() const
+    {
+        return this->findChildren<CInfoArea *>(QString(), Qt::FindDirectChildrenOnly);
     }
 
     void CInfoArea::emitInfoAreaStatus()
