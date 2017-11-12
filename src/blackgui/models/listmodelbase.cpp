@@ -210,6 +210,12 @@ namespace BlackGui
             // can be overridden to delete highlighting
         }
 
+        bool CListModelBaseNonTemplate::hasHighlightedRows() const
+        {
+            return false;
+            // can be overridden to enable highlighting based operations
+        }
+
         void CListModelBaseNonTemplate::emitDataChanged(int startRowIndex, int endRowIndex)
         {
             BLACK_VERIFY_X(startRowIndex <= endRowIndex, Q_FUNC_INFO, "check rows");

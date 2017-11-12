@@ -706,6 +706,9 @@ namespace BlackGui
             //! \remark I cannot use a signal with a template parameter, so this functions serves as callback
             virtual void jsonLoadedAndModelUpdated(const ContainerType &data);
 
+            //! \copydoc CViewBaseNonTemplate::customMenu
+            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+
             // --------------------------------------------- SLOTS start here -----------------------------------------
 
             //! \name Slot overrides from base class

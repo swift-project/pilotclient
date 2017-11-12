@@ -114,6 +114,9 @@ namespace BlackGui
             //! Remove all highlighting
             virtual void clearHighlighting();
 
+            //! Has highlighted rows?
+            virtual bool hasHighlightedRows() const;
+
             //! Drop actions
             void setDropActions(Qt::DropActions dropActions) { this->m_dropActions = dropActions; }
 

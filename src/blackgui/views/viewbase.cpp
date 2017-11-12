@@ -430,9 +430,6 @@ namespace BlackGui
             actionInteractiveResize->setChecked(autoResize);
             actionInteractiveResize->setEnabled(enabled);
             connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::ps_toggleResizeMode);
-
-            // Clear highlighting
-            menuActions.addAction(CIcons::refresh16(), "Clear highlighting", CMenuAction::pathViewClearHighlighting(), nullptr , { this, &CViewBaseNonTemplate::clearHighlighting });
         }
 
         void CViewBaseNonTemplate::resizeEvent(QResizeEvent *event)
@@ -1420,6 +1417,18 @@ namespace BlackGui
         void CViewBase<ModelClass, ContainerType, ObjectType>::jsonLoadedAndModelUpdated(const ContainerType &data)
         {
             Q_UNUSED(data);
+        }
+
+        template<class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::customMenu(CMenuActions &menuActions)
+        {
+            CViewBaseNonTemplate::customMenu(menuActions);
+
+            // Clear highlighting
+            if (this->derivedModel()->hasHighlightedRows())
+            {
+                menuActions.addAction(CIcons::refresh16(), "Clear highlighting", CMenuAction::pathViewClearHighlighting(), nullptr , { this, &CViewBaseNonTemplate::clearHighlighting });
+            }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

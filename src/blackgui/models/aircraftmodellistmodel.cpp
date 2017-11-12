@@ -221,5 +221,9 @@ namespace BlackGui
             this->m_highlightStrings.clear();
             COrderableListModelDbObjects::clearHighlighting();
         }
+        bool CAircraftModelListModel::hasHighlightedRows() const
+        {
+            return !m_highlightStrings.isEmpty();
+        }
     } // namespace
 } // namespace

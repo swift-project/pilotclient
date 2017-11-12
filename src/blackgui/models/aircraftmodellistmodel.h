@@ -71,8 +71,11 @@ namespace BlackGui
             //! The highlight color
             void setHighlightModelStringsColor(const QBrush &brush) { m_highlightColor = brush; }
 
-            //! \copydoc CListModelBase::clearHighlighting
+            //! \copydoc CListModelBaseNonTemplate::clearHighlighting
             virtual void clearHighlighting() override;
+
+            //! \copydoc CListModelBaseNonTemplate::hasHighlightedRows
+            virtual bool hasHighlightedRows() const override;
 
             //! Model strings
             QStringList getModelStrings(bool sort) const;
