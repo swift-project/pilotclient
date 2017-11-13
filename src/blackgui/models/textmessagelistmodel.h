@@ -19,7 +19,6 @@
 class QObject;
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
-
 namespace BlackGui
 {
     namespace Models
@@ -47,7 +46,7 @@ namespace BlackGui
             void setTextMessageMode(TextMessageMode mode);
 
             //! Mode
-            TextMessageMode getTextMessageMode() const { return this->m_textMessageMode; }
+            TextMessageMode getTextMessageMode() const { return m_textMessageMode; }
 
         private:
             TextMessageMode m_textMessageMode = NotSet;

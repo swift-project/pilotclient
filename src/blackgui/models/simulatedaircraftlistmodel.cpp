@@ -52,58 +52,58 @@ namespace BlackGui
 
         void CSimulatedAircraftListModel::setAircraftMode(AircraftMode mode)
         {
-            if (this->m_mode == mode) { return; }
-            this->m_mode = mode;
-            this->m_columns.clear();
+            if (m_mode == mode) { return; }
+            m_mode = mode;
+            m_columns.clear();
             switch (mode)
             {
             case NotSet:
             case NetworkMode:
                 {
-                    this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString));
-                    this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
-                    this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
-                    this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
-                    this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, new CSpeedKtsFormatter()));
-                    this->m_columns.addColumn(CColumn::standardString("icao", "icao and livery info", { CSimulatedAircraft::IndexCombinedIcaoLiveryStringNetworkModel}));
+                    m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString));
+                    m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
+                    m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
+                    m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
+                    m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, new CSpeedKtsFormatter()));
+                    m_columns.addColumn(CColumn::standardString("icao", "icao and livery info", { CSimulatedAircraft::IndexCombinedIcaoLiveryStringNetworkModel}));
 
                     // icon column for airline
                     CColumn col("airline", { CSimulatedAircraft::IndexNetworkModel, CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexIcon });
                     col.setSortPropertyIndex({ CSimulatedAircraft::IndexNetworkModel, CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator});
-                    this->m_columns.addColumn(col);
+                    m_columns.addColumn(col);
 
-                    this->m_columns.addColumn(CColumn("frequency", { CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
-                    this->m_columns.addColumn(CColumn::standardString("transponder", { CSimulatedAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
-                    this->m_columns.addColumn(CColumn("latitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLatitude }, new CLatLonFormatter()));
-                    this->m_columns.addColumn(CColumn("longitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLongitude }, new CLatLonFormatter()));
+                    m_columns.addColumn(CColumn("frequency", { CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
+                    m_columns.addColumn(CColumn::standardString("transponder", { CSimulatedAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
+                    m_columns.addColumn(CColumn("latitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLatitude }, new CLatLonFormatter()));
+                    m_columns.addColumn(CColumn("longitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLongitude }, new CLatLonFormatter()));
 
                     // default sort order
                     this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexRelativeDistance);
-                    this->m_sortOrder = Qt::AscendingOrder;
+                    m_sortOrder = Qt::AscendingOrder;
                 }
                 break;
 
             case RenderedMode:
                 {
-                    this->m_columns.addColumn(CColumn("e.", "enabled", CSimulatedAircraft::IndexEnabled, new CBoolIconFormatter("enabled", "disabled"), true));
-                    this->m_columns.addColumn(CColumn("r.", "rendered", CSimulatedAircraft::IndexRendered, new CBoolIconFormatter("rendered", "skipped"), true));
-                    this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", { CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString }));
-                    this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
-                    this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
-                    this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, new CSpeedKtsFormatter()));
-                    this->m_columns.addColumn(CColumn("p.", "parts", CSimulatedAircraft::IndexPartsSynchronized, new CBoolIconFormatter("parts", "no parts"), true));
-                    this->m_columns.addColumn(CColumn("fp.", "fast position updates", CSimulatedAircraft::IndexFastPositionUpdates, new CBoolIconFormatter("enabled", "disabled"), true));
-                    this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
-                    this->m_columns.addColumn(CColumn::standardString("icao", CSimulatedAircraft::IndexCombinedIcaoLiveryString));
-                    this->m_columns.addColumn(CColumn::standardString("model", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelString}));
-                    this->m_columns.addColumn(CColumn::standardString("type", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelTypeAsString}));
-                    this->m_columns.addColumn(CColumn::standardString("desc.", "description", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexDescription}));
-                    this->m_columns.addColumn(CColumn::standardString("aircraft", "rendered vs. network aircraft ICAO", CSimulatedAircraft::IndexNetworkModelAircraftIcaoDifference));
-                    this->m_columns.addColumn(CColumn::standardString("livery", "rendered vs. network livery", CSimulatedAircraft::IndexNetworkModelLiveryDifference));
+                    m_columns.addColumn(CColumn("e.", "enabled", CSimulatedAircraft::IndexEnabled, new CBoolIconFormatter("enabled", "disabled"), true));
+                    m_columns.addColumn(CColumn("r.", "rendered", CSimulatedAircraft::IndexRendered, new CBoolIconFormatter("rendered", "skipped"), true));
+                    m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", { CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString }));
+                    m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
+                    m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
+                    m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, new CSpeedKtsFormatter()));
+                    m_columns.addColumn(CColumn("p.", "parts", CSimulatedAircraft::IndexPartsSynchronized, new CBoolIconFormatter("parts", "no parts"), true));
+                    m_columns.addColumn(CColumn("fp.", "fast position updates", CSimulatedAircraft::IndexFastPositionUpdates, new CBoolIconFormatter("enabled", "disabled"), true));
+                    m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
+                    m_columns.addColumn(CColumn::standardString("icao", CSimulatedAircraft::IndexCombinedIcaoLiveryString));
+                    m_columns.addColumn(CColumn::standardString("model", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelString}));
+                    m_columns.addColumn(CColumn::standardString("type", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelTypeAsString}));
+                    m_columns.addColumn(CColumn::standardString("desc.", "description", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexDescription}));
+                    m_columns.addColumn(CColumn::standardString("aircraft", "rendered vs. network aircraft ICAO", CSimulatedAircraft::IndexNetworkModelAircraftIcaoDifference));
+                    m_columns.addColumn(CColumn::standardString("livery", "rendered vs. network livery", CSimulatedAircraft::IndexNetworkModelLiveryDifference));
 
                     // default sort order
                     this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexRelativeDistance);
-                    this->m_sortOrder = Qt::AscendingOrder;
+                    m_sortOrder = Qt::AscendingOrder;
                 }
                 break;
 

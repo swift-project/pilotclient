@@ -41,9 +41,9 @@ namespace BlackGui
 
         void CTextMessageListModel::setTextMessageMode(CTextMessageListModel::TextMessageMode mode)
         {
-            if (this->m_textMessageMode == mode) return;
-            this->m_textMessageMode = mode;
-            this->m_columns.clear();
+            if (m_textMessageMode == mode) return;
+            m_textMessageMode = mode;
+            m_columns.clear();
             switch (mode)
             {
             case NotSet:
@@ -51,27 +51,27 @@ namespace BlackGui
                 {
                     CColumn col = CColumn("type", CTextMessage::IndexIcon);
                     col.setSortPropertyIndex({ CTextMessage::IndexSenderCallsign, CCallsign::IndexSuffix });
-                    this->m_columns.addColumn(col);
-                    this->m_columns.addColumn(CColumn("time", "received", CTextMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
-                    this->m_columns.addColumn(CColumn::standardString("from", { CTextMessage::IndexSenderCallsign, CCallsign::IndexCallsignString }));
-                    this->m_columns.addColumn(CColumn::standardString("to", CTextMessage::IndexRecipientCallsignOrFrequency));
-                    this->m_columns.addColumn(CColumn::standardString("message", CTextMessage::IndexMessage));
+                    m_columns.addColumn(col);
+                    m_columns.addColumn(CColumn("time", "received", CTextMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
+                    m_columns.addColumn(CColumn::standardString("from", { CTextMessage::IndexSenderCallsign, CCallsign::IndexCallsignString }));
+                    m_columns.addColumn(CColumn::standardString("to", CTextMessage::IndexRecipientCallsignOrFrequency));
+                    m_columns.addColumn(CColumn::standardString("message", CTextMessage::IndexMessage));
 
                     // default sort order
                     this->setSortColumnByPropertyIndex(CTextMessage::IndexUtcTimestamp);
-                    this->m_sortOrder = Qt::DescendingOrder;
+                    m_sortOrder = Qt::DescendingOrder;
                 }
                 break;
 
             case From:
                 {
-                    this->m_columns.addColumn(CColumn("time", "received", CTextMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
-                    this->m_columns.addColumn(CColumn::standardString("from", { CTextMessage::IndexSenderCallsign, CCallsign::IndexCallsignString }));
-                    this->m_columns.addColumn(CColumn::standardString("message", CTextMessage::IndexMessage));
+                    m_columns.addColumn(CColumn("time", "received", CTextMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
+                    m_columns.addColumn(CColumn::standardString("from", { CTextMessage::IndexSenderCallsign, CCallsign::IndexCallsignString }));
+                    m_columns.addColumn(CColumn::standardString("message", CTextMessage::IndexMessage));
 
                     // default sort order
                     this->setSortColumnByPropertyIndex(CTextMessage::IndexUtcTimestamp);
-                    this->m_sortOrder = Qt::DescendingOrder;
+                    m_sortOrder = Qt::DescendingOrder;
                 }
                 break;
 

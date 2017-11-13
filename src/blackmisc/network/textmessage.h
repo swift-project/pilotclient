@@ -53,15 +53,10 @@ namespace BlackMisc
             CTextMessage() {}
 
             //! Constructor, radio message
-            CTextMessage(const QString &message, const PhysicalQuantities::CFrequency &frequency, const Aviation::CCallsign &senderCallsign = {})
-                : m_message(message), m_senderCallsign(senderCallsign), m_frequency(frequency)
-            {
-                m_frequency.switchUnit(PhysicalQuantities::CFrequencyUnit::MHz());
-            }
+            CTextMessage(const QString &message, const PhysicalQuantities::CFrequency &frequency, const Aviation::CCallsign &senderCallsign = {});
 
             //! Constructor, private message
-            CTextMessage(const QString &message, const Aviation::CCallsign &senderCallsign, const Aviation::CCallsign &recipientCallsign = {})
-                : m_message(message), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr) {}
+            CTextMessage(const QString &message, const Aviation::CCallsign &senderCallsign, const Aviation::CCallsign &recipientCallsign = {});
 
             //! Get callsign (from)
             const Aviation::CCallsign &getSenderCallsign() const { return m_senderCallsign; }
@@ -111,33 +106,24 @@ namespace BlackMisc
             //! Initial message of server?
             bool isServerMessage() const;
 
-            /*!
-             * Whole message as formatted string.
-             * Used to display message in a console window.
-             * \param withSender        include sender information in string?
-             * \param withRecipient     include recipient information in string?
-             * \param separator         values separated by given value
-             * \return
-             */
+            //! Whole message as formatted string. Used to display message in a console window.
+            //! \param withSender        include sender information in string?
+            //! \param withRecipient     include recipient information in string?
+            //! \param separator         values separated by given value
             QString asString(bool withSender, bool withRecipient, const QString &separator = ", ") const;
 
-            /*!
-             * Whole message as BlackMisc::CStatusMessage.
-             * Used to display message in logs, or any other situation where a CStatusMessage is required.
-             * \param withSender        include sender information in string?
-             * \param withRecipient     include recipient information in string?
-             * \param separator         values separated by given value
-             * \return
-             */
+            //! Whole message as BlackMisc::CStatusMessage.
+            //! Used to display message in logs, or any other situation where a CStatusMessage is required.
+            //! \param withSender        include sender information in string?
+            //! \param withRecipient     include recipient information in string?
+            //! \param separator         values separated by given value
             CStatusMessage asStatusMessage(bool withSender, bool withRecipient, const QString &separator = ", ") const;
 
             //! Toggle sender receiver, can be used to ping my own message
             void toggleSenderRecipient();
 
-            /*!
-             * Is this a text message encapsulating a SELCAL
-             * \see http://forums.vatsim.net/viewtopic.php?f=8&t=63467
-             */
+            //! Is this a text message encapsulating a SELCAL
+            //! \see http://forums.vatsim.net/viewtopic.php?f=8&t=63467
             bool isSelcalMessage() const;
 
             //! Is this a text message encapsulating a SELCAL for given code?
@@ -147,7 +133,7 @@ namespace BlackMisc
             bool isSupervisorMessage() const;
 
             //! Was sent?
-            bool wasSent() const;
+            bool wasSent() const { return m_wasSent; }
 
             //! Mark as sent
             //! \remark also sets current timestamp if there is no valid timestamp

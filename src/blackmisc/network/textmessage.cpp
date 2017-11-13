@@ -25,6 +25,15 @@ namespace BlackMisc
 {
     namespace Network
     {
+        CTextMessage::CTextMessage(const QString &message, const CFrequency &frequency, const CCallsign &senderCallsign)
+            : m_message(message), m_senderCallsign(senderCallsign), m_frequency(frequency)
+        {
+            m_frequency.switchUnit(PhysicalQuantities::CFrequencyUnit::MHz());
+        }
+
+        CTextMessage::CTextMessage(const QString &message, const CCallsign &senderCallsign, const CCallsign &recipientCallsign)
+            : m_message(message), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr)
+        {}
 
         QString CTextMessage::convertToQString(bool i18n) const
         {
@@ -49,11 +58,6 @@ namespace BlackMisc
         bool CTextMessage::isSupervisorMessage() const
         {
             return m_senderCallsign.isSupervisorCallsign();
-        }
-
-        bool CTextMessage::wasSent() const
-        {
-            return m_wasSent;
         }
 
         void CTextMessage::markAsSent()
@@ -152,7 +156,6 @@ namespace BlackMisc
                         if (!s.isEmpty()) s.append(separator);
                         s.append(m_frequency.valueRoundedWithUnit(3, true));
                     }
-
                 }
             } // to
 
@@ -164,7 +167,7 @@ namespace BlackMisc
 
         CStatusMessage CTextMessage::asStatusMessage(bool withSender, bool withRecipient, const QString &separator) const
         {
-            QString m = this->asString(withSender, withRecipient, separator);
+            const QString m = this->asString(withSender, withRecipient, separator);
             return { this, CStatusMessage::SeverityInfo, m };
         }
 

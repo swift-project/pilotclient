@@ -36,7 +36,7 @@ namespace BlackGui
         CTextMessageTextEdit(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CTextMessageTextEdit();
+        virtual ~CTextMessageTextEdit();
 
         //! Insert a message
         void insertTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int maxMessages = -1);
