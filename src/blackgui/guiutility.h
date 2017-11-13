@@ -59,7 +59,7 @@ namespace BlackGui
         //! Delete hierarchy of layouts
         static void deleteLayout(QLayout *layout, bool deleteWidgets);
 
-        //! Leninet / relaxed
+        //! Lenient / relaxed
         static bool lenientTitleComparison(const QString &title, const QString &comparison);
 
         //! Find best match in comboBox

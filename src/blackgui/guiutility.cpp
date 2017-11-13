@@ -51,28 +51,37 @@ namespace BlackGui
         return nullptr;
     }
 
+    namespace Private
+    {
+        QWidget *mainApplicationWindowImpl()
+        {
+            CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledApplicationWindow();
+            if (mw && mw->getWidget())
+            {
+                return mw->getWidget();
+            }
+
+            // second choice, try via QMainWindow
+            const QWidgetList tlw = CGuiUtility::topLevelApplicationWidgetsWithName();
+            for (QWidget *w : tlw)
+            {
+                QMainWindow *qmw = qobject_cast<QMainWindow *>(w);
+                if (!qmw) { continue; }
+                if (!qmw->parentWidget()) { return qmw; }
+            }
+            return nullptr;
+        }
+    } // ns
+
     QWidget *CGuiUtility::mainApplicationWindow()
     {
-        CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
-        if (mw && mw->getWidget())
-        {
-            return mw->getWidget();
-        }
-
-        // second choice, try via QMainWindow
-        const QWidgetList tlw = topLevelApplicationWidgetsWithName();
-        for (QWidget *w : tlw)
-        {
-            QMainWindow *qmw = qobject_cast<QMainWindow *>(w);
-            if (!qmw) { continue; }
-            if (!qmw->parentWidget()) { return qmw; }
-        }
-        return nullptr;
+        static QWidget *mw = Private::mainApplicationWindowImpl();
+        return mw;
     }
 
     bool CGuiUtility::isMainWindowFrameless()
     {
-        CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
+        const CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
         return (mw && mw->isFrameless());
     }
 
@@ -102,7 +111,7 @@ namespace BlackGui
         {
             for (int i = 0; i < box->count(); i++)
             {
-                QString t(box->itemText(i));
+                const QString t(box->itemText(i));
                 if (t.startsWith(candidate, Qt::CaseInsensitive))
                 {
                     box->setCurrentIndex(i);
@@ -115,7 +124,7 @@ namespace BlackGui
         if (unspecified.isEmpty()) { return false; }
         for (int i = 0; i < box->count(); i++)
         {
-            QString t(box->itemText(i));
+            const QString t(box->itemText(i));
             if (t.startsWith(unspecified, Qt::CaseInsensitive))
             {
                 box->setCurrentIndex(i);
@@ -142,10 +151,10 @@ namespace BlackGui
     CVariant CGuiUtility::fromSwiftDragAndDropData(const QByteArray &utf8Data)
     {
         if (utf8Data.isEmpty()) { return CVariant(); }
-        QJsonDocument jsonDoc(QJsonDocument::fromJson(utf8Data));
-        QJsonObject jsonObj(jsonDoc.object());
-        QString typeName(jsonObj.value("type").toString());
-        int typeId = QMetaType::type(qPrintable(typeName));
+        const QJsonDocument jsonDoc(QJsonDocument::fromJson(utf8Data));
+        const QJsonObject jsonObj(jsonDoc.object());
+        const QString typeName(jsonObj.value("type").toString());
+        const int typeId = QMetaType::type(qPrintable(typeName));
 
         // check if a potential valid value object
         if (typeName.isEmpty() || typeId == QMetaType::UnknownType) { return CVariant(); }
@@ -161,12 +170,11 @@ namespace BlackGui
         constexpr int Unknown = static_cast<int>(QMetaType::UnknownType);
 
         if (!hasSwiftVariantMimeType(mime)) { return Unknown; }
-        QJsonDocument jsonDoc(QJsonDocument::fromJson(mime->data(swiftJsonDragAndDropMimeType())));
-        QJsonObject jsonObj(jsonDoc.object());
-        if (jsonObj.isEmpty()) { return Unknown; }
-        QString typeName(jsonObj.value("type").toString());
+        static const QJsonObject jsonObj(QJsonDocument::fromJson(mime->data(swiftJsonDragAndDropMimeType())).object());
+        Q_ASSERT_X(!jsonObj.isEmpty(), Q_FUNC_INFO, "Empty JSON object");
+        const QString typeName(jsonObj.value("type").toString());
         if (typeName.isEmpty()) { return Unknown; }
-        int typeId = QMetaType::type(qPrintable(typeName));
+        const int typeId = QMetaType::type(qPrintable(typeName));
         return typeId;
     }
 
@@ -225,7 +233,7 @@ namespace BlackGui
     {
         QWidgetList tlw = QApplication::topLevelWidgets();
         QWidgetList rl;
-        foreach (QWidget *w, tlw)
+        for (QWidget *w : tlw)
         {
             if (w->objectName().isEmpty()) { continue; }
             rl.append(w);
