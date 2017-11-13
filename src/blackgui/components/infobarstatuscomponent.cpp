@@ -7,18 +7,18 @@
  * contained in the LICENSE file.
  */
 
-#include "blackconfig/buildconfig.h"
+#include "blackgui/components/infobarstatuscomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/led.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/simulator.h"
-#include "blackgui/components/infobarstatuscomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/led.h"
 #include "blackmisc/audio/audioutils.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackconfig/buildconfig.h"
 #include "ui_infobarstatuscomponent.h"
 
 #include <QLabel>
@@ -81,6 +81,7 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::initLeds()
         {
+            this->updateSpacing();
             CLedWidget::LedShape shape = CLedWidget::Circle;
             ui->led_DBus->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DBus connected", "DBus disconnected", 14);
             ui->led_Network->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Network connected", "Network disconnected", 14);
@@ -103,9 +104,17 @@ namespace BlackGui
             ui->led_DBus->setOnToolTip(tooltip);
         }
 
+        void CInfoBarStatusComponent::setSpacing(int spacing)
+        {
+            if (this->layout())
+            {
+                this->layout()->setSpacing(spacing);
+            }
+        }
+
         void CInfoBarStatusComponent::onSimulatorStatusChanged(int status)
         {
-            ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
+            const ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
             if (simStatus.testFlag(ISimulator::Connected))
             {
                 // at least connected
@@ -140,10 +149,9 @@ namespace BlackGui
             this->onMapperReady();
         }
 
-        void CInfoBarStatusComponent::onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CInfoBarStatusComponent::onNetworkConnectionChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
-
             switch (to)
             {
             case INetwork::Disconnected:
@@ -190,7 +198,7 @@ namespace BlackGui
                 }
                 else if (actions.size() > 1 && selectedItem == actions.at(1))
                 {
-                    BlackMisc::Audio::startWindowsMixer();
+                    Audio::startWindowsMixer();
                 }
             }
         }
@@ -235,6 +243,14 @@ namespace BlackGui
                 ui->led_Network->setOffColor(CLedWidget::Red);
                 ui->led_Network->setOffToolTip("No network/internet access");
             }
+        }
+
+        void CInfoBarStatusComponent::updateSpacing()
+        {
+            if (!sGui || !sGui->mainApplicationWindow()) { return; }
+            const int w = sGui->mainApplicationWindow()->width();
+            const int s = (w >= 400) ? 6 : 2;
+            this->setSpacing(s);
         }
     } // namespace
 } // namespace

@@ -50,6 +50,9 @@ namespace BlackGui
             //! Tooltip for DBus
             void setDBusTooltip(const QString &tooltip);
 
+            //! Set the spacing
+            void setSpacing(int spacing);
+
         private:
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;
             BlackCore::CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CInfoBarStatusComponent::onPttChanged };
@@ -74,6 +77,9 @@ namespace BlackGui
 
             //! Internet accessible?
             void onInternetAccessibleChanged(bool access);
+
+            //! Update spacing based on main window size
+            void updateSpacing();
         };
     } // ns
 } // ns
