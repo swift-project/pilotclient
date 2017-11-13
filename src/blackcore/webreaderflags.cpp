@@ -13,29 +13,29 @@ using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
-    CWebReaderFlags::WebReader CWebReaderFlags::entityToReader(CEntityFlags::Entity entity)
+    CWebReaderFlags::WebReader CWebReaderFlags::entitiesToReaders(CEntityFlags::Entity entities)
     {
         WebReader f = None;
-        if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) || entity.testFlag(CEntityFlags::AirlineIcaoEntity) || entity.testFlag(CEntityFlags::CountryEntity))
+        if (entities.testFlag(CEntityFlags::AircraftIcaoEntity) || entities.testFlag(CEntityFlags::AirlineIcaoEntity) || entities.testFlag(CEntityFlags::CountryEntity))
         {
             f |= IcaoDataReader;
         }
 
-        if (entity.testFlag(CEntityFlags::ModelEntity) || entity.testFlag(CEntityFlags::DistributorEntity) || entity.testFlag(CEntityFlags::LiveryEntity))
+        if (entities.testFlag(CEntityFlags::ModelEntity) || entities.testFlag(CEntityFlags::DistributorEntity) || entities.testFlag(CEntityFlags::LiveryEntity))
         {
             f |= ModelReader;
         }
 
-        if (entity.testFlag(CEntityFlags::AirportEntity))
+        if (entities.testFlag(CEntityFlags::AirportEntity))
         {
             f |= AirportReader;
         }
 
-        if (entity.testFlag(CEntityFlags::DbInfoObjectEntity)) { f |= DbInfoDataReader; }
-        if (entity.testFlag(CEntityFlags::BookingEntity)) { f |= VatsimBookingReader; }
-        if (entity.testFlag(CEntityFlags::VatsimDataFile)) { f |= VatsimDataReader; }
-        if (entity.testFlag(CEntityFlags::VatsimStatusFile)) { f |= VatsimStatusReader; }
-        if (entity.testFlag(CEntityFlags::MetarEntity)) { f |= VatsimMetarReader; }
+        if (entities.testFlag(CEntityFlags::DbInfoObjectEntity)) { f |= DbInfoDataReader; }
+        if (entities.testFlag(CEntityFlags::BookingEntity)) { f |= VatsimBookingReader; }
+        if (entities.testFlag(CEntityFlags::VatsimDataFile)) { f |= VatsimDataReader; }
+        if (entities.testFlag(CEntityFlags::VatsimStatusFile)) { f |= VatsimStatusReader; }
+        if (entities.testFlag(CEntityFlags::MetarEntity)) { f |= VatsimMetarReader; }
 
         return f;
     }
@@ -59,14 +59,30 @@ namespace BlackCore
         return entities;
     }
 
-    bool CWebReaderFlags::isFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity)
+    bool CWebReaderFlags::isFromSwiftDb(CEntityFlags::Entity entity)
     {
-        return isFromSwiftDb(entityToReader(entity));
+        Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+        return isFromSwiftDb(entitiesToReaders(entity));
     }
 
     bool CWebReaderFlags::isFromSwiftDb(WebReader reader)
     {
-        return reader.testFlag(ModelReader) || reader.testFlag(IcaoDataReader) || reader.testFlag(DbInfoDataReader);
+        return reader.testFlag(ModelReader) || reader.testFlag(IcaoDataReader) || reader.testFlag(DbInfoDataReader) || reader.testFlag(AirportReader);
+    }
+
+    int CWebReaderFlags::numberOfReaders(WebReader readers)
+    {
+        int n = 0;
+        if (readers.testFlag(ModelReader)) { n++; }
+        if (readers.testFlag(IcaoDataReader)) { n++; }
+        if (readers.testFlag(AirportReader)) { n++; }
+        if (readers.testFlag(DbInfoDataReader)) { n++; }
+        return n;
+    }
+
+    bool CWebReaderFlags::isSingleReader(WebReader readers)
+    {
+        return numberOfReaders(readers) == 1;
     }
 
 } // namespace

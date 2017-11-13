@@ -1073,23 +1073,21 @@ namespace BlackCore
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
         Q_ASSERT_X(CEntityFlags::anySwiftDbEntity(entity), Q_FUNC_INFO, "No swift DB entity");
 
-        const CWebReaderFlags::WebReader wr = CWebReaderFlags::entityToReader(entity);
+        const CWebReaderFlags::WebReader wr = CWebReaderFlags::entitiesToReaders(entity);
         switch (wr)
         {
         case CWebReaderFlags::IcaoDataReader: return m_icaoDataReader;
         case CWebReaderFlags::ModelReader: return m_modelDataReader;
         case CWebReaderFlags::AirportReader: return m_airportDataReader;
-        default:
-            break;
+        default: break;
         }
         return nullptr;
     }
 
     void CWebDataServices::initWriters()
     {
-        m_databaseWriter = new CDatabaseWriter(
-            sApp->getGlobalSetup().getDbRootDirectoryUrl(),
-            this);
+        m_databaseWriter = new CDatabaseWriter(sApp->getGlobalSetup().getDbRootDirectoryUrl(),
+                                               this);
     }
 
     bool CWebDataServices::signalEntitiesAlreadyRead(CEntityFlags::Entity entities)
@@ -1342,7 +1340,7 @@ namespace BlackCore
         if (this->getAirportsCount() > 0)
         {
             QString json(QJsonDocument(this->getAirports().toJson()).toJson());
-            bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "airports.json"));
+            const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "airports.json"));
             if (!s) { return false; }
         }
 

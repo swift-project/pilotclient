@@ -44,8 +44,8 @@ namespace BlackCore
         };
         Q_DECLARE_FLAGS(WebReader, WebReaderFlag)
 
-        //! Relationship between reader and entity
-        static WebReader entityToReader(BlackMisc::Network::CEntityFlags::Entity entity);
+        //! Relationship between readers and entities
+        static WebReader entitiesToReaders(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Cast
         static WebReader webReaderFlagToWebReader(WebReaderFlag flag);
@@ -58,6 +58,12 @@ namespace BlackCore
 
         //! Reader for swift DB?
         static bool isFromSwiftDb(WebReader reader);
+
+        //! Number of readers
+        static int numberOfReaders(WebReader readers);
+
+        //! Is single reader
+        static bool isSingleReader(WebReader readers);
     };
 } // namespace
 
