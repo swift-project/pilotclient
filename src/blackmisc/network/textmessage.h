@@ -119,6 +119,9 @@ namespace BlackMisc
             //! \param separator         values separated by given value
             CStatusMessage asStatusMessage(bool withSender, bool withRecipient, const QString &separator = ", ") const;
 
+            //! Summary HTML code
+            QString asHtmlSummary(const QString &separator = "<br>") const;
+
             //! Toggle sender receiver, can be used to ping my own message
             void toggleSenderRecipient();
 

@@ -119,6 +119,7 @@ namespace BlackGui
             this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
             this->setWordWrap(true);
+            this->setTextElideMode(Qt::ElideMiddle);
 
             // shortcuts
             QShortcut *filter = new QShortcut(CShortcut::keyDisplayFilter(), this, SLOT(ps_displayFilterDialog()), nullptr, Qt::WidgetShortcut);

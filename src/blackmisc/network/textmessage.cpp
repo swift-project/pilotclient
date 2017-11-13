@@ -17,6 +17,7 @@
 
 #include <Qt>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -37,17 +38,13 @@ namespace BlackMisc
 
         QString CTextMessage::convertToQString(bool i18n) const
         {
-            QString s(m_message);
             if (this->isPrivateMessage())
             {
-                s.append(" ").append(m_senderCallsign.toQString(i18n));
-                s.append(" ").append(m_recipientCallsign.toQString(i18n));
+                return m_message %
+                       QStringLiteral(" ") % m_senderCallsign.toQString(i18n) %
+                       QStringLiteral(" ") % m_recipientCallsign.toQString(i18n);
             }
-            else
-            {
-                s.append(" ").append(m_frequency.toQString(i18n));
-            }
-            return s;
+            return m_message % QStringLiteral(" ") % m_frequency.toQString(i18n);
         }
 
         bool CTextMessage::isPrivateMessage() const
@@ -169,6 +166,11 @@ namespace BlackMisc
         {
             const QString m = this->asString(withSender, withRecipient, separator);
             return { this, CStatusMessage::SeverityInfo, m };
+        }
+
+        QString CTextMessage::asHtmlSummary(const QString &separator) const
+        {
+            return this->asString(true, true, separator);
         }
 
         void CTextMessage::toggleSenderRecipient()

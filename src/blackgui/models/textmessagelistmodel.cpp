@@ -81,5 +81,15 @@ namespace BlackGui
             }
         }
 
+        QVariant CTextMessageListModel::data(const QModelIndex &index, int role) const
+        {
+            if (role == Qt::ToolTipRole)
+            {
+                // the underlying model object as summary
+                const CTextMessage model(this->at(index));
+                return model.asHtmlSummary("<br>");
+            }
+            return CListModelBase::data(index, role);
+        }
     }  // namespace
 } // namespace

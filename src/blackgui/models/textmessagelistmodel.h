@@ -48,6 +48,9 @@ namespace BlackGui
             //! Mode
             TextMessageMode getTextMessageMode() const { return m_textMessageMode; }
 
+            //! \copydoc QAbstractItemModel::data
+            virtual QVariant data(const QModelIndex &index, int role) const override;
+
         private:
             TextMessageMode m_textMessageMode = NotSet;
         };
