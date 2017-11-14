@@ -297,7 +297,9 @@ namespace BlackCore
     {
         static const QString launcher = CApplication::getExecutableForApplication(CApplicationInfo::Application::Laucher);
         if (launcher.isEmpty() || CApplication::isApplicationRunning(CApplicationInfo::Laucher)) { return false; }
-        return QProcess::startDetached(launcher);
+
+        const QStringList args = this->inheritedArguments(true);
+        return QProcess::startDetached(launcher, args);
     }
 
     bool CApplication::isUnitTest() const
