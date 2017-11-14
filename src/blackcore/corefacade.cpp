@@ -170,7 +170,7 @@ namespace BlackCore
         Q_ASSERT(!dBusAddress.isEmpty());
         if (m_dbusServer) { m_dbusServer->deleteLater(); } // delete if there was an existing one
         m_dbusServer = new CDBusServer(dBusAddress, this);
-        CLogMessage(this).info("DBus server on address: %1") << dBusAddress;
+        CLogMessage(this).info("DBus server on address: '%1'") << dBusAddress;
     }
 
     void CCoreFacade::initPostSetup(QMap<QString, int> &times)

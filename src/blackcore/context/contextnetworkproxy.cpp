@@ -32,7 +32,7 @@ namespace BlackCore
     {
         CContextNetworkProxy::CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextNetwork(mode, runtime), m_dBusInterface(nullptr)
         {
-            this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
+            m_dBusInterface = new BlackMisc::CGenericDBusInterface(
                 serviceName , IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                 connection, this);
             this->relaySignals(serviceName, connection);
@@ -106,232 +106,232 @@ namespace BlackCore
 
         void CContextNetworkProxy::requestAtcBookingsUpdate() const
         {
-            this->m_dBusInterface->callDBus(QLatin1String("requestAtcBookingsUpdate"));
+            m_dBusInterface->callDBus(QLatin1String("requestAtcBookingsUpdate"));
         }
 
         BlackMisc::Aviation::CAtcStationList CContextNetworkProxy::getAtcStationsOnline() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getAtcStationsOnline"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getAtcStationsOnline"));
         }
 
         CAtcStationList CContextNetworkProxy::getAtcStationsBooked() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getAtcStationsBooked"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getAtcStationsBooked"));
         }
 
         CSimulatedAircraftList CContextNetworkProxy::getAircraftInRange() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1String("getAircraftInRange"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1String("getAircraftInRange"));
         }
 
         CCallsignSet CContextNetworkProxy::getAircraftInRangeCallsigns() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1String("getAircraftInRangeCallsigns"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1String("getAircraftInRangeCallsigns"));
         }
 
         int CContextNetworkProxy::getAircraftInRangeCount() const
         {
-            return this->m_dBusInterface->callDBusRet<int>(QLatin1String("getAircraftInRangeCount"));
+            return m_dBusInterface->callDBusRet<int>(QLatin1String("getAircraftInRangeCount"));
         }
 
         bool CContextNetworkProxy::isAircraftInRange(const CCallsign &callsign) const
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("isAircraftInRange"), callsign);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isAircraftInRange"), callsign);
         }
 
         CSimulatedAircraft CContextNetworkProxy::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1String("getAircraftInRangeForCallsign"), callsign);
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1String("getAircraftInRangeForCallsign"), callsign);
         }
 
         CAtcStation CContextNetworkProxy::getOnlineStationForCallsign(const CCallsign &callsign) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStation>(QLatin1String("getOnlineStationForCallsign"), callsign);
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStation>(QLatin1String("getOnlineStationForCallsign"), callsign);
         }
 
         CUserList CContextNetworkProxy::getUsers() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getUsers"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getUsers"));
         }
 
         CUserList CContextNetworkProxy::getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getUsersForCallsigns"), callsigns);
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getUsersForCallsigns"), callsigns);
         }
 
         CUser CContextNetworkProxy::getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUser>(QLatin1String("getUserForCallsign"), callsign);
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CUser>(QLatin1String("getUserForCallsign"), callsign);
         }
 
         CClientList CContextNetworkProxy::getOtherClients() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getOtherClients"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getOtherClients"));
         }
 
         CServerList CContextNetworkProxy::getVatsimFsdServers() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1String("getVatsimFsdServers"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1String("getVatsimFsdServers"));
         }
 
         CServerList CContextNetworkProxy::getVatsimVoiceServers() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1String("getVatsimVoiceServers"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1String("getVatsimVoiceServers"));
         }
 
         CClientList CContextNetworkProxy::getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getOtherClientsForCallsigns"), callsigns);
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getOtherClientsForCallsigns"), callsigns);
         }
 
         CVoiceRoomList CContextNetworkProxy::getSelectedVoiceRooms() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Audio::CVoiceRoomList>(QLatin1String("getSelectedVoiceRooms"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Audio::CVoiceRoomList>(QLatin1String("getSelectedVoiceRooms"));
         }
 
         CAtcStationList CContextNetworkProxy::getSelectedAtcStations() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getSelectedAtcStations"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1String("getSelectedAtcStations"));
         }
 
         void CContextNetworkProxy::requestDataUpdates()
         {
-            this->m_dBusInterface->callDBus(QLatin1String("requestDataUpdates"));
+            m_dBusInterface->callDBus(QLatin1String("requestDataUpdates"));
         }
 
         void CContextNetworkProxy::requestAtisUpdates()
         {
-            this->m_dBusInterface->callDBus(QLatin1String("requestAtisUpdates"));
+            m_dBusInterface->callDBus(QLatin1String("requestAtisUpdates"));
         }
 
         bool CContextNetworkProxy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftEnabled"), callsign, enabledForRedering);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftEnabled"), callsign, enabledForRedering);
         }
 
         bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftModel"), callsign, model, originator);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftModel"), callsign, model, originator);
         }
 
         bool CContextNetworkProxy::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftNetworkModel"), callsign, model, originator);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftNetworkModel"), callsign, model, originator);
         }
 
         bool CContextNetworkProxy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionSending)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateFastPositionEnabled"), callsign, enableFastPositionSending);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateFastPositionEnabled"), callsign, enableFastPositionSending);
         }
 
         void CContextNetworkProxy::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("setFastPositionEnabledCallsigns"), callsigns);
+            m_dBusInterface->callDBus(QLatin1String("setFastPositionEnabledCallsigns"), callsigns);
         }
 
         CCallsignSet CContextNetworkProxy::getFastPositionEnabledCallsigns() const
         {
-            return this->m_dBusInterface->callDBusRet<CCallsignSet>(QLatin1String("getFastPositionEnabledCallsigns"));
+            return m_dBusInterface->callDBusRet<CCallsignSet>(QLatin1String("getFastPositionEnabledCallsigns"));
         }
 
         CStatusMessageList CContextNetworkProxy::getReverseLookupMessages(const CCallsign &callsign) const
         {
-            return this->m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("getReverseLookupMessages"), callsign);
+            return m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("getReverseLookupMessages"), callsign);
         }
 
         bool CContextNetworkProxy::isReverseLookupMessagesEnabled() const
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("isReverseLookupLoggingEnabled"));
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isReverseLookupLoggingEnabled"));
         }
 
         void CContextNetworkProxy::enableReverseLookupMessages(bool enabled)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("enableReverseLookupLogging"), enabled);
+            m_dBusInterface->callDBus(QLatin1String("enableReverseLookupLogging"), enabled);
         }
 
         CStatusMessageList CContextNetworkProxy::getAircraftPartsHistory(const CCallsign &callsign) const
         {
-            return this->m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("getAircraftPartsHistory"), callsign);
+            return m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1String("getAircraftPartsHistory"), callsign);
         }
 
         CAircraftPartsList CContextNetworkProxy::getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
         {
-            return this->m_dBusInterface->callDBusRet<CAircraftPartsList>(QLatin1String("getRemoteAircraftParts"), callsign, cutoffTimeValuesBefore);
+            return m_dBusInterface->callDBusRet<CAircraftPartsList>(QLatin1String("getRemoteAircraftParts"), callsign, cutoffTimeValuesBefore);
         }
 
         bool CContextNetworkProxy::isAircraftPartsHistoryEnabled() const
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("isAircraftPartsHistoryEnabled"));
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isAircraftPartsHistoryEnabled"));
         }
 
         void CContextNetworkProxy::enableAircraftPartsHistory(bool enabled)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("enableAircraftPartsHistory"), enabled);
+            m_dBusInterface->callDBus(QLatin1String("enableAircraftPartsHistory"), enabled);
         }
 
         void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("testCreateDummyOnlineAtcStations"), number);
+            m_dBusInterface->callDBus(QLatin1String("testCreateDummyOnlineAtcStations"), number);
         }
 
         void CContextNetworkProxy::testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("testAddAircraftParts"), callsign, parts, incremental);
+            m_dBusInterface->callDBus(QLatin1String("testAddAircraftParts"), callsign, parts, incremental);
         }
 
         void CContextNetworkProxy::testReceivedTextMessages(const CTextMessageList &textMessages)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("testReceivedTextMessages"), textMessages);
+            m_dBusInterface->callDBus(QLatin1String("testReceivedTextMessages"), textMessages);
         }
 
         void CContextNetworkProxy::testRequestAircraftConfig(const CCallsign &callsign)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("testRequestAircraftConfig"), callsign);
+            m_dBusInterface->callDBus(QLatin1String("testRequestAircraftConfig"), callsign);
         }
 
         CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, INetwork::LoginMode loginMode)
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("connectToNetwork"), server, loginMode);
+            return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("connectToNetwork"), server, loginMode);
         }
 
         CStatusMessage CContextNetworkProxy::disconnectFromNetwork()
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("disconnectFromNetwork"));
+            return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1String("disconnectFromNetwork"));
         }
 
         bool CContextNetworkProxy::isConnected() const
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("isConnected"));
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isConnected"));
         }
 
         CServer CContextNetworkProxy::getConnectedServer() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServer>(QLatin1String("getConnectedServer"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CServer>(QLatin1String("getConnectedServer"));
         }
 
         bool CContextNetworkProxy::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
         }
 
         void CContextNetworkProxy::sendTextMessages(const CTextMessageList &textMessages)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("sendTextMessages"), textMessages);
+            m_dBusInterface->callDBus(QLatin1String("sendTextMessages"), textMessages);
         }
 
         void CContextNetworkProxy::sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan)
         {
-            this->m_dBusInterface->callDBus(QLatin1String("sendFlightPlan"), flightPlan);
+            m_dBusInterface->callDBus(QLatin1String("sendFlightPlan"), flightPlan);
         }
 
         CFlightPlan CContextNetworkProxy::loadFlightPlanFromNetwork(const CCallsign &callsign) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CFlightPlan>(QLatin1String("loadFlightPlanFromNetwork"), callsign);
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CFlightPlan>(QLatin1String("loadFlightPlanFromNetwork"), callsign);
         }
 
         CMetar CContextNetworkProxy::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Weather::CMetar>(QLatin1String("getMetarForAirport"), airportIcaoCode);
+            return m_dBusInterface->callDBusRet<BlackMisc::Weather::CMetar>(QLatin1String("getMetarForAirport"), airportIcaoCode);
         }
     } // ns
 } // ns
