@@ -1,3 +1,4 @@
+
 /* Copyright (C) 2015
  * swift project Community / Contributors
  *
@@ -12,6 +13,7 @@
 #ifndef SWIFTCORE_H
 #define SWIFTCORE_H
 
+#include "blackcore/coremodeenums.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/systemtraywindow.h"
 #include "blackmisc/identifiable.h"
@@ -43,34 +45,35 @@ public:
     //! Destructor
     virtual ~CSwiftCore();
 
-private slots:
-    //! \name PushButton slots
-    //! @{
-    void ps_startCorePressed();
-    void ps_stopCorePressed();
-    void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);
-    void ps_p2pModeToggled(bool checked);
-    //! @}
-
-    //! Show the settings dialog
-    void ps_showSettingsDialog();
-
-    //! Style sheet has changed
-    virtual void ps_onStyleSheetsChanged();
-
 private:
     //! \name Init
     //! @{
-    void initSlots();
     void initLogDisplay();
     void initStyleSheet();
-    void initDBusMode();
     void initMenus();
+    void initAudio();
     //! @}
 
-    void startCore(const QString &dBusAdress);
-    void stopCore();
-    QString getDBusAddress() const;
+    //! Add a message to log UI
+    void appendLogMessage(const BlackMisc::CStatusMessage &message);
+
+    //! Toggled P2P mode
+    void p2pModeToggled(bool checked);
+
+    //! Show the settings dialog
+    void showSettingsDialog();
+
+    //! Style sheet has changed
+    virtual void onStyleSheetsChanged();
+
+    //! Restart with new arguments
+    void restart();
+
+    //! Core mode from radio buttons
+    QString getAudioCmdFromRadioButtons() const;
+
+    //! Restart CMD args
+    QStringList getRestartCmdArgs() const;
 
     QScopedPointer<BlackGui::Components::CCoreSettingsDialog> m_settingsDialog;
     QScopedPointer<Ui::CSwiftCore> ui;

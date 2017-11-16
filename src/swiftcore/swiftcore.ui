@@ -6,55 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>460</width>
-    <height>382</height>
+    <width>450</width>
+    <height>550</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>450</width>
+    <height>550</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>swiftcore</string>
+   <string>swiftcore UI</string>
   </property>
   <widget class="QWidget" name="qw_MainWidget">
    <layout class="QGridLayout" name="gl_Main">
-    <item row="1" column="2">
-     <widget class="QGroupBox" name="gb_Controls">
-      <property name="title">
-       <string>Controls</string>
-      </property>
-      <layout class="QGridLayout" name="gl_Controls">
-       <item row="0" column="1">
-        <widget class="QPushButton" name="pb_StartCore">
-         <property name="styleSheet">
-          <string notr="true">/** Main window **/
-QTextEdit {
-  background-color: DimGray;
-}</string>
-         </property>
-         <property name="text">
-          <string>Start</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="pb_StopCore">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">/** Main window **/
-QTextEdit {
-  background-color: DimGray;
-}</string>
-         </property>
-         <property name="text">
-          <string>Stop</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item row="5" column="0" colspan="3">
+     <widget class="BlackGui::Components::CCommandInput" name="lep_CommandLineInput"/>
     </item>
     <item row="0" column="0" colspan="3">
      <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus" native="true">
@@ -81,54 +55,134 @@ QTextEdit {
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QGroupBox" name="gb_DBusMode">
-      <property name="title">
-       <string>DBus Mode</string>
+    <item row="4" column="0" colspan="3">
+     <widget class="BlackGui::Components::CCoreInfoAreaComponent" name="comp_InfoArea" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <layout class="QGridLayout" name="gl_DBusMode">
-       <item row="0" column="0">
-        <widget class="QRadioButton" name="rb_SessionBus">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>200</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QGroupBox" name="gb_Audio">
+      <property name="title">
+       <string>Audio</string>
+      </property>
+      <layout class="QVBoxLayout" name="vl_Audio">
+       <property name="leftMargin">
+        <number>9</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>9</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="lbl_AudioRunsWhere">
          <property name="text">
-          <string>Session</string>
+          <string>&lt;Audio is where&gt;</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="rb_AudioOnCore">
+         <property name="text">
+          <string>on core side</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="rb_AudioOnGui">
+         <property name="text">
+          <string>on GUI side</string>
          </property>
          <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QRadioButton" name="rb_P2PBus">
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="2" alignment="Qt::AlignBottom">
+     <widget class="QGroupBox" name="gb_Controls">
+      <property name="title">
+       <string>Control</string>
+      </property>
+      <layout class="QVBoxLayout" name="vl_Controls">
+       <property name="leftMargin">
+        <number>9</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>9</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item alignment="Qt::AlignRight">
+        <widget class="QPushButton" name="pb_Restart">
+         <property name="styleSheet">
+          <string notr="true">/** Main window **/
+QTextEdit {
+  background-color: DimGray;
+}</string>
+         </property>
          <property name="text">
-          <string>P2P</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QRadioButton" name="rb_SystemBus">
-         <property name="text">
-          <string>System</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="3">
-        <widget class="QLineEdit" name="le_P2PAddress">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="placeholderText">
-          <string>P2P address</string>
+          <string>restart</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
     </item>
-    <item row="4" column="0" colspan="3">
-     <widget class="BlackGui::Components::CCommandInput" name="lep_CommandLineInput"/>
-    </item>
-    <item row="3" column="0" colspan="3">
-     <widget class="BlackGui::Components::CCoreInfoAreaComponent" name="comp_InfoArea" native="true"/>
+    <item row="1" column="0" rowspan="2" colspan="2">
+     <widget class="QGroupBox" name="gb_DBus">
+      <property name="title">
+       <string>DBus Mode</string>
+      </property>
+      <layout class="QVBoxLayout" name="vl_DBus">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
+        <number>2</number>
+       </property>
+       <item>
+        <widget class="BlackGui::Components::CDBusServerAddressSelector" name="comp_DBusSelector">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -137,7 +191,7 @@ QTextEdit {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>460</width>
+     <width>450</width>
      <height>21</height>
     </rect>
    </property>
@@ -179,6 +233,12 @@ QTextEdit {
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CDBusServerAddressSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbusserveraddressselector.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>BlackGui::CSystemTrayWindow</class>
    <extends>QMainWindow</extends>

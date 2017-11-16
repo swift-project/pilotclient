@@ -8,13 +8,14 @@
  */
 
 #include "swiftcore.h"
-#include "blackcore/corefacade.h"
 #include "blackgui/components/commandinput.h"
 #include "blackgui/components/coreinfoareacomponent.h"
 #include "blackgui/components/coresettingsdialog.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/corefacade.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/loghandler.h"
@@ -41,6 +42,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     CIdentifiable(this),
     ui(new Ui::CSwiftCore)
 {
+    Q_ASSERT(sGui);
     ui->setupUi(this);
     sGui->initMainApplicationWindow(this);
     const QString name(sGui->getApplicationNameAndVersion());
@@ -51,18 +53,25 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     m_mwaOverlayFrame = nullptr;
     m_mwaStatusBar = nullptr;
 
-    initLogDisplay();
-    initSlots();
-    initStyleSheet();
-    initDBusMode();
-    initMenus();
+    connect(ui->pb_Restart, &QPushButton::clicked, this, &CSwiftCore::restart);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::onStyleSheetsChanged);
+
+    this->initLogDisplay();
+    this->initStyleSheet();
+    this->initMenus();
+    this->initAudio();
+
+    // log
+    CStatusMessage m = CStatusMessage(this).info("Cmd: " + CGuiApplication::arguments().join(" "));
+    this->appendLogMessage(m);
 
     // command line
     ui->lep_CommandLineInput->setIdentifier(this->identifier());
     connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
-
-    if (sGui->isParserOptionSet("start")) { startCore(sGui->getCmdDBusAddressValue()); }
 }
+
+CSwiftCore::~CSwiftCore()
+{ }
 
 void CSwiftCore::initStyleSheet()
 {
@@ -76,56 +85,12 @@ void CSwiftCore::initStyleSheet()
     this->setStyleSheet(s);
 }
 
-void CSwiftCore::initDBusMode()
-{
-    const QString dBusAddress(sGui->getCmdDBusAddressValue());
-    if (dBusAddress.startsWith(CDBusServer::sessionBusAddress()))
-    {
-        ui->rb_SessionBus->setChecked(true);
-    }
-    else if (dBusAddress.startsWith(CDBusServer::systemBusAddress()))
-    {
-        ui->rb_SystemBus->setChecked(true);
-    }
-    else
-    {
-        ui->rb_P2PBus->setChecked(true);
-        ui->le_P2PAddress->setText(dBusAddress);
-    }
-}
-
-CSwiftCore::~CSwiftCore()
-{ }
-
-void CSwiftCore::ps_startCorePressed()
-{
-    startCore(getDBusAddress());
-}
-
-void CSwiftCore::ps_stopCorePressed()
-{
-    stopCore();
-}
-
-void CSwiftCore::ps_appendLogMessage(const CStatusMessage &message)
+void CSwiftCore::appendLogMessage(const CStatusMessage &message)
 {
     ui->comp_InfoArea->getLogComponent()->appendStatusMessageToList(message);
 }
 
-void CSwiftCore::ps_p2pModeToggled(bool checked)
-{
-    if (checked)
-    {
-        ui->le_P2PAddress->setEnabled(true);
-    }
-    else
-    {
-        ui->le_P2PAddress->setText(QString());
-        ui->le_P2PAddress->setEnabled(false);
-    }
-}
-
-void CSwiftCore::ps_showSettingsDialog()
+void CSwiftCore::showSettingsDialog()
 {
     if (!m_settingsDialog)
     {
@@ -134,17 +99,9 @@ void CSwiftCore::ps_showSettingsDialog()
     m_settingsDialog->show();
 }
 
-void CSwiftCore::ps_onStyleSheetsChanged()
+void CSwiftCore::onStyleSheetsChanged()
 {
     this->initStyleSheet();
-}
-
-void CSwiftCore::initSlots()
-{
-    connect(ui->pb_StartCore, &QPushButton::clicked, this, &CSwiftCore::ps_startCorePressed);
-    connect(ui->pb_StopCore, &QPushButton::clicked, this, &CSwiftCore::ps_stopCorePressed);
-    connect(ui->rb_P2PBus, &QRadioButton::toggled, this, &CSwiftCore::ps_p2pModeToggled);
-    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::ps_onStyleSheetsChanged);
 }
 
 void CSwiftCore::initLogDisplay()
@@ -155,7 +112,7 @@ void CSwiftCore::initLogDisplay()
     auto logHandler = CLogHandler::instance()->handlerForPattern(
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
                       );
-    logHandler->subscribe(this, &CSwiftCore::ps_appendLogMessage);
+    logHandler->subscribe(this, &CSwiftCore::appendLogMessage);
     ui->comp_InfoArea->getLogComponent()->showFilterDialog(); // add a filter dialog
 }
 
@@ -164,36 +121,40 @@ void CSwiftCore::initMenus()
     sGui->addMenuFile(*ui->menu_File);
     sGui->addMenuWindow(*ui->menu_Window);
     sGui->addMenuHelp(*ui->menu_Help);
-    connect(ui->menu_SettingsDialog, &QAction::triggered, this, &CSwiftCore::ps_showSettingsDialog);
+    connect(ui->menu_SettingsDialog, &QAction::triggered, this, &CSwiftCore::showSettingsDialog);
 }
 
-void CSwiftCore::startCore(const QString &dBusAdress)
+void CSwiftCore::initAudio()
 {
-    if (dBusAdress.isEmpty()) { return; }
-    Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
-    Q_ASSERT_X(sGui->getCoreFacade(), Q_FUNC_INFO, "Missing facade");
-
-    ui->pb_StartCore->setEnabled(false);
-    ui->pb_StopCore->setEnabled(true);
-    ui->gb_DBusMode->setDisabled(true);
-    sGui->processEventsToRefreshGui();
+    if (!sGui->getIContextAudio()) { return; }
+    ui->lbl_AudioRunsWhere->setText(sGui->getIContextAudio()->audioRunsWhereInfo());
+    if (sGui->getIContextAudio()->isUsingImplementingObject())
+    {
+        ui->rb_AudioOnCore->setChecked(true);
+    }
+    else
+    {
+        ui->rb_AudioOnGui->setChecked(true);
+    }
 }
 
-void CSwiftCore::stopCore()
+void CSwiftCore::restart()
 {
-    ui->pb_StartCore->setEnabled(true);
-    ui->pb_StopCore->setEnabled(false);
-    ui->gb_DBusMode->setDisabled(false);
-    sGui->processEventsToRefreshGui();
-    sGui->exit();
+    ui->pb_Restart->setEnabled(false);
+    const QStringList args = this->getRestartCmdArgs();
+    sGui->restartApplication(args, { "--coreaudio" });
 }
 
-QString CSwiftCore::getDBusAddress() const
+QString CSwiftCore::getAudioCmdFromRadioButtons() const
 {
-    if (ui->rb_SessionBus->isChecked()) { return CDBusServer::sessionBusAddress(); }
-    if (ui->rb_SystemBus->isChecked()) { return CDBusServer::systemBusAddress(); }
-    if (ui->rb_P2PBus->isChecked()) { return CDBusServer::normalizeAddress(ui->le_P2PAddress->text()); }
-
-    Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong DBus address");
+    if (ui->rb_AudioOnCore->isChecked()) { return "--coreaudio"; }
     return "";
+}
+
+QStringList CSwiftCore::getRestartCmdArgs() const
+{
+    const QString coreAudio = this->getAudioCmdFromRadioButtons();
+    QStringList cmds = ui->comp_DBusSelector->getDBusCmdLineArgs();
+    if (!coreAudio.isEmpty()) { cmds.append(coreAudio); }
+    return cmds;
 }

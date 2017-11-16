@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
     a.addWindowStateOption();
     a.addDBusAddressOption();
     a.addVatlibOptions();
-    a.addParserOption({{"r", "start"}, QCoreApplication::translate("main", "Start the server.")});
     a.addParserOption({{"c", "coreaudio"}, QCoreApplication::translate("main", "Audio in core.")});
     if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
 
