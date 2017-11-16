@@ -1584,9 +1584,9 @@ namespace BlackSimPlugin
         {
             if (!m_traceSendId) { return; }
             if (MaxSendIdTraces < 1) { return; }
-            DWORD dwLastId = -1;
+            DWORD dwLastId = 0;
             const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);
-            if (hr != S_OK || dwLastId < 0) { return; }
+            if (hr != S_OK) { return; }
             if (m_sendIdTraces.size() > MaxSendIdTraces) { m_sendIdTraces.removeFirst(); }
             const TraceFsxSendId trace(dwLastId, simObjectId,
                                        details.isEmpty() ? function : details + ", " + function);

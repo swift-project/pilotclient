@@ -88,11 +88,15 @@ namespace BlackSimPlugin
             //! Ctor
             TraceFsxSendId(DWORD sendId, DWORD simObjectId, const QString &comment) :
                 sendId(sendId), simObjectId(simObjectId), comment(comment)
-            { }
+            {
+                Q_ASSERT_X(sendId >= 0, Q_FUNC_INFO, "DWORD is unsigned");
+                Q_ASSERT_X(simObjectId >= 0, Q_FUNC_INFO, "DWORD is unsigned");
+            }
 
-            DWORD sendId = -1;      //!< the send id
-            DWORD simObjectId = -1; //!< corresponding CSimConnectObject
-            QString comment;        //!< where sent
+            // DWORD is unsigned
+            DWORD sendId = 0;      //!< the send id
+            DWORD simObjectId = 0; //!< corresponding CSimConnectObject
+            QString comment;       //!< where sent
         };
 
         //! FSX Simulator Implementation
