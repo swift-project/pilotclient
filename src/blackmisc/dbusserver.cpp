@@ -130,6 +130,14 @@ namespace BlackMisc
         }
     }
 
+    bool CDBusServer::dBusAddressToHostAndPort(QString dbusAddress, QString &o_host, QString &o_port)
+    {
+        int port;
+        const bool s = dBusAddressToHostAndPort(dbusAddress, o_host, port);
+        o_port = QString::number(port);
+        return s;
+    }
+
     bool CDBusServer::isQtDefaultConnection(const QDBusConnection &connection)
     {
         return connection.name() == QDBusConnection::sessionBus().name() ||
