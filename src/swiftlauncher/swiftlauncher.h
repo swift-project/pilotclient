@@ -93,9 +93,6 @@ private:
     //! Get core mode
     BlackCore::CoreModes::CoreMode getCoreMode() const;
 
-    //! select DBus address/mode
-    QString getDBusAddress() const;
-
     //! Selected window mode
     BlackGui::CEnableForFramelessWindow::WindowMode getWindowMode() const;
 
@@ -104,9 +101,6 @@ private:
 
     //! style sheets
     void initStyleSheet();
-
-    //! combobox for DBus
-    void initDBusGui();
 
     //! Log display
     void initLogDisplay();
@@ -157,9 +151,6 @@ private slots:
 
     //! Start button pressed
     void ps_startButtonPressed();
-
-    //! Changed selection
-    void ps_dbusServerAddressSelectionChanged(const QString &currentText);
 
     //! DBus server mode selected
     void ps_dbusServerModeSelected(bool selected);

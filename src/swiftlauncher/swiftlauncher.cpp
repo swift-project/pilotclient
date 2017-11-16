@@ -14,6 +14,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextapplicationproxy.h"
+#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusserver.h"
@@ -37,6 +38,7 @@ using namespace BlackGui::Components;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackCore::Data;
+using namespace BlackCore::Vatsim;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
@@ -59,7 +61,6 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::ps_onStyleSheetsChanged);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
-    ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
 
     // default from settings
     this->setDefaults();
@@ -106,16 +107,6 @@ CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 
     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
     return CoreModes::CoreInGuiProcess;
-}
-
-QString CSwiftLauncher::getDBusAddress() const
-{
-    if (ui->rb_DBusSession->isChecked()) { return CDBusServer::sessionBusAddress(); }
-    if (ui->rb_DBusSystem->isChecked()) { return CDBusServer::systemBusAddress(); }
-    return CDBusServer::p2pAddress(
-               ui->cb_DBusServerAddress->currentText() + ":" +
-               ui->le_DBusServerPort->text()
-           );
 }
 
 void CSwiftLauncher::mouseMoveEvent(QMouseEvent *event)
@@ -167,7 +158,6 @@ void CSwiftLauncher::init()
 
     this->initStyleSheet();
     this->initLogDisplay();
-    this->initDBusGui();
 
     ui->lbl_HeaderInfo->setVisible(false);
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain);
@@ -212,23 +202,6 @@ void CSwiftLauncher::loadAbout()
     ui->tbr_About->setHtml(htmlFixed);
 }
 
-void CSwiftLauncher::initDBusGui()
-{
-    ui->cb_DBusServerAddress->addItems(CNetworkUtils::getKnownLocalIpV4Addresses());
-    ui->cb_DBusServerAddress->setCurrentIndex(0);
-
-    connect(ui->cb_DBusServerAddress, &QComboBox::currentTextChanged, this, &CSwiftLauncher::ps_dbusServerAddressSelectionChanged);
-    connect(ui->rb_DBusP2P, &QRadioButton::clicked, this, &CSwiftLauncher::ps_dbusServerModeSelected);
-    connect(ui->rb_DBusSession, &QRadioButton::clicked, this, &CSwiftLauncher::ps_dbusServerModeSelected);
-    connect(ui->rb_DBusSystem, &QRadioButton::clicked, this, &CSwiftLauncher::ps_dbusServerModeSelected);
-
-    // normally no system Bus on Windows
-    if (CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::isStableBranch())
-    {
-        ui->rb_DBusSystem->setEnabled(false);
-    }
-}
-
 void CSwiftLauncher::initLogDisplay()
 {
     CLogHandler::instance()->install(true);
@@ -255,21 +228,13 @@ void CSwiftLauncher::setHeaderInfo(const QString &newVersionAvailable)
 void CSwiftLauncher::startSwiftCore()
 {
     this->saveSetup();
-    const QString dBus(this->getDBusAddress());
-
-    QStringList args(
-    {
-        "--start",
-        "--dbus", dBus
-    });
-
+    QStringList args = ui->comp_DBusSelector->getDBusCmdLineArgs();
     if (ui->rb_SwiftCoreAudioOnCore->isChecked())
     {
         args.append("--coreaudio");
     }
 
-    args.append(sGui->inheritedArguments(true));
-    m_executableArgs = args;
+    m_executableArgs = sGui->argumentsJoined(args);
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftCoreExecutableName());
     this->startDetached();
 }
@@ -277,13 +242,12 @@ void CSwiftLauncher::startSwiftCore()
 void CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftDataExecutableName());
-    m_executableArgs = sGui->inheritedArguments(false);
+    m_executableArgs = sGui->argumentsJoined({}, CNetworkVatlib::vatlibArguments());
 }
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
     m_executable = CDirectoryUtils::executableFilePath(CBuildConfig::swiftGuiExecutableName());
-
     QStringList args
     {
         "--core", CoreModes::coreModeToString(getCoreMode()),
@@ -293,25 +257,22 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
     this->saveSetup();
     if (!this->isStandaloneGuiSelected())
     {
-        const QString dBus(this->getDBusAddress());
+        const QString dBus(ui->comp_DBusSelector->getDBusAddress());
+        args.append(ui->comp_DBusSelector->getDBusCmdLineArgs());
         this->saveSetup();
-        args.append("--dbus");
-        args.append(dBus); // already converted
 
         QString msg;
         if (!CSwiftLauncher::canConnectSwiftOnDBusServer(dBus, msg))
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
-            const CStatusMessage m(cats, CStatusMessage::SeverityError,
-                                   "DBus server for '" + this->getDBusAddress() + "' can not be connected.\n\n" +
+            const CStatusMessage m(this, CStatusMessage::SeverityError,
+                                   "DBus server for '" + dBus + "' can not be connected.\n\n" +
                                    "Likely the core is not running or is not reachable.\n\n" +
-                                   "Details: " + msg);
+                                   "Details: " + msg, true);
             this->ps_showStatusMessage(m);
             return false;
         }
     }
-    args.append(sGui->inheritedArguments(true));
-    m_executableArgs = args;
+    m_executableArgs = sGui->argumentsJoined(args);
     return true;
 }
 
@@ -330,18 +291,7 @@ void CSwiftLauncher::setDefaults()
 {
     const CLauncherSetup setup(m_setup.get());
     const QString dbus(setup.getDBusAddress().toLower().trimmed());
-    if (dbus.isEmpty() || dbus.startsWith("session"))
-    {
-        ui->rb_DBusSession->setChecked(true);
-    }
-    else if (dbus.startsWith("sys"))
-    {
-        ui->rb_DBusSystem->setChecked(true);
-    }
-    else
-    {
-        ui->rb_DBusP2P->setChecked(true);
-    }
+    ui->comp_DBusSelector->set(dbus);
     if (setup.useFramelessWindow())
     {
         ui->rb_WindowFrameless->setChecked(true);
@@ -363,7 +313,7 @@ void CSwiftLauncher::setDefaults()
 void CSwiftLauncher::saveSetup()
 {
     CLauncherSetup setup = m_setup.get();
-    const QString dBus(this->getDBusAddress());
+    const QString dBus(ui->comp_DBusSelector->getDBusAddress());
     if (!dBus.isEmpty()) { setup.setDBusAddress(dBus); }
     setup.setFramelessWindow(ui->rb_WindowFrameless->isChecked());
     setup.setCoreMode(CLauncherSetup::Standalone);
@@ -429,16 +379,6 @@ void CSwiftLauncher::ps_startButtonPressed()
         const CUrl homePage(sApp->getGlobalSetup().getDbHomePageUrl());
         QDesktopServices::openUrl(homePage);
     }
-}
-
-void CSwiftLauncher::ps_dbusServerAddressSelectionChanged(const QString &currentText)
-{
-    Q_UNUSED(currentText);
-    if (this->isStandaloneGuiSelected())
-    {
-        ui->rb_SwiftCoreAudioOnGui->setChecked(true);
-    }
-    ui->rb_DBusP2P->setChecked(true);
 }
 
 void CSwiftLauncher::ps_dbusServerModeSelected(bool selected)
