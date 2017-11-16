@@ -45,22 +45,7 @@ namespace BlackGui
             // audio is optional
             const bool audio = this->hasAudio();
             this->setEnabled(audio);
-            if (!audio)
-            {
-                ui->lbl_ExtraInfo->setText("No audio, cannot change.");
-            }
-            else if (sGui->getIContextAudio()->isUsingImplementingObject())
-            {
-                const CIdentifier i = sGui->getIContextAudio()->audioRunsWhere();
-                const QString info = QString("Local audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName());
-                ui->lbl_ExtraInfo->setText(info);
-            }
-            else
-            {
-                const CIdentifier i = sGui->getIContextAudio()->audioRunsWhere();
-                const QString info = QString("Remote audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName());
-                ui->lbl_ExtraInfo->setText(info);
-            }
+            ui->lbl_ExtraInfo->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
 
             bool c = connect(ui->tb_ExpandNotificationSounds, &QToolButton::toggled, this, &CAudioSetupComponent::ps_onToggleNotificationSoundsVisibility);
             Q_ASSERT(c);

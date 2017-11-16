@@ -137,6 +137,9 @@ namespace BlackCore
             //! Audio runs where
             virtual BlackMisc::CIdentifier audioRunsWhere() const = 0;
 
+            //! Info string about audio
+            QString audioRunsWhereInfo() const;
+
             //! Get current audio device
             //! \return input and output devices
             virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const = 0;
