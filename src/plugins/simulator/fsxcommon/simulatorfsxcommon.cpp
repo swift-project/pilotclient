@@ -1128,9 +1128,9 @@ namespace BlackSimPlugin
                 {
                     if (!interpolatorStatus.validInterpolatedSituation())
                     {
-//                        CLogMessage(this).warning("Invalid interpolation for SimObject '%1' callsign: '%2' info: '%3'")
-//                                << simObject.getObjectId() << callsign
-//                                << interpolatorStatus.toQString();
+                        CLogMessage(this).warning("Invalid interpolation for SimObject '%1' callsign: '%2' info: '%3'")
+                                << simObject.getObjectId() << callsign
+                                << interpolatorStatus.toQString();
                     }
                 }
 
