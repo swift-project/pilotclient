@@ -12,20 +12,23 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include <QTimer>
 
+using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
+
 namespace BlackSimPlugin
 {
     namespace Emulated
     {
-        BlackCore::ISimulator *CSimulatorEmulatedFactory::create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+        BlackCore::ISimulator *CSimulatorEmulatedFactory::create(const CSimulatorPluginInfo &info,
+                IOwnAircraftProvider *ownAircraftProvider,
+                IRemoteAircraftProvider *remoteAircraftProvider,
                 BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider)
         {
             Q_ASSERT(ownAircraftProvider);
             return new CSimulatorEmulated(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, this);
         }
 
-        BlackCore::ISimulatorListener *CSimulatorEmulatedFactory::createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info)
+        BlackCore::ISimulatorListener *CSimulatorEmulatedFactory::createListener(const CSimulatorPluginInfo &info)
         {
             return new CSimulatorEmulatedListener(info);
         }

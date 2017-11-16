@@ -1575,8 +1575,8 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFsxCommon::getCallsignsMissingInProvider() const
         {
-            CCallsignSet simObjectCallsigns(m_simConnectObjects.keys());
-            CCallsignSet providerCallsigns(this->getAircraftInRangeCallsigns());
+            const CCallsignSet simObjectCallsigns(m_simConnectObjects.keys());
+            const CCallsignSet providerCallsigns(this->getAircraftInRangeCallsigns());
             return simObjectCallsigns.difference(providerCallsigns);
         }
 

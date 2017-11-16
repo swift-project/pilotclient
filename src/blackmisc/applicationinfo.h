@@ -39,8 +39,9 @@ namespace BlackMisc
         //! Flags describing application modes
         enum ApplicationModeFlag
         {
-            Developer   = 1 << 0,
-            BetaTest    = 1 << 1
+            None      = 0,
+            Developer = 1 << 0,
+            BetaTest  = 1 << 1
         };
         Q_DECLARE_FLAGS(ApplicationMode, ApplicationModeFlag)
 
