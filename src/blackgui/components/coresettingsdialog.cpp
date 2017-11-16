@@ -9,6 +9,7 @@
 
 #include "coresettingsdialog.h"
 #include "ui_coresettingsdialog.h"
+#include "blackgui/guiapplication.h"
 
 namespace BlackGui
 {
@@ -18,7 +19,9 @@ namespace BlackGui
             QDialog(parent),
             ui(new Ui::CCoreSettingsDialog)
         {
+            Q_ASSERT(sGui);
             ui->setupUi(this);
+            this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
         }
 
         CCoreSettingsDialog::~CCoreSettingsDialog()

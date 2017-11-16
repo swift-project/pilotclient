@@ -26,7 +26,8 @@ namespace BlackGui
          * General GUI settings
          */
         class CSettingsGuiComponent :
-            public QFrame, BlackGui::CSingleApplicationUi
+            public QFrame,
+            public BlackGui::CSingleApplicationUi
         {
             Q_OBJECT
 
