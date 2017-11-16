@@ -41,6 +41,9 @@ namespace BlackMisc
         //! Empty constructor.
         CLogCategoryList() = default;
 
+        //! By single element
+        CLogCategoryList(const CLogCategory &category) { this->push_back(category); }
+
         //! Copy constructor.
         CLogCategoryList(const CLogCategoryList &) = default;
 
