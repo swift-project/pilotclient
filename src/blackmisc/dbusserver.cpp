@@ -104,14 +104,17 @@ namespace BlackMisc
             const QStringList parts(address.split(','));
             for (const QString &part : parts)
             {
-                if (part.startsWith("host="))
+                // "host=" or "tcp:host="
+                if (part.contains("host=", Qt::CaseInsensitive))
                 {
-                    host = part.midRef(part.lastIndexOf("=") + 1).trimmed().toString();
+                    const QString h = part.mid(part.lastIndexOf("=") + 1).trimmed();
+                    host = h;
                 }
-                else if (part.startsWith("port="))
+                else if (part.contains("port=", Qt::CaseInsensitive))
                 {
+                    const QString p = part.mid(part.lastIndexOf("=") + 1).trimmed();
                     bool ok;
-                    port = part.midRef(part.lastIndexOf("=") + 1).trimmed().toInt(&ok);
+                    port = p.toInt(&ok);
                     if (! ok) { port = -1; }
                 }
             }
