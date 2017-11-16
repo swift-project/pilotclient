@@ -48,9 +48,11 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QSslSocket>
 #include <QStandardPaths>
 #include <QStringBuilder>
+#include <QStringList>
 #include <QTemporaryDir>
 #include <QThread>
 #include <QTime>
@@ -164,7 +166,7 @@ namespace BlackCore
             connect(m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable, Qt::QueuedConnection);
             connect(m_setupReader.data(), &CSetupReader::successfullyReadSharedUrl, m_networkWatchDog.data(), &CNetworkWatchdog::setWorkingSharedUrl, Qt::QueuedConnection);
 
-            m_parser.addOptions(m_setupReader->getCmdLineOptions()); // add options from reader
+            this->addParserOptions(m_setupReader->getCmdLineOptions()); // add options from reader
 
             // startup done
             connect(this, &CApplication::startUpCompleted, this, &CApplication::onStartUpCompleted, Qt::QueuedConnection);
@@ -177,9 +179,22 @@ namespace BlackCore
 
     bool CApplication::registerAsRunning()
     {
+        //! \fixme KB 2017-11 maybe this code can be encapsulated somewhere
         CApplicationInfoList apps = CApplication::getRunningApplications();
         const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
         if (!apps.contains(myself)) { apps.insert(myself); }
+        const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
+        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
+        return ok;
+    }
+
+    bool CApplication::unregisterAsRunning()
+    {
+        //! \fixme KB 2017-11 maybe this code can be encapsulated somewhere
+        CApplicationInfoList apps = CApplication::getRunningApplications();
+        const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
+        if (!apps.contains(myself)) { return true; }
+        apps.remove(myself);
         const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
         if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
         return ok;
@@ -192,11 +207,12 @@ namespace BlackCore
         return QCoreApplication::exec();
     }
 
-    void CApplication::restartApplication()
+    void CApplication::restartApplication(const QStringList &newArguments, const QStringList &removeArguments)
     {
-        this->gracefulShutdown();
+        CApplication::unregisterAsRunning();
         const QString prg = QCoreApplication::applicationFilePath();
-        const QStringList args = CApplication::arguments();
+        const QStringList args = this->argumentsJoined(newArguments, removeArguments);
+        this->gracefulShutdown();
         QProcess::startDetached(prg, args);
         this->exit(0);
     }
@@ -208,7 +224,7 @@ namespace BlackCore
 
     CApplicationInfo CApplication::getApplicationInfo() const
     {
-        CApplicationInfo::ApplicationMode mode;
+        CApplicationInfo::ApplicationMode mode = CApplicationInfo::None;
         if (isRunningInDeveloperEnvironment()) { mode |= CApplicationInfo::Developer; }
         if (CBuildConfig::isDevBranch()) { mode |= CApplicationInfo::BetaTest; }
         return { CApplication::getSwiftApplication(), mode, QCoreApplication::applicationFilePath(), CBuildConfig::getVersionString(), CProcessInfo::currentProcess() };
@@ -298,8 +314,17 @@ namespace BlackCore
         static const QString launcher = CApplication::getExecutableForApplication(CApplicationInfo::Application::Laucher);
         if (launcher.isEmpty() || CApplication::isApplicationRunning(CApplicationInfo::Laucher)) { return false; }
 
-        const QStringList args = this->inheritedArguments(true);
+        const QStringList args = this->argumentsJoined({}, { "--dbus" });
         return QProcess::startDetached(launcher, args);
+    }
+
+    bool CApplication::startLauncherAndQuit()
+    {
+        const bool started = CApplication::startLauncher();
+        if (!started) { return false; }
+        this->gracefulShutdown();
+        CApplication::exit();
+        return true;
     }
 
     bool CApplication::isUnitTest() const
@@ -752,6 +777,34 @@ namespace BlackCore
         return QCoreApplication::arguments();
     }
 
+    int CApplication::indexOfCommandLineOption(const QCommandLineOption &option, const QStringList &args)
+    {
+        const QStringList names = option.names();
+        if (names.isEmpty() || args.isEmpty()) { return -1; }
+        int i = -1;
+        for (const QString &arg : args)
+        {
+            i++;
+            QString a;
+            if (arg.startsWith("--")) { a = arg.mid(2); }
+            else if (arg.startsWith("-")) { a = arg.mid(1); }
+            else { continue; }
+
+            if (names.contains(a, Qt::CaseInsensitive)) { return i; }
+        }
+        return -1;
+    }
+
+    void CApplication::argumentsWithoutOption(const QCommandLineOption &option, QStringList &args)
+    {
+        const int index = indexOfCommandLineOption(option, args);
+        if (index < 0) { return; }
+
+        // remove argument and its value
+        args.removeAt(index);
+        if (!option.valueName().isEmpty() && args.size() > index) { args.removeAt(index); }
+    }
+
     void CApplication::processEventsFor(int milliseconds)
     {
         // sApp check allows to use in test cases without sApp
@@ -857,6 +910,8 @@ namespace BlackCore
         m_parser.setApplicationDescription(m_applicationName);
         m_cmdHelp = m_parser.addHelpOption();
         m_cmdVersion = m_parser.addVersionOption();
+        m_allOptions.append(m_cmdHelp);
+        m_allOptions.append(m_cmdVersion);
 
         // dev. system
         m_cmdDevelopment = QCommandLineOption({ "dev", "development" },
@@ -1067,11 +1122,13 @@ namespace BlackCore
 
     bool CApplication::addParserOption(const QCommandLineOption &option)
     {
+        m_allOptions.append(option);
         return m_parser.addOption(option);
     }
 
     bool CApplication::addParserOptions(const QList<QCommandLineOption> &options)
     {
+        m_allOptions.append(options);
         return m_parser.addOptions(options);
     }
 
@@ -1090,16 +1147,10 @@ namespace BlackCore
 
     QString CApplication::getCmdDBusAddressValue() const
     {
-        if (this->isParserOptionSet(m_cmdDBusAddress))
-        {
-            const QString v(this->getParserValue(m_cmdDBusAddress));
-            const QString dBusAddress(CDBusServer::normalizeAddress(v));
-            return dBusAddress;
-        }
-        else
-        {
-            return "";
-        }
+        if (!this->isParserOptionSet(m_cmdDBusAddress)) { return ""; }
+        const QString v(this->getParserValue(m_cmdDBusAddress));
+        const QString dBusAddress(CDBusServer::normalizeAddress(v));
+        return dBusAddress;
     }
 
     QString CApplication::getCmdSwiftPrivateSharedDir() const
@@ -1139,7 +1190,7 @@ namespace BlackCore
         // checks
         if (CBuildConfig::isLifetimeExpired())
         {
-            this->cmdLineErrorMessage("Program exired " + CBuildConfig::getEol().toString());
+            this->cmdLineErrorMessage("Program expired " + CBuildConfig::getEol().toString());
             return false;
         }
 
@@ -1216,18 +1267,6 @@ namespace BlackCore
         return false;
     }
 
-    QStringList CApplication::inheritedArguments(bool withVatlibArgs) const
-    {
-        QStringList args;
-        if (this->isSet(m_cmdDevelopment))
-        {
-            args.append("--" + m_cmdDevelopment.names().first());
-            args.append("true");
-        }
-        if (withVatlibArgs) { args.append(CNetworkVatlib::inheritedArguments()); }
-        return args;
-    }
-
     QString CApplication::cmdLineArgumentsAsString(bool withExecutable)
     {
         QStringList args = QCoreApplication::arguments();
@@ -1245,6 +1284,40 @@ namespace BlackCore
     void CApplication::cmdLineVersionMessage() const
     {
         printf("%s %s\n", qPrintable(QCoreApplication::applicationName()), qPrintable(QCoreApplication::applicationVersion()));
+    }
+
+    QStringList CApplication::argumentsJoined(const QStringList &newArguments, const QStringList &removeArguments) const
+    {
+        QStringList joinedArguments = CApplication::arguments();
+        QStringList newArgumentsChecked = newArguments;
+
+        // remove the executable argument if it exists at position 0
+        if (!joinedArguments.isEmpty() && !joinedArguments.at(0).startsWith("-")) { joinedArguments.removeFirst(); } // was cmd line argument
+        if (!newArgumentsChecked.isEmpty() && !newArgumentsChecked.at(0).startsWith("-")) { newArgumentsChecked.removeFirst(); } // was cmd line argument
+
+        // remove all values before checking options
+        static const QRegularExpression regExp("^-");
+        QStringList toBeRemoved(newArgumentsChecked.filter(regExp));
+        toBeRemoved.append(removeArguments.filter(regExp));
+        toBeRemoved.append("--installer");
+        toBeRemoved.removeDuplicates();
+
+        if (!joinedArguments.isEmpty() && !toBeRemoved.isEmpty())
+        {
+            // remove all options from removeArguments
+            // consider alias names, that is why we check on option
+            for (const QCommandLineOption &option : m_allOptions)
+            {
+                const int n = indexOfCommandLineOption(option, toBeRemoved);
+                if (n >= 0)
+                {
+                    argumentsWithoutOption(option, joinedArguments);
+                }
+            }
+        }
+
+        joinedArguments.append(newArgumentsChecked);
+        return joinedArguments;
     }
 
     // ---------------------------------------------------------------------------------

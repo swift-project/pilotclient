@@ -545,12 +545,12 @@ namespace BlackCore
             return m_interimPositionReceivers;
         }
 
-        QStringList CNetworkVatlib::inheritedArguments()
+        QStringList CNetworkVatlib::vatlibArguments()
         {
             QStringList args;
             int id = 0;
             QString key;
-            if (!getCmdLineClientIdAndKey(id, key)) return args;
+            if (!getCmdLineClientIdAndKey(id, key)) { return args; }
             args << "--idAndKey";
             args << sApp->getParserValue("clientIdAndKey"); // as typed in
             return args;
@@ -723,6 +723,11 @@ namespace BlackCore
 
         bool CNetworkVatlib::getCmdLineClientIdAndKey(int &id, QString &key)
         {
+            // init values
+            id = 0;
+            key = "";
+
+            // split parser values
             const QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
             if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
             const auto stringList = clientIdAndKey.split(':');

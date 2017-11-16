@@ -117,7 +117,7 @@ namespace BlackCore
             //! @}
 
             //! Arguments to be passed to another swift appplication
-            static QStringList inheritedArguments();
+            static QStringList vatlibArguments();
 
             //! \name Weather functions
             //! @{

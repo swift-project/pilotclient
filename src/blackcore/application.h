@@ -144,6 +144,9 @@ namespace BlackCore
         //! Start the launcher
         bool startLauncher();
 
+        //! Start the launcher and quit
+        bool startLauncherAndQuit();
+
         //! Unit test?
         bool isUnitTest() const;
 
@@ -247,11 +250,18 @@ namespace BlackCore
         QString getTemporaryDirectory() const;
 
         //! Stop and restart application
-        void restartApplication();
+        void restartApplication(const QStringList &newArguments = {}, const QStringList &removeArguments = {});
+
+        //! Current parameters replaced by new arguments without the cmd line argument
+        virtual QStringList argumentsJoined(const QStringList &newArguments = {}, const QStringList &removeArguments = {}) const;
 
         //! Register as running
         //! \note Normally done automatically when CApplication::exec is called
         static bool registerAsRunning();
+
+        //! Unregister from running
+        //! \note Normally done automatically, needed for restart
+        static bool unregisterAsRunning();
 
         //! Run event loop
         static int exec();
@@ -264,6 +274,7 @@ namespace BlackCore
 
         //! Process all events for some time
         //! \remark unlike QCoreApplication::processEvents this will spend at least the given time in the function, using QThread::msleep
+        //! \remark using processEventsFor can lead to undesired behaviour: A function may be called again before it is finished, even with only one thread
         //! \sa BlackMisc::CEventLoop
         static void processEventsFor(int milliseconds);
 
@@ -325,9 +336,6 @@ namespace BlackCore
 
         //! Display error message
         virtual bool cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs, bool retry = false) const;
-
-        //! Arguments to be passed to another swift appplication
-        QStringList inheritedArguments(bool withVatlibArgs = true) const;
 
         //! cmd line arguments as string
         virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
@@ -408,7 +416,6 @@ namespace BlackCore
 
         // ------------------------- network -----------------------------------------------
 
-    public:
         static constexpr int NoRedirects = -1;        //!< network request not allowing redirects
         static constexpr int NoLogRequestId = -1;     //!< network request without logging
         static constexpr int DefaultMaxRedirects = 2; //!< network request, default for max.redirects
@@ -503,6 +510,12 @@ namespace BlackCore
         //! Display version message
         virtual void cmdLineVersionMessage() const;
 
+        //! Is the command line option represented in the given arguments?
+        static int indexOfCommandLineOption(const QCommandLineOption &option, const QStringList &args = CApplication::arguments());
+
+        //! Arguments without that given option
+        static void argumentsWithoutOption(const QCommandLineOption &option, QStringList &args);
+
         //! Can be used to parse specialized arguments
         virtual bool parsingHookIn() { return true; }
 
@@ -534,6 +547,7 @@ namespace BlackCore
         static void registerMetadata();
 
         // cmd parsing
+        QList<QCommandLineOption> m_allOptions;                //!< all registered options
         QCommandLineParser m_parser;                           //!< cmd parser
         QCommandLineOption m_cmdHelp {"help"};                 //!< help option
         QCommandLineOption m_cmdVersion {"version"};           //!< version option
