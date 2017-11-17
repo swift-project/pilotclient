@@ -1,6 +1,6 @@
 <component>
     <name>vcruntime</name>
-    <description>Visual Studio 2015 Redistributables</description>
+    <description>Visual Studio 2017 Redistributables</description>
     <canBeEdited>0</canBeEdited>
     <selected>1</selected>
     <show>1</show>
@@ -11,38 +11,44 @@
             <name>vcredist</name>
             <platforms>windows</platforms>
             <actionList>
+                <registryGet>
+                    <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86</key>
+                    <name>Version</name>
+                    <variable>vcruntimeversionx86</variable>
+                </registryGet>
+                <registryGet>
+                    <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64</key>
+                    <name>Version</name>
+                    <variable>vcruntimeversionx64</variable>
+                </registryGet>
                 <runProgram>
                     <program>${installdir}/vcredist/vcredist_x86.exe</program>
                     <programArguments>/install /quiet /norestart</programArguments>
-                    <progressText>Installing VC++ 2015 32 Bit Runtime</progressText>
+                    <progressText>Installing VC++ 2017 32 Bit Runtime</progressText>
                     <ruleList>
-                        <registryTest>
-                            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86</key>
-                            <logic>does_not_exist</logic>
-                            <name>Installed</name>
-                            <type>REG_DWORD</type>
-                            <wowMode>32</wowMode>
-                        </registryTest>
                         <fileExists>
                             <path>${installdir}/vcredist/vcredist_x86.exe</path>
                         </fileExists>
+                        <compareVersions>
+                            <logic>greater</logic>
+                            <version1>14.11.25325.0</version1>
+                            <version2>${vcruntimeversionx86}</version2>
+                        </compareVersions>
                     </ruleList>
                 </runProgram>
                 <runProgram>
                     <program>${installdir}/vcredist/vcredist_x64.exe</program>
                     <programArguments>/install /quiet /norestart</programArguments>
-                    <progressText>Installing VC++ 2015 64 Bit Runtime</progressText>
+                    <progressText>Installing VC++ 2017 64 Bit Runtime</progressText>
                     <ruleList>
-                        <registryTest>
-                            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64</key>
-                            <logic>does_not_exist</logic>
-                            <name>Installed</name>
-                            <type>REG_DWORD</type>
-                            <wowMode>64</wowMode>
-                        </registryTest>
                         <fileExists>
                             <path>${installdir}/vcredist/vcredist_x64.exe</path>
                         </fileExists>
+                        <compareVersions>
+                            <logic>greater</logic>
+                            <version1>v14.11.25325.0</version1>
+                            <version2>${vcruntimeversionx64}</version2>
+                        </compareVersions>
                     </ruleList>
                 </runProgram>
             </actionList>
