@@ -32,9 +32,9 @@ namespace BlackCore
         return status;
     }
 
-    CSimulatorInfo ISimulator::getSimulatorInfo() const
+    const CSimulatorInfo &ISimulator::getSimulatorInfo() const
     {
-        return CSimulatorInfo(this->getSimulatorPluginInfo().getSimulatorInfo());
+        return this->getSimulatorPluginInfo().getSimulatorInfo();
     }
 
     void ISimulator::registerHelp()

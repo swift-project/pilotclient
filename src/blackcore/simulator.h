@@ -84,7 +84,7 @@ namespace BlackCore
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const = 0;
 
         //! Get simulator info (default implementation)
-        virtual BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
+        const BlackMisc::Simulation::CSimulatorInfo &getSimulatorInfo() const;
 
         //! Get the setup (simulator environemnt)
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const = 0;

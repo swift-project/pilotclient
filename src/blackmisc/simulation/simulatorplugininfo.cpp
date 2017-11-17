@@ -19,8 +19,10 @@ namespace BlackMisc
     namespace Simulation
     {
         CSimulatorPluginInfo::CSimulatorPluginInfo(const QString &identifier, const QString &name, const QString &simulator, const QString &description, bool valid) :
-            m_identifier(identifier), m_name(name), m_simulator(simulator), m_description(description), m_valid(valid)
-        { }
+            m_identifier(identifier), m_name(name), m_simulator(simulator), m_description(description), m_info(simulator), m_valid(valid)
+        {
+            Q_ASSERT_X(m_info.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+        }
 
         void CSimulatorPluginInfo::convertFromJson(const QJsonObject &json)
         {
@@ -38,6 +40,12 @@ namespace BlackMisc
             {
                 CValueObject::convertFromJson(json);
             }
+
+            // set info if it wasn't set already
+            if (m_info.isNoSimulator() && !m_simulator.isEmpty())
+            {
+                m_info = CSimulatorInfo(m_simulator);
+            }
         }
 
         bool CSimulatorPluginInfo::isUnspecified() const
@@ -45,14 +53,9 @@ namespace BlackMisc
             return m_identifier.isEmpty();
         }
 
-        CSimulatorInfo CSimulatorPluginInfo::getSimulatorInfo() const
-        {
-            return CSimulatorInfo(getSimulator());
-        }
-
         bool CSimulatorPluginInfo::isEmulatedPlugin() const
         {
-            return this->getIdentifier() == emulatedPluginIndentifier();
+            return this->getIdentifier() == emulatedPluginIdentifier();
         }
 
         QString CSimulatorPluginInfo::convertToQString(bool i18n) const
@@ -61,31 +64,31 @@ namespace BlackMisc
             return QString("%1 (%2)").arg(m_name, m_identifier);
         }
 
-        const QString &CSimulatorPluginInfo::fsxPluginIndentifier()
+        const QString &CSimulatorPluginInfo::fsxPluginIdentifier()
         {
             static const QString s("org.swift-project.plugins.simulator.fsx");
             return s;
         }
 
-        const QString &CSimulatorPluginInfo::p3dPluginIndentifier()
+        const QString &CSimulatorPluginInfo::p3dPluginIdentifier()
         {
             static const QString s("org.swift-project.plugins.simulator.p3d");
             return s;
         }
 
-        const QString &CSimulatorPluginInfo::fs9PluginIndentifier()
+        const QString &CSimulatorPluginInfo::fs9PluginIdentifier()
         {
             static const QString s("org.swift-project.plugins.simulator.fs9");
             return s;
         }
 
-        const QString &CSimulatorPluginInfo::xplanePluginIndentifier()
+        const QString &CSimulatorPluginInfo::xplanePluginIdentifier()
         {
             static const QString s("org.swift-project.plugins.simulator.xplane");
             return s;
         }
 
-        const QString &CSimulatorPluginInfo::emulatedPluginIndentifier()
+        const QString &CSimulatorPluginInfo::emulatedPluginIdentifier()
         {
             static const QString s("org.swift-project.plugins.simulator.emulated");
             return s;
@@ -95,11 +98,11 @@ namespace BlackMisc
         {
             static const QStringList identifiers(
             {
-                fsxPluginIndentifier(),
-                p3dPluginIndentifier(),
-                xplanePluginIndentifier(),
-                fs9PluginIndentifier(),
-                emulatedPluginIndentifier()
+                fsxPluginIdentifier(),
+                p3dPluginIdentifier(),
+                xplanePluginIdentifier(),
+                fs9PluginIdentifier(),
+                emulatedPluginIdentifier()
             });
             return identifiers;
         }
@@ -109,14 +112,14 @@ namespace BlackMisc
             if (BlackConfig::CBuildConfig::isRunningOnUnixPlatform())
             {
                 // On UNIX we likely run XP
-                return QStringList { xplanePluginIndentifier() };
+                return QStringList { xplanePluginIdentifier() };
             }
 
             return QStringList
             {
-                fsxPluginIndentifier(),
-                p3dPluginIndentifier(),
-                xplanePluginIndentifier()
+                fsxPluginIdentifier(),
+                p3dPluginIdentifier(),
+                xplanePluginIdentifier()
             };
         }
     } // ns

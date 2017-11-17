@@ -52,12 +52,6 @@ namespace BlackSimPlugin
             this->connectOwnSignals();
         }
 
-        CSimulatorInfo CSimulatorEmulated::getSimulatorInfo() const
-        {
-            const CSwiftPluginSettings s = m_settings.get();
-            return s.getEmulatedSimulator();
-        }
-
         bool CSimulatorEmulated::isTimeSynchronized() const
         {
             return m_timeSyncronized;

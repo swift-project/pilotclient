@@ -80,10 +80,10 @@ namespace BlackGui
             QStringList ids;
 
             // have to match full canonical ids from swift-plugin-simulators.xml
-            if (ui->cb_FS9->isChecked()) { ids << CSimulatorPluginInfo::fs9PluginIndentifier(); }
-            if (ui->cb_FSX->isChecked()) { ids << CSimulatorPluginInfo::fsxPluginIndentifier(); }
-            if (ui->cb_P3D->isChecked()) { ids << CSimulatorPluginInfo::p3dPluginIndentifier(); }
-            if (ui->cb_XP->isChecked())  { ids << CSimulatorPluginInfo::xplanePluginIndentifier(); }
+            if (ui->cb_FS9->isChecked()) { ids << CSimulatorPluginInfo::fs9PluginIdentifier(); }
+            if (ui->cb_FSX->isChecked()) { ids << CSimulatorPluginInfo::fsxPluginIdentifier(); }
+            if (ui->cb_P3D->isChecked()) { ids << CSimulatorPluginInfo::p3dPluginIdentifier(); }
+            if (ui->cb_XP->isChecked())  { ids << CSimulatorPluginInfo::xplanePluginIdentifier(); }
 
             return ids;
         }

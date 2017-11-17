@@ -33,23 +33,23 @@ namespace BlackSimPlugin
     {
         void CALLBACK CSimulatorFsxCommon::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
         {
-            CSimulatorFsxCommon *simulatorFsx = static_cast<CSimulatorFsxCommon *>(pContext);
+            CSimulatorFsxCommon *simulatorFsxP3D = static_cast<CSimulatorFsxCommon *>(pContext);
             switch (pData->dwID)
             {
             case SIMCONNECT_RECV_ID_OPEN:
                 {
                     SIMCONNECT_RECV_OPEN *event = (SIMCONNECT_RECV_OPEN *)pData;
-                    simulatorFsx->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
-                    simulatorFsx->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
-                    simulatorFsx->m_simulatorName = QString(event->szApplicationName);
-                    simulatorFsx->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simulatorFsx->m_simulatorName, simulatorFsx->m_simulatorVersion, simulatorFsx->m_simConnectVersion);
-                    CLogMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).info("Connect to FSX/P3D: '%1'") << simulatorFsx->m_simulatorDetails;
-                    simulatorFsx->setSimConnected();
+                    simulatorFsxP3D->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
+                    simulatorFsxP3D->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
+                    simulatorFsxP3D->m_simulatorName = QString(event->szApplicationName);
+                    simulatorFsxP3D->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simulatorFsxP3D->m_simulatorName, simulatorFsxP3D->m_simulatorVersion, simulatorFsxP3D->m_simConnectVersion);
+                    CLogMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).info("Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << simulatorFsxP3D->m_simulatorDetails;
+                    simulatorFsxP3D->setSimConnected();
                     break;
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
-                    if (!simulatorFsx->stillDisplayReceiveExceptions()) { break; }
+                    if (!simulatorFsxP3D->stillDisplayReceiveExceptions()) { break; }
                     SIMCONNECT_RECV_EXCEPTION *exception = (SIMCONNECT_RECV_EXCEPTION *)pData;
                     const DWORD exceptionId = exception->dwException;
                     const DWORD sendId = exception->dwSendID;
@@ -64,15 +64,15 @@ namespace BlackSimPlugin
                     QString ex;
                     ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
                     const QString exceptionString(CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException));
-                    const QString sendIdDetails = simulatorFsx->getSendIdTraceDetails(sendId);
-                    CLogMessage(simulatorFsx).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
+                    const QString sendIdDetails = simulatorFsxP3D->getSendIdTraceDetails(sendId);
+                    CLogMessage(simulatorFsxP3D).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
                             << exceptionString << ex
                             << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:
                 {
-                    simulatorFsx->onSimExit();
+                    simulatorFsxP3D->onSimExit();
                     break;
                 }
             case SIMCONNECT_RECV_ID_EVENT:
@@ -85,21 +85,21 @@ namespace BlackSimPlugin
                             const bool running = event->dwData ? true : false;
                             if (running)
                             {
-                                simulatorFsx->onSimRunning();
+                                simulatorFsxP3D->onSimRunning();
                             }
                             else
                             {
-                                simulatorFsx->onSimStopped();
+                                simulatorFsxP3D->onSimStopped();
                             }
                             break;
                         }
                     case SystemEventPause:
                         {
                             const bool p = event->dwData ? true : false;
-                            if (simulatorFsx->m_simPaused != p)
+                            if (simulatorFsxP3D->m_simPaused != p)
                             {
-                                simulatorFsx->m_simPaused = p;
-                                simulatorFsx->emitSimulatorCombinedStatus();
+                                simulatorFsxP3D->m_simPaused = p;
+                                simulatorFsxP3D->emitSimulatorCombinedStatus();
                             }
                             break;
                         }
@@ -120,14 +120,14 @@ namespace BlackSimPlugin
 
                     // such an object is not necessarily one of ours
                     // for instance, I always see object "5" when I start the simulator
-                    if (!simulatorFsx->getSimConnectObjects().isKnownSimObjectId(objectId)) { break; }
+                    if (!simulatorFsxP3D->getSimConnectObjects().isKnownSimObjectId(objectId)) { break; }
                     switch (event->uEventID)
                     {
                     case SystemEventObjectAdded:
                         // added in SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
                         break;
                     case SystemEventObjectRemoved:
-                        simulatorFsx->simulatorReportedObjectRemoved(objectId);
+                        simulatorFsxP3D->simulatorReportedObjectRemoved(objectId);
                         break;
                     default:
                         break;
@@ -141,7 +141,7 @@ namespace BlackSimPlugin
                     {
                     case SystemEventFrame:
                         // doing interpolation
-                        simulatorFsx->onSimFrame();
+                        simulatorFsxP3D->onSimFrame();
                         break;
                     default:
                         break;
@@ -153,16 +153,16 @@ namespace BlackSimPlugin
                     const SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
                     const DWORD requestId = event->dwRequestID;
                     const DWORD objectId = event->dwObjectID;
-                    bool success = simulatorFsx->setSimConnectObjectId(requestId, objectId);
+                    bool success = simulatorFsxP3D->setSimConnectObjectId(requestId, objectId);
                     if (!success) { break; } // not an request ID of ours
 
-                    success = simulatorFsx->simulatorReportedObjectAdded(objectId); // trigger follow up actions
+                    success = simulatorFsxP3D->simulatorReportedObjectAdded(objectId); // trigger follow up actions
                     if (!success)
                     {
-                        const CSimulatedAircraft remoteAircraft(simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId).getAircraft());
-                        const CStatusMessage msg = CStatusMessage(simulatorFsx).error("Cannot add object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
+                        const CSimulatedAircraft remoteAircraft(simulatorFsxP3D->getSimConnectObjects().getSimObjectForObjectId(objectId).getAircraft());
+                        const CStatusMessage msg = CStatusMessage(simulatorFsxP3D).error("Cannot add object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
                         CLogMessage::preformatted(msg);
-                        emit simulatorFsx->physicallyAddingRemoteModelFailed(remoteAircraft, msg);
+                        emit simulatorFsxP3D->physicallyAddingRemoteModelFailed(remoteAircraft, msg);
                     }
                     break;
                 }
@@ -181,7 +181,7 @@ namespace BlackSimPlugin
                         {
                             static_assert(sizeof(DataDefinitionOwnAircraft) == 30 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
                             const DataDefinitionOwnAircraft *ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
-                            simulatorFsx->updateOwnAircraftFromSimulator(*ownAircaft);
+                            simulatorFsxP3D->updateOwnAircraftFromSimulator(*ownAircaft);
                             break;
                         }
                     case CSimConnectDefinitions::RequestOwnAircraftTitle:
@@ -190,13 +190,13 @@ namespace BlackSimPlugin
                             CAircraftModel model;
                             model.setModelString(dataDefinitionModel->title);
                             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                            simulatorFsx->reverseLookupAndUpdateOwnAircraftModel(model);
+                            simulatorFsxP3D->reverseLookupAndUpdateOwnAircraftModel(model);
                             break;
                         }
                     case CSimConnectDefinitions::RequestSimEnvironment:
                         {
                             const DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
-                            if (simulatorFsx->isTimeSynchronized())
+                            if (simulatorFsxP3D->isTimeSynchronized())
                             {
                                 const int zh = simEnv->zuluTimeSeconds / 3600;
                                 const int zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
@@ -204,7 +204,7 @@ namespace BlackSimPlugin
                                 const int lh = simEnv->localTimeSeconds / 3600;
                                 const int lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
                                 const CTime local(lh, lm);
-                                simulatorFsx->synchronizeTime(zulu, local);
+                                simulatorFsxP3D->synchronizeTime(zulu, local);
                             }
                             break;
                         }
@@ -214,19 +214,19 @@ namespace BlackSimPlugin
                             if (CSimulatorFsxCommon::isRequestForSimData(requestId))
                             {
                                 static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
-                                const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
+                                const CSimConnectObject simObj = simulatorFsxP3D->getSimConnectObjects().getSimObjectForObjectId(objectId);
                                 if (!simObj.hasValidRequestAndObjectId()) break;
                                 const DataDefinitionRemoteAircraftSimData *remoteAircraftSimData = (DataDefinitionRemoteAircraftSimData *)&pObjData->dwData;
                                 // extra check, but ids should be the same
                                 if (objectId == simObj.getObjectId())
                                 {
-                                    simulatorFsx->updateRemoteAircraftFromSimulator(simObj, *remoteAircraftSimData);
+                                    simulatorFsxP3D->updateRemoteAircraftFromSimulator(simObj, *remoteAircraftSimData);
                                 }
                             }
                             else if (CSimulatorFsxCommon::isRequestForLights(requestId))
                             {
                                 static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
-                                const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
+                                const CSimConnectObject simObj = simulatorFsxP3D->getSimConnectObjects().getSimObjectForObjectId(objectId);
                                 if (!simObj.hasValidRequestAndObjectId()) break;
                                 const DataDefinitionRemoteAircraftLights *remoteAircraftLights = (DataDefinitionRemoteAircraftLights *)&pObjData->dwData;
                                 // extra check, but ids should be the same
@@ -234,11 +234,11 @@ namespace BlackSimPlugin
                                 {
                                     const CCallsign callsign(simObj.getCallsign());
                                     const CAircraftLights lights = remoteAircraftLights->toLights(); // as in simulator
-                                    simulatorFsx->setCurrentLights(callsign, lights);
+                                    simulatorFsxP3D->setCurrentLights(callsign, lights);
                                     if (simObj.getLightsAsSent().isNull())
                                     {
                                         // allows to compare for toggle
-                                        simulatorFsx->setLightsAsSent(callsign, lights);
+                                        simulatorFsxP3D->setLightsAsSent(callsign, lights);
                                     }
                                 }
                             }
@@ -251,7 +251,7 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_AIRPORT_LIST:
                 {
                     static const CLength maxDistance(200.0, CLengthUnit::NM());
-                    const CCoordinateGeodetic posAircraft(simulatorFsx->getOwnAircraftPosition());
+                    const CCoordinateGeodetic posAircraft(simulatorFsxP3D->getOwnAircraftPosition());
                     const SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
                     for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
                     {
@@ -265,26 +265,26 @@ namespace BlackSimPlugin
                         CAirport airport(CAirportIcaoCode(icao), pos);
                         const CLength d = airport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);
                         if (d > maxDistance) { continue; }
-                        airport.updateMissingParts(simulatorFsx->getWebServiceAirport(icao));
-                        simulatorFsx->m_airportsInRangeFromSimulator.replaceOrAddByIcao(airport);
+                        airport.updateMissingParts(simulatorFsxP3D->getWebServiceAirport(icao));
+                        simulatorFsxP3D->m_airportsInRangeFromSimulator.replaceOrAddByIcao(airport);
                     }
 
-                    if (simulatorFsx->m_airportsInRangeFromSimulator.size() > simulatorFsx->maxAirportsInRange())
+                    if (simulatorFsxP3D->m_airportsInRangeFromSimulator.size() > simulatorFsxP3D->maxAirportsInRange())
                     {
-                        simulatorFsx->m_airportsInRangeFromSimulator.sortByDistanceToOwnAircraft();
-                        simulatorFsx->m_airportsInRangeFromSimulator.truncate(simulatorFsx->maxAirportsInRange());
+                        simulatorFsxP3D->m_airportsInRangeFromSimulator.sortByDistanceToOwnAircraft();
+                        simulatorFsxP3D->m_airportsInRangeFromSimulator.truncate(simulatorFsxP3D->maxAirportsInRange());
                     }
                     break;
                 }
             case SIMCONNECT_RECV_ID_CLIENT_DATA:
                 {
-                    if (!simulatorFsx->m_useSbOffsets) { break; }
+                    if (!simulatorFsxP3D->m_useSbOffsets) { break; }
                     const SIMCONNECT_RECV_CLIENT_DATA *clientData = (SIMCONNECT_RECV_CLIENT_DATA *)pData;
-                    if (simulatorFsx->m_useSbOffsets && clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)
+                    if (simulatorFsxP3D->m_useSbOffsets && clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)
                     {
                         //! \fixme FSUIPC vs SimConnect why is offset 19 ident 2/0? In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here. Whoever knows, add comment or fix if wrong
                         DataDefinitionClientAreaSb *sbData = (DataDefinitionClientAreaSb *) &clientData->dwData;
-                        simulatorFsx->updateOwnAircraftFromSimulator(*sbData);
+                        simulatorFsxP3D->updateOwnAircraftFromSimulator(*sbData);
                     }
                     break;
                 }

@@ -740,7 +740,7 @@ namespace BlackSimPlugin
             {
                 const bool trace = parser.toBool(2);
                 this->setTraceSendId(trace);
-                CLogMessage(this, CLogCategory::cmdLine()).info("Tracing FSX/P3D driver sendIds is '%1'") << boolToOnOff(trace);
+                CLogMessage(this, CLogCategory::cmdLine()).info("Tracing %1 driver sendIds is '%2'") << this->getSimulatorPluginInfo().getIdentifier() << boolToOnOff(trace);
                 return true;
             }
             return CSimulatorFsCommon::parseDetails(parser);
@@ -782,12 +782,12 @@ namespace BlackSimPlugin
                 {
                     // 2nd time, an error / avoid multiple messages
                     // idea: if it happens once ignore
-                    CLogMessage(this).error("FSX/P3D: Dispatch error");
+                    CLogMessage(this).error("%1: Dispatch error") << this->getSimulatorPluginInfo().getIdentifier();
                 }
                 else if (m_dispatchErrors > 5)
                 {
                     // this normally happens during a FSX crash or shutdown
-                    CLogMessage(this).error("FSX/P3D: Multiple dispatch errors, disconnecting");
+                    CLogMessage(this).error("%1: Multiple dispatch errors, disconnecting") << this->getSimulatorPluginInfo().getIdentifier();
                     this->disconnectFrom();
                 }
                 return;
@@ -1709,14 +1709,13 @@ namespace BlackSimPlugin
             if (connectedSimName.isEmpty()) { return false; }
             if (pluginSim.p3d())
             {
-                // P3D drivers only work with P3D
+                // P3D drivers only works with P3D
                 return connectedSimName.contains("lockheed") || connectedSimName.contains("martin") || connectedSimName.contains("p3d") || connectedSimName.contains("prepar");
             }
             else if (pluginSim.fsx())
             {
-                // FSX drivers works with P3D and FSX
-                return connectedSimName.contains("fsx") || connectedSimName.contains("microsoft") || connectedSimName.contains("simulator x") ||
-                       connectedSimName.contains("lockheed") || connectedSimName.contains("martin") || connectedSimName.contains("p3d") || connectedSimName.contains("prepar");
+                // FSX drivers only works with FSX
+                return connectedSimName.contains("fsx") || connectedSimName.contains("microsoft") || connectedSimName.contains("simulator x");
             }
             return false;
         }
@@ -1741,7 +1740,7 @@ namespace BlackSimPlugin
                     simListener->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
                     simListener->m_simulatorName = QString(event->szApplicationName);
                     simListener->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simListener->m_simulatorName, simListener->m_simulatorVersion, simListener->m_simConnectVersion);
-                    CLogMessage(static_cast<CSimulatorFsxCommonListener *>(nullptr)).info("Connect to FSX/P3D: '%1'") << simListener->backendInfo();
+                    CLogMessage(static_cast<CSimulatorFsxCommonListener *>(nullptr)).info("Connect to %1: '%2'") << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
                     break;
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:

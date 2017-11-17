@@ -33,13 +33,13 @@ namespace BlackMisc
         CSimulatorInfo::CSimulatorInfo()
         { }
 
-        CSimulatorInfo::CSimulatorInfo(const QString &identifierString) : m_simulator(identifierToFlag(identifierString))
+        CSimulatorInfo::CSimulatorInfo(const QString &identifierString) : m_simulator(identifierToSimulator(identifierString))
         { }
 
         CSimulatorInfo::CSimulatorInfo(const QStringList &simulators)
         {
             const QString identifier = simulators.join(' ');
-            m_simulator = identifierToFlag(identifier);
+            m_simulator = identifierToSimulator(identifier);
         }
 
         CSimulatorInfo::CSimulatorInfo(Simulator simulator) : m_simulator(static_cast<int>(simulator))
@@ -181,10 +181,10 @@ namespace BlackMisc
             static const QString e;
             if (!this->isSingleSimulator()) { return e; }
             const Simulator s = getSimulator();
-            if (s.testFlag(FSX)) { return CSimulatorPluginInfo::fsxPluginIndentifier(); }
-            if (s.testFlag(FS9)) { return CSimulatorPluginInfo::fs9PluginIndentifier(); }
-            if (s.testFlag(P3D)) { return CSimulatorPluginInfo::p3dPluginIndentifier(); }
-            if (s.testFlag(XPLANE)) { return CSimulatorPluginInfo::xplanePluginIndentifier(); }
+            if (s.testFlag(FSX)) { return CSimulatorPluginInfo::fsxPluginIdentifier(); }
+            if (s.testFlag(FS9)) { return CSimulatorPluginInfo::fs9PluginIdentifier(); }
+            if (s.testFlag(P3D)) { return CSimulatorPluginInfo::p3dPluginIdentifier(); }
+            if (s.testFlag(XPLANE)) { return CSimulatorPluginInfo::xplanePluginIdentifier(); }
             return e;
         }
 
@@ -197,9 +197,9 @@ namespace BlackMisc
             return s;
         }
 
-        CSimulatorInfo::Simulator CSimulatorInfo::identifierToFlag(const QString &identifier)
+        CSimulatorInfo::Simulator CSimulatorInfo::identifierToSimulator(const QString &identifier)
         {
-            QString i(identifier.toLower().trimmed().remove(' ').remove('-'));
+            const QString i(identifier.toLower().trimmed().remove(' ').remove('-'));
             if (i.isEmpty()) { return None; }
 
             Simulator s = None;

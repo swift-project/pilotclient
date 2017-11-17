@@ -45,9 +45,6 @@ namespace BlackSimPlugin
                 BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                 QObject *parent = nullptr);
 
-            //! \copydoc BlackCore::CSimulatorCommon::getSimulatorInfo
-            virtual BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const override;
-
             // functions implemented
             virtual bool isTimeSynchronized() const override;
             virtual bool connectTo() override;

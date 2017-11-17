@@ -26,7 +26,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Describing a simulator plugin
-        class BLACKMISC_EXPORT CSimulatorPluginInfo : public BlackMisc::CValueObject<CSimulatorPluginInfo>
+        class BLACKMISC_EXPORT CSimulatorPluginInfo : public CValueObject<CSimulatorPluginInfo>
         {
         public:
             //! Default constructor
@@ -60,7 +60,7 @@ namespace BlackMisc
             const QString &getSimulator() const { return m_simulator; }
 
             //! Simulator info object
-            BlackMisc::Simulation::CSimulatorInfo getSimulatorInfo() const;
+            const CSimulatorInfo &getSimulatorInfo() const { return m_info; }
 
             //! Is this the emulated driver?
             bool isEmulatedPlugin() const;
@@ -72,19 +72,19 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! Plugin identifier (FSX)
-            static const QString &fsxPluginIndentifier();
+            static const QString &fsxPluginIdentifier();
 
             //! Plugin identifier (P3D)
-            static const QString &p3dPluginIndentifier();
+            static const QString &p3dPluginIdentifier();
 
             //! Plugin identifier (FS9)
-            static const QString &fs9PluginIndentifier();
+            static const QString &fs9PluginIdentifier();
 
             //! Plugin identifier (XPlane)
-            static const QString &xplanePluginIndentifier();
+            static const QString &xplanePluginIdentifier();
 
             //! Plugin identifier (emulated simulator plugin)
-            static const QString &emulatedPluginIndentifier();
+            static const QString &emulatedPluginIdentifier();
 
             //! All valid identifiers
             static const QStringList &allIdentifiers();
@@ -97,6 +97,7 @@ namespace BlackMisc
             QString m_name;
             QString m_simulator;
             QString m_description;
+            CSimulatorInfo m_info;
             bool m_valid { false };
 
             BLACK_METACLASS(
@@ -105,6 +106,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
                 BLACK_METAMEMBER(simulator, 0, DisabledForComparison | DisabledForHashing),
                 BLACK_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),
+                BLACK_METAMEMBER(info, 0, DisabledForComparison | DisabledForHashing),
                 BLACK_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing)
             );
         };

@@ -31,14 +31,16 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Simple hardcoded info about the corresponding simulator.
+        //!
         //! * in an ideal world this class would not exist, all would depend on flexible plugins \sa CSimulatorPluginInfo
         //! * in a real world the info is needed in a couple of places to specify the simulator
         //! ** when data from the swift datastore are read, the corresponding simulator is specified
         //! ** when model metadata are written to the swift datastore the DB simulator info needs to be provided
         //! ** when models are indexed from disk it does not know the corresponding driver
         //! ** also there is no strict dependency of some functions to the driver. I might not have the XP plugin installed,
-        //!    but need to handle XP data from the swift data store
-        //! If someone manages to remove this hardocded simulator information and makes it entirely flexible
+        //!    but need to handle XP data from the swift datastore.
+        //!
+        //! If someone manages to remove this hardcoded simulator information and makes it entirely flexible
         //! based upon the plugin metadata feel free.
         class BLACKMISC_EXPORT CSimulatorInfo : public CValueObject<CSimulatorInfo>
         {
@@ -163,7 +165,7 @@ namespace BlackMisc
             static Simulator boolToFlag(bool fsx, bool fs9, bool xp, bool p3d);
 
             //! Identifer, as provided by plugin
-            static Simulator identifierToFlag(const QString &identifier);
+            static Simulator identifierToSimulator(const QString &identifier);
 
             //! All simulators
             static const CSimulatorInfo &allSimulators();
