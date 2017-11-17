@@ -2,6 +2,6 @@
     "identifier" : "org.swift-project.plugins.simulator.p3d",
     "name" : "PREPAR3D",
     "simulator" : "p3d",
-    "description" : "Lockheed Martin PREPAR3D (x64, v4)",
+    "description" : "Lockheed Martin PREPAR3D (v1-3 x86, v4 and later x64)",
     "config" : "org.swift-project.plugins.simulator.p3d.config"
 }
