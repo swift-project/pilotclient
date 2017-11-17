@@ -40,10 +40,10 @@ namespace BlackSimPlugin
             Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
 
             CSimulatorEmulated::registerHelp();
-            this->setObjectName(info.getSimulatorInfo());
+            this->onSettingsChanged(); // init from settings
+
             m_myAircraft = this->getOwnAircraft(); // sync with provider
             m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWindow()));
-            this->onSettingsChanged();
 
             connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
             connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::fetchFromInterpolator);
@@ -355,6 +355,8 @@ namespace BlackSimPlugin
             const CSimulatorInfo simulator = settings.getEmulatedSimulator();
             const CSimulatorPluginInfoList plugins = sApp->getIContextSimulator()->getAvailableSimulatorPlugins();
             const CSimulatorPluginInfo plugin = plugins.findBySimulator(simulator);
+
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
             if (plugin.isValid())
             {
                 // ? restart driver, disconnect/reconnect
@@ -362,14 +364,13 @@ namespace BlackSimPlugin
             }
             else
             {
-                CLogMessage(this).validationError("No valid plugin for %1") << settings.getEmulatedSimulator().getSimulator();
+                CLogMessage(this).validationError("No valid plugin for '%1'") << simulator.toQString();
             }
 
-            // update provider
+            // update provider, own name, title
             this->updateOwnModel(settings.getOwnModel());
-
-            // own name
             this->setObjectName(simulator);
+            if (m_monitorWidget) { m_monitorWidget->updateWindowTitle(simulator); }
         }
 
         void CSimulatorEmulated::connectOwnSignals()
