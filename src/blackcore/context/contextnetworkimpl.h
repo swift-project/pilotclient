@@ -226,7 +226,7 @@ namespace BlackCore
             void checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);
 
             //! Connection status changed
-            void fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
+            void fsdConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Render restrictions have been changed, used with analyzer
             //! \sa CAirspaceAnalyzer
