@@ -59,11 +59,14 @@ namespace BlackCore
         return entities;
     }
 
+    // some strange Doxygen warning, added KB 2017-11
+    //! \cond PRIVATE
     bool CWebReaderFlags::isFromSwiftDb(CEntityFlags::Entity entity)
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
-        return isFromSwiftDb(entitiesToReaders(entity));
+        return CWebReaderFlags::isFromSwiftDb(entitiesToReaders(entity));
     }
+    //! \endcond
 
     bool CWebReaderFlags::isFromSwiftDb(WebReader reader)
     {
@@ -84,5 +87,4 @@ namespace BlackCore
     {
         return numberOfReaders(readers) == 1;
     }
-
 } // namespace
