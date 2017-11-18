@@ -75,6 +75,9 @@ namespace BlackCore
         //! Facade and context shutting down
         bool isShuttingDown() const { return m_shuttingDown; }
 
+        //! Parse command line in all contexts
+        bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+
         // ------- Context as interface, normal way to access a context
 
         //! Context for network
@@ -157,10 +160,6 @@ namespace BlackCore
 
         //! Register metadata
         static void registerMetadata();
-
-    public slots:
-        //! Parse command line in all contexts
-        bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
     private:
         bool m_initalized = false;   //!< flag if already initialized

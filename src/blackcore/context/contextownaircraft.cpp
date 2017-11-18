@@ -40,7 +40,7 @@ namespace BlackCore
             }
         }
 
-        const BlackMisc::Aviation::CAircraftSituation &IContextOwnAircraft::getDefaultSituation()
+        const CAircraftSituation &IContextOwnAircraft::getDefaultSituation()
         {
             static const CAircraftSituation situation(
                 CCoordinateGeodetic(
@@ -52,7 +52,7 @@ namespace BlackCore
             return situation;
         }
 
-        BlackMisc::Simulation::CAircraftModel IContextOwnAircraft::getDefaultOwnAircraftModel()
+        CAircraftModel IContextOwnAircraft::getDefaultOwnAircraftModel()
         {
             // if all fails
             static const CAircraftModel defaultModel(

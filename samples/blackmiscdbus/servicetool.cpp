@@ -101,7 +101,7 @@ namespace BlackSample
 
             // The << operator is used to add the parameters for the slot
             const QDateTime dtnow = QDateTime::currentDateTimeUtc();
-            const QString msg = QString("Message at %1").arg(dtnow.toString("MM/dd/yyyy @ hh:mm:ss"));
+            const QString msg = QString("Con.: %1, message at %2").arg(connection.name(), dtnow.toString("MM/dd/yyyy @ hh:mm:ss"));
             m << msg;
 
             // We send this as a non-replying message. This is used for sending errors, replys, signals.

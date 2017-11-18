@@ -162,11 +162,10 @@ namespace BlackGui
         //! \deprecated use BlackGui::CGuiApplication::styleSheetsChanged
         void styleSheetsChanged();
 
-    private slots:
-        //! File changed
-        void ps_qssDirectoryChanged(const QString &file);
-
     private:
+        //! File changed
+        void qssDirectoryChanged(const QString &file);
+
         //! Filename based on OS/existing files
         static QString getQssFileName(const QString &fileName);
 

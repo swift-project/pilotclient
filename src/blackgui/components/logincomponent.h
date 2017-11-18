@@ -63,11 +63,14 @@ namespace BlackGui
             //! Constructor
             explicit CLoginComponent(QWidget *parent = nullptr);
 
+            //! Destructor
+            virtual ~CLoginComponent();
+
             //! Automatically popup
             void setAutoPopupWizad(bool autoPopup);
 
-            //! Destructor
-            virtual ~CLoginComponent();
+            //! Main info area changed
+            void mainInfoAreaChanged(const QWidget *currentWidget);
 
         signals:
             //! Login
@@ -81,10 +84,6 @@ namespace BlackGui
 
             //! Relevant login data changed (digest version)
             void loginDataChangedDigest();
-
-        public slots:
-            //! Main info area changed
-            void mainInfoAreaChanged(const QWidget *currentWidget);
 
         private:
             //! Login cancelled

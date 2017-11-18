@@ -14,11 +14,13 @@
 #include "blackmisc/dbusserver.h"
 
 using namespace BlackCore;
+using namespace BlackMisc;
+
 namespace BlackCore
 {
     namespace Context
     {
-        IContextNetwork *IContextNetwork::create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection)
+        IContextNetwork *IContextNetwork::create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
         {
             switch (mode)
             {
@@ -26,7 +28,7 @@ namespace BlackCore
             case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
-                return new CContextNetworkProxy(BlackMisc::CDBusServer::coreServiceName(), connection, mode, runtime);
+                return new CContextNetworkProxy(CDBusServer::coreServiceName(), connection, mode, runtime);
             case CCoreFacadeConfig::NotUsed:
             default:
                 return new CContextNetworkEmpty(runtime);

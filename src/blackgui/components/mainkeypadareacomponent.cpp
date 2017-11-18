@@ -101,7 +101,8 @@ namespace BlackGui
         void CMainKeypadAreaComponent::buttonSelected()
         {
             QPushButton *senderButton = static_cast<QPushButton *>(QObject::sender());
-            Q_ASSERT(senderButton);
+            Q_ASSERT_X(senderButton, Q_FUNC_INFO, "No sender button");
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
             if (!senderButton) { return; }
             const CMainInfoAreaComponent::InfoArea ia = buttonToMainInfoArea(senderButton);
             if (ia != CMainInfoAreaComponent::InfoAreaNone)

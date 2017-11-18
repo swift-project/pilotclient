@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     Q_UNUSED(qa); // application init needed
-    CSwiftGuiStdApplication a;
+    CSwiftGuiStdApplication a; // application with contexts
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swift256());
     if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }

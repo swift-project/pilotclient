@@ -37,8 +37,8 @@ namespace BlackGui
     CStyleSheetUtility::CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent) : QObject(parent)
     {
         this->read();
-        connect(&this->m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::ps_qssDirectoryChanged);
-        connect(&this->m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &CStyleSheetUtility::ps_qssDirectoryChanged);
+        connect(&this->m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
+        connect(&this->m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
     }
 
     const QString &CStyleSheetUtility::fontStyleAsString(const QFont &font)
@@ -465,7 +465,7 @@ namespace BlackGui
         }
     }
 
-    void CStyleSheetUtility::ps_qssDirectoryChanged(const QString &file)
+    void CStyleSheetUtility::qssDirectoryChanged(const QString &file)
     {
         Q_UNUSED(file);
         this->read();
