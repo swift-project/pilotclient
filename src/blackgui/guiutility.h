@@ -41,6 +41,9 @@ namespace BlackGui
         //! Main (frameless enabled) application window
         static CEnableForFramelessWindow *mainFramelessEnabledApplicationWindow();
 
+        //! Register main application window widget if this is known
+        static void registerMainApplicationWindow(QWidget *mainWindow);
+
         //! Main application window widget
         static QWidget *mainApplicationWindow();
 
@@ -131,6 +134,8 @@ namespace BlackGui
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}
+
+        static QWidget *s_mainApplicationWindow;
     };
 } // ns
 

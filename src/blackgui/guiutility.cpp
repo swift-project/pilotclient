@@ -39,6 +39,8 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
+    QWidget *CGuiUtility::s_mainApplicationWindow = nullptr;
+
     CEnableForFramelessWindow *CGuiUtility::mainFramelessEnabledApplicationWindow()
     {
         const QWidgetList tlw = topLevelApplicationWidgetsWithName();
@@ -53,7 +55,7 @@ namespace BlackGui
 
     namespace Private
     {
-        QWidget *mainApplicationWindowImpl()
+        QWidget *mainApplicationWindowSearch()
         {
             CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledApplicationWindow();
             if (mw && mw->getWidget())
@@ -73,15 +75,23 @@ namespace BlackGui
         }
     } // ns
 
+    void CGuiUtility::registerMainApplicationWindow(QWidget *mainWindow)
+    {
+        CGuiUtility::s_mainApplicationWindow = mainWindow;
+    }
+
     QWidget *CGuiUtility::mainApplicationWindow()
     {
-        static QWidget *mw = Private::mainApplicationWindowImpl();
-        return mw;
+        if (!CGuiUtility::s_mainApplicationWindow)
+        {
+            CGuiUtility::s_mainApplicationWindow = Private::mainApplicationWindowSearch();
+        }
+        return CGuiUtility::s_mainApplicationWindow;
     }
 
     bool CGuiUtility::isMainWindowFrameless()
     {
-        const CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
+        const CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledApplicationWindow();
         return (mw && mw->isFrameless());
     }
 

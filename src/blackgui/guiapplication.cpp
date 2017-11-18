@@ -187,13 +187,16 @@ namespace BlackGui
         if (!mainWindow) { return; }
         if (m_uiSetupCompleted) { return; }
         m_uiSetupCompleted = true;
+
         const QString name(this->getApplicationNameVersionBetaDev());
         mainWindow->setObjectName(QCoreApplication::applicationName());
         mainWindow->setWindowTitle(name);
         mainWindow->setWindowIcon(m_windowIcon);
         mainWindow->setWindowIconText(name);
-        CStyleSheetUtility::setQSysInfoProperties(CGuiApplication::mainApplicationWindow(), true);
-        emit uiObjectTreeReady();
+        CStyleSheetUtility::setQSysInfoProperties(mainWindow, true);
+        CGuiUtility::registerMainApplicationWindow(mainWindow);
+
+        emit this->uiObjectTreeReady();
     }
 
     void CGuiApplication::addWindowFlags(Qt::WindowFlags flags)
