@@ -163,9 +163,9 @@ namespace BlackMisc
         const QMetaObject *mo = object->metaObject();
         for (int i = 0; i < mo->classInfoCount(); i++)
         {
-            QMetaClassInfo ci = mo->classInfo(i);
-            QString name(ci.name());
-            if (name == "D-Bus Interface") { return QString(ci.value()); }
+            const QMetaClassInfo ci = mo->classInfo(i);
+            const QString name = QString(ci.name()).toLower();
+            if (name == "d-bus interface") { return QString(ci.value()); }
         }
         return "";
     }
