@@ -324,22 +324,21 @@ void SwiftGuiStd::setContextAvailability()
 
 void SwiftGuiStd::updateGuiStatusInformation()
 {
-    QString network("unavailable");
     if (m_coreAvailable)
     {
+        static const QString dBusTimestamp("%1 %2");
+        static const QString local("local");
         const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
-        bool dBus = sGui->getCoreFacadeConfig().requiresDBusConnection();
-        network = dBus ? now : "local";
+        const bool dBus = sGui->getCoreFacadeConfig().requiresDBusConnection();
         ui->comp_InfoBarStatus->setDBusStatus(dBus && m_coreAvailable);
+        ui->comp_InfoBarStatus->setDBusTooltip(dBus ? dBusTimestamp.arg(now, sGui->getCoreFacadeConfig().getDBusAddress()) : local);
     }
     else
     {
+        static const QString unavailable("unavailable");
         ui->comp_InfoBarStatus->setDBusStatus(false);
+        ui->comp_InfoBarStatus->setDBusTooltip(unavailable);
     }
-
-    // update status fields
-    const QString s = QString("network: %1").arg(network);
-    ui->comp_InfoBarStatus->setDBusTooltip(s);
 }
 
 void SwiftGuiStd::onChangedWindowOpacity(int opacity)

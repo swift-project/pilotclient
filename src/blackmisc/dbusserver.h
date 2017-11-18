@@ -107,6 +107,9 @@ namespace BlackMisc
         //! Return the server mode of the given address
         static ServerMode modeOfAddress(QString address);
 
+        //! Mode to string
+        static const QString &modeToString(ServerMode mode);
+
         //! True if a valid Qt DBus address, e.g. "unix:tmpdir=/tmp", "tcp:host=127.0.0.1,port=45000"
         static bool isQtDBusAddress(const QString &address);
 
@@ -143,10 +146,7 @@ namespace BlackMisc
         static QString getDBusInterfaceFromClassInfo(QObject *object);
 
         //! Register options with connection
-        static QDBusConnection::RegisterOptions registerOptions()
-        {
-            return QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
-        }
+        static QDBusConnection::RegisterOptions registerOptions();
 
         //! Called when a new DBus client has connected in P2P mode
         bool registerObjectsWithP2PConnection(QDBusConnection connection);

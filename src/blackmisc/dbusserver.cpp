@@ -26,7 +26,9 @@ namespace BlackMisc
 {
     CDBusServer::CDBusServer(const QString &service, const QString &address, QObject *parent) : QObject(parent)
     {
-        m_serverMode = modeOfAddress(address);
+        static const QString desc("Mode: %1 Address: '%2' Service: '%3'");
+        m_serverMode = CDBusServer::modeOfAddress(address);
+        this->setObjectName(desc.arg(CDBusServer::modeToString(m_serverMode), address, service.isEmpty() ? "-" : service));
         switch (m_serverMode)
         {
         case SERVERMODE_SESSIONBUS:
@@ -60,13 +62,14 @@ namespace BlackMisc
                 dbusAddress = dbusAddress.toLower().trimmed().replace(' ', "");
                 if (! dbusAddress.contains("bind=")) { dbusAddress = dbusAddress.append(",bind=*"); } // bind to all network interfaces
 
-                m_busServer.reset(new QDBusServer(dbusAddress, parent));
+                m_busServer.reset(new QDBusServer(dbusAddress, this));
+                m_busServer->setObjectName("QDBusServer: " + this->objectName());
                 m_busServer->setAnonymousAuthenticationAllowed(true);
 
                 // Note: P2P has no service name
                 if (m_busServer->isConnected())
                 {
-                    CLogMessage(this).debug() << "Server listening on address:" << m_busServer->address();
+                    CLogMessage(this).info("DBus P2P Server listening on address: '%1'") << m_busServer->address();
                 }
                 else
                 {
@@ -171,14 +174,21 @@ namespace BlackMisc
     {
         Q_ASSERT(! m_objects.isEmpty());
         m_connections.insert(connection.name(), connection);
-        CLogMessage(this).debug() << "New Connection from:" << connection.name();
+        CLogMessage(this).info("New Connection from: '%1'") << connection.name();
         bool success = true;
         for (auto i = m_objects.cbegin(); i != m_objects.cend(); ++i)
         {
-            CLogMessage(this).debug() << "Adding" << i.key() << getDBusInterfaceFromClassInfo(i.value()) << "to the new connection.";
-            bool ok = connection.registerObject(i.key(), i.value(), registerOptions());
-            Q_ASSERT_X(ok, "CDBusServer::newConnection", "Registration failed");
-            if (! ok) { success = false; }
+            const QString key(i.key());
+            const bool ok = connection.registerObject(key, i.value(), registerOptions());
+            if (ok)
+            {
+                CLogMessage(this).info("Adding '%1' to the new connection '%2'") << key << this->getDBusInterfaceFromClassInfo(i.value());
+            }
+            else
+            {
+                CLogMessage(this).info("Adding '%1' failed, connection '%2', error '%3'") << key << this->getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
+                success = false;
+            }
         }
         return success;
     }
@@ -195,7 +205,7 @@ namespace BlackMisc
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
                 if (connection.registerObject(path, object, registerOptions()))
                 {
-                    CLogMessage(this).debug() << "Adding" << path << getDBusInterfaceFromClassInfo(object) << "to session bus.";
+                    CLogMessage(this).info("Adding '%1' '%2' to session DBus") << path << getDBusInterfaceFromClassInfo(object);
                 }
                 else
                 {
@@ -208,7 +218,7 @@ namespace BlackMisc
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
                 if (connection.registerObject(path, object, registerOptions()))
                 {
-                    CLogMessage(this).debug() << "Adding" << path << getDBusInterfaceFromClassInfo(object) << "to system bus.";
+                    CLogMessage(this).info("Adding '%1' '%2' to system DBus") << path << getDBusInterfaceFromClassInfo(object);
                 }
                 else
                 {
@@ -222,7 +232,7 @@ namespace BlackMisc
                 {
                     if (connection.registerObject(path, object, registerOptions()))
                     {
-                        CLogMessage(this).debug() << "Adding" << path << getDBusInterfaceFromClassInfo(object) << "to" << connection.name();
+                        CLogMessage(this).info("Adding '%1' '%2' to P2P DBus '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.name();
                     }
                     else
                     {
@@ -401,6 +411,22 @@ namespace BlackMisc
         if (address == systemBusAddress())       { return SERVERMODE_SYSTEMBUS; }
         else if (address == sessionBusAddress()) { return SERVERMODE_SESSIONBUS; }
         else                                     { return SERVERMODE_P2P; }
+    }
+
+    const QString &CDBusServer::modeToString(CDBusServer::ServerMode mode)
+    {
+        static const QString p2p = "P2P";
+        static const QString session = "session";
+        static const QString system = "system";
+
+        switch (mode)
+        {
+        case SERVERMODE_P2P: return p2p;
+        case SERVERMODE_SYSTEMBUS: return system;
+        case SERVERMODE_SESSIONBUS:
+        default: break;
+        }
+        return session;
     }
 
     bool CDBusServer::isDBusAvailable(const QString &address, int port, int timeoutMs)
