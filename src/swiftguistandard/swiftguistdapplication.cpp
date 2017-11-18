@@ -31,12 +31,40 @@ CSwiftGuiStdApplication::CSwiftGuiStdApplication() :
 CStatusMessageList CSwiftGuiStdApplication::startHookIn()
 {
     Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed cmd line arguments");
-    CoreModes::CoreMode coreMode = CoreModes::CoreInGuiProcess;
-    const QString dBusAddress(this->getCmdDBusAddressValue());
-    if (this->isParserOptionSet(m_cmdFacadeMode))
+
+    QString dBusAddress(this->getCmdDBusAddressValue());
+    const QString coreModeStr = this->isParserOptionSet(m_cmdFacadeMode) ? this->getParserValue(m_cmdFacadeMode) : QStringLiteral("");
+    CoreModes::CoreMode coreMode = CoreModes::stringToCoreMode(coreModeStr);
+
+    // Valid combination?
+    if (!coreModeStr.isEmpty())
     {
-        const QString v(this->getParserValue(m_cmdFacadeMode));
-        coreMode = CoreModes::stringToCoreMode(v);
+        if (coreMode == CoreModes::CoreInGuiProcess && !dBusAddress.isEmpty())
+        {
+            const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
+                                     error("Inconsistent pair DBus: '%1' and core: '%2'")
+                                     << dBusAddress << coreModeStr;
+            return CStatusMessageList(m) ;
+        }
+    }
+
+    // Implicit configuration
+    CStatusMessageList msgs;
+    if (!dBusAddress.isEmpty() && coreModeStr.isEmpty())
+    {
+        coreMode = CoreModes::CoreExternalAudioGui; // default
+        const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
+                                 info("No DBus address, setting core mode: '%1'")
+                                 << CoreModes::coreModeToString(coreMode);
+        msgs.push_back(m);
+    }
+    else if (dBusAddress.isEmpty() && (coreMode == CoreModes::CoreExternalCoreAudio || coreMode == CoreModes::CoreExternalAudioGui))
+    {
+        dBusAddress = CDBusServer::sessionBusAddress(); // a possible default
+        const CStatusMessage m = CStatusMessage(this, CLogCategory::validation()).
+                                 info("Setting DBus address to '%1'")
+                                 << dBusAddress;
+        msgs.push_back(m);
     }
 
     CCoreFacadeConfig runtimeConfig;
@@ -45,15 +73,18 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     case CoreModes::CoreExternalCoreAudio:
         runtimeConfig = CCoreFacadeConfig::remote(dBusAddress);
         break;
+    case CoreModes::CoreExternalAudioGui:
+        runtimeConfig = CCoreFacadeConfig::remoteLocalAudio(dBusAddress);
+        break;
     default:
     case CoreModes::CoreInGuiProcess:
         runtimeConfig = CCoreFacadeConfig::local(dBusAddress);
         break;
-    case CoreModes::CoreExternalAudioGui:
-        runtimeConfig = CCoreFacadeConfig::remoteLocalAudio(dBusAddress);
-        break;
     }
-    return this->useContexts(runtimeConfig);
+
+    const CStatusMessageList contextMsgs = this->useContexts(runtimeConfig);
+    msgs.push_back(contextMsgs);
+    return contextMsgs;
 }
 
 bool CSwiftGuiStdApplication::parsingHookIn()
