@@ -48,14 +48,18 @@ namespace BlackGui
             //! Set values
             void set(const QString &dBus);
 
+            //! Set system DBus radio button visible/invisible
+            void setSystemDBusVisible(bool visible);
+
+        signals:
+            //! Is being edited
+            void editingFinished();
+
         private:
             QScopedPointer<Ui::CDBusServerAddressSelector> ui;
 
             //! Radio button clicked
             void radioButtonReleased();
-
-            //! P2P address changed
-            void p2pAddressChanged();
         };
     } // ns
 } // ns

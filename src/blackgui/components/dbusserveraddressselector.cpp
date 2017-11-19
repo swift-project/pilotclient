@@ -32,9 +32,9 @@ namespace BlackGui
             ui->setupUi(this);
 
             // normally no system Bus on Windows
-            if (CBuildConfig::isRunningOnWindowsNtPlatform() && !sGui->isRunningInDeveloperEnvironment())
+            if (CBuildConfig::isRunningOnWindowsNtPlatform() || !sGui->isRunningInDeveloperEnvironment())
             {
-                ui->rb_DBusSystem->setEnabled(false);
+                this->setSystemDBusVisible(false);
             }
 
             ui->cb_DBusServerAddress->addItems(CNetworkUtils::getKnownLocalIpV4Addresses());
@@ -45,7 +45,8 @@ namespace BlackGui
             connect(ui->rb_DBusP2P, &QRadioButton::released, this, &CDBusServerAddressSelector::radioButtonReleased);
             connect(ui->rb_DBusSession, &QRadioButton::released, this, &CDBusServerAddressSelector::radioButtonReleased);
             connect(ui->rb_DBusSystem, &QRadioButton::released, this, &CDBusServerAddressSelector::radioButtonReleased);
-            connect(ui->cb_DBusServerAddress, &QComboBox::currentTextChanged, this, &CDBusServerAddressSelector::p2pAddressChanged);
+            connect(ui->le_DBusServerPort, &QLineEdit::editingFinished, this, &CDBusServerAddressSelector::editingFinished);
+            connect(ui->cb_DBusServerAddress, &QComboBox::currentTextChanged, this, &CDBusServerAddressSelector::editingFinished);
         }
 
         CDBusServerAddressSelector::~CDBusServerAddressSelector()
@@ -105,16 +106,22 @@ namespace BlackGui
             }
         }
 
+        void CDBusServerAddressSelector::setSystemDBusVisible(bool visible)
+        {
+            const bool wasChecked = ui->rb_DBusSystem->isChecked();
+            ui->rb_DBusSystem->setVisible(visible);
+            if (!visible && wasChecked)
+            {
+                ui->rb_DBusSession->setChecked(true);
+            }
+        }
+
         void CDBusServerAddressSelector::radioButtonReleased()
         {
             const bool p2p = this->isP2P();
             ui->le_DBusServerPort->setEnabled(p2p);
             ui->cb_DBusServerAddress->setEnabled(p2p);
-        }
-
-        void CDBusServerAddressSelector::p2pAddressChanged()
-        {
-            // void
+            emit this->editingFinished();
         }
     } // ns
 } // ns
