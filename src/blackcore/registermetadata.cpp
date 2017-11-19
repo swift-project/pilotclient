@@ -28,20 +28,26 @@ namespace BlackCore
 {
     void registerMetadata()
     {
-        qDBusRegisterMetaType<BlackCore::Context::CLogSubscriptionHash>();
-        qDBusRegisterMetaType<BlackCore::Context::CLogSubscriptionPair>();
-        qDBusRegisterMetaType<BlackCore::Context::CSettingsDictionary>();
-        qDBusRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
-        qDBusRegisterMetaType<BlackCore::INetwork::LoginMode>();
-        qDBusRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
-        qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
-        qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
+        // not really clear when a type here has to be registered with qRegisterMetaType
+        // however, does not harm if it is redundant
+        qRegisterMetaType<INetwork::ConnectionStatus>();
+        qRegisterMetaType<INetwork::LoginMode>();
+        qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
+        qRegisterMetaType<CWebReaderFlags::WebReader>();
+        qRegisterMetaType<CWebReaderFlags::WebReaderFlag>();
 
-        BlackCore::Db::CDatabaseReaderConfig::registerMetadata();
-        BlackCore::Db::CDatabaseReaderConfigList::registerMetadata();
-        BlackCore::Data::CGlobalSetup::registerMetadata();
-        BlackCore::Data::CVatsimSetup::registerMetadata();
-        BlackCore::Data::CLauncherSetup::registerMetadata();
-        BlackCore::Vatsim::CReaderSettings::registerMetadata();
+        qDBusRegisterMetaType<Context::CLogSubscriptionHash>();
+        qDBusRegisterMetaType<Context::CLogSubscriptionPair>();
+        qDBusRegisterMetaType<Context::CSettingsDictionary>();
+        qDBusRegisterMetaType<INetwork::ConnectionStatus>();
+        qDBusRegisterMetaType<INetwork::LoginMode>();
+        qDBusRegisterMetaType<IVoiceChannel::ConnectionStatus>();
+
+        Db::CDatabaseReaderConfig::registerMetadata();
+        Db::CDatabaseReaderConfigList::registerMetadata();
+        Data::CGlobalSetup::registerMetadata();
+        Data::CVatsimSetup::registerMetadata();
+        Data::CLauncherSetup::registerMetadata();
+        Vatsim::CReaderSettings::registerMetadata();
     }
 } // namespace
