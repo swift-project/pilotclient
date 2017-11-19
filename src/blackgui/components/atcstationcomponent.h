@@ -78,50 +78,49 @@ namespace BlackGui
             //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
-        private slots:
+        private:
             //! Get all METARs
-            void ps_getMetarAsEntered();
+            void getMetarAsEntered();
 
             //! Request new ATIS
-            void ps_requestAtis();
+            void requestAtis();
 
             //! Online ATC station selected
-            void ps_onlineAtcStationSelected(QModelIndex index);
+            void onlineAtcStationSelected(QModelIndex index);
 
             //! Tab changed
-            void ps_atcStationsTabChanged();
+            void atcStationsTabChanged();
 
             //! Booked stations reloading
-            void ps_reloadAtcStationsBooked();
+            void reloadAtcStationsBooked();
 
             //! Booked stations changed
-            void ps_changedAtcStationsBooked();
+            void changedAtcStationsBooked();
 
             //! Online stations changed
-            void ps_changedAtcStationsOnline();
+            void changedAtcStationsOnline();
 
             //! Connection status has been changed
-            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Request dummy ATC online stations
-            void ps_testCreateDummyOnlineAtcStations(int number);
+            void testCreateDummyOnlineAtcStations(int number);
 
             //! Request udpate
-            void ps_requestOnlineStationsUpdate();
+            void requestOnlineStationsUpdate();
 
             //! Info area tab bar has changed
-            void ps_infoAreaTabBarChanged(int index);
+            void infoAreaTabBarChanged(int index);
 
             //! Count has been changed
-            void ps_onCountChanged(int count, bool withFilter);
+            void onCountChanged(int count, bool withFilter);
 
             //! Set COM frequency
-            void ps_setComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
+            void setComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
             //! Airports read from web readers
-            void ps_airportsRead();
+            void airportsRead();
 
-        private:
             //! Build a tree view for ATC stations
             void updateTreeView();
 
