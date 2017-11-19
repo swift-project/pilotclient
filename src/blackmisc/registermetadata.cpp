@@ -101,8 +101,6 @@ namespace BlackMisc
         Weather::registerMetadata();
 
         // needed by XSwiftBus proxy class
-        qRegisterMetaType<CSequence<double>>();
-        qRegisterMetaType<CSequence<double>>("CDoubleSequence");
         qDBusRegisterMetaType<CSequence<double>>();
     }
 } // ns
