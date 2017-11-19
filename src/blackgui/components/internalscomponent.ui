@@ -398,7 +398,7 @@
           <item row="1" column="0">
            <widget class="QLabel" name="lbl_PartsNetwork">
             <property name="text">
-             <string>Network</string>
+             <string>Network:</string>
             </property>
            </widget>
           </item>
@@ -417,7 +417,7 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item>
+             <item alignment="Qt::AlignRight">
               <widget class="QPushButton" name="pb_RequestFromNetwork">
                <property name="toolTip">
                 <string>Request from network</string>
