@@ -73,9 +73,6 @@ namespace BlackCore
                                    "changedAircraftInRangeDigest", this, SIGNAL(changedAircraftInRangeDigest()));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                   "connectionTerminated", this, SIGNAL(connectionTerminated()));
-            Q_ASSERT(s);
-            s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                    "kicked", this, SIGNAL(kicked(QString)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),

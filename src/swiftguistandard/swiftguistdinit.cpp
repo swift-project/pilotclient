@@ -123,8 +123,6 @@ void SwiftGuiStd::init()
     // signal / slots contexts / timers
     bool s = connect(sGui->getWebDataServices(), &CWebDataServices::sharedInfoObjectsRead, this, &SwiftGuiStd::sharedInfoObjectsLoaded, Qt::QueuedConnection);
     Q_ASSERT(s);
-    s = connect(sGui->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::onConnectionTerminated, Qt::QueuedConnection);
-    Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::onConnectionStatusChanged, Qt::QueuedConnection);
     Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::kicked, this, &SwiftGuiStd::onKickedFromNetwork, Qt::QueuedConnection);

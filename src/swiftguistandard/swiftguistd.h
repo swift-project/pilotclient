@@ -207,9 +207,6 @@ private:
     //! Menu item clicked
     void onMenuClicked();
 
-    //! Terminated connection
-    void onConnectionTerminated();
-
     //! Kicked from network
     void onKickedFromNetwork(const QString &kickMessage);
 

@@ -237,11 +237,6 @@ void SwiftGuiStd::displayStatusMessageInGui(const CStatusMessage &statusMessage)
     }
 }
 
-void SwiftGuiStd::onConnectionTerminated()
-{
-    this->updateGuiStatusInformation();
-}
-
 void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
 {
     this->updateGuiStatusInformation();
