@@ -44,6 +44,9 @@ namespace BlackMisc
         //! Default service name
         static const QString &coreServiceName();
 
+        //! Service name, empty if is P2P connection
+        static const QString &coreServiceName(const QDBusConnection &connection);
+
         //! Server mode
         enum ServerMode
         {
@@ -119,6 +122,9 @@ namespace BlackMisc
         //! False if address is session or system bus address
         static bool isP2PAddress(const QString &address);
 
+        //! False if address is session or system bus connection
+        static bool isP2PConnection(const QDBusConnection &connection);
+
         //! Extract host and port from a DBus address
         static bool dBusAddressToHostAndPort(QString dbusAddress, QString &o_host, int &o_port);
 
@@ -143,6 +149,7 @@ namespace BlackMisc
         QMap<QString, QObject *> m_objects;
         QMap<QString, QDBusConnection> m_connections;
 
+        //! Interface name/value to class name
         static QString getDBusInterfaceFromClassInfo(QObject *object);
 
         //! Register options with connection

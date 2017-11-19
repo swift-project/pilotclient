@@ -93,9 +93,21 @@ namespace BlackMisc
         return sn;
     }
 
+    const QString &CDBusServer::coreServiceName(const QDBusConnection &connection)
+    {
+        static const QString empty;
+        return CDBusServer::isP2PConnection(connection) ? empty : CDBusServer::coreServiceName();
+    }
+
     bool CDBusServer::isP2PAddress(const QString &address)
     {
         return modeOfAddress(address) == SERVERMODE_P2P;
+    }
+
+    bool CDBusServer::isP2PConnection(const QDBusConnection &connection)
+    {
+        if (CDBusServer::isQtDefaultConnection(connection)) { return false; }
+        return connection.name().contains(p2pConnectionName());
     }
 
     bool CDBusServer::dBusAddressToHostAndPort(QString address, QString &host, int &port)
@@ -168,6 +180,12 @@ namespace BlackMisc
             if (name == "d-bus interface") { return QString(ci.value()); }
         }
         return "";
+    }
+
+    QDBusConnection::RegisterOptions CDBusServer::registerOptions()
+    {
+        return QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
+        // return QDBusConnection::ExportAllContents;
     }
 
     bool CDBusServer::registerObjectsWithP2PConnection(QDBusConnection connection)

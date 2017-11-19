@@ -361,7 +361,7 @@ namespace BlackCore
         }
         else
         {
-            const QString name("BlackBoxRuntime");
+            const QString name(CDBusServer::p2pConnectionName() + " " + address);
             QDBusConnection::disconnectFromPeer(name);
             m_dbusConnection = QDBusConnection::connectToPeer(address, name);
         }
