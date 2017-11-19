@@ -30,6 +30,7 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/verify.h"
 
 #include <stdbool.h>
 #include <QByteArray>
@@ -82,7 +83,7 @@ namespace BlackCore
 
         QMap<QString, int> times;
         QTime time;
-        registerMetadata();
+        CCoreFacade::registerMetadata();
 
         // either use explicit setting or last value
         const QString dbusAddress = this->getDBusAddress();
@@ -95,11 +96,10 @@ namespace BlackCore
             this->initDBusConnection(dbusAddress);
             if (!m_dbusConnection.isConnected())
             {
-                QString notConnected("DBus connection failed: ");
                 const QString e = m_dbusConnection.lastError().message();
-                if (!e.isEmpty()) { notConnected.append(e); }
-                Q_ASSERT_X(false, "CRuntime::init", notConnected.toUtf8().constData());
-                CLogMessage(this).error(notConnected);
+                BLACK_VERIFY_X(false, "CRuntime::init DBus problem", e.toUtf8().constData());
+                CLogMessage(this).error("DBus connection failed: '%1'") << e;
+                return;
             }
         }
         times.insert("DBus", time.restart());
