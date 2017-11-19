@@ -16,6 +16,7 @@
 
 #include <QFlag>
 
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
@@ -34,13 +35,13 @@ namespace BlackCore
             return s;
         }
 
-        const BlackMisc::PhysicalQuantities::CTime &IContextSimulator::HighlightTime()
+        const PhysicalQuantities::CTime &IContextSimulator::HighlightTime()
         {
             static const CTime t(10.0, CTimeUnit::s());
             return t;
         }
 
-        IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn)
+        IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
         {
             switch (mode)
             {
@@ -48,7 +49,7 @@ namespace BlackCore
             case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextSimulator(mode, parent))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
-                return new CContextSimulatorProxy(BlackMisc::CDBusServer::coreServiceName(), conn, mode, parent);
+                return new CContextSimulatorProxy(CDBusServer::coreServiceName(connection), connection, mode, parent);
             case CCoreFacadeConfig::NotUsed:
             default:
                 return new CContextSimulatorEmpty(parent);

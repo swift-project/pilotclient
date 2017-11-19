@@ -28,7 +28,7 @@ namespace BlackCore
             case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
-                return new CContextNetworkProxy(CDBusServer::coreServiceName(), connection, mode, runtime);
+                return new CContextNetworkProxy(CDBusServer::coreServiceName(connection), connection, mode, runtime);
             case CCoreFacadeConfig::NotUsed:
             default:
                 return new CContextNetworkEmpty(runtime);

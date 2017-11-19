@@ -32,7 +32,7 @@ namespace BlackCore
     {
         CContextNetworkProxy::CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextNetwork(mode, runtime), m_dBusInterface(nullptr)
         {
-            m_dBusInterface = new BlackMisc::CGenericDBusInterface(
+            m_dBusInterface = new CGenericDBusInterface(
                 serviceName , IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                 connection, this);
             this->relaySignals(serviceName, connection);

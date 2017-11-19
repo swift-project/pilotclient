@@ -32,7 +32,7 @@ namespace BlackCore
 {
     namespace Context
     {
-        IContextApplication *IContextApplication::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &connection)
+        IContextApplication *IContextApplication::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
         {
             switch (mode)
             {
@@ -40,7 +40,7 @@ namespace BlackCore
             case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextApplication(mode, parent))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
-                return new CContextApplicationProxy(BlackMisc::CDBusServer::coreServiceName(), connection, mode, parent);
+                return new CContextApplicationProxy(CDBusServer::coreServiceName(connection), connection, mode, parent);
             case CCoreFacadeConfig::NotUsed:
             default:
                 return new CContextApplicationEmpty(parent);
@@ -136,14 +136,14 @@ namespace BlackCore
             qFatal("Not implemented"); // avoid losing a change during context interface construction
         }
 
-        void IContextApplication::registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin)
+        void IContextApplication::registerHotkeyActions(const QStringList &actions, const CIdentifier &origin)
         {
             Q_UNUSED(actions);
             Q_UNUSED(origin);
             qFatal("Not implemented"); // avoid losing a change during context interface construction
         }
 
-        void IContextApplication::callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin)
+        void IContextApplication::callHotkeyAction(const QString &action, bool argument, const CIdentifier &origin)
         {
             Q_UNUSED(action);
             Q_UNUSED(argument);

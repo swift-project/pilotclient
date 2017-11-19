@@ -141,9 +141,6 @@ namespace BlackCore
             //! Connection status changed for online station
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
-            //! Terminated connection
-            void connectionTerminated();
-
             //! User has been kicked from network
             void kicked(const QString &kickMessage);
 

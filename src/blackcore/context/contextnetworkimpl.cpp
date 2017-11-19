@@ -400,7 +400,7 @@ namespace BlackCore
             return sApp->getWebDataServices()->getVatsimVoiceServers();
         }
 
-        void CContextNetwork::fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CContextNetwork::fsdConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to; }
             auto fromOld = m_currentStatus; // own status cached

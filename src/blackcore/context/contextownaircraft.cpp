@@ -16,6 +16,7 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/dbusserver.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
@@ -25,7 +26,7 @@ namespace BlackCore
 {
     namespace Context
     {
-        IContextOwnAircraft *IContextOwnAircraft::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn)
+        IContextOwnAircraft *IContextOwnAircraft::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
         {
             switch (mode)
             {
@@ -33,7 +34,7 @@ namespace BlackCore
             case CCoreFacadeConfig::LocalInDBusServer:
                 return (new CContextOwnAircraft(mode, parent))->registerWithDBus(server);
             case CCoreFacadeConfig::Remote:
-                return new CContextOwnAircraftProxy(BlackMisc::CDBusServer::coreServiceName(), conn, mode, parent);
+                return new CContextOwnAircraftProxy(CDBusServer::coreServiceName(), connection, mode, parent);
             case CCoreFacadeConfig::NotUsed:
             default:
                 return new CContextOwnAircraftEmpty(parent);
