@@ -50,30 +50,30 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
 {
     ui->setupUi(this);
     this->init();
-    connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
-    connect(ui->tb_SwiftMappingTool, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
-    connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
-    connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
-    connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
-    connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::ps_startWizard);
-    connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::ps_tabChanged);
-    connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::distributionInfoAvailable, this, &CSwiftLauncher::ps_distributionInfoAvailable);
-    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::ps_onStyleSheetsChanged);
+    connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_SwiftMappingTool, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);
+    connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::showMainPage);
+    connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::startWizard);
+    connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::tabChanged);
+    connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::distributionInfoAvailable, this, &CSwiftLauncher::distributionInfoAvailable);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged);
 
-    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
 
     // default from settings
     this->setDefaults();
 
     // periodically check
-    connect(&m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::ps_checkRunningApplicationsAndCore);
+    connect(&m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::checkRunningApplicationsAndCore);
     m_checkTimer.setInterval(2500);
     m_checkTimer.start();
 
     // auto launch wizard
     if (sGui->isInstallerOptionSet())
     {
-        QTimer::singleShot(2500, this, &CSwiftLauncher::ps_startWizard);
+        QTimer::singleShot(2500, this, &CSwiftLauncher::startWizard);
     }
 }
 
@@ -114,7 +114,7 @@ void CSwiftLauncher::mouseMoveEvent(QMouseEvent *event)
     if (!handleMouseMoveEvent(event)) { QDialog::mouseMoveEvent(event); }
 }
 
-void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
+void CSwiftLauncher::displayLatestNews(QNetworkReply *reply)
 {
     QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
     if (nwReply->error() == QNetworkReply::NoError)
@@ -136,7 +136,7 @@ void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
     }
 }
 
-void CSwiftLauncher::ps_distributionInfoAvailable()
+void CSwiftLauncher::distributionInfoAvailable()
 {
     this->setHeaderInfo(ui->comp_DistributionInfo->getNewAvailableVersionForSelection());
     this->loadLatestNews();
@@ -185,7 +185,7 @@ void CSwiftLauncher::loadLatestNews()
         CLogMessage(this).warning("No working news URL in %1") << newsUrls.toQString();
         return;
     }
-    sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::ps_displayLatestNews});
+    sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::displayLatestNews});
 }
 
 void CSwiftLauncher::loadAbout()
@@ -209,7 +209,7 @@ void CSwiftLauncher::initLogDisplay()
     auto logHandler = CLogHandler::instance()->handlerForPattern(
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
                       );
-    logHandler->subscribe(this, &CSwiftLauncher::ps_appendLogMessage);
+    logHandler->subscribe(this, &CSwiftLauncher::appendLogMessage);
 
     ui->comp_SwiftLauncherLog->showFilterBar();
     ui->comp_SwiftLauncherLog->filterUseRadioButtonDescriptiveIcons(false);
@@ -268,7 +268,7 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
                                    "DBus server for '" + dBus + "' can not be connected.\n\n" +
                                    "Likely the core is not running or is not reachable.\n\n" +
                                    "Details: " + msg, true);
-            this->ps_showStatusMessage(m);
+            this->showStatusMessage(m);
             return false;
         }
     }
@@ -350,7 +350,7 @@ QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs
     return cmd;
 }
 
-void CSwiftLauncher::ps_startButtonPressed()
+void CSwiftLauncher::startButtonPressed()
 {
     const QObject *sender = QObject::sender();
     if (sender == ui->tb_SwiftGui)
@@ -381,42 +381,42 @@ void CSwiftLauncher::ps_startButtonPressed()
     }
 }
 
-void CSwiftLauncher::ps_dbusServerModeSelected(bool selected)
+void CSwiftLauncher::dbusServerModeSelected(bool selected)
 {
     if (!selected) { return; }
     if (!this->isStandaloneGuiSelected()) { return; }
     ui->rb_SwiftCoreAudioOnGui->setChecked(true);
 }
 
-void CSwiftLauncher::ps_showStatusMessage(const CStatusMessage &msg)
+void CSwiftLauncher::showStatusMessage(const CStatusMessage &msg)
 {
     ui->fr_SwiftLauncherMain->showOverlayMessage(msg, 5000);
 }
 
-void CSwiftLauncher::ps_appendLogMessage(const CStatusMessage &message)
+void CSwiftLauncher::appendLogMessage(const CStatusMessage &message)
 {
     ui->comp_SwiftLauncherLog->appendStatusMessageToList(message);
     if (message.getSeverity() == CStatusMessage::SeverityError)
     {
-        this->ps_showStatusMessage(message);
+        this->showStatusMessage(message);
     }
 }
 
-void CSwiftLauncher::ps_appendLogMessages(const CStatusMessageList &messages)
+void CSwiftLauncher::appendLogMessages(const CStatusMessageList &messages)
 {
     ui->comp_SwiftLauncherLog->appendStatusMessagesToList(messages);
     if (messages.hasErrorMessages())
     {
-        this->ps_showStatusMessage(messages.getErrorMessages().toSingleMessage());
+        this->showStatusMessage(messages.getErrorMessages().toSingleMessage());
     }
 }
 
-void CSwiftLauncher::ps_showMainPage()
+void CSwiftLauncher::showMainPage()
 {
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain);
 }
 
-void CSwiftLauncher::ps_tabChanged(int current)
+void CSwiftLauncher::tabChanged(int current)
 {
     if (current == static_cast<int>(PageUpdates))
     {
@@ -424,12 +424,12 @@ void CSwiftLauncher::ps_tabChanged(int current)
     }
 }
 
-void CSwiftLauncher::ps_showLogPage()
+void CSwiftLauncher::showLogPage()
 {
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherLog);
 }
 
-void CSwiftLauncher::ps_checkRunningApplicationsAndCore()
+void CSwiftLauncher::checkRunningApplicationsAndCore()
 {
     // wait some time before buttons are enabled (allows startup)
     if (m_startCoreWaitCycles > 0) { m_startCoreWaitCycles--; }
@@ -446,7 +446,7 @@ void CSwiftLauncher::ps_checkRunningApplicationsAndCore()
     ui->tb_SwiftGui->setEnabled(!foundLocalPilotClientGui && m_startGuiWaitCycles < 1);
 }
 
-void CSwiftLauncher::ps_startWizard()
+void CSwiftLauncher::startWizard()
 {
     const bool show = this->warnAboutOtherSwiftApplications();
     if (!show) { return; }
@@ -457,7 +457,7 @@ void CSwiftLauncher::ps_startWizard()
     m_wizard->show();
 }
 
-void CSwiftLauncher::ps_onStyleSheetsChanged()
+void CSwiftLauncher::onStyleSheetsChanged()
 {
     this->initStyleSheet();
 }

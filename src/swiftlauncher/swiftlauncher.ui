@@ -82,7 +82,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>2</number>
+             <number>4</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -772,6 +772,22 @@ p, li { white-space: pre-wrap; }
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tbr_LatestNews</tabstop>
+  <tabstop>rb_WindowNormal</tabstop>
+  <tabstop>rb_WindowFrameless</tabstop>
+  <tabstop>rb_SwiftStandalone</tabstop>
+  <tabstop>rb_SwiftCoreAudioOnGui</tabstop>
+  <tabstop>rb_SwiftCoreAudioOnCore</tabstop>
+  <tabstop>sa_DataUpdates</tabstop>
+  <tabstop>tbr_About</tabstop>
+  <tabstop>tb_SwiftGui</tabstop>
+  <tabstop>tb_SwiftCore</tabstop>
+  <tabstop>tb_SwiftMappingTool</tabstop>
+  <tabstop>tb_Database</tabstop>
+  <tabstop>tb_ConfigurationWizard</tabstop>
+  <tabstop>tb_BackToMain</tabstop>
+ </tabstops>
  <resources>
   <include location="../blackmisc/blackmisc.qrc"/>
   <include location="swiftlauncher.qrc"/>

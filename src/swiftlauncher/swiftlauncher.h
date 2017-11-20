@@ -109,7 +109,7 @@ private:
     void setHeaderInfo(const QString &newVersionAvailable);
 
     //! Latest news
-    //! \sa CSwiftLauncher::ps_displayLatestNews
+    //! \sa CSwiftLauncher::displayLatestNews
     void loadLatestNews();
 
     //! Load credits and legal info
@@ -139,48 +139,47 @@ private:
     //! Check for other swift applications, if so show message box
     bool warnAboutOtherSwiftApplications();
 
-    //! Command line
-    static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
-
-private slots:
     //! Display latest news
-    void ps_displayLatestNews(QNetworkReply *reply);
+    void displayLatestNews(QNetworkReply *reply);
 
     //! Distribution info is available
-    void ps_distributionInfoAvailable();
+    void distributionInfoAvailable();
 
     //! Start button pressed
-    void ps_startButtonPressed();
+    void startButtonPressed();
 
     //! DBus server mode selected
-    void ps_dbusServerModeSelected(bool selected);
+    void dbusServerModeSelected(bool selected);
 
     //! Display status message as overlay
-    void ps_showStatusMessage(const BlackMisc::CStatusMessage &msg);
+    void showStatusMessage(const BlackMisc::CStatusMessage &msg);
 
     //! Append status message
-    void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);
+    void appendLogMessage(const BlackMisc::CStatusMessage &message);
 
     //! Append status messages
-    void ps_appendLogMessages(const BlackMisc::CStatusMessageList &messages);
+    void appendLogMessages(const BlackMisc::CStatusMessageList &messages);
 
     //! Show set main page
-    void ps_showMainPage();
+    void showMainPage();
 
     //! Tab changed
-    void ps_tabChanged(int current);
+    void tabChanged(int current);
 
     //! Show the log page
-    void ps_showLogPage();
+    void showLogPage();
 
     //! Check if applications are already running
-    void ps_checkRunningApplicationsAndCore();
+    void checkRunningApplicationsAndCore();
 
     //! Start the configuration wizard
-    void ps_startWizard();
+    void startWizard();
 
     //! Style sheet has been changed
-    void ps_onStyleSheetsChanged();
+    void onStyleSheetsChanged();
+
+    //! Command line
+    static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
 };
 
 #endif // guard
