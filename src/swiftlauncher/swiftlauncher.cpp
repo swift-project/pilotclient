@@ -57,7 +57,13 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::showMainPage);
     connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::startWizard);
     connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::tabChanged);
+
+    connect(ui->rb_SwiftCoreAudioOnCore, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
+    connect(ui->rb_SwiftCoreAudioOnGui, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
+    connect(ui->rb_SwiftStandalone, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
+
     connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::distributionInfoAvailable, this, &CSwiftLauncher::distributionInfoAvailable);
+    connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished, this, &CSwiftLauncher::onDBusEditingFinished);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(showLogPage()));
@@ -460,4 +466,14 @@ void CSwiftLauncher::startWizard()
 void CSwiftLauncher::onStyleSheetsChanged()
 {
     this->initStyleSheet();
+}
+
+void CSwiftLauncher::onDBusEditingFinished()
+{
+    ui->rb_SwiftCoreAudioOnGui->setChecked(true);
+}
+
+void CSwiftLauncher::onCoreModeReleased()
+{
+    ui->comp_DBusSelector->setEnabled(!ui->rb_SwiftStandalone->isChecked());
 }

@@ -178,6 +178,12 @@ private:
     //! Style sheet has been changed
     void onStyleSheetsChanged();
 
+    //! DBus editing completed
+    void onDBusEditingFinished();
+
+    //! Core mode has been changed
+    void onCoreModeReleased();
+
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
 };
