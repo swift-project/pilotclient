@@ -59,18 +59,18 @@ namespace BlackGui
             void setLedReadState(CLedWidget *led, BlackMisc::Network::CEntityFlags::ReadState readState);
 
             //! Maps entity to its id
-            QList<CLedWidget *> entityToLeds(BlackMisc::Network::CEntityFlags::Entity entity) const;
+            QList<CLedWidget *> entitiesToLeds(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! All data read
             bool hasAllData() const;
 
             //! Initial setup of leds
             void setLeds(BlackGui::CLedWidget *ledDb, BlackGui::CLedWidget *ledDataReady, CLedWidget *ledConsolidation,
-                         BlackGui::CLedWidget *led_IcaoAircraft, BlackGui::CLedWidget *led_IcaoAirline, BlackGui::CLedWidget *led_Countries,
-                         BlackGui::CLedWidget *led_Distributors, BlackGui::CLedWidget *led_Liveries, BlackGui::CLedWidget *led_Models);
+                         BlackGui::CLedWidget *ledIcaoAircraft, BlackGui::CLedWidget *ledIcaoAirline, BlackGui::CLedWidget *ledCountries,
+                         BlackGui::CLedWidget *ledDistributors, BlackGui::CLedWidget *ledLiveries, BlackGui::CLedWidget *ledModels);
 
             //! Data have been read
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+            void dataRead(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
             //! DB or network accessibility changed
             void accessibilityChanged(bool accessible);
@@ -83,15 +83,15 @@ namespace BlackGui
 
         private:
             QTimer m_timer { this }; //!< check timer
-            BlackGui::CLedWidget *led_SwiftDb = nullptr;
-            BlackGui::CLedWidget *led_DataReady = nullptr;
-            BlackGui::CLedWidget *led_Consolidation = nullptr;
-            BlackGui::CLedWidget *led_IcaoAircraft = nullptr;
-            BlackGui::CLedWidget *led_IcaoAirline = nullptr;
-            BlackGui::CLedWidget *led_Countries = nullptr;
-            BlackGui::CLedWidget *led_Distributors = nullptr;
-            BlackGui::CLedWidget *led_Liveries = nullptr;
-            BlackGui::CLedWidget *led_Models = nullptr;
+            BlackGui::CLedWidget *m_ledSwiftDb = nullptr;
+            BlackGui::CLedWidget *m_ledDataReady = nullptr;
+            BlackGui::CLedWidget *m_ledConsolidation = nullptr;
+            BlackGui::CLedWidget *m_ledIcaoAircraft = nullptr;
+            BlackGui::CLedWidget *m_ledIcaoAirline = nullptr;
+            BlackGui::CLedWidget *m_ledCountries = nullptr;
+            BlackGui::CLedWidget *m_ledDistributors = nullptr;
+            BlackGui::CLedWidget *m_ledLiveries = nullptr;
+            BlackGui::CLedWidget *m_ledModels = nullptr;
         };
 
         //! Info bar displaying status of web readers(swift DB, ...)

@@ -269,6 +269,7 @@ namespace BlackCore
             void swiftDbDataRead(bool success);
 
             //! Combined read signal
+            //! \remark normally in success case state for a single case, skipped cases can be reported for 1..n enities
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
             //! Header of shared file read
