@@ -125,7 +125,7 @@ namespace BlackGui
             case CEntityFlags::ReadSkipped:
             case CEntityFlags::ReadFinished:
             case CEntityFlags::ReadFinishedRestricted:
-                led->setOn(true, resetTimeMs);
+                led->blink(resetTimeMs); // blink here (temp. "on"), since read from cache results in immediate ReadFinished
                 break;
             case CEntityFlags::StartRead:
                 led->setOn(true);

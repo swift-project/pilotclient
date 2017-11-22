@@ -63,7 +63,7 @@ namespace BlackGui
         bool value() const { return m_state; }
 
         //! Allows to set the led value {true, false}
-        void setOn(bool on, int resetTimeMs = -1);
+        void setOn(bool on) { this->setOn(on, -1); }
 
         //! Set to on for resetTimeMs
         void blink(int resetTimeMs = 500);
@@ -155,6 +155,9 @@ namespace BlackGui
 
         //! Init
         void init();
+
+        //! Allows to set the led value {true, false}
+        void setOn(bool on, int resetTimeMs);
 
         //! Reset the state
         void resetState();
