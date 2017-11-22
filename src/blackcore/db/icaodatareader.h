@@ -167,18 +167,18 @@ namespace BlackCore
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entities,
                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan);
 
-            void ps_aircraftIcaoCacheChanged();
-            void ps_airlineIcaoCacheChanged();
-            void ps_countryCacheChanged();
-            void ps_baseUrlCacheChanged();
-
         private:
-            BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache> m_aircraftIcaoCache {this, &CIcaoDataReader::ps_aircraftIcaoCacheChanged };
-            BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache>  m_airlineIcaoCache  {this, &CIcaoDataReader::ps_airlineIcaoCacheChanged };
-            BlackMisc::CData<BlackCore::Data::TDbCountryCache>      m_countryCache      {this, &CIcaoDataReader::ps_countryCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbAircraftIcaoCache> m_aircraftIcaoCache {this, &CIcaoDataReader::aircraftIcaoCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbAirlineIcaoCache>  m_airlineIcaoCache  {this, &CIcaoDataReader::airlineIcaoCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbCountryCache>      m_countryCache      {this, &CIcaoDataReader::countryCacheChanged };
 
             //! Reader URL (we read from where?) used to detect changes of location
-            BlackMisc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache {this, &CIcaoDataReader::ps_baseUrlCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbIcaoReaderBaseUrl> m_readerUrlCache {this, &CIcaoDataReader::baseUrlCacheChanged };
+
+            void aircraftIcaoCacheChanged();
+            void airlineIcaoCacheChanged();
+            void countryCacheChanged();
+            void baseUrlCacheChanged();
 
             //! Update reader URL
             void updateReaderUrl(const BlackMisc::Network::CUrl &url);

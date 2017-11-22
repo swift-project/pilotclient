@@ -50,7 +50,7 @@ namespace BlackCore
 
         CLiveryList CModelDataReader::getLiveries() const
         {
-            return this->m_liveryCache.get();
+            return m_liveryCache.get();
         }
 
         CLivery CModelDataReader::getLiveryForCombinedCode(const QString &combinedCode) const
@@ -226,31 +226,31 @@ namespace BlackCore
             }
         }
 
-        void CModelDataReader::ps_liveryCacheChanged()
+        void CModelDataReader::liveryCacheChanged()
         {
             this->cacheHasChanged(CEntityFlags::LiveryEntity);
         }
 
-        void CModelDataReader::ps_modelCacheChanged()
+        void CModelDataReader::modelCacheChanged()
         {
             this->cacheHasChanged(CEntityFlags::ModelEntity);
         }
 
-        void CModelDataReader::ps_distributorCacheChanged()
+        void CModelDataReader::distributorCacheChanged()
         {
             this->cacheHasChanged(CEntityFlags::DistributorEntity);
         }
 
-        void CModelDataReader::ps_baseUrlCacheChanged()
+        void CModelDataReader::baseUrlCacheChanged()
         {
             // void
         }
 
         void CModelDataReader::updateReaderUrl(const CUrl &url)
         {
-            const CUrl current = this->m_readerUrlCache.get();
+            const CUrl current = m_readerUrlCache.get();
             if (current == url) { return; }
-            const CStatusMessage m = this->m_readerUrlCache.set(url);
+            const CStatusMessage m = m_readerUrlCache.set(url);
             if (m.isFailure())
             {
                 CLogMessage::preformatted(m);
@@ -293,7 +293,7 @@ namespace BlackCore
                 CLogMessage(this).error("No timestamp in livery list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
-            this->m_liveryCache.set(liveries, latestTimestamp);
+            m_liveryCache.set(liveries, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
             this->emitAndLogDataRead(CEntityFlags::LiveryEntity, n, res);
@@ -335,7 +335,7 @@ namespace BlackCore
                 CLogMessage(this).error("No timestamp in distributor list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
-            this->m_distributorCache.set(distributors, latestTimestamp);
+            m_distributorCache.set(distributors, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
             this->emitAndLogDataRead(CEntityFlags::DistributorEntity, n, res);
@@ -378,7 +378,7 @@ namespace BlackCore
                 CLogMessage(this).error("No timestamp in model list, setting to last modified value");
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
-            this->m_modelCache.set(models, latestTimestamp);
+            m_modelCache.set(models, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
             this->emitAndLogDataRead(CEntityFlags::ModelEntity, n, res);
@@ -411,7 +411,7 @@ namespace BlackCore
                         CLiveryList liveries;
                         liveries.convertFromJson(liveriesJson);
                         const int c = liveries.size();
-                        this->m_liveryCache.set(liveries);
+                        m_liveryCache.set(liveries);
                         emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
                         reallyRead |= CEntityFlags::LiveryEntity;
                     }
@@ -438,7 +438,7 @@ namespace BlackCore
                         CAircraftModelList models;
                         models.convertFromJson(modelsJson);
                         const int c = models.size();
-                        this->m_modelCache.set(models);
+                        m_modelCache.set(models);
                         emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
                         reallyRead |= CEntityFlags::ModelEntity;
                     }
@@ -465,7 +465,7 @@ namespace BlackCore
                         CDistributorList distributors;
                         distributors.convertFromJson(distributorsJson);
                         const int c = distributors.size();
-                        this->m_distributorCache.set(distributors);
+                        m_distributorCache.set(distributors);
                         emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
                         reallyRead |= CEntityFlags::DistributorEntity;
                     }
@@ -535,32 +535,32 @@ namespace BlackCore
 
         void CModelDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
-            if (entities.testFlag(CEntityFlags::LiveryEntity)) { this->m_liveryCache.synchronize(); }
-            if (entities.testFlag(CEntityFlags::ModelEntity))  { this->m_modelCache.synchronize(); }
-            if (entities.testFlag(CEntityFlags::DistributorEntity)) { this->m_distributorCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::LiveryEntity)) { m_liveryCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::ModelEntity))  { m_modelCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::DistributorEntity)) { m_distributorCache.synchronize(); }
         }
 
         void CModelDataReader::admitCaches(CEntityFlags::Entity entities)
         {
-            if (entities.testFlag(CEntityFlags::LiveryEntity)) { this->m_liveryCache.admit(); }
-            if (entities.testFlag(CEntityFlags::ModelEntity))  { this->m_modelCache.admit(); }
-            if (entities.testFlag(CEntityFlags::DistributorEntity)) { this->m_distributorCache.admit(); }
+            if (entities.testFlag(CEntityFlags::LiveryEntity)) { m_liveryCache.admit(); }
+            if (entities.testFlag(CEntityFlags::ModelEntity))  { m_modelCache.admit(); }
+            if (entities.testFlag(CEntityFlags::DistributorEntity)) { m_distributorCache.admit(); }
         }
 
         void CModelDataReader::invalidateCaches(CEntityFlags::Entity entities)
         {
-            if (entities.testFlag(CEntityFlags::LiveryEntity)) { CDataCache::instance()->clearAllValues(this->m_liveryCache.getKey()); }
-            if (entities.testFlag(CEntityFlags::ModelEntity))  { CDataCache::instance()->clearAllValues(this->m_modelCache.getKey()); }
-            if (entities.testFlag(CEntityFlags::DistributorEntity)) { CDataCache::instance()->clearAllValues(this->m_distributorCache.getKey()); }
+            if (entities.testFlag(CEntityFlags::LiveryEntity)) { CDataCache::instance()->clearAllValues(m_liveryCache.getKey()); }
+            if (entities.testFlag(CEntityFlags::ModelEntity))  { CDataCache::instance()->clearAllValues(m_modelCache.getKey()); }
+            if (entities.testFlag(CEntityFlags::DistributorEntity)) { CDataCache::instance()->clearAllValues(m_distributorCache.getKey()); }
         }
 
         QDateTime CModelDataReader::getCacheTimestamp(CEntityFlags::Entity entity) const
         {
             switch (entity)
             {
-            case CEntityFlags::LiveryEntity:      return this->m_liveryCache.getAvailableTimestamp();
-            case CEntityFlags::ModelEntity:       return this->m_modelCache.getAvailableTimestamp();
-            case CEntityFlags::DistributorEntity: return this->m_distributorCache.getAvailableTimestamp();
+            case CEntityFlags::LiveryEntity:      return m_liveryCache.getAvailableTimestamp();
+            case CEntityFlags::ModelEntity:       return m_modelCache.getAvailableTimestamp();
+            case CEntityFlags::DistributorEntity: return m_distributorCache.getAvailableTimestamp();
             default: return QDateTime();
             }
         }
@@ -569,9 +569,9 @@ namespace BlackCore
         {
             switch (entity)
             {
-            case CEntityFlags::LiveryEntity:      return this->m_liveryCache.get().size();
-            case CEntityFlags::ModelEntity:       return this->m_modelCache.get().size();
-            case CEntityFlags::DistributorEntity: return this->m_distributorCache.get().size();
+            case CEntityFlags::LiveryEntity:      return m_liveryCache.get().size();
+            case CEntityFlags::ModelEntity:       return m_modelCache.get().size();
+            case CEntityFlags::DistributorEntity: return m_distributorCache.get().size();
             default: return 0;
             }
         }
@@ -597,7 +597,7 @@ namespace BlackCore
         bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
         {
             Q_UNUSED(entity);
-            oldUrlInfo = this->m_readerUrlCache.get();
+            oldUrlInfo = m_readerUrlCache.get();
             newUrlInfo = this->getBaseUrl(CDbFlags::DbReading);
             return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);
         }

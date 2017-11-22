@@ -462,7 +462,7 @@ namespace BlackCore
 
         CDatabaseReaderConfig CDatabaseReader::getConfigForEntity(CEntityFlags::Entity entity) const
         {
-            return this->m_config.findFirstOrDefaultForEntity(entity);
+            return m_config.findFirstOrDefaultForEntity(entity);
         }
 
         CEntityFlags::Entity CDatabaseReader::emitReadSignalPerSingleCachedEntity(CEntityFlags::Entity cachedEntities, bool onlyIfHasData)
@@ -476,7 +476,7 @@ namespace BlackCore
                 const int c = this->getCacheCount(currentCachedEntity);
                 if (!onlyIfHasData || c > 0)
                 {
-                    emit dataRead(currentCachedEntity, CEntityFlags::ReadFinished, c);
+                    emit this->dataRead(currentCachedEntity, CEntityFlags::ReadFinished, c);
                     emitted |= currentCachedEntity;
                 }
                 currentCachedEntity = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
@@ -487,7 +487,8 @@ namespace BlackCore
         void CDatabaseReader::emitAndLogDataRead(CEntityFlags::Entity entity, int number, const JsonDatastoreResponse &res)
         {
             // never emit when lock is held, deadlock
-            emit dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number);
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Expect single entity");
+            emit this->dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number);
             CLogMessage(this).info("Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
         }
 
@@ -541,7 +542,7 @@ namespace BlackCore
             const HeaderResponse headerResponse = this->transformReplyIntoHeaderResponse(nwReplyPtr);
             const QString fileName = nwReplyPtr->url().fileName();
             const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(fileName);
-            this->m_sharedFileResponses[entity] = headerResponse;
+            m_sharedFileResponses[entity] = headerResponse;
 
             CLogMessage(this).info("Received header for shared file of '%1' from '%2'") << fileName << headerResponse.getUrl().toQString();
             emit this->sharedFileHeaderRead(entity, fileName, !headerResponse.hasWarningOrAboveMessage());
@@ -549,20 +550,20 @@ namespace BlackCore
 
         bool CDatabaseReader::hasReceivedOkReply() const
         {
-            QReadLocker rl(&this->m_statusLock);
+            QReadLocker rl(&m_statusLock);
             return m_1stReplyReceived && m_1stReplyStatus == QNetworkReply::NoError;
         }
 
         bool CDatabaseReader::hasReceivedOkReply(QString &message) const
         {
-            QReadLocker rl(&this->m_statusLock);
+            QReadLocker rl(&m_statusLock);
             message = m_statusMessage;
             return m_1stReplyReceived && m_1stReplyStatus == QNetworkReply::NoError;
         }
 
         bool CDatabaseReader::hasReceivedFirstReply() const
         {
-            QReadLocker rl(&this->m_statusLock);
+            QReadLocker rl(&m_statusLock);
             return m_1stReplyReceived;
         }
 
@@ -585,15 +586,15 @@ namespace BlackCore
 
         const QString &CDatabaseReader::getStatusMessage() const
         {
-            return this->m_statusMessage;
+            return m_statusMessage;
         }
 
         void CDatabaseReader::setReplyStatus(QNetworkReply::NetworkError status, const QString &message)
         {
-            QWriteLocker wl(&this->m_statusLock);
-            this->m_statusMessage = message;
-            this->m_1stReplyStatus = status;
-            this->m_1stReplyReceived = true;
+            QWriteLocker wl(&m_statusLock);
+            m_statusMessage = message;
+            m_1stReplyStatus = status;
+            m_1stReplyReceived = true;
         }
 
         void CDatabaseReader::setReplyStatus(QNetworkReply *nwReply)
@@ -744,7 +745,7 @@ namespace BlackCore
         QString CDatabaseReader::HeaderResponse::getLoadTimeStringWithStartedHint() const
         {
             if (m_requestStarted < 0) { return this->getLoadTimeString(); }
-            const qint64 diff = QDateTime::currentMSecsSinceEpoch() - this->m_requestStarted;
+            const qint64 diff = QDateTime::currentMSecsSinceEpoch() - m_requestStarted;
             static const QString s("%1 load time, started %2ms before now");
             return s.arg(this->getLoadTimeString()).arg(diff);
         }

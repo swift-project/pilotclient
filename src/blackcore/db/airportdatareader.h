@@ -80,17 +80,17 @@ namespace BlackCore
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
 
-            //! Airport cache changed
-            void ps_airportCacheChanged();
-
-            //! Base url cache changed
-            void ps_baseUrlCacheChanged();
-
         private:
-            BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache {this, &CAirportDataReader::ps_airportCacheChanged};
+            BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache {this, &CAirportDataReader::airportCacheChanged};
 
             //! Reader URL (we read from where?) used to detect changes of location
-            BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::ps_baseUrlCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::baseUrlCacheChanged };
+
+            //! Airport cache changed
+            void airportCacheChanged();
+
+            //! Base url cache changed
+            void baseUrlCacheChanged();
 
             //! Update reader URL
             void updateReaderUrl(const BlackMisc::Network::CUrl &url);
