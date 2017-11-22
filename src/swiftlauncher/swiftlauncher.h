@@ -78,6 +78,10 @@ protected:
     //! \copydoc QDialog::mouseMoveEvent
     void mouseMoveEvent(QMouseEvent *event) override;
 
+private slots:
+    //! Show the log page
+    void showLogPage();
+
 private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
@@ -165,9 +169,6 @@ private:
 
     //! Tab changed
     void tabChanged(int current);
-
-    //! Show the log page
-    void showLogPage();
 
     //! Check if applications are already running
     void checkRunningApplicationsAndCore();
