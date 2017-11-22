@@ -163,6 +163,10 @@ BlackGui--CPluginConfigWindow {
   background: black;
 }
 
+BlackGui--Components--CDBusServerAddressSelector::disabled {
+  background: rgba(4, 105, 105, 105);
+}
+
 /* default for buttons */
 QToolButton {
   background-color: transparent; /* transparent tool buttons */
@@ -306,8 +310,8 @@ QPlainTextEdit {
 
 QGroupBox {
   border: 1px solid green;
-  margin-top: 2.0ex; /* the x-height of the relevant font, leave space at the top for the title */
-  padding-top: 1.0ex;
+  margin-top: 1.0em; /* leave space at the top for the title */
+  padding-top: 0.25em;
   border-radius: 5px;
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
