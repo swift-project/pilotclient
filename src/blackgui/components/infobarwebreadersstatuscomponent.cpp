@@ -59,29 +59,29 @@ namespace BlackGui
 
         void CInfoBarWebReadersStatusBase::consolidationRunning(bool running)
         {
-            if (!this->led_Consolidation) { return; }
-            this->led_Consolidation->setOn(running);
+            if (!m_ledConsolidation) { return; }
+            m_ledConsolidation->setOn(running);
         }
 
         void CInfoBarWebReadersStatusBase::initLeds()
         {
             CLedWidget::LedShape shape = CLedWidget::Rounded;
-            this->led_SwiftDb->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DB online", "DB offline", 14);
-            this->led_DataReady->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "all data ready", "data missing", 14);
-            if (this->led_Consolidation) { this->led_Consolidation->setValues(CLedWidget::Blue, CLedWidget::Black, shape, "consolidation running", "idle", 14); }
+            m_ledSwiftDb->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DB online", "DB offline", 14);
+            m_ledDataReady->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "all data ready", "data missing", 14);
+            if (m_ledConsolidation) { m_ledConsolidation->setValues(CLedWidget::Blue, CLedWidget::Black, shape, "consolidation running", "idle", 14); }
 
-            this->led_IcaoAircraft->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-            this->led_IcaoAirline->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-            this->led_Countries->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-            this->led_Models->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-            this->led_Liveries->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-            this->led_Distributors->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
+            m_ledIcaoAircraft->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
+            m_ledIcaoAirline->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
+            m_ledCountries->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
+            m_ledModels->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
+            m_ledLiveries->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
+            m_ledDistributors->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
         }
 
-        void CInfoBarWebReadersStatusBase::dataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+        void CInfoBarWebReadersStatusBase::dataRead(CEntityFlags::Entity entities, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
-            QList<CLedWidget *> leds = this->entityToLeds(entity);
+            QList<CLedWidget *> leds = this->entitiesToLeds(entities);
             if (!leds.isEmpty()) { this->setLedReadStates(leds, readState); }
         }
 
@@ -94,17 +94,17 @@ namespace BlackGui
         void CInfoBarWebReadersStatusBase::checkServerAndData()
         {
             const bool swift = sGui && sGui->isSwiftDbAccessible();
-            this->led_SwiftDb->setOn(swift);
+            m_ledSwiftDb->setOn(swift);
 
             const bool allData = hasAllData();
-            this->led_DataReady->setOn(allData);
+            m_ledDataReady->setOn(allData);
         }
 
         void CInfoBarWebReadersStatusBase::showConsolidationStatus(bool show)
         {
-            if (this->led_Consolidation)
+            if (m_ledConsolidation)
             {
-                this->led_Consolidation->setVisible(show);
+                m_ledConsolidation->setVisible(show);
             }
         }
 
@@ -112,25 +112,26 @@ namespace BlackGui
         {
             for (CLedWidget *led : leds)
             {
-                setLedReadState(led, readState);
+                this->setLedReadState(led, readState);
             }
         }
 
         void CInfoBarWebReadersStatusBase::setLedReadState(CLedWidget *led, CEntityFlags::ReadState readState)
         {
             Q_ASSERT_X(led, Q_FUNC_INFO, "no LED");
-            const int blinkTime = 2.5 * 1000;
+            const int resetTimeMs = 2.5 * 1000;
             switch (readState)
             {
+            case CEntityFlags::ReadSkipped:
             case CEntityFlags::ReadFinished:
             case CEntityFlags::ReadFinishedRestricted:
-                led->setOn(true, blinkTime);
+                led->setOn(true, resetTimeMs);
                 break;
             case CEntityFlags::StartRead:
                 led->setOn(true);
                 break;
             case CEntityFlags::ReadFailed:
-                led->setTriState(2 * blinkTime);
+                led->setTriState(2 * resetTimeMs);
                 break;
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "read state not handled");
@@ -138,15 +139,15 @@ namespace BlackGui
             }
         }
 
-        QList<CLedWidget *> CInfoBarWebReadersStatusBase::entityToLeds(CEntityFlags::Entity entity) const
+        QList<CLedWidget *> CInfoBarWebReadersStatusBase::entitiesToLeds(CEntityFlags::Entity entities) const
         {
             QList<CLedWidget *> leds;
-            if (entity.testFlag(CEntityFlags::CountryEntity)) { leds << this->led_Countries; }
-            if (entity.testFlag(CEntityFlags::DistributorEntity)) { leds << this->led_Distributors; }
-            if (entity.testFlag(CEntityFlags::AircraftIcaoEntity)) { leds << this->led_IcaoAircraft; }
-            if (entity.testFlag(CEntityFlags::AirlineIcaoEntity)) { leds << this->led_IcaoAirline; }
-            if (entity.testFlag(CEntityFlags::LiveryEntity)) { leds << this->led_Liveries; }
-            if (entity.testFlag(CEntityFlags::ModelEntity)) { leds << this->led_Models; }
+            if (entities.testFlag(CEntityFlags::CountryEntity)) { leds << m_ledCountries; }
+            if (entities.testFlag(CEntityFlags::DistributorEntity)) { leds << m_ledDistributors; }
+            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { leds << m_ledIcaoAircraft; }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) { leds << m_ledIcaoAirline; }
+            if (entities.testFlag(CEntityFlags::LiveryEntity)) { leds << m_ledLiveries; }
+            if (entities.testFlag(CEntityFlags::ModelEntity)) { leds << m_ledModels; }
             return leds;
         }
 
@@ -161,17 +162,19 @@ namespace BlackGui
                    sGui->getWebDataServices()->getCountriesCount() > 0;
         }
 
-        void CInfoBarWebReadersStatusBase::setLeds(CLedWidget *ledDb, CLedWidget *ledDataReady, CLedWidget *ledConsolidation, CLedWidget *ledIcaoAircraft, CLedWidget *ledIcaoAirline, CLedWidget *ledCountries, CLedWidget *ledDistributors, CLedWidget *ledLiveries, CLedWidget *ledModels)
+        void CInfoBarWebReadersStatusBase::setLeds(
+            CLedWidget *ledDb, CLedWidget *ledDataReady, CLedWidget *ledConsolidation, CLedWidget *ledIcaoAircraft,
+            CLedWidget *ledIcaoAirline, CLedWidget *ledCountries, CLedWidget *ledDistributors, CLedWidget *ledLiveries, CLedWidget *ledModels)
         {
-            this->led_SwiftDb = ledDb;
-            this->led_DataReady = ledDataReady;
-            this->led_Consolidation = ledConsolidation;
-            this->led_IcaoAircraft = ledIcaoAircraft;
-            this->led_IcaoAirline = ledIcaoAirline;
-            this->led_Countries = ledCountries;
-            this->led_Distributors = ledDistributors;
-            this->led_Liveries = ledLiveries;
-            this->led_Models = ledModels;
+            m_ledSwiftDb = ledDb;
+            m_ledDataReady = ledDataReady;
+            m_ledConsolidation = ledConsolidation;
+            m_ledIcaoAircraft = ledIcaoAircraft;
+            m_ledIcaoAirline = ledIcaoAirline;
+            m_ledCountries = ledCountries;
+            m_ledDistributors = ledDistributors;
+            m_ledLiveries = ledLiveries;
+            m_ledModels = ledModels;
         }
 
         CInfoBarWebReadersStatusComponent::CInfoBarWebReadersStatusComponent(QWidget *parent) :
