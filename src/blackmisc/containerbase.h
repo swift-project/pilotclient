@@ -49,18 +49,17 @@ namespace BlackMisc
     /*!
      * Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
      */
-    template <template <class> class C, class T, class CIt>
+    template <class Derived>
     class CContainerBase :
-        public CRangeBase<C<T>, CIt>,
-        public Mixin::MetaType<C<T>>,
-        public Mixin::DBusOperators<C<T>>,
-        public Mixin::JsonOperators<C<T>>,
-        public Mixin::String<C<T>>
+        public CRangeBase<Derived>,
+        public Mixin::MetaType<Derived>,
+        public Mixin::DBusOperators<Derived>,
+        public Mixin::JsonOperators<Derived>,
+        public Mixin::String<Derived>
     {
     public:
-
         //! \copydoc BlackMisc::CValueObject::compare
-        friend int compare(const C<T> &a, const C<T> &b)
+        friend int compare(const Derived &a, const Derived &b)
         {
             for (auto i = a.cbegin(), j = b.cbegin(); i != a.cend() && j != b.cend(); ++i, ++j)
             {
@@ -75,13 +74,21 @@ namespace BlackMisc
 
         //! Return a new container of a different type, containing the same elements as this one.
         //! \tparam Other the type of the new container.
-        //! \param other an optional initial value for the new container; will be copied.
+        //! @{
         template <template <class> class Other>
-        Other<T> to(Other<T> other = Other<T>()) const
+        auto to() const
+        {
+            return to(Other<typename Derived::value_type>());
+        }
+        //! \tparam T element type of the new container.
+        //! \param other an initial value for the new container; will be copied.
+        template <template <class> class Other, class T>
+        Other<T> to(Other<T> other) const
         {
             for (auto it = derived().cbegin(); it != derived().cend(); ++it) { other.push_back(*it); }
             return other;
         }
+        //! @}
 
         //! Remove elements matching some particular key/value pair(s).
         //! \param k0 A pointer to a member function of T.
@@ -96,7 +103,7 @@ namespace BlackMisc
 
     public:
         //! Simplifies composition, returns 0 for performance
-        friend uint qHash(const C<T> &) { return 0; }
+        friend uint qHash(const Derived &) { return 0; }
 
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const
@@ -131,7 +138,7 @@ namespace BlackMisc
                 CJsonScope scope("containerbase", index++);
                 Q_UNUSED(scope);
                 QJsonValueRef ref = (*i);
-                T val;
+                typename Derived::value_type val;
                 ref >> val;
                 derived().insert(std::move(val));
             }
@@ -159,24 +166,23 @@ namespace BlackMisc
         }
 
         //! To string list
-        QStringList toStringList(bool i18n = false) const {
+        QStringList toStringList(bool i18n = false) const
+        {
             QStringList sl;
-            for (const T &obj : this->derived()) {
-                sl.append(obj.toQString(i18n));
-            }
+            for (const auto &obj : this->derived()) { sl.append(obj.toQString(i18n)); }
             return sl;
         }
 
     protected:
         //! \copydoc BlackMisc::CValueObject::getMetaTypeId
-        int getMetaTypeId() const { return qMetaTypeId<C<T>>(); }
+        int getMetaTypeId() const { return qMetaTypeId<Derived>(); }
 
     public:
         //! \copydoc BlackMisc::CValueObject::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const
         {
-            argument.beginArray(qMetaTypeId<T>());
-            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { argument << value; });
+            argument.beginArray(qMetaTypeId<typename Derived::value_type>());
+            std::for_each(derived().cbegin(), derived().cend(), [ & ](const auto & value) { argument << value; });
             argument.endArray();
         }
 
@@ -185,13 +191,13 @@ namespace BlackMisc
         {
             derived().clear();
             argument.beginArray();
-            while (!argument.atEnd()) { T value; argument >> value; derived().insert(value); }
+            while (!argument.atEnd()) { typename Derived::value_type value; argument >> value; derived().insert(value); }
             argument.endArray();
         }
 
     private:
-        C<T> &derived() { return static_cast<C<T> &>(*this); }
-        const C<T> &derived() const { return static_cast<const C<T> &>(*this); }
+        Derived &derived() { return static_cast<Derived &>(*this); }
+        const Derived &derived() const { return static_cast<const Derived &>(*this); }
     };
 
 }

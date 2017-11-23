@@ -67,7 +67,7 @@ namespace BlackMisc
      */
     template <class T>
     class CCollection :
-        public CContainerBase<CCollection, T, Iterators::ConstForwardIterator<T>>,
+        public CContainerBase<CCollection<T>>,
         public Mixin::Icon<CCollection<T>>
     {
     public:

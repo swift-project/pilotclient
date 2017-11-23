@@ -367,8 +367,8 @@ namespace BlackMisc
     };
 
     // CContainerBase methods implemented out-of-line to avoid circular include
-    template <template <class> class C, class T, class CIt>
-    CStatusMessage CContainerBase<C, T, CIt>::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    template <class Derived>
+    CStatusMessage CContainerBase<Derived>::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
     {
         try
         {
@@ -382,8 +382,8 @@ namespace BlackMisc
     }
 
     //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
-    template <template <class> class C, class T, class CIt>
-    CStatusMessage CContainerBase<C, T, CIt>::convertFromJsonNoThrow(const QString &jsonString, const CLogCategoryList &categories, const QString &prefix)
+    template <class Derived>
+    CStatusMessage CContainerBase<Derived>::convertFromJsonNoThrow(const QString &jsonString, const CLogCategoryList &categories, const QString &prefix)
     {
         try
         {

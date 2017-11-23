@@ -43,7 +43,7 @@ namespace BlackMisc
      */
     template <class T>
     class CSequence :
-        public CContainerBase<CSequence, T, Iterators::ConstRandomAccessIterator<T>>,
+        public CContainerBase<CSequence<T>>,
         public Mixin::Icon<CSequence<T>>
     {
     public:
