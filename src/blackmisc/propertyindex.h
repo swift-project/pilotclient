@@ -63,7 +63,7 @@ namespace BlackMisc
         public Mixin::MetaType<CPropertyIndex>,
         public Mixin::HashByMetaClass<CPropertyIndex>,
         public Mixin::DBusByMetaClass<CPropertyIndex>,
-        public Mixin::JsonByMetaClass<CPropertyIndex>,
+        public Mixin::JsonOperators<CPropertyIndex>,
         public Mixin::EqualsByMetaClass<CPropertyIndex>,
         public Mixin::LessThanByMetaClass<CPropertyIndex>,
         public Mixin::CompareByMetaClass<CPropertyIndex>,
@@ -170,7 +170,10 @@ namespace BlackMisc
         //! Initializer list constructor
         CPropertyIndex(std::initializer_list<int> il);
 
-        //! Construct from a base class object.
+        //! Construct from a vector of indexes.
+        CPropertyIndex(const QVector<int> &indexes);
+
+        //! Construct from a list of indexes.
         CPropertyIndex(const QList<int> &indexes);
 
         //! From string
@@ -187,6 +190,9 @@ namespace BlackMisc
 
         //! Empty?
         bool isEmpty() const;
+
+        //! Index vector
+        QVector<int> indexVector() const;
 
         //! Index list
         QList<int> indexList() const;
@@ -237,19 +243,22 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
+        //! \copydoc BlackMisc::CValueObject::toJson
+        QJsonObject toJson() const;
+
+        //! \copydoc BlackMisc::CValueObject::convertFromJson
+        void convertFromJson(const QJsonObject &json);
+
     protected:
         //! Parse indexes from string
         void parseFromString(const QString &indexes);
 
     private:
-        QString m_indexString; //! I use a little trick here, the string is used with the tupel system, as it provides all operators, hash ..
-
-        //! Convert list to string
-        void setIndexStringByList(const QList<int> &list);
+        QVector<int> m_indexes;
 
         BLACK_METACLASS(
             CPropertyIndex,
-            BLACK_METAMEMBER(indexString)
+            BLACK_METAMEMBER(indexes)
         );
     };
 } //namespace
