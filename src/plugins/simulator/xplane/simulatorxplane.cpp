@@ -237,6 +237,8 @@ namespace BlackSimPlugin
 
             if (m_service->isValid() && m_traffic->isValid() && m_weather->isValid() && m_traffic->initialize())
             {
+                ps_emitOwnAircraftModelChanged(m_service->getAircraftModelPath(), m_service->getAircraftModelFilename(), m_service->getAircraftLivery(),
+                    m_service->getAircraftIcaoCode(), m_service->getAircraftModelString(), m_service->getAircraftName(), m_service->getAircraftDescription());
                 connect(m_service, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
                 connect(m_service, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
@@ -285,11 +287,9 @@ namespace BlackSimPlugin
             emitSimulatorCombinedStatus();
         }
 
-        void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
-            const QString &modelString, const QString &name, const QString &distributor, const QString &description)
+        void CSimulatorXPlane::ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
+            const QString &icao, const QString &modelString, const QString &name, const QString &description)
         {
-            Q_UNUSED(distributor);
-
             CAircraftModel model(modelString, CAircraftModel::TypeOwnSimulatorModel, CSimulatorInfo::XPLANE, name, description, icao);
             if (!livery.isEmpty()) { model.setModelString(model.getModelString() + " " + livery); }
             model.setFileName(path + "/" + filename);

@@ -70,8 +70,8 @@ namespace XSwiftBus
 
     signals:
         //! Emitted when the model or livery changes.
-        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
-            const QString &modelString, const QString &name, const QString &distributor, const QString &description);
+        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
+            const QString &icao, const QString &modelString, const QString &name, const QString &description);
 
         //! Airports in range updated.
         void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QDoubleList &lats, const QDoubleList &lons, const QDoubleList &alts);
@@ -88,6 +88,12 @@ namespace XSwiftBus
 
         //! Get base filename of current aircraft model
         QString getAircraftModelFilename() const;
+
+        //! Get canonical swift model string of current aircraft model
+        QString getAircraftModelString() const;
+
+        //! Get name of current aircraft model
+        QString getAircraftName() const;
 
         //! Get path to current aircraft livery
         QString getAircraftLivery() const { return m_liveryPath.get().c_str(); }

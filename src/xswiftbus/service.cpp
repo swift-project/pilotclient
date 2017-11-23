@@ -34,7 +34,7 @@ namespace XSwiftBus
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
         const auto model = BlackMisc::Simulation::XPlane::CAircraftModelLoaderXPlane::extractAcfProperties(path, QFileInfo(path));
         emit aircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode(),
-            model.getModelString(), model.getName(), model.getDistributor().getDescription(), getAircraftDescription());
+            model.getModelString(), model.getName(), getAircraftDescription());
     }
 
     void CService::addTextMessage(const QString &text, double red, double green, double blue)
@@ -75,6 +75,24 @@ namespace XSwiftBus
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
         return filename;
+    }
+
+    QString CService::getAircraftModelString() const
+    {
+        char filename[256];
+        char path[512];
+        XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
+        const auto model = BlackMisc::Simulation::XPlane::CAircraftModelLoaderXPlane::extractAcfProperties(path, QFileInfo(path));
+        return model.getModelString();
+    }
+
+    QString CService::getAircraftName() const
+    {
+        char filename[256];
+        char path[512];
+        XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
+        const auto model = BlackMisc::Simulation::XPlane::CAircraftModelLoaderXPlane::extractAcfProperties(path, QFileInfo(path));
+        return model.getName();
     }
 
     int CService::getXPlaneVersionMajor() const
