@@ -64,29 +64,32 @@ namespace BlackMisc
         //! Construct a message with some specific categories.
         CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories) { this->addIfNotExisting(extra); }
 
+        //! Set the severity and format string.
+        Derived &log(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
+
         //! Set the severity to debug.
-        Derived &debug() { return setSeverityAndMessage(SeverityDebug, ""); }
+        Derived &debug() { return log(SeverityDebug, ""); }
 
         //! Set the severity to debug, providing a format string.
-        Derived &debug(const QString &format) { return setSeverityAndMessage(SeverityDebug, format); }
+        Derived &debug(const QString &format) { return log(SeverityDebug, format); }
 
         //! Set the severity to info, providing a format string.
-        Derived &info(const QString &format) { return setSeverityAndMessage(SeverityInfo, format); }
+        Derived &info(const QString &format) { return log(SeverityInfo, format); }
 
         //! Set the severity to warning, providing a format string.
-        Derived &warning(const QString &format) { return setSeverityAndMessage(SeverityWarning, format); }
+        Derived &warning(const QString &format) { return log(SeverityWarning, format); }
 
         //! Set the severity to error, providing a format string.
-        Derived &error(const QString &format) { return setSeverityAndMessage(SeverityError, format); }
+        Derived &error(const QString &format) { return log(SeverityError, format); }
 
         //! Set the severity to info, providing a format string, and adding the validation category.
-        Derived &validationInfo(const QString &format) { setValidation(); return setSeverityAndMessage(SeverityInfo, format); }
+        Derived &validationInfo(const QString &format) { setValidation(); return log(SeverityInfo, format); }
 
         //! Set the severity to warning, providing a format string, and adding the validation category.
-        Derived &validationWarning(const QString &format) { setValidation(); return setSeverityAndMessage(SeverityWarning, format); }
+        Derived &validationWarning(const QString &format) { setValidation(); return log(SeverityWarning, format); }
 
         //! Set the severity to error, providing a format string, and adding the validation category.
-        Derived &validationError(const QString &format) { setValidation(); return setSeverityAndMessage(SeverityError, format); }
+        Derived &validationError(const QString &format) { setValidation(); return log(SeverityError, format); }
 
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
@@ -111,7 +114,6 @@ namespace BlackMisc
 
     private:
         void setValidation() { m_categories.remove(CLogCategory::uncategorized()); this->addIfNotExisting(CLogCategory::validation()); }
-        Derived &setSeverityAndMessage(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
         Derived &arg(const QString &value) { m_args.push_back(value); return derived(); }
         Derived &derived() { return static_cast<Derived &>(*this); }
 
