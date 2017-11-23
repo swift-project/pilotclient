@@ -38,6 +38,7 @@ namespace BlackMisc
                 const CDbInfo info(CDbInfo::fromDatabaseJson(value.toObject()));
                 infoObjects.push_back(info);
             }
+            infoObjects.sortByKey(); // make sure the data are in proper order
             return infoObjects;
         }
     } // namespace

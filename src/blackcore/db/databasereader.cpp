@@ -50,7 +50,7 @@ namespace BlackCore
 
             // we accept cached data
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
-            const bool hasInfoObjects = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
+            const bool hasDbInfoObjects = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
             CEntityFlags::Entity allEntities    = entities;
             CEntityFlags::Entity cachedEntities = CEntityFlags::NoEntity;
             CEntityFlags::Entity dbEntities     = CEntityFlags::NoEntity;
@@ -77,7 +77,7 @@ namespace BlackCore
                 else if (rm.testFlag(CDbFlags::Cached))
                 {
                     // info object comparisons only for: cache + shared or cache + DB data
-                    if (hasInfoObjects && rmDbReadingOrShared)
+                    if (hasDbInfoObjects && rmDbReadingOrShared)
                     {
                         // check mode here for consistency
                         Q_ASSERT_X(!getBaseUrl(rmDbOrSharedFlag).isEmpty(), Q_FUNC_INFO, "Wrong retrieval mode");
@@ -116,8 +116,8 @@ namespace BlackCore
                     }
                     else
                     {
-                        if (!rmDbReadingOrShared) { CLogMessage(this).info("No DB or shared reading for '%1'") << currentEntityName; }
-                        if (!hasInfoObjects) { CLogMessage(this).info("No info objects for '%1'") << currentEntityName; }
+                        if (!rmDbReadingOrShared) { CLogMessage(this).info("No DB or shared reading for '%1', read mode is: '%2'") << currentEntityName << rmString; }
+                        if (!hasDbInfoObjects) { CLogMessage(this).info("No DB info objects for '%1', read mode is: '%2'") << currentEntityName << rmString; }
                         if (currentEntityCount > 0)
                         {
                             CLogMessage(this).info("Cache for '%1' already read, %2 entries") << currentEntityName << currentEntityCount;

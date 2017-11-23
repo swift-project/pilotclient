@@ -367,7 +367,7 @@ namespace BlackMisc
         bool CAircraftIcaoCode::isDbDuplicate() const
         {
             return m_modelIataDescription.startsWith("duplicate", Qt::CaseInsensitive) ||
-                   m_modelSwiftDescription.startsWith("duplicate", Qt::CaseInsensitive);
+                   m_modelSwiftDescription.startsWith("do not", Qt::CaseInsensitive);
         }
 
         void CAircraftIcaoCode::setCodeFlags(bool military, bool legacy, bool realWorld)
