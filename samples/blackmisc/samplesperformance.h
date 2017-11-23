@@ -29,9 +29,6 @@ namespace BlackSample
         //! Copy, create, RegEx
         static int samplesMisc(QTextStream &out);
 
-        //! Impact of implementation type
-        static int samplesImplementationType(QTextStream &out, int numberOfCallsigns, int numberOfTimes);
-
         //! Interpolator scenario
         static int interpolatorScenario(QTextStream &out, int numberOfCallsigns, int numberOfTimes);
 

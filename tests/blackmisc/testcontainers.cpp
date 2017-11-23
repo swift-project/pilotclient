@@ -51,17 +51,13 @@ namespace BlackMiscTest
     {
         CCollection<int> c1;
         QVERIFY2(c1.empty(), "Uninitialized collection is empty");
-        auto c2 = CCollection<int>::fromImpl(QSet<int>());
-        QVERIFY2(c1 == c2, "Uninitialized and empty collections are equal");
-        c1.changeImpl(std::set<int>());
-        QVERIFY2(c1 == c2, "Two empty collections are equal");
+        auto c2 = c1;
+        QVERIFY2(c1 == c2, "Copy of collection is equal");
         c1.insert(1);
         QVERIFY2(c1 != c2, "Different collections are not equal");
         QVERIFY2(c1.size() == 1, "Collection has expected size");
         c2.insert(1);
         QVERIFY2(c1 == c2, "Collections with equal elements are equal");
-        c1.changeImpl(QSet<int>());
-        QVERIFY2(c1 == c2, "Collection stays equal after changing implementation");
         c1.clear();
         QVERIFY2(c1.empty(), "Cleared collection is empty");
         c1.insert(2);
@@ -74,17 +70,13 @@ namespace BlackMiscTest
     {
         CSequence<int> s1;
         QVERIFY2(s1.empty(), "Uninitialized sequence is empty");
-        auto s2 = CSequence<int>::fromImpl(QList<int>());
-        QVERIFY2(s1 == s2, "Uninitialized and empty sequence are equal");
-        s1.changeImpl(std::vector<int>());
-        QVERIFY2(s1 == s2, "Two empty sequences are equal");
+        auto s2 = s1;
+        QVERIFY2(s1 == s2, "Copy of sequence is equal");
         s1.push_back(1);
         QVERIFY2(s1 != s2, "Different sequences are not equal");
         QVERIFY2(s1.size() == 1, "Sequence has expected size");
         s2.push_back(1);
         QVERIFY2(s1 == s2, "Sequences with equal elements are equal");
-        s1.changeImpl(QVector<int>());
-        QVERIFY2(s1 == s2, "Sequence stays equal after changing implementation");
         s1.clear();
         QVERIFY2(s1.empty(), "Cleared sequence is empty");
         s1.push_back(2);
