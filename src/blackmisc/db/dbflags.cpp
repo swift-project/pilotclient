@@ -48,7 +48,7 @@ namespace BlackMisc
             if (mode.testFlag(DbReading)) list << "Direct DB access";
             if (mode.testFlag(Shared)) list << "Shared data";
             if (mode.testFlag(Cached)) list << "Cached data";
-            return list.join(',');
+            return list.join(", ");
         }
 
         CDbFlags::DataRetrievalModeFlag CDbFlags::modeToModeFlag(DataRetrievalMode mode)

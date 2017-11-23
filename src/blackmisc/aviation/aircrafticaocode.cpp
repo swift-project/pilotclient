@@ -379,7 +379,7 @@ namespace BlackMisc
 
         void CAircraftIcaoCode::setMilitary(bool military)
         {
-            m_military =  military;
+            m_military = military;
         }
 
         void CAircraftIcaoCode::setRealWorld(bool realWorld)

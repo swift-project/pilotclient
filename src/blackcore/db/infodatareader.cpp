@@ -83,15 +83,13 @@ namespace BlackCore
 
         CEntityFlags::Entity CInfoDataReader::getEntitiesWithCacheCount() const
         {
-            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-            return entities;
+            return CEntityFlags::NoEntity;
         }
 
         CEntityFlags::Entity CInfoDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
         {
             Q_UNUSED(threshold);
-            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-            return entities;
+            return CEntityFlags::NoEntity;
         }
 
         bool CInfoDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
@@ -144,7 +142,7 @@ namespace BlackCore
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit dataRead(this->getEntityForMode(), CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadFailed, 0);
                 return;
             }
 
@@ -154,8 +152,8 @@ namespace BlackCore
 
             // this part needs to be synchronized
             {
-                QWriteLocker wl(&this->m_lockInfoObjects);
-                this->m_infoObjects = infoObjects;
+                QWriteLocker wl(&m_lockInfoObjects);
+                m_infoObjects = infoObjects;
             }
 
             this->emitAndLogDataRead(this->getEntityForMode(), n, res);
@@ -173,8 +171,8 @@ namespace BlackCore
 
         CEntityFlags::EntityFlag CInfoDataReader::getEntityForMode() const
         {
-            if (this->m_mode == CDbFlags::DbReading) return CEntityFlags::DbInfoObjectEntity;
-            if (this->m_mode == CDbFlags::Shared) return CEntityFlags::SharedInfoObjectEntity;
+            if (m_mode == CDbFlags::DbReading) return CEntityFlags::DbInfoObjectEntity;
+            if (m_mode == CDbFlags::Shared) return CEntityFlags::SharedInfoObjectEntity;
             qFatal("Wrong mode");
             return CEntityFlags::NoEntity;
         }

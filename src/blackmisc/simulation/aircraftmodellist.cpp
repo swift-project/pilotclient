@@ -909,9 +909,9 @@ namespace BlackMisc
             QJsonArray array = value.toArray();
 
             CAircraftModel::MemoHelper::CUnmemoizer helper;
-            QJsonValue aircraftIcaos = json.value("aircraftIcaos");
-            QJsonValue liveries = json.value("liveries");
-            QJsonValue distributors = json.value("distributors");
+            const QJsonValue aircraftIcaos = json.value("aircraftIcaos");
+            const QJsonValue liveries = json.value("liveries");
+            const QJsonValue distributors = json.value("distributors");
             if (aircraftIcaos.isUndefined()) { throw CJsonException("Missing 'aircraftIcaos'"); }
             if (liveries.isUndefined()) { throw CJsonException("Missing 'liveries'"); }
             if (distributors.isUndefined()) { throw CJsonException("Missing 'distributors'"); }
