@@ -178,24 +178,12 @@ win32-g++ {
 
 win32: externals_lib_target.path = $${PREFIX}/bin
 else: externals_lib_target.path = $${PREFIX}/lib
-!win32-g++: externals_lib_target.files *= $${EXTERNALS_LIB_DIR}/*.$${QMAKE_EXTENSION_SHLIB}*
+externals_lib_target.files *= $${EXTERNALS_LIB_DIR}/*.$${QMAKE_EXTENSION_SHLIB}*
 INSTALLS += externals_lib_target
-
-# win32-g++ needs a workaround since copy does not accept a filepath with '+' in it
-# we also need to make it dependent on vc_runtime_target since this target has no
-# files and does not generate any install target.
-win32-g++ {
-    vc_runtime_target.depends += copy_externals
-    copy_externals.target = copy_externals
-    source_path = $${EXTERNALS_LIB_DIR}//*.dll
-    dest_path = $${externals_lib_target.path}
-    copy_externals.commands += xcopy /Y $$shell_path($$source_path) $$shell_path($$dest_path) $$escape_expand(\n\t)
-    QMAKE_EXTRA_TARGETS += copy_externals
-}
 
 win32: externals_bin_target.path = $${PREFIX}/bin
 else: externals_bin_target.path = $${PREFIX}/bin
-!win32-g++: externals_bin_target.files *= $${EXTERNALS_BIN_DIR}/*
+externals_bin_target.files *= $${EXTERNALS_BIN_DIR}/*
 INSTALLS += externals_bin_target
 
 ############### Installbuilder ##############
