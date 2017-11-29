@@ -18,7 +18,8 @@
             <platforms>windows</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/bin/vatlib.dll</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/*vatlib*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
@@ -26,17 +27,19 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/SimConnect*</origin>
+                    <origin>../../dist/bin/SimConnect*.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/speexdsp.dll</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/*speexdsp*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/*opus*.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/swift_crashpad_handler.exe</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/*swift_crashpad_handler.exe</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
