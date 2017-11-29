@@ -82,12 +82,27 @@ class Builder:
         print('Running install ...')
         build_path = self._get_swift_build_path()
         os.chdir(build_path)
-        if self._should_run_publish():
-            subprocess.check_call([self.make_cmd, 'publish_installer'], env=dict(os.environ))
+        if self._should_publish():
+            subprocess.check_call([self.make_cmd, 'create_installer'], env=dict(os.environ))
             pass
         else:
             subprocess.check_call([self.make_cmd, 'install'], env=dict(os.environ))
             pass
+
+    def publish(self):
+        if self._should_publish():
+            os_map = {'Linux': 'linux', 'Darwin': 'osx', 'Windows': 'win'}
+            extension_map = {'Linux': 'run', 'Darwin': 'dmg', 'Windows': 'exe'}
+            version_segments = self.version.split('.')
+            lastSegment = version_segments.pop()
+            version_without_timestamp = '.'.join(version_segments)
+            installer_name_old = '-'.join(['swift', 'installer', os_map[platform.system()], self.word_size, version_without_timestamp])
+            installer_name_new = '.'.join([installer_name_old, lastSegment])
+            installer_name_old = installer_name_old + '.' + extension_map[platform.system()]
+            installer_name_new = installer_name_new + '.' + extension_map[platform.system()]
+            build_path = os.path.abspath(path.join(self._get_swift_build_path(), installer_name_old))
+            dest_path = os.path.abspath(path.join(self._get_swift_build_path(), os.pardir, installer_name_new))
+            os.rename(build_path, dest_path)
 
     def package_xswiftbus(self):
         """
@@ -142,7 +157,7 @@ class Builder:
     def _should_run_checks(self):
         return True
 
-    def _should_run_publish(self):
+    def _should_publish(self):
         return True
 
     def _should_create_symbols(self):
@@ -216,8 +231,17 @@ class Builder:
                 pass
             line = f.readline()
         f.close()
-        version = '.'.join([version_major, version_minor, version_micro])
+
+        # Converted from swift's CBuildConfig::lastCommitTimestampAsVersionSegment
+        last_commit_timestamp = int(self.__get_last_commit_timestamp())
+        year_offset = 201000000000
+        last_commit_timestamp = last_commit_timestamp - year_offset
+        version = '.'.join([version_major, version_minor, version_micro, str(last_commit_timestamp)])
         return version
+
+    def __get_last_commit_timestamp(self):
+        out = subprocess.check_output(['git', 'log', '-1', '--date=format:"%Y%m%d%H%M"', '--pretty=format:%cd'])
+        return out.decode("utf-8").strip('"')
 
     def __upload_symbol_files(self, symbol_path):
         print('Uploading symbols')
@@ -288,8 +312,8 @@ class MinGWBuilder(Builder):
     def _should_run_checks(self):
         return False
 
-    def _should_run_publish(self):
-        return False
+    def _should_publish(self):
+        return True
 
     def _should_create_symbols(self):
         return False
@@ -424,6 +448,7 @@ def main(argv):
     builder.build(jobs, dev_build)
     builder.checks()
     builder.install()
+    builder.publish()
     builder.package_xswiftbus()
     builder.symbols(upload_symbols)
 

@@ -219,7 +219,6 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
         INSTALLER_PLATFORM = osx
         INSTALLER_BASENAME = swift-installer-osx-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = app
-        INSTALLER_CONTAINER_EXT = dmg
     }
     else:unix {
         INSTALLER_PLATFORM = linux-x$${WORD_SIZE}
@@ -232,29 +231,6 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
                                               project.version=$${BLACK_VERSION} \
                                               project.windows64bitMode=$${WINDOWS64BITMODE}
     QMAKE_EXTRA_TARGETS += create_installer
-}
-
-############### Publish Jenkins build artifact ###############
-
-!isEmpty(create_installer.commands) {
-    win32: {
-        # Fixme: the path to date.exe is currently hard coded
-        PUBLISHED_FILENAME = $${INSTALLER_BASENAME}.$$system(C:\UnxUtils\usr\local\wbin\date.exe -u +%Y%m%d%H%M%S).$${INSTALLER_EXT}
-        publish_installer.commands = move $${INSTALLER_BASENAME}.$${INSTALLER_EXT} ../$${PUBLISHED_FILENAME}
-    }
-
-    unix: {
-        isEmpty(INSTALLER_CONTAINER_EXT) {
-            PUBLISHED_FILENAME = $${INSTALLER_BASENAME}.$$system(date -u '+%Y%m%d%H%M%S').$${INSTALLER_EXT}
-            publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_EXT} ../$${PUBLISHED_FILENAME}
-        } else {
-            PUBLISHED_FILENAME = $${INSTALLER_BASENAME}.$$system(date -u '+%Y%m%d%H%M%S').$${INSTALLER_CONTAINER_EXT}
-            publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_CONTAINER_EXT} ../$${PUBLISHED_FILENAME}
-        }
-    }
-
-    publish_installer.depends = create_installer
-    QMAKE_EXTRA_TARGETS += publish_installer
 }
 
 ############### Bitrock Installbuilder Files ###############

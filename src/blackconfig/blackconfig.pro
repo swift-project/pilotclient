@@ -22,8 +22,10 @@ else: GIT_BIN = $$system(which git 2> /dev/null)
 
 isEmpty(GIT_BIN) {
     GIT_HEAD_SHA1="<unknown>"
+    GIT_COMMIT_TS="0"
 } else {
     GIT_HEAD_SHA1=$$system(git rev-parse --short HEAD)
+    GIT_COMMIT_TS=$$system(git log -1 --date=format:'%Y%m%d%H%M' --pretty=format:%cd)
 }
 
 load(common_post)

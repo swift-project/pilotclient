@@ -253,10 +253,7 @@ namespace BlackMisc
                 return QVersionNumber::fromString(v);
             }
 
-            const QString versionTimestampString = BlackMisc::digitOnlyString(ts1Match.captured(0));
-            const QDateTime versionTimestamp = QDateTime::fromString(versionTimestampString, "yyyyMMddHHmmss");
-            const QString lastSegment = QString::number(CBuildConfig::buildTimestampAsVersionSegment(versionTimestamp));
-
+            const QString lastSegment = BlackMisc::digitOnlyString(ts1Match.captured(0));
             v += lastSegment;
             return QVersionNumber::fromString(v);
         }

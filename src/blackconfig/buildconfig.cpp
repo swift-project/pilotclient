@@ -192,7 +192,7 @@ namespace BlackConfig
 
     const QVersionNumber &CBuildConfig::getVersion()
     {
-        static const QVersionNumber v { versionMajor(), versionMinor(), versionMicro(), buildTimestampAsVersionSegment(buildTimestamp()) };
+        static const QVersionNumber v { versionMajor(), versionMinor(), versionMicro(), lastCommitTimestampAsVersionSegment(lastCommitTimestamp()) };
         return v;
     }
 
@@ -220,20 +220,20 @@ namespace BlackConfig
         return dt;
     }
 
-    int CBuildConfig::buildTimestampAsVersionSegment(const QDateTime &buildTimestamp)
+    int CBuildConfig::lastCommitTimestampAsVersionSegment(const QDateTime &lastCommitTimestamp)
     {
-        if (buildTimestamp.isValid())
+        if (lastCommitTimestamp.isValid())
         {
-            const QString bts = buildTimestamp.toString("yyyyMMddHHmm");
+            const QString bts = lastCommitTimestamp.toString("yyyyMMddHHmm");
             bool ok;
-            const long long btsll = bts.toLongLong(&ok); // at least 64bit
+            const long long lctsll = bts.toLongLong(&ok); // at least 64bit
             if (!ok) { return 0; }
             // now we have to converto int
             // max 2147483647 (2^31 - 1)
             //      1MMddHHmm (years since 2010)
             const long long yearOffset = 201000000000;
-            const int btsInt = btsll - yearOffset;
-            return btsInt;
+            const int lctsInt = lctsll - yearOffset;
+            return lctsInt;
         }
         return 0; // intentionally 0 => 0.7.3.0 <-
     }

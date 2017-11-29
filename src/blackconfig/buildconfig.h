@@ -119,6 +119,9 @@ namespace BlackConfig
         //! Returns SHA-1 of git HEAD at build time
         static const QString &gitHeadSha1();
 
+        //! Timestamp of the last commit (NOT the authored timestamp)
+        static const QDateTime &lastCommitTimestamp(); // defined in buildconfig_gen.cpp.in
+
         //! Build timestamp
         static const QDateTime &buildTimestamp();
 
@@ -131,8 +134,8 @@ namespace BlackConfig
         //! Version as QVersionNumber
         static const QString &getVersionString();
 
-        //! Turns build timestamp into a version number
-        static int buildTimestampAsVersionSegment(const QDateTime &buildTimestamp);
+        //! Turns last commit timestamp into a version number
+        static int lastCommitTimestampAsVersionSegment(const QDateTime &lastCommitTimestamp);
 
         //! Build ABI parts as in http://doc.qt.io/qt-5/qsysinfo.html#buildAbi
         static const QStringList &getBuildAbiParts();
