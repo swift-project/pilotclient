@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "keyboardmac.h"
+#include "keyboardmacos.h"
 #include "blackmisc/logmessage.h"
 
 #include <QHash>
@@ -63,16 +63,16 @@ namespace BlackInput
         { kVK_ANSI_Z, Key_Z },
     };
 
-    CKeyboardMac::CKeyboardMac(QObject *parent) :
+    CKeyboardMacOS::CKeyboardMacOS(QObject *parent) :
         IKeyboard(parent)
     {
     }
 
-    CKeyboardMac::~CKeyboardMac()
+    CKeyboardMacOS::~CKeyboardMacOS()
     {
     }
 
-    bool CKeyboardMac::init()
+    bool CKeyboardMacOS::init()
     {
         // 10.9 and later
         const void *keys[] = { kAXTrustedCheckOptionPrompt };
@@ -114,7 +114,7 @@ namespace BlackInput
         return true;
     }
 
-    void CKeyboardMac::processKeyEvent(CGEventType type,
+    void CKeyboardMacOS::processKeyEvent(CGEventType type,
                                        CGEventRef event)
     {
         BlackMisc::Input::CHotkeyCombination oldCombination(m_keyCombination);
@@ -191,21 +191,21 @@ namespace BlackInput
         }
     }
 
-    KeyCode CKeyboardMac::convertToKey(int keyCode)
+    KeyCode CKeyboardMacOS::convertToKey(int keyCode)
     {
         return keyMapping.value(keyCode, Key_Unknown);
     }
 
-    CGEventRef CKeyboardMac::myCGEventCallback(CGEventTapProxy,
+    CGEventRef CKeyboardMacOS::myCGEventCallback(CGEventTapProxy,
             CGEventType type,
             CGEventRef event,
             void *refcon)
     {
 
-        CKeyboardMac *keyboardMac = static_cast<CKeyboardMac*>(refcon);
+        CKeyboardMacOS *keyboardMac = static_cast<CKeyboardMacOS*>(refcon);
         if (type == kCGEventTapDisabledByTimeout)
         {
-            BlackMisc::CLogMessage(static_cast<CKeyboardMac *>(nullptr)).warning("Event tap got disabled by timeout. Enable it again.");
+            BlackMisc::CLogMessage(static_cast<CKeyboardMacOS *>(nullptr)).warning("Event tap got disabled by timeout. Enable it again.");
             CGEventTapEnable(keyboardMac->m_eventTap, true);
         }
         else

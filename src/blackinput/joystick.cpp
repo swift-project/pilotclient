@@ -13,8 +13,8 @@
     #include "win/joystickwindows.h"
 #elif defined(Q_OS_LINUX)
     #include "linux/joysticklinux.h"
-#elif defined(Q_OS_OSX)
-    #include "osx/joystickmac.h"
+#elif defined(Q_OS_MACOS)
+    #include "macos/joystickmacos.h"
 #else
     #error "Platform is not supported!"
 #endif
@@ -33,8 +33,8 @@ namespace BlackInput
         std::unique_ptr<IJoystick> ptr(new CJoystickWindows(parent));
 #elif defined(Q_OS_LINUX)
         std::unique_ptr<IJoystick> ptr(new CJoystickLinux(parent));
-#elif defined(Q_OS_OSX)
-        std::unique_ptr<IJoystick> ptr(new CJoystickMac(parent));
+#elif defined(Q_OS_MACOS)
+        std::unique_ptr<IJoystick> ptr(new CJoystickMacOS(parent));
 #endif
 
         return ptr;

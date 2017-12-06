@@ -23,7 +23,7 @@
 
 // Change QSharedPointer<QCoreApplication> to QSharedPointer<QApplication> below
 // in case you want to have Qt Gui components inside a X-Plane plugin. The current
-// default was used since QApplication causes an infinite loop in X-Plane on OSX
+// default was used since QApplication causes an infinite loop in X-Plane on MacOS
 // platforms. X-Plane is allocating an NSApplication but never calling run(), rather
 // it controls the main loop itself and pumps the event Q as needed. This causes
 // unusual start conditions for QCocoaEventDispatcher and ends up in the infinite

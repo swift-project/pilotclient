@@ -41,7 +41,7 @@ namespace BlackGui
         // Use datarefs Sim/operation/windows/system window via xswiftbus to grab the OS's native window handle
         // http://www.xsquawkbox.net/xpsdk/mediawiki/sim%252Foperation%252Fwindows%252Fsystem_window
         // For the time being, use IWindowFinder.
-        // The if condition is to prevent a crash on Linux/OSX.
+        // The if condition is to prevent a crash on Linux/MacOS.
         if (!m_windowFinder.isNull()) simulatorWindow = m_windowFinder->findForeignWindow("X-System", "");
 
         return simulatorWindow;

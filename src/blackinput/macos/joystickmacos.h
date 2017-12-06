@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKINPUT_JOYSTICKMAC_H
-#define BLACKINPUT_JOYSTICKMAC_H
+#ifndef BLACKINPUT_JOYSTICKMACOS_H
+#define BLACKINPUT_JOYSTICKMACOS_H
 
 //! \file
 
@@ -18,30 +18,30 @@
 
 namespace BlackInput
 {
-    //! OSX implemenation of IJoystick
+    //! MacOS implemenation of IJoystick
     //! \todo Not implmeneted yet
-    class CJoystickMac : public IJoystick
+    class CJoystickMacOS : public IJoystick
     {
         Q_OBJECT
 
     public:
 
         //! Copy Constructor
-        CJoystickMac(CJoystickMac const &) = delete;
+        CJoystickMacOS(CJoystickMacOS const &) = delete;
 
         //! Assignment operator
-        CJoystickMac &operator=(CJoystickMac const &) = delete;
+        CJoystickMacOS &operator=(CJoystickMacOS const &) = delete;
 
         //! \brief Destructor
-        virtual ~CJoystickMac();
+        virtual ~CJoystickMacOS();
 
     private:
         friend class IJoystick;
 
         //! Destructor
-        CJoystickMac(QObject *parent = nullptr);
+        CJoystickMacOS(QObject *parent = nullptr);
     };
 
 } // namespace BlackInput
 
-#endif // BLACKINPUT_JOYSTICKMAC_H
+#endif // BLACKINPUT_JOYSTICKMACOS_H

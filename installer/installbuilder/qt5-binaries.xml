@@ -110,7 +110,7 @@
         <folder>
             <description>lib</description>
             <destination>${installdir}/lib</destination>
-            <name>lib_osx</name>
+            <name>lib_macos</name>
             <platforms>osx</platforms>
             <distributionFileList>
                 <distributionFile>
@@ -148,7 +148,7 @@
         <folder>
             <description>bin</description>
             <destination>${installdir}/bin</destination>
-            <name>bin_osx</name>
+            <name>bin_macos</name>
             <platforms>osx</platforms>
             <distributionFileList>
                 <distributionFile>

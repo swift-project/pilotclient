@@ -32,7 +32,7 @@ equals (TEMPLATE, app) {
 include(copyfiles.pri)
 
 ################################
-# Allow "empty" projects on OSX
+# Allow "empty" projects on MacOS
 ################################
 
 macx:staticlib:isEmpty(SOURCES) {

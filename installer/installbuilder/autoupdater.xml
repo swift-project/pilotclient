@@ -27,7 +27,7 @@
         <folder>
             <description>/</description>
             <destination>${installdir}</destination>
-            <name>autoupdaterosx</name>
+            <name>autoupdatermacos</name>
             <platforms>osx</platforms>
             <distributionFileList>
                 <distributionFile>

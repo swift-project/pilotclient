@@ -80,8 +80,8 @@ namespace BlackConfig
         //! Windows 10
         static bool isRunningOnWindows10();
 
-        //! Running on Mac OS X platform?
-        static bool isRunningOnMacOSXPlatform();
+        //! Running on MacOS platform?
+        static bool isRunningOnMacOSPlatform();
 
         //! Running on Linux platform?
         static bool isRunningOnLinuxPlatform();

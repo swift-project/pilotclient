@@ -14,7 +14,7 @@
 #if defined(Q_OS_WIN)
     #include "win/windowfinderwindows.h"
 #elif defined(Q_OS_LINUX)
-#elif defined(Q_OS_OSX)
+#elif defined(Q_OS_MACOS)
 #else
     #error "Platform is not supported!"
 #endif
@@ -28,7 +28,7 @@ namespace BlackGui
 #if defined(Q_OS_WIN)
         finder = new CWindowFinderWindows();
 #elif defined(Q_OS_LINUX)
-#elif defined(Q_OS_OSX)
+#elif defined(Q_OS_MACOS)
 #endif
 
         return finder;

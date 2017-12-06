@@ -46,9 +46,9 @@ namespace BlackMisc
         //! swift application data sub directories
         static QStringList applicationDataDirectoryList(bool withoutCurrent = false, bool beautify = false);
 
-        //! Is MacOSX application bundle?
-        //! \remark: Means the currently running executable is a MacOSX bundle, but not all our executables are bundles on MacOSX
-        static bool isMacOSXAppBundle();
+        //! Is MacOS application bundle?
+        //! \remark: Means the currently running executable is a MacOS bundle, but not all our executables are bundles on MacOS
+        static bool isMacOSAppBundle();
 
         //! swift application data directory for one specific installation (a version)
         static const QString &normalizedApplicationDataDirectory();

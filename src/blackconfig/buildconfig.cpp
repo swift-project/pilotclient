@@ -79,9 +79,9 @@ namespace BlackConfig
 #endif
     }
 
-    bool CBuildConfig::isRunningOnMacOSXPlatform()
+    bool CBuildConfig::isRunningOnMacOSPlatform()
     {
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
         return true;
 #else
         return false;
@@ -99,7 +99,7 @@ namespace BlackConfig
 
     bool CBuildConfig::isRunningOnUnixPlatform()
     {
-        return isRunningOnMacOSXPlatform() || isRunningOnLinuxPlatform();
+        return isRunningOnMacOSPlatform() || isRunningOnLinuxPlatform();
     }
 
     bool CBuildConfig::isDebugBuild()
@@ -269,7 +269,7 @@ namespace BlackConfig
         {
             p = "win-" + ws;
         }
-        else if (BlackConfig::CBuildConfig::isRunningOnMacOSXPlatform()) { p = "macos-64"; }
+        else if (BlackConfig::CBuildConfig::isRunningOnMacOSPlatform()) { p = "macos-64"; }
         else if (BlackConfig::CBuildConfig::isRunningOnLinuxPlatform()) { p = "linux-64"; }
 
         if (!p.isEmpty() && BlackConfig::CBuildConfig::isVatsimVersion()) { p += "-vatsim"; }

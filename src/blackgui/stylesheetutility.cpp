@@ -482,7 +482,7 @@ namespace BlackGui
         {
             specific = fn + ".win" + qss;
         }
-        else if (CBuildConfig::isRunningOnMacOSXPlatform())
+        else if (CBuildConfig::isRunningOnMacOSPlatform())
         {
             specific = fn + ".mac" + qss;
         }

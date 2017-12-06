@@ -12,7 +12,7 @@
 #include <QFileInfo>
 #include <type_traits>
 
-#if defined(Q_OS_OSX)
+#if defined(Q_OS_MACOS)
 #include <libproc.h>
 #elif defined(Q_OS_WIN)
 #include <windows.h>
@@ -33,7 +33,7 @@ namespace BlackMisc
         QString path = QFileInfo(QString("/proc/%1/exe").arg(pid)).symLinkTarget();
         return QFileInfo(path).fileName();
     }
-#elif defined(Q_OS_OSX)
+#elif defined(Q_OS_MACOS)
     QString CProcessInfo::processNameFromId(qint64 pid)
     {
         char name[1024];

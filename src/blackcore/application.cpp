@@ -532,8 +532,8 @@ namespace BlackCore
             QLatin1String(" Unix: ") %
             boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) %
             separator %
-            QLatin1String("MacOSX: ") %
-            boolToYesNo(CBuildConfig::isRunningOnMacOSXPlatform());
+            QLatin1String("MacOS: ") %
+            boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform());
 
         return env;
     }

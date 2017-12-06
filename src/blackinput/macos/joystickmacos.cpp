@@ -7,18 +7,18 @@
  * contained in the LICENSE file.
  */
 
-#include "joystickmac.h"
+#include "joystickmacos.h"
 
 using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-    CJoystickMac::CJoystickMac(QObject *parent) :
+    CJoystickMacOS::CJoystickMacOS(QObject *parent) :
         IJoystick(parent)
     {
     }
 
-    CJoystickMac::~CJoystickMac()
+    CJoystickMacOS::~CJoystickMacOS()
     {
     }
 

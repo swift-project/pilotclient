@@ -22,7 +22,7 @@ win32 {
     QT5_LIBRARY_DIR = $$[QT_INSTALL_BINS]
 }
 else:macx {
-    # OSX workaround using rsync. Otherwise all headers are also copied.
+    # MacOS workaround using rsync. Otherwise all headers are also copied.
     qt5_target.path = $${PREFIX}/lib/QtCore.framework
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/lib/QtCore.framework/ &&
     qt5_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/lib/QtGui.framework/ &&
@@ -211,13 +211,13 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     WINDOWS64BITMODE = 0
     win32 {
         INSTALLER_PLATFORM = windows
-        INSTALLER_BASENAME = swift-installer-win-$${WORD_SIZE}-$${BLACK_VERSION}
+        INSTALLER_BASENAME = swift-installer-windows-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = exe
         equals(WORD_SIZE,64): WINDOWS64BITMODE = 1
     }
     else:macx {
         INSTALLER_PLATFORM = osx
-        INSTALLER_BASENAME = swift-installer-osx-$${WORD_SIZE}-$${BLACK_VERSION}
+        INSTALLER_BASENAME = swift-installer-macos-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = app
     }
     else:unix {

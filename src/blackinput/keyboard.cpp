@@ -13,8 +13,8 @@
     #include "win/keyboardwindows.h"
 #elif defined(Q_OS_LINUX)
     #include "linux/keyboardlinux.h"
-#elif defined(Q_OS_OSX)
-    #include "osx/keyboardmac.h"
+#elif defined(Q_OS_MACOS)
+    #include "macos/keyboardmacos.h"
 #else
     #error "Platform is not supported!"
 #endif
@@ -29,8 +29,8 @@ namespace BlackInput
         std::unique_ptr<IKeyboard> ptr(new CKeyboardWindows(parent));
 #elif defined(Q_OS_LINUX)
         std::unique_ptr<IKeyboard> ptr(new CKeyboardLinux(parent));
-#elif defined(Q_OS_OSX)
-        std::unique_ptr<IKeyboard> ptr(new CKeyboardMac(parent));
+#elif defined(Q_OS_MACOS)
+        std::unique_ptr<IKeyboard> ptr(new CKeyboardMacOS(parent));
 #endif
         ptr->init();
         return ptr;

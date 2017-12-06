@@ -91,7 +91,7 @@ class Builder:
 
     def publish(self):
         if self._should_publish():
-            os_map = {'Linux': 'linux', 'Darwin': 'osx', 'Windows': 'win'}
+            os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
             extension_map = {'Linux': 'run', 'Darwin': 'dmg', 'Windows': 'exe'}
             version_segments = self.version.split('.')
             lastSegment = version_segments.pop()
@@ -111,7 +111,8 @@ class Builder:
         print('Packaging xswiftbus ...')
         build_path = self._get_swift_build_path()
         os.chdir(build_path)
-        archive_name = '-'.join(['xswiftbus', platform.system(), self.word_size, self.version]) + '.7z'
+        os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
+        archive_name = '-'.join(['xswiftbus', os_map[platform.system()], self.word_size, self.version]) + '.7z'
         archive_path = path.abspath(path.join(os.pardir, archive_name))
         content_path = path.abspath(path.join(os.curdir, 'dist', 'xswiftbus'))
         subprocess.check_call(['7z', 'a', '-mx=9', archive_path, content_path], env=dict(os.environ))
@@ -130,7 +131,8 @@ class Builder:
             dumper = symbolstore.get_platform_specific_dumper(dump_syms=self.dump_syms, symbol_path=symbol_path)
             dumper.process(binary_path)
             dumper.finish()
-            tar_filename = '-'.join(['swift', 'symbols', platform.system(), self.word_size, self.version]) + '.tar.gz'
+            os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
+            tar_filename = '-'.join(['swift', 'symbols', os_map[platform.system()], self.word_size, self.version]) + '.tar.gz'
             tar_path = path.abspath(path.join(self._get_swift_source_path(), tar_filename))
             dumper.pack(tar_path)
             if upload_symbols:

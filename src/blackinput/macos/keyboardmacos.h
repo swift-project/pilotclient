@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKINPUT_KEYBOARD_MAC_H
-#define BLACKINPUT_KEYBOARD_MAC_H
+#ifndef BLACKINPUT_KEYBOARDMACOS_H
+#define BLACKINPUT_KEYBOARDMACOS_H
 
 #include "blackinput/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
@@ -19,20 +19,20 @@
 
 namespace BlackInput
 {
-    //! Mac OSX implemenation of IKeyboard using hook procedure
-    class CKeyboardMac : public IKeyboard
+    //! MacOS implemenation of IKeyboard using hook procedure
+    class CKeyboardMacOS : public IKeyboard
     {
         Q_OBJECT
 
     public:
         //! Copy Constructor
-        CKeyboardMac(CKeyboardMac const&) = delete;
+        CKeyboardMacOS(CKeyboardMacOS const&) = delete;
 
         //! Assignment operator
-        CKeyboardMac &operator=(CKeyboardMac const&) = delete;
+        CKeyboardMacOS &operator=(CKeyboardMacOS const&) = delete;
 
         //! Destructor
-        virtual ~CKeyboardMac();
+        virtual ~CKeyboardMacOS();
 
         //! Process key event
         virtual void processKeyEvent(CGEventType type, CGEventRef event);
@@ -47,7 +47,7 @@ namespace BlackInput
         friend class IKeyboard;
 
         //! Constructor
-        CKeyboardMac(QObject *parent = nullptr);
+        CKeyboardMacOS(QObject *parent = nullptr);
         BlackMisc::Input::KeyCode convertToKey(int keyCode);
 
         static CGEventRef myCGEventCallback(CGEventTapProxy proxy,
@@ -60,4 +60,4 @@ namespace BlackInput
     };
 }
 
-#endif // BLACKINPUT_KEYBOARD_MAC_H
+#endif // BLACKINPUT_KEYBOARDMACOS_H

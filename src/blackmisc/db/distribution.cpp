@@ -59,9 +59,14 @@ namespace BlackMisc
                 {
                     if (!p.contains("linux", Qt::CaseInsensitive)) continue;
                 }
-                else if (CBuildConfig::isRunningOnMacOSXPlatform())
+                else if (CBuildConfig::isRunningOnMacOSPlatform())
                 {
-                    if (!(p.contains("mac", Qt::CaseInsensitive) || p.contains("osx", Qt::CaseInsensitive))) continue;
+                    if (!(p.contains("mac", Qt::CaseInsensitive) ||
+                          p.contains("macos", Qt::CaseInsensitive) ||
+                          p.contains("osx", Qt::CaseInsensitive)))
+                    {
+                        continue;
+                    }
                 }
                 reduced << p;
             }

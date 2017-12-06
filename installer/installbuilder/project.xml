@@ -124,7 +124,7 @@
     <allowComponentSelection>1</allowComponentSelection>
     <compressionAlgorithm>lzma</compressionAlgorithm>
 
-    <!-- Generate a DMG for OSX Installer -->
+    <!-- Generate a DMG for MacOS Installer -->
     <createOsxBundleDmg>0</createOsxBundleDmg>
 
     <!--  <allowedLanguages>en fr es it de ja nl ru zh_CN no pt_BR</allowedLanguages> -->
