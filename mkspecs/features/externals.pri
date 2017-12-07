@@ -37,8 +37,6 @@ msvc {
 
 INCLUDEPATH *= $$EXTERNALSROOT/common/include
 INCLUDEPATH *= $$EXTERNALSROOT/$$EXTERNALS_SPEC/include
-INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad
-INCLUDEPATH *= $$EXTERNALSROOT/common/include/mini_chromium
 
 equals(WORD_SIZE,64) {
     EXTERNALS_BIN_DIR = $$EXTERNALSROOT/$$EXTERNALS_SPEC/bin64

@@ -19,6 +19,9 @@ PRECOMPILED_HEADER = pch/pch.h
 
 DEFINES += LOG_IN_FILE BUILD_BLACKCORE_LIB
 
+INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad
+INCLUDEPATH *= $$EXTERNALSROOT/common/include/mini_chromium
+
 HEADERS += *.h
 HEADERS += $$PWD/application/*.h
 HEADERS += $$PWD/audio/*.h
