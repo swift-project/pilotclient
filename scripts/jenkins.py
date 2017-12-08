@@ -96,7 +96,7 @@ class Builder:
             version_segments = self.version.split('.')
             lastSegment = version_segments.pop()
             version_without_timestamp = '.'.join(version_segments)
-            installer_name_old = '-'.join(['swift', 'installer', os_map[platform.system()], self.word_size, version_without_timestamp])
+            installer_name_old = '-'.join(['swiftinstaller', os_map[platform.system()], self.word_size, version_without_timestamp])
             installer_name_new = '.'.join([installer_name_old, lastSegment])
             installer_name_old = installer_name_old + '.' + extension_map[platform.system()]
             installer_name_new = installer_name_new + '.' + extension_map[platform.system()]
@@ -132,7 +132,7 @@ class Builder:
             dumper.process(binary_path)
             dumper.finish()
             os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
-            tar_filename = '-'.join(['swift', 'symbols', os_map[platform.system()], self.word_size, self.version]) + '.tar.gz'
+            tar_filename = '-'.join(['swiftsymbols', os_map[platform.system()], self.word_size, self.version]) + '.tar.gz'
             tar_path = path.abspath(path.join(self._get_swift_source_path(), tar_filename))
             dumper.pack(tar_path)
             if upload_symbols:

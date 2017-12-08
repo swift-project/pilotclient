@@ -11,7 +11,7 @@
         </setInstallerVariable>
         <setInstallerVariableFromRegEx>
             <name>installerBasename</name>
-            <pattern>(swift-installer-macos-\d+-\d.\d.\d).app</pattern>
+            <pattern>(swiftinstaller-macos-\d+-\d.\d.\d).app</pattern>
             <substitution>\1</substitution>
             <text>${project.installerFilename}</text>
         </setInstallerVariableFromRegEx>

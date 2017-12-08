@@ -211,18 +211,18 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     WINDOWS64BITMODE = 0
     win32 {
         INSTALLER_PLATFORM = windows
-        INSTALLER_BASENAME = swift-installer-windows-$${WORD_SIZE}-$${BLACK_VERSION}
+        INSTALLER_BASENAME = swiftinstaller-windows-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = exe
         equals(WORD_SIZE,64): WINDOWS64BITMODE = 1
     }
     else:macx {
         INSTALLER_PLATFORM = osx
-        INSTALLER_BASENAME = swift-installer-macos-$${WORD_SIZE}-$${BLACK_VERSION}
+        INSTALLER_BASENAME = swiftinstaller-macos-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = app
     }
     else:unix {
         INSTALLER_PLATFORM = linux-x$${WORD_SIZE}
-        INSTALLER_BASENAME = swift-installer-linux-$${WORD_SIZE}-$${BLACK_VERSION}
+        INSTALLER_BASENAME = swiftinstaller-linux-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = run
     }
     create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} $${INSTALLER_PLATFORM} \
