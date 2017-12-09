@@ -57,18 +57,13 @@ namespace BlackGui
             //! Load all from shared
             void loadAllFromShared();
 
-        signals:
-            //! Trigger GUI update
-            //! \private
-            void ps_triggerDigestGuiUpdate();
-
         protected:
             //! \copydoc QWidget::resizeEvent
             virtual void resizeEvent(QResizeEvent *event) override;
 
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
-            BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
+            BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
             bool m_loadInProgress = false; //!< data loading in progress
             bool m_setValuesInProgress = false; //!< setting values in progress, needed because of CNetworkUtils::canConnect check (processing events)
 

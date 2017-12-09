@@ -61,7 +61,6 @@ namespace BlackGui
             connect(ui->pb_LoadAllFromDB, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
             connect(ui->pb_LoadAllFromShared, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
 
-            connect(this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, this, &CDbLoadOverviewComponent::setGuiValues);
             if (sGui->hasWebDataServices())
             {
                 connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::dataLoaded);
@@ -231,7 +230,7 @@ namespace BlackGui
         QString CDbLoadOverviewComponent::formattedTimestamp(const QDateTime &dateTime)
         {
             if (!dateTime.isValid()) { return "-"; }
-            return dateTime.toUTC().toString("MM-dd hh:mm:ss");
+            return dateTime.toUTC().toString("yy-MM-dd hh:mm:ss");
         }
 
         QString CDbLoadOverviewComponent::cacheTimestampForEntity(CEntityFlags::Entity entity)
@@ -327,7 +326,7 @@ namespace BlackGui
         {
             Q_UNUSED(number);
             if (!CEntityFlags::isFinishedReadState(state)) return;
-            if (!entities.testFlag(CEntityFlags::SharedInfoObjectEntity) && entities.testFlag(CEntityFlags::DbInfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
+            if (!entities.testFlag(CEntityFlags::SharedInfoObjectEntity) && !entities.testFlag(CEntityFlags::DbInfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
             m_loadInProgress = false;
             m_dsTriggerGuiUpdate.inputSignal();
         }
