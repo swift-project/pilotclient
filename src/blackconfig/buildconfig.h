@@ -140,13 +140,12 @@ namespace BlackConfig
         //! Build ABI parts as in http://doc.qt.io/qt-5/qsysinfo.html#buildAbi
         static const QStringList &getBuildAbiParts();
 
+        //! Turn build timestamp into 4th version segment
+        static int buildTimestampAsVersionSegment(const QDateTime &buildTimestamp);
+
         //! Whether this swift application is build as 32 or 64bit application
         //! \returns 32, 64 or -1 (in case no info is possible)
         static int buildWordSize();
-
-        //! The platform string used for updates etc.
-        //! \remark ideally no such guess would be needed, but it is used as default value
-        static QString guessMyPlatformString();
 
     private:
         //! Major version

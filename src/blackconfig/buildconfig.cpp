@@ -238,6 +238,25 @@ namespace BlackConfig
         return 0; // intentionally 0 => 0.7.3.0 <-
     }
 
+    int CBuildConfig::buildTimestampAsVersionSegment(const QDateTime &buildTimestamp)
+    {
+        if (buildTimestamp.isValid())
+        {
+            const QString bts = buildTimestamp.toString("yyyyMMddHHmm");
+            bool ok;
+            const long long btsll = bts.toLongLong(&ok); // at least 64bit
+            if (!ok) { return 0; }
+            // now we have to converto int
+            // max 2147483647 (2^31 - 1)
+            //      1MMddHHmm (years since 2010)
+            //                           yyyyMMddHHmm
+            const long long yearOffset = 201000000000;
+            const int btsInt = btsll - yearOffset;
+            return btsInt;
+        }
+        return 0; // intentionally 0 => 0.7.3.0 <-
+    }
+
     const QStringList &CBuildConfig::getBuildAbiParts()
     {
         static const QStringList parts = QSysInfo::buildAbi().split('-');
@@ -257,23 +276,6 @@ namespace BlackConfig
     {
         static const int bws = buildWordSizeImpl();
         return bws;
-    }
-
-    QString CBuildConfig::guessMyPlatformString()
-    {
-        // 32/64 only matters on Windows
-        // 64 is default
-        QString p;
-        QString ws = (buildWordSize() == 32) ? "32" : "64";
-        if (BlackConfig::CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            p = "win-" + ws;
-        }
-        else if (BlackConfig::CBuildConfig::isRunningOnMacOSPlatform()) { p = "macos-64"; }
-        else if (BlackConfig::CBuildConfig::isRunningOnLinuxPlatform()) { p = "linux-64"; }
-
-        if (!p.isEmpty() && BlackConfig::CBuildConfig::isVatsimVersion()) { p += "-vatsim"; }
-        return p;
     }
 } // ns
 
