@@ -87,6 +87,9 @@ namespace BlackMisc
             //! All failed URLs
             const CUrlList &getFailedUrls() const { return m_failedUrls; }
 
+            //! Size of failed URLs
+            int getFailedUrlsSize() const { return m_failedUrls.size(); }
+
             //! Get without the failed URLs
             CUrlList getWithoutFailed() const;
 
@@ -104,6 +107,9 @@ namespace BlackMisc
 
             //! More URLs to try
             bool hasMoreUrlsToTry() const;
+
+            //! Number of URLs which can be used for a retry
+            int numberOfStillValidUrls() const;
 
             //! Next utl from this list
             CUrl obtainNextUrl(bool randomStart = false);

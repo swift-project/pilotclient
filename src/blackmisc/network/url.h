@@ -142,6 +142,29 @@ namespace BlackMisc
             //! Path ending with?
             bool pathEndsWith(const QString &ending, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
 
+            //! A path ends with "/", and file is anythingy beyond that, e.g. "path/file"
+            //! \sa isFile with appendix
+            bool isFile() const;
+
+            //! Stricter version of isFile()
+            bool isFileWithSuffix(const QString &suffix = {}) const;
+
+            //! File appendix if any, otherwise empty, does not include the "."
+            //! \remark similar to QFileInfo::suffix()
+            QString getFileSuffix() const;
+
+            //! Suffix plus dot
+            QString getFileSuffixPlusDot() const;
+
+            //! Likely a HTM file?
+            bool isHavingHtmlSuffix() const;
+
+            //! \copydoc BlackMisc::CFileUtils::isExecutableFile
+            bool isExecutableFile() const;
+
+            //! \copydoc BlackMisc::CFileUtils::isSwiftInstaller
+            bool isSwiftInstaller() const;
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 

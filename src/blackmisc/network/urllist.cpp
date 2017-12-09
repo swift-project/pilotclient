@@ -147,13 +147,13 @@ namespace BlackMisc
         bool CFailoverUrlList::addFailedUrl(const CUrl &failedUrl)
         {
             Q_ASSERT_X(!failedUrl.isEmpty(), Q_FUNC_INFO, "empty URL as failed");
-            this->m_failedUrls.push_back(failedUrl);
+            m_failedUrls.push_back(failedUrl);
             return hasMoreUrlsToTry();
         }
 
         bool CFailoverUrlList::addFailedUrls(const CUrlList &failedUrls)
         {
-            this->m_failedUrls.push_back(failedUrls);
+            m_failedUrls.push_back(failedUrls);
             return hasMoreUrlsToTry();
         }
 
@@ -173,21 +173,29 @@ namespace BlackMisc
 
         bool CFailoverUrlList::hasMoreUrlsToTry() const
         {
-            if (this->isEmpty()) { return false; }
-            return (m_failedUrls.size() < this->size() && m_failedUrls.size() < m_maxTrials);
+            return this->numberOfStillValidUrls() > 0;
+        }
+
+        int CFailoverUrlList::numberOfStillValidUrls() const
+        {
+            if (this->isEmpty()) { return 0; }
+            if (m_failedUrls.size() >= m_maxTrials) { return 0; }
+            const int trailsLeft1 = qMax(m_maxTrials - m_failedUrls.size(), 0);
+            const int trailsLeft2 = qMax(this->size() - m_failedUrls.size(), 0);
+            return qMin(trailsLeft1, trailsLeft2);
         }
 
         CUrl CFailoverUrlList::obtainNextWorkingUrl(bool random, int connectTimeoutMs)
         {
             if (!hasMoreUrlsToTry()) { return CUrl(); }
-            const CUrl url(this->obtainNextUrlWithout(random, this->m_failedUrls));
+            const CUrl url(this->obtainNextUrlWithout(random, m_failedUrls));
             QString msg;
             if (CNetworkUtils::canConnect(url, msg, connectTimeoutMs)) { return url; }
             if (addFailedUrl(url))
             {
                 if (!msg.isEmpty())
                 {
-                    this->m_errorMsgs.append(QString("URL: %1 error: %2").arg(url.toQString(), msg));
+                    m_errorMsgs.append(QString("URL: %1 error: %2").arg(url.toQString(), msg));
                 }
                 return obtainNextWorkingUrl(random, connectTimeoutMs);
             }
@@ -226,8 +234,8 @@ namespace BlackMisc
 
         void CFailoverUrlList::reset(int maxTrials)
         {
-            this->m_failedUrls.clear();
-            if (maxTrials >= 0) { this->m_maxTrials = maxTrials; }
+            m_failedUrls.clear();
+            if (maxTrials >= 0) { m_maxTrials = maxTrials; }
         }
     } // namespace
 } // namespace

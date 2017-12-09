@@ -162,13 +162,61 @@ namespace BlackMisc
             QUrl qurl(this->toQUrl());
             qurl.setPort(port);
             qurl.setScheme(scheme);
-            CUrl url(qurl);
+            const CUrl url(qurl);
             return url;
         }
 
         bool CUrl::pathEndsWith(const QString &ending, Qt::CaseSensitivity cs) const
         {
             return m_path.endsWith(ending, cs);
+        }
+
+        bool CUrl::isFile() const
+        {
+            const QString f(this->getFileName());
+            return !f.isEmpty();
+        }
+
+        bool CUrl::isFileWithSuffix(const QString &suffix) const
+        {
+            const QString f(this->getFileName());
+            if (suffix.isEmpty()) { return f.contains('.'); }
+            return f.endsWith(suffix, Qt::CaseInsensitive);
+        }
+
+        bool CUrl::isExecutableFile() const
+        {
+            return CFileUtils::isExecutableFile(this->getFileName());
+        }
+
+        bool CUrl::isSwiftInstaller() const
+        {
+            return CFileUtils::isSwiftInstaller(this->getFileName());
+        }
+
+        QString CUrl::getFileSuffix() const
+        {
+            const QString f(this->getFileName());
+            const int i = f.lastIndexOf('.');
+            if (i < 0) return "";
+            if (f.length() <= i + 1) return ""; // ends with "."
+            return f.mid(i + 1); // suffix without dot
+        }
+
+        QString CUrl::getFileSuffixPlusDot() const
+        {
+            const QString f(this->getFileName());
+            const int i = f.lastIndexOf('.');
+            if (i < 0) return "";
+            if (f.length() <= i + 1) return ""; // ends with "."
+            return f.mid(i);  // suffix with dot
+        }
+
+        bool CUrl::isHavingHtmlSuffix() const
+        {
+            static const QString h1(".html");
+            static const QString h2(".htm");
+            return this->isFileWithSuffix(h1) || this->isFileWithSuffix(h2);
         }
 
         CUrl CUrl::withAppendedQuery(const QString &query) const
@@ -187,8 +235,8 @@ namespace BlackMisc
 
         QJsonObject CUrl::toJson() const
         {
-            QPair<QString, QJsonValue> v("url", getFullUrl());
-            QJsonObject json({ v });
+            const QPair<QString, QJsonValue> v("url", getFullUrl());
+            const QJsonObject json({ v });
             return json;
         }
 
@@ -210,7 +258,7 @@ namespace BlackMisc
 
         bool CUrl::isDefaultPort(const QString &protocol, int port)
         {
-            int p = protocolToDefaultPort(protocol);
+            const int p = protocolToDefaultPort(protocol);
             if (p < 0) { return false; }
             return port == p;
         }
@@ -240,10 +288,10 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexHost:   return CVariant::fromValue(this->m_host);
-            case IndexPort:   return CVariant::fromValue(this->m_port);
-            case IndexScheme: return CVariant::fromValue(this->m_scheme);
-            case IndexPath:   return CVariant::fromValue(this->m_path);
+            case IndexHost:   return CVariant::fromValue(m_host);
+            case IndexPort:   return CVariant::fromValue(m_port);
+            case IndexScheme: return CVariant::fromValue(m_scheme);
+            case IndexPath:   return CVariant::fromValue(m_path);
             default:          return CValueObject::propertyByIndex(index);
             }
         }
