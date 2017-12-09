@@ -36,7 +36,7 @@ namespace BlackMisc
 
         CAtcStation::CAtcStation(const QString &callsign) : m_callsign(callsign)
         {
-            this->m_callsign.setTypeHint(CCallsign::Atc);
+            m_callsign.setTypeHint(CCallsign::Atc);
         }
 
         CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency,
@@ -48,21 +48,21 @@ namespace BlackMisc
             m_atis(atis), m_metar(metar)
         {
             // sync callsigns
-            this->m_callsign.setTypeHint(CCallsign::Atc);
-            if (!this->m_controller.hasValidCallsign() && !callsign.isEmpty())
+            m_callsign.setTypeHint(CCallsign::Atc);
+            if (!m_controller.hasValidCallsign() && !callsign.isEmpty())
             {
-                this->m_controller.setCallsign(m_callsign);
+                m_controller.setCallsign(m_callsign);
             }
         }
 
         bool CAtcStation::hasBookingTimes() const
         {
-            return !(this->m_bookedFromUtc.isNull() && this->m_bookedUntilUtc.isNull());
+            return !(m_bookedFromUtc.isNull() && m_bookedUntilUtc.isNull());
         }
 
         bool CAtcStation::hasMetar() const
         {
-            return this->m_metar.hasMessage();
+            return m_metar.hasMessage();
         }
 
         QString CAtcStation::getCallsignSuffix() const
@@ -72,14 +72,14 @@ namespace BlackMisc
 
         void CAtcStation::setCallsign(const CCallsign &callsign)
         {
-            this->m_callsign = callsign;
-            this->m_controller.setCallsign(callsign);
+            m_callsign = callsign;
+            m_controller.setCallsign(callsign);
         }
 
         void CAtcStation::setController(const CUser &controller)
         {
-            this->m_controller = controller;
-            this->m_controller.setCallsign(this->m_callsign);
+            m_controller = controller;
+            m_controller.setCallsign(m_callsign);
         }
 
         QString CAtcStation::convertToQString(bool i18n) const
@@ -90,28 +90,28 @@ namespace BlackMisc
             static const QString untilUtcI18n(QCoreApplication::translate("Aviation", "until(UTC)"));
 
             const QString s = (i18n ? atcI18n : QLatin1String("ATC station")) %
-                              QLatin1Char(' ') % this->m_callsign.toQString(i18n) %
-                              QLatin1Char(' ') % this->m_position.toQString(i18n) %
+                              QLatin1Char(' ') % m_callsign.toQString(i18n) %
+                              QLatin1Char(' ') % m_position.toQString(i18n) %
                               QLatin1String(" online: ") % boolToYesNo(m_isOnline) %
 
                               // controller
-                              (!this->m_controller.isValid() ? QStringLiteral("") :
-                               QStringLiteral(" ") % this->m_controller.toQString(i18n)) %
+                              (!m_controller.isValid() ? QStringLiteral("") :
+                               QStringLiteral(" ") % m_controller.toQString(i18n)) %
 
                               // frequency
-                              QLatin1Char(' ') % this->m_frequency.valueRoundedWithUnit(3, i18n) %
+                              QLatin1Char(' ') % m_frequency.valueRoundedWithUnit(3, i18n) %
 
                               // ATIS
                               (!this->hasAtis() ? QStringLiteral("") :
-                               QStringLiteral(" ") % this->m_atis.toQString(i18n)) %
+                               QStringLiteral(" ") % m_atis.toQString(i18n)) %
 
                               // METAR
                               (!this->hasMetar() ? QStringLiteral("") :
-                               QStringLiteral(" ") % this->m_metar.toQString(i18n)) %
+                               QStringLiteral(" ") % m_metar.toQString(i18n)) %
 
                               // range
                               QLatin1Char(' ') % (i18n ? rangeI18n : QLatin1String("range")) %
-                              QLatin1Char(' ') % this->m_range.toQString(i18n) %
+                              QLatin1Char(' ') % m_range.toQString(i18n) %
 
                               // distance / bearing
                               QLatin1Char(' ') % ICoordinateWithRelativePosition::convertToQString(i18n) %
@@ -120,12 +120,12 @@ namespace BlackMisc
                               QLatin1Char(' ') %
                               (i18n ? fromUtcI18n : QLatin1String("from(UTC)")) %
                               QLatin1Char(' ') %
-                              (this->m_bookedFromUtc.isNull() ? QLatin1String("-") : this->m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
+                              (m_bookedFromUtc.isNull() ? QLatin1String("-") : m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
 
                               QLatin1Char(' ') %
                               (i18n ? untilUtcI18n : QLatin1String("until(UTC)")) %
                               QLatin1Char(' ') %
-                              (this->m_bookedUntilUtc.isNull() ? QLatin1String("-") : this->m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
+                              (m_bookedUntilUtc.isNull() ? QLatin1String("-") : m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
 
             return s;
 
@@ -142,15 +142,15 @@ namespace BlackMisc
 
         void CAtcStation::setFrequency(const CFrequency &frequency)
         {
-            this->m_frequency = frequency;
-            this->m_frequency.setUnit(CFrequencyUnit::MHz());
+            m_frequency = frequency;
+            m_frequency.setUnit(CFrequencyUnit::MHz());
         }
 
         void CAtcStation::synchronizeControllerData(CAtcStation &otherStation)
         {
-            if (this->m_controller == otherStation.getController()) { return; }
+            if (m_controller == otherStation.getController()) { return; }
             CUser otherController = otherStation.getController();
-            this->m_controller.synchronizeData(otherController);
+            m_controller.synchronizeData(otherController);
             otherStation.setController(otherController);
         }
 
@@ -238,8 +238,8 @@ namespace BlackMisc
 
         bool CAtcStation::hasValidBookingTimes() const
         {
-            return !this->m_bookedFromUtc.isNull() && this->m_bookedFromUtc.isValid() &&
-                   !this->m_bookedUntilUtc.isNull() && this->m_bookedUntilUtc.isValid();
+            return !m_bookedFromUtc.isNull() && m_bookedFromUtc.isValid() &&
+                   !m_bookedUntilUtc.isNull() && m_bookedUntilUtc.isValid();
         }
 
         void CAtcStation::setBookedFromUntil(const CAtcStation &otherStation)
@@ -252,8 +252,8 @@ namespace BlackMisc
         {
             if (!this->hasValidBookingTimes()) { return false; }
             QDateTime now = QDateTime::currentDateTimeUtc();
-            if (this->m_bookedFromUtc > now)  { return false; }
-            if (now > this->m_bookedUntilUtc) { return false; }
+            if (m_bookedFromUtc > now)  { return false; }
+            if (now > m_bookedUntilUtc) { return false; }
             return true;
         }
 
@@ -267,13 +267,13 @@ namespace BlackMisc
             if (!this->hasValidBookingTimes()) { return CTime(0, nullptr); }
             QDateTime now = QDateTime::currentDateTimeUtc();
             qint64 diffMs;
-            if (this->m_bookedFromUtc > now)
+            if (m_bookedFromUtc > now)
             {
                 // future
-                diffMs = now.msecsTo(this->m_bookedFromUtc);
+                diffMs = now.msecsTo(m_bookedFromUtc);
                 return CTime(diffMs / 1000.0, CTimeUnit::s());
             }
-            else if (this->m_bookedUntilUtc > now)
+            else if (m_bookedUntilUtc > now)
             {
                 // now
                 return CTime(0.0, CTimeUnit::s());
@@ -298,17 +298,17 @@ namespace BlackMisc
 
         const CAltitude &CAtcStation::geodeticHeight() const
         {
-            return this->m_position.geodeticHeight();
+            return m_position.geodeticHeight();
         }
 
         QVector3D CAtcStation::normalVector() const
         {
-            return this->m_position.normalVector();
+            return m_position.normalVector();
         }
 
         std::array<double, 3> CAtcStation::normalVectorDouble() const
         {
-            return this->m_position.normalVectorDouble();
+            return m_position.normalVectorDouble();
         }
 
         CVariant CAtcStation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -318,33 +318,33 @@ namespace BlackMisc
             switch (i)
             {
             case IndexBookedFrom:
-                return CVariant::from(this->m_bookedFromUtc);
+                return CVariant::from(m_bookedFromUtc);
             case IndexBookedUntil:
-                return CVariant::from(this->m_bookedUntilUtc);
+                return CVariant::from(m_bookedUntilUtc);
             case IndexCallsign:
-                return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
+                return m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexController:
-                return this->m_controller.propertyByIndex(index.copyFrontRemoved());
+                return m_controller.propertyByIndex(index.copyFrontRemoved());
             case IndexFrequency:
-                return this->m_frequency.propertyByIndex(index.copyFrontRemoved());
+                return m_frequency.propertyByIndex(index.copyFrontRemoved());
             case IndexIsOnline:
-                return CVariant::from(this->m_isOnline);
+                return CVariant::from(m_isOnline);
             case IndexLatitude:
                 return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude:
                 return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexPosition:
-                return this->m_position.propertyByIndex(index.copyFrontRemoved());
+                return m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexRange:
-                return this->m_range.propertyByIndex(index.copyFrontRemoved());
+                return m_range.propertyByIndex(index.copyFrontRemoved());
             case IndexIsInRange:
                 return CVariant::fromValue(isInRange());
             case IndexAtis:
-                return this->m_atis.propertyByIndex(index.copyFrontRemoved());
+                return m_atis.propertyByIndex(index.copyFrontRemoved());
             case IndexMetar:
-                return this->m_metar.propertyByIndex(index.copyFrontRemoved());
+                return m_metar.propertyByIndex(index.copyFrontRemoved());
             case IndexVoiceRoom:
-                return this->m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
+                return m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -365,31 +365,31 @@ namespace BlackMisc
                 this->setBookedUntilUtc(variant.value<QDateTime>());
                 break;
             case IndexCallsign:
-                this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexController:
-                this->m_controller.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_controller.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexFrequency:
-                this->m_frequency.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_frequency.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexIsOnline:
                 this->setOnline(variant.value<bool>());
                 break;
             case IndexPosition:
-                this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexRange:
-                this->m_range.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_range.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexAtis:
-                this->m_atis.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_atis.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexMetar:
-                this->m_metar.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_metar.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexVoiceRoom:
-                this->m_voiceRoom.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_voiceRoom.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
@@ -415,11 +415,11 @@ namespace BlackMisc
             case IndexBookedUntil:
                 return Compare::compare(this->getBookedUntilUtc(), compareValue.getBookedUntilUtc());
             case IndexCallsign:
-                return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+                return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexController:
-                return this->m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
+                return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
             case IndexFrequency:
-                return this->m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
+                return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
             case IndexIsOnline:
                 return Compare::compare(this->isOnline(), compareValue.isOnline());
             case IndexLatitude:
@@ -427,15 +427,15 @@ namespace BlackMisc
             case IndexLongitude:
                 return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
             case IndexPosition:
-                return this->m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
+                return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
             case IndexRange:
-                return this->m_range.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRange());
+                return m_range.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRange());
             case IndexIsInRange:
                 return Compare::compare(this->isInRange(), compareValue.isInRange());
             case IndexAtis:
-                return this->m_atis.getMessage().compare(compareValue.getAtis().getMessage());
+                return m_atis.getMessage().compare(compareValue.getAtis().getMessage());
             case IndexMetar:
-                return this->m_metar.getMessage().compare(compareValue.getMetar().getMessage());
+                return m_metar.getMessage().compare(compareValue.getMetar().getMessage());
             case IndexVoiceRoom:
                 return this->getVoiceRoom().getVoiceRoomUrl().compare(compareValue.getVoiceRoom().getVoiceRoomUrl());
             default:

@@ -24,7 +24,7 @@ namespace BlackMisc
         QString CCallsign::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return this->m_callsign;
+            return m_callsign;
         }
 
         QString CCallsign::unifyCallsign(const QString &callsign)
@@ -73,7 +73,7 @@ namespace BlackMisc
         bool CCallsign::isSupervisorCallsign() const
         {
             if (this->getTypeHint() == Aircraft) { return false; }
-            return this->m_callsign.endsWith("SUP");
+            return m_callsign.endsWith("SUP");
         }
 
         QString CCallsign::getIcaoCode() const
@@ -122,11 +122,11 @@ namespace BlackMisc
 
         QString CCallsign::getAirlineSuffix() const
         {
-            if (this->m_callsign.length() < 3) { return ""; }
+            if (m_callsign.length() < 3) { return ""; }
             if (this->isAtcCallsign()) { return ""; }
 
             thread_local const QRegularExpression regExp("^[A-Z]{3,}");
-            QRegularExpressionMatch match = regExp.match(this->m_callsign);
+            QRegularExpressionMatch match = regExp.match(m_callsign);
             if (!match.hasMatch()) { return QString(); }
             const QString airline = match.captured(0);
 
@@ -178,13 +178,13 @@ namespace BlackMisc
             switch (i)
             {
             case IndexCallsignString:
-                this->m_callsign = variant.toQString();
+                m_callsign = variant.toQString();
                 break;
             case IndexCallsignStringAsSet:
-                this->m_callsignAsSet = variant.toQString();
+                m_callsignAsSet = variant.toQString();
                 break;
             case IndexTelephonyDesignator:
-                this->m_telephonyDesignator = variant.toQString();
+                m_telephonyDesignator = variant.toQString();
                 break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
@@ -193,16 +193,16 @@ namespace BlackMisc
 
         int CCallsign::comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const
         {
-            if (index.isMyself()) { return this->m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
+            if (index.isMyself()) { return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsignString:
-                return this->m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
+                return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
             case IndexCallsignStringAsSet:
-                return this->m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
+                return m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
             case IndexTelephonyDesignator:
-                return this->m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
+                return m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
             case IndexSuffix:
                 return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
             default:

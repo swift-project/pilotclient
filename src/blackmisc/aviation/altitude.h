@@ -129,5 +129,6 @@ namespace BlackMisc
 }
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude::ReferenceDatum)
 
 #endif // guard

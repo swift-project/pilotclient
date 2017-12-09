@@ -36,7 +36,7 @@ namespace BlackMisc
             //! Indexes
             enum ColumnIndex
             {
-                IndexCallsignString = BlackMisc::CPropertyIndex::GlobalIndexCCallsign,
+                IndexCallsignString = CPropertyIndex::GlobalIndexCCallsign,
                 IndexCallsignStringAsSet,
                 IndexTelephonyDesignator,
                 IndexSuffix
@@ -69,7 +69,7 @@ namespace BlackMisc
             {}
 
             //! Is empty?
-            bool isEmpty() const { return this->m_callsignAsSet.isEmpty(); }
+            bool isEmpty() const { return m_callsignAsSet.isEmpty(); }
 
             //! ATC callsign
             //! \sa atcCallsignSuffixes()
@@ -86,19 +86,19 @@ namespace BlackMisc
             bool isSupervisorCallsign() const;
 
             //! Get callsign (normalized)
-            const QString &asString() const { return this->m_callsign; }
+            const QString &asString() const { return m_callsign; }
 
             //! Get callsign.
-            const QString &getStringAsSet() const { return this->m_callsignAsSet; }
+            const QString &getStringAsSet() const { return m_callsignAsSet; }
 
             //! Get callsign telephony designator (how callsign is pronounced)
-            const QString &getTelephonyDesignator() const { return this->m_telephonyDesignator; }
+            const QString &getTelephonyDesignator() const { return m_telephonyDesignator; }
 
             //! Type hint
             TypeHint getTypeHint() const { return m_typeHint; }
 
             //! Type hint
-            void setTypeHint(TypeHint hint) { this->m_typeHint = hint; }
+            void setTypeHint(TypeHint hint) { m_typeHint = hint; }
 
             //! Get ICAO code, if this makes sense (EDDF_TWR -> EDDF)
             QString getIcaoCode() const;
@@ -181,5 +181,6 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsign)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsign::TypeHint)
 
 #endif // guard

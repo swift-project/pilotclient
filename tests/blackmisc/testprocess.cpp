@@ -16,7 +16,6 @@
 
 #include "testprocess.h"
 #include "blackmisc/processinfo.h"
-
 #include <QTest>
 #include <QCoreApplication>
 
@@ -24,7 +23,6 @@ using namespace BlackMisc;
 
 namespace BlackMiscTest
 {
-
     void CTestProcess::processInfo()
     {
         CProcessInfo invalid;
@@ -37,7 +35,6 @@ namespace BlackMiscTest
         QVERIFY2(current1 == current2, "Current process equals process with current PID");
         QVERIFY2(current1 == current3, "Current process equals process with current PID and name");
     }
-
 }
 
 //! \endcond

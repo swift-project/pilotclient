@@ -81,7 +81,7 @@ namespace BlackMisc
             bool hasBookingTimes() const;
 
             //! Has ATIS?
-            bool hasAtis() const { return this->m_atis.hasMessage(); }
+            bool hasAtis() const { return m_atis.hasMessage(); }
 
             //! Has METAR?
             bool hasMetar() const;
@@ -111,31 +111,31 @@ namespace BlackMisc
             void setController(const BlackMisc::Network::CUser &controller);
 
             //! Set controller's name
-            void setControllerRealName(const QString &controllerName) { this->m_controller.setRealName(controllerName); }
+            void setControllerRealName(const QString &controllerName) { m_controller.setRealName(controllerName); }
 
             //! Set controller's id
-            void setControllerId(const QString &controllerId) { this->m_controller.setId(controllerId); }
+            void setControllerId(const QString &controllerId) { m_controller.setId(controllerId); }
 
             //! Has valid realname?
-            bool hasValidRealName() const { return this->m_controller.hasValidRealName(); }
+            bool hasValidRealName() const { return m_controller.hasValidRealName(); }
 
             //! Has valid id?
-            bool hasValidId() const { return this->m_controller.hasValidId(); }
+            bool hasValidId() const { return m_controller.hasValidId(); }
 
             //! Valid COM frequency
             bool hasValidFrequency() const { return BlackMisc::Aviation::CComSystem::isValidCivilAviationFrequency(this->getFrequency()); }
 
             //! Get frequency.
-            const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
+            const PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
 
             //! Set frequency
             void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
             //! Get the position of the center of the controller's area of visibility.
-            const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
+            const Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
 
             //! Set position
-            void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
+            void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { m_position = position; }
 
             //! Synchronize controller data
             //! Updates two stations (normally a booked and online ATC station) with complementary data
@@ -147,10 +147,10 @@ namespace BlackMisc
             void synchronizeWithBookedStation(CAtcStation &bookedStation);
 
             //! Get the radius of the controller's area of visibility.
-            const BlackMisc::PhysicalQuantities::CLength &getRange() const { return m_range; }
+            const PhysicalQuantities::CLength &getRange() const { return m_range; }
 
             //! Set range
-            void setRange(const BlackMisc::PhysicalQuantities::CLength &range) { this->m_range = range; }
+            void setRange(const PhysicalQuantities::CLength &range) { m_range = range; }
 
             //! In range? If range and distance to own aircraft are not available false
             bool isInRange() const;
@@ -159,19 +159,19 @@ namespace BlackMisc
             bool isOnline() const { return m_isOnline; }
 
             //! Set online
-            void setOnline(bool online) { this->m_isOnline = online; }
+            void setOnline(bool online) { m_isOnline = online; }
 
             //! Get voice room
-            const BlackMisc::Audio::CVoiceRoom &getVoiceRoom() const { return this->m_voiceRoom; }
+            const Audio::CVoiceRoom &getVoiceRoom() const { return m_voiceRoom; }
 
             //! Set voice room
-            void setVoiceRoom(const BlackMisc::Audio::CVoiceRoom &voiceRoom) { this->m_voiceRoom = voiceRoom; }
+            void setVoiceRoom(const Audio::CVoiceRoom &voiceRoom) { m_voiceRoom = voiceRoom; }
 
             //! Set voice room URL
-            void setVoiceRoomUrl(const QString &url) { this->m_voiceRoom.setVoiceRoomUrl(url); }
+            void setVoiceRoomUrl(const QString &url) { m_voiceRoom.setVoiceRoomUrl(url); }
 
             //! Valid voice room?
-            bool hasValidVoiceRoom() const { return this->m_voiceRoom.isValid(); }
+            bool hasValidVoiceRoom() const { return m_voiceRoom.isValid(); }
 
             //! Booked date/time if any.
             //! This represents the closest booking within a time frame as there can be multiple bookings.
@@ -185,7 +185,7 @@ namespace BlackMisc
             bool hasValidBookingTimes() const;
 
             //! Set booked from
-            void setBookedFromUtc(const QDateTime &from) { this->m_bookedFromUtc = from; }
+            void setBookedFromUtc(const QDateTime &from) { m_bookedFromUtc = from; }
 
             //! Transfer booking times
             void setBookedFromUntil(const CAtcStation &otherStation);
@@ -200,37 +200,37 @@ namespace BlackMisc
             //! negative values mean booking in past,
             //! positive values mean booking in future,
             //! no booking dates will result in null time
-            BlackMisc::PhysicalQuantities::CTime bookedWhen() const;
+            PhysicalQuantities::CTime bookedWhen() const;
 
             //! Get ATIS
             const CInformationMessage &getAtis() const { return m_atis; }
 
             //! Set ATIS
-            void setAtis(const CInformationMessage &atis) { this->m_atis = atis;}
+            void setAtis(const CInformationMessage &atis) { m_atis = atis;}
 
             //! Set ATIS Message
-            void setAtisMessage(const QString &atis) { this->m_atis.setMessage(atis); }
+            void setAtisMessage(const QString &atis) { m_atis.setMessage(atis); }
 
             //! Get METAR
             const CInformationMessage &getMetar() const { return m_metar; }
 
             //! Set METAR
-            void setMetar(const CInformationMessage &metar) { this->m_metar = metar;}
+            void setMetar(const CInformationMessage &metar) { m_metar = metar;}
 
             //! Set METAR Message
-            void setMetarMessage(const QString &metar) { this->m_metar.setMessage(metar); }
+            void setMetarMessage(const QString &metar) { m_metar.setMessage(metar); }
 
             //! Set booked until
-            void setBookedUntilUtc(const QDateTime &until) { this->m_bookedUntilUtc = until; }
+            void setBookedUntilUtc(const QDateTime &until) { m_bookedUntilUtc = until; }
 
             //! \copydoc Geo::ICoordinateGeodetic::latitude
-            virtual BlackMisc::Geo::CLatitude latitude() const override;
+            virtual Geo::CLatitude latitude() const override;
 
             //! \copydoc Geo::ICoordinateGeodetic::longitude
-            virtual BlackMisc::Geo::CLongitude longitude() const override;
+            virtual Geo::CLongitude longitude() const override;
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
-            const BlackMisc::Aviation::CAltitude &geodeticHeight() const override;
+            const Aviation::CAltitude &geodeticHeight() const override;
 
             //! \copydoc Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override;
@@ -239,7 +239,7 @@ namespace BlackMisc
             virtual std::array<double, 3> normalVectorDouble() const override;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
@@ -251,20 +251,20 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
+            BlackMisc::CIcon toIcon() const { return m_callsign.toIcon(); }
 
         private:
-            CCallsign                                 m_callsign;
-            BlackMisc::Network::CUser                 m_controller;
-            BlackMisc::PhysicalQuantities::CFrequency m_frequency;
-            BlackMisc::Geo::CCoordinateGeodetic       m_position;
-            BlackMisc::PhysicalQuantities::CLength    m_range;
-            bool                                      m_isOnline = false;
-            QDateTime                                 m_bookedFromUtc;
-            QDateTime                                 m_bookedUntilUtc;
+            CCallsign                      m_callsign;
+            Network::CUser                 m_controller;
+            PhysicalQuantities::CFrequency m_frequency;
+            Geo::CCoordinateGeodetic       m_position;
+            PhysicalQuantities::CLength    m_range;
+            bool                           m_isOnline = false;
+            QDateTime                      m_bookedFromUtc;
+            QDateTime                      m_bookedUntilUtc;
             CInformationMessage m_atis  { CInformationMessage::ATIS };
             CInformationMessage m_metar { CInformationMessage::METAR };
-            BlackMisc::Audio::CVoiceRoom              m_voiceRoom;
+            Audio::CVoiceRoom              m_voiceRoom;
 
             BLACK_METACLASS(
                 CAtcStation,

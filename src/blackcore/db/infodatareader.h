@@ -25,7 +25,7 @@ namespace BlackCore
     namespace Db
     {
         //! Read information about data from Database or shared files
-        //! like when updated and number of entries.
+        //! such as when updated and number of entries.
         //! \see BlackMisc::Db::CDbInfo
         class BLACKCORE_EXPORT CInfoDataReader : public CDatabaseReader
         {

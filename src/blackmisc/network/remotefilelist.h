@@ -27,9 +27,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        class CRemoteFile;
-
-        //! Value object encapsulating a list of servers.
+        //! Value object encapsulating a list of remote files.
         class BLACKMISC_EXPORT CRemoteFileList :
             public CSequence<CRemoteFile>,
             public BlackMisc::Mixin::MetaType<CRemoteFileList>
