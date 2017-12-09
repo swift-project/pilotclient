@@ -65,7 +65,7 @@ namespace BlackGui
             void triggerLoadingXSwiftBusFileInfo();
 
             //! Received info about XSwiftBus download files
-            void loadedXSwiftBusFileInfo(QNetworkReply *reply);
+            void loadedAlphaXSwiftBusFileInfo(QNetworkReply *reply);
 
             //! Trigger downloading of XSwiftBusFile
             void triggerDownloadingOfXSwiftBusFile();

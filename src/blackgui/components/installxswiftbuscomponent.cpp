@@ -49,12 +49,18 @@ namespace BlackGui
             connect(ui->pb_OpenDownloadDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::openDownloadDir);
             connect(ui->pb_OpenInstallDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::openInstallDir);
 
-            // lod metadata
-            this->triggerLoadingXSwiftBusFileInfo();
+            // init upate info
+            this->updatesChanged();
         }
 
         CInstallXSwiftBusComponent::~CInstallXSwiftBusComponent()
         { }
+
+        void CInstallXSwiftBusComponent::setDefaultDownloadName(const QString &defaultDownload)
+        {
+            m_defaultDownloadName = defaultDownload;
+
+        }
 
         void CInstallXSwiftBusComponent::selectPluginDirectory()
         {
@@ -113,57 +119,9 @@ namespace BlackGui
             }
         }
 
-        void CInstallXSwiftBusComponent::triggerLoadingXSwiftBusFileInfo()
-        {
-            if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return; }
-            const CUrl url = sGui->getGlobalSetup().getAlphaXSwiftBusFilesServiceUrl();
-            if (url.isEmpty()) { return; }
-            sGui->getFromNetwork(url, { this, &CInstallXSwiftBusComponent::loadedXSwiftBusFileInfo });
-            CLogMessage(this).info("Trigger loading XSwiftBus file info from '%1'") << url.getHost();
-        }
-
-        void CInstallXSwiftBusComponent::loadedXSwiftBusFileInfo(QNetworkReply *reply)
-        {
-            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply); // clean up reply afterwards
-            if (sGui && sGui->isShuttingDown()) { return; }
-            m_remoteFiles.clear();
-
-            if (nwReply->error() == QNetworkReply::NoError)
-            {
-                const QString json = reply->readAll();
-                if (!json.isEmpty())
-                {
-                    const CRemoteFileList remoteFiles = CRemoteFileList::fromDatabaseJson(json);
-                    m_remoteFiles = remoteFiles;
-                    CLogMessage(this).info("Loaded %1 XSwiftBus file info entries from '%2'") << remoteFiles.size() << nwReply->url().toString();
-                }
-            }
-            else if (sGui && !sGui->isShuttingDown())
-            {
-                QTimer::singleShot(30 * 1000, this, &CInstallXSwiftBusComponent::triggerLoadingXSwiftBusFileInfo);
-            }
-
-            ui->cb_DownloadFile->clear();
-            if (!m_remoteFiles.isEmpty())
-            {
-                QStringList xSWiftBusFiles(m_remoteFiles.getNamesPlusSize(true));
-                std::reverse(xSWiftBusFiles.begin(), xSWiftBusFiles.end()); // latest on top
-                ui->cb_DownloadFile->addItems(xSWiftBusFiles);
-                ui->cb_DownloadFile->setCurrentText(m_remoteFiles.backOrDefault().getNameAndSize()); // latest version
-            }
-            ui->cb_DownloadFile->setEnabled(!m_remoteFiles.isEmpty());
-        }
-
         void CInstallXSwiftBusComponent::triggerDownloadingOfXSwiftBusFile()
         {
             if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return; }
-            if (m_remoteFiles.isEmpty())
-            {
-                const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error("No remote file information");
-                this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
-                this->triggerLoadingXSwiftBusFileInfo(); // try to reload
-                return;
-            }
             if (!this->existsDownloadDir())
             {
                 const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error("Invalid download directory");
