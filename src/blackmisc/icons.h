@@ -89,7 +89,11 @@ namespace BlackMisc
             NetworkVatsimLogo,
             NetworkVatsimLogoWhite,
             NotSet,
-            StandardIconAppAircrafts16,
+            OSAll,
+            OSLinux,
+            OSMacOs,
+            OSWindows,
+            StandardIconAppAircraft16,
             StandardIconAppAtc16,
             StandardIconAppFlightPlan16,
             StandardIconAppLog16,
@@ -439,6 +443,22 @@ namespace BlackMisc
 
         //! Database table
         static const QPixmap &databaseTable16();
+
+        // --------------------------------------------------
+        // -- OS icons
+        // --------------------------------------------------
+
+        //! All OS
+        static const QPixmap &osAll();
+
+        //! Linux
+        static const QPixmap &osLinux();
+
+        //! MacOS
+        static const QPixmap &osMac();
+
+        //! Windows
+        static const QPixmap &osWindows();
 
         // --------------------------------------------------
         // -- Preloader icons

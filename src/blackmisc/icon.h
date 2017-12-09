@@ -58,8 +58,8 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_ICON(DERIVED)      \
-    using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;    \
-    using ::BlackMisc::Mixin::Icon<DERIVED>::toPixmap;
+            using ::BlackMisc::Mixin::Icon<DERIVED>::toIcon;    \
+            using ::BlackMisc::Mixin::Icon<DERIVED>::toPixmap;
     } // Mixin
 
     //! Value object for icons. An icon is stored in the global icon repository and

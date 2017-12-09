@@ -472,6 +472,29 @@ namespace BlackMisc
         return pm;
     }
 
+    const QPixmap &CIcons::osAll()
+    {
+        return empty16();
+    }
+
+    const QPixmap &CIcons::osLinux()
+    {
+        static const QPixmap pm(":/os/icons/os/linux_24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::osMac()
+    {
+        static const QPixmap pm(":/os/icons/os/macos_24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::osWindows()
+    {
+        static const QPixmap pm(":/os/icons/os/windows_24.png");
+        return pm;
+    }
+
     const QPixmap &CIcons::preloader64()
     {
         static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing64.gif");
@@ -1071,7 +1094,11 @@ namespace BlackMisc
         case NetworkVatsimLogo: return vatsimLogo16();
         case NetworkVatsimLogoWhite: return vatsimLogoWhite16();
         case NotSet: return empty();
-        case StandardIconAppAircrafts16: return appAircraft16();
+        case OSAll: return osAll();
+        case OSLinux: return osLinux();
+        case OSMacOs: return osMac();
+        case OSWindows: return osWindows();
+        case StandardIconAppAircraft16: return appAircraft16();
         case StandardIconAppAtc16: return appAtc16();
         case StandardIconAppFlightPlan16: return appFlightPlan16();
         case StandardIconAppLog16: return appLog16();
@@ -1118,6 +1145,8 @@ namespace BlackMisc
         case StandardIconInfo16: return info16();
         case StandardIconJoystick16: return joystick16();
         case StandardIconLoad16: return load16();
+        case StandardIconLockClosed16: return lockClosed16();
+        case StandardIconLockOpen16: return lockOpen16();
         case StandardIconMonitorError16: return monitorError16();
         case StandardIconPaintCan16: return paintCan16();
         case StandardIconPaperPlane16: return paperPlane16();

@@ -576,4 +576,9 @@
         <file>icons/famfamfam/icons/silk/controller_delete.png</file>
         <file>icons/famfamfam/icons/silk/controller_error.png</file>
     </qresource>
+    <qresource prefix="/os">
+        <file>icons/os/linux_24.png</file>
+        <file>icons/os/macos_24.png</file>
+        <file>icons/os/windows_24.png</file>
+    </qresource>
 </RCC>
