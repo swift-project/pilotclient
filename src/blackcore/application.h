@@ -19,7 +19,7 @@
 #include "blackcore/db/databasereaderconfig.h"
 #include "blackcore/application/applicationsettings.h"
 #include "blackcore/webreaderflags.h"
-#include "blackmisc/db/distributionlist.h"
+#include "blackmisc/db/updateinfo.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/slot.h"
@@ -154,9 +154,9 @@ namespace BlackCore
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getGlobalSetup() const;
 
-        //! Distributions
+        //! Update info
         //! \threadsafe
-        BlackMisc::Db::CDistributionList getDistributionInfo() const;
+        BlackMisc::Db::CUpdateInfo getUpdateInfo() const;
 
         //! Delete all cookies from cookie manager
         void deleteAllCookies();
@@ -471,7 +471,7 @@ namespace BlackCore
         void setupHandlingCompleted(bool success);
 
         //! Update info available (cache, web load)
-        void distributionInfoAvailable(bool success);
+        void updateInfoAvailable(bool success);
 
         //! Startup has been completed
         //! \remark needs to be triggered by application when it think it is done

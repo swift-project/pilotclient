@@ -14,7 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackmisc/db/distributionlist.h"
+#include "blackmisc/db/updateinfo.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/statusmessagelist.h"
@@ -44,7 +44,7 @@ namespace BlackCore
     //!       Once the file is in place (i.e. in the cache) it can be automatically updated.
     //!
     //! \sa BlackCore::Data::TGlobalSetup
-    //! \sa BlackMisc::Db::TDistributionInfo
+    //! \sa BlackMisc::Db::TUpdateInfo
     class BLACKCORE_EXPORT CSetupReader : public QObject
     {
         Q_OBJECT
@@ -91,13 +91,13 @@ namespace BlackCore
         //! \threadsafe
         QString getLastSuccessfulSetupUrl() const;
 
-        //! Distributions info (channel, version, platforms, download URLs)
+        //! Update info (artifacts and distributions)
         //! \threadsafe
-        BlackMisc::Db::CDistributionList getDistributionInfo() const;
+        BlackMisc::Db::CUpdateInfo getUpdateInfo() const;
 
         //! Has cached distribution info?
         //! \threadsafe
-        bool hasCachedDistributionInfo() const;
+        bool hasCachedUpdateInfo() const;
 
         //! Distribution cache timestamp
         //! \threadsafe
@@ -120,8 +120,8 @@ namespace BlackCore
         //! Setup fetched or failed (from web, cache, or local file)
         void setupHandlingCompleted(bool available);
 
-        //! Setup avialable (from web, cache
-        void distributionInfoAvailable(bool available);
+        //! Update infao available (from web, cache)
+        void updateInfoAvailable(bool available);
 
         //! A shared URL was successfully read
         void successfullyReadSharedUrl(const BlackMisc::Network::CUrl &sharedUrl);
@@ -148,7 +148,7 @@ namespace BlackCore
 
         //! Version info available?
         //! \threadsafe
-        bool isUpdateInfoAvailable() const { return m_distributionInfoAvailable; }
+        bool isUpdateInfoAvailable() const { return m_updateInfoAvailable; }
 
     private:
         //! Bootstrap mode
@@ -160,39 +160,36 @@ namespace BlackCore
         };
 
         std::atomic<bool> m_shutdown { false };
-        std::atomic<bool> m_setupAvailable { false };
-        std::atomic<bool> m_distributionInfoAvailable { false };
+        std::atomic<bool> m_setupAvailable { false };            //!< setup available
+        std::atomic<bool> m_updateInfoAvailable { false };       //!< update info available
         std::atomic<bool> m_ignoreCmdBootstrapUrl { false };     //!< ignore the explicitly set bootstrap URL
         std::atomic<bool> m_checkCmdBootstrapUrl { true };       //!< check connection on CMD bootstrap URL
         QString m_localSetupFileValue;                           //!< Local file for setup, passed by cmd line arguments
         QString m_bootstrapUrlFileValue;                         //!< Bootstrap URL if not local
         BootstrapMode m_bootstrapMode = Explicit;                //!< How to bootstrap
         BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;    //!< location of setup files
-        BlackMisc::Network::CFailoverUrlList m_distributionUrls; //!< location of info files
+        BlackMisc::Network::CFailoverUrlList m_updateInfoUrls;   //!< location of info files
         QCommandLineOption m_cmdBootstrapUrl;                    //!< bootstrap URL
         QCommandLineOption m_cmdBootstrapMode;                   //!< bootstrap mode
         mutable QReadWriteLock m_lockSetup;                      //!< lock for setup
-        mutable QReadWriteLock m_lockDistribution;               //!< lock for distribution
+        mutable QReadWriteLock m_lockUpdateInfo;                 //!< lock for update info
         QString m_lastSuccessfulSetupUrl;                        //!< last successful read setup URL
-        QString m_lastSuccessfulDistributionUrl;                 //!< last successful read distribution URL
+        QString m_lastSuccessfulUpdateInfoUrl;                   //!< last successful read update info URL
         BlackMisc::CStatusMessageList m_setupReadErrorMsgs;      //!< last parsing error messages
-        BlackMisc::CData<BlackCore::Data::TGlobalSetup>     m_setup { this, &CSetupReader::setupChanged }; //!< data cache setup
-        BlackMisc::CData<BlackMisc::Db::TDistributionsInfo> m_distributions { this };                         //!< data cache distributions
+        BlackMisc::CData<Data::TGlobalSetup> m_setup { this };   //!< data cache setup
+        BlackMisc::CData<BlackMisc::Db::TUpdateInfo> m_updateInfo { this }; //!< data cache distributions
 
         //! Setup has been read (aka bootstrap file)
-        void parseSetupFile(QNetworkReply *nwReply);
+        void parseBootstrapFile(QNetworkReply *nwReplyPtr);
 
         //! Update info has been read
-        void parseDistributionsFile(QNetworkReply *nwReplyPtr);
+        void parseUpdateInfoFile(QNetworkReply *nwReplyPtr);
 
         //! Do reading
         void readSetup();
 
         //! Do reading of distributions
-        void readDistributionInfo();
-
-        //! Setup has been changed
-        void setupChanged();
+        void readUpdateInfo();
 
         //! Read by local individual file and update cache from that
         BlackMisc::CStatusMessageList readLocalBootstrapFile(const QString &fileName);
@@ -206,12 +203,12 @@ namespace BlackCore
 
         //! Emit the available signal
         //! \threadsafe
-        void manageDistributionsInfoAvailability(bool webRead);
+        void manageUpdateInfoAvailability(bool webRead);
 
         //! Set last setup parsing messages
         void setLastSetupReadErrorMessages(const BlackMisc::CStatusMessageList &messages);
 
-        //! Convert string to mode
+        //! Convert string to bootstrap mode
         static BootstrapMode stringToEnum(const QString &s);
 
         //! Bootsrap URL used for unit tests

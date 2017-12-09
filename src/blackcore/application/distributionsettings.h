@@ -14,6 +14,7 @@
 
 #include "blackcore/application.h"
 #include "blackconfig/buildconfig.h"
+#include "blackmisc/platform.h"
 #include "blackmisc/settingscache.h"
 #include <QStringList>
 
@@ -21,26 +22,26 @@ namespace BlackCore
 {
     namespace Application
     {
-        //! Distribution settings, QStringList with 2 values: channel/platform
-        struct TDistribution : public BlackMisc::TSettingTrait<QStringList>
+        //! Update info settings, QStringList with 2 values: channel/platform
+        struct TUpdatePreferences : public BlackMisc::TSettingTrait<QStringList>
         {
             //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "distribution"; }
+            static const char *key() { return "updatepreferences"; }
 
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const QStringList &defaultValue()
             {
                 // guessing / preseting some default values
-                static const QStringList d = (sApp && !sApp->getDistributionInfo().isEmpty()) ?
-                                             sApp->getDistributionInfo().guessMyDefaultChannelAndPlatform() : // from cached or loaded distribution data
-                                             QStringList({"ALPHA", BlackConfig::CBuildConfig::guessMyPlatformString()}); // guessing
+                static const QStringList d = (sApp && !sApp->getUpdateInfo().isEmpty()) ?
+                                             sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
+                                             QStringList({ "STABLE", BlackMisc::CPlatform::currentPlatform().getPlatformName()});
                 return d;
             }
 
             //! \copydoc BlackMisc::TSettingTrait::humanReadable
             static const QString &humanReadable()
             {
-                static const QString name("Download channel/platform");
+                static const QString name("Updates channel/platform");
                 return name;
             }
         };

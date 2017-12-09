@@ -163,7 +163,7 @@ namespace BlackCore
             // global setup
             m_setupReader.reset(new CSetupReader(this));
             connect(m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::setupHandlingIsCompleted, Qt::QueuedConnection);
-            connect(m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable, Qt::QueuedConnection);
+            connect(m_setupReader.data(), &CSetupReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable, Qt::QueuedConnection);
             connect(m_setupReader.data(), &CSetupReader::successfullyReadSharedUrl, m_networkWatchDog.data(), &CNetworkWatchdog::setWorkingSharedUrl, Qt::QueuedConnection);
 
             this->addParserOptions(m_setupReader->getCmdLineOptions()); // add options from reader
@@ -340,12 +340,12 @@ namespace BlackCore
         return r->getSetup();
     }
 
-    CDistributionList CApplication::getDistributionInfo() const
+    CUpdateInfo CApplication::getUpdateInfo() const
     {
-        if (m_shutdown) { return CDistributionList(); }
+        if (m_shutdown) { return CUpdateInfo(); }
         const CSetupReader *r = m_setupReader.data();
-        if (!r) { return CDistributionList(); }
-        return r->getDistributionInfo();
+        if (!r) { return CUpdateInfo(); }
+        return r->getUpdateInfo();
     }
 
     bool CApplication::start()

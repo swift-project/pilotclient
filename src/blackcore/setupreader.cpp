@@ -77,15 +77,14 @@ namespace BlackCore
         const bool cacheAvailable = cachedSetup.wasLoaded();
         msgs.push_back(cacheAvailable ?
                        CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized and contains data") :
-                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized, but no data in cache")
-                      );
+                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized, but no data in cache"));
+
         if (m_bootstrapMode == CacheOnly)
         {
-            m_distributionUrls = cachedSetup.getSwiftDistributionFileUrls();
+            m_updateInfoUrls = cachedSetup.getSwiftUpdateInfoFileUrls(); // we use the info URLs from cached setup
             msgs.push_back(cacheAvailable ?
                            CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is") :
-                           CStatusMessage(this, CStatusMessage::SeverityError, "Cache only setup, but cache is empty")
-                          );
+                           CStatusMessage(this, CStatusMessage::SeverityError, "Cache only setup, but cache is empty"));
             msgs.push_back(this->manageSetupAvailability(false, false));
             return msgs;
         }
@@ -247,23 +246,18 @@ namespace BlackCore
         return m;
     }
 
-    void CSetupReader::readDistributionInfo()
+    void CSetupReader::readUpdateInfo()
     {
-        const CUrl url(m_distributionUrls.obtainNextWorkingUrl());
+        const CUrl url(m_updateInfoUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read update info, URLs: '%1', failed URLs: '%2'") << m_distributionUrls << m_distributionUrls.getFailedUrls();
+            CLogMessage(this).warning("Cannot read update info, URLs: '%1', failed URLs: '%2'") << m_updateInfoUrls << m_updateInfoUrls.getFailedUrls();
             CLogMessage::preformatted(CNetworkUtils::createNetworkReport(sApp->getNetworkAccessManager()));
-            this->manageDistributionsInfoAvailability(false);
+            this->manageUpdateInfoAvailability(false);
             return;
         }
         if (m_shutdown) { return; }
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseDistributionsFile});
-    }
-
-    void CSetupReader::setupChanged()
-    {
-        // settings have changed on disk
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseUpdateInfoFile});
     }
 
     CSetupReader::BootstrapMode CSetupReader::stringToEnum(const QString &s)
@@ -352,7 +346,7 @@ namespace BlackCore
                     bool sameVersionLoaded = (loadedSetup == currentSetup);
                     if (sameVersionLoaded)
                     {
-                        m_distributionUrls = currentSetup.getSwiftDistributionFileUrls(); // defaults
+                        m_updateInfoUrls = currentSetup.getSwiftUpdateInfoFileUrls(); // defaults
                         CLogMessage(this).info("Same setup version loaded from '%1' as already in data cache '%2'") << urlString << m_setup.getFilename();
                         CLogMessage::preformatted(this->manageSetupAvailability(true));
                         return; // success
@@ -365,7 +359,7 @@ namespace BlackCore
                     if (m.isSeverityInfoOrLess())
                     {
                         // no issue with cache
-                        m_distributionUrls = loadedSetup.getSwiftDistributionFileUrls();
+                        m_updateInfoUrls = loadedSetup.getSwiftUpdateInfoFileUrls();
                         CLogMessage(this).info("Loaded setup from '%1'") << urlString;
                         CLogMessage(this).info("Setup: Updated data cache in '%1'") << m_setup.getFilename();
                         {
@@ -395,15 +389,16 @@ namespace BlackCore
             // network error, log as warning as we will read again if possible
             // however, store as error because this will be a possible root cause if nothing else is
             nwReply->abort();
-            const CStatusMessage msg = CStatusMessage(this).error("Reading setup failed '%1' '%2' (can possibly be fixed by reading from another server afterwards)") << replyMessage << urlString;
-            CLogMessage::preformatted(msg);
-            this->setLastSetupReadErrorMessages(msg);
         }
 
         // try next one if any
         if (m_bootstrapUrls.addFailedUrl(url))
         {
-            m_distributionUrls.addFailedHost(url); // the same host will likely fail for distributions
+            CStatusMessage msg = CStatusMessage(this).warning("Reading setup failed %1 %2 (can possibly be fixed by reading from another %3 servers afterwards)")
+                                 << replyMessage << urlString
+                                 << m_bootstrapUrls.numberOfStillValidUrls();
+            this->setLastSetupReadErrorMessages(msg);
+            CLogMessage::preformatted(msg);
             QTimer::singleShot(500, this, &CSetupReader::readSetup);
         }
         else
@@ -413,7 +408,7 @@ namespace BlackCore
         }
     }
 
-    void CSetupReader::parseDistributionsFile(QNetworkReply *nwReplyPtr)
+    void CSetupReader::parseUpdateInfoFile(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
@@ -427,9 +422,9 @@ namespace BlackCore
         if (nwReply->error() == QNetworkReply::NoError)
         {
             const qint64 lastModified = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply.data());
-            const QString distributionJson(nwReplyPtr->readAll());
+            const QString updateInfoJsonString(nwReplyPtr->readAll());
             nwReplyPtr->close();
-            if (distributionJson.isEmpty())
+            if (updateInfoJsonString.isEmpty())
             {
                 CLogMessage(this).info("No distribution file content");
                 // try next URL
@@ -438,30 +433,30 @@ namespace BlackCore
             {
                 try
                 {
-                    const CDistributionList loadedDistributions = CDistributionList::fromDatabaseJson(distributionJson);
-                    if (loadedDistributions.isEmpty())
+                    const CUpdateInfo updateInfo = CUpdateInfo::fromDatabaseJson(updateInfoJsonString);
+                    if (updateInfo.isEmpty())
                     {
-                        CLogMessage(this).error("Loading of distribution yielded no data");
-                        this->manageDistributionsInfoAvailability(false);
+                        CLogMessage(this).error("Loading of update info yielded no data");
+                        this->manageUpdateInfoAvailability(false);
                     }
                     else
                     {
-                        CStatusMessage m = m_distributions.set(loadedDistributions, lastModified);
+                        CStatusMessage m = m_updateInfo.set(updateInfo, lastModified);
                         if (m.isFailure())
                         {
                             m.addCategories(getLogCategories());
                             CLogMessage::preformatted(m);
-                            this->manageDistributionsInfoAvailability(false);
+                            this->manageUpdateInfoAvailability(false);
                         }
                         else
                         {
                             {
                                 QWriteLocker l(&m_lockDistribution);
-                                m_lastSuccessfulDistributionUrl = urlString;
+                                m_lastSuccessfulUpdateInfoUrl = urlString;
                             }
-                            CLogMessage(this).info("Distribution info loaded from '%1") << urlString;
-                            CLogMessage(this).info("Distribution info: Updated data cache in '%1'") << m_distributions.getFilename();
-                            this->manageDistributionsInfoAvailability(true);
+                            CLogMessage(this).info("Update info loaded from '%1") << urlString;
+                            CLogMessage(this).info("Update info: Updated data cache in '%1', artifacts: %2, distributions: %3") << m_updateInfo.getFilename() << updateInfo.getArtifactsPilotClient().size() << updateInfo.getDistributions().size();
+                            this->manageUpdateInfoAvailability(true);
                         } // cache
                     }
                     return;
@@ -481,20 +476,22 @@ namespace BlackCore
         } // no error
         else
         {
-            // network error
+            // network error, try next URL
             nwReply->abort();
-            CLogMessage(this).error("Reading update info failed %1 %2 (can possibly be fixed by reading from another server afterwards)") << replyMessage << urlString;
         }
 
         // try next one if any
-        if (m_distributionUrls.addFailedUrl(url))
+        if (m_updateInfoUrls.addFailedUrl(url))
         {
-            QTimer::singleShot(500, this, &CSetupReader::readDistributionInfo);
+            CLogMessage(this).warning("Reading update info failed %1 %2 (can possibly be fixed by reading from another %3 servers afterwards)")
+                    << replyMessage << urlString
+                    << m_updateInfoUrls.numberOfStillValidUrls();
+            QTimer::singleShot(500, this, &CSetupReader::readUpdateInfo);
         }
         else
         {
-            const CStatusMessageList msgs = this->manageSetupAvailability(false);
-            CLogMessage::preformatted(msgs);
+            this->manageUpdateInfoAvailability(false);
+            CLogMessage(this).error("Reading update info failed %1 %2, failed URLs %3") << replyMessage << urlString << m_updateInfoUrls.getFailedUrlsSize();
         }
     }
 
@@ -561,26 +558,26 @@ namespace BlackCore
         return m_lastSuccessfulSetupUrl;
     }
 
-    CDistributionList CSetupReader::getDistributionInfo() const
+    CUpdateInfo CSetupReader::getUpdateInfo() const
     {
-        return m_distributions.get();
+        return m_updateInfo.get();
     }
 
-    bool CSetupReader::hasCachedDistributionInfo() const
+    bool CSetupReader::hasCachedUpdateInfo() const
     {
-        const CDistributionList distributions = m_distributions.get();
-        return !distributions.isEmpty();
+        const CUpdateInfo updateInfo = m_updateInfo.get();
+        return !updateInfo.isEmpty();
     }
 
     QDateTime CSetupReader::getDistributionCacheTimestamp() const
     {
-        return m_distributions.getTimestamp();
+        return m_updateInfo.getTimestamp();
     }
 
     QString CSetupReader::getLastSuccessfulDistributionUrl() const
     {
         QReadLocker l(&m_lockDistribution);
-        return m_lastSuccessfulDistributionUrl;
+        return m_lastSuccessfulUpdateInfoUrl;
     }
 
     CStatusMessageList CSetupReader::getLastSetupReadErrorMessages() const
@@ -600,8 +597,8 @@ namespace BlackCore
         switch (m_bootstrapMode)
         {
         case CacheOnly: return "cache only";
-        case Explicit: return "explicit";
-        case Implicit: return "implicit";
+        case Explicit:  return "explicit";
+        case Implicit:  return "implicit";
         default: break;
         }
         return "";
@@ -619,13 +616,13 @@ namespace BlackCore
         CStatusMessageList msgs;
         if (webRead)
         {
-            msgs.push_back(CStatusMessage(this).info("Setup loaded from web, will trigger read of distribution information"));
-            QTimer::singleShot(500, this, &CSetupReader::readDistributionInfo);
+            msgs.push_back(CStatusMessage(this).info("Setup loaded from web, will trigger read of update information"));
+            QTimer::singleShot(500, this, &CSetupReader::readUpdateInfo);
         }
         if (localRead)
         {
-            msgs.push_back(CStatusMessage(this).info("Setup loaded locally, will trigger read of distribution information"));
-            QTimer::singleShot(500, this, &CSetupReader::readDistributionInfo);
+            msgs.push_back(CStatusMessage(this).info("Setup loaded locally, will trigger read of update information"));
+            QTimer::singleShot(500, this, &CSetupReader::readUpdateInfo);
         }
 
         bool available = false;
@@ -635,7 +632,7 @@ namespace BlackCore
         }
         else
         {
-            bool cacheAvailable = m_setup.get().wasLoaded();
+            const bool cacheAvailable = m_setup.get().wasLoaded();
             available = cacheAvailable && m_bootstrapMode != Explicit;
         }
 
@@ -657,23 +654,23 @@ namespace BlackCore
         if (!webRead && !localRead)
         {
             msgs.push_back(CStatusMessage(this).warning("Since setup was not updated this time, will not start loading of update information"));
-            this->manageDistributionsInfoAvailability(false);
+            this->manageUpdateInfoAvailability(false);
         }
         return msgs;
     }
 
-    void CSetupReader::manageDistributionsInfoAvailability(bool webRead)
+    void CSetupReader::manageUpdateInfoAvailability(bool webRead)
     {
         if (webRead)
         {
-            m_distributionInfoAvailable = true;
-            emit distributionInfoAvailable(true);
+            m_updateInfoAvailable = true;
+            emit updateInfoAvailable(true);
         }
         else
         {
-            const bool cached = m_distributions.isSaved();
-            m_distributionInfoAvailable = cached;
-            emit distributionInfoAvailable(cached);
+            const bool cached = m_updateInfo.isSaved();
+            m_updateInfoAvailable = cached;
+            emit updateInfoAvailable(cached);
         }
     }
 } // namespace

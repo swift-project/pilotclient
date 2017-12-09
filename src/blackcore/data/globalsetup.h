@@ -52,7 +52,7 @@ namespace BlackCore
                 IndexSwiftDbFiles,
                 IndexSwiftMapUrls,
                 IndexBootstrapFileUrls,
-                IndexDistributionFileUrls,
+                IndexUpdateInfoFileUrls,
                 IndexNewsUrls,
                 IndexOnlineHelpUrls,
                 IndexCrashReportServerUrl,
@@ -142,7 +142,7 @@ namespace BlackCore
 
             //! Distribution URLs
             //! \remark based on getSwiftSharedUrls
-            BlackMisc::Network::CUrlList getSwiftDistributionFileUrls() const;
+            BlackMisc::Network::CUrlList getSwiftUpdateInfoFileUrls() const;
 
             //! URL to read VATSIM bookings
             const BlackMisc::Network::CUrl &getVatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
@@ -230,7 +230,7 @@ namespace BlackCore
             BlackMisc::Network::CUrlList    m_onlineHelpUrls;        //!< online help URLs
             BlackMisc::Network::CUrlList    m_mapUrls;               //!< swift map URLs
             BlackMisc::Network::CServerList m_fsdTestServers;        //!< FSD test servers
-            BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl;     //!< NCEP GFS url
+            BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url
 
             // transient members, to be switched on/off via GUI or set from reader
             bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing

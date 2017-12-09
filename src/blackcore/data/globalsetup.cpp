@@ -93,9 +93,9 @@ namespace BlackCore
             return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/bootstrap/bootstrap.json");
         }
 
-        CUrlList CGlobalSetup::getSwiftDistributionFileUrls() const
+        CUrlList CGlobalSetup::getSwiftUpdateInfoFileUrls() const
         {
-            return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/updateinfo/distribution.json");
+            return getSwiftSharedUrls().withAppendedPath(CGlobalSetup::schemaVersionString() + "/updateinfo/updateinfo.json");
         }
 
         CUrl CGlobalSetup::getDbHomePageUrl() const
@@ -271,7 +271,7 @@ namespace BlackCore
                 % separator
 
                 % "Distribution URLs: "
-                % getSwiftDistributionFileUrls().toQString(i18n)
+                % getSwiftUpdateInfoFileUrls().toQString(i18n)
                 % separator
                 % "Bootstrap URLs: "
                 % getSwiftBootstrapFileUrls().toQString(i18n)
@@ -345,7 +345,7 @@ namespace BlackCore
             case IndexVatsimBookings: return CVariant::fromValue(m_vatsimDataFileUrls);
             case IndexVatsimMetars: return CVariant::fromValue(m_vatsimMetarsUrls);
             case IndexBootstrapFileUrls: return CVariant::fromValue(this->getSwiftBootstrapFileUrls());
-            case IndexDistributionFileUrls: return CVariant::fromValue(this->getSwiftDistributionFileUrls());
+            case IndexUpdateInfoFileUrls: return CVariant::fromValue(this->getSwiftUpdateInfoFileUrls());
             case IndexSharedUrls: return CVariant::fromValue(m_sharedUrls);
             case IndexNewsUrls: return CVariant::fromValue(m_newsUrls);
             case IndexSwiftMapUrls: return CVariant::fromValue(m_mapUrls);
