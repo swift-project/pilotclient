@@ -15,6 +15,7 @@
 #include "blackmisc/aviation/airport.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/db/dbinfolist.h"
+#include "blackmisc/db/artifactlist.h"
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/textmessagelist.h"
@@ -248,6 +249,7 @@ namespace BlackMisc
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Db::CDbInfo, BlackMisc::Db::CDbInfoList>;
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Db::CArtifact, BlackMisc::Db::CArtifactList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Db::CDistribution, BlackMisc::Db::CDistributionList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Network::CUrlLog, BlackMisc::Network::CUrlLogList>;

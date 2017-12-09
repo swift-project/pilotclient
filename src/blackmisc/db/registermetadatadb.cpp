@@ -16,9 +16,11 @@ namespace BlackMisc
     {
         void registerMetadata()
         {
+            CDbFlags::registerMetadata();
             CDbInfo::registerMetadata();
             CDbInfoList::registerMetadata();
-            CDbFlags::registerMetadata();
+            CArtifact::registerMetadata();
+            CArtifactList::registerMetadata();
             CDistribution::registerMetadata();
             CDistributionList::registerMetadata();
         }

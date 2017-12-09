@@ -87,6 +87,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Db::CDbInfo, BlackMisc::Db::CDbInfoList, int>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Db::CArtifact, BlackMisc::Db::CArtifactList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Db::CDistribution, BlackMisc::Db::CDistributionList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString>;

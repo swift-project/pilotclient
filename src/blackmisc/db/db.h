@@ -1,4 +1,4 @@
-/* Copyright (C) 2013
+/* Copyright (C) 2017
  * swift Project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -23,5 +23,7 @@
 #include "blackmisc/db/dbflags.h"
 #include "blackmisc/db/distribution.h"
 #include "blackmisc/db/distributionlist.h"
+#include "blackmisc/db/artifact.h"
+#include "blackmisc/db/artifactlist.h"
 
 #endif // guard
