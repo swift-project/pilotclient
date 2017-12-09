@@ -393,7 +393,7 @@
                   <number>4</number>
                  </property>
                  <item>
-                  <widget class="BlackGui::Components::CDistributionInfoComponent" name="comp_DistributionInfo">
+                  <widget class="BlackGui::Components::CUpdateInfoComponent" name="comp_UpdateInfo">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -760,9 +760,9 @@ p, li { white-space: pre-wrap; }
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CDistributionInfoComponent</class>
+   <class>BlackGui::Components::CUpdateInfoComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/distributioninfocomponent.h</header>
+   <header>blackgui/components/updateinfocomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

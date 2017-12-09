@@ -484,11 +484,11 @@ namespace BlackGui
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
-        a = sm->addAction("JSON distributions (info only)");
+        a = sm->addAction("JSON update info (for info only)");
         c = connect(a, &QAction::triggered, this, [a, this]()
         {
-            const CDistributionList d = this->getDistributionInfo();
-            this->displayTextInConsole(d.toJsonString());
+            const CUpdateInfo info = this->getUpdateInfo();
+            this->displayTextInConsole(info.toJsonString());
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 

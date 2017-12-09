@@ -18,6 +18,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/coremodeenums.h"
+#include "blackmisc/db/artifact.h"
 #include "blackmisc/identifiable.h"
 #include <QDialog>
 #include <QTimer>
@@ -110,7 +111,7 @@ private:
     void initLogDisplay();
 
     //! Set header info
-    void setHeaderInfo(const QString &newVersionAvailable);
+    void setHeaderInfo(const BlackMisc::Db::CArtifact &latestArtifact);
 
     //! Latest news
     //! \sa CSwiftLauncher::displayLatestNews
@@ -147,7 +148,7 @@ private:
     void displayLatestNews(QNetworkReply *reply);
 
     //! Distribution info is available
-    void distributionInfoAvailable();
+    void updateInfoAvailable();
 
     //! Start button pressed
     void startButtonPressed();

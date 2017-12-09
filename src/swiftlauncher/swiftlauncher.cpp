@@ -40,6 +40,7 @@ using namespace BlackCore::Context;
 using namespace BlackCore::Data;
 using namespace BlackCore::Vatsim;
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 
 CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
@@ -62,7 +63,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->rb_SwiftCoreAudioOnGui, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
     connect(ui->rb_SwiftStandalone, &QRadioButton::released, this, &CSwiftLauncher::onCoreModeReleased);
 
-    connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::distributionInfoAvailable, this, &CSwiftLauncher::distributionInfoAvailable);
+    connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::updateInfoAvailable, this, &CSwiftLauncher::updateInfoAvailable);
     connect(ui->comp_DBusSelector, &CDBusServerAddressSelector::editingFinished, this, &CSwiftLauncher::onDBusEditingFinished);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftLauncher::onStyleSheetsChanged);
 
@@ -142,9 +143,9 @@ void CSwiftLauncher::displayLatestNews(QNetworkReply *reply)
     }
 }
 
-void CSwiftLauncher::distributionInfoAvailable()
+void CSwiftLauncher::updateInfoAvailable()
 {
-    this->setHeaderInfo(ui->comp_DistributionInfo->getNewAvailableVersionForSelection());
+    this->setHeaderInfo(ui->comp_UpdateInfo->getLatestAvailablePilotClientArtifactForSelection());
     this->loadLatestNews();
     this->loadAbout();
 }
@@ -221,12 +222,16 @@ void CSwiftLauncher::initLogDisplay()
     ui->comp_SwiftLauncherLog->filterUseRadioButtonDescriptiveIcons(false);
 }
 
-void CSwiftLauncher::setHeaderInfo(const QString &newVersionAvailable)
+void CSwiftLauncher::setHeaderInfo(const CArtifact &latestArtifact)
 {
-    ui->lbl_HeaderInfo->setVisible(!newVersionAvailable.isEmpty());
-    if (!newVersionAvailable.isEmpty())
+    const bool isNewer = latestArtifact.isNewerThanCurrentBuild();
+    ui->lbl_HeaderInfo->setVisible(isNewer);
+    if (isNewer)
     {
-        ui->lbl_HeaderInfo->setText("New version '" + newVersionAvailable + "' available");
+        static const QString t("New version '%1' ['%2'/'%3']");
+        ui->lbl_HeaderInfo->setText(
+            t.arg(latestArtifact.getVersionString(), latestArtifact.getPlatform().getPlatformName(),
+                  latestArtifact.getMostStableDistribution().getChannel()));
         ui->lbl_HeaderInfo->setStyleSheet("background: red; color: yellow;");
     }
 }

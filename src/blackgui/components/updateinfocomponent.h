@@ -9,17 +9,17 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_DISTRIBUTIONINFOCOMPONENT_H
-#define BLACKGUI_COMPONENTS_DISTRIBUTIONINFOCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_UPDATEINFOCOMPONENT_H
+#define BLACKGUI_COMPONENTS_UPDATEINFOCOMPONENT_H
 
-#include "blackcore/application/distributionsettings.h"
+#include "blackcore/application/updatesettings.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/db/distributionlist.h"
+#include "blackmisc/db/updateinfo.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/digestsignal.h"
 #include <QFrame>
 
-namespace Ui { class CDistributionInfoComponent; }
+namespace Ui { class CUpdateInfoComponent; }
 namespace BlackGui
 {
     namespace Components
@@ -27,49 +27,47 @@ namespace BlackGui
         class CInstallXSwiftBusDialog;
 
         /**
-         * Update info (distributions etc.)
+         * Update info (distributions, artifacts etc.)
          */
-        class BLACKGUI_EXPORT CDistributionInfoComponent : public QFrame
+        class BLACKGUI_EXPORT CUpdateInfoComponent : public QFrame
         {
             Q_OBJECT
 
         public:
             //! Ctor
-            explicit CDistributionInfoComponent(QWidget *parent = nullptr);
+            explicit CUpdateInfoComponent(QWidget *parent = nullptr);
 
             //! Dtor
-            virtual ~CDistributionInfoComponent();
+            virtual ~CUpdateInfoComponent();
 
             //! Is there a new version available return version, else empty string
-            QString getNewAvailableVersionForSelection() const { return m_newVersionAvailable; }
+            BlackMisc::Db::CArtifact getLatestAvailablePilotClientArtifactForSelection() const;
 
             //! Is there a new version available?
-            bool isNewVersionAvailable() const;
+            bool isNewPilotClientVersionAvailable() const;
 
             //! Current distribution
-            BlackMisc::Db::CDistribution getCurrentDistribution() { return m_currentDistribution; }
+            BlackMisc::Db::CDistribution getCurrentDistribution() const { return this->getSelectedOrDefaultDistribution(); }
 
         signals:
-            //! Distribution info loaded
-            void distributionInfoAvailable();
+            //! Update info loaded
+            void updateInfoAvailable();
 
             //! New platfrom or channel
             void selectionChanged();
 
         private:
-            QScopedPointer<Ui::CDistributionInfoComponent> ui;
+            QScopedPointer<Ui::CUpdateInfoComponent> ui;
             QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
-            QString m_newVersionAvailable; //!< new version number if any
-            BlackMisc::Db::CDistribution m_currentDistribution; //!< current distribution
-            BlackMisc::CDataReadOnly<BlackMisc::Db::TDistributionsInfo> m_distributionsInfo { this, &CDistributionInfoComponent::changedDistributionInfo }; //!< version cache
-            BlackMisc::CSetting<BlackCore::Application::TDistribution> m_distributionSetting { this }; //!< channel/platform selected
-            BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CDistributionInfoComponent::distributionInfoAvailable, 10000, 2 };
+            BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updateInfo { this, &CUpdateInfoComponent::changedUpdateInfo }; //!< version cache
+            BlackMisc::CSetting<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
+            BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable, 15000, 2 };
 
             //! Load latest version
             void requestLoadOfSetup();
 
             //! Loaded latest version
-            void changedDistributionInfo();
+            void changedUpdateInfo();
 
             //! Channel has been changed
             void channelChanged();
@@ -77,14 +75,20 @@ namespace BlackGui
             //! Platform changed
             void platformChanged();
 
+            //! Selection changed
+            void uiSelectionChanged();
+
             //! Install XSwiftBus dialog
-            void installXSwiftBusDialog();
+            void downloadXSwiftBusDialog();
 
             //! Save the current settings
             void saveSettings();
 
             //! Selected platform from UI or guessed platform
-            QString getSelectedOrGuessedPlatform() const;
+            const BlackMisc::CPlatform &getSelectedOrDefaultPlatform() const;
+
+            //! Selected or default distribution
+            const BlackMisc::Db::CDistribution getSelectedOrDefaultDistribution() const;
         };
     } // ns
 } // ns

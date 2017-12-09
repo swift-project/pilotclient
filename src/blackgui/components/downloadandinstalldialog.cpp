@@ -27,7 +27,7 @@ namespace BlackGui
             ui->bb_DownloadInstallDialog->button(QDialogButtonBox::Ok)->setText(" Download and install ");
             ui->cb_DontShowAgain->setChecked(!m_setting.get());
             this->selectionChanged();
-            connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::selectionChanged, this, &CDownloadAndInstallDialog::selectionChanged);
+            connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::selectionChanged, this, &CDownloadAndInstallDialog::selectionChanged);
             connect(ui->cb_DontShowAgain, &QCheckBox::toggled, this, &CDownloadAndInstallDialog::onDontShowAgain);
         }
 
@@ -36,16 +36,16 @@ namespace BlackGui
 
         bool CDownloadAndInstallDialog::isNewVersionAvailable() const
         {
-            const bool newVersion = ui->comp_DistributionInfo->isNewVersionAvailable();
+            const bool newVersion = ui->comp_UpdateInfo->isNewPilotClientVersionAvailable();
             return newVersion;
         }
 
         int CDownloadAndInstallDialog::exec()
         {
             const int r = QDialog::exec();
-            if (r != QDialog::Accepted) return r;
-            if (!ui->comp_DistributionInfo->isNewVersionAvailable()) { return QDialog::Rejected; }
-            const CDistribution distribution = ui->comp_DistributionInfo->getCurrentDistribution();
+            if (r != QDialog::Accepted) { return r; }
+            if (!ui->comp_UpdateInfo->isNewPilotClientVersionAvailable()) { return QDialog::Rejected; }
+            const CDistribution distribution = ui->comp_UpdateInfo->getCurrentDistribution();
             if (!distribution.hasDownloadUrls()) { return QDialog::Rejected; }
 
             // in future, start download and close application
@@ -68,7 +68,7 @@ namespace BlackGui
 
         void CDownloadAndInstallDialog::selectionChanged()
         {
-            const bool nv = ui->comp_DistributionInfo->isNewVersionAvailable();
+            const bool nv = ui->comp_UpdateInfo->isNewPilotClientVersionAvailable();
             ui->bb_DownloadInstallDialog->button(QDialogButtonBox::Ok)->setEnabled(nv);
         }
 

@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>150</height>
+    <height>200</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>400</width>
-    <height>130</height>
+    <height>200</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
     <number>4</number>
    </property>
    <item>
-    <widget class="BlackGui::Components::CDistributionInfoComponent" name="comp_DistributionInfo">
+    <widget class="BlackGui::Components::CUpdateInfoComponent" name="comp_UpdateInfo">
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -52,7 +52,7 @@
        <number>9</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="rightMargin">
        <number>9</number>
@@ -84,9 +84,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CDistributionInfoComponent</class>
+   <class>BlackGui::Components::CUpdateInfoComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/components/distributioninfocomponent.h</header>
+   <header>blackgui/components/updateinfocomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
