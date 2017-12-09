@@ -14,7 +14,7 @@
 
 #include "distribution.h"
 #include "blackmisc/db/datastoreobjectlist.h"
-#include "blackmisc/datacache.h"
+#include "blackmisc/platform.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
@@ -27,12 +27,13 @@ namespace BlackMisc
     namespace Db
     {
         //! Multiple distributions for different channels:
-        //! - one CDistribution objects contains all versions for a channel
-        //! - a distribution list normally contains all distributions for all channels
+        //! - one CDistribution objects contains all artifacts for a channel
+        //! - a distribution list normally contains all artifacts for all channels
+        //! \sa CArtifact
         class BLACKMISC_EXPORT CDistributionList :
-            public BlackMisc::CSequence<CDistribution>,
-            public BlackMisc::Db::IDatastoreObjectList<CDistribution, CDistributionList, int>,
-            public BlackMisc::Mixin::MetaType<CDistributionList>
+            public CSequence<CDistribution>,
+            public IDatastoreObjectList<CDistribution, CDistributionList, int>,
+            public Mixin::MetaType<CDistributionList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDistributionList)
@@ -44,47 +45,37 @@ namespace BlackMisc
             CDistributionList(const CSequence<CDistribution> &other);
 
             //! All channels
-            QSet<QString> getChannels() const;
+            QStringList getChannels() const;
 
-            //! Find channels for platform
-            QSet<QString> findChannelsForPlatform(const QString &platform) const;
+            //! Stability
+            void sortByStability(Qt::SortOrder order = Qt::AscendingOrder);
 
-            //! All platforms for all channels
-            QSet<QString> getPlatforms() const;
+            //! Contains distributions considered of same stability or more stable
+            bool containsEqualOrMoreStable(CDistribution &distribution) const;
 
-            //! Find distribution by channels
-            CDistribution findByChannelOrDefault(const QString &channel) const;
+            //! Contains any unrestricted
+            bool containsUnrestricted() const;
 
-            //! Version for specific channel and platform
-            QString getVersionForChannelAndPlatform(const QString &channel, const QString &platform) const;
+            //! Contains channel?
+            bool containsChannel(const QString &channel) const;
 
-            //! Version for specific channel and platform
-            QVersionNumber getQVersionForChannelAndPlatform(const QString &channel, const QString &platform) const;
+            //! Find by channel
+            CDistribution findFirstByChannelOrDefault(const QString &channel) const;
 
-            //! Version for specific channel and platform
-            QString getVersionForChannelAndPlatform(const QStringList &channelPlatform) const;
+            //! Find by restriction flag
+            CDistributionList findByRestriction(bool restricted) const;
 
-            //! Version for specific channel and platform
-            QVersionNumber getQVersionForChannelAndPlatform(const QStringList &channelPlatform) const;
+            //! Most stable or default
+            CDistribution getMostStableOrDefault() const;
 
-            //! Guess the best channel/platform
-            QStringList guessMyDefaultChannelAndPlatform() const;
+            //! Least stable or default
+            CDistribution getLeastStableOrDefault() const;
 
             //! From database JSON by array
             static CDistributionList fromDatabaseJson(const QJsonArray &array);
 
             //! From database JSON by string
             static CDistributionList fromDatabaseJson(const QString &json);
-        };
-
-        //! Trait for distributions
-        struct TDistributionsInfo : public BlackMisc::TDataTrait<CDistributionList>
-        {
-            //! Key in data cache
-            static const char *key() { return "distributions"; }
-
-            //! First load is synchronous
-            static constexpr bool isPinned() { return true; }
         };
     } // ns
 } // ns

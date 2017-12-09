@@ -20,9 +20,9 @@ namespace BlackMisc
             CSequence<CDistribution>(other)
         { }
 
-        QSet<QString> CDistributionList::getChannels() const
+        QStringList CDistributionList::getChannels() const
         {
-            QSet<QString> channels;
+            QStringList channels;
             for (const CDistribution &distribution : *this)
             {
                 if (distribution.getChannel().isEmpty()) { continue; }
@@ -31,65 +31,55 @@ namespace BlackMisc
             return channels;
         }
 
-        QSet<QString> CDistributionList::findChannelsForPlatform(const QString &platform) const
+        void CDistributionList::sortByStability(Qt::SortOrder order)
         {
-            QSet<QString> channels;
-            if (platform.isEmpty()) { return channels; }
-            for (const CDistribution &distribution : *this)
+            this->sort([order](const CDistribution & a, const CDistribution & b)
             {
-                if (distribution.getChannel().isEmpty()) { continue; }
-                if (distribution.supportsPlatform(platform))
-                {
-                    channels.insert(distribution.getChannel());
-                }
-            }
-            return channels;
+                const int as = a.getStability();
+                const int bs = b.getStability();
+                return order == Qt::AscendingOrder ? as < bs : bs < as;
+            });
         }
 
-        QSet<QString> CDistributionList::getPlatforms() const
+        bool CDistributionList::containsEqualOrMoreStable(CDistribution &distribution) const
         {
-            QSet<QString> platforms;
-            for (const CDistribution &distribution : *this)
-            {
-                if (distribution.getChannel().isEmpty()) { continue; }
-                platforms << distribution.getChannel();
-            }
-            return platforms;
+            return containsBy([&distribution](const CDistribution & dist) { return dist.isStabilitySameOrBetter(distribution); });
         }
 
-        CDistribution CDistributionList::findByChannelOrDefault(const QString &channel) const
+        bool CDistributionList::containsUnrestricted() const
+        {
+            return this->contains(&CDistribution::isRestricted, true);
+        }
+
+        bool CDistributionList::containsChannel(const QString &channel) const
+        {
+            return this->contains(&CDistribution::getChannel, channel);
+        }
+
+        CDistribution CDistributionList::findFirstByChannelOrDefault(const QString &channel) const
         {
             return this->findFirstByOrDefault(&CDistribution::getChannel, channel);
         }
 
-        QString CDistributionList::getVersionForChannelAndPlatform(const QString &channel, const QString &platform) const
+        CDistributionList CDistributionList::findByRestriction(bool restricted) const
         {
-            const CDistribution dist = this->findByChannelOrDefault(channel);
-            return dist.getVersionString(platform);
+            return this->findBy(&CDistribution::isRestricted, restricted);
         }
 
-        QVersionNumber CDistributionList::getQVersionForChannelAndPlatform(const QString &channel, const QString &platform) const
+        CDistribution CDistributionList::getMostStableOrDefault() const
         {
-            const CDistribution dist = this->findByChannelOrDefault(channel);
-            return dist.getQVersion(platform);
+            if (this->size() < 2) { return this->frontOrDefault(); }
+            CDistributionList copy(*this);
+            copy.sortByStability();
+            return copy.back();
         }
 
-        QString CDistributionList::getVersionForChannelAndPlatform(const QStringList &channelPlatform) const
+        CDistribution CDistributionList::getLeastStableOrDefault() const
         {
-            Q_ASSERT_X(channelPlatform.length() != 2, Q_FUNC_INFO, "Wrong size");
-            return this->getVersionForChannelAndPlatform(channelPlatform.first(), channelPlatform.last());
-        }
-
-        QVersionNumber CDistributionList::getQVersionForChannelAndPlatform(const QStringList &channelPlatform) const
-        {
-            Q_ASSERT_X(channelPlatform.length() == 2, Q_FUNC_INFO, "Wrong size");
-            return this->getQVersionForChannelAndPlatform(channelPlatform.first(), channelPlatform.last());
-        }
-
-        QStringList CDistributionList::guessMyDefaultChannelAndPlatform() const
-        {
-            //! \fixme will be further improved when we have added a public server and have more channels
-            return QStringList({"ALPHA", BlackConfig::CBuildConfig::guessMyPlatformString()}); // guessing
+            if (this->size() < 2) { return this->frontOrDefault(); }
+            CDistributionList copy(*this);
+            copy.sortByStability();
+            return copy.front();
         }
 
         CDistributionList CDistributionList::fromDatabaseJson(const QJsonArray &array)

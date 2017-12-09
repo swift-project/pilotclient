@@ -29,30 +29,26 @@ namespace BlackMisc
 {
     namespace Db
     {
-        //! Dictionary for files per platform
-        using CPlatformDictionary = BlackMisc::CDictionary<QString, QString>;
-
         //! Distributions for channel
         class BLACKMISC_EXPORT CDistribution :
-            public BlackMisc::CValueObject<CDistribution>,
-            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
+            public CValueObject<CDistribution>,
+            public IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexChannel = BlackMisc::CPropertyIndex::GlobalIndexCDistribution,
+                IndexChannel = CPropertyIndex::GlobalIndexCDistribution,
+                IndexStability,
                 IndexRestricted,
-                IndexDownloadUrls,
-                IndexPlatforms,
-                IndexPlatformFiles,
+                IndexDownloadUrls
             };
 
             //! Default constructor
             CDistribution();
 
             //! Constructor
-            CDistribution(const QString &channel, bool restricted);
+            CDistribution(const QString &channel, int stability, bool restricted);
 
             //! Destructor.
             ~CDistribution() {}
@@ -63,29 +59,17 @@ namespace BlackMisc
             //! Set the channel
             void setChannel(const QString &channel);
 
-            //! Get platforms
-            QStringList getPlatforms() const;
+            //! Stability (higher is more stable)
+            int getStability() const { return m_stability; }
 
-            //! Supports platform?
-            bool supportsPlatform(const QString &platform) const;
-
-            //! Guess platform for this distribution channel and this version of swift
-            QString guessMyPlatform() const;
-
-            //! Version for platform
-            QString getVersionString(const QString &platform) const;
-
-            //! Version as QVersion
-            QVersionNumber getQVersion(const QString &platform) const;
-
-            //! File for platform
-            QString getFilename(const QString &platform) const;
+            //! Order
+            void setStability(int stability) { m_stability = stability; }
 
             //! Download URLs, i.e. here one can download installer
-            const BlackMisc::Network::CUrlList &getDownloadUrls() const { return m_downloadUrls; }
+            const Network::CUrlList &getDownloadUrls() const { return m_downloadUrls; }
 
             //! Add URL, ignored if empty
-            void addDownloadUrl(const BlackMisc::Network::CUrl &url);
+            void addDownloadUrl(const Network::CUrl &url);
 
             //! At least one download URL?
             bool hasDownloadUrls() const;
@@ -93,48 +77,57 @@ namespace BlackMisc
             //! Restricted channel?
             bool isRestricted() const { return m_restricted; }
 
+            //! Restricted channel
+            void setRestricted(bool r) { m_restricted = r; }
+
+            //! Get the restrict icon
+            CIcon getRestrictionIcon() const;
+
+            //! "this" having same or better stability than other distribution?
+            bool isStabilitySameOrBetter(const CDistribution &otherDistribution) const;
+
+            //! "this" having better stability than other distribution?
+            bool isStabilityBetter(const CDistribution &otherDistribution) const;
+
+            //! Empty?
+            bool isEmpty() const { return m_channel.isEmpty(); }
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! To string
             QString convertToQString(const QString &separator, bool i18n = false) const;
 
+            //! Representing icon
+            CIcon toIcon() const;
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Object from database JSON format
             static CDistribution fromDatabaseJson(const QJsonObject &json, const QString &prefix = {});
 
         private:
-            QString                      m_channel;            //!< channel the files belong to
-            bool                         m_restricted = false; //!< restricted access (i.e. password for download needed)
-            BlackMisc::Network::CUrlList m_downloadUrls;       //!< download URLs, here I get the installer
-            CPlatformDictionary          m_platformFiles;      //!< the latest file version per platform
-            CPlatformDictionary          m_platformVersions;   //!< the version per platform
-
-            //! Extract version number from a file name
-            static QVersionNumber versionNumberFromFilename(const QString &filename);
-
-            //! Find the file representing the latest version
-            static QPair<QString, QVersionNumber> findLatestVersion(const QStringList &filenames);
+            QString m_channel;                //!< channel the files belong to
+            int     m_stability;              //!< stability
+            bool    m_restricted = false;     //!< restricted access (i.e. password for download needed)
+            Network::CUrlList m_downloadUrls; //!< download URLs, here I get the installer
 
             BLACK_METACLASS(
                 CDistribution,
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(channel),
-                BLACK_METAMEMBER(downloadUrls),
-                BLACK_METAMEMBER(platformFiles, 0, DisabledForComparison | DisabledForHashing),
-                BLACK_METAMEMBER(platformVersions, 0, DisabledForComparison | DisabledForHashing)
+                BLACK_METAMEMBER(stability),
+                BLACK_METAMEMBER(downloadUrls)
             );
         };
     } // ns
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Db::CDistribution)
-Q_DECLARE_METATYPE(BlackMisc::Db::CPlatformDictionary)
 
 #endif // guard
