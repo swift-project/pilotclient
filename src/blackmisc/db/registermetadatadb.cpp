@@ -23,6 +23,7 @@ namespace BlackMisc
             CArtifactList::registerMetadata();
             CDistribution::registerMetadata();
             CDistributionList::registerMetadata();
+            CUpdateInfo::registerMetadata();
         }
     } // ns
 } // ns

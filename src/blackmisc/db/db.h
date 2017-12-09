@@ -25,5 +25,6 @@
 #include "blackmisc/db/distributionlist.h"
 #include "blackmisc/db/artifact.h"
 #include "blackmisc/db/artifactlist.h"
+#include "blackmisc/db/updateinfo.h"
 
 #endif // guard
