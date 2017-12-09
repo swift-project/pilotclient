@@ -8,18 +8,14 @@
  */
 
 #include "registermetadata.h"
-#include "blackmisc/applicationinfo.h"
 #include "blackmisc/applicationinfolist.h"
 #include "blackmisc/audio/registermetadataaudio.h"
 #include "blackmisc/aviation/registermetadataaviation.h"
-#include "blackmisc/country.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/db/registermetadatadb.h"
 #include "blackmisc/geo/registermetadatageo.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/iconlist.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/input/registermetadatainput.h"
 #include "blackmisc/logcategory.h"
@@ -29,6 +25,7 @@
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/network/registermetadatanetwork.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/platformset.h"
 #include "blackmisc/pq/registermetadatapq.h"
 #include "blackmisc/processinfo.h"
 #include "blackmisc/propertyindex.h"
@@ -37,11 +34,9 @@
 #include "blackmisc/rgbcolor.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simulation/registermetadatasimulation.h"
-#include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valuecache.h"
 #include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/variantlist.h"
 #include "blackmisc/variantmap.h"
 #include "blackmisc/weather/registermetadataweather.h"
@@ -76,6 +71,8 @@ namespace BlackMisc
         CNameVariantPair::registerMetadata();
         CNameVariantPairList::registerMetadata();
         CPixmap::registerMetadata();
+        CPlatform::registerMetadata();
+        CPlatformSet::registerMetadata();
         CProcessInfo::registerMetadata();
         CPropertyIndex::registerMetadata();
         CPropertyIndex::registerMetadata();
