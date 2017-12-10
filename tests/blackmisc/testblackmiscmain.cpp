@@ -14,7 +14,10 @@
 #include "testaviation.h"
 #include "testblackmiscmain.h"
 #include "testcontainers.h"
+#include "testdbus.h"
+#include "testflightplan.h"
 #include "testgeo.h"
+#include "testicon.h"
 #include "testidentifier.h"
 #include "testinput.h"
 #include "testinterpolator.h"
@@ -28,8 +31,6 @@
 #include "testvaluecache.h"
 #include "testvariantandmap.h"
 #include "testweather.h"
-#include "testdbus.h"
-#include "testflightplan.h"
 #include "blackmisc/test/test.h"
 
 #include <QStringList>
@@ -116,6 +117,10 @@ namespace BlackMiscTest
         {
             CTestDBus testDBus;
             status |= test.exec(&testDBus, "blackmisc_dbus");
+        }
+        {
+            CTestIcon testIcon;
+            status |= test.exec(&testIcon, "blackmisc_icon");
         }
         return status;
     }
