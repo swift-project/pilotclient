@@ -12,7 +12,6 @@
 #include "blackmisc/iconlist.h"
 #include "blackmisc/range.h"
 #include "blackmisc/variant.h"
-
 #include <QDBusMetaType>
 
 namespace BlackMisc
@@ -54,9 +53,9 @@ namespace BlackMisc
             CIcon(CIcons::ApplicationDbStash, "DB stash"),
             CIcon(CIcons::ApplicationDistributors, "distributors"),
             CIcon(CIcons::ApplicationFlightPlan, "flightplan"),
+            CIcon(CIcons::ApplicationLiveries, "liveries"),
             CIcon(CIcons::ApplicationLog, "log"),
             CIcon(CIcons::ApplicationMappings, "mappings"),
-            CIcon(CIcons::ApplicationLiveries, "liveries"),
             CIcon(CIcons::ApplicationModels, "models"),
             CIcon(CIcons::ApplicationSettings, "settings"),
             CIcon(CIcons::ApplicationSimulator, "simulator"),
@@ -146,12 +145,12 @@ namespace BlackMisc
             CIcon(CIcons::StandardIconHeadingOne16, "heading"),
             CIcon(CIcons::StandardIconInfo16, "info"),
             CIcon(CIcons::StandardIconJoystick16, "joystick"),
+            CIcon(CIcons::StandardIconLoad16, "load open"),
             CIcon(CIcons::StandardIconLockClosed16, "lock"),
             CIcon(CIcons::StandardIconLockOpen16, "lock open"),
-            CIcon(CIcons::StandardIconLoad16, "load open"),
             CIcon(CIcons::StandardIconMonitorError16, "monitor error"),
-            CIcon(CIcons::StandardIconPaperPlane16, "plane"),
             CIcon(CIcons::StandardIconPaintCan16, "paint can"),
+            CIcon(CIcons::StandardIconPaperPlane16, "plane"),
             CIcon(CIcons::StandardIconPaste16, "paste"),
             CIcon(CIcons::StandardIconPlugin16, "plugin"),
             CIcon(CIcons::StandardIconRadar16, "radar"),
@@ -183,15 +182,34 @@ namespace BlackMisc
             CIcon(CIcons::StandardIconWrench16, "wrench"),
             CIcon(CIcons::Swift16, "swift"),
             CIcon(CIcons::Swift24, "swift"),
+            CIcon(CIcons::Swift48, "swift"),
             CIcon(CIcons::Swift64, "swift"),
+            CIcon(CIcons::Swift128, "swift"),
+            CIcon(CIcons::Swift256, "swift"),
             CIcon(CIcons::Swift1024, "swift"),
-            CIcon(CIcons::SwiftDatabase16, "swift"),
-            CIcon(CIcons::SwiftDatabase24, "swift"),
-            CIcon(CIcons::SwiftDatabase48, "swift"),
-            CIcon(CIcons::SwiftDatabase1024, "swift"),
-            CIcon(CIcons::SwiftCore16, "swift"),
-            CIcon(CIcons::SwiftCore24, "swift"),
-            CIcon(CIcons::SwiftCore48, "swift")
+            CIcon(CIcons::SwiftDatabase16, "swift DB"),
+            CIcon(CIcons::SwiftDatabase24, "swift DB"),
+            CIcon(CIcons::SwiftDatabase48, "swift DB"),
+            CIcon(CIcons::SwiftDatabase64, "swift DB"),
+            CIcon(CIcons::SwiftDatabase128, "swift DB"),
+            CIcon(CIcons::SwiftDatabase256, "swift DB"),
+            CIcon(CIcons::SwiftDatabase1024, "swift DB"),
+            CIcon(CIcons::SwiftCore16, "swift core"),
+            CIcon(CIcons::SwiftCore24, "swift core"),
+            CIcon(CIcons::SwiftCore48, "swift core"),
+            CIcon(CIcons::SwiftCore64, "swift core"),
+            CIcon(CIcons::SwiftCore128, "swift core"),
+            CIcon(CIcons::SwiftCore256, "swift core"),
+            CIcon(CIcons::SwiftCore512, "swift core"),
+            CIcon(CIcons::SwiftCore1024, "swift core"),
+            CIcon(CIcons::SwiftLauncher16, "swift launcher"),
+            CIcon(CIcons::SwiftLauncher24, "swift launcher"),
+            CIcon(CIcons::SwiftLauncher48, "swift launcher"),
+            CIcon(CIcons::SwiftLauncher64, "swift launcher"),
+            CIcon(CIcons::SwiftLauncher128, "swift launcher"),
+            CIcon(CIcons::SwiftLauncher256, "swift launcher"),
+            CIcon(CIcons::SwiftLauncher512, "swift launcher"),
+            CIcon(CIcons::SwiftLauncher1024, "swift launcher")
         });
         return icons;
     }
