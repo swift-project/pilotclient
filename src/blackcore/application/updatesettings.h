@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKCORE_APPLICATION_DISTRIBUTIONSETTINGS_H
-#define BLACKCORE_APPLICATION_DISTRIBUTIONSETTINGS_H
+#ifndef BLACKCORE_APPLICATION_UPDATESETTINGS_H
+#define BLACKCORE_APPLICATION_UPDATESETTINGS_H
 
 #include "blackcore/application.h"
 #include "blackconfig/buildconfig.h"
@@ -31,7 +31,7 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static const QStringList &defaultValue()
             {
-                // guessing / preseting some default values
+                // guessing / preset-ing some default values
                 static const QStringList d = (sApp && !sApp->getUpdateInfo().isEmpty()) ?
                                              sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
                                              QStringList({ "STABLE", BlackMisc::CPlatform::currentPlatform().getPlatformName()});
