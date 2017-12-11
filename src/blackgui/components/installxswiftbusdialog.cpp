@@ -23,5 +23,10 @@ namespace BlackGui
 
         CInstallXSwiftBusDialog::~CInstallXSwiftBusDialog()
         { }
+
+        void CInstallXSwiftBusDialog::setDefaultDownloadName(const QString &defaultName)
+        {
+            ui->comp_InstallXSwiftBus->setDefaultDownloadName(defaultName);
+        }
     } // ns
 } // ns

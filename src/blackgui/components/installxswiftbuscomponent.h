@@ -15,6 +15,8 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/loadindicator.h"
 #include "blackcore/application/applicationsettings.h"
+#include "blackcore/application/updatesettings.h"
+#include "blackmisc/db/updateinfo.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/network/remotefilelist.h"
 #include <QNetworkReply>
@@ -43,12 +45,16 @@ namespace BlackGui
             //! Dtor
             virtual ~CInstallXSwiftBusComponent();
 
+            //! Set a default name for download
+            void setDefaultDownloadName(const QString &defaultDownload);
+
         private:
             QScopedPointer<Ui::CInstallXSwiftBusComponent> ui;
-            BlackMisc::CSettingReadOnly<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this };
-            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this };
-            BlackMisc::Network::CRemoteFileList m_remoteFiles;
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
+            BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updates { this, &CInstallXSwiftBusComponent::updatesChanged };
+            BlackMisc::CSettingReadOnly<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
             const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
+            QString m_defaultDownloadName; //!< default name for download
 
             static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
 
@@ -61,13 +67,7 @@ namespace BlackGui
             //! Install from download directory to X-Plane directory
             void installXSwiftBus();
 
-            //! Trigger loading of XSwiftBus file info
-            void triggerLoadingXSwiftBusFileInfo();
-
-            //! Received info about XSwiftBus download files
-            void loadedAlphaXSwiftBusFileInfo(QNetworkReply *reply);
-
-            //! Trigger downloading of XSwiftBusFile
+            //! Trigger downloading of the XSwiftBus file
             void triggerDownloadingOfXSwiftBusFile();
 
             //! Downloaded XSwiftBus file
@@ -84,6 +84,9 @@ namespace BlackGui
 
             //! X-Plane directory from settings of default directory
             QString getXPlanePluginDirectory() const;
+
+            //! Updates have been changed
+            void updatesChanged();
 
             //! Show install dir
             void openInstallDir();

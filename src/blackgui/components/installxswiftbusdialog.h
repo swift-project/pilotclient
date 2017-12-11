@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_INSTALLXSWIFTBUSDIALOG_H
 #define BLACKGUI_COMPONENTS_INSTALLXSWIFTBUSDIALOG_H
 
+#include <QString>
 #include <QDialog>
 
 namespace Ui { class CInstallXSwiftBusDialog; }
@@ -32,6 +33,9 @@ namespace BlackGui
 
             //! Dtor
             virtual ~CInstallXSwiftBusDialog();
+
+            //! \copydoc CInstallXSwiftBusComponent::setDefaultDownloadName
+            void setDefaultDownloadName(const QString &defaultName);
 
         private:
             QScopedPointer<Ui::CInstallXSwiftBusDialog> ui;

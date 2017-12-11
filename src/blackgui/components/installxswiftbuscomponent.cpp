@@ -23,6 +23,7 @@
 #include <QDesktopServices>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
@@ -43,8 +44,8 @@ namespace BlackGui
             ui->le_DownloadDir->setText(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
             ui->cb_DownloadFile->setEnabled(false);
 
-            connect(ui->pb_DialogInstallDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::selectPluginDirectory);
-            connect(ui->pb_DialogDownloadDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::selectDownloadDirectory);
+            connect(ui->tb_DialogInstallDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::selectPluginDirectory);
+            connect(ui->tb_DialogDownloadDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::selectDownloadDirectory);
             connect(ui->pb_Download, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::triggerDownloadingOfXSwiftBusFile);
             connect(ui->pb_OpenDownloadDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::openDownloadDir);
             connect(ui->pb_OpenInstallDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::openInstallDir);
@@ -130,7 +131,7 @@ namespace BlackGui
             }
 
             const CRemoteFile rf = this->getRemoteFileSelected();
-            const CUrl download = rf.getUrl();
+            const CUrl download = rf.getSmartUrl();
             if (download.isEmpty())
             {
                 const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).error("No download URL for file name '%1'") << rf.getNameAndSize();
@@ -168,7 +169,9 @@ namespace BlackGui
         CRemoteFile CInstallXSwiftBusComponent::getRemoteFileSelected() const
         {
             const QString fileNameAndSize = ui->cb_DownloadFile->currentText();
-            return m_remoteFiles.findFirstMatchingNameOrDefault(fileNameAndSize);
+            const CUpdateInfo update = m_updates.get();
+            const CRemoteFileList remoteFiles = update.getArtifactsXsb().asRemoteFiles();
+            return remoteFiles.findFirstByMatchingNameOrDefault(fileNameAndSize);
         }
 
         bool CInstallXSwiftBusComponent::existsDownloadDir() const
@@ -191,6 +194,33 @@ namespace BlackGui
             if (!settings.hasSimulatorDirectory()) { return CXPlaneUtil::xplanePluginDir(); }
             const QString dir = CFileUtils::appendFilePaths(settings.getSimulatorDirectory(), CXPlaneUtil::xplanePluginPath());
             return dir;
+        }
+
+        void CInstallXSwiftBusComponent::updatesChanged()
+        {
+            const CUpdateInfo updateInfo = m_updates.get();
+            if (updateInfo.getArtifactsXsb().isEmpty()) { return; }
+            const CArtifactList artifacts = updateInfo.getArtifactsXsbLatestVersionFirst();
+            const CRemoteFileList remoteFiles = artifacts.asRemoteFiles();
+            if (!remoteFiles.isEmpty())
+            {
+                const QStringList xSwiftBusFiles(remoteFiles.getNamesPlusSize(true));
+                ui->cb_DownloadFile->addItems(xSwiftBusFiles);
+
+                // current text
+                QString current;
+                if (!m_defaultDownloadName.isEmpty())
+                {
+                    const CRemoteFile rf = remoteFiles.findFirstByMatchingNameOrDefault(m_defaultDownloadName);
+                    current = rf.getNameAndSize();
+                }
+                ui->cb_DownloadFile->setCurrentText(
+                    current.isEmpty() ?
+                    remoteFiles.backOrDefault().getNameAndSize() :
+                    current
+                ); // latest version
+            }
+            ui->cb_DownloadFile->setEnabled(!remoteFiles.isEmpty());
         }
 
         void CInstallXSwiftBusComponent::openInstallDir()
