@@ -33,10 +33,10 @@ namespace BlackMisc { class CLogCategoryList; }
 namespace BlackCoreTest { class CTestConnectivity; }
 namespace BlackCore
 {
-    //! Read the central URLs / locations of our data / setup.
+    //! Read the central URLs / locations of our data, setup and versions.
     //!
-    //! \details This class should be only used in BlackCore::CApplication. It will also trigger reading
-    //!          update information.
+    //! \details This class should be only used in BlackCore::CApplication.
+    //!          It will also trigger reading update information.
     //!
     //! \note This class is no(!) BlackCore::CThreadedReader as it will be loaded once during startup
     //!       and reading setup data is fast. The read file is also called "bootstrap" file as it tells
@@ -99,13 +99,13 @@ namespace BlackCore
         //! \threadsafe
         bool hasCachedUpdateInfo() const;
 
-        //! Distribution cache timestamp
+        //! Update info cache timestamp
         //! \threadsafe
-        QDateTime getDistributionCacheTimestamp() const;
+        QDateTime getUpdateInfoCacheTimestamp() const;
 
-        //! Last distribution URL successfully read
+        //! Last update info URL successfully read
         //! \threadsafe
-        QString getLastSuccessfulDistributionUrl() const;
+        QString getLastSuccessfulUpdateInfoUrl() const;
 
         //! Last setup parsing error messages (if any)
         BlackMisc::CStatusMessageList getLastSetupReadErrorMessages() const;
@@ -201,7 +201,7 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::CStatusMessageList manageSetupAvailability(bool webRead, bool localRead = false);
 
-        //! Emit the available signal
+        //! Emit the availability signal
         //! \threadsafe
         void manageUpdateInfoAvailability(bool webRead);
 

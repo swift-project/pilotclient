@@ -241,7 +241,7 @@ namespace BlackCore
             return msgs;
         }
         const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Start reading URL: " + url.toQString());
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseSetupFile });
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::parseBootstrapFile });
         this->setLastSetupReadErrorMessages(m); // clear errors
         return m;
     }
@@ -310,7 +310,7 @@ namespace BlackCore
         }
     }
 
-    void CSetupReader::parseSetupFile(QNetworkReply *nwReplyPtr)
+    void CSetupReader::parseBootstrapFile(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
@@ -426,7 +426,7 @@ namespace BlackCore
             nwReplyPtr->close();
             if (updateInfoJsonString.isEmpty())
             {
-                CLogMessage(this).info("No distribution file content");
+                CLogMessage(this).info("No update info file content");
                 // try next URL
             }
             else
@@ -451,7 +451,7 @@ namespace BlackCore
                         else
                         {
                             {
-                                QWriteLocker l(&m_lockDistribution);
+                                QWriteLocker l(&m_lockUpdateInfo);
                                 m_lastSuccessfulUpdateInfoUrl = urlString;
                             }
                             CLogMessage(this).info("Update info loaded from '%1") << urlString;
@@ -465,7 +465,7 @@ namespace BlackCore
                 {
                     // we downloaded an unparsable JSON file.
                     // as we control those files something is wrong
-                    const QString errorMsg = QString("Distribution file loaded from '%1' cannot be parsed").arg(urlString);
+                    const QString errorMsg = QString("Update info file loaded from '%1' cannot be parsed").arg(urlString);
                     const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
                     CLogMessage::preformatted(msg);
 
@@ -569,14 +569,14 @@ namespace BlackCore
         return !updateInfo.isEmpty();
     }
 
-    QDateTime CSetupReader::getDistributionCacheTimestamp() const
+    QDateTime CSetupReader::getUpdateInfoCacheTimestamp() const
     {
         return m_updateInfo.getTimestamp();
     }
 
-    QString CSetupReader::getLastSuccessfulDistributionUrl() const
+    QString CSetupReader::getLastSuccessfulUpdateInfoUrl() const
     {
-        QReadLocker l(&m_lockDistribution);
+        QReadLocker l(&m_lockUpdateInfo);
         return m_lastSuccessfulUpdateInfoUrl;
     }
 

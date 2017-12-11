@@ -446,7 +446,7 @@ namespace BlackCore
         }
         if (m_setupReader->hasCmdLineBootstrapUrl())
         {
-            msgs.push_back(CStatusMessage(this).info("Check cmd line argument '%1'") << m_setupReader->getCmdLineBootstrapUrl());
+            msgs.push_back(CStatusMessage(this).info("Bootstrap URL cmd line argument '%1'") << m_setupReader->getCmdLineBootstrapUrl());
         }
         return msgs;
     }
@@ -1420,7 +1420,7 @@ namespace BlackCore
     QString CApplication::getLastSuccesfulDistributionUrl() const
     {
         if (!this->hasSetupReader()) { return ""; }
-        return m_setupReader->getLastSuccessfulDistributionUrl();
+        return m_setupReader->getLastSuccessfulUpdateInfoUrl();
     }
 
     CStatusMessageList CApplication::synchronizeSetup(int timeoutMs)
