@@ -361,7 +361,7 @@ namespace BlackGui
         {
             CFlightPlan flightPlan;
             CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
-            if (messages.isEmpty())
+            if (!messages.hasWarningOrErrorMessages())
             {
                 // no error, send if possible
                 if (sGui->getIContextNetwork()->isConnected())
