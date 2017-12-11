@@ -9,6 +9,8 @@
 
 //! \cond PRIVATE
 
+#include "blackcore/application.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/vatsim/voicechannelvatlib.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
@@ -20,21 +22,20 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
     namespace Vatsim
     {
-        CVoiceChannelVatlib::CVoiceChannelVatlib(VatAudioService audioService, VatUDPAudioPort udpPort, QObject *parent)
-            : IVoiceChannel(parent),
-              m_audioService(audioService),
-              m_udpPort(udpPort)
+        CVoiceChannelVatlib::CVoiceChannelVatlib(VatAudioService *audioService, VatUDPAudioPort *udpPort, QObject *parent)
+            : IVoiceChannel(parent)
         {
-            m_voiceChannel.reset(Vat_CreateVoiceChannel(m_audioService, "", 3782, "", "", m_udpPort));
+            m_voiceChannel.reset(Vat_CreateVoiceChannel(audioService, "", 3782, "", "", udpPort));
             Vat_SetConnectionChangedHandler(m_voiceChannel.data(), roomStatusUpdate, this);
             Vat_SetClientJoinedHandler(m_voiceChannel.data(), processUserJoined, this);
             Vat_SetClientLeftHandler(m_voiceChannel.data(), processUserLeft, this);
-            Vat_SetVoiceTransmissionChangedHandler(m_voiceChannel.data(), processTransmissionChange, this);
+            Vat_SetVoiceReceptionHandler(m_voiceChannel.data(), processVoiceReceptionChanged, this);
 
         }
 
@@ -46,6 +47,14 @@ namespace BlackCore
         void CVoiceChannelVatlib::joinVoiceRoom(const CVoiceRoom &voiceRoom)
         {
             if (m_roomStatus == IVoiceChannel::Connecting || m_roomStatus == IVoiceChannel::Connected) return;
+
+            // Make sure we are connected to a VATSIM FSD
+            CServer::ServerType connectedServerType = sApp->getIContextNetwork()->getConnectedServer().getServerType();
+            if (!sApp->getIContextNetwork()->isConnected() || connectedServerType != CServer::FSDServerVatsim)
+            {
+                CLogMessage(this).warning("Cannot join VATSIM voice channel without active VATSIM FSD connection!");
+                return;
+            }
 
             // No one else is using this voice room, so prepare to join
             m_voiceRoom = voiceRoom;
@@ -101,7 +110,7 @@ namespace BlackCore
             return 100;
         }
 
-        VatVoiceChannel CVoiceChannelVatlib::getVoiceChannel() const
+        VatVoiceChannel *CVoiceChannelVatlib::getVoiceChannel() const
         {
             return m_voiceChannel.data();
         }
@@ -126,27 +135,27 @@ namespace BlackCore
             return callsign;
         }
 
-        void CVoiceChannelVatlib::userJoinedVoiceRoom(VatVoiceChannel, int /** id **/, const char *name)
+        void CVoiceChannelVatlib::userJoinedVoiceRoom(VatVoiceChannel *, int /** id **/, const char *name)
         {
             CCallsign callsign(extractCallsign(name));
             m_listCallsigns.push_back(callsign);
             emit userJoinedRoom(callsign);
         }
 
-        void CVoiceChannelVatlib::userLeftVoiceRoom(VatVoiceChannel, int /** id **/, const char *name)
+        void CVoiceChannelVatlib::userLeftVoiceRoom(VatVoiceChannel *, int /** id **/, const char *name)
         {
             CCallsign callsign(extractCallsign(name));
             m_listCallsigns.remove(callsign);
             emit userLeftRoom(callsign);
         }
 
-        void CVoiceChannelVatlib::transmissionChanged(VatVoiceChannel, VatVoiceTransmissionStatus status)
+        void CVoiceChannelVatlib::voiceReceptionChanged(VatVoiceChannel *, bool isVoiceReceiving)
         {
-            if (status == vatVoiceStarted) emit audioStarted();
+            if (isVoiceReceiving) emit audioStarted();
             else emit audioStopped();
         }
 
-        void CVoiceChannelVatlib::updateRoomStatus(VatVoiceChannel channel, VatConnectionStatus oldVatStatus, VatConnectionStatus newVatStatus)
+        void CVoiceChannelVatlib::updateRoomStatus(VatVoiceChannel *channel, VatConnectionStatus oldVatStatus, VatConnectionStatus newVatStatus)
         {
             Q_UNUSED(channel);
             Q_UNUSED(oldVatStatus);
@@ -190,25 +199,25 @@ namespace BlackCore
             return static_cast<CVoiceChannelVatlib *>(cbvar);
         }
 
-        void CVoiceChannelVatlib::processUserJoined(VatVoiceChannel channel, int id, const char *name, void *cbVar)
+        void CVoiceChannelVatlib::processUserJoined(VatVoiceChannel *channel, int id, const char *name, void *cbVar)
         {
             auto obj = cbvar_cast_voiceChannel(cbVar);
             obj->userJoinedVoiceRoom(channel, id, name);
         }
 
-        void CVoiceChannelVatlib::processUserLeft(VatVoiceChannel channel, int id, const char *name, void *cbVar)
+        void CVoiceChannelVatlib::processUserLeft(VatVoiceChannel *channel, int id, const char *name, void *cbVar)
         {
             auto obj = cbvar_cast_voiceChannel(cbVar);
             obj->userLeftVoiceRoom(channel, id, name);
         }
 
-        void CVoiceChannelVatlib::processTransmissionChange(VatVoiceChannel channel, VatVoiceTransmissionStatus status, void *cbVar)
+        void CVoiceChannelVatlib::processVoiceReceptionChanged(VatVoiceChannel *channel, bool isVoiceReceiving, void *cbVar)
         {
             auto obj = cbvar_cast_voiceChannel(cbVar);
-            obj->transmissionChanged(channel, status);
+            obj->voiceReceptionChanged(channel, isVoiceReceiving);
         }
 
-        void CVoiceChannelVatlib::roomStatusUpdate(VatVoiceChannel channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbVar)
+        void CVoiceChannelVatlib::roomStatusUpdate(VatVoiceChannel *channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbVar)
         {
             auto obj = cbvar_cast_voiceChannel(cbVar);
             obj->updateRoomStatus(channel, oldStatus, newStatus);

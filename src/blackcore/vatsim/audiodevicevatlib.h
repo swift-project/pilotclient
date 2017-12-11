@@ -21,9 +21,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-struct VatConsumer_tag;
-struct VatProducer_tag;
-
 namespace BlackCore
 {
     namespace Vatsim
@@ -36,7 +33,7 @@ namespace BlackCore
         public:
 
             //! Constructor
-            CAudioInputDeviceVatlib(VatAudioService audioService, QObject *parent = nullptr);
+            CAudioInputDeviceVatlib(VatAudioService *audioService, QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CAudioInputDeviceVatlib() = default;
@@ -54,13 +51,13 @@ namespace BlackCore
             virtual void setInputDevice(const BlackMisc::Audio::CAudioDeviceInfo &device) override;
 
             //! Get vatlib input device pointer
-            VatLocalInputCodec getVatLocalInputCodec() { return m_inputCodec.data(); }
+            VatLocalInputCodec *getVatLocalInputCodec() { return m_inputCodec.data(); }
 
         private:
 
             struct VatLocalInputCodecDeleter
             {
-                static inline void cleanup(VatProducer_tag *obj)
+                static inline void cleanup(VatLocalInputCodec *obj)
                 {
                     if (obj) Vat_DestroyLocalInputCodec(obj);
                 }
@@ -71,8 +68,7 @@ namespace BlackCore
             BlackMisc::Audio::CAudioDeviceInfoList m_devices; /*!< in and output devices */
             BlackMisc::Audio::CAudioDeviceInfo m_currentDevice;
 
-            VatAudioService m_audioService;
-            QScopedPointer<VatProducer_tag, VatLocalInputCodecDeleter> m_inputCodec;
+            QScopedPointer<VatLocalInputCodec, VatLocalInputCodecDeleter> m_inputCodec;
         };
 
         //! Audio Output Device
@@ -83,7 +79,7 @@ namespace BlackCore
         public:
 
             //! Constructor
-            CAudioOutputDeviceVatlib(VatAudioService audioService, QObject *parent = nullptr);
+            CAudioOutputDeviceVatlib(VatAudioService *audioService, QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CAudioOutputDeviceVatlib() = default;
@@ -107,13 +103,13 @@ namespace BlackCore
             virtual int getOutputVolume() const override;
 
             //! Get vatlib output device pointer
-            VatLocalOutputCodec getVatLocalOutputCodec() { return m_outputCodec.data(); }
+            VatLocalOutputCodec *getVatLocalOutputCodec() { return m_outputCodec.data(); }
 
         private:
 
             struct VatLocalOutputCodecDeleter
             {
-                static inline void cleanup(VatConsumer_tag *obj)
+                static inline void cleanup(VatLocalOutputCodec *obj)
                 {
                     if (obj) Vat_DestroyLocalOutputCodec(obj);
                 }
@@ -125,8 +121,7 @@ namespace BlackCore
             BlackMisc::Audio::CAudioDeviceInfoList m_devices; /*!< in and output devices */
             BlackMisc::Audio::CAudioDeviceInfo m_currentDevice;
 
-            VatAudioService m_audioService;
-            QScopedPointer<VatConsumer_tag, VatLocalOutputCodecDeleter> m_outputCodec;
+            QScopedPointer<VatLocalOutputCodec, VatLocalOutputCodecDeleter> m_outputCodec;
         };
     } // ns
 } // ns

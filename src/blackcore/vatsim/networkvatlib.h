@@ -141,27 +141,27 @@ namespace BlackCore
 
             //! \name Shimlib callbacks
             //! @{
-            static void onConnectionStatusChanged(VatSessionID, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbvar);
-            static void onTextMessageReceived(VatSessionID, const char *from, const char *to, const char *msg, void *cbvar);
-            static void onRadioMessageReceived(VatSessionID, const char *from, int freqCount, int *freqList, const char *message, void *cbvar);
-            static void onControllerDisconnected(VatSessionID, const char *callsign, void *cbvar);
-            static void onInterimPilotPositionUpdate(VatSessionID, const char *sender, const VatInterimPilotPosition *position, void *cbvar);
-            static void onAtcPositionUpdate(VatSessionID, const char *callsign, const VatAtcPosition *pos, void *cbvar);
-            static void onKicked(VatSessionID, const char *reason, void *cbvar);
-            static void onPong(VatSessionID, const char *sender, double elapsedTime, void *cbvar);
-            static void onMetarReceived(VatSessionID, const char *data, void *cbvar);
-            static void onInfoQueryRequestReceived(VatSessionID, const char *callsign, VatClientQueryType type, const char *data, void *cbvar);
-            static void onInfoQueryReplyReceived(VatSessionID, const char *callsign, VatClientQueryType type, const char *data, const char *data2, void *cbvar);
-            static void onCapabilitiesReplyReceived(VatSessionID, const char *callsign, int capabilityFlags, void *cbvar);
-            static void onAtisReplyReceived(VatSessionID, const char *callsign, const VatControllerAtis *atis, void *cbvar);
-            static void onFlightPlanReceived(VatSessionID, const char *callsign, const VatFlightPlan *fp, void *cbvar);
-            static void onErrorReceived(VatSessionID, VatServerError error, const char *msg, const char *data, void *cbvar);
-            static void onPilotDisconnected(VatSessionID, const char *callsign, void *cbvar);
-            static void onPilotInfoRequestReceived(VatSessionID, const char *callsign, void *cbvar);
-            static void onPilotInfoReceived(VatSessionID, const char *callsign, const VatAircraftInfo *aircraftInfo, void *cbvar);
-            static void onPilotPositionUpdate(VatSessionID, const char *callsign, const VatPilotPosition *position, void *cbvar);
-            static void onAircraftConfigReceived(VatSessionID, const char *callsign, const char *aircraftConfig, void *cbvar);
-            static void onCustomPacketReceived(VatSessionID, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar);
+            static void onConnectionStatusChanged(VatFsdClient *, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbvar);
+            static void onTextMessageReceived(VatFsdClient *, const char *from, const char *to, const char *msg, void *cbvar);
+            static void onRadioMessageReceived(VatFsdClient *, const char *from, int freqCount, int *freqList, const char *message, void *cbvar);
+            static void onControllerDisconnected(VatFsdClient *, const char *callsign, void *cbvar);
+            static void onInterimPilotPositionUpdate(VatFsdClient *, const char *sender, const VatInterimPilotPosition *position, void *cbvar);
+            static void onAtcPositionUpdate(VatFsdClient *, const char *callsign, const VatAtcPosition *pos, void *cbvar);
+            static void onKicked(VatFsdClient *, const char *reason, void *cbvar);
+            static void onPong(VatFsdClient *, const char *sender, double elapsedTime, void *cbvar);
+            static void onMetarReceived(VatFsdClient *, const char *data, void *cbvar);
+            static void onInfoQueryRequestReceived(VatFsdClient *, const char *callsign, VatClientQueryType type, const char *data, void *cbvar);
+            static void onInfoQueryReplyReceived(VatFsdClient *, const char *callsign, VatClientQueryType type, const char *data, const char *data2, void *cbvar);
+            static void onCapabilitiesReplyReceived(VatFsdClient *, const char *callsign, int capabilityFlags, void *cbvar);
+            static void onAtisReplyReceived(VatFsdClient *, const char *callsign, const VatControllerAtis *atis, void *cbvar);
+            static void onFlightPlanReceived(VatFsdClient *, const char *callsign, const VatFlightPlan *fp, void *cbvar);
+            static void onErrorReceived(VatFsdClient *, VatServerError error, const char *msg, const char *data, void *cbvar);
+            static void onPilotDisconnected(VatFsdClient *, const char *callsign, void *cbvar);
+            static void onPilotInfoRequestReceived(VatFsdClient *, const char *callsign, void *cbvar);
+            static void onPilotInfoReceived(VatFsdClient *, const char *callsign, const VatAircraftInfo *aircraftInfo, void *cbvar);
+            static void onPilotPositionUpdate(VatFsdClient *, const char *callsign, const VatPilotPosition *position, void *cbvar);
+            static void onAircraftConfigReceived(VatFsdClient *, const char *callsign, const char *aircraftConfig, void *cbvar);
+            static void onCustomPacketReceived(VatFsdClient *, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar);
             //! @}
 
             QByteArray toFSD(const QString &qstr) const;
@@ -177,7 +177,7 @@ namespace BlackCore
             bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
             static QString convertToUnicodeEscaped(const QString &str);
             static VatSimType convertToSimType(BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
-            static void networkLogHandler(SeverityLevel severity, const char *message);
+            static void networkLogHandler(SeverityLevel severity, const char *context, const char *message);
             void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
             static const QString &defaultModelString()
@@ -208,13 +208,13 @@ namespace BlackCore
             void emitConsolidatedTextMessages();
 
             //! Deletion policy for QScopedPointer
-            struct VatlibQScopedPointerDeleter
+            struct VatFsdClientDeleter
             {
                 //! Called by QScopedPointer destructor
-                static void cleanup(VatSessionID session) { if (session) Vat_DestroyNetworkSession(session); }
+                static void cleanup(VatFsdClient *session) { if (session) Vat_DestroyNetworkSession(session); }
             };
 
-            QScopedPointer<PCSBClient, VatlibQScopedPointerDeleter> m_net;
+            QScopedPointer<VatFsdClient, VatFsdClientDeleter> m_net;
             LoginMode                    m_loginMode;
             VatConnectionStatus          m_status;
             BlackMisc::Network::CServer  m_server;

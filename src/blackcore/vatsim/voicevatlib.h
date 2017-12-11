@@ -99,7 +99,7 @@ namespace BlackCore
             //! this struct calls Vat_DestroyAudioService to delete the pointer
             struct VatAudioServiceDeleter
             {
-                static inline void cleanup(VatAudioService_tag *obj)
+                static inline void cleanup(VatAudioService *obj)
                 {
                     Vat_DestroyAudioService(obj);
                 }
@@ -108,16 +108,16 @@ namespace BlackCore
             //! this struct calls Vat_DestroyUDPAudioPort to delete the pointer
             struct VatUDPAudioPortDeleter
             {
-                static inline void cleanup(VatUDPAudioPort_tag *obj)
+                static inline void cleanup(VatUDPAudioPort *obj)
                 {
                     Vat_DestroyUDPAudioPort(obj);
                 }
             };
 
-            static void voiceLogHandler(SeverityLevel severity, const char *message);
+            static void voiceLogHandler(SeverityLevel severity, const char *context, const char *message);
 
-            QScopedPointer<VatAudioService_tag, VatAudioServiceDeleter> m_audioService;
-            QScopedPointer<VatUDPAudioPort_tag, VatUDPAudioPortDeleter> m_udpPort;
+            QScopedPointer<VatAudioService, VatAudioServiceDeleter> m_audioService;
+            QScopedPointer<VatUDPAudioPort, VatUDPAudioPortDeleter> m_udpPort;
         };
     } // namespace
 } // namespace

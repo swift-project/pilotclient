@@ -35,9 +35,8 @@ namespace BlackCore
             return static_cast<CAudioOutputDeviceVatlib *>(cbvar);
         }
 
-        CAudioInputDeviceVatlib::CAudioInputDeviceVatlib(VatAudioService audioService, QObject *parent)
-            : IAudioInputDevice(parent),
-              m_audioService(audioService)
+        CAudioInputDeviceVatlib::CAudioInputDeviceVatlib(VatAudioService *audioService, QObject *parent)
+            : IAudioInputDevice(parent)
         {
             m_inputCodec.reset(Vat_CreateLocalInputCodec(audioService, vatCodecLegacy));
             Vat_GetInputDeviceInfo(m_inputCodec.data(), onInputHardwareDeviceReceived, this, nullptr);
@@ -82,11 +81,10 @@ namespace BlackCore
             cbvar_cast_inputDevice(cbVar)->m_devices.push_back(inputDevice);
         }
 
-        CAudioOutputDeviceVatlib::CAudioOutputDeviceVatlib(VatAudioService audioService, QObject *parent)
-            : IAudioOutputDevice(parent),
-              m_audioService(audioService)
+        CAudioOutputDeviceVatlib::CAudioOutputDeviceVatlib(VatAudioService *audioService, QObject *parent)
+            : IAudioOutputDevice(parent)
         {
-            m_outputCodec.reset(Vat_CreateLocalOutputCodec(m_audioService, vatCodecLegacy));
+            m_outputCodec.reset(Vat_CreateLocalOutputCodec(audioService, vatCodecLegacy));
             Vat_GetOutputDeviceInfo(m_outputCodec.data(), onOutputHardwareDeviceReceived, this, nullptr);
             m_currentDevice = getDefaultOutputDevice();
         }

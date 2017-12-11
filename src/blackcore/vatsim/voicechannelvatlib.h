@@ -24,8 +24,6 @@
 #include <QScopedPointer>
 #include <QString>
 
-struct VatProducerConsumer_tag;
-
 namespace BlackCore
 {
     namespace Vatsim
@@ -40,7 +38,7 @@ namespace BlackCore
         public:
 
             //! Default constructor
-            CVoiceChannelVatlib(VatAudioService audioService, VatUDPAudioPort udpPort, QObject *parent = nullptr);
+            CVoiceChannelVatlib(VatAudioService *audioService, VatUDPAudioPort *udpPort, QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CVoiceChannelVatlib();
@@ -70,13 +68,13 @@ namespace BlackCore
             virtual int getVolume() const override;
 
             //! Get vatlib channel pointer
-            VatVoiceChannel getVoiceChannel() const;
+            VatVoiceChannel *getVoiceChannel() const;
 
         private:
 
             struct VatVoiceChannelDeleter
             {
-                static inline void cleanup(VatProducerConsumer_tag *obj)
+                static inline void cleanup(VatVoiceChannel *obj)
                 {
                     if (obj) Vat_DestroyVoiceChannel(obj);
                 }
@@ -84,26 +82,23 @@ namespace BlackCore
 
             BlackMisc::Aviation::CCallsign extractCallsign(const QString &name);
 
-            void userJoinedVoiceRoom(VatVoiceChannel, int id, const char *name);
-            void userLeftVoiceRoom(VatVoiceChannel, int id, const char *name);
-            void transmissionChanged(VatVoiceChannel, VatVoiceTransmissionStatus status);
-            void updateRoomStatus(VatVoiceChannel channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus);
+            void userJoinedVoiceRoom(VatVoiceChannel *, int id, const char *name);
+            void userLeftVoiceRoom(VatVoiceChannel *, int id, const char *name);
+            void voiceReceptionChanged(VatVoiceChannel *, bool isVoiceReceiving);
+            void updateRoomStatus(VatVoiceChannel *channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus);
 
-            static void processUserJoined(VatVoiceChannel channel, int id, const char *name, void *cbVar);
-            static void processUserLeft(VatVoiceChannel channel, int id, const char *name, void *cbVar);
-            static void processTransmissionChange(VatVoiceChannel channel, VatVoiceTransmissionStatus status, void *cbVar);
+            static void processUserJoined(VatVoiceChannel *channel, int id, const char *name, void *cbVar);
+            static void processUserLeft(VatVoiceChannel *channel, int id, const char *name, void *cbVar);
+            static void processVoiceReceptionChanged(VatVoiceChannel *channel, bool isVoiceReceiving, void *cbVar);
 
-            static void roomStatusUpdate(VatVoiceChannel channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbVar);
+            static void roomStatusUpdate(VatVoiceChannel *channel, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbVar);
 
             BlackMisc::Aviation::CCallsign m_callsign; // Own callsign
             BlackMisc::Audio::CVoiceRoom m_voiceRoom; // Voice Room
             BlackMisc::Aviation::CCallsignSet m_listCallsigns; // Callsigns connected to room
             IVoiceChannel::ConnectionStatus m_roomStatus = IVoiceChannel::Disconnected; // Room connection status
 
-            VatAudioService m_audioService;
-            VatUDPAudioPort m_udpPort;
-
-            QScopedPointer<VatProducerConsumer_tag, VatVoiceChannelDeleter> m_voiceChannel;
+            QScopedPointer<VatVoiceChannel, VatVoiceChannelDeleter> m_voiceChannel;
         };
     } // ns
 } // ns

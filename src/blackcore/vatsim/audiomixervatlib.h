@@ -20,8 +20,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-struct VatProducerConsumer_tag;
-
 namespace BlackCore
 {
     namespace Vatsim
@@ -52,19 +50,19 @@ namespace BlackCore
             virtual bool hasMixerConnection(InputPort inputPort, OutputPort outputPort) override;
 
             //! Return the pointer to vatlib audio mixer
-            VatAudioMixer getVatAudioMixer() { return m_audioMixer.data(); }
+            VatAudioMixer *getVatAudioMixer() { return m_audioMixer.data(); }
 
         private:
 
             struct VatAudioMixerDeleter
             {
-                static inline void cleanup(VatProducerConsumer_tag *obj)
+                static inline void cleanup(VatAudioMixer *obj)
                 {
                     if (obj) Vat_DestroyAudioMixer(obj);
                 }
             };
 
-            QScopedPointer<VatProducerConsumer_tag, VatAudioMixerDeleter> m_audioMixer;
+            QScopedPointer<VatAudioMixer, VatAudioMixerDeleter> m_audioMixer;
         };
     } // ns
 } // ns
