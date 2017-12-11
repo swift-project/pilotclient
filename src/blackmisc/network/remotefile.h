@@ -33,13 +33,13 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT CRemoteFile :
             public CValueObject<CRemoteFile>,
-            public BlackMisc::ITimestampBased
+            public ITimestampBased
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = BlackMisc::CPropertyIndex::GlobalIndexCRemoteFile,
+                IndexName = CPropertyIndex::GlobalIndexCRemoteFile,
                 IndexDescription,
                 IndexUrl,
                 IndexSize
@@ -52,10 +52,16 @@ namespace BlackMisc
             CRemoteFile(const QString &name, const QString &description);
 
             //! Constructor
+            CRemoteFile(const QString &name, qint64 size);
+
+            //! Constructor
             CRemoteFile(const QString &name, qint64 size, const QString &url);
 
             //! Name
             const QString &getName() const { return m_name; }
+
+            //! Has name?
+            bool hasName() const { return !m_name.isEmpty(); }
 
             //! Name + human readable size
             QString getNameAndSize() const;
@@ -75,6 +81,21 @@ namespace BlackMisc
             //! Get URL
             const CUrl &getUrl() const { return m_url; }
 
+            //! Has an URL
+            bool hasUrl() const { return !m_url.isEmpty(); }
+
+            //! Automatically concatenates the name if missing
+            CUrl getSmartUrl() const;
+
+            //! File with appendix
+            bool isFileWithSuffix() const { return this->getUrl().isFileWithSuffix(); }
+
+            //! \copydoc BlackMisc::CFileUtils::isExecutableFile
+            bool isExecutableFile() const;
+
+            //! \copydoc BlackMisc::CFileUtils::isSwiftInstaller
+            bool isSwiftInstaller() const;
+
             //! Set URL
             void setUrl(const CUrl &url) { m_url = url; }
 
@@ -84,7 +105,7 @@ namespace BlackMisc
             //! Get size
             qint64 getSize() const { return m_size; }
 
-            //! Human readable file size, e.g. 2KB
+            //! \copydoc BlackMisc::CFileUtils::humanReadableFileSize
             QString getSizeHumanReadable() const;
 
             //! Set size

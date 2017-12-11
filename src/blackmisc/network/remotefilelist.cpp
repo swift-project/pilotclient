@@ -25,6 +25,11 @@ namespace BlackMisc
             CSequence<CRemoteFile>(other)
         { }
 
+        CRemoteFileList::CRemoteFileList(const CRemoteFile &remoteFile)
+        {
+            this->push_back(remoteFile);
+        }
+
         QStringList CRemoteFileList::getNames(bool sorted) const
         {
             QStringList fileNames;
@@ -53,13 +58,42 @@ namespace BlackMisc
             return this->findFirstByOrDefault(&CRemoteFile::getName, name);
         }
 
-        CRemoteFile CRemoteFileList::findFirstMatchingNameOrDefault(const QString &name) const
+        CRemoteFile CRemoteFileList::findFirstByMatchingNameOrDefault(const QString &name) const
         {
-            for (const CRemoteFile &file : *this)
+            if (name.isEmpty()) { return CRemoteFile(); }
+            for (const CRemoteFile &rf : *this)
             {
-                if (file.matchesName(name)) { return file; }
+                if (rf.matchesName(name)) { return rf; }
             }
             return CRemoteFile();
+        }
+
+        CRemoteFileList CRemoteFileList::findExecutableFiles() const
+        {
+            CRemoteFileList files;
+            for (const CRemoteFile &rf : *this)
+            {
+                if (CFileUtils::isExecutableFile(rf.getName()))
+                {
+                    files.push_back(rf);
+                }
+            }
+            return files;
+        }
+
+        qint64 CRemoteFileList::getTotalFileSize() const
+        {
+            qint64 s = 0;
+            for (const CRemoteFile &rf : *this)
+            {
+                s += rf.getSize();
+            }
+            return s;
+        }
+
+        QString CRemoteFileList::getTotalFileSizeHumanReadable() const
+        {
+            return CFileUtils::humanReadableFileSize(this->getTotalFileSize());
         }
 
         CRemoteFileList CRemoteFileList::fromDatabaseJson(const QJsonArray &array)

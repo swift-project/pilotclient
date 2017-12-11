@@ -30,7 +30,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of remote files.
         class BLACKMISC_EXPORT CRemoteFileList :
             public CSequence<CRemoteFile>,
-            public BlackMisc::Mixin::MetaType<CRemoteFileList>
+            public Mixin::MetaType<CRemoteFileList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRemoteFileList)
@@ -40,6 +40,9 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CRemoteFileList(const CSequence<CRemoteFile> &other);
+
+            //! From single file
+            CRemoteFileList(const CRemoteFile &remoteFile);
 
             //! All file names
             QStringList getNames(bool sorted = true) const;
@@ -51,7 +54,16 @@ namespace BlackMisc
             CRemoteFile findFirstByNameOrDefault(const QString &name) const;
 
             //! Find first matching name of default
-            CRemoteFile findFirstMatchingNameOrDefault(const QString &name) const;
+            CRemoteFile findFirstByMatchingNameOrDefault(const QString &name) const;
+
+            //! Find all executable files (decided by appendix)
+            CRemoteFileList findExecutableFiles() const;
+
+            //! Size of all files
+            qint64 getTotalFileSize() const;
+
+            //! Size formatted
+            QString getTotalFileSizeHumanReadable() const;
 
             //! From our database JSON format
             static CRemoteFileList fromDatabaseJson(const QJsonArray &array);

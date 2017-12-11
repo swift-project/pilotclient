@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/network/remotefile.h"
+#include "remotefile.h"
 #include "blackmisc/stringutils.h"
 #include <QJsonValue>
 #include <QtGlobal>
@@ -20,12 +20,17 @@ namespace BlackMisc
             : m_name(name), m_description(description)
         { }
 
+        CRemoteFile::CRemoteFile(const QString &name, qint64 size)
+            : m_name(name), m_size(size)
+        { }
+
         CRemoteFile::CRemoteFile(const QString &name, qint64 size, const QString &url)
             : m_name(name), m_url(url), m_size(size)
         { }
 
         QString CRemoteFile::getNameAndSize() const
         {
+            if (!this->hasName()) { return QStringLiteral(""); }
             static const QString s("%1 (%2)");
             return s.arg(this->getName(), this->getSizeHumanReadable());
         }
@@ -37,6 +42,23 @@ namespace BlackMisc
             if (name.startsWith(this->getName(), Qt::CaseInsensitive)) { return true; }
             if (this->getName().startsWith(name, Qt::CaseInsensitive)) { return true; }
             return false;
+        }
+
+        CUrl CRemoteFile::getSmartUrl() const
+        {
+            if (!this->hasName()) { return this->getUrl(); }
+            if (!this->hasUrl())  { return this->getUrl(); }
+            return this->getUrl().withAppendedPath(this->getName());
+        }
+
+        bool CRemoteFile::isExecutableFile() const
+        {
+            return CFileUtils::isExecutableFile(this->getName());
+        }
+
+        bool CRemoteFile::isSwiftInstaller() const
+        {
+            return CFileUtils::isSwiftInstaller(this->getName());
         }
 
         void CRemoteFile::setUrl(const QString &url)
@@ -51,7 +73,7 @@ namespace BlackMisc
 
         QString CRemoteFile::getFormattedCreatedYmdhms() const
         {
-            if (this->m_created < 1) { return ""; }
+            if (m_created < 1) { return ""; }
             const QDateTime dt = QDateTime::fromMSecsSinceEpoch(m_created);
             return dt.toString("yyyy-MM-dd HH:mm:ss");
         }
@@ -74,10 +96,10 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexName: return CVariant::fromValue(this->m_name);
-            case IndexDescription: return CVariant::fromValue(this->m_description);
-            case IndexUrl: return CVariant::fromValue(this->m_url);
-            case IndexSize: return CVariant::fromValue(this->m_size);
+            case IndexName: return CVariant::fromValue(m_name);
+            case IndexDescription: return CVariant::fromValue(m_description);
+            case IndexUrl: return CVariant::fromValue(m_url);
+            case IndexSize: return CVariant::fromValue(m_size);
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -91,7 +113,7 @@ namespace BlackMisc
             {
             case IndexName: this->setName(variant.value<QString>()); break;
             case IndexDescription: this->setDescription(variant.value<QString>()); break;
-            case IndexUrl: this->m_url.setPropertyByIndex(index.copyFrontRemoved(), variant);
+            case IndexUrl: m_url.setPropertyByIndex(index.copyFrontRemoved(), variant);
             case IndexSize: this->setSize(variant.toInt());
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
