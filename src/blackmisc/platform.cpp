@@ -151,10 +151,10 @@ namespace BlackMisc
     {
         switch (stringToPlatform(str))
         {
-        case Win32: return CPlatform::win32();
-        case Win64: return CPlatform::win64();
-        case Linux: return CPlatform::linux();
-        case MacOS: return CPlatform::macOS();
+        case Win32: return CPlatform::win32Platform();
+        case Win64: return CPlatform::win64Platform();
+        case Linux: return CPlatform::linuxPlatform();
+        case MacOS: return CPlatform::macOSPlatform();
         default: break;
         }
         return unknownOs();
@@ -167,11 +167,11 @@ namespace BlackMisc
             if (CBuildConfig::isRunningOnWindowsNtPlatform())
             {
                 const int wordSize = CBuildConfig::buildWordSize();
-                return wordSize == 64 ? CPlatform::win64() : CPlatform::win32();
+                return wordSize == 64 ? CPlatform::win64Platform() : CPlatform::win32Platform();
             }
 
-            if (CBuildConfig::isRunningOnLinuxPlatform()) { return CPlatform::linux(); }
-            if (CBuildConfig::isRunningOnMacOSPlatform()) { return CPlatform::macOS(); }
+            if (CBuildConfig::isRunningOnLinuxPlatform()) { return CPlatform::linuxPlatform(); }
+            if (CBuildConfig::isRunningOnMacOSPlatform()) { return CPlatform::macOSPlatform(); }
             return CPlatform::unknownOs();
         }
     }
@@ -182,25 +182,25 @@ namespace BlackMisc
         return p;
     }
 
-    const CPlatform &CPlatform::win32()
+    const CPlatform &CPlatform::win32Platform()
     {
         static const CPlatform p(Win32);
         return p;
     }
 
-    const CPlatform &CPlatform::win64()
+    const CPlatform &CPlatform::win64Platform()
     {
         static const CPlatform p(Win64);
         return p;
     }
 
-    const CPlatform &CPlatform::linux()
+    const CPlatform &CPlatform::linuxPlatform()
     {
         static const CPlatform p(Linux);
         return p;
     }
 
-    const CPlatform &CPlatform::macOS()
+    const CPlatform &CPlatform::macOSPlatform()
     {
         static const CPlatform p(MacOS);
         return p;

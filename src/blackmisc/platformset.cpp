@@ -63,7 +63,7 @@ namespace BlackMisc
 
     const CPlatformSet &CPlatformSet::allPlatforms()
     {
-        static const CPlatformSet platforms({ CPlatform::win32(), CPlatform::win64(), CPlatform::linux(), CPlatform::macOS() });
+        static const CPlatformSet platforms({ CPlatform::win32Platform(), CPlatform::win64Platform(), CPlatform::linuxPlatform(), CPlatform::macOSPlatform() });
         return platforms;
     }
 

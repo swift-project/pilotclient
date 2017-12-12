@@ -120,16 +120,16 @@ namespace BlackMisc
         static const CPlatform &currentPlatform();
 
         //! Win32
-        static const CPlatform &win32();
+        static const CPlatform &win32Platform();
 
         //! Win64
-        static const CPlatform &win64();
+        static const CPlatform &win64Platform();
 
         //! Linux
-        static const CPlatform &linux();
+        static const CPlatform &linuxPlatform();
 
         //! Mac OS
-        static const CPlatform &macOS();
+        static const CPlatform &macOSPlatform();
 
         //! Unknown OS
         static const CPlatform &unknownOs();
