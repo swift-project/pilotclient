@@ -13,7 +13,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/applicationclosedialog.h"
-#include "blackgui/components/downloadandinstalldialog.h"
+#include "blackgui/components/updateinfodialog.h"
 #include "blackgui/components/aboutdialog.h"
 #include "blackgui/components/setuploadingdialog.h"
 #include "blackgui/guiapplication.h"
@@ -746,14 +746,14 @@ namespace BlackGui
 
     void CGuiApplication::checkNewVersion(bool onlyIfNew)
     {
-        if (!m_installDialog)
+        if (!m_updateDialog)
         {
             // without parent stylesheet is not inherited
-            m_installDialog = new CDownloadAndInstallDialog(this->mainApplicationWindow());
+            m_updateDialog = new CUpdateInfoDialog(this->mainApplicationWindow());
         }
 
-        if (onlyIfNew && !m_installDialog->isNewVersionAvailable()) return;
-        const int result = m_installDialog->exec();
+        if (onlyIfNew && !m_updateDialog->isNewVersionAvailable()) return;
+        const int result = m_updateDialog->exec();
         if (result != QDialog::Accepted) { return; }
     }
 
@@ -762,7 +762,7 @@ namespace BlackGui
         if (!m_updateSetting.get()) { return; }
         QTimer::singleShot(delayedMs, this, [ = ]
         {
-            if (m_installDialog) { return; }
+            if (m_updateDialog) { return; }
             this->checkNewVersion(true);
         });
     }

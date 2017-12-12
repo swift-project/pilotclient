@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "downloadandinstalldialog.h"
-#include "ui_downloadandinstalldialog.h"
+#include "updateinfodialog.h"
+#include "ui_updateinfodialog.h"
 #include "blackgui/guiapplication.h"
 #include <QPushButton>
 #include <QDesktopServices>
@@ -19,28 +19,28 @@ namespace BlackGui
 {
     namespace Components
     {
-        CDownloadAndInstallDialog::CDownloadAndInstallDialog(QWidget *parent) :
+        CUpdateInfoDialog::CUpdateInfoDialog(QWidget *parent) :
             QDialog(parent),
-            ui(new Ui::CDownloadAndInstallDialog)
+            ui(new Ui::CUpdateInfoDialog)
         {
             ui->setupUi(this);
-            ui->bb_DownloadInstallDialog->button(QDialogButtonBox::Ok)->setText(" Download and install ");
+            ui->bb_UpdateInfolDialog->button(QDialogButtonBox::Ok)->setText(" Download and install ");
             ui->cb_DontShowAgain->setChecked(!m_setting.get());
             this->selectionChanged();
-            connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::selectionChanged, this, &CDownloadAndInstallDialog::selectionChanged);
-            connect(ui->cb_DontShowAgain, &QCheckBox::toggled, this, &CDownloadAndInstallDialog::onDontShowAgain);
+            connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::selectionChanged, this, &CUpdateInfoDialog::selectionChanged);
+            connect(ui->cb_DontShowAgain, &QCheckBox::toggled, this, &CUpdateInfoDialog::onDontShowAgain);
         }
 
-        CDownloadAndInstallDialog::~CDownloadAndInstallDialog()
+        CUpdateInfoDialog::~CUpdateInfoDialog()
         { }
 
-        bool CDownloadAndInstallDialog::isNewVersionAvailable() const
+        bool CUpdateInfoDialog::isNewVersionAvailable() const
         {
             const bool newVersion = ui->comp_UpdateInfo->isNewPilotClientVersionAvailable();
             return newVersion;
         }
 
-        int CDownloadAndInstallDialog::exec()
+        int CUpdateInfoDialog::exec()
         {
             const int r = QDialog::exec();
             if (r != QDialog::Accepted) { return r; }
@@ -54,25 +54,25 @@ namespace BlackGui
             return QDialog::Rejected;
         }
 
-        bool CDownloadAndInstallDialog::event(QEvent *event)
+        bool CUpdateInfoDialog::event(QEvent *event)
         {
             if (event->type() != QEvent::EnterWhatsThisMode) { return QDialog::event(event); }
-            QTimer::singleShot(0, this, &CDownloadAndInstallDialog::requestHelp);
+            QTimer::singleShot(0, this, &CUpdateInfoDialog::requestHelp);
             return true;
         }
 
-        void CDownloadAndInstallDialog::onDontShowAgain(bool dontShowAgain)
+        void CUpdateInfoDialog::onDontShowAgain(bool dontShowAgain)
         {
             m_setting.setAndSave(!dontShowAgain);
         }
 
-        void CDownloadAndInstallDialog::selectionChanged()
+        void CUpdateInfoDialog::selectionChanged()
         {
             const bool nv = ui->comp_UpdateInfo->isNewPilotClientVersionAvailable();
-            ui->bb_DownloadInstallDialog->button(QDialogButtonBox::Ok)->setEnabled(nv);
+            ui->bb_UpdateInfolDialog->button(QDialogButtonBox::Ok)->setVisible(nv);
         }
 
-        void CDownloadAndInstallDialog::requestHelp()
+        void CUpdateInfoDialog::requestHelp()
         {
             if (sGui) { sGui->showHelp(this); }
         }

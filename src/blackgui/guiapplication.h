@@ -42,7 +42,7 @@ namespace BlackGui
     namespace Components
     {
         class CApplicationCloseDialog;
-        class CDownloadAndInstallDialog;
+        class CUpdateInfoDialog;
     }
 }
 namespace BlackGui
@@ -240,7 +240,7 @@ namespace BlackGui
         CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
         QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
-        Components::CDownloadAndInstallDialog *m_installDialog = nullptr; //!< software installation dialog
+        Components::CUpdateInfoDialog *m_updateDialog = nullptr;  //!< software installation dialog
         Components::CApplicationCloseDialog *m_closeDialog = nullptr;     //!< close dialog (no QScopedPointer because I need to set parent)
         BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
         BlackMisc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings

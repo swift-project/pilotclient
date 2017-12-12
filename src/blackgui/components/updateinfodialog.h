@@ -9,14 +9,14 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_DOWNLOADANDINSTALLDIALOG_H
-#define BLACKGUI_COMPONENTS_DOWNLOADANDINSTALLDIALOG_H
+#ifndef BLACKGUI_COMPONENTS_UPDATEINFODIALOG_H
+#define BLACKGUI_COMPONENTS_UPDATEINFODIALOG_H
 
 #include "blackgui/settings/updatenotification.h"
 #include "blackgui/blackguiexport.h"
 #include <QDialog>
 
-namespace Ui { class CDownloadAndInstallDialog; }
+namespace Ui { class CUpdateInfoDialog; }
 namespace BlackGui
 {
     namespace Components
@@ -24,16 +24,16 @@ namespace BlackGui
         /**
          * Download and install swift
          */
-        class BLACKGUI_EXPORT CDownloadAndInstallDialog : public QDialog
+        class BLACKGUI_EXPORT CUpdateInfoDialog : public QDialog
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            explicit CDownloadAndInstallDialog(QWidget *parent = nullptr);
+            explicit CUpdateInfoDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDownloadAndInstallDialog();
+            virtual ~CUpdateInfoDialog();
 
             //! A new version existing?
             bool isNewVersionAvailable() const;
@@ -45,7 +45,7 @@ namespace BlackGui
             virtual bool event(QEvent *event) override;
 
         private:
-            QScopedPointer<Ui::CDownloadAndInstallDialog> ui;
+            QScopedPointer<Ui::CUpdateInfoDialog> ui;
             BlackMisc::CSetting<BlackGui::Settings::TUpdateNotificationSettings> m_setting { this }; //!< show again?
 
             //! Toggled checkbox

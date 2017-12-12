@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDownloadAndInstallDialog</class>
- <widget class="QDialog" name="CDownloadAndInstallDialog">
+ <class>CUpdateInfoDialog</class>
+ <widget class="QDialog" name="CUpdateInfoDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -68,7 +68,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QDialogButtonBox" name="bb_DownloadInstallDialog">
+       <widget class="QDialogButtonBox" name="bb_UpdateInfolDialog">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -93,9 +93,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>bb_DownloadInstallDialog</sender>
+   <sender>bb_UpdateInfolDialog</sender>
    <signal>accepted()</signal>
-   <receiver>CDownloadAndInstallDialog</receiver>
+   <receiver>CUpdateInfoDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -109,9 +109,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>bb_DownloadInstallDialog</sender>
+   <sender>bb_UpdateInfolDialog</sender>
    <signal>rejected()</signal>
-   <receiver>CDownloadAndInstallDialog</receiver>
+   <receiver>CUpdateInfoDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
