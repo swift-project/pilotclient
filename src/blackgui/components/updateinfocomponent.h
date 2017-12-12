@@ -25,6 +25,7 @@ namespace BlackGui
     namespace Components
     {
         class CInstallXSwiftBusDialog;
+        class CDownloadDialog;
 
         /**
          * Update info (distributions, artifacts etc.)
@@ -59,6 +60,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CUpdateInfoComponent> ui;
             QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
+            QScopedPointer<CDownloadDialog> m_downloadDialog; //!< dialog, download installer
             BlackMisc::CDataReadOnly<BlackMisc::Db::TUpdateInfo> m_updateInfo { this, &CUpdateInfoComponent::changedUpdateInfo }; //!< version cache
             BlackMisc::CSetting<BlackCore::Application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
             BlackMisc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable, 15000, 2 };
@@ -80,6 +82,9 @@ namespace BlackGui
 
             //! Install XSwiftBus dialog
             void downloadXSwiftBusDialog();
+
+            //! Download installer dialog
+            void downloadInstallerDialog();
 
             //! Save the current settings
             void saveSettings();

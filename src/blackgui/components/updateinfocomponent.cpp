@@ -10,6 +10,7 @@
 #include "updateinfocomponent.h"
 #include "ui_updateinfocomponent.h"
 #include "installxswiftbusdialog.h"
+#include "downloaddialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/db/distributionlist.h"
@@ -128,6 +129,31 @@ namespace BlackGui
             const QString current = ui->cb_ArtifactsXsb->currentText();
             m_installXSwiftBusDialog->setDefaultDownloadName(current);
             m_installXSwiftBusDialog->show();
+        }
+
+        void CUpdateInfoComponent::downloadInstallerDialog()
+        {
+            const CUpdateInfo update(m_updateInfo.get());
+            const QString currentVersion = ui->cb_ArtifactsPilotClient->currentText();
+            const CArtifact artifact = update.getArtifactsPilotClient().findFirstByVersionOrDefault(currentVersion);
+
+            if (!m_downloadDialog)
+            {
+                m_downloadDialog.reset(new CDownloadDialog(this));
+                m_downloadDialog->setModal(true);
+            }
+
+            const CRemoteFile rf = artifact.asRemoteFile();
+            if (rf.getUrl().isHavingHtmlSuffix())
+            {
+                QDesktopServices::openUrl(rf.getUrl());
+            }
+            else
+            {
+                m_downloadDialog->setMode(CDownloadComponent::SwiftInstaller);
+                m_downloadDialog->setDownloadFile(artifact.asRemoteFile());
+                m_downloadDialog->showAndStartDownloading();
+            }
         }
 
         void CUpdateInfoComponent::saveSettings()
