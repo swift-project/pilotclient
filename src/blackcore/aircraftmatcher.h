@@ -226,6 +226,8 @@ namespace BlackCore
     };
 } // namespace
 
+Q_DECLARE_METATYPE(BlackCore::CAircraftMatcher::MatchingMode)
+Q_DECLARE_METATYPE(BlackCore::CAircraftMatcher::MatchingModeFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::CAircraftMatcher::MatchingMode)
 
 #endif // guard
