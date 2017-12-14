@@ -52,8 +52,14 @@ namespace BlackGui
         //! Show the inner frame
         void showStatusMessagesFrame();
 
+        //! Set the size factors
+        void setOverlaySizeFactors(double widthFactor, double heightFactor, double middleFactor);
+
         //! Show kill button
         void showKillButton(bool killButton);
+
+        //! \copydoc COverlayMessages::setForceSmall
+        void setForceSmall(bool force);
 
         //! \copydoc COverlayMessages::showOverlayMessagesWithConfirmation
         void showOverlayMessagesWithConfirmation(
@@ -103,8 +109,10 @@ namespace BlackGui
         void initInnerFrame();
 
         bool m_showKillButton = false; //!< show kill button
+        bool m_forceSmallMsgs = false; //!< force small messages
         double m_widthFactor  = 0.7;   //!< inner frame x factor
         double m_heightFactor = 0.6;   //!< inner frame x factor
+        double m_middleFactor = 2;     //!< 2 means middle, 1 means on top
     };
 } // ns
 

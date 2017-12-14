@@ -28,7 +28,8 @@ namespace BlackGui
     COverlayMessagesFrame::COverlayMessagesFrame(QWidget *parent) :
         QFrame(parent)
     {
-        // void
+        const bool isFrameless = CGuiUtility::isMainWindowFrameless();
+        m_middleFactor = isFrameless ? 1.25 : 1.5; // 2 is middle in normal window
     }
 
     COverlayMessagesFrame::~COverlayMessagesFrame()
@@ -39,12 +40,28 @@ namespace BlackGui
         this->initInnerFrame();
     }
 
+    void COverlayMessagesFrame::setOverlaySizeFactors(double widthFactor, double heightFactor, double middleFactor)
+    {
+        m_widthFactor = widthFactor;
+        m_heightFactor = heightFactor;
+        m_middleFactor = middleFactor;
+    }
+
     void COverlayMessagesFrame::showKillButton(bool killButton)
     {
         m_showKillButton = killButton;
         if (m_overlayMessages)
         {
             m_overlayMessages->showKillButton(killButton);
+        }
+    }
+
+    void COverlayMessagesFrame::setForceSmall(bool force)
+    {
+        m_forceSmallMsgs = force;
+        if (m_overlayMessages)
+        {
+            m_overlayMessages->setForceSmall(force);
         }
     }
 
@@ -153,17 +170,16 @@ namespace BlackGui
             m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
             m_overlayMessages->addShadow();
             m_overlayMessages->showKillButton(m_showKillButton);
+            m_overlayMessages->setForceSmall(m_forceSmallMsgs);
         }
 
         Q_ASSERT(m_overlayMessages);
 
-        const bool isFrameless = CGuiUtility::isMainWindowFrameless();
         const QPoint middle = this->geometry().center();
-        const double yFactor = isFrameless ? 1.25 : 1.5; // 2 is middle in normal window
         const int w = inner.width();
         const int h = inner.height();
         const int x = middle.x() - w / 2;
-        const int y = middle.y() - h / yFactor;
+        const int y = middle.y() - h / m_middleFactor;
         m_overlayMessages->setGeometry(x, y, w, h);
     }
 } // ns

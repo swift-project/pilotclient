@@ -65,6 +65,9 @@ namespace BlackGui
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
 
+    COverlayMessages::~COverlayMessages()
+    {}
+
     COverlayMessages::COverlayMessages(const QString &headerText, int w, int h, QWidget *parent) :
         QFrame(parent),
         ui(new Ui::COverlayMessages),
@@ -123,7 +126,7 @@ namespace BlackGui
 
     bool COverlayMessages::useSmall() const
     {
-        return (this->width() < 400);
+        return (m_forceSmall || this->width() < 400 || this->height() < 300);
     }
 
     void COverlayMessages::showKill(bool show)
@@ -140,9 +143,6 @@ namespace BlackGui
         const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
         return s.popup(textMessage, ownAircraft);
     }
-
-    COverlayMessages::~COverlayMessages()
-    {}
 
     void COverlayMessages::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
     {

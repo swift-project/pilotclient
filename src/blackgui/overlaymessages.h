@@ -68,6 +68,9 @@ namespace BlackGui
         //! Display image
         void setModeToImage();
 
+        //! Force small
+        void setForceSmall(bool force) { m_forceSmall = force; }
+
         //! Set header text
         void setHeaderText(const QString &header);
 
@@ -132,13 +135,14 @@ namespace BlackGui
 
     private:
         QScopedPointer<Ui::COverlayMessages> ui;
-        BlackMisc::CSettingReadOnly<BlackGui::Settings::TextMessageSettings> m_messageSettings { this };
-        QString                      m_header;
-        int                          m_lastConfirmation = QMessageBox::Cancel;
-        bool                         m_awaitingConfirmation = false;
-        bool                         m_hasKillButton = false;
-        std::function<void()>        m_okLambda;
-        QTimer                       m_autoCloseTimer { this };
+        BlackMisc::CSettingReadOnly<Settings::TextMessageSettings> m_messageSettings { this };
+        QString m_header;
+        int     m_lastConfirmation = QMessageBox::Cancel;
+        bool    m_awaitingConfirmation = false;
+        bool    m_hasKillButton = false;
+        bool    m_forceSmall = false;
+        QTimer  m_autoCloseTimer { this };
+        std::function<void()> m_okLambda; //!< called when confirmed as "OK"
         QList<std::function<void()>> m_pendingMessageCalls;
 
         //! Stylesheet changed
