@@ -399,6 +399,23 @@
         <file>icons/diagona/icons/clipboard-paste.png</file>
         <file>icons/diagona/icons/document-copy.png</file>
         <file>icons/diagona/icons/blue-document-copy.png</file>
+        <file>icons/diagona/icons/folder-network-horizontal-open.png</file>
+        <file>icons/diagona/icons/folder-open.png</file>
+        <file>icons/diagona/icons/folder-open-document.png</file>
+        <file>icons/diagona/icons/folder-open-document-music.png</file>
+        <file>icons/diagona/icons/folder-open-document-music-playlist.png</file>
+        <file>icons/diagona/icons/folder-open-document-text.png</file>
+        <file>icons/diagona/icons/folder-open-feed.png</file>
+        <file>icons/diagona/icons/folder-open-film.png</file>
+        <file>icons/diagona/icons/folder-open-image.png</file>
+        <file>icons/diagona/icons/folder-open-slide.png</file>
+        <file>icons/diagona/icons/folder-open-table.png</file>
+        <file>icons/diagona/icons/folder--pencil.png</file>
+        <file>icons/diagona/icons/folder--plus.png</file>
+        <file>icons/diagona/icons/folder-rename.png</file>
+        <file>icons/diagona/icons/folders.png</file>
+        <file>icons/diagona/icons/blue-folder-search-result.png</file>
+        <file>icons/diagona/icons/folder-search-result.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>
