@@ -139,6 +139,15 @@ namespace BlackMisc
 
         //! Human readable (GB, MB, ..) file size
         static QString humanReadableFileSize(qint64 size);
+
+        //! Executable file name appendixes
+        static const QStringList &executableSuffixes();
+
+        //! Executable file (decided by appendix)
+        static bool isExecutableFile(const QString &fileName);
+
+        //! swift installer
+        static bool isSwiftInstaller(const QString &fileName);
     };
 } // ns
 

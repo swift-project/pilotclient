@@ -216,10 +216,7 @@ namespace BlackMisc
         if (excludeDirectories.isEmpty()) { return false; }
         for (const QString &ex : excludeDirectories)
         {
-            if (matchesExcludeDirectory(directoryPath, ex, cs))
-            {
-                return true;
-            }
+            if (matchesExcludeDirectory(directoryPath, ex, cs)) { return true; }
         }
         return false;
     }
@@ -393,5 +390,27 @@ namespace BlackMisc
             currentSize /= 1024.0;
         }
         return QString("%1 %2").arg(CMathUtils::roundAsString(currentSize, 2), unit);
+    }
+
+    const QStringList &CFileUtils::executableSuffixes()
+    {
+        // incomplete list of file name appendixes
+        static const QStringList appendixes({".exe", ".dmg", ".run"});
+        return appendixes;
+    }
+
+    bool CFileUtils::isExecutableFile(const QString &fileName)
+    {
+        for (const QString &app : CFileUtils::executableSuffixes())
+        {
+            if (fileName.endsWith(app, Qt::CaseInsensitive)) { return true; }
+        }
+        return CFileUtils::isSwiftInstaller(fileName);
+    }
+
+    bool CFileUtils::isSwiftInstaller(const QString &fileName)
+    {
+        if (fileName.isEmpty()) { return false; }
+        return fileName.contains("swift", Qt::CaseInsensitive) && fileName.contains("installer");
     }
 } // ns
