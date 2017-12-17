@@ -23,9 +23,7 @@ namespace BlackCore
 {
     namespace Db
     {
-        /**
-         * Update and consolidation of DB data
-         */
+        //! Update and consolidation of DB data
         class BLACKCORE_EXPORT CBackgroundDataUpdater : public BlackMisc::CContinuousWorker
         {
             Q_OBJECT

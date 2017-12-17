@@ -23,9 +23,7 @@ namespace BlackCore
 {
     namespace Db
     {
-        /**
-         * Reader for airport database.
-         */
+        //! Reader for airport database data.
         class BLACKCORE_EXPORT CAirportDataReader : public CDatabaseReader
         {
             Q_OBJECT

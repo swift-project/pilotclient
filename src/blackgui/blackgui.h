@@ -24,6 +24,11 @@
  */
 
 /*!
+ * \namespace BlackGui::Context
+ * \brief The context classes are high level API classes providing the interface for DBus.
+ */
+
+/*!
  * \namespace BlackGui::Filters
  * \brief Filter to search data sets.
  */
@@ -31,6 +36,11 @@
 /*!
  * \namespace BlackGui::Models
  * \brief Models to be used with views, mainly QTableView
+ */
+
+/*!
+ * \namespace BlackGui::Vatsim
+ * \brief Specific classes for the VATSIM network
  */
 
 /*!

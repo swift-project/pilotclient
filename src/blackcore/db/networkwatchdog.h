@@ -22,9 +22,7 @@ namespace BlackCore
 {
     namespace Db
     {
-        /**
-         * Monitoring the swift DB, internet access, shared URL
-         */
+        //! Monitoring the swift DB, internet access, shared URLs
         class CNetworkWatchdog : public BlackMisc::CContinuousWorker
         {
             Q_OBJECT

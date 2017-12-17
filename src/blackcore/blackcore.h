@@ -14,13 +14,19 @@
  */
 
 /*!
- * \namespace BlackCore::Settings
- * Core settings traits.
+ * \namespace BlackCore::Data
+ * Core data traits (aka cached values) and classes.
  */
 
 /*!
- * \namespace BlackCore::Data
- * Core data traits (aka cached values) and classes.
+ * \namespace BlackCore::Db
+ * Classes interacting with the swift database (aka "datastore"). This includes the readers and related classes.
+ * Related model classes can be found in BlackMisc::Db
+ */
+
+/*!
+ * \namespace BlackCore::Settings
+ * Core settings traits.
  */
 
 /*!
