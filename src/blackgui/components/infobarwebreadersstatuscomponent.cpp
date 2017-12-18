@@ -154,6 +154,7 @@ namespace BlackGui
         bool CInfoBarWebReadersStatusBase::hasAllData() const
         {
             if (!sGui) { return false; }
+            if (!sGui->hasWebDataServices()) { return false; }
             return sGui->getWebDataServices()->getAirlineIcaoCodesCount() > 0 &&
                    sGui->getWebDataServices()->getAircraftIcaoCodesCount() > 0 &&
                    sGui->getWebDataServices()->getDistributorsCount() > 0 &&
