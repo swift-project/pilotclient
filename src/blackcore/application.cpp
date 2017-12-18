@@ -592,7 +592,7 @@ namespace BlackCore
 
     QString CApplication::getTemporaryDirectory() const
     {
-        static QTemporaryDir tempDir;
+        static const QTemporaryDir tempDir;
         if (tempDir.isValid()) { return tempDir.path(); }
         return QDir::tempPath();
     }
