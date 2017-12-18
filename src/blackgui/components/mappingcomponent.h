@@ -74,69 +74,68 @@ namespace BlackGui
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
-        private slots:
+        private:
             //! Aircraft models available
-            void ps_onModelSetChanged();
+            void onModelSetChanged();
 
             //! Changed count
-            void ps_onRowCountChanged(int count, bool withFilter);
+            void onRowCountChanged(int count, bool withFilter);
 
             //! Simulated aircraft did change in view
             //! \sa CViewBaseNonTemplate::objectChanged
-            void ps_onChangedSimulatedAircraftInView(const BlackMisc::CVariant &simulatedAircraft, const BlackMisc::CPropertyIndex &index);
+            void onChangedSimulatedAircraftInView(const BlackMisc::CVariant &simulatedAircraft, const BlackMisc::CPropertyIndex &index);
 
             //! Aircraft selected (in view)
-            void ps_onAircraftSelectedInView(const QModelIndex &index);
+            void onAircraftSelectedInView(const QModelIndex &index);
 
             //! Model selected (in view)
-            void ps_onModelSelectedInView(const QModelIndex &index);
+            void onModelSelectedInView(const QModelIndex &index);
 
             //! Save changed aircraft
-            void ps_onSaveAircraft();
+            void onSaveAircraft();
 
             //! Reset aircraft
-            void ps_onResetAircraft();
+            void onResetAircraft();
 
             //! Model preview
-            void ps_onModelPreviewChanged(int state);
+            void onModelPreviewChanged(int state);
 
             //! Request update for models from backend
-            void ps_onModelsUpdateRequested();
+            void onModelsUpdateRequested();
 
             //! Rendered aircraft changed in backend
-            void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Connection status has been changed
-            void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Fast position updates onf/off
-            void ps_onMenuChangeFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void onMenuChangeFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Enable / disable aircraft
-            void ps_onMenuToggleEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void onMenuToggleEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Highlight in simulator
-            void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Adding a remote aircraft failed
-            void ps_addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);
+            void addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);
 
             //! Timer update
-            void ps_timerUpdate();
+            void timerUpdate();
 
             //! Token bucket based update
-            void ps_tokenBucketUpdate();
+            void tokenBucketUpdate();
 
             //! Token bucket based update
-            void ps_tokenBucketUpdateAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void tokenBucketUpdateAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Settings have been changed
-            void ps_settingsChanged();
+            void settingsChanged();
 
             //! Connection status has been changed
-            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
-        private:
             //! Identifier for data send from this component
             BlackMisc::CIdentifier mappingIdentifier();
 
@@ -147,11 +146,11 @@ namespace BlackGui
             BlackMisc::Aviation::CCallsign validateRenderedCallsign() const;
 
             QScopedPointer<Ui::CMappingComponent> ui;
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::ps_settingsChanged }; //!< settings changed
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
             QTimer m_updateTimer { this };
             BlackMisc::CTokenBucket m_bucket { 3, BlackMisc::PhysicalQuantities::CTime(5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()), 1};
-            BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
+            Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
             BlackMisc::CIdentifier m_identifier;
         };
     } // namespace
