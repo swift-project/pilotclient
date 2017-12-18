@@ -172,20 +172,14 @@ namespace BlackGui
 
         void CMappingComponent::ps_onChangedSimulatedAircraftInView(const CVariant &object, const CPropertyIndex &index)
         {
+            if (!sGui || !index.contains(CSimulatedAircraft::IndexEnabled)) { return; } // we only deal with enabled/disabled here
             const CSimulatedAircraft sa = object.to<CSimulatedAircraft>(); // changed in GUI
             const CSimulatedAircraft saFromBackend = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(sa.getCallsign());
             if (!saFromBackend.hasValidCallsign()) { return; } // obviously deleted
-            if (index.contains(CSimulatedAircraft::IndexEnabled))
-            {
-                const bool enabled = sa.propertyByIndex(index).toBool();
-                if (saFromBackend.isEnabled() == enabled) { return; }
-                CLogMessage(this).info("Request to %1 aircraft %2") << (enabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
-                sGui->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), enabled);
-            }
-            else
-            {
-                Q_ASSERT_X(false, "ps_onChangedSimulatedAircraftInView", "Index not supported");
-            }
+            const bool nowEnabled = sa.isEnabled();
+            if (saFromBackend.isEnabled() == nowEnabled) { return; } // already same value
+            CLogMessage(this).info("Request to %1 aircraft %2") << (nowEnabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
+            sGui->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), nowEnabled);
         }
 
         void CMappingComponent::ps_onAircraftSelectedInView(const QModelIndex &index)
