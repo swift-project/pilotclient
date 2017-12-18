@@ -267,7 +267,7 @@ namespace BlackCore
         static int exec();
 
         //! Exit application, perform graceful shutdown and exit
-        static void exit(int retcode = 0);
+        static void exit(int retcode = EXIT_SUCCESS);
 
         //! Similar to QCoreApplication::arguments
         static QStringList arguments();

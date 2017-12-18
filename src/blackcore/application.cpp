@@ -982,7 +982,7 @@ namespace BlackCore
             CLogMessage(getLogCategories()).preformatted(m);
         }
 
-        // from here on we really rip appart the application object
+        // from here on we really rip apart the application object
         // and it should no longer be used
         sApp = nullptr;
         disconnect(this);
