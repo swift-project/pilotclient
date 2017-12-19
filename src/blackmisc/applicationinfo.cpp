@@ -13,19 +13,30 @@
 
 namespace BlackMisc
 {
-    CApplicationInfo::CApplicationInfo() = default;
+    CApplicationInfo::CApplicationInfo() {}
 
-    CApplicationInfo::CApplicationInfo(Application app, ApplicationMode mode, const QString &exePath, const QString &version, const CProcessInfo &process) :
+    CApplicationInfo::CApplicationInfo(Application app, const QString &exePath, const QString &version, const CProcessInfo &process) :
         m_app(app),
-        m_mode(mode),
         m_exePath(exePath),
         m_version(version),
         m_process(process)
     {}
 
+    bool CApplicationInfo::isSampleOrUnitTest() const
+    {
+        const Application a = this->application();
+        return a == CApplicationInfo::Sample || a == CApplicationInfo::UnitTest;
+    }
+
+    bool CApplicationInfo::isUnitTest() const
+    {
+        const Application a = this->application();
+        return a == CApplicationInfo::UnitTest;
+    }
+
     QString CApplicationInfo::convertToQString(bool i18n) const
     {
-        return QString("{ %1, %2, %3, %4, %5 }").arg(QString::number(m_app), QString::number(m_mode), m_exePath, m_version, m_process.convertToQString(i18n));
+        return QString("{ %1, %2, %3, %4 }").arg(QString::number(m_app), m_exePath, m_version, m_process.convertToQString(i18n));
     }
 
     const QString &CApplicationInfo::swiftPilotClientGui()

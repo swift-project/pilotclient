@@ -36,32 +36,17 @@ namespace BlackMisc
             Sample
         };
 
-        //! Flags describing application modes
-        enum ApplicationModeFlag
-        {
-            None      = 0,
-            Developer = 1 << 0,
-            BetaTest  = 1 << 1
-        };
-        Q_DECLARE_FLAGS(ApplicationMode, ApplicationModeFlag)
-
         //! Default constructor.
         CApplicationInfo();
 
         //! Constructor.
-        CApplicationInfo(Application app, ApplicationMode mode, const QString &exePath, const QString &version, const CProcessInfo &process);
+        CApplicationInfo(Application app, const QString &exePath, const QString &version, const CProcessInfo &process);
 
         //! Set application.
         void setApplication(Application app) { m_app = static_cast<int>(app); }
 
         //! Get application.
         Application application() const { return static_cast<Application>(m_app); }
-
-        //! Set application mode.
-        void setApplicationMode(ApplicationMode mode) { m_mode = static_cast<int>(mode); }
-
-        //! Get application mode.
-        ApplicationMode applicationMode() const { return static_cast<ApplicationMode>(m_mode); }
 
         //! Set executable path.
         void setExecutablePath(const QString &exePath) { m_exePath = exePath; }
@@ -81,6 +66,12 @@ namespace BlackMisc
         //! Get process info.
         const CProcessInfo &processInfo() const { return m_process; }
 
+        //! Sample or unit test
+        bool isSampleOrUnitTest() const;
+
+        //! Unit test
+        bool isUnitTest() const;
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
@@ -98,7 +89,6 @@ namespace BlackMisc
 
     private:
         int m_app = static_cast<int>(Unknown);
-        int m_mode = 0;
         QString m_exePath;
         QString m_version;
         CProcessInfo m_process;
@@ -106,13 +96,12 @@ namespace BlackMisc
         BLACK_METACLASS(
             CApplicationInfo,
             BLACK_METAMEMBER(app),
-            BLACK_METAMEMBER(mode),
             BLACK_METAMEMBER(exePath),
             BLACK_METAMEMBER(version),
             BLACK_METAMEMBER(process)
         );
     };
-}
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::CApplicationInfo)
 
