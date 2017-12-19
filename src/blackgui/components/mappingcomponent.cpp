@@ -265,7 +265,7 @@ namespace BlackGui
             bool changed = false;
             if (aircraftFromBackend.getModelString() != modelString)
             {
-                CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);
+                const CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);
                 if (models.isEmpty())
                 {
                     CLogMessage(this).validationError("No model for title: %1") << modelString;

@@ -157,7 +157,7 @@ namespace BlackGui
             CServerList otherServers(m_otherTrafficNetworkServers.getThreadLocal());
 
             // add a testserver when no servers can be loaded
-            if (otherServers.isEmpty() && (sGui->isRunningInDeveloperEnvironment() || CBuildConfig::isDevBranch()))
+            if (otherServers.isEmpty() && sGui->isRunningInDeveloperEnvironment())
             {
                 otherServers.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
                 CLogMessage(this).info("Added servers for testing");

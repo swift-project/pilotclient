@@ -47,7 +47,7 @@ namespace BlackGui
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
             this->setCurrentIndex(0); // 1st tab
-            ui->comp_DataLoadOverview->showVisibleDbRefreshButtons(CBuildConfig::isDebugBuild() || CBuildConfig::isDevBranch());
+            ui->comp_DataLoadOverview->showVisibleDbRefreshButtons(CBuildConfig::isDebugBuild() || sGui->isRunningInDeveloperEnvironment());
             ui->comp_DataLoadOverview->showVisibleLoadAllButtons(false, false);
 
             connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this, &CSettingsComponent::changedWindowsOpacity);

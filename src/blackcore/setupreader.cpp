@@ -42,7 +42,7 @@ namespace BlackCore
     {
         { "url", "bootstrapurl" },
         QCoreApplication::translate("application", "Bootstrap URL, e.g. https://datastore.swift-project.org/shared"),
-        "bootstrapurl", (sApp->isUnitTest()) ? unitTestBootstrapUrl() : ""
+        "bootstrapurl", (sApp->getApplicationInfo().isUnitTest()) ? unitTestBootstrapUrl() : ""
     },  m_cmdBootstrapMode
     {
         { "bmode", "bootstrapmode" },

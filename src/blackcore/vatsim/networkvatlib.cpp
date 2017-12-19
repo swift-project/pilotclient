@@ -718,7 +718,7 @@ namespace BlackCore
             };
 
             // only in not officially shipped versions
-            return (CBuildConfig::isStableBranch() && !CBuildConfig::isDevBranch()) ? e : opts;
+            return (CBuildConfig::isLocalDeveloperDebugBuild()) ? opts : e;
         }
 
         bool CNetworkVatlib::getCmdLineClientIdAndKey(int &id, QString &key)

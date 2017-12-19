@@ -185,7 +185,7 @@ namespace BlackCore
                 m_network->presetServer(server);
 
                 // Fall back to observer mode, if no simulator is available or not simulating
-                if (CBuildConfig::isStableBranch() && !this->getIContextSimulator()->isSimulatorSimulating())
+                if (!CBuildConfig::isLocalDeveloperDebugBuild() && !this->getIContextSimulator()->isSimulatorSimulating())
                 {
                     CLogMessage(this).info("No simulator connected or connected simulator not simulating. Falling back to observer mode");
                     mode = INetwork::LoginAsObserver;
