@@ -115,6 +115,17 @@ namespace BlackMisc
             }
         }
 
+        const CDistribution &CDistribution::localDeveloperBuild()
+        {
+            static const CDistribution d = []
+            {
+                CDistribution ld("local developer", 0, true);
+                ld.setCurrentUtcTime();
+                return ld;
+            }();
+            return d;
+        }
+
         CDistribution CDistribution::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             Q_UNUSED(prefix); // not nested

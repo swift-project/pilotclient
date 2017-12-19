@@ -70,7 +70,7 @@ namespace BlackMisc
             const CArtifact exactVersion = ownArtifacts.findFirstByVersionOrDefault(myVersion);
             if (!exactVersion.isUnknown()) { return exactVersion.getDistributions().getMostStableOrDefault(); }
 
-            return CDistribution();
+            return CDistribution::localDeveloperBuild();
         }
 
         QStringList CUpdateInfo::anticipateMyDefaultChannelAndPlatform() const

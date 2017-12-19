@@ -107,6 +107,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
+            //! Pseudo distribution for local builds
+            const static CDistribution &localDeveloperBuild();
+
             //! Object from database JSON format
             static CDistribution fromDatabaseJson(const QJsonObject &json, const QString &prefix = {});
 
