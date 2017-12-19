@@ -39,6 +39,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
+using namespace BlackCore;
 
 namespace BlackGui
 {
@@ -47,7 +48,7 @@ namespace BlackGui
         CKeySelectionBox::CKeySelectionBox(QWidget *parent) :
             QComboBox(parent)
         {
-            connect(this, static_cast<void(CKeySelectionBox::*)(int)>(&CKeySelectionBox::currentIndexChanged), this, &CKeySelectionBox::ps_updateSelectedIndex);
+            connect(this, static_cast<void(CKeySelectionBox::*)(int)>(&CKeySelectionBox::currentIndexChanged), this, &CKeySelectionBox::updateSelectedIndex);
         }
 
         void CKeySelectionBox::setSelectedIndex(int index)
@@ -56,13 +57,13 @@ namespace BlackGui
             setCurrentIndex(m_oldIndex);
         }
 
-        void CKeySelectionBox::ps_updateSelectedIndex(int index)
+        void CKeySelectionBox::updateSelectedIndex(int index)
         {
             emit keySelectionChanged(m_oldIndex, index);
             m_oldIndex = index;
         }
 
-        CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, const BlackMisc::CIdentifierList &applications, QWidget *parent) :
+        CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, const CIdentifierList &identifiers, QWidget *parent) :
             QDialog(parent),
             ui(new Ui::CHotkeyDialog),
             m_actionHotkey(actionHotkey),
@@ -74,7 +75,7 @@ namespace BlackGui
             ui->qf_Advanced->hide();
 
             ui->tv_Actions->setModel(&m_actionModel);
-            ui->pb_AdvancedMode->setIcon(BlackMisc::CIcons::arrowMediumSouth16());
+            ui->pb_AdvancedMode->setIcon(CIcons::arrowMediumSouth16());
             selectAction();
 
             if (!actionHotkey.getCombination().isEmpty()) { ui->pb_SelectedHotkey->setText(actionHotkey.getCombination().toQString()); }
@@ -92,13 +93,13 @@ namespace BlackGui
                 ui->cb_Identifier->setCurrentIndex(index);
             }
 
-            connect(ui->pb_AdvancedMode, &QPushButton::clicked, this, &CHotkeyDialog::ps_advancedModeChanged);
-            connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::ps_selectHotkey);
-            connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::ps_accept);
+            connect(ui->pb_AdvancedMode, &QPushButton::clicked, this, &CHotkeyDialog::advancedModeChanged);
+            connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::selectHotkey);
+            connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::accept);
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
-            connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::ps_combinationSelectionChanged);
-            connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::ps_combinationSelectionFinished);
-            connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::ps_changeSelectedAction);
+            connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
+            connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
+            connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::changeSelectedAction);
             connect(ui->cb_Identifier, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
 
             initStyleSheet();
@@ -118,50 +119,49 @@ namespace BlackGui
             setStyleSheet(s);
         }
 
-        CActionHotkey CHotkeyDialog::getActionHotkey(const CActionHotkey &initial, const CIdentifierList &applications, QWidget *parent)
+        CActionHotkey CHotkeyDialog::getActionHotkey(const CActionHotkey &initial, const CIdentifierList &identifiers, QWidget *parent)
         {
-            CHotkeyDialog editDialog(initial, applications, parent);
+            CHotkeyDialog editDialog(initial, identifiers, parent);
             editDialog.setWindowModality(Qt::WindowModal);
             if (editDialog.exec()) { return editDialog.getSelectedActionHotkey(); }
             return {};
         }
 
-        void CHotkeyDialog::ps_advancedModeChanged()
+        void CHotkeyDialog::advancedModeChanged()
         {
             if (m_actionHotkey.getCombination().isEmpty()) return;
-
             if (!ui->qf_Advanced->isVisible())
             {
                 setupAdvancedFrame();
                 ui->qf_Advanced->show();
-                ui->pb_AdvancedMode->setIcon(BlackMisc::CIcons::arrowMediumNorth16());
+                ui->pb_AdvancedMode->setIcon(CIcons::arrowMediumNorth16());
             }
             else
             {
-                ui->pb_AdvancedMode->setIcon(BlackMisc::CIcons::arrowMediumSouth16());
+                ui->pb_AdvancedMode->setIcon(CIcons::arrowMediumSouth16());
                 ui->qf_Advanced->hide();
                 ui->gb_Hotkey->resize(0, 0);
             }
         }
 
-        void CHotkeyDialog::ps_selectHotkey()
+        void CHotkeyDialog::selectHotkey()
         {
             ui->pb_SelectedHotkey->setText("Press any key/button...");
             m_inputManager->startCapture();
         }
 
-        void CHotkeyDialog::ps_combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination)
+        void CHotkeyDialog::combinationSelectionChanged(const CHotkeyCombination &combination)
         {
             ui->pb_SelectedHotkey->setText(combination.toFormattedQString());
         }
 
-        void CHotkeyDialog::ps_combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination)
+        void CHotkeyDialog::combinationSelectionFinished(const CHotkeyCombination &combination)
         {
             m_actionHotkey.setCombination(combination);
             synchronize();
         }
 
-        void CHotkeyDialog::ps_changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected)
+        void CHotkeyDialog::changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected)
         {
             Q_UNUSED(deselected);
             if (selected.indexes().isEmpty()) { return; }
@@ -172,28 +172,28 @@ namespace BlackGui
         void CHotkeyDialog::changeApplicableMachine(int index)
         {
             Q_UNUSED(index);
-            QVariant userData = ui->cb_Identifier->currentData(Qt::UserRole);
+            QVariant userData = ui->cb_Identifier->currentData();
             Q_ASSERT(userData.canConvert<CIdentifier>());
             m_actionHotkey.setApplicableMachine(userData.value<CIdentifier>());
         }
 
-        void CHotkeyDialog::ps_accept()
+        void CHotkeyDialog::accept()
         {
             if (m_actionHotkey.getApplicableMachine().getMachineName().isEmpty())
             {
-                CLogMessage().validationWarning("Missing %1") << ui->gb_Machine->title();
+                CLogMessage().validationWarning("Missing '%1'") << ui->gb_Machine->title();
                 return;
             }
 
             if (m_actionHotkey.getCombination().isEmpty())
             {
-                CLogMessage().validationWarning("Missing %1") << ui->gb_Hotkey->title();
+                CLogMessage().validationWarning("Missing '%1'") << ui->gb_Hotkey->title();
                 return;
             }
 
             if (m_actionHotkey.getAction().isEmpty())
             {
-                CLogMessage().validationWarning("Missing %1") << ui->gb_Action->title();
+                CLogMessage().validationWarning("Missing '%1'") << ui->gb_Action->title();
                 return;
             }
 
@@ -279,7 +279,7 @@ namespace BlackGui
 
             for (const auto &token : tokens)
             {
-                QModelIndex startIndex = m_actionModel.index(0, 0, parentIndex);
+                const QModelIndex startIndex = m_actionModel.index(0, 0, parentIndex);
                 const auto indexList = m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
                 if (indexList.isEmpty()) return;
                 parentIndex = indexList.first();

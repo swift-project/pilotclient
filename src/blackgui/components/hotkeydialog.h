@@ -28,7 +28,6 @@ class QWidget;
 namespace BlackCore { class CInputManager; }
 namespace BlackMisc { namespace Input { class CHotkeyCombination; } }
 namespace Ui { class CHotkeyDialog; }
-
 namespace BlackGui
 {
     namespace Components
@@ -51,10 +50,9 @@ namespace BlackGui
             //! User has changed the selection
             void keySelectionChanged(int oldIndex, int newIndex);
 
-        private slots:
-            void ps_updateSelectedIndex(int index);
-
         private:
+            void updateSelectedIndex(int index);
+
             int m_oldIndex;
         };
 
@@ -67,7 +65,10 @@ namespace BlackGui
 
         public:
             //! Constructor
-            CHotkeyDialog(const BlackMisc::Input::CActionHotkey &actionHotkey, const BlackMisc::CIdentifierList &applications, QWidget *parent = nullptr);
+            CHotkeyDialog(
+                const BlackMisc::Input::CActionHotkey &actionHotkey,
+                const BlackMisc::CIdentifierList &identifiers,
+                QWidget *parent = nullptr);
 
             //! Destructor
             virtual ~CHotkeyDialog();
@@ -78,19 +79,21 @@ namespace BlackGui
             //! Init style sheet
             void initStyleSheet();
 
+            //! \copydoc QDialog::accept
+            virtual void accept() override;
+
             //! Runs the hotkey dialog and returns the result
             static BlackMisc::Input::CActionHotkey getActionHotkey(
                 const BlackMisc::Input::CActionHotkey &initial,
-                const BlackMisc::CIdentifierList &applications,
+                const BlackMisc::CIdentifierList &identifiers,
                 QWidget *parent = nullptr);
 
         private:
-            void ps_advancedModeChanged();
-            void ps_selectHotkey();
-            void ps_combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
-            void ps_combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
-            void ps_changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
-            void ps_accept();
+            void advancedModeChanged();
+            void selectHotkey();
+            void combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
+            void combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
+            void changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
 
             void changeApplicableMachine(int index);
             void synchronize();

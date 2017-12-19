@@ -43,12 +43,13 @@ namespace BlackGui
             QFrame(parent),
             ui(new Ui::CSettingsHotkeyComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             ui->setupUi(this);
             ui->tv_Hotkeys->setModel(&m_model);
 
-            connect(ui->pb_AddHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_addEntry);
-            connect(ui->pb_EditHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_editEntry);
-            connect(ui->pb_RemoveHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_removeEntry);
+            connect(ui->pb_AddHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::addEntry);
+            connect(ui->pb_EditHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::editEntry);
+            connect(ui->pb_RemoveHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::removeEntry);
 
             reloadHotkeysFromSettings();
             ui->tv_Hotkeys->selectRow(0);
@@ -68,7 +69,7 @@ namespace BlackGui
             CInputManager::instance()->registerAction(IContextAudio::pttHotkeyAction(), IContextAudio::pttHotkeyIcon());
         }
 
-        void CSettingsHotkeyComponent::ps_addEntry()
+        void CSettingsHotkeyComponent::addEntry()
         {
             BlackMisc::CIdentifierList registeredApps;
             if (sGui->getIContextApplication()) registeredApps = sGui->getIContextApplication()->getRegisteredApplications();
@@ -79,14 +80,14 @@ namespace BlackGui
             if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey))
             {
                 addHotkeytoSettings(selectedActionHotkey);
-                int position = m_model.rowCount();
+                const int position = m_model.rowCount();
                 m_model.insertRows(position, 1, QModelIndex());
-                QModelIndex index = m_model.index(position, 0, QModelIndex());
+                const QModelIndex index = m_model.index(position, 0, QModelIndex());
                 m_model.setData(index, QVariant::fromValue(selectedActionHotkey), CActionHotkeyListModel::ActionHotkeyRole);
             }
         }
 
-        void CSettingsHotkeyComponent::ps_editEntry()
+        void CSettingsHotkeyComponent::editEntry()
         {
             const auto index = ui->tv_Hotkeys->selectionModel()->currentIndex();
             if (!index.isValid()) return;
@@ -109,7 +110,7 @@ namespace BlackGui
             }
         }
 
-        void CSettingsHotkeyComponent::ps_removeEntry()
+        void CSettingsHotkeyComponent::removeEntry()
         {
             const QModelIndexList indexes = ui->tv_Hotkeys->selectionModel()->selectedRows();
             for (const auto &index : indexes)
@@ -178,7 +179,17 @@ namespace BlackGui
             }
         }
 
-        void CSettingsHotkeyComponent::ps_hotkeySlot(bool keyDown)
+        CIdentifierList CSettingsHotkeyComponent::getAllIdentifiers() const
+        {
+            CIdentifierList identifiers;
+            if (sGui->getIContextApplication()) { identifiers = sGui->getIContextApplication()->getRegisteredApplications(); }
+
+            // add local application
+            identifiers.push_back(CIdentifier("local identifer for hotkeys"));
+            return identifiers;
+        }
+
+        void CSettingsHotkeyComponent::hotkeySlot(bool keyDown)
         {
             if (keyDown) { QMessageBox::information(this, "Test", "Hotkey test"); }
         }

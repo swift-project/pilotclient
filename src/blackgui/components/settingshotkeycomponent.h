@@ -12,10 +12,10 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 
-#include "blackcore/actionbind.h"
-#include "blackcore/application/applicationsettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/actionhotkeylistmodel.h"
+#include "blackcore/actionbind.h"
+#include "blackcore/application/applicationsettings.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
 
@@ -50,13 +50,11 @@ namespace BlackGui
             //! Create dummy/emtpy Ptt entry for wizard
             void registerDummyPttEntry();
 
-        private slots:
-            void ps_addEntry();
-            void ps_editEntry();
-            void ps_removeEntry();
-            void ps_hotkeySlot(bool keyDown);
-
         private:
+            void addEntry();
+            void editEntry();
+            void removeEntry();
+            void hotkeySlot(bool keyDown);
             void addHotkeytoSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
             void updateHotkeyInSettings(const BlackMisc::Input::CActionHotkey &oldValue, const BlackMisc::Input::CActionHotkey &newValue);
             void removeHotkeyFromSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
@@ -66,7 +64,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
             BlackGui::Models::CActionHotkeyListModel m_model;
             BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this };
-            BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::wrench16(), this, &CSettingsHotkeyComponent::ps_hotkeySlot };
+            BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::wrench16(), this, &CSettingsHotkeyComponent::hotkeySlot };
         };
 
         /**
