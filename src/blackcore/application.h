@@ -147,9 +147,6 @@ namespace BlackCore
         //! Start the launcher and quit
         bool startLauncherAndQuit();
 
-        //! Unit test?
-        bool isUnitTest() const;
-
         //! Global setup
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getGlobalSetup() const;
@@ -157,6 +154,10 @@ namespace BlackCore
         //! Update info
         //! \threadsafe
         BlackMisc::Db::CUpdateInfo getUpdateInfo() const;
+
+        //! Own distribution
+        //! \threadsafe
+        BlackMisc::Db::CDistribution getOwnDistribution() const;
 
         //! Delete all cookies from cookie manager
         void deleteAllCookies();
@@ -226,12 +227,9 @@ namespace BlackCore
         bool isRunningInDeveloperEnvironment() const { return m_devEnv; }
 
         //! Signal startup automatically or individually
-        void setSignalStartupAutomatically(bool enabled);
+        void setSignalStartupAutomatically(bool enabled) { m_signalStartup = enabled; }
 
-        //! Info string
-        QString getEnvironmentInfoString(const QString &separator) const;
-
-        //! To string
+        //! Comprehensive info
         QString getInfoString(const QString &separator) const;
 
         //! Unsaved settings
@@ -577,7 +575,7 @@ namespace BlackCore
         //! Init parser
         void initParser();
 
-        //! Dev.environment
+        //! Dev.environment, return value will be used for m_devEnv
         bool initIsRunningInDeveloperEnvironment() const;
 
         //! Async. start when setup is loaded
@@ -609,7 +607,6 @@ namespace BlackCore
         bool                                     m_useWebData = false;        //!< use web data
         bool                                     m_signalStartup = true;      //!< signal startup automatically
         bool                                     m_devEnv = false;            //!< dev. environment
-        bool                                     m_unitTest = false;          //!< is UNIT test
         bool                                     m_autoSaveSettings = true;   //!< automatically saving all settings
 
         // -------------- crashpad -----------------

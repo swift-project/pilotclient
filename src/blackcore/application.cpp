@@ -122,10 +122,8 @@ namespace BlackCore
             QCoreApplication::setApplicationName(m_applicationName);
             QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
             this->setObjectName(m_applicationName);
-            const QString executable = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
-            if (executable.startsWith("test"))
+            if (this->getApplicationInfo().application() == CApplicationInfo::UnitTest)
             {
-                m_unitTest = true;
                 const QString tempPath(this->getTemporaryDirectory());
                 BlackMisc::setMockCacheRootDirectory(tempPath);
             }
@@ -224,10 +222,7 @@ namespace BlackCore
 
     CApplicationInfo CApplication::getApplicationInfo() const
     {
-        CApplicationInfo::ApplicationMode mode = CApplicationInfo::None;
-        if (isRunningInDeveloperEnvironment()) { mode |= CApplicationInfo::Developer; }
-        if (CBuildConfig::isDevBranch()) { mode |= CApplicationInfo::BetaTest; }
-        return { CApplication::getSwiftApplication(), mode, QCoreApplication::applicationFilePath(), CBuildConfig::getVersionString(), CProcessInfo::currentProcess() };
+        return { CApplication::getSwiftApplication(), QCoreApplication::applicationFilePath(), CBuildConfig::getVersionString(), CProcessInfo::currentProcess() };
     }
 
     CApplicationInfoList CApplication::getRunningApplications()
@@ -273,7 +268,6 @@ namespace BlackCore
 
     CApplicationInfo::Application CApplication::getSwiftApplication() const
     {
-        if (this->isUnitTest()) { return CApplicationInfo::UnitTest; }
         if (m_application != CApplicationInfo::Unknown) { return m_application; }
 
         // if not set, guess
@@ -297,10 +291,9 @@ namespace BlackCore
         case CApplicationInfo::Laucher: search = "launcher"; break;
         case CApplicationInfo::MappingTool: search = "data"; break;
         case CApplicationInfo::PilotClientGui: search = "gui"; break;
-        default:
-            break;
+        default: break;
         }
-        if (search.isEmpty()) return "";
+        if (search.isEmpty()) { return ""; }
         for (const QString &executable : CFileUtils::getSwiftExecutables())
         {
             if (!executable.contains("swift", Qt::CaseInsensitive)) { continue; }
@@ -327,11 +320,6 @@ namespace BlackCore
         return true;
     }
 
-    bool CApplication::isUnitTest() const
-    {
-        return m_unitTest;
-    }
-
     CGlobalSetup CApplication::getGlobalSetup() const
     {
         if (m_shutdown) { return CGlobalSetup(); }
@@ -346,6 +334,13 @@ namespace BlackCore
         const CSetupReader *r = m_setupReader.data();
         if (!r) { return CUpdateInfo(); }
         return r->getUpdateInfo();
+    }
+
+    CDistribution CApplication::getOwnDistribution() const
+    {
+        if (CBuildConfig::isLocalDeveloperDebugBuild()) { return CDistribution::localDeveloperBuild(); }
+        const CUpdateInfo u = this->getUpdateInfo();
+        return u.anticipateOwnDistribution();
     }
 
     bool CApplication::start()
@@ -459,16 +454,10 @@ namespace BlackCore
 
     CStatusMessageList CApplication::requestReloadOfSetupAndVersion()
     {
-        if (!m_shutdown)
-        {
-            Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "Missing reader");
-            Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
-            return m_setupReader->asyncLoad();
-        }
-        else
-        {
-            return CStatusMessage(this).error("No reader for setup/version");
-        }
+        if (m_shutdown) { return CStatusMessage(this).warning("Shutting down, not reading"); }
+        if (!m_setupReader) { return CStatusMessage(this).error("No reader for setup/version"); }
+        Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
+        return m_setupReader->asyncLoad();
     }
 
     bool CApplication::hasWebDataServices() const
@@ -493,9 +482,9 @@ namespace BlackCore
 
     const QString &CApplication::versionStringDetailed() const
     {
-        if (isRunningInDeveloperEnvironment() && CBuildConfig::isDevBranch())
+        if (this->isRunningInDeveloperEnvironment() && CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            static const QString s(CBuildConfig::getVersionString() + " [dev,DEV]");
+            static const QString s(CBuildConfig::getVersionString() + " [dev,DEVDBG]");
             return s;
         }
         if (isRunningInDeveloperEnvironment())
@@ -503,9 +492,9 @@ namespace BlackCore
             static const QString s(CBuildConfig::getVersionString() + " [dev]");
             return s;
         }
-        if (CBuildConfig::isDevBranch())
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            static const QString s(CBuildConfig::getVersionString() + " [DEV]");
+            static const QString s(CBuildConfig::getVersionString() + " [DEVDBG]");
             return s;
         }
         return CBuildConfig::getVersionString();
@@ -525,44 +514,18 @@ namespace BlackCore
 
     bool CApplication::initIsRunningInDeveloperEnvironment() const
     {
-        if (!CBuildConfig::canRunInDeveloperEnvironment()) { return false; }
-        if (m_unitTest) { return true; }
-        if (this->isSet(m_cmdDevelopment)) { return true; }
+        // assumption: restricted distributions are development versions
+
+        if (this->getApplicationInfo().isSampleOrUnitTest()) { return true; }
+        const CDistribution d(this->getOwnDistribution());
+        const bool canSetDeveloperEnv = CBuildConfig::isLocalDeveloperDebugBuild() || d.isRestricted();
+        if (canSetDeveloperEnv && this->isSet(m_cmdDevelopment)) { return true; }
         if (this->isSetupAvailable())
         {
             // assume value from setup
             return this->getGlobalSetup().isDevelopment();
         }
         return false;
-    }
-
-    void CApplication::setSignalStartupAutomatically(bool enabled)
-    {
-        m_signalStartup = enabled;
-    }
-
-    QString CApplication::getEnvironmentInfoString(const QString &separator) const
-    {
-        const QString env =
-            QLatin1String("Beta: ") %
-            boolToYesNo(CBuildConfig::isDevBranch()) %
-            QLatin1String(" dev.env.: ") %
-            boolToYesNo(this->isRunningInDeveloperEnvironment()) %
-            separator %
-            QLatin1String("Windows NT: ") %
-            boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()) %
-            QLatin1String(" Windows 10: ") %
-            boolToYesNo(CBuildConfig::isRunningOnWindows10()) %
-            separator %
-            QLatin1String("Linux: ") %
-            boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) %
-            QLatin1String(" Unix: ") %
-            boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) %
-            separator %
-            QLatin1String("MacOS: ") %
-            boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform());
-
-        return env;
     }
 
     bool CApplication::hasUnsavedSettings() const
@@ -603,7 +566,27 @@ namespace BlackCore
             CBuildConfig::getVersionString() %
             QLatin1Char(' ') % (CBuildConfig::isReleaseBuild() ? QLatin1String("Release build") : QLatin1String("Debug build")) %
             separator %
-            getEnvironmentInfoString(separator) %
+            QLatin1String("Local dev.dbg.: ") %
+            boolToYesNo(CBuildConfig::isLocalDeveloperDebugBuild()) %
+            separator %
+            QLatin1String("dev.env.: ") %
+            boolToYesNo(this->isRunningInDeveloperEnvironment()) %
+            separator %
+            QLatin1String("distribution: ") %
+            this->getOwnDistribution().toQString(true) %
+            separator %
+            QLatin1String("Windows NT: ") %
+            boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()) %
+            QLatin1String(" Windows 10: ") %
+            boolToYesNo(CBuildConfig::isRunningOnWindows10()) %
+            separator %
+            QLatin1String("Linux: ") %
+            boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) %
+            QLatin1String(" Unix: ") %
+            boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) %
+            separator %
+            QLatin1String("MacOS: ") %
+            boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform()) %
             separator %
             QLatin1String("Build Abi: ") %
             QSysInfo::buildAbi() %
@@ -612,6 +595,7 @@ namespace BlackCore
             QSysInfo::buildCpuArchitecture() %
             separator %
             CBuildConfig::compiledWithInfo(false);
+
         return str;
     }
 
@@ -763,10 +747,7 @@ namespace BlackCore
 
     void CApplication::exit(int retcode)
     {
-        if (instance())
-        {
-            instance()->gracefulShutdown();
-        }
+        if (instance()) { instance()->gracefulShutdown(); }
 
         // when the event loop is not running, this does nothing
         QCoreApplication::exit(retcode);
@@ -1474,7 +1455,7 @@ namespace BlackCore
     {
 #ifdef BLACK_USE_CRASHPAD
         // No crash handling for unit tests
-        if (isUnitTest()) { return CStatusMessage(this).info("No crash handler for unit tests"); }
+        if (this->getApplicationInfo().isUnitTest()) { return CStatusMessage(this).info("No crash handler for unit tests"); }
 
         static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
         static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::binDirectory(), crashpadHandler);
