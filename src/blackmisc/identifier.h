@@ -53,10 +53,10 @@ namespace BlackMisc
         CIdentifier(const QString &name = QString());
 
         //! Returns an anonymous identifier.
-        static CIdentifier anonymous();
+        static const CIdentifier &anonymous();
 
         //! Returns a fake identifier.
-        static CIdentifier fake();
+        static const CIdentifier &fake();
 
         //! Produces a UUID generated from the identifier.
         QUuid toUuid() const;
@@ -110,6 +110,10 @@ namespace BlackMisc
         void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
     private:
+        //! Constructor.
+        CIdentifier(const QString &name, const QString &machineId, const QString &machineName,
+                    const QString &processName, qint64 processId = 0);
+
         QString m_name;            //!< object name
         QString m_machineIdBase64; //!< base 64 encoded machine id
         QString m_machineName;     //!< human readable machine name

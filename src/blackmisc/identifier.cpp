@@ -32,29 +32,22 @@ namespace BlackMisc
           m_processId(QCoreApplication::applicationPid())
     { }
 
-    CIdentifier CIdentifier::anonymous()
+    CIdentifier::CIdentifier(const QString &name, const QString &machineId, const QString &machineName,
+                             const QString &processName, qint64 processId) :
+        ITimestampBased(QDateTime::currentMSecsSinceEpoch()),
+        m_name(name), m_machineIdBase64(machineId), m_machineName(machineName),
+        m_processName(processName), m_processId(processId)
+    { }
+
+    const CIdentifier &CIdentifier::anonymous()
     {
-        static CIdentifier id;
-        if (id.m_processId)
-        {
-            id.m_processId = 0;
-            id.m_processName = "";
-            id.m_machineName = "";
-            id.m_machineIdBase64 = "";
-        }
+        static const CIdentifier id("anonymous", "", "", "", 0);
         return id;
     }
 
-    CIdentifier CIdentifier::fake()
+    const CIdentifier &CIdentifier::fake()
     {
-        static CIdentifier id;
-        if (id.m_processId)
-        {
-            id.m_processId = 0;
-            id.m_processName = "fake process";
-            id.m_machineName = "fake machine";
-            id.m_machineIdBase64 = QByteArrayLiteral("0").repeated(32).toBase64();
-        }
+        static const CIdentifier id("fake", QByteArrayLiteral("0").repeated(32).toBase64(), "fake machine", "fake process", 0);
         return id;
     }
 
@@ -101,7 +94,7 @@ namespace BlackMisc
 
     bool CIdentifier::isAnonymous() const
     {
-        return anonymous() == *this;
+        return &anonymous() == this || anonymous() == *this;
     }
 
     QString CIdentifier::convertToQString(bool i18n) const
