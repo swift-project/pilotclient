@@ -129,6 +129,9 @@ namespace BlackMisc
     //! Bool to true/false
     BLACKMISC_EXPORT QString boolToTrueFalse(bool v, bool  i18n = false);
 
+    //! Bool to enabled/disabled
+    BLACKMISC_EXPORT QString boolToEnabledDisabled(bool v, bool  i18n = false);
+
     //! Convert string to bool
     BLACKMISC_EXPORT bool stringToBool(const QString &boolString);
 

@@ -44,6 +44,12 @@ namespace BlackMisc
         return v ? "true" : "false";
     }
 
+    QString boolToEnabledDisabled(bool v, bool i18n)
+    {
+        Q_UNUSED(i18n);
+        return v ? "enabled" : "disabled";
+    }
+
     bool stringToBool(const QString &string)
     {
         QString s(string.trimmed().toLower());
