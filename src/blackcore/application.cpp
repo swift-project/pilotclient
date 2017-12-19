@@ -102,7 +102,8 @@ namespace BlackCore
 
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
         m_accessManager(new QNetworkAccessManager(this)),
-        m_application(application), m_cookieManager( {}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+        m_applicationInfo(application, QCoreApplication::applicationDirPath(), CBuildConfig::getVersionString(), CProcessInfo::currentProcess()),
+        m_cookieManager( {}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -266,21 +267,7 @@ namespace BlackCore
         m_singleApplication = singleApplication;
     }
 
-    CApplicationInfo::Application CApplication::getSwiftApplication() const
-    {
-        if (m_application != CApplicationInfo::Unknown) { return m_application; }
 
-        // if not set, guess
-        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Missing application");
-        const QString a(QCoreApplication::instance()->applicationName().toLower());
-        if (a.contains("core"))     { return CApplicationInfo::PilotClientCore; }
-        if (a.contains("launcher")) { return CApplicationInfo::Laucher; }
-        if (a.contains("gui"))      { return CApplicationInfo::PilotClientGui; }
-        if (a.contains("test"))     { return CApplicationInfo::UnitTest; }
-        if (a.contains("sample"))   { return CApplicationInfo::Sample; }
-        if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
-        return CApplicationInfo::Unknown;
-    }
 
     QString CApplication::getExecutableForApplication(CApplicationInfo::Application application) const
     {

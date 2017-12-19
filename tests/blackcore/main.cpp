@@ -19,6 +19,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+using namespace BlackMisc;
 using namespace BlackCore;
 using namespace BlackCoreTest;
 
@@ -27,7 +28,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication qa(argc, argv);
     Q_UNUSED(qa);
-    CApplication a;
+    CApplication a(CApplicationInfo::UnitTest);
     a.addVatlibOptions();
     const bool setup = a.parseAndSynchronizeSetup();
     if (!setup) { qWarning() << "No setup loaded"; }

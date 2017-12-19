@@ -136,7 +136,7 @@ namespace BlackCore
         void setSingleApplication(bool singleApplication);
 
         //! swift application running
-        BlackMisc::CApplicationInfo::Application getSwiftApplication() const;
+        BlackMisc::CApplicationInfo::Application getSwiftApplication() const { return m_applicationInfo.application(); }
 
         //! Executable names for the given applications
         QString getExecutableForApplication(BlackMisc::CApplicationInfo::Application application) const;
@@ -590,7 +590,7 @@ namespace BlackCore
                                        std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod);
 
         QNetworkAccessManager                   *m_accessManager = nullptr;   //!< single network access manager
-        BlackMisc::CApplicationInfo::Application m_application = BlackMisc::CApplicationInfo::Unknown; //!< Application if specified
+        BlackMisc::CApplicationInfo              m_applicationInfo;           //!< Application if specified
         QScopedPointer<CCoreFacade>              m_coreFacade;                //!< core facade if any
         QScopedPointer<CSetupReader>             m_setupReader;               //!< setup reader
         QScopedPointer<CWebDataServices>         m_webDataServices;           //!< web data services

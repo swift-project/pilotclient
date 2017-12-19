@@ -93,6 +93,8 @@ namespace BlackMisc
         QString m_version;
         CProcessInfo m_process;
 
+        static Application guessApplication();
+
         BLACK_METACLASS(
             CApplicationInfo,
             BLACK_METAMEMBER(app),

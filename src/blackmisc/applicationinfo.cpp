@@ -17,10 +17,15 @@ namespace BlackMisc
 
     CApplicationInfo::CApplicationInfo(Application app, const QString &exePath, const QString &version, const CProcessInfo &process) :
         m_app(app),
-        m_exePath(exePath),
+        m_exePath(exePath.isEmpty() ? QCoreApplication::applicationDirPath() : exePath),
         m_version(version),
         m_process(process)
-    {}
+    {
+        if (app == CApplicationInfo::Unknown)
+        {
+            m_app = guessApplication();
+        }
+    }
 
     bool CApplicationInfo::isSampleOrUnitTest() const
     {
@@ -61,5 +66,17 @@ namespace BlackMisc
     {
         static const QString s("swift core");
         return s;
+    }
+
+    CApplicationInfo::Application CApplicationInfo::guessApplication()
+    {
+        const QString a(QCoreApplication::instance()->applicationName().toLower());
+        if (a.contains("test"))     { return CApplicationInfo::UnitTest; } // names like testcore
+        if (a.contains("sample"))   { return CApplicationInfo::Sample; }
+        if (a.contains("core"))     { return CApplicationInfo::PilotClientCore; }
+        if (a.contains("launcher")) { return CApplicationInfo::Laucher; }
+        if (a.contains("gui"))      { return CApplicationInfo::PilotClientGui; }
+        if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
+        return CApplicationInfo::Unknown;
     }
 }
