@@ -71,12 +71,7 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::addEntry()
         {
-            BlackMisc::CIdentifierList registeredApps;
-            if (sGui->getIContextApplication()) registeredApps = sGui->getIContextApplication()->getRegisteredApplications();
-
-            // add local application
-            registeredApps.push_back(CIdentifier());
-            const auto selectedActionHotkey = CHotkeyDialog::getActionHotkey(CActionHotkey(), registeredApps, this);
+            const CActionHotkey selectedActionHotkey = CHotkeyDialog::getActionHotkey(CActionHotkey(), getAllIdentifiers(), this);
             if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey))
             {
                 addHotkeytoSettings(selectedActionHotkey);
@@ -96,13 +91,8 @@ namespace BlackGui
             const QModelIndex indexHotkey = model->index(index.row(), 0, QModelIndex());
             Q_ASSERT_X(indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).canConvert<CActionHotkey>(), Q_FUNC_INFO, "No action hotkey");
             CActionHotkey actionHotkey = indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
-            BlackMisc::CIdentifierList registeredApps;
-            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
-            if (sGui->getIContextApplication()) registeredApps = sGui->getIContextApplication()->getRegisteredApplications();
 
-            // add local application
-            registeredApps.push_back(CIdentifier());
-            const auto selectedActionHotkey = CHotkeyDialog::getActionHotkey(actionHotkey, registeredApps, this);
+            const CActionHotkey selectedActionHotkey = CHotkeyDialog::getActionHotkey(actionHotkey, getAllIdentifiers(), this);
             if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey, { actionHotkey }))
             {
                 updateHotkeyInSettings(actionHotkey, selectedActionHotkey);

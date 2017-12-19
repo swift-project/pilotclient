@@ -16,6 +16,7 @@
 #include "blackgui/models/actionhotkeylistmodel.h"
 #include "blackcore/actionbind.h"
 #include "blackcore/application/applicationsettings.h"
+#include "blackmisc/identifierlist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
 
@@ -60,6 +61,7 @@ namespace BlackGui
             void removeHotkeyFromSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
             bool checkAndConfirmConflicts(const BlackMisc::Input::CActionHotkey &actionHotkey, const BlackMisc::Input::CActionHotkeyList &ignore = {});
             void reloadHotkeysFromSettings();
+            BlackMisc::CIdentifierList getAllIdentifiers() const;
 
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
             BlackGui::Models::CActionHotkeyListModel m_model;

@@ -69,6 +69,7 @@ namespace BlackGui
             m_actionHotkey(actionHotkey),
             m_actionModel(this)
         {
+            setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
             m_inputManager = BlackCore::CInputManager::instance();
 
             ui->setupUi(this);
@@ -80,15 +81,22 @@ namespace BlackGui
 
             if (!actionHotkey.getCombination().isEmpty()) { ui->pb_SelectedHotkey->setText(actionHotkey.getCombination().toQString()); }
 
+            CIdentifierList machineIdentifiers(identifiers);
+            if (actionHotkey.isValid()) { machineIdentifiers.push_back(actionHotkey.getApplicableMachine()); }
             int index = -1;
-            const CIdentifierList machinesUnique = applications.getMachinesUnique();
-            for (const auto &app : machinesUnique)
+            const CIdentifierList machineIdentifiersUnique = machineIdentifiers.getMachinesUnique();
+            for (const auto &app : machineIdentifiersUnique)
             {
                 ui->cb_Identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
                 if (m_actionHotkey.getApplicableMachine().isFromSameMachine(app)) { index = ui->cb_Identifier->count() - 1; }
             }
 
-            if (index != ui->cb_Identifier->currentIndex())
+            if (index < 0 && ui->cb_Identifier->count() > 0)
+            {
+                // if nothing was found
+                ui->cb_Identifier->setCurrentIndex(0);
+            }
+            else if (index != ui->cb_Identifier->currentIndex())
             {
                 ui->cb_Identifier->setCurrentIndex(index);
             }
