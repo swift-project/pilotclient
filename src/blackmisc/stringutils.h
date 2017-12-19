@@ -123,10 +123,10 @@ namespace BlackMisc
     //! Bool to on/off
     BLACKMISC_EXPORT QString boolToOnOff(bool v, bool  i18n = false);
 
-    //! Bool to yes / no
+    //! Bool to yes/no
     BLACKMISC_EXPORT QString boolToYesNo(bool v, bool  i18n = false);
 
-    //! Bool to true / false
+    //! Bool to true/false
     BLACKMISC_EXPORT QString boolToTrueFalse(bool v, bool  i18n = false);
 
     //! Convert string to bool

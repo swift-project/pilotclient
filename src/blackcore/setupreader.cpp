@@ -53,7 +53,7 @@ namespace BlackCore
 
     QList<QCommandLineOption> CSetupReader::getCmdLineOptions() const
     {
-        return  QList<QCommandLineOption>
+        return QList<QCommandLineOption>
         {
             {
                 m_cmdBootstrapUrl,

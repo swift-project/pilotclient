@@ -72,7 +72,7 @@ namespace BlackCore
         //! Current setup (reader URLs, DB location, crash server)
         //! \remarks aka "bootstrap file"
         //! \threadsafe
-        BlackCore::Data::CGlobalSetup getSetup() const;
+        Data::CGlobalSetup getSetup() const;
 
         //! Has cached setup ("bootstrap") data?
         //! \threadsafe
