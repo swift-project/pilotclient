@@ -120,22 +120,30 @@ namespace BlackConfig
 #endif
     }
 
-    bool CBuildConfig::isLifetimeExpired()
+    namespace Private
     {
-        if (getEol().isValid())
+        bool isLocalDeveloperBuildImpl()
         {
-            return QDateTime::currentDateTime() > getEol();
-        }
-        else
-        {
-            return true;
+            const QString p = QCoreApplication::applicationDirPath().toLower();
+
+            // guessing, feel free to add path checks
+            if (p.contains("build")) { return true; }
+            if (p.contains("msvc")) { return true; }
+            return false;
         }
     }
 
-    bool CBuildConfig::canRunInDeveloperEnvironment()
+    bool CBuildConfig::isLocalDeveloperDebugBuild()
     {
-        if (CBuildConfig::isDevBranch()) { return true; }
-        return !CBuildConfig::isStableBranch();
+        if (!CBuildConfig::isDebugBuild()) { return false; }
+        static const bool devBuild = Private::isLocalDeveloperBuildImpl();
+        return devBuild;
+    }
+
+    bool CBuildConfig::isLifetimeExpired()
+    {
+        if (!getEol().isValid()) { return true; }
+        return QDateTime::currentDateTime() > getEol();
     }
 
     QString boolToYesNo(bool v)
@@ -263,18 +271,21 @@ namespace BlackConfig
         return parts;
     }
 
-    int buildWordSizeImpl()
+    namespace Private
     {
-        if (CBuildConfig::getBuildAbiParts().length() < 3) { return -1; }
-        const QString abiWs = CBuildConfig::getBuildAbiParts()[2];
-        if (abiWs.contains("32")) { return 32; }
-        if (abiWs.contains("64")) { return 64; }
-        return -1;
+        int buildWordSizeImpl()
+        {
+            if (CBuildConfig::getBuildAbiParts().length() < 3) { return -1; }
+            const QString abiWs = CBuildConfig::getBuildAbiParts()[2];
+            if (abiWs.contains("32")) { return 32; }
+            if (abiWs.contains("64")) { return 64; }
+            return -1;
+        }
     }
 
     int CBuildConfig::buildWordSize()
     {
-        static const int bws = buildWordSizeImpl();
+        static const int bws = Private::buildWordSizeImpl();
         return bws;
     }
 } // ns

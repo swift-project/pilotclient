@@ -56,8 +56,6 @@ include(vatsim.pri)
 !contains(BLACK_CONFIG, FS9) { DEFINE_WITH_FS9 = "//" }
 !contains(BLACK_CONFIG, FSUIPC) { DEFINE_WITH_FSUIPC = "//" }
 !contains(BLACK_CONFIG, XPlane) { DEFINE_WITH_XPLANE = "//" }
-!contains(BLACK_CONFIG, SwiftDevBranch) { DEFINE_SWIFT_DEV_BRANCH = "//" }
-!contains(BLACK_CONFIG, SwiftStableBranch) { DEFINE_SWIFT_STABLE_BRANCH = "//" }
 !contains(BLACK_CONFIG, SwiftVatsimSupport) { DEFINE_SWIFT_VATSIM_SUPPORT = "//" }
 
 # Global compiler Macros

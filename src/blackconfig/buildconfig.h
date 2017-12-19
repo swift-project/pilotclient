@@ -62,14 +62,8 @@ namespace BlackConfig
         //! Release build?
         static bool isReleaseBuild();
 
-        //! DEV. branch?
-        static bool isDevBranch(); // defined in buildconfig_gen.cpp.in
-
-        //! STABLE branch?
-        static bool isStableBranch(); // defined in buildconfig_gen.cpp.in
-
-        //! Can run in dev. environment?
-        static bool canRunInDeveloperEnvironment();
+        //! Local build for developers
+        static bool isLocalDeveloperDebugBuild();
 
         //! Vatsim enabled version?
         static bool isVatsimVersion(); // defined in buildconfig_gen.cpp.in

@@ -23,8 +23,6 @@ $$DEFINE_WITH_P3D#define WITH_P3D
 $$DEFINE_WITH_FS9#define WITH_FS9
 $$DEFINE_WITH_FSUIPC#define WITH_FSUIPC
 $$DEFINE_WITH_XPLANE#define WITH_XPLANE
-$$DEFINE_SWIFT_DEV_BRANCH#define SWIFT_DEV_BRANCH
-$$DEFINE_SWIFT_STABLE_BRANCH#define SWIFT_STABLE_BRANCH
 $$DEFINE_SWIFT_VATSIM_SUPPORT#define SWIFT_VATSIM_SUPPORT
 
 bool BlackConfig::CBuildConfig::isCompiledWithBlackCore()
@@ -102,24 +100,6 @@ bool BlackConfig::CBuildConfig::isCompiledWithXPlaneSupport()
 bool BlackConfig::CBuildConfig::isCompiledWithGui()
 {
 #ifdef WITH_BLACKGUI
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool BlackConfig::CBuildConfig::isDevBranch()
-{
-#ifdef SWIFT_DEV_BRANCH
-        return true;
-#else
-        return false;
-#endif
-}
-
-bool BlackConfig::CBuildConfig::isStableBranch()
-{
-#ifdef SWIFT_STABLE_BRANCH
     return true;
 #else
     return false;
