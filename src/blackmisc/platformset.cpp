@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "platformset.h"
 #include "blackmisc/containerbase.h"
 #include "blackmisc/dbus.h"
@@ -20,8 +22,11 @@ namespace BlackMisc
 {
     CPlatformSet::CPlatformSet() { }
 
-    CPlatformSet::CPlatformSet(const CCollection<CPlatform> &other) :
-        CCollection<CPlatform>(other)
+    // cppcheck-suppress passedByValue
+    CPlatformSet::CPlatformSet(std::initializer_list<CPlatform> il) : CCollection<CPlatform>(il)
+    { }
+
+    CPlatformSet::CPlatformSet(const CCollection<CPlatform> &other) : CCollection<CPlatform>(other)
     { }
 
     QStringList CPlatformSet::getPlatformNames() const
@@ -78,3 +83,5 @@ namespace BlackMisc
         registerMetaValueType<CPlatformSet>();
     }
 } // namespace
+
+//! \endcond

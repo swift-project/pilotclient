@@ -18,10 +18,11 @@ namespace BlackMisc
     namespace Db
     {
         CUpdateInfo::CUpdateInfo(const CArtifactList &artifacts, const CDistributionList &distributions) :
+            m_artifactsPilotClient(artifacts.findByType(CArtifact::PilotClientInstaller)),
+            m_artifactsXsb(artifacts.findByType(CArtifact::XSwiftBus)),
             m_distributions(distributions)
         {
-            m_artifactsPilotClient = artifacts.findByType(CArtifact::PilotClientInstaller);
-            m_artifactsXsb = artifacts.findByType(CArtifact::XSwiftBus);
+            // void
         }
 
         CDistributionList CUpdateInfo::getDistributionsPilotClientForCurrentPlatform() const
