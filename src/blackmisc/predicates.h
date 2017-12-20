@@ -7,9 +7,7 @@
  * contained in the LICENSE file.
  */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_PREDICATES_H
 #define BLACKMISC_PREDICATES_H
@@ -27,7 +25,6 @@ namespace BlackMisc
 
     namespace Predicates
     {
-
         namespace Private
         {
             //! \private
@@ -136,7 +133,6 @@ namespace BlackMisc
         }
 
     } //namespace Predicates
-
 } //namespace BlackMisc
 
-#endif //BLACKMISC_PREDICATES_H
+#endif // guard
