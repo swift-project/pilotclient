@@ -53,14 +53,14 @@ namespace BlackMisc
             CArtifactList getArtifactsPilotClientForCurrentPlatform() const;
 
             //! Artifacts (XSwiftBus)
-            const CArtifactList &getArtifactsXsb() const { return m_artifactsXsb; }
+            const CArtifactList &getArtifactsXSwiftBus() const { return m_artifactsXSwiftBus; }
 
             //! Artifacts (XSwiftBus)
-            CArtifactList getArtifactsXsbLatestVersionFirst() const;
+            CArtifactList getArtifactsXSwiftBusLatestVersionFirst() const;
 
             //! Artifacts for current platform
             //! \note sorted by version
-            CArtifactList getArtifactsXsbForCurrentPlatform() const;
+            CArtifactList getArtifactsXSwiftBusForCurrentPlatform() const;
 
             //! Distributions (all)
             const CDistributionList &getDistributions() const { return m_distributions; }
@@ -97,13 +97,13 @@ namespace BlackMisc
 
         private:
             CArtifactList m_artifactsPilotClient; //!< artifacts pilot client
-            CArtifactList m_artifactsXsb;         //!< artifacts XSwiftBus
+            CArtifactList m_artifactsXSwiftBus;   //!< artifacts XSwiftBus
             CDistributionList m_distributions;    //!< all distributions (for any artifacts)
 
             BLACK_METACLASS(
                 CUpdateInfo,
                 BLACK_METAMEMBER(artifactsPilotClient),
-                BLACK_METAMEMBER(artifactsXsb),
+                BLACK_METAMEMBER(artifactsXSwiftBus),
                 BLACK_METAMEMBER(distributions)
             );
         };

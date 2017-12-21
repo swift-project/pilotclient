@@ -775,8 +775,8 @@ namespace BlackCore
 
         void CNetworkVatlib::broadcastAircraftConfig(const QJsonObject &config)
         {
-            static const QString dataStr = convertToUnicodeEscaped(QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact));
-            static const QByteArray data(toFSD(dataStr));
+            const QString dataStr = convertToUnicodeEscaped(QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact));
+            const QByteArray data(toFSD(dataStr));
             Vat_SendAircraftConfigBroadcast(m_net.data(), data);
         }
 

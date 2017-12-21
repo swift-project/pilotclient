@@ -395,6 +395,7 @@ namespace BlackMisc
     const QStringList &CFileUtils::executableSuffixes()
     {
         // incomplete list of file name appendixes
+        // dmg is not a executable. It is a MacOS container. If you open it, a new virtual drive will be mapped which includes a executable.
         static const QStringList appendixes({".exe", ".dmg", ".run"});
         return appendixes;
     }

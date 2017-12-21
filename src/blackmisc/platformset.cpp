@@ -22,7 +22,6 @@ namespace BlackMisc
 {
     CPlatformSet::CPlatformSet() { }
 
-    // cppcheck-suppress passedByValue
     CPlatformSet::CPlatformSet(std::initializer_list<CPlatform> il) : CCollection<CPlatform>(il)
     { }
 

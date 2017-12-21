@@ -19,7 +19,7 @@ namespace BlackMisc
     {
         CUpdateInfo::CUpdateInfo(const CArtifactList &artifacts, const CDistributionList &distributions) :
             m_artifactsPilotClient(artifacts.findByType(CArtifact::PilotClientInstaller)),
-            m_artifactsXsb(artifacts.findByType(CArtifact::XSwiftBus)),
+            m_artifactsXSwiftBus(artifacts.findByType(CArtifact::XSwiftBus)),
             m_distributions(distributions)
         {
             // void
@@ -40,16 +40,16 @@ namespace BlackMisc
             return artifacts;
         }
 
-        CArtifactList CUpdateInfo::getArtifactsXsbLatestVersionFirst() const
+        CArtifactList CUpdateInfo::getArtifactsXSwiftBusLatestVersionFirst() const
         {
-            CArtifactList artifacts(m_artifactsXsb);
+            CArtifactList artifacts(m_artifactsXSwiftBus);
             artifacts.sortByVersion(Qt::DescendingOrder);
             return artifacts;
         }
 
-        CArtifactList CUpdateInfo::getArtifactsXsbForCurrentPlatform() const
+        CArtifactList CUpdateInfo::getArtifactsXSwiftBusForCurrentPlatform() const
         {
-            CArtifactList artifacts = m_artifactsXsb.findMatchingForCurrentPlatform();
+            CArtifactList artifacts = m_artifactsXSwiftBus.findMatchingForCurrentPlatform();
             artifacts.sortByVersion(Qt::DescendingOrder);
             return artifacts;
         }
@@ -93,7 +93,7 @@ namespace BlackMisc
                    this->getArtifactsPilotClient().toQString(i18n) %
                    separator %
                    QLatin1String("artifacts (XSB): ") %
-                   this->getArtifactsXsb().toQString(i18n) %
+                   this->getArtifactsXSwiftBus().toQString(i18n) %
                    separator %
                    QLatin1String("distributions: ") %
                    this->getDistributions().toQString(i18n);
@@ -106,7 +106,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexArtifactsPilotClient: return CVariant::fromValue(m_artifactsPilotClient);
-            case IndexArtifactsXSwiftBus: CVariant::fromValue(m_artifactsXsb);
+            case IndexArtifactsXSwiftBus: CVariant::fromValue(m_artifactsXSwiftBus);
             case IndexDistributions: return CVariant::fromValue(m_distributions);
             default: return CValueObject::propertyByIndex(index);
             }
@@ -119,7 +119,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexArtifactsPilotClient: m_artifactsPilotClient = variant.value<CArtifactList>(); break;
-            case IndexArtifactsXSwiftBus: m_artifactsXsb = variant.value<CArtifactList>(); break;
+            case IndexArtifactsXSwiftBus: m_artifactsXSwiftBus = variant.value<CArtifactList>(); break;
             case IndexDistributions: m_distributions = variant.value<CDistributionList>(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }

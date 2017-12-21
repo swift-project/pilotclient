@@ -185,7 +185,7 @@ namespace BlackGui
 
             const CUpdateInfo updateInfo(m_updateInfo.get());
             const CArtifactList artifactsPilotClient = updateInfo.getArtifactsPilotClient().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
-            const CArtifactList artifactsXsb = updateInfo.getArtifactsXsb().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
+            const CArtifactList artifactsXsb = updateInfo.getArtifactsXSwiftBus().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
 
             const QStringList sortedPilotClientVersions = artifactsPilotClient.getSortedVersions();
             ui->cb_ArtifactsPilotClient->clear();

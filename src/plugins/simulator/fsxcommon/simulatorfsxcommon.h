@@ -88,10 +88,7 @@ namespace BlackSimPlugin
             //! Ctor
             TraceFsxSendId(DWORD sendId, DWORD simObjectId, const QString &comment) :
                 sendId(sendId), simObjectId(simObjectId), comment(comment)
-            {
-                Q_ASSERT_X(sendId >= 0, Q_FUNC_INFO, "DWORD is unsigned");
-                Q_ASSERT_X(simObjectId >= 0, Q_FUNC_INFO, "DWORD is unsigned");
-            }
+            { }
 
             // DWORD is unsigned
             DWORD sendId = 0;      //!< the send id

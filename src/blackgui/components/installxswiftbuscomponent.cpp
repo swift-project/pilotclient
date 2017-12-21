@@ -170,7 +170,7 @@ namespace BlackGui
         {
             const QString fileNameAndSize = ui->cb_DownloadFile->currentText();
             const CUpdateInfo update = m_updates.get();
-            const CRemoteFileList remoteFiles = update.getArtifactsXsb().asRemoteFiles();
+            const CRemoteFileList remoteFiles = update.getArtifactsXSwiftBus().asRemoteFiles();
             return remoteFiles.findFirstByMatchingNameOrDefault(fileNameAndSize);
         }
 
@@ -199,8 +199,8 @@ namespace BlackGui
         void CInstallXSwiftBusComponent::updatesChanged()
         {
             const CUpdateInfo updateInfo = m_updates.get();
-            if (updateInfo.getArtifactsXsb().isEmpty()) { return; }
-            const CArtifactList artifacts = updateInfo.getArtifactsXsbLatestVersionFirst();
+            if (updateInfo.getArtifactsXSwiftBus().isEmpty()) { return; }
+            const CArtifactList artifacts = updateInfo.getArtifactsXSwiftBusLatestVersionFirst();
             const CRemoteFileList remoteFiles = artifacts.asRemoteFiles();
             if (!remoteFiles.isEmpty())
             {

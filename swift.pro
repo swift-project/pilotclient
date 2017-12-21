@@ -5,6 +5,7 @@ CONFIG += ordered
 
 OTHER_FILES += mkspecs/features/*.prf
 OTHER_FILES += mkspecs/features/*.pri
+OTHER_FILES += *.supp
 
 CheckMandatoryDependency(gl)
 CheckMandatoryDependency(glu)
