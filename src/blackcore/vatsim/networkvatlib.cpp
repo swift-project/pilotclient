@@ -759,17 +759,15 @@ namespace BlackCore
         void CNetworkVatlib::sendCustomFsinnReponse(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
-            const CSimulatedAircraft myAircraft(getOwnAircraft());
-            QString modelString = myAircraft.getModel().getModelString();
-            if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
-            const QStringList data { { "0" },
-                myAircraft.getAirlineIcaoCodeDesignator(),
-                myAircraft.getAircraftIcaoCodeDesignator(),
-                { "" }, { "" }, { "" }, { "" },
-                myAircraft.getAircraftIcaoCombinedType(),
-                modelString
-            };
+            static const QStringList dataTemplate{ "0", "", "", "", "", "", "", "", "" };
+            const CSimulatedAircraft myAircraft(getOwnAircraft());
+
+            QStringList data(dataTemplate);
+            data[1] = myAircraft.getAirlineIcaoCodeDesignator();
+            data[2] = myAircraft.getAircraftIcaoCodeDesignator();
+            data[7] = myAircraft.getAircraftIcaoCombinedType();
+            data[8] = myAircraft.hasModelString() ? myAircraft.getModel().getModelString() : defaultModelString();
             sendCustomPacket(callsign, "FSIPI", data);
         }
 
