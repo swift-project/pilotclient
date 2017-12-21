@@ -181,7 +181,7 @@ namespace BlackSample
         out << "contains matched " << number << " of " << strList4.size() << " strings in " << ms << "ms" << endl;
 
         out << "-----------------------------------------------"  << endl;
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     int CSamplesPerformance::interpolatorScenario(QTextStream &out, int numberOfCallsigns, int numberOfTimes)
@@ -239,7 +239,7 @@ namespace BlackSample
         out << "Split by callsign, by time: " << timer.elapsed() << "ms" << endl;
 
         out << endl;
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     int CSamplesPerformance::samplesJson(QTextStream &out)
@@ -272,7 +272,7 @@ namespace BlackSample
         models.convertFromMemoizedJson(json);
         out << "Convert 10,000 aircraft models from JSON (memoize): " << timer.elapsed() << "ms" << endl << endl;
 
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     int CSamplesPerformance::samplesJsonModel(QTextStream &out)
@@ -306,7 +306,7 @@ namespace BlackSample
         out << "Read via swift JSON format: " << swiftModels.size() << " models in " << ms << "ms" << endl;
 
         Q_ASSERT_X(swiftModels.size() == dbModels.size(), Q_FUNC_INFO, "Mismatching container size");
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     int CSamplesPerformance::samplesStringUtilsVsRegEx(QTextStream &out)
@@ -387,7 +387,7 @@ namespace BlackSample
         }
         out << "Split 100,000 line string into list of lines: (QList<QStringRef>)    " << timer.elapsed() << "ms" << endl;
 
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     int CSamplesPerformance::samplesStringConcat(QTextStream &out)
@@ -470,7 +470,63 @@ namespace BlackSample
         out << "arg QStringLiteral multiple " << time.elapsed() << "ms" << endl;
         x.clear();
 
-        return 0;
+        return EXIT_SUCCESS;
+    }
+
+    int CSamplesPerformance::samplesStringLiteralVsConstQString(QTextStream &out)
+    {
+        const int loop = 1e7;
+        QTime time;
+        QString x;
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = fooString();
+        }
+        out << "by constQString " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = fooStringLiteral();
+        }
+        out << "by QStringLiteral " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = QString("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.");
+        }
+        out << "by QString(\"...\") " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = QStringLiteral("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.");
+        }
+        out << "by QStringLiteral(\"...\") " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            QStringList foo = generateList();
+            Q_UNUSED(foo.size());
+        }
+        out << "generated list " << time.elapsed() << "ms" << endl;
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            QStringList foo = replacedList();
+            Q_UNUSED(foo.size());
+        }
+        out << "replaced list " << time.elapsed() << "ms" << endl;
+
+        return EXIT_SUCCESS;
     }
 
     CAircraftSituationList CSamplesPerformance::createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes)
@@ -518,7 +574,7 @@ namespace BlackSample
     {
         if (n < 1) return;
         CAtcStation atc = CTesting::createStation(1);
-        QList<CCoordinateGeodetic> pos(
+        const QList<CCoordinateGeodetic> pos(
         {
             CCoordinateGeodetic(10.0, 10.0, 10.0),
             CCoordinateGeodetic(20.0, 20.0, 20.0),
@@ -565,6 +621,31 @@ namespace BlackSample
             int idx = (i % 5) * 2;
             c = CCoordinateGeodetic::fromWgs84(wgsLatLng.at(idx), wgsLatLng.at(idx + 1), a);
         }
+    }
+
+    const QString &CSamplesPerformance::fooString()
+    {
+        static const QString s("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.");
+        return s;
+    }
+
+    QString CSamplesPerformance::fooStringLiteral()
+    {
+        return QStringLiteral("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.");
+    }
+
+    QStringList CSamplesPerformance::generateList()
+    {
+        return QStringList({"1", "2", "3", "4"});
+    }
+
+    QStringList CSamplesPerformance::replacedList()
+    {
+        static const QStringList l({"1", "2", "3", "4"});
+        QStringList lc(l);
+        lc[1] = QStringLiteral("6");
+        lc[3] = QStringLiteral("7");
+        return lc;
     }
 
     const CAtcStationList &CSamplesPerformance::stations10k()

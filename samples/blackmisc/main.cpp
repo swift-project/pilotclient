@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
         qtout << "6d .. JSON model performance (database vs. own JSON)" << endl;
         qtout << "6e .. string utils vs.regex" << endl;
         qtout << "6f .. string concatenation (+=, arg, ..)" << endl;
+        qtout << "6g .. const &QString vs. QStringLiteral" << endl;
         qtout << "7 .. Algorithms" << endl;
         qtout << "-----" << endl;
         qtout << "x .. Bye" << endl;
@@ -68,6 +69,7 @@ int main(int argc, char *argv[])
         else if (s.startsWith("6d")) { CSamplesPerformance::samplesJsonModel(qtout); }
         else if (s.startsWith("6e")) { CSamplesPerformance::samplesStringUtilsVsRegEx(qtout); }
         else if (s.startsWith("6f")) { CSamplesPerformance::samplesStringConcat(qtout); }
+        else if (s.startsWith("6g")) { CSamplesPerformance::samplesStringLiteralVsConstQString(qtout); }
         else if (s.startsWith("7")) { CSamplesAlgorithm::samples(); }
         else if (s.startsWith("x")) { break; }
     }

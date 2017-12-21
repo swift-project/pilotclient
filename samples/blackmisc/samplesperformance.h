@@ -44,6 +44,9 @@ namespace BlackSample
         //! String manipulation (concatenation)
         static int samplesStringConcat(QTextStream &out);
 
+        //! const QString vs. QStringLiteral
+        static int samplesStringLiteralVsConstQString(QTextStream &out);
+
     private:
         static const qint64 DeltaTime = 10;
 
@@ -70,6 +73,18 @@ namespace BlackSample
 
         //! parse coordinates from WGS
         static void parseWgs(int times);
+
+        //! String as reference
+        static const QString &fooString();
+
+        //! String as reference
+        static QString fooStringLiteral();
+
+        //! String list generated
+        static QStringList generateList();
+
+        //! String list generated
+        static QStringList replacedList();
     };
 } // namespace
 
