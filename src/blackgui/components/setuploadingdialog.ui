@@ -67,10 +67,37 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="3">
+       <widget class="QLabel" name="lbl_BootstrapMode">
+        <property name="text">
+         <string>Mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_BootstrapUrl">
+        <property name="toolTip">
+         <string>Where the bootstrap file is located</string>
+        </property>
+        <property name="text">
+         <string>Bootstrap URL:</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="4">
        <widget class="QLineEdit" name="le_BootstrapMode">
         <property name="whatsThis">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The mode, implicit means no URL is provided and the value is obtained from an existing setup.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The mode: 'implicit' means no URL is provided and the value is obtained from an existing setup. 'explicit' means an URL is provided via command line arguments.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_BootstrapUrl">
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The bootstrap URL provided by command line options. This is where the setup data are loaded from.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -87,40 +114,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_BootstrapUrl">
-        <property name="toolTip">
-         <string>Where the bootstrap file is located</string>
-        </property>
-        <property name="text">
-         <string>Bootstrap URL:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QLabel" name="lbl_BootstrapMode">
-        <property name="text">
-         <string>Mode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="le_BootstrapUrl">
-        <property name="whatsThis">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The bootstrap URL provided by command line options. This is where the setup data are loaded from.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="pb_IgnoreExplicitBootstrapUrl">
-        <property name="text">
-         <string>Ignore</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0" colspan="5">
        <widget class="QLabel" name="lbl_Info">
         <property name="text">
@@ -134,6 +127,13 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_CopyOver">
+        <property name="text">
+         <string>Copy over:</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="0">
        <widget class="QLabel" name="lbl_SetupCache">
         <property name="text">
@@ -143,8 +143,55 @@
       </item>
       <item row="3" column="2">
        <widget class="QPushButton" name="pb_LoadFromDisk">
+        <property name="whatsThis">
+         <string>load the cache data from disk, i.e. from the file which came with the installer</string>
+        </property>
         <property name="text">
-         <string> load from disk </string>
+         <string>from disk</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pb_IgnoreExplicitBootstrapUrl">
+        <property name="whatsThis">
+         <string>ignore the bootstrap URL and try to read from cache</string>
+        </property>
+        <property name="text">
+         <string>ignore</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="pb_CopyFromSwift">
+        <property name="whatsThis">
+         <string>copy cache data from another swift version</string>
+        </property>
+        <property name="text">
+         <string>copy over</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="le_OtherSwiftVersions">
+        <property name="whatsThis">
+         <string>Info about other swift versions installed</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="4">
+       <widget class="QPushButton" name="pb_OpemDirectory">
+        <property name="text">
+         <string>open dir.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="4">
+       <widget class="QPushButton" name="pb_Help">
+        <property name="text">
+         <string>help page</string>
         </property>
        </widget>
       </item>

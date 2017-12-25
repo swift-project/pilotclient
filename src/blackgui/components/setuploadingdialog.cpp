@@ -8,11 +8,15 @@
  */
 
 #include "setuploadingdialog.h"
+#include "copyconfigurationdialog.h"
 #include "ui_setuploadingdialog.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/network/urllist.h"
 #include "blackcore/setupreader.h"
+#include "blackmisc/directoryutils.h"
+#include "blackmisc/network/urllist.h"
+
 #include <QPushButton>
+#include <QDesktopServices>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -37,6 +41,9 @@ namespace BlackGui
             ui->setupUi(this);
             connect(ui->pb_IgnoreExplicitBootstrapUrl, &QPushButton::clicked, this, &CSetupLoadingDialog::tryAgainWithoutBootstrapUrl);
             connect(ui->pb_LoadFromDisk, &QPushButton::clicked, this, &CSetupLoadingDialog::prefillSetupCache);
+            connect(ui->pb_Help, &QPushButton::clicked, this, &CSetupLoadingDialog::openHelpPage);
+            connect(ui->pb_CopyFromSwift, &QPushButton::clicked, this, &CSetupLoadingDialog::copyFromOtherSwiftVersions);
+            connect(ui->pb_OpemDirectory, &QPushButton::clicked, this, &CSetupLoadingDialog::openDirectory);
 
             QPushButton *retry = ui->bb_Dialog->button(QDialogButtonBox::Retry);
             retry->setDefault(true);
@@ -45,6 +52,7 @@ namespace BlackGui
             this->displayCmdBoostrapUrl();
             this->displayBootstrapUrls();
             this->displayGlobalSetup();
+            this->displayOtherVersionsInfo();
         }
         CSetupLoadingDialog::CSetupLoadingDialog(const BlackMisc::CStatusMessageList &msgs, QWidget *parent) : CSetupLoadingDialog(parent)
         {
@@ -69,9 +77,9 @@ namespace BlackGui
             const CUrlList bootstrapUrls = sApp->getGlobalSetup().getSwiftBootstrapFileUrls();
             for (const CUrl &url : bootstrapUrls)
             {
-                CStatusMessage msg = CNetworkUtils::canConnect(url) ?
-                                     CStatusMessage(this).info("Can connect to '%1'") << url.getFullUrl() :
-                                     CStatusMessage(this).warning("Cannot connect to '%1'") << url.getFullUrl();
+                const CStatusMessage msg = CNetworkUtils::canConnect(url) ?
+                                           CStatusMessage(this).info("Can connect to '%1'") << url.getFullUrl() :
+                                           CStatusMessage(this).warning("Cannot connect to '%1'") << url.getFullUrl();
                 ui->comp_Messages->appendStatusMessageToList(msg);
             }
         }
@@ -91,6 +99,13 @@ namespace BlackGui
         {
             const QString gs = sApp->getGlobalSetup().convertToQString("\n", true);
             ui->comp_Messages->appendPlainTextToConsole(gs);
+        }
+
+        void CSetupLoadingDialog::openHelpPage()
+        {
+            const CUrl url = sApp->getGlobalSetup().getHelpPageUrl("bootstrap");
+            if (url.isEmpty()) { return; }
+            QDesktopServices::openUrl(url);
         }
 
         void CSetupLoadingDialog::tryAgainWithoutBootstrapUrl()
@@ -126,7 +141,34 @@ namespace BlackGui
 
             const bool hasCachedSetup = this->hasCachedSetup();
             ui->pb_LoadFromDisk->setEnabled(!hasCachedSetup);
-            ui->pb_LoadFromDisk->setVisible(!hasCachedSetup);
+            ui->pb_LoadFromDisk->setToolTip(hasCachedSetup ? "Cached setup already available" : "No cached setup");
+        }
+
+        void CSetupLoadingDialog::displayOtherVersionsInfo()
+        {
+            const int other = CDirectoryUtils::applicationDataDirectoriesCount() - 1 ;
+            ui->le_OtherSwiftVersions->setText(QString("There is/are %1 other swift version(s) installed").arg(other));
+            ui->pb_CopyFromSwift->setEnabled(other > 0);
+        }
+
+        void CSetupLoadingDialog::openDirectory()
+        {
+            const QUrl url = QUrl::fromLocalFile(CDirectoryUtils::normalizedApplicationDataDirectory());
+            QDesktopServices::openUrl(url);
+        }
+
+        void CSetupLoadingDialog::copyFromOtherSwiftVersions()
+        {
+            if (!m_copyFromOtherSwiftVersion)
+            {
+                CCopyConfigurationDialog *d = new CCopyConfigurationDialog(this);
+                d->setModal(true);
+                d->setCacheCode();
+                m_copyFromOtherSwiftVersion.reset(d);
+            }
+
+            const int r = m_copyFromOtherSwiftVersion->exec();
+            Q_UNUSED(r);
         }
 
         void CSetupLoadingDialog::onSetupHandlingCompleted(bool success)

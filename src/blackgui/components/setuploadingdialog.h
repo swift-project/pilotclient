@@ -20,6 +20,8 @@ namespace BlackGui
 {
     namespace Components
     {
+        class CCopyConfigurationDialog;
+
         /**
          * Setup dialog, if something goes wrong
          */
@@ -39,6 +41,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSetupLoadingDialog> ui;
+            QScopedPointer<CCopyConfigurationDialog> m_copyFromOtherSwiftVersion;
 
             //! Cached setup available?
             bool hasCachedSetup() const;
@@ -55,6 +58,9 @@ namespace BlackGui
             //! Display global setup
             void displayGlobalSetup();
 
+            //! Open the help page
+            void openHelpPage();
+
             //! Try again without explicit bootstrap URL
             void tryAgainWithoutBootstrapUrl();
 
@@ -63,6 +69,15 @@ namespace BlackGui
 
             //! Display the setup cache info
             void displaySetupCacheInfo();
+
+            //! Display other versions info
+            void displayOtherVersionsInfo();
+
+            //! Open directory
+            void openDirectory();
+
+            //! Copy from other swift versions
+            void copyFromOtherSwiftVersions();
 
             //! Setup loading has been completed
             void onSetupHandlingCompleted(bool success);
