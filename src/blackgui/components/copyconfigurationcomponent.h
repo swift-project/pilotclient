@@ -63,6 +63,9 @@ namespace BlackGui
             //! Log copied files
             void logCopiedFiles(bool log) { m_logCopiedFiles = log; }
 
+            //! Select all
+            void selectAll();
+
         protected:
             //! \copydoc QWidget::resizeEvent
             virtual void resizeEvent(QResizeEvent *event) override;
@@ -92,6 +95,9 @@ namespace BlackGui
 
             //! Init model caches if required (create .rev entries with high level functions)
             void initModelCaches(const QStringList &files);
+
+            //! Init the other swift versions
+            void initOtherSwiftVersions();
 
             QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;

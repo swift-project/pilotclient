@@ -43,9 +43,7 @@ namespace BlackGui
             ui(new Ui::CCopyConfigurationComponent)
         {
             ui->setupUi(this);
-            ui->cb_OtherVersions->clear();
-            ui->cb_OtherVersions->addItems(CDirectoryUtils::applicationDataDirectoryList(true, true));
-            m_otherVersionDirs = CDirectoryUtils::applicationDataDirectoryList(true, false); // not beautified
+            this->initOtherSwiftVersions();
 
             connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
             connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, [ = ] { this->initCurrentDirectories(true); });
@@ -259,6 +257,11 @@ namespace BlackGui
             ui->rb_Settings->setEnabled(allow);
         }
 
+        void CCopyConfigurationComponent::selectAll()
+        {
+            ui->tv_Source->selectAll();
+        }
+
         void CCopyConfigurationComponent::resizeEvent(QResizeEvent *event)
         {
             const int w = 0.45 * this->width();
@@ -279,9 +282,9 @@ namespace BlackGui
 
         QString CCopyConfigurationComponent::getOtherVersionsSelectedDirectory() const
         {
-            if (ui->cb_OtherVersions->count() < 1) { return ""; }
+            if (ui->cb_OtherVersions->count() < 1) { return QStringLiteral(""); }
             const QFileInfoList dirs(CDirectoryUtils::applicationDataDirectories());
-            if (dirs.isEmpty()) { return ""; }
+            if (dirs.isEmpty()) { return QStringLiteral(""); }
             const QString otherVersionDir = m_otherVersionDirs.at(ui->cb_OtherVersions->currentIndex());
             QString dir;
             for (const QFileInfo &info : dirs)
@@ -292,7 +295,7 @@ namespace BlackGui
                     break;
                 }
             }
-            if (dir.isEmpty()) { return ""; }
+            if (dir.isEmpty()) { return QStringLiteral(""); }
             dir = CFileUtils::appendFilePaths(dir, ui->rb_Cache->isChecked() ?
                                               CDataCache::relativeFilePath() :
                                               CSettingsCache::relativeFilePath());
@@ -352,6 +355,26 @@ namespace BlackGui
 
             // allow the cache files to be generated before we will override them
             CGuiApplication::processEventsFor(2500);
+        }
+
+        void CCopyConfigurationComponent::initOtherSwiftVersions()
+        {
+            ui->cb_OtherVersions->clear();
+            const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMap(true);
+            for (const QString &directory : otherVersions.keys())
+            {
+                const CApplicationInfo info(otherVersions.value(directory));
+                if (info.isNull())
+                {
+                    ui->cb_OtherVersions->addItem(CDirectoryUtils::decodeNormalizedDirectory(directory));
+                }
+                else
+                {
+                    static const QString item("swift %1 (%2)");
+                    ui->cb_OtherVersions->addItem(item.arg(info.getVersionString(), info.getPlatform()));
+                }
+                m_otherVersionDirs.push_back(directory);
+            }
         }
 
         const CLogCategoryList &CCopyConfigurationWizardPage::getLogCategories()

@@ -1,0 +1,52 @@
+/* Copyright (C) 2017
+ * swift project community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKGUI_COMPONENTS_COPYCONFIGURATIONDIALOG_H
+#define BLACKGUI_COMPONENTS_COPYCONFIGURATIONDIALOG_H
+
+#include "blackgui/blackguiexport.h"
+#include <QDialog>
+#include <QScopedPointer>
+
+namespace Ui { class CCopyConfigurationDialog; }
+namespace BlackGui
+{
+    namespace Components
+    {
+        /**
+         * Dialog to copy cache and settings
+         */
+        class BLACKGUI_EXPORT CCopyConfigurationDialog : public QDialog
+        {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            explicit CCopyConfigurationDialog(QWidget *parent = nullptr);
+
+            //! Destructor
+            virtual ~CCopyConfigurationDialog();
+
+            //! For cache data
+            void setCacheCode();
+
+            //! For settings
+            void setSettingsMode();
+
+            //! Select all settings or caches
+            void selectAll();
+
+        private:
+            QScopedPointer<Ui::CCopyConfigurationDialog> ui;
+        };
+    } // ns
+} // ns
+#endif // guard
