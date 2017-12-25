@@ -33,7 +33,7 @@ namespace BlackMisc
         names.reserve(size());
         for (const CApplicationInfo &info : *this)
         {
-            names.append(info.processInfo().processName());
+            names.append(info.getProcessInfo().processName());
         }
         return names;
     }

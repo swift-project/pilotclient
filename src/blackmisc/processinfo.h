@@ -42,6 +42,9 @@ namespace BlackMisc
         //! Get the pid.
         qint64 processId() const { return m_pid; }
 
+        //! Empty process info
+        bool isNull() const { return m_pid == 0 && m_name.isEmpty(); }
+
         //! Get the process name.
         const QString &processName() const { return m_name; }
 

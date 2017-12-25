@@ -12,7 +12,9 @@
 #ifndef BLACKMISC_DIRECTORYUTILS_H
 #define BLACKMISC_DIRECTORYUTILS_H
 
-#include "blackmisc/blackmiscexport.h"
+#include "applicationinfo.h"
+#include "blackmiscexport.h"
+#include <QMap>
 #include <QSet>
 #include <QString>
 #include <QFileInfoList>
@@ -41,10 +43,16 @@ namespace BlackMisc
         static const QString &applicationDataDirectory();
 
         //! swift application data sub directories
-        static QFileInfoList applicationDataDirectories();
+        static const QFileInfoList &applicationDataDirectories();
+
+        //! number of data directories (including this version)
+        static int applicationDataDirectoriesCount();
 
         //! swift application data sub directories
-        static QStringList applicationDataDirectoryList(bool withoutCurrent = false, bool beautify = false);
+        static QStringList applicationDataDirectoryList(bool withoutCurrent = false, bool decodedDirName = false);
+
+        //! swift application data sub directories with info if available
+        static QMap<QString, CApplicationInfo> applicationDataDirectoryMap(bool withoutCurrent = false);
 
         //! Is MacOS application bundle?
         //! \remark: Means the currently running executable is a MacOS bundle, but not all our executables are bundles on MacOS

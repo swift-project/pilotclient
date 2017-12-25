@@ -95,23 +95,54 @@ namespace BlackMisc
         return p;
     }
 
-    QFileInfoList CDirectoryUtils::applicationDataDirectories()
+    const QFileInfoList &CDirectoryUtils::applicationDataDirectories()
     {
-        QDir swiftAppData(CDirectoryUtils::applicationDataDirectory()); // contains 1..n subdirs
-        if (!swiftAppData.isReadable()) return QFileInfoList();
-        return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
+        static const QFileInfoList fileInfoList([]
+        {
+            const QDir swiftAppData(CDirectoryUtils::applicationDataDirectory()); // contains 1..n subdirs
+            if (!swiftAppData.isReadable()) return QFileInfoList();
+            return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
+        }());
+        return fileInfoList;
     }
 
-    QStringList CDirectoryUtils::applicationDataDirectoryList(bool withoutCurrent, bool beautify)
+    int CDirectoryUtils::applicationDataDirectoriesCount()
+    {
+        return CDirectoryUtils::applicationDataDirectories().size();
+    }
+
+    QStringList CDirectoryUtils::applicationDataDirectoryList(bool withoutCurrent, bool decodedDirName)
     {
         QStringList dirs;
-        const QFileInfoList directories(CDirectoryUtils::applicationDataDirectories());
-        for (const QFileInfo &info : directories)
+        for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
         {
             if (withoutCurrent && info.filePath().contains(normalizedApplicationDirectory(), Qt::CaseInsensitive)) continue;
-            dirs.append(beautify ?
-                        CDirectoryUtils::decodeNormalizedDirectory(info.fileName()) :
-                        info.fileName());
+            dirs.append(decodedDirName ?
+                        CDirectoryUtils::decodeNormalizedDirectory(info.filePath()) :
+                        info.filePath());
+        }
+        return dirs;
+    }
+
+    QMap<QString, CApplicationInfo> CDirectoryUtils::applicationDataDirectoryMap(bool withoutCurrent)
+    {
+        static const CApplicationInfo nullInfo;
+        QMap<QString, CApplicationInfo> dirs;
+
+        for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
+        {
+            if (withoutCurrent && info.filePath().contains(normalizedApplicationDirectory(), Qt::CaseInsensitive)) continue;
+            const QString appInfoFile = CFileUtils::appendFilePaths(info.filePath(), CApplicationInfo::fileName());
+            const QString appInfoJson = CFileUtils::readFileToString(appInfoFile);
+            if (appInfoJson.isEmpty())
+            {
+                dirs.insert(info.filePath(), nullInfo);
+            }
+            else
+            {
+                const CApplicationInfo appInfo = CApplicationInfo::fromJson(appInfoJson);
+                dirs.insert(info.filePath(), appInfo);
+            }
         }
         return dirs;
     }
