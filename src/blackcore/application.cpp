@@ -18,6 +18,7 @@
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/atomicfile.h"
+#include "blackmisc/applicationinfo.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/directoryutils.h"
@@ -102,7 +103,7 @@ namespace BlackCore
 
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
         m_accessManager(new QNetworkAccessManager(this)),
-        m_applicationInfo(application, QCoreApplication::applicationDirPath(), CBuildConfig::getVersionString(), CProcessInfo::currentProcess()),
+        m_applicationInfo(application),
         m_cookieManager( {}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
@@ -131,6 +132,7 @@ namespace BlackCore
             m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getSwiftApplication());
             this->initParser();
             this->initLogging();
+            this->tagApplicationDataDirectory();
 
             //
             // cmd line arguments not yet parsed here
@@ -221,16 +223,17 @@ namespace BlackCore
         this->gracefulShutdown();
     }
 
-    CApplicationInfo CApplication::getApplicationInfo() const
+    const CApplicationInfo &CApplication::getApplicationInfo() const
     {
-        return { CApplication::getSwiftApplication(), QCoreApplication::applicationFilePath(), CBuildConfig::getVersionString(), CProcessInfo::currentProcess() };
+        static const CApplicationInfo a(CApplication::getSwiftApplication());
+        return a;
     }
 
     CApplicationInfoList CApplication::getRunningApplications()
     {
         CApplicationInfoList apps;
         apps.convertFromJsonNoThrow(CFileUtils::readLockedFileToString(swiftDataRoot() + "apps.json"), {}, {});
-        apps.removeIf([](const CApplicationInfo & info) { return !info.processInfo().exists(); });
+        apps.removeIf([](const CApplicationInfo & info) { return !info.getProcessInfo().exists(); });
         return apps;
     }
 
@@ -266,8 +269,6 @@ namespace BlackCore
     {
         m_singleApplication = singleApplication;
     }
-
-
 
     QString CApplication::getExecutableForApplication(CApplicationInfo::Application application) const
     {
@@ -1534,5 +1535,15 @@ namespace BlackCore
             }, Qt::QueuedConnection);
         }
         return reply;
+    }
+
+    void CApplication::tagApplicationDataDirectory()
+    {
+        const QString d = CDirectoryUtils::normalizedApplicationDataDirectory();
+        const QDir dir(d);
+        if (!dir.exists() || !dir.isReadable()) { return; }
+        const QString aiStr(this->getApplicationInfo().toJsonString());
+        const QString filePath(CFileUtils::appendFilePaths(dir.path(), CApplicationInfo::fileName())); // will be overridden by next swift app
+        CFileUtils::writeStringToFile(aiStr, filePath);
     }
 } // ns

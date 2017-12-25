@@ -111,7 +111,7 @@ namespace BlackCore
         virtual ~CApplication();
 
         //! Application information
-        BlackMisc::CApplicationInfo getApplicationInfo() const;
+        const BlackMisc::CApplicationInfo &getApplicationInfo() const;
 
         //! Information about all running apps (including this one only if exec() has already been called)
         static BlackMisc::CApplicationInfoList getRunningApplications();
@@ -588,6 +588,9 @@ namespace BlackCore
                                        const BlackMisc::CSlot<void(QNetworkReply *)> &callback,
                                        int maxRedirects,
                                        std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod);
+
+        //! Write meta information into the application directory so other swift versions can display them
+        void tagApplicationDataDirectory();
 
         QNetworkAccessManager                   *m_accessManager = nullptr;   //!< single network access manager
         BlackMisc::CApplicationInfo              m_applicationInfo;           //!< Application if specified
