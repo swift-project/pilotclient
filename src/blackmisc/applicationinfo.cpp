@@ -9,17 +9,23 @@
 
 //! \file
 
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/applicationinfo.h"
+
+using namespace BlackConfig;
 
 namespace BlackMisc
 {
     CApplicationInfo::CApplicationInfo() {}
 
-    CApplicationInfo::CApplicationInfo(Application app, const QString &exePath, const QString &version, const CProcessInfo &process) :
+    CApplicationInfo::CApplicationInfo(Application app) :
         m_app(app),
-        m_exePath(exePath.isEmpty() ? QCoreApplication::applicationDirPath() : exePath),
-        m_version(version),
-        m_process(process)
+        m_wordSize(CBuildConfig::buildWordSize()),
+        m_exePath(QCoreApplication::applicationDirPath()),
+        m_version(CBuildConfig::getVersionString()),
+        m_compileInfo(CBuildConfig::compiledWithInfo()),
+        m_platform(CBuildConfig::getPlatformString()),
+        m_process(CProcessInfo::currentProcess())
     {
         if (app == CApplicationInfo::Unknown)
         {
@@ -37,6 +43,11 @@ namespace BlackMisc
     {
         const Application a = this->application();
         return a == CApplicationInfo::UnitTest;
+    }
+
+    bool CApplicationInfo::isNull() const
+    {
+        return this->application() == Unknown && m_exePath.isNull();
     }
 
     QString CApplicationInfo::convertToQString(bool i18n) const
@@ -66,6 +77,18 @@ namespace BlackMisc
     {
         static const QString s("swift core");
         return s;
+    }
+
+    const CApplicationInfo &CApplicationInfo::autoInfo()
+    {
+        static const CApplicationInfo info(CApplicationInfo::Unknown);
+        return info;
+    }
+
+    const QString &CApplicationInfo::fileName()
+    {
+        static const QString fn("appinfo.json");
+        return fn;
     }
 
     CApplicationInfo::Application CApplicationInfo::guessApplication()

@@ -20,6 +20,9 @@ namespace BlackMisc
 {
     /*!
      * Description of a swift application.
+     *
+     * This is basically a CValueObject compliant version of CBuildConfig combined with CProcessInfo
+     * so we can store the information as JSON and transfer them via DBus.
      */
     class BLACKMISC_EXPORT CApplicationInfo : public CValueObject<CApplicationInfo>
     {
@@ -40,7 +43,7 @@ namespace BlackMisc
         CApplicationInfo();
 
         //! Constructor.
-        CApplicationInfo(Application app, const QString &exePath, const QString &version, const CProcessInfo &process);
+        CApplicationInfo(Application app);
 
         //! Set application.
         void setApplication(Application app) { m_app = static_cast<int>(app); }
@@ -52,25 +55,46 @@ namespace BlackMisc
         void setExecutablePath(const QString &exePath) { m_exePath = exePath; }
 
         //! Get executable path.
-        const QString &executablePath() const { return m_exePath; }
+        const QString &getExecutablePath() const { return m_exePath; }
 
         //! Set version string.
         void setVersionString(const QString &version) { m_version = version; }
 
         //! Get version string.
-        const QString &versionString() const { return m_version; }
+        const QString &getVersionString() const { return m_version; }
 
         //! Set process info.
         void setProcessInfo(const CProcessInfo &process) { m_process = process; }
 
         //! Get process info.
-        const CProcessInfo &processInfo() const { return m_process; }
+        const CProcessInfo &getProcessInfo() const { return m_process; }
+
+        //! Set platform.
+        void setPlatformInfo(const QString &platform) { m_platform = platform; }
+
+        //! Get platform.
+        const QString &getPlatform() const { return m_platform; }
+
+        //! Word size
+        int getWordSize() const { return m_wordSize; }
+
+        //! Word size
+        void setWordSize(int size) { m_wordSize = size; }
+
+        //! Compile info
+        const QString &getCompileInfo() const { return m_compileInfo; }
+
+        //! Compile info
+        void setCompileInfo(const QString &info) { m_compileInfo = info; }
 
         //! Sample or unit test
         bool isSampleOrUnitTest() const;
 
         //! Unit test
         bool isUnitTest() const;
+
+        //! Null object
+        bool isNull() const;
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
@@ -87,10 +111,19 @@ namespace BlackMisc
         //! Name of swift core
         static const QString &swiftCore();
 
+        //! Info automatically initalized
+        static const CApplicationInfo &autoInfo();
+
+        //! File name of the application info file
+        static const QString &fileName();
+
     private:
         int m_app = static_cast<int>(Unknown);
+        int m_wordSize;
         QString m_exePath;
         QString m_version;
+        QString m_compileInfo;
+        QString m_platform;
         CProcessInfo m_process;
 
         static Application guessApplication();
@@ -98,8 +131,11 @@ namespace BlackMisc
         BLACK_METACLASS(
             CApplicationInfo,
             BLACK_METAMEMBER(app),
+            BLACK_METAMEMBER(wordSize),
             BLACK_METAMEMBER(exePath),
             BLACK_METAMEMBER(version),
+            BLACK_METAMEMBER(compileInfo),
+            BLACK_METAMEMBER(platform),
             BLACK_METAMEMBER(process)
         );
     };
