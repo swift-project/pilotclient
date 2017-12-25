@@ -83,6 +83,9 @@ namespace BlackConfig
         //! Running on Unix (Linux or Mac OS X) platform
         static bool isRunningOnUnixPlatform();
 
+        //! Info such as Win32, Win64, MacOs, Linux
+        static const QString &getPlatformString();
+
         //! Info string about compilation
         static const QString &compiledWithInfo(bool shortVersion = true);
 

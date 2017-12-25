@@ -72,7 +72,7 @@ namespace BlackConfig
     {
 #ifdef Q_OS_WIN
         // QSysInfo::WindowsVersion only available on Win platforms
-        if (!isRunningOnWindowsNtPlatform()) { return false; }
+        if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
         return (QSysInfo::WindowsVersion == QSysInfo::WV_10_0);
 #else
         return false;
@@ -99,7 +99,23 @@ namespace BlackConfig
 
     bool CBuildConfig::isRunningOnUnixPlatform()
     {
-        return isRunningOnMacOSPlatform() || isRunningOnLinuxPlatform();
+        return CBuildConfig::isRunningOnMacOSPlatform() || CBuildConfig::isRunningOnLinuxPlatform();
+    }
+
+    const QString &CBuildConfig::getPlatformString()
+    {
+        static const QString p([]
+        {
+            if (CBuildConfig::isRunningOnLinuxPlatform()) return QString("Linux");
+            if (CBuildConfig::isRunningOnMacOSPlatform()) return QString("MacOS");
+            if (CBuildConfig::isRunningOnWindowsNtPlatform())
+            {
+                if (CBuildConfig::buildWordSize() == 32) return QString("Win32");
+                if (CBuildConfig::buildWordSize() == 64) return QString("Win64");
+            };
+            return QString("unknown");
+        }());
+        return p;
     }
 
     bool CBuildConfig::isDebugBuild()
