@@ -2,22 +2,8 @@
 <ui version="4.0">
  <class>CNetworkServerForm</class>
  <widget class="QFrame" name="CNetworkServerForm">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>275</width>
-    <height>172</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Frame</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QVBoxLayout" name="vl_NetworkServerForm">
    <property name="spacing">
@@ -59,64 +45,23 @@
        </property>
        <item>
         <widget class="QFrame" name="fr_ServerGeneral">
-         <layout class="QGridLayout" name="gl_ServerForm">
+         <layout class="QGridLayout" name="gl_ServerGeneral" columnstretch="1,2,2">
           <property name="leftMargin">
-           <number>4</number>
+           <number>3</number>
           </property>
           <property name="topMargin">
-           <number>4</number>
+           <number>3</number>
           </property>
           <property name="rightMargin">
-           <number>4</number>
+           <number>3</number>
           </property>
           <property name="bottomMargin">
-           <number>4</number>
+           <number>3</number>
           </property>
-          <property name="spacing">
-           <number>4</number>
-          </property>
-          <item row="4" column="0">
-           <widget class="QLabel" name="lbl_IdPassword">
-            <property name="text">
-             <string>Id/Password:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLineEdit" name="le_NetworkId">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="placeholderText">
-             <string>id</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="lbl_Name">
             <property name="text">
-             <string>Name/Type:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="lbl_RealName">
-            <property name="text">
-             <string>Real name:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="lbl_Description">
-            <property name="text">
-             <string>Description:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="lbl_Address">
-            <property name="text">
-             <string>Addr./ port:</string>
+             <string>Name:</string>
             </property>
            </widget>
           </item>
@@ -127,17 +72,45 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_Ecosystem">
+            <property name="text">
+             <string>Eco./type:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
            <widget class="QComboBox" name="cb_ServerType"/>
           </item>
-          <item row="1" column="1" colspan="3">
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbl_Description">
+            <property name="text">
+             <string>Description:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
            <widget class="QLineEdit" name="le_Description">
             <property name="placeholderText">
              <string>server description</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="3">
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbl_Address">
+            <property name="text">
+             <string>Addr./ port:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="le_Address">
+            <property name="placeholderText">
+             <string>e.g. &quot;server.foo.com&quot;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
            <widget class="QLineEdit" name="le_Port">
             <property name="text">
              <string>6809</string>
@@ -147,14 +120,14 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1" colspan="2">
-           <widget class="QLineEdit" name="le_Address">
-            <property name="placeholderText">
-             <string>e.g. &quot;server.foo.com&quot;</string>
+          <item row="4" column="0">
+           <widget class="QLabel" name="lbl_RealName">
+            <property name="text">
+             <string>Real name:</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1" colspan="3">
+          <item row="4" column="1" colspan="2">
            <widget class="QLineEdit" name="le_RealName">
             <property name="text">
              <string/>
@@ -164,7 +137,24 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="2" colspan="2">
+          <item row="5" column="0">
+           <widget class="QLabel" name="lbl_IdPassword">
+            <property name="text">
+             <string>Id/Password:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="le_NetworkId">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string>id</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
            <widget class="QLineEdit" name="le_Password">
             <property name="maxLength">
              <number>32</number>
@@ -176,6 +166,9 @@
              <string>password</string>
             </property>
            </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="BlackGui::CEcosystemComboBox" name="cbp_Ecosystem"/>
           </item>
          </layout>
         </widget>
@@ -222,9 +215,15 @@
    <header>blackgui/editors/fsdsetupform.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::CEcosystemComboBox</class>
+   <extends>QComboBox</extends>
+   <header>blackgui/ecosystemcombobox.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>le_Name</tabstop>
+  <tabstop>cbp_Ecosystem</tabstop>
   <tabstop>cb_ServerType</tabstop>
   <tabstop>le_Description</tabstop>
   <tabstop>le_Address</tabstop>

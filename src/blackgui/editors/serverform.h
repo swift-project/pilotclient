@@ -47,6 +47,9 @@ namespace BlackGui
             //! Get server
             BlackMisc::Network::CServer getServer() const;
 
+            //! Get currently selected server type
+            BlackMisc::Network::CServer::ServerType getServerType() const;
+
             //! \name Form class implementations
             //! @{
             virtual void setReadOnly(bool readonly) override;
@@ -57,6 +60,10 @@ namespace BlackGui
             void showPasswordField(bool show);
 
         private:
+            void initServerTypes();
+            void onChangedServerType(const QString &text);
+            void onChangedEcoSystem(const QString &text);
+
             QScopedPointer<Ui::CNetworkServerForm> ui;
             QString m_passwordNameLabel;
         };

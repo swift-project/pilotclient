@@ -27,15 +27,10 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->le_Port->setValidator(new QIntValidator(1, 65535, this));
+            this->initServerTypes();
 
-            // init all server type values
-            ui->cb_ServerType->clear();
-            int c = 0;
-            for (int type : CServer::allServerTypes())
-            {
-                const CServer::ServerType st = static_cast<CServer::ServerType>(type);
-                ui->cb_ServerType->insertItem(c++, CServer::serverTypeToString(st), QVariant::fromValue(type));
-            }
+            connect(ui->cbp_Ecosystem, &CEcosystemComboBox::currentTextChanged, this, &CServerForm::onChangedEcoSystem);
+            connect(ui->cb_ServerType, &QComboBox::currentTextChanged, this, &CServerForm::onChangedServerType);
         }
 
         CServerForm::~CServerForm()
@@ -48,6 +43,7 @@ namespace BlackGui
             ui->le_RealName->setText(user.getRealName());
             ui->le_Name->setText(server.getName());
             ui->cb_ServerType->setCurrentText(server.getServerTypeAsString());
+            ui->cbp_Ecosystem->setCurrentEcosystem(server.getEcosystem());
             ui->le_Password->setText(user.getPassword());
             ui->le_Description->setText(server.getDescription());
             ui->le_Address->setText(server.getAddress());
@@ -57,24 +53,29 @@ namespace BlackGui
 
         BlackMisc::Network::CServer CServerForm::getServer() const
         {
-            CUser user(
+            const CUser user(
                 ui->le_NetworkId->text().trimmed(),
                 ui->le_RealName->text().trimmed().simplified(),
                 "",
                 ui->le_Password->text().trimmed()
             );
-            CServer server(
+            const CFsdSetup setup(ui->form_ServerFsd->getValue());
+            const CServer server(
                 ui->le_Name->text().trimmed().simplified(),
                 ui->le_Description->text().trimmed().simplified(),
                 ui->le_Address->text().trimmed(),
                 ui->le_Port->text().trimmed().toInt(),
-                user,
-                ui->cb_ServerType->currentData().value<CServer::ServerType>(),
+                user, setup,
+                ui->cbp_Ecosystem->getSelectedEcosystem(),
+                this->getServerType(),
                 true
             );
-            CFsdSetup setup(ui->form_ServerFsd->getValue());
-            server.setFsdSetup(setup);
             return server;
+        }
+
+        CServer::ServerType CServerForm::getServerType() const
+        {
+            return ui->cb_ServerType->currentData().value<CServer::ServerType>();
         }
 
         void CServerForm::setReadOnly(bool readOnly)
@@ -88,21 +89,47 @@ namespace BlackGui
             ui->le_Password->setReadOnly(readOnly);
             ui->form_ServerFsd->setReadOnly(readOnly);
             ui->cb_ServerType->setEnabled(!readOnly);
+            ui->cbp_Ecosystem->setEnabled(!readOnly);
         }
 
         void CServerForm::showPasswordField(bool show)
         {
             if (ui->le_Password->isVisible() == show) { return; }
             if (m_passwordNameLabel.isEmpty()) { m_passwordNameLabel = ui->lbl_IdPassword->text(); }
-            if (show)
-            {
-                ui->lbl_IdPassword->setText(m_passwordNameLabel);
-            }
-            else
-            {
-                ui->lbl_IdPassword->setText("Id");
-            }
+            ui->lbl_IdPassword->setText(show ? m_passwordNameLabel : "Id");
             ui->le_Password->setVisible(show);
+        }
+
+        void CServerForm::initServerTypes()
+        {
+            // init all server type values
+            int c = 0;
+            ui->cb_ServerType->clear();
+            for (const int type : CServer::allServerTypes())
+            {
+                const CServer::ServerType st = static_cast<CServer::ServerType>(type);
+                ui->cb_ServerType->insertItem(c++, CServer::serverTypeToString(st), QVariant::fromValue(type));
+            }
+        }
+
+        void CServerForm::onChangedServerType(const QString &text)
+        {
+            Q_UNUSED(text);
+            const CServer::ServerType t = this->getServerType();
+            const CServer dummy(t);
+            const CEcosystem es = dummy.getEcosystem();
+            if (es.isUnspecified()) { return; }
+            if (es.isSystem(CEcosystem::NoSystem)) { return; }
+            ui->cbp_Ecosystem->setCurrentEcosystem(es);
+        }
+
+        void CServerForm::onChangedEcoSystem(const QString &text)
+        {
+            Q_UNUSED(text);
+            const CEcosystem es = ui->cbp_Ecosystem->getSelectedEcosystem();
+            const CServer dummy(es);
+            if (dummy.hasUnspecifiedServerType()) { return; }
+            ui->cb_ServerType->setCurrentText(dummy.getServerTypeAsString());
         }
 
         BlackMisc::CStatusMessageList CServerForm::validate(bool nested) const
