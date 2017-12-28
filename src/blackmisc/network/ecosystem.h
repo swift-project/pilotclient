@@ -1,0 +1,111 @@
+/* Copyright (C) 2017
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKMISC_NETWORK_ECOSYSTEM_H
+#define BLACKMISC_NETWORK_ECOSYSTEM_H
+
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+
+namespace BlackMisc
+{
+    namespace Network
+    {
+        //! Ecosystem of server belonging together.
+        class BLACKMISC_EXPORT CEcosystem : public CValueObject<CEcosystem>
+        {
+        public:
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexSystem = CPropertyIndex::GlobalIndexCEcosystem,
+                IndexSystemString
+            };
+
+            //! Known system
+            enum System
+            {
+                Unspecified, //!< unspecified
+                NoSystem,    //!< no relevant ecosystem
+                VATSIM,      //!< VATSIM
+                SwiftTest,   //!< swift test server
+                Swift,       //!< Future usage
+                PrivateFSD   //!< Private FSD environment
+            };
+
+            //! Default constructor
+            CEcosystem() {}
+
+            //! Constructor
+            CEcosystem(System s) : m_system(static_cast<int>(s)) {}
+
+            //! Get system
+            System getSystem() const { return static_cast<System>(m_system); }
+
+            //! Unknown system?
+            bool isUnspecified() const { return this->getSystem() == Unspecified; }
+
+            //! Is system?
+            bool isSystem(System s) const { return this->getSystem() == s; }
+
+            //! Set the system
+            void setSystem(System system) { m_system = static_cast<int>(system); }
+
+            //! Get the system string
+            const QString &getSystemString() const;
+
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+            CIcon toIcon() const;
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
+            //! Compare by index
+            int comparePropertyByIndex(const CPropertyIndex &index, const CEcosystem &compareValue) const;
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
+            //! VATSIM eco system
+            static const CEcosystem &vatsim();
+
+            //! swift eco system
+            static const CEcosystem &swift();
+
+            //! swift test eco system
+            static const CEcosystem &swiftTest();
+
+            //! FSD private
+            static const CEcosystem &privateFsd();
+
+        private:
+            int m_system = static_cast<int>(Unspecified);
+
+            BLACK_METACLASS(
+                CEcosystem,
+                BLACK_METAMEMBER(system)
+            );
+        };
+    } // namespace
+} // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Network::CEcosystem)
+Q_DECLARE_METATYPE(BlackMisc::Network::CEcosystem::System)
+
+#endif // guard

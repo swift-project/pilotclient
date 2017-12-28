@@ -1,0 +1,54 @@
+/* Copyright (C) 2017
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKMISC_NETWORK_ECOSYSTEMLIST_H
+#define BLACKMISC_NETWORK_ECOSYSTEMLIST_H
+
+#include "ecosystem.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+#include <QStringList>
+#include <QMetaType>
+
+namespace BlackMisc
+{
+    namespace Network
+    {
+        //! Value object encapsulating a list of voice rooms.
+        class BLACKMISC_EXPORT CEcosystemList :
+            public CSequence<CEcosystem>,
+            public BlackMisc::Mixin::MetaType<CEcosystemList>
+        {
+        public:
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CEcosystemList)
+
+            //! Default constructor.
+            CEcosystemList();
+
+            //! Construct from a base class object.
+            CEcosystemList(const CSequence &other);
+
+            //! All system strings
+            QStringList allSystemStrings() const;
+
+            //! All systems
+            static const CEcosystemList &allKnownSystems();
+        };
+    } //namespace
+} // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Network::CEcosystemList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CEcosystem>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CEcosystem>)
+
+#endif //guard

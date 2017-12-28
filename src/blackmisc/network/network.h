@@ -20,6 +20,8 @@
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/ecosystem.h"
+#include "blackmisc/network/ecosystemlist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/network/role.h"
