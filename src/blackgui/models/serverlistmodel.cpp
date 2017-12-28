@@ -27,8 +27,9 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn::standardString("description", CServer::IndexDescription));
             this->m_columns.addColumn(CColumn::standardString("address", CServer::IndexAddress));
             this->m_columns.addColumn(CColumn::standardString("port", CServer::IndexPort));
-            this->m_columns.addColumn(CColumn::standardString("realname", { CServer::IndexUser, CUser::IndexRealName}));
-            this->m_columns.addColumn(CColumn::standardString("userid", { CServer::IndexUser, CUser::IndexId}));
+            this->m_columns.addColumn(CColumn::standardString("realname", { CServer::IndexUser, CUser::IndexRealName }));
+            this->m_columns.addColumn(CColumn::standardString("userid", { CServer::IndexUser, CUser::IndexId }));
+            this->m_columns.addColumn(CColumn::standardString("eco", { CServer::IndexEcosystem, CEcosystem::IndexSystemString }));
             this->m_columns.addColumn(CColumn::standardString("type", CServer::IndexServerTypeAsString));
 
             // force strings for translation in resource files
@@ -38,6 +39,7 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ServerListModel", "port");
             (void)QT_TRANSLATE_NOOP("ServerListModel", "realname");
             (void)QT_TRANSLATE_NOOP("ServerListModel", "userid");
+            (void)QT_TRANSLATE_NOOP("ServerListModel", "eco");
             (void)QT_TRANSLATE_NOOP("ServerListModel", "type");
         }
 
