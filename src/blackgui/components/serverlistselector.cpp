@@ -29,7 +29,7 @@ namespace BlackGui
             QComboBox(parent)
         { }
 
-        void CServerListSelector::setServers(const BlackMisc::Network::CServerList &servers, bool nameIsCountry)
+        void CServerListSelector::setServers(const CServerList &servers, bool nameIsCountry)
         {
             if (m_servers == servers) { return; }
             this->setServerItems(servers, nameIsCountry);

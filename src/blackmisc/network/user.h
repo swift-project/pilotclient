@@ -40,7 +40,7 @@ namespace BlackMisc
              */
             enum ColumnIndex
             {
-                IndexEmail = BlackMisc::CPropertyIndex::GlobalIndexCUser,
+                IndexEmail = CPropertyIndex::GlobalIndexCUser,
                 IndexId,
                 IndexPassword,
                 IndexRealName,
@@ -52,13 +52,13 @@ namespace BlackMisc
             CUser() = default;
 
             //! Constructor by callsign
-            CUser(const BlackMisc::Aviation::CCallsign &callsign);
+            CUser(const Aviation::CCallsign &callsign);
 
             //! Constructor.
-            CUser(const QString &id, const QString &realname, const BlackMisc::Aviation::CCallsign &callsign);
+            CUser(const QString &id, const QString &realname, const Aviation::CCallsign &callsign);
 
             //! Constructor.
-            CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const BlackMisc::Aviation::CCallsign &callsign = {});
+            CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const Aviation::CCallsign &callsign = {});
 
             //! Get full name.
             QString getRealName() const { return m_realname; }
@@ -73,16 +73,16 @@ namespace BlackMisc
             void setPassword(const QString &pw) { m_password = pw.trimmed(); }
 
             //! Valid user object?
-            bool isValid() const { return !this->m_realname.isEmpty() &&  !this->m_id.isEmpty(); }
+            bool isValid() const { return !m_realname.isEmpty() &&  !m_id.isEmpty(); }
 
             //! Valid credentials?
-            bool hasValidCredentials() const { return this->isValid() && !this->m_password.isEmpty(); }
+            bool hasValidCredentials() const { return this->isValid() && !m_password.isEmpty(); }
 
             //! Valid real name?
-            bool hasValidRealName() const { return !this->m_realname.isEmpty(); }
+            bool hasValidRealName() const { return !m_realname.isEmpty(); }
 
             //! Valid id?
-            bool hasValidId() const { return !this->m_id.isEmpty(); }
+            bool hasValidId() const { return !m_id.isEmpty(); }
 
             //! Has associated callsign?
             bool hasValidCallsign() const { return !m_callsign.isEmpty(); }
@@ -91,7 +91,7 @@ namespace BlackMisc
             bool hasValidHomebase() const { return !m_homebase.isEmpty(); }
 
             //! Validate, provide details about issues
-            BlackMisc::CStatusMessageList validate() const;
+            CStatusMessageList validate() const;
 
             //! Get email.
             QString getEmail() const { return m_email; }
@@ -100,7 +100,7 @@ namespace BlackMisc
             void setEmail(const QString &email) { m_email = email.trimmed(); }
 
             //! Valid email?
-            bool hasValidEmail() const { return !this->m_email.isEmpty(); }
+            bool hasValidEmail() const { return !m_email.isEmpty(); }
 
             //! Get id.
             QString getId() const { return m_id; }
@@ -109,28 +109,28 @@ namespace BlackMisc
             void setId(const QString &id) { m_id = id.trimmed(); }
 
             //! Homebase
-            const BlackMisc::Aviation::CAirportIcaoCode &getHomeBase() const { return this->m_homebase; }
+            const Aviation::CAirportIcaoCode &getHomeBase() const { return m_homebase; }
 
             //! Set homebase
-            void setHomeBase(const BlackMisc::Aviation::CAirportIcaoCode &homebase) { this->m_homebase = homebase; }
+            void setHomeBase(const Aviation::CAirportIcaoCode &homebase) { m_homebase = homebase; }
 
             //! Has home base?
-            bool hasHomeBase() const { return !this->m_homebase.isEmpty(); }
+            bool hasHomeBase() const { return !m_homebase.isEmpty(); }
 
             //! Get associated callsign.
-            const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
+            const Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
             //! Set associated callsign
-            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            void setCallsign(const Aviation::CCallsign &callsign);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const { return this->getCallsign().toIcon(); }
+            CIcon toIcon() const { return this->getCallsign().toIcon(); }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Compare by index
             int comparePropertyByIndex(const CPropertyIndex &index, const CUser &compareValue) const;
@@ -158,8 +158,8 @@ namespace BlackMisc
             QString m_realname;
             QString m_email;
             QString m_password;
-            BlackMisc::Aviation::CCallsign m_callsign;
-            BlackMisc::Aviation::CAirportIcaoCode m_homebase;
+            Aviation::CCallsign m_callsign;
+            Aviation::CAirportIcaoCode m_homebase;
 
             BLACK_METACLASS(
                 CUser,

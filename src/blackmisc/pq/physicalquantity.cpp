@@ -44,17 +44,17 @@ namespace BlackMisc
         template <class MU, class PQ>
         MU CPhysicalQuantity<MU, PQ>::getUnit() const
         {
-            return this->m_unit;
+            return m_unit;
         }
 
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::setUnitBySymbol(const QString &unitName)
         {
-            this->m_unit = CMeasurementUnit::unitFromSymbol<MU>(unitName);
+            m_unit = CMeasurementUnit::unitFromSymbol<MU>(unitName);
         }
 
         template <class MU, class PQ>
-        QString CPhysicalQuantity<MU, PQ>::getUnitSymbol() const { return this->m_unit.getSymbol(true); }
+        QString CPhysicalQuantity<MU, PQ>::getUnitSymbol() const { return m_unit.getSymbol(true); }
 
         template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, MU unit) :
@@ -76,8 +76,8 @@ namespace BlackMisc
             if (this->isNull()) return other.isNull();
             if (other.isNull()) return false;
 
-            double diff = std::abs(this->m_value - other.value(this->m_unit));
-            return diff <= this->m_unit.getEpsilon();
+            double diff = std::abs(m_value - other.value(m_unit));
+            return diff <= m_unit.getEpsilon();
         }
 
         template <class MU, class PQ>
@@ -89,7 +89,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator +=(const CPhysicalQuantity<MU, PQ> &other)
         {
-            this->m_value += other.value(this->m_unit);
+            m_value += other.value(m_unit);
             return *this;
         }
 
@@ -104,19 +104,19 @@ namespace BlackMisc
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::addValueSameUnit(double value)
         {
-            this->m_value += value;
+            m_value += value;
         }
 
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::substractValueSameUnit(double value)
         {
-            this->m_value -= value;
+            m_value -= value;
         }
 
         template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator -=(const CPhysicalQuantity<MU, PQ> &other)
         {
-            this->m_value -= other.value(this->m_unit);
+            m_value -= other.value(m_unit);
             return *this;
         }
 
@@ -131,31 +131,31 @@ namespace BlackMisc
         template <class MU, class PQ>
         bool CPhysicalQuantity<MU, PQ>::isZeroEpsilonConsidered() const
         {
-            return this->m_unit.isEpsilon(this->m_value);
+            return m_unit.isEpsilon(m_value);
         }
 
         template <class MU, class PQ>
         bool CPhysicalQuantity<MU, PQ>::isPositiveWithEpsilonConsidered() const
         {
-            return !this->isZeroEpsilonConsidered() && this->m_value > 0;
+            return !this->isZeroEpsilonConsidered() && m_value > 0;
         }
 
         template <class MU, class PQ>
         bool CPhysicalQuantity<MU, PQ>::isNegativeWithEpsilonConsidered() const
         {
-            return !this->isZeroEpsilonConsidered() && this->m_value < 0;
+            return !this->isZeroEpsilonConsidered() && m_value < 0;
         }
 
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::makePositive()
         {
-            if (this->m_value < 0) { this->m_value *= -1.0; }
+            if (m_value < 0) { m_value *= -1.0; }
         }
 
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::makeNegative()
         {
-            if (this->m_value > 0) { this->m_value *= -1.0; }
+            if (m_value > 0) { m_value *= -1.0; }
         }
 
         template <class MU, class PQ>
@@ -163,27 +163,27 @@ namespace BlackMisc
         {
             constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
             argument << (this->isNull() ? NaN : this->value(UnitClass::defaultUnit()));
-            // argument << this->m_value;
-            // argument << this->m_unit;
+            // argument << m_value;
+            // argument << m_unit;
         }
 
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_value;
-            this->m_unit = UnitClass::defaultUnit();
-            if (std::isnan(this->m_value))
+            argument >> m_value;
+            m_unit = UnitClass::defaultUnit();
+            if (std::isnan(m_value))
             {
                 this->setNull();
             }
-            // argument >> this->m_value;
-            // argument >> this->m_unit;
+            // argument >> m_value;
+            // argument >> m_unit;
         }
 
         template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator *=(double factor)
         {
-            this->m_value *= factor;
+            m_value *= factor;
             return *this;
         }
 
@@ -198,7 +198,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator /=(double divisor)
         {
-            this->m_value /= divisor;
+            m_value /= divisor;
             return *this;
         }
 
@@ -216,7 +216,7 @@ namespace BlackMisc
             if (*this == other) return false;
             if (this->isNull() || other.isNull()) return false;
 
-            return (this->m_value < other.value(this->m_unit));
+            return (m_value < other.value(m_unit));
         }
 
         template <class MU, class PQ>
@@ -242,10 +242,10 @@ namespace BlackMisc
         template <class MU, class PQ>
         PQ &CPhysicalQuantity<MU, PQ>::switchUnit(MU newUnit)
         {
-            if (this->m_unit != newUnit)
+            if (m_unit != newUnit)
             {
-                this->m_value = newUnit.convertFrom(this->m_value, this->m_unit);
-                this->m_unit = newUnit;
+                m_value = newUnit.convertFrom(m_value, m_unit);
+                m_unit = newUnit;
             }
             return *derived();
         }
@@ -253,21 +253,21 @@ namespace BlackMisc
         template <class MU, class PQ>
         bool CPhysicalQuantity<MU, PQ>::isNull() const
         {
-            return this->m_unit.isNull();
+            return m_unit.isNull();
         }
 
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::setNull()
         {
-            this->m_value = 0;
-            this->m_unit = MU::nullUnit();
+            m_value = 0;
+            m_unit = MU::nullUnit();
         }
 
         template <class MU, class PQ>
         double CPhysicalQuantity<MU, PQ>::value() const
         {
             if (this->isNull()) { return 0.0; }
-            return this->m_value;
+            return m_value;
         }
 
         template <class MU, class PQ>
@@ -275,14 +275,14 @@ namespace BlackMisc
         {
             if (!this->isNull())
             {
-                this->m_value = value;
+                m_value = value;
             }
         }
 
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::setValueSameUnit(double baseValue)
         {
-            this->m_value = baseValue;
+            m_value = baseValue;
         }
 
         template <class MU, class PQ>
@@ -297,14 +297,14 @@ namespace BlackMisc
         QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(int digits, bool i18n) const
         {
             if (this->isNull()) { return this->convertToQString(i18n); }
-            return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
+            return this->valueRoundedWithUnit(m_unit, digits, i18n);
         }
 
         template<class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::roundToEpsilon()
         {
             if (this->isNull()) { return; }
-            this->m_value = this->m_unit.roundToEpsilon(this->m_value);
+            m_value = m_unit.roundToEpsilon(m_value);
         }
 
         template <class MU, class PQ>
@@ -325,14 +325,14 @@ namespace BlackMisc
         template <class MU, class PQ>
         double CPhysicalQuantity<MU, PQ>::valueRounded(int digits) const
         {
-            return this->valueRounded(this->m_unit, digits);
+            return this->valueRounded(m_unit, digits);
         }
 
         template <class MU, class PQ>
         double CPhysicalQuantity<MU, PQ>::value(MU unit) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
-            return unit.convertFrom(this->m_value, this->m_unit);
+            return unit.convertFrom(m_value, m_unit);
         }
 
         template <class MU, class PQ>
@@ -356,8 +356,8 @@ namespace BlackMisc
         QJsonObject CPhysicalQuantity<MU, PQ>::toJson() const
         {
             QJsonObject json;
-            json.insert("value", QJsonValue(this->m_value));
-            json.insert("unit", QJsonValue(this->m_unit.getSymbol()));
+            json.insert("value", QJsonValue(m_value));
+            json.insert("unit", QJsonValue(m_unit.getSymbol()));
             return json;
         }
 
@@ -370,7 +370,7 @@ namespace BlackMisc
             if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
 
             this->setUnitBySymbol(unit.toString());
-            this->m_value = value.toDouble();
+            m_value = value.toDouble();
         }
 
         template <class MU, class PQ>
@@ -389,25 +389,17 @@ namespace BlackMisc
         CVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*derived()); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexValue:
-                return CVariant::from(this->m_value);
-            case IndexUnit:
-                return CVariant::from(this->m_unit);
-            case IndexValueRounded0DigitsWithUnit:
-                return CVariant::from(this->valueRoundedWithUnit(0));
-            case IndexValueRounded1DigitsWithUnit:
-                return CVariant::from(this->valueRoundedWithUnit(1));
-            case IndexValueRounded2DigitsWithUnit:
-                return CVariant::from(this->valueRoundedWithUnit(2));
-            case IndexValueRounded3DigitsWithUnit:
-                return CVariant::from(this->valueRoundedWithUnit(3));
-            case IndexValueRounded6DigitsWithUnit:
-                return CVariant::from(this->valueRoundedWithUnit(6));
-            default:
-                return Mixin::Index<PQ>::propertyByIndex(index);
+            case IndexValue: return CVariant::from(m_value);
+            case IndexUnit: return CVariant::from(m_unit);
+            case IndexValueRounded0DigitsWithUnit: return CVariant::from(this->valueRoundedWithUnit(0));
+            case IndexValueRounded1DigitsWithUnit: return CVariant::from(this->valueRoundedWithUnit(1));
+            case IndexValueRounded2DigitsWithUnit: return CVariant::from(this->valueRoundedWithUnit(2));
+            case IndexValueRounded3DigitsWithUnit: return CVariant::from(this->valueRoundedWithUnit(3));
+            case IndexValueRounded6DigitsWithUnit: return CVariant::from(this->valueRoundedWithUnit(6));
+            default: return Mixin::Index<PQ>::propertyByIndex(index);
             }
         }
 
@@ -415,14 +407,14 @@ namespace BlackMisc
         void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<PQ>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexValue:
-                this->m_value = variant.toDouble();
+                m_value = variant.toDouble();
                 break;
             case IndexUnit:
-                this->m_unit = variant.to<MU>();
+                m_unit = variant.to<MU>();
                 break;
             case IndexValueRounded0DigitsWithUnit:
             case IndexValueRounded1DigitsWithUnit:
@@ -441,13 +433,11 @@ namespace BlackMisc
         int CPhysicalQuantity<MU, PQ>::comparePropertyByIndex(const CPropertyIndex &index, const PQ &pq) const
         {
             if (index.isMyself()) { return compareImpl(*derived(), pq); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexValue:
-                return Compare::compare(this->m_value, pq.m_value);
-            default:
-                break;
+            case IndexValue: return Compare::compare(m_value, pq.m_value);
+            default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
             return 0;

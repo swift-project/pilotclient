@@ -38,7 +38,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCapabilities = BlackMisc::CPropertyIndex::GlobalIndexCClient,
+                IndexCapabilities = CPropertyIndex::GlobalIndexCClient,
                 IndexCapabilitiesString,
                 IndexModelString,
                 IndexServer,
@@ -53,7 +53,7 @@ namespace BlackMisc
             //! The Capabilities enum
             enum Capabilities
             {
-                FsdWithInterimPositions = BlackMisc::CPropertyIndex::GlobalIndexClientCapabilities, //!< interim positions
+                FsdWithInterimPositions = CPropertyIndex::GlobalIndexClientCapabilities, //!< interim positions
                 FsdWithIcaoCodes,       //!< basically means it is a pilot client handling ICAO code pacakages
                 FsdAtisCanBeReceived,   //!< ATIS
                 FsdWithAircraftConfig   //!< Aircraft parts
@@ -69,7 +69,7 @@ namespace BlackMisc
             CClient(const CUser &user) : m_user(user) {}
 
             //! Callsign used with other client
-            const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_user.getCallsign(); }
+            const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_user.getCallsign(); }
 
             //! ATC client
             bool isAtc() const { return getCallsign().isAtcAlikeCallsign(); }
@@ -78,7 +78,7 @@ namespace BlackMisc
             bool isValid() const;
 
             //! Get capabilities
-            CPropertyIndexVariantMap getCapabilities() const { return this->m_capabilities; }
+            CPropertyIndexVariantMap getCapabilities() const { return m_capabilities; }
 
             //! Set capability
             void setCapability(bool hasCapability, Capabilities capability);
@@ -105,31 +105,31 @@ namespace BlackMisc
             void setVoiceCapabilities(const QString &flightPlanRemarks) { m_voiceCapabilities = CVoiceCapabilities(flightPlanRemarks);}
 
             //! User
-            const CUser &getUser() const { return this->m_user; }
+            const CUser &getUser() const { return m_user; }
 
             //! User
-            void setUser(const CUser &user) { this->m_user = user;}
+            void setUser(const CUser &user) { m_user = user;}
 
             //! User's callsign
             void setUserCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Server
-            const QString &getServer() const { return this->m_server; }
+            const QString &getServer() const { return m_server; }
 
             //! Server
-            void setServer(const QString &server) { this->m_server = server;}
+            void setServer(const QString &server) { m_server = server;}
 
             //! Model
-            const QString &getQueriedModelString() const { return this->m_modelString; }
+            const QString &getQueriedModelString() const { return m_modelString; }
 
             //! \copydoc Simulation::CAircraftModel::hasQueriedModelString
-            bool hasQueriedModelString() const { return !this->m_modelString.isEmpty(); }
+            bool hasQueriedModelString() const { return !m_modelString.isEmpty(); }
 
             //! Set model
-            void setQueriedModelString(const QString &modelString) { this->m_modelString = modelString.trimmed(); }
+            void setQueriedModelString(const QString &modelString) { m_modelString = modelString.trimmed(); }
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            CIcon toIcon() const { return this->m_user.toIcon(); }
+            CIcon toIcon() const { return m_user.toIcon(); }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -141,11 +141,11 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BlackMisc::Network::CUser              m_user;
-            BlackMisc::CPropertyIndexVariantMap    m_capabilities;
-            QString                                m_modelString;
-            QString                                m_server;
-            BlackMisc::Network::CVoiceCapabilities m_voiceCapabilities;
+            CUser m_user;
+            CPropertyIndexVariantMap m_capabilities;
+            QString m_modelString;
+            QString m_server;
+            CVoiceCapabilities m_voiceCapabilities;
 
             BLACK_METACLASS(
                 CClient,

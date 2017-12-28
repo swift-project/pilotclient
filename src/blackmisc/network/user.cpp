@@ -56,11 +56,11 @@ namespace BlackMisc
         QString CUser::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            if (this->m_realname.isEmpty()) return "<no realname>";
-            QString s = this->m_realname;
+            if (m_realname.isEmpty()) return "<no realname>";
+            QString s = m_realname;
             if (this->hasValidId())
             {
-                s.append(" (").append(this->m_id).append(')');
+                s.append(" (").append(m_id).append(')');
             }
             if (this->hasValidCallsign())
             {
@@ -71,12 +71,12 @@ namespace BlackMisc
 
         void CUser::deriveHomeBaseFromCallsign()
         {
-            if (this->m_callsign.isEmpty()) { return; }
-            if (this->m_homebase.isEmpty())
+            if (m_callsign.isEmpty()) { return; }
+            if (m_homebase.isEmpty())
             {
-                if (this->m_callsign.isAtcCallsign())
+                if (m_callsign.isAtcCallsign())
                 {
-                    this->m_homebase = this->m_callsign.getIcaoCode();
+                    m_homebase = m_callsign.getIcaoCode();
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace BlackMisc
             QString rn(removeAccents(realname.trimmed().simplified()));
             if (rn.isEmpty())
             {
-                this->m_realname = "";
+                m_realname = "";
                 return;
             }
 
@@ -108,7 +108,7 @@ namespace BlackMisc
             }
 
             // do not beautify before stripping home base
-            this->m_realname = beautifyRealName(rn);
+            m_realname = beautifyRealName(rn);
         }
 
         CStatusMessageList CUser::validate() const
@@ -187,12 +187,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEmail: return CVariant(this->m_email);
-            case IndexId: return CVariant(this->m_id);
-            case IndexPassword: return CVariant(this->m_password);
-            case IndexRealName: return CVariant(this->m_realname);
-            case IndexHomebase: return this->m_homebase.propertyByIndex(index.copyFrontRemoved());
-            case IndexCallsign: return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexEmail: return CVariant(m_email);
+            case IndexId: return CVariant(m_id);
+            case IndexPassword: return CVariant(m_password);
+            case IndexRealName: return CVariant(m_realname);
+            case IndexHomebase: return m_homebase.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -207,8 +207,8 @@ namespace BlackMisc
             case IndexId: this->setId(variant.value<QString>()); break;
             case IndexPassword: this->setPassword(variant.value<QString>()); break;
             case IndexRealName: this->setRealName(variant.value<QString>()); break;
-            case IndexHomebase: this->m_homebase.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexCallsign: this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexHomebase: m_homebase.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCallsign: m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
@@ -219,11 +219,11 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEmail: return this->m_email.compare(compareValue.getEmail(), Qt::CaseInsensitive);
-            case IndexId: return this->m_id.compare(compareValue.getId(), Qt::CaseInsensitive);
-            case IndexRealName: return this->m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
-            case IndexHomebase: return this->m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
-            case IndexCallsign: return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+            case IndexEmail: return m_email.compare(compareValue.getEmail(), Qt::CaseInsensitive);
+            case IndexId: return m_id.compare(compareValue.getId(), Qt::CaseInsensitive);
+            case IndexRealName: return m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
+            case IndexHomebase: return m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
+            case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexPassword: break;
             default: break;
             }

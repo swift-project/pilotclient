@@ -53,7 +53,7 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CTestData
         {
         public:
-            //! Traffic server
+            //! Traffic server (dummy)
             static const BlackMisc::Network::CServer &getTrafficServer();
 
             //! Get a variant list with various data

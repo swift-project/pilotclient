@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
-
 #include <QObject>
 
 class QLabel;
@@ -24,7 +23,6 @@ class QTimer;
 
 namespace BlackGui
 {
-
     //! Managed status bar
     class BLACKGUI_EXPORT CManagedStatusBar : public QObject
     {
@@ -35,7 +33,7 @@ namespace BlackGui
         explicit CManagedStatusBar(QObject *parent = nullptr);
 
         //! Destructor
-        ~CManagedStatusBar();
+        virtual ~CManagedStatusBar();
 
         //! Get the status bar
         QStatusBar *getStatusBar() const { return m_statusBar; }
@@ -56,11 +54,10 @@ namespace BlackGui
         //! Display status messages
         void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
 
-    private slots:
-        //! Clear status bar
-        void ps_clearStatusBar();
-
     private:
+        //! Clear status bar
+        void clearStatusBar();
+
         QStatusBar *m_statusBar  = nullptr; //!< the status bar itself
         QLabel *m_statusBarIcon  = nullptr; //!< status bar icon
         QLabel *m_statusBarLabel = nullptr; //!< status bar label
@@ -68,7 +65,6 @@ namespace BlackGui
         bool m_ownStatusBar = false;
         BlackMisc::StatusSeverity m_currentSeverity = BlackMisc::StatusSeverity::SeverityDebug; // severity currently displayed
     };
-
 } // namespace
 
 #endif // guard
