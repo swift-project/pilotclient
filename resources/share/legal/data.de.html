@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="style.css">
+<title>Datenspeicherung</title>
+</head>
+<body>
+	<h1>Datenspeicherung</h1>
+	<h2>Welche personenbezogenen Daten werden bei "swift" gespeichert und warum?</h2>
+	<table>
+		<tr>
+			<th>Was wird gespeichert?</th>
+			<th>Warum?</th>
+		</tr>
+		<tr>
+			<td>
+			Benutzerkonten: Die Benutzerkonten umfassen den Realname (z.B. Joachim Mustermann),
+			email, die Id-Nummer des assoziierten Netzwerks (z.B. VATSIM), das Land des Benutzers, 
+			Nutzername (user account).
+			
+			Bei jeder Anmeldung wird der Zeitpunkt gespeichert, weiterhin wie die Anmeldung erfolgte
+			(über den Web-Browser, über den swift client) und wann das Benutzerkonto erstellt wurde.
+			
+			Hinweis: Jeder Benutzer kann nach dem Login seine Stammdaten sehen und selbst ändern.
+			</td>
+			<td>
+			Die email wird für Benachrichtungen benötigt, z.B. wenn das Passwort vergessen wurde.
+			Die Id (z.B. VATSIM Benutzer Id) wird für den Single-Sign-On (SSO) benötigt. 
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Änderungshistorie: Wenn Daten in der Datenbank gespeichert werden wird gespeichert, wer und 
+			wann diese Daten verändert hat. Zur Einordnung: Es handelt sich hier um Daten zur Flugsimulation,
+			also keine sicherheitsrelevanten oder vertrauliche Daten.
+			</td>
+			<td>
+			Die Historie dient der Nachvollziehbarkeit der Änderungen, ggf.der Nachfrage und Korrektur
+			bei fehlerhaften/fragwürdigen Informationen.
+			</td>
+		</tr>
+	</table>
+	
+	<h2>Welche personenbezogenen Daten werden im Entwicklerbereich "Phabricator, Jenkins" gespeichert und warum?</h2>
+	<table>
+		<tr>
+			<th>Was wird gespeichert?</th>
+			<th>Warum?</th>
+		</tr>
+		<tr>
+			<td>
+			Benutzerkonten: Die Benutzerkonten umfassen den Realname (z.B. Jochaim Mustermann),
+			email, die Id-Nummer des assoziierten Netzwerks (z.B. VATSIM), Nutzername (user account).
+			Passworte sind nicht im Klartext gespeichert und werden durch den Benutzer selbst verwaltet.
+			
+			Hinweis: Jeder Benutzer kann seine Daten selbst verwalten (siehe unten)
+			</td>
+			<td>
+			Wird zur Benutzerverwaltung und zur Änderungshistorie benötigt.
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Änderungshistorie: Alle Änderungen an Aufgaben, Fehlerberichten, Software-Artifakten werden protokolliert
+			(wer hat welche Änderungen durchgeführt?).
+			</td>
+			<td>
+			In einem Software-Projekt muss klar sein, wer welche Softwarekomponente verändert hat
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Versionsverwaltung: Als Versionsverwaltung wird <a href="https://de.wikipedia.org/wiki/Git">git</a> eingesetzt.
+			Hierbei wird gespeichert wer welchen Teil der Software entwickelt oder geändert hat.
+			</td>
+			<td>
+			Weitere Details können der Dokumentation von git entnommen werden.
+			</td>
+		<tr>	
+	</table>
+
+	<h2>Wo kann ich meine Daten einsehen?</h2>
+	<table>
+		<tr>
+			<th>Selbstadministration</th>
+			<th>Warum?</th>
+		</tr>
+		<tr>
+			<td>
+			Die Benutzerstammdaten können im <a href="https://datastore.swift-project.org">datastore</a> und in <a href="https://dev.swift-project.org/">Phabricator</a>
+			selbst geändert werden. Mit VATSIM ist ein vereinfachtes Single-Sign-On möglich, wobei wir Daten
+			von VATSIM erhalten.
+			</td>
+			<td>
+			</td>
+		</tr>
+	</table>
+	
+	<h2>Empfehlungen</h2>
+	<table>
+		<tr>
+			<th>email und Passworte</th>
+			<th>Warum?</th>
+		</tr>
+		<tr>
+			<td>
+			Wenn möglich nutzen sie eine email-Addresse nur für swift. 
+			Verwenden Sie sichere Passworte, aber keine die Sie auch anderweitig nutzen.
+			</td>
+			<td>
+			Im Fall eines Datenlecks bei swift können sie Ihre email löschen/sperren und
+			aus das Passwort kann nicht bei einem anderen Ihrer Konten verwendet werden. 
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
