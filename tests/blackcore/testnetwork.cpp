@@ -45,7 +45,7 @@ namespace BlackCoreTest
 {
     void CTestNetwork::networkTest(BlackCore::INetwork *net)
     {
-        CServer fsdServer("", "", "fsd.swift-project.org", 6809, CUser("1234567", "", "", "123456"));
+        const CServer fsdServer = CServer::swiftFsdTestServer(true);
         if (!this->pingServer(fsdServer)) { QSKIP("Server not reachable."); }
 
         QString string = net->connectionStatusToString(INetwork::Connected);
@@ -102,7 +102,7 @@ namespace BlackCoreTest
     bool CTestNetwork::pingServer(const CServer &server)
     {
         QString m;
-        CUrl url(server.getAddress(), server.getPort());
+        const CUrl url(server.getAddress(), server.getPort());
         if (!CNetworkUtils::canConnect(url, m, 2500))
         {
             qWarning() << "Skipping unit test as" << url.getFullUrl() << "cannot be connected";

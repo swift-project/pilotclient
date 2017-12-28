@@ -171,7 +171,7 @@ namespace BlackMiscTest
         CUser user2(user1);
         QVERIFY2(user1 == user2, "information shall be equal");
 
-        CServer server1("development", "VATSIM dev.server", "vatsim-germany.org", 6809, user1);
+        CServer server1 = CServer::swiftFsdTestServer();
         CServer server2(server1);
         QVERIFY2(server1 == server2, "server shall be equal");
 

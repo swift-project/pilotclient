@@ -35,7 +35,8 @@ namespace BlackMisc
         const CServer &CTestData::getTrafficServer()
         {
             static const CServer trafficServer("fooserver", "a foo server", "localhost", 1234,
-                                               CUser("112233", "Some real name", "email@xyz.com", "secret"));
+                                               CUser("112233", "Some real name", "email@xyz.com", "secret"),
+                                               CFsdSetup(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
             return trafficServer;
         }
 
