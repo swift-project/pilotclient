@@ -16,6 +16,7 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/fsdsetup.h"
+#include "blackmisc/network/ecosystem.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/timestampbased.h"
@@ -32,18 +33,19 @@ namespace BlackMisc
         //! Value object encapsulating information of a server
         class BLACKMISC_EXPORT CServer :
             public CValueObject<CServer>,
-            public BlackMisc::ITimestampBased
+            public ITimestampBased
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = BlackMisc::CPropertyIndex::GlobalIndexCServer,
+                IndexName = CPropertyIndex::GlobalIndexCServer,
                 IndexDescription,
                 IndexAddress,
                 IndexPort,
                 IndexUser,
                 IndexFsdSetup,
+                IndexEcosystem,
                 IndexIsAcceptingConnections,
                 IndexServerType,
                 IndexServerTypeAsString
@@ -52,11 +54,12 @@ namespace BlackMisc
             //! Server Type
             enum ServerType
             {
+                Unspecified,
                 FSDServerVatsim,
-                FSDServerFSC,
-                FSDServerLegacy,
+                FSDServer,
+                VoiceServerVatsim,
+                VoiceServer,
                 WebService,
-                Unspecified
             };
 
             //! Allows to iterate over all ServerType
@@ -70,7 +73,18 @@ namespace BlackMisc
 
             //! Constructor.
             CServer(const QString &name, const QString &description, const QString &address, int port,
-                    const CUser &user, ServerType serverType = FSDServerVatsim, bool isAcceptingConnections = true);
+                    const CUser &user,
+                    const CFsdSetup &setup, const CEcosystem &ecosytem, ServerType serverType,
+                    bool isAcceptingConnections = true);
+
+            //! Constructor (minimal for testing)
+            CServer(const QString &address, int port, const CUser &user);
+
+            //! Constructor by ecosystem
+            CServer(const CEcosystem &ecosystem);
+
+            //! Constructor by server type
+            CServer(ServerType serverType);
 
             //! Get address.
             const QString &getAddress() const { return m_address; }
@@ -111,6 +125,12 @@ namespace BlackMisc
             //! Set port
             void setPort(int port) { m_port = port; }
 
+            //! Get the ecosystem
+            const CEcosystem &getEcosystem() const { return m_ecosystem; }
+
+            //! Set the ecosystem
+            bool setEcosystem(const CEcosystem &ecosystem);
+
             //! Server is accepting connections (allows to disable server temporarily or generally)
             bool isAcceptingConnections() const { return m_isAcceptingConnections; }
 
@@ -124,19 +144,22 @@ namespace BlackMisc
             bool hasAddressAndPort() const;
 
             //! Get setup
-            const CFsdSetup &getFsdSetup() const { return this->m_fsdSetup; }
+            const CFsdSetup &getFsdSetup() const { return m_fsdSetup; }
 
             //! A FSD server?
             bool isFsdServer() const;
 
             //! Set setup
-            void setFsdSetup(const CFsdSetup &setup) { this->m_fsdSetup = setup; }
+            void setFsdSetup(const CFsdSetup &setup) { m_fsdSetup = setup; }
 
             //! Set server type
-            void setServerType(ServerType serverType) { m_serverType = static_cast<int>(serverType); }
+            bool setServerType(ServerType serverType);
 
             //! Get server type
             ServerType getServerType() const { return static_cast<ServerType>(m_serverType); }
+
+            //! Unspecified?
+            bool hasUnspecifiedServerType() const;
 
             //! Get server type as string
             const QString &getServerTypeAsString() const;
@@ -154,16 +177,16 @@ namespace BlackMisc
             bool isConnected() const;
 
             //! Validate, provide details about issues
-            BlackMisc::CStatusMessageList validate() const;
+            CStatusMessageList validate() const;
 
             //! Identifying a session, if not connected empty
             QString getServerSessionId() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Compare by index
             int comparePropertyByIndex(const CPropertyIndex &index, const CServer &compareValue) const;
@@ -171,15 +194,19 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
+            //! swift FSD test server
+            static const CServer &swiftFsdTestServer(bool withPw = false);
+
         private:
-            QString   m_name;
-            QString   m_description;
-            QString   m_address;
-            int       m_port = -1;
-            CUser     m_user;
-            CFsdSetup m_fsdSetup;
-            int       m_serverType = FSDServerVatsim;
-            bool      m_isAcceptingConnections = true; //!< disable server for connections
+            QString    m_name;
+            QString    m_description;
+            QString    m_address;
+            int        m_port = -1;
+            CUser      m_user;
+            CFsdSetup  m_fsdSetup;
+            CEcosystem m_ecosystem;
+            int        m_serverType = static_cast<int>(Unspecified);
+            bool       m_isAcceptingConnections = true; //!< disable server for connections
 
             BLACK_METACLASS(
                 CServer,
@@ -189,6 +216,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(port),
                 BLACK_METAMEMBER(user),
                 BLACK_METAMEMBER(fsdSetup),
+                BLACK_METAMEMBER(ecosystem),
                 BLACK_METAMEMBER(serverType),
                 BLACK_METAMEMBER(isAcceptingConnections),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison)
