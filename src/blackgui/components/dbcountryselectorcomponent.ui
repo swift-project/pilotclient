@@ -7,17 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>135</width>
-    <height>22</height>
+    <height>24</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Country selector</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
+  <property name="whatsThis">
+   <string>select a country</string>
   </property>
   <layout class="QHBoxLayout" name="hl_Country">
    <property name="spacing">

@@ -11,7 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Aircraft ICAO selector</string>
+  </property>
+  <property name="statusTip">
+   <string>search for correct ICAO code</string>
+  </property>
+  <property name="whatsThis">
+   <string>search for correct ICAO code</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>

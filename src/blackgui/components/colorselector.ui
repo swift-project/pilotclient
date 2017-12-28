@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>136</width>
-    <height>22</height>
+    <height>24</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -18,6 +18,9 @@
   </property>
   <property name="windowTitle">
    <string>Color selector</string>
+  </property>
+  <property name="whatsThis">
+   <string>select a color</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>

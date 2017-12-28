@@ -7,17 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>189</width>
-    <height>22</height>
+    <height>24</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Airline ICAO selector</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
+  <property name="statusTip">
+   <string>search for airline ICAO code</string>
   </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
+  <property name="whatsThis">
+   <string>search for airline ICAO code</string>
   </property>
   <layout class="QGridLayout" name="gl_AirlineIcaoSelectorComponent">
    <property name="leftMargin">

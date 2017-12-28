@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Search color livery</string>
   </property>
+  <property name="whatsThis">
+   <string>search color livery</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="lbl_Fuselage">

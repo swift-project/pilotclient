@@ -2,8 +2,19 @@
 <ui version="4.0">
  <class>CDbLiveryComponent</class>
  <widget class="QFrame" name="CDbLiveryComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>256</width>
+    <height>206</height>
+   </rect>
+  </property>
   <property name="windowTitle">
-   <string>Liveries</string>
+   <string>Search and find aircraft liveries</string>
+  </property>
+  <property name="whatsThis">
+   <string>Search and find aircraft liveries</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::NoFrame</enum>

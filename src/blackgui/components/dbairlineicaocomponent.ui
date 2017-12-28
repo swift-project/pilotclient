@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Airline ICAO code</string>
+  </property>
+  <property name="whatsThis">
+   <string>search and find airline ICAO code</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
