@@ -33,8 +33,7 @@ namespace BlackCore
 
         bool CVatsimSetup::setServers(const CServerList &fsdServers, const CServerList &voiceServers)
         {
-            const bool changed = !this->getVoiceServers().equalsByKeys(voiceServers, &CServer::getName, &CServer::getAddress) ||
-                                 !this->getFsdServers().equalsByKeys(fsdServers, &CServer::getName, &CServer::getAddress);
+            const bool changed = (this->getVoiceServers() != voiceServers || this->getFsdServers() != fsdServers);
             this->setFsdServers(fsdServers);
             this->setVoiceServers(voiceServers);
             return changed;

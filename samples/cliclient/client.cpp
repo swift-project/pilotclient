@@ -177,7 +177,8 @@ namespace BlackSample
         QString password;
         args >> hostname >> port >> username >> password;
         args.skipWhiteSpace();
-        emit presetServer(BlackMisc::Network::CServer("", "", hostname, port, BlackMisc::Network::CUser(username, args.readAll(), "", password)));
+        const BlackMisc::Network::CUser user(username, args.readAll(), "", password);
+        emit presetServer(BlackMisc::Network::CServer(hostname, port, user));
     }
 
     void Client::presetCallsignCmd(QTextStream &args)

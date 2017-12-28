@@ -355,7 +355,9 @@ namespace BlackCore
                             if (fsdServerParts.size() < 5) break;
                             if (!fsdServerParts.at(4).trimmed().contains('1')) break; // allowed?
                             const QString description(fsdServerParts.at(2)); // part(3) could be added
-                            const BlackMisc::Network::CServer fsdServer(fsdServerParts.at(0), description, fsdServerParts.at(1), 6809, CUser("id", "real name", "email", "password"));
+                            const CServer fsdServer(fsdServerParts.at(0), description, fsdServerParts.at(1), 6809,
+                                                    CUser("id", "real name", "email", "password"),
+                                                    CFsdSetup::vatsimStandard(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
                             fsdServers.push_back(fsdServer);
                         }
                         break;
@@ -365,7 +367,9 @@ namespace BlackCore
                             const QStringList voiceServerParts = currentLine.split(':');
                             if (voiceServerParts.size() < 3) break;
                             if (!voiceServerParts.at(3).trimmed().contains('1')) break; // allowed?
-                            const BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
+                            const CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1,
+                                                      CUser(),
+                                                      CFsdSetup(), CEcosystem(CEcosystem::VATSIM), CServer::VoiceServerVatsim);
                             voiceServers.push_back(voiceServer);
                         }
                         break;
@@ -377,7 +381,6 @@ namespace BlackCore
                 } // for each line
 
                 // Setup for VATSIM servers and sorting for comparison
-                fsdServers.setFsdSetup(CFsdSetup::vatsimStandard());
                 fsdServers.sortBy(&CServer::getName, &CServer::getDescription);
                 voiceServers.sortBy(&CServer::getName, &CServer::getDescription);
 
