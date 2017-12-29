@@ -64,8 +64,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>398</width>
-         <height>494</height>
+         <width>358</width>
+         <height>482</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -377,19 +377,8 @@
             </item>
             <item row="1" column="0">
              <widget class="QPushButton" name="pb_RemarksGenerator">
-              <property name="styleSheet">
-               <string notr="true">QPushButton {
-	background-color: transparent;
-	border: none;
-	text-align: left;
-	text-decoration: underline;
-}</string>
-              </property>
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
               <property name="text">
-               <string>Generator</string>
+               <string>generator</string>
               </property>
              </widget>
             </item>
@@ -618,25 +607,25 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>398</width>
-         <height>472</height>
+         <width>358</width>
+         <height>482</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="vl_RemarksGeneratorScroll">
         <property name="spacing">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="leftMargin">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="topMargin">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>2</number>
+         <number>0</number>
         </property>
         <item>
          <layout class="QGridLayout" name="gl_RemarksGenerator">
@@ -1012,7 +1001,6 @@
   <tabstop>le_EstimatedTimeEnroute</tabstop>
   <tabstop>le_FuelOnBoard</tabstop>
   <tabstop>le_AlternateAirport</tabstop>
-  <tabstop>pb_RemarksGenerator</tabstop>
   <tabstop>pte_Remarks</tabstop>
   <tabstop>le_PilotsName</tabstop>
   <tabstop>le_PilotsHomeBase</tabstop>
