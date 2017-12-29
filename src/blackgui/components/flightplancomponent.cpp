@@ -56,7 +56,7 @@ namespace BlackGui
     namespace Components
     {
         CFlightPlanComponent::CFlightPlanComponent(QWidget *parent) :
-            QTabWidget(parent),
+            COverlayMessagesTabWidget(parent),
             ui(new Ui::CFlightPlanComponent)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
@@ -77,41 +77,71 @@ namespace BlackGui
             ui->le_AlternateAirport->setValidator(ucv);
             ui->le_OriginAirport->setValidator(ucv);
 
+            ucv = new CUpperCaseValidator(true, 0, 1, ui->le_EquipmentSuffix);
+            ucv->setRestrictions(CFlightPlan::equipmentCodes());
+            ui->le_EquipmentSuffix->setValidator(ucv);
+            ui->le_EquipmentSuffix->setToolTip(ui->tbr_EquipmentCodes->toHtml());
+            QCompleter *completer = new QCompleter(CFlightPlan::equipmentCodesInfo(), ui->le_EquipmentSuffix);
+            completer->setMaxVisibleItems(10);
+            completer->popup()->setMinimumWidth(225);
+            completer->setCompletionMode(QCompleter::PopupCompletion);
+            ui->le_EquipmentSuffix->setCompleter(completer);
+
             // connect
-            connect(ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::ps_sendFlightPlan);
-            connect(ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::ps_loadFlightPlanFromNetwork);
-            connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::ps_resetFlightPlan);
-            connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::ps_validateFlightPlan);
+            connect(ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan);
+            connect(ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork);
+            connect(ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan);
+            connect(ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan);
+            connect(ui->pb_Prefill, &QPushButton::pressed, this, &CFlightPlanComponent::anticipateValues);
 
-            connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
-            connect(ui->cb_NavigationEquipment, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
-            connect(ui->cb_PerformanceCategory, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
-            connect(ui->cb_PilotRating, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
-            connect(ui->cb_RequiredNavigationPerformance, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
+            connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks);
+            connect(ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes);
+            connect(ui->cb_VoiceCapabilitiesFirstPage, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::syncVoiceComboBoxes);
+            connect(ui->cb_NavigationEquipment, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks);
+            connect(ui->cb_PerformanceCategory, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks);
+            connect(ui->cb_PilotRating, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks);
+            connect(ui->cb_RequiredNavigationPerformance, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::currentTextChangedToBuildRemarks);
 
-            connect(ui->pb_LoadDisk, &QPushButton::clicked, this, &CFlightPlanComponent::ps_loadFromDisk);
-            connect(ui->pb_SaveDisk, &QPushButton::clicked, this, &CFlightPlanComponent::ps_saveToDisk);
+            connect(ui->pb_LoadDisk, &QPushButton::clicked, this, &CFlightPlanComponent::loadFromDisk);
+            connect(ui->pb_SaveDisk, &QPushButton::clicked, this, &CFlightPlanComponent::saveToDisk);
 
-            bool c = connect(ui->le_AircraftRegistration, SIGNAL(textChanged(QString)), this, SLOT(ps_buildRemarksString()));
-            Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
-            c = connect(ui->cb_NoSidsStarts, SIGNAL(toggled(bool)), this, SLOT(ps_buildRemarksString()));
-            Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
-            c = connect(ui->le_AirlineOperator, SIGNAL(textChanged(QString)), this, SLOT(ps_buildRemarksString()));
-            Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
-            Q_UNUSED(c);
+            connect(ui->le_AircraftRegistration, &QLineEdit::textChanged, this, &CFlightPlanComponent::buildRemarksString);
+            connect(ui->le_AirlineOperator, &QLineEdit::textChanged, this, &CFlightPlanComponent::buildRemarksString);
+            connect(ui->cb_NoSidsStarts, &QCheckBox::released, this, &CFlightPlanComponent::buildRemarksString);
 
-            connect(ui->pte_AdditionalRemarks, &QPlainTextEdit::textChanged, this, &CFlightPlanComponent::ps_buildRemarksString);
-            connect(ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::ps_buildRemarksString);
-            connect(ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::ps_setSelcalInOwnAircraft);
-            connect(ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::ps_copyRemarks);
-            connect(ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::ps_currentTabGenerator);
+            connect(ui->pte_AdditionalRemarks, &QPlainTextEdit::textChanged, this, &CFlightPlanComponent::buildRemarksString);
+            connect(ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::buildRemarksString);
+            connect(ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::setSelcalInOwnAircraft);
+            connect(ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::copyRemarksConfirmed);
+            connect(ui->pb_GetFromGenerator, &QPushButton::pressed, this, &CFlightPlanComponent::copyRemarksConfirmed);
+            connect(ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::currentTabGenerator);
+            connect(ui->tb_HelpEquipment, &QToolButton::clicked, this, &CFlightPlanComponent::showEquipmentCodesTab);
+
+            connect(ui->le_AircraftType, &QLineEdit::editingFinished, this, &CFlightPlanComponent::aircraftTypeChanged);
+            connect(ui->le_EquipmentSuffix, &QLineEdit::editingFinished, this, &CFlightPlanComponent::buildPrefixIcaoSuffix);
+            connect(ui->cb_Heavy, &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged);
+            connect(ui->cb_Tcas, &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged);
 
             // web services
-            connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CFlightPlanComponent::ps_swiftWebDataRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CFlightPlanComponent::swiftWebDataRead);
 
             // init GUI
-            this->ps_resetFlightPlan();
-            this->ps_buildRemarksString();
+            this->resetFlightPlan();
+            this->buildRemarksString();
+
+            // prefill some data derived from what was used last
+            if (sGui->getIContextSimulator()->isSimulatorSimulating())
+            {
+                this->prefillWithOwnAircraftData();
+            }
+            else
+            {
+                const CAircraftModel model = m_lastAircraftModel.get();
+                const CServer server = m_lastServer.get();
+                CSimulatedAircraft aircraft(model);
+                aircraft.setPilot(server.getUser());
+                this->prefillWithAircraftData(aircraft);
+            }
         }
 
         CFlightPlanComponent::~CFlightPlanComponent()
@@ -201,108 +231,111 @@ namespace BlackGui
             return m_flightPlan;
         }
 
-        BlackMisc::CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(CFlightPlan &flightPlan)
+        CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(CFlightPlan &flightPlan)
         {
-            BlackMisc::CStatusMessageList messages;
+            CStatusMessageList messages;
             QString v;
+            const bool strict = ui->cb_StrictCheck->isChecked();
+            const bool vfr = this->isVfr();
+            const CStatusMessage::StatusSeverity severity = strict ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning;
+            messages.push_back(CStatusMessage(this).validationInfo(strict ? "Strict validation" : "Lenient validation"));
 
-            CFlightPlan::FlightRules rule = CFlightPlan::IFR;
-            if (ui->rb_TypeIfr->isChecked())
-            {
-                rule = CFlightPlan::IFR;
-            }
-            else if (ui->rb_TypeVfr->isChecked())
-            {
-                rule = CFlightPlan::VFR;
-            }
+            const CFlightPlan::FlightRules rule = ui->cb_FlightRule->currentText().startsWith("I") ? CFlightPlan::IFR : CFlightPlan::VFR;
             flightPlan.setFlightRule(rule);
 
-            v = ui->le_Callsign->text().trimmed();
+            // callsign
+            v = ui->le_Callsign->text().trimmed().toUpper();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage().validationWarning("Missing %1") << ui->lbl_Callsign->text());
+                messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_Callsign->text());
+            }
+            else if (!CCallsign::isValidAircraftCallsign(v))
+            {
+                messages.push_back(CStatusMessage(this).validationError("Invalid callsign '%1'") << v);
             }
 
+            // aircraft ICAO / aircraft type
+            v = ui->le_AircraftType->text().trimmed().toUpper();
+            if (v.isEmpty())
+            {
+                messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_AircraftType->text());
+            }
+            else if (!CAircraftIcaoCode::isValidDesignator(v))
+            {
+                messages.push_back(CStatusMessage(this).validationError("Invalid aircraft ICAO code '%1'") << v);
+            }
+            else if (sApp && sApp->hasWebDataServices() && !sApp->getWebDataServices()->containsAircraftIcaoDesignator(v))
+            {
+                messages.push_back(CStatusMessage(this).validationWarning("Are you sure '%1' is a valid type?") << v);
+            }
+            flightPlan.setAircraftIcao(this->getAircraftIcaoCode());
+
+            // route
             v = ui->pte_Route->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage().validationWarning("Missing flight plan route"));
+                messages.push_back(CStatusMessage(this).validation(vfr ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, "Missing '%1'") << ui->lbl_Route->text());
             }
             else if (v.length() > CFlightPlan::MaxRouteLength)
             {
-                messages.push_back(CLogMessage().validationWarning("Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
+                messages.push_back(CStatusMessage(this).validationError("Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
             }
             else
             {
                 flightPlan.setRoute(v);
             }
 
+            // remarks
             v = ui->pte_Remarks->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage().validationWarning("No remarks, voice capabilities are mandatory"));
+                messages.push_back(CStatusMessage(this).validationError("No '%1', voice capabilities are mandatory") << ui->lbl_Remarks->text());
             }
             else if (v.length() > CFlightPlan::MaxRemarksLength)
             {
-                messages.push_back(CLogMessage().validationWarning("Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
+                messages.push_back(CStatusMessage(this).validationError("Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
             }
             else
             {
                 flightPlan.setRemarks(v);
             }
 
+            // time enroute
             v = ui->le_EstimatedTimeEnroute->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage().validationWarning("Missing %1") << ui->lbl_EstimatedTimeEnroute->text());
+                messages.push_back(CStatusMessage(this).validation(severity, "Missing '%1'") << ui->lbl_EstimatedTimeEnroute->text());
             }
-            else
-            {
-                flightPlan.setEnrouteTime(v);
-            }
+            flightPlan.setEnrouteTime(v);
 
+            // fuel
             v = ui->le_FuelOnBoard->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage().validationWarning("Missing %1") << ui->lbl_FuelOnBorad->text());
+                messages.push_back(CStatusMessage(this).validation(severity, "Missing '%1'") << ui->lbl_FuelOnBoard->text());
             }
-            else
-            {
-                flightPlan.setFuelTime(v);
-            }
+            flightPlan.setFuelTime(v);
 
+            // take off time
             v = ui->le_TakeOffTimePlanned->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage().validationWarning("Missing %1") << ui->lbl_TakeOffTimePlanned->text());
+                messages.push_back(CStatusMessage(this).validation(severity, "Missing '%1'") << ui->lbl_TakeOffTimePlanned->text());
             }
-            else
-            {
-                flightPlan.setTakeoffTimePlanned(v);
-            }
+            flightPlan.setTakeoffTimePlanned(v);
 
-            thread_local const QRegularExpression withUnit("\\D+");
-            v = ui->le_CrusingAltitude->text().trimmed();
-            if (!v.isEmpty() && !withUnit.match(v).hasMatch())
+            // cruising alt
+            if (ui->lep_CrusingAltitude->isValid(&messages))
             {
-                v += "ft";
-                ui->le_CrusingAltitude->setText(v);
-            }
-
-            CAltitude cruisingAltitude(v, CPqString::SeparatorsLocale);
-            if (v.isEmpty() || cruisingAltitude.isNull())
-            {
-                messages.push_back(CLogMessage().validationWarning("Wrong %1") << ui->lbl_CrusingAltitude->text());
-            }
-            else
-            {
+                const CAltitude cruisingAltitude = ui->lep_CrusingAltitude->getAltitude();
                 flightPlan.setCruiseAltitude(cruisingAltitude);
             }
 
+            // destination airport
             v = ui->le_DestinationAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CLogMessage().validationWarning("Missing %1") << ui->lbl_DestinationAirport->text());
+                messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_DestinationAirport->text());
                 flightPlan.setDestinationAirportIcao(QString(""));
             }
             else
@@ -310,28 +343,30 @@ namespace BlackGui
                 flightPlan.setDestinationAirportIcao(v);
             }
 
-            v = ui->le_CruiseTrueAirspeed->text();
-            CSpeed cruiseTAS;
-            cruiseTAS.parseFromString(v, CPqString::SeparatorsLocale);
-            if (cruiseTAS.isNull())
-            {
-                messages.push_back(CLogMessage().validationWarning("Wrong TAS, %1") << ui->lbl_CruiseTrueAirspeed->text());
-                flightPlan.setDestinationAirportIcao(defaultIcao());
-            }
-            else
-            {
-                flightPlan.setCruiseTrueAirspeed(cruiseTAS);
-            }
-
+            // origin airport
             v = ui->le_OriginAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CLogMessage().validationWarning("Missing %1") << ui->lbl_OriginAirport->text());
+                messages.push_back(CStatusMessage(this).validationError("Missing '%1'") << ui->lbl_OriginAirport->text());
                 flightPlan.setOriginAirportIcao(defaultIcao());
             }
             else
             {
                 flightPlan.setOriginAirportIcao(v);
+            }
+
+            // TAS
+            v = ui->le_CruiseTrueAirspeed->text();
+            CSpeed cruiseTAS;
+            cruiseTAS.parseFromString(v, CPqString::SeparatorsLocale);
+            if (cruiseTAS.isNull())
+            {
+                messages.push_back(CStatusMessage(this).validationError("Wrong TAS, %1") << ui->lbl_CruiseTrueAirspeed->text());
+                flightPlan.setDestinationAirportIcao(defaultIcao());
+            }
+            else
+            {
+                flightPlan.setCruiseTrueAirspeed(cruiseTAS);
             }
 
             // Optional fields
@@ -340,7 +375,7 @@ namespace BlackGui
             {
                 if (!messages.hasWarningOrErrorMessages())
                 {
-                    messages.push_back(CLogMessage().validationInfo("Missing %1") << ui->lbl_AlternateAirport->text());
+                    messages.push_back(CStatusMessage(this).validationInfo("Missing %1") << ui->lbl_AlternateAirport->text());
                 }
                 flightPlan.setAlternateAirportIcao(QString(""));
             }
@@ -352,15 +387,15 @@ namespace BlackGui
             // OK
             if (!messages.hasWarningOrErrorMessages())
             {
-                messages.push_back(CLogMessage().validationInfo("Flight plan validation passed"));
+                messages.push_back(CStatusMessage(this).validationInfo("Flight plan validation passed"));
             }
             return messages;
         }
 
-        void CFlightPlanComponent::ps_sendFlightPlan()
+        void CFlightPlanComponent::sendFlightPlan()
         {
             CFlightPlan flightPlan;
-            CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
+            const CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
             if (!messages.hasWarningOrErrorMessages())
             {
                 // no error, send if possible
@@ -381,16 +416,14 @@ namespace BlackGui
             }
         }
 
-        void CFlightPlanComponent::ps_validateFlightPlan()
+        void CFlightPlanComponent::validateFlightPlan()
         {
             CFlightPlan flightPlan;
-            CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
-            messages.addCategories(this);
-            messages.addCategory(CLogCategory::validation());
-            CLogMessage::preformatted(messages);
+            const CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
+            this->showOverlayMessages(messages);
         }
 
-        void CFlightPlanComponent::ps_resetFlightPlan()
+        void CFlightPlanComponent::resetFlightPlan()
         {
             Q_ASSERT(sGui->getIContextNetwork());
             Q_ASSERT(sGui->getIContextOwnAircraft());
@@ -409,7 +442,7 @@ namespace BlackGui
             ui->le_TakeOffTimePlanned->setText(QDateTime::currentDateTimeUtc().addSecs(30 * 60).toString("hh:mm"));
         }
 
-        void CFlightPlanComponent::ps_loadFromDisk()
+        void CFlightPlanComponent::loadFromDisk()
         {
             CStatusMessage m;
             const QString fileName = QFileDialog::getOpenFileName(nullptr,
@@ -454,7 +487,7 @@ namespace BlackGui
             if (m.isFailure()) { CLogMessage::preformatted(m); }
         }
 
-        void CFlightPlanComponent::ps_saveToDisk()
+        void CFlightPlanComponent::saveToDisk()
         {
             CStatusMessage m;
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
@@ -485,14 +518,14 @@ namespace BlackGui
             if (m.isFailure()) { CLogMessage::preformatted(m); }
         }
 
-        void CFlightPlanComponent::ps_setSelcalInOwnAircraft()
+        void CFlightPlanComponent::setSelcalInOwnAircraft()
         {
             if (!sGui->getIContextOwnAircraft()) return;
             if (!ui->frp_SelcalCode->hasValidCode()) return;
             sGui->getIContextOwnAircraft()->updateSelcal(ui->frp_SelcalCode->getSelcal(), flightPlanIdentifier());
         }
 
-        void CFlightPlanComponent::ps_loadFlightPlanFromNetwork()
+        void CFlightPlanComponent::loadFlightPlanFromNetwork()
         {
             if (!sGui->getIContextNetwork())
             {
@@ -518,13 +551,10 @@ namespace BlackGui
             }
         }
 
-        void CFlightPlanComponent::ps_buildRemarksString()
+        void CFlightPlanComponent::buildRemarksString()
         {
-            QString rem;
             QString v = ui->cb_VoiceCapabilities->currentText().toUpper();
-            if (v.contains("TEXT"))         { rem.append("/T/ "); }
-            else if (v.contains("RECEIVE")) { rem.append("/R/ "); }
-            else if (v.contains("VOICE"))   { rem.append("/V/ "); }
+            QString rem = CFlightPlanRemarks::textToVoiceCapabilities(v);
 
             v = ui->le_AirlineOperator->text().trimmed();
             if (!v.isEmpty()) rem.append("OPR/").append(v).append(" ");
@@ -571,18 +601,18 @@ namespace BlackGui
             ui->pte_RemarksGenerated->setPlainText(rem);
         }
 
-        void CFlightPlanComponent::ps_copyRemarks()
+        void CFlightPlanComponent::copyRemarks()
         {
             ui->pte_Remarks->setPlainText(ui->pte_RemarksGenerated->toPlainText());
             CLogMessage(this).info("Copied remarks");
         }
 
-        void CFlightPlanComponent::ps_currentTabGenerator()
+        void CFlightPlanComponent::currentTabGenerator()
         {
             this->setCurrentWidget(ui->tb_RemarksGenerator);
         }
 
-        void CFlightPlanComponent::ps_swiftWebDataRead()
+        void CFlightPlanComponent::swiftWebDataRead()
         {
             this->initCompleters();
         }

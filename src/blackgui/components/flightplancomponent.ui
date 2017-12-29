@@ -375,7 +375,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="1" column="0" alignment="Qt::AlignTop">
              <widget class="QPushButton" name="pb_RemarksGenerator">
               <property name="text">
                <string>generator</string>

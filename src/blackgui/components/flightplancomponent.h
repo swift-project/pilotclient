@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_FLIGHTPLANCOMPONENT_H
 #define BLACKGUI_COMPONENTS_FLIGHTPLANCOMPONENT_H
 
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/user.h"
@@ -25,8 +26,6 @@
 #include <QtGlobal>
 #include <QFileDialog>
 
-class QWidget;
-
 namespace Ui { class CFlightPlanComponent; }
 namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace BlackGui
@@ -34,7 +33,7 @@ namespace BlackGui
     namespace Components
     {
         //! Flight plan widget
-        class BLACKGUI_EXPORT CFlightPlanComponent : public QTabWidget
+        class BLACKGUI_EXPORT CFlightPlanComponent : public COverlayMessagesTabWidget
         {
             Q_OBJECT
 
@@ -88,42 +87,71 @@ namespace BlackGui
             //! File name for load/save
             QString getDefaultFilename(bool load);
 
-        private slots:
-            //! Call \sa ps_buildRemarksString from combo box signal
-            void ps_currentTextChangedToBuildRemarks(const QString &text) { this->ps_buildRemarksString(); Q_UNUSED(text); }
+            //! Call \sa buildRemarksString from combo box signal
+            void currentTextChangedToBuildRemarks(const QString &text) { this->buildRemarksString(); Q_UNUSED(text); }
 
             //! Send flightplan
-            void ps_sendFlightPlan();
+            void sendFlightPlan();
 
             //! Reset Flightplan
-            void ps_resetFlightPlan();
+            void resetFlightPlan();
 
             //! Load from disk
-            void ps_loadFromDisk();
+            void loadFromDisk();
 
             //! Save to disk
-            void ps_saveToDisk();
+            void saveToDisk();
 
             //! Set SELCAL in own aircrafr
-            void ps_setSelcalInOwnAircraft();
+            void setSelcalInOwnAircraft();
 
             //! Load Flightplan
-            void ps_loadFlightPlanFromNetwork();
+            void loadFlightPlanFromNetwork();
 
             //! Validate Flightplan
-            void ps_validateFlightPlan();
+            void validateFlightPlan();
 
-            //! Remark
-            void ps_buildRemarksString();
+            //! Remarks
+            void buildRemarksString();
 
             //! Copy over
-            void ps_copyRemarks();
+            void copyRemarksConfirmed() { this->copyRemarks(true); }
+
+            //! Copy over
+            void copyRemarks(bool confirm = true);
 
             //! Show generator tab page
-            void ps_currentTabGenerator();
+            void currentTabGenerator();
 
             //! GUI init complete
-            void ps_swiftWebDataRead();
+            void swiftWebDataRead();
+
+            //! Build "H/B737/F"
+            void buildPrefixIcaoSuffix();
+
+            //! Prefix check box changed
+            void prefixCheckBoxChanged();
+
+            //! Aircraft type changed
+            void aircraftTypeChanged();
+
+            //! Something like "H/B737/F"
+            QString getPrefixIcaoSuffix() const;
+
+            //! Aircraft type as ICAO code
+            BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCode() const;
+
+            //! Show tab of equipment codes
+            void showEquipmentCodesTab();
+
+            //! VFR rules?
+            bool isVfr() const;
+
+            //! Override remarks message dialog
+            bool overrideRemarks();
+
+            //! Guess some FP values/setting
+            void anticipateValues();
         };
     } // ns
 } // ns
