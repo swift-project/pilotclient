@@ -91,6 +91,7 @@ namespace BlackGui
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CLoginComponent::toggleNetworkConnection);
             connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
             connect(ui->tb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
+            connect(ui->tb_UnhidePassword, &QToolButton::clicked, this, &CLoginComponent::unhidePassword);
 
             ui->comp_FsdDetails->showEnableInfo(true);
             ui->comp_FsdDetails->setFsdSetupEnabled(false);
@@ -644,6 +645,16 @@ namespace BlackGui
                 m_logoffCountdownTimer->start();
                 ui->tb_Timeout->setIcon(m_iconPause);
             }
+        }
+
+        void CLoginComponent::unhidePassword()
+        {
+            static const QLineEdit::EchoMode originalMode = ui->le_VatsimPassword->echoMode();
+            ui->le_VatsimPassword->setEchoMode(QLineEdit::Normal);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                ui->le_VatsimPassword->setEchoMode(originalMode);
+            });
         }
 
         void CLoginComponent::initCompleters(CEntityFlags::Entity entity)

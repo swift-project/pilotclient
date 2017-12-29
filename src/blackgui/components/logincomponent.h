@@ -125,6 +125,9 @@ namespace BlackGui
             //! Pause/Continue timeout
             void toggleTimeout();
 
+            //! Temp. unhide password
+            void unhidePassword();
+
             //! GUI aircraft values, formatted
             struct CGuiAircraftValues
             {
@@ -159,7 +162,7 @@ namespace BlackGui
             BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
 
             //! Set ICAO values
-            //! \return changed values
+            //! \return changed values?
             bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
 
             // -------------- values from GUI -----------------
@@ -209,8 +212,8 @@ namespace BlackGui
             BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible = false; //!< is this component selected?
-            QIcon m_iconPlay {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
-            QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
+            const QIcon m_iconPlay {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
+            const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
             const int LogoffIntervalSeconds = 20; //!< time before logoff
             QTimer *m_logoffCountdownTimer { nullptr }; //!< timer for logoff countdown
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::reloadSettings };

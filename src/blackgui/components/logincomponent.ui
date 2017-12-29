@@ -97,24 +97,24 @@
           <property name="verticalSpacing">
            <number>4</number>
           </property>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="le_VatsimId"/>
-          </item>
-          <item row="3" column="5">
+          <item row="3" column="6">
            <widget class="BlackGui::CTickLabel" name="lblp_VatsimHomeAirport">
             <property name="text">
              <string/>
             </property>
            </widget>
           </item>
-          <item row="1" column="4">
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_VatsimId"/>
+          </item>
+          <item row="1" column="5">
            <widget class="QLineEdit" name="le_VatsimPassword">
             <property name="echoMode">
              <enum>QLineEdit::PasswordEchoOnEdit</enum>
             </property>
            </widget>
           </item>
-          <item row="1" column="5">
+          <item row="1" column="6">
            <widget class="BlackGui::CTickLabel" name="lblp_VatsimPassword">
             <property name="text">
              <string/>
@@ -135,10 +135,27 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="5">
+          <item row="2" column="6">
            <widget class="BlackGui::CTickLabel" name="lblp_VatsimRealName">
             <property name="text">
              <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="le_VatsimHomeAirport">
+            <property name="maxLength">
+             <number>4</number>
+            </property>
+            <property name="placeholderText">
+             <string>e.g. &quot;KLAX&quot;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="lbl_VatsimServer">
+            <property name="text">
+             <string>Server</string>
             </property>
            </widget>
           </item>
@@ -152,30 +169,13 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1" colspan="4">
+          <item row="4" column="1" colspan="5">
            <widget class="BlackGui::Components::CServerListSelector" name="comp_VatsimServer"/>
           </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="le_VatsimHomeAirport">
-            <property name="maxLength">
-             <number>4</number>
-            </property>
-            <property name="placeholderText">
-             <string>e.g. &quot;KLAX&quot;</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1" colspan="4">
+          <item row="2" column="1" colspan="5">
            <widget class="QLineEdit" name="le_VatsimRealName">
             <property name="placeholderText">
              <string>e.g. Joe Doe</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="lbl_VatsimServer">
-            <property name="text">
-             <string>Server</string>
             </property>
            </widget>
           </item>
@@ -193,13 +193,27 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0" colspan="5">
+          <item row="5" column="0" colspan="6">
            <widget class="QWidget" name="wi_EmptyForSpace" native="true">
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>10</height>
              </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QToolButton" name="tb_UnhidePassword">
+            <property name="toolTip">
+             <string>unhide password</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../blackmisc/blackmisc.qrc">
+              <normaloff>:/diagona/icons/diagona/icons/question-button.png</normaloff>:/diagona/icons/diagona/icons/question-button.png</iconset>
             </property>
            </widget>
           </item>
@@ -662,25 +676,80 @@
      </layout>
     </widget>
    </item>
-   <item>
-    <widget class="QDialogButtonBox" name="bb_OkCancel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-     <property name="centerButtons">
-      <bool>false</bool>
-     </property>
+   <item alignment="Qt::AlignBottom">
+    <widget class="QFrame" name="fr_Buttons">
+     <layout class="QGridLayout" name="gl_Buttons">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <item row="1" column="0">
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pb_Cancel">
+        <property name="text">
+         <string>cancel</string>
+        </property>
+        <property name="shortcut">
+         <string>Esc</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pb_Ok">
+        <property name="text">
+         <string>ok</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>BlackGui::CTickLabel</class>
+   <extends>QLabel</extends>
+   <header>blackgui/ticklabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CFsdSetupForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/fsdsetupform.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbAircraftIcaoSelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbaircrafticaoselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbAirlineIcaoSelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbairlineicaoselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>BlackGui::CTickLabel</class>
    <extends>QLabel</extends>
@@ -707,18 +776,6 @@
    <class>BlackGui::Editors::CFsdSetupForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/fsdsetupform.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CDbAircraftIcaoSelectorComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbaircrafticaoselectorcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CDbAirlineIcaoSelectorComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbairlineicaoselectorcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
