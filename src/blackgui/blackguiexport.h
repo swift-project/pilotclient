@@ -29,4 +29,24 @@
 #  define BLACKGUI_EXPORT
 #endif
 
-#endif // BLACKGUI_MACROS_H
+/*!
+ * \def BLACKGUI_EXPORT_DECLARE_TEMPLATE
+ * BLACKGUI Export Explicit Template Declaration Macro
+ */
+
+/*!
+ * \def BLACKGUI_EXPORT_DEFINE_TEMPLATE
+ * BLACKGUI Export Explicit Template Definition Macro
+ */
+#if defined(Q_OS_WIN) && defined(Q_CC_GNU)
+#  define BLACKGUI_EXPORT_DECLARE_TEMPLATE BLACKGUI_EXPORT
+#  define BLACKGUI_EXPORT_DEFINE_TEMPLATE
+#elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
+#  define BLACKGUI_EXPORT_DECLARE_TEMPLATE
+#  define BLACKGUI_EXPORT_DEFINE_TEMPLATE BLACKGUI_EXPORT
+#else
+#  define BLACKGUI_EXPORT_DECLARE_TEMPLATE
+#  define BLACKGUI_EXPORT_DEFINE_TEMPLATE
+#endif
+
+#endif // guard
