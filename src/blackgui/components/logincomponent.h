@@ -16,12 +16,14 @@
 #include "blackcore/data/vatsimsetup.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/settings/guisettings.h"
+#include "blackmisc/simulation/data/lastmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/digestsignal.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
 
@@ -217,8 +219,9 @@ namespace BlackGui
             const int LogoffIntervalSeconds = 20; //!< time before logoff
             QTimer *m_logoffCountdownTimer { nullptr }; //!< timer for logoff countdown
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::reloadSettings };
-            BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this }; //!< current settings of aircraft
-            BlackMisc::CData<BlackCore::Data::TVatsimCurrentServer> m_currentVatsimServer { this }; //!< cache for current VATSIM server
+            BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
+            BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
+            BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this }; //!< recently used VATSIM server
         };
     } // namespace
 } // namespace

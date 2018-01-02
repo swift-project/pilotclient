@@ -128,8 +128,8 @@ namespace BlackCore
             static constexpr bool isPinned() { return true; }
         };
 
-        //! Trait for currently used VATSIM server and user
-        struct TVatsimCurrentServer : public BlackMisc::TDataTrait<BlackMisc::Network::CServer>
+        //! Trait for last (most recently) used VATSIM server and user
+        struct TVatsimLastServer : public BlackMisc::TDataTrait<BlackMisc::Network::CServer>
         {
             //! Key in data cache
             static const char *key() { return "vatsimserver"; }

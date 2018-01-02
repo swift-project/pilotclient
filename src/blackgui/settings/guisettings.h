@@ -84,16 +84,6 @@ namespace BlackGui
         };
 
         //! Settings for last manual entries of own aircraft mode
-        struct TOwnAircraftModel : public BlackMisc::TSettingTrait<BlackMisc::Simulation::CAircraftModel>
-        {
-            //! \copydoc BlackCore::TSettingTrait::key
-            static const char *key() { return "guinownaircraftmodel"; }
-
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("Own aircraft"); return name; }
-        };
-
-        //! Settings for last manual entries of own aircraft mode
         struct TBackgroundConsolidation : public BlackMisc::TSettingTrait<int>
         {
             //! \copydoc BlackCore::TSettingTrait::key

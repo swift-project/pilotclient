@@ -291,11 +291,13 @@ namespace BlackGui
 
                 // Login
                 msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, mode);
-                if (msg.isSuccess() && vatsimLogin)
+                if (msg.isSuccess())
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
-                    m_currentVatsimServer.set(currentServer);
-                    m_currentAircraftModel.setAndSave(ownAircraft.getModel());
+                    m_lastServer.set(currentServer);
+                    m_lastAircraftModel.set(ownAircraft.getModel());
+                    ui->le_HomeBase->setText(currentServer.getUser().getHomeBase().asString());
+                    if (vatsimLogin) { m_lastVatsimServer.set(currentServer); }
                 }
             }
             else
@@ -335,7 +337,7 @@ namespace BlackGui
                 CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
                 if (vatsimFsdServers.isEmpty()) { return; }
                 vatsimFsdServers.sortBy(&CServer::getName);
-                const CServer currentServer = m_currentVatsimServer.get();
+                const CServer currentServer = m_lastVatsimServer.get();
                 ui->comp_VatsimServer->setServers(vatsimFsdServers, true);
                 ui->comp_VatsimServer->preSelect(currentServer.getName());
             }
@@ -347,7 +349,7 @@ namespace BlackGui
 
         void CLoginComponent::loadRememberedVatsimData()
         {
-            const CServer lastServer = m_currentVatsimServer.get();
+            const CServer lastServer = m_lastVatsimServer.get();
             const CUser lastUser = lastServer.getUser();
             if (lastUser.hasValidCallsign())
             {
@@ -357,7 +359,7 @@ namespace BlackGui
                 ui->le_VatsimHomeAirport->setText(lastUser.getHomeBase().asString());
                 ui->le_VatsimRealName->setText(lastUser.getRealName());
             }
-            else
+            else if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 ui->le_Callsign->setText("SWIFT");
                 ui->le_VatsimId->setText("1288459");
@@ -365,7 +367,6 @@ namespace BlackGui
                 ui->le_VatsimHomeAirport->setText("LOWI");
                 ui->le_VatsimRealName->setText("Black Swift");
             }
-            ui->comp_OtherServers->preSelect(lastServer.getName());
         }
 
         CLoginComponent::CGuiAircraftValues CLoginComponent::getAircraftValuesFromGui() const
@@ -702,7 +703,7 @@ namespace BlackGui
 
         CAircraftModel CLoginComponent::getPrefillModel() const
         {
-            CAircraftModel model = m_currentAircraftModel.get();
+            const CAircraftModel model = m_lastAircraftModel.get();
             if (model.hasAircraftDesignator()) { return model; }
             return IContextOwnAircraft::getDefaultOwnAircraftModel();
         }

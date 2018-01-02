@@ -27,7 +27,13 @@ namespace BlackGui
     {
         CServerListSelector::CServerListSelector(QWidget *parent) :
             QComboBox(parent)
-        { }
+        {
+            const CServer server = m_lastServer.get();
+            if (server.hasName())
+            {
+                m_pendingPreselect = server.getName();
+            }
+        }
 
         void CServerListSelector::setServers(const CServerList &servers, bool nameIsCountry)
         {

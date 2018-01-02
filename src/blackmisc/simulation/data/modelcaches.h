@@ -29,7 +29,7 @@ namespace BlackMisc
         namespace Data
         {
             //! Trait for model cache
-            struct TModelCache : public BlackMisc::TDataTrait<BlackMisc::Simulation::CAircraftModelList>
+            struct TModelCache : public TDataTrait<CAircraftModelList>
             {
                 //! Defer loading
                 static constexpr bool isDeferred() { return true; }

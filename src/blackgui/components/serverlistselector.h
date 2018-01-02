@@ -13,9 +13,10 @@
 #define BLACKGUI_COMPONENTS_SERVERLISTSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/server.h"
+#include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/country.h"
+#include "blackmisc/datacache.h"
 
 #include <QComboBox>
 #include <QObject>
@@ -58,6 +59,7 @@ namespace BlackGui
             BlackMisc::Network::CServerList m_servers; //!< corresponding servers
             QStringList m_items;                       //!< items strings
             QString m_pendingPreselect;                //!< pending preselect value
+            BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
         };
     } // ns
 } // ns
