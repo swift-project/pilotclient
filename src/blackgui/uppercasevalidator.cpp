@@ -34,6 +34,19 @@ namespace BlackGui
         if (m_optionalValue && input.isEmpty()) { return Acceptable; }
         if (input.length() > m_maxLength) { return Invalid; }
         if (input.length() < m_minLength) { return Intermediate; }
+        if (!m_restrictions.isEmpty())
+        {
+            bool valid = false;
+            for (const QString &r : m_restrictions)
+            {
+                if (r.startsWith(input))
+                {
+                    valid = true;
+                    break;
+                }
+            }
+            if (!valid) { return Invalid; }
+        }
         return Acceptable;
     }
 

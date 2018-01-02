@@ -13,11 +13,8 @@
 #define BLACKGUI_UPPERCASEVALIDATOR_H
 
 #include "blackgui/blackguiexport.h"
-
+#include <QStringList>
 #include <QValidator>
-
-class QObject;
-class QString;
 
 namespace BlackGui
 {
@@ -35,6 +32,9 @@ namespace BlackGui
         //! Constructor
         CUpperCaseValidator(bool optionalValue, int minLength, int maxLength, QObject *parent = nullptr);
 
+        //! Set restrictions
+        void setRestrictions(const QStringList &restrictions) { m_restrictions = restrictions; }
+
         //! \copydoc QValidator::validate
         virtual State validate(QString &input, int &pos) const override;
 
@@ -42,10 +42,10 @@ namespace BlackGui
         virtual void fixup(QString &input) const override;
 
     private:
-        bool m_optionalValue = false;
+        bool m_optionalValue = false; //!< allow empty
         int m_minLength = 0;
-        int m_maxLength = 32678; // standard length
-
+        int m_maxLength = 32678;      //!< standard length
+        QStringList m_restrictions;   //!< list of allowed strings
     };
 }
 #endif // guard
