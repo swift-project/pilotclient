@@ -511,7 +511,7 @@ namespace BlackSample
     {
         const QString rules = flightPlan.getFlightRulesAsString();
         std::cout << "FLIGHTPLAN "  << callsign
-                  << flightPlan.getEquipmentIcao().toStdString() << " " << flightPlan.getOriginAirportIcao() << " "
+                  << flightPlan.getPrefixIcaoSuffix().toStdString() << " " << flightPlan.getOriginAirportIcao() << " "
                   << flightPlan.getDestinationAirportIcao() << " " << flightPlan.getAlternateAirportIcao() << " "
                   << flightPlan.getTakeoffTimePlannedHourMin().toStdString() << " " << flightPlan.getTakeoffTimeActualHourMin().toStdString() << " "
                   << flightPlan.getEnrouteTime() << " " << flightPlan.getFuelTime() << " "

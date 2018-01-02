@@ -37,13 +37,13 @@ namespace BlackMisc
 
         bool CFlightPlanRemarks::hasAnyParsedRemarks() const
         {
-            if (!this->m_isParsed) { return false; }
+            if (!m_isParsed) { return false; }
             return this->hasParsedAirlineRemarks() || m_selcalCode.isValid() || !m_voiceCapabilities.isUnknown();
         }
 
         bool CFlightPlanRemarks::hasParsedAirlineRemarks() const
         {
-            if (!this->m_isParsed) { return false; }
+            if (!m_isParsed) { return false; }
             return !m_radioTelephony.isEmpty() || !m_flightOperator.isEmpty() || m_airlineIcao.hasValidDesignator();
         }
 
@@ -59,14 +59,34 @@ namespace BlackMisc
             return s.simplified().trimmed();
         }
 
-        void CFlightPlanRemarks::parseFlightPlanRemarks()
+        QString CFlightPlanRemarks::textToVoiceCapabilities(const QString &text)
+        {
+            if (text.contains("TEXT", Qt::CaseInsensitive)) { return QStringLiteral("/T/"); }
+            if (text.contains("RECEIVE", Qt::CaseInsensitive)) { return QStringLiteral("/R/"); }
+            if (text.contains("VOICE", Qt::CaseInsensitive)) { return QStringLiteral("/V/"); }
+            return QStringLiteral("");
+        }
+
+        QString CFlightPlanRemarks::replaceVoiceCapabilities(const QString &newCaps, const QString &oldRemarks)
+        {
+            if (newCaps.isEmpty()) { return oldRemarks; }
+            if (oldRemarks.isEmpty()) { return newCaps; }
+
+            QString r(oldRemarks);
+            if (r.contains("/V/", Qt::CaseInsensitive)) { r.replace("/V/", newCaps, Qt::CaseInsensitive); return r; }
+            if (r.contains("/R/", Qt::CaseInsensitive)) { r.replace("/R/", newCaps, Qt::CaseInsensitive); return r; }
+            if (r.contains("/T/", Qt::CaseInsensitive)) { r.replace("/T/", newCaps, Qt::CaseInsensitive); return r; }
+            return newCaps + " " + r;
+        }
+
+        void CFlightPlanRemarks::parseFlightPlanRemarks(bool force)
         {
             // examples: VFPS = VATSIM Flightplan Prefile System
             // 1) RT/KESTREL OPR/MYTRAVEL REG/G-DAJC SEL/FP-ES PER/C NAV/RNP10
             // 2) OPR/UAL CALLSIGN/UNITED
             // 3) /v/FPL-VIR9-IS-A346/DEP/S-EGLL/ARR/KJFK/REG/G-VGAS/TCAS RVR/200 OPR/VIRGIN AIRLINES
 
-            if (m_isParsed) { return; }
+            if (!force && m_isParsed) { return; }
             m_isParsed = true;
             if (m_remarks.isEmpty()) { return; }
             const QString remarks = m_remarks.toUpper();
@@ -85,15 +105,6 @@ namespace BlackMisc
             }
         }
 
-        QString CFlightPlanRemarks::aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft)
-        {
-            // http://uk.flightaware.com/about/faq_aircraft_flight_plan_suffix.rvt
-            // we expect something like H/B772/F B773 B773/F
-            thread_local const QRegularExpression reg("/.");
-            QString aircraftIcaoCode(equipmentCodeAndAircraft);
-            aircraftIcaoCode = aircraftIcaoCode.replace(reg, "").trimmed().toUpper();
-            return aircraftIcaoCode;
-        }
 
         QString CFlightPlanRemarks::cut(const QString &remarks, const QString &marker)
         {
@@ -125,7 +136,7 @@ namespace BlackMisc
                                  const PhysicalQuantities::CTime &fuelTime, const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, CFlightPlan::FlightRules flightRules,
                                  const QString &route, const QString &remarks)
             : m_callsign(callsign),
-              m_equipmentIcao(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
+              m_equipmentSuffix(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
               m_takeoffTimePlanned(takeoffTimePlanned), m_takeoffTimeActual(takeoffTimeActual), m_enrouteTime(enrouteTime), m_fuelTime(fuelTime),
               m_cruiseAltitude(cruiseAltitude), m_cruiseTrueAirspeed(cruiseTrueAirspeed), m_flightRules(flightRules),
               m_route(route.trimmed().left(MaxRouteLength).toUpper()),
@@ -144,9 +155,10 @@ namespace BlackMisc
 
         void CFlightPlan::setEquipmentIcao(const QString &equipmentIcao)
         {
-            m_equipmentIcao = equipmentIcao;
-            const QString aircraftIcao = CFlightPlanRemarks::aircraftIcaoCodeFromEquipmentCode(equipmentIcao);
-            m_aircraftIcao = CAircraftIcaoCode::isValidDesignator(aircraftIcao) ? aircraftIcao : "";
+            const QStringList parts = CFlightPlan::splitEquipmentCode(equipmentIcao);
+            m_aircraftIcao = CAircraftIcaoCode::isValidDesignator(parts[1]) ? parts[1] : "";
+            m_equipmentPrefix = parts[0];
+            m_equipmentSuffix = parts[2];
         }
 
         void CFlightPlan::setRemarks(const QString &remarks)
@@ -156,20 +168,21 @@ namespace BlackMisc
 
         CFlightPlan::FlightRules CFlightPlan::getFlightRulesAsVFRorIFR() const
         {
-            switch (getFlightRules())
+            switch (this->getFlightRules())
             {
-            case IFR:
-                return IFR;
+            case IFR: return IFR;
             case VFR:
             case SVFR:
-            case DVFR:
-                return VFR;
+            case DVFR: return VFR;
             case UNKNOWN:
-            default:
-                break;
+            default: break;
             }
             return UNKNOWN;
+        }
 
+        QString CFlightPlan::getPrefixIcaoSuffix() const
+        {
+            return CFlightPlan::concatPrefixIcaoSuffix(m_equipmentPrefix, m_aircraftIcao.getDesignator(), m_equipmentSuffix);
         }
 
         CVariant CFlightPlan::propertyByIndex(const CPropertyIndex &index) const
@@ -183,7 +196,7 @@ namespace BlackMisc
             case IndexAlternateAirportIcao: return m_alternateAirportIcao.propertyByIndex(index.copyFrontRemoved());
             case IndexDestinationAirportIcao: return m_destinationAirportIcao.propertyByIndex(index.copyFrontRemoved());
             case IndexOriginAirportIcao: return m_originAirportIcao.propertyByIndex(index.copyFrontRemoved());
-            case IndexCallsign: return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexRemarks: return CVariant::from(m_remarks);
             default: return CValueObject::propertyByIndex(index);
             }
@@ -213,7 +226,7 @@ namespace BlackMisc
         QString CFlightPlan::convertToQString(bool i18n) const
         {
             const QString s = m_callsign.toQString(i18n)
-                              % QLatin1Char(' ') % m_equipmentIcao
+                              % QLatin1Char(' ') % m_equipmentSuffix
                               % QLatin1Char(' ') % m_originAirportIcao.toQString(i18n)
                               % QLatin1Char(' ') % m_destinationAirportIcao.toQString(i18n)
                               % QLatin1Char(' ') % m_alternateAirportIcao.toQString(i18n)
@@ -241,6 +254,71 @@ namespace BlackMisc
             }
         }
 
+        QString CFlightPlan::aircraftIcaoCodeFromEquipmentCode(const QString &equipmentCodeAndAircraft)
+        {
+            // http://uk.flightaware.com/about/faq_aircraft_flight_plan_suffix.rvt
+            // we expect something like H/B772/F B773 B773/F
+            thread_local const QRegularExpression reg("/.");
+            QString aircraftIcaoCode(equipmentCodeAndAircraft);
+            aircraftIcaoCode = aircraftIcaoCode.replace(reg, "").trimmed().toUpper();
+            return aircraftIcaoCode;
+        }
+
+        QStringList CFlightPlan::splitEquipmentCode(const QString &equipmentCodeAndAircraft)
+        {
+            static const QStringList empty({"", "", ""});
+            if (empty.isEmpty()) { return empty; }
+            QStringList split = equipmentCodeAndAircraft.split('/');
+            if (split.length() == 3) { return split; } // "H/B738/F"
+            if (split.length() == 2)
+            {
+                if (split[0].length() == 1)
+                {
+                    // we assume prefix + ICAO
+                    // e.g. "H/B748"
+                    split.push_back("");
+                }
+                else
+                {
+                    // we assume ICAO + suffix
+                    // e.g. "B748/F"
+                    split.push_front("");
+                    return split;
+                }
+            }
+
+            // one part only
+            if (split[0].length() > 1 && CAircraftIcaoCode::isValidDesignator(split[0]))
+            {
+                QStringList sl(empty);
+                sl[1] = split[0]; // only ICAO
+                return sl;
+            }
+            if (split[0].length() != 1) { return empty; } // something invalid
+
+            // one part, one char only. hard to tell
+            QStringList sl(empty);
+            if (faaEquipmentCodes().contains(split[0]))
+            {
+                sl[2] = split[0]; // return as equipment code
+                return sl;
+            }
+            sl[0] = split[0];
+            return sl;
+        }
+
+        QString CFlightPlan::concatPrefixIcaoSuffix(const QString &prefix, const QString &icao, const QString &suffix)
+        {
+            QString s = prefix;
+            if (!icao.isEmpty())
+            {
+                s += (s.isEmpty() ? QStringLiteral("") : QStringLiteral("/")) % icao;
+            }
+            if (suffix.isEmpty()) { return s; }
+            if (s.isEmpty()) { return suffix; }
+            return s % QStringLiteral("/") % suffix;
+        }
+
         CFlightPlan::FlightRules CFlightPlan::stringToFlightRules(const QString &flightRules)
         {
             if (flightRules.length() < 3) { return UNKNOWN; }
@@ -250,6 +328,89 @@ namespace BlackMisc
             if (fr.startsWith("VFR"))  { return VFR; }
             if (fr.startsWith("IFR"))  { return IFR; }
             return UNKNOWN;
+        }
+
+        const QStringList &CFlightPlan::faaEquipmentCodes()
+        {
+            // List of FAA Aircraft Equipment Codes For US Domestic Flights
+            static const QStringList e({"X", "T", "U", "D", "B", "A", "M", "N", "P", "Y", "C", "I", "L", "G", "Z", "I", "W", "L"});
+            return e;
+        }
+
+        const QStringList &CFlightPlan::faaEquipmentCodesInfo()
+        {
+            static const QStringList e(
+            {
+                "X No transponder",
+                "T Transponder with no Mode C",
+                "U Transponder with Mode C",
+                "D DME: No transponder",
+                "B DME: Transponder with no Mode C",
+                "A DME: Transponder with Mode C",
+                "M TACAN only: No transponder",
+                "N TACAN only: Transponder with no Mode C",
+                "P TACAN only: Transponder with Mode C",
+                "Y Basic RNAV: LORAN, VOR/DME, or INS with no transponder",
+                "C Basic RNAV: LORAN, VOR/DME, or INS, transponder with no Mode C",
+                "I Basic RNAV: LORAN, VOR/DME, or INS, transponder with Mode C",
+                "L Advanced RNAV: RNAV capability with Global Navigation Satellite System (GNSS)",
+                "G Advanced RNAV: RNAV capability with GNSS and without RVSM",
+                "Z Advanced RNAV: RNAV capability without GNSS and with RVSM",
+                "I Advanced RNAV: RNAV capability without GNSS and without RVSM",
+                "W RVSM",
+                "L RVSM and /G"
+            });
+            return e;
+        }
+
+        const QStringList &CFlightPlan::squawkBoxEquipmentCodes()
+        {
+            static const QStringList e({"E", "F", "G", "R", "J", "K", "L", "Q"});
+            return e;
+        }
+
+        const QStringList &CFlightPlan::squawkBoxEquipmentCodesInfo()
+        {
+            static const QStringList e(
+            {
+                "E Flight Management System (FMS) with DME/DME and IRU positioning updating",
+                "F Flight Management System (FMS) with DME/DME positioning updating",
+                "G Global Navigation Satellite System (GNSS), including GPS or Wide Area Augmentation System",
+                "R Required navigation performance, the aircraft meets the RNP type prescribed for the route segment(s), route(s) and or area concerned",
+                "J RVSM + E",
+                "L RVSM + F",
+                "L RVSM + G",
+                "Q RVSM + E"
+            });
+            return e;
+        }
+
+        const QStringList &CFlightPlan::equipmentCodes()
+        {
+            static const QStringList e = []
+            {
+                QSet<QString> el(CFlightPlan::faaEquipmentCodes().toSet());
+                el.unite(CFlightPlan::squawkBoxEquipmentCodes().toSet());
+                return el.toList();
+            }();
+            return e;
+        }
+
+        const QStringList &CFlightPlan::equipmentCodesInfo()
+        {
+            static const QStringList e = []
+            {
+                QStringList info(CFlightPlan::faaEquipmentCodesInfo());
+                info.append(CFlightPlan::squawkBoxEquipmentCodesInfo());
+                return info;
+            }();
+            return e;
+        }
+
+        const QStringList &CFlightPlan::prefixCodes()
+        {
+            static const QStringList p({"T", "H"});
+            return p;
         }
 
         CIcon CFlightPlan::toIcon() const

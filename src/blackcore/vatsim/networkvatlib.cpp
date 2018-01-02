@@ -587,7 +587,7 @@ namespace BlackCore
             alt = alt.remove('.').remove(','); // remove any separators
 
             QByteArray acTypeTemp, altAptTemp, cruiseAltTemp, depAptTemp, destAptTemp, routeTemp, remarksTemp;
-            vatlibFP.aircraftType = acTypeTemp = toFSD(flightPlan.getEquipmentIcao());
+            vatlibFP.aircraftType = acTypeTemp = toFSD(flightPlan.getPrefixIcaoSuffix());
             vatlibFP.alternateAirport = altAptTemp = toFSD(flightPlan.getAlternateAirportIcao().asString());
             vatlibFP.cruiseAltitude = cruiseAltTemp = toFSD(alt);
             vatlibFP.departAirport = depAptTemp = toFSD(flightPlan.getOriginAirportIcao().asString());

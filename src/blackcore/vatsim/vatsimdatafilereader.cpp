@@ -302,7 +302,7 @@ namespace BlackCore
                                 const QString equipmentCodeAndAircraft = clientPartsMap["planned_aircraft"].trimmed();
                                 if (!equipmentCodeAndAircraft.isEmpty())
                                 {
-                                    const QString aircraftIcaoCode = CFlightPlanRemarks::aircraftIcaoCodeFromEquipmentCode(equipmentCodeAndAircraft);
+                                    const QString aircraftIcaoCode = CFlightPlan::aircraftIcaoCodeFromEquipmentCode(equipmentCodeAndAircraft);
                                     if (CAircraftIcaoCode::isValidDesignator(aircraftIcaoCode))
                                     {
                                         currentAircraft.setAircraftIcaoDesignator(aircraftIcaoCode);
