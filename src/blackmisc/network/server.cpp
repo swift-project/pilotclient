@@ -152,6 +152,11 @@ namespace BlackMisc
             return m_timestampMSecsSinceEpoch >= 0;
         }
 
+        bool CServer::isNull() const
+        {
+            return this->hasUnspecifiedServerType() && !this->hasName() && m_port < 0;
+        }
+
         CStatusMessageList CServer::validate() const
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));

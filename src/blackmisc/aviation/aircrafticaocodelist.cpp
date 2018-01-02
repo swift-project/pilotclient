@@ -185,6 +185,12 @@ namespace BlackMisc
             return codes.front();
         }
 
+        bool CAircraftIcaoCodeList::containsDesignator(const QString &designator) const
+        {
+            if (designator.isEmpty()) { return false; }
+            return this->contains(&CAircraftIcaoCode::getDesignator, designator);
+        }
+
         void CAircraftIcaoCodeList::sortByRank()
         {
             this->sortBy(&CAircraftIcaoCode::getRank);

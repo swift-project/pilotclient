@@ -101,6 +101,9 @@ namespace BlackMisc
             //! Get name
             const QString &getName() const { return m_name; }
 
+            //! Has name?
+            bool hasName() const { return !m_name.isEmpty(); }
+
             //! Set name
             void setName(const QString &name) { m_name = name.trimmed(); }
 
@@ -175,6 +178,9 @@ namespace BlackMisc
 
             //! Is connected?
             bool isConnected() const;
+
+            //! NULL?
+            bool isNull() const;
 
             //! Validate, provide details about issues
             CStatusMessageList validate() const;
