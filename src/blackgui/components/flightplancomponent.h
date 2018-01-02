@@ -14,8 +14,12 @@
 
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/simulation/data/lastmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/network/data/lastserver.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -27,7 +31,6 @@
 #include <QFileDialog>
 
 namespace Ui { class CFlightPlanComponent; }
-namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace BlackGui
 {
     namespace Components
@@ -44,15 +47,8 @@ namespace BlackGui
             //! Destructor
             virtual ~CFlightPlanComponent();
 
-        public slots:
             //! Login data were set
             void loginDataSet();
-
-            //! Prefill with aircraft data
-            void prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
-
-            //! Prefill with user data
-            void prefillWithUserData(const BlackMisc::Network::CUser &user);
 
             //! Prefill with aircraft dara
             void fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan);
@@ -62,24 +58,34 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CFlightPlanComponent> ui;
+            BlackMisc::Aviation::CFlightPlan m_flightPlan; //!< My flight plan
+            BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
+            BlackMisc::CIdentifier m_identifier; //!< Flightplan identifier
+            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
+            BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
 
-            //! My flight plan
-            BlackMisc::Aviation::CFlightPlan m_flightPlan;
+            static constexpr int showOverlayMs = 5000;
 
             //! Validate, generates status messages
             BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);
 
-            //! Flightplan identifier
-            BlackMisc::CIdentifier m_identifier;
-
-            //! Default value for airport ICAO airports
+            //! Default value for ICAO airports
             static const QString &defaultIcao() { static const QString d("ICAO"); return d; }
 
             //! Default value for time
             static const QString &defaultTime() { static const  QString t("00:00"); return t; }
 
             //! Identifier
-            BlackMisc::CIdentifier flightPlanIdentifier();
+            static const BlackMisc::CIdentifier &flightPlanIdentifier();
+
+            //! Prefill with own aircraft data
+            void prefillWithOwnAircraftData();
+
+            //! Prefill with aircraft data
+            void prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Prefill with user data
+            void prefillWithUserData(const BlackMisc::Network::CUser &user);
 
             //! Set completers
             void initCompleters();
@@ -89,6 +95,9 @@ namespace BlackGui
 
             //! Call \sa buildRemarksString from combo box signal
             void currentTextChangedToBuildRemarks(const QString &text) { this->buildRemarksString(); Q_UNUSED(text); }
+
+            //! Voice combo boxes shall display the same
+            void syncVoiceComboBoxes(const QString &text);
 
             //! Send flightplan
             void sendFlightPlan();

@@ -9,6 +9,7 @@
 
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/components/flightplancomponent.h"
@@ -37,14 +38,17 @@
 #include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QPushButton>
+#include <QToolButton>
 #include <QRadioButton>
 #include <QRegularExpression>
 #include <QTabBar>
 #include <QCompleter>
+#include <QStringBuilder>
 #include <Qt>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackGui;
@@ -64,10 +68,14 @@ namespace BlackGui
 
             // UI
             ui->setupUi(this);
+            this->setCurrentIndex(0);
 
             // fix style
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
+
+            // overlay
+            this->setOverlaySizeFactors(0.8, 0.9);
 
             // validators
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
@@ -149,36 +157,42 @@ namespace BlackGui
 
         void CFlightPlanComponent::loginDataSet()
         {
-            if (m_flightPlan.wasSentOrLoaded()) { return; } // when loaded or sent do not override
-            if (!sGui->getIContextOwnAircraft()) { return; }
-
-            const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
-            this->prefillWithAircraftData(ownAircraft);
-            this->prefillWithUserData(ownAircraft.getPilot());
+            if (m_flightPlan.wasSentOrLoaded())  { return; } // when loaded or sent do not override
+            this->prefillWithOwnAircraftData();
         }
 
-        void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
+        void CFlightPlanComponent::prefillWithOwnAircraftData()
+        {
+            if (!sGui->getIContextOwnAircraft()) { return; }
+            if (!sGui->getIContextSimulator())   { return; }
+            if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
+            const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
+            this->prefillWithAircraftData(ownAircraft);
+        }
+
+        void CFlightPlanComponent::prefillWithAircraftData(const CSimulatedAircraft &aircraft)
         {
             if (m_flightPlan.wasSentOrLoaded()) { return; }
 
             // only override with valid values
-            if (CCallsign::isValidAircraftCallsign(ownAircraft.getCallsignAsString()))
+            if (CCallsign::isValidAircraftCallsign(aircraft.getCallsignAsString()))
             {
-                ui->le_Callsign->setText(ownAircraft.getCallsign().asString());
+                ui->le_Callsign->setText(aircraft.getCallsign().asString());
             }
-            if (CAircraftIcaoCode::isValidDesignator(ownAircraft.getAircraftIcaoCodeDesignator()))
+            if (CAircraftIcaoCode::isValidDesignator(aircraft.getAircraftIcaoCodeDesignator()))
             {
-                ui->le_AircraftType->setText(ownAircraft.getAircraftIcaoCodeDesignator());
+                ui->le_AircraftType->setText(aircraft.getAircraftIcaoCodeDesignator());
             }
-            if (ownAircraft.hasValidRealName())
-            {
-                ui->le_PilotsName->setText(ownAircraft.getPilot().getRealName());
-            }
+            m_model = aircraft.getModel();
+            this->prefillWithUserData(aircraft.getPilot());
+            this->buildPrefixIcaoSuffix();
         }
 
-        void CFlightPlanComponent::prefillWithUserData(const Network::CUser &user)
+        void CFlightPlanComponent::prefillWithUserData(const CUser &user)
         {
             if (m_flightPlan.wasSentOrLoaded()) { return; }
+
+            // only override with valid values
             if (user.hasValidRealName())
             {
                 ui->le_PilotsName->setText(user.getRealName());
@@ -217,12 +231,8 @@ namespace BlackGui
 
             switch (flightPlan.getFlightRulesAsVFRorIFR())
             {
-            case CFlightPlan::VFR:
-                ui->rb_TypeVfr->setChecked(true);
-                break;
-            default:
-                ui->rb_TypeIfr->setChecked(true);
-                break;
+            case CFlightPlan::VFR: ui->cb_FlightRule->setCurrentText("VFR"); break;
+            default: ui->cb_FlightRule->setCurrentText("IFR"); break;
             }
         }
 
@@ -385,7 +395,7 @@ namespace BlackGui
             }
 
             // OK
-            if (!messages.hasWarningOrErrorMessages())
+            if (!messages.isFailure())
             {
                 messages.push_back(CStatusMessage(this).validationInfo("Flight plan validation passed"));
             }
@@ -396,23 +406,30 @@ namespace BlackGui
         {
             CFlightPlan flightPlan;
             const CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
-            if (!messages.hasWarningOrErrorMessages())
+            if (messages.isSuccess())
             {
                 // no error, send if possible
-                if (sGui->getIContextNetwork()->isConnected())
+                CStatusMessage m;
+                QString lastSent;
+                if (sGui && sGui->getIContextNetwork()->isConnected())
                 {
                     flightPlan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
                     sGui->getIContextNetwork()->sendFlightPlan(flightPlan);
-                    ui->le_LastSent->setText(flightPlan.whenLastSentOrLoaded().toString());
-                    CLogMessage(this).info("Sent flight plan");
+                    lastSent = flightPlan.whenLastSentOrLoaded().toString();
+                    m = CStatusMessage(this).validationInfo("Sent flight plan");
                 }
                 else
                 {
                     flightPlan.setWhenLastSentOrLoaded(QDateTime()); // empty
-                    ui->le_LastSent->clear();
-                    CLogMessage(this).error("No errors, but not connected, cannot send flight plan");
+                    m = CStatusMessage(this).validationError("No errors, but not connected, cannot send flight plan");
                 }
+                ui->le_LastSent->setText(lastSent);
+                this->showOverlayMessage(m, showOverlayMs);
                 m_flightPlan = flightPlan; // last valid FP
+            }
+            else
+            {
+                this->showOverlayMessages(messages);
             }
         }
 
@@ -425,9 +442,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::resetFlightPlan()
         {
-            Q_ASSERT(sGui->getIContextNetwork());
-            Q_ASSERT(sGui->getIContextOwnAircraft());
-            if (sGui->getIContextOwnAircraft()) { this->prefillWithAircraftData(sGui->getIContextOwnAircraft()->getOwnAircraft()); }
+            this->prefillWithOwnAircraftData();
             ui->le_AircraftRegistration->clear();
             ui->le_AirlineOperator->clear();
             ui->le_CrusingAltitude->setText("FL70");
@@ -440,6 +455,7 @@ namespace BlackGui
             ui->le_FuelOnBoard->setText(defaultTime());
             ui->le_EstimatedTimeEnroute->setText(defaultTime());
             ui->le_TakeOffTimePlanned->setText(QDateTime::currentDateTimeUtc().addSecs(30 * 60).toString("hh:mm"));
+            this->syncVoiceComboBoxes(ui->cb_VoiceCapabilities->itemText(0));
         }
 
         void CFlightPlanComponent::loadFromDisk()
@@ -603,7 +619,9 @@ namespace BlackGui
 
         void CFlightPlanComponent::copyRemarks()
         {
-            ui->pte_Remarks->setPlainText(ui->pte_RemarksGenerated->toPlainText());
+            const QString generated = ui->pte_RemarksGenerated->toPlainText().trimmed();
+            if (!this->overrideRemarks()) { return; }
+            ui->pte_Remarks->setPlainText(generated);
             CLogMessage(this).info("Copied remarks");
         }
 
@@ -617,15 +635,158 @@ namespace BlackGui
             this->initCompleters();
         }
 
-        CIdentifier CFlightPlanComponent::flightPlanIdentifier()
+        void CFlightPlanComponent::buildPrefixIcaoSuffix()
         {
-            if (m_identifier.getName().isEmpty()) { m_identifier = CIdentifier(QStringLiteral("FLIGHTPLANCOMPONENT")); }
-            return m_identifier;
+            ui->le_PrefixIcaoSuffix->setText(this->getPrefixIcaoSuffix());
+        }
+
+        void CFlightPlanComponent::prefixCheckBoxChanged()
+        {
+            QObject *sender = QObject::sender();
+            if (sender == ui->cb_Heavy)
+            {
+                if (ui->cb_Heavy->isChecked())
+                {
+                    QTimer::singleShot(10, this, [ = ]
+                    {
+                        ui->cb_Tcas->setChecked(false);
+                        this->buildPrefixIcaoSuffix();
+                    });
+                    return;
+                }
+            }
+            else if (sender == ui->cb_Tcas)
+            {
+                if (ui->cb_Tcas->isChecked())
+                {
+                    QTimer::singleShot(10, this, [ = ]
+                    {
+                        ui->cb_Heavy->setChecked(false);
+                        this->buildPrefixIcaoSuffix();
+                    });
+                    return;
+                }
+            }
+            this->buildPrefixIcaoSuffix();
+        }
+
+        void CFlightPlanComponent::aircraftTypeChanged()
+        {
+            const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
+            if (!icao.isLoadedFromDb()) { return; }
+            QTimer::singleShot(25, this, [ = ]
+            {
+                const bool heavy = icao.getWtc().startsWith("H");
+                ui->cb_Heavy->setChecked(heavy);
+                if (heavy) { ui->cb_Tcas->setChecked(false); }
+                this->buildPrefixIcaoSuffix();
+            });
+        }
+
+        QString CFlightPlanComponent::getPrefixIcaoSuffix() const
+        {
+            QString prefix;
+            if (ui->cb_Heavy->isChecked()) { prefix = QStringLiteral("H"); }
+            else if (ui->cb_Tcas->isChecked()) { prefix = QStringLiteral("T"); }
+
+            return CFlightPlan::concatPrefixIcaoSuffix(prefix, ui->le_AircraftType->text().toUpper().trimmed(), ui->le_EquipmentSuffix->text().trimmed().toUpper());
+        }
+
+        CAircraftIcaoCode CFlightPlanComponent::getAircraftIcaoCode() const
+        {
+            const QString designator(ui->le_AircraftType->text());
+            if (!sApp || !sApp->hasWebDataServices() || !CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCode(); }
+            return sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(designator);
+        }
+
+        void CFlightPlanComponent::showEquipmentCodesTab()
+        {
+            this->setCurrentWidget(ui->tb_EquipmentCodes);
+        }
+
+        bool CFlightPlanComponent::isVfr() const
+        {
+            const bool vfr = ui->cb_FlightRule->currentText().startsWith("V", Qt::CaseInsensitive);
+            return vfr;
+        }
+
+        bool CFlightPlanComponent::overrideRemarks()
+        {
+            if (!ui->pte_Remarks->toPlainText().trimmed().isEmpty())
+            {
+                const int reply = QMessageBox::question(this, "Remarks", "Override existing remarks?", QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::Yes) { return false; }
+            }
+            return true;
+        }
+
+        void CFlightPlanComponent::anticipateValues()
+        {
+            if (!this->overrideRemarks()) { return; }
+            CStatusMessageList msgs;
+            const bool vfr = this->isVfr();
+            const bool airline = m_model.hasAirlineDesignator();
+
+            if (vfr)
+            {
+                ui->cb_NoSidsStarts->setChecked(true);
+                msgs.push_back(CStatusMessage(this).validationInfo("No SID/STARs"));
+                ui->cb_RequiredNavigationPerformance->setCurrentIndex(0);
+                ui->cb_PerformanceCategory->setCurrentIndex(0);
+                ui->cb_NavigationEquipment->setCurrentIndex(0);
+                msgs.push_back(CStatusMessage(this).validationInfo("Set navigation and performance to VFR"));
+            }
+            else
+            {
+                // IFR
+                const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
+                if (icao.isLoadedFromDb())
+                {
+                    if (icao.getEngineCount() >= 2 && icao.getEngineType() == "J")
+                    {
+                        // jet with >=2 engines
+                        msgs.push_back(CStatusMessage(this).validationInfo("Jet >=2 engines"));
+                        msgs.push_back(CStatusMessage(this).validationInfo("SID/STARs"));
+                        ui->cb_NoSidsStarts->setChecked(false);
+                        ui->cb_NavigationEquipment->setCurrentText("GPS or FMC capable of SIDs/STARs");
+                        msgs.push_back(CStatusMessage(this).validationInfo("GPS or FMC capable of SIDs/STARs"));
+
+                        // reset those values
+                        ui->cb_RequiredNavigationPerformance->setCurrentIndex(0);
+                        ui->cb_PerformanceCategory->setCurrentIndex(0);
+                    }
+                } // ICAO
+            }
+
+            // further info if having model from DB
+            if (m_model.isLoadedFromDb())
+            {
+                if (airline)
+                {
+                    ui->le_AirlineOperator->setText(m_model.getAirlineIcaoCode().getName());
+                }
+            }
+
+            // messages
+            this->showOverlayMessages(msgs, false, showOverlayMs);
+
+            // copy over
+            if (msgs.isSuccess())
+            {
+                this->buildRemarksString();
+                this->copyRemarks(false);
+            }
+        }
+
+        const CIdentifier &CFlightPlanComponent::flightPlanIdentifier()
+        {
+            static const CIdentifier i(QStringLiteral("FLIGHTPLANCOMPONENT"));
+            return i;
         }
 
         void CFlightPlanComponent::initCompleters()
         {
-            if (!sGui || !sGui->getWebDataServices()) { return; }
+            if (!sGui || !sGui->hasWebDataServices()) { return; }
             const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allIcaoCodes().toList());
             ui->le_AircraftType->setCompleter(new QCompleter(aircraft, this));
 
@@ -639,18 +800,15 @@ namespace BlackGui
         QString CFlightPlanComponent::getDefaultFilename(bool load)
         {
             // some logic to find a useful default name
-            QString dir = CDirectoryUtils::documentationDirectory();
-
-            if (load)
-            {
-                return CFileUtils::appendFilePaths(dir, CFileUtils::jsonWildcardAppendix());
-            }
+            const QString dir = CDirectoryUtils::documentationDirectory();
+            if (load) { return CFileUtils::appendFilePaths(dir, CFileUtils::jsonWildcardAppendix()); }
 
             // Save file path
             QString name("Flight plan");
             if (!ui->le_DestinationAirport->text().isEmpty() && !ui->le_OriginAirport->text().isEmpty())
             {
-                name.append(" ").append(ui->le_OriginAirport->text()).append("-").append(ui->le_DestinationAirport->text());
+                name += QStringLiteral(" ") % ui->le_OriginAirport->text() %
+                        QStringLiteral("-") % ui->le_DestinationAirport->text();
             }
 
             if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive))
@@ -658,6 +816,21 @@ namespace BlackGui
                 name += CFileUtils::jsonAppendix();
             }
             return CFileUtils::appendFilePaths(dir, name);
+        }
+
+        void CFlightPlanComponent::syncVoiceComboBoxes(const QString &text)
+        {
+            const QObject *sender = QObject::sender();
+            if (sender == ui->cb_VoiceCapabilities)
+            {
+                ui->cb_VoiceCapabilitiesFirstPage->setCurrentText(text);
+            }
+            else
+            {
+                ui->cb_VoiceCapabilities->setCurrentText(text);
+                const QString r = CFlightPlanRemarks::replaceVoiceCapabilities(CFlightPlanRemarks::textToVoiceCapabilities(text), ui->pte_Remarks->toPlainText());
+                ui->pte_Remarks->setPlainText(r);
+            }
         }
     } // namespace
 } // namespace
