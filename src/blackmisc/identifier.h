@@ -22,6 +22,7 @@
 #include <QByteArray>
 #include <QMetaType>
 #include <QString>
+#include <QObject>
 #include <QUuid>
 #include <QtGlobal>
 
@@ -50,10 +51,21 @@ namespace BlackMisc
         };
 
         //! Constructor.
-        CIdentifier(const QString &name = QString());
+        //! \private use CIdentifier::anonymous() if you need an identifier without name and CIdentifier::null() for an empty identifier
+        CIdentifier() : CIdentifier("") {}
 
-        //! Returns an anonymous identifier.
+        //! Constructor.
+        CIdentifier(const QString &name);
+
+        //! Constructor using object's name
+        CIdentifier(const QString &name, QObject *object);
+
+        //! Returns an anonymous identifier, which is a valid identifier without name
+        //! \remark same as CIdentifier()
         static const CIdentifier &anonymous();
+
+        //! Null (empty) identifier
+        static const CIdentifier &null();
 
         //! Returns a fake identifier.
         static const CIdentifier &fake();
@@ -69,6 +81,16 @@ namespace BlackMisc
 
         //! Has name
         bool hasName() const { return !m_name.isEmpty(); }
+
+        //! Set the name
+        void setName(const QString &name) { m_name = name; }
+
+        //! Set name or append name
+        //! \remark append makes sense if an object name changes after some time (like for UI components when the whole UI is setup)
+        void appendName(const QString &name);
+
+        //! Reflect changes of QObject::
+        void linkWithQObjectName(QObject *object);
 
         //! Get machine id
         QByteArray getMachineId() const;
@@ -99,6 +121,9 @@ namespace BlackMisc
 
         //! Check if it is anonymous identifier
         bool isAnonymous() const;
+
+        //! Null identifier (no name, ids etc)
+        bool isNull() const;
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;

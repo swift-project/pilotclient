@@ -56,7 +56,7 @@ namespace BlackGui
             virtual ~CTextMessageComponent();
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
+            virtual bool setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget) override;
 
         signals:
             //! Message to be displayed in info window
@@ -80,8 +80,8 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
-            BlackMisc::CIdentifier m_identifier;
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TextMessageSettings> m_messageSettings { this };
+            BlackMisc::CIdentifier m_identifier { "TextMessageComponent", this };
+            BlackMisc::CSettingReadOnly<Settings::TextMessageSettings> m_messageSettings { this };
 
             //! Enum to widget
             QWidget *getTabWidget(Tab tab) const;
@@ -124,7 +124,7 @@ namespace BlackGui
             QString textMessageToCommand(const QString &enteredLine);
 
             //! Identifier
-            BlackMisc::CIdentifier componentIdentifier();
+            const BlackMisc::CIdentifier &componentIdentifier() const { return m_identifier; }
 
             //! Handle a text message entered
             void handleEnteredTextMessage(const QString &textMessage);

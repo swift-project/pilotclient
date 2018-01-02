@@ -60,7 +60,7 @@ namespace BlackGui
             QScopedPointer<Ui::CFlightPlanComponent> ui;
             BlackMisc::Aviation::CFlightPlan m_flightPlan; //!< My flight plan
             BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
-            BlackMisc::CIdentifier m_identifier; //!< Flightplan identifier
+            BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
             BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
             BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
 
@@ -76,7 +76,7 @@ namespace BlackGui
             static const QString &defaultTime() { static const  QString t("00:00"); return t; }
 
             //! Identifier
-            static const BlackMisc::CIdentifier &flightPlanIdentifier();
+            const BlackMisc::CIdentifier &flightPlanIdentifier() const { return m_identifier; }
 
             //! Prefill with own aircraft data
             void prefillWithOwnAircraftData();

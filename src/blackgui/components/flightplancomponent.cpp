@@ -778,12 +778,6 @@ namespace BlackGui
             }
         }
 
-        const CIdentifier &CFlightPlanComponent::flightPlanIdentifier()
-        {
-            static const CIdentifier i(QStringLiteral("FLIGHTPLANCOMPONENT"));
-            return i;
-        }
-
         void CFlightPlanComponent::initCompleters()
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }

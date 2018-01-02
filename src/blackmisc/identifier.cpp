@@ -32,6 +32,16 @@ namespace BlackMisc
           m_processId(QCoreApplication::applicationPid())
     { }
 
+    CIdentifier::CIdentifier(const QString &name, QObject *object) : CIdentifier(name)
+    {
+        if (object)
+        {
+            // append object name
+            this->linkWithQObjectName(object);
+            this->appendName(object->objectName());
+        }
+    }
+
     CIdentifier::CIdentifier(const QString &name, const QString &machineId, const QString &machineName,
                              const QString &processName, qint64 processId) :
         ITimestampBased(QDateTime::currentMSecsSinceEpoch()),
@@ -41,7 +51,13 @@ namespace BlackMisc
 
     const CIdentifier &CIdentifier::anonymous()
     {
-        static const CIdentifier id("anonymous", "", "", "", 0);
+        static const CIdentifier id("");
+        return id;
+    }
+
+    const CIdentifier &CIdentifier::null()
+    {
+        static const CIdentifier id("", "", "", "", 0);
         return id;
     }
 
@@ -65,6 +81,18 @@ namespace BlackMisc
     QString CIdentifier::toUuidString() const
     {
         return toUuid().toString();
+    }
+
+    void CIdentifier::appendName(const QString &name)
+    {
+        if (m_name.endsWith(name)) { return; }
+        m_name += QStringLiteral(":") + name;
+    }
+
+    void CIdentifier::linkWithQObjectName(QObject *object)
+    {
+        if (!object) { return; }
+        QObject::connect(object, &QObject::objectNameChanged, object, [ = ](const QString & name) { this->appendName(name); });
     }
 
     QByteArray CIdentifier::getMachineId() const
@@ -95,6 +123,11 @@ namespace BlackMisc
     bool CIdentifier::isAnonymous() const
     {
         return &anonymous() == this || anonymous() == *this;
+    }
+
+    bool CIdentifier::isNull() const
+    {
+        return &null() == this || null() == *this;
     }
 
     QString CIdentifier::convertToQString(bool i18n) const

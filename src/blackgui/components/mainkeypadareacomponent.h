@@ -96,7 +96,7 @@ namespace BlackGui
             void disableButtonBriefly();
 
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
-            BlackMisc::CIdentifier m_identifier { QStringLiteral("KEYPADAREACOMPONENT") };
+            BlackMisc::CIdentifier m_identifier { "MainKeypadAreaComponent", this };
         };
     } // namespace
 } // namespace

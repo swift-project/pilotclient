@@ -92,14 +92,10 @@ namespace BlackGui
         {
             switch (tab)
             {
-            case TextMessagesAll:
-                return ui->tb_TextMessagesAll;
-            case TextMessagesCom1:
-                return ui->tb_TextMessagesCOM1;
-            case TextMessagesCom2:
-                return ui->tb_TextMessagesCOM2;
-            case TextMessagesUnicom:
-                return ui->tb_TextMessagesUnicom;
+            case TextMessagesAll: return ui->tb_TextMessagesAll;
+            case TextMessagesCom1: return ui->tb_TextMessagesCOM1;
+            case TextMessagesCom2: return ui->tb_TextMessagesCOM2;
+            case TextMessagesUnicom: return ui->tb_TextMessagesUnicom;
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index");
                 break;
@@ -120,7 +116,7 @@ namespace BlackGui
         {
             if (messages.isEmpty()) return;
             const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
-            const CTextMessageSettings msgSettings(this->m_messageSettings.getThreadLocal());
+            const CTextMessageSettings msgSettings(m_messageSettings.getThreadLocal());
 
             for (const CTextMessage &message : messages)
             {
@@ -193,14 +189,6 @@ namespace BlackGui
             }
         }
 
-        CIdentifier CTextMessageComponent::componentIdentifier()
-        {
-            if (m_identifier.getName().isEmpty())
-                m_identifier = CIdentifier(QStringLiteral("TEXTMESSAGECOMPONENT"));
-
-            return m_identifier;
-        }
-
         void CTextMessageComponent::onChangedAircraftCockpit()
         {
             this->showCurrentFrequenciesFromCockpit();
@@ -214,7 +202,7 @@ namespace BlackGui
             if (textMessage.isPrivateMessage())
             {
                 // private message
-                CCallsign cs = textMessage.getSenderCallsign();
+                const CCallsign cs = textMessage.getSenderCallsign();
                 if (cs.isEmpty()) return false;
                 QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
                 if (!tab) { return false; }
@@ -292,12 +280,12 @@ namespace BlackGui
             if (!textMessage.isPrivateMessage()) { return; }
             const CCallsign cs = textMessage.wasSent() ? textMessage.getRecipientCallsign() : textMessage.getSenderCallsign();
             if (cs.isEmpty()) { return; }
-            QWidget *tab = this->findTextMessageTabByCallsign(cs);
+            const QWidget *tab = this->findTextMessageTabByCallsign(cs);
             if (!tab) { tab = this->addNewTextMessageTab(cs); }
             Q_ASSERT_X(tab, Q_FUNC_INFO, "Missing tab");
             CTextMessageTextEdit *textEdit = tab->findChild<CTextMessageTextEdit *>();
             BLACK_VERIFY_X(textEdit, Q_FUNC_INFO, "Missing text edit");
-            if (!textEdit) { return; } // do not crash, though this situation could not happen
+            if (!textEdit) { return; } // do not crash, though this situation should not happen
             textEdit->insertTextMessage(textMessage);
 
             // sound

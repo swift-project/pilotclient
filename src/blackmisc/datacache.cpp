@@ -316,7 +316,7 @@ namespace BlackMisc
         if (! m_deferredChanges.isEmpty())
         {
             m_deferredChanges.setSaved();
-            emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
+            emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::null());
             deliverPromises(m_cache->m_revision.loadedValuePromises());
             m_deferredChanges.clear();
         }

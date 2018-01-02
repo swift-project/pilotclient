@@ -1077,8 +1077,8 @@ namespace BlackCore
             model.updateMissingParts(aircraft.getModel());
             // Use anonymous as originator here, since the remote aircraft provider is ourselves and the call to updateAircraftModel() would
             // return without doing anything.
-            this->updateAircraftModel(callsign, model, CIdentifier::anonymous());
-            this->updateAircraftNetworkModel(callsign, model, CIdentifier::anonymous());
+            this->updateAircraftModel(callsign, model, CIdentifier::null());
+            this->updateAircraftNetworkModel(callsign, model, CIdentifier::null());
         }
         else
         {

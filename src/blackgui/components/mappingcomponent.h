@@ -137,7 +137,7 @@ namespace BlackGui
             void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Identifier for data send from this component
-            BlackMisc::CIdentifier mappingIdentifier();
+            const BlackMisc::CIdentifier &mappingIdentifier() const { return m_identifier; }
 
             //! Update simulated aircraft view
             void updateRenderedAircraftView(bool forceUpdate = false);
@@ -151,7 +151,7 @@ namespace BlackGui
             QTimer m_updateTimer { this };
             BlackMisc::CTokenBucket m_bucket { 3, BlackMisc::PhysicalQuantities::CTime(5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()), 1};
             Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
-            BlackMisc::CIdentifier m_identifier;
+            BlackMisc::CIdentifier m_identifier { "MappingComponent", this };
         };
     } // namespace
 } // namespace

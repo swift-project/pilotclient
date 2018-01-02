@@ -39,7 +39,7 @@ namespace BlackCore
         // todo: send weather grid to drivers from here
     }
 
-    void CWeatherManager::requestWeatherGrid(const CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier)
+    void CWeatherManager::requestWeatherGrid(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
     {
         WeatherRequest request { identifier, weatherGrid, {} };
         m_pendingRequests.append(request);
@@ -48,7 +48,7 @@ namespace BlackCore
     }
 
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &weatherGrid,
-                                             const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback)
+            const CSlot<void(const CWeatherGrid &)> &callback)
     {
         if (m_isWeatherClear)
         {
@@ -56,7 +56,7 @@ namespace BlackCore
             return;
         }
 
-        WeatherRequest weatherRequest { CIdentifier::anonymous(), weatherGrid, callback };
+        WeatherRequest weatherRequest { CIdentifier::null(), weatherGrid, callback };
         m_pendingRequests.append(weatherRequest);
 
         // Serialize the requests, since plugins can handle only one at a time
