@@ -250,6 +250,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
 
+        //! Contains the given designator?
+        //! \threadsafe
+        bool containsAircraftIcaoDesignator(const QString &designator) const;
+
         //! ICAO codes for designator
         //! \threadsafe
         BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForDesignator(const QString &designator) const;
@@ -266,7 +270,7 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodes() const;
 
-        //! Contains the given designator
+        //! Contains the given designator?
         //! \threadsafe
         bool containsAirlineIcaoDesignator(const QString &designator) const;
 

@@ -72,6 +72,11 @@ namespace BlackCore
             return getAircraftIcaoCodes().findByKey(key);
         }
 
+        bool CIcaoDataReader::containsAircraftIcaoDesignator(const QString &designator) const
+        {
+            return this->getAircraftIcaoCodes().containsDesignator(designator);
+        }
+
         CAirlineIcaoCodeList CIcaoDataReader::getAirlineIcaoCodes() const
         {
             return m_airlineIcaoCache.get();

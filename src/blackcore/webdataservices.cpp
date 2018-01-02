@@ -582,6 +582,13 @@ namespace BlackCore
         return CAircraftIcaoCode();
     }
 
+    bool CWebDataServices::containsAircraftIcaoDesignator(const QString &designator) const
+    {
+        if (designator.isEmpty()) { return false; }
+        if (m_icaoDataReader) { return m_icaoDataReader->containsAircraftIcaoDesignator(designator); }
+        return false;
+    }
+
     CAircraftIcaoCodeList CWebDataServices::getAircraftIcaoCodesForDesignator(const QString &designator) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAircraftIcaoCodesForDesignator(designator); }

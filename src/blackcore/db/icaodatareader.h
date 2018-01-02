@@ -69,6 +69,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int key) const;
 
+            //! \copydoc BlackMisc::Aviation::CAircraftIcaoCodeList::containsDesignator
+            //! \threadsafe
+            bool containsAircraftIcaoDesignator(const QString &designator) const;
+
             //! Get best match for incomplete aircraft ICAO code
             //! \threadsafe
             BlackMisc::Aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const BlackMisc::Aviation::CAircraftIcaoCode &icaoPattern) const;
@@ -101,7 +105,7 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
 
-            //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::findByVDesignator
+            //! \copydoc BlackMisc::Aviation::CAirlineIcaoCodeList::containsVDesignator
             //! \threadsafe
             bool containsAirlineIcaoDesignator(const QString &designator) const;
 
