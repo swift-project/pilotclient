@@ -570,6 +570,10 @@ namespace BlackCore
         void CNetworkVatlib::sendAtisQuery(const CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
+            if (m_server.getServerType() != CServer::FSDServerVatsim)
+            {
+                m_pendingAtisQueries.insert(callsign, {});
+            }
             Vat_SendClientQuery(m_net.data(), vatClientQueryAtis, toFSD(callsign));
         }
 
@@ -801,7 +805,24 @@ namespace BlackCore
 
         void CNetworkVatlib::onTextMessageReceived(VatFsdClient *, const char *from, const char *to, const char *msg, void *cbvar)
         {
-            CTextMessage tm(cbvar_cast(cbvar)->fromFSD(msg), CCallsign(cbvar_cast(cbvar)->fromFSD(from)), CCallsign(cbvar_cast(cbvar)->fromFSD(to)));
+            auto *self = cbvar_cast(cbvar);
+            CCallsign sender(self->fromFSD(from));
+            CCallsign receiver(self->fromFSD(to));
+            QString message(self->fromFSD(msg));
+
+            // Other FSD servers send the controller ATIS as text message. The following conditions need to be met:
+            // * non-VATSIM server. VATSIM has a specific ATIS message
+            // * Receiver callsign must be owner callsign and not any type of broadcast.
+            // * We have requested the ATIS of this controller before.
+            if (self->m_server.getServerType() != CServer::FSDServerVatsim &&
+                    self->m_ownCallsign == receiver &&
+                    self->m_pendingAtisQueries.contains(sender))
+            {
+                self->maybeHandleAtisReply(sender, receiver, message);
+                return;
+            }
+
+            CTextMessage tm(message, sender, receiver);
             tm.setCurrentUtcTime();
             cbvar_cast(cbvar)->consolidateTextMessage(tm);
         }
@@ -1010,6 +1031,43 @@ namespace BlackCore
         {
             auto *self = cbvar_cast(cbvar);
             emit self->metarReplyReceived(self->fromFSD(data));
+        }
+
+        void CNetworkVatlib::maybeHandleAtisReply(const CCallsign &sender, const CCallsign &receiver, const QString &message)
+        {
+            Q_ASSERT(m_pendingAtisQueries.contains(sender));
+            PendingAtisQuery &pendingQuery = m_pendingAtisQueries[sender];
+            pendingQuery.m_atisMessage.push_back(message);
+
+            // Wait maximum 3 seconds for the reply and release as text message after
+            if (pendingQuery.m_queryTime.secsTo(QDateTime::currentDateTimeUtc()) > 3)
+            {
+                QString atisMessage(pendingQuery.m_atisMessage.join(QChar::LineFeed));
+                CTextMessage tm(atisMessage, sender, receiver);
+                tm.setCurrentUtcTime();
+                consolidateTextMessage(tm);
+                m_pendingAtisQueries.remove(sender);
+                return;
+            }
+
+            // 4 digits followed by z (e.g. 0200z) is always the last atis line.
+            // Some controllers leave the logoff time empty. Hence we accept anything
+            // between 0-4 digits.
+            QRegularExpression reLogoff("\\d{0,4}z");
+            if (reLogoff.match(message).hasMatch())
+            {
+                emit atisLogoffTimeReplyReceived(sender, message);
+                CInformationMessage atisMessage;
+                atisMessage.setType(CInformationMessage::ATIS);
+                for (const auto &line : as_const(pendingQuery.m_atisMessage))
+                {
+                    if (!atisMessage.isEmpty()) atisMessage.appendMessage("\n");
+                    atisMessage.appendMessage(line);
+                }
+                emit atisReplyReceived(CCallsign(sender.toQString(), CCallsign::Atc), atisMessage);
+                m_pendingAtisQueries.remove(sender);
+                return;
+            }
         }
 
         void CNetworkVatlib::onInfoQueryRequestReceived(VatFsdClient *, const char *callsignString, VatClientQueryType type, const char *, void *cbvar)

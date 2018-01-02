@@ -207,6 +207,10 @@ namespace BlackCore
             //! Send the consolidatedTextMessages
             void emitConsolidatedTextMessages();
 
+            //! Handles ATIS replies from non-VATSIM servers. If the conditions are not met, the message is
+            //! released as normal text message.
+            void maybeHandleAtisReply(const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &receiver, const QString &message);
+
             //! Deletion policy for QScopedPointer
             struct VatFsdClientDeleter
             {
@@ -239,6 +243,15 @@ namespace BlackCore
             static int const c_processingIntervalMsec = 100;            //!< interval for the processing timer
             static int const c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
             static int const c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
+
+            struct PendingAtisQuery
+            {
+                QDateTime m_queryTime = QDateTime::currentDateTimeUtc();
+                QStringList m_atisMessage;
+
+            };
+
+            QHash<BlackMisc::Aviation::CCallsign, PendingAtisQuery> m_pendingAtisQueries;
         };
     } //namespace
 } //namespace
