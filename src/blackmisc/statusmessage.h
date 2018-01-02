@@ -82,6 +82,9 @@ namespace BlackMisc
         //! Set the severity to error, providing a format string.
         Derived &error(const QString &format) { return log(SeverityError, format); }
 
+        //! Set the severity to s, providing a format string, and adding the validation category.
+        Derived &validation(StatusSeverity s, const QString &format) { setValidation(); return log(s, format); }
+
         //! Set the severity to info, providing a format string, and adding the validation category.
         Derived &validationInfo(const QString &format) { setValidation(); return log(SeverityInfo, format); }
 
@@ -109,7 +112,7 @@ namespace BlackMisc
         Derived &operator <<(char v) { return arg(QChar(v)); }
         Derived &operator <<(double v) { return arg(QString::number(v)); }
         template <class T, class = std::enable_if_t<THasToQString<T>::value>>
-        Derived &operator <<(const T &v) { return arg(v.toQString()); }
+        Derived & operator <<(const T &v) { return arg(v.toQString()); }
         //! @}
 
     private:
