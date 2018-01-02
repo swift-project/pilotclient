@@ -131,9 +131,6 @@
           </property>
           <item>
            <widget class="BlackGui::Views::CStatusMessageView" name="tvp_StatusMessages">
-            <property name="verticalScrollBarPolicy">
-             <enum>Qt::ScrollBarAlwaysOn</enum>
-            </property>
             <attribute name="verticalHeaderVisible">
              <bool>false</bool>
             </attribute>

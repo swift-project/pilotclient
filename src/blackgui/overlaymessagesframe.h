@@ -71,7 +71,7 @@ namespace BlackGui
             }
         }
 
-        //! \copydoc COverlayMessages::setForceSmall
+        //! \copydoc BlackGui::COverlayMessages::setForceSmall
         void setForceSmall(bool force)
         {
             m_forceSmallMsgs = force;
@@ -81,7 +81,7 @@ namespace BlackGui
             }
         }
 
-        //! \copydoc COverlayMessages::showOverlayMessagesWithConfirmation
+        //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesWithConfirmation
         void showOverlayMessagesWithConfirmation(
             const BlackMisc::CStatusMessageList &messages,
             bool                                appendOldMessages,
@@ -97,21 +97,21 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
-        //! \copydoc COverlayMessages::clearOverlayMessages
+        //! \copydoc BlackGui::COverlayMessages::clearOverlayMessages
         void clearOverlayMessages()
         {
             if (!m_overlayMessages) { return; }
             m_overlayMessages->clearOverlayMessages();
         }
 
-        //! \copydoc COverlayMessages::close
+        //! \copydoc BlackGui::COverlayMessages::close
         void closeOverlay()
         {
             if (!m_overlayMessages) { return; }
             m_overlayMessages->close();
         }
 
-        //! \copydoc COverlayMessages::showOverlayMessages
+        //! \copydoc BlackGui::COverlayMessages::showOverlayMessages
         void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
@@ -120,7 +120,7 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
-        //! \copydoc COverlayMessages::showOverlayMessage
+        //! \copydoc BlackGui::COverlayMessages::showOverlayMessage
         void showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1)
         {
             if (message.isEmpty()) { return; }
@@ -129,7 +129,7 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
-        //! \copydoc COverlayMessages::showOverlayTextMessage
+        //! \copydoc BlackGui::COverlayMessages::showOverlayTextMessage
         void showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1)
         {
             if (textMessage.isEmpty()) { return; }
@@ -138,7 +138,7 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
-        //! \copydoc COverlayMessages::showOverlayVariant
+        //! \copydoc BlackGui::COverlayMessages::showOverlayVariant
         void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1)
         {
             this->initInnerFrame();
@@ -146,7 +146,7 @@ namespace BlackGui
             WIDGET::repaint();
         }
 
-        //! \copydoc COverlayMessages::showOverlayImage
+        //! \copydoc BlackGui::COverlayMessages::showOverlayImage
         void showOverlayImage(const BlackMisc::CPixmap &pixmap, int timeOutMs = -1)
         {
             this->initInnerFrame();

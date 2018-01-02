@@ -38,7 +38,7 @@ namespace BlackGui
             ui(new Ui::CDownloadComponent)
         {
             ui->setupUi(this);
-            this->setOverlaySizeFactors(0.8, 0.9, 2);
+            this->setOverlaySizeFactors(0.8, 0.9);
             this->setForceSmall(true);
 
             ui->le_DownloadDir->setText(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
