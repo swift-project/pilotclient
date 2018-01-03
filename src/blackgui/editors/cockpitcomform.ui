@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <layout class="QHBoxLayout" name="hl_CockpitComForm" stretch="1,2">
+  <layout class="QHBoxLayout" name="hl_CockpitComForm">
    <property name="leftMargin">
     <number>2</number>
    </property>
@@ -28,15 +28,6 @@
    </property>
    <item>
     <widget class="QFrame" name="fr_Com">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
-     </property>
-     <property name="lineWidth">
-      <number>0</number>
-     </property>
      <layout class="QGridLayout" name="gl_Com">
       <property name="leftMargin">
        <number>2</number>
