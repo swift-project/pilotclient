@@ -107,6 +107,12 @@ namespace BlackMisc
             //! As integer value
             int valueInteger(MU unit) const;
 
+            //! As integer value in current unit
+            int valueInteger() const;
+
+            //! Is value an integer
+            bool isInteger() const;
+
             //! Rounded value in current unit
             //! \note default digits is CMeasurementUnit::getDisplayDigits
             double valueRounded(int digits = -1) const;

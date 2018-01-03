@@ -318,8 +318,23 @@ namespace BlackMisc
         int CPhysicalQuantity<MU, PQ>::valueInteger(MU unit) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
-            double v = unit.roundValue(this->value(unit), 0);
+            const double v = unit.roundValue(this->value(unit), 0);
             return static_cast<int>(v);
+        }
+
+        template<class MU, class PQ>
+        int CPhysicalQuantity<MU, PQ>::valueInteger() const
+        {
+            return this->valueInteger(m_unit);
+        }
+
+        template<class MU, class PQ>
+        bool CPhysicalQuantity<MU, PQ>::isInteger() const
+        {
+            if (this->isNull()) { return false; }
+
+            const double diff = std::abs(this->value() - this->valueInteger());
+            return diff <= m_unit.getEpsilon();
         }
 
         template <class MU, class PQ>
