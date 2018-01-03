@@ -110,7 +110,7 @@ namespace BlackGui
                          aircraft.getAircraftIcaoCode().toQString(false) %
                          QLatin1String(")");
                 }
-                if (aircraft.hasValidRealName())
+                if (aircraft.hasRealName())
                 {
                     i += QLatin1String(" - ") % aircraft.getPilotRealName();
                 }

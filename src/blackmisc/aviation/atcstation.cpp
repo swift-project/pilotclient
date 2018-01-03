@@ -49,7 +49,7 @@ namespace BlackMisc
         {
             // sync callsigns
             m_callsign.setTypeHint(CCallsign::Atc);
-            if (!m_controller.hasValidCallsign() && !callsign.isEmpty())
+            if (!m_controller.hasCallsign() && !callsign.isEmpty())
             {
                 m_controller.setCallsign(m_callsign);
             }

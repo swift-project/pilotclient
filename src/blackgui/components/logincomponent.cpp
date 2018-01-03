@@ -351,7 +351,7 @@ namespace BlackGui
         {
             const CServer lastServer = m_lastVatsimServer.get();
             const CUser lastUser = lastServer.getUser();
-            if (lastUser.hasValidCallsign())
+            if (lastUser.hasCallsign())
             {
                 ui->le_Callsign->setText(lastUser.getCallsign().asString());
                 ui->le_VatsimId->setText(lastUser.getId());

@@ -193,7 +193,7 @@ namespace BlackGui
             if (m_flightPlan.wasSentOrLoaded()) { return; }
 
             // only override with valid values
-            if (user.hasValidRealName())
+            if (user.hasRealName())
             {
                 ui->le_PilotsName->setText(user.getRealName());
             }
@@ -201,7 +201,7 @@ namespace BlackGui
             {
                 ui->le_PilotsHomeBase->setText(user.getHomeBase().getIcaoCode());
             }
-            if (user.hasValidCallsign())
+            if (user.hasCallsign())
             {
                 ui->le_Callsign->setText(user.getCallsign().asString());
             }

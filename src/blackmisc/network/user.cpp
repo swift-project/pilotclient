@@ -20,6 +20,7 @@
 #include <QThreadStorage>
 #include <Qt>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc::Aviation;
 
@@ -47,6 +48,13 @@ namespace BlackMisc
             this->setRealName(realname); // extracts homebase
         }
 
+        QString CUser::getRealNameAndHomeBase(const QString &separator) const
+        {
+            if (!this->hasHomeBase()) { return this->getRealName(); }
+            if (!this->hasRealName()) { return this->getHomeBase().asString(); }
+            return this->getRealName() % separator % this->getHomeBase().asString();
+        }
+
         void CUser::setCallsign(const CCallsign &callsign)
         {
             m_callsign = callsign;
@@ -58,13 +66,13 @@ namespace BlackMisc
             Q_UNUSED(i18n);
             if (m_realname.isEmpty()) return "<no realname>";
             QString s = m_realname;
-            if (this->hasValidId())
+            if (this->hasId())
             {
-                s.append(" (").append(m_id).append(')');
+                s += QStringLiteral(" (") % m_id % QStringLiteral(")");
             }
-            if (this->hasValidCallsign())
+            if (this->hasCallsign())
             {
-                s.append(' ').append(this->getCallsign().getStringAsSet());
+                s += QStringLiteral(" ") % this->getCallsign().getStringAsSet();
             }
             return s;
         }
@@ -86,11 +94,11 @@ namespace BlackMisc
             QString rn(removeAccents(realname.trimmed().simplified()));
             if (rn.isEmpty())
             {
-                m_realname = "";
+                m_realname.clear();
                 return;
             }
 
-            if (!this->hasValidHomebase())
+            if (!this->hasHomeBase())
             {
                 // only apply stripping if home base is not explicitly given
                 // try to strip homebase: I understand the limitations, but we will have more correct hits as failures I assume
@@ -115,8 +123,8 @@ namespace BlackMisc
         {
             CStatusMessageList msgs;
             // callsign optional
-            if (!this->hasValidId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid id"));}
-            if (!this->hasValidRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid real name"));}
+            if (!this->hasId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid id"));}
+            if (!this->hasRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid real name"));}
             if (!this->hasValidCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid credentials"));}
             return msgs;
         }
@@ -124,10 +132,10 @@ namespace BlackMisc
         void CUser::updateMissingParts(const CUser &otherUser)
         {
             if (this == &otherUser) { return; }
-            if (!this->hasValidRealName()) { this->setRealName(otherUser.getRealName()); }
-            if (!this->hasValidId()) { this->setId(otherUser.getId()); }
+            if (!this->hasRealName()) { this->setRealName(otherUser.getRealName()); }
+            if (!this->hasId()) { this->setId(otherUser.getId()); }
             if (!this->hasValidEmail()) { this->setEmail(otherUser.getEmail()); }
-            if (!this->hasValidCallsign()) { this->setCallsign(otherUser.getCallsign()); }
+            if (!this->hasCallsign()) { this->setCallsign(otherUser.getCallsign()); }
         }
 
         void CUser::synchronizeData(CUser &otherUser)
@@ -141,7 +149,7 @@ namespace BlackMisc
         {
             if (id.isEmpty()) { return false; }
             bool ok;
-            int i = id.toInt(&ok);
+            const int i = id.toInt(&ok);
             if (!ok) { return false; }
             return i >= 100000 && i <= 9999999;
         }

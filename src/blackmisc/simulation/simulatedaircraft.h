@@ -153,10 +153,10 @@ namespace BlackMisc
             void setAircraftIcaoDesignator(const QString &designator);
 
             //! Has valid realname?
-            bool hasValidRealName() const { return m_pilot.hasValidRealName(); }
+            bool hasRealName() const { return m_pilot.hasRealName(); }
 
             //! Has valid id?
-            bool hasValidId() const { return m_pilot.hasValidId(); }
+            bool hasId() const { return m_pilot.hasId(); }
 
             //! Valid designator?
             bool hasAircraftDesignator() const;

@@ -117,13 +117,13 @@ namespace BlackMisc
             void setControllerId(const QString &controllerId) { m_controller.setId(controllerId); }
 
             //! Has valid realname?
-            bool hasValidRealName() const { return m_controller.hasValidRealName(); }
+            bool hasRealName() const { return m_controller.hasRealName(); }
 
             //! Has valid id?
-            bool hasValidId() const { return m_controller.hasValidId(); }
+            bool hasId() const { return m_controller.hasId(); }
 
             //! Valid COM frequency
-            bool hasValidFrequency() const { return BlackMisc::Aviation::CComSystem::isValidCivilAviationFrequency(this->getFrequency()); }
+            bool hasValidFrequency() const { return CComSystem::isValidCivilAviationFrequency(this->getFrequency()); }
 
             //! Get frequency.
             const PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }

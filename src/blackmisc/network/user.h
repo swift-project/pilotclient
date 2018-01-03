@@ -61,13 +61,13 @@ namespace BlackMisc
             CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const Aviation::CCallsign &callsign = {});
 
             //! Get full name.
-            QString getRealName() const { return m_realname; }
+            const QString &getRealName() const { return m_realname; }
 
-            //! setRealName
+            //! Set real name
             void setRealName(const QString &realname);
 
             //! Get password
-            QString getPassword() const { return m_password; }
+            const QString &getPassword() const { return m_password; }
 
             //! Set password
             void setPassword(const QString &pw) { m_password = pw.trimmed(); }
@@ -79,22 +79,25 @@ namespace BlackMisc
             bool hasValidCredentials() const { return this->isValid() && !m_password.isEmpty(); }
 
             //! Valid real name?
-            bool hasValidRealName() const { return !m_realname.isEmpty(); }
+            bool hasRealName() const { return !m_realname.isEmpty(); }
 
             //! Valid id?
-            bool hasValidId() const { return !m_id.isEmpty(); }
+            bool hasId() const { return !m_id.isEmpty(); }
 
             //! Has associated callsign?
-            bool hasValidCallsign() const { return !m_callsign.isEmpty(); }
+            bool hasCallsign() const { return !m_callsign.isEmpty(); }
 
-            //! Valid homebase
-            bool hasValidHomebase() const { return !m_homebase.isEmpty(); }
+            //! Has home base?
+            bool hasHomeBase() const { return !m_homebase.isEmpty(); }
+
+            //! Real name + homebase
+            QString getRealNameAndHomeBase(const QString &separator = QString(" ")) const;
 
             //! Validate, provide details about issues
             CStatusMessageList validate() const;
 
             //! Get email.
-            QString getEmail() const { return m_email; }
+            const QString &getEmail() const { return m_email; }
 
             //! Set email.
             void setEmail(const QString &email) { m_email = email.trimmed(); }
@@ -103,7 +106,7 @@ namespace BlackMisc
             bool hasValidEmail() const { return !m_email.isEmpty(); }
 
             //! Get id.
-            QString getId() const { return m_id; }
+            const QString &getId() const { return m_id; }
 
             //! Set id
             void setId(const QString &id) { m_id = id.trimmed(); }
@@ -113,9 +116,6 @@ namespace BlackMisc
 
             //! Set homebase
             void setHomeBase(const Aviation::CAirportIcaoCode &homebase) { m_homebase = homebase; }
-
-            //! Has home base?
-            bool hasHomeBase() const { return !m_homebase.isEmpty(); }
 
             //! Get associated callsign.
             const Aviation::CCallsign &getCallsign() const { return m_callsign; }

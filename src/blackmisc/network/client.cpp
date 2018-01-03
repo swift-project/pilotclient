@@ -35,7 +35,7 @@ namespace BlackMisc
 
         bool CClient::isValid() const
         {
-            return m_user.hasValidCallsign();
+            return m_user.hasCallsign();
         }
 
         void CClient::setCapability(bool hasCapability, CClient::Capabilities capability)

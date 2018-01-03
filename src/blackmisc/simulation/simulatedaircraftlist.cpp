@@ -69,7 +69,7 @@ namespace BlackMisc
         bool CSimulatedAircraftList::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUpdated) const
         {
             if (this->isEmpty()) return false;
-            if (aircraftToBeUpdated.hasValidRealName() && aircraftToBeUpdated.hasValidId() && aircraftToBeUpdated.hasAircraftAndAirlineDesignator()) { return false; }
+            if (aircraftToBeUpdated.hasRealName() && aircraftToBeUpdated.hasId() && aircraftToBeUpdated.hasAircraftAndAirlineDesignator()) { return false; }
 
             CSimulatedAircraft currentDataFileAircraft = this->findFirstByCallsign(aircraftToBeUpdated.getCallsign());
             if (currentDataFileAircraft.getCallsign().isEmpty()) return false;
