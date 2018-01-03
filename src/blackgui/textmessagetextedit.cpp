@@ -28,7 +28,7 @@ namespace BlackGui
 {
     CTextMessageTextEdit::CTextMessageTextEdit(QWidget *parent) : QTextEdit(parent)
     {
-        this->m_textDocument = new QTextDocument(this);
+        m_textDocument = new QTextDocument(this);
         this->setDocument(m_textDocument);
         this->setReadOnly(true);
         this->setWordWrap(true);
@@ -46,19 +46,19 @@ namespace BlackGui
         m_actionWithSender->setCheckable(true);
         m_actionWordWrap->setCheckable(true);
 
-        connect(this->m_actionClearTextEdit, &QAction::triggered, this, &CTextMessageTextEdit::clear);
-        connect(this->m_actionAll, &QAction::triggered, this, &CTextMessageTextEdit::ps_keepLastNMessages);
-        connect(this->m_actionLast10, &QAction::triggered, this, &CTextMessageTextEdit::ps_keepLastNMessages);
-        connect(this->m_actionLast25, &QAction::triggered, this, &CTextMessageTextEdit::ps_keepLastNMessages);
-        connect(this->m_actionWithSender, &QAction::triggered, this, &CTextMessageTextEdit::ps_setVisibleFields);
-        connect(this->m_actionWithRecipient, &QAction::triggered, this, &CTextMessageTextEdit::ps_setVisibleFields);
-        connect(this->m_actionWordWrap, &QAction::triggered, this, &CTextMessageTextEdit::ps_setWordWrap);
+        connect(m_actionClearTextEdit, &QAction::triggered, this, &CTextMessageTextEdit::clear);
+        connect(m_actionAll, &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
+        connect(m_actionLast10, &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
+        connect(m_actionLast25, &QAction::triggered, this, &CTextMessageTextEdit::keepLastNMessages);
+        connect(m_actionWithSender, &QAction::triggered, this, &CTextMessageTextEdit::setVisibleFields);
+        connect(m_actionWithRecipient, &QAction::triggered, this, &CTextMessageTextEdit::setVisibleFields);
+        connect(m_actionWordWrap, &QAction::triggered, this, &CTextMessageTextEdit::setWordWrap);
 
-        connect(this, &QTextEdit::customContextMenuRequested, this, &CTextMessageTextEdit::ps_showContextMenuForTextEdit);
+        connect(this, &QTextEdit::customContextMenuRequested, this, &CTextMessageTextEdit::showContextMenuForTextEdit);
 
         // style sheet
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageTextEdit::ps_onStyleSheetChanged);
-        ps_onStyleSheetChanged();
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageTextEdit::onStyleSheetChanged);
+        onStyleSheetChanged();
     }
 
     CTextMessageTextEdit::~CTextMessageTextEdit()
@@ -69,13 +69,13 @@ namespace BlackGui
         if (maxMessages < 0 && m_keepMaxMessages >= 0) { maxMessages = m_keepMaxMessages; }
         if (maxMessages >= 0)
         {
-            this->m_messages.push_frontMaxElements(textMessage, maxMessages);
+            m_messages.push_frontMaxElements(textMessage, maxMessages);
         }
         else
         {
-            this->m_messages.push_front(textMessage);
+            m_messages.push_front(textMessage);
         }
-        QString html(toHtml(this->m_messages, this->m_withSender, this->m_withRecipient));
+        QString html(toHtml(m_messages, m_withSender, m_withRecipient));
         m_textDocument->setHtml(html);
     }
 
@@ -86,13 +86,13 @@ namespace BlackGui
 
     void CTextMessageTextEdit::clear()
     {
-        this->m_messages.clear();
+        m_messages.clear();
         QTextEdit::clear();
     }
 
     void CTextMessageTextEdit::setStyleSheetForContent(const QString &styleSheet)
     {
-        this->m_textDocument->setDefaultStyleSheet(styleSheet);
+        m_textDocument->setDefaultStyleSheet(styleSheet);
     }
 
     QString CTextMessageTextEdit::toHtml(const CTextMessageList &messages, bool withFrom, bool withTo)
@@ -151,35 +151,35 @@ namespace BlackGui
         return html;
     }
 
-    void CTextMessageTextEdit::ps_showContextMenuForTextEdit(const QPoint &pt)
+    void CTextMessageTextEdit::showContextMenuForTextEdit(const QPoint &pt)
     {
-        m_actionWithRecipient->setChecked(this->m_withRecipient);
-        m_actionWithSender->setChecked(this->m_withSender);
-        m_actionWordWrap->setChecked(this->m_wordWrap);
+        m_actionWithRecipient->setChecked(m_withRecipient);
+        m_actionWithSender->setChecked(m_withSender);
+        m_actionWordWrap->setChecked(m_wordWrap);
 
         QScopedPointer<QMenu> menu(this->createStandardContextMenu());
         menu->setObjectName(this->objectName().append("_contextMenu"));
         menu->addSeparator();
-        menu->addAction(this->m_actionWordWrap);
+        menu->addAction(m_actionWordWrap);
         QMenu *subMenu = menu->addMenu("Max.messages");
-        subMenu->addAction(this->m_actionLast10);
-        subMenu->addAction(this->m_actionLast25);
-        subMenu->addAction(this->m_actionAll);
+        subMenu->addAction(m_actionLast10);
+        subMenu->addAction(m_actionLast25);
+        subMenu->addAction(m_actionAll);
         subMenu = menu->addMenu("Fields");
-        subMenu->addAction(this->m_actionWithSender);
-        subMenu->addAction(this->m_actionWithRecipient);
-        menu->addAction(this->m_actionClearTextEdit);
+        subMenu->addAction(m_actionWithSender);
+        subMenu->addAction(m_actionWithRecipient);
+        menu->addAction(m_actionClearTextEdit);
         menu->exec(this->mapToGlobal(pt));
     }
 
-    void CTextMessageTextEdit::ps_onStyleSheetChanged()
+    void CTextMessageTextEdit::onStyleSheetChanged()
     {
-        Q_ASSERT(this->m_textDocument);
+        Q_ASSERT(m_textDocument);
         QString style(sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameTextMessage()));
-        this->m_textDocument->setDefaultStyleSheet(style);
+        m_textDocument->setDefaultStyleSheet(style);
     }
 
-    void CTextMessageTextEdit::ps_keepLastNMessages()
+    void CTextMessageTextEdit::keepLastNMessages()
     {
         QObject *sender = QObject::sender();
         if (sender == m_actionAll)
@@ -196,7 +196,7 @@ namespace BlackGui
         }
     }
 
-    void CTextMessageTextEdit::ps_setVisibleFields()
+    void CTextMessageTextEdit::setVisibleFields()
     {
         QObject *sender = QObject::sender();
         if (sender == m_actionWithRecipient)
@@ -221,12 +221,4 @@ namespace BlackGui
             this->setWordWrapMode(QTextOption::NoWrap);
         }
     }
-
-    void CTextMessageTextEdit::ps_setWordWrap()
-    {
-        QObject *sender = QObject::sender();
-        if (sender != m_actionWordWrap) { return; }
-        this->setWordWrap(m_actionWordWrap->isChecked());
-    }
-
 } // namespace

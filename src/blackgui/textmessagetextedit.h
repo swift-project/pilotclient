@@ -25,7 +25,6 @@ class QTextDocument;
 class QWidget;
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
-
 namespace BlackGui
 {
     //! Specialized text edit for displaying text messages
@@ -51,23 +50,19 @@ namespace BlackGui
         //! Clear
         void clear();
 
-    private slots:
+    private:
         //! Context menu
-        void ps_showContextMenuForTextEdit(const QPoint &pt);
+        void showContextMenuForTextEdit(const QPoint &pt);
 
         //! Stylesheet has been changed
-        void ps_onStyleSheetChanged();
+        void onStyleSheetChanged();
 
         //! Keep last n messages
-        void ps_keepLastNMessages();
+        void keepLastNMessages();
 
         //! Visible fields
-        void ps_setVisibleFields();
+        void setVisibleFields();
 
-        //! Toggle word wrap
-        void ps_setWordWrap();
-
-    private:
         //! Convert to HTML
         static QString toHtml(const BlackMisc::Network::CTextMessageList &messages, bool withFrom, bool withTo);
 
