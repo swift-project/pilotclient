@@ -68,6 +68,7 @@ namespace BlackGui
             ui->le_textMessages->setVisible(false);
             ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
 
+            // le_textMessages is the own line edit
             bool c = connect(ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::textMessageEntered);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
             c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit);
@@ -204,7 +205,7 @@ namespace BlackGui
                 // private message
                 const CCallsign cs = textMessage.getSenderCallsign();
                 if (cs.isEmpty()) return false;
-                QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
+                const QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
                 if (!tab) { return false; }
                 return ui->tw_TextMessages->currentWidget() == tab;
             }
@@ -380,13 +381,13 @@ namespace BlackGui
             // is this a command?
             if (!cl.startsWith("."))
             {
-                // build a command line
+                // build a command line -> e.g. ".msg 122.8 fooBar"
                 cl = this->textMessageToCommand(cl);
             }
 
             // relay the command
             if (cl.isEmpty()) { return; }
-            emit commandEntered(cl, componentIdentifier());
+            emit this->commandEntered(cl, this->componentIdentifier());
         }
 
         QString CTextMessageComponent::textMessageToCommand(const QString &enteredLine)
@@ -453,9 +454,9 @@ namespace BlackGui
             this->displayTextMessage(sentMessage);
         }
 
-        bool CTextMessageComponent::handleGlobalCommandLine(const QString &commandLine, const CIdentifier &originator)
+        bool CTextMessageComponent::handleGlobalCommandLineText(const QString &commandLine, const CIdentifier &originator)
         {
-            if (originator == componentIdentifier()) { return false; }
+            if (originator == this->componentIdentifier()) { return false; }
             if (commandLine.isEmpty() || commandLine.startsWith(".")) { return false; }
 
             // no "dot" command input

@@ -38,14 +38,18 @@ namespace BlackGui
         {
             const QString c(this->getLastEnteredLineFormatted());
             if (c.isEmpty()) { return; }
-            if (c.toLower().contains("help"))
-            {
-                this->setCommandTooltip();
-                return;
-            }
             if (c.startsWith('.'))
             {
+                if (c.toLower().contains("help"))
+                {
+                    this->setCommandTooltip();
+                    return;
+                }
                 emit this->commandEntered(c, this->identifier());
+            }
+            else
+            {
+                emit this->textEntered(c, this->identifier());
             }
         }
 

@@ -45,6 +45,9 @@ namespace BlackGui
             //! Command was entered
             void commandEntered(const QString &command, const BlackMisc::CIdentifier &originator);
 
+            //! Text entered (which is not a command)
+            void textEntered(const QString &command, const BlackMisc::CIdentifier &originator);
+
         private:
             //! Basic command validation
             void validateCommand();

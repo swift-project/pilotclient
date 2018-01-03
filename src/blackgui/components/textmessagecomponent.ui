@@ -234,7 +234,7 @@
     <widget class="BlackGui::Components::CSettingsTextMessageInlineComponent" name="comp_Settings"/>
    </item>
    <item>
-    <widget class="QLineEdit" name="le_textMessages">
+    <widget class="BlackGui::CLineEditHistory" name="le_textMessages">
      <property name="toolTip">
       <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
      </property>
@@ -258,6 +258,11 @@
    <extends>QFrame</extends>
    <header>blackgui/components/settingstextmessageinlinecomponent.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CLineEditHistory</class>
+   <extends>QLineEdit</extends>
+   <header>blackgui/lineedithistory.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

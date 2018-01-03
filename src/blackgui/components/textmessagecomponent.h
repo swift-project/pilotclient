@@ -63,7 +63,7 @@ namespace BlackGui
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
 
             //! Command line was entered
-            void commandEntered(const QString commandLine, const BlackMisc::CIdentifier &orignator);
+            void commandEntered(const QString commandLine, const BlackMisc::CIdentifier &originator);
 
         public slots:
             //! Text messages received
@@ -73,7 +73,8 @@ namespace BlackGui
             void onTextMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
             //! Used to allow direct input from global command line when visible
-            bool handleGlobalCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+            //! \remark takes the messages, turns it into a ".msg" command, and emits it
+            bool handleGlobalCommandLineText(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
             //! Display the tab for given callsign
             void showCorrespondingTab(const BlackMisc::Aviation::CCallsign &callsign);

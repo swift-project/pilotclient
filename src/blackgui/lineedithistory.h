@@ -33,9 +33,15 @@ namespace BlackGui
         //! Get the last entered line but simplified and trimmed
         QString getLastEnteredLineFormatted() const;
 
+        //! Clear the history
+        void clearHistory();
+
     protected:
         //! \copydoc QLineEdit::keyPressEvent
         virtual void keyPressEvent(QKeyEvent *event) override;
+
+        //! \copydoc QLineEdit::keyPressEvent
+        virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
     private:
         QStringList m_history;

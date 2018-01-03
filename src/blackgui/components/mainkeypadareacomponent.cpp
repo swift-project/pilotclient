@@ -66,6 +66,7 @@ namespace BlackGui
             // command line
             ui->lep_CommandLineInput->setIdentifier(m_identifier);
             connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, this, &CMainKeypadAreaComponent::commandEntered);
+            connect(ui->lep_CommandLineInput, &CCommandInput::textEntered, this, &CMainKeypadAreaComponent::textEntered);
 
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ownAircraftCockpitChanged);

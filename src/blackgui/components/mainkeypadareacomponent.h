@@ -54,8 +54,11 @@ namespace BlackGui
             //! Change opacity 0..30
             void changedOpacity(int opacity);
 
-            //! Command was entered
+            //! \copydoc CCommandInput::commandEntered
             void commandEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
+
+            //! \copydoc CCommandInput::commandEntered
+            void textEntered(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
             //! Connect was pressed
             void connectPressed();

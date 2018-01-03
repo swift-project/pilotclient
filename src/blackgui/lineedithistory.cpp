@@ -9,6 +9,7 @@
 
 #include "lineedithistory.h"
 #include <QKeyEvent>
+#include <QMenu>
 
 namespace BlackGui
 {
@@ -20,7 +21,12 @@ namespace BlackGui
 
     QString CLineEditHistory::getLastEnteredLineFormatted() const
     {
-        return getLastEnteredLine().trimmed().simplified();
+        return this->getLastEnteredLine().trimmed().simplified();
+    }
+
+    void CLineEditHistory::clearHistory()
+    {
+        m_history.clear();
     }
 
     void CLineEditHistory::keyPressEvent(QKeyEvent *event)
@@ -36,11 +42,11 @@ namespace BlackGui
         else if (event->key() == Qt::Key_Down)
         {
             // move forward in history
-            if (m_position <= 0) { clear(); return; }
+            if (m_position <= 0) { this->clear(); return; }
             if (m_position == m_history.size()) { --m_position; } // avoid need of 2xKeyDown at end
             if (m_position > 0 && m_history.size() > --m_position)
             {
-                setText(m_history.at(m_position));
+                this->setText(m_history.at(m_position));
             }
         }
         else if (event->key() == Qt::Key_Return)
@@ -49,10 +55,21 @@ namespace BlackGui
             {
                 m_history.push_front(text());
                 m_position = 0;
-                clear();
+                this->clear();
             }
         }
         // default handler for event
         QLineEdit::keyPressEvent(event);
+    }
+
+    void CLineEditHistory::contextMenuEvent(QContextMenuEvent *event)
+    {
+        if (!event) { return; }
+        QMenu *menu = this->createStandardContextMenu();
+        menu->addSeparator();
+        menu->addAction("Clear history");
+        connect(menu->actions().last(), &QAction::triggered, this, &CLineEditHistory::clearHistory);
+        menu->exec(event->globalPos());
+        delete menu;
     }
 } // ns
