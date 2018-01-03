@@ -437,12 +437,12 @@ namespace BlackCore
             QByteArray callsign = toFSD(m_loginMode == LoginAsObserver ?
                                         m_ownCallsign.getAsObserverCallsignString() :
                                         m_ownCallsign.asString());
-            QByteArray name = toFSD(m_server.getUser().getRealName());
-
+            QByteArray name;
             if (m_loginMode == LoginAsObserver)
             {
                 // Observer mode
                 VatAtcConnection info;
+                name = toFSD(m_server.getUser().getRealName());
                 info.name = name.data();
                 info.rating = vatAtcRatingObserver;
                 info.callsign = callsign.data();
@@ -456,6 +456,7 @@ namespace BlackCore
                 // normal scenario, also used in STEALTH
                 VatPilotConnection info;
                 info.callsign = callsign.data();
+                name = toFSD(m_server.getUser().getRealNameAndHomeBase());
                 info.name = name.data();
                 info.rating = vatPilotRatingStudent; // as documented, expected to be vatPilotRatingStudent only
                 info.simType = convertToSimType(m_simulatorInfo);
@@ -645,7 +646,7 @@ namespace BlackCore
 
         void CNetworkVatlib::replyToNameQuery(const CCallsign &callsign) // private
         {
-            QStringList response { m_server.getUser().getRealName(), "" };
+            QStringList response { m_server.getUser().getRealNameAndHomeBase(), "" };
             Vat_SendClientQueryResponse(m_net.data(), vatClientQueryName, toFSD(callsign), toFSD(response)(), response.size());
         }
 
