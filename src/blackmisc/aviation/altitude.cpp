@@ -23,7 +23,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        CAltitude::CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) : CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
+        CAltitude::CAltitude(const QString &altitudeAsString, PhysicalQuantities::CPqString::SeparatorMode mode) : CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
         {
             this->parseFromString(altitudeAsString, mode);
         }
@@ -64,10 +64,10 @@ namespace BlackMisc
 
         void CAltitude::parseFromString(const QString &value)
         {
-            this->parseFromString(value, BlackMisc::PhysicalQuantities::CPqString::SeparatorsCLocale);
+            this->parseFromString(value, PhysicalQuantities::CPqString::SeparatorsCLocale);
         }
 
-        void CAltitude::parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode)
+        void CAltitude::parseFromString(const QString &value, PhysicalQuantities::CPqString::SeparatorMode mode)
         {
             QString v = value.trimmed();
 
