@@ -12,21 +12,23 @@
 #ifndef BLACKMISC_AVIATION_ALTITUDE_H
 #define BLACKMISC_AVIATION_ALTITUDE_H
 
-#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/pqstring.h"
-#include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
 #include <QString>
+#include <QRegularExpression>
 
 namespace BlackMisc
 {
@@ -72,20 +74,20 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
-            //! Default constructor: 0 Altitude true
-            CAltitude() : CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
+            //! Default constructor: 0m Altitude MSL
+            CAltitude() : CLength(0, PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 
             //! Constructor
-            CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(datum) {}
+            CAltitude(double value, ReferenceDatum datum, const PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(datum) {}
 
             //! Constructor, value as CAltitude::MeanSeaLevel
-            CAltitude(double value, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(MeanSeaLevel) {}
+            CAltitude(double value, const PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(MeanSeaLevel) {}
 
             //! Altitude as string
-            CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode = BlackMisc::PhysicalQuantities::CPqString::SeparatorsLocale);
+            CAltitude(const QString &altitudeAsString, PhysicalQuantities::CPqString::SeparatorMode mode = PhysicalQuantities::CPqString::SeparatorsLocale);
 
             //! Constructor by CLength
-            CAltitude(const BlackMisc::PhysicalQuantities::CLength &altitude, ReferenceDatum datum) : CLength(altitude), m_datum(datum) {}
+            CAltitude(const PhysicalQuantities::CLength &altitude, ReferenceDatum datum) : CLength(altitude), m_datum(datum) {}
 
             //! AGL Above ground level?
             bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }
@@ -109,7 +111,36 @@ namespace BlackMisc
             void parseFromString(const QString &value);
 
             //! Parse value from string, with specified separator
-            void parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode);
+            void parseFromString(const QString &value, PhysicalQuantities::CPqString::SeparatorMode mode);
+
+            //! Parse from FP altitude string
+            //! \sa CFlightPlan::asFpAltitudeString
+            bool parseFromFpAltitudeString(const QString &value, CStatusMessageList *msgs = nullptr);
+
+            //! Is this a valid FP altitude
+            //! \sa CFlightPlan::asFpAltitudeString
+            bool isValidFpAltitude(CStatusMessageList *msgs = nullptr) const;
+
+            //! Altitude string (official version)
+            //! * flight level, expressed as "F" followed by 3 figures, example: F085 (which means flight level 085),
+            //! * standard metric level in tens of meters, expressed as "S" followed by 4 figures, example: S0150 (which means 1500 metres)
+            //! * altitude in hundreds of feet, expressed as "A" followed by 3 figures, example: A055 (which means 5500 feet altitude)
+            //! * altitude in tens of meters expressed as "M" followed by 4 figures, example: M0610 (which means 6100 metres altitude)
+            QString asFpAltitudeString() const;
+
+            //! As simple VATSIM string, only FLxxx or altitude as ft
+            QString asFpAltitudeSimpleVatsimString() const;
+
+            //! Checking FP altitude strings like "A20", "FL100"
+            //! \sa CFlightPlan::asFpAltitudeString
+            static const QRegularExpression &fpAltitudeRegExp();
+
+            //! Info for FP altitude strings
+            //! \sa CFlightPlan::asFpAltitudeString
+            static QString fpAltitudeInfo(const QString &separator = ", ");
+
+            //! Examples of FP altitude strings
+            static QString fpAltitudeExamples();
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
             BlackMisc::CIcon toIcon() const;
@@ -125,8 +156,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(datum)
             );
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude::ReferenceDatum)
