@@ -583,12 +583,11 @@ namespace BlackCore
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");
 
             VatFlightPlan vatlibFP;
-            QString route = QString(flightPlan.getRoute()).replace(" ", ".");
-            QString remarks = QString(flightPlan.getRemarks()).replace(":", ";").trimmed();
-            QString alt = flightPlan.getCruiseAltitude().isFlightLevel() ?
-                          flightPlan.getCruiseAltitude().toQString() :
-                          flightPlan.getCruiseAltitude().valueRoundedWithUnit(0);
-            alt = alt.remove('.').remove(','); // remove any separators
+            const QString route = QString(flightPlan.getRoute()).replace(" ", ".");
+            const QString remarks = QString(flightPlan.getRemarks()).replace(":", ";").trimmed();
+            const QString alt = flightPlan.getCruiseAltitude().asFpAltitudeSimpleVatsimString();
+            //! \fixme that would be the official string, can this be used
+            // const QString alt = flightPlan.getCruiseAltitude().asFpAltitudeString();
 
             QByteArray acTypeTemp, altAptTemp, cruiseAltTemp, depAptTemp, destAptTemp, routeTemp, remarksTemp;
             vatlibFP.aircraftType = acTypeTemp = toFSD(flightPlan.getPrefixIcaoSuffix());
