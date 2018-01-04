@@ -22,6 +22,7 @@
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest
 {
@@ -55,6 +56,42 @@ namespace BlackMiscTest
         QVERIFY2(fpRemarks.getRegistration().asString() == "GVGAS" , "Wrong registration");
         QVERIFY2(fpRemarks.getFlightOperator() == "VIRGIN AIRLINES", "Wrong operator");
         QVERIFY2(fpRemarks.getVoiceCapabilities().getCapabilities() == CVoiceCapabilities::Voice, "Wrong airline, expect UAL");
+    }
+
+    void CTestFlightPlan::flightPlanAltitude()
+    {
+        CAltitude a;
+        a.parseFromFpAltitudeString("FL125");
+        QVERIFY2(a == CAltitude(12500, CAltitude::FlightLevel, CLengthUnit::ft()), "Wrong altitude FL125");
+        a.parseFromFpAltitudeString("A122");
+        QVERIFY2(a == CAltitude(12200, CAltitude::MeanSeaLevel, CLengthUnit::ft()), "Wrong altitude A122");
+        a.parseFromFpAltitudeString("123ft");
+        QVERIFY2(a == CAltitude(123, CAltitude::MeanSeaLevel, CLengthUnit::ft()), "Wrong altitude 123ft");
+        a.parseFromFpAltitudeString("1234m");
+        QVERIFY2(a == CAltitude(1234, CAltitude::MeanSeaLevel, CLengthUnit::m()), "Wrong altitude 1234m");
+        a.parseFromFpAltitudeString("S0666");
+        QVERIFY2(a == CAltitude(6660, CAltitude::FlightLevel, CLengthUnit::m()), "Wrong altitude S0666");
+        a.parseFromFpAltitudeString("M456");
+        QVERIFY2(a == CAltitude(4560, CAltitude::MeanSeaLevel, CLengthUnit::m()), "Wrong altitude M456");
+
+        // some values which are supposed to be wrong
+        CAltitude faulty(a);
+        faulty.makeNegative();
+        QVERIFY2(!faulty.isValidFpAltitude(), "Negative values not allowed");
+        faulty.parseFromFpAltitudeString("FL111");
+        QVERIFY2(!faulty.isValidFpAltitude(), "FL should end with 0/5");
+
+        // as string
+        a = CAltitude(12500, CAltitude::FlightLevel, CLengthUnit::ft());
+        QVERIFY2(a.asFpAltitudeString() == "FL125", "Expect FL125");
+        QVERIFY2(a.asFpAltitudeSimpleVatsimString() == "FL125", "Expect FL125");
+        a = CAltitude(15000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+        QVERIFY2(a.asFpAltitudeString() == "A150", "Expect A150");
+        QVERIFY2(a.asFpAltitudeSimpleVatsimString() == "15000", "Expect 15000");
+        a = CAltitude(1500, CAltitude::FlightLevel, CLengthUnit::m());
+        QVERIFY2(a.asFpAltitudeString() == "S0150", "Expect S0150");
+        a = CAltitude(1600, CAltitude::MeanSeaLevel, CLengthUnit::m());
+        QVERIFY2(a.asFpAltitudeString() == "M0160", "Expect M0160");
     }
 } // ns
 

@@ -30,6 +30,9 @@ namespace BlackMiscTest
     private slots:
         //! Flight plan remarks (parsing)
         void flightPlanRemarks();
+
+        //! Flight plan altitude
+        void flightPlanAltitude();
     };
 } // namespace
 
