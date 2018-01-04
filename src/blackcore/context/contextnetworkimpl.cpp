@@ -690,6 +690,13 @@ namespace BlackCore
             return m_network->getInterimPositionReceivers();
         }
 
+        QString CContextNetwork::getLibraryInfo(bool detailed) const
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << detailed; }
+            Q_ASSERT(m_network);
+            return m_network->getLibraryInfo(detailed);
+        }
+
         void CContextNetwork::testRequestAircraftConfig(const CCallsign &callsign)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }

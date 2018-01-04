@@ -291,6 +291,9 @@ namespace BlackCore
             //! Enable storing of aircraft parts
             virtual void enableAircraftPartsHistory(bool enabled) = 0;
 
+            //! Version of the underlying library (e.g. VATLIB)
+            virtual QString getLibraryInfo(bool detailed) const = 0;
+
             // ------------------------ testing ------------------------
 
             //! Create dummy ATC stations for performance tests etc.

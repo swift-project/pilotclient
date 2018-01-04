@@ -256,6 +256,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<CAircraftPartsList>(QLatin1String("getRemoteAircraftParts"), callsign, cutoffTimeValuesBefore);
         }
 
+        QString CContextNetworkProxy::getLibraryInfo(bool detailed) const
+        {
+            return m_dBusInterface->callDBusRet<QString>(QLatin1String("getLibraryInfo"), detailed);
+        }
+
         bool CContextNetworkProxy::isAircraftPartsHistoryEnabled() const
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("isAircraftPartsHistoryEnabled"));

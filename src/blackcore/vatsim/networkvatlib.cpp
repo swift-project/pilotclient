@@ -166,6 +166,13 @@ namespace BlackCore
             terminateConnection();
         }
 
+        const QString &CNetworkVatlib::getLibraryInfo(bool detailed) const
+        {
+            static const QString vs(QStringLiteral("VATLIB: ") + Vat_GetVersionText());
+            static const QString vd(QStringLiteral("VATLIB: ") + Vat_GetVersionText() + QStringLiteral("\n") + Vat_GetBuildInfo());
+            return detailed ? vd : vs;
+        }
+
         void CNetworkVatlib::process()
         {
             if (!m_net) { return; }

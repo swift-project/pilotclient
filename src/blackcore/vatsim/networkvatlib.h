@@ -71,6 +71,9 @@ namespace BlackCore
             //! Destructor
             virtual ~CNetworkVatlib();
 
+            //! \copydoc INetwork::getLibraryInfo
+            const QString &getLibraryInfo(bool detailed) const override;
+
             //! \name Network functions
             //! @{
             virtual bool isConnected() const override { return m_status == vatStatusConnected; }
@@ -139,7 +142,7 @@ namespace BlackCore
             void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
             void sendIncrementalAircraftConfig();
 
-            //! \name Shimlib callbacks
+            //! \name VATLIB callbacks
             //! @{
             static void onConnectionStatusChanged(VatFsdClient *, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbvar);
             static void onTextMessageReceived(VatFsdClient *, const char *from, const char *to, const char *msg, void *cbvar);

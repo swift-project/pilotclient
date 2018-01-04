@@ -10,6 +10,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackcore/application.h"
 #include "blackcore/db/networkwatchdog.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacade.h"
@@ -550,39 +551,48 @@ namespace BlackCore
 
     QString CApplication::getInfoString(const QString &separator) const
     {
-        const QString str =
+        QString str =
             CBuildConfig::getVersionString() %
-            QLatin1Char(' ') % (CBuildConfig::isReleaseBuild() ? QLatin1String("Release build") : QLatin1String("Debug build")) %
+            QStringLiteral(" ") % (CBuildConfig::isReleaseBuild() ? QStringLiteral("Release build") : QStringLiteral("Debug build")) %
             separator %
-            QLatin1String("Local dev.dbg.: ") %
+            QStringLiteral("Local dev.dbg.: ") %
             boolToYesNo(CBuildConfig::isLocalDeveloperDebugBuild()) %
             separator %
-            QLatin1String("dev.env.: ") %
+            QStringLiteral("dev.env.: ") %
             boolToYesNo(this->isRunningInDeveloperEnvironment()) %
             separator %
-            QLatin1String("distribution: ") %
+            QStringLiteral("distribution: ") %
             this->getOwnDistribution().toQString(true) %
             separator %
-            QLatin1String("Windows NT: ") %
+            QStringLiteral("Windows NT: ") %
             boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()) %
-            QLatin1String(" Windows 10: ") %
+            QStringLiteral(" Windows 10: ") %
             boolToYesNo(CBuildConfig::isRunningOnWindows10()) %
             separator %
-            QLatin1String("Linux: ") %
+            QStringLiteral("Linux: ") %
             boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) %
-            QLatin1String(" Unix: ") %
+            QStringLiteral(" Unix: ") %
             boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) %
             separator %
-            QLatin1String("MacOS: ") %
+            QStringLiteral("MacOS: ") %
             boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform()) %
             separator %
-            QLatin1String("Build Abi: ") %
+            QStringLiteral("Build Abi: ") %
             QSysInfo::buildAbi() %
             separator %
-            QLatin1String("Build CPU: ") %
+            QStringLiteral("Build CPU: ") %
             QSysInfo::buildCpuArchitecture() %
             separator %
             CBuildConfig::compiledWithInfo(false);
+
+        if (this->supportsContexts())
+        {
+            str += (separator % QStringLiteral("Supporting contexts"));
+            if (this->getIContextNetwork())
+            {
+                str += (separator % this->getIContextNetwork()->getLibraryInfo(true));
+            }
+        }
 
         return str;
     }

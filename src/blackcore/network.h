@@ -69,6 +69,11 @@ namespace BlackCore
         virtual ~INetwork() {}
 
         /*!
+         * Underlying library info.
+         */
+        virtual const QString &getLibraryInfo(bool detailed) const = 0;
+
+        /*!
          * Flags for capabilities bitfield.
          */
         enum
@@ -109,8 +114,8 @@ namespace BlackCore
          */
         static QString connectionStatusToString(ConnectionStatus status)
         {
-            int index = staticMetaObject.indexOfEnumerator("ConnectionStatus");
-            QMetaEnum metaEnum = staticMetaObject.enumerator(index);
+            const int index = staticMetaObject.indexOfEnumerator("ConnectionStatus");
+            const QMetaEnum metaEnum = staticMetaObject.enumerator(index);
             return metaEnum.valueToKey(status);
         }
 
