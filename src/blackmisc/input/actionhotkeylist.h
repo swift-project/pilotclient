@@ -45,16 +45,17 @@ namespace BlackMisc
             CActionHotkeyList(const CSequence<CActionHotkey> &baseClass);
 
             //! Returns true if this list has a action hotkey with a combination which is a subset of other
-            //! Example:
-            //! List contains CTRL and other has combination CTRL-F
+            //! Example: List contains CTRL and other has combination CTRL-F
             CActionHotkeyList findSubsetsOf(const CActionHotkey &other) const;
 
-            //! Returns true if this list has a hotkey with a combination for which other is a subset
-            //! Example:
-            //! List contains CTRL-F and other has combination CTRL
+            //! Returns true if this list has a hotkey with a combination for which other is a superset of other
+            //! Example: List contains CTRL-F and other has combination CTRL
             CActionHotkeyList findSupersetsOf(const CActionHotkey &other) const;
 
-            //! Contains action
+            //! Find hotkeys for the same machine
+            CActionHotkeyList findBySameMachine(const CActionHotkey &key) const;
+
+            //! Contains action?
             bool containsAction(const QString &action) const;
         };
     } // ns

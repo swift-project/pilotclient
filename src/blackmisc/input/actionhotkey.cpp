@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/input/actionhotkey.h"
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
@@ -23,18 +24,23 @@ namespace BlackMisc
 
         QString CActionHotkey::convertToQString(bool /* i18n */) const
         {
-            QString s;
-            s += m_identifier.getMachineName();
-            s += " ";
-            s += m_combination.toQString();
-            s += " ";
-            s += m_action;
+            const QString s =
+                m_identifier.getMachineName() %
+                QStringLiteral(" ") %
+                m_combination.toQString() %
+                QStringLiteral(" ") %
+                m_action;
             return s;
         }
 
         void CActionHotkey::setCombination(const CHotkeyCombination &combination)
         {
             m_combination = combination;
+        }
+
+        bool CActionHotkey::isForSameMachine(const CActionHotkey &key) const
+        {
+            return this->getApplicableMachine().hasSameMachineId(key.getApplicableMachine());
         }
 
         void CActionHotkey::setObject(const CActionHotkey &obj)
@@ -46,30 +52,23 @@ namespace BlackMisc
         CVariant CActionHotkey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexIdentifier:
-                return CVariant::from(m_identifier);
-            case IndexIdentifierAsString:
-                return CVariant::from(m_identifier.getMachineName());
-            case IndexAction:
-                return CVariant::from(m_action);
-            case IndexActionAsString:
-                return CVariant::from(m_action);
-            case IndexCombination:
-                return CVariant::from(m_combination);
-            case IndexCombinationAsString:
-                return CVariant::from(QString(m_combination.toQString()));
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexIdentifier: return CVariant::from(m_identifier);
+            case IndexIdentifierAsString: return CVariant::from(m_identifier.getMachineName());
+            case IndexAction: return CVariant::from(m_action);
+            case IndexActionAsString: return CVariant::from(m_action);
+            case IndexCombination: return CVariant::from(m_combination);
+            case IndexCombinationAsString: return CVariant::from(QString(m_combination.toQString()));
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
         void CActionHotkey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CActionHotkey>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAction:
@@ -80,6 +79,7 @@ namespace BlackMisc
             case IndexCombination:
             case IndexCombinationAsString:
                 m_combination = variant.to<CHotkeyCombination>();
+                break;
             case IndexObject:
                 this->setObject(variant.value<CActionHotkey>());
                 break;

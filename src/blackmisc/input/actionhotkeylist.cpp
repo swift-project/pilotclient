@@ -36,7 +36,7 @@ namespace BlackMisc
         CActionHotkeyList CActionHotkeyList::findSupersetsOf(const CActionHotkey &other) const
         {
             CActionHotkeyList supersets;
-            for (const auto &actionHotkey : *this)
+            for (const CActionHotkey &actionHotkey : *this)
             {
                 if (other.getCombination().isSubsetOf(actionHotkey.getCombination()))
                 {
@@ -44,6 +44,17 @@ namespace BlackMisc
                 }
             }
             return supersets;
+        }
+
+        CActionHotkeyList CActionHotkeyList::findBySameMachine(const CActionHotkey &key) const
+        {
+            CActionHotkeyList sameMachineKeys;
+            for (const CActionHotkey &actionHotkey : *this)
+            {
+                if (!actionHotkey.isForSameMachine(key)) { continue; }
+                sameMachineKeys.push_back(actionHotkey);
+            }
+            return sameMachineKeys;
         }
 
         bool CActionHotkeyList::containsAction(const QString &action) const

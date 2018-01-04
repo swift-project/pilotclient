@@ -34,7 +34,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexIdentifier = BlackMisc::CPropertyIndex::GlobalIndexCSettingKeyboardHotkey,
+                IndexIdentifier = CPropertyIndex::GlobalIndexCSettingKeyboardHotkey,
                 IndexIdentifierAsString,
                 IndexCombination,
                 IndexCombinationAsString,
@@ -59,7 +59,7 @@ namespace BlackMisc
             void setCombination(const CHotkeyCombination &combination);
 
             //! Action
-            QString getAction() const { return m_action; }
+            const QString &getAction() const { return m_action; }
 
             //! Set function
             void setAction(const QString &action) { m_action = action; }
@@ -68,7 +68,10 @@ namespace BlackMisc
             void setApplicableMachine(const CIdentifier &identifier) { m_identifier = identifier; }
 
             //! Get applicable machine
-            CIdentifier getApplicableMachine() const { return m_identifier; }
+            const CIdentifier &getApplicableMachine() const { return m_identifier; }
+
+            //! Key for the same machine?
+            bool isForSameMachine(const CActionHotkey &key) const;
 
             //! Set object
             void setObject(const CActionHotkey &obj);
@@ -77,10 +80,10 @@ namespace BlackMisc
             bool isValid() const { return !m_identifier.getMachineName().isEmpty() && !m_combination.isEmpty() && !m_action.isEmpty(); }
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -97,8 +100,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(action)
             );
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CActionHotkey)
 
