@@ -134,17 +134,19 @@ namespace BlackGui
 
         bool CSettingsHotkeyComponent::checkAndConfirmConflicts(const CActionHotkey &actionHotkey, const CActionHotkeyList &ignore)
         {
-            const auto configuredHotkeys = m_actionHotkeys.getThreadLocal();
-            CActionHotkeyList conflicts = configuredHotkeys.findSupersetsOf(actionHotkey);
-            conflicts.push_back(configuredHotkeys.findSubsetsOf(actionHotkey));
-            conflicts.removeIfIn(ignore);
+            // check the hotkeys of the same machine only
+            // and avoid duplicates (replace or add)
+            const CActionHotkeyList configuredHotkeysSameMachine = m_actionHotkeys.getThreadLocal().findBySameMachine(actionHotkey);
+            CActionHotkeyList conflicts = configuredHotkeysSameMachine.findSupersetsOf(actionHotkey);
+            conflicts.replaceOrAdd(configuredHotkeysSameMachine.findSubsetsOf(actionHotkey));
+            conflicts.removeIfIn(ignore.findBySameMachine(actionHotkey));
 
             if (!conflicts.isEmpty())
             {
-                QString message = QString("The selected combination conflicts with the following %1 combinations(s):\n\n").arg(conflicts.size());
-                for (const auto &conflict : conflicts)
+                QString message = QString("The selected combination conflicts with the following %1 combination(s):\n\n").arg(conflicts.size());
+                for (const CActionHotkey &conflict : conflicts)
                 {
-                    message += conflict.getCombination().toQString();
+                    message += conflict.toQString();
                     message += "\n";
                 }
                 message += "\n Do you want to use it anway?";
