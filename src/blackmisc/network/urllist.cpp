@@ -106,7 +106,7 @@ namespace BlackMisc
             CUrlList withoutDuplicates;
             for (const CUrl &url : (*this))
             {
-                withoutDuplicates.replaceOrAdd(url, url);
+                withoutDuplicates.replaceOrAdd(url);
             }
             return withoutDuplicates;
         }

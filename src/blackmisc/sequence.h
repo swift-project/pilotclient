@@ -24,7 +24,6 @@
 
 namespace BlackMisc
 {
-
     /*!
      * Generic sequential container with value semantics.
      * \tparam T the type of elements contained.
@@ -351,6 +350,21 @@ namespace BlackMisc
             else { push_back(replacement); }
         }
 
+        //! Replace elements matching the given element. If there is no match, push the new element on the end.
+        void replaceOrAdd(const T &replacement)
+        {
+            this->replaceOrAdd(replacement, replacement);
+        }
+
+        //! Replace or add given elements
+        void replaceOrAdd(const CSequence<T> &replacements)
+        {
+            for (const T &replacement : replacements)
+            {
+                this->replaceOrAdd(replacement, replacement);
+            }
+        }
+
         //! Replace elements matching a particular key/value pair. If there is no match, push the new element on the end.
         //! \param key1 A pointer to a member function of T.
         //! \param value1 Will be compared to the return value of key1.
@@ -505,7 +519,6 @@ namespace BlackMisc
     private:
         QVector<T> m_impl;
     };
-
 } //namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CSequence<int>)

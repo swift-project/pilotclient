@@ -798,7 +798,7 @@ namespace BlackMisc
 
         CProcessInfo currentProcess = CProcessInfo::currentProcess();
         Q_ASSERT(currentProcess.exists());
-        apps.replaceOrAdd(currentProcess, currentProcess);
+        apps.replaceOrAdd(currentProcess);
         json.insert("apps", apps.toJson());
         json.insert("uuid", uuid.toString());
         if (!(file.seek(0) && file.resize(0) && file.write(QJsonDocument(json).toJson()) && file.checkedClose()))
