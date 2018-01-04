@@ -424,14 +424,7 @@
            </widget>
           </item>
           <item row="4" column="3">
-           <widget class="QLineEdit" name="le_CrusingAltitude">
-            <property name="maxLength">
-             <number>40</number>
-            </property>
-            <property name="placeholderText">
-             <string>e.g. FL70</string>
-            </property>
-           </widget>
+           <widget class="BlackGui::CAltitudeEdit" name="lep_CrusingAltitude"/>
           </item>
           <item row="0" column="1">
            <widget class="QLabel" name="lbl_Callsign">
@@ -1137,6 +1130,11 @@ p, li { white-space: pre-wrap; }
    <header>blackgui/components/selcalcodeselector.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::CAltitudeEdit</class>
+   <extends>QLineEdit</extends>
+   <header>blackgui/altitudeedit.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>sa_FlightPlanTabMain</tabstop>
@@ -1151,7 +1149,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>tb_HelpEquipment</tabstop>
   <tabstop>le_OriginAirport</tabstop>
   <tabstop>le_TakeOffTimePlanned</tabstop>
-  <tabstop>le_CrusingAltitude</tabstop>
+  <tabstop>lep_CrusingAltitude</tabstop>
   <tabstop>pte_Route</tabstop>
   <tabstop>le_DestinationAirport</tabstop>
   <tabstop>le_EstimatedTimeEnroute</tabstop>

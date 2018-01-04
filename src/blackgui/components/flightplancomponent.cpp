@@ -40,7 +40,6 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QRadioButton>
-#include <QRegularExpression>
 #include <QTabBar>
 #include <QCompleter>
 #include <QStringBuilder>
@@ -220,14 +219,7 @@ namespace BlackGui
             ui->le_CruiseTrueAirspeed->setText(flightPlan.getCruiseTrueAirspeed().valueRoundedWithUnit(CSpeedUnit::kts(), 0));
 
             const CAltitude cruiseAlt = flightPlan.getCruiseAltitude();
-            if (cruiseAlt.isFlightLevel())
-            {
-                ui->le_CrusingAltitude->setText(cruiseAlt.toQString());
-            }
-            else
-            {
-                ui->le_CrusingAltitude->setText(cruiseAlt.valueRoundedWithUnit(CLengthUnit::ft(), 0));
-            }
+            ui->lep_CrusingAltitude->setAltitude(cruiseAlt);
 
             switch (flightPlan.getFlightRulesAsVFRorIFR())
             {
@@ -263,6 +255,7 @@ namespace BlackGui
             {
                 messages.push_back(CStatusMessage(this).validationError("Invalid callsign '%1'") << v);
             }
+            flightPlan.setCallsign(CCallsign(v));
 
             // aircraft ICAO / aircraft type
             v = ui->le_AircraftType->text().trimmed().toUpper();
@@ -445,7 +438,7 @@ namespace BlackGui
             this->prefillWithOwnAircraftData();
             ui->le_AircraftRegistration->clear();
             ui->le_AirlineOperator->clear();
-            ui->le_CrusingAltitude->setText("FL70");
+            ui->lep_CrusingAltitude->setText("FL70");
             ui->le_CruiseTrueAirspeed->setText("100 kts");
             ui->pte_Remarks->clear();
             ui->pte_Route->clear();
@@ -543,12 +536,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::loadFlightPlanFromNetwork()
         {
-            if (!sGui->getIContextNetwork())
-            {
-                CLogMessage(this).info("Cannot load flight plan, network not available");
-                return;
-            }
-            if (!sGui->getIContextNetwork()->isConnected())
+            if (!sGui->getIContextNetwork() || !sGui->getIContextNetwork()->isConnected())
             {
                 CLogMessage(this).warning("Cannot load flight plan, network not connected");
                 return;
@@ -558,6 +546,8 @@ namespace BlackGui
             const CFlightPlan loadedPlan = sGui->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
             if (loadedPlan.wasSentOrLoaded())
             {
+                const int r = QMessageBox::warning(this, "Override current data?", "Loaded FP", QMessageBox::Yes | QMessageBox::No);
+                if (r != QMessageBox::Yes) { return; }
                 this->fillWithFlightPlanData(loadedPlan);
                 CLogMessage(this).info("Updated with loaded flight plan");
             }
@@ -617,10 +607,10 @@ namespace BlackGui
             ui->pte_RemarksGenerated->setPlainText(rem);
         }
 
-        void CFlightPlanComponent::copyRemarks()
+        void CFlightPlanComponent::copyRemarks(bool confirm)
         {
             const QString generated = ui->pte_RemarksGenerated->toPlainText().trimmed();
-            if (!this->overrideRemarks()) { return; }
+            if (confirm && !this->overrideRemarks()) { return; }
             ui->pte_Remarks->setPlainText(generated);
             CLogMessage(this).info("Copied remarks");
         }
