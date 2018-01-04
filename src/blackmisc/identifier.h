@@ -77,7 +77,7 @@ namespace BlackMisc
         QString toUuidString() const;
 
         //! Name
-        QString getName() const { return m_name; }
+        const QString &getName() const { return m_name; }
 
         //! Has name
         bool hasName() const { return !m_name.isEmpty(); }
@@ -95,29 +95,32 @@ namespace BlackMisc
         //! Get machine id
         QByteArray getMachineId() const;
 
-        //! Machine 64 base64 encoded
-        QString getMachineIdBase64() const { return m_machineIdBase64; }
+        //! Machine base64 encoded
+        const QString &getMachineIdBase64() const { return m_machineIdBase64; }
 
         //! Machine name
-        QString getMachineName() const { return m_machineName; }
+        const QString &getMachineName() const { return m_machineName; }
+
+        //! Check if the other identifier has the same machine name
+        bool hasSameMachineName(const CIdentifier &other) const;
+
+        //! Check if other identifier is from the same machine id
+        bool hasSameMachineId(const CIdentifier &other) const;
 
         //! Get process id
         qint64 getProcessId() const {return m_processId;}
 
         //! Get process name
-        QString getProcessName() const {return m_processName;}
+        const QString &getProcessName() const {return m_processName;}
 
         //! Check if originating from the same local machine
         bool isFromLocalMachine() const;
 
-        //! Check if other identifier is from the same machine
-        bool isFromSameMachine(const CIdentifier &other) const;
-
         //! Check if originating from the same process id
-        bool isFromSameProcess() const;
+        bool hasApplicationProcessId() const;
 
         //! Check if originating from the same process name
-        bool isFromSameProcessName() const;
+        bool hasApplicationProcessName() const;
 
         //! Check if it is anonymous identifier
         bool isAnonymous() const;

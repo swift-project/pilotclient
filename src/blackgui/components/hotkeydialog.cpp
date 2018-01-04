@@ -88,7 +88,7 @@ namespace BlackGui
             for (const auto &app : machineIdentifiersUnique)
             {
                 ui->cb_Identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
-                if (m_actionHotkey.getApplicableMachine().isFromSameMachine(app)) { index = ui->cb_Identifier->count() - 1; }
+                if (m_actionHotkey.getApplicableMachine().hasSameMachineName(app)) { index = ui->cb_Identifier->count() - 1; }
             }
 
             if (index < 0 && ui->cb_Identifier->count() > 0)

@@ -304,7 +304,7 @@ namespace BlackMisc
             while (out != end && out.key() < in.key()) { ++out; }
             auto &element = getElement(in.key(), out);
 
-            if (originator.isFromSameProcess()) // round trip
+            if (originator.hasApplicationProcessId()) // round trip
             {
                 element.m_pendingChanges--;
                 Q_ASSERT(element.m_pendingChanges >= 0);

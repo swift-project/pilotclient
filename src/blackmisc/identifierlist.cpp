@@ -33,7 +33,7 @@ namespace BlackMisc
         {
             bool contained = il.containsBy([ = ] (const CIdentifier &ident)
             {
-                return identifier.isFromSameMachine(ident);
+                return identifier.hasSameMachineName(ident);
             });
             if (!contained) { il.push_back(identifier); }
         }

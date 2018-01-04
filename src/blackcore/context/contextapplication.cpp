@@ -92,7 +92,7 @@ namespace BlackCore
 
             s = connect(this, &IContextApplication::hotkeyActionsRegistered, [this](const QStringList & actions, const CIdentifier & origin)
             {
-                if (origin.isFromSameProcess()) { return; }
+                if (origin.hasApplicationProcessId()) { return; }
                 CInputManager::instance()->registerRemoteActions(actions);
             });
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey actions failed");

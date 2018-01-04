@@ -100,22 +100,27 @@ namespace BlackMisc
         return QByteArray::fromBase64(m_machineIdBase64.toLocal8Bit());
     }
 
+    bool CIdentifier::hasSameMachineName(const CIdentifier &other) const
+    {
+        return !other.getMachineName().isEmpty() && other.getMachineName() == this->getMachineName();
+    }
+
+    bool CIdentifier::hasSameMachineId(const CIdentifier &other) const
+    {
+        return !m_machineIdBase64.isEmpty() && m_machineIdBase64 == other.m_machineIdBase64;
+    }
+
     bool CIdentifier::isFromLocalMachine() const
     {
         return QDBusConnection::localMachineId() == getMachineId();
     }
 
-    bool CIdentifier::isFromSameMachine(const CIdentifier &other) const
-    {
-        return getMachineIdBase64() == other.getMachineIdBase64();
-    }
-
-    bool CIdentifier::isFromSameProcess() const
+    bool CIdentifier::hasApplicationProcessId() const
     {
         return QCoreApplication::applicationPid() == getProcessId() && isFromLocalMachine();
     }
 
-    bool CIdentifier::isFromSameProcessName() const
+    bool CIdentifier::hasApplicationProcessName() const
     {
         return QCoreApplication::applicationName() == getProcessName();
     }
@@ -157,8 +162,8 @@ namespace BlackMisc
         case IndexProcessId: return CVariant::fromValue(m_processId);
         case IndexProcessName: return CVariant::fromValue(m_processName);
         case IndexIsFromLocalMachine: return CVariant::fromValue(isFromLocalMachine());
-        case IndexIsFromSameProcess: return CVariant::fromValue(isFromSameProcess());
-        case IndexIsFromSameProcessName: return CVariant::fromValue(isFromSameProcessName());
+        case IndexIsFromSameProcess: return CVariant::fromValue(hasApplicationProcessId());
+        case IndexIsFromSameProcessName: return CVariant::fromValue(hasApplicationProcessName());
         default: return CValueObject::propertyByIndex(index);
         }
     }

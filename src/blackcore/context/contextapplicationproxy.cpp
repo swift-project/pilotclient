@@ -32,7 +32,7 @@ namespace BlackCore
 
             connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage & message, const CIdentifier & origin)
             {
-                if (!origin.isFromSameProcess())
+                if (!origin.hasApplicationProcessId())
                 {
                     CLogHandler::instance()->logRemoteMessage(message);
                 }

@@ -41,7 +41,7 @@ namespace BlackCore
 
         void CContextApplication::logMessage(const CStatusMessage &message, const CIdentifier &origin)
         {
-            if (!origin.isFromSameProcess())
+            if (!origin.hasApplicationProcessId())
             {
                 CLogHandler::instance()->logRemoteMessage(message);
             }
