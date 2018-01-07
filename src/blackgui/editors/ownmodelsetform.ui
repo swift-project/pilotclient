@@ -252,18 +252,24 @@
  <tabstops>
   <tabstop>rb_Full</tabstop>
   <tabstop>rb_Incremental</tabstop>
+  <tabstop>cb_ConsolidateModelSet</tabstop>
   <tabstop>rb_DbDataOnly</tabstop>
   <tabstop>rb_DbIcaoCodesOnly</tabstop>
   <tabstop>rb_WithIcaoData</tabstop>
   <tabstop>rb_DistributorsSelected</tabstop>
+  <tabstop>rb_DistributorsFromBelow</tabstop>
+  <tabstop>rb_DistributorsAll</tabstop>
+  <tabstop>rb_DisplayPreferencesDistributors</tabstop>
+  <tabstop>rb_DisplayAllDistributors</tabstop>
+  <tabstop>cb_SortByPreferences</tabstop>
   <tabstop>tvp_Distributors</tabstop>
  </tabstops>
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="bg_Distributors"/>
   <buttongroup name="bg_Mode"/>
   <buttongroup name="bg_DisplayedDistributors"/>
-  <buttongroup name="bg_Distributors"/>
   <buttongroup name="bg_SourceSet"/>
  </buttongroups>
 </ui>
