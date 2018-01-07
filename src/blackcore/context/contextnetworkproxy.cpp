@@ -82,10 +82,6 @@ namespace BlackCore
                                    "textMessageSent", this, SIGNAL(textMessageSent(BlackMisc::Network::CTextMessage)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                                   "webServiceDataRead", this, SIGNAL(webServiceDataRead(int, int, int)));
-
-            Q_ASSERT(s);
-            s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                    "changedRemoteAircraftEnabled", this, SIGNAL(changedRemoteAircraftEnabled(BlackMisc::Simulation::CSimulatedAircraft)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),

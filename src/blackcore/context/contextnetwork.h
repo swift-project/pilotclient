@@ -156,12 +156,6 @@ namespace BlackCore
             //! Text message sent (by me)
             void textMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
 
-            // --------------------------- data readers -------------------------------
-
-            //! Web serice data read
-            // void webServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-            void webServiceDataRead(int entity, int state, int number);
-
         public slots:
             //! Reload bookings from booking service
             virtual void requestAtcBookingsUpdate() const = 0;

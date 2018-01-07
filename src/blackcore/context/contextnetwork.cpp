@@ -25,10 +25,8 @@ namespace BlackCore
             switch (mode)
             {
             case CCoreFacadeConfig::Local:
-            case CCoreFacadeConfig::LocalInDBusServer:
-                return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
-            case CCoreFacadeConfig::Remote:
-                return new CContextNetworkProxy(CDBusServer::coreServiceName(connection), connection, mode, runtime);
+            case CCoreFacadeConfig::LocalInDBusServer: return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
+            case CCoreFacadeConfig::Remote: return new CContextNetworkProxy(CDBusServer::coreServiceName(connection), connection, mode, runtime);
             case CCoreFacadeConfig::NotUsed:
             default:
                 return new CContextNetworkEmpty(runtime);

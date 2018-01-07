@@ -77,11 +77,7 @@ namespace BlackCore
             connect(m_networkDataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
             m_networkDataUpdateTimer->start(30 * 1000);
 
-            // 3. data reader, start reading when setup is synced with xx delay
-            Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
-            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CContextNetwork::webServiceDataRead);
-
-            // 4. Airspace contents
+            // 3. Airspace contents
             Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
             m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), m_network, this);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
@@ -157,7 +153,7 @@ namespace BlackCore
         {
             if (this->isDebugEnabled()) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             QString msg;
-            if (!server.getUser().isValid())
+            if (!server.getUser().hasCredentials())
             {
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid user credentials");
             }
