@@ -26,9 +26,7 @@ namespace BlackGui
 {
     namespace Editors
     {
-        /*!
-         * Form base class
-         */
+        //! Form base class
         class BLACKGUI_EXPORT CForm : public COverlayMessagesFrame
         {
             Q_OBJECT
@@ -53,23 +51,37 @@ namespace BlackGui
             //! Is read only?
             bool isReadOnly() const { return m_readOnly; }
 
-            //! Authenticated DB user
-            BlackMisc::Network::CAuthenticatedUser getSwiftDbUser() const;
-
         protected:
             //! JSON string has been pasted
             //! \remark The JSON string has been pre-checked
             virtual void jsonPasted(const QString &json);
 
-            bool m_readOnly = false; //!< read only
-            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CForm::ps_userChanged}; //!< authenticated user
-
-        protected slots:
-            //! User has been changed
-            virtual void ps_userChanged();
-
             //! Pasted from clipboard
-            void ps_pasted();
+            void pasted();
+
+            bool m_readOnly = false; //!< read only
+        };
+
+        //! Form base class
+        class BLACKGUI_EXPORT CFormDbUser : public CForm
+        {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            explicit CFormDbUser(QWidget *parent = nullptr);
+
+            //! Destructor
+            virtual ~CFormDbUser();
+
+            //! Authenticated DB user
+            BlackMisc::Network::CAuthenticatedUser getSwiftDbUser() const;
+
+        protected:
+            //! User has been changed
+            virtual void userChanged();
+
+            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CFormDbUser::userChanged}; //!< authenticated user
         };
     } // ns
 } // ns

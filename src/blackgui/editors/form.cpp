@@ -35,27 +35,33 @@ namespace BlackGui
             return CStatusMessageList();
         }
 
-        CAuthenticatedUser CForm::getSwiftDbUser() const
-        {
-            return this->m_swiftDbUser.get();
-        }
-
         void CForm::jsonPasted(const QString &json)
         {
             Q_UNUSED(json);
         }
 
-        void CForm::ps_userChanged()
-        {
-            // void
-        }
-
-        void CForm::ps_pasted()
+        void CForm::pasted()
         {
             if (!QApplication::clipboard()) { return; }
             const QString data = QApplication::clipboard()->text();
             if (!Json::looksLikeSwiftJson(data)) { return; }
             this->jsonPasted(data);
+        }
+
+        CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent)
+        { }
+
+        CFormDbUser::~CFormDbUser()
+        { }
+
+        CAuthenticatedUser CFormDbUser::getSwiftDbUser() const
+        {
+            return m_swiftDbUser.get();
+        }
+
+        void CFormDbUser::userChanged()
+        {
+            // void
         }
     } // ns
 } // ns
