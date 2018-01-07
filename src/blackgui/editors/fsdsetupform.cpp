@@ -25,11 +25,10 @@ namespace BlackGui
             ui(new Ui::CFsdSetupForm)
         {
             ui->setupUi(this);
-            this->showEnableInfo(false);
             this->resetToDefaultValues();
-            ui->cb_Enabled->setChecked(true);
+            ui->cb_Override->setChecked(true);
             ui->le_TextCodec->setCompleter(new QCompleter(textCodecNames(true, true), this));
-            connect(ui->cb_Enabled, &QCheckBox::toggled, this, &CFsdSetupForm::enabledToggled);
+            connect(ui->cb_Override, &QCheckBox::toggled, this, &CFsdSetupForm::enabledToggled);
             connect(ui->pb_SetDefaults, &QPushButton::clicked, this, &CFsdSetupForm::resetToDefaultValues);
         }
 
@@ -66,23 +65,25 @@ namespace BlackGui
 
         bool CFsdSetupForm::isFsdSetupEnabled() const
         {
-            return ui->cb_Enabled->isChecked();
+            return ui->cb_Override->isChecked();
         }
 
         void CFsdSetupForm::setFsdSetupEnabled(bool enabled)
         {
-            ui->cb_Enabled->setChecked(enabled);
+            ui->cb_Override->setChecked(enabled);
         }
 
         void CFsdSetupForm::showEnableInfo(bool visible)
         {
-            ui->cb_Enabled->setVisible(visible);
-            ui->lbl_Enabled->setVisible(visible);
+            ui->cb_Override->setVisible(visible);
+            ui->lbl_FsdSetup->setVisible(visible);
+            ui->pb_SetDefaults->setVisible(visible);
         }
 
         void CFsdSetupForm::setReadOnly(bool readonly)
         {
-            ui->le_TextCodec->setReadOnly(readonly);
+            this->showEnableInfo(!readonly);
+            ui->le_TextCodec->setReadOnly(!readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_AircraftPartsReceive, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_AircraftPartsSend, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionReceive, readonly);

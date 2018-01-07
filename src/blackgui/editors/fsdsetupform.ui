@@ -6,20 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>209</width>
-    <height>130</height>
+    <width>244</width>
+    <height>91</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
-  <layout class="QFormLayout" name="fl_FsdSetupForm">
+  <layout class="QGridLayout" name="gl_FsdSetupForm">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -32,6 +26,13 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
+   <item row="4" column="2">
+    <widget class="QCheckBox" name="cb_FastPositionReceive">
+     <property name="text">
+      <string>receive</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="lbl_TextCodec">
      <property name="text">
@@ -39,104 +40,74 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="3" column="0">
+    <widget class="QLabel" name="lbl_AircraftParts">
+     <property name="text">
+      <string>Aircraft parts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="cb_AircraftPartsSend">
+     <property name="text">
+      <string>send</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QPushButton" name="pb_SetDefaults">
+     <property name="text">
+      <string>set defaults</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="lbl_FastPositions">
+     <property name="text">
+      <string>Fast positions</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QCheckBox" name="cb_AircraftPartsReceive">
+     <property name="text">
+      <string>receive</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="cb_FastPositionSend">
+     <property name="text">
+      <string>send</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QCheckBox" name="cb_Override">
+     <property name="text">
+      <string>override</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_FsdSetup">
+     <property name="text">
+      <string>FSD setup:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
     <widget class="QLineEdit" name="le_TextCodec">
      <property name="placeholderText">
       <string>e.g. &quot;latin1&quot;</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QFrame" name="fr_SendReceive">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
-     </property>
-     <layout class="QGridLayout" name="gl_SendReceive">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_FastPositions">
-        <property name="text">
-         <string>Fast positions</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_AircraftParts">
-        <property name="text">
-         <string>Aircraft parts</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FastPositionSend">
-        <property name="text">
-         <string>send</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_AircraftPartsReceive">
-        <property name="text">
-         <string>receive</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_AircraftPartsSend">
-        <property name="text">
-         <string>send</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FastPositionReceive">
-        <property name="text">
-         <string>receive</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="pb_SetDefaults">
-        <property name="text">
-         <string>set defaults</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_Enabled">
-     <property name="text">
-      <string>Enabled:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QCheckBox" name="cb_Enabled">
-     <property name="text">
-      <string>override defaults</string>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>cb_Enabled</tabstop>
+  <tabstop>cb_Override</tabstop>
+  <tabstop>pb_SetDefaults</tabstop>
   <tabstop>le_TextCodec</tabstop>
   <tabstop>cb_AircraftPartsSend</tabstop>
   <tabstop>cb_AircraftPartsReceive</tabstop>
