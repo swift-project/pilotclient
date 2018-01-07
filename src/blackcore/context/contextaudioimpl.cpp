@@ -300,7 +300,7 @@ namespace BlackCore
             Q_ASSERT(m_voice);
             Q_ASSERT(newRooms.size() == 2);
             Q_ASSERT(getIContextOwnAircraft());
-            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << newRooms; }
 
             CVoiceRoomList currentRooms = getComVoiceRooms();
             CVoiceRoom currentRoomCom1 = currentRooms[0];

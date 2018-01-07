@@ -28,7 +28,7 @@ namespace BlackGui
         /**
          * Settings
          */
-        class BLACKGUI_EXPORT CDataSettingsComponent : public BlackGui::COverlayMessagesFrame
+        class BLACKGUI_EXPORT CDataSettingsComponent : public COverlayMessagesFrame
         {
             Q_OBJECT
 
