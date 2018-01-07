@@ -31,6 +31,8 @@ namespace BlackMisc
             { "data inconsistency",          exactMatch(CLogCategory::dataInconsistency()) },
             { "downloading data",            exactMatch(CLogCategory::download()) },
             { "driver",                      exactMatch(CLogCategory::driver()) },
+            { "flight plan",                 exactMatch(CLogCategory::flightPlan()) },
+            { "interpolator",                exactMatch(CLogCategory::interpolator()) },
             { "model cache",                 exactMatch(CLogCategory::modelCache()) },
             { "model GUI",                   exactMatch(CLogCategory::modelGui()) },
             { "model loader",                exactMatch(CLogCategory::modelLoader()) },

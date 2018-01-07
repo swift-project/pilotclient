@@ -68,6 +68,20 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Interpolator
+        static const CLogCategory &interpolator()
+        {
+            static const CLogCategory cat { "swift.interpolator" };
+            return cat;
+        }
+
+        //! Flight plan
+        static const CLogCategory &flightPlan()
+        {
+            static const CLogCategory cat { "swift.flightplan" };
+            return cat;
+        }
+
         //! Context slots
         static const CLogCategory &contextSlot()
         {
@@ -314,7 +328,7 @@ namespace BlackMisc
             BLACK_METAMEMBER(string)
         );
     };
-}
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::CLogCategory)
 
