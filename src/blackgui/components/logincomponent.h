@@ -88,6 +88,52 @@ namespace BlackGui
             void loginDataChangedDigest();
 
         private:
+            //! GUI aircraft values, formatted
+            struct CGuiAircraftValues
+            {
+                BlackMisc::Aviation::CCallsign         ownCallsign;
+                BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao;
+                BlackMisc::Aviation::CAirlineIcaoCode  ownAirlineIcao;
+                QString ownAircraftCombinedType;
+                QString ownAircraftSimulatorModel;
+            };
+
+            // -------------- values from GUI -----------------
+
+            //! Values from GUI
+            CGuiAircraftValues getAircraftValuesFromGui() const;
+
+            //! User from VATSIM data
+            BlackMisc::Network::CUser getUserFromPilotGuiValues() const;
+
+            //! Callsign from GUI
+            BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
+
+            //! Set ICAO values
+            //! \return changed values?
+            bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
+
+            // -------------- values to GUI -----------------
+
+            //! Update own callsign (own aircraft from what is set in the GUI)
+            //! \return changed?
+            bool updateOwnAircraftCallsignAndPilotFromGuiValues();
+
+            //! Update own ICAO values (own aircraft from what is set in the GUI)
+            //! \return changed?
+            bool updateOwnAircaftIcaoValuesFromGuiValues();
+
+            // -------------- others -----------------
+
+            //! Selected server (VATSIM)
+            BlackMisc::Network::CServer getCurrentVatsimServer() const;
+
+            //! Selected server (others)
+            BlackMisc::Network::CServer getCurrentOtherServer() const;
+
+            //! Get a prefill model
+            BlackMisc::Simulation::CAircraftModel getPrefillModel() const;
+
             //! Login cancelled
             void loginCancelled();
 
@@ -95,13 +141,10 @@ namespace BlackGui
             void toggleNetworkConnection();
 
             //! VATSIM data file was loaded
-            void onWebServiceDataRead(int entity, int stateInt, int number);
+            void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
             //! Validate aircaft
             bool validateAircraftValues();
-
-            //! Validate VATSIM credentials
-            bool validateVatsimValues();
 
             //! Aircraft ICAO code has been changed
             void changedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
@@ -127,97 +170,46 @@ namespace BlackGui
             //! Pause/Continue timeout
             void toggleTimeout();
 
-            //! Temp. unhide password
-            void unhidePassword();
-
-            //! GUI aircraft values, formatted
-            struct CGuiAircraftValues
-            {
-                BlackMisc::Aviation::CCallsign         ownCallsign;
-                BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao;
-                BlackMisc::Aviation::CAirlineIcaoCode  ownAirlineIcao;
-                QString ownAircraftCombinedType;
-                QString ownAircraftSimulatorModel;
-            };
-
-            //! VATSIM login data
-            struct CVatsimValues
-            {
-                QString vatsimId;
-                QString vatsimPassword;
-                QString vatsimRealName;
-                QString vatsimHomeAirport;
-            };
-
-            // -------------- values from GUI -----------------
-
-            //! Values from GUI
-            CGuiAircraftValues getAircraftValuesFromGui() const;
-
-            //! Values from GUI
-            CVatsimValues getVatsimValuesFromGui() const;
-
-            //! User from VATSIM data
-            BlackMisc::Network::CUser getUserFromVatsimGuiValues() const;
-
-            //! Callsign from GUI
-            BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
-
-            //! Set ICAO values
-            //! \return changed values?
-            bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
-
-            // -------------- values from GUI -----------------
-
-            //! Update own callsign (own aircraft from what is set in the GUI)
-            //! \return changed?
-            bool updateOwnAircraftCallsignAndPilotFromGuiValues();
-
-            //! Update own ICAO values (own aircraft from what is set in the GUI)
-            //! \return changed?
-            bool updateOwnAircaftIcaoValuesFromGuiValues();
-
-            // -------------- others -----------------
+            //! Show / hide elements for UI depending on login state
+            void setUiLoginState(bool connected);
 
             //! Own model and ICAO data for GUI and own aircraft
             void setOwnModelAndIcaoValues();
 
-            //! Selected server (VATSIM)
-            BlackMisc::Network::CServer getCurrentVatsimServer() const;
-
-            //! Selected server (others)
-            BlackMisc::Network::CServer getCurrentOtherServer() const;
-
             //! Set OK button string
             void setOkButtonString(bool connected);
-
-            //! Show/hide elements as appropriate
-            void setGuiVisibility(bool connected);
 
             //! Logoff countdown
             void startLogoffTimerCountdown();
 
-            //! Completers
-            void initCompleters(BlackMisc::Network::CEntityFlags::Entity entity);
-
             //! Highlight model field according to model data
             void highlightModelField(const BlackMisc::Simulation::CAircraftModel &model = {});
 
-            //! Load from settings
-            void loadRememberedVatsimData();
+            //! Is the VATSIM network tab selected?
+            bool isVatsimNetworkTabSelected() const;
 
-            //! Get a prefill model
-            BlackMisc::Simulation::CAircraftModel getPrefillModel() const;
+            //! Load from settings
+            void loadRememberedUserData();
+
+            //! Copy credentials to pilot
+            void copyCredentialsToPilot();
+
+            //! Server changed
+            void onSelectedServerChanged(const BlackMisc::Network::CServer &server);
+
+            //! Tab widget (server) changed
+            void onServerTabWidgetChanged(int index);
 
             QScopedPointer<Ui::CLoginComponent> ui;
             QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
             BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible = false; //!< is this component selected?
+            bool m_updatePilotOnServerChanges = true;
             const QIcon m_iconPlay {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
             const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
             const int LogoffIntervalSeconds = 20; //!< time before logoff
-            QTimer *m_logoffCountdownTimer { nullptr }; //!< timer for logoff countdown
+            QTimer m_logoffCountdownTimer { this }; //!< timer for logoff countdown
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::reloadSettings };
             BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
             BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
