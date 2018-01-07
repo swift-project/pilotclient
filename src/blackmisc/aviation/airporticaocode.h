@@ -41,6 +41,9 @@ namespace BlackMisc
             //! Is empty?
             bool isEmpty() const { return this->m_icaoCode.isEmpty(); }
 
+            //! Has valid code?
+            bool hasValidIcaoCode() const;
+
             //! Get code.
             const QString &asString() const { return this->m_icaoCode; }
 

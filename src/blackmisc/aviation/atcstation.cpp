@@ -95,7 +95,7 @@ namespace BlackMisc
                               QLatin1String(" online: ") % boolToYesNo(m_isOnline) %
 
                               // controller
-                              (!m_controller.isValid() ? QStringLiteral("") :
+                              (m_controller.isNull() ? QStringLiteral("") :
                                QStringLiteral(" ") % m_controller.toQString(i18n)) %
 
                               // frequency

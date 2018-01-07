@@ -106,7 +106,7 @@ namespace BlackMisc
 
         bool CServer::isValidForLogin() const
         {
-            return m_user.hasValidCredentials() && this->hasAddressAndPort() && this->isAcceptingConnections();
+            return m_user.hasCredentials() && this->hasAddressAndPort() && this->isAcceptingConnections();
         }
 
         bool CServer::hasAddressAndPort() const

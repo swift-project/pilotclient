@@ -119,13 +119,18 @@ namespace BlackMisc
             m_realname = beautifyRealName(rn);
         }
 
+        bool CUser::hasValidHomeBase() const
+        {
+            return m_homebase.hasValidIcaoCode();
+        }
+
         CStatusMessageList CUser::validate() const
         {
             CStatusMessageList msgs;
             // callsign optional
             if (!this->hasId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid id"));}
             if (!this->hasRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid real name"));}
-            if (!this->hasValidCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid credentials"));}
+            if (!this->hasCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid credentials"));}
             return msgs;
         }
 

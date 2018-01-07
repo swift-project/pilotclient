@@ -88,8 +88,8 @@ namespace BlackMisc
 
         bool CSimulatedAircraft::isValidForLogin() const
         {
-            if (m_callsign.asString().isEmpty()) { return false; }
-            if (!m_pilot.isValid()) { return false; }
+            if (m_callsign.isEmpty()) { return false; }
+            if (m_pilot.isNull()) { return false; }
             return true;
         }
 

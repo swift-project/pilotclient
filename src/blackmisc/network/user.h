@@ -73,10 +73,13 @@ namespace BlackMisc
             void setPassword(const QString &pw) { m_password = pw.trimmed(); }
 
             //! Valid user object?
-            bool isValid() const { return !m_realname.isEmpty() &&  !m_id.isEmpty(); }
+            bool isValid() const { return !isNull(); }
+
+            //! Null?
+            bool isNull() const { return m_realname.isEmpty() && m_id.isEmpty(); }
 
             //! Valid credentials?
-            bool hasValidCredentials() const { return this->isValid() && !m_password.isEmpty(); }
+            bool hasCredentials() const { return this->isValid() && !m_password.isEmpty(); }
 
             //! Valid real name?
             bool hasRealName() const { return !m_realname.isEmpty(); }
@@ -84,11 +87,17 @@ namespace BlackMisc
             //! Valid id?
             bool hasId() const { return !m_id.isEmpty(); }
 
+            //! Has a valid VATSIM id?
+            bool hasValidVatsimId() const { return CUser::isValidVatsimId(this->getId()); }
+
             //! Has associated callsign?
             bool hasCallsign() const { return !m_callsign.isEmpty(); }
 
             //! Has home base?
             bool hasHomeBase() const { return !m_homebase.isEmpty(); }
+
+            //! Has valid home base?
+            bool hasValidHomeBase() const;
 
             //! Real name + homebase
             QString getRealNameAndHomeBase(const QString &separator = QString(" ")) const;

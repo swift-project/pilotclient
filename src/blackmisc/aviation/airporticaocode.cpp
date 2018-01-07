@@ -21,6 +21,11 @@ namespace BlackMisc
             return this->m_icaoCode.compare(compareValue.getIcaoCode(), Qt::CaseInsensitive);
         }
 
+        bool CAirportIcaoCode::hasValidIcaoCode() const
+        {
+            return CAirportIcaoCode::isValidIcaoDesignator(this->getIcaoCode());
+        }
+
         bool CAirportIcaoCode::equalsString(const QString &icaoCode) const
         {
             CAirportIcaoCode other(icaoCode);
