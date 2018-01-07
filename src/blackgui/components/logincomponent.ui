@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="hl_Timeout_2">
    <property name="spacing">
-    <number>6</number>
+    <number>2</number>
    </property>
    <property name="leftMargin">
     <number>1</number>
@@ -225,6 +225,37 @@
           </item>
          </layout>
         </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_PilotsDetails">
+     <property name="title">
+      <string>Pilot's info</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_PilotIngoGroupBox">
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <item>
+       <widget class="BlackGui::Editors::CPilotForm" name="editor_Pilot">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
        </widget>
       </item>
      </layout>
@@ -459,28 +490,31 @@
      </property>
      <layout class="QVBoxLayout" name="vl_LogoffConfirmation">
       <property name="leftMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
-       <number>2</number>
+       <number>5</number>
       </property>
       <property name="rightMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>2</number>
+       <number>5</number>
       </property>
       <item>
        <widget class="QGroupBox" name="gb_CurrentLogin">
         <property name="title">
-         <string>Current server</string>
+         <string>Current server and aircraft</string>
         </property>
         <layout class="QVBoxLayout" name="vl_CurrentServer">
+         <property name="spacing">
+          <number>2</number>
+         </property>
          <property name="leftMargin">
           <number>2</number>
          </property>
          <property name="topMargin">
-          <number>2</number>
+          <number>5</number>
          </property>
          <property name="rightMargin">
           <number>2</number>
@@ -662,11 +696,6 @@
    <extends>QFrame</extends>
    <header>blackgui/components/dbairlineicaoselectorcomponent.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::CTickLabel</class>
-   <extends>QLabel</extends>
-   <header>blackgui/ticklabel.h</header>
   </customwidget>
   <customwidget>
    <class>BlackGui::Components::CServerListSelector</class>

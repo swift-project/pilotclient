@@ -89,8 +89,8 @@ namespace BlackGui
             connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CLoginComponent::onServerTabWidgetChanged);
 
-            connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CLoginComponent::loginCancelled);
-            connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CLoginComponent::toggleNetworkConnection);
+            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled);
+            connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection);
             connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
             connect(ui->tb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
 
@@ -101,9 +101,6 @@ namespace BlackGui
             ui->lblp_AirlineIcao->setToolTips("ok", "wrong");
             ui->lblp_AircraftIcao->setToolTips("ok", "wrong");
             ui->lblp_Callsign->setToolTips("ok", "wrong");
-
-            //! \fixme hardcoded padding, could maybe goto to stylesheet file
-            ui->bb_OkCancel->button(QDialogButtonBox::Ok)->setStyleSheet("padding-left: 3px; padding-right: 3px;");
 
             // Stored data
             this->loadRememberedUserData();
