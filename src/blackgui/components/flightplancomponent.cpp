@@ -156,7 +156,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::loginDataSet()
         {
-            if (m_flightPlan.wasSentOrLoaded())  { return; } // when loaded or sent do not override
+            if (m_sentFlightPlan.wasSentOrLoaded())  { return; } // when loaded or sent do not override
             this->prefillWithOwnAircraftData();
         }
 
@@ -171,7 +171,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::prefillWithAircraftData(const CSimulatedAircraft &aircraft)
         {
-            if (m_flightPlan.wasSentOrLoaded()) { return; }
+            if (m_sentFlightPlan.wasSentOrLoaded()) { return; }
 
             // only override with valid values
             if (CCallsign::isValidAircraftCallsign(aircraft.getCallsignAsString()))
@@ -189,7 +189,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::prefillWithUserData(const CUser &user)
         {
-            if (m_flightPlan.wasSentOrLoaded()) { return; }
+            if (m_sentFlightPlan.wasSentOrLoaded()) { return; }
 
             // only override with valid values
             if (user.hasRealName())
@@ -228,15 +228,15 @@ namespace BlackGui
             }
         }
 
-        CFlightPlan CFlightPlanComponent::getFlightPlan() const
+        const CLogCategoryList &CFlightPlanComponent::getLogCategories()
         {
-            return m_flightPlan;
+            static const CLogCategoryList cats { CLogCategory::flightPlan(), CLogCategory::guiComponent() };
+            return cats;
         }
 
         CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(CFlightPlan &flightPlan)
         {
             CStatusMessageList messages;
-            QString v;
             const bool strict = ui->cb_StrictCheck->isChecked();
             const bool vfr = this->isVfr();
             const CStatusMessage::StatusSeverity severity = strict ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning;
@@ -246,6 +246,7 @@ namespace BlackGui
             flightPlan.setFlightRule(rule);
 
             // callsign
+            QString v;
             v = ui->le_Callsign->text().trimmed().toUpper();
             if (v.isEmpty())
             {
@@ -267,11 +268,26 @@ namespace BlackGui
             {
                 messages.push_back(CStatusMessage(this).validationError("Invalid aircraft ICAO code '%1'") << v);
             }
-            else if (sApp && sApp->hasWebDataServices() && !sApp->getWebDataServices()->containsAircraftIcaoDesignator(v))
+            else if (sApp && sApp->hasWebDataServices() && sApp->getWebDataServices()->hasDbAircraftData() && !sApp->getWebDataServices()->containsAircraftIcaoDesignator(v))
             {
                 messages.push_back(CStatusMessage(this).validationWarning("Are you sure '%1' is a valid type?") << v);
             }
             flightPlan.setAircraftIcao(this->getAircraftIcaoCode());
+
+            // prefix / equipment code
+            v = this->getPrefix();
+            if (!v.isEmpty() && !CFlightPlan::prefixCodes().contains(v))
+            {
+                messages.push_back(CStatusMessage(this).validation(severity, "Invalid prefix"));
+            }
+            flightPlan.setPrefix(v);
+
+            v = this->getEquipmentSuffix();
+            if (!v.isEmpty() && !CFlightPlan::equipmentCodes().contains(v))
+            {
+                messages.push_back(CStatusMessage(this).validation(severity, "Invalid equipment code"));
+            }
+            flightPlan.setEquipmentSuffix(v);
 
             // route
             v = ui->pte_Route->toPlainText().trimmed();
@@ -418,7 +434,7 @@ namespace BlackGui
                 }
                 ui->le_LastSent->setText(lastSent);
                 this->showOverlayMessage(m, showOverlayMs);
-                m_flightPlan = flightPlan; // last valid FP
+                m_sentFlightPlan = flightPlan; // last valid FP
             }
             else
             {
@@ -627,7 +643,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::buildPrefixIcaoSuffix()
         {
-            ui->le_PrefixIcaoSuffix->setText(this->getPrefixIcaoSuffix());
+            ui->le_PrefixIcaoSuffix->setText(this->getCombinedPrefixIcaoSuffix());
         }
 
         void CFlightPlanComponent::prefixCheckBoxChanged()
@@ -673,13 +689,11 @@ namespace BlackGui
             });
         }
 
-        QString CFlightPlanComponent::getPrefixIcaoSuffix() const
+        QString CFlightPlanComponent::getPrefix() const
         {
-            QString prefix;
-            if (ui->cb_Heavy->isChecked()) { prefix = QStringLiteral("H"); }
-            else if (ui->cb_Tcas->isChecked()) { prefix = QStringLiteral("T"); }
-
-            return CFlightPlan::concatPrefixIcaoSuffix(prefix, ui->le_AircraftType->text().toUpper().trimmed(), ui->le_EquipmentSuffix->text().trimmed().toUpper());
+            if (ui->cb_Heavy->isChecked()) { return QStringLiteral("H"); }
+            else if (ui->cb_Tcas->isChecked()) { return QStringLiteral("T"); }
+            return QStringLiteral("");
         }
 
         CAircraftIcaoCode CFlightPlanComponent::getAircraftIcaoCode() const
@@ -687,6 +701,16 @@ namespace BlackGui
             const QString designator(ui->le_AircraftType->text());
             if (!sApp || !sApp->hasWebDataServices() || !CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCode(); }
             return sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(designator);
+        }
+
+        QString CFlightPlanComponent::getEquipmentSuffix() const
+        {
+            return ui->le_EquipmentSuffix->text().trimmed().toUpper();
+        }
+
+        QString CFlightPlanComponent::getCombinedPrefixIcaoSuffix() const
+        {
+            return CFlightPlan::concatPrefixIcaoSuffix(this->getPrefix(), this->getAircraftIcaoCode().getDesignator(), this->getEquipmentSuffix());
         }
 
         void CFlightPlanComponent::showEquipmentCodesTab()

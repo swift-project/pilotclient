@@ -22,6 +22,7 @@
 #include "blackmisc/datacache.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/logcategorylist.h"
 
 #include <QObject>
 #include <QScopedPointer>
@@ -53,12 +54,15 @@ namespace BlackGui
             //! Prefill with aircraft dara
             void fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan);
 
-            //! Get this flight plan
-            BlackMisc::Aviation::CFlightPlan getFlightPlan() const;
+            //! Get sent flight plan
+            const BlackMisc::Aviation::CFlightPlan &getSentFlightPlan() const { return m_sentFlightPlan; }
+
+            //! Log.categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
 
         private:
             QScopedPointer<Ui::CFlightPlanComponent> ui;
-            BlackMisc::Aviation::CFlightPlan m_flightPlan; //!< My flight plan
+            BlackMisc::Aviation::CFlightPlan m_sentFlightPlan; //!< My flight plan
             BlackMisc::Simulation::CAircraftModel m_model; //!< currently used model
             BlackMisc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
             BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
@@ -144,11 +148,17 @@ namespace BlackGui
             //! Aircraft type changed
             void aircraftTypeChanged();
 
-            //! Something like "H/B737/F"
-            QString getPrefixIcaoSuffix() const;
+            //! Get prefix
+            QString getPrefix() const;
 
             //! Aircraft type as ICAO code
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCode() const;
+
+            //! Get equipment code (1 char)
+            QString getEquipmentSuffix() const;
+
+            //! Something like "H/B737/F"
+            QString getCombinedPrefixIcaoSuffix() const;
 
             //! Show tab of equipment codes
             void showEquipmentCodesTab();
