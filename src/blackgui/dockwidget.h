@@ -63,23 +63,23 @@ namespace BlackGui
         void setNullTitleBarWidget();
 
         //! Window title backup
-        const QString &windowTitleBackup() const { return this->m_windowTitleBackup; }
+        const QString &windowTitleBackup() const { return m_windowTitleBackup; }
 
         //! If current window title is empty, use backup
         QString windowTitleOrBackup() const;
 
         //! Window title when window is docked
-        bool showTitleWhenDocked() const { return this->m_windowTitleWhenDocked; }
+        bool showTitleWhenDocked() const { return m_windowTitleWhenDocked; }
 
         //! Selected when tabbed
-        bool isSelected() const { return this->m_selected; }
+        bool isSelected() const { return m_selected; }
 
         //! Is widget visible? Not to be confused with \sa QWidget::isVisbible
         //! \remarks Logical vsibility as in \sa QDockWidget::visibilityChanged
         bool isWidgetVisible() const;
 
         //! Allow a status bar to be displayed
-        void allowStatusBar(bool allow) { this->m_allowStatusBar = allow; }
+        void allowStatusBar(bool allow) { m_allowStatusBar = allow; }
 
         //! Show the window title when docked
         void showTitleWhenDocked(bool show);
@@ -88,13 +88,13 @@ namespace BlackGui
         void resetWasAlreadyFloating();
 
         //! Was widget already floating?
-        bool wasAlreadyFloating() const { return this->m_wasAlreadyFloating; }
+        bool wasAlreadyFloating() const { return m_wasAlreadyFloating; }
 
         //! Size when floating first time
         void setPreferredSizeWhenFloating(const QSize &size);
 
         //! Position offset when floating first time
-        void setOffsetWhenFloating(const QPoint &point) { this->m_offsetWhenFloating = point; }
+        void setOffsetWhenFloating(const QPoint &point) { m_offsetWhenFloating = point; }
 
         //! \copydoc CEnableForFramelessWindow::setFrameless
         virtual void setFrameless(bool frameless) override;
@@ -183,10 +183,13 @@ namespace BlackGui
         //! \copydoc QWidget::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
 
-        //! \copydoc QMainWindow::mouseMoveEvent
+        //! \copydoc QWidget::mouseMoveEvent
         virtual void mouseMoveEvent(QMouseEvent *event) override;
 
-        //! \copydoc QMainWindow::mousePressEvent
+        //! \copydoc QWidget::mouseMoveEvent
+        virtual void keyPressEvent(QKeyEvent *event) override;
+
+        //! \copydoc QWidget::mousePressEvent
         virtual void mousePressEvent(QMouseEvent *event) override;
 
         //! Contribute to menu
@@ -197,28 +200,8 @@ namespace BlackGui
         //! The GUI is already initialized, so all widget data are available.
         virtual void initialFloating();
 
-    protected slots:
         //! Style sheet has changed
-        virtual void ps_onStyleSheetsChanged();
-
-    private slots:
-        //! Top level has been chaged
-        void ps_onTopLevelChanged(bool topLevel);
-
-        //! Context menu
-        void ps_showContextMenu(const QPoint &pos);
-
-        //! Visibility has changed
-        void ps_onVisibilityChanged(bool visible);
-
-        //! Change margins
-        void ps_menuChangeMargins(const QMargins &margins);
-
-        //! Changed settings
-        void ps_settingsChanged();
-
-        //! Dummy slot for QAction
-        void ps_dummy();
+        virtual void onStyleSheetsChanged();
 
     private:
         QWidget *m_titleBarWidgetEmpty     = nullptr; //!< replacing default title bar
@@ -237,7 +220,25 @@ namespace BlackGui
         bool m_selected              = false;         //!< selected when tabbed
         bool m_dockWidgetVisible     = false;         //!< logical visible, not to be confused with QDockWidget::isVisible()
         bool m_wasFrameless          = false;         //!< frameless when last floating
-        BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::ps_settingsChanged };
+        BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::settingsChanged };
+
+        //! Top level has been chaged
+        void onTopLevelChanged(bool topLevel);
+
+        //! Context menu
+        void showContextMenu(const QPoint &pos);
+
+        //! Visibility has changed
+        void onVisibilityChanged(bool visible);
+
+        //! Change margins
+        void menuChangeMargins(const QMargins &margins);
+
+        //! Changed settings
+        void settingsChanged();
+
+        //! Dummy slot for QAction
+        void dummy();
 
         //! Empty widget with no size
         void initTitleBarWidgets();

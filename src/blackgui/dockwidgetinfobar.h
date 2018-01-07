@@ -22,7 +22,6 @@ class QWidget;
 
 namespace BlackGui
 {
-
     //! Class for dock widgets in the info area, containing some specialized functionality
     //! \sa CDockWidgetInfoArea
     //! \sa CInfoArea
@@ -38,12 +37,10 @@ namespace BlackGui
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const override;
 
-    protected slots:
-        //! \copydoc CDockWidget::ps_onStyleSheetsChanged
-        virtual void ps_onStyleSheetsChanged() override;
-
+    protected:
+        //! \copydoc CDockWidget::onStyleSheetsChanged
+        virtual void onStyleSheetsChanged() override;
     };
-
 } // namespace
 
 #endif // guard

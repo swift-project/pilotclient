@@ -24,7 +24,7 @@ namespace BlackGui
     {
         this->setWindowTitle("Info status bar");
         this->setWindowIcon(CIcons::swift24());
-        this->ps_onStyleSheetsChanged(); // margins from infobar
+        this->onStyleSheetsChanged(); // margins from infobar
     }
 
     void CDockWidgetInfoBar::addToContextMenu(QMenu *contextMenu) const
@@ -33,7 +33,7 @@ namespace BlackGui
         CDockWidget::addToContextMenu(contextMenu);
     }
 
-    void CDockWidgetInfoBar::ps_onStyleSheetsChanged()
+    void CDockWidgetInfoBar::onStyleSheetsChanged()
     {
         const QString st = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameInfoBar());
         this->setStyleSheet(st);
