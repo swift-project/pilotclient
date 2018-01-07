@@ -172,7 +172,7 @@ namespace BlackGui
             {
                 // lazy init
                 m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
-                m_overlayMessages->addShadow();
+                // m_overlayMessages->addShadow();
                 m_overlayMessages->showKillButton(m_showKillButton);
                 m_overlayMessages->setForceSmall(m_forceSmallMsgs);
             }

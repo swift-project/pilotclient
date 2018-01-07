@@ -138,7 +138,7 @@ BlackGui--CInfoArea {
 BlackGui--COverlayMessages {
   background: transparent; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  border: 2px solid blue;
+  border: 5px solid rgba(100, 100, 100, 90%);
   border-radius: 10px;
 }
 
