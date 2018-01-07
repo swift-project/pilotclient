@@ -157,7 +157,7 @@ namespace BlackMisc
         {
             const QStringList parts = CFlightPlan::splitEquipmentCode(equipmentIcao);
             m_aircraftIcao = CAircraftIcaoCode::isValidDesignator(parts[1]) ? parts[1] : "";
-            m_equipmentPrefix = parts[0];
+            m_prefix = parts[0];
             m_equipmentSuffix = parts[2];
         }
 
@@ -180,9 +180,9 @@ namespace BlackMisc
             return UNKNOWN;
         }
 
-        QString CFlightPlan::getPrefixIcaoSuffix() const
+        QString CFlightPlan::getCombinedPrefixIcaoSuffix() const
         {
-            return CFlightPlan::concatPrefixIcaoSuffix(m_equipmentPrefix, m_aircraftIcao.getDesignator(), m_equipmentSuffix);
+            return CFlightPlan::concatPrefixIcaoSuffix(m_prefix, m_aircraftIcao.getDesignator(), m_equipmentSuffix);
         }
 
         CVariant CFlightPlan::propertyByIndex(const CPropertyIndex &index) const

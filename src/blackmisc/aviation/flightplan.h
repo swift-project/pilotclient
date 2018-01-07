@@ -307,10 +307,10 @@ namespace BlackMisc
             const CFlightPlanRemarks &getFlightPlanRemarks() const { return m_remarks; }
 
             //! Get ICAO aircraft equipment prefix H/B737/F "H"
-            const QString &getEquipmentPrefix() const { return m_equipmentPrefix; }
+            const QString &getPrefix() const { return m_prefix; }
 
             //! Set ICAO aircraft equipment prefix H/B737/F "H"
-            void setEquipmentPrefix(const QString &prefix) { m_equipmentPrefix = prefix; }
+            void setPrefix(const QString &prefix) { m_prefix = prefix; }
 
             //! Get ICAO aircraft equipment suffix H/B737/F "F"
             const QString &getEquipmentSuffix() const { return m_equipmentSuffix; }
@@ -328,7 +328,7 @@ namespace BlackMisc
             bool hasAircraftIcao() const { return m_aircraftIcao.hasDesignator(); }
 
             //! Full string like "H/B737/F"
-            QString getPrefixIcaoSuffix() const;
+            QString getCombinedPrefixIcaoSuffix() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
@@ -380,10 +380,10 @@ namespace BlackMisc
             static const QStringList &prefixCodes();
 
         private:
-            CCallsign m_callsign; //!< aircraft callsign
+            CCallsign m_callsign;             //!< aircraft callsign
             CAircraftIcaoCode m_aircraftIcao; //!< Aircraft ICAO code
-            QString m_equipmentPrefix; //!< e.g. "T/A320/F" -> the "T"
-            QString m_equipmentSuffix; //!< e.g. "T/A320/F" -> the "F"
+            QString m_prefix;                 //!< e.g. "T/A320/F" -> the "T"
+            QString m_equipmentSuffix;        //!< e.g. "T/A320/F" -> the "F"
             CAirportIcaoCode m_originAirportIcao;
             CAirportIcaoCode m_destinationAirportIcao;
             CAirportIcaoCode m_alternateAirportIcao;
@@ -401,7 +401,7 @@ namespace BlackMisc
                 CFlightPlan,
                 // callsign will be current flight
                 BLACK_METAMEMBER(aircraftIcao),
-                BLACK_METAMEMBER(equipmentPrefix),
+                BLACK_METAMEMBER(prefix),
                 BLACK_METAMEMBER(equipmentSuffix),
                 BLACK_METAMEMBER(originAirportIcao),
                 BLACK_METAMEMBER(destinationAirportIcao),
