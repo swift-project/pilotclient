@@ -53,7 +53,7 @@ namespace BlackGui
             connect(ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue);
 
             // drag and drop, paste
-            connect(ui->tb_Paste, &QToolButton::clicked, this, &CLiveryForm::ps_pasted);
+            connect(ui->tb_Paste, &QToolButton::clicked, this, &CLiveryForm::pasted);
             connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CLiveryForm::ps_droppedLivery);
             ui->drop_DropData->setInfoText("<drop livery>");
             ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>()});

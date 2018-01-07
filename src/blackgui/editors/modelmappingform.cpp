@@ -28,7 +28,7 @@ namespace BlackGui
     namespace Editors
     {
         CModelMappingForm::CModelMappingForm(QWidget *parent) :
-            CForm(parent),
+            CFormDbUser(parent),
             ui(new Ui::CModelMappingForm)
         {
             ui->setupUi(this);
@@ -38,7 +38,7 @@ namespace BlackGui
             connect(ui->pb_Stash, &QPushButton::clicked, this, &CModelMappingForm::requestStash);
 
             // for setting mode (include/exclude)
-            this->ps_userChanged();
+            this->userChanged();
         }
 
         CModelMappingForm::~CModelMappingForm()
@@ -58,7 +58,7 @@ namespace BlackGui
         CStatusMessageList CModelMappingForm::validate(bool withNestedObjects) const
         {
             const CAircraftModel model(getValue());
-            CStatusMessageList msgs(model.validate(withNestedObjects));
+            const CStatusMessageList msgs(model.validate(withNestedObjects));
             ui->val_Indicator->setState(msgs);
             return msgs;
         }
@@ -88,7 +88,7 @@ namespace BlackGui
             m_originalModel = model;
         }
 
-        void CModelMappingForm::ps_userChanged()
+        void CModelMappingForm::userChanged()
         {
             const CAuthenticatedUser user(this->getSwiftDbUser());
             if (user.hasAdminRole())
@@ -101,7 +101,7 @@ namespace BlackGui
                 ui->selector_ModelMode->setReadOnly(true);
             }
 
-            CForm::ps_userChanged();
+            CFormDbUser::userChanged();
         }
     } // ns
 } // ns

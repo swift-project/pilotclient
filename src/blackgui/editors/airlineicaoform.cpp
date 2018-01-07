@@ -52,7 +52,7 @@ namespace BlackGui
             connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAirlineIcaoForm::ps_idEntered);
 
             // drag and drop, paste
-            connect(ui->tb_Paste, &QToolButton::clicked, this, &CAirlineIcaoForm::ps_pasted);
+            connect(ui->tb_Paste, &QToolButton::clicked, this, &CAirlineIcaoForm::pasted);
             connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAirlineIcaoForm::ps_droppedCode);
             ui->drop_DropData->setInfoText("<drop airline ICAO code>");
             ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});

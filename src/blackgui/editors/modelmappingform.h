@@ -30,7 +30,7 @@ namespace BlackGui
         /*!
          * Model mapping form
          */
-        class BLACKGUI_EXPORT CModelMappingForm : public CForm
+        class BLACKGUI_EXPORT CModelMappingForm : public CFormDbUser
         {
             Q_OBJECT
 
@@ -61,9 +61,9 @@ namespace BlackGui
             //! Request stashing for model
             void requestStash();
 
-        protected slots:
-            //! \copydoc CForm::ps_userChanged
-            virtual void ps_userChanged() override;
+        protected:
+            //! \copydoc CFormDbUser::userChanged
+            virtual void userChanged() override;
 
         private:
             QScopedPointer<Ui::CModelMappingForm> ui;

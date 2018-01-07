@@ -31,8 +31,7 @@ namespace BlackGui
         /*!
          * Aircraft ICAO form
          */
-        class BLACKGUI_EXPORT CAircraftIcaoForm :
-            public CForm
+        class BLACKGUI_EXPORT CAircraftIcaoForm : public CForm
         {
             Q_OBJECT
 
@@ -73,16 +72,15 @@ namespace BlackGui
             //! \copydoc CForm::jsonPasted
             virtual void jsonPasted(const QString &json) override;
 
-        private slots:
-            //! Variant has been dropped
-            void ps_droppedCode(const BlackMisc::CVariant &variantDropped);
-
-            //! Id has been entered
-            void ps_idEntered();
-
         private:
             QScopedPointer<Ui::CAircraftIcaoForm>  ui;
             BlackMisc::Aviation::CAircraftIcaoCode m_originalCode;
+
+            //! Variant has been dropped
+            void droppedCode(const BlackMisc::CVariant &variantDropped);
+
+            //! Id has been entered
+            void idEntered();
 
             //! Key from GUI
             int getDbKeyFromGui() const;

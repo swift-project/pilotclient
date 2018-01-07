@@ -29,16 +29,16 @@ namespace BlackGui
     namespace Editors
     {
         CModelMappingModifyForm::CModelMappingModifyForm(QWidget *parent) :
-            CForm(parent),
+            CFormDbUser(parent),
             ui(new Ui::CModelMappingModifyForm)
         {
             ui->setupUi(this);
-            connect(ui->le_Description, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::ps_returnPressed);
-            connect(ui->le_Name, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::ps_returnPressed);
-            connect(ui->selector_ModeSelector, &CModelModeSelector::changed, this, &CModelMappingModifyForm::ps_changed);
-            connect(ui->selector_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMappingModifyForm::ps_changed);
+            connect(ui->le_Description, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::returnPressed);
+            connect(ui->le_Name, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::returnPressed);
+            connect(ui->selector_ModeSelector, &CModelModeSelector::changed, this, &CModelMappingModifyForm::changed);
+            connect(ui->selector_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMappingModifyForm::changed);
 
-            this->ps_userChanged();
+            this->userChanged();
         }
 
         CModelMappingModifyForm::~CModelMappingModifyForm()
@@ -90,7 +90,7 @@ namespace BlackGui
             Q_UNUSED(readOnly);
         }
 
-        void CModelMappingModifyForm::ps_userChanged()
+        void CModelMappingModifyForm::userChanged()
         {
             const CAuthenticatedUser user(this->getSwiftDbUser());
             if (user.hasAdminRole())
@@ -103,17 +103,17 @@ namespace BlackGui
                 ui->selector_ModeSelector->setReadOnly(true);
             }
 
-            CForm::ps_userChanged();
+            CFormDbUser::userChanged();
         }
 
-        void CModelMappingModifyForm::ps_returnPressed()
+        void CModelMappingModifyForm::returnPressed()
         {
             QCheckBox *cb = widgetToCheckbox(sender());
             if (!cb) { return; }
             cb->setChecked(true);
         }
 
-        void CModelMappingModifyForm::ps_changed()
+        void CModelMappingModifyForm::changed()
         {
             QCheckBox *cb = widgetToCheckbox(sender());
             if (!cb) { return; }

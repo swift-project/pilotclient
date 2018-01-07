@@ -52,11 +52,11 @@ namespace BlackGui
             connect(ui->aircraft_Selector, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CAircraftIcaoForm::setValue);
 
             // Id
-            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAircraftIcaoForm::ps_idEntered);
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAircraftIcaoForm::idEntered);
 
             // drag and drop, pasted
-            connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAircraftIcaoForm::ps_droppedCode);
-            connect(ui->tb_Paste, &QToolButton::clicked, this, &CAircraftIcaoForm::ps_pasted);
+            connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAircraftIcaoForm::droppedCode);
+            connect(ui->tb_Paste, &QToolButton::clicked, this, &CAircraftIcaoForm::pasted);
             ui->drop_DropData->setInfoText("<drop aircraft ICAO code>");
             ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>()});
         }
@@ -66,8 +66,8 @@ namespace BlackGui
 
         bool CAircraftIcaoForm::setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
         {
-            if (icao == this->m_originalCode) { return false; }
-            this->m_originalCode = icao;
+            if (icao == m_originalCode) { return false; }
+            m_originalCode = icao;
 
             ui->le_Id->setText(icao.getDbKeyAsString());
             ui->aircraft_Selector->setAircraftIcao(icao);
@@ -173,7 +173,7 @@ namespace BlackGui
 
         void CAircraftIcaoForm::setReadOnly(bool readOnly)
         {
-            this->m_readOnly = readOnly;
+            m_readOnly = readOnly;
             ui->aircraft_Selector->setReadOnly(readOnly);
             ui->le_Manufacturer->setReadOnly(readOnly);
             ui->le_ModelDescription->setReadOnly(readOnly);
@@ -203,7 +203,7 @@ namespace BlackGui
 
         void CAircraftIcaoForm::clear()
         {
-            setValue(CAircraftIcaoCode());
+            this->setValue(CAircraftIcaoCode());
         }
 
         void CAircraftIcaoForm::resetValue()
@@ -211,7 +211,7 @@ namespace BlackGui
             this->setValue(m_originalCode);
         }
 
-        void CAircraftIcaoForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)
+        void CAircraftIcaoForm::droppedCode(const BlackMisc::CVariant &variantDropped)
         {
             CAircraftIcaoCode icao;
             if (variantDropped.canConvert<CAircraftIcaoCode>())
@@ -220,9 +220,9 @@ namespace BlackGui
             }
             else if (variantDropped.canConvert<CAircraftIcaoCodeList>())
             {
-                CAircraftIcaoCodeList icaoList(variantDropped.value<CAircraftIcaoCodeList>());
+                const CAircraftIcaoCodeList icaoList(variantDropped.value<CAircraftIcaoCodeList>());
                 if (icaoList.isEmpty()) { return;  }
-                icao =  icaoList.front();
+                icao = icaoList.front();
             }
             else
             {
@@ -231,7 +231,7 @@ namespace BlackGui
             this->setValue(icao);
         }
 
-        void CAircraftIcaoForm::ps_idEntered()
+        void CAircraftIcaoForm::idEntered()
         {
             if (!sGui || !sGui->hasWebDataServices())
             {

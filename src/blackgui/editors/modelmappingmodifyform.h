@@ -15,7 +15,6 @@
 #include "form.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/propertyindexvariantmap.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
@@ -23,9 +22,8 @@
 class QCheckBox;
 class QWidget;
 
-namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace Ui { class CModelMappingModifyForm; }
-
+namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace BlackGui
 {
     namespace Editors
@@ -33,7 +31,7 @@ namespace BlackGui
         /*!
          * Allows to modify individual fields of the model form
          */
-        class BLACKGUI_EXPORT CModelMappingModifyForm : public CForm
+        class BLACKGUI_EXPORT CModelMappingModifyForm : public CFormDbUser
         {
             Q_OBJECT
 
@@ -42,7 +40,7 @@ namespace BlackGui
             explicit CModelMappingModifyForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CModelMappingModifyForm();
+            virtual ~CModelMappingModifyForm();
 
             //! Get the values
             BlackMisc::CPropertyIndexVariantMap getValues() const;
@@ -53,18 +51,17 @@ namespace BlackGui
             //! \copydoc CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
 
-        protected slots:
-            //! \copydoc CForm::ps_userChanged
-            virtual void ps_userChanged() override;
-
-        private slots:
-            //! Return pressed
-            void ps_returnPressed();
-
-            //! Data changed
-            void ps_changed();
+        protected:
+            //! \copydoc CFormDbUser::userChanged
+            virtual void userChanged() override;
 
         private:
+            //! Return pressed
+            void returnPressed();
+
+            //! Data changed
+            void changed();
+
             //! Checkbox from its corresponding widgte
             QCheckBox *widgetToCheckbox(QObject *widget) const;
 
