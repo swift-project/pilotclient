@@ -73,9 +73,6 @@ public:
     //! Destructor
     virtual ~SwiftGuiStd();
 
-    //! Log message category
-    static QString getLogCategory() { return "swift.gui.stdgui"; }
-
 signals:
     //! Main info area has changed
     //! \remarks using widget pointer allows the component itself to identify if it is current

@@ -13,10 +13,11 @@
 #define BLACKMISC_SIMULATION_INTERPOLATOR_H
 
 #include "interpolationrenderingsetup.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/logcategorylist.h"
 
 #include <QObject>
 #include <QString>
@@ -40,25 +41,25 @@ namespace BlackMisc
         class CInterpolator : public QObject
         {
         public:
-            //! Log category
-            static QString getLogCategory() { return "swift.interpolator"; }
+            //! Log categories
+            const CLogCategoryList &getLogCategories();
 
             //! Current interpolated situation
-            BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+            Aviation::CAircraftSituation getInterpolatedSituation(
                 qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status);
 
             //! Parts before given offset time (aka pending parts)
-            BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
+            Aviation::CAircraftParts getInterpolatedParts(
                 qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
 
             //! Add a new aircraft situation
-            void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+            void addAircraftSituation(const Aviation::CAircraftSituation &situation);
 
             //! Any aircraft situations?
             bool hasAircraftSituations() const { return !m_aircraftSituations.isEmpty(); }
 
             //! Add a new aircraft parts
-            void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+            void addAircraftParts(const Aviation::CAircraftParts &parts);
 
             //! Any aircraft parts?
             bool hasAircraftParts() const { return !m_aircraftParts.isEmpty(); }
@@ -82,19 +83,19 @@ namespace BlackMisc
             QString getInterpolatorInfo() const;
 
         protected:
-            BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
-            BlackMisc::Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts for one aircraft
-            BlackMisc::Aviation::CCallsign m_callsign;                        //!< callsign
+            Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
+            Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts for one aircraft
+            Aviation::CCallsign m_callsign;                        //!< callsign
             bool m_isFirstInterpolation = true;                               //!< set to false after the first successful interpolation
 
             //! Constructor
-            CInterpolator(const QString &objectName, const BlackMisc::Aviation::CCallsign &callsign, QObject *parent);
+            CInterpolator(const QString &objectName, const Aviation::CCallsign &callsign, QObject *parent);
 
             //! Set the ground elevation from hints
-            static void setGroundElevationFromHint(const CInterpolationHints &hints, BlackMisc::Aviation::CAircraftSituation &situation, bool override = true);
+            static void setGroundElevationFromHint(const CInterpolationHints &hints, Aviation::CAircraftSituation &situation, bool override = true);
 
             //! Set on ground flag
-            static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, BlackMisc::Aviation::CAircraftSituation &situation);
+            static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, Aviation::CAircraftSituation &situation);
 
         private:
             CInterpolationLogger *m_logger = nullptr;

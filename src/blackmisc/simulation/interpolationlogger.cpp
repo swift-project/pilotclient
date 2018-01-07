@@ -39,6 +39,12 @@ namespace BlackMisc
             this->setObjectName("CInterpolationLogger");
         }
 
+        const CLogCategoryList &CInterpolationLogger::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::interpolator() };
+            return cats;
+        }
+
         CWorker *CInterpolationLogger::writeLogInBackground()
         {
             QList<SituationLog> interpolation;

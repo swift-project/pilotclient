@@ -204,9 +204,6 @@ namespace BlackSimPlugin
             //! Initialize all data definitions
             static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect);
 
-            //! Log message category
-            static QString getLogCategory() { return "swift.fsx.simconnect"; }
-
         private:
             //! Initialize data definition for our own aircraft
             static HRESULT initOwnAircraft(const HANDLE hSimConnect);

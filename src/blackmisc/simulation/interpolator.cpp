@@ -45,6 +45,13 @@ namespace BlackMisc
         }
 
         template <typename Derived>
+        const CLogCategoryList &CInterpolator<Derived>::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::interpolator() };
+            return cats;
+        }
+
+        template <typename Derived>
         CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(
             qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints,

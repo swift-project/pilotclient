@@ -96,10 +96,6 @@ namespace BlackSimPlugin
                 return sims;
             }
 
-            //! Log message category
-            static QString getLogCategory() { return "swift.fscommon.fsuipc"; }
-
-
         protected:
             //! \copydoc QObject::timerEvent
             void timerEvent(QTimerEvent *event);
@@ -120,7 +116,7 @@ namespace BlackSimPlugin
             //! Integer representing fractional
             static double intToFractional(double fractional);
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

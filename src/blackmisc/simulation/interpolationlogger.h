@@ -13,11 +13,11 @@
 #define BLACKMISC_SIMULATION_INTERPOLATIONLOGGER_H
 
 #include "interpolationrenderingsetup.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-
+#include "blackmisc/logcategorylist.h"
 #include <QObject>
 #include <QStringList>
 #include <QtGlobal>
@@ -36,8 +36,8 @@ namespace BlackMisc
             //! Constructor
             CInterpolationLogger(QObject *parent = nullptr);
 
-            //! Log category
-            static QString getLogCategory() { return "swift.interpolationlogger"; }
+            //! Log categories
+            static const CLogCategoryList &getLogCategories();
 
             //! Write a log in background
             CWorker *writeLogInBackground();

@@ -13,9 +13,9 @@
 #define BLACKMISC_SIMULATION_INTERPOLATORLINEAR_H
 
 #include "interpolator.h"
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QString>
 #include <QtGlobal>
 
@@ -67,10 +67,7 @@ namespace BlackMisc
 
             //! Get the interpolant for the given time point
             Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-                const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log) const;
-
-            //! Log category
-            static QString getLogCategory() { return "swift.interpolatorlinear"; }
+                                       const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log) const;
         };
     } // ns
 } // ns
