@@ -33,6 +33,7 @@ namespace BlackGui
             {
                 m_pendingPreselect = server.getName();
             }
+            connect(this, &QComboBox::currentTextChanged, this, &CServerListSelector::onServerTextChanged);
         }
 
         void CServerListSelector::setServers(const CServerList &servers, bool nameIsCountry)
@@ -118,6 +119,12 @@ namespace BlackGui
             {
                 this->setCurrentIndex(index);
             }
+        }
+
+        void CServerListSelector::onServerTextChanged(const QString &text)
+        {
+            Q_UNUSED(text);
+            emit this->serverChanged(this->currentServer());
         }
 
         bool CServerListSelector::knowsAllCountries()

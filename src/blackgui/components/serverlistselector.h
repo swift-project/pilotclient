@@ -46,9 +46,16 @@ namespace BlackGui
             //! Preselect
             bool preSelect(const QString &name);
 
+        signals:
+            //! Server has been changed
+            void serverChanged(const BlackMisc::Network::CServer &server);
+
         private:
             //! Build the item string descriptions
             void setServerItems(const BlackMisc::Network::CServerList &servers, bool nameToCountry);
+
+            //! Server index has been changed
+            void onServerTextChanged(const QString &text);
 
             //! Do we know all countries?
             static bool knowsAllCountries();
