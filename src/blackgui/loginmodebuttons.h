@@ -14,7 +14,7 @@
 
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
-#include <QGroupBox>
+#include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 
@@ -24,7 +24,7 @@ namespace Ui { class CLoginModeButtons; }
 namespace BlackGui
 {
     //! Display login modes (normal, stealth, ...)
-    class BLACKGUI_EXPORT CLoginModeButtons : public QGroupBox
+    class BLACKGUI_EXPORT CLoginModeButtons : public QFrame
     {
         Q_OBJECT
 

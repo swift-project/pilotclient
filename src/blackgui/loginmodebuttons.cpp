@@ -22,7 +22,7 @@ using namespace BlackCore::Context;
 namespace BlackGui
 {
     CLoginModeButtons::CLoginModeButtons(QWidget *parent) :
-        QGroupBox(parent),
+        QFrame(parent),
         ui(new Ui::CLoginModeButtons)
     {
         ui->setupUi(this);

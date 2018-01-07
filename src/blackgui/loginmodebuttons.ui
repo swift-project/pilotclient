@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>CLoginModeButtons</class>
- <widget class="QGroupBox" name="CLoginModeButtons">
+ <widget class="QFrame" name="CLoginModeButtons">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>257</width>
-    <height>49</height>
+    <width>285</width>
+    <height>22</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Login mode </string>
+   <string>Login mode</string>
   </property>
-  <property name="title">
+  <property name="title" stdset="0">
    <string/>
   </property>
-  <property name="flat">
+  <property name="flat" stdset="0">
    <bool>false</bool>
   </property>
   <layout class="QHBoxLayout" name="hl_LoginMode">
@@ -38,11 +38,11 @@
    <item>
     <widget class="QLabel" name="lbl_LognMode">
      <property name="text">
-      <string>Mode</string>
+      <string>Login mode</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignRight">
     <widget class="QRadioButton" name="rb_LoginNormal">
      <property name="text">
       <string>Normal</string>
@@ -52,19 +52,32 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignRight">
     <widget class="QRadioButton" name="rb_LoginStealth">
      <property name="text">
       <string>Stealth</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignRight">
     <widget class="QRadioButton" name="rb_LoginObserver">
      <property name="text">
       <string>Observer</string>
      </property>
     </widget>
+   </item>
+   <item>
+    <spacer name="hs_LoginModeButtons">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
