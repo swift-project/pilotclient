@@ -90,8 +90,9 @@ namespace BlackGui
             CGuiApplication::adjustPalette();
             this->setWindowIcon(icon);
             this->settingsChanged();
+            this->setCurrentFontValues(); // most likely the default font and not any stylesheet font at this time
             sGui = this;
-            connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
+            connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::onStyleSheetsChanged);
         }
     }
 
@@ -195,7 +196,6 @@ namespace BlackGui
         mainWindow->setWindowIconText(name);
         CStyleSheetUtility::setQSysInfoProperties(mainWindow, true);
         CGuiUtility::registerMainApplicationWindow(mainWindow);
-
         emit this->uiObjectTreeReady();
     }
 
@@ -236,9 +236,33 @@ namespace BlackGui
     void CGuiApplication::onStartUpCompleted()
     {
         CApplication::onStartUpCompleted();
+        this->setCurrentFont();
         if (m_splashScreen)
         {
             m_splashScreen->close();
+            m_splashScreen.reset();
+        }
+
+        if (m_minWidthChars > 0 || m_minHeightChars > 0)
+        {
+            const QSize s = CGuiUtility::fontMetricsEstimateSize(m_minWidthChars, m_minHeightChars);
+            QWidget *mw = CGuiUtility::mainApplicationWindow();
+            if (mw)
+            {
+                QSize cs = mw->size();
+                if (m_minWidthChars > 0)  { cs.setWidth(s.width()); }
+                if (m_minHeightChars > 0) { cs.setHeight(s.height()); }
+                mw->resize(cs);
+            }
+        }
+        if (m_saveMainWidgetState && !this->isSet(m_cmdWindowSizeReset))
+        {
+            this->restoreWindowGeometryAndState();
+        }
+
+        if (m_splashScreen)
+        {
+            m_splashScreen->close(); // GUI
             m_splashScreen.reset();
         }
     }
@@ -642,6 +666,12 @@ namespace BlackGui
         return m_styleSheetUtility.resetFont();
     }
 
+    void CGuiApplication::setMinimumSizeInCharacters(int widthChars, int heightChars)
+    {
+        m_minWidthChars = widthChars;
+        m_minHeightChars = heightChars;
+    }
+
     bool CGuiApplication::interactivelySynchronizeSetup(int timeoutMs)
     {
         bool ok = false;
@@ -757,6 +787,16 @@ namespace BlackGui
         if (result != QDialog::Accepted) { return; }
     }
 
+    QString CGuiApplication::getFontInfo() const
+    {
+        static const QString info("Family: '%1', average width: %2");
+        const QWidget *w = this->mainApplicationWindow();
+        if (!w) { return QStringLiteral("Font info not available"); }
+        return info.
+               arg(w->font().family()).
+               arg(w->fontMetrics().averageCharWidth());
+    }
+
     void CGuiApplication::triggerNewVersionCheck(int delayedMs)
     {
         if (!m_updateSetting.get()) { return; }
@@ -805,5 +845,23 @@ namespace BlackGui
         newPalette.setColor(QPalette::Link, linkColor);
         newPalette.setColor(QPalette::LinkVisited, linkColor);
         qApp->setPalette(newPalette);
+    }
+
+    void CGuiApplication::onStyleSheetsChanged()
+    {
+        emit this->styleSheetsChanged();
+        const QFont f = CGuiUtility::currentFont();
+        if (f.pointSize() != m_fontPointSize || f.family() != m_fontFamily)
+        {
+            emit this->fontChanged();
+            CLogMessage(this).info(this->getFontInfo());
+        }
+    }
+
+    void CGuiApplication::setCurrentFontValues()
+    {
+        const QFont font = CGuiUtility::currentFont();
+        m_fontFamily = font.family();
+        m_fontPointSize = font.pointSize();
     }
 } // ns

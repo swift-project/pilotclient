@@ -172,6 +172,9 @@ namespace BlackGui
         //! Reset the font to default
         bool resetFont();
 
+        //! Set minimum width/height in characters
+        void setMinimumSizeInCharacters(int widthChars, int heightChars);
+
         //! Wait for setup, in case it fails display a dialog how to continue
         bool interactivelySynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
 
@@ -210,9 +213,8 @@ namespace BlackGui
         //! Object tree ready (means ui->setupUi() completed)
         void uiObjectTreeReady();
 
-    protected slots:
-        //! Startup competed
-        virtual void onStartUpCompleted() override;
+        //! Font has been changed
+        void fontChanged();
 
     protected:
         //! \name print messages generated during parsing / cmd handling
@@ -227,14 +229,24 @@ namespace BlackGui
         //! \copydoc BlackCore::CApplication::onCoreFacadeStarted
         virtual void onCoreFacadeStarted() override;
 
+        //! \copydoc BlackCore::CApplication::onStartUpCompleted
+        virtual void onStartUpCompleted() override;
+
         //! Check for a new version (update)
         void checkNewVersion(bool onlyIfNew);
+
+        //! Info about font
+        QString getFontInfo() const;
 
         //! Register metadata
         static void registerMetadata();
 
     private:
         QPixmap m_windowIcon;
+        QString m_fontFamily;      //!< current font family
+        int m_fontPointSize;       //!< current font size
+        int m_minWidthChars = -1;  //!< min. width characters (based on current font metrics)
+        int m_minHeightChars = -1; //!< min. height characters (based on current font metrics)
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
         CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
@@ -256,6 +268,12 @@ namespace BlackGui
 
         //! Fix the palette for better readibility
         void adjustPalette();
+
+        //! Style sheets have been changed
+        void onStyleSheetsChanged();
+
+        //! Set current font values
+        void setCurrentFontValues();
     };
 } // ns
 
