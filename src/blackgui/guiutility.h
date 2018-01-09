@@ -16,10 +16,13 @@
 #include "blackmisc/variant.h"
 
 #include <QByteArray>
+#include <QSize>
 #include <QPoint>
 #include <QString>
 #include <QWidget>
 #include <QWidgetList>
+#include <QFont>
+#include <QFontMetrics>
 #include <QModelIndexList>
 
 class QCheckBox;
@@ -130,6 +133,21 @@ namespace BlackGui
 
         //! Fade out a widget
         static QGraphicsOpacityEffect *fadeOutWidget(int durationMs, QWidget *widget, double startValue = 1.0, double endValue = 0.0);
+
+        //! Main window font metrics or default metrics
+        static QFontMetrics currentFontMetrics();
+
+        //! Main window font or default font
+        static QFont currentFont();
+
+        //! 80 characters width/height
+        static QSize fontMetrics80Chars();
+
+        //! 43 characters width/height "the quick brown ..."
+        static QSize fontMetricsLazyDog43Chars();
+
+        //! Estimate size based on current font
+        static QSize fontMetricsEstimateSize(int xCharacters, int yCharacters);
 
     private:
         //! Constructor, use static methods only

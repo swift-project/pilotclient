@@ -404,4 +404,47 @@ namespace BlackGui
         a->start(QPropertyAnimation::DeleteWhenStopped);
         return effect;
     }
+
+    QFontMetrics CGuiUtility::currentFontMetrics()
+    {
+        const QWidget *w = CGuiUtility::mainApplicationWindow();
+        if (w) { return w->fontMetrics(); }
+        return QApplication::fontMetrics();
+    }
+
+    QFont CGuiUtility::currentFont()
+    {
+        const QWidget *w = CGuiUtility::mainApplicationWindow();
+        if (w) { return w->font(); }
+        return QApplication::font();
+    }
+
+    QSize CGuiUtility::fontMetrics80Chars()
+    {
+        static const QString s("01234567890123456789012345678901234567890123456789012345678901234567890123456789");
+        const QFontMetrics fm = CGuiUtility::currentFontMetrics();
+        const int w = fm.width(s);
+        const int h = fm.height();
+        return QSize(w, h);
+    }
+
+    QSize CGuiUtility::fontMetricsLazyDog43Chars()
+    {
+        // 43 characters        0123456789012345678901234567890123456789012
+        static const QString s("The quick brown fox jumps over the lazy dog");
+        const QFontMetrics fm = CGuiUtility::currentFontMetrics();
+        const int w = fm.width(s);
+        const int h = fm.height();
+        return QSize(w, h);
+    }
+
+    QSize CGuiUtility::fontMetricsEstimateSize(int xCharacters, int yCharacters)
+    {
+        const QSize s1 = CGuiUtility::fontMetrics80Chars();
+        const QSize s2 = CGuiUtility::fontMetricsLazyDog43Chars();
+        const QSize s = s1 + s2;
+        const int w = s.width()  * xCharacters / 123;
+        const int h = s.height() * yCharacters / 2;
+        return QSize(w, h);
+    }
 } // ns
