@@ -33,9 +33,9 @@ namespace BlackGui
             //! Destructor
             virtual ~CFilterDialog();
 
-        private slots:
+        private:
             //! Stylesheet changed
-            void ps_onStyleSheetChanged();
+            void onStyleSheetChanged();
         };
 
     } // namespace

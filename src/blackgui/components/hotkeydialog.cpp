@@ -124,7 +124,7 @@ namespace BlackGui
                 CStyleSheetUtility::fileNameStandardWidget()
             }
             );
-            setStyleSheet(s);
+            this->setStyleSheet(s);
         }
 
         CActionHotkey CHotkeyDialog::getActionHotkey(const CActionHotkey &initial, const CIdentifierList &identifiers, QWidget *parent)

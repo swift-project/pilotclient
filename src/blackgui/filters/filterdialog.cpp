@@ -21,14 +21,14 @@ namespace BlackGui
         CFilterDialog::CFilterDialog(QWidget *parent) : QDialog(parent, Qt::Tool)
         {
             this->setWindowTitle("Filter dialog");
-            this->ps_onStyleSheetChanged();
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::ps_onStyleSheetChanged);
+            this->onStyleSheetChanged();
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::onStyleSheetChanged);
         }
 
         CFilterDialog::~CFilterDialog()
         { }
 
-        void CFilterDialog::ps_onStyleSheetChanged()
+        void CFilterDialog::onStyleSheetChanged()
         {
             const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameFilterDialog());
             this->setStyleSheet(qss);

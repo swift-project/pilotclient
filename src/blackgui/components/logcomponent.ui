@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CLogComponent</class>
  <widget class="QFrame" name="CLogComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>264</width>
+    <height>335</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Log component</string>
   </property>
@@ -60,6 +68,9 @@
        </item>
        <item>
         <widget class="BlackGui::Views::CStatusMessageView" name="tvp_StatusMessages">
+         <property name="whatsThis">
+          <string>Status message log view</string>
+         </property>
          <property name="verticalScrollBarPolicy">
           <enum>Qt::ScrollBarAlwaysOn</enum>
          </property>

@@ -162,9 +162,9 @@ namespace BlackConfig
         return QDateTime::currentDateTime() > getEol();
     }
 
-    QString boolToYesNo(bool v)
+    const QString boolToYesNo(bool v)
     {
-        return v ? "yes" : "no";
+        return v ? QStringLiteral("yes") : QStringLiteral("no");
     }
 
     const QString &CBuildConfig::compiledWithInfo(bool shortVersion)
@@ -210,7 +210,7 @@ namespace BlackConfig
     const QString &CBuildConfig::buildDateAndTime()
     {
         // http://en.cppreference.com/w/cpp/preprocessor/replace#Predefined_macros
-        static const QString buildDateAndTime(__DATE__ " "  __TIME__);
+        static const QString buildDateAndTime = QString(__DATE__ " "  __TIME__).simplified();
         return buildDateAndTime;
     }
 

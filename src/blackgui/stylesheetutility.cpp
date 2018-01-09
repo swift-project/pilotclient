@@ -37,8 +37,8 @@ namespace BlackGui
     CStyleSheetUtility::CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent) : QObject(parent)
     {
         this->read();
-        connect(&this->m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
-        connect(&this->m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
+        connect(&m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
+        connect(&m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &CStyleSheetUtility::qssDirectoryChanged);
     }
 
     const QString &CStyleSheetUtility::fontStyleAsString(const QFont &font)
@@ -137,8 +137,8 @@ namespace BlackGui
         if (!directory.exists()) { return false; }
 
         // qss/css files
-        const bool needsWatcher = this->m_fileWatcher.files().isEmpty();
-        if (needsWatcher) { this->m_fileWatcher.addPath(CDirectoryUtils::stylesheetsDirectory()); } // directory to deleted file watching
+        const bool needsWatcher = m_fileWatcher.files().isEmpty();
+        if (needsWatcher) { m_fileWatcher.addPath(CDirectoryUtils::stylesheetsDirectory()); } // directory to deleted file watching
         directory.setNameFilters({"*.qss", "*.css"});
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
@@ -150,7 +150,7 @@ namespace BlackGui
             QFile file(absolutePath);
             if (file.open(QFile::QIODevice::ReadOnly | QIODevice::Text))
             {
-                if (needsWatcher) { this->m_fileWatcher.addPath(absolutePath); }
+                if (needsWatcher) { m_fileWatcher.addPath(absolutePath); }
                 QTextStream in(&file);
                 const QString c = in.readAll();
                 const QString f = fileInfo.fileName().toLower();
@@ -162,9 +162,9 @@ namespace BlackGui
         }
 
         // ignore redundant re-reads
-        if (newStyleSheets != this->m_styleSheets)
+        if (newStyleSheets != m_styleSheets)
         {
-            this->m_styleSheets = newStyleSheets;
+            m_styleSheets = newStyleSheets;
             emit this->styleSheetsChanged();
         }
         return true;
@@ -173,7 +173,7 @@ namespace BlackGui
     QString CStyleSheetUtility::style(const QString &fileName) const
     {
         if (!this->containsStyle(fileName)) { return QString(); }
-        return this->m_styleSheets[fileName.toLower()].trimmed();
+        return m_styleSheets[fileName.toLower()].trimmed();
     }
 
     QString CStyleSheetUtility::styles(const QStringList &fileNames) const
@@ -193,12 +193,12 @@ namespace BlackGui
                 if (fontAdded) { continue; }
                 fontAdded = true;
                 s = hasModifiedFont ?
-                    this->m_styleSheets[fileNameFontsModified().toLower()] :
-                    this->m_styleSheets[fileNameFonts()];
+                    m_styleSheets[fileNameFontsModified().toLower()] :
+                    m_styleSheets[fileNameFonts()];
             }
             else
             {
-                s = this->m_styleSheets[key];
+                s = m_styleSheets[key];
             }
             if (s.isEmpty()) continue;
             if (!style.isEmpty()) style.append("\n\n");
@@ -211,7 +211,7 @@ namespace BlackGui
     bool CStyleSheetUtility::containsStyle(const QString &fileName) const
     {
         if (fileName.isEmpty()) return false;
-        return this->m_styleSheets.contains(fileName.toLower().trimmed());
+        return m_styleSheets.contains(fileName.toLower().trimmed());
     }
 
     bool CStyleSheetUtility::updateFont(const QFont &font)
