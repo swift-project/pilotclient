@@ -555,16 +555,19 @@ QHeaderView::up-arrow {
 }
 
 QTableView, QTreeView, QListView {
-  border: 1px solid green;
+  border: 1px solid green; /** outer border **/
   border-radius: 5px;
   background-color: transparent;
   alternate-background-color: darkslategray;
+  /** in order to enable alternate color it must be also set to true on view **/
+  /** this can be done in code or UI builder **/
   selection-background-color: blue;
   margin-left: 2px;
   margin-right: 2px;
   margin-top: 2px;
   margin-bottom: 2px;
-  padding:0px;
+  padding: 1px;
+  gridline-color: transparent;
 }
 
 /** explicitly setting font color avoids black when pressing CTRL-S **/
@@ -595,7 +598,7 @@ QTreeView::branch:open:has-children {
 }
 
 QTreeView::branch:closed:has-children {
-    image: url(:/diagona/icons/diagona/icons/toggle-expand.png);
+  image: url(:/diagona/icons/diagona/icons/toggle-expand.png);
 }
 
 QSlider::groove:horizontal {
