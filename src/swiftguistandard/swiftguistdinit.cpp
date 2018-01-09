@@ -98,11 +98,7 @@ void SwiftGuiStd::init()
     }
 
     // timers
-    if (m_timerContextWatchdog == nullptr)
-    {
-        m_timerContextWatchdog = new QTimer(this);
-        m_timerContextWatchdog->setObjectName(this->objectName().append(":m_timerContextWatchdog"));
-    }
+    m_timerContextWatchdog.setObjectName(this->objectName().append(":m_timerContextWatchdog"));
 
     // info bar and status bar
     m_statusBar.initStatusBar(ui->sb_MainStatusBar);
@@ -131,11 +127,11 @@ void SwiftGuiStd::init()
     Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent, Qt::QueuedConnection);
     Q_ASSERT(s);
-    s = connect(m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
+    s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
     Q_ASSERT(s);
     Q_UNUSED(s);
     // start timers, update timers will be started when network is connected
-    m_timerContextWatchdog->start(2500);
+    m_timerContextWatchdog.start(2500);
 
     // init availability
     this->setContextAvailability();
@@ -212,9 +208,9 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_WindowToggleNavigator, &QAction::triggered, m_navigator.data(), &CNavigatorDialog::toggleNavigator);
-    connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::navigatorClosed);
     connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
     connect(ui->menu_MovingMap, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
+    connect(m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::navigatorClosed);
 
     // command line / text messages
     connect(ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, ui->fr_CentralFrameInside, &COverlayMessagesFrame::showOverlayVariant);
@@ -228,12 +224,12 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &SwiftGuiStd::setMainPageToInfoArea);
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
     connect(ui->comp_Login, &CLoginComponent::loginDataChangedDigest, ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
-    connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
     connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, [ this ]()
     {
         this->setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
         ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabServers);
     });
+    connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
 
     // text messages
     connect(ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
@@ -259,7 +255,7 @@ void SwiftGuiStd::initialDataReads()
 
 void SwiftGuiStd::stopAllTimers(bool disconnectSignalSlots)
 {
-    m_timerContextWatchdog->stop();
+    m_timerContextWatchdog.stop();
     if (!disconnectSignalSlots) { return; }
-    this->disconnect(m_timerContextWatchdog);
+    this->disconnect(&m_timerContextWatchdog);
 }

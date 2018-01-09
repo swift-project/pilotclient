@@ -114,7 +114,7 @@ private:
     bool m_contextNetworkAvailable = false;    //!< network context available?
     bool m_contextAudioAvailable   = false;    //!< audio context available?
     bool m_displayingDBusReconnect = false;    //!< currently displaying reconnect dialog
-    QTimer *m_timerContextWatchdog = nullptr;  //!< core available?
+    QTimer m_timerContextWatchdog { this };    //!< core available?
     BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
 
     //! GUI status update
