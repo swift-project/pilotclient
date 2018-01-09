@@ -8,6 +8,7 @@
  */
 
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/logmessage.h"
 #include "settingsfontcomponent.h"
 #include "ui_settingsfontcomponent.h"
@@ -26,17 +27,15 @@ namespace BlackGui
             ui(new Ui::CSettingsFontComponent)
         {
             ui->setupUi(this);
-
-            // Font
-            const QFont font = this->font();
-            m_cancelFont = font;
-            m_cancelColor = QColor(sGui->getStyleSheetUtility().fontColor());
             this->setMode(CSettingsFontComponent::DirectUpdate);
-            this->initUiValues();
 
+            this->initValues(); // most likely default font at ctor call time
             connect(ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsFontComponent::fontColorDialog);
             connect(ui->pb_Ok, &QPushButton::clicked, this, &CSettingsFontComponent::changeFont);
             connect(ui->pb_CancelOrReset, &QToolButton::pressed, this, &CSettingsFontComponent::resetFont);
+
+            // only after the complete startup style sheet font overrides are available
+            connect(sGui, &CGuiApplication::startUpCompleted, this, &CSettingsFontComponent::initValues);
         }
 
         CSettingsFontComponent::~CSettingsFontComponent()
@@ -66,8 +65,8 @@ namespace BlackGui
             const QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
             const QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
             const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
-            QString fontColor = this->m_selectedColor.name();
-            if (!this->m_selectedColor.isValid() || this->m_selectedColor.name().isEmpty())
+            QString fontColor = m_selectedColor.name();
+            if (!m_selectedColor.isValid() || m_selectedColor.name().isEmpty())
             {
                 fontColor = sGui->getStyleSheetUtility().fontColor();
             }
@@ -90,25 +89,34 @@ namespace BlackGui
 
         void CSettingsFontComponent::fontColorDialog()
         {
-            const QColor c = QColorDialog::getColor(this->m_selectedColor, this, "Font color");
-            if (c == this->m_selectedColor) return;
-            this->m_selectedColor = c;
-            ui->le_SettingsGuiFontColor->setText(this->m_selectedColor.name());
+            const QColor c = QColorDialog::getColor(m_selectedColor, this, "Font color");
+            if (c == m_selectedColor) return;
+            m_selectedColor = c;
+            ui->le_SettingsGuiFontColor->setText(m_selectedColor.name());
         }
 
-        void CSettingsFontComponent::initUiValues()
+        void CSettingsFontComponent::initValues()
         {
-            ui->cb_SettingsGuiFontStyle->setCurrentText(CStyleSheetUtility::fontAsCombinedWeightStyle(m_cancelFont));
-            ui->cb_SettingsGuiFont->setCurrentFont(m_cancelFont);
-            ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(m_cancelFont.pointSize()));
-            ui->le_SettingsGuiFontColor->setText(this->m_cancelColor.name());
-            m_selectedColor = m_cancelColor;
+            // Font
+            m_cancelFont = this->font();
+            m_cancelColor = QColor(sGui->getStyleSheetUtility().fontColor());
+            this->initUiValues(m_cancelFont, m_cancelColor);
+        }
+
+        void CSettingsFontComponent::initUiValues(const QFont &font, const QColor &color)
+        {
+            const QString family = font.family();
+            ui->cb_SettingsGuiFontStyle->setCurrentText(CStyleSheetUtility::fontAsCombinedWeightStyle(font));
+            ui->cb_SettingsGuiFont->setCurrentFont(font);
+            ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
+            ui->le_SettingsGuiFontColor->setText(color.name());
+            m_selectedColor = color;
             m_qss.clear();
         }
 
         void CSettingsFontComponent::resetFont()
         {
-            this->initUiValues();
+            this->initUiValues(m_cancelFont, m_cancelColor);
             if (m_mode == CSettingsFontComponent::DirectUpdate)
             {
                 sGui->resetFont();
