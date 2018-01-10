@@ -216,7 +216,7 @@ namespace BlackGui
 
         QWidget *CViewBaseNonTemplate::mainApplicationWindowWidget() const
         {
-            return CGuiUtility::mainApplicationWindow();
+            return CGuiUtility::mainApplicationWidget();
         }
 
         CStatusMessage CViewBaseNonTemplate::showFileLoadDialog()

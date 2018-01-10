@@ -43,7 +43,7 @@ namespace BlackSimPlugin
             this->onSettingsChanged(); // init from settings
 
             m_myAircraft = this->getOwnAircraft(); // sync with provider
-            m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWindow()));
+            m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget()));
 
             connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
             connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::fetchFromInterpolator);

@@ -109,7 +109,8 @@ namespace BlackGui
         void processEventsToRefreshGui() const;
 
         //! Init the main application window based on information in this application
-        void initMainApplicationWindow(QWidget *mainWindow);
+        //! \remark can be QDialog, QMainWindow
+        void initMainApplicationWidget(QWidget *mainWidget);
 
         //! Set window flag on main application window
         void addWindowFlags(Qt::WindowFlags flags);
@@ -193,8 +194,11 @@ namespace BlackGui
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter
         static void setWindowIcon(const QPixmap &icon);
 
+        //! \copydoc BlackGui::CGuiUtility::mainApplicationWidget
+        static QWidget *mainApplicationWidget();
+
         //! Main application window
-        static QWidget *mainApplicationWindow();
+        static QMainWindow *mainApplicationWindow();
 
         //! Main window access interface
         static BlackGui::IMainWindowAccess *mainWindowAccess();

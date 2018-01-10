@@ -33,6 +33,7 @@ namespace BlackGui { namespace Components { class CConfigurationWizard; }}
  * \note Besides the fact the launcher makes it easy to start our applications it also pre-fetches some
  *       cache files, hence reducing load times in the subsequent applications. Therefor starting via the launcher
  *       is preferable, but not mandatory.
+ * \fixme it was better if launcher was a QMainWindow, because we have to deal with main widgets QDialog and QMainWindow because of launcher
  */
 class CSwiftLauncher :
     public QDialog,

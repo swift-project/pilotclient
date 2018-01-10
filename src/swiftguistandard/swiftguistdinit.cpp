@@ -69,7 +69,7 @@ void SwiftGuiStd::init()
     m_mwaOverlayFrame = ui->fr_CentralFrameInside;
     m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
 
-    sGui->initMainApplicationWindow(this);
+    sGui->initMainApplicationWidget(this);
 
     // log messages
     m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));

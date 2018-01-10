@@ -172,36 +172,41 @@ namespace BlackGui
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
 
-    QWidget *CGuiApplication::mainApplicationWindow()
+    QWidget *CGuiApplication::mainApplicationWidget()
     {
-        return CGuiUtility::mainApplicationWindow();
+        return CGuiUtility::mainApplicationWidget();
+    }
+
+    QMainWindow *CGuiApplication::mainApplicationWindow()
+    {
+        return qobject_cast<QMainWindow *>(CGuiApplication::mainApplicationWidget());
     }
 
     IMainWindowAccess *CGuiApplication::mainWindowAccess()
     {
-        IMainWindowAccess *m = qobject_cast<IMainWindowAccess *>(mainApplicationWindow());
+        IMainWindowAccess *m = qobject_cast<IMainWindowAccess *>(mainApplicationWidget());
         return m;
     }
 
-    void CGuiApplication::initMainApplicationWindow(QWidget *mainWindow)
+    void CGuiApplication::initMainApplicationWidget(QWidget *mainWidget)
     {
-        if (!mainWindow) { return; }
+        if (!mainWidget) { return; }
         if (m_uiSetupCompleted) { return; }
         m_uiSetupCompleted = true;
 
-        const QString name(this->getApplicationNameVersionBetaDev());
-        mainWindow->setObjectName(QCoreApplication::applicationName());
-        mainWindow->setWindowTitle(name);
-        mainWindow->setWindowIcon(m_windowIcon);
-        mainWindow->setWindowIconText(name);
-        CStyleSheetUtility::setQSysInfoProperties(mainWindow, true);
-        CGuiUtility::registerMainApplicationWindow(mainWindow);
+        const QString name(this->getApplicationNameVersionDetailed());
+        mainWidget->setObjectName(QCoreApplication::applicationName());
+        mainWidget->setWindowTitle(name);
+        mainWidget->setWindowIcon(m_windowIcon);
+        mainWidget->setWindowIconText(name);
+        CStyleSheetUtility::setQSysInfoProperties(mainWidget, true);
+        CGuiUtility::registerMainApplicationWidget(mainWidget);
         emit this->uiObjectTreeReady();
     }
 
     void CGuiApplication::addWindowFlags(Qt::WindowFlags flags)
     {
-        QWidget *maw = this->mainApplicationWindow();
+        QWidget *maw = this->mainApplicationWidget();
         if (maw)
         {
             Qt::WindowFlags windowFlags = maw->windowFlags();
@@ -490,7 +495,7 @@ namespace BlackGui
         c = connect(a, &QAction::triggered, this, [a, this]()
         {
             // a close event might already trigger a shutdown
-            this->mainApplicationWindow()->close();
+            this->mainApplicationWidget()->close();
             this->gracefulShutdown();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -537,7 +542,7 @@ namespace BlackGui
 
     void CGuiApplication::addMenuWindow(QMenu &menu)
     {
-        QWidget *w = mainApplicationWindow();
+        QWidget *w = mainApplicationWidget();
         if (!w) { return; }
         const QSize iconSize = CIcons::empty16().size();
         QPixmap icon = w->style()->standardIcon(QStyle::SP_TitleBarMaxButton).pixmap(iconSize);
@@ -582,7 +587,7 @@ namespace BlackGui
 
     void CGuiApplication::addMenuHelp(QMenu &menu)
     {
-        QWidget *w = mainApplicationWindow();
+        QWidget *w = mainApplicationWidget();
         if (!w) { return; }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
         bool c = connect(a, &QAction::triggered, this, [this]()
@@ -685,7 +690,7 @@ namespace BlackGui
                     CStyleSheetUtility::fileNameFonts(),
                     CStyleSheetUtility::fileNameStandardWidget()
                 });
-                CSetupLoadingDialog dialog(msgs, this->mainApplicationWindow());
+                CSetupLoadingDialog dialog(msgs, this->mainApplicationWidget());
                 dialog.setStyleSheet(style);
                 const int r = dialog.exec();
                 if (r == QDialog::Rejected)
@@ -779,7 +784,7 @@ namespace BlackGui
         if (!m_updateDialog)
         {
             // without parent stylesheet is not inherited
-            m_updateDialog = new CUpdateInfoDialog(this->mainApplicationWindow());
+            m_updateDialog = new CUpdateInfoDialog(this->mainApplicationWidget());
         }
 
         if (onlyIfNew && !m_updateDialog->isNewVersionAvailable()) return;
@@ -790,7 +795,7 @@ namespace BlackGui
     QString CGuiApplication::getFontInfo() const
     {
         static const QString info("Family: '%1', average width: %2");
-        const QWidget *w = this->mainApplicationWindow();
+        const QWidget *w = this->mainApplicationWidget();
         if (!w) { return QStringLiteral("Font info not available"); }
         return info.
                arg(w->font().family()).

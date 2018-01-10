@@ -157,7 +157,7 @@ void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
 
 void CSwiftLauncher::init()
 {
-    sGui->initMainApplicationWindow(this);
+    sGui->initMainApplicationWidget(this);
 
     m_mwaOverlayFrame = ui->fr_SwiftLauncherMain;
     m_mwaStatusBar = nullptr;

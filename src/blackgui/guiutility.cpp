@@ -39,9 +39,9 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-    QWidget *CGuiUtility::s_mainApplicationWindow = nullptr;
+    QWidget *CGuiUtility::s_mainApplicationWidget = nullptr;
 
-    CEnableForFramelessWindow *CGuiUtility::mainFramelessEnabledApplicationWindow()
+    CEnableForFramelessWindow *CGuiUtility::mainFramelessEnabledWindow()
     {
         const QWidgetList tlw = topLevelApplicationWidgetsWithName();
         for (QWidget *w : tlw)
@@ -55,9 +55,9 @@ namespace BlackGui
 
     namespace Private
     {
-        QWidget *mainApplicationWindowSearch()
+        QWidget *mainApplicationWidgetSearch()
         {
-            CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledApplicationWindow();
+            CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledWindow();
             if (mw && mw->getWidget())
             {
                 return mw->getWidget();
@@ -75,23 +75,23 @@ namespace BlackGui
         }
     } // ns
 
-    void CGuiUtility::registerMainApplicationWindow(QWidget *mainWindow)
+    void CGuiUtility::registerMainApplicationWidget(QWidget *mainWidget)
     {
-        CGuiUtility::s_mainApplicationWindow = mainWindow;
+        CGuiUtility::s_mainApplicationWidget = mainWidget;
     }
 
-    QWidget *CGuiUtility::mainApplicationWindow()
+    QWidget *CGuiUtility::mainApplicationWidget()
     {
-        if (!CGuiUtility::s_mainApplicationWindow)
+        if (!CGuiUtility::s_mainApplicationWidget)
         {
-            CGuiUtility::s_mainApplicationWindow = Private::mainApplicationWindowSearch();
+            CGuiUtility::s_mainApplicationWidget = Private::mainApplicationWidgetSearch();
         }
-        return CGuiUtility::s_mainApplicationWindow;
+        return CGuiUtility::s_mainApplicationWidget;
     }
 
     bool CGuiUtility::isMainWindowFrameless()
     {
-        const CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledApplicationWindow();
+        const CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledWindow();
         return (mw && mw->isFrameless());
     }
 
@@ -251,9 +251,9 @@ namespace BlackGui
         return rl;
     }
 
-    QPoint CGuiUtility::mainWindowPosition()
+    QPoint CGuiUtility::mainWidgetPosition()
     {
-        CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
+        CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledWindow();
         return (mw) ? mw->getWidget()->pos() : QPoint();
     }
 
@@ -407,14 +407,19 @@ namespace BlackGui
 
     QFontMetrics CGuiUtility::currentFontMetrics()
     {
-        const QWidget *w = CGuiUtility::mainApplicationWindow();
+        const QWidget *w = CGuiUtility::mainApplicationWidget();
         if (w) { return w->fontMetrics(); }
         return QApplication::fontMetrics();
     }
 
+    QFontMetricsF CGuiUtility::currentFontMetricsF()
+    {
+        return QFontMetricsF(CGuiUtility::currentFontMetrics());
+    }
+
     QFont CGuiUtility::currentFont()
     {
-        const QWidget *w = CGuiUtility::mainApplicationWindow();
+        const QWidget *w = CGuiUtility::mainApplicationWidget();
         if (w) { return w->font(); }
         return QApplication::font();
     }
@@ -440,6 +445,8 @@ namespace BlackGui
 
     QSize CGuiUtility::fontMetricsEstimateSize(int xCharacters, int yCharacters)
     {
+        // 1920/1080: 560/16 256/16 => 530/960
+        // 3840/2160: 400/10 178/10 => 375/600
         const QSize s1 = CGuiUtility::fontMetrics80Chars();
         const QSize s2 = CGuiUtility::fontMetricsLazyDog43Chars();
         const QSize s = s1 + s2;

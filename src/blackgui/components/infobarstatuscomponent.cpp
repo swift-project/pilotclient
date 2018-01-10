@@ -247,8 +247,8 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::updateSpacing()
         {
-            if (!sGui || !sGui->mainApplicationWindow()) { return; }
-            const int w = sGui->mainApplicationWindow()->width();
+            if (!sGui || !sGui->mainApplicationWidget()) { return; }
+            const int w = sGui->mainApplicationWidget()->width();
             const int s = (w >= 400) ? 6 : 2;
             this->setSpacing(s);
         }

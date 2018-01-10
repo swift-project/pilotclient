@@ -44,7 +44,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
 {
     Q_ASSERT(sGui);
     ui->setupUi(this);
-    sGui->initMainApplicationWindow(this);
+    sGui->initMainApplicationWidget(this);
     const QString name(sGui->getApplicationNameAndVersion());
     setSystemTrayMode(MinimizeToTray | QuitOnClose);
     setSystemTrayToolTip(name);

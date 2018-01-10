@@ -82,7 +82,7 @@ namespace BlackGui
         WindowMode   m_windowMode = WindowNormal;         //!< Window mode, \sa WindowMode
         WindowMode   m_originalWindowMode = WindowNormal; //!< mode when initialized
         bool         m_mainApplicationWindow = false;     //!< is this the main application window (only 1)?
-        QWidget     *m_widget = nullptr;                  //!< corresponding widget or dock widget
+        QWidget     *m_widget = nullptr;                  //!< corresponding window or dock widget
         QSizeGrip   *m_framelessSizeGrip = nullptr;       //!< size grip object
         QByteArray   m_framelessPropertyName;             //!< property name for frameless widgets
 

@@ -23,6 +23,7 @@
 #include <QWidgetList>
 #include <QFont>
 #include <QFontMetrics>
+#include <QFontMetricsF>
 #include <QModelIndexList>
 
 class QCheckBox;
@@ -42,13 +43,13 @@ namespace BlackGui
     {
     public:
         //! Main (frameless enabled) application window
-        static CEnableForFramelessWindow *mainFramelessEnabledApplicationWindow();
+        static CEnableForFramelessWindow *mainFramelessEnabledWindow();
 
         //! Register main application window widget if this is known
-        static void registerMainApplicationWindow(QWidget *mainWindow);
+        static void registerMainApplicationWidget(QWidget *mainWidget);
 
         //! Main application window widget
-        static QWidget *mainApplicationWindow();
+        static QWidget *mainApplicationWidget();
 
         //! Is main window frameless?
         static bool isMainWindowFrameless();
@@ -56,8 +57,8 @@ namespace BlackGui
         //! Top level widgets with names
         static QWidgetList topLevelApplicationWidgetsWithName();
 
-        //! Position of main window
-        static QPoint mainWindowPosition();
+        //! Position of main widget
+        static QPoint mainWidgetPosition();
 
         //! Replace count in name such as "stations (4)"
         static QString replaceTabCountValue(const QString &oldName, int count);
@@ -137,6 +138,9 @@ namespace BlackGui
         //! Main window font metrics or default metrics
         static QFontMetrics currentFontMetrics();
 
+        //! Main window font metrics or default metrics
+        static QFontMetricsF currentFontMetricsF();
+
         //! Main window font or default font
         static QFont currentFont();
 
@@ -153,7 +157,7 @@ namespace BlackGui
         //! Constructor, use static methods only
         CGuiUtility() {}
 
-        static QWidget *s_mainApplicationWindow;
+        static QWidget *s_mainApplicationWidget;
     };
 } // ns
 

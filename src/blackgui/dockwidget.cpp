@@ -387,7 +387,7 @@ namespace BlackGui
         }
 
         // and move
-        QPoint mainWindowPos = BlackGui::CGuiUtility::mainWindowPosition();
+        QPoint mainWindowPos = BlackGui::CGuiUtility::mainWidgetPosition();
         if (!mainWindowPos.isNull())
         {
             int x = mainWindowPos.x() + m_offsetWhenFloating.x();
@@ -556,8 +556,8 @@ namespace BlackGui
 
     void CDockWidget::forceStyleSheetUpdate()
     {
-        QString qss = this->styleSheet();
-        this->setStyleSheet(qss.isEmpty() ? " " : "");
+        const QString qss = this->styleSheet();
+        this->setStyleSheet(qss.isEmpty() ? QStringLiteral(" ") : QStringLiteral(""));
         this->setStyleSheet(qss);
     }
 

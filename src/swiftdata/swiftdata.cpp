@@ -94,7 +94,7 @@ void CSwiftData::onStyleSheetsChanged()
 
 void CSwiftData::init()
 {
-    sGui->initMainApplicationWindow(this);
+    sGui->initMainApplicationWidget(this);
     this->initLogDisplay();
 
     m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
