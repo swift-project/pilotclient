@@ -45,6 +45,7 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QSettings>
 #include <QSplashScreen>
 #include <QStyleFactory>
 #include <QStringList>
@@ -238,6 +239,32 @@ namespace BlackGui
         qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
     }
 
+    bool CGuiApplication::isUsingHighDpiScreenSupport()
+    {
+        const QByteArray v = qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR");
+        return !v.isEmpty();
+    }
+
+    bool CGuiApplication::saveWindowGeometryAndState(const QMainWindow *window) const
+    {
+        if (!window) { return false; }
+        QSettings settings("swift-project.org", this->getApplicationName());
+        settings.setValue("geometry", window->saveGeometry());
+        settings.setValue("windowState", window->saveState());
+        return true;
+    }
+
+    bool CGuiApplication::restoreWindowGeometryAndState(QMainWindow *window)
+    {
+        if (!window) { return false; }
+        const QSettings settings("swift-project.org", this->getApplicationName());
+        const QByteArray g = settings.value("geometry").toByteArray();
+        const QByteArray s = settings.value("windowState").toByteArray();
+        window->restoreGeometry(g);
+        window->restoreState(s);
+        return true;
+    }
+
     void CGuiApplication::onStartUpCompleted()
     {
         CApplication::onStartUpCompleted();
@@ -248,10 +275,15 @@ namespace BlackGui
             m_splashScreen.reset();
         }
 
-        if (m_minWidthChars > 0 || m_minHeightChars > 0)
+        // window size
+        if (m_saveMainWidgetState)
+        {
+            this->restoreWindowGeometryAndState();
+        }
+        else if (m_minWidthChars > 0 || m_minHeightChars > 0)
         {
             const QSize s = CGuiUtility::fontMetricsEstimateSize(m_minWidthChars, m_minHeightChars);
-            QWidget *mw = CGuiUtility::mainApplicationWindow();
+            QWidget *mw = CGuiUtility::mainApplicationWidget();
             if (mw)
             {
                 QSize cs = mw->size();
@@ -810,6 +842,15 @@ namespace BlackGui
             if (m_updateDialog) { return; }
             this->checkNewVersion(true);
         });
+    }
+
+    void CGuiApplication::gracefulShutdown()
+    {
+        if (m_saveMainWidgetState)
+        {
+            this->saveWindowGeometryAndState();
+        }
+        CApplication::gracefulShutdown();
     }
 
     void CGuiApplication::settingsChanged()

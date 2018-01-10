@@ -174,6 +174,7 @@ namespace BlackGui
         bool resetFont();
 
         //! Set minimum width/height in characters
+        //! \deprecated kept for experimental tests
         void setMinimumSizeInCharacters(int widthChars, int heightChars);
 
         //! Wait for setup, in case it fails display a dialog how to continue
@@ -189,6 +190,18 @@ namespace BlackGui
 
         //! Trigger new version check
         void triggerNewVersionCheck(int delayedMs);
+
+        //! \copydoc BlackCore::CApplication::gracefulShutdown
+        virtual void gracefulShutdown() override;
+
+        //! Save the main widget state?
+        void setSaveMainWidgetState(bool save) { m_saveMainWidgetState = save; }
+
+        //! Save widget's geometry and state
+        bool saveWindowGeometryAndState(const QMainWindow *window = CGuiApplication::mainApplicationWindow()) const;
+
+        //! Restore widget's geometry and state
+        bool restoreWindowGeometryAndState(QMainWindow *window = CGuiApplication::mainApplicationWindow());
 
         //! Set icon
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter
@@ -209,6 +222,9 @@ namespace BlackGui
         //! Support for high DPI screens
         //! \note Needs to be at the beginning of main
         static void highDpiScreenSupport();
+
+        //! Uses the high DPI support?
+        static bool isUsingHighDpiScreenSupport();
 
     signals:
         //! Style sheet changed
@@ -246,18 +262,19 @@ namespace BlackGui
         static void registerMetadata();
 
     private:
-        QPixmap m_windowIcon;
+        QPixmap m_windowIcon;      //!< the window icon
         QString m_fontFamily;      //!< current font family
         int m_fontPointSize;       //!< current font size
-        int m_minWidthChars = -1;  //!< min. width characters (based on current font metrics)
+        int m_minWidthChars  = -1; //!< min. width characters (based on current font metrics)
         int m_minHeightChars = -1; //!< min. height characters (based on current font metrics)
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
         CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
+        bool m_saveMainWidgetState = true;                        //!< save/restore main widget's state
         QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
         Components::CUpdateInfoDialog *m_updateDialog = nullptr;  //!< software installation dialog
-        Components::CApplicationCloseDialog *m_closeDialog = nullptr;     //!< close dialog (no QScopedPointer because I need to set parent)
+        Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
         BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
         BlackMisc::CSettingReadOnly<Settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
 
