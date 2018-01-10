@@ -122,15 +122,21 @@ namespace BlackCore
         //! True if this swift application is already running (including different versions)
         bool isAlreadyRunning() const;
 
+        //! Graceful shutdown
+        virtual void gracefulShutdown();
+
         //! Is application shutting down?
         //! \threadsafe
         bool isShuttingDown() const;
 
         //! Application name and version
+        const QString &getApplicationName() const { return m_applicationName; }
+
+        //! Application name and version
         const QString &getApplicationNameAndVersion() const;
 
         //! Version, name beta and dev info
-        const QString &getApplicationNameVersionBetaDev() const;
+        const QString &getApplicationNameVersionDetailed() const;
 
         //! Force single application (only one instance)
         void setSingleApplication(bool singleApplication);
@@ -159,58 +165,6 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Db::CDistribution getOwnDistribution() const;
 
-        //! Delete all cookies from cookie manager
-        void deleteAllCookies();
-
-        //! Get the watchdog
-        //! \remark mostly for UNIT tests etc, normally not meant to be used directly
-        Db::CNetworkWatchdog *getNetworkWatchdog() const;
-
-        //! Allows to mark the DB as "up" or "down"
-        //! \see BlackCore::Db::CNetworkWatchdog::setDbAccessibility
-        void setSwiftDbAccessibility(bool accessible);
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::triggerCheck
-        int triggerNetworkChecks();
-
-        //! Is network accessible
-        bool isNetworkAccessible() const;
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::isInternetAccessible
-        bool isInternetAccessible() const;
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::isSwiftDbAccessible
-        bool isSwiftDbAccessible() const;
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::hasWorkingSharedUrl
-        bool hasWorkingSharedUrl() const;
-
-        //! \copydoc BlackCore::Db::CNetworkWatchdog::getWorkingSharedUrl
-        BlackMisc::Network::CUrl getWorkingSharedUrl() const;
-
-        //! Access to access manager
-        //! \remark supposed to be used only in special cases
-        const QNetworkAccessManager *getNetworkAccessManager() const { return m_accessManager; }
-
-        //! Last setup URL (successfully read)
-        //! \threadsafe
-        QString getLastSuccesfulSetupUrl() const;
-
-        //! Last distribution URL (successfully read)
-        //! \threadsafe
-        QString getLastSuccesfulDistributionUrl() const;
-
-        //! Reload setup and version
-        BlackMisc::CStatusMessageList requestReloadOfSetupAndVersion();
-
-        //! Web data services available?
-        //! \threadsafe
-        bool hasWebDataServices() const;
-
-        //! Get the web data services
-        //! \remark use hasWebDataServices to test if services are available
-        CWebDataServices *getWebDataServices() const;
-
         //! Currently running in application thread?
         bool isApplicationThread() const;
 
@@ -232,26 +186,11 @@ namespace BlackCore
         //! Comprehensive info
         QString getInfoString(const QString &separator) const;
 
-        //! Unsaved settings
-        bool hasUnsavedSettings() const;
-
-        //! Automatically and always save settings
-        void setSettingsAutoSave(bool autoSave);
-
-        //! All unsaved settings
-        QStringList getUnsavedSettingsKeys() const;
-
-        //! Save all settings
-        BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys);
-
         //! Directory for temporary files
         QString getTemporaryDirectory() const;
 
         //! Stop and restart application
         void restartApplication(const QStringList &newArguments = {}, const QStringList &removeArguments = {});
-
-        //! Current parameters replaced by new arguments without the cmd line argument
-        virtual QStringList argumentsJoined(const QStringList &newArguments = {}, const QStringList &removeArguments = {}) const;
 
         //! Register as running
         //! \note Normally done automatically when CApplication::exec is called
@@ -267,9 +206,6 @@ namespace BlackCore
         //! Exit application, perform graceful shutdown and exit
         static void exit(int retcode = EXIT_SUCCESS);
 
-        //! Similar to QCoreApplication::arguments
-        static QStringList arguments();
-
         //! Process all events for some time
         //! \remark unlike QCoreApplication::processEvents this will spend at least the given time in the function, using QThread::msleep
         //! \remark using processEventsFor can lead to undesired behaviour: A function may be called again before it is finished, even with only one thread
@@ -280,7 +216,27 @@ namespace BlackCore
         //! \return all cache files
         static QStringList clearCaches();
 
+        // ----------------------- settings -------------------------------
+
+        //! Unsaved settings
+        bool hasUnsavedSettings() const;
+
+        //! Automatically and always save settings
+        void setSettingsAutoSave(bool autoSave);
+
+        //! All unsaved settings
+        QStringList getUnsavedSettingsKeys() const;
+
+        //! Save all settings
+        BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys);
+
         // ----------------------- cmd line args / parsing ----------------------------------------
+
+        //! Current parameters replaced by new arguments without the cmd line argument
+        virtual QStringList argumentsJoined(const QStringList &newArguments = {}, const QStringList &removeArguments = {}) const;
+
+        //! Similar to QCoreApplication::arguments
+        static QStringList arguments();
 
         //! \name cmd line args and parsing of command line options
         //! @{
@@ -384,6 +340,18 @@ namespace BlackCore
         //! @}
 
         // ----------------------- setup data ---------------------------------
+
+        //! Last setup URL (successfully read)
+        //! \threadsafe
+        QString getLastSuccesfulSetupUrl() const;
+
+        //! Last distribution URL (successfully read)
+        //! \threadsafe
+        QString getLastSuccesfulDistributionUrl() const;
+
+        //! Reload setup and version
+        BlackMisc::CStatusMessageList requestReloadOfSetupAndVersion();
+
         //! Read and wait for setup
         //! \sa waitForSetup
         BlackMisc::CStatusMessageList synchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs());
@@ -406,9 +374,6 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CUrlList getVatsimDataFileUrls() const;
 
-        //! Graceful shutdown
-        virtual void gracefulShutdown();
-
         //! Start services, if not yet parsed call CApplication::parse
         virtual bool start();
 
@@ -417,6 +382,47 @@ namespace BlackCore
         static constexpr int NoRedirects = -1;        //!< network request not allowing redirects
         static constexpr int NoLogRequestId = -1;     //!< network request without logging
         static constexpr int DefaultMaxRedirects = 2; //!< network request, default for max.redirects
+
+        //! Delete all cookies from cookie manager
+        void deleteAllCookies();
+
+        //! Get the watchdog
+        //! \remark mostly for UNIT tests etc, normally not meant to be used directly
+        Db::CNetworkWatchdog *getNetworkWatchdog() const;
+
+        //! Allows to mark the DB as "up" or "down"
+        //! \see BlackCore::Db::CNetworkWatchdog::setDbAccessibility
+        void setSwiftDbAccessibility(bool accessible);
+
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::triggerCheck
+        int triggerNetworkChecks();
+
+        //! Is network accessible
+        bool isNetworkAccessible() const;
+
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::isInternetAccessible
+        bool isInternetAccessible() const;
+
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::isSwiftDbAccessible
+        bool isSwiftDbAccessible() const;
+
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::hasWorkingSharedUrl
+        bool hasWorkingSharedUrl() const;
+
+        //! \copydoc BlackCore::Db::CNetworkWatchdog::getWorkingSharedUrl
+        BlackMisc::Network::CUrl getWorkingSharedUrl() const;
+
+        //! Access to access manager
+        //! \remark supposed to be used only in special cases
+        const QNetworkAccessManager *getNetworkAccessManager() const { return m_accessManager; }
+
+        //! Web data services available?
+        //! \threadsafe
+        bool hasWebDataServices() const;
+
+        //! Get the web data services
+        //! \remark use hasWebDataServices to test if services are available
+        CWebDataServices *getWebDataServices() const;
 
         //! Request to get network reply
         //! \threadsafe
@@ -600,7 +606,7 @@ namespace BlackCore
         QScopedPointer<Db::CNetworkWatchdog>     m_networkWatchDog;           //!< checking DB/internet access
         QScopedPointer<BlackMisc::CFileLogger>   m_fileLogger;                //!< file logger
         CCookieManager                           m_cookieManager;             //!< single cookie manager for our access manager
-        QString                                  m_applicationName;           //!< application name
+        const QString                            m_applicationName;           //!< application name
         QReadWriteLock                           m_accessManagerLock;         //!< lock to make access manager access threadsafe
         CCoreFacadeConfig                        m_coreFacadeConfig;          //!< Core facade config if any
         CWebReaderFlags::WebReader               m_webReadersUsed;            //!< Readers to be used

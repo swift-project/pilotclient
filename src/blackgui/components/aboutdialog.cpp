@@ -28,7 +28,7 @@ namespace BlackGui
 
         void CAboutDialog::init()
         {
-            ui->lbl_VersionValue->setText(sGui->getApplicationNameVersionBetaDev());
+            ui->lbl_VersionValue->setText(sGui->getApplicationNameVersionDetailed());
             ui->pte_Info->setPlainText(sGui->getInfoString("\n"));
             ui->pte_Info->appendPlainText("\nSetup follows:\n----");
             ui->pte_Info->appendPlainText(sGui->getGlobalSetup().convertToQString("\n", true));

@@ -110,6 +110,10 @@ namespace BlackCore
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
 
+        QCoreApplication::setApplicationName(m_applicationName);
+        QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
+        this->setObjectName(m_applicationName);
+
         // init skipped when called from CGuiApplication
         if (init)
         {
@@ -122,9 +126,6 @@ namespace BlackCore
         if (!sApp)
         {
             if (withMetadata) { CApplication::registerMetadata(); }
-            QCoreApplication::setApplicationName(m_applicationName);
-            QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
-            this->setObjectName(m_applicationName);
             if (this->getApplicationInfo().application() == CApplicationInfo::UnitTest)
             {
                 const QString tempPath(this->getTemporaryDirectory());
@@ -256,13 +257,13 @@ namespace BlackCore
 
     const QString &CApplication::getApplicationNameAndVersion() const
     {
-        static const QString s(QCoreApplication::instance()->applicationName() + " " + CBuildConfig::getVersionString());
+        static const QString s(m_applicationName + " " + CBuildConfig::getVersionString());
         return s;
     }
 
-    const QString &CApplication::getApplicationNameVersionBetaDev() const
+    const QString &CApplication::getApplicationNameVersionDetailed() const
     {
-        static const QString s(QCoreApplication::instance()->applicationName() + " " + this->versionStringDetailed());
+        static const QString s(m_applicationName + " " + this->versionStringDetailed());
         return s;
     }
 
