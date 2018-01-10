@@ -46,7 +46,7 @@ namespace BlackMiscTest
         //! Testing angles (degrees / radians)
         void angleTests();
 
-        //! Testing angles
+        //! Testing mass
         void massTests();
 
         //! Testing pressure
@@ -69,9 +69,7 @@ namespace BlackMiscTest
 
         //! Basic arithmetic such as +/-
         void basicArithmetic();
-
     };
-
 } // namespace
 
 //! \endcond

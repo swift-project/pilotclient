@@ -41,7 +41,6 @@ using namespace BlackMisc::Math;
 
 namespace BlackMiscTest
 {
-
     /*
      * Basic unit tests for physical units
      */
@@ -163,14 +162,22 @@ namespace BlackMiscTest
      */
     void CTestPhysicalQuantities::pressureTests()
     {
-        CPressure p1(1013.25, CPressureUnit::hPa());
-        CPressure p2(29.92, CPressureUnit::inHg());
+        const CPressure p1(1013.25, CPressureUnit::hPa());
+        const CPressure p2(29.92, CPressureUnit::inHg());
         CPressure p4(p1);
         p4.switchUnit(CPressureUnit::mbar());
 
         // does not match exactly
         QVERIFY2(p1 != p2, "Standard pressure test little difference");
         QVERIFY2(p1.value() == p4.value(), "mbar/hPa test");
+
+        // Unit substract test
+        const CPressure seaLevelPressure(918.0, CPressureUnit::mbar());
+        const CPressure standardPressure(1013.2, CPressureUnit::mbar());
+        const CPressure delta = (standardPressure - seaLevelPressure);
+        const double expected = 95.2;
+        const double deltaV = delta.value(CPressureUnit::mbar());
+        QCOMPARE(deltaV, expected);
     }
 
     /*
