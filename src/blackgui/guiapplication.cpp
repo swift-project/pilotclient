@@ -253,8 +253,7 @@ namespace BlackGui
 
     bool CGuiApplication::isUsingHighDpiScreenSupport()
     {
-        const QByteArray v = qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR");
-        return !v.isEmpty();
+        return CGuiUtility::isUsingHighDpiScreenSupport();
     }
 
     bool CGuiApplication::saveWindowGeometryAndState(const QMainWindow *window) const
@@ -280,21 +279,15 @@ namespace BlackGui
     void CGuiApplication::onStartUpCompleted()
     {
         CApplication::onStartUpCompleted();
-        this->setCurrentFont();
-        if (m_splashScreen)
-        {
-            m_splashScreen->close();
-            m_splashScreen.reset();
-        }
+        this->setCurrentFontValues();
+
+        const QString metricInfo = CGuiUtility::metricsInfo();
+        CLogMessage(this).info(metricInfo);
 
         // window size
-        if (m_saveMainWidgetState)
+        if (m_minWidthChars > 0 || m_minHeightChars > 0)
         {
-            this->restoreWindowGeometryAndState();
-        }
-        else if (m_minWidthChars > 0 || m_minHeightChars > 0)
-        {
-            const QSize s = CGuiUtility::fontMetricsEstimateSize(m_minWidthChars, m_minHeightChars);
+            const QSizeF s = CGuiUtility::fontMetricsEstimateSize(m_minWidthChars, m_minHeightChars);
             QWidget *mw = CGuiUtility::mainApplicationWidget();
             if (mw)
             {

@@ -29,8 +29,7 @@ int main(int argc, char *argv[])
     CSwiftGuiStdApplication a; // application with contexts
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swift256());
-    a.setSaveMainWidgetState(true);
-    // a.setMinimumSizeInCharacters(80, 60); // experimental
+    a.setMinimumSizeInCharacters(60, 42); // experimental
     if (!a.parseAndSynchronizeSetup()) { return EXIT_FAILURE; }
     if (!a.hasSetupReader() || !a.start())
     {
