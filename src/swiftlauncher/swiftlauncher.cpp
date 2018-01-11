@@ -49,6 +49,8 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     CIdentifiable(this),
     ui(new Ui::CSwiftLauncher)
 {
+    Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+    sGui->registerMainApplicationWidget(this);
     ui->setupUi(this);
     this->init();
     connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::startButtonPressed);

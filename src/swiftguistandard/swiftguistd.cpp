@@ -72,6 +72,8 @@ SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowM
     ui(new Ui::SwiftGuiStd)
 {
     // GUI
+    Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+    sGui->registerMainApplicationWidget(this);
     ui->setupUi(this);
     this->setDynamicProperties(windowMode == CEnableForFramelessWindow::WindowFrameless);
     this->init();

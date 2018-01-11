@@ -210,6 +210,9 @@ namespace BlackGui
         //! \copydoc BlackGui::CGuiUtility::mainApplicationWidget
         static QWidget *mainApplicationWidget();
 
+        //! \copydoc BlackGui::CGuiUtility::registerMainApplicationWidget
+        void registerMainApplicationWidget(QWidget *mainWidget);
+
         //! Main application window
         static QMainWindow *mainApplicationWindow();
 

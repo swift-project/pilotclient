@@ -178,6 +178,11 @@ namespace BlackGui
         return CGuiUtility::mainApplicationWidget();
     }
 
+    void CGuiApplication::registerMainApplicationWidget(QWidget *mainWidget)
+    {
+        CGuiUtility::registerMainApplicationWidget(mainWidget);
+    }
+
     QMainWindow *CGuiApplication::mainApplicationWindow()
     {
         return qobject_cast<QMainWindow *>(CGuiApplication::mainApplicationWidget());

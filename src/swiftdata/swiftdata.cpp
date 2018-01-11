@@ -47,6 +47,9 @@ CSwiftData::CSwiftData(QWidget *parent) :
     CIdentifiable(this),
     ui(new Ui::CSwiftData)
 {
+
+    Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+    sGui->registerMainApplicationWidget(this);
     ui->setupUi(this);
     this->init();
 }
