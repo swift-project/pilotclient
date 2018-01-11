@@ -46,10 +46,18 @@ namespace BlackGui
         static CEnableForFramelessWindow *mainFramelessEnabledWindow();
 
         //! Register main application window widget if this is known
+        //! \remark if not set, is is searched from QApplication::topLevelWidgets()
         static void registerMainApplicationWidget(QWidget *mainWidget);
 
         //! Main application window widget
         static QWidget *mainApplicationWidget();
+
+        //! Device pixel ratio
+        static qreal mainApplicationWidgetPixelRatio();
+
+        //! Desktop size
+        //! might be scaled depending on mainApplicationWidgetPixelRatio
+        static QSize desktopSize();
 
         //! Is main window frameless?
         static bool isMainWindowFrameless();
@@ -145,13 +153,19 @@ namespace BlackGui
         static QFont currentFont();
 
         //! 80 characters width/height
-        static QSize fontMetrics80Chars();
+        static QSizeF fontMetrics80Chars(bool withRatio = false);
 
         //! 43 characters width/height "the quick brown ..."
-        static QSize fontMetricsLazyDog43Chars();
+        static QSizeF fontMetricsLazyDog43Chars(bool withRatio = false);
 
         //! Estimate size based on current font
-        static QSize fontMetricsEstimateSize(int xCharacters, int yCharacters);
+        static QSizeF fontMetricsEstimateSize(int xCharacters, int yCharacters, bool withRatio = false);
+
+        //! Some info about font metrics
+        static QString metricsInfo();
+
+        //! Using high DPI screen support
+        static bool isUsingHighDpiScreenSupport();
 
     private:
         //! Constructor, use static methods only

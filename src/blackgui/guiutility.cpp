@@ -34,6 +34,7 @@
 #include <QtGlobal>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
+#include <QDesktopWidget>
 
 using namespace BlackMisc;
 
@@ -87,6 +88,22 @@ namespace BlackGui
             CGuiUtility::s_mainApplicationWidget = Private::mainApplicationWidgetSearch();
         }
         return CGuiUtility::s_mainApplicationWidget;
+    }
+
+    qreal CGuiUtility::mainApplicationWidgetPixelRatio()
+    {
+        const QWidget *mw = CGuiUtility::mainApplicationWidget();
+        if (mw) { return mw->devicePixelRatio(); }
+        return 1.0;
+    }
+
+    QSize CGuiUtility::desktopSize()
+    {
+        const QWidget *mw = CGuiUtility::mainApplicationWidget();
+        if (mw) { return QApplication::desktop()->screenGeometry(mw).size(); }
+
+        // main screen
+        return QApplication::desktop()->screenGeometry().size();
     }
 
     bool CGuiUtility::isMainWindowFrameless()
@@ -424,34 +441,67 @@ namespace BlackGui
         return QApplication::font();
     }
 
-    QSize CGuiUtility::fontMetrics80Chars()
+    QSizeF CGuiUtility::fontMetrics80Chars(bool withRatio)
     {
         static const QString s("01234567890123456789012345678901234567890123456789012345678901234567890123456789");
-        const QFontMetrics fm = CGuiUtility::currentFontMetrics();
-        const int w = fm.width(s);
-        const int h = fm.height();
-        return QSize(w, h);
+        const QFontMetricsF fm = CGuiUtility::currentFontMetricsF();
+        const qreal scale = withRatio ? CGuiUtility::mainApplicationWidgetPixelRatio() : 1.0;
+        const qreal w = fm.width(s) * scale;
+        const qreal h = fm.height() * scale;
+        return QSizeF(w, h);
     }
 
-    QSize CGuiUtility::fontMetricsLazyDog43Chars()
+    QSizeF CGuiUtility::fontMetricsLazyDog43Chars(bool withRatio)
     {
         // 43 characters        0123456789012345678901234567890123456789012
         static const QString s("The quick brown fox jumps over the lazy dog");
-        const QFontMetrics fm = CGuiUtility::currentFontMetrics();
-        const int w = fm.width(s);
-        const int h = fm.height();
-        return QSize(w, h);
+        const QFontMetricsF fm = CGuiUtility::currentFontMetrics();
+        const qreal scale = withRatio ? CGuiUtility::mainApplicationWidgetPixelRatio() : 1.0;
+        const qreal w = fm.width(s) * scale;
+        const qreal h = fm.height() * scale;
+        return QSizeF(w, h);
     }
 
-    QSize CGuiUtility::fontMetricsEstimateSize(int xCharacters, int yCharacters)
+    QSizeF CGuiUtility::fontMetricsEstimateSize(int xCharacters, int yCharacters, bool withRatio)
     {
         // 1920/1080: 560/16 256/16 => 530/960
         // 3840/2160: 400/10 178/10 => 375/600
-        const QSize s1 = CGuiUtility::fontMetrics80Chars();
-        const QSize s2 = CGuiUtility::fontMetricsLazyDog43Chars();
-        const QSize s = s1 + s2;
-        const int w = s.width()  * xCharacters / 123;
-        const int h = s.height() * yCharacters / 2;
-        return QSize(w, h);
+        const QSizeF s1 = CGuiUtility::fontMetrics80Chars(withRatio);
+        const QSizeF s2 = CGuiUtility::fontMetricsLazyDog43Chars(withRatio);
+        const QSizeF s = s1 + s2;
+        const qreal w = s.width()  * xCharacters / 123;
+        const qreal h = s.height() * yCharacters / 2;
+        return QSizeF(w, h);
+    }
+
+    QString CGuiUtility::metricsInfo()
+    {
+        static const QString s("%1 %2 %3 | 80 chars: w%4 h%5 | 43 chars: w%6 h%7");
+        const QSizeF s80 = CGuiUtility::fontMetrics80Chars();
+        const QSizeF s43 = CGuiUtility::fontMetricsLazyDog43Chars();
+
+        QString ratio("-");
+        QString desktop("-");
+
+        const QWidget *mainWidget = CGuiUtility::mainApplicationWidget();
+        if (mainWidget)
+        {
+            QSize sd = QApplication::desktop()->screenGeometry().size();
+            desktop = QString("Desktop w%1 w%2").arg(sd.width()).arg(sd.height());
+            ratio = QString("ratio: %1").arg(mainWidget->devicePixelRatioF());
+        }
+        return s.
+               arg(desktop).
+               arg(CGuiUtility::isUsingHighDpiScreenSupport() ? "hi DPI" : "-").
+               arg(ratio).
+               arg(s80.width()).arg(s80.height()).arg(s43.width()).arg(s43.height());
+    }
+
+    bool CGuiUtility::isUsingHighDpiScreenSupport()
+    {
+        const QByteArray v = qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR");
+        const QString vs(v);
+        const bool highDpi = stringToBool(vs);
+        return highDpi;
     }
 } // ns
