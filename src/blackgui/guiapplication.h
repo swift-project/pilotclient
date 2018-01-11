@@ -93,6 +93,9 @@ namespace BlackGui
         //! CMD line arguments
         void addWindowModeOption();
 
+        //! CMD line arguments
+        void addWindowResetSizeOption();
+
         //! Window state
         Qt::WindowState getWindowState() const;
 
@@ -272,6 +275,7 @@ namespace BlackGui
         int m_minHeightChars = -1; //!< min. height characters (based on current font metrics)
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
+        QCommandLineOption m_cmdWindowSizeReset {"empty"};        //!< window size resizing
         CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
         bool m_saveMainWidgetState = true;                        //!< save/restore main widget's state

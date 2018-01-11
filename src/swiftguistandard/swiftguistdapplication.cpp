@@ -23,7 +23,6 @@ CSwiftGuiStdApplication::CSwiftGuiStdApplication() :
     CGuiApplication(CApplicationInfo::swiftPilotClientGui(), CApplicationInfo::PilotClientGui, CIcons::swift1024())
 {
     this->addParserOption(m_cmdFacadeMode);
-    this->addWindowModeOption();
     this->addDBusAddressOption();
     this->addVatlibOptions();
 }

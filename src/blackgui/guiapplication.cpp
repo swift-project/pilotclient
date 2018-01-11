@@ -83,6 +83,9 @@ namespace BlackGui
     CGuiApplication::CGuiApplication(const QString &applicationName, CApplicationInfo::Application application, const QPixmap &icon) :
         CApplication(applicationName, application, false)
     {
+        this->addWindowModeOption();
+        this->addWindowResetSizeOption();
+
         if (!sGui)
         {
             CGuiApplication::registerMetadata();
@@ -114,6 +117,12 @@ namespace BlackGui
                                              QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."),
                                              "windowtype");
         this->addParserOption(m_cmdWindowMode);
+    }
+
+    void CGuiApplication::addWindowResetSizeOption()
+    {
+        m_cmdWindowSizeReset = QCommandLineOption({{"r", "resetsize"}, QCoreApplication::translate("main", "Reset window size (ignore saved values).")});
+        this->addParserOption(m_cmdWindowSizeReset);
     }
 
     void CGuiApplication::addWindowStateOption()
