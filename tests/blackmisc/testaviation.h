@@ -21,7 +21,6 @@
 
 namespace BlackMiscTest
 {
-
     /*!
      * Aviation classes basic tests
      */
@@ -49,7 +48,6 @@ namespace BlackMiscTest
         //! Testing copying and equality of objects
         void copyAndEqual();
     };
-
 } // namespace
 
 //! \endcond

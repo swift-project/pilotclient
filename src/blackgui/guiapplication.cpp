@@ -155,8 +155,7 @@ namespace BlackGui
     {
         if (m_splashScreen)
         {
-            // delete old one
-            m_splashScreen.reset();
+            m_splashScreen.reset(); // delete old one
         }
         if (!resource.isEmpty())
         {
@@ -169,8 +168,7 @@ namespace BlackGui
     {
         if (m_splashScreen)
         {
-            // delete old one
-            m_splashScreen.reset();
+            m_splashScreen.reset(); // delete old one
         }
         m_splashScreen.reset(new QSplashScreen(pixmap.scaled(256, 256)));
         m_splashScreen->show();
