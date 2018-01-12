@@ -16,8 +16,7 @@
 #include <Qt>
 #include <QtGlobal>
 
-using BlackMisc::PhysicalQuantities::CLength;
-using BlackMisc::PhysicalQuantities::CLengthUnit;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -60,6 +59,24 @@ namespace BlackMisc
         {
             Q_ASSERT(this->m_datum == MeanSeaLevel || this->m_datum == FlightLevel);
             this->m_datum = MeanSeaLevel;
+        }
+
+        void CAltitude::convertToPressureAltitude(const CPressure &seaLevelPressure)
+        {
+            if (m_altitudeType == PressureAltitude) { return; }
+            static const CPressure standardPressure(1013.25, CPressureUnit::mbar());
+            const CPressure delta = (standardPressure - seaLevelPressure);
+            double deltaV = delta.value(CPressureUnit::mbar());
+            deltaV *= 30.0;
+            addValueSameUnit(deltaV);
+            m_altitudeType = PressureAltitude;
+        }
+
+        CAltitude CAltitude::toPressureAltitude(const CPressure &seaLevelPressure) const
+        {
+            CAltitude other(*this);
+            other.convertToPressureAltitude(seaLevelPressure);
+            return other;
         }
 
         void CAltitude::parseFromString(const QString &value)

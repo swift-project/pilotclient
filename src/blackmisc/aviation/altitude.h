@@ -21,6 +21,7 @@
 #include "blackmisc/dictionary.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
+#include "blackmisc/pq/pressure.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
@@ -71,6 +72,13 @@ namespace BlackMisc
                 FlightLevel         //!< Flight level
             };
 
+            //! Altitude type
+            enum AltitudeType
+            {
+                PressureAltitude,   //!< Altitude above the standard datum plane
+                TrueAltitude        //!< Height of the airplane above Mean Sea Level (MSL)
+            };
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -79,6 +87,9 @@ namespace BlackMisc
 
             //! Constructor
             CAltitude(double value, ReferenceDatum datum, const PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(datum) {}
+
+            //! Constructor
+            CAltitude(double value, ReferenceDatum datum, AltitudeType type, const PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(datum), m_altitudeType(type) {}
 
             //! Constructor, value as CAltitude::MeanSeaLevel
             CAltitude(double value, const PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(MeanSeaLevel) {}
@@ -106,6 +117,15 @@ namespace BlackMisc
 
             //! Flightlevel to MSL
             void toMeanSeaLevel();
+
+            //! Current altitude type
+            AltitudeType getAltitudeType() const { return m_altitudeType; }
+
+            //! Converts this to pressure altitude. Requires the current barometric pressure at MSL
+            void convertToPressureAltitude(const PhysicalQuantities::CPressure &seaLevelPressure);
+
+            //! Returns the altitude converted to pressure altitude. Requires the current barometric pressure at MSL
+            CAltitude toPressureAltitude(const PhysicalQuantities::CPressure &seaLevelPressure) const;
 
             //! Parse value from string
             void parseFromString(const QString &value);
@@ -150,10 +170,12 @@ namespace BlackMisc
 
         private:
             ReferenceDatum m_datum; //!< MSL or AGL?
+            AltitudeType m_altitudeType = TrueAltitude;
 
             BLACK_METACLASS(
                 CAltitude,
-                BLACK_METAMEMBER(datum)
+                BLACK_METAMEMBER(datum),
+                BLACK_METAMEMBER(altitudeType)
             );
         };
     } // ns
@@ -161,5 +183,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude::ReferenceDatum)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude::AltitudeType)
 
 #endif // guard
