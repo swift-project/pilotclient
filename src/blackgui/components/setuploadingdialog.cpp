@@ -130,7 +130,8 @@ namespace BlackGui
                 // reset if it was temporarily ignored
                 const CSetupReader *sr = sApp->getSetupReader();
                 const QDateTime setupTs = sr->getSetupCacheTimestamp();
-                ui->le_SetupCache->setText(setupTs.isValid() ?
+                static const QDateTime zeroTime = QDateTime::fromMSecsSinceEpoch(0);
+                ui->le_SetupCache->setText(setupTs.isValid() && setupTs > zeroTime ?
                                            setupTs.toString(Qt::ISODateWithMs) :
                                            "No cache timestamp");
             }
@@ -170,6 +171,7 @@ namespace BlackGui
 
             const int r = m_copyFromOtherSwiftVersion->exec();
             Q_UNUSED(r);
+            this->displaySetupCacheInfo();
         }
 
         void CSetupLoadingDialog::onSetupHandlingCompleted(bool success)
