@@ -162,8 +162,9 @@ namespace BlackGui
             if (!m_copyFromOtherSwiftVersion)
             {
                 CCopyConfigurationDialog *d = new CCopyConfigurationDialog(this);
+                d->setWithBootstrapFile(true);
                 d->setModal(true);
-                d->setCacheCode();
+                d->setCacheMode();
                 m_copyFromOtherSwiftVersion.reset(d);
             }
 

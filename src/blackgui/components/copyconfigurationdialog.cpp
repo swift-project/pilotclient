@@ -25,7 +25,7 @@ namespace BlackGui
         CCopyConfigurationDialog::~CCopyConfigurationDialog()
         { }
 
-        void CCopyConfigurationDialog::setCacheCode()
+        void CCopyConfigurationDialog::setCacheMode()
         {
             ui->comp_CopyConfiguration->setCacheMode();
         }
@@ -38,6 +38,16 @@ namespace BlackGui
         void CCopyConfigurationDialog::selectAll()
         {
             ui->comp_CopyConfiguration->selectAll();
+        }
+
+        void CCopyConfigurationDialog::setNameFilterDisables(bool disable)
+        {
+            ui->comp_CopyConfiguration->setNameFilterDisables(disable);
+        }
+
+        void CCopyConfigurationDialog::setWithBootstrapFile(bool withBootstrapFile)
+        {
+            ui->comp_CopyConfiguration->setWithBootstrapFile(withBootstrapFile);
         }
     } // ns
 } // ns

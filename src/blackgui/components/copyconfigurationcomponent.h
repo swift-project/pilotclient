@@ -66,6 +66,12 @@ namespace BlackGui
             //! Select all
             void selectAll();
 
+            //! \copydoc QFileSystemModel::setNameFilterDisables
+            void setNameFilterDisables(bool disable);
+
+            //! Show bootstrap file?
+            void setWithBootstrapFile(bool withBootstrapFile) { m_withBootstrapFile = withBootstrapFile; }
+
         protected:
             //! \copydoc QWidget::resizeEvent
             virtual void resizeEvent(QResizeEvent *event) override;
@@ -99,11 +105,18 @@ namespace BlackGui
             //! Init the other swift versions
             void initOtherSwiftVersions();
 
+            //! Set name filter disables from ui
+            void changeNameFilterDisables();
+
             QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
             QString m_initializedSourceDir;
             QString m_initializedDestinationDir;
             bool m_logCopiedFiles = true;
+            bool m_nameFilterDisables = false; //!< name filter disables or hides
+            bool m_withBootstrapFile = false;
+
+            // caches will be initialized (default files on disk)
             BlackMisc::Simulation::Data::CModelCaches m_modelCaches{false, this};
             BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches{false, this};
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_modelSetCurrentSimulator { this };

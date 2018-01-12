@@ -36,13 +36,19 @@ namespace BlackGui
             virtual ~CCopyConfigurationDialog();
 
             //! For cache data
-            void setCacheCode();
+            void setCacheMode();
 
             //! For settings
             void setSettingsMode();
 
             //! Select all settings or caches
             void selectAll();
+
+            //! \copydoc QFileSystemModel::setNameFilterDisables
+            void setNameFilterDisables(bool disable);
+
+            //! \copydoc CCopyConfigurationComponent::setWithBootstrapFile
+            void setWithBootstrapFile(bool withBootstrapFile);
 
         private:
             QScopedPointer<Ui::CCopyConfigurationDialog> ui;

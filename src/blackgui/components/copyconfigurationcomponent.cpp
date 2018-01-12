@@ -45,13 +45,15 @@ namespace BlackGui
             ui->setupUi(this);
             this->initOtherSwiftVersions();
 
+            ui->cb_ShowAll->setChecked(m_nameFilterDisables);
             connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
             connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, [ = ] { this->initCurrentDirectories(true); });
             connect(ui->pb_SelectAll, &QPushButton::clicked, ui->tv_Source, &QTreeView::selectAll);
             connect(ui->pb_ClearSelection, &QPushButton::clicked, ui->tv_Source, &QTreeView::clearSelection);
             connect(ui->pb_CopyOver, &QPushButton::clicked, this, &CCopyConfigurationComponent::copySelectedFiles);
+            connect(ui->cb_ShowAll, &QCheckBox::released, this, &CCopyConfigurationComponent::changeNameFilterDisables);
 
-            // create default caches with timestamps
+            // create default caches with timestamps on disk
             // possible for small caches, but not the large model sets (too slow)
             m_modelSetCurrentSimulator.synchronize();
             m_modelSetCurrentSimulator.set(m_modelSetCurrentSimulator.get());
@@ -166,7 +168,15 @@ namespace BlackGui
                     "modelcache*.json",
                     "*setup.json"
                 });
-                return cacheFilter;
+                if (!m_withBootstrapFile) { return cacheFilter; }
+
+                static const QStringList cacheFilterBs = [ = ]
+                {
+                    QStringList f(cacheFilter);
+                    f.push_back(CDirectoryUtils::bootstrapFileName());
+                    return f;
+                }();
+                return cacheFilterBs;
             }
             else
             {
@@ -178,7 +188,11 @@ namespace BlackGui
         void CCopyConfigurationComponent::initCurrentDirectories(bool preselectMissingOrOutdated)
         {
             const QString destinationDir = this->getThisVersionDirectory(); // cache or settings dir
-            if (m_initializedDestinationDir != destinationDir)
+
+            QFileSystemModel *destinationModel = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
+            QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
+
+            if (!destinationModel || m_initializedDestinationDir != destinationDir)
             {
                 m_initializedDestinationDir = destinationDir;
                 const QDir thisVersionDirectory(destinationDir);
@@ -194,13 +208,10 @@ namespace BlackGui
                 ui->le_CurrentVersion->setText(destinationDir);
 
                 // destination
-                QFileSystemModel *destinationModel = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
                 if (!destinationModel)
                 {
                     destinationModel = new QFileSystemModel(this);
-                    destinationModel->setNameFilterDisables(true);
                     destinationModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
-                    destinationModel->setNameFilters(this->getSourceFileFilter());
                     ui->tv_Destination->setModel(destinationModel);
                     ui->tv_Destination->setSortingEnabled(true);
 
@@ -215,19 +226,19 @@ namespace BlackGui
                 const QModelIndex destinationIndex = destinationModel->setRootPath(destinationDir);
                 ui->tv_Destination->setRootIndex(destinationIndex);
             }
+            destinationModel->setNameFilters(this->getSourceFileFilter());
+            destinationModel->setNameFilterDisables(m_nameFilterDisables);
+
 
             // source
             const QString sourceDir = this->getOtherVersionsSelectedDirectory();
-            if (m_initializedSourceDir != sourceDir)
+            if (!sourceModel || m_initializedSourceDir != sourceDir)
             {
                 m_initializedSourceDir = sourceDir;
-                QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
                 if (!sourceModel)
                 {
                     sourceModel = new QFileSystemModel(this);
-                    sourceModel->setNameFilterDisables(true); // hide/disable only
                     sourceModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
-                    sourceModel->setNameFilters(this->getSourceFileFilter());
                     ui->tv_Source->setModel(sourceModel);
                     ui->tv_Source->setSortingEnabled(true); // hide/disable only
                     connectOnce(sourceModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
@@ -244,6 +255,8 @@ namespace BlackGui
                 const QModelIndex sourceIndex = sourceModel->setRootPath(sourceDir);
                 ui->tv_Source->setRootIndex(sourceIndex);
             }
+            sourceModel->setNameFilters(this->getSourceFileFilter());
+            sourceModel->setNameFilterDisables(m_nameFilterDisables);
         }
 
         bool CCopyConfigurationComponent::hasOtherVersionData() const
@@ -260,6 +273,13 @@ namespace BlackGui
         void CCopyConfigurationComponent::selectAll()
         {
             ui->tv_Source->selectAll();
+        }
+
+        void CCopyConfigurationComponent::setNameFilterDisables(bool disable)
+        {
+            if (m_nameFilterDisables == disable) { return; }
+            m_nameFilterDisables = disable;
+            this->initCurrentDirectories(true);
         }
 
         void CCopyConfigurationComponent::resizeEvent(QResizeEvent *event)
@@ -377,9 +397,14 @@ namespace BlackGui
             }
         }
 
+        void CCopyConfigurationComponent::changeNameFilterDisables()
+        {
+            this->setNameFilterDisables(ui->cb_ShowAll->isChecked());
+        }
+
         const CLogCategoryList &CCopyConfigurationWizardPage::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { CLogCategory::wizard(), CLogCategory::guiComponent() };
+            static const CLogCategoryList cats { CLogCategory::wizard(), CLogCategory::guiComponent() };
             return cats;
         }
 
