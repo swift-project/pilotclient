@@ -99,8 +99,11 @@ namespace BlackGui
             //! Get the selected files
             QStringList getSelectedFiles() const;
 
-            //! Init model caches if required (create .rev entries with high level functions)
-            void initModelCaches(const QStringList &files);
+            //! Init caches if required (create .rev entries with high level functions)
+            void initCaches(const QStringList &files);
+
+            //! Init a multi simulator cache (modelset/models)
+            void initMultiSimulatorCache(BlackMisc::Simulation::Data::IMultiSimulatorModelCaches *cache, const QString &fileName);
 
             //! Init the other swift versions
             void initOtherSwiftVersions();
@@ -116,9 +119,13 @@ namespace BlackGui
             bool m_nameFilterDisables = false; //!< name filter disables or hides
             bool m_withBootstrapFile = false;
 
-            // caches will be initialized (default files on disk)
-            BlackMisc::Simulation::Data::CModelCaches m_modelCaches{false, this};
-            BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches{false, this};
+            // caches will be explicitly initialized in initCaches
+            BlackMisc::Simulation::Data::CModelCaches m_modelCaches{ false, this };
+            BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches{ false, this };
+
+            // caches will be initialized so they can be overriden
+            // those caches do not harm if they exists default initialized
+            //! \fixme this is a workaround, as it creates files on disk even if those are not copied. It was much nicer if the cache would init themself if the file appears
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_modelSetCurrentSimulator { this };
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_modelsCurrentSimulator { this };
             BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_launcherSetup { this };

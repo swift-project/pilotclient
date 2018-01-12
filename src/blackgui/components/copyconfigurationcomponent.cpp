@@ -10,6 +10,7 @@
 #include "ui_copyconfigurationcomponent.h"
 #include "copyconfigurationcomponent.h"
 #include "configurationwizard.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackgui/guiapplication.h"
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/directoryutils.h"
@@ -27,6 +28,8 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Data;
 using namespace BlackConfig;
 using namespace BlackGui;
+using namespace BlackCore;
+using namespace BlackCore::Data;
 
 namespace BlackGui
 {
@@ -91,7 +94,7 @@ namespace BlackGui
             if (!destination.exists()) { return 0; }
 
             // init model caches if applicable (.rev file entries)
-            this->initModelCaches(files);
+            this->initCaches(files);
 
             int c = 0;
             QStringList copied;
@@ -341,40 +344,43 @@ namespace BlackGui
             return files;
         }
 
-        void CCopyConfigurationComponent::initModelCaches(const QStringList &files)
+        void CCopyConfigurationComponent::initCaches(const QStringList &files)
         {
             if (files.isEmpty()) { return; }
             if (!ui->rb_Cache->isChecked()) { return; }
             for (const QString &file : files)
             {
-                CStatusMessage msg;
-                IMultiSimulatorModelCaches *cache = nullptr;
                 if (file.contains("modelset", Qt::CaseInsensitive))
                 {
-                    cache = &m_modelSetCaches;
+                    this->initMultiSimulatorCache(&m_modelSetCaches, file);
                 }
                 else if (file.contains("modelcache", Qt::CaseInsensitive))
                 {
-                    cache = &m_modelCaches;
+                    this->initMultiSimulatorCache(&m_modelCaches, file);
                 }
-                else
+                else if (file.contains(CDirectoryUtils::bootstrapFileName()))
                 {
-                    continue;
-                }
-
-                const CSimulatorInfo info = cache->getSimulatorForFilename(file);
-                if (info.isNoSimulator()) continue;
-                if (cache->isSaved(info)) continue; // already a file and hence in .rev
-                const QFileInfo fi(file);
-                msg = cache->setCacheTimestamp(fi.lastModified(), info); // create cache file and timestamp in .rev
-                if (msg.isFailure())
-                {
-                    CLogMessage(this).preformatted(msg);
+                    CData<TGlobalSetup> setup { this };   //!< data cache setup
+                    const CGlobalSetup s = CGlobalSetup::fromJsonFile(file, true);
+                    setup.set(s);
                 }
             }
 
             // allow the cache files to be generated before we will override them
             CGuiApplication::processEventsFor(2500);
+        }
+
+        void CCopyConfigurationComponent::initMultiSimulatorCache(IMultiSimulatorModelCaches *cache, const QString &fileName)
+        {
+            const CSimulatorInfo info = cache->getSimulatorForFilename(fileName);
+            if (info.isNoSimulator()) return;
+            if (cache->isSaved(info)) return; // already a file and hence in .rev
+            const QFileInfo fi(fileName);
+            const CStatusMessage msg = cache->setCacheTimestamp(fi.lastModified(), info); // create cache file and timestamp in .rev
+            if (msg.isFailure())
+            {
+                CLogMessage(this).preformatted(msg);
+            }
         }
 
         void CCopyConfigurationComponent::initOtherSwiftVersions()
