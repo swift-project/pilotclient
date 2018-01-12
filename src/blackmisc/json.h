@@ -237,7 +237,7 @@ namespace BlackMisc
 
         //! JSON Object from string
         //! \ingroup JSON
-        BLACKMISC_EXPORT QJsonObject jsonObjectFromString(const QString &json);
+        BLACKMISC_EXPORT QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat = false);
 
         //! JSON Array from string
         //! \ingroup JSON
@@ -257,15 +257,26 @@ namespace BlackMisc
         //! \remark Quick check if the string could be a valid swift JSON string
         BLACKMISC_EXPORT bool looksLikeSwiftJson(const QString &json);
 
+        //! Looks like a cache/setting object
+        BLACKMISC_EXPORT bool looksLikeSwiftDataObject(const QJsonObject &object);
+
+        //! The value of a cache/setting object
+        //! \remark if data object unstrip from that, otherwise leave unchanged
+        BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QJsonObject &object);
+
+        //! The value of a cache/setting object
+        //! \remark if data object unstrip from that, otherwise leave unchanged
+        BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QString &jsonString);
+
         /*!
          * Load JSON file and init by that
          */
         template <class T>
-        bool loadFromJsonFile(T &object, const QString &fileNameAndPath)
+        bool loadFromJsonFile(T &object, const QString &fileNameAndPath, bool acceptCacheFormat = false)
         {
             const QString jsonString(CFileUtils::readFileToString(fileNameAndPath));
             if (jsonString.isEmpty()) { return false; }
-            object.convertFromJson(jsonString);
+            object.convertFromJson(jsonString, acceptCacheFormat);
             return true;
         }
 
@@ -386,9 +397,10 @@ namespace BlackMisc
             }
 
             //! Assign from JSON object string
-            void convertFromJson(const QString &jsonString)
+            void convertFromJson(const QString &jsonString, bool acceptCacheFormat = false)
             {
-                convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
+                const QJsonObject jsonObject = BlackMisc::Json::jsonObjectFromString(jsonString, acceptCacheFormat);
+                convertFromJson(jsonObject);
             }
 
             //! Get object from QJsonObject
@@ -402,10 +414,11 @@ namespace BlackMisc
 
             //! Get object from JSON string
             template<class DerivedObj = Derived>
-            static DerivedObj fromJson(const QString &jsonString)
+            static DerivedObj fromJson(const QString &jsonString, bool acceptCacheJson = false)
             {
                 DerivedObj obj;
-                obj.convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
+                const QJsonObject jsonObj = acceptCacheJson ? Json::swiftDataObjectValue(jsonString) : Json::jsonObjectFromString(jsonString);
+                obj.convertFromJson(jsonObj);
                 return obj;
             }
 

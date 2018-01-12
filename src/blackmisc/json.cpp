@@ -386,24 +386,24 @@ namespace BlackMisc
 {
     namespace Json
     {
-        QJsonObject jsonObjectFromString(const QString &json)
+        QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat)
         {
             if (json.isEmpty()) { return QJsonObject();}
-            QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
-            return jsonDoc.object();
+            const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+            return acceptCacheFormat ? Json::swiftDataObjectValue(jsonDoc.object()) : jsonDoc.object();
         }
 
         QJsonArray jsonArrayFromString(const QString &json)
         {
             if (json.isEmpty()) { return QJsonArray();}
-            QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
+            const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
             return jsonDoc.array();
         }
 
         QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
         {
             if (toBeAppended.isEmpty()) return target;
-            QStringList keys = toBeAppended.keys();
+            const QStringList keys = toBeAppended.keys();
             foreach (const QString &key, keys)
             {
                 target.insert(key, toBeAppended.value(key));
@@ -462,5 +462,32 @@ namespace BlackMisc
             // further checks would go here
             return looksLikeJson(json);
         }
-    }
-}
+
+        bool looksLikeSwiftDataObject(const QJsonObject &object)
+        {
+            if (object.size() != 1) { return false; }
+            const QString key = object.keys().front();
+            const QJsonObject cacheObject = object.value(key).toObject();
+            return (cacheObject.contains("type") && cacheObject.contains("value"));
+        }
+
+        QJsonObject swiftDataObjectValue(const QJsonObject &object)
+        {
+            if (object.size() != 1) { return object; }
+            const QString key = object.keys().front();
+            const QJsonObject cacheObject = object.value(key).toObject();
+            if (cacheObject.contains("type") && cacheObject.contains("value"))
+            {
+                return cacheObject.value("value").toObject();
+            }
+            return object;
+        }
+
+        QJsonObject swiftDataObjectValue(const QString &jsonString)
+        {
+            const QJsonObject obj = jsonObjectFromString(jsonString);
+            if (obj.isEmpty()) { return obj; }
+            return swiftDataObjectValue(obj);
+        }
+    } // ns
+} // ns

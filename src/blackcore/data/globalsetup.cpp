@@ -215,10 +215,10 @@ namespace BlackCore
             return url;
         }
 
-        CGlobalSetup CGlobalSetup::fromJsonFile(const QString &fileNameAndPath)
+        CGlobalSetup CGlobalSetup::fromJsonFile(const QString &fileNameAndPath, bool acceptCacheFormat)
         {
             CGlobalSetup setup;
-            loadFromJsonFile(setup, fileNameAndPath);
+            loadFromJsonFile(setup, fileNameAndPath, acceptCacheFormat);
             return setup;
         }
 

@@ -211,7 +211,7 @@ namespace BlackCore
             static BlackMisc::Network::CUrl buildDbDataDirectoryUrl(const BlackMisc::Network::CUrl &candidate);
 
             //! Object initialized by JSON file
-            static CGlobalSetup fromJsonFile(const QString &fileNameAndPath);
+            static CGlobalSetup fromJsonFile(const QString &fileNameAndPath, bool acceptCacheFormat);
 
         private:
             bool                            m_wasLoaded = false;     //!< Loaded from web
