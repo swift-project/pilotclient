@@ -580,6 +580,12 @@ namespace BlackCore
         return m_lastSuccessfulUpdateInfoUrl;
     }
 
+    void CSetupReader::synchronize()
+    {
+        m_setup.synchronize();
+        m_updateInfo.synchronize();
+    }
+
     CStatusMessageList CSetupReader::getLastSetupReadErrorMessages() const
     {
         QReadLocker l(&m_lockSetup);

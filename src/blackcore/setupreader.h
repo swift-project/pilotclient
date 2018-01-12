@@ -107,6 +107,9 @@ namespace BlackCore
         //! \threadsafe
         QString getLastSuccessfulUpdateInfoUrl() const;
 
+        //! Synchronize the caches
+        void synchronize();
+
         //! Last setup parsing error messages (if any)
         BlackMisc::CStatusMessageList getLastSetupReadErrorMessages() const;
 
