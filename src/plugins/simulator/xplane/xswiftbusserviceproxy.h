@@ -319,10 +319,15 @@ namespace BlackSimPlugin
             //! @}
 
             //! \copydoc XSwiftBus::CService::getTaxiLightsOn
-
             //! @{
             bool getTaxiLightsOn() const;
             void getTaxiLightsOnAsync(bool *o_taxiLightsOn);
+            //! @}
+
+            //! \copydoc XSwiftBus::CService::getQNH
+            //! @{
+            double getQNH() const;
+            void getQNHAsync(double *o_qnh);
             //! @}
 
             //! \copydoc XSwiftBus::CService::setCom1Active

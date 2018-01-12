@@ -47,7 +47,7 @@ bool SwiftGuiStd::reloadOwnAircraft()
     return changed;
 }
 
-void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude)
+void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude, const CAltitude &pressureAltitude)
 {
     CCoordinateGeodetic coordinate(
         CLatitude::fromWgs84(wgsLatitude),
@@ -56,5 +56,5 @@ void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgs
 
     m_ownAircraft.setPosition(coordinate);
     m_ownAircraft.setAltitude(altitude);
-    sGui->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude);
+    sGui->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude, pressureAltitude);
 }

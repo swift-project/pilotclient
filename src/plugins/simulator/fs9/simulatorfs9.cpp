@@ -397,6 +397,7 @@ namespace BlackSimPlugin
                 simDataOwnAircraft.getCom2System(),
                 simDataOwnAircraft.getTransponder(),
                 this->identifier());
+            this->updateOwnSituation(simDataOwnAircraft.getSituation());
             reverseLookupAndUpdateOwnAircraftModel(simDataOwnAircraft.getModelString());
         }
 

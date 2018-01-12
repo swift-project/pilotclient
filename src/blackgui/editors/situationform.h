@@ -74,12 +74,21 @@ namespace BlackGui
             //! Get pitch angle
             double getPitchAngleDegrees() const;
 
+            //! Get barometric pressure at mean sea level
+            BlackMisc::PhysicalQuantities::CPressure getBarometricPressureMsl() const;
+
+            //! Get pressure at mean sea level
+            double getBarometricPressureMslMillibar() const;
+
             void bankSliderChanged(int value);
             void pitchSliderChanged(int value);
+            void pressureSliderChanged(int value);
             void bankEntered();
             void resetBank();
             void pitchEntered();
             void resetPitch();
+            void pressureEntered();
+            void resetPressure();
 
             QScopedPointer<Ui::CSituationForm> ui;
         };

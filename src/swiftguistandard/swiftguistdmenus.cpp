@@ -37,23 +37,33 @@ void SwiftGuiStd::onMenuClicked()
     QObject *sender = QObject::sender();
     if (sender == ui->menu_TestLocationsEDRY)
     {
-        this->setTestPosition("N 049° 18' 17", "E 008° 27' 05", CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+        this->setTestPosition("N 049° 18' 17", "E 008° 27' 05",
+                              CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
+                              CAltitude(312, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
     }
     else if (sender == ui->menu_TestLocationsEDNX)
     {
-        this->setTestPosition("N 048° 14′ 22", "E 011° 33′ 41", CAltitude(486, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+        this->setTestPosition("N 048° 14′ 22", "E 011° 33′ 41",
+                              CAltitude(486, CAltitude::MeanSeaLevel, CLengthUnit::m()),
+                              CAltitude(486, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
     }
     else if (sender == ui->menu_TestLocationsEDDM)
     {
-        this->setTestPosition("N 048° 21′ 14", "E 011° 47′ 10", CAltitude(448, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+        this->setTestPosition("N 048° 21′ 14", "E 011° 47′ 10",
+                              CAltitude(448, CAltitude::MeanSeaLevel, CLengthUnit::m()),
+                              CAltitude(448, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
     }
     else if (sender == ui->menu_TestLocationsEDDF)
     {
-        this->setTestPosition("N 50° 2′ 0", "E 8° 34′ 14", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+        this->setTestPosition("N 50° 2′ 0", "E 8° 34′ 14",
+                              CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()),
+                              CAltitude(100, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
     }
     else if (sender == ui->menu_TestLocationsLOWW)
     {
-        this->setTestPosition("N 48° 7′ 6.3588", "E 16° 33′ 39.924", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+        this->setTestPosition("N 48° 7′ 6.3588", "E 16° 33′ 39.924",
+                              CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()),
+                              CAltitude(100, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
     }
     else if (sender == ui->menu_WindowFont)
     {

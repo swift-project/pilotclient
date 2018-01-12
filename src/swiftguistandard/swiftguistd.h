@@ -148,7 +148,7 @@ private:
     //! \param wgsLatitude  WGS latitude
     //! \param wgsLongitude WGS longitude
     //! \param altitude
-    void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
+    void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude, const BlackMisc::Aviation::CAltitude &pressureAltitude);
 
     //! Is given main page selected?
     //! \param mainPage index to be checked

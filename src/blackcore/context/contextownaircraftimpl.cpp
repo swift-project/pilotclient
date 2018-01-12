@@ -212,7 +212,7 @@ namespace BlackCore
             return true;
         }
 
-        bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
+        bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
             QWriteLocker l(&m_lockAircraft);
@@ -223,6 +223,12 @@ namespace BlackCore
             {
                 changed = true;
                 m_ownAircraft.setAltitude(altitude);
+            }
+
+            if (m_ownAircraft.getPressureAltitude() != pressureAltitude)
+            {
+                changed = true;
+                m_ownAircraft.setPressureAltitude(pressureAltitude);
             }
             return changed;
         }

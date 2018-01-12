@@ -38,6 +38,7 @@ namespace BlackSimPlugin
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LONGITUDE", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALTITUDE", "Feet");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALT ABOVE GROUND", "Feet");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PRESSURE ALTITUDE", "Meters");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "STATIC CG TO GROUND", "Feet");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE HEADING DEGREES TRUE", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE PITCH DEGREES", "Degrees");
@@ -65,6 +66,7 @@ namespace BlackSimPlugin
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:2", "Bool");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:3", "Bool");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GENERAL ENG COMBUSTION:4", "Bool");
+
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", NULL, SIMCONNECT_DATATYPE_STRING256);
             if (hr != S_OK)
             {

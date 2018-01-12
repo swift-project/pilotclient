@@ -203,6 +203,19 @@ namespace BlackMiscTest
         QVERIFY2(atc1 != atc3, "ATC stations shall not be equal");
     }
 
+    void CTestAviation::altitude()
+    {
+        CAltitude altitude1(448, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+        CPressure seaLevelPressure1(1025, CPressureUnit::mbar());
+        CAltitude pressureAltitude1 = altitude1.toPressureAltitude(seaLevelPressure1);
+        QCOMPARE(pressureAltitude1.value(CLengthUnit::ft()), 95.5);
+
+        CAltitude altitude2(500, CAltitude::MeanSeaLevel, CLengthUnit::m());
+        CPressure seaLevelPressure2(29.56, CPressureUnit::inHg());
+        CAltitude pressureAltitude2 = altitude2.toPressureAltitude(seaLevelPressure2);
+        QCOMPARE(qRound(pressureAltitude2.value(CLengthUnit::m())), 612);
+    }
+
 } // namespace
 
 //! \endcond

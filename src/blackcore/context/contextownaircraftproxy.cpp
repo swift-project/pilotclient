@@ -75,9 +75,9 @@ namespace BlackCore
             return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateSelcal"), selcal, originator);
         }
 
-        bool CContextOwnAircraftProxy::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
+        bool CContextOwnAircraftProxy::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnPosition"), position, altitude);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnPosition"), position, altitude, pressureAltitude);
         }
 
         bool CContextOwnAircraftProxy::updateOwnCallsign(const CCallsign &callsign)

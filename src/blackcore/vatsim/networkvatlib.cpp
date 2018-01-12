@@ -204,8 +204,7 @@ namespace BlackCore
                 {
                     // Normal / Stealth mode
                     VatPilotPosition pos;
-                    //! \fixme we need to distinguish true and pressure altitude
-                    pos.altitudePressure = myAircraft.getAltitude().value(CLengthUnit::ft());
+                    pos.altitudePressure = myAircraft.getPressureAltitude().value(CLengthUnit::ft());
                     pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
                     pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
                     pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());

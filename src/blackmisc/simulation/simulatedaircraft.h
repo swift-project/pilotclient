@@ -185,6 +185,12 @@ namespace BlackMisc
             //! Set altitude
             void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { m_situation.setAltitude(altitude); }
 
+            //! Get pressure altitude
+            const BlackMisc::Aviation::CAltitude &getPressureAltitude() const { return m_situation.getPressureAltitude(); }
+
+            //! Set pressure altitude
+            void setPressureAltitude(const BlackMisc::Aviation::CAltitude &altitude) { m_situation.setPressureAltitude(altitude); }
+
             //! Get groundspeed
             const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return m_situation.getGroundSpeed(); }
 

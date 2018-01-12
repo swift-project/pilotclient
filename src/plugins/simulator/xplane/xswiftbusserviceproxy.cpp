@@ -376,6 +376,17 @@ namespace BlackSimPlugin
         }
 
 
+        double CXSwiftBusServiceProxy::getQNH() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getQNH"));
+        }
+
+        void CXSwiftBusServiceProxy::getQNHAsync(double *o_qnh)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getQNH"), setterCallback(o_qnh));
+        }
+
+
         void CXSwiftBusServiceProxy::setCom1Active(int freq)
         {
             m_dbusInterface->callDBus(QLatin1String("setCom1Active"), freq);

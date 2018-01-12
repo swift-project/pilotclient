@@ -153,10 +153,15 @@ namespace BlackSimPlugin
                 m_service->getTransponderModeAsync(&m_xplaneData.xpdrMode);
                 m_service->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
                 m_service->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
+                m_service->getQNHAsync(&m_xplaneData.seaLeveLPressure);
 
                 CAircraftSituation situation;
                 situation.setPosition({ m_xplaneData.latitude, m_xplaneData.longitude, 0 });
+                CAltitude altitude { m_xplaneData.altitude, CAltitude::MeanSeaLevel, CLengthUnit::m() };
                 situation.setAltitude({ m_xplaneData.altitude, CAltitude::MeanSeaLevel, CLengthUnit::m() });
+                CPressure seaLevelPressure({ m_xplaneData.seaLeveLPressure, CPressureUnit::inHg() });
+                CAltitude pressureAltitude(altitude.toPressureAltitude(seaLevelPressure));
+                situation.setPressureAltitude(pressureAltitude);
                 situation.setHeading({ m_xplaneData.trueHeading, CHeading::True, CAngleUnit::deg() });
                 situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
                 situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });

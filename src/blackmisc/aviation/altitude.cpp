@@ -64,11 +64,11 @@ namespace BlackMisc
         void CAltitude::convertToPressureAltitude(const CPressure &seaLevelPressure)
         {
             if (m_altitudeType == PressureAltitude) { return; }
-            static const CPressure standardPressure(1013.25, CPressureUnit::mbar());
-            const CPressure delta = (standardPressure - seaLevelPressure);
-            double deltaV = delta.value(CPressureUnit::mbar());
-            deltaV *= 30.0;
-            addValueSameUnit(deltaV);
+            const CPressure deltaPressure = standardISASeaLevelPressure() - seaLevelPressure;
+            const double deltaPressureV = deltaPressure.value(CPressureUnit::mbar());
+            const double deltaAltitudeV = deltaPressureV * 30.0; // 30.0 ft per mbar
+            CLength deltaAltitude(deltaAltitudeV, CLengthUnit::ft());
+            *this += deltaAltitude;
             m_altitudeType = PressureAltitude;
         }
 

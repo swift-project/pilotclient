@@ -182,12 +182,13 @@ namespace BlackSimPlugin
                 double gearReployRatio;
                 QList<double> enginesN1Percentage;
                 double speedBrakeRatio;
+                double seaLeveLPressure;
             } m_xplaneData;
 
             void resetData()
             {
                 m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
-                                 false, false, 0, 0, {}, false
+                                 false, false, 0, 0, {}, 0.0, 0.0
                                };
 
             }

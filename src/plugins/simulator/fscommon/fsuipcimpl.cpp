@@ -267,6 +267,7 @@ namespace BlackSimPlugin
             qint8 xpdrModeSb3Raw = 0, xpdrIdentSb3Raw = 0;
             qint32 groundspeedRaw = 0, pitchRaw = 0, bankRaw = 0, headingRaw = 0;
             qint64 altitudeRaw = 0;
+            double pressureAltitudeRaw = 0; // 34B0
             qint32 groundAltitudeRaw = 0;
             qint64 latitudeRaw = 0, longitudeRaw = 0;
             qint16 lightsRaw = 0;
@@ -311,6 +312,7 @@ namespace BlackSimPlugin
                     (situationN || FSUIPC_Read(0x0560, 8, &latitudeRaw, &dwResult)) &&
                     (situationN || FSUIPC_Read(0x0568, 8, &longitudeRaw, &dwResult)) &&
                     (situationN || FSUIPC_Read(0x0020, 4, &groundAltitudeRaw, &dwResult)) &&
+                    (situationN || FSUIPC_Read(0x34B0, 8, &pressureAltitudeRaw, &dwResult)) &&
 
                     // model name
                     FSUIPC_Read(0x3d00, 256, &modelNameRaw, &dwResult) &&
@@ -402,11 +404,13 @@ namespace BlackSimPlugin
                     CHeading heading = CHeading(headingRaw * angleCorrectionFactor, CHeading::True, CAngleUnit::deg());
                     CSpeed groundspeed(groundspeedRaw / 65536.0, CSpeedUnit::m_s());
                     CAltitude altitude(altitudeRaw / (65536.0 * 65536.0), CAltitude::MeanSeaLevel, CLengthUnit::m());
+                    CAltitude pressureAltitude(pressureAltitudeRaw, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m());
                     situation.setBank(bank);
                     situation.setHeading(heading);
                     situation.setPitch(pitch);
                     situation.setGroundSpeed(groundspeed);
                     situation.setAltitude(altitude);
+                    situation.setPressureAltitude(pressureAltitude);
                     aircraft.setSituation(situation);
 
                 } // situation

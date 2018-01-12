@@ -187,6 +187,12 @@ namespace BlackMisc
             //! Set altitude
             void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
 
+            //! Get pressure altitude
+            const CAltitude &getPressureAltitude() const { return m_pressureAltitude; }
+
+            //! Set pressure altitude
+            void setPressureAltitude(const CAltitude &altitude);
+
             //! Get pitch
             const PhysicalQuantities::CAngle &getPitch() const { return m_pitch; }
 
@@ -238,6 +244,7 @@ namespace BlackMisc
         private:
             CCallsign m_correspondingCallsign;
             Geo::CCoordinateGeodetic m_position;
+            Aviation::CAltitude m_pressureAltitude { 0, nullptr };
             CHeading m_heading;
             PhysicalQuantities::CAngle m_pitch;
             PhysicalQuantities::CAngle m_bank;
@@ -252,6 +259,7 @@ namespace BlackMisc
                 CAircraftSituation,
                 BLACK_METAMEMBER(correspondingCallsign),
                 BLACK_METAMEMBER(position),
+                BLACK_METAMEMBER(pressureAltitude),
                 BLACK_METAMEMBER(heading),
                 BLACK_METAMEMBER(pitch),
                 BLACK_METAMEMBER(bank),

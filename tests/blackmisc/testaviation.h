@@ -47,6 +47,9 @@ namespace BlackMiscTest
 
         //! Testing copying and equality of objects
         void copyAndEqual();
+
+        //! CAltitude tests
+        void altitude();
     };
 } // namespace
 

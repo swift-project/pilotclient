@@ -38,10 +38,11 @@ namespace BlackCore
             }
 
             //! \copydoc IContextOwnAircraft::updateOwnPosition
-            virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override
+            virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const BlackMisc::Aviation::CAltitude &pressureAltitude) override
             {
                 Q_UNUSED(position);
                 Q_UNUSED(altitude);
+                Q_UNUSED(pressureAltitude)
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }

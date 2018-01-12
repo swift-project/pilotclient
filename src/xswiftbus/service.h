@@ -194,6 +194,9 @@ namespace XSwiftBus
         //! Get whether taxi lights are on
         bool getTaxiLightsOn() const { return m_taxiLightsOn.get(); }
 
+        //! Get barometric pressure at sea level in inches of mercury.
+        double getQNH() const { return m_qnhInhg.get(); }
+
         //! Set the current COM1 active frequency in kHz
         void setCom1Active(int freq) { m_com1Active.set(freq / 10); }
 
@@ -275,6 +278,7 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::aircraft::engine::acf_num_engines> m_numberOfEngines;
         ArrayDataRef<xplane::data::sim::flightmodel::engine::ENGN_N1_> m_enginesN1Percentage;
         DataRef<xplane::data::sim::flightmodel2::controls::speedbrake_ratio> m_speedBrakeRatio;
+        DataRef<xplane::data::sim::weather::barometer_sealevel_inhg> m_qnhInhg;
     };
 
 }

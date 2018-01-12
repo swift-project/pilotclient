@@ -30,7 +30,10 @@ namespace BlackMisc
 
         CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
             : m_position(position), m_heading(heading), m_pitch(pitch),
-              m_bank(bank), m_groundSpeed(gs), m_groundElevation(groundElevation) {}
+              m_bank(bank), m_groundSpeed(gs), m_groundElevation(groundElevation)
+        {
+            m_pressureAltitude = position.geodeticHeight().toPressureAltitude(CPressure(1013.25, CPressureUnit::mbar()));
+        }
 
         CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign, const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
             : m_correspondingCallsign(correspondingCallsign),
@@ -38,6 +41,7 @@ namespace BlackMisc
               m_bank(bank), m_groundSpeed(gs), m_groundElevation(groundElevation)
         {
             m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
+            m_pressureAltitude = position.geodeticHeight().toPressureAltitude(CPressure(1013.25, CPressureUnit::mbar()));
         }
 
         QString CAircraftSituation::convertToQString(bool i18n) const
@@ -217,6 +221,12 @@ namespace BlackMisc
             if (this->getAltitude().getReferenceDatum() != CAltitude::MeanSeaLevel) { return this->getAltitude(); }
             if (this->getGroundElevation() < this->getAltitude()) { return this->getAltitude(); }
             return this->getGroundElevation();
+        }
+
+        void CAircraftSituation::setPressureAltitude(const CAltitude &altitude)
+        {
+            Q_ASSERT(altitude.getAltitudeType() == CAltitude::PressureAltitude);
+            m_pressureAltitude = altitude;
         }
 
         void CAircraftSituation::setCallsign(const CCallsign &callsign)
