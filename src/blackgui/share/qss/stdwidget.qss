@@ -624,6 +624,7 @@ QSizeGrip {
 
 QStatusBar {
   background: transparent;
+  min-height: 20px;
 }
 
 QStatusBar::item {
