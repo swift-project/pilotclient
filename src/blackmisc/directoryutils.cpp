@@ -178,11 +178,17 @@ namespace BlackMisc
         return s;
     }
 
+    const QString &CDirectoryUtils::bootstrapFileName()
+    {
+        static const QString n("bootstrap.json");
+        return n;
+    }
+
     const QString getBootstrapResourceFileImpl()
     {
         const QString d(CDirectoryUtils::shareDirectory());
         if (d.isEmpty()) { return ""; }
-        const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/bootstrap.json"));
+        const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/" + CDirectoryUtils::bootstrapFileName()));
         Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing bootstrap file");
         return QFileInfo(file).absoluteFilePath();
     }

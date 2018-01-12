@@ -65,6 +65,9 @@ namespace BlackMisc
         //! \remark share not shared (do no mix)
         static const QString &shareDirectory();
 
+        //! Bootstrap file name
+        static const QString &bootstrapFileName();
+
         //! Bootstrap resource file path
         static const QString &bootstrapResourceFilePath();
 

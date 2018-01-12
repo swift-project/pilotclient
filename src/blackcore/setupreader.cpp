@@ -286,7 +286,7 @@ namespace BlackCore
             if (dir.isEmpty()) { return CStatusMessage(this).error("Empty shared directory '%1' for bootstrap file") << dir; }
 
             // no version for local files, as those come with the current code
-            fn = CFileUtils::appendFilePaths(dir, "bootstrap/bootstrap.json");
+            fn = CFileUtils::appendFilePaths(dir, "bootstrap/" + CDirectoryUtils::bootstrapFileName());
         }
         else
         {
