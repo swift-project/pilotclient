@@ -165,12 +165,21 @@ namespace BlackGui
             if (ui->rb_Cache->isChecked())
             {
                 // only copy setup and model caches
-                static const QStringList cacheFilter(
+                static const QStringList cacheFilter = [ = ]
                 {
-                    "modelset*.json",
-                    "modelcache*.json",
-                    "*setup.json"
-                });
+                    QStringList cf({
+                        m_modelSetCurrentSimulator.getFilename(),
+                        m_modelsCurrentSimulator.getFilename(),
+                        m_launcherSetup.getFilename(),
+                        m_vatsimSetup.getFilename(),
+                        m_lastVatsimServer.getFilename(),
+                        m_lastServer.getFilename(),
+                        m_lastAircraftModel.getFilename()
+                    });
+                    cf.append(m_modelSetCaches.getAllFilenames());
+                    cf.append(m_modelCaches.getAllFilenames());
+                    return CFileUtils::getFileNamesOnly(cf);
+                }();
                 if (!m_withBootstrapFile) { return cacheFilter; }
 
                 static const QStringList cacheFilterBs = [ = ]

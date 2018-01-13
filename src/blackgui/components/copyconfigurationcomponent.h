@@ -16,6 +16,8 @@
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/data/vatsimsetup.h"
 #include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/simulation/data/lastmodel.h"
+#include "blackmisc/network/data/lastserver.h"
 #include <QFrame>
 #include <QWizardPage>
 #include <QDir>
@@ -126,10 +128,13 @@ namespace BlackGui
             // caches will be initialized so they can be overriden
             // those caches do not harm if they exists default initialized
             //! \fixme this is a workaround, as it creates files on disk even if those are not copied. It was much nicer if the cache would init themself if the file appears
+            BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_modelSetCurrentSimulator { this };
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_modelsCurrentSimulator { this };
+            BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
             BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_launcherSetup { this };
             BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_vatsimSetup { this };
+            BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this }; //!< recently used VATSIM server
         };
 
         /**
