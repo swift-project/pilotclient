@@ -150,6 +150,9 @@ namespace BlackMisc
                 //! Get filename for simulator cache file
                 virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
+                //! All file names
+                virtual QStringList getAllFilenames() const;
+
                 //! Simulator which uses cache with filename
                 BlackMisc::Simulation::CSimulatorInfo getSimulatorForFilename(const QString &filename) const;
 

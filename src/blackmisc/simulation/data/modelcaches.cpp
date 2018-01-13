@@ -47,6 +47,17 @@ namespace BlackMisc
                 return this->getCachedModels(simulator).size();
             }
 
+            QStringList IMultiSimulatorModelCaches::getAllFilenames() const
+            {
+                return QStringList(
+                {
+                    this->getFilename(CSimulatorInfo::FS9),
+                    this->getFilename(CSimulatorInfo::FSX),
+                    this->getFilename(CSimulatorInfo::P3D),
+                    this->getFilename(CSimulatorInfo::XPLANE)
+                });
+            }
+
             CSimulatorInfo IMultiSimulatorModelCaches::getSimulatorForFilename(const QString &filename) const
             {
                 if (filename.isEmpty()) { return CSimulatorInfo(); }
