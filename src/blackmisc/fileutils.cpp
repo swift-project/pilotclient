@@ -338,6 +338,28 @@ namespace BlackMisc
         return executables;
     }
 
+    QStringList CFileUtils::getBaseNamesOnly(const QStringList &fileNames)
+    {
+        QStringList baseNames;
+        for (const QString &fn : fileNames)
+        {
+            const QFileInfo fi(fn);
+            baseNames.push_back(fi.baseName());
+        }
+        return baseNames;
+    }
+
+    QStringList CFileUtils::getFileNamesOnly(const QStringList &fileNames)
+    {
+        QStringList fns;
+        for (const QString &fn : fileNames)
+        {
+            const QFileInfo fi(fn);
+            fns.push_back(fi.fileName());
+        }
+        return fns;
+    }
+
     QString CFileUtils::lockFileError(const QLockFile &lockFile)
     {
         switch (lockFile.error())

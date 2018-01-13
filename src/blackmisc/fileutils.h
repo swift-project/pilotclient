@@ -127,6 +127,12 @@ namespace BlackMisc
         //! Get all swift executables
         static const QStringList &getSwiftExecutables();
 
+        //! Turn paths and filenames in base names only
+        static QStringList getBaseNamesOnly(const QStringList &fileNames);
+
+        //! Turn paths and filenames in file names only
+        static QStringList getFileNamesOnly(const QStringList &fileNames);
+
         //! Error message explaining why a QLockFile failed to lock.
         static QString lockFileError(const QLockFile &lockFile);
 
