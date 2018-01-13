@@ -103,26 +103,25 @@ namespace BlackGui
             //! \copydoc QWidget::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
 
-        private slots:
-            //! Distributors have been read
-            void ps_codesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
-
-            //! Data have been changed
-            void ps_dataChanged();
-
-            //! Data have been changed
-            void ps_completerActivated(const QString &icaoString);
-
         private:
+            //! Distributors have been read
+            void onCodesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! Data have been changed
+            void onCompleterActivated(const QString &icaoString);
+
+            //! Data have been changed
+            void onDataChanged();
+
+            //! Get the completer strings
+            //! \remark shared for performance reasons
+            const QStringList &completerStrings();
+
             QScopedPointer<Ui::CDbAircraftIcaoSelectorComponent> ui;
             QScopedPointer<QCompleter> m_completerIcaoDescription;
             BlackMisc::Aviation::CAircraftIcaoCode m_currentIcao;
             Display m_display = DisplayIcaoAndId;
             QStringList m_completerStrings; //!< the completer strings
-
-            //! Get the completer strings
-            //! \remark shared for performance reasons
-            const QStringList &completerStrings();
         };
     } // ns
 } // ns

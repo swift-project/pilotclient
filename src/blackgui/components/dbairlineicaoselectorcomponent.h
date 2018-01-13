@@ -49,7 +49,7 @@ namespace BlackGui
 
             //! Destructor
             //! \note needed for forward declared QScopedPointer and needs to be in .cpp
-            ~CDbAirlineIcaoSelectorComponent();
+            virtual ~CDbAirlineIcaoSelectorComponent();
 
             //! \name Base class overrides
             //! @{
@@ -71,17 +71,16 @@ namespace BlackGui
             //! \copydoc CDbAirlineIcaoSelectorBase::createCompleter
             virtual QCompleter *createCompleter() override;
 
-        private slots:
-            //! Data have been changed
-            void ps_dataChanged();
-
         private:
-            QScopedPointer<Ui::CDbAirlineIcaoSelectorComponent> ui;
-            Display m_display = DisplayVDesignatorAndId;
-
             //! Get the completer strings
             //! \remark shared for performance reasons
             static const QStringList &completerStrings();
+
+            //! Data have been changed
+            void onDataChanged();
+
+            QScopedPointer<Ui::CDbAirlineIcaoSelectorComponent> ui;
+            Display m_display = DisplayVDesignatorAndId;
         };
     } // ns
 } // ns

@@ -39,7 +39,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->setFocusProxy(ui->le_Airline);
             ui->le_Airline->setValidator(new CUpperCaseValidator(this));
-            connect(ui->le_Airline, &QLineEdit::editingFinished, this, &CDbAirlineIcaoSelectorComponent::ps_dataChanged);
+            connect(ui->le_Airline, &QLineEdit::editingFinished, this, &CDbAirlineIcaoSelectorComponent::onDataChanged);
         }
 
         CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent()
@@ -97,7 +97,7 @@ namespace BlackGui
             return c;
         }
 
-        void CDbAirlineIcaoSelectorComponent::ps_dataChanged()
+        void CDbAirlineIcaoSelectorComponent::onDataChanged()
         {
             if (!sGui) { return; }
             QString s(ui->le_Airline->text());
