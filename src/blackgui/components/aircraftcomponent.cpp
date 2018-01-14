@@ -87,6 +87,8 @@ namespace BlackGui
 
         void CAircraftComponent::update()
         {
+            if (sGui->isShuttingDown()) { return; }
+
             Q_ASSERT(ui->tvp_AircraftInRange);
             Q_ASSERT(sGui->getIContextNetwork());
             Q_ASSERT(sGui->getIContextSimulator());
