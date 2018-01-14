@@ -86,9 +86,12 @@ namespace BlackMisc
             static QString flagToString(ReadState flag);
 
             //! Flag to severity
-            static BlackMisc::CStatusMessage::StatusSeverity flagToSeverity(ReadState state);
+            static CStatusMessage::StatusSeverity flagToSeverity(ReadState state);
 
-            //! To flag
+            //! To entity (when explicit conversion is needed)
+            static Entity entityFlagToEntity(EntityFlag entityFlag);
+
+            //! To flag (when explicit conversion is needed)
             static EntityFlag entityToEntityFlag(Entity entity);
 
             //! Return single entity and remove it from entities

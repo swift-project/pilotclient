@@ -114,6 +114,7 @@ private:
     bool m_contextNetworkAvailable = false;    //!< network context available?
     bool m_contextAudioAvailable   = false;    //!< audio context available?
     bool m_displayingDBusReconnect = false;    //!< currently displaying reconnect dialog
+    bool m_dbDataLoading           = false;    //!< DB or shared data loading in progress
     QTimer m_timerContextWatchdog { this };    //!< core available?
     BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
 
@@ -124,7 +125,7 @@ private:
     void initStyleSheet();
 
     //! 1st data reads
-    void initialDataReads();
+    void initialContextDataReads();
 
     //! Init data (post GUI init)
     void init();
@@ -155,7 +156,7 @@ private:
     bool isMainPageSelected(MainPageIndex mainPage) const;
 
     //! Stop all timers
-    //! \param disconnect also disconnect signal/slots
+    //! \param disconnectSignalSlots also disconnect signal/slots
     void stopAllTimers(bool disconnectSignalSlots);
 
     //! Play notifcation sound
@@ -246,8 +247,8 @@ private:
     //! Checks if model set is available
     void verifyModelSet();
 
-    //! The shared info objects have been loaded
-    void sharedInfoObjectsLoaded();
+    //! Ckeck if the DB data have been loaded
+    void checkDbDataLoaded();
 };
 
 #pragma pop_macro("interface")

@@ -398,6 +398,7 @@ void SwiftGuiStd::navigatorClosed()
 
 void SwiftGuiStd::verifyModelSet()
 {
+    if (!sGui || sGui->isShuttingDown()) { return; }
     const CSimulatorInfo sims = sGui->getIContextSimulator()->simulatorsWithInitializedModelSet();
     if (sims.isNoSimulator())
     {
@@ -405,31 +406,65 @@ void SwiftGuiStd::verifyModelSet()
     }
 }
 
-void SwiftGuiStd::sharedInfoObjectsLoaded()
+void SwiftGuiStd::checkDbDataLoaded()
 {
-    Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
-    Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread");
-    const CEntityFlags::Entity newEntities = sGui->getWebDataServices()->getEntitiesWithNewerSharedFile(CEntityFlags::AllDbEntities);
-    if (newEntities == CEntityFlags::NoEntity) { return; }
-    CStatusMessage sm = CStatusMessage(this).info("New data for shared files:");
-    CStatusMessageList sms({sm});
-    const QSet<CEntityFlags::Entity> newSingleEntities = CEntityFlags::asSingleEntities(newEntities);
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
+    Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread, needs to run in main thread");
+    CEntityFlags::Entity loadEntities = sGui->getWebDataServices()->getEntitiesWithNewerSharedFile(CEntityFlags::AllDbEntities);
+    const CEntityFlags::Entity checkForEmpty = CEntityFlags::entityFlagToEntity(CEntityFlags::AllDbEntitiesNoInfoObjects) & ~loadEntities;
+
+    // it can happen the timestamps are not newer, but the data are empty
+    // - can happen if caches are copied and the TS does not represent the DB timestamp
+    // - cache files have been deleted
+    // - sync all DB entities
+    //   - fast if there are no data
+    //   - no impact if already synced
+    //   - slow if newer synced before and all has to be done now
+    if (!m_dbDataLoading) { sGui->getWebDataServices()->synchronizeDbCaches(checkForEmpty); }
+
+    // we have no newer timestamps, but incomplete data
+    loadEntities |= sGui->getWebDataServices()->getEmptyEntities();
+    if (loadEntities == CEntityFlags::NoEntity)
+    {
+        m_dbDataLoading = false;
+        return;
+    }
+
+    CStatusMessage sm = m_dbDataLoading ?
+                        CStatusMessage(this).info("Loading in progress:") :
+                        CStatusMessage(this).info("New data for shared files:");
+    CStatusMessageList sms(sm);
+    const QSet<CEntityFlags::Entity> newSingleEntities = CEntityFlags::asSingleEntities(loadEntities);
+    const QString m = m_dbDataLoading ? QStringLiteral("Loading data for '%1'") : QStringLiteral("Load data for '%1'?");
     for (CEntityFlags::Entity newSingleEntity : newSingleEntities)
     {
-        sm = CStatusMessage(this).info("Load data for '%1'?") << CEntityFlags::flagToString(newSingleEntity);
+        sm = CStatusMessage(this).info(m) << CEntityFlags::flagToString(newSingleEntity);
         sms.push_back(sm);
     }
 
-    // allow to init GUI completely before showing overlays
-    const int delay = 2500;
+    constexpr int checkAgain = 5000;
+    if (m_dbDataLoading)
+    {
+        // already loading
+        ui->fr_CentralFrameInside->showOverlayMessages(sms, false, 1.2 * checkAgain);
+        return;
+    }
+
+    // data need to be loaded
+    constexpr int delay = 2500; // allow to init GUI completely before showing overlays
     QTimer::singleShot(delay, this, [ = ]
     {
         // delayed call
-        auto lambda = [newEntities]()
+        auto lambda = [ = ]()
         {
-            sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(newEntities, false);
+            sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(loadEntities, false);
+            m_dbDataLoading = true;
+
+            // re-check
+            QTimer::singleShot(checkAgain, this, &SwiftGuiStd::checkDbDataLoaded);
         };
-        ui->fr_CentralFrameInside->showOverlayMessagesWithConfirmation(sms, false, "Load data?", lambda);
+        ui->fr_CentralFrameInside->showOverlayMessagesWithConfirmation(sms, false, "Load DB data?", lambda);
     });
 }
 

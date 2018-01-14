@@ -112,6 +112,11 @@ namespace BlackMisc
             }
         }
 
+        CEntityFlags::Entity CEntityFlags::entityFlagToEntity(CEntityFlags::EntityFlag entityFlag)
+        {
+            return static_cast<Entity>(static_cast<int>(entityFlag));
+        }
+
         CEntityFlags::EntityFlag CEntityFlags::entityToEntityFlag(Entity entity)
         {
             return static_cast<EntityFlag>(static_cast<int>(entity));

@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+#include "swiftguistd.h"
+#include "ui_swiftguistd.h"
 #include "blackconfig/buildconfig.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/context/contextnetwork.h"
@@ -32,9 +34,8 @@
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
+#include "blackmisc/slot.h"
 #include "blackmisc/statusmessage.h"
-#include "swiftguistd.h"
-#include "ui_swiftguistd.h"
 
 #include <QAction>
 #include <QHBoxLayout>
@@ -117,9 +118,7 @@ void SwiftGuiStd::init()
     this->initGuiSignals();
 
     // signal / slots contexts / timers
-    bool s = connect(sGui->getWebDataServices(), &CWebDataServices::sharedInfoObjectsRead, this, &SwiftGuiStd::sharedInfoObjectsLoaded, Qt::QueuedConnection);
-    Q_ASSERT(s);
-    s = connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::onConnectionStatusChanged, Qt::QueuedConnection);
+    bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::onConnectionStatusChanged, Qt::QueuedConnection);
     Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::kicked, this, &SwiftGuiStd::onKickedFromNetwork, Qt::QueuedConnection);
     Q_ASSERT(s);
@@ -130,6 +129,11 @@ void SwiftGuiStd::init()
     s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
     Q_ASSERT(s);
     Q_UNUSED(s);
+
+    // check if DB data have been loaded
+    // only check once, so data can be loaded and
+    connectOnce(sGui->getWebDataServices(), &CWebDataServices::sharedInfoObjectsRead, this, &SwiftGuiStd::checkDbDataLoaded, Qt::QueuedConnection);
+
     // start timers, update timers will be started when network is connected
     m_timerContextWatchdog.start(2500);
 
@@ -137,7 +141,7 @@ void SwiftGuiStd::init()
     this->setContextAvailability();
 
     // data
-    this->initialDataReads();
+    this->initialContextDataReads();
 
     // start screen and complete menu
     this->setMainPageToInfoArea();
@@ -156,8 +160,8 @@ void SwiftGuiStd::init()
 
     emit sGui->startUpCompleted(true);
     m_init = true;
-    QTimer::singleShot(2500, this, &SwiftGuiStd::verifyModelSet);
 
+    QTimer::singleShot(2500, this, &SwiftGuiStd::verifyModelSet);
     if (!sGui->isNetworkAccessible())
     {
         CLogMessage(this).error("No network interface, software will not work properly");
@@ -240,7 +244,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this, &SwiftGuiStd::onChangedMainInfoAreaFloating);
 }
 
-void SwiftGuiStd::initialDataReads()
+void SwiftGuiStd::initialContextDataReads()
 {
     this->setContextAvailability();
     if (!m_coreAvailable)
