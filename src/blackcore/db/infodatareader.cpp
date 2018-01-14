@@ -8,9 +8,11 @@
  */
 
 #include "blackcore/application.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/verify.h"
 #include "infodatareader.h"
 
 #include <QTimer>
@@ -52,43 +54,70 @@ namespace BlackCore
         void CInfoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
             // no caching used here
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
             Q_UNUSED(entities);
         }
 
         void CInfoDataReader::admitCaches(CEntityFlags::Entity entities)
         {
             // no caching used here
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
             Q_UNUSED(entities);
         }
 
         void CInfoDataReader::invalidateCaches(CEntityFlags::Entity entities)
         {
             // no caching used here
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
             Q_UNUSED(entities);
         }
 
         QDateTime CInfoDataReader::getCacheTimestamp(CEntityFlags::Entity entity) const
         {
-            // no caching used here
+            // no own caching used here
             Q_UNUSED(entity);
-            return QDateTime();
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
+
+            if (entity == CEntityFlags::DbInfoObjectEntity || entity == CEntityFlags::SharedInfoObjectEntity)
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+                return QDateTime();
+            }
+
+            // Forward to web data services so I get cache data from other readers
+            //! \fixme bit of a hack to use web data services here
+            return sApp->getWebDataServices()->getCacheTimestamp(entity);
         }
 
         int CInfoDataReader::getCacheCount(CEntityFlags::Entity entity) const
         {
-            // no caching used here
+            // no own caching used here
             Q_UNUSED(entity);
-            return 0;
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
+
+            if (entity == CEntityFlags::DbInfoObjectEntity || entity == CEntityFlags::SharedInfoObjectEntity)
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
+                return 0;
+            }
+
+            // Forward to web data services so I get cache data from other readers
+            //! \fixme bit of a hack to use web data services here
+            return sApp->getWebDataServices()->getCacheCount(entity);
         }
 
         CEntityFlags::Entity CInfoDataReader::getEntitiesWithCacheCount() const
         {
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
             return CEntityFlags::NoEntity;
         }
 
         CEntityFlags::Entity CInfoDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
         {
             Q_UNUSED(threshold);
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
             return CEntityFlags::NoEntity;
         }
 

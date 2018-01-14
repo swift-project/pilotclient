@@ -360,7 +360,7 @@ namespace BlackCore
         {
             Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
             static const QDateTime e;
-            const CDbInfoList il(getSharedInfoObjects());
+            const CDbInfoList il(this->getSharedInfoObjects());
             if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return e; }
 
             const CDbInfo info = il.findFirstByEntityOrDefault(entity);
@@ -380,7 +380,7 @@ namespace BlackCore
         {
             if (!this->isInternetAccessible(QString("No network/internet access, will not read shared file headers for %1").arg(CEntityFlags::flagToString(entities)))) { return false; }
 
-            CEntityFlags::Entity allEntities(this->maskBySupportedEntities(entities));
+            CEntityFlags::Entity allEntities = entities & CEntityFlags::AllDbEntitiesNoInfoObjects;
             CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);
             const CUrl urlSharedDbdata = CDatabaseReader::getWorkingSharedDbdataDirectoryUrl();
             if (urlSharedDbdata.isEmpty())
@@ -430,7 +430,7 @@ namespace BlackCore
 
         CEntityFlags::Entity CDatabaseReader::getEntitesWithNewerHeaderTimestamp(CEntityFlags::Entity entities) const
         {
-            entities = this->maskBySupportedEntities(entities); // handled by this reader
+            entities &= CEntityFlags::AllDbEntitiesNoInfoObjects;
             CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(entities);
             CEntityFlags::Entity newerEntities = CEntityFlags::NoEntity;
             while (currentEntity != CEntityFlags::NoEntity)
@@ -446,7 +446,7 @@ namespace BlackCore
 
         CEntityFlags::Entity CDatabaseReader::getEntitesWithNewerSharedInfoObject(CEntityFlags::Entity entities) const
         {
-            entities = this->maskBySupportedEntities(entities); // handled by this reader
+            entities &= CEntityFlags::AllDbEntitiesNoInfoObjects;
             CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(entities);
             CEntityFlags::Entity newerEntities = CEntityFlags::NoEntity;
             while (currentEntity != CEntityFlags::NoEntity)
@@ -569,12 +569,12 @@ namespace BlackCore
 
         CEntityFlags::Entity CDatabaseReader::maskBySupportedEntities(CEntityFlags::Entity entities) const
         {
-            return entities & getSupportedEntities();
+            return entities & this->getSupportedEntities();
         }
 
         bool CDatabaseReader::supportsAnyOfEntities(CEntityFlags::Entity entities) const
         {
-            return static_cast<int>(maskBySupportedEntities(entities)) > 0;
+            return static_cast<int>(this->maskBySupportedEntities(entities)) > 0;
         }
 
         bool CDatabaseReader::hasCacheTimestampNewerThan(CEntityFlags::Entity entity, const QDateTime &threshold) const
