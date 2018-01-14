@@ -162,7 +162,7 @@ namespace BlackMiscTest
      */
     void CTestPhysicalQuantities::pressureTests()
     {
-        const CPressure p1(1013.25, CPressureUnit::hPa());
+        const CPressure p1(CPhysicalQuantitiesConstants::ISASeaLevelPressure());
         const CPressure p2(29.92, CPressureUnit::inHg());
         CPressure p4(p1);
         p4.switchUnit(CPressureUnit::mbar());

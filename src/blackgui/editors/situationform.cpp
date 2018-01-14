@@ -17,6 +17,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
@@ -57,12 +58,12 @@ namespace BlackGui
 
         CAircraftSituation CSituationForm::getSituation() const
         {
-            const BlackMisc::Geo::CCoordinateGeodetic position = ui->comp_Coordinate->getCoordinate();
+            const CCoordinateGeodetic position = ui->comp_Coordinate->getCoordinate();
+            const CAltitude pressureAltitude(position.geodeticHeight().toPressureAltitude(this->getBarometricPressureMsl()));
+
             CAircraftSituation s(position);
             s.setBank(this->getBankAngle());
             s.setPitch(this->getPitchAngle());
-
-            CAltitude pressureAltitude(position.geodeticHeight().toPressureAltitude(this->getBarometricPressureMsl()));
             s.setPressureAltitude(pressureAltitude);
             return s;
         }
@@ -100,13 +101,13 @@ namespace BlackGui
             const QString v(ui->le_Pressure->text().replace(',', '.'));
             bool ok;
             double vd = v.toDouble(&ok);
-            if (!ok) { vd = 1013.25; }
+            if (!ok) { vd = CAltitude::standardISASeaLevelPressure().value(CPressureUnit::mbar()); }
             return vd;
         }
 
         CPressure CSituationForm::getBarometricPressureMsl() const
         {
-            return CPressure (getBarometricPressureMslMillibar(), CPressureUnit::mbar());
+            return CPressure(getBarometricPressureMslMillibar(), CPressureUnit::mbar());
         }
 
         void CSituationForm::setReadOnly(bool readonly)
@@ -207,8 +208,10 @@ namespace BlackGui
 
         void CSituationForm::resetPressure()
         {
-            ui->le_Pressure->setText("1013.00");
-            ui->hs_Pressure->setValue(1013);
+            static const int v = CAltitude::standardISASeaLevelPressure().valueInteger(CPressureUnit::mbar());
+            static const QString vs(dotToLocaleDecimalPoint(QString::number(CAltitude::standardISASeaLevelPressure().valueRounded(CPressureUnit::mbar(), 2))));
+            ui->le_Pressure->setText(vs);
+            ui->hs_Pressure->setValue(v);
         }
     } // ns
 } // ns

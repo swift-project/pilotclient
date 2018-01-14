@@ -300,6 +300,12 @@ namespace BlackMisc
         return input.replace('.', QLocale::system().decimalPoint());
     }
 
+    QString dotToLocaleDecimalPoint(const QString &input)
+    {
+        QString copy(input);
+        return copy.replace('.', QLocale::system().decimalPoint());
+    }
+
     bool stringCompare(const QString &c1, const QString &c2, Qt::CaseSensitivity cs)
     {
         if (cs == Qt::CaseSensitive) { return c1 == c2; }

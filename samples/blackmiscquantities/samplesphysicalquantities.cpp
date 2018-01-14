@@ -11,6 +11,7 @@
 //! \ingroup sampleblackmiscquantities
 
 #include "samplesphysicalquantities.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/pq/acceleration.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/frequency.h"
@@ -28,6 +29,7 @@
 #include <QTextStream>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackSample
@@ -96,7 +98,7 @@ namespace BlackSample
         w2.switchUnit(CMassUnit::lb());
         out << w1 << " " << w1.valueRoundedWithUnit(CMassUnit::kg()) << " " << w2 << endl;
 
-        CPressure p1(1013.25, CPressureUnit::hPa());
+        CPressure p1(CAltitude::standardISASeaLevelPressure());
         out << p1 << " " << p1.valueRoundedWithUnit(CPressureUnit::psi()) << " " << p1.valueRoundedWithUnit(CPressureUnit::inHg()) << endl;
 
         CTemperature t1;
@@ -130,5 +132,4 @@ namespace BlackSample
         out << "-----------------------------------------------" << endl;
         return 0;
     }
-
 } // namespace

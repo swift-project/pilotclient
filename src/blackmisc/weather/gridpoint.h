@@ -12,18 +12,19 @@
 #ifndef BLACKMISC_WEATHER_GRIDPOINT_H
 #define BLACKMISC_WEATHER_GRIDPOINT_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/metaclass.h"
-#include "blackmisc/pq/pressure.h"
-#include "blackmisc/pq/units.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/temperaturelayerlist.h"
 #include "blackmisc/weather/visibilitylayerlist.h"
 #include "blackmisc/weather/windlayerlist.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/metaclass.h"
 
 #include <QMetaType>
 #include <QString>
@@ -41,7 +42,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexIdentifier = BlackMisc::CPropertyIndex::GlobalIndexCGridPoint,
+                IndexIdentifier = CPropertyIndex::GlobalIndexCGridPoint,
                 IndexPosition,
                 IndexCloudLayers,
                 IndexTemperatureLayers,
@@ -69,37 +70,37 @@ namespace BlackMisc
             void setIdentifier(const QString &identifier) { m_identifier = identifier; }
 
             //! Get identifier
-            QString getIdentifier() const { return m_identifier; }
+            const QString &getIdentifier() const { return m_identifier; }
 
             //! Set position
-            void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { m_position = position; }
+            void setPosition(const Geo::CCoordinateGeodetic &position) { m_position = position; }
 
             //! Get position
-            const BlackMisc::Geo::CCoordinateGeodetic getPosition() const { return m_position; }
+            const Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
 
             //! Set cloud layers
             void setCloudLayers(const CCloudLayerList &cloudLayers) { m_cloudLayers = cloudLayers; }
 
             //! Get cloud layers
-            CCloudLayerList getCloudLayers() const { return m_cloudLayers; }
+            const CCloudLayerList &getCloudLayers() const { return m_cloudLayers; }
 
             //! Set temperature layers
             void setTemperatureLayers(const CTemperatureLayerList &temperatureLayers) { m_temperatureLayers = temperatureLayers; }
 
             //! Get temperature layers
-            CTemperatureLayerList getTemperatureLayers() const { return m_temperatureLayers; }
+            const CTemperatureLayerList &getTemperatureLayers() const { return m_temperatureLayers; }
 
             //! Set visibility layers
             void setVisibilityLayers(const CVisibilityLayerList &visibilityLayers) { m_visibilityLayers = visibilityLayers; }
 
             //! Get visibility layers
-            CVisibilityLayerList getVisibilityLayers() const { return m_visibilityLayers; }
+            const CVisibilityLayerList &getVisibilityLayers() const { return m_visibilityLayers; }
 
             //! Set wind layers
             void setWindLayers(const CWindLayerList &windLayers) { m_windLayers = windLayers; }
 
             //! Get wind layers
-            CWindLayerList getWindLayers() const { return m_windLayers; }
+            const CWindLayerList &getWindLayers() const { return m_windLayers; }
 
             //! Copies all weather data from other without modifying identifier and position.
             void copyWeatherDataFrom(const CGridPoint &other);
@@ -108,7 +109,7 @@ namespace BlackMisc
             void setSurfacePressure(const PhysicalQuantities::CPressure &pressure) { m_surfacePressure = pressure; }
 
             //! Get surface pressure
-            PhysicalQuantities::CPressure getSurfacePressure() const { return m_surfacePressure; }
+            const PhysicalQuantities::CPressure &getSurfacePressure() const { return m_surfacePressure; }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -120,14 +121,13 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            // Identifier is intentionally string based. MSFS uses ICAO but others don't.
-            QString m_identifier;
-            BlackMisc::Geo::CCoordinateGeodetic m_position;
+            QString m_identifier; //!< Identifier is intentionally string based. MSFS uses ICAO, but others don't.
+            Geo::CCoordinateGeodetic m_position;
             CCloudLayerList m_cloudLayers;
             CTemperatureLayerList m_temperatureLayers;
             CVisibilityLayerList m_visibilityLayers;
             CWindLayerList m_windLayers;
-            PhysicalQuantities::CPressure m_surfacePressure = { 1013.25, PhysicalQuantities::CPressureUnit::hPa() };
+            PhysicalQuantities::CPressure m_surfacePressure = { PhysicalQuantities::CPhysicalQuantitiesConstants::ISASeaLevelPressure() };
 
             BLACK_METACLASS(
                 CGridPoint,

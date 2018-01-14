@@ -34,8 +34,8 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CPressure(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressure)
 

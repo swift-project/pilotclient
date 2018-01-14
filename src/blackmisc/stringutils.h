@@ -145,6 +145,9 @@ namespace BlackMisc
     //! Replace dot '.' by locale decimal point
     BLACKMISC_EXPORT QString dotToLocaleDecimalPoint(QString &input);
 
+    //! Replace dot '.' by locale decimal point
+    BLACKMISC_EXPORT QString dotToLocaleDecimalPoint(const QString &input);
+
     //! Int to hex value (per byte, 2 digits)
     BLACKMISC_EXPORT QString bytesToHexString(const QByteArray &bytes);
 

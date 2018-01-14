@@ -74,7 +74,7 @@ namespace BlackGui
             //! Get pitch angle
             double getPitchAngleDegrees() const;
 
-            //! Get barometric pressure at mean sea level
+            //! Get barometric pressure at MSL (mean sea level)
             BlackMisc::PhysicalQuantities::CPressure getBarometricPressureMsl() const;
 
             //! Get pressure at mean sea level

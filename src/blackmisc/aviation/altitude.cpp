@@ -11,6 +11,7 @@
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/pq/measurementunit.h"
+#include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/pqstring.h"
 
 #include <Qt>
@@ -22,7 +23,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        CAltitude::CAltitude(const QString &altitudeAsString, PhysicalQuantities::CPqString::SeparatorMode mode) : CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
+        CAltitude::CAltitude(const QString &altitudeAsString, CPqString::SeparatorMode mode) : CLength(0, CLengthUnit::m()), m_datum(MeanSeaLevel)
         {
             this->parseFromString(altitudeAsString, mode);
         }
@@ -31,7 +32,7 @@ namespace BlackMisc
         {
             if (this->m_datum == FlightLevel)
             {
-                int fl = qRound(this->CLength::value(CLengthUnit::ft()) / 100.0);
+                const int fl = qRound(this->CLength::value(CLengthUnit::ft()) / 100.0);
                 return QString("FL%1").arg(fl);
             }
             else
@@ -45,7 +46,7 @@ namespace BlackMisc
                 {
                     s = this->CLength::valueRoundedWithUnit(CLengthUnit::ft(), 0, i18n);
                 }
-                return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
+                return s.append(this->isMeanSeaLevel() ? QStringLiteral(" MSL") : QStringLiteral(" AGL"));
             }
         }
 
@@ -81,10 +82,10 @@ namespace BlackMisc
 
         void CAltitude::parseFromString(const QString &value)
         {
-            this->parseFromString(value, PhysicalQuantities::CPqString::SeparatorsCLocale);
+            this->parseFromString(value, CPqString::SeparatorsCLocale);
         }
 
-        void CAltitude::parseFromString(const QString &value, PhysicalQuantities::CPqString::SeparatorMode mode)
+        void CAltitude::parseFromString(const QString &value, CPqString::SeparatorMode mode)
         {
             QString v = value.trimmed();
 
@@ -94,8 +95,8 @@ namespace BlackMisc
                 v = v.replace("FL", "", Qt::CaseInsensitive).trimmed();
                 bool ok = false;
                 double dv = v.toDouble(&ok) * 100.0;
-                CAltitude a(ok ? dv : 0.0, FlightLevel,
-                            ok ? CLengthUnit::ft() : nullptr);
+                const CAltitude a(ok ? dv : 0.0, FlightLevel,
+                                  ok ? CLengthUnit::ft() : nullptr);
                 *this = a;
                 return;
             }
@@ -113,7 +114,7 @@ namespace BlackMisc
                 rd = AboveGround;
             }
 
-            const CLength l = BlackMisc::PhysicalQuantities::CPqString::parse<CLength>(v, mode);
+            const CLength l = CPqString::parse<CLength>(v, mode);
             *this = CAltitude(l, rd);
         }
 
@@ -312,6 +313,13 @@ namespace BlackMisc
         {
             static const CAltitude null(0, CAltitude::MeanSeaLevel, CLengthUnit::nullUnit());
             return null;
+        }
+
+        const CPressure &CAltitude::standardISASeaLevelPressure()
+        {
+            // Average sea-level pressure is 1013.25mbar or 1013.25hPa
+            static const CPressure standardPressure(CPhysicalQuantitiesConstants::ISASeaLevelPressure());
+            return standardPressure;
         }
     } // namespace
 } // namespace

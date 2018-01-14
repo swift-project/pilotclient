@@ -46,8 +46,9 @@ namespace BlackWxPlugin
 
         double millibarToLevel(double millibar)
         {
+            static const double hPaStandardPressure = CPhysicalQuantitiesConstants::ICAOFlightLevelPressure().value(CPressureUnit::mbar());
             millibar /= 100;
-            double level = (1 - std::pow(millibar / 1013.25, 0.190284)) * 145366.45;
+            double level = (1 - std::pow(millibar / hPaStandardPressure, 0.190284)) * 145366.45;
             return level;
         }
 

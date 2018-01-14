@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         /*!
          * Physical quantities constants
          */
@@ -43,14 +42,14 @@ namespace BlackMisc
             //! International Standard Atmosphere pressure at mean sea level, 1013.25hPa
             static const CPressure &ISASeaLevelPressure()
             {
-                static CPressure p(1013.25, CPressureUnit::hPa());
+                static CPressure p(1013.25, CPressureUnit::mbar());
                 return p;
             }
 
             //! ICAO standard pressure datum for flight levels, 1013.2hPa
             static const CPressure &ICAOFlightLevelPressure()
             {
-                static CPressure p(1013.2, CPressureUnit::hPa());
+                static CPressure p(1013.2, CPressureUnit::mbar());
                 return p;
             }
 
