@@ -185,14 +185,26 @@ namespace BlackCore
 
     bool CWebDataServices::hasDbAircraftData() const
     {
-        return (this->getModelsCount() > 0) && (this->getLiveriesCount() > 0) && (this->getDistributorsCount() > 0) && (this->getAircraftIcaoCodesCount() > 0);
+        return this->hasDbIcaoData() && this->hasDbModelData();
+    }
+
+    bool CWebDataServices::hasDbModelData() const
+    {
+        return (this->getModelsCount() > 0) && (this->getLiveriesCount() > 0) && (this->getDistributorsCount() > 0);
+    }
+
+    bool CWebDataServices::hasDbIcaoData() const
+    {
+        return (this->getAircraftIcaoCodesCount() > 0) && (this->getAirlineIcaoCodesCount() > 0) && (this->getCountriesCount() > 0);
     }
 
     void CWebDataServices::admitDbCaches(CEntityFlags::Entity entities)
     {
+        if (m_shuttingDown) { return; }
+
         // hint: those 2 are currently doing nothing, but this might change in the future
-        if (m_dbInfoDataReader)     { m_dbInfoDataReader->admitCaches(entities); }
-        if (m_sharedInfoDataReader) { m_sharedInfoDataReader->admitCaches(entities); }
+        // if (m_dbInfoDataReader)     { m_dbInfoDataReader->admitCaches(entities); }
+        // if (m_sharedInfoDataReader) { m_sharedInfoDataReader->admitCaches(entities); }
 
         // hint: all the readers use own threads
         if (m_modelDataReader)   { m_modelDataReader->admitCaches(entities); }
@@ -200,9 +212,24 @@ namespace BlackCore
         if (m_airportDataReader) { m_airportDataReader->admitCaches(entities); }
     }
 
+    void CWebDataServices::synchronizeDbCaches(CEntityFlags::Entity entities)
+    {
+        if (m_shuttingDown) { return; }
+
+        // hint: those 2 are currently doing nothing, but this might change in the future
+        // if (m_dbInfoDataReader)     { m_dbInfoDataReader->synchronizeCaches(entities); }
+        // if (m_sharedInfoDataReader) { m_sharedInfoDataReader->synchronizeCaches(entities); }
+
+        // hint: all the readers use own threads
+        if (m_modelDataReader)   { m_modelDataReader->synchronizeCaches(entities); }
+        if (m_icaoDataReader)    { m_icaoDataReader->synchronizeCaches(entities); }
+        if (m_airportDataReader) { m_airportDataReader->synchronizeCaches(entities); }
+    }
+
     CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
+
         m_initialRead = true; // read started
         Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront");
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
@@ -390,6 +417,20 @@ namespace BlackCore
         Q_ASSERT_X(m_sharedInfoDataReader, Q_FUNC_INFO, "Shared info reader was not initialized");
         if (m_sharedInfoDataReader->getInfoObjectCount() < 1) { return CEntityFlags::NoEntity; }
         return m_sharedInfoDataReader->getEntitesWithNewerSharedInfoObject(entities);
+    }
+
+    CEntityFlags::Entity CWebDataServices::getEmptyEntities(CEntityFlags::Entity entities) const
+    {
+        entities &= CEntityFlags::AllDbEntities; // handled by this reader
+        CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(entities);
+        CEntityFlags::Entity emptyEntities = CEntityFlags::NoEntity;
+        while (currentEntity != CEntityFlags::NoEntity)
+        {
+            const int c = this->getCacheCount(currentEntity);
+            if (c < 1) { emptyEntities |= currentEntity; }
+            currentEntity = CEntityFlags::iterateDbEntities(entities);
+        }
+        return emptyEntities;
     }
 
     int CWebDataServices::getCacheCount(CEntityFlags::Entity entity) const

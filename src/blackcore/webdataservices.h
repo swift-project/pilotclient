@@ -397,6 +397,11 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CEntityFlags::Entity getEntitiesWithNewerSharedFile(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
+        //! Empty entities in cache
+        //! \remark can also be empty because cache is not yet synchronized
+        //! \threadsafe
+        BlackMisc::Network::CEntityFlags::Entity getEmptyEntities(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllDbEntities) const;
+
         //! Cache count for entity
         //! \threadsafe
         int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
@@ -423,6 +428,12 @@ namespace BlackCore
 
         //! Are all DB data for an aircraft entity available?
         bool hasDbAircraftData() const;
+
+        //! Are DB model data available?
+        bool hasDbModelData() const;
+
+        //! Are all DB ICAO data available?
+        bool hasDbIcaoData() const;
 
         //! Admit all DB caches specified
         void admitDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
