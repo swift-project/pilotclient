@@ -13,6 +13,7 @@
 #define BLACKMISC_DATACACHE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/threadutils.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
@@ -71,7 +72,7 @@ namespace BlackMisc
 
         private:
             CValuePage *m_page = nullptr;
-            QList<std::pair<CValueCachePacket, QObject*>> m_queue;
+            QList<std::pair<CValueCachePacket, QObject *>> m_queue;
             QMutex m_mutex;
         };
     }
@@ -329,7 +330,7 @@ namespace BlackMisc
             if (Trait::isPinned()) { CDataCache::instance()->pinValue(this->getKey()); }
             if (Trait::isDeferred()) { CDataCache::instance()->deferValue(this->getKey()); }
             if (Trait::isSession()) { CDataCache::instance()->sessionValue(this->getKey()); }
-            static_assert(! (Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
+            static_assert(!(Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
         }
 
         //! Constructor.
@@ -381,12 +382,18 @@ namespace BlackMisc
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
         void synchronize()
         {
+            // does not compile on gcc without this -> this->m_page
             auto *queue = this->m_page->template findChild<Private::CDataPageQueue *>();
             Q_ASSERT(queue);
-            admit();
-            CDataCache::instance()->synchronize(this->getKey());
-            CDataCache::instance()->synchronize(this->getKey()); // if load was in progress when admit() was called, synchronize with the next load
-            queue->setQueuedValueFromCache(this->getKey());
+            this->admit();
+            const QString key(this->getKey());
+            CDataCache::instance()->synchronize(key);
+            CDataCache::instance()->synchronize(key); // if load was in progress when admit() was called, synchronize with the next load
+
+            // run in page thread
+            //! \todo KB 2018-01 is this OK or should it go to CValuePage::setValuesFromCache?
+            if (CThreadUtils::isCurrentThreadObjectThread(this->m_page)) { queue->setQueuedValueFromCache(key); }
+            else { QTimer::singleShot(0, queue, [ = ] { queue->setQueuedValueFromCache(key); }); }
         }
 
         //! Data cache doesn't support setAndSave (because set() already causes save anyway).
