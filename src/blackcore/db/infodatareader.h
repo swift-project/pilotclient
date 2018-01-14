@@ -78,7 +78,8 @@ namespace BlackCore
             //! URL shared info objects
             BlackMisc::Network::CUrl getSharedInfoObjectsUrl() const;
 
-            //! Entity for mode
+            //! Info object entity for mode
+            //! \remark CEntityFlags::DbInfoObjectEntity or CEntityFlags::SharedInfoObjectEntity
             BlackMisc::Network::CEntityFlags::EntityFlag getEntityForMode() const;
 
             BlackMisc::Db::CDbFlags::DataRetrievalModeFlag m_mode; //!< shared or DB web service?

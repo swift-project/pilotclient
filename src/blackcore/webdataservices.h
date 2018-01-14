@@ -375,10 +375,10 @@ namespace BlackCore
         //! \note requires info objects loaded upfront and uses the full cache logic
         BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
 
-        //! Trigger reload from DB, only loads the DB data and bypasses the caches checks and info objects
+        //! Trigger reload from DB, loads the DB data and bypasses the caches checks and info objects
         BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromDb(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
 
-        //! Trigger reload from shared files, only loads the data and bypasses caches
+        //! Trigger reload from shared files, loads the data and bypasses caches
         BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(BlackMisc::Network::CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront);
 
         //! Corresponding cache timestamp if applicable
@@ -421,11 +421,15 @@ namespace BlackCore
         //! Reset the flags what was already signaled
         void resetSignalFlags();
 
-        //! All DB data for an aircraft entity available?
+        //! Are all DB data for an aircraft entity available?
         bool hasDbAircraftData() const;
 
-        //! Admit all DB caches
+        //! Admit all DB caches specified
         void admitDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
+
+        //! Synchronize all DB caches specified
+        //! \remark can be slow if all data are forced to be loaded
+        void synchronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Write data to disk (mainly for testing scenarios)
         bool writeDbDataToDisk(const QString &dir) const;

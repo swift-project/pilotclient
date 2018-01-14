@@ -62,7 +62,7 @@ namespace BlackCore
 
             if (sApp && sApp->getWebDataServices())
             {
-                connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CContextOwnAircraft::ps_allSwiftWebDataRead);
+                connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CContextOwnAircraft::allSwiftWebDataRead);
             }
 
             // Init own aircraft
@@ -322,7 +322,7 @@ namespace BlackCore
             if (this->getIContextAudio()) this->getIContextAudio()->setVoiceOutputVolume(outputVolume);
         }
 
-        void CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
+        void CContextOwnAircraft::changedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
         {
             // any of our active frequencies?
             Q_UNUSED(connected);
@@ -331,12 +331,12 @@ namespace BlackCore
             this->resolveVoiceRooms();
         }
 
-        void CContextOwnAircraft::ps_changedSimulatorModel(const CAircraftModel &model)
+        void CContextOwnAircraft::changedSimulatorModel(const CAircraftModel &model)
         {
             this->updateOwnModel(model);
         }
 
-        void CContextOwnAircraft::ps_allSwiftWebDataRead()
+        void CContextOwnAircraft::allSwiftWebDataRead()
         {
             // we should already have received a reverse lookup model
             // from the driver

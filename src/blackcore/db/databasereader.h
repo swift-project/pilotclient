@@ -241,10 +241,10 @@ namespace BlackCore
             //! Is the shared info timestamp newer than cache timestamp?
             bool isSharedInfoObjectNewerThanCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
-            //! Those entities where the timestamp of header is newer than the cache timestamp
+            //! Those entities where the timestamp of the header is newer than the cache timestamp
             BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
-            //! Those entities where the timestamp of shared info obejct is newer than the cache timestamp
+            //! Those entities where the timestamp of a shared info object is newer than the cache timestamp
             BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerSharedInfoObject(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! Request headers of shared file

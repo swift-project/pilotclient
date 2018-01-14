@@ -232,7 +232,7 @@ namespace BlackCore
                             this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorSelcalFromContext);
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
-                            this->getCContextOwnAircraft(), &CContextOwnAircraft::ps_changedSimulatorModel);
+                            this->getCContextOwnAircraft(), &CContextOwnAircraft::changedSimulatorModel);
                 Q_ASSERT(c);
             }
 
@@ -245,7 +245,7 @@ namespace BlackCore
         if (m_contextNetwork && m_contextOwnAircraft && m_contextNetwork->isUsingImplementingObject() && m_contextOwnAircraft->isUsingImplementingObject())
         {
             c = connect(m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
-                        this->getCContextOwnAircraft(),  &CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus);
+                        this->getCContextOwnAircraft(),  &CContextOwnAircraft::changedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
             times.insert("Post setup, connects network", time.restart());
         }

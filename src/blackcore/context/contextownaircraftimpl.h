@@ -174,18 +174,6 @@ namespace BlackCore
             //! Register myself in DBus
             CContextOwnAircraft *registerWithDBus(BlackMisc::CDBusServer *server);
 
-        private slots:
-            //! Station has been changed, needed to tune in/out voice room
-            //! \ingroup crosscontextslot
-            void ps_changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
-
-            //! Simulator model has been changed
-            //! \ingroup crosscontextslot
-            void ps_changedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
-
-            //! Web data loaded
-            void ps_allSwiftWebDataRead();
-
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
             bool m_automaticVoiceRoomResolution = true;              //!< automatic voice room resolution, or disable for override
@@ -194,6 +182,17 @@ namespace BlackCore
             mutable QReadWriteLock m_lockAircraft;                   //!< lock aircraft
 
             BlackMisc::CSetting<Vatsim::TCurrentTrafficServer> m_currentNetworkServer { this };
+
+            //! Station has been changed, needed to tune in/out voice room
+            //! \ingroup crosscontextslot
+            void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
+
+            //! Simulator model has been changed
+            //! \ingroup crosscontextslot
+            void changedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Web data loaded
+            void allSwiftWebDataRead();
 
             //! Init my very own aircraft with some defaults, before overridden by simulator
             void initOwnAircraft();
