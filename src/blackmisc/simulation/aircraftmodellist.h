@@ -190,10 +190,10 @@ namespace BlackMisc
             QString designatorToFamily(const Aviation::CAircraftIcaoCode &aircraftIcaoCode) const;
 
             //! Find for given simulator
-            CAircraftModelList matchesSimulator(const Simulation::CSimulatorInfo &simulator) const;
+            CAircraftModelList matchesSimulator(const CSimulatorInfo &simulator) const;
 
             //! Set simulator for all elements
-            int setSimulatorInfo(const Simulation::CSimulatorInfo &info);
+            int setSimulatorInfo(const CSimulatorInfo &info);
 
             //! Which simulators are supported in that model list
             CSimulatorInfo simulatorsSupported() const;
@@ -295,7 +295,7 @@ namespace BlackMisc
             ScoredModels scoreFull(const CAircraftModel &remoteModel, bool preferColorLiveries, bool ignoreZeroScores = true, CStatusMessageList *log = nullptr) const;
 
             //! Completer strings
-            QStringList toCompleterStrings(bool sorted = true, const Simulation::CSimulatorInfo &simulator = { Simulation::CSimulatorInfo::All }) const;
+            QStringList toCompleterStrings(bool sorted = true, const CSimulatorInfo &simulator = { CSimulatorInfo::All }) const;
 
             //! Validate for publishing
             CStatusMessageList validateForPublishing() const;
@@ -304,7 +304,7 @@ namespace BlackMisc
             CStatusMessageList validateForPublishing(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
             //! Validate distributors
-            CStatusMessageList validateDistributors(const Simulation::CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
+            CStatusMessageList validateDistributors(const CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
             //! To compact JSON format
             QJsonObject toMemoizedJson() const;
