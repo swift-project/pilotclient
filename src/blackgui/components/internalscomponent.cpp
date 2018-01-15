@@ -58,29 +58,29 @@ namespace BlackGui
             ui->le_TxtMsgFrom->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
             ui->le_TxtMsgTo->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
 
-            connect(ui->pb_SendAircraftPartsGui, &QPushButton::pressed, this, &CInternalsComponent::ps_sendAircraftParts);
-            connect(ui->pb_SendAircraftPartsJson, &QPushButton::pressed, this, &CInternalsComponent::ps_sendAircraftParts);
-            connect(ui->pb_CurrentParts, &QPushButton::pressed, this, &CInternalsComponent::ps_setCurrentParts);
+            connect(ui->pb_SendAircraftPartsGui, &QPushButton::pressed, this, &CInternalsComponent::sendAircraftParts);
+            connect(ui->pb_SendAircraftPartsJson, &QPushButton::pressed, this, &CInternalsComponent::sendAircraftParts);
+            connect(ui->pb_CurrentParts, &QPushButton::pressed, this, &CInternalsComponent::setCurrentParts);
 
-            connect(ui->cb_DebugContextAudio, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
-            connect(ui->cb_DebugContextApplication, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
-            connect(ui->cb_DebugContextNetwork, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
-            connect(ui->cb_DebugContextOwnAircraft, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
-            connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
+            connect(ui->cb_DebugContextAudio, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_DebugContextApplication, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_DebugContextNetwork, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_DebugContextOwnAircraft, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
 
-            connect(ui->cb_DebugDriver, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
-            connect(ui->cb_ForceFullInterpolation, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
-            connect(ui->cb_EnableParts, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
+            connect(ui->cb_DebugDriver, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_ForceFullInterpolation, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
+            connect(ui->cb_EnableParts, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
 
-            connect(ui->pb_SendTextMessage, &QPushButton::pressed, this, &CInternalsComponent::ps_sendTextMessage);
-            connect(ui->tb_LogStatusMessage, &QPushButton::pressed, this, &CInternalsComponent::ps_logStatusMessage);
-            connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::ps_logStatusMessage);
+            connect(ui->pb_SendTextMessage, &QPushButton::pressed, this, &CInternalsComponent::sendTextMessage);
+            connect(ui->tb_LogStatusMessage, &QPushButton::pressed, this, &CInternalsComponent::logStatusMessage);
+            connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::logStatusMessage);
 
-            connect(ui->pb_LatestInterpolationLog, &QPushButton::pressed, this, &CInternalsComponent::ps_showLogFiles);
-            connect(ui->pb_LatestPartsLog, &QPushButton::pressed, this, &CInternalsComponent::ps_showLogFiles);
-            connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::ps_requestPartsFromNetwork);
+            connect(ui->pb_LatestInterpolationLog, &QPushButton::pressed, this, &CInternalsComponent::showLogFiles);
+            connect(ui->pb_LatestPartsLog, &QPushButton::pressed, this, &CInternalsComponent::showLogFiles);
+            connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::requestPartsFromNetwork);
 
-            connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::ps_selectorChanged);
+            connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
 
             contextFlagsToGui();
         }
@@ -94,7 +94,7 @@ namespace BlackGui
             QWidget::showEvent(event);
         }
 
-        void CInternalsComponent::ps_sendAircraftParts()
+        void CInternalsComponent::sendAircraftParts()
         {
             Q_ASSERT(sGui->getIContextNetwork());
             if (!sGui->getIContextNetwork()->isConnected())
@@ -118,7 +118,7 @@ namespace BlackGui
             CLogMessage(this).info("Added parts for %1") << callsign.toQString();
         }
 
-        void CInternalsComponent::ps_setCurrentParts()
+        void CInternalsComponent::setCurrentParts()
         {
             if (!sGui->getIContextNetwork()->isConnected()) { return; }
             const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
@@ -136,7 +136,7 @@ namespace BlackGui
             ui->tb_History->setToolTip(history.toHtml());
         }
 
-        void CInternalsComponent::ps_enableDebug(int state)
+        void CInternalsComponent::enableDebug(int state)
         {
             Q_ASSERT(sGui->getIContextApplication());
             Q_ASSERT(sGui->getIContextAudio());
@@ -163,7 +163,7 @@ namespace BlackGui
             }
         }
 
-        void CInternalsComponent::ps_sendTextMessage()
+        void CInternalsComponent::sendTextMessage()
         {
             if (ui->le_TxtMsgTo->text().isEmpty()) { return; }
             if (ui->le_TxtMsgFrom->text().isEmpty()) { return; }
@@ -189,7 +189,7 @@ namespace BlackGui
             sGui->getIContextNetwork()->testReceivedTextMessages(CTextMessageList({ tm }));
         }
 
-        void CInternalsComponent::ps_logStatusMessage()
+        void CInternalsComponent::logStatusMessage()
         {
             if (ui->le_StatusMessage->text().isEmpty()) { return; }
             CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
@@ -209,7 +209,7 @@ namespace BlackGui
             CLogMessage::preformatted(sm);
         }
 
-        void CInternalsComponent::ps_showLogFiles()
+        void CInternalsComponent::showLogFiles()
         {
             QString file;
             const QObject *sender = QObject::sender();
@@ -226,7 +226,7 @@ namespace BlackGui
             QDesktopServices::openUrl(QUrl::fromLocalFile(file));
         }
 
-        void CInternalsComponent::ps_requestPartsFromNetwork()
+        void CInternalsComponent::requestPartsFromNetwork()
         {
             const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
             if (callsign.isEmpty())
@@ -246,9 +246,9 @@ namespace BlackGui
             });
         }
 
-        void CInternalsComponent::ps_selectorChanged()
+        void CInternalsComponent::selectorChanged()
         {
-            this->ps_setCurrentParts();
+            this->setCurrentParts();
         }
 
         void CInternalsComponent::contextFlagsToGui()

@@ -43,36 +43,35 @@ namespace BlackGui
             //! \copydoc QWidget::showEvent
             virtual void showEvent(QShowEvent *event) override;
 
-        private slots:
+        private:
             //! Send aircraft parts
-            void ps_sendAircraftParts();
+            void sendAircraftParts();
 
             //! Current parts in UI
-            void ps_setCurrentParts();
+            void setCurrentParts();
 
             //! Enable / disable debugging
-            void ps_enableDebug(int state);
+            void enableDebug(int state);
 
             //! Send the text message
-            void ps_sendTextMessage();
+            void sendTextMessage();
 
             //! Send a dummy status message
-            void ps_logStatusMessage();
+            void logStatusMessage();
 
             //! Show log files
-            void ps_showLogFiles();
+            void showLogFiles();
 
             //! Request parts (aka aircraft config) from network
-            void ps_requestPartsFromNetwork();
+            void requestPartsFromNetwork();
 
             //! Selector has been changed
-            void ps_selectorChanged();
-
-        private:
-            QScopedPointer<Ui::CInternalsComponent> ui;
+            void selectorChanged();
 
             //! Set the context flags
             void contextFlagsToGui();
+
+            QScopedPointer<Ui::CInternalsComponent> ui;
         };
     } // namespace
 } // namespace
