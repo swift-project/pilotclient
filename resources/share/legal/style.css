@@ -34,3 +34,8 @@ pre {
 	font: 100% Courier;
 	
 }
+
+th {
+	text-align: left;
+	background-color: lightgray;
+}
