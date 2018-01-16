@@ -68,7 +68,7 @@ namespace BlackGui
             BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
             BlackMisc::CDataReadOnly<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
 
-            static constexpr int showOverlayMs = 5000;
+            static constexpr int OverlayMessageMs = 5000;
 
             //! Validate, generates status messages
             BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);

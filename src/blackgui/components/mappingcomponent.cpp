@@ -66,6 +66,8 @@ namespace BlackGui
             Q_ASSERT_X(sGui->getIContextNetwork(), Q_FUNC_INFO, "need network context");
 
             ui->setupUi(this);
+            ui->tw_ListViews->setCurrentIndex(0);
+
             ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnAircraftModelClient);
             ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
             ui->tvp_AircraftModels->addFilterDialog();
@@ -94,6 +96,10 @@ namespace BlackGui
 
             m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
             ui->tvp_RenderedAircraft->setItemDelegateForColumn(0, m_currentMappingsViewDelegate);
+
+            // overlay
+            this->setReducedInfo(true);
+            this->setForceSmall(true);
             this->showKillButton(false);
 
             // Aircraft previews
@@ -128,6 +134,12 @@ namespace BlackGui
 
         CMappingComponent::~CMappingComponent()
         { }
+
+        const CLogCategoryList &CMappingComponent::getLogCategories()
+        {
+            static const CLogCategoryList cats({ CLogCategory::mapping(), CLogCategory::guiComponent() });
+            return cats;
+        }
 
         int CMappingComponent::countCurrentMappings() const
         {
@@ -182,7 +194,7 @@ namespace BlackGui
             if (!saFromBackend.hasValidCallsign()) { return; } // obviously deleted
             const bool nowEnabled = sa.isEnabled();
             if (saFromBackend.isEnabled() == nowEnabled) { return; } // already same value
-            CLogMessage(this).info("Request to %1 aircraft %2") << (nowEnabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
+            CLogMessage(this).info("Request to %1 aircraft '%2'") << (nowEnabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
             sGui->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), nowEnabled);
         }
 
@@ -218,12 +230,12 @@ namespace BlackGui
             }
         }
 
-        CCallsign CMappingComponent::validateRenderedCallsign() const
+        CCallsign CMappingComponent::validateRenderedCallsign()
         {
             const QString cs = ui->le_Callsign->text().trimmed();
             if (!CCallsign::isValidAircraftCallsign(cs))
             {
-                CLogMessage(this).validationError("Invalid callsign for mapping");
+                this->showOverlayMessage(CStatusMessage(this).validationError("Invalid callsign for mapping"), OverlayMessageMs);
                 return CCallsign();
             }
 
@@ -231,7 +243,8 @@ namespace BlackGui
             const bool hasCallsign = ui->tvp_RenderedAircraft->container().containsCallsign(callsign);
             if (!hasCallsign)
             {
-                CLogMessage(this).validationError("Unmapped callsign %1 for mapping") << callsign.asString();
+                const CStatusMessage msg = CStatusMessage(this).validationError("Unmapped callsign '%1' for mapping") << callsign.asString();
+                this->showOverlayMessage(msg);
                 return CCallsign();
             }
             return callsign;
@@ -245,14 +258,14 @@ namespace BlackGui
             const QString modelString = ui->completer_ModelStrings->getModelString();
             if (modelString.isEmpty())
             {
-                CLogMessage(this).validationError("Missing model for mapping");
+                this->showOverlayMessage(CStatusMessage(this).validationError("Missing model for mapping"), OverlayMessageMs);
                 return;
             }
 
             const bool hasModel = ui->tvp_AircraftModels->container().containsModelString(modelString);
             if (!hasModel)
             {
-                CLogMessage(this).validationError("Invalid model for mapping, reload models");
+                this->showOverlayMessage(CStatusMessage(this).validationError("Invalid model for mapping, reloading model set"), OverlayMessageMs);
                 if (ui->tvp_AircraftModels->isEmpty())
                 {
                     this->onModelsUpdateRequested();
@@ -268,7 +281,8 @@ namespace BlackGui
                 const CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);
                 if (models.isEmpty())
                 {
-                    CLogMessage(this).validationError("No model for title: %1") << modelString;
+                    const CStatusMessage msg = CStatusMessage(this).validationError("No model for title: '%1'") << modelString;
+                    this->showOverlayMessage(msg, OverlayMessageMs);
                     return;
                 }
 
@@ -281,11 +295,12 @@ namespace BlackGui
                     }
                     else
                     {
-                        CLogMessage(this).validationInfo("Ambigious title: %1, using %2") << modelString << model.getModelString();
+                        const CStatusMessage msg = CStatusMessage(this).validationInfo("Ambigious title: '%1', using '%2'") << modelString << model.getModelString();
+                        this->showOverlayMessage(msg, OverlayMessageMs);
                     }
                 }
                 model.setModelType(CAircraftModel::TypeManuallySet);
-                CLogMessage(this).info("Requesting changes for %1") << callsign.asString();
+                CLogMessage(this).info("Requesting changes for '%1'") << callsign.asString();
                 changed = sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
             }
             if (aircraftFromBackend.isEnabled() != enabled)
@@ -295,7 +310,7 @@ namespace BlackGui
 
             if (!changed)
             {
-                CLogMessage(this).info("Model mapping, nothing to change");
+                this->showOverlayMessage(CLogMessage(this).info("Model mapping, nothing to change"), OverlayMessageMs);
             }
         }
 
@@ -305,14 +320,10 @@ namespace BlackGui
             const CCallsign callsign(this->validateRenderedCallsign());
             if (callsign.isEmpty()) { return; }
             const bool reset = sGui->getIContextSimulator()->resetToModelMatchingAircraft(callsign);
-            if (reset)
-            {
-                CLogMessage(this).info("Model reset for '%1'") << callsign.toQString();
-            }
-            else
-            {
-                CLogMessage(this).info("Reset failed for '%1'") << callsign.toQString();
-            }
+            const CStatusMessage msg = reset ?
+                                       CStatusMessage(this).info("Model reset for '%1'") << callsign.toQString() :
+                                       CStatusMessage(this).info("Reset failed for '%1'") << callsign.toQString();
+            this->showOverlayMessage(msg);
         }
 
         void CMappingComponent::onModelPreviewChanged(int state)

@@ -14,8 +14,9 @@
 
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/data/vatsimsetup.h"
-#include "blackgui/blackguiexport.h"
 #include "blackgui/settings/guisettings.h"
+#include "blackgui/blackguiexport.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/simulation/data/lastmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/callsign.h"
@@ -54,7 +55,7 @@ namespace BlackGui
         /*!
          * Login component to flight network
          */
-        class BLACKGUI_EXPORT CLoginComponent : public QFrame
+        class BLACKGUI_EXPORT CLoginComponent : public COverlayMessagesFrame
         {
             Q_OBJECT
 
@@ -200,6 +201,7 @@ namespace BlackGui
             //! Tab widget (server) changed
             void onServerTabWidgetChanged(int index);
 
+            static const int OverlayMessageMs = 5000;
             QScopedPointer<Ui::CLoginComponent> ui;
             QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
             BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };

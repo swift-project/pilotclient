@@ -70,7 +70,7 @@ namespace BlackGui
         }
 
         CLoginComponent::CLoginComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CLoginComponent)
         {
             ui->setupUi(this);
@@ -101,6 +101,12 @@ namespace BlackGui
             ui->lblp_AirlineIcao->setToolTips("ok", "wrong");
             ui->lblp_AircraftIcao->setToolTips("ok", "wrong");
             ui->lblp_Callsign->setToolTips("ok", "wrong");
+
+            // overlay
+            this->setOverlaySizeFactors(0.8, 0.5);
+            this->setReducedInfo(true);
+            this->setForceSmall(true);
+            this->showKillButton(false);
 
             // Stored data
             this->loadRememberedUserData();
@@ -141,7 +147,7 @@ namespace BlackGui
             CServerList otherServers(m_otherTrafficNetworkServers.getThreadLocal());
 
             // add a testserver when no servers can be loaded
-            if (otherServers.isEmpty() && sGui->isRunningInDeveloperEnvironment())
+            if (otherServers.isEmpty() && (sGui->isRunningInDeveloperEnvironment() || CBuildConfig::isLocalDeveloperDebugBuild()))
             {
                 otherServers.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
                 CLogMessage(this).info("Added servers for testing");
@@ -151,7 +157,6 @@ namespace BlackGui
             connect(ui->pb_copyCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::copyCredentialsToPilot);
             connect(ui->pb_CopyCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::copyCredentialsToPilot);
             this->setUiLoginState(false);
-
         }
 
         CLoginComponent::~CLoginComponent()
@@ -202,7 +207,7 @@ namespace BlackGui
         {
             if (ui->tw_Network->currentWidget() == ui->pg_FsdDetails)
             {
-                CLogMessage(this).validationError("No login possible from this very tab, use VATSIM or other servers");
+                this->showOverlayMessage(CStatusMessage(this).validationError("No login possible from this very tab, use VATSIM or other servers"), OverlayMessageMs);
                 return;
             }
             const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
@@ -218,14 +223,14 @@ namespace BlackGui
             {
                 if (!this->validateAircraftValues())
                 {
-                    CLogMessage(this).validationWarning("Invalid aircraft data, login not possible");
+                    this->showOverlayMessage(CStatusMessage(this).validationWarning("Invalid aircraft data, login not possible"), OverlayMessageMs);
                     return;
                 }
 
                 const CStatusMessageList pilotMsgs = ui->editor_Pilot->validate();
                 if (pilotMsgs.isFailure())
                 {
-                    CLogMessage(this).validationWarning("Invalid pilot data, login not possible");
+                    this->showOverlayMessage(CStatusMessage(this).validationWarning("Invalid pilot data, login not possible"), OverlayMessageMs);
                     return;
                 }
 

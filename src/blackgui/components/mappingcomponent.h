@@ -61,6 +61,9 @@ namespace BlackGui
             //! Destructor
             virtual ~CMappingComponent();
 
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Number of current mappings
             int countCurrentMappings() const;
 
@@ -143,15 +146,16 @@ namespace BlackGui
             void updateRenderedAircraftView(bool forceUpdate = false);
 
             //! Check callsign entered
-            BlackMisc::Aviation::CCallsign validateRenderedCallsign() const;
+            BlackMisc::Aviation::CCallsign validateRenderedCallsign();
 
+            static constexpr int OverlayMessageMs = 5000;
             QScopedPointer<Ui::CMappingComponent> ui;
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
             QTimer m_updateTimer { this };
             BlackMisc::CTokenBucket m_bucket { 3, BlackMisc::PhysicalQuantities::CTime(5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()), 1};
             Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
             BlackMisc::CIdentifier m_identifier { "MappingComponent", this };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
         };
     } // namespace
 } // namespace

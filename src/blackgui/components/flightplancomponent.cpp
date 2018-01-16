@@ -75,6 +75,9 @@ namespace BlackGui
 
             // overlay
             this->setOverlaySizeFactors(0.8, 0.9);
+            this->setReducedInfo(true);
+            this->setForceSmall(true);
+            this->showKillButton(false);
 
             // validators
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
@@ -433,7 +436,7 @@ namespace BlackGui
                     m = CStatusMessage(this).validationError("No errors, but not connected, cannot send flight plan");
                 }
                 ui->le_LastSent->setText(lastSent);
-                this->showOverlayMessage(m, showOverlayMs);
+                this->showOverlayMessage(m, OverlayMessageMs);
                 m_sentFlightPlan = flightPlan; // last valid FP
             }
             else
@@ -782,7 +785,7 @@ namespace BlackGui
             }
 
             // messages
-            this->showOverlayMessages(msgs, false, showOverlayMs);
+            this->showOverlayMessages(msgs, false, OverlayMessageMs);
 
             // copy over
             if (msgs.isSuccess())
