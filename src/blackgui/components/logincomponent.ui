@@ -178,19 +178,19 @@
               </spacer>
              </item>
              <item>
+              <widget class="QPushButton" name="pb_OtherServersGotoSettings">
+               <property name="text">
+                <string> goto settings </string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pb_CopyCredentialsOtherServers">
                <property name="toolTip">
                 <string>copy credentials to pilot section</string>
                </property>
                <property name="text">
                 <string> override pilot </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pb_OtherServersGotoSettings">
-               <property name="text">
-                <string> goto settings </string>
                </property>
               </widget>
              </item>
@@ -728,7 +728,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tw_Network</tabstop>
   <tabstop>le_Callsign</tabstop>
   <tabstop>selector_AircraftIcao</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>

@@ -33,7 +33,7 @@
      </property>
      <widget class="QTabWidget" name="tw_ListViews">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tb_CurrentMappings">
        <attribute name="title">
@@ -192,6 +192,16 @@
        <property name="bottomMargin">
         <number>3</number>
        </property>
+       <item row="2" column="0" colspan="5">
+        <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="completer_ModelStrings">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="lbl_Aircraft">
          <property name="text">
@@ -212,13 +222,23 @@
        <item row="0" column="1">
         <widget class="QCheckBox" name="cb_AircraftIconDisplayed">
          <property name="toolTip">
-          <string>show / hide icon</string>
+          <string>show / hide icon of aircraft</string>
          </property>
          <property name="text">
           <string/>
          </property>
          <property name="checked">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QPushButton" name="pb_SaveAircraft">
+         <property name="toolTip">
+          <string>save selected model</string>
+         </property>
+         <property name="text">
+          <string>save</string>
          </property>
         </widget>
        </item>
@@ -229,7 +249,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
+       <item row="1" column="3">
         <widget class="QPushButton" name="pb_ResetAircraft">
          <property name="toolTip">
           <string>reset model by callsign</string>
@@ -239,28 +259,14 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="3">
-        <widget class="QPushButton" name="pb_SaveAircraft">
-         <property name="toolTip">
-          <string>save selected model</string>
-         </property>
-         <property name="text">
-          <string>save</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="4">
-        <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="completer_ModelStrings">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>20</height>
-          </size>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="2">
         <widget class="QLineEdit" name="le_Callsign">
+         <property name="toolTip">
+          <string>callsign of aircraft</string>
+         </property>
+         <property name="statusTip">
+          <string/>
+         </property>
          <property name="maxLength">
           <number>15</number>
          </property>
@@ -272,13 +278,13 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2" alignment="Qt::AlignRight">
+       <item row="0" column="4">
         <widget class="QPushButton" name="pb_LoadModels">
          <property name="toolTip">
-          <string>load models</string>
+          <string>load model set</string>
          </property>
          <property name="text">
-          <string>load</string>
+          <string>load set</string>
          </property>
         </widget>
        </item>
