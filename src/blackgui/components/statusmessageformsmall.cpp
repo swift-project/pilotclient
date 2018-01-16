@@ -49,5 +49,16 @@ namespace BlackGui
         {
             this->setVisible(!isVisible());
         }
+
+        void CStatusMessageFormSmall::setReducedInfo(bool minimized)
+        {
+            ui->le_Timestamp->setVisible(!minimized);
+            ui->lbl_Timestamp->setVisible(!minimized);
+            ui->le_Categories->setVisible(!minimized);
+            ui->lbl_Categories->setVisible(!minimized);
+            ui->le_Severity->setVisible(!minimized);
+            ui->lbl_SeverityIcon->setVisible(!minimized);
+            ui->lbl_Severity->setVisible(!minimized);
+        }
     } // ns
 } // ns

@@ -41,7 +41,6 @@ namespace BlackGui
             //! Destructor
             virtual ~CStatusMessageFormSmall();
 
-        public slots:
             //! Set message
             void setVariant(const BlackMisc::CVariant &messageVariant);
 
@@ -50,6 +49,9 @@ namespace BlackGui
 
             //! Toggle visibility
             void toggleVisibility();
+
+            //! Minimize by hiding status ...
+            void setReducedInfo(bool minimized);
 
         private:
             QScopedPointer<Ui::CStatusMessageFormSmall> ui;

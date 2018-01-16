@@ -68,7 +68,7 @@ namespace BlackGui
         //! Display image
         void setModeToImage();
 
-        //! Force small
+        //! Force small (smaller layout)
         void setForceSmall(bool force) { m_forceSmall = force; }
 
         //! Set header text
@@ -119,8 +119,11 @@ namespace BlackGui
         //! Is awaiting a conformation
         bool hasPendingConfirmation() const;
 
+        //! Display reduced information
+        void setReducedInfo(bool reduced);
+
         //! Add a shadow
-        void addShadow();
+        void addShadow(QColor color = Qt::gray);
 
     signals:
         //! Confirmation completed

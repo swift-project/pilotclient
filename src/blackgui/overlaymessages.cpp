@@ -405,10 +405,15 @@ namespace BlackGui
         return m_awaitingConfirmation;
     }
 
-    void COverlayMessages::addShadow()
+    void COverlayMessages::setReducedInfo(bool reduced)
+    {
+        ui->form_StatusMessage->setReducedInfo(reduced);
+        ui->form_StatusMessageSmall->setReducedInfo(reduced);
+    }
+
+    void COverlayMessages::addShadow(QColor color)
     {
         QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
-        QColor color(Qt::blue);
         color.setAlpha(96);
         shadow->setColor(color);
         this->setGraphicsEffect(shadow);

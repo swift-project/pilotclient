@@ -81,6 +81,16 @@ namespace BlackGui
             }
         }
 
+        //! \copydoc BlackGui::COverlayMessages::setReducedInfo
+        void setReducedInfo(bool reduced)
+        {
+            m_reducedInfo = reduced;
+            if (m_overlayMessages)
+            {
+                m_overlayMessages->setReducedInfo(reduced);
+            }
+        }
+
         //! \copydoc BlackGui::COverlayMessages::showOverlayMessagesWithConfirmation
         void showOverlayMessagesWithConfirmation(
             const BlackMisc::CStatusMessageList &messages,
@@ -175,6 +185,7 @@ namespace BlackGui
                 // m_overlayMessages->addShadow();
                 m_overlayMessages->showKillButton(m_showKillButton);
                 m_overlayMessages->setForceSmall(m_forceSmallMsgs);
+                m_overlayMessages->setReducedInfo(m_reducedInfo);
             }
 
             Q_ASSERT(m_overlayMessages);
@@ -228,6 +239,7 @@ namespace BlackGui
 
         bool m_showKillButton = false;     //!< show kill button
         bool m_forceSmallMsgs = false;     //!< force small messages
+        bool m_reducedInfo    = false;     //!< reduced info (no timestamp ..)
         double m_widthFactor  = 0.7;       //!< inner frame x factor
         double m_heightFactor = 0.6;       //!< inner frame x factor
         double m_middleFactor = 2;         //!< 2 means middle, 1 means on top
