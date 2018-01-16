@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_NETWORK_FSDSETIP_H
-#define BLACKMISC_NETWORK_FSDSETIP_H
+#ifndef BLACKMISC_NETWORK_FSDSETUP_H
+#define BLACKMISC_NETWORK_FSDSETUP_H
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
