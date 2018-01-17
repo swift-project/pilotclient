@@ -125,6 +125,7 @@ namespace BlackCore
             if (m_simulatorPlugin.first.isUnspecified()) { return BlackMisc::Simulation::CSimulatorPluginInfo(); }
 
             Q_ASSERT(m_simulatorPlugin.second);
+            if (m_simulatorPlugin.first.getSimulator() == "emulated") { return m_simulatorPlugin.second->getSimulatorPluginInfo(); }
             return m_simulatorPlugin.first;
         }
 
