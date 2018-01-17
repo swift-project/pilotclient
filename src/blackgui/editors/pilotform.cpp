@@ -72,7 +72,7 @@ namespace BlackGui
         bool CPilotForm::setUser(const CUser &user, bool ignoreEmptyUser)
         {
             if (ignoreEmptyUser && user.isNull()) { return false; }
-            if (user.hasCredentials())
+            if (user.isValid())
             {
                 ui->le_Id->setText(user.getId());
                 ui->le_Password->setText(user.getPassword());
