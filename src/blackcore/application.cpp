@@ -1056,6 +1056,10 @@ namespace BlackCore
         else
         {
             CLogMessage(this).warning("swift DB not accessible");
+            if (m_networkWatchDog)
+            {
+                CLogMessage(this).warning(m_networkWatchDog->getCheckInfo());
+            }
         }
     }
 

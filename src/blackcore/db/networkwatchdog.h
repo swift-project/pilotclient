@@ -76,7 +76,12 @@ namespace BlackCore
             int triggerCheck();
 
             //! Number of completed checks
+            //! \threadsafe
             int getCheckCount() const { return m_checkCount; }
+
+            //! Number of completed checks
+            //! \threadsafe
+            QString getCheckInfo() const;
 
             //! Set working URL from external
             //! \threadsafe
@@ -150,6 +155,10 @@ namespace BlackCore
             std::atomic_bool m_checkSharedUrl { true };
             std::atomic_bool m_checkInProgress { false }; //!< a check is currently in progress
             std::atomic_int  m_checkCount { 0 }; //!< counting number of checks
+            std::atomic_int  m_badCountDb { 0 }; //! Total number of DB failing counts (only real responses when tried)
+            std::atomic_int  m_badCountInternet { 0 }; //! Total number of Internet failing count (only when network is accessible)
+            std::atomic_int  m_goodCountDb { 0 };
+            std::atomic_int  m_goodCountInternet { 0 };
             BlackMisc::Network::CUrl m_workingSharedUrl;
             mutable QReadWriteLock m_lockSharedUrl;
         };

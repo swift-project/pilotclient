@@ -42,7 +42,7 @@ namespace BlackCore
         {
             m_dbAccessible = accessible;
             m_internetAccessible = m_internetAccessible && m_networkAccessible;
-            QTimer::singleShot(0, &m_updateTimer, [this] { m_updateTimer.start(); }); // restart
+            QTimer::singleShot(0, &m_updateTimer, [this] { m_updateTimer.start(); }); // restart timer
         }
 
         bool CNetworkWatchdog::hasWorkingSharedUrl() const
@@ -66,6 +66,14 @@ namespace BlackCore
             const int n = this->getCheckCount();
             QTimer::singleShot(0, this, &CNetworkWatchdog::doWork);
             return n; // triggered
+        }
+
+        QString CNetworkWatchdog::getCheckInfo() const
+        {
+            static const QString info("Internet accessible: %1 (good: %2/ bad: %3), swift DB accessible: %4 (good: %5/bad: %6)");
+            return info.
+                   arg(boolToYesNo(this->isInternetAccessible())).arg(m_goodCountInternet).arg(m_badCountInternet).
+                   arg(boolToYesNo(this->isSwiftDbAccessible())).arg(m_goodCountDb).arg(m_badCountDb);
         }
 
         void CNetworkWatchdog::setWorkingSharedUrl(const CUrl &workingUrl)
@@ -153,6 +161,8 @@ namespace BlackCore
                         static const QString testHost2("www.microsoft.com"); // secondary test
                         canConnectInternet = CNetworkUtils::canConnect(testHost2, 80, message); // running in background worker
                     }
+                    if (canConnectInternet) { m_goodCountInternet++; }
+                    else { m_badCountInternet++; }
                 }
                 m_internetAccessible = networkAccess && canConnectInternet;
 
@@ -224,6 +234,8 @@ namespace BlackCore
             nw->close();
             if (!sApp || sApp->isShuttingDown()) { return; }
             m_lastClientPingSuccess = ok;
+            if (ok) { m_goodCountDb++; }
+            else { m_badCountDb++; }
             this->setDbAccessibility(ok);
         }
 
