@@ -349,9 +349,6 @@ class LinuxBuilder(Builder):
     def _get_qt_component(self):
         return 'gcc'
 
-    def _should_create_symbols(self):
-        return False
-
     def __init__(self, config_file, word_size):
         Builder.__init__(self, config_file, word_size)
 

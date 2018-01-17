@@ -288,7 +288,7 @@ class Dumper:
                 self.output_pid(sys.stderr, ' '.join(cmd))
                 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                         stderr=open(os.devnull, 'wb'))
-                module_line = proc.stdout.next()
+                module_line = proc.stdout.readline().decode("utf-8")
                 if module_line.startswith("MODULE"):
                     # MODULE os cpu guid debug_file
                     (guid, debug_file) = (module_line.split())[3:5]
@@ -307,7 +307,8 @@ class Dumper:
                     f = open(full_path, "w")
                     f.write(module_line)
                     # now process the rest of the output
-                    for line in proc.stdout:
+                    for line_as_bytes in proc.stdout:
+                        line = line_as_bytes.decode("utf-8")
                         if line.startswith("FILE"):
                             # FILE index filename
                             (x, index, filename) = line.rstrip().split(None, 2)
@@ -422,7 +423,8 @@ class DumperLinux(Dumper):
         if not Dumper.should_process(self, file_name):
             return False
         if file_name.endswith(".so") or os.access(file_name, os.X_OK):
-            return self.run_file_command(file_name).startswith("ELF")
+            if not os.path.islink(file_name) and self.run_file_command(file_name).startswith("ELF"):
+                return True
         return False
 
 
