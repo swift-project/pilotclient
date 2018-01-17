@@ -99,7 +99,6 @@ namespace BlackMisc
 
             // cross dependency
             if (ecosystem.isSystem(CEcosystem::VATSIM)) { m_serverType = FSDServerVatsim; }
-            if (ecosystem.isSystem(CEcosystem::PrivateFSD)) { m_serverType = FSDServer; }
             if (ecosystem.isSystem(CEcosystem::SwiftTest)) { m_serverType = FSDServerVatsim; }
             return true;
         }
@@ -123,17 +122,8 @@ namespace BlackMisc
         bool CServer::setServerType(CServer::ServerType serverType)
         {
             if (m_serverType == serverType) { return false; } // avoid x-dependency
+            // disabled x-dependency
             m_serverType = static_cast<int>(serverType);
-            switch (m_serverType)
-            {
-            case FSDServerVatsim : m_ecosystem = CEcosystem(CEcosystem::VATSIM); break;
-            case FSDServer: m_ecosystem = CEcosystem(CEcosystem::PrivateFSD); break;
-            case VoiceServerVatsim: m_ecosystem = CEcosystem(CEcosystem::VATSIM); break;
-            case VoiceServer: m_ecosystem = CEcosystem(CEcosystem::PrivateFSD); break;
-            case WebService: m_ecosystem = CEcosystem(CEcosystem::NoSystem); break;
-            case Unspecified: m_ecosystem = CEcosystem(CEcosystem::Unspecified); break;
-            default: break;
-            }
             return true;
         }
 
