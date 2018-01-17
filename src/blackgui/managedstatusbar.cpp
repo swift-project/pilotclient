@@ -12,6 +12,7 @@
 #include "blackmisc/sequence.h"
 
 #include <QLabel>
+#include <QFontMetrics>
 #include <QSize>
 #include <QSizePolicy>
 #include <QStatusBar>
@@ -36,21 +37,21 @@ namespace BlackGui
         m_statusBar->removeWidget(m_statusBarIcon);
 
         // labels will be deleted with status bar
-        if (m_ownStatusBar) { delete m_statusBar; }
+        if (m_ownedStatusBar) { delete m_statusBar; }
     }
 
     void CManagedStatusBar::initStatusBar(QStatusBar *statusBar)
     {
         if (m_statusBar) { return; }
-        m_ownStatusBar = statusBar ? false : true;
+        m_ownedStatusBar = statusBar ? false : true;
         m_statusBar = statusBar ? statusBar : new QStatusBar();
         if (m_statusBar->objectName().isEmpty()) { m_statusBar->setObjectName("sb_ManagedStatusBar"); }
-        if (m_ownStatusBar) { m_statusBar->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);}
+        if (m_ownedStatusBar) { m_statusBar->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);}
 
         m_statusBarIcon = new QLabel(m_statusBar);
+        m_statusBarIcon->setObjectName(QString("lbl_StatusBarIcon").append(m_statusBar->objectName()));
         m_statusBarLabel = new QLabel(m_statusBar);
         m_statusBarLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-        m_statusBarIcon->setObjectName(QString("lbl_StatusBarIcon").append(m_statusBar->objectName()));
         m_statusBarLabel->setObjectName(QString("lbl_StatusBarLabel").append(m_statusBar->objectName()));
 
         // use insert to insert from left to right
@@ -59,13 +60,12 @@ namespace BlackGui
         m_statusBar->insertPermanentWidget(1, m_statusBarLabel, 1); // status text
 
         // timer
-        m_timerStatusBar = new QTimer(this);
-        m_timerStatusBar->setObjectName(this->objectName().append(":m_timerStatusBar"));
-        m_timerStatusBar->setSingleShot(true);
-        connect(m_timerStatusBar, &QTimer::timeout, this, &CManagedStatusBar::clearStatusBar);
+        m_timerStatusBar.setObjectName(this->objectName().append(":m_timerStatusBar"));
+        m_timerStatusBar.setSingleShot(true);
+        connect(&m_timerStatusBar, &QTimer::timeout, this, &CManagedStatusBar::clearStatusBar);
 
         // done when injected status bar
-        if (m_ownStatusBar)
+        if (m_ownedStatusBar)
         {
             // self created status bar
             QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -91,7 +91,7 @@ namespace BlackGui
         m_statusBar->hide();
 
         // reset minimum width
-        if (m_ownStatusBar)
+        if (m_ownedStatusBar)
         {
             m_statusBar->setMinimumWidth(50);
         }
@@ -101,8 +101,10 @@ namespace BlackGui
     {
         Q_ASSERT_X(m_statusBarIcon, Q_FUNC_INFO, "Missing status bar icon");
         Q_ASSERT_X(m_statusBar, Q_FUNC_INFO, "Missing status bar");
+        Q_ASSERT_X(m_statusBarLabel, Q_FUNC_INFO, "Missing label");
 
         // already displaying a message with severity higher than this one?
+        if (statusMessage.isEmpty()) { return; }
         if (!statusMessage.isSeverityHigherOrEqual(m_currentSeverity)) { return; }
 
         // used with log subscriber, make sure it is not displayed twice
@@ -110,25 +112,32 @@ namespace BlackGui
         statusMessage.markAsHandledBy(this);
 
         this->show();
-        m_timerStatusBar->start(3000); // start / restart
+        m_timerStatusBar.start(3000); // start / restart
         m_statusBarIcon->setPixmap(statusMessage.toPixmap());
-        m_statusBarLabel->setText(statusMessage.getMessage());
-        m_currentSeverity = statusMessage.getSeverity();
 
         // restrict size for own status bars
-        if (m_ownStatusBar)
+        const QSize size = m_statusBar->window()->size();
+        const int w = qRound(0.95 * size.width());
+        if (m_ownedStatusBar) { m_statusBar->setMaximumWidth(w); }
+
+        if (m_elideMode != Qt::ElideNone)
         {
-            QSize size = m_statusBar->window()->size();
-            int w = qRound(0.95 * size.width());
-            m_statusBar->setMaximumWidth(w);
+            const QFontMetrics metrics(m_statusBarLabel->font());
+            const QString elidedText = metrics.elidedText(statusMessage.getMessage(), m_elideMode, 0.90 * w);
+            m_statusBarLabel->setText(elidedText);
         }
+        else
+        {
+            m_statusBarLabel->setText(statusMessage.getMessage());
+        }
+        m_currentSeverity = statusMessage.getSeverity();
     }
 
-    void CManagedStatusBar::displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
+    void CManagedStatusBar::displayStatusMessages(const CStatusMessageList &statusMessages)
     {
         foreach (CStatusMessage m, statusMessages)
         {
-            displayStatusMessage(m);
+            this->displayStatusMessage(m);
         }
     }
 
@@ -139,5 +148,4 @@ namespace BlackGui
         m_statusBarIcon->clear();
         m_statusBarLabel->clear();
     }
-
 } // namespace

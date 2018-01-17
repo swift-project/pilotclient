@@ -16,10 +16,10 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QObject>
+#include <QTimer>
 
 class QLabel;
 class QStatusBar;
-class QTimer;
 
 namespace BlackGui
 {
@@ -47,7 +47,9 @@ namespace BlackGui
         //! Hide
         void hide();
 
-    public slots:
+        //! Set the label elide mode
+        void setElideMode(Qt::TextElideMode mode) { m_elideMode = mode; }
+
         //! Display status message
         void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
 
@@ -61,9 +63,10 @@ namespace BlackGui
         QStatusBar *m_statusBar  = nullptr; //!< the status bar itself
         QLabel *m_statusBarIcon  = nullptr; //!< status bar icon
         QLabel *m_statusBarLabel = nullptr; //!< status bar label
-        QTimer *m_timerStatusBar = nullptr; //!< cleaning up status bar (own cleaning as I need to clean window / icon)
-        bool m_ownStatusBar = false;
-        BlackMisc::StatusSeverity m_currentSeverity = BlackMisc::StatusSeverity::SeverityDebug; // severity currently displayed
+        QTimer  m_timerStatusBar { this };  //!< cleaning up status bar (own cleaning as I need to clean window / icon)
+        bool m_ownedStatusBar = false;      //!< own status bar or "injected"
+        Qt::TextElideMode m_elideMode = Qt::ElideMiddle; //!< label text elide
+        BlackMisc::StatusSeverity m_currentSeverity = BlackMisc::StatusSeverity::SeverityDebug; //!< severity currently displayed
     };
 } // namespace
 
