@@ -193,7 +193,7 @@ namespace BlackGui
             void loadRememberedUserData();
 
             //! Copy credentials to pilot
-            void copyCredentialsToPilot();
+            void overrideCredentialsToPilot();
 
             //! Server changed
             void onSelectedServerChanged(const BlackMisc::Network::CServer &server);

@@ -114,7 +114,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pb_copyCredentialsVatsim">
+              <widget class="QPushButton" name="pb_OverrideCredentialsVatsim">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -185,7 +185,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pb_CopyCredentialsOtherServers">
+              <widget class="QPushButton" name="pb_OverrideCredentialsOtherServers">
                <property name="toolTip">
                 <string>copy credentials to pilot section</string>
                </property>

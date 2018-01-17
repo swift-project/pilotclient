@@ -154,8 +154,8 @@ namespace BlackGui
             }
             ui->comp_OtherServers->setServers(otherServers);
 
-            connect(ui->pb_copyCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::copyCredentialsToPilot);
-            connect(ui->pb_CopyCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::copyCredentialsToPilot);
+            connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
+            connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
             this->setUiLoginState(false);
         }
 
@@ -348,15 +348,15 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::copyCredentialsToPilot()
+        void CLoginComponent::overrideCredentialsToPilot()
         {
             const QObject *s = QObject::sender();
             CServer server;
-            if (s == ui->pb_CopyCredentialsOtherServers)
+            if (s == ui->pb_OverrideCredentialsOtherServers)
             {
                 server = this->getCurrentOtherServer();
             }
-            else if (s == ui->pb_copyCredentialsVatsim)
+            else if (s == ui->pb_OverrideCredentialsVatsim)
             {
                 // the VATSIM server selected has no valid user credentials
                 server = m_lastVatsimServer.get();
