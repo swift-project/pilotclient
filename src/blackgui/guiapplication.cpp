@@ -754,6 +754,7 @@ namespace BlackGui
 
     QDialog::DialogCode CGuiApplication::showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent)
     {
+        this->saveSettingsOnShutdown(false); // saving itself will be handled in dialog
         const bool needsDialog = this->hasUnsavedSettings();
         if (!needsDialog) { return QDialog::Accepted; }
         if (!m_closeDialog)
@@ -761,15 +762,22 @@ namespace BlackGui
             m_closeDialog = new CApplicationCloseDialog(mainWindow);
             if (mainWindow && !mainWindow->windowTitle().isEmpty())
             {
-                this->setSettingsAutoSave(false); // will be handled by dialog
                 m_closeDialog->setWindowTitle(mainWindow->windowTitle());
                 m_closeDialog->setModal(true);
             }
         }
+
+        // dialog will handle the saving
         const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(m_closeDialog->exec());
-        if (c == QDialog::Rejected)
+
+        // settings already saved when reaching here
+        switch (c)
         {
+        case QDialog::Rejected:
             if (closeEvent) { closeEvent->ignore(); }
+            break;
+        default:
+            break;
         }
         return c;
     }
