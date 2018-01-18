@@ -31,6 +31,8 @@ namespace BlackGui
             QDialog(parent),
             ui(new Ui::CApplicationCloseDialog)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+
             ui->setupUi(this);
             this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
             this->initSettingsView();
@@ -54,10 +56,10 @@ namespace BlackGui
             {
                 const QString description = m_settingsDescriptions[r];
                 const QString key = m_settingsDictionary.key(description);
-                if (!key.isEmpty()) { saveKeys.append(description); }
+                if (!key.isEmpty()) { saveKeys.append(key); }
             }
             if (saveKeys.isEmpty()) { return; }
-            CStatusMessage msg = sApp->saveSettingsByKey(saveKeys);
+            const CStatusMessage msg = sApp->saveSettingsByKey(saveKeys);
             if (msg.isFailure()) { CLogMessage::preformatted(msg); }
         }
 
