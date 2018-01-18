@@ -167,6 +167,9 @@ namespace BlackGui
         //! Using high DPI screen support
         static bool isUsingHighDpiScreenSupport();
 
+        //! Forces a stylesheet update
+        static void forceStyleSheetUpdate(QWidget *widget);
+
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}

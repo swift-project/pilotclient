@@ -504,4 +504,10 @@ namespace BlackGui
         const bool highDpi = stringToBool(vs);
         return highDpi;
     }
+
+    void CGuiUtility::forceStyleSheetUpdate(QWidget *widget)
+    {
+        if (!widget) { return; }
+        widget->setStyleSheet(widget->styleSheet());
+    }
 } // ns
