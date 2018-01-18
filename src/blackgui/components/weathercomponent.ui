@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>556</height>
+    <width>280</width>
+    <height>396</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <number>3</number>
    </property>
    <property name="topMargin">
-    <number>7</number>
+    <number>3</number>
    </property>
    <property name="rightMargin">
     <number>3</number>
@@ -53,74 +53,51 @@
      <property name="title">
       <string>Weather Display</string>
      </property>
-     <layout class="QGridLayout" name="gl_weatherDisplay">
-      <item row="0" column="0" colspan="2">
-       <widget class="QCheckBox" name="cb_UseOwnAcftPosition">
+     <layout class="QVBoxLayout" name="vl_WeatherDisplay">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="fr_Misc">
+        <layout class="QHBoxLayout" name="hl_Misc">
+         <item>
+          <widget class="QCheckBox" name="cb_UseOwnAcftPosition">
+           <property name="text">
+            <string>Use own aircraft position</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignRight">
+          <widget class="QPushButton" name="pb_Coordinate">
+           <property name="text">
+            <string>coordinate</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_Status">
         <property name="text">
-         <string>Use own aircraft position</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+         <string>&lt;status will go here&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLineEdit" name="le_LatOrIcao">
-        <property name="minimumSize">
-         <size>
-          <width>85</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="placeholderText">
-         <string>latitude or ICAO</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="le_Lon">
-        <property name="minimumSize">
-         <size>
-          <width>85</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="placeholderText">
-         <string>longitude</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="lb_Status">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="2" column="0" colspan="4">
+      <item>
        <widget class="QTabWidget" name="tw_weatherGrid">
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
         <widget class="QWidget" name="tb_temperatureLayers">
          <attribute name="title">
           <string>Temperature</string>

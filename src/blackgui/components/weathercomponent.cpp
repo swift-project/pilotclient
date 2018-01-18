@@ -44,6 +44,9 @@ namespace BlackGui
             ui(new Ui::CWeatherComponent)
         {
             ui->setupUi(this);
+            m_coordinateDialog->showElevation(false);
+            m_coordinateDialog->setReadOnly(ui->cb_UseOwnAcftPosition->isChecked());
+            connect(ui->pb_Coordinate, &QPushButton::clicked, this, &CWeatherComponent::showCoordinateDialog);
 
             m_weatherScenarios = CWeatherGrid::getAllScenarios();
             for (const auto &scenario : as_const(m_weatherScenarios))
@@ -56,18 +59,18 @@ namespace BlackGui
             ui->pb_ActivateWeather->setIcon(CIcons::metar());
 
             setupConnections();
-            setupInputValidators();
-            setupCompleter();
+            ui->lbl_Status->setText({});
 
             // hotkeys
             const QString swift(CGuiActionBindHandler::pathSwiftPilotClient());
             m_hotkeyBindings.append(CGuiActionBindHandler::bindButton(ui->pb_ActivateWeather, swift + "Weather/Toggle weather", true));
+            m_hotkeyBindings.append(CGuiActionBindHandler::bindButton(ui->pb_ActivateWeather, swift + "Weather/Force CAVOK", true));
 
             // Set interval to 5 min
             m_weatherUpdateTimer.setInterval(1000 * 60 * 5);
 
             // Call this method deferred in order to have the component fully initialized, e.g. object name set by the parent
-            QTimer::singleShot(0, this, &CWeatherComponent::updateWeatherInformation);
+            QTimer::singleShot(1000, this, &CWeatherComponent::updateWeatherInformation);
         }
 
         CWeatherComponent::~CWeatherComponent()
@@ -76,13 +79,13 @@ namespace BlackGui
         bool CWeatherComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
             CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-            bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CWeatherComponent::ps_infoAreaTabBarChanged);
+            bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CWeatherComponent::infoAreaTabBarChanged);
             Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
             Q_ASSERT_X(parentDockableWidget, Q_FUNC_INFO, "missing parent");
             return c && parentDockableWidget;
         }
 
-        void CWeatherComponent::ps_infoAreaTabBarChanged(int index)
+        void CWeatherComponent::infoAreaTabBarChanged(int index)
         {
             // ignore in those cases
             if (!this->isVisibleWidget()) { return; }
@@ -93,25 +96,19 @@ namespace BlackGui
             Q_UNUSED(index);
         }
 
-        void CWeatherComponent::toggleUseOwnAircraftPosition(bool checked)
+        void CWeatherComponent::toggleUseOwnAircraftPosition(bool useOwnAircraftPosition)
         {
             m_lastOwnAircraftPosition = {};
-            if (checked)
+            m_coordinateDialog->setReadOnly(useOwnAircraftPosition);
+            if (useOwnAircraftPosition)
             {
-                ui->le_LatOrIcao->setReadOnly(true);
-                ui->le_Lon->setReadOnly(true);
                 m_weatherUpdateTimer.start();
-                updateWeatherInformation();
             }
             else
             {
                 m_weatherUpdateTimer.stop();
-                ui->le_LatOrIcao->setReadOnly(false);
-                ui->le_LatOrIcao->setText({});
-                ui->le_Lon->setReadOnly(false);
-                ui->le_Lon->setText({});
-                updateWeatherInformation();
             }
+            updateWeatherInformation();
         }
 
         void CWeatherComponent::toggleWeatherActivation()
@@ -129,14 +126,32 @@ namespace BlackGui
             sGui->getIContextSimulator()->setWeatherActivated(m_isWeatherActivated);
         }
 
+        void CWeatherComponent::showCoordinateDialog()
+        {
+            m_coordinateDialog->show();
+        }
+
         void CWeatherComponent::setWeatherScenario(int index)
         {
             if (index == -1) { return; }
             m_lastOwnAircraftPosition = {};
-            auto scenario = m_weatherScenarios[index];
+            CWeatherScenario scenario = m_weatherScenarios[index];
             m_weatherScenarioSetting.set(scenario);
             updateWeatherInformation();
 
+        }
+
+        void CWeatherComponent::setCavok()
+        {
+            for (int index = 0; index < m_weatherScenarios.size(); index++)
+            {
+                if (m_weatherScenarios[index].getIndex() == CWeatherScenario::ClearSky)
+                {
+                    // call queued
+                    QTimer::singleShot(0, this, [ = ] { this->setWeatherScenario(index); });
+                    break;
+                }
+            }
         }
 
         void CWeatherComponent::updateWeatherInformation()
@@ -151,42 +166,10 @@ namespace BlackGui
             {
                 Q_ASSERT(sGui->getIContextOwnAircraft());
                 position = sGui->getIContextOwnAircraft()->getOwnAircraft().getPosition();
-                if (position == CCoordinateGeodetic())
-                {
-                    ui->le_LatOrIcao->setText("N/A");
-                    ui->le_Lon->setText("N/A");
-                    return;
-                }
-                ui->le_LatOrIcao->setText(position.latitude().toQString());
-                ui->le_Lon->setText(position.longitude().toQString());
-
-
             }
             else
             {
-                QString latitudeOrIcao = ui->le_LatOrIcao->text();
-                QString longitude = ui->le_Lon->text();
-                const QRegularExpression reIcao("^[a-zA-Z]{4}$", QRegularExpression::CaseInsensitiveOption);
-                auto icaoMatch = reIcao.match(latitudeOrIcao);
-                if (icaoMatch.hasMatch())
-                {
-                    CLogMessage(this).warning("Requested weather for ICAO station %1. Unfortunately ICAO support is not yet implemented.") << latitudeOrIcao;
-                    return;
-                }
-
-                const QRegularExpression reDecimalNumber("^-?\\d{1,2}[,.]?\\d+$", QRegularExpression::CaseInsensitiveOption);
-                auto latitudeMatch = reDecimalNumber.match(latitudeOrIcao);
-                auto longitudeMatch = reDecimalNumber.match(longitude);
-                if (!latitudeMatch.hasMatch() || !longitudeMatch.hasMatch())
-                {
-                    CLogMessage(this).warning("Invalid position - Latitude: %1, Longitude: %2") << latitudeOrIcao << longitude;
-                    return;
-                }
-
-                // Replace ',' with '.'. Both are allowed as input, but QString::toDouble() only accepts '.'
-                latitudeOrIcao = latitudeOrIcao.replace(',', '.');
-                longitude = longitude.replace(',', '.');
-                position = { latitudeOrIcao.toDouble(), longitude.toDouble(), 0 };
+                position = m_coordinateDialog->getCoordinate();
             }
 
             if (CWeatherScenario::isRealWeatherScenario(scenario))
@@ -207,7 +190,7 @@ namespace BlackGui
         void CWeatherComponent::weatherGridReceived(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
             if (!isMyIdentifier(identifier)) { return; }
-            ui->lb_Status->setText({});
+            ui->lbl_Status->setText({});
             setWeatherGrid(weatherGrid);
         }
 
@@ -216,8 +199,7 @@ namespace BlackGui
             // UI connections
             connect(ui->cb_weatherScenario, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
                     this, &CWeatherComponent::setWeatherScenario);
-            connect(ui->le_LatOrIcao, &QLineEdit::returnPressed, this, &CWeatherComponent::updateWeatherInformation);
-            connect(ui->le_Lon, &QLineEdit::returnPressed, this, &CWeatherComponent::updateWeatherInformation);
+            connect(m_coordinateDialog.data(), &CCoordinateDialog::changedCoordinate, this, &CWeatherComponent::updateWeatherInformation);
             connect(ui->cb_UseOwnAcftPosition, &QCheckBox::toggled, this, &CWeatherComponent::toggleUseOwnAircraftPosition);
             connect(&m_weatherUpdateTimer, &QTimer::timeout, this, &CWeatherComponent::updateWeatherInformation);
             connect(ui->pb_ActivateWeather, &QPushButton::clicked, this, &CWeatherComponent::toggleWeatherActivation);
@@ -225,25 +207,6 @@ namespace BlackGui
             // Context connections
             Q_ASSERT(sGui->getIContextSimulator());
             connect(sGui->getIContextSimulator(), &IContextSimulator::weatherGridReceived, this, &CWeatherComponent::weatherGridReceived);
-        }
-
-        void CWeatherComponent::setupInputValidators()
-        {
-            QRegularExpression reIcaoOrLatitude("^[a-zA-Z]{4}|-?\\d{1,2}[,.]?\\d+$", QRegularExpression::CaseInsensitiveOption);
-            ui->le_LatOrIcao->setValidator(new QRegularExpressionValidator(reIcaoOrLatitude, this));
-            QRegularExpression reLongitude("^-?\\d{1,2}[,.]?\\d+$", QRegularExpression::CaseInsensitiveOption);
-            ui->le_Lon->setValidator(new QRegularExpressionValidator(reLongitude, this));
-        }
-
-        void CWeatherComponent::setupCompleter()
-        {
-            // Temporary list of ICAO airports. Replace with final list, once available
-            QStringList airports = { "EDDM", "LSZH", "EDMO", "EGLL" };
-            QCompleter *c = new QCompleter(airports, this);
-            c->setCaseSensitivity(Qt::CaseInsensitive);
-            c->setCompletionMode(QCompleter::PopupCompletion);
-            c->setMaxVisibleItems(5);
-            ui->le_LatOrIcao->setCompleter(c);
         }
 
         void CWeatherComponent::setWeatherGrid(const CWeatherGrid &weatherGrid)
@@ -256,11 +219,10 @@ namespace BlackGui
 
         void CWeatherComponent::requestWeatherGrid(const CCoordinateGeodetic &position)
         {
-            ui->lb_Status->setText("Loading...");
+            ui->lbl_Status->setText("Loading...");
             CWeatherGrid weatherGrid { { {}, position } };
             auto ident = identifier();
             sGui->getIContextSimulator()->requestWeatherGrid(weatherGrid, ident);
         }
-
     } // namespace
 } // namespace

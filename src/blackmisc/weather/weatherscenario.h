@@ -39,7 +39,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexScenarioIndex = BlackMisc::CPropertyIndex::GlobalIndexCWeatherScenario,
+                IndexScenarioIndex = CPropertyIndex::GlobalIndexCWeatherScenario,
                 IndexScenarioName,
                 IndexScenarioDescription
             };
@@ -95,7 +95,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(scenarioDescription)
             );
         };
-
     } //namespace
 } // namespace
 

@@ -12,7 +12,8 @@
 #ifndef BLACKGUI_WEATHERCOMPONENT_H
 #define BLACKGUI_WEATHERCOMPONENT_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "enablefordockwidgetinfoarea.h"
+#include "coordinatedialog.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/actionbind.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -35,6 +36,7 @@ namespace Ui { class CWeatherComponent; }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
+
     namespace Components
     {
         //! Weather component
@@ -55,30 +57,30 @@ namespace BlackGui
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
-        private slots:
-            void ps_infoAreaTabBarChanged(int index);
-
         private:
-            void toggleUseOwnAircraftPosition(bool checked);
+            void infoAreaTabBarChanged(int index);
+
+            void toggleUseOwnAircraftPosition(bool useOwnAircraftPosition);
             void toggleWeatherActivation();
+            void showCoordinateDialog();
             void setWeatherScenario(int index);
+            void setCavok();
 
             void updateWeatherInformation();
             void weatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
             void setupConnections();
-            void setupInputValidators();
-            void setupCompleter();
 
             void setWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
             void requestWeatherGrid(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
             QScopedPointer<Ui::CWeatherComponent> ui;
+            QScopedPointer<CCoordinateDialog> m_coordinateDialog { new CCoordinateDialog(this) };
             QVector<BlackMisc::Weather::CWeatherScenario> m_weatherScenarios;
             QTimer m_weatherUpdateTimer { this };
             BlackMisc::Geo::CCoordinateGeodetic m_lastOwnAircraftPosition;
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
-            BlackCore::CActionBindings m_hotkeyBindings;
+            BlackCore::CActionBindings m_hotkeyBindings; //!< allow binding of hotkey
             bool m_isWeatherActivated = false;
         };
     } // namespace
