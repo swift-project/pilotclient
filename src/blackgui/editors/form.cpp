@@ -36,6 +36,13 @@ namespace BlackGui
             return CStatusMessageList();
         }
 
+        CStatusMessageList CForm::validateAsOverlayMessage(bool withNestedObjects, bool appendOldMessages, int timeOutMs)
+        {
+            const CStatusMessageList msgs = this->validate(withNestedObjects);
+            this->showOverlayMessages(msgs, appendOldMessages, timeOutMs);
+            return msgs;
+        }
+
         void CForm::jsonPasted(const QString &json)
         {
             Q_UNUSED(json);

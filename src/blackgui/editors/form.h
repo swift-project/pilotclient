@@ -48,6 +48,10 @@ namespace BlackGui
             //! Validate, empty list means OK
             virtual BlackMisc::CStatusMessageList validate(bool withNestedObjects = true) const;
 
+            //! Validate as overlay message
+            //! \note uses CForm::validate and displays the messages as overlay messages
+            BlackMisc::CStatusMessageList validateAsOverlayMessage(bool withNestedObjects = true, bool appendOldMessages = false, int timeOutMs = -1);
+
             //! Is read only?
             bool isReadOnly() const { return m_readOnly; }
 
