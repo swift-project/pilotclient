@@ -133,6 +133,8 @@ namespace BlackGui
 
             CGuiUtility::checkBoxReadOnly(ui->cb_Va, readOnly);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
+
+            this->forceStyleSheetUpdate();
         }
 
         void CAirlineIcaoForm::setSelectOnly()

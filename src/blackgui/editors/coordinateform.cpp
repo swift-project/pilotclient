@@ -135,7 +135,7 @@ namespace BlackGui
             ui->le_Location->setVisible(!readonly); // does not make sense to show it in ro, no reverse lookup
             ui->lbl_Location->setVisible(!readonly);
 
-            CGuiUtility::forceStyleSheetUpdate(this);
+            this->forceStyleSheetUpdate();
         }
 
         void CCoordinateForm::setSelectOnly()

@@ -184,6 +184,7 @@ namespace BlackGui
             ui->drop_DropData->setVisible(!readOnly);
             ui->tb_Paste->setVisible(!readOnly);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
+            this->forceStyleSheetUpdate();
         }
 
         void CLiveryForm::setSelectOnly()

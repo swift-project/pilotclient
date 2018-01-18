@@ -56,7 +56,7 @@ namespace BlackGui
             const CUser user(
                 ui->le_NetworkId->text().trimmed(),
                 ui->le_RealName->text().trimmed().simplified(),
-                "",
+                QStringLiteral(""),
                 ui->le_Password->text().trimmed()
             );
             const CFsdSetup setup(ui->form_ServerFsd->getValue());
@@ -90,6 +90,7 @@ namespace BlackGui
             ui->form_ServerFsd->setReadOnly(readOnly);
             ui->cb_ServerType->setEnabled(!readOnly);
             ui->cbp_Ecosystem->setEnabled(!readOnly);
+            this->forceStyleSheetUpdate();
         }
 
         void CServerForm::showPasswordField(bool show)

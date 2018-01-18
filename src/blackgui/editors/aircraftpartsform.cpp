@@ -19,7 +19,6 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 
-using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 
@@ -46,6 +45,7 @@ namespace BlackGui
         {
             CGuiUtility::childrenSetEnabled<QPushButton>(this, !readonly);
             CGuiUtility::checkBoxesReadOnly(this, readonly);
+            this->forceStyleSheetUpdate();
         }
 
         void CAircraftPartsForm::setSelectOnly()

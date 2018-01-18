@@ -34,7 +34,7 @@ namespace BlackGui
             explicit COwnModelSetForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~COwnModelSetForm();
+            virtual ~COwnModelSetForm();
 
             //! Reload data
             void reloadData();
@@ -90,17 +90,16 @@ namespace BlackGui
             //! Simulator changed
             void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-        private slots:
+        private:
             //! Changed preferences
-            void ps_preferencesChanged();
+            void onPreferencesChanged();
 
             //! Simulator changed
-            void ps_simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Display distributors based on checkboxes
-            void ps_changeDistributorDisplay();
+            void changeDistributorDisplay();
 
-        private:
             //! Init the options which distributors are displayed
             void initDistributorDisplay();
 
@@ -109,7 +108,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::COwnModelSetForm>  ui;
             BlackMisc::Simulation::CSimulatorInfo m_simulator;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::ps_preferencesChanged };
+            BlackMisc::CSetting<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::onPreferencesChanged };
         };
     } // ns
 } // ns

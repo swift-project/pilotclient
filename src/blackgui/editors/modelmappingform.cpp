@@ -68,6 +68,7 @@ namespace BlackGui
             ui->le_Description->setReadOnly(readOnly);
             ui->le_ModelKey->setReadOnly(readOnly);
             ui->le_Name->setReadOnly(readOnly);
+            this->forceStyleSheetUpdate();
         }
 
         void CModelMappingForm::setSelectOnly()

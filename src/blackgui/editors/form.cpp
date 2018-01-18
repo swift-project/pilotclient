@@ -8,6 +8,7 @@
  */
 
 #include "blackgui/editors/form.h"
+#include "blackgui/guiutility.h"
 #include <QApplication>
 #include <QClipboard>
 #include <QShortcut>
@@ -46,6 +47,11 @@ namespace BlackGui
             const QString data = QApplication::clipboard()->text();
             if (!Json::looksLikeSwiftJson(data)) { return; }
             this->jsonPasted(data);
+        }
+
+        void CForm::forceStyleSheetUpdate()
+        {
+            CGuiUtility::forceStyleSheetUpdate(this);
         }
 
         CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent)

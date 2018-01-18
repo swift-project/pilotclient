@@ -88,6 +88,7 @@ namespace BlackGui
         {
             // void
             Q_UNUSED(readOnly);
+            // this->forceStyleSheetUpdate();
         }
 
         void CModelMappingModifyForm::userChanged()

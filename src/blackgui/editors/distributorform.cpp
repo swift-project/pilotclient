@@ -8,10 +8,10 @@
  */
 
 #include "blackgui/components/dbdistributorselectorcomponent.h"
-#include "blackgui/dropsite.h"
 #include "blackgui/editors/distributorform.h"
 #include "blackgui/editors/validationindicator.h"
 #include "blackgui/labelandicon.h"
+#include "blackgui/dropsite.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/simulation/distributorlist.h"
@@ -107,6 +107,7 @@ namespace BlackGui
             ui->le_Description->setReadOnly(readOnly);
             ui->distributor_Selector->setReadOnly(readOnly);
             ui->drop_DropData->setVisible(!readOnly);
+            this->forceStyleSheetUpdate();
         }
 
         void CDistributorForm::setSelectOnly()

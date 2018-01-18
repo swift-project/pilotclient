@@ -32,6 +32,7 @@ namespace BlackGui
             ui->editor_AircraftIcao->setReadOnly(readOnly);
             ui->editor_Distributor->setReadOnly(readOnly);
             ui->editor_Livery->setReadOnly(readOnly);
+            this->forceStyleSheetUpdate();
         }
 
         void CAircraftModelForm::setSelectOnly()

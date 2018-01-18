@@ -36,11 +36,11 @@ namespace BlackGui
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->comp_SimulatorSelector->setLeftMargin(0);
 
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &COwnModelSetForm::ps_simulatorChanged);
-            connect(ui->rb_DisplayAllDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::ps_changeDistributorDisplay);
-            connect(ui->rb_DisplayPreferencesDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::ps_changeDistributorDisplay);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &COwnModelSetForm::onSimulatorChanged);
+            connect(ui->rb_DisplayAllDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::changeDistributorDisplay);
+            connect(ui->rb_DisplayPreferencesDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::changeDistributorDisplay);
 
-            this->ps_simulatorChanged(ui->comp_SimulatorSelector->getValue());
+            this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
         }
 
         COwnModelSetForm::~COwnModelSetForm()
@@ -88,19 +88,19 @@ namespace BlackGui
             return ui->cb_ConsolidateModelSet->isChecked();
         }
 
-        void COwnModelSetForm::ps_preferencesChanged()
+        void COwnModelSetForm::onPreferencesChanged()
         {
             // void
         }
 
-        void COwnModelSetForm::ps_simulatorChanged(const CSimulatorInfo &simulator)
+        void COwnModelSetForm::onSimulatorChanged(const CSimulatorInfo &simulator)
         {
             this->setSimulator(simulator);
             this->reloadData();
-            emit simulatorChanged(simulator);
+            emit this->simulatorChanged(simulator);
         }
 
-        void COwnModelSetForm::ps_changeDistributorDisplay()
+        void COwnModelSetForm::changeDistributorDisplay()
         {
             if (ui->rb_DisplayAllDistributors->isChecked())
             {
@@ -128,7 +128,7 @@ namespace BlackGui
             {
                 ui->rb_DisplayAllDistributors->setChecked(true);
             }
-            this->ps_changeDistributorDisplay();
+            this->changeDistributorDisplay();
         }
 
         void COwnModelSetForm::setDistributorView(bool hasPreferences)

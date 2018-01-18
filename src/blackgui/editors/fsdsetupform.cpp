@@ -88,6 +88,7 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_AircraftPartsSend, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionReceive, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionSend, readonly);
+            this->forceStyleSheetUpdate();
         }
 
         CStatusMessageList CFsdSetupForm::validate(bool nested) const

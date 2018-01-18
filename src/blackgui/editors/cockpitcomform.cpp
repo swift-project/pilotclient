@@ -65,6 +65,7 @@ namespace BlackGui
             ui->cbp_ComPanelTransponderMode->setDisabled(!readonly);
             ui->tb_ComPanelCom1Toggle->setEnabled(!readonly);
             ui->tb_ComPanelCom2Toggle->setEnabled(!readonly);
+            this->forceStyleSheetUpdate();
         }
 
         void CCockpitComForm::setSelectOnly()

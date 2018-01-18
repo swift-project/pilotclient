@@ -59,6 +59,9 @@ namespace BlackGui
             //! Pasted from clipboard
             void pasted();
 
+            //! \copydoc BlackGui::CGuiUtility::forceStyleSheetUpdate
+            void forceStyleSheetUpdate();
+
             bool m_readOnly = false; //!< read only
         };
 

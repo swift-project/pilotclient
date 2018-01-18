@@ -23,7 +23,6 @@
 
 class QWidget;
 namespace Ui { class CDistributorForm; }
-
 namespace BlackGui
 {
     namespace Editors

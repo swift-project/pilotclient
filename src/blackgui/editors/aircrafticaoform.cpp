@@ -190,6 +190,8 @@ namespace BlackGui
             ui->cb_Rank->setEnabled(!readOnly);
             ui->drop_DropData->setVisible(!readOnly);
             ui->combined_TypeSelector->setReadOnly(readOnly);
+
+            this->forceStyleSheetUpdate();
         }
 
         void CAircraftIcaoForm::setSelectOnly()

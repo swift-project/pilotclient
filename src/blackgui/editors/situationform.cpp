@@ -113,6 +113,7 @@ namespace BlackGui
         void CSituationForm::setReadOnly(bool readonly)
         {
             ui->comp_Coordinate->setReadOnly(readonly);
+            this->forceStyleSheetUpdate();
         }
 
         void CSituationForm::setSelectOnly()

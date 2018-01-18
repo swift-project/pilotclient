@@ -116,6 +116,7 @@ namespace BlackGui
             ui->lblp_HomeAirport->setVisible(!readonly);
             ui->lblp_Password->setVisible(!readonly);
             ui->lblp_RealName->setVisible(!readonly);
+            this->forceStyleSheetUpdate();
         }
 
         CStatusMessageList CPilotForm::validate(bool nested) const
