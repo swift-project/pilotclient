@@ -73,7 +73,7 @@ void CSwiftData::closeEvent(QCloseEvent *event)
 {
     if (sGui)
     {
-        // save settings
+        // save settings?
         if (sGui->showCloseDialog(this, event) == QDialog::Rejected) { return; }
     }
     this->performGracefulShutdown();

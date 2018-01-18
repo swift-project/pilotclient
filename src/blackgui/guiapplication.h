@@ -189,6 +189,7 @@ namespace BlackGui
         virtual bool parseAndSynchronizeSetup(int timeoutMs = BlackMisc::Network::CNetworkUtils::getLongTimeoutMs()) override;
 
         //! Show close dialog
+        //! \remark will modify CApplication::saveSettingsOnShutdown
         QDialog::DialogCode showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent);
 
         //! Trigger new version check

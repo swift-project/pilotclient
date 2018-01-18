@@ -523,9 +523,9 @@ namespace BlackCore
         return !this->getUnsavedSettingsKeys().isEmpty();
     }
 
-    void CApplication::setSettingsAutoSave(bool autoSave)
+    void CApplication::saveSettingsOnShutdown(bool saveSettings)
     {
-        m_autoSaveSettings = autoSave;
+        m_saveSettingsOnShutdown = saveSettings;
     }
 
     QStringList CApplication::getUnsavedSettingsKeys() const
@@ -948,18 +948,11 @@ namespace BlackCore
         m_shutdown = true;
 
         // save settings (but only when application was really alive)
-        CStatusMessage m;
-        if (m_parsed)
+        if (m_parsed && m_saveSettingsOnShutdown)
         {
-            if (this->supportsContexts() && m_autoSaveSettings)
-            {
-                // this will eventually also call saveToStore
-                m = this->getIContextApplication()->saveSettings();
-            }
-            else
-            {
-                m = CSettingsCache::instance()->saveToStore();
-            }
+            const CStatusMessage m = this->supportsContexts() ?
+                                     this->getIContextApplication()->saveSettings() :
+                                     CSettingsCache::instance()->saveToStore();
             CLogMessage(getLogCategories()).preformatted(m);
         }
 
