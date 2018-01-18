@@ -34,7 +34,7 @@ namespace BlackGui
 
             ui->lblp_LatCheck->setToolTips("ok", "wrong format");
             ui->lblp_LngCheck->setToolTips("ok", "wrong format");
-            ui->lblp_AltCheck->setToolTips("ok", "wrong format");
+            ui->lblp_ElvCheck->setToolTips("ok", "wrong format");
 
             ui->le_LatDeg->setValidator(new QIntValidator(-90, 90, ui->le_LatDeg));
             ui->le_LatMin->setValidator(new QIntValidator(0, 60, ui->le_LatMin));
@@ -61,7 +61,7 @@ namespace BlackGui
             connect(ui->le_LngSecFrag, &QLineEdit::editingFinished, this, &CCoordinateForm::lngCombinedEntered);
 
             connect(ui->le_Location, &QLineEdit::returnPressed, this, &CCoordinateForm::locationEntered);
-            connect(ui->pb_Set, &QPushButton::pressed, this, &CCoordinateForm::changeCoordinate);
+            connect(ui->pb_Set, &QPushButton::pressed, this, &CCoordinateForm::changedCoordinate);
 
             const CCoordinateGeodetic c;
             this->setCoordinate(c);
@@ -129,8 +129,13 @@ namespace BlackGui
             ui->le_LngMin->setReadOnly(readonly);
             ui->le_LngSec->setReadOnly(readonly);
             ui->le_LngSecFrag->setReadOnly(readonly);
-            ui->le_Location->setReadOnly(readonly);
             ui->le_Longitude->setReadOnly(readonly);
+
+            ui->le_Location->setReadOnly(readonly);
+            ui->le_Location->setVisible(!readonly); // does not make sense to show it in ro, no reverse lookup
+            ui->lbl_Location->setVisible(!readonly);
+
+            CGuiUtility::forceStyleSheetUpdate(this);
         }
 
         void CCoordinateForm::setSelectOnly()
@@ -148,6 +153,14 @@ namespace BlackGui
         void CCoordinateForm::showSetButton(bool visible)
         {
             ui->pb_Set->setVisible(visible);
+        }
+
+        void CCoordinateForm::showElevation(bool show)
+        {
+            ui->le_Elevation->setVisible(show);
+            ui->lbl_Elevation->setVisible(show);
+            ui->lblp_ElvCheck->setVisible(show);
+            m_coordinate.setGeodeticHeightToNull();
         }
 
         void CCoordinateForm::locationEntered()
@@ -248,7 +261,7 @@ namespace BlackGui
             const QString e = ui->le_Elevation->text();
             CAltitude a;
             a.parseFromString(e);
-            ui->lblp_AltCheck->setTicked(!e.isNull());
+            ui->lblp_ElvCheck->setTicked(!e.isNull());
             CCoordinateGeodetic c = m_coordinate;
             c.setGeodeticHeight(a);
             this->setCoordinate(c);

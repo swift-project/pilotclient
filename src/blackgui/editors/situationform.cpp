@@ -45,7 +45,7 @@ namespace BlackGui
             connect(ui->tb_ResetPressure, &QToolButton::clicked, this, &CSituationForm::resetPressure);
             connect(ui->pb_Set, &QPushButton::clicked, this, &CSituationForm::changeAircraftSituation);
             connect(ui->pb_SetEnvironment, &QPushButton::clicked, this, &CSituationForm::changeAircraftSituation);
-            connect(ui->comp_Coordinate, &CCoordinateForm::changeCoordinate, this, &CSituationForm::changeAircraftSituation);
+            connect(ui->comp_Coordinate, &CCoordinateForm::changedCoordinate, this, &CSituationForm::changeAircraftSituation);
         }
 
         CSituationForm::~CSituationForm()

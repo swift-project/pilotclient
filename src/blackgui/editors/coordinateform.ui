@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item row="3" column="2">
-    <widget class="BlackGui::CTickLabel" name="lblp_AltCheck">
+    <widget class="BlackGui::CTickLabel" name="lblp_ElvCheck">
      <property name="minimumSize">
       <size>
        <width>20</width>
@@ -82,7 +82,11 @@
     </widget>
    </item>
    <item row="3" column="5" colspan="4">
-    <widget class="QLineEdit" name="le_Location"/>
+    <widget class="QLineEdit" name="le_Location">
+     <property name="placeholderText">
+      <string>ICAO, city</string>
+     </property>
+    </widget>
    </item>
    <item row="2" column="7">
     <widget class="QLineEdit" name="le_LngSec">
@@ -139,7 +143,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="lbl_Altitude">
+    <widget class="QLabel" name="lbl_Elevation">
      <property name="text">
       <string>Elevation:</string>
      </property>
@@ -275,7 +279,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="bg_EW"/>
   <buttongroup name="bg_NS"/>
+  <buttongroup name="bg_EW"/>
  </buttongroups>
 </ui>

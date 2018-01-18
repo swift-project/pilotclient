@@ -54,9 +54,12 @@ namespace BlackGui
             //! Set button visible
             void showSetButton(bool visible);
 
+            //! Show elevation
+            void showElevation(bool show);
+
         signals:
             //! Change coordinate
-            void changeCoordinate();
+            void changedCoordinate();
 
         private:
             QScopedPointer<Ui::CCoordinateForm> ui;
