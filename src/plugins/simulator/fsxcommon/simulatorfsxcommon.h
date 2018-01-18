@@ -330,6 +330,9 @@ namespace BlackSimPlugin
             //! Request for lights (request in range of lights)?
             static bool isRequestForLights(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestLightsOffset) && requestId < (RequestSimDataStart + RequestLightsOffset + MaxSimObjects); }
 
+            //! Encapsulates creating QString from FSX string data
+            static QString fsxCharToQString(const char *fsxChar, int size = -1);
+
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
             static constexpr int SkipUpdateCyclesForCockpit = 10;    //!< skip x cycles before updating cockpit again
             static constexpr int IgnoreReceiveExceptions = 10;       //!< skip exceptions when displayed more than x times

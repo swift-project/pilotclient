@@ -217,8 +217,8 @@ namespace BlackSimPlugin
             case CStatusMessage::SeverityWarning: type = SIMCONNECT_TEXT_TYPE_PRINT_YELLOW; break;
             case CStatusMessage::SeverityError: type = SIMCONNECT_TEXT_TYPE_PRINT_RED; break;
             }
-            HRESULT hr = SimConnect_Text(m_hSimConnect, type, 7.5, EventTextMessage,
-                                         static_cast<DWORD>(m.size()), m.data());
+            const HRESULT hr = SimConnect_Text(m_hSimConnect, type, 7.5, EventTextMessage,
+                                               static_cast<DWORD>(m.size()), m.data());
             Q_UNUSED(hr);
         }
 
@@ -1632,6 +1632,11 @@ namespace BlackSimPlugin
             }
             m_simConnectObjects.insert(aircraft.getCallsign(), simObject);
             return simObject;
+        }
+
+        QString CSimulatorFsxCommon::fsxCharToQString(const char *fsxChar, int size)
+        {
+            return QString::fromLatin1(fsxChar, size);
         }
 
         CCallsignSet CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider()
