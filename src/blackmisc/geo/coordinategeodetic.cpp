@@ -247,6 +247,12 @@ namespace BlackMisc
             m_z = latitude.sin();
         }
 
+        void CCoordinateGeodetic::setGeodeticHeightToNull()
+        {
+            static const CAltitude na = CAltitude(0, CAltitude::MeanSeaLevel, CLengthUnit::nullUnit());
+            this->setGeodeticHeight(na);
+        }
+
         CCoordinateGeodetic &CCoordinateGeodetic::switchUnit(const CLengthUnit &unit)
         {
             m_geodeticHeight.switchUnit(unit);

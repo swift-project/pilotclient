@@ -243,6 +243,9 @@ namespace BlackMisc
             //! Set height (ellipsoidal or geodetic height)
             void setGeodeticHeight(const Aviation::CAltitude &height) { m_geodeticHeight = height; }
 
+            //! Set height to NULL
+            void setGeodeticHeightToNull();
+
             //! Set normal vector
             void setNormalVector(const QVector3D &normal) { m_x = normal.x(); m_y = normal.y(); m_z = normal.z(); }
 
