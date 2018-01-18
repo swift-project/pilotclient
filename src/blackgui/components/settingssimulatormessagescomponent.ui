@@ -6,66 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>262</width>
-    <height>242</height>
+    <width>228</width>
+    <height>212</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="2">
-    <widget class="QGroupBox" name="gb_TechnicalMessages">
-     <property name="title">
-      <string>Technical messages</string>
-     </property>
-     <layout class="QGridLayout" name="gl_TechnicalMessages">
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="rb_ErrorsOnly">
-        <property name="text">
-         <string>errors</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="rb_NoTechnicalMessages">
-        <property name="text">
-         <string>none</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QRadioButton" name="rb_ErrorWarningsInfo">
-        <property name="text">
-         <string>all</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QRadioButton" name="rb_ErrorsAndWarnings">
-        <property name="text">
-         <string>warnings</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="lbl_Messages">
      <property name="text">
@@ -141,18 +89,107 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QPushButton" name="pb_Cancel">
-     <property name="text">
-      <string>cancel</string>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="gb_TechnicalMessages">
+     <property name="title">
+      <string>Technical messages</string>
      </property>
+     <layout class="QGridLayout" name="gl_TechnicalMessages">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="rb_ErrorsOnly">
+        <property name="text">
+         <string>errors</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="rb_NoTechnicalMessages">
+        <property name="text">
+         <string>none</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="rb_ErrorWarningsInfo">
+        <property name="text">
+         <string>all</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="rb_ErrorsAndWarnings">
+        <property name="text">
+         <string>warnings</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QPushButton" name="pb_Save">
-     <property name="text">
-      <string>save</string>
+   <item row="3" column="0" colspan="2">
+    <widget class="QFrame" name="fr_Buttons">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="hl_Buttons">
+      <property name="leftMargin">
+       <number>1</number>
+      </property>
+      <property name="topMargin">
+       <number>1</number>
+      </property>
+      <property name="rightMargin">
+       <number>1</number>
+      </property>
+      <property name="bottomMargin">
+       <number>1</number>
+      </property>
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Cancel">
+        <property name="text">
+         <string>cancel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_Save">
+        <property name="text">
+         <string>save</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

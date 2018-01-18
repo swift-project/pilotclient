@@ -466,20 +466,20 @@
      <number>1</number>
     </property>
     <property name="bottomMargin">
-     <number>1</number>
+     <number>15</number>
     </property>
     <item>
      <widget class="QScrollArea" name="sa_DataLoad">
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
-      <widget class="QWidget" name="wi_DataLoadOverview">
+      <widget class="QWidget" name="wi_DataLoadScrollable">
        <property name="geometry">
         <rect>
          <x>0</x>
          <y>0</y>
          <width>228</width>
-         <height>306</height>
+         <height>295</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="vl_DataLoadOverview">
@@ -498,8 +498,15 @@
         <property name="bottomMargin">
          <number>1</number>
         </property>
-        <item>
-         <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="comp_DataLoadOverview"/>
+        <item alignment="Qt::AlignTop">
+         <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="comp_DataLoadOverview">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>250</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

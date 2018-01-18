@@ -16,6 +16,7 @@
 #include <QFont>
 #include <QFontComboBox>
 #include <QStyleFactory>
+#include <QMessageBox>
 
 using namespace BlackMisc;
 using namespace BlackGui::Settings;
@@ -98,6 +99,17 @@ namespace BlackGui
         {
             const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
             if (!settings.isDifferentValidWidgetStyle(widgetStyle)) { return; }
+
+            const int ret = QMessageBox::information(this,
+                            tr("Change style?"),
+                            tr("Changing style is slow.\nThe GUI will hang for some seconds.\nDo you want to save your changes?"),
+                            QMessageBox::Ok | QMessageBox::Cancel);
+            if (ret != QMessageBox::Ok)
+            {
+                ui->cb_SettingsGuiWidgetStyle->setCurrentText(settings.getWidgetStyle());
+                return;
+            }
+
             if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
             {
                 // Style changes freeze the GUI, must not be done in flight mode

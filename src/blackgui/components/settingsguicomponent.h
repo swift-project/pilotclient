@@ -41,7 +41,6 @@ namespace BlackGui
             //! Hide opacity elements
             void hideOpacity(bool hide);
 
-        public slots:
             //! GUI Opacity 0-100%
             void setGuiOpacity(double value);
 

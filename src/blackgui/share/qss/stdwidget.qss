@@ -607,6 +607,10 @@ QTreeView::branch:closed:has-children {
   image: url(:/diagona/icons/diagona/icons/toggle-expand.png);
 }
 
+QSlider {
+  min-height: 2em;
+}
+
 QSlider::groove:horizontal {
   border: 1px solid gray;
   height: 4px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
