@@ -342,8 +342,10 @@ namespace XSwiftBus
                 BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
                 BlackMisc::Simulation::CInterpolationStatus status;
                 const auto situation = plane->interpolator.getInterpolatedSituation(-1, setup, plane->hints(), status);
-                if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
-                if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
+                if (! status.hasValidSituation()) { return xpmpData_Unavailable; }
+
+                //! \fixme KB 2018-01 commented out with T229. Change detection needs to go somewhere else
+                // if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 
                 using namespace BlackMisc::PhysicalQuantities;
                 using namespace BlackMisc::Aviation;

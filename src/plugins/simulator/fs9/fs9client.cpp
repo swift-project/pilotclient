@@ -188,8 +188,8 @@ namespace BlackSimPlugin
             hints.setLoggingInterpolation(this->getInterpolationSetup().getLogCallsigns().contains(m_callsign));
             const CAircraftSituation situation = m_interpolator.getInterpolatedSituation(-1, m_interpolationSetup, hints, status);
 
-            // Test only for successful interpolation. FS9 requires constant positions
-            if (!status.didInterpolationSucceed()) { return; }
+            // Test only for successful position. FS9 requires constant positions
+            if (!status.hasValidSituation()) { return; }
 
             sendMultiplayerPosition(situation);
             sendMultiplayerParamaters();
