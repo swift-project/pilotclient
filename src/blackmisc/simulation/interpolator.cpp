@@ -71,9 +71,9 @@ namespace BlackMisc
             const auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, hints, status, log);
 
             // succeeded so far?
-            if (!status.didInterpolationSucceed())
+            if (!status.isInterpolated())
             {
-                status.setValidSituation(currentSituation);
+                status.checkIfValidSituation(currentSituation);
                 return currentSituation;
             }
 
@@ -114,16 +114,15 @@ namespace BlackMisc
                 CInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
             }
 
-            if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || status.hasChangedPosition())
+            if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || status.isInterpolated())
             {
                 const auto pbh = interpolant.pbh();
                 currentSituation.setHeading(pbh.getHeading());
                 currentSituation.setPitch(pbh.getPitch());
                 currentSituation.setBank(pbh.getBank());
                 currentSituation.setGroundSpeed(pbh.getGroundSpeed());
-                status.setChangedPosition(true);
+                status.setInterpolatedAndCheckSituation(true, currentSituation);
             }
-            status.setInterpolationSucceeded(true, currentSituation);
             m_isFirstInterpolation = false;
 
             if (m_logger && hints.isLoggingInterpolation())

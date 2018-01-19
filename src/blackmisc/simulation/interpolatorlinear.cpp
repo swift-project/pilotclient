@@ -73,7 +73,7 @@ namespace BlackMisc
                 if (situationsOlder.isEmpty())
                 {
                     const CAircraftSituation currentSituation(*(situationsNewer.end() - 1)); // oldest newest
-                    status.setInterpolationSucceeded(false, currentSituation);
+                    status.setInterpolatedAndCheckSituation(false, currentSituation);
                     return currentSituation;
                 }
 
@@ -81,7 +81,7 @@ namespace BlackMisc
                 if (situationsOlder.size() < 2)
                 {
                     const CAircraftSituation currentSituation(situationsOlder.front()); // latest oldest
-                    status.setInterpolationSucceeded(false, currentSituation);
+                    status.setInterpolatedAndCheckSituation(false, currentSituation);
                     return currentSituation;
                 }
 
@@ -124,9 +124,7 @@ namespace BlackMisc
 
             currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
             currentSituation.setMSecsSinceEpoch(oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs);
-
-            status.setChangedPosition(m_isFirstInterpolation || oldSituation.getPosition() != newSituation.getPosition() || oldSituation.getAltitude() != newSituation.getAltitude());
-            status.setInterpolationSucceeded(true, currentSituation);
+            status.setInterpolatedAndCheckSituation(true, currentSituation);
 
             log.oldSituation = oldSituation;
             log.newSituation = newSituation;

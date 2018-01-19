@@ -1157,7 +1157,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftSituation &interpolatedSituation, const CInterpolationStatus &interpolationStatus)
         {
             if (!simObj.hasValidRequestAndObjectId()) { return false; }
-            if (!interpolationStatus.didInterpolationSucceed()) { return false; }
+            if (!interpolationStatus.isInterpolated()) { return false; }
 
             CAircraftLights lights;
             DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWintoutLights = {}; // init members

@@ -53,7 +53,6 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackMiscTest
 {
-
     void CTestInterpolator::linearInterpolator()
     {
         CCallsign cs("SWIFT");
@@ -97,10 +96,9 @@ namespace BlackMiscTest
             CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
                                                 (currentTime, setup, hints, status)
                                                );
-            QVERIFY2(status.didInterpolationSucceed(), "Interpolation was not succesful");
-            QVERIFY2(status.hasChangedPosition(), "Interpolation did not changed");
-            double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
-            double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
+            QVERIFY2(status.isInterpolated(), "Value was not interpolated");
+            const double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
+            const double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
             QVERIFY2(latDeg < latOld && lngDeg < lngOld, "Values shall decrease");
             QVERIFY2(latDeg >= 0 && latDeg <= IRemoteAircraftProvider::MaxSituationsPerCallsign, "Values shall be in range");
             latOld = latDeg;
@@ -127,7 +125,7 @@ namespace BlackMiscTest
                 CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
                                                     (currentTime, setup, hints, status)
                                                    );
-                QVERIFY2(status.validAndChangedInterpolatedSituation(), "Failed interpolation");
+                QVERIFY2(status.isInterpolated(), "Not interpolated");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");
                 double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
                 double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
@@ -178,7 +176,6 @@ namespace BlackMiscTest
         p.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         return p;
     }
-
 } // namespace
 
 //! \endcond

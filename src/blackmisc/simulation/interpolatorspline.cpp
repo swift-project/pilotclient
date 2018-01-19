@@ -135,8 +135,7 @@ namespace BlackMisc
             log.oldSituation = m_pbh.getOldSituation();
             log.newSituation = m_pbh.getNewSituation();
 
-            status.setInterpolationSucceeded(true);
-            status.setChangedPosition(true);
+            status.setInterpolated(true);
             const double dt1 = static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleTime);
             const double dt2 = static_cast<double>(m_nextSampleTime - m_prevSampleTime);
             const double timeFraction = dt1 / dt2;

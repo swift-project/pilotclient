@@ -24,7 +24,6 @@
 #include <QtGlobal>
 
 namespace BlackMisc { namespace Aviation { class CCallsign; } }
-
 namespace BlackMiscTest
 {
 
