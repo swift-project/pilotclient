@@ -510,4 +510,15 @@ namespace BlackGui
         if (!widget) { return; }
         widget->setStyleSheet(widget->styleSheet());
     }
+
+    void CGuiUtility::superviseMainWindowMinSizes(qreal wRatio, qreal hRatio)
+    {
+        QWidget *w = CGuiUtility::mainApplicationWidget();
+        if (!w) { return; }
+        const QSize s = CGuiUtility::desktopSize();
+        const int minW = wRatio * s.width();
+        const int minH = hRatio * s.height();
+        w->setMinimumWidth(qMin(minW, w->minimumWidth()));
+        w->setMinimumHeight(qMin(minH, w->minimumHeight()));
+    }
 } // ns

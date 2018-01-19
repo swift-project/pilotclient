@@ -97,6 +97,7 @@ namespace BlackGui
             this->setCurrentFontValues(); // most likely the default font and not any stylesheet font at this time
             sGui = this;
             connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::onStyleSheetsChanged);
+            connect(this, &CGuiApplication::startUpCompleted, this, &CGuiApplication::superviseWindowMinSizes);
         }
     }
 
@@ -922,5 +923,10 @@ namespace BlackGui
         const QFont font = CGuiUtility::currentFont();
         m_fontFamily = font.family();
         m_fontPointSize = font.pointSize();
+    }
+
+    void CGuiApplication::superviseWindowMinSizes()
+    {
+        CGuiUtility::superviseMainWindowMinSizes();
     }
 } // ns

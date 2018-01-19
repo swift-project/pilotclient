@@ -276,7 +276,7 @@ namespace BlackGui
         int m_minHeightChars = -1; //!< min. height characters (based on current font metrics)
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
-        QCommandLineOption m_cmdWindowSizeReset {"empty"};        //!< window size resizing
+        QCommandLineOption m_cmdWindowSizeReset { "empty" };      //!< window size resizing
         CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
         bool m_saveMainWidgetState = true;                        //!< save/restore main widget's state
@@ -303,6 +303,9 @@ namespace BlackGui
 
         //! Set current font values
         void setCurrentFontValues();
+
+        //! \copydoc BlackGui::CGuiUtility::superviseMainWindowMinSizes
+        void superviseWindowMinSizes();
     };
 } // ns
 

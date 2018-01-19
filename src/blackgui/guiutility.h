@@ -170,6 +170,9 @@ namespace BlackGui
         //! Forces a stylesheet update
         static void forceStyleSheetUpdate(QWidget *widget);
 
+        //! Make sure that the min.sizes to not exceed the screen resolution
+        static void superviseMainWindowMinSizes(qreal wRatio = 0.85, qreal hRatio = 0.85);
+
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}
