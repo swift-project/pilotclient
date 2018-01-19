@@ -33,17 +33,17 @@ namespace BlackGui
             this->setSmallLayout(true); // no disadvantage, so I always set it
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->comp_SimulatorSelector->setToLastSelection();
-            connect(ui->pb_ExcludeFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_excludeFileDialog);
-            connect(ui->pb_ModelFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_modelFileDialog);
-            connect(ui->pb_SimulatorFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_simulatorFileDialog);
+            connect(ui->pb_ExcludeFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::excludeFileDialog);
+            connect(ui->pb_ModelFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::modelFileDialog);
+            connect(ui->pb_SimulatorFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::simulatorFileDialog);
             connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::save);
-            connect(ui->pb_Reset, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_reset);
-            connect(ui->pb_CopyDefaults, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_copyDefaults);
-            connect(ui->pb_AdjustModelDirectory, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_adjustModelDirectory);
-            connect(ui->le_SimulatorDirectory, &QLineEdit::returnPressed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorDirectoryEntered);
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorChanged);
+            connect(ui->pb_Reset, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::reset);
+            connect(ui->pb_CopyDefaults, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::copyDefaults);
+            connect(ui->pb_AdjustModelDirectory, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::adjustModelDirectory);
+            connect(ui->le_SimulatorDirectory, &QLineEdit::returnPressed, this, &CSettingsSimulatorBasicsComponent::simulatorDirectoryEntered);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CSettingsSimulatorBasicsComponent::simulatorChanged);
 
-            this->ps_simulatorChanged();
+            this->simulatorChanged();
         }
 
         CSettingsSimulatorBasicsComponent::~CSettingsSimulatorBasicsComponent()
@@ -67,17 +67,17 @@ namespace BlackGui
             ui->lbl_SimulatorDirectory->setWordWrap(small);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_simulatorFileDialog()
+        void CSettingsSimulatorBasicsComponent::simulatorFileDialog()
         {
             const QString startDirectory = this->getFileBrowserSimulatorDirectory();
             const QString dir = QFileDialog::getExistingDirectory(this, tr("Simulator directory"), startDirectory,
                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             if (dir.isEmpty()) { return; }
             ui->le_SimulatorDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(dir));
-            this->ps_adjustModelDirectory();
+            this->adjustModelDirectory();
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_modelFileDialog()
+        void CSettingsSimulatorBasicsComponent::modelFileDialog()
         {
             const QString startDirectory = this->getFileBrowserModelDirectory();
             const QString dir = QFileDialog::getExistingDirectory(this, tr("Model directory"), startDirectory,
@@ -87,7 +87,7 @@ namespace BlackGui
             this->displayModelDirectories(newDirs);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_excludeFileDialog()
+        void CSettingsSimulatorBasicsComponent::excludeFileDialog()
         {
             const QString startDirectory = this->getFileBrowserModelDirectory();
             const QString dir = QFileDialog::getExistingDirectory(this, tr("Exclude directory"), startDirectory,
@@ -97,7 +97,7 @@ namespace BlackGui
             this->displayExcludeDirectoryPatterns(newDirs);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_simulatorDirectoryEntered()
+        void CSettingsSimulatorBasicsComponent::simulatorDirectoryEntered()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             const QString simDir = CFileUtils::normalizeFilePathToQtStandard(ui->le_SimulatorDirectory->text().trimmed());
@@ -126,7 +126,7 @@ namespace BlackGui
             this->displaySettings(simulator);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_copyDefaults()
+        void CSettingsSimulatorBasicsComponent::copyDefaults()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             const QString sd(m_settings.getDefaultSimulatorDirectory(simulator));
@@ -137,7 +137,7 @@ namespace BlackGui
             this->displayExcludeDirectoryPatterns(excludes);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_adjustModelDirectory()
+        void CSettingsSimulatorBasicsComponent::adjustModelDirectory()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             QString simDir = this->getFileBrowserSimulatorDirectory();
@@ -163,7 +163,7 @@ namespace BlackGui
             this->displayModelDirectories(newDirs);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_reset()
+        void CSettingsSimulatorBasicsComponent::reset()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             m_settings.resetToDefaults(simulator);
@@ -175,7 +175,7 @@ namespace BlackGui
             CLogMessage(this).info("Reset values for settings of %1") << simulator.toQString(true);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_simulatorChanged()
+        void CSettingsSimulatorBasicsComponent::simulatorChanged()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             this->displayDefaultValuesAsPlaceholder(simulator);

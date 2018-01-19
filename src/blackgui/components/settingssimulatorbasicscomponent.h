@@ -46,20 +46,19 @@ namespace BlackGui
             //! Save data
             void save();
 
-        private slots:
-            void ps_modelFileDialog();
-            void ps_excludeFileDialog();
-            void ps_simulatorFileDialog();
-            void ps_simulatorDirectoryEntered();
-            void ps_copyDefaults();
-            void ps_adjustModelDirectory();
-            void ps_reset();
-            void ps_simulatorChanged();
-
         private:
             QScopedPointer<Ui::CSettingsSimulatorBasicsComponent> ui;
             BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this };
             Qt::CaseSensitivity m_fileCaseSensitivity = BlackMisc::CFileUtils::osFileNameCaseSensitivity();
+
+            void modelFileDialog();
+            void excludeFileDialog();
+            void simulatorFileDialog();
+            void simulatorDirectoryEntered();
+            void copyDefaults();
+            void adjustModelDirectory();
+            void reset();
+            void simulatorChanged();
 
             //! Optimize for small layout
             void setSmallLayout(bool small);
