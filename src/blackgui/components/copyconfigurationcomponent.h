@@ -98,6 +98,9 @@ namespace BlackGui
             //! Get the selected directory
             QString getOtherVersionsSelectedDirectory() const;
 
+            //! Other the directory of that other version
+            void openOtherVersionsSelectedDirectory();
+
             //! Get the selected files
             QStringList getSelectedFiles() const;
 

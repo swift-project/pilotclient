@@ -22,6 +22,8 @@
 #include <QDirIterator>
 #include <QFileInfoList>
 #include <QFileSystemModel>
+#include <QDir>
+#include <QDesktopServices>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -55,6 +57,8 @@ namespace BlackGui
             connect(ui->pb_ClearSelection, &QPushButton::clicked, ui->tv_Source, &QTreeView::clearSelection);
             connect(ui->pb_CopyOver, &QPushButton::clicked, this, &CCopyConfigurationComponent::copySelectedFiles);
             connect(ui->cb_ShowAll, &QCheckBox::released, this, &CCopyConfigurationComponent::changeNameFilterDisables);
+            connect(ui->tb_OpenOtherVersionsDir, &QToolButton::clicked, this, &CCopyConfigurationComponent::openOtherVersionsSelectedDirectory);
+            connect(ui->tb_OpenThisVersionDir, &QToolButton::clicked, this, &CCopyConfigurationComponent::openOtherVersionsSelectedDirectory);
 
             // create default caches with timestamps on disk
             // possible for small caches, but not the large model sets (too slow)
@@ -332,6 +336,19 @@ namespace BlackGui
                                               CDataCache::relativeFilePath() :
                                               CSettingsCache::relativeFilePath());
             return dir;
+        }
+
+        void CCopyConfigurationComponent::openOtherVersionsSelectedDirectory()
+        {
+            const QObject *s = sender();
+            const QString d = (s == ui->tb_OpenOtherVersionsDir) ?
+                              this->getOtherVersionsSelectedDirectory() :
+                              this->getThisVersionDirectory();
+            if (d.isEmpty()) { return; }
+            QDir dir(d);
+            if (!dir.exists()) { return; }
+            const QUrl url = QUrl::fromLocalFile(dir.path());
+            QDesktopServices::openUrl(url);
         }
 
         QStringList CCopyConfigurationComponent::getSelectedFiles() const
