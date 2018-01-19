@@ -81,6 +81,18 @@ namespace BlackSimPlugin
             //! Invalidate parts as sent
             void invalidatePartsAsSent();
 
+            //! Parts as sent to simulator
+            const SIMCONNECT_DATA_INITPOSITION &getPositionAsSent() const { return m_positionAsSent; }
+
+            //! Position as sent
+            void setPositionAsSent(const SIMCONNECT_DATA_INITPOSITION &position) { m_positionAsSent = position; }
+
+            //! Same as sent
+            bool isSameAsSent(const SIMCONNECT_DATA_INITPOSITION &position) const;
+
+            //! Invalidate position as sent;
+            void invalidatePositionAsSent();
+
             //! Lights as sent to simulator
             const BlackMisc::Aviation::CAircraftLights &getLightsAsSent() const { return m_lightsAsSent; }
 
@@ -172,6 +184,7 @@ namespace BlackSimPlugin
             bool m_pendingRemoved = false;
             int m_lightsRequestedAt = -1;
             DataDefinitionRemoteAircraftPartsWithoutLights m_partsAsSent {};          //!< parts as sent
+            SIMCONNECT_DATA_INITPOSITION m_positionAsSent {};                         //!< position as sent
             BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr };    //!< current lights to know state for toggling
             BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };          //!< lights as sent to simulator
             SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;       //!< how often do we query ground elevation

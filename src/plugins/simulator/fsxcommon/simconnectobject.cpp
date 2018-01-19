@@ -69,6 +69,24 @@ namespace BlackSimPlugin
             m_partsAsSent = dd;
         }
 
+        bool CSimConnectObject::isSameAsSent(const SIMCONNECT_DATA_INITPOSITION &position) const
+        {
+            return std::tie(m_positionAsSent.Airspeed, m_positionAsSent.Altitude, m_positionAsSent.Bank, m_positionAsSent.Heading, m_positionAsSent.Latitude, m_positionAsSent.Longitude, m_positionAsSent.Pitch, m_positionAsSent.OnGround) ==
+                   std::tie(position.Airspeed, position.Altitude, position.Bank, position.Heading, position.Latitude, position.Longitude, position.Pitch, position.OnGround);
+        }
+
+        void CSimConnectObject::invalidatePositionAsSent()
+        {
+            m_positionAsSent.Airspeed = 0;
+            m_positionAsSent.Altitude = -1;
+            m_positionAsSent.Bank = -1;
+            m_positionAsSent.Heading = -1;
+            m_positionAsSent.Latitude = -1;
+            m_positionAsSent.Longitude = -1;
+            m_positionAsSent.OnGround = 0;
+            m_positionAsSent.Pitch = -1;
+        }
+
         void CSimConnectObject::setObjectId(DWORD id)
         {
             m_objectId = id;
@@ -104,12 +122,13 @@ namespace BlackSimPlugin
             m_confirmedAdded = false;
             m_currentLightsInSim = CAircraftLights();
             m_lightsAsSent = CAircraftLights();
-            m_partsAsSent = DataDefinitionRemoteAircraftPartsWithoutLights {}; // init with 0s
             m_requestId = -1;
             m_objectId = -1;
             m_lightsRequestedAt = -1;
             m_validRequestId = false;
             m_validObjectId = false;
+            this->invalidatePartsAsSent();
+            this->invalidatePositionAsSent();
         }
 
         bool CSimConnectObject::hasValidRequestAndObjectId() const
