@@ -1108,31 +1108,31 @@ namespace BlackSimPlugin
                 hints.setLoggingInterpolation(logInterpolationAndParts);
                 const CAircraftSituation interpolatedSituation = simObject.getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
 
-                if (interpolatorStatus.validAndChangedInterpolatedSituation())
+                if (interpolatorStatus.hasValidSituation())
                 {
                     // update situation
                     SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(interpolatedSituation);
-                    HRESULT hr = S_OK;
-                    hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
-                                                        static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
-                                                        sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
-                    if (hr == S_OK)
+                    if (!simObject.isSameAsSent(position))
                     {
-                        if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO); }
-                    }
-                    else
-                    {
-                        CLogMessage(this).warning("Failed so set position on SimObject '%1' callsign: '%2'") << simObject.getObjectId() << callsign;
+                        m_simConnectObjects[simObject.getCallsign()].setPositionAsSent(position);
+                        const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
+                                           static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
+                                           sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
+                        if (hr == S_OK)
+                        {
+                            if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO); }
+                        }
+                        else
+                        {
+                            CLogMessage(this).warning("Failed so set position on SimObject '%1' callsign: '%2'") << simObject.getObjectId() << callsign;
+                        }
                     }
                 }
                 else
                 {
-                    if (!interpolatorStatus.validInterpolatedSituation())
-                    {
-                        CLogMessage(this).warning("Invalid interpolation for SimObject '%1' callsign: '%2' info: '%3'")
-                                << simObject.getObjectId() << callsign
-                                << interpolatorStatus.toQString();
-                    }
+                    CLogMessage(this).warning("Invalid situation for SimObject '%1' callsign: '%2' info: '%3'")
+                            << simObject.getObjectId() << callsign
+                            << interpolatorStatus.toQString();
                 }
 
                 if (useAircraftParts)
