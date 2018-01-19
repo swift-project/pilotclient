@@ -250,7 +250,7 @@ namespace BlackGui
             ui->le_SimulatorDirectory->setPlaceholderText(s.isEmpty() ? "Simulator directory" : s);
 
             //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
-            constexpr bool BrokenMultilinePlaceholder = true;
+            constexpr bool BrokenMultilinePlaceholder = true; // last checked with Qt 5.10
             const QStringList m = m_settings.getDefaultModelDirectories(simulator);
             if (m.isEmpty())
             {

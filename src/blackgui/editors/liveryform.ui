@@ -123,7 +123,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
+      <item row="0" column="3" alignment="Qt::AlignRight">
        <widget class="QPushButton" name="pb_SearchColor">
         <property name="toolTip">
          <string>find a color livery</string>
@@ -232,7 +232,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="0" column="2" alignment="Qt::AlignLeft">
        <widget class="QToolButton" name="tb_Paste">
         <property name="text">
          <string>...</string>
@@ -250,6 +250,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Components::CColorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/colorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::CLabelAndIcon</class>
    <extends>QFrame</extends>
    <header>blackgui/labelandicon.h</header>
@@ -265,12 +271,6 @@
    <class>BlackGui::CDropSite</class>
    <extends>QLabel</extends>
    <header>blackgui/dropsite.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CColorSelector</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/colorselector.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>BlackGui::Editors::CAirlineIcaoForm</class>
