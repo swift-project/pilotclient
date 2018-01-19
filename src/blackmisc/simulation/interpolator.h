@@ -147,31 +147,22 @@ namespace BlackMisc
         {
         public:
             //! Did interpolation succeed?
-            bool didInterpolationSucceed() const { return m_interpolationSucceeded; }
+            bool isInterpolated() const { return m_isInterpolated; }
 
             //! Set succeeded
-            void setInterpolationSucceeded(bool succeeded) { m_interpolationSucceeded = succeeded; }
+            void setInterpolated(bool interpolated) { m_isInterpolated = interpolated; }
 
             //! Set succeeded
-            void setInterpolationSucceeded(bool succeeded, const Aviation::CAircraftSituation &situation);
-
-            //! Changed position?
-            bool hasChangedPosition() const { return m_changedPosition; }
+            void setInterpolatedAndCheckSituation(bool succeeded, const Aviation::CAircraftSituation &situation);
 
             //! Is the corresponding position valid?
-            bool hasValidSituation() const { return m_validSituation; }
-
-            //! Is that a valid position?
-            void setValidSituation(const Aviation::CAircraftSituation &situation);
-
-            //! Set as changed
-            void setChangedPosition(bool changed) { m_changedPosition = changed; }
-
-            //! Valid interpolated situation which also changed
-            bool validAndChangedInterpolatedSituation() const;
+            bool hasValidSituation() const { return m_isValidSituation; }
 
             //! Valid interpolated situation
-            bool validInterpolatedSituation() const;
+            bool hasValidInterpolatedSituation() const;
+
+            //! Is that a valid position?
+            void checkIfValidSituation(const Aviation::CAircraftSituation &situation);
 
             //! Reset to default values
             void reset();
@@ -180,9 +171,8 @@ namespace BlackMisc
             QString toQString() const;
 
         private:
-            bool m_changedPosition = false;        //!< position was changed
-            bool m_interpolationSucceeded = false; //!< interpolation succeeded (means enough values, etc.)
-            bool m_validSituation = false;         //!< is valid situation
+            bool m_isInterpolated = false;   //!< position is interpolated (means enough values, etc.)
+            bool m_isValidSituation = false; //!< is valid situation
         };
 
         //! Status regarding parts

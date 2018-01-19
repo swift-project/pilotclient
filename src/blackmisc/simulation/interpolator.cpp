@@ -373,39 +373,32 @@ namespace BlackMisc
             situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
         }
 
-        void CInterpolationStatus::setInterpolationSucceeded(bool succeeded, const CAircraftSituation &situation)
+        void CInterpolationStatus::setInterpolatedAndCheckSituation(bool succeeded, const CAircraftSituation &situation)
         {
-            m_interpolationSucceeded = succeeded;
-            this->setValidSituation(situation);
+            m_isInterpolated = succeeded;
+            this->checkIfValidSituation(situation);
         }
 
-        void CInterpolationStatus::setValidSituation(const CAircraftSituation &situation)
+        void CInterpolationStatus::checkIfValidSituation(const CAircraftSituation &situation)
         {
-            m_validSituation = !situation.isGeodeticHeightNull() && !situation.isPositionNull();
+            m_isValidSituation = !situation.isGeodeticHeightNull() && !situation.isPositionNull();
         }
 
-        bool CInterpolationStatus::validAndChangedInterpolatedSituation() const
+        bool CInterpolationStatus::hasValidInterpolatedSituation() const
         {
-            return m_interpolationSucceeded && m_changedPosition && m_validSituation;
-        }
-
-        bool CInterpolationStatus::validInterpolatedSituation() const
-        {
-            return m_interpolationSucceeded && m_validSituation;
+            return m_isInterpolated && m_isValidSituation;
         }
 
         void CInterpolationStatus::reset()
         {
-            m_validSituation = false;
-            m_changedPosition = false;
-            m_interpolationSucceeded = false;
+            m_isValidSituation = false;
+            m_isInterpolated = false;
         }
 
         QString CInterpolationStatus::toQString() const
         {
-            return "Interpolation: " % boolToYesNo(m_interpolationSucceeded) %
-                   " situation valid: " % boolToYesNo(m_interpolationSucceeded) %
-                   " changed pos.: " % boolToYesNo(m_changedPosition);
+            return QStringLiteral("Interpolated: ") % boolToYesNo(m_isInterpolated) %
+                   QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation);
         }
 
         bool CPartsStatus::allTrue() const
