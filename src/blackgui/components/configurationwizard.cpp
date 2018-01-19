@@ -66,6 +66,13 @@ namespace BlackGui
             return wizard && wizard->lastStepSkipped();
         }
 
+        bool CConfigurationWizard::event(QEvent *event)
+        {
+            if (event->type() != QEvent::EnterWhatsThisMode) { return QDialog::event(event); }
+            QTimer::singleShot(0, this, [ = ] { sGui->showHelp(this); });
+            return true;
+        }
+
         void CConfigurationWizard::wizardCurrentIdChanged(int id)
         {
             const int previousId = m_previousId;
