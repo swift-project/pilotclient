@@ -12,8 +12,11 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/logcategorylist.h"
+
 #include <QFrame>
 #include <QFileDialog>
 
@@ -26,11 +29,14 @@ namespace BlackGui
          * Driver independent parts of simulator settings, ie those one are also used independent of the driver.
          * Example: model paths used in loaders
          */
-        class CSettingsSimulatorBasicsComponent : public QFrame
+        class CSettingsSimulatorBasicsComponent : public COverlayMessagesFrame
         {
             Q_OBJECT
 
         public:
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             explicit CSettingsSimulatorBasicsComponent(QWidget *parent = nullptr);
 
@@ -51,13 +57,28 @@ namespace BlackGui
             BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this };
             Qt::CaseSensitivity m_fileCaseSensitivity = BlackMisc::CFileUtils::osFileNameCaseSensitivity();
 
+            //! Model file dialog
             void modelFileDialog();
+
+            //! Exclude file dialog
             void excludeFileDialog();
+
+            //! Simulator file dialog
             void simulatorFileDialog();
+
+            //! Simulator directory entered
             void simulatorDirectoryEntered();
+
+            //! Copy the default values
             void copyDefaults();
+
+            //! Adjust model directory
             void adjustModelDirectory();
+
+            //! Reset values
             void reset();
+
+            //! Simulator has been changed
             void simulatorChanged();
 
             //! Optimize for small layout

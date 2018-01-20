@@ -12,6 +12,7 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/stringutils.h"
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -82,12 +83,11 @@ namespace BlackMisc
             QString CSimulatorSettings::convertToQString(const QString &separator, bool i18n) const
             {
                 Q_UNUSED(i18n);
-                QString s("model directories: ");
-                s.append(m_modelDirectories.join(','));
-                s.append(separator);
-                s.append("exclude directories: ");
-                s.append(m_excludeDirectoryPatterns.join(','));
-                return s;
+                return QStringLiteral("model directories: ") %
+                       m_modelDirectories.join(',') %
+                       separator %
+                       QStringLiteral("exclude directories: ") %
+                       m_excludeDirectoryPatterns.join(',');
             }
 
             CVariant CSimulatorSettings::propertyByIndex(const CPropertyIndex &index) const
@@ -185,30 +185,36 @@ namespace BlackMisc
                 return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityError, "wrong simulator");
             }
 
+            QString CMultiSimulatorSettings::getSimulatorDirectoryIfNotDefault(const CSimulatorInfo &simulator) const
+            {
+                const CSimulatorSettings s = this->getSettings(simulator);
+                const QString dir = s.getSimulatorDirectory();
+                if (dir.isEmpty() || dir == CMultiSimulatorSettings::getDefaultSimulatorDirectory(simulator))
+                {
+                    return QStringLiteral("");
+                }
+                return s.getSimulatorDirectory();
+            }
+
             QString CMultiSimulatorSettings::getSimulatorDirectoryOrDefault(const CSimulatorInfo &simulator) const
             {
                 const CSimulatorSettings s = this->getSettings(simulator);
                 if (s.getSimulatorDirectory().isEmpty())
                 {
-                    return this->getDefaultSimulatorDirectory(simulator);
+                    return CMultiSimulatorSettings::getDefaultSimulatorDirectory(simulator);
                 }
                 return s.getSimulatorDirectory();
             }
 
-            QString CMultiSimulatorSettings::getDefaultSimulatorDirectory(const CSimulatorInfo &simulator) const
+            QStringList CMultiSimulatorSettings::getModelDirectoriesIfNotDefault(const CSimulatorInfo &simulator) const
             {
-                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                switch (simulator.getSimulator())
+                const CSimulatorSettings s = this->getSettings(simulator);
+                const QStringList dirs = s.getModelDirectories();
+                if (dirs.isEmpty() || dirs == CMultiSimulatorSettings::getDefaultModelDirectories(simulator))
                 {
-                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9Dir();
-                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxDir();
-                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dDir();
-                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir(); //! check XP
-                default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                    break;
+                    return QStringList();
                 }
-                return "";
+                return dirs;
             }
 
             QStringList CMultiSimulatorSettings::getModelDirectoriesOrDefault(const CSimulatorInfo &simulator) const
@@ -245,6 +251,17 @@ namespace BlackMisc
                 return QStringList();
             }
 
+            QStringList CMultiSimulatorSettings::getModelExcludeDirectoryPatternsIfNotDefault(const CSimulatorInfo &simulator) const
+            {
+                const CSimulatorSettings s = this->getSettings(simulator);
+                const QStringList patterns = s.getModelExcludeDirectoryPatterns();
+                if (patterns.isEmpty() || patterns == CMultiSimulatorSettings::getDefaultModelExcludeDirectoryPatterns(simulator))
+                {
+                    return QStringList();
+                }
+                return patterns;
+            }
+
             QStringList CMultiSimulatorSettings::getModelExcludeDirectoryPatternsOrDefault(const CSimulatorInfo &simulator) const
             {
                 const CSimulatorSettings s = this->getSettings(simulator);
@@ -275,6 +292,23 @@ namespace BlackMisc
                 CSimulatorSettings s = this->getSettings(simulator);
                 s.resetPaths();
                 this->setAndSaveSettings(s, simulator);
+            }
+
+            QString CMultiSimulatorSettings::getDefaultSimulatorDirectory(const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9Dir();
+                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxDir();
+                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dDir();
+                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir(); //! check XPlane
+                default:
+                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    break;
+                }
+                static const QString empty;
+                return empty;
             }
 
             CSimulatorMessagesSettings::CSimulatorMessagesSettings()
@@ -392,7 +426,7 @@ namespace BlackMisc
                 QString severity;
                 if (this->isRelayedTechnicalMessages())
                 {
-                    severity = "No tech. msgs";
+                    severity = QStringLiteral("No tech. msgs");
                 }
                 else
                 {

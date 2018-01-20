@@ -25,8 +25,14 @@ namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CSettingsSimulatorBasicsComponent::getLogCategories()
+        {
+            static const CLogCategoryList cats({ CLogCategory::guiComponent(), CLogCategory::wizard() });
+            return cats;
+        }
+
         CSettingsSimulatorBasicsComponent::CSettingsSimulatorBasicsComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CSettingsSimulatorBasicsComponent)
         {
             ui->setupUi(this);
@@ -112,6 +118,13 @@ namespace BlackGui
             const QString simulatorDir(ui->le_SimulatorDirectory->text().trimmed());
             const QStringList modelDirs(this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
             const QStringList excludeDirs(this->parseDirectories(ui->pte_ExcludeDirectories->toPlainText()));
+
+            if (simulatorDir.trimmed().isEmpty())
+            {
+                this->showOverlayMessage(CStatusMessage(this).validationError("Empty simulator directory"));
+                return;
+            }
+
             const QStringList relativeDirs = CFileUtils::makeDirectoriesRelative(excludeDirs, this->getFileBrowserModelDirectory(), m_fileCaseSensitivity);
             s.setSimulatorDirectory(simulatorDir);
             s.setModelDirectories(modelDirs);
@@ -187,7 +200,8 @@ namespace BlackGui
             const QString raw = rawString.trimmed();
             if (raw.isEmpty()) { return QStringList(); }
             QStringList dirs;
-            const QStringList rawLines = raw.split(QRegularExpression("\n|\r\n|\r"));
+            static thread_local QRegularExpression regExp("\n|\r\n|\r");
+            const QStringList rawLines = raw.split(regExp);
             for (const QString &l : rawLines)
             {
                 const QString normalized = CFileUtils::normalizeFilePathToQtStandard(l);
@@ -238,10 +252,9 @@ namespace BlackGui
 
         void CSettingsSimulatorBasicsComponent::displaySettings(const CSimulatorInfo &simulator)
         {
-            const CSimulatorSettings s = this->getSettings(simulator);
-            this->displayExcludeDirectoryPatterns(s.getModelExcludeDirectoryPatterns());
-            this->displayModelDirectories(s.getModelDirectories());
-            ui->le_SimulatorDirectory->setText(s.getSimulatorDirectory());
+            this->displayExcludeDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsIfNotDefault(simulator));
+            this->displayModelDirectories(m_settings.getModelDirectoriesIfNotDefault(simulator));
+            ui->le_SimulatorDirectory->setText(m_settings.getSimulatorDirectoryIfNotDefault(simulator));
         }
 
         void CSettingsSimulatorBasicsComponent::displayDefaultValuesAsPlaceholder(const CSimulatorInfo &simulator)

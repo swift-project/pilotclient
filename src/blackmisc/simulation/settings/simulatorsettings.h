@@ -33,13 +33,13 @@ namespace BlackMisc
             //! Settings for simulator
             //! Driver independent part also used in loaders (such as directories)
             class BLACKMISC_EXPORT CSimulatorSettings :
-                public BlackMisc::CValueObject<CSimulatorSettings>
+                public CValueObject<CSimulatorSettings>
             {
             public:
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexSimulatorDirectory = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorSettings,
+                    IndexSimulatorDirectory = CPropertyIndex::GlobalIndexCSimulatorSettings,
                     IndexModelDirectory,
                     IndexModelExcludeDirectoryPatterns
                 };
@@ -81,10 +81,10 @@ namespace BlackMisc
                 QString convertToQString(const QString &separator, bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+                CVariant propertyByIndex(const CPropertyIndex &index) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             private:
                 QString     m_simulatorDirectory;         //! Simulator directory
@@ -100,7 +100,7 @@ namespace BlackMisc
             };
 
             //! Trait for simulator settings
-            struct TSimulatorFsx : public BlackMisc::TSettingTrait<CSimulatorSettings>
+            struct TSimulatorFsx : public TSettingTrait<CSimulatorSettings>
             {
                 //! \copydoc BlackCore::TSettingTrait::key
                 static const char *key() { return "settingssimulatorfsx"; }
@@ -110,7 +110,7 @@ namespace BlackMisc
             };
 
             //! Trait for simulator settings
-            struct TSimulatorFs9 : public BlackMisc::TSettingTrait<CSimulatorSettings>
+            struct TSimulatorFs9 : public TSettingTrait<CSimulatorSettings>
             {
                 //! \copydoc BlackCore::TSettingTrait::key
                 static const char *key() { return "settingssimulatorfs9"; }
@@ -120,7 +120,7 @@ namespace BlackMisc
             };
 
             //! Trait for simulator settings
-            struct TSimulatorP3D : public BlackMisc::TSettingTrait<CSimulatorSettings>
+            struct TSimulatorP3D : public TSettingTrait<CSimulatorSettings>
             {
                 //! \copydoc BlackCore::TSettingTrait::key
                 static const char *key() { return "settingssimulatorp3d"; }
@@ -130,7 +130,7 @@ namespace BlackMisc
             };
 
             //! Trait for simulator settings
-            struct TSimulatorXP : public BlackMisc::TSettingTrait<CSimulatorSettings>
+            struct TSimulatorXP : public TSettingTrait<CSimulatorSettings>
             {
                 //! \copydoc BlackCore::TSettingTrait::key
                 static const char *key() { return "settingssimulatorxplane"; }
@@ -149,58 +149,67 @@ namespace BlackMisc
                 CMultiSimulatorSettings(QObject *parent = nullptr);
 
                 //! Settings per simulator
-                CSimulatorSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                CSimulatorSettings getSettings(const CSimulatorInfo &simulator) const;
 
                 //! Set settings per simulator
-                BlackMisc::CStatusMessage setSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                CStatusMessage setSettings(const Settings::CSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
                 //! Set settings per simulator
-                BlackMisc::CStatusMessage setAndSaveSettings(const BlackMisc::Simulation::Settings::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                CStatusMessage setAndSaveSettings(const Settings::CSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
                 //! Set settings per simulator
-                BlackMisc::CStatusMessage saveSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                CStatusMessage saveSettings(const CSimulatorInfo &simulator);
+
+                //! Simulator directory or empty if default dir
+                QString getSimulatorDirectoryIfNotDefault(const CSimulatorInfo &simulator) const;
 
                 //! Simulator directory or default model path per simulator
-                QString getSimulatorDirectoryOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                QString getSimulatorDirectoryOrDefault(const CSimulatorInfo &simulator) const;
 
-                //! Default simulator path per simulator
-                QString getDefaultSimulatorDirectory(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                //! Model directory or or empty if default
+                QStringList getModelDirectoriesIfNotDefault(const CSimulatorInfo &simulator) const;
 
                 //! Model directory or default model path per simulator
-                QStringList getModelDirectoriesOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                QStringList getModelDirectoriesOrDefault(const CSimulatorInfo &simulator) const;
 
                 //! First model directoy
-                QString getFirstModelDirectoryOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                QString getFirstModelDirectoryOrDefault(const CSimulatorInfo &simulator) const;
 
                 //! Default model path per simulator
-                QStringList getDefaultModelDirectories(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                QStringList getDefaultModelDirectories(const CSimulatorInfo &simulator) const;
 
-                //! Model exclude paths per simulator
-                QStringList getModelExcludeDirectoryPatternsOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                //! Model exclude patterns or empty if default
+                QStringList getModelExcludeDirectoryPatternsIfNotDefault(const CSimulatorInfo &simulator) const;
 
-                //! Default model exclude paths per simulator
-                QStringList getDefaultModelExcludeDirectoryPatterns(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                //! Model exclude patterns per simulator
+                QStringList getModelExcludeDirectoryPatternsOrDefault(const CSimulatorInfo &simulator) const;
+
+                //! Default model exclude patterns per simulator
+                QStringList getDefaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator) const;
 
                 //! Reset to defaults
-                void resetToDefaults(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                void resetToDefaults(const CSimulatorInfo &simulator);
+
+                //! Default simulator path per simulator
+                static QString getDefaultSimulatorDirectory(const CSimulatorInfo &simulator);
 
             private:
-                BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFsx> m_simSettingsFsx {this}; //!< FSX cache
-                BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorFs9> m_simSettingsFs9 {this}; //!< FS9 cache
-                BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorP3D> m_simSettingsP3D {this}; //!< P3D cache
-                BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSimulatorXP>  m_simSettingsXP  {this}; //!< XP cache
+                CSetting<Settings::TSimulatorFsx> m_simSettingsFsx {this}; //!< FSX cache
+                CSetting<Settings::TSimulatorFs9> m_simSettingsFs9 {this}; //!< FS9 cache
+                CSetting<Settings::TSimulatorP3D> m_simSettingsP3D {this}; //!< P3D cache
+                CSetting<Settings::TSimulatorXP>  m_simSettingsXP  {this}; //!< XP cache
             };
 
             //! Settings regarding message handling.
             //! Driver independent part, related to network
             class BLACKMISC_EXPORT CSimulatorMessagesSettings :
-                public BlackMisc::CValueObject<CSimulatorMessagesSettings>
+                public CValueObject<CSimulatorMessagesSettings>
             {
             public:
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexTechnicalLogSeverity = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorMessageSettings,
+                    IndexTechnicalLogSeverity = CPropertyIndex::GlobalIndexCSimulatorMessageSettings,
                     IndexTextMessageRelay,
                     IndexGloballyEnabled
                 };
@@ -225,10 +234,10 @@ namespace BlackMisc
                 void setTechnicalLogSeverity(BlackMisc::CStatusMessage::StatusSeverity severity);
 
                 //! Globally enable / disable
-                void setGloballyEnabled(bool enabled) { this->m_globallyEnabled = enabled; }
+                void setGloballyEnabled(bool enabled) { m_globallyEnabled = enabled; }
 
                 //! Globally enabled?
-                bool isGloballyEnabled() const { return this->m_globallyEnabled; }
+                bool isGloballyEnabled() const { return m_globallyEnabled; }
 
                 //! No technical messages
                 void disableTechnicalMessages();
@@ -246,7 +255,7 @@ namespace BlackMisc
                 bool isRelayedTechnicalMessages() const;
 
                 //! Relay the following message types
-                void setRelayedTextMessages(BlackMisc::Simulation::Settings::CSimulatorMessagesSettings::TextMessageType messageType);
+                void setRelayedTextMessages(Settings::CSimulatorMessagesSettings::TextMessageType messageType);
 
                 //! Relay supervisor messages
                 bool isRelayedSupervisorTextMessages() const;
@@ -264,10 +273,10 @@ namespace BlackMisc
                 bool isRelayedCom2TextMessages() const;
 
                 //! Relay given text message
-                bool relayThisTextMessage(const BlackMisc::Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
+                bool relayThisTextMessage(const Network::CTextMessage &msg, const CSimulatedAircraft &aircraft) const;
 
                 //! Relay this particular message
-                bool relayThisStatusMessage(const BlackMisc::CStatusMessage &message) const;
+                bool relayThisStatusMessage(const CStatusMessage &message) const;
 
                 //! Relayed text messages
                 CSimulatorMessagesSettings::TextMessageType getRelayedTextMessageTypes() const;
@@ -276,13 +285,13 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+                BlackMisc::CVariant propertyByIndex(const CPropertyIndex &index) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             private:
-                int m_technicalLogLevel = BlackMisc::CStatusMessage::SeverityError; //!< Simulator directory
+                int m_technicalLogLevel = CStatusMessage::SeverityError; //!< Simulator directory
                 int m_messageType = static_cast<int>(TextMessagePrivate | TextMessageSupervisor);
                 bool m_globallyEnabled = true; //!< messsage relay enabled to simulator
 
@@ -294,7 +303,7 @@ namespace BlackMisc
             };
 
             //! Trait for simulator message settings
-            struct TSimulatorMessages : public BlackMisc::TSettingTrait<CSimulatorMessagesSettings>
+            struct TSimulatorMessages : public TSettingTrait<CSimulatorMessagesSettings>
             {
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "settingssimulatormessages"; }
@@ -304,7 +313,7 @@ namespace BlackMisc
             };
 
             //! Selected weather scenario
-            struct TSelectedWeatherScenario : public BlackMisc::TSettingTrait<BlackMisc::Weather::CWeatherScenario>
+            struct TSelectedWeatherScenario : public TSettingTrait<Weather::CWeatherScenario>
             {
                 //! \copydoc BlackMisc::TSettingTrait::key
                 static const char *key() { return "simulator/selectedweatherscenario"; }
@@ -313,9 +322,9 @@ namespace BlackMisc
                 static const QString &humanReadable() { static const QString name("Weather scenario"); return name; }
 
                 //! \copydoc BlackMisc::TSettingTrait::defaultValue
-                static const BlackMisc::Weather::CWeatherScenario &defaultValue()
+                static const Weather::CWeatherScenario &defaultValue()
                 {
-                    static const BlackMisc::Weather::CWeatherScenario scenario {};
+                    static const Weather::CWeatherScenario scenario {};
                     return scenario;
                 }
             };

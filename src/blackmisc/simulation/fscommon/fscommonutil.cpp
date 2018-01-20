@@ -114,7 +114,7 @@ namespace BlackMisc
 
             QString CFsCommonUtil::fsxSimObjectsDirFromSimDir(const QString &simDir)
             {
-                Q_ASSERT_X(!simDir.isEmpty(), Q_FUNC_INFO, "missing simulator directory");
+                if (simDir.isEmpty()) { return QStringLiteral(""); }
                 return CFileUtils::appendFilePaths(simDir, "SimObjects");
             }
 
@@ -137,6 +137,7 @@ namespace BlackMisc
                 {
                     FsRegistryPathPair p3dRegistryPathPairs =
                     {
+                        { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v4"), QStringLiteral("AppPath") },
                         { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v3"), QStringLiteral("AppPath") },
                         { QStringLiteral("HKEY_CURRENT_USER\\Software\\Lockheed Martin\\Prepar3d v2"), QStringLiteral("AppPath") },
                         { QStringLiteral("HKEY_CURRENT_USER\\Software\\LockheedMartin\\Prepar3d"), QStringLiteral("AppPath") }
@@ -164,6 +165,7 @@ namespace BlackMisc
                 if (!dir.isEmpty()) { return dir; }
                 const QStringList someDefaultDirs(
                 {
+                    "C:/Program Files (x86)/Lockheed Martin/Prepar3D v4",
                     "C:/Program Files (x86)/Lockheed Martin/Prepar3D v3",
                     "C:/Program Files (x86)/Lockheed Martin/Prepar3D v2",
                     "C:/Program Files (x86)/Lockheed Martin/Prepar3D"
@@ -271,7 +273,7 @@ namespace BlackMisc
             QString fs9AircraftDirFromRegistryImpl()
             {
                 QString fs9Path = CFsCommonUtil::fs9DirFromRegistry();
-                if (fs9Path.isEmpty()) { return ""; }
+                if (fs9Path.isEmpty()) { return QStringLiteral(""); }
                 return CFsCommonUtil::fs9AircraftDirFromSimDir(fs9Path);
             }
 
@@ -284,7 +286,7 @@ namespace BlackMisc
             QString fs9AircraftDirImpl()
             {
                 const QString dir(CFsCommonUtil::fs9Dir());
-                if (dir.isEmpty()) { return ""; }
+                if (dir.isEmpty()) { return QStringLiteral(""); }
                 return CFsCommonUtil::fs9AircraftDirFromSimDir(dir);
             }
 
@@ -296,7 +298,7 @@ namespace BlackMisc
 
             QString CFsCommonUtil::fs9AircraftDirFromSimDir(const QString &simDir)
             {
-                Q_ASSERT_X(!simDir.isEmpty(), Q_FUNC_INFO, "missing simulator directory");
+                if (simDir.isEmpty()) { return QStringLiteral(""); }
                 return CFileUtils::appendFilePaths(simDir, "Aircraft");
             }
 
