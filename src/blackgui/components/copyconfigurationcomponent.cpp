@@ -49,6 +49,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->initOtherSwiftVersions();
+            this->setWidths();
 
             ui->cb_ShowAll->setChecked(m_nameFilterDisables);
             connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
@@ -300,8 +301,7 @@ namespace BlackGui
 
         void CCopyConfigurationComponent::resizeEvent(QResizeEvent *event)
         {
-            const int w = 0.45 * this->width();
-            ui->cb_OtherVersions->setMaximumWidth(w);
+            this->setWidths();
             QFrame::resizeEvent(event);
         }
 
@@ -432,6 +432,16 @@ namespace BlackGui
         void CCopyConfigurationComponent::changeNameFilterDisables()
         {
             this->setNameFilterDisables(ui->cb_ShowAll->isChecked());
+        }
+
+        void CCopyConfigurationComponent::setWidths()
+        {
+            const int w = this->width();
+            const int wCb = 0.45 * w;
+            const int wView = 0.4 * w;
+            ui->cb_OtherVersions->setMaximumWidth(wCb);
+            ui->tv_Destination->setMinimumWidth(wView);
+            ui->tv_Source->setMinimumWidth(wView);
         }
 
         const CLogCategoryList &CCopyConfigurationWizardPage::getLogCategories()

@@ -116,6 +116,9 @@ namespace BlackGui
             //! Set name filter disables from ui
             void changeNameFilterDisables();
 
+            //! Set widths
+            void setWidths();
+
             QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
             QString m_initializedSourceDir;
