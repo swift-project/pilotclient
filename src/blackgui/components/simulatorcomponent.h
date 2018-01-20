@@ -12,8 +12,9 @@
 #ifndef BLACKGUI_SIMULATORCOMPONENT_H
 #define BLACKGUI_SIMULATORCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/blackguiexport.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/icons.h"
 
 #include <QObject>
@@ -25,9 +26,8 @@
 
 class QWidget;
 
-namespace BlackMisc { class CIcon; }
+namespace BlackMisc { class CIcon; namespace Simulation { class CSimulatedAircraft; }}
 namespace Ui { class CSimulatorComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -40,6 +40,9 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             explicit CSimulatorComponent(QWidget *parent = nullptr);
 
@@ -56,14 +59,16 @@ namespace BlackGui
             //! Update simulator
             void update();
 
-        private slots:
+        private:
             //! \copydoc ISimulator::simulatorStatusChanged
-            void ps_onSimulatorStatusChanged(int status);
+            void onSimulatorStatusChanged(int status);
+
+            //! \copydoc ISimulator::addingRemoteModelFailed
+            void onAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);
 
             //! Refresh the internals
-            void ps_refreshInternals();
+            void refreshInternals();
 
-        private:
             //! Update interval
             int getUpdateIntervalMs() const;
 
@@ -74,7 +79,7 @@ namespace BlackGui
             void addOrUpdateLiveDataByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
 
             QScopedPointer<Ui::CSimulatorComponent> ui;
-            QTimer m_updateTimer;
+            QTimer m_updateTimer { this };
         };
     } // ns
 } // ns

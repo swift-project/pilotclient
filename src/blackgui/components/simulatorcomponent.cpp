@@ -37,21 +37,39 @@ namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CSimulatorComponent::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::guiComponent(), CLogCategory::matching() };
+            return cats;
+        }
+
         CSimulatorComponent::CSimulatorComponent(QWidget *parent) :
             QTabWidget(parent),
             CEnableForDockWidgetInfoArea(),
             ui(new Ui::CSimulatorComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+
             ui->setupUi(this);
             this->setCurrentIndex(0);
+            ui->comp_StatusMessages->showFilterDialog();
+
+            // live data
             ui->tvp_LiveData->setIconMode(true);
             ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
             this->addOrUpdateLiveDataByName("info", "no data yet", CIcons::StandardIconWarning16);
 
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::ps_onSimulatorStatusChanged);
-            connect(&this->m_updateTimer, &QTimer::timeout, this, &CSimulatorComponent::update);
-            connect(ui->pb_RefreshInternals, &QPushButton::pressed, this, &CSimulatorComponent::ps_refreshInternals);
-            this->ps_onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
+            // connects
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::onSimulatorStatusChanged);
+            connect(&m_updateTimer, &QTimer::timeout, this, &CSimulatorComponent::update);
+            connect(ui->pb_RefreshInternals, &QPushButton::pressed, this, &CSimulatorComponent::refreshInternals);
+            if (sGui->supportsContexts() && sGui->getIContextSimulator())
+            {
+                connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed, this, &CSimulatorComponent::onAddingRemoteModelFailed);
+            }
+
+            // init status
+            this->onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
         }
 
         CSimulatorComponent::~CSimulatorComponent()
@@ -134,23 +152,29 @@ namespace BlackGui
             this->addOrUpdateLiveDataByName("Transponder", ownAircraft.getTransponderCodeFormatted(), iconRadio);
         }
 
-        void CSimulatorComponent::ps_onSimulatorStatusChanged(int status)
+        void CSimulatorComponent::onSimulatorStatusChanged(int status)
         {
             if (status & ISimulator::Connected)
             {
                 const int intervalMs = getUpdateIntervalMs();
-                this->m_updateTimer.start(intervalMs);
-                this->ps_refreshInternals();
+                m_updateTimer.start(intervalMs);
+                this->refreshInternals();
             }
             else
             {
-                this->m_updateTimer.stop();
+                m_updateTimer.stop();
                 this->clear();
                 this->update();
             }
         }
 
-        void CSimulatorComponent::ps_refreshInternals()
+        void CSimulatorComponent::onAddingRemoteModelFailed(const CSimulatedAircraft &aircraft, const CStatusMessage &message)
+        {
+            ui->comp_StatusMessages->appendStatusMessageToList(CStatusMessage(this).warning("Adding model failed: '%1'") << aircraft.toQString(true));
+            ui->comp_StatusMessages->appendStatusMessageToList(message);
+        }
+
+        void CSimulatorComponent::refreshInternals()
         {
             if (!sGui->getIContextSimulator()) { return; }
             const CSimulatorInternals internals = sGui->getIContextSimulator()->getSimulatorInternals();

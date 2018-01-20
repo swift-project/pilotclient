@@ -72,10 +72,39 @@
       </attribute>
      </widget>
     </item>
-    <item>
+    <item alignment="Qt::AlignRight">
      <widget class="QPushButton" name="pb_RefreshInternals">
       <property name="text">
        <string>refresh</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_Messages">
+   <attribute name="title">
+    <string>Messages</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_Messages">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CStatusMessagesDetail" name="comp_StatusMessages">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
      </widget>
     </item>
@@ -87,6 +116,12 @@
    <class>BlackGui::Views::CNameVariantPairView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/namevariantpairview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CStatusMessagesDetail</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/statusmessagesdetail.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
