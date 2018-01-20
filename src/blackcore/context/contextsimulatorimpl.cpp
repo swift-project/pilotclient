@@ -63,8 +63,8 @@ namespace BlackCore
             this->restoreSimulatorPlugins();
 
             connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
-            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CContextSimulator::ps_modelSetChanged);
-            connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::ps_modelSetChanged);
+            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CContextSimulator::modelSetChanged);
+            connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
             // deferred init of last model set, if no other data are set in meantime
             QTimer::singleShot(1250, this, &CContextSimulator::initByLastUsedModelSet);
@@ -287,9 +287,9 @@ namespace BlackCore
             m_aircraftMatcher.setModelSet(m_modelSetLoader.getAircraftModels(), simInfo);
             m_aircraftMatcher.setDefaultModel(simulator->getDefaultModel());
 
-            bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
+            bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::onSimulatorStatusChanged);
             Q_ASSERT(c);
-            c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this, &CContextSimulator::ps_addingRemoteAircraftFailed);
+            c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this, &CContextSimulator::addingRemoteAircraftFailed);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
             Q_ASSERT(c);
@@ -301,9 +301,9 @@ namespace BlackCore
             Q_ASSERT(c);
 
             // log from context to simulator
-            c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CContextSimulator::ps_relayStatusMessageToSimulator);
+            c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CContextSimulator::relayStatusMessageToSimulator);
             Q_ASSERT(c);
-            c = connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this, &CContextSimulator::ps_relayStatusMessageToSimulator);
+            c = connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this, &CContextSimulator::relayStatusMessageToSimulator);
             Q_ASSERT(c);
             Q_UNUSED(c);
 
@@ -352,7 +352,7 @@ namespace BlackCore
             {
                 Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
 
-                const bool c = connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::ps_simulatorStarted);
+                const bool c = connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::onSimulatorStarted);
                 if (!c)
                 {
                     CLogMessage(this).error("Unable to use '%1'") << simulatorInfo.toQString();
@@ -406,7 +406,7 @@ namespace BlackCore
             }
         }
 
-        void CContextSimulator::ps_addedRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        void CContextSimulator::xCtxAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
             if (!isSimulatorSimulating()) { return; }
             const CCallsign callsign = remoteAircraft.getCallsign();
@@ -425,13 +425,13 @@ namespace BlackCore
             emit modelMatchingCompleted(remoteAircraft);
         }
 
-        void CContextSimulator::ps_removedRemoteAircraft(const CCallsign &callsign)
+        void CContextSimulator::xCtxRemovedRemoteAircraft(const CCallsign &callsign)
         {
             if (!isSimulatorSimulating()) { return; }
             m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(callsign);
         }
 
-        void CContextSimulator::ps_onSimulatorStatusChanged(ISimulator::SimulatorStatus status)
+        void CContextSimulator::onSimulatorStatusChanged(ISimulator::SimulatorStatus status)
         {
             if (m_initallyAddAircrafts && status.testFlag(ISimulator::Simulating))
             {
@@ -445,7 +445,7 @@ namespace BlackCore
                 for (const CSimulatedAircraft &simulatedAircraft : aircraft)
                 {
                     BLACK_VERIFY_X(!simulatedAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "Need callsign");
-                    ps_addedRemoteAircraft(simulatedAircraft);
+                    xCtxAddedRemoteAircraft(simulatedAircraft);
                 }
                 m_initallyAddAircrafts = false;
             }
@@ -458,13 +458,13 @@ namespace BlackCore
             emit simulatorStatusChanged(status);
         }
 
-        void CContextSimulator::ps_modelSetChanged(const CSimulatorInfo &simulator)
+        void CContextSimulator::onModelSetChanged(const CSimulatorInfo &simulator)
         {
             Q_UNUSED(simulator);
             emit this->modelSetChanged();
         }
 
-        void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
+        void CContextSimulator::xCtxTextMessagesReceived(const Network::CTextMessageList &textMessages)
         {
             if (!isSimulatorSimulating()) { return; }
             if (!this->getIContextOwnAircraft()) { return; }
@@ -477,26 +477,26 @@ namespace BlackCore
             }
         }
 
-        void CContextSimulator::ps_cockpitChangedFromSimulator(const CSimulatedAircraft &ownAircraft)
+        void CContextSimulator::onCockpitChangedFromSimulator(const CSimulatedAircraft &ownAircraft)
         {
             Q_ASSERT(getIContextOwnAircraft());
             emit getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
         }
 
-        void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
+        void CContextSimulator::xCtxChangedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
         {
             if (CIdentifiable::isMyIdentifier(originator)) { return; }
             if (!isSimulatorSimulating()) { return; }
             m_simulatorPlugin.second->changeRemoteAircraftModel(aircraft);
         }
 
-        void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
+        void CContextSimulator::xCtxChangedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
             if (!isSimulatorSimulating()) { return; }
             m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
         }
 
-        void CContextSimulator::ps_networkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CContextSimulator::xCtxNetworkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
             BLACK_VERIFY_X(getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
@@ -512,13 +512,13 @@ namespace BlackCore
             }
         }
 
-        void CContextSimulator::ps_addingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, const CStatusMessage &message)
+        void CContextSimulator::addingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, const CStatusMessage &message)
         {
             if (!isSimulatorSimulating()) { return; }
-            emit addingRemoteModelFailed(remoteAircraft, message);
+            emit this->addingRemoteModelFailed(remoteAircraft, message);
         }
 
-        void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
+        void CContextSimulator::xCtxUpdateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
             if (!isSimulatorSimulating()) { return; }
             if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
@@ -527,7 +527,7 @@ namespace BlackCore
             m_simulatorPlugin.second->updateOwnSimulatorCockpit(ownAircraft, originator);
         }
 
-        void CContextSimulator::ps_updateSimulatorSelcalFromContext(const CSelcal &selcal, const CIdentifier &originator)
+        void CContextSimulator::xCtxUpdateSimulatorSelcalFromContext(const CSelcal &selcal, const CIdentifier &originator)
         {
             if (!isSimulatorSimulating()) { return; }
             if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
@@ -536,13 +536,13 @@ namespace BlackCore
             m_simulatorPlugin.second->updateOwnSimulatorSelcal(selcal, originator);
         }
 
-        void CContextSimulator::ps_networkRequestedNewAircraft(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
+        void CContextSimulator::xCtxNetworkRequestedNewAircraft(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
         {
             if (m_networkSessionId.isEmpty()) { return; }
             m_aircraftMatcher.evaluateStatisticsEntry(m_networkSessionId, callsign, aircraftIcao, airlineIcao, livery);
         }
 
-        void CContextSimulator::ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
+        void CContextSimulator::relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
         {
             if (!isSimulatorSimulating()) { return; }
             const CSimulatorMessagesSettings simMsg = m_messageSettings.getThreadLocal();
@@ -676,7 +676,7 @@ namespace BlackCore
             CSimulatedAircraft aircraft = getAircraftInRangeForCallsign(callsign);
             if (aircraft.getCallsign() != callsign) { return false; } // not found
             aircraft.setModel(aircraft.getNetworkModel());
-            ps_addedRemoteAircraft(aircraft);
+            xCtxAddedRemoteAircraft(aircraft);
             return true;
         }
 
@@ -695,7 +695,7 @@ namespace BlackCore
             m_weatherManager.requestWeatherGrid(weatherGrid, identifier);
         }
 
-        void CContextSimulator::ps_simulatorStarted(const CSimulatorPluginInfo &info)
+        void CContextSimulator::onSimulatorStarted(const CSimulatorPluginInfo &info)
         {
             stopSimulatorListeners();
             loadSimulatorPlugin(info);

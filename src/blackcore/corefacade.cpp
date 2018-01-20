@@ -194,31 +194,31 @@ namespace BlackCore
                 Q_ASSERT_X(this->getCContextNetwork()->airspace(), Q_FUNC_INFO, "No airspace object");
 
                 c = connect(m_contextNetwork, &IContextNetwork::textMessagesReceived,
-                            this->getCContextSimulator(), &CContextSimulator::ps_textMessagesReceived);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxTextMessagesReceived);
                 Q_ASSERT(c);
 
                 // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
                 // ready for model matching is sent delayed when all information are available
                 c = connect(m_contextNetwork, &IContextNetwork::readyForModelMatching,
-                            this->getCContextSimulator(), &CContextSimulator::ps_addedRemoteAircraft);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxAddedRemoteAircraft);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::removedAircraft,
-                            this->getCContextSimulator(), &CContextSimulator::ps_removedRemoteAircraft);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxRemovedRemoteAircraft);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::changedRemoteAircraftModel,
-                            this->getCContextSimulator(), &CContextSimulator::ps_changedRemoteAircraftModel);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedRemoteAircraftModel);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::changedRemoteAircraftEnabled,
-                            this->getCContextSimulator(), &CContextSimulator::ps_changedRemoteAircraftEnabled);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedRemoteAircraftEnabled);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::connectionStatusChanged,
-                            this->getCContextSimulator(), &CContextSimulator::ps_networkConnectionStatusChanged);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxNetworkConnectionStatusChanged);
                 Q_ASSERT(c);
                 c = connect(this->getCContextNetwork()->airspace(), &CAirspaceMonitor::requestedNewAircraft,
-                            this->getCContextSimulator(), &CContextSimulator::ps_networkRequestedNewAircraft);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxNetworkRequestedNewAircraft);
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::renderRestrictionsChanged,
-                            this->getCContextNetwork(), &CContextNetwork::simulatorRenderRestrictionsChanged);
+                            this->getCContextNetwork(), &CContextNetwork::xCtxSimulatorRenderRestrictionsChanged);
                 Q_ASSERT(c);
             }
 
@@ -226,13 +226,13 @@ namespace BlackCore
             if (m_contextOwnAircraft && m_contextOwnAircraft->isUsingImplementingObject())
             {
                 c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
-                            this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorCockpitFromContext);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxUpdateSimulatorCockpitFromContext);
                 Q_ASSERT(c);
                 c = connect(m_contextOwnAircraft, &IContextOwnAircraft::changedSelcal,
-                            this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorSelcalFromContext);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxUpdateSimulatorSelcalFromContext);
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
-                            this->getCContextOwnAircraft(), &CContextOwnAircraft::changedSimulatorModel);
+                            this->getCContextOwnAircraft(), &CContextOwnAircraft::xCtxChangedSimulatorModel);
                 Q_ASSERT(c);
             }
 
@@ -245,7 +245,7 @@ namespace BlackCore
         if (m_contextNetwork && m_contextOwnAircraft && m_contextNetwork->isUsingImplementingObject() && m_contextOwnAircraft->isUsingImplementingObject())
         {
             c = connect(m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
-                        this->getCContextOwnAircraft(),  &CContextOwnAircraft::changedAtcStationOnlineConnectionStatus);
+                        this->getCContextOwnAircraft(),  &CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
             times.insert("Post setup, connects network", time.restart());
         }

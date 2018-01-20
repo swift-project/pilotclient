@@ -117,7 +117,9 @@ namespace BlackCore
             //! @}
             //! \copydoc IContextSimulator::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            // ----------------------------- context interface -----------------------------
 
+        public:
             //! Register dot commands
             static void registerHelp()
             {
@@ -128,8 +130,6 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".ris parts on|off", "aircraft parts"});
             }
 
-            // ----------------------------- context interface -----------------------------
-
         protected:
             //! Constructor
             CContextSimulator(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
@@ -137,59 +137,58 @@ namespace BlackCore
             //! Register myself in DBus
             CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server);
 
-        private slots:
+        private:
             //  ------------ slots connected with network or other contexts ---------
             //! \ingroup crosscontextslot
             //! @{
 
             //! Remote aircraft added
-            void ps_addedRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+            void xCtxAddedRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
             //! Remove remote aircraft
-            void ps_removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+            void xCtxRemovedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Changed remote aircraft model
-            void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void xCtxChangedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Enable / disable aircraft
-            void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void xCtxChangedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Network connection status
-            void ps_networkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
+            void xCtxNetworkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
             //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
-            void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
+            void xCtxUpdateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
             //! Update simulator SELCAL from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
-            void ps_updateSimulatorSelcalFromContext(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
+            void xCtxUpdateSimulatorSelcalFromContext(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator);
 
             //! Raw data when a new aircraft was requested, used for statistics
-            void ps_networkRequestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
+            void xCtxNetworkRequestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
+
+            //! Text message received
+            void xCtxTextMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
             //! @}
             //  ------------ slots connected with network or other contexts ---------
 
             //! Handle new connection status of simulator
-            void ps_onSimulatorStatusChanged(ISimulator::SimulatorStatus status);
+            void onSimulatorStatusChanged(ISimulator::SimulatorStatus status);
 
             //! Model set from model set loader changed
-            void ps_modelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-            //! Text message received
-            void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
+            void onModelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Listener reports the simulator has started
-            void ps_simulatorStarted(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+            void onSimulatorStarted(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
             //! Simulator has changed cockpit
-            void ps_cockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+            void onCockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             //! Failed adding remote aircraft
-            void ps_addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);
+            void addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);
 
             //! Relay status message to simulator under consideration of settings
-            void ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);
+            void relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);
 
-        private:
             //! Handle a change in enabled simulators
             void changeEnabledSimulators();
 

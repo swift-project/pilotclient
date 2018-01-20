@@ -437,7 +437,7 @@ namespace BlackCore
             emit this->connectionStatusChanged(from, to);
         }
 
-        void CContextNetwork::simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
+        void CContextNetwork::xCtxSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
         {
             // mainly passing changed restrictions from simulator to network
             if (!m_airspace) { return; }

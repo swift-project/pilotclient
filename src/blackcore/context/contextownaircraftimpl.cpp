@@ -322,7 +322,7 @@ namespace BlackCore
             if (this->getIContextAudio()) this->getIContextAudio()->setVoiceOutputVolume(outputVolume);
         }
 
-        void CContextOwnAircraft::changedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
+        void CContextOwnAircraft::xCtxChangedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
         {
             // any of our active frequencies?
             Q_UNUSED(connected);
@@ -331,7 +331,7 @@ namespace BlackCore
             this->resolveVoiceRooms();
         }
 
-        void CContextOwnAircraft::changedSimulatorModel(const CAircraftModel &model)
+        void CContextOwnAircraft::xCtxChangedSimulatorModel(const CAircraftModel &model)
         {
             this->updateOwnModel(model);
         }

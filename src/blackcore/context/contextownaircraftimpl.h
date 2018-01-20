@@ -185,11 +185,11 @@ namespace BlackCore
 
             //! Station has been changed, needed to tune in/out voice room
             //! \ingroup crosscontextslot
-            void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
+            void xCtxChangedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
             //! Simulator model has been changed
             //! \ingroup crosscontextslot
-            void changedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
+            void xCtxChangedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Web data loaded
             void allSwiftWebDataRead();
