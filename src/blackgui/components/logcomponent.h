@@ -13,8 +13,6 @@
 #define BLACKGUI_LOGCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/menus/menudelegate.h"
-#include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QFrame>
@@ -30,7 +28,6 @@ class QWidget;
 namespace Ui { class CLogComponent; }
 namespace BlackGui
 {
-    namespace Menus { class CMenuActions; }
     namespace Components
     {
         //! Text edit for our log component
@@ -42,9 +39,9 @@ namespace BlackGui
             //! Constructor
             CConsoleTextEdit(QWidget *parent = nullptr);
 
-        protected slots:
+        protected:
             //! Custom menu
-            void ps_customMenuRequested(const QPoint &pos);
+            void customMenuRequested(const QPoint &pos);
         };
 
         //! GUI displaying log and status messages
@@ -65,32 +62,24 @@ namespace BlackGui
             //! Display console
             void displayConsole(bool attention = false);
 
-            //! Show log details
-            void showDetails(bool details);
+            //! \copydoc BlackGui::Components::CStatusMessagesDetail::filterUseRadioButtonDescriptiveIcons
+            void filterUseRadioButtonDescriptiveIcons(bool oneLetterText);
 
-            //! Show filter dialog and disable bar
+            //! \copydoc BlackGui::Components::CStatusMessagesDetail::showFilterDialog
             void showFilterDialog();
 
-            //! Show a filter bar
+            //! \copydoc BlackGui::Components::CStatusMessagesDetail::showFilterBar
             void showFilterBar();
 
-            //! Set descriptive icons
-            void filterUseRadioButtonDescriptiveIcons(bool oneLetterText);
+            //! \copydoc BlackGui::Components::CStatusMessagesDetail::showDetails
+            void showDetails(bool details);
+
+            //! \copydoc BlackGui::Components::CStatusMessagesDetail::setMaxLogMessages
+            void setMaxLogMessages(int max);
 
             //! Clear
             void clear();
 
-            //! Number of status messages in log view
-            int rowCount() const;
-
-            //! Set max.log messages
-            void setMaxLogMessages(int desiredNumber) { m_maxLogMessages = desiredNumber; }
-
-        signals:
-            //! Make me visible
-            void requestAttention();
-
-        public slots:
             //! Append status message to console
             void appendStatusMessageToConsole(const BlackMisc::CStatusMessage &statusMessage);
 
@@ -103,29 +92,15 @@ namespace BlackGui
             //! Append status messages to list
             void appendStatusMessagesToList(const BlackMisc::CStatusMessageList &statusMessages);
 
+        signals:
+            //! Make me visible
+            void requestAttention();
+
         private:
             QScopedPointer<Ui::CLogComponent> ui;
-            int m_maxLogMessages = -1;
 
             //! Status messages changed
             void onStatusMessageDataChanged(int count, bool withFilter);
-
-            //! Remove oldest messages
-            void removeOldest();
-
-            //! Custom menu for the log component
-            class CLogMenu : public BlackGui::Menus::IMenuDelegate
-            {
-            public:
-                //! Constructor
-                CLogMenu(CLogComponent *parent) : IMenuDelegate(parent) {}
-
-                //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
-
-            private:
-                QAction *m_action = nullptr;
-            };
         };
     } // ns
 } // ns

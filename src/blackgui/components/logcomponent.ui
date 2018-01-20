@@ -64,47 +64,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="BlackGui::Filters::CStatusMessageFilterBar" name="filter_LogMessages"/>
-       </item>
-       <item>
-        <widget class="BlackGui::Views::CStatusMessageView" name="tvp_StatusMessages">
-         <property name="whatsThis">
-          <string>Status message log view</string>
-         </property>
-         <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOn</enum>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-        </widget>
-       </item>
-       <item>
-        <widget class="BlackGui::Components::CStatusMessageForm" name="form_StatusMessage">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>100</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>100</height>
-          </size>
-         </property>
+        <widget class="BlackGui::Components::CStatusMessagesDetail" name="comp_StatusMessages">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -163,25 +123,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Views::CStatusMessageView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/statusmessageview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CStatusMessageForm</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/statusmessageform.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CConsoleTextEdit</class>
    <extends>QPlainTextEdit</extends>
    <header>blackgui/components/logcomponent.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Filters::CStatusMessageFilterBar</class>
+   <class>BlackGui::Components::CStatusMessagesDetail</class>
    <extends>QFrame</extends>
-   <header>blackgui/filters/statusmessagefilterbar.h</header>
+   <header>blackgui/components/statusmessagesdetail.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
