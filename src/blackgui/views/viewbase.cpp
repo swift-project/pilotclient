@@ -132,9 +132,11 @@ namespace BlackGui
             deleteRow->setObjectName("Delete selected rows for " + this->objectName());
             QShortcut *copy = new QShortcut(CShortcut::keyCopy(), this, SLOT(ps_copy()), nullptr, Qt::WidgetShortcut);
             copy->setObjectName("Copy rows for " + this->objectName());
+        }
 
-            // Font menus
-            // m_fontMenu = new CFontMenu(this, true);
+        CViewBaseNonTemplate::~CViewBaseNonTemplate()
+        {
+            // dtor
         }
 
         bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)

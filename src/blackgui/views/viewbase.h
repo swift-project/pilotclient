@@ -363,6 +363,9 @@ namespace BlackGui
             //! Constructor
             CViewBaseNonTemplate(QWidget *parent);
 
+            //! Destructor
+            virtual ~CViewBaseNonTemplate();
+
             //! Method creating the menu
             //! \remarks override this method to contribute to the menu
             //! \sa BlackGui::Views::CViewBaseNonTemplate::ps_customMenuRequested
