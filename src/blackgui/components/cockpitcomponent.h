@@ -53,14 +53,13 @@ namespace BlackGui
             //! Show the audio ui
             void showAudio();
 
-        private slots:
+        private:
             //! Show or hide cockpit details
-            void ps_onToggleShowHideDetails(bool show);
+            void onToggleShowHideDetails(bool show);
 
             //! Toggle floating
-            void ps_onToggleFloating(bool floating);
+            void onToggleFloating(bool floating);
 
-        private:
             // toggle area on show/hide details
             void toggleShowHideDetails(bool show, bool considerCurrentSize);
 

@@ -28,7 +28,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
-            connect(ui->wip_CockpitComPanelShowHideBar, &BlackGui::CShowHideBar::toggleShowHide, this, &CCockpitComponent::ps_onToggleShowHideDetails);
+            connect(ui->wip_CockpitComPanelShowHideBar, &BlackGui::CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails);
         }
 
         CCockpitComponent::~CCockpitComponent()
@@ -40,7 +40,7 @@ namespace BlackGui
             bool ok = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
             if (ok && parentDockableWidget)
             {
-                ok = connect(parentDockableWidget, &QDockWidget::topLevelChanged, this, &CCockpitComponent::ps_onToggleFloating);
+                ok = connect(parentDockableWidget, &QDockWidget::topLevelChanged, this, &CCockpitComponent::onToggleFloating);
             }
             return ok;
         }
@@ -60,7 +60,7 @@ namespace BlackGui
             ui->comp_CockpitInfoArea->selectArea(CCockpitInfoAreaComponent::InfoAreaAudio);
         }
 
-        void CCockpitComponent::ps_onToggleShowHideDetails(bool show)
+        void CCockpitComponent::onToggleShowHideDetails(bool show)
         {
             // use the toggle method to set the sizes
             this->toggleShowHideDetails(show, true);
@@ -116,7 +116,7 @@ namespace BlackGui
             }
         }
 
-        void CCockpitComponent::ps_onToggleFloating(bool floating)
+        void CCockpitComponent::onToggleFloating(bool floating)
         {
             ui->wip_CockpitComPanelShowHideBar->setVisible(floating);
             if (floating)

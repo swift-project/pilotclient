@@ -38,22 +38,21 @@ namespace BlackGui
             explicit CVoiceRoomsComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CVoiceRoomsComponent();
-
-        private slots:
-            //! Override for voice was changed
-            void ps_onVoiceRoomOverrideChanged(bool checked);
-
-            //! Return pressed
-            void ps_onVoiceRoomUrlsReturnPressed();
-
-            //! Set the voice room url fields (checkboxes, line edits)
-            void ps_updateAudioVoiceRoomsFromContext(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
-
-            //! Update voice room views
-            void ps_updateVoiceRoomMembers();
+            virtual ~CVoiceRoomsComponent();
 
         private:
+            //! Override for voice was changed
+            void onVoiceRoomOverrideChanged(bool checked);
+
+            //! Return pressed
+            void onVoiceRoomUrlsReturnPressed();
+
+            //! Set the voice room url fields (checkboxes, line edits)
+            void updateAudioVoiceRoomsFromContext(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
+
+            //! Update voice room views
+            void updateVoiceRoomMembers();
+
             //! Set the URL fields
             void setVoiceRoomUrlFieldsReadOnlyState();
 
