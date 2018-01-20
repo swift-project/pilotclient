@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CStatusMessageForm</class>
  <widget class="QFrame" name="CStatusMessageForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>368</width>
+    <height>252</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Status message</string>
   </property>
