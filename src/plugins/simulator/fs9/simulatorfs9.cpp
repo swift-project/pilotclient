@@ -144,7 +144,7 @@ namespace BlackSimPlugin
                 m_fsuipc->connect(); // connect FSUIPC too
             }
             initSimulatorInternals();
-            m_dispatchTimerId = startTimer(50);
+            m_timerId = startTimer(50);
             return true;
         }
 
@@ -154,8 +154,7 @@ namespace BlackSimPlugin
 
             // Don't forward messages when disconnected
             disconnect(m_connectionHostMessages);
-            killTimer(m_dispatchTimerId);
-            m_dispatchTimerId = -1;
+            safeKillTimer();
             disconnectAllClients();
 
             //  disconnect FSUIPC and status

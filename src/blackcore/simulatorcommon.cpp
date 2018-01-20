@@ -85,7 +85,10 @@ namespace BlackCore
         CLogMessage(this).info("Initialized simulator driver: '%1'") << m_simulatorPluginInfo.toQString();
     }
 
-    CSimulatorCommon::~CSimulatorCommon() { }
+    CSimulatorCommon::~CSimulatorCommon()
+    {
+        this->safeKillTimer();
+    }
 
     const CLogCategoryList &CSimulatorCommon::getLogCategories()
     {
@@ -498,6 +501,13 @@ namespace BlackCore
     void CSimulatorCommon::oneSecondTimerTimeout()
     {
         this->blinkHighlightedAircraft();
+    }
+
+    void CSimulatorCommon::safeKillTimer()
+    {
+        if (m_timerId < 0) { return; }
+        this->killTimer(m_timerId);
+        m_timerId = -1;
     }
 
     void CSimulatorCommon::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)

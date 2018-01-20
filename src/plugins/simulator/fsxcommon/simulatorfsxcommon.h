@@ -154,7 +154,7 @@ namespace BlackSimPlugin
             //! @}
 
             //! Timer event (our SimConnect event loop), runs dispatch
-            //! \sa m_simconnectTimerId
+            //! \sa m_timerId
             //! \sa CSimulatorFsxCommon::dispatch
             virtual void timerEvent(QTimerEvent *event) override;
 
@@ -354,7 +354,6 @@ namespace BlackSimPlugin
             bool m_traceSendId   = false;           //!< trace the send ids, meant for dedugging
             qint64 m_simulatingChangedTs = -1;      //!< timestamp, when simulating changed (used to avoid jitter)
             int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
-            int  m_simConnectTimerId = -1;          //!< Timer identifier
             int  m_skipCockpitUpdateCycles = 0;     //!< skip some update cycles to allow changes in simulator cockpit to be set
             int  m_interpolationRequest = 0;        //!< current interpolation request
             int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa dispatch

@@ -206,8 +206,12 @@ namespace BlackCore
         //! Slow timer used to highlight aircraft, can be used for other things too
         virtual void oneSecondTimerTimeout();
 
+        //! Kill timer if id is valid
+        void safeKillTimer();
+
         bool m_pausedSimFreezesInterpolation = false;                      //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool m_autoCalcAirportDistance = true;                             //!< automatically calculate airport distance and bearing
+        int    m_timerId = -1;                                             //!< dispatch timer id
         int    m_statsUpdateAircraftCountMs = 0;                           //!< statistics update count
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;                       //!< statistics update time
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;                         //!< statistics update time

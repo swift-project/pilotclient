@@ -90,7 +90,7 @@ namespace BlackSimPlugin
             // set structures and move on
             this->initEvents();
             this->initDataDefinitionsWhenConnected();
-            m_simConnectTimerId = startTimer(DispatchIntervalMs);
+            m_timerId = startTimer(DispatchIntervalMs);
             // do not start m_addPendingAircraftTimer here, it will be started when object was added
 
             return true;
@@ -99,8 +99,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::disconnectFrom()
         {
             if (!m_simConnected) { return true; }
-            if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
-            m_simConnectTimerId = -1;
+            this->safeKillTimer();
             m_simSimulating = false; // treat as stopped, just setting the flag here avoids overhead of on onSimStopped
             if (m_hSimConnect)
             {
@@ -338,7 +337,7 @@ namespace BlackSimPlugin
         {
             // reset complete state, we are going down
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
-            if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
+            this->safeKillTimer();
 
             // if called from dispatch function, avoid that SimConnectProc disconnects itself while in SimConnectProc
             QTimer::singleShot(0, this, &CSimulatorFsxCommon::disconnectFrom);
@@ -1503,8 +1502,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::reset()
         {
-            if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
-            m_simConnectTimerId = -1;
+            this->safeKillTimer();
             m_simulatingChangedTs = -1;
             m_simConnected = false;
             m_simSimulating = false;
