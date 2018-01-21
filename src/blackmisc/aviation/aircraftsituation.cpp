@@ -214,11 +214,13 @@ namespace BlackMisc
             return this->getAltitude() - gh;
         }
 
-        CAltitude CAircraftSituation::getCorrectedAltitude() const
+        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &centerOfGravity) const
         {
-            if (this->getGroundElevation().isNull()) { return this->getAltitude(); }
-            if (this->getAltitude().getReferenceDatum() != CAltitude::MeanSeaLevel) { return this->getAltitude(); }
-            if (this->getGroundElevation() < this->getAltitude()) { return this->getAltitude(); }
+            CAltitude altPlusCG = this->getAltitude();
+            if (!centerOfGravity.isNull()) { altPlusCG += centerOfGravity; }
+            if (this->getGroundElevation().isNull()) { return altPlusCG; }
+            if (this->getAltitude().getReferenceDatum() != CAltitude::MeanSeaLevel) { return altPlusCG; }
+            if (this->getGroundElevation() < this->getAltitude()) { return altPlusCG; }
             return this->getGroundElevation();
         }
 

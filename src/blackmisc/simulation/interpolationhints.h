@@ -66,6 +66,9 @@ namespace BlackMisc
             //! Get CG above ground
             const PhysicalQuantities::CLength &getCGAboveGround() const { return m_cgAboveGround;}
 
+            //! Get CG above ground or 0 ("Zero")
+            const PhysicalQuantities::CLength &getCGAboveGroundOrZero() const;
+
             //! Has CG above ground
             bool hasCGAboveGround() const { return m_cgAboveGround.isNull(); }
 

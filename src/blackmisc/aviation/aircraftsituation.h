@@ -182,7 +182,7 @@ namespace BlackMisc
             const CAltitude &getAltitude() const { return m_position.geodeticHeight(); }
 
             //! Get altitude under consideration of ground elevation
-            CAltitude getCorrectedAltitude() const;
+            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = {}) const;
 
             //! Set altitude
             void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }

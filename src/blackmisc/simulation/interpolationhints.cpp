@@ -45,6 +45,12 @@ namespace BlackMisc
             return m_elevationPlane.isWithinRange(coordinate);
         }
 
+        const CLength &CInterpolationHints::getCGAboveGroundOrZero() const
+        {
+            static const CLength zero;
+            return this->hasCGAboveGround() ? this->getCGAboveGround() : zero;
+        }
+
         void CInterpolationHints::setAircraftParts(const CAircraftParts &parts, bool hasParts)
         {
             m_hasParts = hasParts;
