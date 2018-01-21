@@ -51,6 +51,7 @@
 #include <QJsonValue>
 #include <QList>
 #include <QRegularExpression>
+#include <QStringBuilder>
 #include <QTextCodec>
 #include <QTextStream>
 #include <QVector>
@@ -1304,10 +1305,7 @@ namespace BlackCore
 
         void CNetworkVatlib::networkLogHandler(SeverityLevel /** severity **/, const char *context, const char *message)
         {
-            QString errorMessage("vatlib ");
-            errorMessage += context;
-            errorMessage += ": ";
-            errorMessage += message;
+            const QString errorMessage = QStringLiteral("vatlib ") % context % QStringLiteral(": ") % message;
             CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).error(errorMessage);
         }
 
@@ -1318,4 +1316,5 @@ namespace BlackCore
         }
     } // namespace
 } // namespace
+
 //! \endcond
