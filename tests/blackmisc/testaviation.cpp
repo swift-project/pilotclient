@@ -214,6 +214,10 @@ namespace BlackMiscTest
         CPressure seaLevelPressure2(29.56, CPressureUnit::inHg());
         CAltitude pressureAltitude2 = altitude2.toPressureAltitude(seaLevelPressure2);
         QCOMPARE(qRound(pressureAltitude2.value(CLengthUnit::m())), 612);
+
+        CLength offset(10, CLengthUnit::m());
+        altitude2 += offset;
+        QCOMPARE(qRound(altitude2.value(CLengthUnit::m())), 510);
     }
 
 } // namespace
