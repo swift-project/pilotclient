@@ -67,16 +67,15 @@ namespace BlackMisc
             case CAircraftSituation::NotOnGround: return notog;
             case CAircraftSituation::OnGround: return og;
             case CAircraftSituation::OnGroundSituationUnknown:
-            default:
-                return unknown;
+            default: return unknown;
             }
         }
 
         const QString &CAircraftSituation::onGroundReliabilityToString(CAircraftSituation::OnGroundReliability reliability)
         {
-            static const QString elv("by elevation");
-            static const QString elvCg("by elevation/CG");
-            static const QString inter("by interpolation");
+            static const QString elv("elevation");
+            static const QString elvCg("elevation/CG");
+            static const QString inter("interpolation");
             static const QString guess("guessing");
             static const QString unknown("unknown");
 

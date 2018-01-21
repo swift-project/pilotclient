@@ -13,7 +13,6 @@
 #define BLACKGUI_SHOWHIDEBAR_H
 
 #include "blackgui/blackguiexport.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
@@ -21,7 +20,6 @@
 class QWidget;
 
 namespace Ui { class CShowHideBar; }
-
 namespace BlackGui
 {
     //! Show or hide (expand / collapse) another section
@@ -34,7 +32,7 @@ namespace BlackGui
         explicit CShowHideBar(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CShowHideBar();
+        virtual ~CShowHideBar();
 
         //! Is shown?
         bool isShown() const;

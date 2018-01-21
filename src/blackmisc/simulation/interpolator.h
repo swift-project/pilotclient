@@ -86,7 +86,7 @@ namespace BlackMisc
             Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
             Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts for one aircraft
             Aviation::CCallsign m_callsign;                        //!< callsign
-            bool m_isFirstInterpolation = true;                               //!< set to false after the first successful interpolation
+            bool m_isFirstInterpolation = true;                    //!< set to false after the first successful interpolation
 
             //! Constructor
             CInterpolator(const QString &objectName, const Aviation::CCallsign &callsign, QObject *parent);

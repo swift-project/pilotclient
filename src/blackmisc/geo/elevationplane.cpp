@@ -20,15 +20,15 @@ namespace BlackMisc
     {
         QString CElevationPlane::convertToQString(bool i18n) const
         {
-            QString s = "Geodetic: {%1, %2, %3} radius: %4";
+            static const QString s = "Geodetic: {%1, %2, %3} radius: %4";
             return s.arg(this->latitude().valueRoundedWithUnit(6, i18n),
                          this->longitude().valueRoundedWithUnit(6, i18n),
                          this->geodeticHeight().valueRoundedWithUnit(6, i18n),
-                         this->m_radius.valueRoundedWithUnit(2, i18n)
+                         m_radius.valueRoundedWithUnit(2, i18n)
                         );
         }
 
-        const CAltitude &CElevationPlane::getAltitudeIfWithinRadius(const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const
+        const CAltitude &CElevationPlane::getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const
         {
             return (isWithinRange(coordinate)) ? geodeticHeight() : CAltitude::null();
         }
@@ -67,10 +67,8 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexRadius:
-                return m_radius.propertyByIndex(index.copyFrontRemoved());
-            default:
-                break;
+            case IndexRadius: return m_radius.propertyByIndex(index.copyFrontRemoved());
+            default: break;
             }
             return CCoordinateGeodetic::propertyByIndex(index);
         }
@@ -82,7 +80,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexRadius:
-                this->m_radius.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_radius.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
                 CCoordinateGeodetic::setPropertyByIndex(index, variant);
