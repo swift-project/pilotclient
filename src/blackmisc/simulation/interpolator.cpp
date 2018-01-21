@@ -81,39 +81,7 @@ namespace BlackMisc
             currentSituation.setPosition(interpolant.interpolatePosition(setup, hints));
             currentSituation.setAltitude(interpolant.interpolateAltitude(setup, hints));
 
-            // Update current position by hints' elevation
-            // * for XP provided by hints.getElevationProvider at current position
-            // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
-            // As XP uses lazy init we will call getGroundElevation only when needed, so default here via getElevationPlane
-            CAltitude currentGroundElevation(hints.getElevationPlane().getAltitudeIfWithinRadius(currentSituation));
-
-            // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
-            if (hints.hasAircraftParts())
-            {
-                const double groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
-                log.groundFactor = groundFactor;
-                if (groundFactor > 0.0)
-                {
-                    currentGroundElevation = hints.getGroundElevation(currentSituation);
-                    if (!currentGroundElevation.isNull())
-                    {
-                        Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
-                        currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor) +
-                                                               currentGroundElevation * groundFactor,
-                                                               currentSituation.getAltitude().getReferenceDatum()));
-                    }
-                }
-                currentSituation.setGroundElevation(currentGroundElevation);
-                CInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
-            }
-            else
-            {
-                // guess ground flag
-                constexpr double NoGroundFactor = -1;
-                currentSituation.setGroundElevation(currentGroundElevation);
-                CInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
-            }
-
+            // PBH before ground so we can use PBH
             if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || status.isInterpolated())
             {
                 const auto pbh = interpolant.pbh();
@@ -124,6 +92,43 @@ namespace BlackMisc
                 status.setInterpolatedAndCheckSituation(true, currentSituation);
             }
             m_isFirstInterpolation = false;
+
+            // Update current position by hints' elevation
+            // * for XP provided by hints.getElevationProvider at current position
+            // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
+            // * As XP uses lazy init we will call getGroundElevation only when needed
+            // * default here via getElevationPlane
+            CAltitude currentGroundElevation(hints.getElevationPlane().getAltitudeIfWithinRadius(currentSituation));
+
+            // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
+            if (hints.hasAircraftParts())
+            {
+                const double groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
+                log.groundFactor = groundFactor;
+                if (groundFactor > 0.0)
+                {
+                    currentGroundElevation = hints.getGroundElevation(currentSituation); // "expensive on XPlane"
+                    if (!currentGroundElevation.isNull())
+                    {
+                        Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
+                        const CAltitude groundElevationCG = currentGroundElevation.withOffset(hints.getCGAboveGround());
+                        currentSituation.setGroundElevationChecked(currentGroundElevation);
+                        // alt = ground + aboveGround * groundFactor
+                        //     = ground + (altitude - ground) * groundFactor
+                        //     = ground (1 - groundFactor) + altitude * groundFactor
+                        currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor) +
+                                                               groundElevationCG * groundFactor,
+                                                               CAltitude::MeanSeaLevel));
+                    }
+                }
+            }
+            else
+            {
+                // guess ground flag
+                constexpr double NoGroundFactor = -1;
+                currentSituation.setGroundElevation(currentGroundElevation);
+                CInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
+            }
 
             if (m_logger && hints.isLoggingInterpolation())
             {
@@ -337,22 +342,41 @@ namespace BlackMisc
             }
 
             // on elevation and CG
-            if (!situation.getGroundElevation().isNull())
+            // remark: to some extend redundant as situation.getCorrectedAltitude() already corrects altitude
+            if (situation.hasGroundElevation())
             {
-                CLength offset(hints.isVtolAircraft() ? 0.0 : 1.0, CLengthUnit::m()); // offset from ground
+                static const CLength onGroundThresholdLimit(1.0, CLengthUnit::m());
+                static const CLength notOnGroundThresholdLimit(10.0, CLengthUnit::m()); // upper boundary
+                CLength offset = onGroundThresholdLimit; // very small offset from allowed
                 CAircraftSituation::OnGroundReliability reliability = CAircraftSituation::OnGroundByElevation;
-                if (!hints.isVtolAircraft() && !hints.getCGAboveGround().isNull())
+                if (hints.hasCGAboveGround())
                 {
-                    offset = hints.getCGAboveGround();
+                    offset += hints.getCGAboveGround();
                     reliability = CAircraftSituation::OnGroundByElevationAndCG;
+                }
+                else
+                {
+                    // increase offset a bit
+                    offset += CLength(1.0, CLengthUnit::m());
                 }
 
                 Q_ASSERT_X(situation.getGroundElevation().getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL elevation");
-                const CAircraftSituation::IsOnGround og =
-                    situation.getHeightAboveGround() <= offset ?
-                    CAircraftSituation::OnGround : CAircraftSituation::NotOnGround;
-                situation.setOnGround(og, reliability);
-                return;
+                if (situation.getHeightAboveGround() <= offset)
+                {
+                    // lower boundary underflow, we can tell we are on ground
+                    const CAircraftSituation::IsOnGround og = CAircraftSituation::OnGround;
+                    situation.setOnGround(og, reliability);
+                    return; // for underflow we can stop here
+                }
+                else if (situation.getHeightAboveGround() >= notOnGroundThresholdLimit)
+                {
+                    // upper boundary
+                    const CAircraftSituation::IsOnGround og = CAircraftSituation::NotOnGround;
+                    situation.setOnGround(og, reliability);
+                    return;
+                }
+
+                // within an interval were we cannot really tell and continue
             }
 
             // for VTOL aircraft we give up
