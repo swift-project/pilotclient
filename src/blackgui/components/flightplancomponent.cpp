@@ -296,7 +296,10 @@ namespace BlackGui
             v = ui->pte_Route->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CStatusMessage(this).validation(vfr ? CStatusMessage::SeverityInfo : CStatusMessage::SeverityError, "Missing '%1'") << ui->lbl_Route->text());
+                messages.push_back(CStatusMessage(this).validation(
+                                       vfr ?
+                                       CStatusMessage::SeverityInfo :
+                                       CStatusMessage::SeverityWarning, "Missing '%1'") << ui->lbl_Route->text());
             }
             else if (v.length() > CFlightPlan::MaxRouteLength)
             {
