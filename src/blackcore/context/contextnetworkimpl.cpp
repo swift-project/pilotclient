@@ -264,10 +264,10 @@ namespace BlackCore
                     CLogMessage(this).validationError("Incorrect message");
                     return false;
                 }
-                QString receiver = parser.part(1).trimmed(); // receiver
 
                 // set receiver
-                CSimulatedAircraft ownAircraft(this->getIContextOwnAircraft()->getOwnAircraft());
+                const QString receiver = parser.part(1).trimmed(); // receiver
+                const CSimulatedAircraft ownAircraft(this->getIContextOwnAircraft()->getOwnAircraft());
                 if (ownAircraft.getCallsign().isEmpty())
                 {
                     CLogMessage(this).validationError("No own callsign");

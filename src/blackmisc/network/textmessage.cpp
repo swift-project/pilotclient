@@ -27,13 +27,13 @@ namespace BlackMisc
     namespace Network
     {
         CTextMessage::CTextMessage(const QString &message, const CFrequency &frequency, const CCallsign &senderCallsign)
-            : m_message(message), m_senderCallsign(senderCallsign), m_frequency(frequency)
+            : m_message(message.trimmed().simplified()), m_senderCallsign(senderCallsign), m_frequency(frequency)
         {
             m_frequency.switchUnit(PhysicalQuantities::CFrequencyUnit::MHz());
         }
 
         CTextMessage::CTextMessage(const QString &message, const CCallsign &senderCallsign, const CCallsign &recipientCallsign)
-            : m_message(message), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr)
+            : m_message(message.trimmed().simplified()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr)
         {}
 
         QString CTextMessage::convertToQString(bool i18n) const

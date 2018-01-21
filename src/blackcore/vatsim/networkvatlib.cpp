@@ -1108,7 +1108,7 @@ namespace BlackCore
             // Wait maximum 3 seconds for the reply and release as text message after
             if (pendingQuery.m_queryTime.secsTo(QDateTime::currentDateTimeUtc()) > 3)
             {
-                QString atisMessage(pendingQuery.m_atisMessage.join(QChar::LineFeed));
+                const QString atisMessage(pendingQuery.m_atisMessage.join(QChar::LineFeed));
                 CTextMessage tm(atisMessage, sender, receiver);
                 tm.setCurrentUtcTime();
                 consolidateTextMessage(tm);
