@@ -90,7 +90,7 @@ namespace BlackMisc
         }
 
         CInterpolatorSpline::Interpolant CInterpolatorSpline::getInterpolant(qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log)
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log)
         {
             Q_UNUSED(hints);
             Q_UNUSED(setup);
@@ -112,13 +112,29 @@ namespace BlackMisc
                     return { *this, 0 };
                 }
 
-                const std::array<CAircraftSituation, 3> s {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
+                std::array<CAircraftSituation, 3> s {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
+
+                // altitude unit must be the same for all three, but does not matter
+                // ground elevantion here normally is not available
+                // 100km/h => 1sec 27,7m => 5 secs 136m
+                // only use elevation plane here, do not call provider
+                if (!hints.getElevationPlane().isNull())
+                {
+                    const CAltitude groundElevation = hints.getElevationPlane().getAltitude();
+                    s[0].setGroundElevation(groundElevation);
+                    s[1].setGroundElevation(groundElevation);
+                    s[2].setGroundElevation(groundElevation);
+                }
+
+                const double a0 = s[0].getCorrectedAltitude(hints.getCGAboveGround()).value();
+                const double a1 = s[1].getCorrectedAltitude(hints.getCGAboveGround()).value();
+                const double a2 = s[2].getCorrectedAltitude(hints.getCGAboveGround()).value();
 
                 const std::array<std::array<double, 3>, 3> normals {{ s[0].getPosition().normalVectorDouble(), s[1].getPosition().normalVectorDouble(), s[2].getPosition().normalVectorDouble() }};
                 x = {{ normals[0][0], normals[1][0], normals[2][0] }};
                 y = {{ normals[0][1], normals[1][1], normals[2][1] }};
                 z = {{ normals[0][2], normals[1][2], normals[2][2] }};
-                a = {{ s[0].getCorrectedAltitude().value(), s[1].getCorrectedAltitude().value(), s[2].getCorrectedAltitude().value() }};
+                a = {{ a0, a1, a2 }};
                 t = {{ static_cast<double>(s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[2].getAdjustedMSecsSinceEpoch()) }};
 
                 dx = getDerivatives(t, x);
