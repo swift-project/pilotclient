@@ -168,7 +168,10 @@ namespace BlackMisc
             int lc = 0;
             for (const QChar ch : realName)
             {
-                if (uc > 1 && lc > 1) { return newRealName; } // mixed case name, no need to beautify
+                // Joe Doe -> valid
+                // jOE dOE -> invalid
+                // Joe McArthur -> valid
+                if (uc > 1 && lc > 2 && lc > uc) { return newRealName; } // mixed case name, no need to beautify
                 if (ch.isLower()) { lc++; continue; }
                 if (ch.isUpper()) { uc++; continue;}
             }
