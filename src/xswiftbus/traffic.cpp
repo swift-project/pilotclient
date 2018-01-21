@@ -45,25 +45,28 @@ namespace XSwiftBus
 
     BlackMisc::Simulation::CInterpolationHints CTraffic::Plane::hints()
     {
-        // \todo MS 865 CInterpolationAndRenderingSetup allows to setup interpolation in the GUI, e.g.
-        //       also to disable aircraft parts / or logging parts (log file). I wonder if you want to consider it here
-        //       e.g. interpolator->getInterpolatorSetup().getLogCallsigns().contains(callsign)
-        //       if the setup is needed more than once, store it here to avoid multiple locks
-        BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
-        BlackMisc::Simulation::CInterpolationHints hints;
-        BlackMisc::Simulation::CPartsStatus status;
+        //! \todo MS 865 CInterpolationAndRenderingSetup allows to setup interpolation in the GUI
+        //        Also to disable aircraft parts / or logging parts (log file). I wonder if you want to consider it here
+        //        e.g. interpolator->getInterpolatorSetup().getLogCallsigns().contains(callsign)
+        //        if the setup is needed more than once, store it here to avoid multiple locks
+        using namespace BlackMisc::PhysicalQuantities;
+        using namespace BlackMisc::Aviation;
+        using namespace BlackMisc::Simulation;
+
+        CInterpolationAndRenderingSetup setup;
+        CInterpolationHints hints;
+        CPartsStatus status;
+        constexpr double fudgeFactor = 3.0; //! \fixme Value should be different for each plane, derived from the CSL model geometry
         hints.setAircraftParts(interpolator.getInterpolatedParts(-1, setup, status));
+        hints.setCGAboveGround({ fudgeFactor, CLengthUnit::m() }); // fudge factor
         hints.setElevationProvider([this](const auto & situation)
         {
-            using namespace BlackMisc::PhysicalQuantities;
-            using namespace BlackMisc::Aviation;
             const auto meters = terrainProbe.getElevation(
                                     situation.latitude().value(CAngleUnit::deg()),
                                     situation.longitude().value(CAngleUnit::deg()),
                                     situation.getAltitude().value(CLengthUnit::m()));
             if (std::isnan(meters)) { return CAltitude::null(); }
-            constexpr decltype(meters) fudgeFactor = 3.0; //! \fixme Value should be different for each plane, derived from the CSL model geometry
-            return CAltitude(CLength(meters + fudgeFactor, CLengthUnit::m()), CAltitude::MeanSeaLevel);
+            return CAltitude(CLength(meters, CLengthUnit::m()), CAltitude::MeanSeaLevel);
         });
         return hints;
     }
@@ -257,7 +260,7 @@ namespace XSwiftBus
     void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
                                     double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
     {
-        const auto surfaces = std::make_pair(relativeTime + timeOffset + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane *plane)
+        const auto surfaces = std::make_pair(relativeTime + timeOffset + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane * plane)
         {
             plane->hasSurfaces = true;
             plane->targetGearPosition = gear;
@@ -310,7 +313,7 @@ namespace XSwiftBus
         if (plane)
         {
             plane->interpolator.setMode(spline ? BlackMisc::Simulation::CInterpolatorMulti::ModeSpline
-                                               : BlackMisc::Simulation::CInterpolatorMulti::ModeLinear);
+                                        : BlackMisc::Simulation::CInterpolatorMulti::ModeLinear);
         }
         else if (callsign.isEmpty())
         {
