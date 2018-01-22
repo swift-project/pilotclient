@@ -49,5 +49,6 @@ namespace BlackCore
         Data::CVatsimSetup::registerMetadata();
         Data::CLauncherSetup::registerMetadata();
         Vatsim::CReaderSettings::registerMetadata();
+        Vatsim::CRawFsdMessageSettings::registerMetadata();
     }
 } // namespace

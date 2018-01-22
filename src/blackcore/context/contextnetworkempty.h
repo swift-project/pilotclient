@@ -385,6 +385,16 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
                 Q_UNUSED(enabled);
             }
+
+        public:
+            //! \copydoc IContextNetwork::connectRawFsdMessageSignal
+            virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(receiver);
+                Q_UNUSED(rawFsdMessageReceivedSlot);
+                return {};
+            }
         };
     } // namespace
 } // namespace

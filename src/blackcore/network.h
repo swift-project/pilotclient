@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/rawfsdmessage.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/aviation/informationmessage.h"
@@ -525,6 +526,11 @@ namespace BlackCore
          * We received an aircraft config packet.
          */
         void aircraftConfigPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &incremental, bool isFull);
+
+        /*!
+         * We received a raw message for debugging purposes
+         */
+        void rawFsdMessageReceived(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
 
         //! @}
         ////////////////////////////////////////////////////////////////

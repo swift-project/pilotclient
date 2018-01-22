@@ -32,6 +32,7 @@
 #include <stdbool.h>
 #include <vatlib/vatlib.h>
 #include <QByteArray>
+#include <QFile>
 #include <QJsonObject>
 #include <QList>
 #include <QObject>
@@ -165,6 +166,7 @@ namespace BlackCore
             static void onPilotPositionUpdate(VatFsdClient *, const char *callsign, const VatPilotPosition *position, void *cbvar);
             static void onAircraftConfigReceived(VatFsdClient *, const char *callsign, const char *aircraftConfig, void *cbvar);
             static void onCustomPacketReceived(VatFsdClient *, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar);
+            static void onRawFsdMessage(VatFsdClient *, const char *message, void *cbvar);
             //! @}
 
             QByteArray toFSD(const QString &qstr) const;
@@ -198,6 +200,8 @@ namespace BlackCore
             void sendPositionUpdate();
             void sendInterimPositions();
             void customPacketDispatcher(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
+            void handleRawFsdMessage(const QString &fsdMessage);
+            void fsdMessageSettingsChanged();
 
         signals:
             void terminate(); //!< \private
@@ -251,10 +255,11 @@ namespace BlackCore
             {
                 QDateTime m_queryTime = QDateTime::currentDateTimeUtc();
                 QStringList m_atisMessage;
-
             };
-
             QHash<BlackMisc::Aviation::CCallsign, PendingAtisQuery> m_pendingAtisQueries;
+
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CNetworkVatlib::fsdMessageSettingsChanged };
+            QFile m_rawFsdMessageLogFile;
         };
     } //namespace
 } //namespace

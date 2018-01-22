@@ -191,6 +191,10 @@ namespace BlackCore
             //! Gracefully shut down, e.g. for thread safety
             void gracefulShutdown();
 
+        public:
+            //! \copydoc IContextNetwork::connectRawFsdMessageSignal
+            virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
+
         protected:
             //! Constructor, with link to runtime
             CContextNetwork(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);

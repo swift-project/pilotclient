@@ -40,6 +40,8 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/weather/metar.h"
 
+#include <functional>
+
 //! \addtogroup dbus
 //! @{
 
@@ -301,6 +303,13 @@ namespace BlackCore
 
             //! Request parts for callsign (from another client)
             virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        public:
+            //! Raw FSD message receiver functor
+            using RawFsdMessageReceivedSlot = std::function<void(const BlackMisc::Network::CRawFsdMessage &)>;
+
+            //! Connect to receive raw fsd messages
+            virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) = 0;
 
         protected:
             //! Constructor

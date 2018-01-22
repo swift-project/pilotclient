@@ -158,6 +158,7 @@ namespace BlackMisc
             GlobalIndexCGeneralGuiSettings              = 14600,
             GlobalIndexCTextMessageSettings             = 14700,
             GlobalIndexCAtcStationsSettings             = 14800,
+            GlobalIndexRawFsdMessageSettings            = 14900,
             GlobalIndexCInterpolatioRenderingSetup      = 16000,
             GlobalIndexCInterpolationHints              = 16100,
             GlobalIndexSwiftPilotClient                 = 17000,

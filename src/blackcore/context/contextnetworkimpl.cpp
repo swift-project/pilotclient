@@ -751,5 +751,16 @@ namespace BlackCore
             rooms.push_back(s2.getVoiceRoom());
             return rooms;
         }
+
+        QMetaObject::Connection CContextNetwork::connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot)
+        {
+            Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
+
+            // bind does not allow to define connection type, so we use receiver as workaround
+            const QMetaObject::Connection uc; // unconnected
+            const QMetaObject::Connection c = rawFsdMessageReceivedSlot ? connect(m_network, &INetwork::rawFsdMessageReceived, receiver, rawFsdMessageReceivedSlot) : uc;
+            Q_ASSERT_X(c || !rawFsdMessageReceivedSlot, Q_FUNC_INFO, "connect failed");
+            return c;
+        }
     } // namespace
 } // namespace

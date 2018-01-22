@@ -124,6 +124,10 @@ namespace BlackCore
             virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override;
             //! @}
 
+        public:
+            //! \copydoc IContextNetwork::connectRawFsdMessageSignal
+            virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
+
         private:
             BlackMisc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
 

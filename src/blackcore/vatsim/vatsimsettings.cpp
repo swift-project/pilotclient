@@ -74,5 +74,47 @@ namespace BlackCore
                 break;
             }
         }
+
+        CRawFsdMessageSettings::CRawFsdMessageSettings()
+        { }
+
+        CRawFsdMessageSettings::CRawFsdMessageSettings(bool enabled, const QString &FileDir) :
+            m_fileWritingEnabled(enabled), m_FileDir(FileDir)
+        { }
+
+        QString CRawFsdMessageSettings::convertToQString(bool i18n) const
+        {
+            Q_UNUSED(i18n);
+            QString s("CRawFsdMessageSettings");
+            s.append(" enabled: ").append(boolToYesNo(m_fileWritingEnabled));
+            s.append(" dir: ").append(m_FileDir);
+            return s;
+        }
+
+        CVariant CRawFsdMessageSettings::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return CVariant::from(*this); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexWriteEnabled: return CVariant::fromValue(this->m_fileWritingEnabled);
+            case IndexFileDir: return CVariant::fromValue(this->m_FileDir);
+            case IndexFileWriteMode: return CVariant::fromValue(this->m_fileWriteMode);
+            default: return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        void CRawFsdMessageSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        {
+            if (index.isMyself()) { (*this) = variant.to<CRawFsdMessageSettings>(); return; }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexWriteEnabled: this->m_fileWritingEnabled = variant.toBool(); break;
+            case IndexFileDir: this->m_FileDir = variant.toQString(); break;
+            case IndexFileWriteMode: this->m_fileWriteMode = variant.to<FileWriteMode>(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
+            }
+        }
     } // ns
 } // ns

@@ -52,6 +52,7 @@
 #include <QList>
 #include <QRegularExpression>
 #include <QTextCodec>
+#include <QTextStream>
 #include <QVector>
 #include <Qt>
 #include <QtDebug>
@@ -158,6 +159,7 @@ namespace BlackCore
             Vat_SetAircraftInfoHandler(m_net.data(), onPilotInfoReceived, this);
             Vat_SetCustomPilotPacketHandler(m_net.data(), onCustomPacketReceived, this);
             Vat_SetAircraftConfigHandler(m_net.data(), onAircraftConfigReceived, this);
+            Vat_SetFsdMessageHandler(m_net.data(), onRawFsdMessage, this);
         }
 
         CNetworkVatlib::~CNetworkVatlib()
@@ -983,6 +985,11 @@ namespace BlackCore
             cbvar_cast(cbvar)->customPacketDispatcher(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(packetId), cbvar_cast(cbvar)->fromFSD(data, dataSize));
         }
 
+        void CNetworkVatlib::onRawFsdMessage(VatFsdClient *, const char *message, void *cbvar)
+        {
+            cbvar_cast(cbvar)->handleRawFsdMessage(cbvar_cast(cbvar)->fromFSD(message));
+        }
+
         void CNetworkVatlib::customPacketDispatcher(const CCallsign &callsign, const QString &packetId, const QStringList &data)
         {
             if (packetId.compare("FSIPI", Qt::CaseInsensitive) == 0)
@@ -1019,6 +1026,47 @@ namespace BlackCore
             else
             {
                 CLogMessage(this).warning("Unknown custom packet from %1 - id: %2") << callsign.toQString() << packetId;
+            }
+        }
+
+        void CNetworkVatlib::handleRawFsdMessage(const QString &fsdMessage)
+        {
+            CRawFsdMessage rawFsdMessage(fsdMessage);
+            if (m_rawFsdMessageLogFile.isOpen())
+            {
+                 QTextStream stream(&m_rawFsdMessageLogFile);
+                 stream << rawFsdMessage.toQString() << endl;
+            }
+            emit rawFsdMessageReceived(rawFsdMessage);
+        }
+
+        void CNetworkVatlib::fsdMessageSettingsChanged()
+        {
+            if (m_rawFsdMessageLogFile.isOpen()) { m_rawFsdMessageLogFile.close(); }
+            const CRawFsdMessageSettings setting = m_fsdMessageSetting.get();
+            if (!setting.isFileWritingEnabled() || setting.getFileDir().isEmpty()) { return; }
+
+            if (setting.getFileWriteMode() == CRawFsdMessageSettings::Truncate)
+            {
+                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
+                m_rawFsdMessageLogFile.setFileName(filePath);
+                m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
+            }
+            else if (setting.getFileWriteMode() == CRawFsdMessageSettings::Append)
+            {
+                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
+                m_rawFsdMessageLogFile.setFileName(filePath);
+                m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
+            }
+            else if (setting.getFileWriteMode() == CRawFsdMessageSettings::Timestamped)
+            {
+                QString filename("rawfsdmessages");
+                filename += QLatin1String("_");
+                filename += QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
+                filename += QLatin1String(".log");
+                QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), filename);
+                m_rawFsdMessageLogFile.setFileName(filePath);
+                m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
             }
         }
 

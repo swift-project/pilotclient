@@ -93,6 +93,7 @@ namespace BlackCore
             s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                    "removedAircraft", this, SIGNAL(removedAircraft(BlackMisc::Aviation::CCallsign)));
             Q_ASSERT(s);
+
             Q_UNUSED(s);
             this->relayBaseClassSignals(serviceName, connection, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName());
         }
@@ -330,6 +331,13 @@ namespace BlackCore
         CMetar CContextNetworkProxy::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::Weather::CMetar>(QLatin1String("getMetarForAirport"), airportIcaoCode);
+        }
+
+        QMetaObject::Connection CContextNetworkProxy::connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot)
+        {
+            Q_UNUSED(receiver);
+            Q_UNUSED(rawFsdMessageReceivedSlot);
+            return {};
         }
     } // ns
 } // ns
