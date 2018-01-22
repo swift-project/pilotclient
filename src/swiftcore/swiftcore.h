@@ -24,7 +24,14 @@
 #include <QString>
 
 class QWidget;
-namespace BlackGui { namespace Components { class CCoreSettingsDialog; }}
+namespace BlackGui
+{
+    namespace Components
+    {
+        class CCoreSettingsDialog;
+        class CRawFsdMessagesDialog;
+    }
+}
 namespace Ui { class CSwiftCore; }
 
 /*!
@@ -63,6 +70,9 @@ private:
     //! Show the settings dialog
     void showSettingsDialog();
 
+    //! Show the raw FSD messages dialog
+    void showRawFsdMessageDialog();
+
     //! Style sheet has changed
     virtual void onStyleSheetsChanged();
 
@@ -76,7 +86,9 @@ private:
     QStringList getRestartCmdArgs() const;
 
     QScopedPointer<BlackGui::Components::CCoreSettingsDialog> m_settingsDialog;
+    QScopedPointer<BlackGui::Components::CRawFsdMessagesDialog> m_rawFsdMessageDialog;
     QScopedPointer<Ui::CSwiftCore> ui;
+
 };
 
 #endif // guard

@@ -173,6 +173,12 @@ BlackGui--Components--CDownloadDialog {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
+BlackGui--Components--CRawFsdMessagesComponent,
+BlackGui--Components--CRawFsdMessagesDialog {
+  background: black; /* background is background color here */
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
 /* default for buttons */
 QToolButton {
   background-color: transparent; /* transparent tool buttons */

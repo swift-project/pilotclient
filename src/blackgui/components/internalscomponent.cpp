@@ -34,6 +34,7 @@
 #include <Qt>
 #include <QtGlobal>
 #include <QDesktopServices>
+#include <QDateTime>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

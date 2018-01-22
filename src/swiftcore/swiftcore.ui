@@ -192,7 +192,7 @@ QTextEdit {
      <x>0</x>
      <y>0</y>
      <width>450</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -216,10 +216,17 @@ QTextEdit {
     </property>
     <addaction name="menu_SettingsDialog"/>
    </widget>
+   <widget class="QMenu" name="menuInternals">
+    <property name="title">
+     <string>Internals</string>
+    </property>
+    <addaction name="menu_RawFsdMessageDialog"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Window"/>
    <addaction name="menu_Help"/>
    <addaction name="menu_Settings"/>
+   <addaction name="menuInternals"/>
   </widget>
   <action name="menu_SettingsDialog">
    <property name="icon">
@@ -230,9 +237,23 @@ QTextEdit {
     <string>Modify settings</string>
    </property>
   </action>
+  <action name="menu_RawFsdMessageDialog">
+   <property name="text">
+    <string>FSD Messages</string>
+   </property>
+   <property name="toolTip">
+    <string>Raw FSD Messages</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CInfoBarStatusComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/infobarstatuscomponent.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>BlackGui::Components::CDBusServerAddressSelector</class>
    <extends>QFrame</extends>
@@ -243,12 +264,6 @@ QTextEdit {
    <class>BlackGui::CSystemTrayWindow</class>
    <extends>QMainWindow</extends>
    <header>blackgui/systemtraywindow.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CInfoBarStatusComponent</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/infobarstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

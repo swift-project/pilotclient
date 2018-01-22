@@ -12,6 +12,7 @@
 #include "blackgui/components/coreinfoareacomponent.h"
 #include "blackgui/components/coresettingsdialog.h"
 #include "blackgui/components/logcomponent.h"
+#include "blackgui/components/rawfsdmessagesdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextaudio.h"
@@ -22,6 +23,7 @@
 #include "blackmisc/logpattern.h"
 #include "ui_swiftcore.h"
 
+#include <QDialog>
 #include <QFlags>
 #include <QGroupBox>
 #include <QIcon>
@@ -29,6 +31,7 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QtGlobal>
+#include <QVBoxLayout>
 
 class QWidget;
 
@@ -99,6 +102,15 @@ void CSwiftCore::showSettingsDialog()
     m_settingsDialog->show();
 }
 
+void CSwiftCore::showRawFsdMessageDialog()
+{
+    if(!m_rawFsdMessageDialog)
+    {
+        m_rawFsdMessageDialog.reset(new CRawFsdMessagesDialog(this));
+    }
+    m_rawFsdMessageDialog->show();
+}
+
 void CSwiftCore::onStyleSheetsChanged()
 {
     this->initStyleSheet();
@@ -122,6 +134,7 @@ void CSwiftCore::initMenus()
     sGui->addMenuWindow(*ui->menu_Window);
     sGui->addMenuHelp(*ui->menu_Help);
     connect(ui->menu_SettingsDialog, &QAction::triggered, this, &CSwiftCore::showSettingsDialog);
+    connect(ui->menu_RawFsdMessageDialog, &QAction::triggered, this, &CSwiftCore::showRawFsdMessageDialog);
 }
 
 void CSwiftCore::initAudio()
