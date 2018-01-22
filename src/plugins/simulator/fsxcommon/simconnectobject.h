@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/interpolatormulti.h"
 #include "simconnectdatadefinition.h"
 #include <QSharedPointer>
+#include <QStringList>
 
 namespace BlackSimPlugin
 {
@@ -224,6 +225,12 @@ namespace BlackSimPlugin
 
             //! Get all callsigns
             BlackMisc::Aviation::CCallsignSet getAllCallsigns() const;
+
+            //! Get all callsign strings
+            QStringList getAllCallsignStrings(bool sorted = false) const;
+
+            //! Get all callsign strings as string
+            QString getAllCallsignStringsAsString(bool sorted = false, const QString &separator = ", ") const;
 
             //! Callsigns of pending added callsigns
             BlackMisc::Aviation::CCallsignSet getPendingAddedCallsigns() const;

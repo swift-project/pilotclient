@@ -199,6 +199,16 @@ namespace BlackSimPlugin
             return CCallsignSet(this->keys());
         }
 
+        QStringList CSimConnectObjects::getAllCallsignStrings(bool sorted) const
+        {
+            return this->getAllCallsigns().getCallsignStrings(sorted);
+        }
+
+        QString CSimConnectObjects::getAllCallsignStringsAsString(bool sorted, const QString &separator) const
+        {
+            return this->getAllCallsignStrings(sorted).join(separator);
+        }
+
         CSimConnectObject CSimConnectObjects::getSimObjectForObjectId(DWORD objectId) const
         {
             for (const CSimConnectObject &simObject : this->values())

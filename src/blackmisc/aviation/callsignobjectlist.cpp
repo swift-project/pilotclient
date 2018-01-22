@@ -62,9 +62,9 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER>
-        QStringList ICallsignObjectList<OBJ, CONTAINER>::getCallsignStrings() const
+        QStringList ICallsignObjectList<OBJ, CONTAINER>::getCallsignStrings(bool sorted) const
         {
-            return this->getCallsigns().getCallsignStrings();
+            return this->getCallsigns().getCallsignStrings(sorted);
         }
 
         template <class OBJ, class CONTAINER>
