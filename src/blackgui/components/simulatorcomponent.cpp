@@ -65,7 +65,8 @@ namespace BlackGui
             connect(ui->pb_RefreshInternals, &QPushButton::pressed, this, &CSimulatorComponent::refreshInternals);
             if (sGui->supportsContexts() && sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed, this, &CSimulatorComponent::onAddingRemoteModelFailed);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed, this, &CSimulatorComponent::onAddingRemoteModelFailed, Qt::QueuedConnection);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::driverMessages, this, &CSimulatorComponent::onSimulatorMessages, Qt::QueuedConnection);
             }
 
             // init status
@@ -172,6 +173,12 @@ namespace BlackGui
         {
             ui->comp_StatusMessages->appendStatusMessageToList(CStatusMessage(this).warning("Adding model failed: '%1'") << aircraft.toQString(true));
             ui->comp_StatusMessages->appendStatusMessageToList(message);
+        }
+
+        void CSimulatorComponent::onSimulatorMessages(const BlackMisc::CStatusMessageList &messages)
+        {
+            if (messages.isEmpty()) { return; }
+            ui->comp_StatusMessages->appendStatusMessagesToList(messages);
         }
 
         void CSimulatorComponent::refreshInternals()

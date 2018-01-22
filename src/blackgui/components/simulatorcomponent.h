@@ -26,7 +26,15 @@
 
 class QWidget;
 
-namespace BlackMisc { class CIcon; namespace Simulation { class CSimulatedAircraft; }}
+namespace BlackMisc
+{
+    class CIcon;
+    class CStatusMessageList;
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+}
 namespace Ui { class CSimulatorComponent; }
 namespace BlackGui
 {
@@ -65,6 +73,9 @@ namespace BlackGui
 
             //! \copydoc ISimulator::addingRemoteModelFailed
             void onAddingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);
+
+            //! \copydoc ISimulator::onSimulatorMessages
+            void onSimulatorMessages(const BlackMisc::CStatusMessageList &messages);
 
             //! Refresh the internals
             void refreshInternals();
