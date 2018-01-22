@@ -24,6 +24,7 @@
 #include "blackmisc/network/ecosystemlist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/fsdsetup.h"
+#include "blackmisc/network/rawfsdmessage.h"
 #include "blackmisc/network/role.h"
 #include "blackmisc/network/rolelist.h"
 #include "blackmisc/network/remotefile.h"

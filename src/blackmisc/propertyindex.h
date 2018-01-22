@@ -125,6 +125,7 @@ namespace BlackMisc
             GlobalIndexCUrlLog                          =  6800,
             GlobalIndexCRemoteFile                      =  6900,
             GlobalIndexCEcosystem                       =  7000,
+            GlobalIndexCRawFsdMessage                   =  7100,
             GlobalIndexCAircraftModel                   =  8000,
             GlobalIndexCSimulatedAircraft               =  8100,
             GlobalIndexCTextMessage                     =  8200,

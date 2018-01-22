@@ -23,6 +23,7 @@ namespace BlackMisc
             CEcosystemList::registerMetadata();
             CEntityFlags::registerMetadata();
             CFsdSetup::registerMetadata();
+            CRawFsdMessage::registerMetadata();
             CRemoteFile::registerMetadata();
             CRemoteFileList::registerMetadata();
             CRole::registerMetadata();
