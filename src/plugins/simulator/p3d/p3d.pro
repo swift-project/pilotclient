@@ -8,7 +8,7 @@ TARGET = simulatorp3d
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore
+CONFIG += blackconfig blackmisc blackcore
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src

@@ -6,7 +6,7 @@ TARGET = simulatorfscommon
 TEMPLATE = lib
 
 CONFIG += staticlib
-CONFIG += blackmisc
+CONFIG += blackconfig blackmisc
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src

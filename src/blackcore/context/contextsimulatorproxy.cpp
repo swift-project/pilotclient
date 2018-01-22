@@ -74,6 +74,10 @@ namespace BlackCore
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CStatusMessage)));
             Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "driverMessages", this, SIGNAL(driverMessages(BlackMisc::CStatusMessageList)));
+
+            Q_ASSERT(s);
             Q_UNUSED(s);
             this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());
         }

@@ -20,12 +20,15 @@
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QTimer>
 #include <type_traits>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -254,6 +257,17 @@ namespace BlackSimPlugin
             }
         }
 
+        CStatusMessageList CSimulatorFsxCommon::debugVerifyStateAfterAllAircraftRemoved() const
+        {
+            CStatusMessageList msgs;
+            if (CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
+            msgs = CSimulatorFsCommon::debugVerifyStateAfterAllAircraftRemoved();
+            if (!m_simConnectObjects.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_simConnectObjects not empty: '%1'") << m_simConnectObjects.getAllCallsignStringsAsString(true)); }
+            if (!m_simConnectObjectsPositionAndPartsTraces.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_simConnectObjectsPositionAndPartsTraces not empty: '%1'") << m_simConnectObjectsPositionAndPartsTraces.getAllCallsignStringsAsString(true)); }
+            if (!m_addAgainAircraftWhenRemoved.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_addAgainAircraftWhenRemoved not empty: '%1'") << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", ")); }
+            return msgs;
+        }
+
         bool CSimulatorFsxCommon::stillDisplayReceiveExceptions()
         {
             m_receiveExceptionCount++;
@@ -267,7 +281,7 @@ namespace BlackSimPlugin
             this->emitSimulatorCombinedStatus();
 
             // Internals depends on sim data which take a while to be read
-            // this is a trich and I re-init again after a while (which is not really expensive)
+            // this is a trick and I re-init again after a while (which is not really expensive)
             QTimer::singleShot(1000, this, [this] { this->initSimulatorInternals(); });
         }
 
@@ -665,7 +679,7 @@ namespace BlackSimPlugin
                 // good case, object has been removed
                 // we can remove the sim object
             }
-            else
+            else if (!this->isShuttingDown())
             {
                 // object was removed, but removal was not requested by us
                 // this means we are out of the reality bubble or something else went wrong
@@ -673,17 +687,19 @@ namespace BlackSimPlugin
                 // 1) out of reality bubble
                 // 2) wrong position (in ground etc.)
                 // 3) Simulator not running (ie in stopped mode)
+                CStatusMessage msg;
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
-                    m_addPendingAircraft.push_back(simObject.getAircraft());
-                    CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: '%4'")
-                            << callsign.toQString() << simObject.getAircraftModelString()
-                            << objectID << simObject.getInterpolatorInfo();
+                    m_addPendingAircraft.replaceOrAddByCallsign(simObject.getAircraft());
+                    msg = CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: '%4'")
+                          << callsign.toQString() << simObject.getAircraftModelString()
+                          << objectID << simObject.getInterpolatorInfo();
                 }
                 else
                 {
-                    CLogMessage(this).warning("Removed '%1' from simulator, but was not initiated by us: %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    msg = CLogMessage(this).warning("Removed '%1' from simulator, but was not initiated by us: %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
+                emit this->driverMessages(msg);
             }
 
             // in all cases we remove the object
@@ -890,9 +906,12 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
             if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
+            // clean up anyway
             this->removeFromAddPendingAndAddAgainAircraft(callsign);
-            if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
+            m_hints.remove(callsign);
 
+            // really remove from simulator
+            if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
             if (simObject.isPendingRemoved()) { return true; }
 
@@ -914,7 +933,6 @@ namespace BlackSimPlugin
             }
 
             simObject.setPendingRemoved(true);
-            m_hints.remove(simObject.getCallsign());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' request/object id: %2/%3").arg(callsign.toQString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
 
             // call in SIM
@@ -959,7 +977,7 @@ namespace BlackSimPlugin
             {
                 if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
             }
-            this->clearAllAircraft();
+            this->clearAllRemoteAircraftData();
             return r;
         }
 
@@ -1513,15 +1531,19 @@ namespace BlackSimPlugin
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
             m_sendIdTraces.clear();
+            // m_simConnectObjects  cleared below
+            // m_simConnectObjectsPositionAndPartsTraces
+            // m_addPendingAircraft
             CSimulatorFsCommon::reset(); // clears all pending aircraft etc
         }
 
-        void CSimulatorFsxCommon::clearAllAircraft()
+        void CSimulatorFsxCommon::clearAllRemoteAircraftData()
         {
             m_simConnectObjects.clear();
             m_addPendingAircraft.clear();
             m_simConnectObjectsPositionAndPartsTraces.clear();
-            CSimulatorFsCommon::clearAllAircraft();
+            // m_addAgainAircraftWhenRemoved cleared below
+            CSimulatorFsCommon::clearAllRemoteAircraftData();
         }
 
         void CSimulatorFsxCommon::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)

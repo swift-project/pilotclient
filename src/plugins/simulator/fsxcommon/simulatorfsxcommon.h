@@ -130,6 +130,8 @@ namespace BlackSimPlugin
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
             virtual bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode, const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual void clearAllRemoteAircraftData() override;
+            virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
             //! @}
 
         protected:
@@ -142,7 +144,6 @@ namespace BlackSimPlugin
             //! \name Base class overrides
             //! @{
             virtual void reset() override;
-            virtual void clearAllAircraft() override;
             virtual void initSimulatorInternals() override;
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! @}

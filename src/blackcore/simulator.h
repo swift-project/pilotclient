@@ -160,6 +160,13 @@ namespace BlackCore
         //! Driver will be unloaded
         virtual void unload() = 0;
 
+        //! Clear all aircraft related data
+        virtual void clearAllRemoteAircraftData() = 0;
+
+        //! Debug function to check state after all aircraft have been removed
+        //! \remarks only in local developer builds
+        virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const = 0;
+
         //! Is overall (swift) application shutting down
         virtual bool isShuttingDown() const = 0;
 
@@ -201,6 +208,9 @@ namespace BlackCore
 
         //! An airspace snapshot was handled
         void airspaceSnapshotHandled();
+
+        //! Relevant simulator messages to be explicitly displayed
+        void driverMessages(const BlackMisc::CStatusMessageList &messages);
 
     protected:
         //! Default constructor

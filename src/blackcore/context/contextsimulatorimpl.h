@@ -225,7 +225,7 @@ namespace BlackCore
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
             BlackMisc::CSettingReadOnly<Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
-            QString m_networkSessionId; //! Network session of CServer, if not connected empty
+            QString m_networkSessionId; //! Network session of CServer::getServerSessionId, if not connected empty
             bool m_initallyAddAircrafts = false;
             bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated = false;

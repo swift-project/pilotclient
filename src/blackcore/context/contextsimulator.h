@@ -115,6 +115,9 @@ namespace BlackCore
             //! A weather grid, requested with requestWeatherGrid(), is received
             void weatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
+            //! Relevant simulator messages to be explicitly displayed
+            void driverMessages(const BlackMisc::CStatusMessageList &messages);
+
         public slots:
             //! Simulator info, currently loaded plugin
             virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;

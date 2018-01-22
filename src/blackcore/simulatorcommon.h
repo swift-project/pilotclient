@@ -86,6 +86,8 @@ namespace BlackCore
         virtual bool isShuttingDown() const override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
+        virtual void clearAllRemoteAircraftData() override;
+        virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
 
         //! \addtogroup swiftdotcommands
         //! @{
@@ -100,14 +102,13 @@ namespace BlackCore
         //! @}
         //! \copydoc ISimulator::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+        // --------- ISimulator implementations ------------
 
         //! Register help
         static void registerHelp();
 
-        // --------- ISimulator implementations ------------
-
         //! Reset the statistics counters
-        void resetStatistics();
+        void resetAircraftStatistics();
 
         //!  Counter added aircraft
         int getStatisticsPhysicallyAddedAircraft() const { return m_statsPhysicallyAddedAircraft; }
@@ -161,11 +162,10 @@ namespace BlackCore
         //! Max.airports in range
         int maxAirportsInRange() const;
 
-        //! Reset state
+        //! Full reset of state
+        //! \remark reset as it was unloaded without unloading
+        //! \sa ISimulator::clearAllRemoteAircraftData
         virtual void reset();
-
-        //! Clear all aircraft related data
-        virtual void clearAllAircraft();
 
         //! Inject weather grid to simulator
         virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) { Q_UNUSED(weatherGrid); }
@@ -223,9 +223,9 @@ namespace BlackCore
         // setup for debugging, logs ..
         BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
 
-        // some optional functionality which can be used by the sims as needed
+        // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
-        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< last ground elevation fetched
+        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< hints for callsign, contains last ground elevation fetched
 
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?
         BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last

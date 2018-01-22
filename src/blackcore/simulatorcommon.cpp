@@ -23,6 +23,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/threadutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QDateTime>
 #include <QString>
@@ -32,6 +33,7 @@
 #include <QDesktopServices>
 #include <functional>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Aviation;
@@ -121,7 +123,7 @@ namespace BlackCore
             this->callPhysicallyRemoveRemoteAircraft(callsign); return true;
         }
 
-        // will be added with next snapshot ps_recalculateRenderedAircraft
+        // will be added with next snapshot onRecalculatedRenderedAircraft
         return false;
     }
 
@@ -384,7 +386,10 @@ namespace BlackCore
     {
         // a default implementation, but normally overridden by the sims
         const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
-        return this->physicallyRemoveMultipleRemoteAircraft(callsigns);
+        const int r = this->physicallyRemoveMultipleRemoteAircraft(callsigns);
+        this->debugVerifyStateAfterAllAircraftRemoved();
+        this->clearAllRemoteAircraftData();
+        return r;
     }
 
     bool CSimulatorCommon::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
@@ -490,12 +495,21 @@ namespace BlackCore
         CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
     }
 
-    void CSimulatorCommon::resetStatistics()
+    void CSimulatorCommon::resetAircraftStatistics()
     {
         m_statsPhysicallyAddedAircraft = 0;
         m_statsPhysicallyRemovedAircraft = 0;
         m_statsPartsAdded = 0;
         m_statsSituationAdded = 0;
+    }
+
+    CStatusMessageList CSimulatorCommon::debugVerifyStateAfterAllAircraftRemoved() const
+    {
+        CStatusMessageList msgs;
+        if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
+        if (!m_addAgainAircraftWhenRemoved.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_addAgainAircraftWhenRemoved not empty: '%1'") << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", ")); }
+        if (!m_hints.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_hints not empty: '%1'") << CCallsignSet(m_hints.keys()).getCallsignStrings(true).join(", ")); }
+        return msgs;
     }
 
     void CSimulatorCommon::oneSecondTimerTimeout()
@@ -578,16 +592,16 @@ namespace BlackCore
         m_statsUpdateAircraftTimeTotalMs = 0;
         m_blinkCycle = false;
         m_highlightEndTimeMsEpoch = false;
-        this->resetStatistics();
-        this->clearAllAircraft();
+        this->clearAllRemoteAircraftData();
     }
 
-    void CSimulatorCommon::clearAllAircraft()
+    void CSimulatorCommon::clearAllRemoteAircraftData()
     {
         m_addAgainAircraftWhenRemoved.clear();
         m_highlightedAircraft.clear();
         m_callsignsToBeRendered.clear();
         m_hints.clear();
+        this->resetAircraftStatistics();
     }
 
     CAirportList CSimulatorCommon::getWebServiceAirports() const

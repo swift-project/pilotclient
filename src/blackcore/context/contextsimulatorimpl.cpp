@@ -299,6 +299,8 @@ namespace BlackCore
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::airspaceSnapshotHandled, this, &IContextSimulator::airspaceSnapshotHandled);
             Q_ASSERT(c);
+            c = connect(simulator, &ISimulator::driverMessages, this, &IContextSimulator::driverMessages);
+            Q_ASSERT(c);
 
             // log from context to simulator
             c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CContextSimulator::relayStatusMessageToSimulator);
@@ -504,11 +506,19 @@ namespace BlackCore
             {
                 m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId();
             }
-            else if (!m_networkSessionId.isEmpty())
+            else if (INetwork::isDisconnectedStatus(to))
             {
                 m_networkSessionId.clear();
                 m_aircraftMatcher.clearMatchingStatistics();
                 m_matchingMessages.clear();
+
+                // check in case the plugin has been unloaded
+                if (m_simulatorPlugin.second)
+                {
+                    const CStatusMessageList verifyMessages = m_simulatorPlugin.second->debugVerifyStateAfterAllAircraftRemoved();
+                    m_simulatorPlugin.second->clearAllRemoteAircraftData();
+                    if (!verifyMessages.isEmpty()) { emit this->driverMessages(verifyMessages); }
+                }
             }
         }
 

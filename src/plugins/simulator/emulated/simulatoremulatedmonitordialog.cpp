@@ -213,7 +213,7 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulatedMonitorDialog::resetStatistics()
         {
-            if (!m_simulator) { m_simulator->resetStatistics(); }
+            if (!m_simulator) { m_simulator->resetAircraftStatistics(); }
             ui->le_PhysicallyAddedAircraft->clear();
             ui->le_PhysicallyRemovedAircraft->clear();
             ui->le_SituationAdded->clear();
