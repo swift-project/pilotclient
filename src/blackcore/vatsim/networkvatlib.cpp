@@ -375,9 +375,17 @@ namespace BlackCore
         VatSimType CNetworkVatlib::convertToSimType(CSimulatorPluginInfo &simInfo)
         {
             //! \fixme Define recognized simulators somewhere */
-            if (simInfo.getSimulator() == "fs9" || simInfo.getSimulator() == "fsx")
+            if (simInfo.getSimulator() == "fs9")
             {
-                return vatSimTypeMSFS95;
+                return vatSimTypeMSFS2004;
+            }
+            else if (simInfo.getSimulator() == "fsx")
+            {
+                return vatSimTypeMSFSX;
+            }
+            else if (simInfo.getSimulator() == "p3d")
+            {
+                return vatSimTypeP3Dv1;
             }
             else if (simInfo.getSimulator() == "xplane")
             {
