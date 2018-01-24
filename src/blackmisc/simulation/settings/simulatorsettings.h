@@ -152,10 +152,10 @@ namespace BlackMisc
                 CSimulatorSettings getSettings(const CSimulatorInfo &simulator) const;
 
                 //! Set settings per simulator
-                CStatusMessage setSettings(const Settings::CSimulatorSettings &settings, const CSimulatorInfo &simulator);
+                CStatusMessage setSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
                 //! Set settings per simulator
-                CStatusMessage setAndSaveSettings(const Settings::CSimulatorSettings &settings, const CSimulatorInfo &simulator);
+                CStatusMessage setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
                 //! Set settings per simulator
                 CStatusMessage saveSettings(const CSimulatorInfo &simulator);
@@ -231,7 +231,7 @@ namespace BlackMisc
                 CSimulatorMessagesSettings();
 
                 //! Log severity
-                void setTechnicalLogSeverity(BlackMisc::CStatusMessage::StatusSeverity severity);
+                void setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity);
 
                 //! Globally enable / disable
                 void setGloballyEnabled(bool enabled) { m_globallyEnabled = enabled; }
@@ -243,34 +243,34 @@ namespace BlackMisc
                 void disableTechnicalMessages();
 
                 //! Relay (technical) error messages
-                bool isRelayedErrorsMessages() const;
+                bool isRelayErrorsMessages() const;
 
                 //! Relay (technical) warning messages
-                bool isRelayedWarningMessages() const;
+                bool isRelayWarningMessages() const;
 
                 //! Relay (technical) info messages
-                bool isRelayedInfoMessages() const;
+                bool isRelayInfoMessages() const;
 
                 //! Relay any message
-                bool isRelayedTechnicalMessages() const;
+                bool isRelayTechnicalMessages() const;
 
                 //! Relay the following message types
-                void setRelayedTextMessages(Settings::CSimulatorMessagesSettings::TextMessageType messageType);
+                void setRelayTextMessages(CSimulatorMessagesSettings::TextMessageType messageType);
 
                 //! Relay supervisor messages
-                bool isRelayedSupervisorTextMessages() const;
+                bool isRelaySupervisorTextMessages() const;
 
                 //! Relay private messages
-                bool isRelayedPrivateTextMessages() const;
+                bool isRelayPrivateTextMessages() const;
 
                 //! Relay UNICOM messages
-                bool isRelayedUnicomTextMessages() const;
+                bool isRelayUnicomTextMessages() const;
 
                 //! Relay COM1 text message
-                bool isRelayedCom1TextMessages() const;
+                bool isRelayCom1TextMessages() const;
 
                 //! Relay COM2 text message
-                bool isRelayedCom2TextMessages() const;
+                bool isRelayCom2TextMessages() const;
 
                 //! Relay given text message
                 bool relayThisTextMessage(const Network::CTextMessage &msg, const CSimulatedAircraft &aircraft) const;

@@ -59,7 +59,7 @@ namespace BlackGui
             if (ui->cb_SupervisorMessages->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessageSupervisor; }
             if (ui->cb_Com1->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessagesCom1; }
             if (ui->cb_Com2->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessagesCom2; };
-            settings.setRelayedTextMessages(mt);
+            settings.setRelayTextMessages(mt);
 
             // save
             this->m_settings.setAndSave(settings);
@@ -69,27 +69,27 @@ namespace BlackGui
         {
             const CSimulatorMessagesSettings settings(this->m_settings.get());
             ui->cb_Messages->setChecked(settings.isGloballyEnabled());
-            if (settings.isRelayedInfoMessages())
+            if (settings.isRelayInfoMessages())
             {
                 ui->rb_ErrorWarningsInfo->setChecked(true);
             }
-            else if (settings.isRelayedWarningMessages())
+            else if (settings.isRelayWarningMessages())
             {
                 ui->rb_ErrorsAndWarnings->setChecked(true);
             }
-            else if (settings.isRelayedErrorsMessages())
+            else if (settings.isRelayErrorsMessages())
             {
                 ui->rb_ErrorsOnly->setChecked(true);
             }
-            else if (!settings.isRelayedTechnicalMessages())
+            else if (!settings.isRelayTechnicalMessages())
             {
                 ui->rb_NoTechnicalMessages->setChecked(true);
             }
 
-            ui->cb_PrivateMessages->setChecked(settings.isRelayedPrivateTextMessages());
-            ui->cb_SupervisorMessages->setChecked(settings.isRelayedSupervisorTextMessages());
-            ui->cb_Com1->setChecked(settings.isRelayedCom1TextMessages());
-            ui->cb_Com2->setChecked(settings.isRelayedCom2TextMessages());
+            ui->cb_PrivateMessages->setChecked(settings.isRelayPrivateTextMessages());
+            ui->cb_SupervisorMessages->setChecked(settings.isRelaySupervisorTextMessages());
+            ui->cb_Com1->setChecked(settings.isRelayCom1TextMessages());
+            ui->cb_Com2->setChecked(settings.isRelayCom2TextMessages());
         }
     } // ns
 } // ns

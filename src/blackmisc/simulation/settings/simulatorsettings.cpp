@@ -326,55 +326,55 @@ namespace BlackMisc
                 m_technicalLogLevel = -1;
             }
 
-            bool CSimulatorMessagesSettings::isRelayedErrorsMessages() const
+            bool CSimulatorMessagesSettings::isRelayErrorsMessages() const
             {
                 if (m_technicalLogLevel < 0) { return false; }
                 return (m_technicalLogLevel <= CStatusMessage::SeverityError);
             }
 
-            bool CSimulatorMessagesSettings::isRelayedWarningMessages() const
+            bool CSimulatorMessagesSettings::isRelayWarningMessages() const
             {
                 if (m_technicalLogLevel < 0) { return false; }
                 return (m_technicalLogLevel <= CStatusMessage::SeverityWarning);
             }
 
-            bool CSimulatorMessagesSettings::isRelayedInfoMessages() const
+            bool CSimulatorMessagesSettings::isRelayInfoMessages() const
             {
                 if (m_technicalLogLevel < 0) { return false; }
                 return (m_technicalLogLevel <= CStatusMessage::SeverityInfo);
             }
 
-            bool CSimulatorMessagesSettings::isRelayedTechnicalMessages() const
+            bool CSimulatorMessagesSettings::isRelayTechnicalMessages() const
             {
                 return (m_technicalLogLevel >= 0);
             }
 
-            void CSimulatorMessagesSettings::setRelayedTextMessages(CSimulatorMessagesSettings::TextMessageType messageType)
+            void CSimulatorMessagesSettings::setRelayTextMessages(CSimulatorMessagesSettings::TextMessageType messageType)
             {
                 m_messageType = static_cast<int>(messageType);
             }
 
-            bool CSimulatorMessagesSettings::isRelayedSupervisorTextMessages() const
+            bool CSimulatorMessagesSettings::isRelaySupervisorTextMessages() const
             {
                 return this->getRelayedTextMessageTypes().testFlag(TextMessageSupervisor);
             }
 
-            bool CSimulatorMessagesSettings::isRelayedPrivateTextMessages() const
+            bool CSimulatorMessagesSettings::isRelayPrivateTextMessages() const
             {
                 return this->getRelayedTextMessageTypes().testFlag(TextMessagePrivate);
             }
 
-            bool CSimulatorMessagesSettings::isRelayedUnicomTextMessages() const
+            bool CSimulatorMessagesSettings::isRelayUnicomTextMessages() const
             {
                 return this->getRelayedTextMessageTypes().testFlag(TextMessagesUnicom);
             }
 
-            bool CSimulatorMessagesSettings::isRelayedCom1TextMessages() const
+            bool CSimulatorMessagesSettings::isRelayCom1TextMessages() const
             {
                 return this->getRelayedTextMessageTypes().testFlag(TextMessagesCom1);
             }
 
-            bool CSimulatorMessagesSettings::isRelayedCom2TextMessages() const
+            bool CSimulatorMessagesSettings::isRelayCom2TextMessages() const
             {
                 return this->getRelayedTextMessageTypes().testFlag(TextMessagesCom2);
             }
@@ -383,8 +383,8 @@ namespace BlackMisc
             {
                 if (message.isEmpty()) { return false; }
                 if (!this->isGloballyEnabled()) { return false; }
-                if (!this->isRelayedTechnicalMessages()) { return false; }
-                int s = static_cast<int>(message.getSeverity());
+                if (!this->isRelayTechnicalMessages()) { return false; }
+                const int s = static_cast<int>(message.getSeverity());
                 return (s >= m_technicalLogLevel);
             }
 
@@ -424,7 +424,7 @@ namespace BlackMisc
                 Q_UNUSED(i18n);
                 static const QString s("Enabled %1, text messages: %2, severity: %3");
                 QString severity;
-                if (this->isRelayedTechnicalMessages())
+                if (this->isRelayTechnicalMessages())
                 {
                     severity = QStringLiteral("No tech. msgs");
                 }
@@ -455,7 +455,7 @@ namespace BlackMisc
                 switch (i)
                 {
                 case IndexTechnicalLogSeverity: this->setTechnicalLogSeverity(static_cast<CStatusMessage::StatusSeverity>(variant.toInt())); break;
-                case IndexTextMessageRelay: this->setRelayedTextMessages(static_cast<CSimulatorMessagesSettings::TextMessageType>(variant.toInt())); break;
+                case IndexTextMessageRelay: this->setRelayTextMessages(static_cast<CSimulatorMessagesSettings::TextMessageType>(variant.toInt())); break;
                 case IndexGloballyEnabled: this->setGloballyEnabled(variant.toBool()); break;
                 default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
