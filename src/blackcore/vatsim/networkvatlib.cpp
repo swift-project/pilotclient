@@ -1023,6 +1023,10 @@ namespace BlackCore
             {
                 // FSInn peer2peer protocol - ignore, not supported
             }
+            else if (packetId.compare("FSIP2P", Qt::CaseInsensitive) == 0)
+            {
+                // FSInn peer2peer protocol - ignore, not supported
+            }
             else
             {
                 CLogMessage(this).warning("Unknown custom packet from %1 - id: %2") << callsign.toQString() << packetId;
