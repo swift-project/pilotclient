@@ -87,7 +87,42 @@ namespace BlackMisc
             //! Log current parts cycle, only stores in memory, for performance reasons
             //! \remark const to allow const interpolator functions
             //! \threadsafe
-            void logParts(const PartsLog &parts);
+            void logParts(const PartsLog &log);
+
+            //! Max.situations logged
+            void setMaxSituations(int max);
+
+            //! All situation logs
+            //! \threadsafe
+            QList<SituationLog> getSituationsLog() const;
+
+            //! All parts logs
+            //! \threadsafe
+            QList<PartsLog> getPartsLog() const;
+
+            //! All situation logs for callsign
+            //! \threadsafe
+            QList<SituationLog> getSituationsLog(const Aviation::CCallsign &cs) const;
+
+            //! All parts logs for callsign
+            //! \threadsafe
+            QList<PartsLog> getPartsLog(const Aviation::CCallsign &cs) const;
+
+            //! Get last situation
+            //! \threadsafe
+            Aviation::CAircraftSituation getLastSituation() const;
+
+            //! Get last situation
+            //! \threadsafe
+            Aviation::CAircraftSituation getLastSituation(const Aviation::CCallsign &cs) const;
+
+            //! Get last parts
+            //! \threadsafe
+            Aviation::CAircraftParts getLastParts() const;
+
+            //! Get last parts
+            //! \threadsafe
+            Aviation::CAircraftParts getLastParts(const Aviation::CCallsign &cs) const;
 
             //! File pattern for interpolation log
             static const QString &filePatternInterpolationLog();
@@ -100,13 +135,13 @@ namespace BlackMisc
 
         private:
             //! Get log as HTML table
-            static QString getHtmlInterpolationLog(const QList<SituationLog> &logs);
+            static QString getHtmlInterpolationLog(const QList<SituationLog> &getSituationsLog);
 
             //! Get log as HTML table
-            static QString getHtmlPartsLog(const QList<PartsLog> &logs);
+            static QString getHtmlPartsLog(const QList<PartsLog> &getSituationsLog);
 
             //! Write log to file
-            static CStatusMessageList writeLogFile(const QList<SituationLog> &interpolation, const QList<PartsLog> &parts);
+            static CStatusMessageList writeLogFile(const QList<SituationLog> &interpolation, const QList<PartsLog> &getPartsLog);
 
             //! Status of file operation
             static CStatusMessage logStatusFileWriting(bool success, const QString &fileName);
@@ -117,9 +152,11 @@ namespace BlackMisc
             //! Create readable time
             static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
 
-            mutable QReadWriteLock m_lockLogs;   //!< lock logging
-            QList<PartsLog> m_partsLogs;         //!< logs of parts
-            QList<SituationLog> m_situationLogs; //!< logs of interpolation
+            mutable QReadWriteLock m_lockSituations; //!< lock logging
+            mutable QReadWriteLock m_lockParts;      //!< lock logging
+            int m_maxSituations = 2500;
+            QList<PartsLog> m_partsLogs;             //!< logs of parts
+            QList<SituationLog> m_situationLogs;     //!< logs of interpolation
         };
     } // namespace
 } // namespace

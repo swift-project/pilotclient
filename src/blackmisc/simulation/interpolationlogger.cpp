@@ -47,17 +47,20 @@ namespace BlackMisc
 
         CWorker *CInterpolationLogger::writeLogInBackground()
         {
-            QList<SituationLog> interpolation;
+            QList<SituationLog> situations;
             QList<PartsLog> parts;
             {
-                QReadLocker l(&m_lockLogs);
-                interpolation = m_situationLogs;
+                QReadLocker l(&m_lockSituations);
+                situations = m_situationLogs;
+            }
+            {
+                QReadLocker l(&m_lockParts);
                 parts = m_partsLogs;
             }
 
-            CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [interpolation, parts]()
+            CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [situations, parts]()
             {
-                const CStatusMessageList msg = CInterpolationLogger::writeLogFile(interpolation, parts);
+                const CStatusMessageList msg = CInterpolationLogger::writeLogFile(situations, parts);
                 CLogMessage::preformatted(msg);
             });
             return worker;
@@ -127,14 +130,88 @@ namespace BlackMisc
 
         void CInterpolationLogger::logInterpolation(const CInterpolationLogger::SituationLog &log)
         {
-            QWriteLocker l(&m_lockLogs);
-            m_situationLogs.append(log);
+            QWriteLocker l(&m_lockSituations);
+            m_situationLogs.push_back(log);
+            if (m_situationLogs.size() > m_maxSituations)
+            {
+                m_situationLogs.removeFirst();
+            }
         }
 
-        void CInterpolationLogger::logParts(const CInterpolationLogger::PartsLog &parts)
+        void CInterpolationLogger::logParts(const CInterpolationLogger::PartsLog &log)
         {
-            QWriteLocker l(&m_lockLogs);
-            m_partsLogs.append(parts);
+            QWriteLocker l(&m_lockParts);
+            m_partsLogs.push_back(log);
+        }
+
+        void CInterpolationLogger::setMaxSituations(int max)
+        {
+            QReadLocker l(&m_lockSituations);
+            m_maxSituations = max;
+        }
+
+        QList<CInterpolationLogger::SituationLog> CInterpolationLogger::getSituationsLog() const
+        {
+            QReadLocker l(&m_lockSituations);
+            return m_situationLogs;
+        }
+
+        QList<CInterpolationLogger::PartsLog> CInterpolationLogger::getPartsLog() const
+        {
+            QReadLocker l(&m_lockParts);
+            return m_partsLogs;
+        }
+
+        QList<CInterpolationLogger::SituationLog> CInterpolationLogger::getSituationsLog(const CCallsign &cs) const
+        {
+            const QList<SituationLog> copy(this->getSituationsLog());
+            QList<SituationLog> logs;
+            for (const SituationLog &log : copy)
+            {
+                if (log.callsign != cs) { continue; }
+                logs.push_back(log);
+            }
+            return logs;
+        }
+
+        QList<CInterpolationLogger::PartsLog> CInterpolationLogger::getPartsLog(const CCallsign &cs) const
+        {
+            const QList<PartsLog> copy(this->getPartsLog());
+            QList<PartsLog> logs;
+            for (const PartsLog &log : copy)
+            {
+                if (log.callsign != cs) { continue; }
+                logs.push_back(log);
+            }
+            return logs;
+        }
+
+        CAircraftSituation CInterpolationLogger::getLastSituation() const
+        {
+            QReadLocker l(&m_lockSituations);
+            if (m_situationLogs.isEmpty()) { return CAircraftSituation(); }
+            return m_situationLogs.last().currentSituation;
+        }
+
+        CAircraftSituation CInterpolationLogger::getLastSituation(const CCallsign &cs) const
+        {
+            const QList<SituationLog> copy(this->getSituationsLog(cs));
+            if (copy.isEmpty()) { return CAircraftSituation(); }
+            return copy.last().currentSituation;
+        }
+
+        CAircraftParts CInterpolationLogger::getLastParts() const
+        {
+            QReadLocker l(&m_lockParts);
+            if (m_partsLogs.isEmpty()) { return CAircraftParts(); }
+            return m_partsLogs.last().parts;
+        }
+
+        CAircraftParts CInterpolationLogger::getLastParts(const CCallsign &cs) const
+        {
+            const QList<PartsLog> copy(this->getPartsLog(cs));
+            if (copy.isEmpty()) { return CAircraftParts(); }
+            return copy.last().parts;
         }
 
         const QString &CInterpolationLogger::filePatternInterpolationLog()
@@ -269,9 +346,14 @@ namespace BlackMisc
 
         void CInterpolationLogger::clearLog()
         {
-            QWriteLocker l(&m_lockLogs);
-            m_partsLogs.clear();
-            m_situationLogs.clear();
+            {
+                QWriteLocker l(&m_lockSituations);
+                m_situationLogs.clear();
+            }
+            {
+                QWriteLocker l(&m_lockParts);
+                m_partsLogs.clear();
+            }
         }
 
         QString CInterpolationLogger::msSinceEpochToTime(qint64 ms)
