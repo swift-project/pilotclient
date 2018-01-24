@@ -64,10 +64,19 @@ namespace BlackMisc
             if (m_aircraftSituations.isEmpty()) { return {}; }
             CAircraftSituation currentSituation = m_aircraftSituations.front();
 
+            // Update current position by hints' elevation
+            // * for XP provided by hints.getElevationProvider at current position
+            // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
+            // * As XP uses lazy init we will call getGroundElevation only when needed
+            // * default here via getElevationPlane
+            CAltitude currentGroundElevation(hints.getElevationPlane().getAltitudeIfWithinRadius(currentSituation));
+            currentSituation.setGroundElevationChecked(currentGroundElevation); // set as default
+
             // data, split situations by time
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
 
             // interpolant function from derived class
+            // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
             const auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, hints, status, log);
 
             // succeeded so far?
@@ -92,13 +101,6 @@ namespace BlackMisc
                 status.setInterpolatedAndCheckSituation(true, currentSituation);
             }
             m_isFirstInterpolation = false;
-
-            // Update current position by hints' elevation
-            // * for XP provided by hints.getElevationProvider at current position
-            // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
-            // * As XP uses lazy init we will call getGroundElevation only when needed
-            // * default here via getElevationPlane
-            CAltitude currentGroundElevation(hints.getElevationPlane().getAltitudeIfWithinRadius(currentSituation));
 
             // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
             if (hints.hasAircraftParts())
@@ -126,7 +128,6 @@ namespace BlackMisc
             {
                 // guess ground flag
                 constexpr double NoGroundFactor = -1;
-                currentSituation.setGroundElevation(currentGroundElevation);
                 CInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
             }
 
