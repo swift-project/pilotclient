@@ -26,6 +26,11 @@ namespace BlackMisc
             CCollection<CCallsign>(other)
         { }
 
+        bool CCallsignSet::containsCallsign(const QString &callsign) const
+        {
+            return this->contains(CCallsign(callsign));
+        }
+
         QStringList CCallsignSet::getCallsignStrings(bool sorted) const
         {
             QStringList callsigns;

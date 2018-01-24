@@ -28,6 +28,13 @@ namespace BlackMisc
             this->parseFromString(altitudeAsString, mode);
         }
 
+        CAltitude CAltitude::withOffset(const CLength &offset) const
+        {
+            CAltitude copy(*this);
+            if (!offset.isNull() && !offset.isZeroEpsilonConsidered()) { copy += offset; }
+            return copy;
+        }
+
         QString CAltitude::convertToQString(bool i18n) const
         {
             if (this->m_datum == FlightLevel)

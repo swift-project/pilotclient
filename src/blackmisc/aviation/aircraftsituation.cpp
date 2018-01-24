@@ -46,14 +46,15 @@ namespace BlackMisc
 
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
-            const QString s = (m_position.toQString(i18n)) %
-                              QLatin1String(" bank: ") % (m_bank.toQString(i18n)) %
-                              QLatin1String(" pitch: ") % (m_pitch.toQString(i18n)) %
-                              QLatin1String(" gs: ") % (m_groundSpeed.toQString(i18n)) %
-                              QLatin1String(" elevation: ") % (m_groundElevation.toQString(i18n)) %
-                              QLatin1String(" heading: ") % (m_heading.toQString(i18n)) %
-                              QLatin1String(" timestamp: ") % (this->hasValidTimestamp() ? this->getFormattedUtcTimestampDhms() : QStringLiteral("-"));
-            return s;
+            return m_position.toQString(i18n) %
+                   QStringLiteral(" bank: ") % (m_bank.toQString(i18n)) %
+                   QStringLiteral(" pitch: ") % (m_pitch.toQString(i18n)) %
+                   QStringLiteral(" heading: ") % (m_heading.toQString(i18n)) %
+                   QStringLiteral(" og: ") % this->getOnGroundInfo() %
+                   QStringLiteral(" gs: ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
+                   QStringLiteral(" ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
+                   QStringLiteral(" elevation: ") % (m_groundElevation.toQString(i18n)) %
+                   QStringLiteral(" timestamp: ") % (this->hasValidTimestamp() ? this->getFormattedUtcTimestampDhms() : QStringLiteral("-"));
         }
 
         const QString &CAircraftSituation::isOnGroundToString(CAircraftSituation::IsOnGround onGround)
@@ -104,7 +105,7 @@ namespace BlackMisc
             case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexAltitude: return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexHeading: return m_heading.propertyByIndex(index.copyFrontRemoved());
+            case IndexHeading:return m_heading.propertyByIndex(index.copyFrontRemoved());
             case IndexPitch: return m_pitch.propertyByIndex(index.copyFrontRemoved());
             case IndexBank: return m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
@@ -121,11 +122,7 @@ namespace BlackMisc
         void CAircraftSituation::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftSituation>(); return; }
-            if (ITimestampBased::canHandleIndex(index))
-            {
-                ITimestampBased::setPropertyByIndex(index, variant);
-                return;
-            }
+            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -201,6 +198,13 @@ namespace BlackMisc
             return !this->getGroundElevation().isNull();
         }
 
+        void CAircraftSituation::setGroundElevationChecked(const CAltitude &elevation, bool ignoreNullValues, bool overrideExisting)
+        {
+            if (ignoreNullValues && elevation.isNull()) { return; }
+            if (!overrideExisting && this->hasGroundElevation()) { return; }
+            m_groundElevation = elevation;
+        }
+
         CLength CAircraftSituation::getHeightAboveGround() const
         {
             if (this->getAltitude().isNull()) { return { 0, nullptr }; }
@@ -214,20 +218,52 @@ namespace BlackMisc
             return this->getAltitude() - gh;
         }
 
-        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &centerOfGravity) const
+        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &centerOfGravity, bool *corrected) const
         {
-            CAltitude altPlusCG = this->getAltitude();
-            if (!centerOfGravity.isNull()) { altPlusCG += centerOfGravity; }
-            if (this->getGroundElevation().isNull()) { return altPlusCG; }
-            if (this->getAltitude().getReferenceDatum() != CAltitude::MeanSeaLevel) { return altPlusCG; }
-            if (this->getGroundElevation() < this->getAltitude()) { return altPlusCG; }
-            return this->getGroundElevation();
+            if (corrected) { *corrected = false; }
+            if (this->getGroundElevation().isNull()) { return this->getAltitude(); }
+
+            // above ground
+            if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
+            {
+                const CAltitude aboveGround = this->getAltitude().withOffset(centerOfGravity);
+                const bool c = !aboveGround.isPositiveWithEpsilonConsidered();
+                if (corrected) { *corrected = c; }
+                return c ?
+                       CAltitude(0, CAltitude::AboveGround, aboveGround.getUnit()) :
+                       aboveGround;
+            }
+            else
+            {
+                CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
+                const bool c = (this->getAltitude() < groundPlusCG);
+                if (corrected) { *corrected = c; }
+                return c ?
+                       groundPlusCG :
+                       this->getAltitude();
+            }
         }
 
         void CAircraftSituation::setPressureAltitude(const CAltitude &altitude)
         {
             Q_ASSERT(altitude.getAltitudeType() == CAltitude::PressureAltitude);
             m_pressureAltitude = altitude;
+        }
+
+        CLength CAircraftSituation::getDistancePerTime(const CTime &time) const
+        {
+            if (this->getGroundSpeed().isNull()) { return CLength(0, CLengthUnit::nullUnit()); }
+            const int ms = time.valueInteger(CTimeUnit::ms());
+            return this->getDistancePerTime(ms);
+        }
+
+        CLength CAircraftSituation::getDistancePerTime(int milliseconds) const
+        {
+            if (this->getGroundSpeed().isNull()) { return CLength(0, CLengthUnit::nullUnit()); }
+            const double seconds = milliseconds / 1000;
+            const double gsMeterSecond = this->getGroundSpeed().value(CSpeedUnit::m_s());
+            const CLength d(seconds * gsMeterSecond, CLengthUnit::m());
+            return d;
         }
 
         void CAircraftSituation::setCallsign(const CCallsign &callsign)

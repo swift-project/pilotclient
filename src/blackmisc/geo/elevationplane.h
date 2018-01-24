@@ -27,29 +27,32 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexRadius = BlackMisc::CPropertyIndex::GlobalIndexCElevationPlane
+                IndexRadius = CPropertyIndex::GlobalIndexCElevationPlane
             };
 
             //! Default constructor
             CElevationPlane() {}
 
-            //! Constructor
+            //! Constructors from CCoordinateGeodetic
             using CValueObject<CElevationPlane, CCoordinateGeodetic>::CValueObject;
 
             //! Radius
-            const BlackMisc::PhysicalQuantities::CLength &getRadius() const { return m_radius; }
+            const PhysicalQuantities::CLength &getRadius() const { return m_radius; }
 
             //! Radius
-            void setRadius(const BlackMisc::PhysicalQuantities::CLength &radius) { m_radius = radius; }
+            void setRadius(const PhysicalQuantities::CLength &radius) { m_radius = radius; }
 
             //! Altitude when within radius, else null
             const Aviation::CAltitude &getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const;
+
+            //! Altitude (synonym for geodetic height)
+            const Aviation::CAltitude &getAltitude() const { return this->geodeticHeight(); }
 
             //! Existing value
             bool isNull() const;
 
             //! Check if elevation is within radius and can be used
-            bool isWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
+            bool isWithinRange(const ICoordinateGeodetic &coordinate) const;
 
             //! Treat as single point as obtained from simulator
             void setSinglePointRadius();
@@ -61,25 +64,25 @@ namespace BlackMisc
             void setMajorAirportRadius();
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! Radius for single point
-            static const BlackMisc::PhysicalQuantities::CLength &singlePointRadius();
+            static const PhysicalQuantities::CLength &singlePointRadius();
 
             //! Radius for minor airport
-            static const BlackMisc::PhysicalQuantities::CLength &minorAirportRadius();
+            static const PhysicalQuantities::CLength &minorAirportRadius();
 
             //! Radius for major airport
-            static const BlackMisc::PhysicalQuantities::CLength &majorAirportRadius();
+            static const PhysicalQuantities::CLength &majorAirportRadius();
 
         private:
-            BlackMisc::PhysicalQuantities::CLength m_radius { 0, nullptr }; //!< elevation is valid in radius
+            PhysicalQuantities::CLength m_radius { 0, nullptr }; //!< elevation is valid in radius
 
             BLACK_METACLASS(
                 CElevationPlane,

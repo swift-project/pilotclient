@@ -38,6 +38,9 @@ namespace BlackMisc
             //! Construct from a base class object.
             CCallsignSet(const CCollection<CCallsign> &other);
 
+            //! Contains by string
+            bool containsCallsign(const QString &callsign) const;
+
             //! The callsign strings
             QStringList getCallsignStrings(bool sorted = false) const;
 

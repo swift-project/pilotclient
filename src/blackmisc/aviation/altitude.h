@@ -100,6 +100,11 @@ namespace BlackMisc
             //! Constructor by CLength
             CAltitude(const PhysicalQuantities::CLength &altitude, ReferenceDatum datum) : CLength(altitude), m_datum(datum) {}
 
+            //! Altitude with offset
+            //! \remark null offset adds nothing
+            //! \remark epsilon 0 (zero) values ignored
+            CAltitude withOffset(const CLength &offset) const;
+
             //! AGL Above ground level?
             bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }
 

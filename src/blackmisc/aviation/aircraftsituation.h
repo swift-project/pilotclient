@@ -23,6 +23,7 @@
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/time.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
@@ -169,6 +170,9 @@ namespace BlackMisc
             //! Elevation of the ground directly beneath
             void setGroundElevation(const CAltitude &elevation) { m_groundElevation = elevation; }
 
+            //! Set elevation of the ground directly beneath, but checked
+            void setGroundElevationChecked(const CAltitude &elevation, bool ignoreNullValues = true, bool overrideExisting = true);
+
             //! Height above ground.
             PhysicalQuantities::CLength getHeightAboveGround() const;
 
@@ -182,7 +186,7 @@ namespace BlackMisc
             const CAltitude &getAltitude() const { return m_position.geodeticHeight(); }
 
             //! Get altitude under consideration of ground elevation
-            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = {}) const;
+            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = {}, bool *corrected = nullptr) const;
 
             //! Set altitude
             void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
@@ -210,6 +214,12 @@ namespace BlackMisc
 
             //! Set ground speed
             void setGroundSpeed(const PhysicalQuantities::CSpeed &groundspeed) { m_groundSpeed = groundspeed; }
+
+            //! Distance per time
+            PhysicalQuantities::CLength getDistancePerTime(const PhysicalQuantities::CTime &time) const;
+
+            //! Distance per milliseconds
+            PhysicalQuantities::CLength getDistancePerTime(int milliseconds) const;
 
             //! Corresponding callsign
             const CCallsign &getCallsign() const { return m_correspondingCallsign; }
@@ -243,7 +253,7 @@ namespace BlackMisc
 
         private:
             CCallsign m_correspondingCallsign;
-            Geo::CCoordinateGeodetic m_position;
+            Geo::CCoordinateGeodetic m_position; // NULL position
             Aviation::CAltitude m_pressureAltitude { 0, nullptr };
             CHeading m_heading;
             PhysicalQuantities::CAngle m_pitch;

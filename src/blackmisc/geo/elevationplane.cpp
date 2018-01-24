@@ -42,7 +42,7 @@ namespace BlackMisc
         {
             if (isNull()) { return false; }
             const CLength d = this->calculateGreatCircleDistance(coordinate);
-            const bool inRange = m_radius >= d;
+            const bool inRange = (m_radius >= d);
             return inRange;
         }
 
@@ -88,9 +88,12 @@ namespace BlackMisc
             }
         }
 
+        // 100km/h 27,8m/s
+        //  50km/h 13,9m/s
+        // 100kts  51,4m/s
         const CLength &CElevationPlane::singlePointRadius()
         {
-            static const CLength l(10.0, CLengthUnit::m());
+            static const CLength l(25.0, CLengthUnit::m());
             return l;
         }
 
