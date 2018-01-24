@@ -27,7 +27,7 @@ namespace BlackMisc
             m_isVtol(isVtolAircraft), m_hasParts(hasParts), m_logInterpolation(log)
         { }
 
-        CAltitude CInterpolationHints::getGroundElevation(const Aviation::CAircraftSituation &situation) const
+        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation) const
         {
             if (m_elevationProvider) { return m_elevationProvider(situation); }
             if (m_elevationPlane.isNull() || !m_elevationPlane.isWithinRange(situation)) { return CAltitude::null(); }

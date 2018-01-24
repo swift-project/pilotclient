@@ -10,6 +10,7 @@
 #include "interpolationrenderingsetup.h"
 #include "stringutils.h"
 
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
@@ -151,7 +152,7 @@ namespace BlackMisc
             m_callsignsToLog.clear();
         }
 
-        BlackMisc::Aviation::CCallsignSet CInterpolationAndRenderingSetup::getLogCallsigns() const
+        CCallsignSet CInterpolationAndRenderingSetup::getLogCallsigns() const
         {
             return m_callsignsToLog;
         }

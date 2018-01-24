@@ -206,9 +206,9 @@ namespace BlackSimPlugin
             return false;
         }
 
-        void CSimulatorFsxCommon::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
+        void CSimulatorFsxCommon::displayStatusMessage(const CStatusMessage &message) const
         {
-            QByteArray m = message.getMessage().toLocal8Bit().constData();
+            QByteArray m = message.getMessage().toLatin1().constData();
             m.append('\0');
 
             SIMCONNECT_TEXT_TYPE type = SIMCONNECT_TEXT_TYPE_PRINT_BLACK;
@@ -224,7 +224,7 @@ namespace BlackSimPlugin
             Q_UNUSED(hr);
         }
 
-        void CSimulatorFsxCommon::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
+        void CSimulatorFsxCommon::displayTextMessage(const CTextMessage &message) const
         {
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
@@ -482,13 +482,14 @@ namespace BlackSimPlugin
                 }
             }
 
+            // CElevationPlane: deg, deg, feet
             CElevationPlane elevation(remoteAircraftData.latitude, remoteAircraftData.longitude, remoteAircraftData.elevation);
             elevation.setSinglePointRadius();
 
             // const QString debug(hints.debugInfo(elevation));
             CInterpolationHints &hints = m_hints[simObject.getCallsign()];
             hints.setElevationPlane(elevation); // update elevation
-            hints.setCGAboveGround({ remoteAircraftData.cgToGround, CLengthUnit::ft() }); // normally never changing, but if user changes ModelMatching
+            hints.setCGAboveGround({ remoteAircraftData.cgToGround, CLengthUnit::ft() }); // normally never changing, but if user changes ModelMatching update possible
 
             // set it in the remote aircraft provider
             this->updateAircraftGroundElevation(simObject.getCallsign(), elevation);
@@ -1165,6 +1166,7 @@ namespace BlackSimPlugin
                     }
                 }
             } // all callsigns
+
             const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;
             m_statsUpdateAircraftTimeTotalMs += dt;
             m_statsUpdateAircraftCountMs++;
@@ -1382,12 +1384,12 @@ namespace BlackSimPlugin
 
             // MSFS has inverted pitch and bank angles
             position.Pitch = -situation.getPitch().value(CAngleUnit::deg());
-            position.Bank = -situation.getBank().value(CAngleUnit::deg());
+            position.Bank  = -situation.getBank().value(CAngleUnit::deg());
             position.OnGround = 0U;
 
             if (situation.isOnGroundInfoAvailable())
             {
-                const bool onGround = situation.isOnGround() == CAircraftSituation::OnGround;
+                const bool onGround = (situation.isOnGround() == CAircraftSituation::OnGround);
                 position.OnGround = onGround ? 1U : 0U;
             }
             return position;
