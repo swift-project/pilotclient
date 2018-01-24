@@ -34,17 +34,14 @@ using namespace BlackMisc::Audio;
 
 bool SwiftGuiStd::reloadOwnAircraft()
 {
-    if (!this->m_contextNetworkAvailable) { return false; }
+    if (!sApp || sApp->isShuttingDown())  { return false; }
+    if (!sApp->getIContextOwnAircraft() || !sApp->getIContextNetwork()) { return false; }
 
     // check for changed aircraft
-    bool changed = false;
-    CSimulatedAircraft loadedAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
-    if (loadedAircraft != m_ownAircraft)
-    {
-        m_ownAircraft = loadedAircraft;
-        changed = true;
-    }
-    return changed;
+    const CSimulatedAircraft contextAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+    if (contextAircraft == m_ownAircraft) { return false; }
+    m_ownAircraft = contextAircraft;
+    return true;
 }
 
 void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude, const CAltitude &pressureAltitude)
