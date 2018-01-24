@@ -421,6 +421,16 @@ namespace BlackCore
                 CStatusMessage(this).info("Cleared interpolation logging");
                 return true;
             }
+            if (part2.startsWith("max"))
+            {
+                if (!parser.hasPart(3)) { return false; }
+                bool ok;
+                const int max = parser.part(3).toInt(&ok);
+                if (!ok) { return false; }
+                m_interpolationLogger.setMaxSituations(max);
+                CStatusMessage(this).info("Max.situations logged: %1") << max;
+                return true;
+            }
             if (part2 == "write" || part2 == "save")
             {
                 // stop logging of other log
@@ -436,7 +446,7 @@ namespace BlackCore
             }
             if (part2 == "show")
             {
-                QDir dir(CInterpolationLogger::getLogDirectory());
+                const QDir dir(CInterpolationLogger::getLogDirectory());
                 if (dir.exists())
                 {
                     const QUrl dirUrl = QUrl::fromLocalFile(dir.absolutePath());
@@ -463,21 +473,32 @@ namespace BlackCore
                 CLogMessage(this).warning("Cannot log interpolation for '%1', no aircraft in range") << cs;
                 return false;
             }
-        }
+        } // logint
 
         if (part1.startsWith("spline") || part1.startsWith("linear"))
         {
             const CCallsign cs(parser.hasPart(2) ? parser.part(2) : "");
             const bool changed = this->setInterpolatorMode(CInterpolatorMulti::modeFromString(part1), cs);
-            if (changed)
-            {
-                CLogMessage(this).info("Changed interpolation mode");
-            }
-            else
-            {
-                CLogMessage(this).info("Unchanged interpolation mode");
-            }
+            CLogMessage(this).info(changed ?
+                                   "Changed interpolation mode" :
+                                   "Unchanged interpolation mode");
             return true;
+        } // spline/linear
+
+        if (part1.startsWith("pos"))
+        {
+            const QString cs = parser.part(2).toUpper();
+            if (!CCallsign::isValidAircraftCallsign(cs)) { return false; }
+            if (this->getAircraftInRangeCallsigns().contains(cs) && m_interpolationRenderingSetup.getLogCallsigns().containsCallsign(cs))
+            {
+                CAircraftSituation s = m_interpolationLogger.getLastSituation(cs);
+                if (!s.getPosition().isNull())
+                {
+                    this->displayStatusMessage(CStatusMessage(this).info(s.toQString(true)));
+                }
+                return true;
+            }
+            return false;
         }
 
         // driver specific cmd line arguments
@@ -492,7 +513,9 @@ namespace BlackCore
         CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
         CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
         CSimpleCommandParser::registerCommand({".drv logint clear", "clear current log"});
-        CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
+        CSimpleCommandParser::registerCommand({".drv logint max number", "max.number of entries logged"});
+        CSimpleCommandParser::registerCommand({".drv pos callsign", "show position for callsign"});
+        CSimpleCommandParser::registerCommand({".drv spline|linear callsign", "set spline/linear interpolator for one/all callsign(s)"});
     }
 
     void CSimulatorCommon::resetAircraftStatistics()

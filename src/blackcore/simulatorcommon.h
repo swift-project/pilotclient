@@ -97,6 +97,7 @@ namespace BlackCore
         //! .drv logint off                no log information for interpolator     BlackCore::CSimulatorCommon
         //! .drv logint write              write interpolator log to file          BlackCore::CSimulatorCommon
         //! .drv logint clear              clear current log                       BlackCore::CSimulatorCommon
+        //! .drv pos callsign              shows current position in simulator
         //! .drv spline|linear callsign    interpolator spline or linear           BlackCore::CSimulatorCommon
         //! </pre>
         //! @}
