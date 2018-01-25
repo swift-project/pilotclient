@@ -95,6 +95,10 @@ namespace BlackMisc
             //! Geodetic height null?
             bool isGeodeticHeightNull() const { return this->geodeticHeight().isNull(); }
 
+            //! Is null, means vector x, y, z == 0
+            //! \remark this is a default implementation, concrete implementations of ICoordinateGeodetic might override it
+            virtual bool isNull() const { return this->normalVector().isNull(); }
+
             //! Great circle distance
             PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
 
@@ -256,7 +260,7 @@ namespace BlackMisc
             void setNull() { this->setNormalVector(0, 0, 0); }
 
             //! Is null?
-            bool isNull() const { return m_x == 0 && m_y == 0 && m_z == 0; }
+            virtual bool isNull() const override { return m_x == 0 && m_y == 0 && m_z == 0; }
 
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const Aviation::CAltitude &geodeticHeight = {});

@@ -24,8 +24,7 @@ namespace BlackMisc
             return s.arg(this->latitude().valueRoundedWithUnit(6, i18n),
                          this->longitude().valueRoundedWithUnit(6, i18n),
                          this->geodeticHeight().valueRoundedWithUnit(6, i18n),
-                         m_radius.valueRoundedWithUnit(2, i18n)
-                        );
+                         m_radius.valueRoundedWithUnit(2, i18n));
         }
 
         const CAltitude &CElevationPlane::getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const
@@ -40,6 +39,7 @@ namespace BlackMisc
 
         bool CElevationPlane::isWithinRange(const ICoordinateGeodetic &coordinate) const
         {
+            if (coordinate.isNull()) { return false; }
             if (isNull()) { return false; }
             const CLength d = this->calculateGreatCircleDistance(coordinate);
             const bool inRange = (m_radius >= d);
