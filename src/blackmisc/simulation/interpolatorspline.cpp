@@ -90,7 +90,8 @@ namespace BlackMisc
         }
 
         CInterpolatorSpline::Interpolant CInterpolatorSpline::getInterpolant(qint64 currentTimeMsSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log)
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status,
+                CInterpolationLogger::SituationLog &log)
         {
             Q_UNUSED(hints);
             Q_UNUSED(setup);
@@ -114,10 +115,13 @@ namespace BlackMisc
 
                 std::array<CAircraftSituation, 3> s {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
 
-                // altitude unit must be the same for all three, but does not matter
-                // ground elevantion here normally is not available
-                // 100km/h => 1sec 27,7m => 5 secs 136m
-                // only use elevation plane here, do not call provider
+                // - altitude unit must be the same for all three, but the unit itself does not matter
+                // - ground elevantion here normally is not available
+                // - only use elevation plane here, do not call provider
+                // - some info how has a plane moves: 100km/h => 1sec 27,7m => 5 secs 136m
+                // - on an airport the plane does not move very fast, or not at all
+                // - and the elevation remains (almost) constant for a wider area
+                // - flying the ground elevation not really matters
                 if (!hints.getElevationPlane().isNull())
                 {
                     const CAltitude groundElevation = hints.getElevationPlane().getAltitude();

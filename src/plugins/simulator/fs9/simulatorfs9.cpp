@@ -214,7 +214,6 @@ namespace BlackSimPlugin
                 if (physicallyRemoveRemoteAircraft(cs)) { r++; }
             }
             return r;
-
         }
 
         CCallsignSet CSimulatorFs9::physicallyRenderedAircraft() const

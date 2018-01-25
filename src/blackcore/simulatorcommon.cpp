@@ -47,9 +47,9 @@ using namespace BlackCore::Db;
 namespace BlackCore
 {
     CSimulatorCommon::CSimulatorCommon(const CSimulatorPluginInfo &info,
-                                       BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
-                                       BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                       IWeatherGridProvider                           *weatherGridProvider,
+                                       IOwnAircraftProvider    *ownAircraftProvider,
+                                       IRemoteAircraftProvider *remoteAircraftProvider,
+                                       IWeatherGridProvider    *weatherGridProvider,
                                        QObject *parent)
         : ISimulator(parent),
           COwnAircraftAware(ownAircraftProvider),
@@ -245,7 +245,7 @@ namespace BlackCore
         {
             if (CDatabaseUtils::hasDbAircraftData())
             {
-                const CAircraftModel newModel = reverseLookupModel(model);
+                const CAircraftModel newModel = this->reverseLookupModel(model);
                 const bool updated = this->updateOwnModel(newModel); // update in provider (normally the context)
                 if (updated)
                 {
@@ -350,7 +350,7 @@ namespace BlackCore
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
 
-        emit renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
+        emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
     }
 
     CInterpolationAndRenderingSetup CSimulatorCommon::getInterpolationAndRenderingSetup() const

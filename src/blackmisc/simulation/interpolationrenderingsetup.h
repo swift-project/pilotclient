@@ -33,7 +33,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexInterpolatorDebugMessages = BlackMisc::CPropertyIndex::GlobalIndexCInterpolatioRenderingSetup,
+                IndexInterpolatorDebugMessages = CPropertyIndex::GlobalIndexCInterpolatioRenderingSetup,
                 IndexSimulatorDebugMessages,
                 IndexForceFullInterpolation,
                 IndexMaxRenderedAircraft,
@@ -66,7 +66,7 @@ namespace BlackMisc
             bool setMaxRenderedAircraft(int maxRenderedAircraft);
 
             //! Max. distance for rendering
-            bool setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
+            bool setMaxRenderedDistance(const PhysicalQuantities::CLength &distance);
 
             //! Set enabled aircraft parts
             bool setEnabledAircraftParts(bool enabled);
@@ -84,7 +84,7 @@ namespace BlackMisc
             bool isAircraftPartsEnabled() const;
 
             //! Max.distance for rendering
-            BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const { return m_maxRenderedDistance; }
+            PhysicalQuantities::CLength getMaxRenderedDistance() const { return m_maxRenderedDistance; }
 
             //! Restricted by distance?
             bool isMaxDistanceRestricted() const;
@@ -102,10 +102,10 @@ namespace BlackMisc
             QString getRenderRestrictionText() const;
 
             //! Add a callsign which will be logged
-            void addCallsignToLog(const BlackMisc::Aviation::CCallsign &callsign);
+            void addCallsignToLog(const Aviation::CCallsign &callsign);
 
             //! Remove a callsign from logging
-            void removeCallsignFromLog(const BlackMisc::Aviation::CCallsign &callsign);
+            void removeCallsignFromLog(const Aviation::CCallsign &callsign);
 
             //! Clear all interpolator log callsigns
             void clearInterpolatorLogCallsigns();
@@ -114,16 +114,16 @@ namespace BlackMisc
             BlackMisc::Aviation::CCallsignSet getLogCallsigns() const;
 
             //! Log the given callsign?
-            bool logCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            bool logCallsign(const Aviation::CCallsign &callsign) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
         private:
             bool m_interpolatorDebugMessage = false; //! Debug messages in interpolator
@@ -131,8 +131,8 @@ namespace BlackMisc
             bool m_forceFullInterpolation   = false; //! always do a full interpolation, even if aircraft is not moving
             bool m_enabledAircraftParts     = true;  //! Update aircraft parts
             int  m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
-            BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0, nullptr }; //!< max.distance for rendering
-            BlackMisc::Aviation::CCallsignSet m_callsignsToLog;
+            PhysicalQuantities::CLength m_maxRenderedDistance { 0, nullptr }; //!< max.distance for rendering
+            Aviation::CCallsignSet m_callsignsToLog;
 
             BLACK_METACLASS(
                 CInterpolationAndRenderingSetup,

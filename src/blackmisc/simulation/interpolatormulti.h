@@ -93,6 +93,7 @@ namespace BlackMisc
             //! only in a dev.environment, otherwise replaced by low footprint dummy driver
             CInterpolatorLinear m_linear;
 #else
+            //! Low footprint dummy interpolator in non-debug compile
             CInterpolatorDummy m_linear;
 #endif
         };
