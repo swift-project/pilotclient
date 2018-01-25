@@ -69,7 +69,7 @@ namespace BlackMisc
             // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
             // * As XP uses lazy init we will call getGroundElevation only when needed
             // * default here via getElevationPlane
-            CAltitude currentGroundElevation(hints.getElevationPlane().getAltitudeIfWithinRadius(currentSituation));
+            CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, false, false));
             currentSituation.setGroundElevationChecked(currentGroundElevation); // set as default
 
             // data, split situations by time
@@ -109,7 +109,12 @@ namespace BlackMisc
                 log.groundFactor = groundFactor;
                 if (groundFactor > 0.0)
                 {
-                    currentGroundElevation = hints.getGroundElevation(currentSituation); // "expensive on XPlane"
+                    // if not having an ground elevation yet, we fetch from provider
+                    if (!currentGroundElevation.isNull())
+                    {
+                        currentGroundElevation = hints.getGroundElevation(currentSituation, true); // "expensive on XPlane" if provider is called
+                    }
+
                     if (!currentGroundElevation.isNull())
                     {
                         Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
@@ -322,7 +327,7 @@ namespace BlackMisc
         void CInterpolator<Derived>::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation, bool override)
         {
             if (!override && situation.hasGroundElevation()) { return; }
-            const CAltitude elevation = hints.getGroundElevation(situation);
+            const CAltitude elevation = hints.getGroundElevation(situation, false);
             if (elevation.isNull()) { return; }
             situation.setGroundElevation(elevation);
         }

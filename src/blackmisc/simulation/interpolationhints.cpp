@@ -27,11 +27,13 @@ namespace BlackMisc
             m_isVtol(isVtolAircraft), m_hasParts(hasParts), m_logInterpolation(log)
         { }
 
-        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation) const
+        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, bool useProvider, bool forceProvider) const
         {
-            if (m_elevationProvider) { return m_elevationProvider(situation); }
-            if (m_elevationPlane.isNull() || !m_elevationPlane.isWithinRange(situation)) { return CAltitude::null(); }
-            return m_elevationPlane.geodeticHeight();
+            const bool validPlane = m_elevationPlane.isWithinRange(situation);
+            Q_ASSERT_X(!(forceProvider && !useProvider), Q_FUNC_INFO, "Invalid parameter combination");
+            if (forceProvider && useProvider && m_elevationProvider) { return m_elevationProvider(situation); }
+            if (!validPlane   && useProvider && m_elevationProvider) { return m_elevationProvider(situation); }
+            return validPlane ? this->m_elevationPlane.getAltitude() : CAltitude::null();
         }
 
         void CInterpolationHints::resetElevationPlane()

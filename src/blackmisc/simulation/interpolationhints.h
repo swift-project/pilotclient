@@ -56,9 +56,12 @@ namespace BlackMisc
 
             //! Get elevation from CInterpolationHints::getElevationProvider or CInterpolationHints::getElevation
             //! \remark avoid unnecessary calls on XPlane (calling elevation provider)
+            //! @param situation
+            //! @param useProvider using the provider if available
+            //! @param forceProvider use the provider and ignore any plane
             //! \see setElevationProvider
             //! \see setElevationPlane
-            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation) const;
+            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, bool useProvider, bool forceProvider = false) const;
 
             //! Check if elevation is within radius and can be used
             bool isWithinRange(const Geo::ICoordinateGeodetic &coordinate) const;
