@@ -148,6 +148,18 @@ namespace BlackMisc
                 m_logger->logInterpolation(log);
             }
 
+            // we transfer ground elevation for future usage
+            if (currentSituation.hasGroundElevation())
+            {
+                CElevationPlane ep(currentSituation);
+                ep.setSinglePointRadius();
+
+                // transfer to newer situations
+                const int transfered = m_aircraftSituations.setGroundElevationChecked(ep, currentSituation.getMSecsSinceEpoch());
+                Q_UNUSED(transfered); // for debugging
+            }
+
+            // bye
             return currentSituation;
         }
 
