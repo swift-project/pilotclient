@@ -107,6 +107,17 @@ namespace BlackCore
         //! it will physically added to the simulator.
         virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+        //! Removes and adds again the aircraft
+        //! \sa logicallyRemoveRemoteAircraft
+        //! \sa logicallyAddRemoteAircraft
+        virtual bool logicallyReAddRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        //! Find the unrendered enabled aircraft
+        virtual BlackMisc::Aviation::CCallsignSet unrenderedEnabledAircraft() const = 0;
+
+        //! Find the rendered disabled aircraft
+        virtual BlackMisc::Aviation::CCallsignSet renderedDisabledAircraft() const = 0;
+
         //! Change remote aircraft per property
         virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) = 0;
 

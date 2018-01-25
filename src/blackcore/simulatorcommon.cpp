@@ -27,6 +27,7 @@
 
 #include <QDateTime>
 #include <QString>
+#include <QStringBuilder>
 #include <QThread>
 #include <QDir>
 #include <QUrl>
@@ -161,16 +162,7 @@ namespace BlackCore
         }
         else
         {
-            // restore
-            for (const CSimulatedAircraft &aircraft : as_const(m_highlightedAircraft))
-            {
-                // get the current state for this aircraft
-                // it might has been removed in the meantime
-                const CCallsign cs(aircraft.getCallsign());
-                this->resetAircraftFromProvider(cs);
-            }
-            m_highlightedAircraft.clear();
-            m_highlightEndTimeMsEpoch = 0;
+            this->stopHighlighting();
         }
     }
 
@@ -339,6 +331,45 @@ namespace BlackCore
         return (!sApp || sApp->isShuttingDown());
     }
 
+    bool CSimulatorCommon::logicallyReAddRemoteAircraft(const CCallsign &callsign)
+    {
+        if (this->isShuttingDown()) { return false; }
+        if (callsign.isEmpty()) { return false; }
+        this->stopHighlighting();
+        this->logicallyRemoveRemoteAircraft(callsign);
+        if (!this->isAircraftInRange(callsign)) { return false; }
+        QTimer::singleShot(2500, this, [ = ]
+        {
+            if (this->isShuttingDown()) { return; }
+            if (!this->isAircraftInRange(callsign)) { return; }
+            const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
+            if (aircraft.isEnabled() && aircraft.hasModelString())
+            {
+                this->logicallyAddRemoteAircraft(aircraft);
+            }
+        });
+        return true;
+    }
+
+    CCallsignSet CSimulatorCommon::unrenderedEnabledAircraft() const
+    {
+        const CSimulatedAircraftList aircraft = this->getAircraftInRange().findByEnabled(true);
+        if (aircraft.isEmpty()) { return CCallsignSet(); }
+        CCallsignSet enabledOnes = aircraft.getCallsigns();
+        const CCallsignSet renderedOnes = this->physicallyRenderedAircraft();
+        enabledOnes.remove(renderedOnes);
+        return enabledOnes;
+    }
+
+    CCallsignSet CSimulatorCommon::renderedDisabledAircraft() const
+    {
+        const CSimulatedAircraftList aircraft = this->getAircraftInRange().findByEnabled(false);
+        if (aircraft.isEmpty()) { return CCallsignSet(); }
+        const CCallsignSet disabledOnes = aircraft.getCallsigns();
+        const CCallsignSet renderedOnes = this->physicallyRenderedAircraft();
+        return renderedOnes.intersection(disabledOnes);
+    }
+
     void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
     {
         {
@@ -373,6 +404,8 @@ namespace BlackCore
 
     int CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
     {
+        if (callsigns.isEmpty()) { return 0; }
+        this->stopHighlighting();
         int removed = 0;
         for (const CCallsign &callsign : callsigns)
         {
@@ -501,6 +534,42 @@ namespace BlackCore
             return false;
         }
 
+        if (parser.hasPart(2) && (part1.startsWith("aircraft") || part1.startsWith("ac")))
+        {
+            const QString part2 = parser.part(2).toLower();
+            if (parser.hasPart(3) && (part2.startsWith("readd") || part2.startsWith("re-add")))
+            {
+                const QString cs = parser.part(3).toUpper();
+                if (cs == "all")
+                {
+                    this->physicallyRemoveAllRemoteAircraft();
+                    const CStatusMessageList msgs = this->debugVerifyStateAfterAllAircraftRemoved();
+                    this->clearAllRemoteAircraftData();
+                    if (!msgs.isEmpty()) { emit this->driverMessages(msgs); }
+                    const CSimulatedAircraftList aircraft = this->getAircraftInRange();
+                    for (const CSimulatedAircraft a : aircraft)
+                    {
+                        if (a.isEnabled()) { this->logicallyAddRemoteAircraft(a); }
+                    }
+                }
+                else if (CCallsign::isValidAircraftCallsign(cs))
+                {
+                    this->logicallyReAddRemoteAircraft(cs);
+                    return true;
+                }
+                return false;
+            }
+            if (parser.hasPart(3) && (part2.startsWith("rm") || part2.startsWith("remove")))
+            {
+                const QString cs = parser.part(3).toUpper();
+                if (CCallsign::isValidAircraftCallsign(cs))
+                {
+                    this->logicallyRemoveRemoteAircraft(cs);
+                }
+            }
+            return false;
+        }
+
         // driver specific cmd line arguments
         return this->parseDetails(parser);
     }
@@ -516,10 +585,16 @@ namespace BlackCore
         CSimpleCommandParser::registerCommand({".drv logint max number", "max.number of entries logged"});
         CSimpleCommandParser::registerCommand({".drv pos callsign", "show position for callsign"});
         CSimpleCommandParser::registerCommand({".drv spline|linear callsign", "set spline/linear interpolator for one/all callsign(s)"});
+        CSimpleCommandParser::registerCommand({".drv aircraft readd callsign", "add again a given callsign"});
+        CSimpleCommandParser::registerCommand({".drv aircraft readd all", "add again all aircraft"});
+        CSimpleCommandParser::registerCommand({".drv aircraft rm callsign", "remove a given callsign"});
     }
 
     void CSimulatorCommon::resetAircraftStatistics()
     {
+        m_statsUpdateAircraftCountMs = 0;
+        m_statsUpdateAircraftTimeAvgMs = 0;
+        m_statsUpdateAircraftTimeTotalMs = 0;
         m_statsPhysicallyAddedAircraft = 0;
         m_statsPhysicallyRemovedAircraft = 0;
         m_statsPartsAdded = 0;
@@ -610,20 +685,38 @@ namespace BlackCore
 
     void CSimulatorCommon::reset()
     {
-        m_statsUpdateAircraftCountMs = 0;
-        m_statsUpdateAircraftTimeAvgMs = 0;
-        m_statsUpdateAircraftTimeTotalMs = 0;
+        this->clearAllRemoteAircraftData();
+    }
+
+    void CSimulatorCommon::resetHighlighting()
+    {
+        m_highlightedAircraft.clear();
         m_blinkCycle = false;
         m_highlightEndTimeMsEpoch = false;
-        this->clearAllRemoteAircraftData();
+    }
+
+    void CSimulatorCommon::stopHighlighting()
+    {
+        // restore
+        const CSimulatedAircraftList highlightedAircraft(m_highlightedAircraft);
+        for (const CSimulatedAircraft &aircraft : highlightedAircraft)
+        {
+            // get the current state for this aircraft
+            // it might has been removed in the meantime
+            const CCallsign cs(aircraft.getCallsign());
+            this->resetAircraftFromProvider(cs);
+        }
+        this->resetHighlighting();
     }
 
     void CSimulatorCommon::clearAllRemoteAircraftData()
     {
+        // rendering related stuff
         m_addAgainAircraftWhenRemoved.clear();
-        m_highlightedAircraft.clear();
         m_callsignsToBeRendered.clear();
         m_hints.clear();
+
+        this->resetHighlighting();
         this->resetAircraftStatistics();
     }
 

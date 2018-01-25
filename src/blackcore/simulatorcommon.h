@@ -84,6 +84,9 @@ namespace BlackCore
         virtual void setWeatherActivated(bool activated) override;
         virtual void unload() override;
         virtual bool isShuttingDown() const override;
+        virtual bool logicallyReAddRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual BlackMisc::Aviation::CCallsignSet unrenderedEnabledAircraft() const override;
+        virtual BlackMisc::Aviation::CCallsignSet renderedDisabledAircraft() const override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
         virtual void clearAllRemoteAircraftData() override;
@@ -97,8 +100,11 @@ namespace BlackCore
         //! .drv logint off                no log information for interpolator     BlackCore::CSimulatorCommon
         //! .drv logint write              write interpolator log to file          BlackCore::CSimulatorCommon
         //! .drv logint clear              clear current log                       BlackCore::CSimulatorCommon
-        //! .drv pos callsign              shows current position in simulator
+        //! .drv pos callsign              shows current position in simulator     BlackCore::CSimulatorCommon
         //! .drv spline|linear callsign    interpolator spline or linear           BlackCore::CSimulatorCommon
+        //! .drv aircraft readd callsign   re-add (add again) aircraft             BlackCore::CSimulatorCommon
+        //! .drv aircraft readd all        re-add all aircraft                     BlackCore::CSimulatorCommon
+        //! .drv aircraft rm callsign      remove aircraft                         BlackCore::CSimulatorCommon
         //! </pre>
         //! @}
         //! \copydoc ISimulator::parseCommandLine
@@ -168,6 +174,12 @@ namespace BlackCore
         //! \sa ISimulator::clearAllRemoteAircraftData
         virtual void reset();
 
+        //! Reset highlighting
+        void resetHighlighting();
+
+        //! Restore all highlighted aircraft
+        void stopHighlighting();
+
         //! Inject weather grid to simulator
         virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) { Q_UNUSED(weatherGrid); }
 
@@ -210,8 +222,8 @@ namespace BlackCore
         //! Kill timer if id is valid
         void safeKillTimer();
 
-        bool m_pausedSimFreezesInterpolation = false;                      //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        bool m_autoCalcAirportDistance = true;                             //!< automatically calculate airport distance and bearing
+        bool   m_pausedSimFreezesInterpolation = false;                    //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        bool   m_autoCalcAirportDistance = true;                           //!< automatically calculate airport distance and bearing
         int    m_timerId = -1;                                             //!< dispatch timer id
         int    m_statsUpdateAircraftCountMs = 0;                           //!< statistics update count
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;                       //!< statistics update time

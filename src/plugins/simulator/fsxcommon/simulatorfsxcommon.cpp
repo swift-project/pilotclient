@@ -968,6 +968,7 @@ namespace BlackSimPlugin
         {
             // make sure they are not added again
             // cleaning here is somewhat redundant, but double checks
+            this->resetHighlighting();
             m_addPendingAircraft.clear();
             m_addAgainAircraftWhenRemoved.clear();
 
@@ -978,7 +979,6 @@ namespace BlackSimPlugin
             {
                 if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
             }
-            this->clearAllRemoteAircraftData();
             return r;
         }
 

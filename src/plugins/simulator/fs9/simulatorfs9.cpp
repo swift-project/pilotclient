@@ -206,6 +206,7 @@ namespace BlackSimPlugin
 
         int CSimulatorFs9::physicallyRemoveAllRemoteAircraft()
         {
+            resetHighlighting();
             if (m_hashFs9Clients.isEmpty()) { return 0; }
             QList<CCallsign> callsigns(m_hashFs9Clients.keys());
             int r = 0;

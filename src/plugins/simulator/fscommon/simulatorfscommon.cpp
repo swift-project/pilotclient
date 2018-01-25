@@ -137,15 +137,9 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
-            if (aircraft.isEnabled())
-            {
-                this->physicallyAddRemoteAircraft(aircraft);
-            }
-            else
-            {
-                this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
-            }
-            return true;
+            return aircraft.isEnabled() ?
+                   this->physicallyAddRemoteAircraft(aircraft) :
+                   this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
         }
 
         void CSimulatorFsCommon::onSwiftDbAirportsRead()

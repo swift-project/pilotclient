@@ -577,6 +577,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
             //! \todo XP driver obtain number of removed aircraft
+            resetHighlighting();
             int r = getAircraftInRangeCount();
             m_traffic->removeAllPlanes();
             updateMarkAllAsNotRendered();
