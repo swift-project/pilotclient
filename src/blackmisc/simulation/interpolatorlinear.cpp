@@ -35,6 +35,18 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        CInterpolatorLinear::Interpolant::Interpolant(const CAircraftSituation &situation) :
+            m_situationsAvailable(1), m_oldSituation(situation),
+            m_pbh(0, situation, situation)
+        {}
+
+        CInterpolatorLinear::Interpolant::Interpolant(const CAircraftSituation &situation1, const CAircraftSituation &situation2, double timeFraction) :
+            m_situationsAvailable(2),
+            m_oldSituation(situation1), m_newSituation(situation2),
+            m_simulationTimeFraction(timeFraction),
+            m_pbh(m_simulationTimeFraction, situation1, situation2)
+        {}
+
         CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(qint64 currentTimeMsSinceEpoc,
                 const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log) const
         {

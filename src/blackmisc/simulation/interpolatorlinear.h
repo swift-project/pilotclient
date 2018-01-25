@@ -43,10 +43,8 @@ namespace BlackMisc
             public:
                 //! Constructor
                 //! @{
-                Interpolant(const Aviation::CAircraftSituation &situation) :
-                    m_situationsAvailable(1), m_oldSituation(situation) {}
-                Interpolant(const Aviation::CAircraftSituation &situation1, const Aviation::CAircraftSituation &situation2, double time) :
-                    m_situationsAvailable(2), m_oldSituation(situation1), m_newSituation(situation2), m_simulationTimeFraction(time) {}
+                Interpolant(const Aviation::CAircraftSituation &situation);
+                Interpolant(const Aviation::CAircraftSituation &situation1, const Aviation::CAircraftSituation &situation2, double timeFraction);
                 //! @}
 
                 //! Perform the interpolation
@@ -56,13 +54,14 @@ namespace BlackMisc
                 //! @}
 
                 //! Interpolator for pitch, bank, heading, groundspeed
-                CInterpolatorPbh pbh() const { return { m_simulationTimeFraction, m_oldSituation, m_newSituation }; }
+                const CInterpolatorPbh &pbh() const { return m_pbh; }
 
             private:
                 int m_situationsAvailable = 0;
                 Aviation::CAircraftSituation m_oldSituation;
                 Aviation::CAircraftSituation m_newSituation;
                 double m_simulationTimeFraction = 0.0;
+                const CInterpolatorPbh m_pbh;
             };
 
             //! Get the interpolant for the given time point

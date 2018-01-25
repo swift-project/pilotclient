@@ -110,7 +110,7 @@ namespace BlackMisc
 
                 if (situationsNewer.isEmpty() || situationsOlder.size() < 2)
                 {
-                    return { *this, 0 };
+                    return m_interpolant;
                 }
 
                 std::array<CAircraftSituation, 3> s {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
@@ -125,9 +125,11 @@ namespace BlackMisc
                 if (!hints.getElevationPlane().isNull())
                 {
                     const CAltitude groundElevation = hints.getElevationPlane().getAltitude();
-                    s[0].setGroundElevation(groundElevation);
-                    s[1].setGroundElevation(groundElevation);
-                    s[2].setGroundElevation(groundElevation);
+
+                    // do not override existing values
+                    s[0].setGroundElevationChecked(groundElevation);
+                    s[1].setGroundElevationChecked(groundElevation);
+                    s[2].setGroundElevationChecked(groundElevation);
                 }
 
                 const double a0 = s[0].getCorrectedAltitude(hints.getCGAboveGround()).value();
@@ -135,36 +137,36 @@ namespace BlackMisc
                 const double a2 = s[2].getCorrectedAltitude(hints.getCGAboveGround()).value();
 
                 const std::array<std::array<double, 3>, 3> normals {{ s[0].getPosition().normalVectorDouble(), s[1].getPosition().normalVectorDouble(), s[2].getPosition().normalVectorDouble() }};
-                x = {{ normals[0][0], normals[1][0], normals[2][0] }};
-                y = {{ normals[0][1], normals[1][1], normals[2][1] }};
-                z = {{ normals[0][2], normals[1][2], normals[2][2] }};
-                a = {{ a0, a1, a2 }};
-                t = {{ static_cast<double>(s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[2].getAdjustedMSecsSinceEpoch()) }};
+                PosArray pa;
+                pa.x = {{ normals[0][0], normals[1][0], normals[2][0] }};
+                pa.y = {{ normals[0][1], normals[1][1], normals[2][1] }};
+                pa.z = {{ normals[0][2], normals[1][2], normals[2][2] }};
+                pa.a = {{ a0, a1, a2 }};
+                pa.t = {{ static_cast<double>(s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[2].getAdjustedMSecsSinceEpoch()) }};
 
-                dx = getDerivatives(t, x);
-                dy = getDerivatives(t, y);
-                dz = getDerivatives(t, z);
-                da = getDerivatives(t, a);
+                pa.dx = getDerivatives(pa.t, pa.x);
+                pa.dy = getDerivatives(pa.t, pa.y);
+                pa.dz = getDerivatives(pa.t, pa.z);
+                pa.da = getDerivatives(pa.t, pa.a);
 
                 m_prevSampleTime = situationsOlder.begin()->getAdjustedMSecsSinceEpoch();
                 m_nextSampleTime = (situationsNewer.end() - 1)->getAdjustedMSecsSinceEpoch();
-                m_altitudeUnit = situationsOlder.begin()->getAltitude().getUnit();
-                m_pbh = { *situationsOlder.begin(), *(situationsNewer.end() - 1) };
+                m_interpolant = Interpolant(pa, situationsOlder.begin()->getAltitude().getUnit(), { *situationsOlder.begin(), *(situationsNewer.end() - 1) });
             }
-            log.interpolator = 's';
-            log.oldSituation = m_pbh.getOldSituation();
-            log.newSituation = m_pbh.getNewSituation();
 
-            status.setInterpolated(true);
             const double dt1 = static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleTime);
             const double dt2 = static_cast<double>(m_nextSampleTime - m_prevSampleTime);
             const double timeFraction = dt1 / dt2;
+            log.interpolator = 's';
+            log.oldSituation = m_interpolant.pbh().getOldSituation();
+            log.newSituation = m_interpolant.pbh().getNewSituation();
             log.deltaTimeMs = dt1;
             log.deltaTimeFractionMs = dt2;
             log.simulationTimeFraction = timeFraction;
-            m_pbh.setTimeFraction(timeFraction);
 
-            return { *this, currentTimeMsSinceEpoc };
+            status.setInterpolated(true);
+            m_interpolant.setTimes(currentTimeMsSinceEpoc, timeFraction);
+            return m_interpolant;
         }
 
         CCoordinateGeodetic CInterpolatorSpline::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const
@@ -172,9 +174,9 @@ namespace BlackMisc
             Q_UNUSED(setup);
             Q_UNUSED(hints);
 
-            const double newX = evalSplineInterval(currentTimeMsSinceEpoc, i.t[1], i.t[2], i.x[1], i.x[2], i.dx[1], i.dx[2]);
-            const double newY = evalSplineInterval(currentTimeMsSinceEpoc, i.t[1], i.t[2], i.y[1], i.y[2], i.dy[1], i.dy[2]);
-            const double newZ = evalSplineInterval(currentTimeMsSinceEpoc, i.t[1], i.t[2], i.z[1], i.z[2], i.dz[1], i.dz[2]);
+            const double newX = evalSplineInterval(m_currentTimeMsSinceEpoc, m_pa.t[1], m_pa.t[2], m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
+            const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, m_pa.t[1], m_pa.t[2], m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
+            const double newZ = evalSplineInterval(m_currentTimeMsSinceEpoc, m_pa.t[1], m_pa.t[2], m_pa.z[1], m_pa.z[2], m_pa.dz[1], m_pa.dz[2]);
 
             CCoordinateGeodetic currentPosition;
             currentPosition.setNormalVector(newX, newY, newZ);
@@ -186,9 +188,36 @@ namespace BlackMisc
             Q_UNUSED(setup);
             Q_UNUSED(hints);
 
-            const double newA = evalSplineInterval(currentTimeMsSinceEpoc, i.t[1], i.t[2], i.a[1], i.a[2], i.da[1], i.da[2]);
-
-            return CAltitude(newA, i.m_altitudeUnit);
+            const double newA = evalSplineInterval(m_currentTimeMsSinceEpoc, m_pa.t[1], m_pa.t[2], m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
+            return CAltitude(newA, m_altitudeUnit);
         }
-    }
-}
+
+        void CInterpolatorSpline::Interpolant::setTimes(qint64 currentTimeMs, double timeFraction)
+        {
+            m_currentTimeMsSinceEpoc = currentTimeMs;
+            m_pbh.setTimeFraction(timeFraction);
+        }
+
+        void CInterpolatorSpline::PosArray::initToZero()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                x[i] = 0; y[i] = 0; z[i] = 0;
+                a[i] = 0; t[i] = 0;
+                dx[i] = 0; dy[i] = 0; dz[i] = 0;
+                da[i] = 0;
+            }
+        }
+
+        const CInterpolatorSpline::PosArray &CInterpolatorSpline::PosArray::zeroPosArray()
+        {
+            static const PosArray pa = []
+            {
+                PosArray p;
+                p.initToZero();
+                return p;
+            }();
+            return pa;
+        }
+    } // ns
+} // ns

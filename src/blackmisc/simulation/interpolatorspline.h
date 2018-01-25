@@ -30,16 +30,36 @@ namespace BlackMisc
 
         public:
             //! Constructor
-            CInterpolatorSpline(const BlackMisc::Aviation::CCallsign &callsign, QObject *parent = nullptr) :
+            CInterpolatorSpline(const Aviation::CCallsign &callsign, QObject *parent = nullptr) :
                 CInterpolator("CInterpolatorSpline", callsign, parent)
             {}
+
+            //! Position arrays for interpolation
+            struct PosArray
+            {
+                //! Init all values to zero
+                void initToZero();
+
+                //! Zero initialized position array
+                static const PosArray &zeroPosArray();
+
+                //! 3 coordinates for spline interpolation
+                //! @{
+                std::array<double, 3> x, y, z, a, t, dx, dy, dz, da;
+                //! @}
+            };
 
             //! Cubic function that performs the actual interpolation
             class Interpolant
             {
             public:
+                //! Default
+                Interpolant() : m_pa(PosArray::zeroPosArray()) {}
+
                 //! Constructor
-                Interpolant(const CInterpolatorSpline &interpolator, qint64 time) : i(interpolator), currentTimeMsSinceEpoc(time) {}
+                Interpolant(
+                    const PosArray &pa, const PhysicalQuantities::CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) :
+                    m_pa(pa), m_altitudeUnit(altitudeUnit), m_pbh(pbh) {}
 
                 //! Perform the interpolation
                 //! @{
@@ -48,26 +68,30 @@ namespace BlackMisc
                 //! @}
 
                 //! Interpolator for pitch, bank, heading, groundspeed
-                CInterpolatorPbh pbh() const { return i.m_pbh; }
+                const CInterpolatorPbh &pbh() const { return m_pbh; }
+
+                //! Set the time values
+                void setTimes(qint64 currentTimeMs, double timeFraction);
 
             private:
-                const CInterpolatorSpline &i;
-                qint64 currentTimeMsSinceEpoc = 0;
+                PosArray m_pa;
+                PhysicalQuantities::CLengthUnit m_altitudeUnit;
+                CInterpolatorPbh m_pbh;
+                qint64 m_currentTimeMsSinceEpoc { 0 };
             };
 
             //! Strategy used by CInterpolator::getInterpolatedSituation
             Interpolant getInterpolant(
-                qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetup &setup,
+                qint64 currentTimeMsSinceEpoc,
+                const CInterpolationAndRenderingSetup &setup,
                 const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log);
 
         private:
             qint64 m_prevSampleTime = 0;
             qint64 m_nextSampleTime = 0;
-            PhysicalQuantities::CLengthUnit m_altitudeUnit;
-            std::array<double, 3> x, y, z, a, t, dx, dy, dz, da;
-            CInterpolatorPbh m_pbh;
+            Interpolant m_interpolant;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif
