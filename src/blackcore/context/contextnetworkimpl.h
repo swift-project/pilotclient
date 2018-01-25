@@ -67,6 +67,7 @@ namespace BlackCore
 {
     class CAirspaceMonitor;
     class CCoreFacade;
+
     namespace Context
     {
         //! Network context implementation
@@ -94,9 +95,9 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
-                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
-                std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)>    addedPartsSlot,
-                std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)> addedPartsSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;

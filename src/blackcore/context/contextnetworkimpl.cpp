@@ -577,7 +577,7 @@ namespace BlackCore
 
         void CContextNetwork::requestDataUpdates()
         {
-            Q_ASSERT(m_network);
+            Q_ASSERT(m_airspace);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!this->isConnected()) { return; }
 
@@ -587,7 +587,7 @@ namespace BlackCore
 
         void CContextNetwork::requestAtisUpdates()
         {
-            Q_ASSERT(m_network);
+            Q_ASSERT(m_airspace);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (!this->isConnected()) { return; }
 
@@ -596,6 +596,7 @@ namespace BlackCore
 
         bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
+            Q_ASSERT(m_airspace);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRendering; }
             bool c = m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
             if (c)
@@ -609,6 +610,7 @@ namespace BlackCore
 
         bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
+            Q_ASSERT(m_airspace);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
             bool c = m_airspace->updateAircraftModel(callsign, model, originator);
             if (c)
