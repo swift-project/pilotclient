@@ -14,6 +14,7 @@
 
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
+#include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
@@ -24,6 +25,7 @@
 
 namespace BlackMisc
 {
+    namespace Geo { class CElevationPlane; }
     namespace Aviation
     {
         class CAircraftSituation;
@@ -33,8 +35,7 @@ namespace BlackMisc
             public CSequence<CAircraftSituation>,
             public ITimestampObjectList<CAircraftSituation, CAircraftSituationList>,
             public ICallsignObjectList<CAircraftSituation, CAircraftSituationList>,
-            public BlackMisc::Mixin::MetaType<CAircraftSituationList>
-
+            public Mixin::MetaType<CAircraftSituationList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftSituationList)
@@ -47,6 +48,12 @@ namespace BlackMisc
 
             //! Construct from initializer list.
             CAircraftSituationList(std::initializer_list<CAircraftSituation> il);
+
+            //! Set ground elevation from elevation plane
+            int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, bool ignoreNullValues = true, bool overrideExisting = true);
+
+            //! Set ground elevation from elevation plane
+            int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, qint64 newerThan, bool ignoreNullValues = true, bool overrideExisting = true);
         };
     } // namespace
 } // namespace

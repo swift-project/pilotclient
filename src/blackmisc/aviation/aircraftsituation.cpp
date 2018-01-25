@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
@@ -105,7 +106,7 @@ namespace BlackMisc
             case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexAltitude: return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexHeading:return m_heading.propertyByIndex(index.copyFrontRemoved());
+            case IndexHeading: return m_heading.propertyByIndex(index.copyFrontRemoved());
             case IndexPitch: return m_pitch.propertyByIndex(index.copyFrontRemoved());
             case IndexBank: return m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
@@ -198,11 +199,21 @@ namespace BlackMisc
             return !this->getGroundElevation().isNull();
         }
 
-        void CAircraftSituation::setGroundElevationChecked(const CAltitude &elevation, bool ignoreNullValues, bool overrideExisting)
+        bool CAircraftSituation::setGroundElevationChecked(const CAltitude &elevation, bool ignoreNullValues, bool overrideExisting)
         {
-            if (ignoreNullValues && elevation.isNull()) { return; }
-            if (!overrideExisting && this->hasGroundElevation()) { return; }
+            if (ignoreNullValues && elevation.isNull()) { return false; }
+            if (!overrideExisting && this->hasGroundElevation()) { return false; }
             m_groundElevation = elevation;
+            return true;
+        }
+
+        bool CAircraftSituation::setGroundElevationChecked(const CElevationPlane &elevationPlane, bool ignoreNullValues, bool overrideExisting)
+        {
+            if (ignoreNullValues && elevationPlane.isNull()) { return false; }
+            if (!overrideExisting && this->hasGroundElevation()) { return false; }
+            if (!elevationPlane.isWithinRange(*this)) { return false; }
+            m_groundElevation = elevationPlane.getAltitude();
+            return true;
         }
 
         CLength CAircraftSituation::getHeightAboveGround() const

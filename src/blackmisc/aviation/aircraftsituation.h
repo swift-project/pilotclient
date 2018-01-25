@@ -36,6 +36,7 @@
 
 namespace BlackMisc
 {
+    namespace Geo { class CElevationPlane; }
     namespace Aviation
     {
         //! Value object encapsulating information of an aircraft's situation
@@ -171,7 +172,10 @@ namespace BlackMisc
             void setGroundElevation(const CAltitude &elevation) { m_groundElevation = elevation; }
 
             //! Set elevation of the ground directly beneath, but checked
-            void setGroundElevationChecked(const CAltitude &elevation, bool ignoreNullValues = true, bool overrideExisting = true);
+            bool setGroundElevationChecked(const CAltitude &elevation, bool ignoreNullValues = true, bool overrideExisting = true);
+
+            //! Set elevation of the ground directly beneath, but checked
+            bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, bool ignoreNullValues = true, bool overrideExisting = true);
 
             //! Height above ground.
             PhysicalQuantities::CLength getHeightAboveGround() const;

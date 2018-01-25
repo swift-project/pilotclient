@@ -9,16 +9,17 @@
 
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/geo/elevationplane.h"
 
 #include <tuple>
 
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Geo;
 
 namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAircraftSituationList::CAircraftSituationList()
         { }
 
@@ -30,5 +31,29 @@ namespace BlackMisc
             CSequence<CAircraftSituation>(il)
         { }
 
+        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, bool ignoreNullValues, bool overrideExisting)
+        {
+            if (ignoreNullValues && elevationPlane.isNull()) { return 0; }
+            int c = 0;
+            for (CAircraftSituation &s : *this)
+            {
+                const bool set = s.setGroundElevationChecked(elevationPlane, ignoreNullValues, overrideExisting);
+                if (set) { c++; }
+            }
+            return c;
+        }
+
+        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, qint64 newerThan, bool ignoreNullValues, bool overrideExisting)
+        {
+            if (ignoreNullValues && elevationPlane.isNull()) { return 0; }
+            int c = 0;
+            for (CAircraftSituation &s : *this)
+            {
+                if (s.getMSecsSinceEpoch() <= newerThan) { continue; }
+                const bool set = s.setGroundElevationChecked(elevationPlane, ignoreNullValues, overrideExisting);
+                if (set) { c++; }
+            }
+            return c;
+        }
     } // namespace
 } // namespace
