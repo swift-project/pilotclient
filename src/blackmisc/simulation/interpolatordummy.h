@@ -42,7 +42,7 @@ namespace BlackMisc
 
             //! \copydoc CInterpolator::getInterpolatedParts
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                qint64, const CInterpolationAndRenderingSetup &, CPartsStatus &, bool = false) { return {}; }
+                qint64, const CInterpolationAndRenderingSetup &, CPartsStatus &, bool = false) const { return {}; }
 
             //! \copydoc CInterpolator::addAircraftSituation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &) {}

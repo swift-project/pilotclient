@@ -201,7 +201,7 @@ namespace BlackMisc
 
         template <typename Derived>
         CAircraftParts CInterpolator<Derived>::getInterpolatedParts(qint64 currentTimeMsSinceEpoch,
-                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log)
+                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
         {
             Q_UNUSED(setup);
             partsStatus.reset();
@@ -268,7 +268,7 @@ namespace BlackMisc
         }
 
         template<typename Derived>
-        void CInterpolator<Derived>::logParts(qint64 timestamp, const CAircraftParts &parts, bool empty, bool log)
+        void CInterpolator<Derived>::logParts(qint64 timestamp, const CAircraftParts &parts, bool empty, bool log) const
         {
             if (!log || !m_logger) { return; }
             CInterpolationLogger::PartsLog logInfo;

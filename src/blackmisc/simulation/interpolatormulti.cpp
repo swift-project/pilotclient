@@ -39,7 +39,7 @@ namespace BlackMisc
 
         CAircraftParts CInterpolatorMulti::getInterpolatedParts(
             qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-            CPartsStatus &partsStatus, bool log)
+            CPartsStatus &partsStatus, bool log) const
         {
             switch (m_mode)
             {

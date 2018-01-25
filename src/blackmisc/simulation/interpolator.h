@@ -50,7 +50,7 @@ namespace BlackMisc
 
             //! Parts before given offset time (aka pending parts)
             Aviation::CAircraftParts getInterpolatedParts(
-                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
+                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
 
             //! Add a new aircraft situation
             void addAircraftSituation(const Aviation::CAircraftSituation &situation);
@@ -101,7 +101,7 @@ namespace BlackMisc
             CInterpolationLogger *m_logger = nullptr;
 
             //! Log parts
-            void logParts(qint64 timestamp, const Aviation::CAircraftParts &parts, bool empty, bool log);
+            void logParts(qint64 timestamp, const Aviation::CAircraftParts &parts, bool empty, bool log) const;
 
             Derived *derived() { return static_cast<Derived *>(this); }
             const Derived *derived() const { return static_cast<const Derived *>(this); }
