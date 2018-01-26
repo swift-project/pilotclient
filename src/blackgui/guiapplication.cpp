@@ -247,9 +247,19 @@ namespace BlackGui
         CApplication::exit(retcode);
     }
 
-    void CGuiApplication::highDpiScreenSupport()
+    void CGuiApplication::highDpiScreenSupport(qreal scaleFactor)
     {
-        qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+        if (scaleFactor < 0)
+        {
+            qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+        }
+        else
+        {
+            QApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // DPI support
+            QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); //HiDPI pixmaps
+            const QString sf = QString::number(scaleFactor, 'f', 2);
+            qputenv("QT_SCALE_FACTOR", sf.toLatin1());
+        }
     }
 
     bool CGuiApplication::isUsingHighDpiScreenSupport()

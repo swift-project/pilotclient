@@ -228,7 +228,7 @@ namespace BlackGui
 
         //! Support for high DPI screens
         //! \note Needs to be at the beginning of main
-        static void highDpiScreenSupport();
+        static void highDpiScreenSupport(qreal scaleFactor = -1);
 
         //! Uses the high DPI support?
         static bool isUsingHighDpiScreenSupport();

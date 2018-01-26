@@ -50,10 +50,10 @@
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <item>
+      <item alignment="Qt::AlignTop">
        <widget class="BlackGui::CLoginModeButtons" name="frp_LoginMode"/>
       </item>
-      <item>
+      <item alignment="Qt::AlignTop">
        <widget class="QTabWidget" name="tw_Network">
         <property name="minimumSize">
          <size>
@@ -254,7 +254,7 @@
       <property name="bottomMargin">
        <number>2</number>
       </property>
-      <item>
+      <item alignment="Qt::AlignTop">
        <widget class="BlackGui::Editors::CPilotForm" name="editor_Pilot">
         <property name="minimumSize">
          <size>
@@ -267,7 +267,7 @@
      </layout>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignTop">
     <widget class="QGroupBox" name="gb_OwnAircraft">
      <property name="title">
       <string>Own aircraft</string>
@@ -507,7 +507,7 @@
       <property name="bottomMargin">
        <number>5</number>
       </property>
-      <item>
+      <item alignment="Qt::AlignTop">
        <widget class="QGroupBox" name="gb_CurrentLogin">
         <property name="title">
          <string>Current server and aircraft</string>
