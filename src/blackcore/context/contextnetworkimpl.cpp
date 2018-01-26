@@ -66,7 +66,7 @@ namespace BlackCore
 
             // 1. Init by "network driver"
             m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);
-            connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::fsdConnectionStatusChanged);
+            connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
             connect(m_network, &INetwork::kicked, this, &CContextNetwork::kicked);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::checkForSupervisiorTextMessage);
@@ -396,10 +396,10 @@ namespace BlackCore
             return sApp->getWebDataServices()->getVatsimVoiceServers();
         }
 
-        void CContextNetwork::fsdConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CContextNetwork::onFsdConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to; }
-            auto fromOld = m_currentStatus; // own status cached
+            const INetwork::ConnectionStatus fromOld = m_currentStatus; // own status cached
             m_currentStatus = to;
 
             if (fromOld == INetwork::Disconnecting)
@@ -420,6 +420,12 @@ namespace BlackCore
             if (to == INetwork::Connected)
             {
                 CLogMessage(this).info("Connected, own aircraft %1") << this->ownAircraft().getCallsignAsString();
+
+                if (m_network)
+                {
+                    const CServer server = m_network->getPresetServer();
+                    emit this->connectedServerChanged(server);
+                }
             }
 
             // send as message

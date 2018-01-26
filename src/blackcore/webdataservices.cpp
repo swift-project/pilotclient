@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/application.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/airportdatareader.h"
 #include "blackcore/db/infodatareader.h"
@@ -15,12 +15,13 @@
 #include "blackcore/db/databasewriter.h"
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/modeldatareader.h"
-#include "blackcore/setupreader.h"
 #include "blackcore/vatsim/vatsimbookingreader.h"
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/vatsim/vatsimmetarreader.h"
 #include "blackcore/vatsim/vatsimstatusfilereader.h"
 #include "blackcore/webdataservices.h"
+#include "blackcore/setupreader.h"
+#include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logcategory.h"
@@ -43,6 +44,7 @@ using namespace BlackCore;
 using namespace BlackCore::Db;
 using namespace BlackCore::Data;
 using namespace BlackCore::Vatsim;
+using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Simulation;
@@ -84,6 +86,11 @@ namespace BlackCore
         if (writeToSwiftDb)
         {
             this->initWriters();
+        }
+
+        if (sApp)
+        {
+            connect(sApp, &CApplication::coreFacadeStarted, this, &CWebDataServices::onCoreFacadeStarted, Qt::QueuedConnection);
         }
 
         // make sure this is called in event queue, so pending tasks cam be performed
@@ -1225,7 +1232,7 @@ namespace BlackCore
         const int allUsedEntities = static_cast<int>(this->allDbEntitiesForUsedReaders());
         if (((static_cast<int>(m_swiftDbEntitiesRead)) & allUsedEntities) == allUsedEntities)
         {
-            emit allSwiftDbDataRead();
+            emit this->allSwiftDbDataRead();
         }
 
         // individual signals
@@ -1239,11 +1246,11 @@ namespace BlackCore
 
             if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::AllIcaoEntities) && signalEntitiesAlreadyRead(CEntityFlags::AllIcaoEntities))
             {
-                emit swiftDbAllIcaoEntitiesRead();
+                emit this->swiftDbAllIcaoEntitiesRead();
             }
             if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::ModelMatchingEntities) && signalEntitiesAlreadyRead(CEntityFlags::ModelMatchingEntities))
             {
-                emit swiftDbModelMatchingEntitiesRead();
+                emit this->swiftDbModelMatchingEntitiesRead();
             }
         }
     }
@@ -1355,10 +1362,22 @@ namespace BlackCore
         else
         {
             // wait for 1st reply
-            // CLogMessage(this).info("Waiting for 1st reply of info objects (%1) for '%2', from '%4'") << info << CEntityFlags::flagToString(entities) << reader->getInfoObjectsUrl().toQString();
             this->readDeferredInBackground(entities, waitForInfoObjectsMs);
             return false; // wait
         }
+    }
+
+    void CWebDataServices::onCoreFacadeStarted()
+    {
+        if (sApp && sApp->supportsContexts() && sApp->getIContextNetwork())
+        {
+            connect(sApp->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CWebDataServices::onConnectedNetworkServerChanged, Qt::QueuedConnection);
+        }
+    }
+
+    void CWebDataServices::onConnectedNetworkServerChanged(const CServer &server)
+    {
+        Q_UNUSED(server);
     }
 
     bool CWebDataServices::writeDbDataToDisk(const QString &dir) const

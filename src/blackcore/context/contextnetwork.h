@@ -147,7 +147,13 @@ namespace BlackCore
             void kicked(const QString &kickMessage);
 
             //! Connection status changed
+            //! \sa IContextNetwork::connectedServerChanged
             void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+
+            //! The connected server has been changed
+            //! \remark can also be used to determine if the ecosystem has been changed
+            //! \sa BlackMisc::Network::CServer::getEcosysstem
+            void connectedServerChanged(const BlackMisc::Network::CServer &server);
 
             //! Text messages received (also private chat messages, radio channel messages)
             void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);

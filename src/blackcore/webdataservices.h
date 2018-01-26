@@ -550,6 +550,12 @@ namespace BlackCore
         //! \return true means info objects available
         bool waitForInfoObjectsThenRead(BlackMisc::Network::CEntityFlags::Entity entities, const QString &info, BlackCore::Db::CInfoDataReader *infoReader, QDateTime &timeOut);
 
+        //! \copydoc BlackCore::CApplication::coreFacadeStarted
+        void onCoreFacadeStarted();
+
+        //! \copydoc BlackCore::Context::IContextNetwork::connectedServerChanged
+        void onConnectedNetworkServerChanged(const BlackMisc::Network::CServer &server);
+
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
         BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead      = BlackMisc::Network::CEntityFlags::NoEntity; //!< entities read
