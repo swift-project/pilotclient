@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         //! Physical unit length (length)
         class BLACKMISC_EXPORT CLength : public CPhysicalQuantity<CLengthUnit, CLength>
         {
@@ -33,7 +32,6 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CLength(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
-
     } // ns
 } // ns
 

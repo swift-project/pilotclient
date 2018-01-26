@@ -47,11 +47,11 @@ namespace BlackMisc
          */
         template <class MU, class PQ> class CPhysicalQuantity :
             public Mixin::DBusOperators<CPhysicalQuantity<MU, PQ>>,
-            public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
-            public Mixin::Index<PQ>,
-            public Mixin::MetaType<PQ>,
-            public Mixin::String<PQ>,
-            public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
+                    public Mixin::JsonOperators<CPhysicalQuantity<MU, PQ>>,
+                    public Mixin::Index<PQ>,
+                    public Mixin::MetaType<PQ>,
+                    public Mixin::String<PQ>,
+                    public Mixin::Icon<CPhysicalQuantity<MU, PQ>>
         {
             //! \copydoc CValueObject::compare
             friend int compare(const PQ &a, const PQ &b) { return compareImpl(a, b); }
@@ -233,6 +233,12 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
+
+            //! Maximum of 2 quantities
+            static const PQ &maxValue(const PQ &pq1, const PQ &pq2);
+
+            //! Minimum of 2 quantities
+            static const PQ &minValue(const PQ &pq1, const PQ &pq2);
 
         protected:
             //! Constructor with double

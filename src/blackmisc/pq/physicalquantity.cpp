@@ -357,6 +357,22 @@ namespace BlackMisc
             return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
         }
 
+        template<class MU, class PQ>
+        const PQ &CPhysicalQuantity<MU, PQ>::maxValue(const PQ &pq1, const PQ &pq2)
+        {
+            if (pq1.isNull()) { return pq2; }
+            if (pq2.isNull()) { return pq1; }
+            return pq1 > pq2 ? pq1 : pq2;
+        }
+
+        template<class MU, class PQ>
+        const PQ &CPhysicalQuantity<MU, PQ>::minValue(const PQ &pq1, const PQ &pq2)
+        {
+            if (pq1.isNull()) { return pq2; }
+            if (pq2.isNull()) { return pq1; }
+            return pq1 < pq2 ? pq1 : pq2;
+        }
+
         template <class MU, class PQ>
         uint CPhysicalQuantity<MU, PQ>::getValueHash() const
         {
