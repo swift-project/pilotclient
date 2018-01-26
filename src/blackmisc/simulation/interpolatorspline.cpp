@@ -27,6 +27,7 @@ namespace BlackMisc
             template <size_t N>
             std::array<double, N> solveTridiagonal(std::array<std::array<double, N>, N> &matrix, std::array<double, N> &d)
             {
+                // *INDENT-OFF*
                 const auto a = [&matrix](auto i) -> double& { return matrix[i][i-1]; }; // subdiagonal
                 const auto b = [&matrix](auto i) -> double& { return matrix[i][i  ]; }; // main diagonal
                 const auto c = [&matrix](auto i) -> double& { return matrix[i][i+1]; }; // superdiagonal
@@ -47,6 +48,7 @@ namespace BlackMisc
                     d[i] -= c(i) * d[i+1];
                 }
                 return d;
+                // *INDENT-ON*
             }
 
             //! \private Linear equation expressed as tridiagonal matrix.
@@ -58,6 +60,7 @@ namespace BlackMisc
                 std::array<std::array<double, N>, N> a {{}};
                 std::array<double, N> b {{}};
 
+                // *INDENT-OFF*
                 a[0][0] = 2.0 / (x[1] - x[0]);
                 a[0][1] = 1.0 / (x[1] - x[0]);
                 b[0]    = 3.0 * (y[1] - y[0]) / ((x[1] - x[0]) * (x[1] - x[0]));
@@ -74,6 +77,8 @@ namespace BlackMisc
                     b[i]      = 3.0 * (y[i] - y[i-1]) / ((x[i] - x[i-1]) * (x[i] - x[i-1]))
                               + 3.0 * (y[i+1] - y[i]) / ((x[i+1] - x[i]) * (x[i+1] - x[i]));
                 }
+                // *INDENT-ON*
+
                 solveTridiagonal(a, b);
                 return b;
             }
