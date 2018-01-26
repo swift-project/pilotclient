@@ -48,11 +48,15 @@ namespace BlackMisc
             //! Altitude (synonym for geodetic height)
             const Aviation::CAltitude &getAltitude() const { return this->geodeticHeight(); }
 
-            //! Existing value
-            bool isNull() const;
+            //! Existing value?
+            virtual bool isNull() const override;
 
             //! Check if elevation is within radius and can be used
+            //! \remark checks against the set radius
             bool isWithinRange(const ICoordinateGeodetic &coordinate) const;
+
+            //! Check if elevation is within radius and can be used
+            bool isWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &radius) const;
 
             //! Treat as single point as obtained from simulator
             void setSinglePointRadius();

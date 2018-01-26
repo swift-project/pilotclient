@@ -34,7 +34,7 @@ namespace BlackMisc
 
         bool CElevationPlane::isNull() const
         {
-            return m_radius.isNull();
+            return m_radius.isNull() || CCoordinateGeodetic::isNull();
         }
 
         bool CElevationPlane::isWithinRange(const ICoordinateGeodetic &coordinate) const
@@ -43,6 +43,16 @@ namespace BlackMisc
             if (isNull()) { return false; }
             const CLength d = this->calculateGreatCircleDistance(coordinate);
             const bool inRange = (m_radius >= d);
+            return inRange;
+        }
+
+        bool CElevationPlane::isWithinRange(const ICoordinateGeodetic &coordinate, const CLength &radius) const
+        {
+            if (coordinate.isNull()) { return false; }
+            if (radius.isNull()) { return false; }
+            if (isNull()) { return false; }
+            const CLength d = this->calculateGreatCircleDistance(coordinate);
+            const bool inRange = (radius >= d);
             return inRange;
         }
 
