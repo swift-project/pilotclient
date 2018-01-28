@@ -32,7 +32,7 @@ namespace BlackGui
             ui->setupUi(this);
 
             // normally no system Bus on Windows
-            if (CBuildConfig::isRunningOnWindowsNtPlatform() || !sGui->isRunningInDeveloperEnvironment())
+            if (CBuildConfig::isRunningOnWindowsNtPlatform() || !sGui->isDeveloperFlagSet())
             {
                 this->setSystemDBusVisible(false);
             }

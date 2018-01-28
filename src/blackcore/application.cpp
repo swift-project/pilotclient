@@ -472,12 +472,12 @@ namespace BlackCore
 
     const QString &CApplication::versionStringDetailed() const
     {
-        if (this->isRunningInDeveloperEnvironment() && CBuildConfig::isLocalDeveloperDebugBuild())
+        if (this->isDeveloperFlagSet() && CBuildConfig::isLocalDeveloperDebugBuild())
         {
             static const QString s(CBuildConfig::getVersionString() + " [dev,DEVDBG]");
             return s;
         }
-        if (isRunningInDeveloperEnvironment())
+        if (isDeveloperFlagSet())
         {
             static const QString s(CBuildConfig::getVersionString() + " [dev]");
             return s;
@@ -504,12 +504,17 @@ namespace BlackCore
 
     bool CApplication::initIsRunningInDeveloperEnvironment() const
     {
+        //
         // assumption: restricted distributions are development versions
+        //
 
         if (this->getApplicationInfo().isSampleOrUnitTest()) { return true; }
+        if (CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
+
         const CDistribution d(this->getOwnDistribution());
-        const bool canSetDeveloperEnv = CBuildConfig::isLocalDeveloperDebugBuild() || d.isRestricted();
-        if (canSetDeveloperEnv && this->isSet(m_cmdDevelopment)) { return true; }
+        if (d.isRestricted() && this->isSet(m_cmdDevelopment)) { return true; }
+
+        // we can globally set a dev.flag
         if (this->isSetupAvailable())
         {
             // assume value from setup
@@ -560,7 +565,7 @@ namespace BlackCore
             boolToYesNo(CBuildConfig::isLocalDeveloperDebugBuild()) %
             separator %
             QStringLiteral("dev.env.: ") %
-            boolToYesNo(this->isRunningInDeveloperEnvironment()) %
+            boolToYesNo(this->isDeveloperFlagSet()) %
             separator %
             QStringLiteral("distribution: ") %
             this->getOwnDistribution().toQString(true) %
@@ -1208,7 +1213,7 @@ namespace BlackCore
         }
 
         // dev.
-        m_devEnv = this->initIsRunningInDeveloperEnvironment();
+        m_devFlag = this->initIsRunningInDeveloperEnvironment();
 
         // Hookin, other parsing
         if (!this->parsingHookIn()) { return false; }

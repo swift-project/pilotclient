@@ -73,7 +73,7 @@ namespace BlackCore
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
     {
         this->setObjectName("CAirspaceMonitor");
-        m_enableReverseLookupMsgs = sApp->isRunningInDeveloperEnvironment();
+        m_enableReverseLookupMsgs = sApp->isDeveloperFlagSet();
 
         connect(m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::onAtcPositionUpdate);
         connect(m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::onAtisReceived);

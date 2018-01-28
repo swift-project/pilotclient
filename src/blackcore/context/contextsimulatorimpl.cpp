@@ -58,7 +58,7 @@ namespace BlackCore
             this->setObjectName("CContextSimulator");
             CContextSimulator::registerHelp();
 
-            m_enableMatchingMessages = sApp->isRunningInDeveloperEnvironment();
+            m_enableMatchingMessages = sApp->isDeveloperFlagSet();
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
 

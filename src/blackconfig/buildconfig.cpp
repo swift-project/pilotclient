@@ -270,9 +270,9 @@ namespace BlackConfig
             bool ok;
             const long long btsll = bts.toLongLong(&ok); // at least 64bit
             if (!ok) { return 0; }
-            // now we have to converto int
+            // now we have to convert to int, otherwise we would fail 2021
             // max 2147483647 (2^31 - 1)
-            //      1MMddHHmm (years since 2010)
+            //     yyMMddHHmm (years since 2010)
             //                           yyyyMMddHHmm
             const long long yearOffset = 201000000000;
             const int btsInt = btsll - yearOffset;

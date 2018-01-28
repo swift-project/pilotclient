@@ -155,7 +155,7 @@ namespace BlackCore
 
         //! Global setup
         //! \threadsafe
-        BlackCore::Data::CGlobalSetup getGlobalSetup() const;
+        Data::CGlobalSetup getGlobalSetup() const;
 
         //! Update info
         //! \threadsafe
@@ -177,8 +177,8 @@ namespace BlackCore
         //! swift info string
         const char *swiftVersionChar();
 
-        //! Running in dev.environment?
-        bool isRunningInDeveloperEnvironment() const { return m_devEnv; }
+        //! Running with dev.flag?
+        bool isDeveloperFlagSet() const { return m_devFlag; }
 
         //! Signal startup automatically or individually
         void setSignalStartupAutomatically(bool enabled) { m_signalStartup = enabled; }
@@ -316,7 +316,7 @@ namespace BlackCore
         //! Init web data services and start them
         //! \sa webDataServicesStarted
         //! \remark requires setup loaded
-        BlackMisc::CStatusMessageList useWebDataServices(const CWebReaderFlags::WebReader webReader, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig);
+        BlackMisc::CStatusMessageList useWebDataServices(const CWebReaderFlags::WebReader webReader, const Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
@@ -361,7 +361,7 @@ namespace BlackCore
 
         //! Access to setup reader
         //! \remark supposed to be used only in special cases
-        BlackCore::CSetupReader *getSetupReader() const;
+        CSetupReader *getSetupReader() const;
 
         //! Setup already synchronized
         bool isSetupAvailable() const;
@@ -615,7 +615,7 @@ namespace BlackCore
         bool m_useContexts = false;           //!< use contexts
         bool m_useWebData = false;            //!< use web data
         bool m_signalStartup = true;          //!< signal startup automatically
-        bool m_devEnv = false;                //!< dev. environment
+        bool m_devFlag = false;                //!< dev. environment
         bool m_saveSettingsOnShutdown = true; //!< saving all settings on shutdown
 
         // -------------- crashpad -----------------
@@ -625,7 +625,7 @@ namespace BlackCore
 #ifdef BLACK_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
-        BlackMisc::CSettingReadOnly<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::crashDumpUploadEnabledChanged };
+        BlackMisc::CSettingReadOnly<Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::crashDumpUploadEnabledChanged };
 #endif
     };
 } // namespace

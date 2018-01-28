@@ -35,7 +35,7 @@ namespace BlackGui
             ui(new Ui::CAircraftPartsHistory)
         {
             ui->setupUi(this);
-            ui->cb_PartsHistoryEnabled->setChecked(sApp && sApp->isRunningInDeveloperEnvironment()); // default
+            ui->cb_PartsHistoryEnabled->setChecked(sApp && sApp->isDeveloperFlagSet()); // default
 
             m_timerUpdateHistory.setInterval(2 * 1000);
             this->initGui();

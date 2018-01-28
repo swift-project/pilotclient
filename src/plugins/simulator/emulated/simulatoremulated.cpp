@@ -422,7 +422,7 @@ namespace BlackSimPlugin
             {
                 const CCallsign cs = aircraft.getCallsign();
                 if (!m_interpolators.contains(cs)) { continue; }
-                const bool log = setup.logCallsign(cs);
+                const bool log = setup.isLogCallsign(cs);
                 CInterpolatorMulti *im = m_interpolators[cs];
                 CInterpolationStatus statusInterpolation;
                 CPartsStatus statusParts;
