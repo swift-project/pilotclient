@@ -31,6 +31,7 @@
 #include <QModelIndex>
 #include <QPushButton>
 #include <QStandardItemModel>
+#include <QStringBuilder>
 #include <QTabBar>
 #include <QTableView>
 #include <QTextEdit>
@@ -66,10 +67,10 @@ namespace BlackGui
             ui->le_AtcStationsOnlineMetar->setValidator(ucv);
 
             // some icons
-            ui->pb_AtcStationsAtisReload->setIcon(CIcons::atis());
-            ui->pb_AtcStationsAtisReload->setText("");
-            ui->pb_AtcStationsLoadMetar->setIcon(CIcons::metar());
-            ui->pb_AtcStationsLoadMetar->setText("");
+            ui->tb_AtcStationsAtisReload->setIcon(CIcons::atis());
+            ui->tb_AtcStationsAtisReload->setText("");
+            ui->tb_AtcStationsLoadMetar->setIcon(CIcons::metar());
+            ui->tb_AtcStationsLoadMetar->setText("");
 
             // set station mode
             ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
@@ -80,7 +81,7 @@ namespace BlackGui
 
             // Signal / Slots
             connect(ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this, &CAtcStationComponent::getMetarAsEntered);
-            connect(ui->pb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::getMetarAsEntered);
+            connect(ui->tb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::getMetarAsEntered);
             connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged); // "local" tab changed (booked, online)
             connect(ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::onlineAtcStationSelected);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);
@@ -94,7 +95,7 @@ namespace BlackGui
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::reloadAtcStationsBooked);
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::onCountChanged);
 
-            connect(ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtis);
+            connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtis);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
             // runtime based connects
@@ -199,28 +200,27 @@ namespace BlackGui
 
         void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
         {
-            const QString icao(airportIcaoCode.isEmpty() ? ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
-            ui->le_AtcStationsOnlineMetar->setText(icao);
-            if (icao.length() != 4) { return; }
-            CMetar metar(sGui->getIContextNetwork()->getMetarForAirport(icao));
-            if (metar == CMetar())
+            const CAirportIcaoCode icao(airportIcaoCode.isEmpty() ? ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
+            ui->le_AtcStationsOnlineMetar->setText(icao.asString());
+            if (!icao.hasValidIcaoCode()) { return; }
+            const CMetar metar(sGui->getIContextNetwork()->getMetarForAirport(icao));
+            if (metar.hasMessage())
             {
-                ui->te_AtcStationsOnlineInfo->clear();
+                const QString metarText = metar.getMessage() %
+                                          QStringLiteral("\n\n") % metar.getMetarText();
+                ui->te_AtcStationsOnlineInfo->setText(metarText);
             }
             else
             {
-                QString metarText = metar.getMessage();
-                metarText += "\n\n";
-                metarText += metar.getMetarText();
-                ui->te_AtcStationsOnlineInfo->setText(metarText);
+                ui->te_AtcStationsOnlineInfo->clear();
             }
-            ui->le_AtcStationsOnlineMetar->clear();
+            // ui->le_AtcStationsOnlineMetar->clear();
         }
 
         void CAtcStationComponent::reloadAtcStationsBooked()
         {
             Q_ASSERT(ui->tvp_AtcStationsBooked);
-            Q_ASSERT(sGui->getIContextNetwork());
+            Q_ASSERT(sGui && sGui->getIContextNetwork());
 
             QObject *sender = QObject::sender();
             if (sender == ui->tvp_AtcStationsBooked && sGui->getIContextNetwork())
