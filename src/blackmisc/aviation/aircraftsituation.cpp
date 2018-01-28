@@ -47,15 +47,15 @@ namespace BlackMisc
 
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
-            return m_position.toQString(i18n) %
+            return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
+                   QStringLiteral(" ") % m_position.toQString(i18n) %
                    QStringLiteral(" bank: ") % (m_bank.toQString(i18n)) %
                    QStringLiteral(" pitch: ") % (m_pitch.toQString(i18n)) %
                    QStringLiteral(" heading: ") % (m_heading.toQString(i18n)) %
                    QStringLiteral(" og: ") % this->getOnGroundInfo() %
                    QStringLiteral(" gs: ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
                    QStringLiteral(" ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
-                   QStringLiteral(" elevation: ") % (m_groundElevation.toQString(i18n)) %
-                   QStringLiteral(" timestamp: ") % (this->hasValidTimestamp() ? this->getFormattedUtcTimestampDhms() : QStringLiteral("-"));
+                   QStringLiteral(" elevation: ") % (m_groundElevation.toQString(i18n));
         }
 
         const QString &CAircraftSituation::isOnGroundToString(CAircraftSituation::IsOnGround onGround)
@@ -96,7 +96,7 @@ namespace BlackMisc
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+            if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::propertyByIndex(index); }
             if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -123,7 +123,7 @@ namespace BlackMisc
         void CAircraftSituation::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftSituation>(); return; }
-            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+            if (ITimestampWithOffsetBased::canHandleIndex(index)) { ITimestampWithOffsetBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -142,7 +142,7 @@ namespace BlackMisc
 
         int CAircraftSituation::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituation &compareValue) const
         {
-            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+            if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue); }
             if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -246,7 +246,7 @@ namespace BlackMisc
             }
             else
             {
-                CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
+                const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
                 const bool c = (this->getAltitude() < groundPlusCG);
                 if (corrected) { *corrected = c; }
                 return c ?

@@ -42,7 +42,7 @@ namespace BlackMisc
         //! Value object encapsulating information of an aircraft's situation
         class BLACKMISC_EXPORT CAircraftSituation :
             public CValueObject<CAircraftSituation>,
-            public Geo::ICoordinateGeodetic, public ITimestampBased
+            public Geo::ICoordinateGeodetic, public ITimestampWithOffsetBased
         {
         public:
             //! Properties by index
@@ -231,15 +231,6 @@ namespace BlackMisc
             //! Corresponding callsign
             void setCallsign(const CCallsign &callsign);
 
-            //! Milliseconds to add to timestamp for interpolation
-            void setTimeOffsetMs(qint64 offset) { m_timeOffsetMs = offset; }
-
-            //! Milliseconds to add to timestamp for interpolation
-            qint64 getTimeOffsetMs() const { return m_timeOffsetMs; }
-
-            //! Timestamp with offset added for interpolation
-            qint64 getAdjustedMSecsSinceEpoch() const { return this->getMSecsSinceEpoch() + this->getTimeOffsetMs(); }
-
             //! Set flag indicating this is an interim position update
             void setInterimFlag(bool flag) { m_isInterim = flag; }
 
@@ -266,7 +257,6 @@ namespace BlackMisc
             CAltitude m_groundElevation{0, CAltitude::MeanSeaLevel, PhysicalQuantities::CLengthUnit::nullUnit()};
             int m_isOnGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundReliability = static_cast<int>(CAircraftSituation::OnGroundReliabilityNoSet);
-            qint64 m_timeOffsetMs = 0;
             bool m_isInterim = false;
 
             BLACK_METACLASS(

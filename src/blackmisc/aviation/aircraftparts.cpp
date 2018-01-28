@@ -22,25 +22,19 @@ namespace BlackMisc
     {
         QString CAircraftParts::convertToQString(bool i18n) const
         {
-            const QString s =
-                m_lights.toQString(i18n) %
-                " gear down: " %
-                BlackMisc::boolToYesNo(m_gearDown) %
-                " flaps pct: " %
-                QString::number(m_flapsPercentage) %
-                " spoilers out: " %
-                BlackMisc::boolToYesNo(m_spoilersOut) %
-                " engines on: " %
-                m_engines.toQString(i18n) %
-                " on ground: " %
-                BlackMisc::boolToYesNo(m_isOnGround);
-            return s;
+            return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
+                   QStringLiteral(" lights: ") % m_lights.toQString(i18n) %
+                   QStringLiteral(" gear down: ") % BlackMisc::boolToYesNo(m_gearDown) %
+                   QStringLiteral(" flaps pct: ") % QString::number(m_flapsPercentage) %
+                   QStringLiteral(" spoilers out: ") % BlackMisc::boolToYesNo(m_spoilersOut) %
+                   QStringLiteral(" engines on: ") % m_engines.toQString(i18n) %
+                   QStringLiteral(" on ground: ") % BlackMisc::boolToYesNo(m_isOnGround);
         }
 
         CVariant CAircraftParts::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+            if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -57,7 +51,7 @@ namespace BlackMisc
         void CAircraftParts::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftParts>(); return; }
-            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+            if (ITimestampWithOffsetBased::canHandleIndex(index)) { ITimestampWithOffsetBased::setPropertyByIndex(index, variant); return; }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -73,8 +67,8 @@ namespace BlackMisc
 
         int CAircraftParts::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftParts &compareValue) const
         {
-            if (index.isMyself()) { return ITimestampBased::comparePropertyByIndex(CPropertyIndex(), compareValue); }
-            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+            if (index.isMyself()) { return ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndex(), compareValue); }
+            if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -123,6 +117,5 @@ namespace BlackMisc
             }
             return m_isOnGroundInterpolated;
         }
-
     } // namespace
 } // namespace
