@@ -10,9 +10,14 @@
 #include "blackgui/components/commandinput.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackmisc/simplecommandparser.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -27,11 +32,19 @@ namespace BlackGui
                 this->setPlaceholderText(".dot commands");
             }
 
+            QTimer::singleShot(5000, &m_dsCommandTooltip, &CDigestSignal::inputSignal);
+            if (sGui && sGui->supportsContexts())
+            {
+                if (sGui->getIContextSimulator())
+                {
+                    connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CCommandInput::onSimulatorPluginChanged);
+                }
+                if (sGui->getIContextNetwork())
+                {
+                    connect(sGui->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CCommandInput::onConnectedServerChanged);
+                }
+            }
             connect(this, &CCommandInput::returnPressed, this, &CCommandInput::validateCommand);
-
-            // set tooltip: shorty after, and later when application is initialized
-            QTimer::singleShot(5000, this, &CCommandInput::setCommandTooltip);
-            QTimer::singleShot(30000, this, &CCommandInput::setCommandTooltip);
         }
 
         void CCommandInput::validateCommand()
@@ -59,6 +72,22 @@ namespace BlackGui
             this->setToolTip(context ?
                              sGui->getIContextApplication()->dotCommandsHtmlHelp() :
                              CSimpleCommandParser::commandsHtmlHelp());
+        }
+
+        void CCommandInput::onSimulatorPluginChanged(const CSimulatorPluginInfo &info)
+        {
+            Q_UNUSED(info);
+
+            // different simulators have different commands
+            m_dsCommandTooltip.inputSignal();
+        }
+
+        void CCommandInput::onConnectedServerChanged(const Network::CServer &server)
+        {
+            Q_UNUSED(server);
+
+            // commands of network
+            m_dsCommandTooltip.inputSignal();
         }
     } // ns
 } // ns

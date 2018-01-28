@@ -14,6 +14,7 @@
 
 #include "blackgui/lineedithistory.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/digestsignal.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 
@@ -22,7 +23,11 @@
 #include <QString>
 
 class QWidget;
-
+namespace BlackMisc
+{
+    namespace Network { class CServer; }
+    namespace Simulation { class CSimulatorPluginInfo; }
+}
 namespace BlackGui
 {
     namespace Components
@@ -54,6 +59,14 @@ namespace BlackGui
 
             //! Command tooltip
             void setCommandTooltip();
+
+            //! Simulator plugin loaded / unloaded (default info)
+            void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+
+            //! Connected network server has been changed
+            void onConnectedServerChanged(const BlackMisc::Network::CServer &server);
+
+            BlackMisc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandTooltip, 5000, 2 };
         };
     } // ns
 } // ns
