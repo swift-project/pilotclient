@@ -12,6 +12,7 @@
 #include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/presentweather.h"
 
+#include <QStringBuilder>
 #include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
@@ -21,7 +22,6 @@ namespace BlackMisc
 {
     namespace Weather
     {
-
         CMetar::CMetar()
         {
             setCavok();
@@ -32,9 +32,9 @@ namespace BlackMisc
             m_metarMessage = message;
         }
 
-        QString CMetar::getMessage() const
+        bool CMetar::hasMessage() const
         {
-            return m_metarMessage;
+            return !this->getMessage().isEmpty();
         }
 
         void CMetar::setReportType(ReportType type)
@@ -42,34 +42,15 @@ namespace BlackMisc
             m_reportType = type;
         }
 
-        CMetar::ReportType CMetar::getReportType() const
-        {
-            return m_reportType;
-        }
-
         void CMetar::setAirportIcaoCode(const CAirportIcaoCode &icao)
         {
             m_airport = icao;
         }
 
-        CAirportIcaoCode CMetar::getAirportIcaoCode() const
-        {
-            return m_airport;
-        }
-
         void CMetar::setDayTime(int reportDay, const PhysicalQuantities::CTime &reportTime)
         {
-            m_reportDay = reportDay; m_reportTime = reportTime;
-        }
-
-        int CMetar::getDay() const
-        {
-            return m_reportDay;
-        }
-
-        PhysicalQuantities::CTime CMetar::getTime() const
-        {
-            return m_reportTime;
+            m_reportDay = reportDay;
+            m_reportTime = reportTime;
         }
 
         void CMetar::setAutomated(bool isAutomated)
@@ -84,19 +65,9 @@ namespace BlackMisc
             m_cloudLayers.clear();
         }
 
-        bool CMetar::isCavok() const
-        {
-            return false;
-        }
-
         void CMetar::setWindLayer(const CWindLayer &windLayer)
         {
             m_windLayer = windLayer;
-        }
-
-        CWindLayer CMetar::getWindLayer() const
-        {
-            return m_windLayer;
         }
 
         void CMetar::setVisibility(const PhysicalQuantities::CLength &visibility)
@@ -114,20 +85,12 @@ namespace BlackMisc
             m_presentWeathers.push_back(presentWeather);
         }
 
-        CPresentWeatherList CMetar::getPresentWeather() const
-        {
-            return m_presentWeathers;
-        }
-
         void CMetar::addCloudLayer(const CCloudLayer &cloudLayer)
         {
             m_cloudLayers.push_back(cloudLayer);
         }
 
-        CCloudLayerList CMetar::getCloudLayers() const
-        {
-            return m_cloudLayers;
-        }
+
 
         void CMetar::setTemperature(const PhysicalQuantities::CTemperature &temperature)
         {
@@ -144,52 +107,44 @@ namespace BlackMisc
             m_dewPoint = dewPoint;
         }
 
-        PhysicalQuantities::CTemperature CMetar::getDewPoint() const
-        {
-            return m_dewPoint;
-        }
 
         void CMetar::setAltimeter(const PhysicalQuantities::CPressure &altimeter)
         {
             m_altimeter = altimeter;
         }
 
-        PhysicalQuantities::CPressure CMetar::getAltimeter() const
-        {
-            return m_altimeter;
-        }
-
         QString CMetar::getMetarText() const
         {
-            QString metarDescription;
-            metarDescription += QString("Station: %1 \n").arg(m_airport.getIcaoCode());
-            metarDescription += QString("Date/Time: %1 %2 UTC\n").arg(m_reportDay).arg(m_reportTime.formattedHrsMin());
-            metarDescription += m_windLayer.toQString();
-            metarDescription += "\n";
-            metarDescription += QString("Visibility: %1\n").arg(m_visibility.toQString());
-            metarDescription += QString("Weather: ");
             QString presentWeathers;
             for (const auto &presentWeather : m_presentWeathers)
             {
                 if (!presentWeathers.isEmpty()) presentWeathers += ",";
-                presentWeathers += " ";
-                presentWeathers += presentWeather.toQString();
+                presentWeathers += QStringLiteral(" ") % presentWeather.toQString();
             }
-            metarDescription += presentWeathers.simplified();
-            metarDescription += QString("\n");
-            metarDescription += QString("Clouds:");
+
             QString clouds;
             for (const auto &layer : m_cloudLayers)
             {
                 if (!clouds.isEmpty()) clouds += ",";
-                clouds += " ";
-                clouds += layer.toQString();
+                clouds += QStringLiteral(" ") % layer.toQString();
             }
-            metarDescription += clouds;
-            metarDescription += QString("\n");
-            metarDescription += QString("Temperature: %1\n").arg(m_temperature.toQString());
-            metarDescription += QString("Dewpoint: %1\n").arg(m_dewPoint.toQString());
-            metarDescription += QString("Altimeter: %1\n").arg(m_altimeter.toQString());
+
+            const QString metarDescription =
+                QString("Station: %1 \n").arg(m_airport.getIcaoCode())
+                % QString("Date/Time: %1 %2 UTC\n").arg(m_reportDay).arg(m_reportTime.formattedHrsMin())
+                % m_windLayer.toQString()
+                % QStringLiteral("\n")
+                % QString("Visibility: %1\n").arg(m_visibility.toQString())
+                % QString("Weather: ")
+                % presentWeathers.simplified()
+                % QStringLiteral("\n")
+                % QStringLiteral("Clouds:")
+                % clouds
+                % QStringLiteral("\n")
+                % QString("Temperature: %1\n").arg(m_temperature.toQString())
+                % QString("Dewpoint: %1\n").arg(m_dewPoint.toQString())
+                % QString("Altimeter: %1\n").arg(m_altimeter.toQString());
+
             return metarDescription;
         }
 
@@ -206,6 +161,5 @@ namespace BlackMisc
             metar.setCavok();
             return metar;
         }
-
     } // namespace
 } // namespace

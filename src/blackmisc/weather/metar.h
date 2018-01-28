@@ -57,28 +57,31 @@ namespace BlackMisc
             void setMessage(const QString &message);
 
             //! Get METAR message
-            QString getMessage() const;
+            const QString &getMessage() const { return m_metarMessage; }
+
+            //! Has METAR message
+            bool hasMessage() const;
 
             //! Set report type
             void setReportType(ReportType type);
 
             //! Get report type
-            ReportType getReportType() const;
+            ReportType getReportType() const { return m_reportType; }
 
             //! Set airport icao code
             void setAirportIcaoCode(const BlackMisc::Aviation::CAirportIcaoCode &icao);
 
             //! Get airport icao code
-            BlackMisc::Aviation::CAirportIcaoCode getAirportIcaoCode() const;
+            const Aviation::CAirportIcaoCode &getAirportIcaoCode() const { return m_airport; }
 
             //! Set day and time
             void setDayTime(int reportDay, const PhysicalQuantities::CTime &reportTime);
 
             //! Get report day
-            int getDay() const;
+            int getDay() const { return m_reportDay; }
 
             //! Get report time
-            PhysicalQuantities::CTime getTime() const;
+            const PhysicalQuantities::CTime &getTime() const { return m_reportTime; }
 
             //! Set the station to automated
             void setAutomated(bool isAutomated);
@@ -89,14 +92,11 @@ namespace BlackMisc
             //! Set the weather to CAVOK
             void setCavok();
 
-            //! Is CAVOK?
-            bool isCavok() const;
-
             //! Set wind information
             void setWindLayer(const CWindLayer &windLayer);
 
             //! Get wind layer
-            CWindLayer getWindLayer() const;
+            CWindLayer getWindLayer() const { return m_windLayer; }
 
             //! Set visibility information
             void setVisibility(const PhysicalQuantities::CLength &visibility);
@@ -108,13 +108,13 @@ namespace BlackMisc
             void addPresentWeather(const CPresentWeather &presentWeather);
 
             //! Get present weather list
-            CPresentWeatherList getPresentWeather() const;
+            const CPresentWeatherList &getPresentWeather() const { return m_presentWeathers; }
 
             //! Add cloud layer
             void addCloudLayer(const CCloudLayer &cloudLayer);
 
             //! Get all cloud layers
-            CCloudLayerList getCloudLayers() const;
+            const CCloudLayerList &getCloudLayers() const { return m_cloudLayers; }
 
             //! Remove all cloud layers
             void removeAllClouds() { m_cloudLayers.clear(); }
@@ -129,15 +129,15 @@ namespace BlackMisc
             void setDewPoint(const PhysicalQuantities::CTemperature &dewPoint);
 
             //! Get dew point
-            PhysicalQuantities::CTemperature getDewPoint() const;
+            const PhysicalQuantities::CTemperature &getDewPoint() const { return m_dewPoint; }
 
             //! Set altimeter
             void setAltimeter(const PhysicalQuantities::CPressure &altimeter);
 
             //! Get altimeter
-            PhysicalQuantities::CPressure getAltimeter() const;
+            const PhysicalQuantities::CPressure &getAltimeter() const { return m_altimeter; }
 
-            //! Returns the metar in a descriptive text
+            //! Returns the METAR in a descriptive text
             QString getMetarText() const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
@@ -149,7 +149,7 @@ namespace BlackMisc
         private:
             QString m_metarMessage;
             ReportType m_reportType = METAR;
-            BlackMisc::Aviation::CAirportIcaoCode m_airport;
+            Aviation::CAirportIcaoCode m_airport;
             int m_reportDay = 0;
             PhysicalQuantities::CTime m_reportTime;
             bool m_isAutomated = false;
