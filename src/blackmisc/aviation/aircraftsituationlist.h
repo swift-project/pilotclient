@@ -53,7 +53,7 @@ namespace BlackMisc
             int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, bool ignoreNullValues = true, bool overrideExisting = true);
 
             //! Set ground elevation from elevation plane
-            int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, qint64 newerThan, bool ignoreNullValues = true, bool overrideExisting = true);
+            int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, qint64 newerThanAdjustedMs, bool ignoreNullValues = true, bool overrideExisting = true);
         };
     } // namespace
 } // namespace

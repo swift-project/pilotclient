@@ -119,27 +119,29 @@ namespace BlackMisc
             CAircraftSituation currentSituation(oldSituation); // also sets ground elevation if available
 
             // Time between start and end packet
-            const double deltaTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - oldSituation.getAdjustedMSecsSinceEpoch();
-            Q_ASSERT_X(deltaTimeMs >= 0, Q_FUNC_INFO, "Negative delta time");
+            const double sampleDeltaTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - oldSituation.getAdjustedMSecsSinceEpoch();
+            Q_ASSERT_X(sampleDeltaTimeMs >= 0, Q_FUNC_INFO, "Negative delta time");
             log.interpolator = 'l';
-            log.deltaTimeMs = deltaTimeMs;
+            log.tsCurrent = currentTimeMsSinceEpoc;
+            log.deltaSampleTimesMs = sampleDeltaTimeMs;
 
             // Fraction of the deltaTime, ideally [0.0 - 1.0]
             // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
             // 1) values > 1 mean extrapolation
             // 2) values > 2 mean no new situations coming in
             const double distanceToSplitTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
-            const double simulationTimeFraction = 1.0 - (distanceToSplitTimeMs / deltaTimeMs);
-            const double deltaTimeFractionMs = deltaTimeMs * simulationTimeFraction;
+            const double simulationTimeFraction = qMax(1.0 - (distanceToSplitTimeMs / sampleDeltaTimeMs), 0.0);
+            const double deltaTimeFractionMs = sampleDeltaTimeMs * simulationTimeFraction;
             log.simulationTimeFraction = simulationTimeFraction;
-            log.deltaTimeFractionMs = deltaTimeFractionMs;
+            log.deltaSampleTimesMs = sampleDeltaTimeMs;
 
             currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
             currentSituation.setMSecsSinceEpoch(oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs);
             status.setInterpolatedAndCheckSituation(true, currentSituation);
+            log.tsInterpolated = currentSituation.getAdjustedMSecsSinceEpoch();
 
-            log.oldSituation = oldSituation;
-            log.newSituation = newSituation;
+            log.situationOld = oldSituation;
+            log.situationNew = newSituation;
             return { oldSituation, newSituation, simulationTimeFraction };
         }
 

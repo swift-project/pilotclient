@@ -57,23 +57,25 @@ namespace BlackMisc
             const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints,
             CInterpolationStatus &status)
         {
+            // this code is used by linear and spline interpolator
             status.reset();
             CInterpolationLogger::SituationLog log;
 
             // any data at all?
             if (m_aircraftSituations.isEmpty()) { return {}; }
-            CAircraftSituation currentSituation = m_aircraftSituations.front();
+            CAircraftSituation currentSituation = m_lastInterpolation.isNull() ? m_aircraftSituations.front() : m_lastInterpolation;
 
             // Update current position by hints' elevation
             // * for XP provided by hints.getElevationProvider at current position
             // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
             // * As XP uses lazy init we will call getGroundElevation only when needed
             // * default here via getElevationPlane
-            CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, false, false));
-            currentSituation.setGroundElevationChecked(currentGroundElevation); // set as default
+            CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, currentSituation.getDistancePerTime(1000), false, false));
+            currentSituation.setGroundElevation(currentGroundElevation); // set as default
 
             // data, split situations by time
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
+            currentSituation.setMSecsSinceEpoch(currentTimeMsSinceEpoc);
 
             // interpolant function from derived class
             // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
@@ -90,7 +92,7 @@ namespace BlackMisc
             currentSituation.setPosition(interpolant.interpolatePosition(setup, hints));
             currentSituation.setAltitude(interpolant.interpolateAltitude(setup, hints));
 
-            // PBH before ground so we can use PBH
+            // PBH before ground so we can use PBH in guessing ground
             if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || status.isInterpolated())
             {
                 const auto pbh = interpolant.pbh();
@@ -100,16 +102,17 @@ namespace BlackMisc
                 currentSituation.setGroundSpeed(pbh.getGroundSpeed());
                 status.setInterpolatedAndCheckSituation(true, currentSituation);
             }
-            m_isFirstInterpolation = false;
 
             // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
+            constexpr double NoGroundFactor = -1;
+            double groundFactor = NoGroundFactor;
+
             if (hints.hasAircraftParts())
             {
-                const double groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
-                log.groundFactor = groundFactor;
+                groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
                 if (groundFactor > 0.0)
                 {
-                    // if not having an ground elevation yet, we fetch from provider
+                    // if not having an ground elevation yet, we fetch from provider (if there is a provider)
                     if (!currentGroundElevation.isNull())
                     {
                         currentGroundElevation = hints.getGroundElevation(currentSituation, true); // "expensive on XPlane" if provider is called
@@ -129,23 +132,10 @@ namespace BlackMisc
                     }
                 }
             }
-            else
-            {
-                // guess ground flag
-                constexpr double NoGroundFactor = -1;
-                CInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
-            }
 
-            if (m_logger && hints.isLoggingInterpolation())
-            {
-                log.timestamp = currentTimeMsSinceEpoc;
-                log.callsign = m_callsign;
-                log.groundFactor = groundFactor;
-                log.situationCurrent = currentSituation;
-                log.usedHints = hints;
-                log.usedSetup = setup;
-                m_logger->logInterpolation(log);
-            }
+            // depending on ground factor set ground flag and reliability
+            // it will use the hints ground flag or elevation/CG or guessing
+            CInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
 
             // we transfer ground elevation for future usage
             if (currentSituation.hasGroundElevation())
@@ -154,11 +144,23 @@ namespace BlackMisc
                 ep.setSinglePointRadius();
 
                 // transfer to newer situations
-                const int transfered = m_aircraftSituations.setGroundElevationChecked(ep, currentSituation.getMSecsSinceEpoch());
-                Q_UNUSED(transfered); // for debugging
+                log.noTransferredElevations = m_aircraftSituations.setGroundElevationChecked(ep, currentTimeMsSinceEpoc);
+            }
+
+            // logging
+            if (m_logger && hints.isLoggingInterpolation())
+            {
+                log.tsCurrent = currentTimeMsSinceEpoc;
+                log.callsign = m_callsign;
+                log.groundFactor = groundFactor;
+                log.situationCurrent = currentSituation;
+                log.usedHints = hints;
+                log.usedSetup = setup;
+                m_logger->logInterpolation(log);
             }
 
             // bye
+            m_lastInterpolation = currentSituation;
             return currentSituation;
         }
 
@@ -214,6 +216,7 @@ namespace BlackMisc
         CAircraftParts CInterpolator<Derived>::getInterpolatedParts(qint64 currentTimeMsSinceEpoch,
                 const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
         {
+            // this code is used by linear and spline interpolator
             Q_UNUSED(setup);
             partsStatus.reset();
             if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
@@ -284,7 +287,7 @@ namespace BlackMisc
             if (!log || !m_logger) { return; }
             CInterpolationLogger::PartsLog logInfo;
             logInfo.callsign = m_callsign;
-            logInfo.timestamp = timestamp;
+            logInfo.tsCurrent = timestamp;
             logInfo.parts = parts;
             logInfo.empty = empty;
             m_logger->logParts(logInfo);
@@ -331,7 +334,7 @@ namespace BlackMisc
                    QStringLiteral(" parts: ") %
                    QString::number(m_aircraftParts.size()) %
                    QStringLiteral(" 1st interpolation: ") %
-                   boolToYesNo(m_isFirstInterpolation);
+                   boolToYesNo(m_lastInterpolation.isNull());
         }
 
         template <typename Derived>

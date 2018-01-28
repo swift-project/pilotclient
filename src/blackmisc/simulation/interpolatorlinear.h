@@ -56,11 +56,17 @@ namespace BlackMisc
                 //! Interpolator for pitch, bank, heading, groundspeed
                 const CInterpolatorPbh &pbh() const { return m_pbh; }
 
+                //! Old situation
+                const Aviation::CAircraftSituation &getOldSituation() const { return m_oldSituation; }
+
+                //! New situation
+                const Aviation::CAircraftSituation &getNewSituation() const { return m_newSituation; }
+
             private:
                 int m_situationsAvailable = 0;
                 Aviation::CAircraftSituation m_oldSituation;
                 Aviation::CAircraftSituation m_newSituation;
-                double m_simulationTimeFraction = 0.0;
+                double m_simulationTimeFraction = 0.0; //!< 0..1
                 const CInterpolatorPbh m_pbh;
             };
 

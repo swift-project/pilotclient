@@ -43,13 +43,13 @@ namespace BlackMisc
             return c;
         }
 
-        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, qint64 newerThan, bool ignoreNullValues, bool overrideExisting)
+        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, qint64 newerThanAdjustedMs, bool ignoreNullValues, bool overrideExisting)
         {
             if (ignoreNullValues && elevationPlane.isNull()) { return 0; }
             int c = 0;
             for (CAircraftSituation &s : *this)
             {
-                if (s.getMSecsSinceEpoch() <= newerThan) { continue; }
+                if (s.getAdjustedMSecsSinceEpoch() <= newerThanAdjustedMs) { continue; }
                 const bool set = s.setGroundElevationChecked(elevationPlane, ignoreNullValues, overrideExisting);
                 if (set) { c++; }
             }

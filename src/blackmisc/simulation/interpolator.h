@@ -86,7 +86,7 @@ namespace BlackMisc
             Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
             Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts for one aircraft
             Aviation::CCallsign m_callsign;                        //!< callsign
-            bool m_isFirstInterpolation = true;                    //!< set to false after the first successful interpolation
+            Aviation::CAircraftSituation m_lastInterpolation;      //!< last interpolation
 
             //! Constructor
             CInterpolator(const QString &objectName, const Aviation::CCallsign &callsign, QObject *parent);
@@ -129,8 +129,8 @@ namespace BlackMisc
             PhysicalQuantities::CAngle getPitch() const;
             PhysicalQuantities::CAngle getBank() const;
             PhysicalQuantities::CSpeed getGroundSpeed() const;
-            Aviation::CAircraftSituation getOldSituation() const { return m_oldSituation; }
-            Aviation::CAircraftSituation getNewSituation() const { return m_newSituation; }
+            const Aviation::CAircraftSituation &getOldSituation() const { return m_oldSituation; }
+            const Aviation::CAircraftSituation &getNewSituation() const { return m_newSituation; }
             //! @}
 
             //! Change time fraction

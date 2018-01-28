@@ -129,12 +129,10 @@ namespace BlackMisc
                 // - flying the ground elevation not really matters
                 if (!hints.getElevationPlane().isNull())
                 {
-                    const CAltitude groundElevation = hints.getElevationPlane().getAltitude();
-
                     // do not override existing values
-                    s[0].setGroundElevationChecked(groundElevation);
-                    s[1].setGroundElevationChecked(groundElevation);
-                    s[2].setGroundElevationChecked(groundElevation);
+                    s[0].setGroundElevationChecked(hints.getElevationPlane());
+                    s[1].setGroundElevationChecked(hints.getElevationPlane());
+                    s[2].setGroundElevationChecked(hints.getElevationPlane());
                 }
 
                 const double a0 = s[0].getCorrectedAltitude(hints.getCGAboveGround()).value();
@@ -163,11 +161,11 @@ namespace BlackMisc
             const double dt2 = static_cast<double>(m_nextSampleTime - m_prevSampleTime);
             const double timeFraction = dt1 / dt2;
             log.interpolator = 's';
-            log.oldSituation = m_interpolant.pbh().getOldSituation();
-            log.newSituation = m_interpolant.pbh().getNewSituation();
-            log.deltaTimeMs = dt1;
-            log.deltaTimeFractionMs = dt2;
+            log.situationOld = m_interpolant.pbh().getOldSituation();
+            log.situationNew = m_interpolant.pbh().getNewSituation();
+            log.deltaSampleTimesMs = dt2;
             log.simulationTimeFraction = timeFraction;
+            log.tsInterpolated = log.situationNew.getMSecsSinceEpoch(); // without offset
 
             status.setInterpolated(true);
             m_interpolant.setTimes(currentTimeMsSinceEpoc, timeFraction);
