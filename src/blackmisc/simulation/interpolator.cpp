@@ -140,11 +140,10 @@ namespace BlackMisc
             {
                 log.timestamp = currentTimeMsSinceEpoc;
                 log.callsign = m_callsign;
-                log.cgAboveGround = hints.getCGAboveGround();
-                log.vtolAircraft = hints.isVtolAircraft();
-                log.currentSituation = currentSituation;
-                log.useParts = hints.hasAircraftParts();
-                log.parts = hints.getAircraftParts();
+                log.groundFactor = groundFactor;
+                log.situationCurrent = currentSituation;
+                log.usedHints = hints;
+                log.usedSetup = setup;
                 m_logger->logInterpolation(log);
             }
 

@@ -63,6 +63,10 @@ namespace BlackMisc
             //! \see setElevationPlane
             Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, bool useProvider, bool forceProvider = false) const;
 
+            //! Get elevation from CInterpolationHints::getElevationProvider or CInterpolationHints::getElevation
+            //! \remark if validRadius is >= Geo::CElevationPlane::radius use validRadius
+            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, const PhysicalQuantities::CLength &validRadius, bool useProvider, bool forceProvider = false) const;
+
             //! Check if elevation is within radius and can be used
             bool isWithinRange(const Geo::ICoordinateGeodetic &coordinate) const;
 

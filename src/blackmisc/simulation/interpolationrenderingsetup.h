@@ -114,7 +114,7 @@ namespace BlackMisc
             BlackMisc::Aviation::CCallsignSet getLogCallsigns() const;
 
             //! Log the given callsign?
-            bool logCallsign(const Aviation::CCallsign &callsign) const;
+            bool isLogCallsign(const Aviation::CCallsign &callsign) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;

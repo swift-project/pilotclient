@@ -36,6 +36,15 @@ namespace BlackMisc
             return validPlane ? this->m_elevationPlane.getAltitude() : CAltitude::null();
         }
 
+        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, const CLength &validRadius, bool useProvider, bool forceProvider) const
+        {
+            const bool validPlane = m_elevationPlane.isWithinRange(situation, CLength::maxValue(validRadius, m_elevationPlane.getRadius()));
+            Q_ASSERT_X(!(forceProvider && !useProvider), Q_FUNC_INFO, "Invalid parameter combination");
+            if (forceProvider && useProvider && m_elevationProvider) { return m_elevationProvider(situation); }
+            if (!validPlane   && useProvider && m_elevationProvider) { return m_elevationProvider(situation); }
+            return validPlane ? this->m_elevationPlane.getAltitude() : CAltitude::null();
+        }
+
         void CInterpolationHints::resetElevationPlane()
         {
             m_elevationPlane = CElevationPlane();

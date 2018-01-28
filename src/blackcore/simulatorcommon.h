@@ -231,15 +231,16 @@ namespace BlackCore
         BlackMisc::Simulation::CAircraftModel m_defaultModel;              //!< default model
         BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals;   //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log interpolation
-        mutable QReadWriteLock m_interpolationRenderingSetupMutex;         //!< mutex protecting setup object
 
-        // setup for debugging, logs ..
+        // setup for logging etc.
+        mutable QReadWriteLock m_interpolationRenderingSetupMutex; //!< mutex protecting setup object
         BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< hints for callsign, contains last ground elevation fetched
 
+        // weather
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?
         BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
         BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorCommon::reloadWeatherSettings }; //!< Selected weather scenario
@@ -258,6 +259,9 @@ namespace BlackCore
         void callPhysicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
         void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign);
 
+        //! Display a logged situation in simulator
+        void displayLoggedSituationInSimulator(const BlackMisc::Aviation::CCallsign &cs, bool stopLogging, int times = 10);
+
         bool m_blinkCycle = false;            //!< used for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         int m_timerCounter = 0;               //!< allows to calculate n seconds
@@ -269,10 +273,10 @@ namespace BlackCore
 
         // statistics values of how often those functions are called
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)
-        int  m_statsPhysicallyAddedAircraft = 0;   //!< statistics, how many aircraft added
-        int  m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
-        int  m_statsPartsAdded = 0;                //!< statistics, how many aircraft parts added
-        int  m_statsSituationAdded = 0;            //!< statistics, how many situations added
+        int m_statsPhysicallyAddedAircraft = 0;   //!< statistics, how many aircraft added
+        int m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
+        int m_statsPartsAdded = 0;                //!< statistics, how many aircraft parts added
+        int m_statsSituationAdded = 0;            //!< statistics, how many situations added
     };
 } // namespace
 

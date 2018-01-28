@@ -13,6 +13,7 @@
 #define BLACKMISC_SIMULATION_INTERPOLATIONLOGGER_H
 
 #include "interpolationrenderingsetup.h"
+#include "interpolationhints.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
@@ -52,31 +53,51 @@ namespace BlackMisc
             static QString getLogDirectory();
 
             //! Log entry for situation interpolation
-            struct SituationLog
+            struct BLACKMISC_EXPORT SituationLog
             {
                 QChar interpolator;          //!< what interpolator is used
-                qint64 timestamp = -1;       //!< current timestamp
+                qint64 tsCurrent = -1;       //!< current timestamp
+                qint64 tsInterpolated = -1;  //!< timestamp interpolated
                 double groundFactor = -1;    //!< current ground factor
                 double vtolAircraft = false; //!< VTOL aircraft
-                double deltaTimeMs = 0;      //!< delta time to last situation
-                double simulationTimeFraction = -1; //!< time fraction, normally 0..1
-                double deltaTimeFractionMs = -1;    //!< delta time fraction
+                double simulationTimeFraction = -1; //!< time fraction, expected 0..1
+                double deltaSampleTimesMs = -1;     //!< delta time between samples (i.e. 2 situations)
                 bool useParts = false;              //!< supporting aircraft parts
+                int noTransferredElevations = 0;    //!< transferred elevation to n situations
                 Aviation::CCallsign callsign;       //!< current callsign
                 Aviation::CAircraftParts parts;     //!< corresponding parts used in interpolator
-                Aviation::CAircraftSituation oldSituation;     //!< old situation
-                Aviation::CAircraftSituation newSituation;     //!< new situation
-                Aviation::CAircraftSituation currentSituation; //!< interpolated situation
-                PhysicalQuantities::CLength cgAboveGround;     //!< center of gravity
+                Aviation::CAircraftSituation situationOld;     //!< old situation
+                Aviation::CAircraftSituation situationNew;     //!< new situation
+                Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
+                PhysicalQuantities::CLength  cgAboveGround;    //!< center of gravity
+                CInterpolationAndRenderingSetup usedSetup;     //!< used setup
+                CInterpolationHints usedHints; //!< hints
+
+                //! Delta time between interpolation and current time
+                double deltaCurrentToInterpolatedTime() const
+                {
+                    return static_cast<double>(tsCurrent - tsInterpolated);
+                }
+
+                //! Full name of interpolator
+                const QString &interpolationType() const;
+
+                //! To string
+                QString toQString(
+                    bool withCurrentSituation, bool withHints, bool withSetup, bool withElevation,
+                    bool withOtherPositions, bool withDeltaTimes, const QString &separator = {" "}) const;
             };
 
             //! Log entry for parts interpolation
-            struct PartsLog
+            struct BLACKMISC_EXPORT PartsLog
             {
-                qint64 timestamp = -1; //!< current timestamp
+                qint64 tsCurrent = -1; //!< current timestamp
                 bool empty = false;    //!< empty parts?
                 Aviation::CCallsign callsign;   //!< current callsign
                 Aviation::CAircraftParts parts; //!< parts to be logged
+
+                //! To string
+                QString toQString(const QString &separator = {" "}) const;
             };
 
             //! Log current interpolation cycle, only stores in memory, for performance reasons
@@ -108,6 +129,14 @@ namespace BlackMisc
             //! \threadsafe
             QList<PartsLog> getPartsLog(const Aviation::CCallsign &cs) const;
 
+            //! Get last log
+            //! \threadsafe
+            SituationLog getLastSituationLog() const;
+
+            //! Get last log
+            //! \threadsafe
+            SituationLog getLastSituationLog(const Aviation::CCallsign &cs) const;
+
             //! Get last situation
             //! \threadsafe
             Aviation::CAircraftSituation getLastSituation() const;
@@ -123,6 +152,14 @@ namespace BlackMisc
             //! Get last parts
             //! \threadsafe
             Aviation::CAircraftParts getLastParts(const Aviation::CCallsign &cs) const;
+
+            //! Get last parts
+            //! \threadsafe
+            PartsLog getLastPartsLog() const;
+
+            //! Get last parts
+            //! \threadsafe
+            PartsLog getLastPartsLog(const Aviation::CCallsign &cs) const;
 
             //! File pattern for interpolation log
             static const QString &filePatternInterpolationLog();
@@ -149,12 +186,15 @@ namespace BlackMisc
             //! Create readable time
             static QString msSinceEpochToTime(qint64 ms);
 
+            //! Create readable time plus timestamp
+            static QString msSinceEpochToTimeAndTimestamp(qint64 ms);
+
             //! Create readable time
             static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
 
-            mutable QReadWriteLock m_lockSituations; //!< lock logging
-            mutable QReadWriteLock m_lockParts;      //!< lock logging
-            int m_maxSituations = 2500;
+            mutable QReadWriteLock m_lockSituations; //!< lock logging situations
+            mutable QReadWriteLock m_lockParts;      //!< lock logging parts
+            int m_maxSituations = 2500;              //!< max.number of situations
             QList<PartsLog> m_partsLogs;             //!< logs of parts
             QList<SituationLog> m_situationLogs;     //!< logs of interpolation
         };

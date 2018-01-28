@@ -186,18 +186,32 @@ namespace BlackMisc
             return logs;
         }
 
+        CInterpolationLogger::SituationLog CInterpolationLogger::getLastSituationLog() const
+        {
+            QReadLocker l(&m_lockSituations);
+            if (m_situationLogs.isEmpty()) { return SituationLog(); }
+            return m_situationLogs.last();
+        }
+
+        CInterpolationLogger::SituationLog CInterpolationLogger::getLastSituationLog(const CCallsign &cs) const
+        {
+            const QList<SituationLog> copy(this->getSituationsLog(cs));
+            if (copy.isEmpty()) { return SituationLog(); }
+            return copy.last();
+        }
+
         CAircraftSituation CInterpolationLogger::getLastSituation() const
         {
             QReadLocker l(&m_lockSituations);
             if (m_situationLogs.isEmpty()) { return CAircraftSituation(); }
-            return m_situationLogs.last().currentSituation;
+            return m_situationLogs.last().situationCurrent;
         }
 
         CAircraftSituation CInterpolationLogger::getLastSituation(const CCallsign &cs) const
         {
             const QList<SituationLog> copy(this->getSituationsLog(cs));
             if (copy.isEmpty()) { return CAircraftSituation(); }
-            return copy.last().currentSituation;
+            return copy.last().situationCurrent;
         }
 
         CAircraftParts CInterpolationLogger::getLastParts() const
@@ -212,6 +226,20 @@ namespace BlackMisc
             const QList<PartsLog> copy(this->getPartsLog(cs));
             if (copy.isEmpty()) { return CAircraftParts(); }
             return copy.last().parts;
+        }
+
+        CInterpolationLogger::PartsLog CInterpolationLogger::getLastPartsLog() const
+        {
+            QReadLocker l(&m_lockParts);
+            if (m_partsLogs.isEmpty()) { return PartsLog(); }
+            return m_partsLogs.last();
+        }
+
+        CInterpolationLogger::PartsLog CInterpolationLogger::getLastPartsLog(const CCallsign &cs) const
+        {
+            const QList<PartsLog> copy(this->getPartsLog(cs));
+            if (copy.isEmpty()) { return PartsLog(); }
+            return copy.last();
         }
 
         const QString &CInterpolationLogger::filePatternInterpolationLog()
@@ -235,113 +263,113 @@ namespace BlackMisc
         QString CInterpolationLogger::getHtmlInterpolationLog(const QList<SituationLog> &logs)
         {
             if (logs.isEmpty()) { return {}; }
-            const QString tableHeader =
-                QLatin1String("<thead><tr>") %
-                QLatin1String("<th title=\"changed situation\">cs.</th><th>Int</th>") %
-                QLatin1String("<th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>") %
-                QLatin1String("<th>ts old</th><th>ts new</th><th>ts cur</th>") %
-                QLatin1String("<th>&Delta;t</th><th>&Delta;t fr.</th><th>fraction</th>") %
-                QLatin1String("<th>lat.old</th><th>lat.new</th><th>lat.cur</th>") %
-                QLatin1String("<th>lng.old</th><th>lng.new</th><th>lng.cur</th>") %
-                QLatin1String("<th>alt.old</th><th>alt.new</th><th>alt.cur</th>") %
-                QLatin1String("<th>elv.old</th><th>elv.new</th><th>elv.cur</th>") %
-                QLatin1String("<th>gnd.factor</th>") %
-                QLatin1String("<th>onGnd.old</th><th>onGnd.new</th><th>onGnd.cur</th>") %
-                QLatin1String("<th>CG</th>") %
-                QLatin1String("<th>parts</th><th title=\"changed parts\">cp.</th><th>parts details</th>") %
-                QLatin1String("</tr></thead>\n");
+            static const QString tableHeader =
+                QStringLiteral("<thead><tr>") %
+                QStringLiteral("<th title=\"changed situation\">cs.</th><th>Int</th>") %
+                QStringLiteral("<th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>") %
+                QStringLiteral("<th>ts old</th><th>ts new</th><th>ts cur</th>") %
+                QStringLiteral("<th>Interpolation ts.</th><th>Sample &Delta;t</th><th>fraction</th>") %
+                QStringLiteral("<th>lat.old</th><th>lat.new</th><th>lat.cur</th>") %
+                QStringLiteral("<th>lng.old</th><th>lng.new</th><th>lng.cur</th>") %
+                QStringLiteral("<th>alt.old</th><th>alt.new</th><th>alt.cur</th>") %
+                QStringLiteral("<th>elv.old</th><th>elv.new</th><th>elv.cur</th>") %
+                QStringLiteral("<th>gnd.factor</th>") %
+                QStringLiteral("<th>onGnd.old</th><th>onGnd.new</th><th>onGnd.cur</th>") %
+                QStringLiteral("<th>CG</th>") %
+                QStringLiteral("<th>parts</th><th title=\"changed parts\">cp.</th><th>parts details</th>") %
+                QStringLiteral("</tr></thead>\n");
 
             static const CLengthUnit ft = CLengthUnit::ft();
             const SituationLog firstLog = logs.first();
-            qint64 newPosTs = firstLog.newSituation.getMSecsSinceEpoch();
+            qint64 newPosTs = firstLog.situationNew.getMSecsSinceEpoch();
             CAircraftParts lastParts; // default, so shown if parts are different from default
 
             QString tableRows("<tbody>\n");
             for (const SituationLog &log : logs)
             {
-                const bool changedNewPosition = newPosTs != log.newSituation.getMSecsSinceEpoch();
-                const bool changedParts = lastParts != log.parts;
-                newPosTs = log.newSituation.getMSecsSinceEpoch();
+                const bool changedNewPosition = newPosTs != log.situationNew.getMSecsSinceEpoch();
+                const bool changedParts = (lastParts != log.parts);
+                newPosTs = log.situationNew.getMSecsSinceEpoch();
                 lastParts = log.parts;
 
                 // concatenating in multiple steps, otherwise C4503 warnings
                 tableRows +=
-                    QLatin1String("<tr>") %
-                    (changedNewPosition ? QLatin1String("<td class=\"changed\">*</td>") : QLatin1String("<td></td>")) %
-                    QLatin1String("<td>") % log.interpolator % QLatin1String("</td>") %
-                    QLatin1String("<td>") % log.callsign.asString() % QLatin1String("</td>") %
-                    QLatin1String("<td>") % boolToYesNo(log.vtolAircraft) % QLatin1String("</td>") %
-                    QLatin1String("<td>") % msSinceEpochToTime(log.timestamp) % QLatin1String("</td>") %
-                    QLatin1String("<td>") % QString::number(log.timestamp - firstLog.timestamp) % QLatin1String("</td>") %
+                    QStringLiteral("<tr>") %
+                    (changedNewPosition ? QStringLiteral("<td class=\"changed\">*</td>") : QStringLiteral("<td></td>")) %
+                    QStringLiteral("<td>") % log.interpolator % QStringLiteral("</td>") %
+                    QStringLiteral("<td>") % log.callsign.asString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td>") % boolToYesNo(log.vtolAircraft) % QStringLiteral("</td>") %
+                    QStringLiteral("<td>") % msSinceEpochToTime(log.tsCurrent) % QStringLiteral("</td>") %
+                    QStringLiteral("<td>") % QString::number(log.tsCurrent - firstLog.tsCurrent) % QStringLiteral("</td>") %
 
-                    QLatin1String("<td class=\"old\">") % msSinceEpochToTime(log.oldSituation.getAdjustedMSecsSinceEpoch()) % QLatin1Char('-') % QString::number(log.oldSituation.getTimeOffsetMs()) % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"new\">") % msSinceEpochToTime(log.newSituation.getAdjustedMSecsSinceEpoch()) % QLatin1Char('-') % QString::number(log.newSituation.getTimeOffsetMs()) % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"cur\">") % msSinceEpochToTime(log.currentSituation.getAdjustedMSecsSinceEpoch()) % QLatin1Char('-') % QString::number(log.currentSituation.getTimeOffsetMs()) % QLatin1String("</td>") %
+                    QStringLiteral("<td class=\"old\">") % log.situationOld.getTimestampAndOffset(true) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % log.situationNew.getTimestampAndOffset(true) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"cur\">") % log.situationCurrent.getTimestampAndOffset(true) % QStringLiteral("</td>") %
 
-                    QLatin1String("<td>") % QString::number(log.deltaTimeMs) % QLatin1String("</td>") %
-                    QLatin1String("<td>") % QString::number(log.deltaTimeFractionMs) % QLatin1String("</td>") %
-                    QLatin1String("<td>") % QString::number(log.simulationTimeFraction) % QLatin1String("</td>");
-
-                tableRows +=
-                    QLatin1String("<td class=\"old\">") % log.oldSituation.latitudeAsString() % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"new\">") % log.newSituation.latitudeAsString() % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"cur\">") % log.currentSituation.latitudeAsString() % QLatin1String("</td>") %
-
-                    QLatin1String("<td class=\"old\">") % log.oldSituation.longitudeAsString() % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"new\">") % log.newSituation.longitudeAsString() % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"cur\">") % log.currentSituation.longitudeAsString() % QLatin1String("</td>");
+                    QStringLiteral("<td>") % msSinceEpochToTime(log.tsInterpolated) % QStringLiteral("</td>") %
+                    QStringLiteral("<td>") % QString::number(log.deltaSampleTimesMs) % QStringLiteral("ms</td>") %
+                    QStringLiteral("<td>") % QString::number(log.simulationTimeFraction) % QStringLiteral("</td>");
 
                 tableRows +=
-                    QLatin1String("<td class=\"old\">") % log.oldSituation.getAltitude().valueRoundedWithUnit(ft, 1) % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"new\">") % log.newSituation.getAltitude().valueRoundedWithUnit(ft, 1) % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"cur\">") % log.currentSituation.getAltitude().valueRoundedWithUnit(ft, 1) % QLatin1String("</td>") %
+                    QStringLiteral("<td class=\"old\">") % log.situationOld.latitudeAsString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % log.situationNew.latitudeAsString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"cur\">") % log.situationCurrent.latitudeAsString() % QStringLiteral("</td>") %
 
-                    QLatin1String("<td class=\"old\">") % log.oldSituation.getGroundElevation().valueRoundedWithUnit(ft, 1) % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"new\">") % log.newSituation.getGroundElevation().valueRoundedWithUnit(ft, 1) % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"cur\">") % log.currentSituation.getGroundElevation().valueRoundedWithUnit(ft, 1) % QLatin1String("</td>") %
-
-                    QLatin1String("<td>") % QString::number(log.groundFactor) % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"old\">") % log.oldSituation.getOnGroundInfo() % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"new\">") % log.newSituation.getOnGroundInfo() % QLatin1String("</td>") %
-                    QLatin1String("<td class=\"cur\">") % log.currentSituation.getOnGroundInfo() % QLatin1String("</td>");
+                    QStringLiteral("<td class=\"old\">") % log.situationOld.longitudeAsString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % log.situationNew.longitudeAsString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"cur\">") % log.situationCurrent.longitudeAsString() % QStringLiteral("</td>");
 
                 tableRows +=
-                    QLatin1String("<td>") % log.cgAboveGround.valueRoundedWithUnit(CLengthUnit::ft(), 0) % QLatin1String("</td>") %
-                    QLatin1String("<td>") % boolToYesNo(log.useParts) % QLatin1String("</td>") %
-                    (changedParts ? QLatin1String("<td class=\"changed\">*</td>") : QLatin1String("<td></td>")) %
-                    QLatin1String("<td>") % (log.useParts ? log.parts.toQString(true) : QLatin1String("")) % QLatin1String("</td>") %
-                    QLatin1String("</tr>\n");
+                    QStringLiteral("<td class=\"old\">") % log.situationOld.getAltitude().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % log.situationNew.getAltitude().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"cur\">") % log.situationCurrent.getAltitude().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+
+                    QStringLiteral("<td class=\"old\">") % log.situationOld.getGroundElevation().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % log.situationNew.getGroundElevation().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"cur\">") % log.situationCurrent.getGroundElevation().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+
+                    QStringLiteral("<td>") % QString::number(log.groundFactor) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"old\">") % log.situationOld.getOnGroundInfo() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % log.situationNew.getOnGroundInfo() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"cur\">") % log.situationCurrent.getOnGroundInfo() % QStringLiteral("</td>");
+
+                tableRows +=
+                    QStringLiteral("<td>") % log.cgAboveGround.valueRoundedWithUnit(ft, 0) % QStringLiteral("</td>") %
+                    QStringLiteral("<td>") % boolToYesNo(log.useParts) % QStringLiteral("</td>") %
+                    (changedParts ? QStringLiteral("<td class=\"changed\">*</td>") : QStringLiteral("<td></td>")) %
+                    QStringLiteral("<td>") % (log.useParts ? log.parts.toQString(true) : QStringLiteral("")) % QStringLiteral("</td>") %
+                    QStringLiteral("</tr>\n");
             }
 
-            tableRows += QLatin1String("</tbody>\n");
-            return QLatin1String("<table class=\"small\">\n") % tableHeader % tableRows % QLatin1String("</table>\n");
+            tableRows += QStringLiteral("</tbody>\n");
+            return QStringLiteral("<table class=\"small\">\n") % tableHeader % tableRows % QStringLiteral("</table>\n");
         }
 
         QString CInterpolationLogger::getHtmlPartsLog(const QList<PartsLog> &logs)
         {
             if (logs.isEmpty()) { return {}; }
-            const QString tableHeader =
-                QLatin1String("<thead><tr>") %
-                QLatin1String("<th>CS</th><th>timestamp</th>") %
-                QLatin1String("<th>c.</th>") %
-                QLatin1String("<th>parts</th>") %
-                QLatin1String("</tr></thead>\n");
+            static const QString tableHeader =
+                QStringLiteral("<thead><tr>") %
+                QStringLiteral("<th>CS</th><th>timestamp</th>") %
+                QStringLiteral("<th>c.</th>") %
+                QStringLiteral("<th>parts</th>") %
+                QStringLiteral("</tr></thead>\n");
 
             CAircraftParts lastParts; // default, so shown if parts are different from default
             QString tableRows("<tbody>\n");
             for (const PartsLog &log : logs)
             {
-                const bool changedParts = lastParts != log.parts;
+                const bool changedParts = (lastParts != log.parts);
                 lastParts = log.parts;
                 tableRows +=
-                    QLatin1String("<tr>") %
-                    QLatin1String("<td>") % log.callsign.asString() % QLatin1String("</td>") %
-                    QLatin1String("<td>") % msSinceEpochToTime(log.timestamp) % QLatin1String("</td>") %
-                    (changedParts ? QLatin1String("<td class=\"changed\">*</td>") : QLatin1String("<td></td>")) %
-                    QLatin1String("<td>") % (log.empty ? QLatin1String("empty") : log.parts.toQString()) % QLatin1String("</td>");
+                    QStringLiteral("<tr>") %
+                    QStringLiteral("<td>") % log.callsign.asString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td>") % msSinceEpochToTime(log.tsCurrent) % QStringLiteral("</td>") %
+                    (changedParts ? QStringLiteral("<td class=\"changed\">*</td>") : QStringLiteral("<td></td>")) %
+                    QStringLiteral("<td>") % (log.empty ? QStringLiteral("empty") : log.parts.toQString()) % QStringLiteral("</td>");
             }
-            tableRows += QLatin1String("</tbody>\n");
-            return QLatin1String("<table class=\"small\">\n") % tableHeader % tableRows % QLatin1String("</table>\n");
+            tableRows += QStringLiteral("</tbody>\n");
+            return QStringLiteral("<table class=\"small\">\n") % tableHeader % tableRows % QStringLiteral("</table>\n");
         }
 
         void CInterpolationLogger::clearLog()
@@ -362,10 +390,86 @@ namespace BlackMisc
             return QDateTime::fromMSecsSinceEpoch(ms).toString(dateFormat);
         }
 
+        QString CInterpolationLogger::msSinceEpochToTimeAndTimestamp(qint64 ms)
+        {
+            return CInterpolationLogger::msSinceEpochToTime(ms) % QStringLiteral("/") % QString::number(ms);
+        }
+
         QString CInterpolationLogger::msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3)
         {
-            if (t3 < 0) return QString("%1 %2").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2));
-            return QString("%1 %2 %3").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2), msSinceEpochToTime(t3));
+            static const QString s2("%1 %2");
+            if (t3 < 0) { return s2.arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2)); }
+
+            static const QString s3("%1 %2 %3");
+            return s3.arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2), msSinceEpochToTime(t3));
+        }
+
+        QString CInterpolationLogger::SituationLog::toQString(
+            bool withCurrentSituation, bool withHints, bool withSetup,
+            bool withElevation, bool withOtherPositions, bool withDeltaTimes, const QString &separator) const
+        {
+            return QStringLiteral("CS: ") % callsign.asString() % separator %
+                   QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+                   QStringLiteral(" type: ") % this->interpolationType() %
+                   QStringLiteral(" gnd.fa.: ") % QString::number(groundFactor) %
+                   (
+                       withHints ?
+                       separator % QStringLiteral("hints: ") % usedHints.toQString(true) :
+                       QStringLiteral("")
+                   ) %
+                   (
+                       withSetup ?
+                       separator % QStringLiteral("setup: ") % usedSetup.toQString(true) :
+                       QStringLiteral("")
+                   ) %
+                   (
+                       withElevation ?
+                       separator %
+                       QStringLiteral("transf.elv.: ") % QString::number(noTransferredElevations)  :
+                       QStringLiteral("")
+                   ) %
+                   (
+                       withDeltaTimes ?
+                       separator %
+                       QStringLiteral("int.time: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+                       QStringLiteral(" sample dt: ") % QString::number(deltaSampleTimesMs) % QStringLiteral("ms") %
+                       QStringLiteral(" fr.[0-1]: ") % QString::number(simulationTimeFraction) %
+                       QStringLiteral(" old pos.: ") % situationOld.getTimestampAndOffset(true) %
+                       QStringLiteral(" new pos.: ") % situationNew.getTimestampAndOffset(true) :
+                       QStringLiteral("")
+                   ) %
+                   (
+                       withCurrentSituation ?
+                       separator %
+                       QStringLiteral("sit.: ") % situationCurrent.toQString(true) :
+                       QStringLiteral("")
+                   ) %
+                   (
+                       withOtherPositions ?
+                       separator %
+                       QStringLiteral("old: ") % situationOld.toQString(true) %
+                       separator %
+                       QStringLiteral("new: ") % situationNew.toQString(true) :
+                       QStringLiteral("")
+                   );
+        }
+
+        QString CInterpolationLogger::PartsLog::toQString(const QString &separator) const
+        {
+            return QStringLiteral("CS: ") % callsign.asString() % separator %
+                   QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+                   separator %
+                   QStringLiteral("parts: ") % parts.toQString(true);
+        }
+
+        const QString &CInterpolationLogger::SituationLog::interpolationType() const
+        {
+            static const QString s("spline");
+            static const QString l("linear");
+            static const QString u("unknown");
+            if (interpolator == 's') { return s; }
+            if (interpolator == 'l') { return l; }
+            return u;
         }
     } // namespace
 } // namespace
