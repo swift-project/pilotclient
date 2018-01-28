@@ -245,9 +245,6 @@ namespace BlackCore
             //! Load flight plan (from network)
             virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
-            //! Command line was entered
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
-
             //! Use the selected COM1/2 frequencies, and get the corresponding voice room for it
             virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const = 0;
 

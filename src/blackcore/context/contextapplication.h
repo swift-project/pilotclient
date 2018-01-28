@@ -205,6 +205,9 @@ namespace BlackCore
             //! Remote enabled version of file exists
             virtual bool existsFile(const QString &fileName) const = 0;
 
+            //! Forward to facade
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
             //! The HTML help for dot commands
             virtual QString dotCommandsHtmlHelp() const = 0;
 

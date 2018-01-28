@@ -139,9 +139,6 @@ namespace BlackCore
             //! Automatic voice room resolution for frequencies
             virtual void enableAutomaticVoiceRoomResolution(bool enable) = 0;
 
-            //! Parse command line
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
-
             //! Default situation
             //! \remark normally used when no driver is attached
             static const BlackMisc::Aviation::CAircraftSituation &getDefaultSituation();

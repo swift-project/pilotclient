@@ -173,9 +173,6 @@ namespace BlackCore
 
             //! Is loobback enabled?
             virtual bool isAudioLoopbackEnabled() const = 0;
-
-            //! Command line was entered
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
         };
     } // ns
 } // ns

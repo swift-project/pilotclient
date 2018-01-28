@@ -149,6 +149,12 @@ namespace BlackCore
             Q_UNUSED(argument);
             Q_UNUSED(origin);
         }
+
+        bool IContextApplication::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
+        {
+            if (!this->getRuntime()) { return false; }
+            return this->getRuntime()->parseCommandLine(commandLine, originator);
+        }
     } // ns
 } // ns
 

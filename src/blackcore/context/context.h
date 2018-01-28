@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QString>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 namespace BlackMisc { class CLogCategoryList; }
 namespace BlackCore
@@ -125,8 +126,15 @@ namespace BlackCore
             //! Debug enabled?
             bool isDebugEnabled() const;
 
+            // ---------------------------------------------------------------
+            // All context must implement those functions
+            // ---------------------------------------------------------------
+
             //! Id and path name for round trip protection
             virtual QString getPathAndContextId() const = 0;
+
+            //! Parse a given command line
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
 
         signals:
             //! Log or debug values changed
@@ -145,7 +153,7 @@ namespace BlackCore
             //! Path and context id
             QString buildPathAndContextId(const QString &path) const
             {
-                return QString(path) + ":" + QString::number(this->getUniqueId());
+                return path % QStringLiteral(":") % QString::number(this->getUniqueId());
             }
 
             //! Relay signals from this class
