@@ -85,6 +85,9 @@ namespace BlackMisc
             //! Default constructor.
             CAircraftSituation();
 
+            //! Constructor with callsign
+            CAircraftSituation(const CCallsign &correspondingCallsign);
+
             //! Comprehensive constructor
             CAircraftSituation(const Geo::CCoordinateGeodetic &position,
                                const CHeading &heading = {},
@@ -116,6 +119,12 @@ namespace BlackMisc
 
             //! Position null?
             bool isPositionNull() const { return m_position.isNull(); }
+
+            //! Null situation
+            virtual bool isNull() const override;
+
+            //! Set to null
+            void setNull();
 
             //! Set position
             void setPosition(const Geo::CCoordinateGeodetic &position) { m_position = position; }

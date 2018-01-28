@@ -99,7 +99,7 @@ namespace BlackMiscTest
             QVERIFY2(status.isInterpolated(), "Value was not interpolated");
             const double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
             const double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
-            QVERIFY2(latDeg < latOld && lngDeg < lngOld, "Values shall decrease");
+            QVERIFY2(latDeg < latOld && lngDeg < lngOld, QString("Values shall decrease: %1/%2 %3/%4").arg(latDeg).arg(latOld).arg(lngDeg).arg(lngOld).toLatin1());
             QVERIFY2(latDeg >= 0 && latDeg <= IRemoteAircraftProvider::MaxSituationsPerCallsign, "Values shall be in range");
             latOld = latDeg;
             lngOld = lngDeg;
@@ -108,13 +108,14 @@ namespace BlackMiscTest
         QTime timer;
         timer.start();
         int interpolationNo = 0;
-        qint64 startTimeMsSinceEpoch = ts - 2 * deltaT;
+        const qint64 startTimeMsSinceEpoch = ts - 2 * deltaT;
 
         // Pseudo performance test:
         // Those make not completely sense, as the performance depends on the implementation of
         // the dummy provider, which is different from the real provider
         // With one callsign in the lists (of dummy provider) it is somehow expected to be roughly the same performance
 
+        interpolator.resetLastInterpolation();
         for (int loops = 0; loops < 20; loops++)
         {
             for (qint64 currentTime = startTimeMsSinceEpoch + offset; currentTime < ts + offset; currentTime += (deltaT / 20))
@@ -126,9 +127,10 @@ namespace BlackMiscTest
                                                     (currentTime, setup, hints, status)
                                                    );
                 QVERIFY2(status.isInterpolated(), "Not interpolated");
+                QVERIFY2(!currentSituation.getCallsign().isEmpty(), "Empty callsign");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");
-                double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
-                double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
+                const double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
+                const double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
                 Q_UNUSED(latDeg);
                 Q_UNUSED(lngDeg);
                 interpolationNo++;
@@ -143,7 +145,8 @@ namespace BlackMiscTest
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
             CPartsStatus partsStatus;
-            CAircraftParts pl(interpolator.getInterpolatedParts(ts, setup, partsStatus));
+            const CAircraftParts pl(interpolator.getInterpolatedParts(ts, setup, partsStatus));
+            Q_UNUSED(pl);
             fetchedParts++;
             QVERIFY2(partsStatus.isSupportingParts(), "Parts not supported");
         }
@@ -153,15 +156,15 @@ namespace BlackMiscTest
 
     CAircraftSituation CTestInterpolator::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset)
     {
-        CAltitude alt(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
-        CLatitude lat(number, CAngleUnit::deg());
-        CLongitude lng(180.0 + number, CAngleUnit::deg());
-        CHeading heading(number * 10, CHeading::True, CAngleUnit::deg());
-        CAngle bank(number, CAngleUnit::deg());
-        CAngle pitch(number, CAngleUnit::deg());
-        CSpeed gs(number * 10, CSpeedUnit::km_h());
-        CAltitude gndElev({ 0, CLengthUnit::m() }, CAltitude::MeanSeaLevel);
-        CCoordinateGeodetic c(lat, lng, alt);
+        const CAltitude alt(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
+        const CLatitude lat(number, CAngleUnit::deg());
+        const CLongitude lng(180.0 + number, CAngleUnit::deg());
+        const CHeading heading(number * 10, CHeading::True, CAngleUnit::deg());
+        const CAngle bank(number, CAngleUnit::deg());
+        const CAngle pitch(number, CAngleUnit::deg());
+        const CSpeed gs(number * 10, CSpeedUnit::km_h());
+        const CAltitude gndElev({ 0, CLengthUnit::m() }, CAltitude::MeanSeaLevel);
+        const CCoordinateGeodetic c(lat, lng, alt);
         CAircraftSituation s(callsign, c, heading, pitch, bank, gs, gndElev);
         s.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         s.setTimeOffsetMs(offset);

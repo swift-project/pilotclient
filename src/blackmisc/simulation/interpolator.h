@@ -82,6 +82,10 @@ namespace BlackMisc
             //! Get an interpolator info string (for debug info)
             QString getInterpolatorInfo() const;
 
+            //! Reset last interpolation to null
+            //! \remark mainly needed in UNIT tests
+            void resetLastInterpolation();
+
         protected:
             Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
             Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts for one aircraft

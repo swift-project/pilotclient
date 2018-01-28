@@ -29,6 +29,10 @@ namespace BlackMisc
         CAircraftSituation::CAircraftSituation()
             : m_groundElevation( { 0, nullptr }, CAltitude::MeanSeaLevel) {}
 
+        CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign)
+            : m_correspondingCallsign(correspondingCallsign), m_groundElevation( { 0, nullptr }, CAltitude::MeanSeaLevel)
+        {}
+
         CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
             : m_position(position), m_heading(heading), m_pitch(pitch),
               m_bank(bank), m_groundSpeed(gs), m_groundElevation(groundElevation)
@@ -165,6 +169,23 @@ namespace BlackMisc
             const QString assertMsg("No comparison for index " + index.toQString());
             BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(assertMsg));
             return 0;
+        }
+
+        bool CAircraftSituation::isNull() const
+        {
+            return this->isPositionNull();
+        }
+
+        void CAircraftSituation::setNull()
+        {
+            m_position.setNull();
+            m_pressureAltitude.setNull();
+            m_heading.setNull();
+            m_pitch.setNull();
+            m_bank.setNull();
+            m_groundElevation.setNull();
+            m_groundSpeed.setNull();
+            m_onGroundReliability = CAircraftSituation::OnGroundReliabilityNoSet;
         }
 
         const QString &CAircraftSituation::isOnGroundAsString() const

@@ -57,13 +57,20 @@ namespace BlackMisc
             const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints,
             CInterpolationStatus &status)
         {
+            Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
+
             // this code is used by linear and spline interpolator
             status.reset();
             CInterpolationLogger::SituationLog log;
 
             // any data at all?
-            if (m_aircraftSituations.isEmpty()) { return {}; }
+            if (m_aircraftSituations.isEmpty()) { return CAircraftSituation(m_callsign); }
             CAircraftSituation currentSituation = m_lastInterpolation.isNull() ? m_aircraftSituations.front() : m_lastInterpolation;
+            if (currentSituation.getCallsign() != m_callsign)
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
+                currentSituation.setCallsign(m_callsign);
+            }
 
             // Update current position by hints' elevation
             // * for XP provided by hints.getElevationProvider at current position
@@ -296,8 +303,12 @@ namespace BlackMisc
         template <typename Derived>
         void CInterpolator<Derived>::addAircraftSituation(const CAircraftSituation &situation)
         {
+            Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
+            Q_ASSERT_X(situation.getCallsign() == m_callsign, Q_FUNC_INFO, "Wrong callsign");
             if (m_aircraftSituations.isEmpty())
             {
+                this->resetLastInterpolation(); // delete any leftover
+
                 // make sure we have enough situations to do start interpolating immediately without waiting for more updates
                 m_aircraftSituations = { situation, situation };
                 m_aircraftSituations.back().addMsecs(-10000); // number here does
@@ -335,6 +346,12 @@ namespace BlackMisc
                    QString::number(m_aircraftParts.size()) %
                    QStringLiteral(" 1st interpolation: ") %
                    boolToYesNo(m_lastInterpolation.isNull());
+        }
+
+        template<typename Derived>
+        void CInterpolator<Derived>::resetLastInterpolation()
+        {
+            m_lastInterpolation.setNull();
         }
 
         template <typename Derived>
