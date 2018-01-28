@@ -30,11 +30,11 @@ namespace BlackMisc
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
-
     namespace Views
     {
         //! Aircraft view
-        class BLACKGUI_EXPORT CSimulatedAircraftView : public CViewWithCallsignObjects<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
+        class BLACKGUI_EXPORT CSimulatedAircraftView :
+                public CViewWithCallsignObjects<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
         {
             Q_OBJECT
 
@@ -65,13 +65,13 @@ namespace BlackGui
             //! \copydoc CViewBase::customMenu
             virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
-        private slots:
-            void ps_requestTextMessage();
-            void ps_toogleEnabledAircraft();
-            void ps_fastPositionUpdates();
-            void ps_highlightInSimulator();
-
         private:
+            void requestTextMessage();
+            void toogleEnabledAircraft();
+            void fastPositionUpdates();
+            void highlightInSimulator();
+            void showPositionLogInSimulator();
+
             bool m_withMenuHighlight = true;
             bool m_withMenuEnable = true;
             bool m_withMenuFastPosition = true;

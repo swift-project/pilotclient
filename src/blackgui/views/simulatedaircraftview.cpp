@@ -11,14 +11,18 @@
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/views/simulatedaircraftview.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Context;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 
@@ -48,51 +52,63 @@ namespace BlackGui
 
         void CSimulatedAircraftView::customMenu(CMenuActions &menuActions)
         {
-            if (BlackConfig::CBuildConfig::isDebugBuild())
-            {
-                // tbd
-            }
-
             if (this->hasSelection())
             {
                 CSimulatedAircraft aircraft(selectedObject());
                 Q_ASSERT(!aircraft.getCallsign().isEmpty());
-                menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CSimulatedAircraftView::ps_requestTextMessage });
-                if (m_withMenuEnable)       { menuActions.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::ps_toogleEnabledAircraft }); }
-                if (m_withMenuHighlight)    { menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::ps_highlightInSimulator }); }
-                if (m_withMenuFastPosition) { menuActions.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates",  CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::ps_fastPositionUpdates }); }
+                menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CSimulatedAircraftView::requestTextMessage });
+                if (m_withMenuEnable)       { menuActions.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::toogleEnabledAircraft }); }
+                if (m_withMenuHighlight)    { menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::highlightInSimulator }); }
+                if (m_withMenuFastPosition) { menuActions.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates",  CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::fastPositionUpdates }); }
+                const bool any = m_withMenuEnable || m_withMenuFastPosition || m_withMenuHighlight;
+                if (any && (sApp && sApp->isDeveloperFlagSet()))
+                {
+                    menuActions.addAction(CIcons::appSimulator16(), "Show position log.", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::showPositionLogInSimulator });
+                }
             }
             CViewBase::customMenu(menuActions);
         }
 
-        void CSimulatedAircraftView::ps_requestTextMessage()
+        void CSimulatedAircraftView::requestTextMessage()
         {
-            CSimulatedAircraft aircraft(selectedObject());
+            const CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
-            emit requestTextMessageWidget(aircraft.getCallsign());
+            emit this->requestTextMessageWidget(aircraft.getCallsign());
         }
 
-        void CSimulatedAircraftView::ps_toogleEnabledAircraft()
+        void CSimulatedAircraftView::toogleEnabledAircraft()
         {
             CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
             aircraft.setEnabled(!aircraft.isEnabled());
-            emit requestEnableAircraft(aircraft);
+            emit this->requestEnableAircraft(aircraft);
         }
 
-        void CSimulatedAircraftView::ps_fastPositionUpdates()
+        void CSimulatedAircraftView::fastPositionUpdates()
         {
             CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
             aircraft.setFastPositionUpdates(!aircraft.fastPositionUpdates());
-            emit requestFastPositionUpdates(aircraft);
+            emit this->requestFastPositionUpdates(aircraft);
         }
 
-        void CSimulatedAircraftView::ps_highlightInSimulator()
+        void CSimulatedAircraftView::highlightInSimulator()
         {
-            CSimulatedAircraft aircraft(selectedObject());
+            const CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
-            emit requestHighlightInSimulator(aircraft);
+            emit this->requestHighlightInSimulator(aircraft);
+        }
+
+        void CSimulatedAircraftView::showPositionLogInSimulator()
+        {
+            if (!sGui || sGui->isShuttingDown())  { return; }
+            if (!sGui->getIContextSimulator())  { return; }
+            const CSimulatedAircraft aircraft(selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+
+            const CIdentifier i(this->objectName());
+            const QString dotCmd(".drv pos " + aircraft.getCallsignAsString());
+            sGui->getIContextSimulator()->parseCommandLine(dotCmd, i);
         }
     } // ns
 } // ns
