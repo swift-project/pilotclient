@@ -200,7 +200,9 @@ namespace BlackGui
         {
             const CUpdateInfo updateInfo = m_updates.get();
             if (updateInfo.getArtifactsXSwiftBus().isEmpty()) { return; }
-            const CArtifactList artifacts = updateInfo.getArtifactsXSwiftBusLatestVersionFirst();
+            const CArtifactList artifacts = updateInfo.getArtifactsXSwiftBusLatestVersionFirst().findWithUnrestrictedDistributions();
+            if (artifacts.isEmpty()) { return; }
+
             const CRemoteFileList remoteFiles = artifacts.asRemoteFiles();
             if (!remoteFiles.isEmpty())
             {

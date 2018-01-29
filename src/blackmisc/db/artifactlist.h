@@ -64,6 +64,9 @@ namespace BlackMisc
             //! Find by distribution
             CArtifactList findByDistribution(const CDistribution &distribution, bool findMoreStableDistribution = false) const;
 
+            //! Find artifacts with public (unrestricted) distributions
+            CArtifactList findWithUnrestrictedDistributions() const;
+
             //! Find by distribution and platform
             CArtifactList findByDistributionAndPlatform(const CDistribution &distribution, const CPlatform &platform, bool findMoreStableDistributions = false) const;
 

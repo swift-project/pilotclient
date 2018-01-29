@@ -56,6 +56,11 @@ namespace BlackMisc
             return m_platform.matchesAny(platform);
         }
 
+        bool CArtifact::hasUnrestrictedDistribution() const
+        {
+            return m_distributions.containsUnrestricted();
+        }
+
         bool CArtifact::isWithDistribution(const CDistribution &distribution, bool acceptMoreStableDistributions) const
         {
             if (distribution.isEmpty() || !this->hasDistributions()) { return false; }
@@ -73,6 +78,7 @@ namespace BlackMisc
             CRemoteFile rf(this->getName(), this->getFileSize());
             const CDistribution d = this->getMostStableDistribution();
             const CUrl url = d.getDownloadUrls().getRandomUrl();
+            if (url.isEmpty()) { return CRemoteFile(); }
             rf.setUtcTimestamp(this->getUtcTimestamp());
             rf.setUrl(url);
             rf.setDescription(this->getPlatform().toQString() + " " + d.getChannel());

@@ -48,7 +48,7 @@ namespace BlackMisc
 
         bool CDistributionList::containsUnrestricted() const
         {
-            return this->contains(&CDistribution::isRestricted, true);
+            return this->contains(&CDistribution::isRestricted, false);
         }
 
         bool CDistributionList::containsChannel(const QString &channel) const

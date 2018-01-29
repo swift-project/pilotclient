@@ -77,6 +77,17 @@ namespace BlackMisc
             return al;
         }
 
+        CArtifactList CArtifactList::findWithUnrestrictedDistributions() const
+        {
+            CArtifactList al;
+            for (const CArtifact &artifact : *this)
+            {
+                if (!artifact.hasUnrestrictedDistribution()) { continue; }
+                al.push_back(artifact);
+            }
+            return al;
+        }
+
         CArtifactList CArtifactList::findByDistributionAndPlatform(const CDistribution &distribution, const CPlatform &platform, bool findMoreStableDistributions) const
         {
             return this->findByMatchingPlatform(platform).findByDistribution(distribution, findMoreStableDistributions);

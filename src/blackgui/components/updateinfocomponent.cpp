@@ -183,9 +183,10 @@ namespace BlackGui
             const CDistribution selectedDistribution(this->getSelectedOrDefaultDistribution());
             const CPlatform selectedPlatform(this->getSelectedOrDefaultPlatform());
 
+            // for XSwiftBus we only show public (unrestricted) ones, as the follow up dialog will only show unrestricted
             const CUpdateInfo updateInfo(m_updateInfo.get());
             const CArtifactList artifactsPilotClient = updateInfo.getArtifactsPilotClient().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
-            const CArtifactList artifactsXsb = updateInfo.getArtifactsXSwiftBus().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
+            const CArtifactList artifactsXsb = updateInfo.getArtifactsXSwiftBus().findWithUnrestrictedDistributions().findByDistributionAndPlatform(selectedDistribution, selectedPlatform, true);
 
             const QStringList sortedPilotClientVersions = artifactsPilotClient.getSortedVersions();
             ui->cb_ArtifactsPilotClient->clear();

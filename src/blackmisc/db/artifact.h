@@ -123,6 +123,9 @@ namespace BlackMisc
             //! Has distributions?
             bool hasDistributions() const { return !m_distributions.isEmpty(); }
 
+            //! Has unrestricted distribution
+            bool hasUnrestrictedDistribution() const;
+
             //! Is distributed with given distribution?
             bool isWithDistribution(const CDistribution &distribution, bool acceptMoreStableDistributions) const;
 
