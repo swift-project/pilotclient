@@ -14,6 +14,8 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
+#include <QStringBuilder>
+
 namespace BlackMisc
 {
     namespace Simulation
@@ -79,14 +81,10 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCenterOfGravity:
-                return this->m_cgAboveGround.propertyByIndex(index.copyFrontRemoved());
-            case IndexElevationPlane:
-                return this->m_elevationPlane.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsVtolAircraft:
-                return CVariant::fromValue(m_isVtol);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexCenterOfGravity: return this->m_cgAboveGround.propertyByIndex(index.copyFrontRemoved());
+            case IndexElevationPlane: return this->m_elevationPlane.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsVtolAircraft: return CVariant::fromValue(m_isVtol);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -113,8 +111,17 @@ namespace BlackMisc
 
         QString CInterpolationHints::convertToQString(bool i18n) const
         {
-            static const QString s("%1 %2");
-            return s.arg(m_elevationPlane.toQString(i18n), m_cgAboveGround.toQString(i18n));
+            return
+                QStringLiteral("VTOL: ") % boolToYesNo(m_isVtol) %
+                QStringLiteral(" parts: ") % boolToYesNo(m_hasParts) %
+                (
+                    m_hasParts ?
+                    QStringLiteral(" parts: ") % m_aircraftParts.toQString(i18n) :
+                    QStringLiteral("")
+                ) %
+                QStringLiteral(" CG: ") % m_cgAboveGround.valueRoundedWithUnit(CLengthUnit::m(), 1) %
+                QStringLiteral(" elv.plane: ") % m_elevationPlane.toQString(i18n) %
+                QStringLiteral(" elv.pr: ") % boolToYesNo(m_elevationProvider ? true : false);
         }
 
         QString CInterpolationHints::debugInfo(const Geo::CElevationPlane &deltaElevation) const

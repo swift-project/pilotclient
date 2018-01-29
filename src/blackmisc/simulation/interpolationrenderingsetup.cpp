@@ -9,6 +9,7 @@
 
 #include "interpolationrenderingsetup.h"
 #include "stringutils.h"
+#include <QStringBuilder>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -165,17 +166,12 @@ namespace BlackMisc
         QString CInterpolationAndRenderingSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s("Setup: debug sim: ");
-            s += boolToYesNo(m_simulatorDebugMessages);
-            s += " debug interpolator: ";
-            s += boolToYesNo(m_interpolatorDebugMessage);
-            s += " force full interpolation: ";
-            s += boolToYesNo(m_forceFullInterpolation);
-            s += " max.aircraft:";
-            s += QString::number(m_maxRenderedAircraft);
-            s += " max.distance:";
-            s += m_maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::NM(), 2);
-            return s;
+            return
+                QStringLiteral("Debug sim: ") % boolToYesNo(m_simulatorDebugMessages) %
+                QStringLiteral(" debug interpolator: ") % boolToYesNo(m_interpolatorDebugMessage) %
+                QStringLiteral(" force full interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
+                QStringLiteral(" max.aircraft:") % QString::number(m_maxRenderedAircraft) %
+                QStringLiteral(" max.distance:") % m_maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::NM(), 2);
         }
 
         CVariant CInterpolationAndRenderingSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
