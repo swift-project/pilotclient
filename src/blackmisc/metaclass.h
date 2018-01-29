@@ -28,7 +28,7 @@
 
 // Work around MinGW problem with combination of constexpr and extern template
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#define BLACK_NO_EXPORT_CONSTEXPR constexpr inline __attribute__((gnu_inline))
+#define BLACK_NO_EXPORT_CONSTEXPR constexpr inline __attribute__((always_inline))
 #else
 #define BLACK_NO_EXPORT_CONSTEXPR constexpr
 #endif
