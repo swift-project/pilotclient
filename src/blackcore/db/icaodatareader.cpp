@@ -397,7 +397,7 @@ namespace BlackCore
 
         CStatusMessageList CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
         {
-            QDir directory(dir);
+            const QDir directory(dir);
             if (!directory.exists())
             {
                 return CStatusMessage(this).error("Missing directory '%1'") << dir;

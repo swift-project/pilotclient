@@ -15,6 +15,7 @@
 #include "blackcore/application.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
@@ -580,13 +581,36 @@ namespace BlackCore
         bool CDatabaseReader::hasCacheTimestampNewerThan(CEntityFlags::Entity entity, const QDateTime &threshold) const
         {
             const QDateTime ts = this->getCacheTimestamp(entity);
-            if (!ts.isValid()) return false;
+            if (!ts.isValid()) { return false; }
             return ts > threshold;
         }
 
         const QString &CDatabaseReader::getStatusMessage() const
         {
             return m_statusMessage;
+        }
+
+        CStatusMessageList CDatabaseReader::initFromLocalResourceFiles()
+        {
+            static const QDateTime threshold = QDateTime::currentDateTimeUtc().addYears(-1);
+            const QSet<CEntityFlags::Entity> eSet = CEntityFlags::asSingleEntities(this->getSupportedEntities());
+
+            CStatusMessageList msgs;
+            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+            for (CEntityFlags::Entity e : eSet)
+            {
+                if (this->hasCacheTimestampNewerThan(e, threshold))
+                {
+                    entities |= e;
+                }
+                {
+                    msgs.push_back(CStatusMessage(this).info("Will not init from local file, there are already data for '%1'") << CEntityFlags::flagToString(e));
+                }
+            }
+
+            const CStatusMessageList readMsgs = this->readFromJsonFiles(CDirectoryUtils::staticDbFilesDirectory(), entities);
+            msgs.push_back(readMsgs);
+            return readMsgs;
         }
 
         void CDatabaseReader::setReplyStatus(QNetworkReply::NetworkError status, const QString &message)

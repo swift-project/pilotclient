@@ -257,6 +257,16 @@ namespace BlackCore
             //! Severity used for log messages in case of no URLs
             void setSeverityNoWorkingUrl(BlackMisc::CStatusMessage::StatusSeverity s) { m_severityNoWorkingUrl = s; }
 
+            //! Init from local resource file
+            //! \remark normally used after installation for a 1st time init
+            BlackMisc::CStatusMessageList initFromLocalResourceFiles();
+
+            //! Data read from local data
+            virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead) = 0;
+
+            //! Data read from local data
+            virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead) = 0;
+
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
 

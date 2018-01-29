@@ -1406,7 +1406,7 @@ namespace BlackCore
 
         if (this->getAirportsCount() > 0)
         {
-            QString json(QJsonDocument(this->getAirports().toJson()).toJson());
+            const QString json(QJsonDocument(this->getAirports().toJson()).toJson());
             const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "airports.json"));
             if (!s) { return false; }
         }
@@ -1423,22 +1423,22 @@ namespace BlackCore
         bool s = false;
         if (m_icaoDataReader)
         {
-            if (inBackground) { return m_icaoDataReader->readFromJsonFilesInBackground(dir); }
-            const CStatusMessageList msgs = m_icaoDataReader->readFromJsonFiles(dir);
+            if (inBackground) { return m_icaoDataReader->readFromJsonFilesInBackground(dir, m_icaoDataReader->getSupportedEntities()); }
+            const CStatusMessageList msgs = m_icaoDataReader->readFromJsonFiles(dir, m_icaoDataReader->getSupportedEntities());
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
             s = msgs.isSuccess();
         }
         if (s && m_modelDataReader)
         {
-            if (inBackground) { return m_modelDataReader->readFromJsonFilesInBackground(dir); }
-            const CStatusMessageList msgs = m_modelDataReader->readFromJsonFiles(dir);
+            if (inBackground) { return m_modelDataReader->readFromJsonFilesInBackground(dir, m_modelDataReader->getSupportedEntities()); }
+            const CStatusMessageList msgs = m_modelDataReader->readFromJsonFiles(dir, m_modelDataReader->getSupportedEntities());
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
             s = msgs.isSuccess();
         }
         if (s && m_airportDataReader)
         {
-            if (inBackground) { return m_airportDataReader->readFromJsonFilesInBackground(dir); }
-            const CStatusMessageList msgs = m_airportDataReader->readFromJsonFiles(dir);
+            if (inBackground) { return m_airportDataReader->readFromJsonFilesInBackground(dir, m_airportDataReader->getSupportedEntities()); }
+            const CStatusMessageList msgs = m_airportDataReader->readFromJsonFiles(dir, m_airportDataReader->getSupportedEntities());
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
             s = msgs.isSuccess();
         }

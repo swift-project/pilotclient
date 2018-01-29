@@ -53,6 +53,10 @@ namespace BlackCore
             //! URL depending on mode, i.e. shared/DB
             BlackMisc::Network::CUrl getInfoObjectsUrl() const;
 
+            // data read from local data
+            virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead) override;
+            virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead) override;
+
             // cache handling for base class: no cache handling here in that case
             virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;

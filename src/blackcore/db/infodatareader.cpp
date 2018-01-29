@@ -217,6 +217,22 @@ namespace BlackCore
             return CUrl();
         }
 
+        CStatusMessageList CInfoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
+        {
+            Q_UNUSED(dir);
+            Q_UNUSED(whatToRead);
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Not supported");
+            return CStatusMessage(this).error("Not supported");
+        }
+
+        bool CInfoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
+        {
+            Q_UNUSED(dir);
+            Q_UNUSED(whatToRead);
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Not supported");
+            return false;
+        }
+
         CEntityFlags::Entity CInfoDataReader::getSupportedEntities() const
         {
             return this->getEntityForMode();
