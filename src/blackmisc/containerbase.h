@@ -147,7 +147,7 @@ namespace BlackMisc
         //! Assign from JSON object string
         void convertFromJson(const QString &jsonString)
         {
-            this->convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
+            this->convertFromJson(Json::jsonObjectFromString(jsonString));
         }
 
         //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.

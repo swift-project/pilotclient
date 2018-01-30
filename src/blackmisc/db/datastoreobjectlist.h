@@ -13,6 +13,7 @@
 #define BLACKMISC_DB_DATABASEOBJECTLIST_H
 
 #include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/jsonexception.h"
 #include <QJsonArray>
 #include <QSet>
 #include <QString>
@@ -64,6 +65,10 @@ namespace BlackMisc
 
             //! Number of entries with valid DB key
             int countWithValidDbKey() const;
+
+            //! From multiple JSON formats
+            //! \remark supports native swift C++ format, DB format, and cache format
+            static CONTAINER fromMultipleJsonFormats(const QJsonObject &jsonObject);
 
             //! From DB JSON with default prefixes
             //! \remark Specialized classes might have their own fromDatabaseJson implementation

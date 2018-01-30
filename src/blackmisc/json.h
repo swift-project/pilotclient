@@ -257,6 +257,9 @@ namespace BlackMisc
         //! \remark Quick check if the string could be a valid swift JSON string
         BLACKMISC_EXPORT bool looksLikeSwiftJson(const QString &json);
 
+        //! Looks like a valid swift container JSON object
+        BLACKMISC_EXPORT bool looksLikeSwiftContainerJson(const QJsonObject &object);
+
         //! Looks like a cache/setting object
         BLACKMISC_EXPORT bool looksLikeSwiftDataObject(const QJsonObject &object);
 

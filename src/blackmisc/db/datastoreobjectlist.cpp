@@ -196,6 +196,42 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>
+        CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::fromMultipleJsonFormats(const QJsonObject &jsonObject)
+        {
+            // also accept cache format
+            if (jsonObject.isEmpty())
+            {
+                const CONTAINER c;
+                return c;
+            }
+
+            if (Json::looksLikeSwiftDataObject(jsonObject))
+            {
+                const QJsonObject cacheObj = Json::swiftDataObjectValue(jsonObject);
+                // swift own format
+                CONTAINER container;
+                container.convertFromJson(cacheObj);
+                return container;
+            }
+
+            if (Json::looksLikeSwiftContainerJson(jsonObject))
+            {
+                CONTAINER container;
+                container.convertFromJson(jsonObject);
+                return container;
+            }
+
+            if (jsonObject.contains("data"))
+            {
+                // DB format
+                return IDatastoreObjectList::fromDatabaseJson(jsonObject.value("data").toArray());
+            }
+
+            // no idea what this is
+            throw CJsonException("Unsupported JSON format");
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
         QDateTime IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::latestDbTimestamp() const
         {
             CONTAINER objs(this->container());

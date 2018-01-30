@@ -71,16 +71,16 @@ namespace BlackMisc
             static QString flagToString(EntityFlag flag);
 
             //! Convert to string
-            static QString flagToString(BlackMisc::Network::CEntityFlags::Entity flag);
+            static QString flagToString(CEntityFlags::Entity flag);
 
             //! Representing single entity?
-            static bool isSingleEntity(BlackMisc::Network::CEntityFlags::Entity flag);
+            static bool isSingleEntity(CEntityFlags::Entity flag);
 
             //! Any finished state
             static bool isFinishedReadState(ReadState state);
 
             //! Represented number of entities
-            static int numberOfEntities(BlackMisc::Network::CEntityFlags::Entity flag);
+            static int numberOfEntities(CEntityFlags::Entity flag);
 
             //! Convert to string
             static QString flagToString(ReadState flag);

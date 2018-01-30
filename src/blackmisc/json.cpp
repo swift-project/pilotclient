@@ -473,7 +473,7 @@ namespace BlackMisc
 
         QJsonObject swiftDataObjectValue(const QJsonObject &object)
         {
-            if (object.size() != 1) { return object; }
+            if (object.size() != 1) { return object; } // no cache format
             const QString key = object.keys().front();
             const QJsonObject cacheObject = object.value(key).toObject();
             if (cacheObject.contains("type") && cacheObject.contains("value"))
@@ -488,6 +488,12 @@ namespace BlackMisc
             const QJsonObject obj = jsonObjectFromString(jsonString);
             if (obj.isEmpty()) { return obj; }
             return swiftDataObjectValue(obj);
+        }
+
+        bool looksLikeSwiftContainerJson(const QJsonObject &object)
+        {
+            // CContainerbase::convertFromJson
+            return object.contains("containerbase");
         }
     } // ns
 } // ns
