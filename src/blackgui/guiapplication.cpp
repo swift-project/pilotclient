@@ -571,10 +571,11 @@ namespace BlackGui
 
         if (this->hasWebDataServices())
         {
-            a = menu.addAction("Services log");
+            a = menu.addAction("Services log.(console)");
             c = connect(a, &QAction::triggered, this, [a, this]()
             {
                 this->displayTextInConsole(this->getWebDataServices()->getReadersLog());
+                CLogMessage(this).info("Displayed services log.");
             });
             Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         }
