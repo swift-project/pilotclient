@@ -44,7 +44,7 @@ namespace BlackMisc
             }
         }
 
-        QString CEntityFlags::flagToString(BlackMisc::Network::CEntityFlags::Entity flag)
+        QString CEntityFlags::flagToString(CEntityFlags::Entity flag)
         {
             QStringList list;
             if (flag.testFlag(AircraftIcaoEntity)) list << "Aircraft ICAO";

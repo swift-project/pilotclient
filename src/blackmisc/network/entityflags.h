@@ -68,7 +68,7 @@ namespace BlackMisc
             };
 
             //! Convert to string
-            static QString flagToString(EntityFlag flag);
+            static QString flagToString(CEntityFlags::EntityFlag flag);
 
             //! Convert to string
             static QString flagToString(CEntityFlags::Entity flag);
