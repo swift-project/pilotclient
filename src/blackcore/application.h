@@ -612,11 +612,11 @@ namespace BlackCore
         CWebReaderFlags::WebReader             m_webReadersUsed;            //!< Readers to be used
         Db::CDatabaseReaderConfigList          m_dbReaderConfig;            //!< Load or used caching?
         std::atomic<bool>                      m_shutdown { false };        //!< is being shutdown?
-        bool m_useContexts = false;           //!< use contexts
-        bool m_useWebData = false;            //!< use web data
-        bool m_signalStartup = true;          //!< signal startup automatically
+        bool m_useContexts = false;            //!< use contexts
+        bool m_useWebData = false;             //!< use web data
+        bool m_signalStartup = true;           //!< signal startup automatically
         bool m_devFlag = false;                //!< dev. environment
-        bool m_saveSettingsOnShutdown = true; //!< saving all settings on shutdown
+        bool m_saveSettingsOnShutdown = true;  //!< saving all settings on shutdown
 
         // -------------- crashpad -----------------
         BlackMisc::CStatusMessageList initCrashHandler();

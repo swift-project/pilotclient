@@ -866,12 +866,19 @@ namespace BlackCore
                 new CWebDataServices(m_webReadersUsed, m_dbReaderConfig, {}, this)
             );
 
+            // caches from local files (i.e. the files delivered)
+            if (this->isInstallerOptionSet())
+            {
+                msgs.push_back(m_webDataServices->initDbCachesFromLocalResourceFiles(false));
+            }
+
+            // watchdog
             if (m_networkWatchDog)
             {
                 connect(m_webDataServices.data(), &CWebDataServices::swiftDbDataRead, m_networkWatchDog.data(), &CNetworkWatchdog::setDbAccessibility);
             }
 
-            emit webDataServicesStarted(true);
+            emit this->webDataServicesStarted(true);
         }
         else
         {
