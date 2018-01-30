@@ -115,7 +115,7 @@ private:
     bool m_contextAudioAvailable   = false;    //!< audio context available?
     bool m_displayingDBusReconnect = false;    //!< currently displaying reconnect dialog
     bool m_dbDataLoading           = false;    //!< DB or shared data loading in progress
-    QTimer m_timerContextWatchdog { this };    //!< core available?
+    QTimer m_timerContextWatchdog;             //!< core available?
     BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
 
     //! GUI status update

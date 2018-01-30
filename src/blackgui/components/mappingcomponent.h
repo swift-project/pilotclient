@@ -151,7 +151,7 @@ namespace BlackGui
             static constexpr int OverlayMessageMs = 5000;
             QScopedPointer<Ui::CMappingComponent> ui;
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
-            QTimer m_updateTimer { this };
+            QTimer m_updateTimer;
             BlackMisc::CTokenBucket m_bucket { 3, BlackMisc::PhysicalQuantities::CTime(5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()), 1};
             Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
             BlackMisc::CIdentifier m_identifier { "MappingComponent", this };

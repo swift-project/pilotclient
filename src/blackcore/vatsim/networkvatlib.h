@@ -242,10 +242,10 @@ namespace BlackCore
             BlackMisc::CDigestSignal m_dsSendTextMessage  { this, &CNetworkVatlib::emitConsolidatedTextMessages, 500, 10 };
             BlackMisc::Network::CTextMessageList m_textMessagesToConsolidate;
 
-            QTimer m_scheduledConfigUpdate { this };
-            QTimer m_processingTimer { this };
-            QTimer m_positionUpdateTimer { this };
-            QTimer m_interimPositionUpdateTimer { this };
+            QTimer m_scheduledConfigUpdate;
+            QTimer m_processingTimer;
+            QTimer m_positionUpdateTimer;
+            QTimer m_interimPositionUpdateTimer;
 
             static int const c_processingIntervalMsec = 100;            //!< interval for the processing timer
             static int const c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)

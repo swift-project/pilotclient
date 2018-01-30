@@ -151,7 +151,7 @@ namespace BlackGui
         QString m_tooltipTriState = "tri-state"; //!< tooltip tri-state
         QString m_currentToolTip = "off";        //!< currently used tooltip
         QScopedPointer<QSvgRenderer> m_renderer; //!< Renderer
-        QTimer m_resetTimer { this };            //!< reset state
+        QTimer m_resetTimer;                     //!< reset state
 
         //! Init
         void init();

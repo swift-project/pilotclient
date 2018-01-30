@@ -90,7 +90,7 @@ namespace BlackGui
             void addOrUpdateLiveDataByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
 
             QScopedPointer<Ui::CSimulatorComponent> ui;
-            QTimer m_updateTimer { this };
+            QTimer m_updateTimer;
         };
     } // ns
 } // ns

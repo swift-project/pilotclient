@@ -163,7 +163,7 @@ namespace BlackSimPlugin
             bool m_timeSyncronized = false;
             int m_countInterpolatedSituations = 0;
             int m_countInterpolatedParts = 0;
-            QTimer m_interpolatorFetchTimer { this }; //!< fetch data from interpolator
+            QTimer m_interpolatorFetchTimer; //!< fetch data from interpolator
             BlackMisc::PhysicalQuantities::CTime m_offsetTime;
             BlackMisc::Simulation::CSimulatedAircraft m_myAircraft;           //!< represents own aircraft of simulator
             BlackMisc::Simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator

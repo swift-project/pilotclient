@@ -211,7 +211,7 @@ namespace BlackGui
             const QIcon m_iconPlay {":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png"};
             const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
             const int LogoffIntervalSeconds = 20; //!< time before logoff
-            QTimer m_logoffCountdownTimer { this }; //!< timer for logoff countdown
+            QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::reloadSettings };
             BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
             BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)

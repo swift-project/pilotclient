@@ -131,7 +131,7 @@ namespace BlackGui
             void settingsChanged();
 
             QScopedPointer<Ui::CAtcStationComponent> ui;
-            QTimer m_updateTimer { this };
+            QTimer m_updateTimer;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged;  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations; //!< stations read

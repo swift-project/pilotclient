@@ -74,7 +74,7 @@ namespace BlackGui
             //! Set background color
             void setBackgroundColor(const QString colorName);
 
-            QTimer m_resetTimer { this};  //!< reset to neutral
+            QTimer m_resetTimer; //!< reset to neutral
             QString m_originalStyleSheet; //!< stored, to be able to reset
         };
     } // ns

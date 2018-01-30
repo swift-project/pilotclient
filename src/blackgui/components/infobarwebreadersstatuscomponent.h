@@ -82,7 +82,7 @@ namespace BlackGui
             virtual void showConsolidationStatus(bool show);
 
         private:
-            QTimer m_timer { this }; //!< check timer
+            QTimer m_timer; //!< check timer
             BlackGui::CLedWidget *m_ledSwiftDb = nullptr;
             BlackGui::CLedWidget *m_ledDataReady = nullptr;
             BlackGui::CLedWidget *m_ledConsolidation = nullptr;

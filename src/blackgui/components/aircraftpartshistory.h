@@ -39,7 +39,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAircraftPartsHistory> ui;
-            QTimer m_timerUpdateHistory { this };
+            QTimer m_timerUpdateHistory;
             QTextDocument m_text { this };
             uint m_htmlHash = 0;
 

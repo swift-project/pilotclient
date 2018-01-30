@@ -77,7 +77,7 @@ namespace BlackGui
             QScopedPointer<Ui::CWeatherComponent> ui;
             QScopedPointer<CCoordinateDialog> m_coordinateDialog { new CCoordinateDialog(this) };
             QVector<BlackMisc::Weather::CWeatherScenario> m_weatherScenarios;
-            QTimer m_weatherUpdateTimer { this };
+            QTimer m_weatherUpdateTimer;
             BlackMisc::Geo::CCoordinateGeodetic m_lastOwnAircraftPosition;
             BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
             BlackCore::CActionBindings m_hotkeyBindings; //!< allow binding of hotkey

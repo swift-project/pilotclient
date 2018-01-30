@@ -66,7 +66,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CUserComponent> ui;
-            QTimer m_updateTimer { this };
+            QTimer m_updateTimer;
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::ps_settingsChanged };
         };
     }

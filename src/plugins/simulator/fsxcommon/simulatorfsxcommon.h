@@ -365,7 +365,7 @@ namespace BlackSimPlugin
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimDataStart); //!< request id, use obtainRequestId() to get id
             BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
-            QTimer m_addPendingAircraftTimer { this }; //!< updating of aircraft awaiting to be added
+            QTimer m_addPendingAircraftTimer; //!< updating of aircraft awaiting to be added
         };
 
         //! Listener for FSX

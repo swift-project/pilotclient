@@ -107,7 +107,7 @@ namespace BlackSimPlugin
 
             QScopedPointer<Ui::CSimulatorEmulatedMonitorDialog> ui;
             CSimulatorEmulated *m_simulator = nullptr;
-            QTimer m_uiUpdateTimer { this };
+            QTimer m_uiUpdateTimer;
         };
     } // ns
 } // ns
