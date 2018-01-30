@@ -262,7 +262,7 @@ namespace BlackCore
         //! Delegates to QCommandLineParser::isSet
         bool isParserOptionSet(const QString &option) const;
 
-        //! Installer called?
+        //! Called by installer?
         bool isInstallerOptionSet() const;
 
         //! Delegates to QCommandLineParser::isSet

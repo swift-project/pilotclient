@@ -419,6 +419,22 @@ namespace BlackCore
         return reader->getLatestEntityTimestampFromSharedInfoObjects(entity);
     }
 
+    QDateTime CWebDataServices::getLatestDbEntityCacheTimestamp() const
+    {
+        QDateTime latest;
+        const CEntityFlags::EntitySet set = CEntityFlags::asSingleEntities(CEntityFlags::AllDbEntitiesNoInfoObjects);
+        for (CEntityFlags::Entity e : set)
+        {
+            const QDateTime ts = this->getCacheTimestamp(e);
+            if (!ts.isValid()) { continue; }
+            if (!latest.isValid() || latest < ts)
+            {
+                latest = ts;
+            }
+        }
+        return latest;
+    }
+
     CEntityFlags::Entity CWebDataServices::getEntitiesWithNewerSharedFile(CEntityFlags::Entity entities) const
     {
         Q_ASSERT_X(m_sharedInfoDataReader, Q_FUNC_INFO, "Shared info reader was not initialized");

@@ -77,8 +77,7 @@ namespace BlackCore
     /*!
      * Encapsulates reading data from web sources
      */
-    class BLACKCORE_EXPORT CWebDataServices :
-        public QObject
+    class BLACKCORE_EXPORT CWebDataServices : public QObject
     {
         Q_OBJECT
 
@@ -385,11 +384,17 @@ namespace BlackCore
         //! \threadsafe
         QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
+        //! Latest DB object timestamp, or null if there is no such timestamp
+        //! \threadsafe
+        QDateTime getLatestDbEntityCacheTimestamp() const;
+
         //! Corresponding DB timestamp if applicable
+        //! \remark from Db::CInfoDataReader
         //! \threadsafe
         QDateTime getLatestDbEntityTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
         //! Shared info object timestamp
+        //! \remark from Db::CInfoDataReader
         //! \threadsafe
         QDateTime getLatestSharedInfoObjectTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
