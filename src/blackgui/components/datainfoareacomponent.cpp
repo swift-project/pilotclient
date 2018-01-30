@@ -104,11 +104,12 @@ namespace BlackGui
 
         bool CDataInfoAreaComponent::readDbDataFromResourceDir()
         {
-            const bool s = sGui &&
-                           sGui->getWebDataServices()->readDbDataFromDisk(CDirectoryUtils::staticDbFilesDirectory(), true);
+            if (!sGui) { return false; }
+            const CStatusMessageList msgs = sGui->getWebDataServices()->initDbCachesFromLocalResourceFiles(true);
 
             // info
-            if (s)
+            bool ok = false;
+            if (msgs.isSuccess())
             {
                 CLogMessage(this).info("Read DB data from directory: %1") << CDirectoryUtils::staticDbFilesDirectory();
                 ui->comp_DbAircraftIcao->showLoadIndicator();
@@ -117,12 +118,13 @@ namespace BlackGui
                 ui->comp_DbDistributors->showLoadIndicator();
                 ui->comp_DbLiveries->showLoadIndicator();
                 ui->comp_DbModels->showLoadIndicator();
+                ok = true;
             }
             else
             {
-                CLogMessage(this).error("Failed to load DB data");
+                CLogMessage::preformatted(msgs);
             }
-            return s;
+            return ok;
         }
 
         QSize CDataInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
@@ -145,20 +147,13 @@ namespace BlackGui
             InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
-            case InfoAreaAircraftIcao:
-                return CIcons::appAircraftIcao16();
-            case InfoAreaAirlineIcao:
-                return CIcons::appAirlineIcao16();
-            case InfoAreaLiveries:
-                return CIcons::appLiveries16();
-            case InfoAreaDistributors:
-                return CIcons::appDistributors16();
-            case InfoAreaModels:
-                return CIcons::appModels16();
-            case InfoAreaCountries:
-                return CIcons::appCountries16();
-            default:
-                return CIcons::empty();
+            case InfoAreaAircraftIcao: return CIcons::appAircraftIcao16();
+            case InfoAreaAirlineIcao: return CIcons::appAirlineIcao16();
+            case InfoAreaLiveries: return CIcons::appLiveries16();
+            case InfoAreaDistributors: return CIcons::appDistributors16();
+            case InfoAreaModels: return CIcons::appModels16();
+            case InfoAreaCountries: return CIcons::appCountries16();
+            default: return CIcons::empty();
             }
         }
 

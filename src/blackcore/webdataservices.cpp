@@ -1414,34 +1414,87 @@ namespace BlackCore
         return true;
     }
 
-    bool CWebDataServices::readDbDataFromDisk(const QString &dir, bool inBackground)
+    bool CWebDataServices::readDbDataFromDisk(const QString &dir, bool inBackground, bool overrideNewerOnly)
     {
         if (dir.isEmpty()) { return false; }
         const QDir directory(dir);
         if (!directory.exists()) { return false; }
 
-        bool s = false;
+        bool s1 = !m_icaoDataReader;
         if (m_icaoDataReader)
         {
-            if (inBackground) { return m_icaoDataReader->readFromJsonFilesInBackground(dir, m_icaoDataReader->getSupportedEntities()); }
-            const CStatusMessageList msgs = m_icaoDataReader->readFromJsonFiles(dir, m_icaoDataReader->getSupportedEntities());
-            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
-            s = msgs.isSuccess();
+            // force update to background reading if reader is already in another thread
+            bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_icaoDataReader);
+            if (ib)
+            {
+                CLogMessage(this).info("Reading from disk in background: %1") << m_icaoDataReader->getSupportedEntitiesAsString();
+                s1 = m_icaoDataReader->readFromJsonFilesInBackground(dir, m_icaoDataReader->getSupportedEntities(), overrideNewerOnly);
+            }
+            else
+            {
+                const CStatusMessageList msgs = m_icaoDataReader->readFromJsonFiles(dir, m_icaoDataReader->getSupportedEntities(), overrideNewerOnly);
+                CLogMessage::preformatted(msgs);
+                s1 = msgs.isSuccess();
+            }
         }
-        if (s && m_modelDataReader)
+
+        bool s2 = !m_modelDataReader;
+        if (m_modelDataReader)
         {
-            if (inBackground) { return m_modelDataReader->readFromJsonFilesInBackground(dir, m_modelDataReader->getSupportedEntities()); }
-            const CStatusMessageList msgs = m_modelDataReader->readFromJsonFiles(dir, m_modelDataReader->getSupportedEntities());
-            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
-            s = msgs.isSuccess();
+            // force update to background reading if reader is already in another thread
+            bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_modelDataReader);
+            if (ib)
+            {
+                CLogMessage(this).info("Reading from disk in background: %1") << m_modelDataReader->getSupportedEntitiesAsString();
+                s2 = m_modelDataReader->readFromJsonFilesInBackground(dir, m_modelDataReader->getSupportedEntities(), overrideNewerOnly);
+            }
+            else
+            {
+                const CStatusMessageList msgs = m_modelDataReader->readFromJsonFiles(dir, m_modelDataReader->getSupportedEntities(), overrideNewerOnly);
+                CLogMessage::preformatted(msgs);
+                s2 = msgs.isSuccess();
+            }
         }
-        if (s && m_airportDataReader)
+
+        bool s3 = !m_airportDataReader;
+        if (m_airportDataReader)
         {
-            if (inBackground) { return m_airportDataReader->readFromJsonFilesInBackground(dir, m_airportDataReader->getSupportedEntities()); }
-            const CStatusMessageList msgs = m_airportDataReader->readFromJsonFiles(dir, m_airportDataReader->getSupportedEntities());
-            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
-            s = msgs.isSuccess();
+            // force update to background reading if reader is already in another thread
+            bool ib = inBackground || !CThreadUtils::isCurrentThreadObjectThread(m_airportDataReader);
+            if (ib)
+            {
+                CLogMessage(this).info("Reading from disk in background: %1") << m_airportDataReader->getSupportedEntitiesAsString();
+                s3 = m_airportDataReader->readFromJsonFilesInBackground(dir, m_airportDataReader->getSupportedEntities(), overrideNewerOnly);
+            }
+            else
+            {
+                const CStatusMessageList msgs = m_airportDataReader->readFromJsonFiles(dir, m_airportDataReader->getSupportedEntities(), overrideNewerOnly);
+                CLogMessage::preformatted(msgs);
+                s3 = msgs.isSuccess();
+            }
         }
-        return s;
+
+        return s1 && s2 && s3;
+    }
+
+    CStatusMessageList CWebDataServices::initDbCachesFromLocalResourceFiles(bool inBackground)
+    {
+        CStatusMessageList msgs;
+        msgs.push_back(
+            m_icaoDataReader ?
+            m_icaoDataReader->initFromLocalResourceFiles(inBackground) :
+            CStatusMessage(this).info("No ICAO reader")
+        );
+        msgs.push_back(
+            m_modelDataReader ?
+            m_modelDataReader->initFromLocalResourceFiles(inBackground) :
+            CStatusMessage(this).info("No model reader")
+        );
+        msgs.push_back(
+            m_airportDataReader ?
+            m_airportDataReader->initFromLocalResourceFiles(inBackground) :
+            CStatusMessage(this).info("No airport reader")
+        );
+        return msgs;
     }
 } // ns

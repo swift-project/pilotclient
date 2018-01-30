@@ -19,6 +19,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QFlags>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QReadLocker>
@@ -395,7 +396,7 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::CountryEntity, n, res);
         }
 
-        CStatusMessageList CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
+        CStatusMessageList CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             const QDir directory(dir);
             if (!directory.exists())
@@ -410,100 +411,126 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::CountryEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "countries.json");
-                const QJsonObject countriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
-                if (countriesJson.isEmpty())
+                const QFileInfo fi(fileName);
+                if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                }
+                else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::CountryEntity, msgs))
+                {
+                    // void
                 }
                 else
                 {
-                    try
+                    const QJsonObject countriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    if (countriesJson.isEmpty())
                     {
-                        CCountryList countries;
-                        countries.convertFromJson(countriesJson);
-                        const int c = countries.size();
-                        m_countryCache.set(countries);
-                        reallyRead |= CEntityFlags::CountryEntity;
-                        emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
+                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
                     }
-                    catch (const CJsonException &ex)
+                    else
                     {
-                        emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
-                        msgs.push_back(ex.toStatusMessage(this, QString("Reading countries from '%1'").arg(fileName)));
+                        try
+                        {
+                            const CCountryList countries = CCountryList::fromMultipleJsonFormats(countriesJson);
+                            const int c = countries.size();
+                            msgs.push_back(m_countryCache.set(countries, fi.created().toUTC().toMSecsSinceEpoch()));
+                            reallyRead |= CEntityFlags::CountryEntity;
+                            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, c);
+                        }
+                        catch (const CJsonException &ex)
+                        {
+                            emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0);
+                            msgs.push_back(ex.toStatusMessage(this, QString("Reading countries from '%1'").arg(fileName)));
+                        }
                     }
                 }
-            }
+            } // country
 
             if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "aircrafticao.json");
-                const QJsonObject aircraftJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
-                if (aircraftJson.isEmpty())
+                const QFileInfo fi(fileName);
+                if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                }
+                else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AircraftIcaoEntity, msgs))
+                {
+                    // void
                 }
                 else
                 {
-                    try
+                    const QJsonObject aircraftJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    if (aircraftJson.isEmpty())
                     {
-                        CAircraftIcaoCodeList aircraftIcaos;
-                        aircraftIcaos.convertFromJson(aircraftJson);
-                        const int c = aircraftIcaos.size();
-                        m_aircraftIcaoCache.set(aircraftIcaos);
-                        reallyRead |= CEntityFlags::AircraftIcaoEntity;
-                        emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c);
+                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
                     }
-                    catch (const CJsonException &ex)
+                    else
                     {
-                        emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
-                        msgs.push_back(ex.toStatusMessage(this, QString("Reading aircraft ICAOs from '%1'").arg(fileName)));
+                        try
+                        {
+                            const CAircraftIcaoCodeList aircraftIcaos = CAircraftIcaoCodeList::fromMultipleJsonFormats(aircraftJson);
+                            const int c = aircraftIcaos.size();
+                            msgs.push_back(m_aircraftIcaoCache.set(aircraftIcaos, fi.created().toUTC().toMSecsSinceEpoch()));
+                            reallyRead |= CEntityFlags::AircraftIcaoEntity;
+                            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c);
+                        }
+                        catch (const CJsonException &ex)
+                        {
+                            emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
+                            msgs.push_back(ex.toStatusMessage(this, QString("Reading aircraft ICAOs from '%1'").arg(fileName)));
+                        }
                     }
                 }
-            }
+            } // aircraft
 
             if (whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "airlineicao.json");
-                const QJsonObject airlineJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
-                if (airlineJson.isEmpty())
+                const QFileInfo fi(fileName);
+                if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                }
+                else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AirlineIcaoEntity, msgs))
+                {
+                    // void
                 }
                 else
                 {
-                    try
+                    const QJsonObject airlineJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    if (airlineJson.isEmpty())
                     {
-                        CAirlineIcaoCodeList airlineIcaos;
-                        airlineIcaos.convertFromJson(airlineJson);
-                        const int c = airlineIcaos.size();
-                        m_airlineIcaoCache.set(airlineIcaos);
-                        reallyRead |= CEntityFlags::AirlineIcaoEntity;
-                        emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
+                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
                     }
-                    catch (const CJsonException &ex)
+                    else
                     {
-                        emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
-                        msgs.push_back(ex.toStatusMessage(this, QString("Reading airline ICAOs from '%1'").arg(fileName)));
+                        try
+                        {
+                            const CAirlineIcaoCodeList airlineIcaos = CAirlineIcaoCodeList::fromMultipleJsonFormats(airlineJson);
+                            const int c = airlineIcaos.size();
+                            msgs.push_back(m_airlineIcaoCache.set(airlineIcaos, fi.created().toUTC().toMSecsSinceEpoch()));
+                            reallyRead |= CEntityFlags::AirlineIcaoEntity;
+                            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
+                        }
+                        catch (const CJsonException &ex)
+                        {
+                            emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
+                            msgs.push_back(ex.toStatusMessage(this, QString("Reading airline ICAOs from '%1'").arg(fileName)));
+                        }
                     }
                 }
-            }
+            } // airline
 
-            if (msgs.isSuccess() && (reallyRead & CEntityFlags::DistributorLiveryModel) == whatToRead)
-            {
-                return CStatusMessage(this).info("Updated caches for '%1' from '%2'") << CEntityFlags::flagToString(reallyRead) << dir;
-            }
-            else
-            {
-                return msgs;
-            }
+            return msgs;
         }
 
-        bool CIcaoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
+        bool CIcaoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
-            QTimer::singleShot(0, this, [this, dir, whatToRead]()
+            QTimer::singleShot(0, this, [ = ]()
             {
-                const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead);
+                const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
                 if (msgs.isFailure())
                 {
                     CLogMessage::preformatted(msgs);
@@ -518,22 +545,22 @@ namespace BlackCore
             if (!directory.exists()) { return false; }
             if (this->getCountriesCount() > 0)
             {
-                QString json(QJsonDocument(this->getCountries().toJson()).toJson());
-                bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "countries.json"));
+                const QString json(QJsonDocument(this->getCountries().toJson()).toJson());
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "countries.json"));
                 if (!s) { return false; }
             }
 
             if (this->getAircraftIcaoCodesCount() > 0)
             {
-                QString json(QJsonDocument(this->getAircraftIcaoCodes().toJson()).toJson());
-                bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "aircrafticao.json"));
+                const QString json(QJsonDocument(this->getAircraftIcaoCodes().toJson()).toJson());
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "aircrafticao.json"));
                 if (!s) { return false; }
             }
 
             if (this->getAirlineIcaoCodesCount() > 0)
             {
-                QString json(QJsonDocument(this->getAirlineIcaoCodes().toJson()).toJson());
-                bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "airlineicao.json"));
+                const QString json(QJsonDocument(this->getAirlineIcaoCodes().toJson()).toJson());
+                const bool s = CFileUtils::writeStringToFileInBackground(json, CFileUtils::appendFilePaths(directory.absolutePath(), "airlineicao.json"));
                 if (!s) { return false; }
             }
             return true;

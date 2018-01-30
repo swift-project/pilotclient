@@ -12,7 +12,9 @@
 #include "blackcore/application.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
+
 #include <QNetworkReply>
+#include <QFileInfo>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -49,12 +51,12 @@ namespace BlackCore
             return this->getAirports().size();
         }
 
-        bool CAirportDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
+        bool CAirportDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
-            QTimer::singleShot(0, this, [this, dir, whatToRead]()
+            QTimer::singleShot(0, this, [ = ]()
             {
-                const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead);
+                const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
                 if (msgs.isFailure())
                 {
                     CLogMessage::preformatted(msgs);
@@ -63,13 +65,14 @@ namespace BlackCore
             return true;
         }
 
-        CStatusMessageList CAirportDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
+        CStatusMessageList CAirportDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
-            const QString fileName = CFileUtils::appendFilePaths(dir, "airports.json");
-            if (!QFile::exists(fileName))
+            const QDir directory(dir);
+            if (!directory.exists())
             {
-                return CStatusMessage(this).error("File '%1' does not exist") << fileName;
+                return CStatusMessage(this).error("Missing directory '%1'") << dir;
             }
+
             whatToRead &= CEntityFlags::AirportEntity; // can handle these entities
             if (whatToRead == CEntityFlags::NoEntity)
             {
@@ -78,33 +81,40 @@ namespace BlackCore
 
             int c = 0;
             CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
-            const QJsonObject airportsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
-            if (!airportsJson.isEmpty())
-            {
-                try
-                {
-                    CAirportList airports;
-                    airports.convertFromJson(airportsJson);
-                    c = airports.size();
-                    m_airportCache.set(airports);
 
-                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, c);
-                    reallyRead |= CEntityFlags::AirportEntity;
-                }
-                catch (const CJsonException &ex)
-                {
-                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0);
-                    return ex.toStatusMessage(this, QString("Reading airports from '%1'").arg(fileName));
-                }
-            }
-            if ((reallyRead & CEntityFlags::AirportEntity) == CEntityFlags::AirportEntity)
+            CStatusMessageList msgs;
+            const QString fileName = CFileUtils::appendFilePaths(dir, "airports.json");
+            const QFileInfo fi(fileName);
+            if (!fi.exists())
             {
-                return CStatusMessage(this).info("Written %1 airports from '%2' to cache") << c << fileName;
+                msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+            }
+            else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AirportEntity, msgs))
+            {
+                // void
             }
             else
             {
-                return CStatusMessage(this).error("Not able to read airports from '%1'") << fileName;
+                const QJsonObject airportsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                if (!airportsJson.isEmpty())
+                {
+                    try
+                    {
+                        const CAirportList airports = CAirportList::fromMultipleJsonFormats(airportsJson);
+                        c = airports.size();
+                        msgs.push_back(m_airportCache.set(airports, fi.created().toUTC().toMSecsSinceEpoch()));
+
+                        emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, c);
+                        reallyRead |= CEntityFlags::AirportEntity;
+                    }
+                    catch (const CJsonException &ex)
+                    {
+                        emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0);
+                        return ex.toStatusMessage(this, QString("Reading airports from '%1'").arg(fileName));
+                    }
+                }
             }
+            return msgs;
         }
 
         CEntityFlags::Entity CAirportDataReader::getSupportedEntities() const
@@ -166,7 +176,7 @@ namespace BlackCore
 
         CUrl CAirportDataReader::getAirportsUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AirportEntity, mode));
+            return this->getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AirportEntity, mode));
         }
 
         void CAirportDataReader::ps_parseAirportData(QNetworkReply *nwReplyPtr)

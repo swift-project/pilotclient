@@ -14,6 +14,7 @@
 #include "blackmisc/fileutils.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Json;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 
@@ -356,8 +357,8 @@ namespace BlackCore
                     byteData = qUncompress(ba);
                 }
                 while (false);
-
             }
+
             if (byteData.isEmpty()) { return QJsonDocument(); }
             return QJsonDocument::fromJson(byteData);
         }
@@ -373,7 +374,10 @@ namespace BlackCore
         {
             const QString raw = CFileUtils::readFileToString(filename);
             if (raw.isEmpty()) { return QJsonObject(); }
-            return BlackMisc::Json::jsonObjectFromString(raw);
+
+            // allow also compressed format
+            const QJsonDocument jsonDoc = CDatabaseUtils::databaseJsonToQJsonDocument(raw);
+            return jsonDoc.object();
         }
 
         QJsonObject CDatabaseUtils::readQJsonObjectFromDatabaseFile(const QString &directory, const QString &filename)

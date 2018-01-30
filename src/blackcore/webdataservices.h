@@ -445,8 +445,13 @@ namespace BlackCore
         //! Write data to disk (mainly for testing scenarios)
         bool writeDbDataToDisk(const QString &dir) const;
 
-        //! Load DB data from disk (mainly for testing scenarios)
-        bool readDbDataFromDisk(const QString &dir, bool inBackground);
+        //! Load DB data from disk (mainly for initial data load and testing scenarios)
+        //! \remark if the DB readers are alred in aother thread reads in background
+        bool readDbDataFromDisk(const QString &dir, bool inBackground, bool overrideNewerOnly);
+
+        //! Init caches from local DB files
+        //! \remark the shared files coming with the installer
+        BlackMisc::CStatusMessageList initDbCachesFromLocalResourceFiles(bool inBackground);
 
     signals:
         //! Combined read signal

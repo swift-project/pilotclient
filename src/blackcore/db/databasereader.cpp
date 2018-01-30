@@ -15,6 +15,7 @@
 #include "blackcore/application.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -23,6 +24,7 @@
 #include <QByteArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QFileInfo>
 #include <QJsonValueRef>
 #include <QMetaObject>
 #include <QNetworkReply>
@@ -568,6 +570,11 @@ namespace BlackCore
             return m_1stReplyReceived;
         }
 
+        QString CDatabaseReader::getSupportedEntitiesAsString() const
+        {
+            return CEntityFlags::flagToString(this->getSupportedEntities());
+        }
+
         CEntityFlags::Entity CDatabaseReader::maskBySupportedEntities(CEntityFlags::Entity entities) const
         {
             return entities & this->getSupportedEntities();
@@ -590,27 +597,20 @@ namespace BlackCore
             return m_statusMessage;
         }
 
-        CStatusMessageList CDatabaseReader::initFromLocalResourceFiles()
+        CStatusMessageList CDatabaseReader::initFromLocalResourceFiles(bool inBackground)
         {
-            static const QDateTime threshold = QDateTime::currentDateTimeUtc().addYears(-1);
-            const QSet<CEntityFlags::Entity> eSet = CEntityFlags::asSingleEntities(this->getSupportedEntities());
-
-            CStatusMessageList msgs;
-            CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-            for (CEntityFlags::Entity e : eSet)
+            const bool overrideNewerOnly = true;
+            if (inBackground || !CThreadUtils::isCurrentThreadObjectThread(this))
             {
-                if (this->hasCacheTimestampNewerThan(e, threshold))
-                {
-                    entities |= e;
-                }
-                {
-                    msgs.push_back(CStatusMessage(this).info("Will not init from local file, there are already data for '%1'") << CEntityFlags::flagToString(e));
-                }
+                const bool s = this->readFromJsonFilesInBackground(CDirectoryUtils::staticDbFilesDirectory(), this->getSupportedEntities(), overrideNewerOnly);
+                return s ?
+                       CStatusMessage(this).info("Started reading in background from '%1' of entities: '%2'") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(this->getSupportedEntities()) :
+                       CStatusMessage(this).error("Starting reading in background from '%1' of entities: '%2' failed") << CDirectoryUtils::staticDbFilesDirectory() << CEntityFlags::flagToString(this->getSupportedEntities());
             }
-
-            const CStatusMessageList readMsgs = this->readFromJsonFiles(CDirectoryUtils::staticDbFilesDirectory(), entities);
-            msgs.push_back(readMsgs);
-            return readMsgs;
+            else
+            {
+                return this->readFromJsonFiles(CDirectoryUtils::staticDbFilesDirectory(), this->getSupportedEntities(), overrideNewerOnly);
+            }
         }
 
         void CDatabaseReader::setReplyStatus(QNetworkReply::NetworkError status, const QString &message)
@@ -628,6 +628,27 @@ namespace BlackCore
             {
                 this->logNetworkReplyReceived(nwReply);
                 this->setReplyStatus(nwReply->error(), nwReply->errorString());
+            }
+        }
+
+        bool CDatabaseReader::overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo, CEntityFlags::Entity entity, CStatusMessageList &msgs) const
+        {
+            if (!fileInfo.created().isValid()) { return false; }
+            if (!overrideNewerOnly) { return true; }
+
+            const qint64 fileTs = fileInfo.created().toUTC().toMSecsSinceEpoch();
+            const QDateTime cacheDateTime(this->getCacheTimestamp(entity));
+            if (!cacheDateTime.isValid()) { return true; } // no cache
+            const qint64 cacheTs = cacheDateTime.toUTC().toMSecsSinceEpoch();
+            if (fileTs > cacheTs)
+            {
+                msgs.push_back(CStatusMessage(this).info("File '%1' is newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
+                return true;
+            }
+            else
+            {
+                msgs.push_back(CStatusMessage(this).info("File '%1' is not newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
+                return true;
             }
         }
 

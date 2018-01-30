@@ -18,6 +18,7 @@
 
 #include <QDir>
 #include <QFlags>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QReadLocker>
@@ -158,9 +159,9 @@ namespace BlackCore
         bool CModelDataReader::areAllDataRead() const
         {
             return
-                getLiveriesCount() > 0 &&
-                getModelsCount() > 0 &&
-                getDistributorsCount() > 0;
+                this->getLiveriesCount() > 0 &&
+                this->getModelsCount() > 0 &&
+                this->getDistributorsCount() > 0;
         }
 
         void CModelDataReader::ps_read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
@@ -351,7 +352,7 @@ namespace BlackCore
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
-                emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
+                emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
                 return;
             }
 
@@ -384,7 +385,7 @@ namespace BlackCore
             this->emitAndLogDataRead(CEntityFlags::ModelEntity, n, res);
         }
 
-        CStatusMessageList CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
+        CStatusMessageList CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             const QDir directory(dir);
             if (!directory.exists())
@@ -399,26 +400,37 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::LiveryEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json");
-                const QJsonObject liveriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
-                if (liveriesJson.isEmpty())
+                const QFileInfo fi(fileName);
+                if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                }
+                else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::LiveryEntity, msgs))
+                {
+                    // void
                 }
                 else
                 {
-                    try
+                    const QJsonObject liveriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    if (liveriesJson.isEmpty())
                     {
-                        CLiveryList liveries;
-                        liveries.convertFromJson(liveriesJson);
-                        const int c = liveries.size();
-                        m_liveryCache.set(liveries);
-                        emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
-                        reallyRead |= CEntityFlags::LiveryEntity;
+                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
                     }
-                    catch (const CJsonException &ex)
+                    else
                     {
-                        emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
-                        msgs.push_back(ex.toStatusMessage(this, QString("Reading liveries from '%1'").arg(fileName)));
+                        try
+                        {
+                            const CLiveryList liveries = CLiveryList::fromMultipleJsonFormats(liveriesJson);
+                            const int c = liveries.size();
+                            msgs.push_back(m_liveryCache.set(liveries, fi.created().toUTC().toMSecsSinceEpoch()));
+                            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
+                            reallyRead |= CEntityFlags::LiveryEntity;
+                        }
+                        catch (const CJsonException &ex)
+                        {
+                            emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0);
+                            msgs.push_back(ex.toStatusMessage(this, QString("Reading liveries from '%1'").arg(fileName)));
+                        }
                     }
                 }
             }
@@ -426,26 +438,37 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::ModelEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "models.json");
-                const QJsonObject modelsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
-                if (modelsJson.isEmpty())
+                const QFileInfo fi(fileName);
+                if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                }
+                else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::ModelEntity, msgs))
+                {
+                    // void
                 }
                 else
                 {
-                    try
+                    const QJsonObject modelsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    if (modelsJson.isEmpty())
                     {
-                        CAircraftModelList models;
-                        models.convertFromJson(modelsJson);
-                        const int c = models.size();
-                        m_modelCache.set(models);
-                        emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
-                        reallyRead |= CEntityFlags::ModelEntity;
+                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
                     }
-                    catch (const CJsonException &ex)
+                    else
                     {
-                        emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
-                        msgs.push_back(ex.toStatusMessage(this, QString("Reading models from '%1'").arg(fileName)));
+                        try
+                        {
+                            const CAircraftModelList models = CAircraftModelList::fromMultipleJsonFormats(modelsJson);
+                            const int c = models.size();
+                            msgs.push_back(m_modelCache.set(models, fi.created().toUTC().toMSecsSinceEpoch()));
+                            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
+                            reallyRead |= CEntityFlags::ModelEntity;
+                        }
+                        catch (const CJsonException &ex)
+                        {
+                            emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0);
+                            msgs.push_back(ex.toStatusMessage(this, QString("Reading models from '%1'").arg(fileName)));
+                        }
                     }
                 }
             }
@@ -453,46 +476,50 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::DistributorEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json");
-                const QJsonObject distributorsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
-                if (distributorsJson.isEmpty())
+                const QFileInfo fi(fileName);
+                if (!fi.exists())
                 {
-                    msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
+                    msgs.push_back(CStatusMessage(this).warning("File '%1' does not exist") << fileName);
+                }
+                else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::DistributorEntity, msgs))
+                {
+                    // void
                 }
                 else
                 {
-                    try
+                    const QJsonObject distributorsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
+                    if (distributorsJson.isEmpty())
                     {
-                        CDistributorList distributors;
-                        distributors.convertFromJson(distributorsJson);
-                        const int c = distributors.size();
-                        m_distributorCache.set(distributors);
-                        emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
-                        reallyRead |= CEntityFlags::DistributorEntity;
+                        msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
                     }
-                    catch (const CJsonException &ex)
+                    else
                     {
-                        emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
-                        msgs.push_back(ex.toStatusMessage(this, QString("Reading distributors from '%1'").arg(fileName)));
+                        try
+                        {
+                            const CDistributorList distributors = CDistributorList::fromMultipleJsonFormats(distributorsJson);
+                            const int c = distributors.size();
+                            msgs.push_back(m_distributorCache.set(distributors, fi.created().toUTC().toMSecsSinceEpoch()));
+                            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
+                            reallyRead |= CEntityFlags::DistributorEntity;
+                        }
+                        catch (const CJsonException &ex)
+                        {
+                            emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0);
+                            msgs.push_back(ex.toStatusMessage(this, QString("Reading distributors from '%1'").arg(fileName)));
+                        }
                     }
                 }
             }
 
-            if (msgs.isSuccess() && (reallyRead & CEntityFlags::DistributorLiveryModel) == whatToRead)
-            {
-                return CStatusMessage(this).info("Updated caches for '%1' from '%2'") << CEntityFlags::flagToString(reallyRead) << dir;
-            }
-            else
-            {
-                return msgs;
-            }
+            return msgs;
         }
 
-        bool CModelDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
+        bool CModelDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
         {
             if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
-            QTimer::singleShot(0, this, [this, dir, whatToRead]()
+            QTimer::singleShot(0, this, [ = ]()
             {
-                const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead);
+                const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
                 if (msgs.isFailure())
                 {
                     CLogMessage::preformatted(msgs);

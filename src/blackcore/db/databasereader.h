@@ -32,6 +32,8 @@
 #include <QNetworkReply>
 
 class QNetworkReply;
+class QFileInfo;
+
 namespace BlackMisc { class CLogCategoryList; }
 namespace BlackCore
 {
@@ -186,6 +188,9 @@ namespace BlackCore
             //! Supported entities by this reader
             virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const = 0;
 
+            //! Supported entities as string
+            QString getSupportedEntitiesAsString() const;
+
             //! Mask by supported entities
             BlackMisc::Network::CEntityFlags::Entity maskBySupportedEntities(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
@@ -259,13 +264,13 @@ namespace BlackCore
 
             //! Init from local resource file
             //! \remark normally used after installation for a 1st time init
-            BlackMisc::CStatusMessageList initFromLocalResourceFiles();
+            BlackMisc::CStatusMessageList initFromLocalResourceFiles(bool inBackground);
 
             //! Data read from local data
-            virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead) = 0;
+            virtual BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
 
             //! Data read from local data
-            virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead) = 0;
+            virtual bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
 
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
@@ -398,6 +403,10 @@ namespace BlackCore
             //! Feedback about connection status
             //! \threadsafe
             void setReplyStatus(QNetworkReply *nwReply);
+
+            //! Override cache from file
+            //! \threadsafe
+            bool overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo, BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::CStatusMessageList &msgs) const;
         };
     } // ns
 } // ns
