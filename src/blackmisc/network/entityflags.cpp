@@ -167,7 +167,7 @@ namespace BlackMisc
             return NoEntity;
         }
 
-        QSet<CEntityFlags::Entity> CEntityFlags::asSingleEntities(Entity entities)
+        CEntityFlags::EntitySet CEntityFlags::asSingleEntities(Entity entities)
         {
             QSet<CEntityFlags::Entity> s;
             CEntityFlags::Entity currentEntity = iterateDbEntities(entities);

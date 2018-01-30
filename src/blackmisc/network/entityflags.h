@@ -57,6 +57,9 @@ namespace BlackMisc
             };
             Q_DECLARE_FLAGS(Entity, EntityFlag)
 
+            //! Set of CEntityFlags::Entity
+            using EntitySet = QSet<CEntityFlags::Entity>;
+
             //! State of operation
             enum ReadState
             {
@@ -107,7 +110,7 @@ namespace BlackMisc
             static Entity singleEntityByName(const QString &name);
 
             //! As set of single entities
-            static QSet<Entity> asSingleEntities(Entity entities);
+            static EntitySet asSingleEntities(Entity entities);
 
             //! Register metadata
             static void registerMetadata();
