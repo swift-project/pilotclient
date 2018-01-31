@@ -25,7 +25,7 @@ namespace BlackMisc
 
     CCountry CCountryList::findByIsoCode(const QString &isoCode) const
     {
-        QString iso(isoCode.trimmed().toUpper());
+        const QString iso(isoCode.trimmed().toUpper());
         if (!CCountry::isValidIsoCode(iso)) { return CCountry(); }
         return IDatastoreObjectList::findByKey(isoCode);
     }
@@ -35,7 +35,7 @@ namespace BlackMisc
         if (countryName.isEmpty()) { return CCountry(); }
 
         thread_local const QRegularExpression reg("^[a-z]+", QRegularExpression::CaseInsensitiveOption);
-        QRegularExpressionMatch match = reg.match(countryName);
+        const QRegularExpressionMatch match = reg.match(countryName);
         const QString cn(match.hasMatch() ? match.captured(0) : countryName);
         const CCountryList countries = this->findBy([&](const CCountry & country)
         {
@@ -65,39 +65,68 @@ namespace BlackMisc
         return CCountry();
     }
 
-    QStringList CCountryList::toIsoNameList() const
+    QStringList CCountryList::toIsoNameList(bool sorted) const
     {
         QStringList sl;
         for (const CCountry &country : (*this))
         {
-            QString s = country.getCombinedStringIsoName();
+            const QString s = country.getCombinedStringIsoName();
             if (s.isEmpty()) { continue; }
             sl.append(s);
         }
+        if (sorted) { sl.sort(); }
         return sl;
     }
 
-    QStringList CCountryList::toNameIsoList() const
+    QStringList CCountryList::toNameIsoList(bool sorted) const
     {
         QStringList sl;
         for (const CCountry &country : (*this))
         {
-            QString s = country.getCombinedStringNameIso();
+            const QString s = country.getCombinedStringNameIso();
             if (s.isEmpty()) { continue; }
             sl.append(s);
         }
+        if (sorted) { sl.sort(); }
         return sl;
     }
 
-    QStringList CCountryList::toNameList() const
+    QStringList CCountryList::toNameList(bool sorted) const
     {
         QStringList sl;
         for (const CCountry &country : (*this))
         {
-            QString s = country.getName();
+            const QString s = country.getName();
             if (s.isEmpty()) { continue; }
             sl.append(s);
         }
+        if (sorted) { sl.sort(); }
+        return sl;
+    }
+
+    QStringList CCountryList::toIsoList(bool sorted) const
+    {
+        QStringList sl;
+        for (const CCountry &country : (*this))
+        {
+            const QString s = country.getIsoCode();
+            if (s.length() != 2) { continue; }
+            sl.append(s);
+        }
+        if (sorted) { sl.sort(); }
+        return sl;
+    }
+
+    QStringList CCountryList::toIso3List(bool sorted) const
+    {
+        QStringList sl;
+        for (const CCountry &country : (*this))
+        {
+            const QString s = country.getIso3Code();
+            if (s.length() != 3) { continue; }
+            sl.append(s);
+        }
+        if (sorted) { sl.sort(); }
         return sl;
     }
 

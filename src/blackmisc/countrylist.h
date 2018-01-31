@@ -53,18 +53,23 @@ namespace BlackMisc
         CCountry findFirstByAlias(const QString &alias) const;
 
         //! ISO/name string list
-        QStringList toIsoNameList() const;
+        QStringList toIsoNameList(bool sorted = false) const;
 
         //! Name/ISO string list
-        QStringList toNameIsoList() const;
+        QStringList toNameIsoList(bool sorted = false) const;
 
         //! Name string list
-        QStringList toNameList() const;
+        QStringList toNameList(bool sorted = false) const;
+
+        //! All ISO codes
+        QStringList toIsoList(bool sorted = false) const;
+
+        //! All ISO 3 codes
+        QStringList toIso3List(bool sorted = false) const;
 
         //! From our database JSON format
         static CCountryList fromDatabaseJson(const QJsonArray &array);
     };
-
 } //namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CCountryList)
