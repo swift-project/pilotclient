@@ -9,9 +9,9 @@
 
 #include "pilotform.h"
 #include "ui_pilotform.h"
+#include "blackgui/components/airportsmallcompleter.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
-#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/network/user.h"
 #include "blackconfig/buildconfig.h"
@@ -22,7 +22,7 @@ using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
-using namespace BlackCore;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {
@@ -38,18 +38,11 @@ namespace BlackGui
             ui->lblp_Password->setToolTips("ok", "wrong");
             ui->lblp_RealName->setToolTips("ok", "wrong");
 
-            ui->le_HomeAirport->setValidator(new CUpperCaseValidator(this));
-            this->initCompleters(CEntityFlags::AirportEntity);
-
             connect(ui->tb_UnhidePassword, &QToolButton::clicked, this, &CPilotForm::unhidePassword);
             connect(ui->le_Id, &QLineEdit::editingFinished, this, &CPilotForm::doValidation);
-            connect(ui->le_HomeAirport, &QLineEdit::editingFinished, this, &CPilotForm::doValidation);
+            connect(ui->comp_HomeAirport, &CAirportSmallCompleter::editingFinished, this, &CPilotForm::doValidation);
             connect(ui->le_Password, &QLineEdit::editingFinished, this, &CPilotForm::doValidation);
             connect(ui->le_RealName, &QLineEdit::editingFinished, this, &CPilotForm::doValidation);
-
-            // web service data
-            Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Need web data services");
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CPilotForm::onWebServiceDataRead);
         }
 
         CPilotForm::~CPilotForm()
@@ -65,7 +58,7 @@ namespace BlackGui
         CUser CPilotForm::getUser() const
         {
             CUser user = CUser(ui->le_Id->text().trimmed(), CUser::beautifyRealName(ui->le_RealName->text()), "", ui->le_Password->text());
-            user.setHomeBase(CAirportIcaoCode(ui->le_HomeAirport->text().trimmed()));
+            user.setHomeBase(ui->comp_HomeAirport->getAirportIcaoCode());
             return user;
         }
 
@@ -79,14 +72,14 @@ namespace BlackGui
                 ui->le_RealName->setText(user.getRealName());
                 if (user.hasHomeBase())
                 {
-                    ui->le_HomeAirport->setText(user.getHomeBase().asString());
+                    ui->comp_HomeAirport->setAirportIcaoCode(user.getHomeBase());
                 }
             }
             else if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
                 ui->le_Id->setText("1288459");
                 ui->le_Password->setText("4769");
-                ui->le_HomeAirport->setText("LOWI");
+                ui->comp_HomeAirport->setAirportIcaoCode("LOWI");
                 ui->le_RealName->setText("Swift Project");
             }
             this->validate();
@@ -97,7 +90,7 @@ namespace BlackGui
         {
             ui->le_Id->clear();
             ui->le_Password->clear();
-            ui->le_HomeAirport->clear();
+            ui->comp_HomeAirport->clear();
             ui->le_RealName->clear();
 
             ui->lblp_Id->setTicked(false);
@@ -108,7 +101,7 @@ namespace BlackGui
 
         void CPilotForm::setReadOnly(bool readonly)
         {
-            ui->le_HomeAirport->setReadOnly(readonly);
+            ui->comp_HomeAirport->setReadOnly(readonly);
             ui->le_Id->setReadOnly(readonly);
             ui->le_Password->setReadOnly(readonly);
             ui->le_RealName->setReadOnly(readonly);
@@ -152,35 +145,6 @@ namespace BlackGui
             {
                 ui->le_Password->setEchoMode(originalMode);
             });
-        }
-
-        void CPilotForm::initCompleters(CEntityFlags::Entity entity)
-        {
-            // completers where possible
-            if (sGui && sGui->hasWebDataServices())
-            {
-                if (entity.testFlag(CEntityFlags::AirportEntity) && !ui->le_HomeAirport->completer())
-                {
-                    // one time init
-                    const QStringList airports = sGui->getWebDataServices()->getAirports().allIcaoCodes(true);
-                    if (!airports.isEmpty())
-                    {
-                        QCompleter *completer = new QCompleter(airports, this);
-                        QStyledItemDelegate *itemDelegate = new QStyledItemDelegate(completer);
-                        completer->popup()->setItemDelegate(itemDelegate);
-                        ui->le_HomeAirport->setCompleter(completer);
-                        completer->popup()->setObjectName("AirportCompleter");
-                        completer->popup()->setMinimumWidth(175);
-                    }
-                }
-            }
-        }
-
-        void CPilotForm::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
-        {
-            if (state != CEntityFlags::ReadFinished) { return; }
-            Q_UNUSED(number);
-            this->initCompleters(entity);
         }
 
         void CPilotForm::doValidation()

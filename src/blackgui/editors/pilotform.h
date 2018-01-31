@@ -59,12 +59,6 @@ namespace BlackGui
             //! Unhide password
             void unhidePassword();
 
-            //! Completers
-            void initCompleters(BlackMisc::Network::CEntityFlags::Entity entity);
-
-            //! Web services read
-            void onWebServiceDataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-
             //! Call validation
             void doValidation();
 

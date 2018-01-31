@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CPilotForm</class>
  <widget class="QFrame" name="CPilotForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>295</width>
+    <height>57</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Pilot info</string>
   </property>
@@ -21,7 +29,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="lbl_Id">
      <property name="text">
-      <string>Id:</string>
+      <string>Id</string>
      </property>
     </widget>
    </item>
@@ -35,27 +43,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
-    <widget class="QLabel" name="lbl_Password">
-     <property name="text">
-      <string>Password</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="4">
-    <widget class="QToolButton" name="tb_UnhidePassword">
-     <property name="toolTip">
-      <string>unhide password</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/diagona/icons/diagona/icons/question-button.png</normaloff>:/diagona/icons/diagona/icons/question-button.png</iconset>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="5">
     <widget class="QLineEdit" name="le_Password">
      <property name="echoMode">
@@ -63,24 +50,17 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="6">
+   <item row="0" column="7">
     <widget class="BlackGui::CTickLabel" name="lblp_Password">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lbl_RealName">
+   <item row="0" column="3">
+    <widget class="QLabel" name="lbl_Password">
      <property name="text">
-      <string>Real name</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="le_RealName">
-     <property name="placeholderText">
-      <string>e.g. Joe Doe</string>
+      <string>Password</string>
      </property>
     </widget>
    </item>
@@ -101,20 +81,48 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="4" colspan="2">
-    <widget class="QLineEdit" name="le_HomeAirport">
-     <property name="maxLength">
-      <number>4</number>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_RealName">
+     <property name="toolTip">
+      <string>Real name</string>
      </property>
-     <property name="placeholderText">
-      <string>e.g. &quot;KLAX&quot;</string>
+     <property name="text">
+      <string>Name</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="6">
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="le_RealName">
+     <property name="placeholderText">
+      <string>e.g. Joe Doe</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="7">
     <widget class="BlackGui::CTickLabel" name="lblp_HomeAirport">
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QToolButton" name="tb_UnhidePassword">
+     <property name="toolTip">
+      <string>unhide password</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/diagona/icons/diagona/icons/question-button.png</normaloff>:/diagona/icons/diagona/icons/question-button.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5" colspan="2">
+    <widget class="BlackGui::Components::CAirportSmallCompleter" name="comp_HomeAirport">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
     </widget>
    </item>
@@ -126,7 +134,19 @@
    <extends>QLabel</extends>
    <header>blackgui/ticklabel.h</header>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CAirportSmallCompleter</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/airportsmallcompleter.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>le_Id</tabstop>
+  <tabstop>le_Password</tabstop>
+  <tabstop>tb_UnhidePassword</tabstop>
+  <tabstop>le_RealName</tabstop>
+ </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
  </resources>
