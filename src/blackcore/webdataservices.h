@@ -472,7 +472,7 @@ namespace BlackCore
         //! \name Simplified read signals
         //! @{
         //! All swift DB data have been read
-        void allSwiftDbDataRead();
+        void swiftDbAllDataRead();
 
         //! Shared info objects read
         void sharedInfoObjectsRead();

@@ -62,7 +62,7 @@ namespace BlackCore
 
             if (sApp && sApp->getWebDataServices())
             {
-                connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CContextOwnAircraft::allSwiftWebDataRead);
+                connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CContextOwnAircraft::allSwiftWebDataRead);
             }
 
             // Init own aircraft

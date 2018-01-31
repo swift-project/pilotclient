@@ -45,7 +45,7 @@ namespace BlackGui
             ui->editor_AircraftModel->allowDrop(false);
             ui->editor_AircraftModel->setReadOnly(true);
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CDbQuickMappingWizard::ps_webDataRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CDbQuickMappingWizard::ps_webDataRead);
             connect(sGui->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbQuickMappingWizard::ps_publishedModels);
 
             connect(this, &CDbQuickMappingWizard::currentIdChanged, this, &CDbQuickMappingWizard::ps_currentWizardPageChanged);

@@ -1248,7 +1248,7 @@ namespace BlackCore
         const int allUsedEntities = static_cast<int>(this->allDbEntitiesForUsedReaders());
         if (((static_cast<int>(m_swiftDbEntitiesRead)) & allUsedEntities) == allUsedEntities)
         {
-            emit this->allSwiftDbDataRead();
+            emit this->swiftDbAllDataRead();
         }
 
         // individual signals

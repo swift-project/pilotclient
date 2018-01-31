@@ -40,7 +40,7 @@ namespace BlackGui
             explicit CAircraftCombinedTypeSelector(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAircraftCombinedTypeSelector();
+            virtual ~CAircraftCombinedTypeSelector();
 
             //! Set comined code, e.g. L1P
             void setCombinedType(const QString &combinedCode);
@@ -57,14 +57,13 @@ namespace BlackGui
             //! Get the combined type, e.g. "L2P"
             QString getCombinedType() const;
 
-        private slots:
+        private:
             //! Code has been entered
-            void ps_CombinedTypeEntered();
+            void combinedTypeEntered();
 
             //! Changed combobox
-            void ps_ChangedComboBox(const QString &text);
+            void changedComboBox(const QString &text);
 
-        private:
             //! Combined type from comboboxes
             QString getCombinedTypeFromComboBoxes() const;
 

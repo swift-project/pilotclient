@@ -133,7 +133,7 @@ namespace BlackGui
             connect(ui->cb_Tcas, &QCheckBox::released, this, &CFlightPlanComponent::prefixCheckBoxChanged);
 
             // web services
-            connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CFlightPlanComponent::swiftWebDataRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CFlightPlanComponent::swiftWebDataRead);
 
             // init GUI
             this->resetFlightPlan();

@@ -28,12 +28,12 @@ namespace BlackGui
             ui(new Ui::CAircraftCombinedTypeSelector)
         {
             ui->setupUi(this);
-            connect(ui->le_CombinedType, &QLineEdit::editingFinished, this, &CAircraftCombinedTypeSelector::ps_CombinedTypeEntered);
-            connect(ui->le_CombinedType, &QLineEdit::returnPressed, this, &CAircraftCombinedTypeSelector::ps_CombinedTypeEntered);
+            connect(ui->le_CombinedType, &QLineEdit::editingFinished, this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
+            connect(ui->le_CombinedType, &QLineEdit::returnPressed, this, &CAircraftCombinedTypeSelector::combinedTypeEntered);
 
-            connect(ui->cb_EngineCount, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
-            connect(ui->cb_EngineType, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
-            connect(ui->cb_Type, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
+            connect(ui->cb_EngineCount, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
+            connect(ui->cb_EngineType, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
+            connect(ui->cb_Type, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::changedComboBox);
 
             ui->le_CombinedType->setValidator(new CUpperCaseValidator(this));
         }
@@ -84,13 +84,13 @@ namespace BlackGui
             return ct2;
         }
 
-        void CAircraftCombinedTypeSelector::ps_CombinedTypeEntered()
+        void CAircraftCombinedTypeSelector::combinedTypeEntered()
         {
             QString cc(ui->le_CombinedType->text().trimmed().toUpper());
             this->setCombinedType(cc);
         }
 
-        void CAircraftCombinedTypeSelector::ps_ChangedComboBox(const QString &text)
+        void CAircraftCombinedTypeSelector::changedComboBox(const QString &text)
         {
             Q_UNUSED(text);
             QString ct(getCombinedTypeFromComboBoxes());

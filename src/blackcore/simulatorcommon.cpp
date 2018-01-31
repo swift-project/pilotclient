@@ -79,7 +79,7 @@ namespace BlackCore
         // swift data
         if (sApp && sApp->hasWebDataServices())
         {
-            connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CSimulatorCommon::onSwiftDbAllDataRead, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CSimulatorCommon::onSwiftDbAllDataRead, Qt::QueuedConnection);
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &CSimulatorCommon::onSwiftDbAirportsRead, Qt::QueuedConnection);
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, &CSimulatorCommon::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
         }
