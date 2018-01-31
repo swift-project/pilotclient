@@ -83,16 +83,35 @@ namespace BlackMisc
             QStringList icaos;
             for (const CAirport &airport : *this)
             {
-                if (!airport.getIcaoAsString().isEmpty())
-                {
-                    icaos.push_back(airport.getIcaoAsString());
-                }
+                if (airport.getIcaoAsString().isEmpty()) { continue; }
+                icaos.push_back(airport.getIcaoAsString());
             }
-            if (sorted)
-            {
-                icaos.sort();
-            }
+            if (sorted) { icaos.sort(); }
             return icaos;
+        }
+
+        QStringList CAirportList::allDescriptivesNames(bool sorted) const
+        {
+            QStringList names;
+            for (const CAirport &airport : *this)
+            {
+                if (airport.getDescriptiveName().isEmpty()) { continue; }
+                names.push_back(airport.getDescriptiveName());
+            }
+            if (sorted) { names.sort(); }
+            return names;
+        }
+
+        QStringList CAirportList::allLocations(bool sorted) const
+        {
+            QStringList locations;
+            for (const CAirport &airport : *this)
+            {
+                if (airport.getLocation().isEmpty()) { continue; }
+                locations.push_back(airport.getLocation());
+            }
+            if (sorted) { locations.sort(); }
+            return locations;
         }
 
         CAirportList CAirportList::fromDatabaseJson(const QJsonArray &array, CAirportList *inconsistent)

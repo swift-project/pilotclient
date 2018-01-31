@@ -127,6 +127,9 @@ namespace BlackMisc
             //! Valid ICAO code
             bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }
 
+            //! NULL airport?
+            virtual bool isNull() const override;
+
             //! \copydoc Geo::ICoordinateGeodetic::latitude
             virtual BlackMisc::Geo::CLatitude latitude() const override
             {

@@ -58,6 +58,11 @@ namespace BlackMisc
             if (this->m_descriptiveName.isEmpty()) { this->m_descriptiveName = airport.getDescriptiveName(); }
         }
 
+        bool CAirport::isNull() const
+        {
+            return (m_icao.isEmpty() && m_descriptiveName.isEmpty());
+        }
+
         QString CAirport::convertToQString(bool i18n) const
         {
             QString s = i18n ? QCoreApplication::translate("Aviation", "Airport") : "Airport";

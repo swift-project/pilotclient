@@ -64,6 +64,12 @@ namespace BlackMisc
             //! All ICAO codes
             QStringList allIcaoCodes(bool sorted) const;
 
+            //! All names
+            QStringList allDescriptivesNames(bool sorted) const;
+
+            //! All names
+            QStringList allLocations(bool sorted) const;
+
             //! From our DB JSON
             static CAirportList fromDatabaseJson(const QJsonArray &array, CAirportList *inconsistent = nullptr);
         };
