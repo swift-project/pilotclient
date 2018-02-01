@@ -51,7 +51,16 @@ namespace BlackMisc
             void setRawMessage(const QString &rawMessage) { m_rawMessage = rawMessage; }
 
             //! Get reception time
-            QDateTime getReceptionTime() const;
+            const QDateTime &getReceptionTime() const { return m_receptionTime; }
+
+            //! Returns true if the raw message is from the given PDU packet type
+            bool isPacketType(const QString &type) const;
+
+            //! Does the raw message contain str?
+            bool containsString(const QString &str) const;
+
+            //! Returns a list of all known packet types.
+            static const QStringList &getAllPacketTypes ();
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

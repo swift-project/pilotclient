@@ -174,6 +174,7 @@ namespace BlackCore
             //! File writing mode
             enum FileWriteMode
             {
+                None,
                 Truncate,
                 Append,
                 Timestamped
@@ -182,7 +183,7 @@ namespace BlackCore
             //! Properties by index
             enum ColumnIndex
             {
-                IndexWriteEnabled = BlackMisc::CPropertyIndex::GlobalIndexRawFsdMessageSettings,
+                IndexRawFsdMessagesEnabled = BlackMisc::CPropertyIndex::GlobalIndexRawFsdMessageSettings,
                 IndexFileDir,
                 IndexFileWriteMode
             };
@@ -193,8 +194,8 @@ namespace BlackCore
             //! Simplified constructor
             CRawFsdMessageSettings(bool enabled, const QString &fileDir);
 
-            //! Is file writing enabled?
-            bool isFileWritingEnabled() const { return m_fileWritingEnabled; }
+            //! Are raw FSD messages enabled?
+            bool areRawFsdMessagesEnabled() const { return m_rawFsdMessagesEnabled; }
 
             //! Get file directory
             QString getFileDir() const { return m_FileDir; }
@@ -212,13 +213,13 @@ namespace BlackCore
             QString convertToQString(bool i18n = false) const;
 
         private:
-            bool m_fileWritingEnabled = false;
+            bool m_rawFsdMessagesEnabled = false;
             QString m_FileDir;
-            FileWriteMode m_fileWriteMode = Truncate;
+            FileWriteMode m_fileWriteMode = None;
 
             BLACK_METACLASS(
                 CRawFsdMessageSettings,
-                BLACK_METAMEMBER(fileWritingEnabled),
+                BLACK_METAMEMBER(rawFsdMessagesEnabled),
                 BLACK_METAMEMBER(FileDir),
                 BLACK_METAMEMBER(fileWriteMode)
             );
@@ -233,12 +234,12 @@ namespace BlackCore
             //! \copydoc BlackCore::TSettingTrait::humanReadable
             static const QString &humanReadable() { static const QString name("FSD message Logging"); return name; }
 
-            //! \copydoc BlackCore::TSettingTrait::isValid
+            /* //! \copydoc BlackCore::TSettingTrait::isValid
             static bool isValid(const CRawFsdMessageSettings &setting)
             {
-                if (setting.isFileWritingEnabled()) { return !setting.getFileDir().isEmpty(); }
+                if (setting.areRawFsdMessagesEnabled()) { return !setting.getFileDir().isEmpty(); }
                 return true;
-            }
+            }*/
 
             //! \copydoc BlackCore::TSettingTrait::defaultValue
             static const CRawFsdMessageSettings &defaultValue()

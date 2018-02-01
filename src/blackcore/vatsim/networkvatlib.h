@@ -260,6 +260,7 @@ namespace BlackCore
 
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CNetworkVatlib::fsdMessageSettingsChanged };
             QFile m_rawFsdMessageLogFile;
+            bool m_rawFsdMessagesEnabled = false;
         };
     } //namespace
 } //namespace

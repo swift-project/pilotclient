@@ -79,14 +79,14 @@ namespace BlackCore
         { }
 
         CRawFsdMessageSettings::CRawFsdMessageSettings(bool enabled, const QString &FileDir) :
-            m_fileWritingEnabled(enabled), m_FileDir(FileDir)
+            m_rawFsdMessagesEnabled(enabled), m_FileDir(FileDir)
         { }
 
         QString CRawFsdMessageSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
             QString s("CRawFsdMessageSettings");
-            s.append(" enabled: ").append(boolToYesNo(m_fileWritingEnabled));
+            s.append(" enabled: ").append(boolToYesNo(m_rawFsdMessagesEnabled));
             s.append(" dir: ").append(m_FileDir);
             return s;
         }
@@ -97,7 +97,7 @@ namespace BlackCore
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexWriteEnabled: return CVariant::fromValue(this->m_fileWritingEnabled);
+            case IndexRawFsdMessagesEnabled: return CVariant::fromValue(this->m_rawFsdMessagesEnabled);
             case IndexFileDir: return CVariant::fromValue(this->m_FileDir);
             case IndexFileWriteMode: return CVariant::fromValue(this->m_fileWriteMode);
             default: return CValueObject::propertyByIndex(index);
@@ -110,7 +110,7 @@ namespace BlackCore
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexWriteEnabled: this->m_fileWritingEnabled = variant.toBool(); break;
+            case IndexRawFsdMessagesEnabled: this->m_rawFsdMessagesEnabled = variant.toBool(); break;
             case IndexFileDir: this->m_FileDir = variant.toQString(); break;
             case IndexFileWriteMode: this->m_fileWriteMode = variant.to<FileWriteMode>(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;

@@ -160,7 +160,8 @@ namespace BlackCore
             Vat_SetAircraftInfoHandler(m_net.data(), onPilotInfoReceived, this);
             Vat_SetCustomPilotPacketHandler(m_net.data(), onCustomPacketReceived, this);
             Vat_SetAircraftConfigHandler(m_net.data(), onAircraftConfigReceived, this);
-            Vat_SetFsdMessageHandler(m_net.data(), onRawFsdMessage, this);
+
+            fsdMessageSettingsChanged();
         }
 
         CNetworkVatlib::~CNetworkVatlib()
@@ -1036,6 +1037,7 @@ namespace BlackCore
 
         void CNetworkVatlib::handleRawFsdMessage(const QString &fsdMessage)
         {
+            if (!m_rawFsdMessagesEnabled) { return; }
             CRawFsdMessage rawFsdMessage(fsdMessage);
             if (m_rawFsdMessageLogFile.isOpen())
             {
@@ -1045,11 +1047,25 @@ namespace BlackCore
             emit rawFsdMessageReceived(rawFsdMessage);
         }
 
+
+
         void CNetworkVatlib::fsdMessageSettingsChanged()
         {
+            if (!m_net) { return; }
             if (m_rawFsdMessageLogFile.isOpen()) { m_rawFsdMessageLogFile.close(); }
             const CRawFsdMessageSettings setting = m_fsdMessageSetting.get();
-            if (!setting.isFileWritingEnabled() || setting.getFileDir().isEmpty()) { return; }
+
+            // Workaround bug in vatlib v0.9.7. Handlers cannot be updated.
+            m_rawFsdMessagesEnabled = setting.areRawFsdMessagesEnabled();
+            /*if (!setting.areRawFsdMessagesEnabled())
+            {
+                Vat_SetFsdMessageHandler(m_net.data(), nullptr, this);
+                return;
+            }*/
+
+            Vat_SetFsdMessageHandler(m_net.data(), CNetworkVatlib::onRawFsdMessage, this);
+
+            if (setting.getFileWriteMode() == CRawFsdMessageSettings::None || setting.getFileDir().isEmpty()) { return; }
 
             if (setting.getFileWriteMode() == CRawFsdMessageSettings::Truncate)
             {

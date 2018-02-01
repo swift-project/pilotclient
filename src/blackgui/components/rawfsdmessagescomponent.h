@@ -14,14 +14,10 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackcore/vatsim/vatsimsettings.h"
-#include "blackmisc/network/rawfsdmessage.h"
+#include "blackmisc/network/rawfsdmessagelist.h"
 #include "blackmisc/connectionguard.h"
 
 #include <QFrame>
-
-class QAction;
-class QPoint;
-class QWidget;
 
 namespace Ui { class CRawFsdMessagesComponent; }
 namespace BlackGui
@@ -41,17 +37,33 @@ namespace BlackGui
             virtual ~CRawFsdMessagesComponent();
 
         private:
-            void changeWritingToFile(bool enable);
+            void setupConnections();
+            void enableRawFsdMessages(bool enable);
+            void expandFilters(bool expand);
+            void expandWritingToFile(bool expand);
+            void changeStringFilter();
+            void changePacketTypeFilter(const QString &type);
+            void changeMaxDisplayedMessages();
+            void filterDisplayedMessages();
             void selectFileDir();
             void changeFileWritingMode();
-            void setFileWritingModeFromSettings(BlackCore::Vatsim::CRawFsdMessageSettings::FileWriteMode mode);
             void addFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
             void readSettings();
+
+            static QString rawFsdMessageToString(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
 
             BlackMisc::CSetting<BlackCore::Vatsim::TRawFsdMessageSetting> m_setting { this };
 
             QScopedPointer<Ui::CRawFsdMessagesComponent> ui;
             BlackMisc::CConnectionGuard m_signalConnections;  //!< connected signal/slots
+
+            QString m_filterString;
+            QString m_filterPacketType;
+
+            BlackMisc::Network::CRawFsdMessageList m_buffer;
+
+            int m_maxDisplayedMessages = 100;
+            int m_maxBufferSize = 1000;
         };
     } // ns
 } // ns

@@ -34,6 +34,24 @@ namespace BlackMisc
             return s.arg(m_receptionTime.toString("dd.MM.yy HH:mm:ss"), m_rawMessage);
         }
 
+        bool CRawFsdMessage::isPacketType(const QString &type) const
+        {
+            return m_rawMessage.startsWith("FSD Sent=>" + type) || m_rawMessage.startsWith("FSD Recv=>" + type);
+        }
+
+        bool CRawFsdMessage::containsString(const QString &str) const
+        {
+            return m_rawMessage.contains(str);
+        }
+
+        const QStringList &CRawFsdMessage::getAllPacketTypes()
+        {
+            static const QStringList allPacketTypes = { "@", "%", "#AA", "#DA", "#AP", "#DP", "#TM", "#WX", "#DL", "#TD", "#WD"
+                                                          "#CD", "#PC", "#SB", "$FP", "$AM", "$PI", "$PO", "$HO", "$HA", "$AX", "$AR",
+                                                          "$CQ", "$CR", "$ER", "$!!" };
+            return allPacketTypes;
+        }
+
         CVariant CRawFsdMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
