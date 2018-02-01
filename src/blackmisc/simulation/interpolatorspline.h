@@ -95,6 +95,7 @@ namespace BlackMisc
         private:
             qint64 m_prevSampleTime = 0;
             qint64 m_nextSampleTime = 0;
+            std::array<Aviation::CAircraftSituation, 3> m_s;
             Interpolant m_interpolant;
         };
     } // ns

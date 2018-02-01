@@ -16,7 +16,7 @@
 #include "interpolationhints.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/logcategorylist.h"
 #include <QObject>
@@ -51,54 +51,6 @@ namespace BlackMisc
 
             //! Get the log directory
             static QString getLogDirectory();
-
-            //! Log entry for situation interpolation
-            struct BLACKMISC_EXPORT SituationLog
-            {
-                QChar interpolator;          //!< what interpolator is used
-                qint64 tsCurrent = -1;       //!< current timestamp
-                qint64 tsInterpolated = -1;  //!< timestamp interpolated
-                double groundFactor = -1;    //!< current ground factor
-                double vtolAircraft = false; //!< VTOL aircraft
-                double simulationTimeFraction = -1; //!< time fraction, expected 0..1
-                double deltaSampleTimesMs = -1;     //!< delta time between samples (i.e. 2 situations)
-                bool useParts = false;              //!< supporting aircraft parts
-                int noTransferredElevations = 0;    //!< transferred elevation to n situations
-                Aviation::CCallsign callsign;       //!< current callsign
-                Aviation::CAircraftParts parts;     //!< corresponding parts used in interpolator
-                Aviation::CAircraftSituation situationOld;     //!< old situation
-                Aviation::CAircraftSituation situationNew;     //!< new situation
-                Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
-                PhysicalQuantities::CLength  cgAboveGround;    //!< center of gravity
-                CInterpolationAndRenderingSetup usedSetup;     //!< used setup
-                CInterpolationHints usedHints; //!< hints
-
-                //! Delta time between interpolation and current time
-                double deltaCurrentToInterpolatedTime() const
-                {
-                    return static_cast<double>(tsCurrent - tsInterpolated);
-                }
-
-                //! Full name of interpolator
-                const QString &interpolationType() const;
-
-                //! To string
-                QString toQString(
-                    bool withCurrentSituation, bool withHints, bool withSetup, bool withElevation,
-                    bool withOtherPositions, bool withDeltaTimes, const QString &separator = {" "}) const;
-            };
-
-            //! Log entry for parts interpolation
-            struct BLACKMISC_EXPORT PartsLog
-            {
-                qint64 tsCurrent = -1; //!< current timestamp
-                bool empty = false;    //!< empty parts?
-                Aviation::CCallsign callsign;   //!< current callsign
-                Aviation::CAircraftParts parts; //!< parts to be logged
-
-                //! To string
-                QString toQString(const QString &separator = {" "}) const;
-            };
 
             //! Log current interpolation cycle, only stores in memory, for performance reasons
             //! \remark const to allow const interpolator functions

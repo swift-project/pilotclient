@@ -122,8 +122,6 @@ namespace BlackMisc
             const double sampleDeltaTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - oldSituation.getAdjustedMSecsSinceEpoch();
             Q_ASSERT_X(sampleDeltaTimeMs >= 0, Q_FUNC_INFO, "Negative delta time");
             log.interpolator = 'l';
-            log.tsCurrent = currentTimeMsSinceEpoc;
-            log.deltaSampleTimesMs = sampleDeltaTimeMs;
 
             // Fraction of the deltaTime, ideally [0.0 - 1.0]
             // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
@@ -132,16 +130,23 @@ namespace BlackMisc
             const double distanceToSplitTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
             const double simulationTimeFraction = qMax(1.0 - (distanceToSplitTimeMs / sampleDeltaTimeMs), 0.0);
             const double deltaTimeFractionMs = sampleDeltaTimeMs * simulationTimeFraction;
-            log.simulationTimeFraction = simulationTimeFraction;
-            log.deltaSampleTimesMs = sampleDeltaTimeMs;
 
             currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
             currentSituation.setMSecsSinceEpoch(oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs);
             status.setInterpolatedAndCheckSituation(true, currentSituation);
-            log.tsInterpolated = currentSituation.getAdjustedMSecsSinceEpoch();
 
-            log.situationOld = oldSituation;
-            log.situationNew = newSituation;
+            if (this->hasAttachedLogger())
+            {
+                log.tsCurrent = currentTimeMsSinceEpoc;
+                log.deltaSampleTimesMs = sampleDeltaTimeMs;
+                log.simulationTimeFraction = simulationTimeFraction;
+                log.deltaSampleTimesMs = sampleDeltaTimeMs;
+                log.tsInterpolated = interpolatedTime;
+                log.interpolationSituations.clear();
+                log.interpolationSituations.push_back(newSituation); // newest at front
+                log.interpolationSituations.push_back(oldSituation); // oldest at back
+            }
+
             return { oldSituation, newSituation, simulationTimeFraction };
         }
 

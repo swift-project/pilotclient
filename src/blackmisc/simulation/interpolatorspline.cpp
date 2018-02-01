@@ -118,7 +118,7 @@ namespace BlackMisc
                     return m_interpolant;
                 }
 
-                std::array<CAircraftSituation, 3> s {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
+                m_s = std::array<CAircraftSituation, 3> {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
 
                 // - altitude unit must be the same for all three, but the unit itself does not matter
                 // - ground elevantion here normally is not available
@@ -130,22 +130,22 @@ namespace BlackMisc
                 if (!hints.getElevationPlane().isNull())
                 {
                     // do not override existing values
-                    s[0].setGroundElevationChecked(hints.getElevationPlane());
-                    s[1].setGroundElevationChecked(hints.getElevationPlane());
-                    s[2].setGroundElevationChecked(hints.getElevationPlane());
+                    m_s[0].setGroundElevationChecked(hints.getElevationPlane());
+                    m_s[1].setGroundElevationChecked(hints.getElevationPlane());
+                    m_s[2].setGroundElevationChecked(hints.getElevationPlane());
                 }
 
-                const double a0 = s[0].getCorrectedAltitude(hints.getCGAboveGround()).value();
-                const double a1 = s[1].getCorrectedAltitude(hints.getCGAboveGround()).value();
-                const double a2 = s[2].getCorrectedAltitude(hints.getCGAboveGround()).value();
+                const double a0 = m_s[0].getCorrectedAltitude(hints.getCGAboveGround()).value();
+                const double a1 = m_s[1].getCorrectedAltitude(hints.getCGAboveGround()).value();
+                const double a2 = m_s[2].getCorrectedAltitude(hints.getCGAboveGround()).value();
 
-                const std::array<std::array<double, 3>, 3> normals {{ s[0].getPosition().normalVectorDouble(), s[1].getPosition().normalVectorDouble(), s[2].getPosition().normalVectorDouble() }};
+                const std::array<std::array<double, 3>, 3> normals {{ m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() }};
                 PosArray pa;
                 pa.x = {{ normals[0][0], normals[1][0], normals[2][0] }};
                 pa.y = {{ normals[0][1], normals[1][1], normals[2][1] }};
                 pa.z = {{ normals[0][2], normals[1][2], normals[2][2] }};
                 pa.a = {{ a0, a1, a2 }};
-                pa.t = {{ static_cast<double>(s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[2].getAdjustedMSecsSinceEpoch()) }};
+                pa.t = {{ static_cast<double>(m_s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[2].getAdjustedMSecsSinceEpoch()) }};
 
                 pa.dx = getDerivatives(pa.t, pa.x);
                 pa.dy = getDerivatives(pa.t, pa.y);
@@ -160,12 +160,17 @@ namespace BlackMisc
             const double dt1 = static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleTime);
             const double dt2 = static_cast<double>(m_nextSampleTime - m_prevSampleTime);
             const double timeFraction = dt1 / dt2;
-            log.interpolator = 's';
-            log.situationOld = m_interpolant.pbh().getOldSituation();
-            log.situationNew = m_interpolant.pbh().getNewSituation();
-            log.deltaSampleTimesMs = dt2;
-            log.simulationTimeFraction = timeFraction;
-            log.tsInterpolated = log.situationNew.getMSecsSinceEpoch(); // without offset
+
+            if (this->hasAttachedLogger())
+            {
+                log.interpolationSituations.push_back(m_s[0]);
+                log.interpolationSituations.push_back(m_s[1]);
+                log.interpolationSituations.push_back(m_s[2]); // latest at end
+                log.interpolator = 's';
+                log.deltaSampleTimesMs = dt2;
+                log.simulationTimeFraction = timeFraction;
+                log.tsInterpolated = log.newestInterpolationSituation().getMSecsSinceEpoch(); // without offset
+            }
 
             status.setInterpolated(true);
             m_interpolant.setTimes(currentTimeMsSinceEpoc, timeFraction);

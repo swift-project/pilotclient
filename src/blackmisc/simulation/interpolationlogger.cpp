@@ -281,15 +281,17 @@ namespace BlackMisc
 
             static const CLengthUnit ft = CLengthUnit::ft();
             const SituationLog firstLog = logs.first();
-            qint64 newPosTs = firstLog.situationNew.getMSecsSinceEpoch();
+            qint64 newPosTs = firstLog.newestInterpolationSituation().getMSecsSinceEpoch();
             CAircraftParts lastParts; // default, so shown if parts are different from default
 
             QString tableRows("<tbody>\n");
             for (const SituationLog &log : logs)
             {
-                const bool changedNewPosition = newPosTs != log.situationNew.getMSecsSinceEpoch();
+                const CAircraftSituation situationOld = log.oldestInterpolationSituation();
+                const CAircraftSituation situationNew = log.newestInterpolationSituation();
+                const bool changedNewPosition = newPosTs != situationNew.getMSecsSinceEpoch();
                 const bool changedParts = (lastParts != log.parts);
-                newPosTs = log.situationNew.getMSecsSinceEpoch();
+                newPosTs = situationNew.getMSecsSinceEpoch();
                 lastParts = log.parts;
 
                 // concatenating in multiple steps, otherwise C4503 warnings
@@ -302,8 +304,8 @@ namespace BlackMisc
                     QStringLiteral("<td>") % msSinceEpochToTime(log.tsCurrent) % QStringLiteral("</td>") %
                     QStringLiteral("<td>") % QString::number(log.tsCurrent - firstLog.tsCurrent) % QStringLiteral("</td>") %
 
-                    QStringLiteral("<td class=\"old\">") % log.situationOld.getTimestampAndOffset(true) % QStringLiteral("</td>") %
-                    QStringLiteral("<td class=\"new\">") % log.situationNew.getTimestampAndOffset(true) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"old\">") % situationOld.getTimestampAndOffset(true) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % situationNew.getTimestampAndOffset(true) % QStringLiteral("</td>") %
                     QStringLiteral("<td class=\"cur\">") % log.situationCurrent.getTimestampAndOffset(true) % QStringLiteral("</td>") %
 
                     QStringLiteral("<td>") % msSinceEpochToTime(log.tsInterpolated) % QStringLiteral("</td>") %
@@ -311,26 +313,26 @@ namespace BlackMisc
                     QStringLiteral("<td>") % QString::number(log.simulationTimeFraction) % QStringLiteral("</td>");
 
                 tableRows +=
-                    QStringLiteral("<td class=\"old\">") % log.situationOld.latitudeAsString() % QStringLiteral("</td>") %
-                    QStringLiteral("<td class=\"new\">") % log.situationNew.latitudeAsString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"old\">") % situationOld.latitudeAsString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % situationNew.latitudeAsString() % QStringLiteral("</td>") %
                     QStringLiteral("<td class=\"cur\">") % log.situationCurrent.latitudeAsString() % QStringLiteral("</td>") %
 
-                    QStringLiteral("<td class=\"old\">") % log.situationOld.longitudeAsString() % QStringLiteral("</td>") %
-                    QStringLiteral("<td class=\"new\">") % log.situationNew.longitudeAsString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"old\">") % situationOld.longitudeAsString() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % situationNew.longitudeAsString() % QStringLiteral("</td>") %
                     QStringLiteral("<td class=\"cur\">") % log.situationCurrent.longitudeAsString() % QStringLiteral("</td>");
 
                 tableRows +=
-                    QStringLiteral("<td class=\"old\">") % log.situationOld.getAltitude().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
-                    QStringLiteral("<td class=\"new\">") % log.situationNew.getAltitude().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"old\">") % situationOld.getAltitude().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % situationNew.getAltitude().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
                     QStringLiteral("<td class=\"cur\">") % log.situationCurrent.getAltitude().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
 
-                    QStringLiteral("<td class=\"old\">") % log.situationOld.getGroundElevation().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
-                    QStringLiteral("<td class=\"new\">") % log.situationNew.getGroundElevation().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"old\">") % situationOld.getGroundElevation().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % situationNew.getGroundElevation().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
                     QStringLiteral("<td class=\"cur\">") % log.situationCurrent.getGroundElevation().valueRoundedWithUnit(ft, 1) % QStringLiteral("</td>") %
 
                     QStringLiteral("<td>") % QString::number(log.groundFactor) % QStringLiteral("</td>") %
-                    QStringLiteral("<td class=\"old\">") % log.situationOld.getOnGroundInfo() % QStringLiteral("</td>") %
-                    QStringLiteral("<td class=\"new\">") % log.situationNew.getOnGroundInfo() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"old\">") % situationOld.getOnGroundInfo() % QStringLiteral("</td>") %
+                    QStringLiteral("<td class=\"new\">") % situationNew.getOnGroundInfo() % QStringLiteral("</td>") %
                     QStringLiteral("<td class=\"cur\">") % log.situationCurrent.getOnGroundInfo() % QStringLiteral("</td>");
 
                 tableRows +=
@@ -408,10 +410,14 @@ namespace BlackMisc
             bool withCurrentSituation, bool withHints, bool withSetup,
             bool withElevation, bool withOtherPositions, bool withDeltaTimes, const QString &separator) const
         {
+            const CAircraftSituation situationOldInterpolation = this->oldestInterpolationSituation();
+            const CAircraftSituation situationNewInterpolation = this->newestInterpolationSituation();
+
             return QStringLiteral("CS: ") % callsign.asString() % separator %
                    QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
                    QStringLiteral(" type: ") % this->interpolationType() %
                    QStringLiteral(" gnd.fa.: ") % QString::number(groundFactor) %
+                   QStringLiteral(" #nw.sit.: ") % QString::number(noNetworkSituations) %
                    (
                        withHints ?
                        separator % QStringLiteral("hints: ") % usedHints.toQString(true) :
@@ -431,11 +437,14 @@ namespace BlackMisc
                    (
                        withDeltaTimes ?
                        separator %
-                       QStringLiteral("int.time: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+                       QStringLiteral("cur.time: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+                       QStringLiteral(" int.time: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsInterpolated) %
+                       QStringLiteral(" dt.cur.int.: ") %  QString::number(deltaCurrentToInterpolatedTime()) % QStringLiteral("ms") %
                        QStringLiteral(" sample dt: ") % QString::number(deltaSampleTimesMs) % QStringLiteral("ms") %
                        QStringLiteral(" fr.[0-1]: ") % QString::number(simulationTimeFraction) %
-                       QStringLiteral(" old pos.: ") % situationOld.getTimestampAndOffset(true) %
-                       QStringLiteral(" new pos.: ") % situationNew.getTimestampAndOffset(true) :
+                       QStringLiteral(" old int.pos.: ") % situationOldInterpolation.getTimestampAndOffset(true) %
+                       QStringLiteral(" new int.pos.: ") % situationNewInterpolation.getTimestampAndOffset(true) %
+                       QStringLiteral(" #int.pos.: ") % QString::number(interpolationSituations.size()) :
                        QStringLiteral("")
                    ) %
                    (
@@ -447,9 +456,9 @@ namespace BlackMisc
                    (
                        withOtherPositions ?
                        separator %
-                       QStringLiteral("old: ") % situationOld.toQString(true) %
+                       QStringLiteral("old: ") % situationOldInterpolation.toQString(true) %
                        separator %
-                       QStringLiteral("new: ") % situationNew.toQString(true) :
+                       QStringLiteral("new: ") % situationNewInterpolation.toQString(true) :
                        QStringLiteral("")
                    );
         }
