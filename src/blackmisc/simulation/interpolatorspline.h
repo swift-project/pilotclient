@@ -76,14 +76,18 @@ namespace BlackMisc
                 //! New situation
                 const Aviation::CAircraftSituation &getNewSituation() const { return pbh().getNewSituation(); }
 
+                //! "Real time" representing the interpolated situation
+                qint64 getInterpolatedTime() const { return m_interpolatedTime; }
+
                 //! Set the time values
-                void setTimes(qint64 currentTimeMs, double timeFraction);
+                void setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs);
 
             private:
                 PosArray m_pa;
                 PhysicalQuantities::CLengthUnit m_altitudeUnit;
                 CInterpolatorPbh m_pbh;
                 qint64 m_currentTimeMsSinceEpoc { 0 };
+                qint64 m_interpolatedTime { 0 }; //!< represented "real time" at interpolated situation
             };
 
             //! Strategy used by CInterpolator::getInterpolatedSituation
@@ -93,8 +97,10 @@ namespace BlackMisc
                 const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log);
 
         private:
-            qint64 m_prevSampleTime = 0;
-            qint64 m_nextSampleTime = 0;
+            qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset
+            qint64 m_nextSampleAdjustedTime = 0; //!< previous sample time + offset
+            qint64 m_prevSampleTime = 0; //!< previous sample "real time"
+            qint64 m_nextSampleTime = 0; //!< next sample "real time"
             std::array<Aviation::CAircraftSituation, 3> m_s;
             Interpolant m_interpolant;
         };

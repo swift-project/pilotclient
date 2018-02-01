@@ -102,9 +102,13 @@ namespace BlackMisc
             Q_UNUSED(setup);
 
             // recalculate derivatives only if they changed
-            if (currentTimeMsSinceEpoc > m_nextSampleTime)
+            if (currentTimeMsSinceEpoc > m_nextSampleAdjustedTime)
             {
                 // find the first situation not in the correct order, keep only the situations before that one
+                //! \todo KB 2-2018, IMHO the sorting by adjusted times is wrong. we should sort by received time
+                // when mixing fast/slow updates, the postion is represented when it is sent, not when it is used
+                // see example below
+                // so why do we check here only, and do not sort
                 const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
                 const auto validSituations = makeRange(m_aircraftSituations.begin(), end);
 
@@ -152,16 +156,37 @@ namespace BlackMisc
                 pa.dz = getDerivatives(pa.t, pa.z);
                 pa.da = getDerivatives(pa.t, pa.a);
 
-                m_prevSampleTime = situationsOlder.begin()->getAdjustedMSecsSinceEpoch();
-                m_nextSampleTime = (situationsNewer.end() - 1)->getAdjustedMSecsSinceEpoch();
+                m_prevSampleAdjustedTime = situationsOlder.begin()->getAdjustedMSecsSinceEpoch();
+                m_nextSampleAdjustedTime = (situationsNewer.end() - 1)->getAdjustedMSecsSinceEpoch();
+                m_prevSampleTime = situationsOlder.begin()->getMSecsSinceEpoch();
+                m_nextSampleTime = (situationsNewer.end() - 1)->getMSecsSinceEpoch();
                 m_interpolant = Interpolant(pa, situationsOlder.begin()->getAltitude().getUnit(), { *situationsOlder.begin(), *(situationsNewer.end() - 1) });
             }
 
-            const double dt1 = static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleTime);
-            const double dt2 = static_cast<double>(m_nextSampleTime - m_prevSampleTime);
+            // Example:
+            // prev.sample time 5 (received at 0) , next sample time 10 (received at 5)
+            // cur.time 6: dt1=6-5=1, dt2=5 => fraction 1/5
+            // cur.time 9: dt1=9-5=4, dt2=5 => fraction 4/5
+            //
+            // we use different offset times for interim pos. updates
+            // prev.sample time 5 (received at 0) , 7/r:5, 10 (rec. at 5)
+            // cur.time 6: dt1=6-5=1, dt2=7-5 => fraction 1/2
+            // cur.time 9: dt1=9-7=2, dt2=10-7=3 => fraction 2/3
+            // we use different offset times for fast pos. updates
+            const double dt1 = static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleAdjustedTime);
+            const double dt2 = static_cast<double>(m_nextSampleAdjustedTime - m_prevSampleAdjustedTime);
             const double timeFraction = dt1 / dt2;
 
-            if (this->hasAttachedLogger())
+            // is that correct with dt2, or would it be
+            // m_nextSampleTime - m_prevSampleTime
+            // as long as the offset time is constant, it does not matter
+            const qint64 interpolatedTime = m_prevSampleTime + timeFraction * dt2;
+
+            // time fraction is expected between 0-1
+            status.setInterpolated(true);
+            m_interpolant.setTimes(currentTimeMsSinceEpoc, timeFraction, interpolatedTime);
+
+            if (this->hasAttachedLogger() && hints.isLoggingInterpolation())
             {
                 log.interpolationSituations.push_back(m_s[0]);
                 log.interpolationSituations.push_back(m_s[1]);
@@ -169,11 +194,10 @@ namespace BlackMisc
                 log.interpolator = 's';
                 log.deltaSampleTimesMs = dt2;
                 log.simulationTimeFraction = timeFraction;
-                log.tsInterpolated = log.newestInterpolationSituation().getMSecsSinceEpoch(); // without offset
+                log.noNetworkSituations = m_aircraftSituations. size();
+                log.tsInterpolated = interpolatedTime; // without offsets
             }
 
-            status.setInterpolated(true);
-            m_interpolant.setTimes(currentTimeMsSinceEpoc, timeFraction);
             return m_interpolant;
         }
 
@@ -200,9 +224,10 @@ namespace BlackMisc
             return CAltitude(newA, m_altitudeUnit);
         }
 
-        void CInterpolatorSpline::Interpolant::setTimes(qint64 currentTimeMs, double timeFraction)
+        void CInterpolatorSpline::Interpolant::setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs)
         {
             m_currentTimeMsSinceEpoc = currentTimeMs;
+            m_interpolatedTime = interpolatedTimeMs;
             m_pbh.setTimeFraction(timeFraction);
         }
 
@@ -210,8 +235,8 @@ namespace BlackMisc
         {
             for (int i = 0; i < 3; i++)
             {
-                x[i] = 0; y[i] = 0; z[i] = 0;
-                a[i] = 0; t[i] = 0;
+                x[i]  = 0; y[i] = 0; z[i] = 0;
+                a[i]  = 0; t[i] = 0;
                 dx[i] = 0; dy[i] = 0; dz[i] = 0;
                 da[i] = 0;
             }

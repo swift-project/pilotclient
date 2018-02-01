@@ -40,10 +40,11 @@ namespace BlackMisc
             m_pbh(0, situation, situation)
         {}
 
-        CInterpolatorLinear::Interpolant::Interpolant(const CAircraftSituation &situation1, const CAircraftSituation &situation2, double timeFraction) :
+        CInterpolatorLinear::Interpolant::Interpolant(const CAircraftSituation &situation1, const CAircraftSituation &situation2, double timeFraction, qint64 interpolatedTime) :
             m_situationsAvailable(2),
             m_oldSituation(situation1), m_newSituation(situation2),
             m_simulationTimeFraction(timeFraction),
+            m_interpolatedTime(interpolatedTime),
             m_pbh(m_simulationTimeFraction, situation1, situation2)
         {}
 
@@ -130,12 +131,13 @@ namespace BlackMisc
             const double distanceToSplitTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
             const double simulationTimeFraction = qMax(1.0 - (distanceToSplitTimeMs / sampleDeltaTimeMs), 0.0);
             const double deltaTimeFractionMs = sampleDeltaTimeMs * simulationTimeFraction;
+            const qint64 interpolatedTime = oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs;
 
             currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
-            currentSituation.setMSecsSinceEpoch(oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs);
+            currentSituation.setMSecsSinceEpoch(interpolatedTime);
             status.setInterpolatedAndCheckSituation(true, currentSituation);
 
-            if (this->hasAttachedLogger())
+            if (this->hasAttachedLogger() && hints.isLoggingInterpolation())
             {
                 log.tsCurrent = currentTimeMsSinceEpoc;
                 log.deltaSampleTimesMs = sampleDeltaTimeMs;
@@ -147,7 +149,7 @@ namespace BlackMisc
                 log.interpolationSituations.push_back(oldSituation); // oldest at back
             }
 
-            return { oldSituation, newSituation, simulationTimeFraction };
+            return { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };
         }
 
         CCoordinateGeodetic CInterpolatorLinear::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const

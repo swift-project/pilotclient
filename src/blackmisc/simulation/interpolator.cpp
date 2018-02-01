@@ -82,7 +82,6 @@ namespace BlackMisc
 
             // data, split situations by time
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
-            currentSituation.setMSecsSinceEpoch(currentTimeMsSinceEpoc);
 
             // interpolant function from derived class
             // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
@@ -98,6 +97,7 @@ namespace BlackMisc
             // use derived interpolant function
             currentSituation.setPosition(interpolant.interpolatePosition(setup, hints));
             currentSituation.setAltitude(interpolant.interpolateAltitude(setup, hints));
+            currentSituation.setMSecsSinceEpoch(interpolant.getInterpolatedTime());
 
             // PBH before ground so we can use PBH in guessing ground
             if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || status.isInterpolated())
@@ -155,7 +155,7 @@ namespace BlackMisc
             }
 
             // logging
-            if (m_logger && hints.isLoggingInterpolation())
+            if (doLogging)
             {
                 log.tsCurrent = currentTimeMsSinceEpoc;
                 log.callsign = m_callsign;

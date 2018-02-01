@@ -44,7 +44,7 @@ namespace BlackMisc
                 //! Constructor
                 //! @{
                 Interpolant(const Aviation::CAircraftSituation &situation);
-                Interpolant(const Aviation::CAircraftSituation &situation1, const Aviation::CAircraftSituation &situation2, double timeFraction);
+                Interpolant(const Aviation::CAircraftSituation &situation1, const Aviation::CAircraftSituation &situation2, double timeFraction, qint64 interpolatedTime);
                 //! @}
 
                 //! Perform the interpolation
@@ -62,11 +62,15 @@ namespace BlackMisc
                 //! New situation
                 const Aviation::CAircraftSituation &getNewSituation() const { return m_newSituation; }
 
+                //! "Real time" representing the interpolated situation
+                qint64 getInterpolatedTime() const { return m_interpolatedTime; }
+
             private:
                 int m_situationsAvailable = 0;
                 Aviation::CAircraftSituation m_oldSituation;
                 Aviation::CAircraftSituation m_newSituation;
                 double m_simulationTimeFraction = 0.0; //!< 0..1
+                qint64 m_interpolatedTime = 0; //!< "Real time "of interpolated situation
                 const CInterpolatorPbh m_pbh;
             };
 
