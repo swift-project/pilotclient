@@ -31,7 +31,7 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             static const QString s("%1 %2");
-            return s.arg(m_receptionTime.toString("dd.MM.yy HH:mm:ss"), m_rawMessage);
+            return s.arg(this->getFormattedUtcTimestampHmsz(), m_rawMessage);
         }
 
         bool CRawFsdMessage::isPacketType(const QString &type) const
@@ -47,27 +47,30 @@ namespace BlackMisc
         const QStringList &CRawFsdMessage::getAllPacketTypes()
         {
             static const QStringList allPacketTypes = { "@", "%", "#AA", "#DA", "#AP", "#DP", "#TM", "#WX", "#DL", "#TD", "#WD"
-                                                          "#CD", "#PC", "#SB", "$FP", "$AM", "$PI", "$PO", "$HO", "$HA", "$AX", "$AR",
-                                                          "$CQ", "$CR", "$ER", "$!!" };
+                                                        "#CD", "#PC", "#SB", "$FP", "$AM", "$PI", "$PO", "$HO", "$HA", "$AX", "$AR",
+                                                        "$CQ", "$CR", "$ER", "$!!"
+                                                      };
             return allPacketTypes;
         }
 
         CVariant CRawFsdMessage::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexReceptionTime: return CVariant::fromValue(m_rawMessage);
-            case IndexRawMessage: return CVariant::fromValue(m_receptionTime);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexRawMessage: return CVariant::fromValue(m_rawMessage);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
         void CRawFsdMessage::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CRawFsdMessage>(); return; }
+            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

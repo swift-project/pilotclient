@@ -1053,6 +1053,7 @@ namespace BlackCore
         {
             if (!m_rawFsdMessagesEnabled) { return; }
             CRawFsdMessage rawFsdMessage(fsdMessage);
+            rawFsdMessage.setCurrentUtcTime();
             if (m_rawFsdMessageLogFile.isOpen())
             {
                 QTextStream stream(&m_rawFsdMessageLogFile);
@@ -1060,8 +1061,6 @@ namespace BlackCore
             }
             emit rawFsdMessageReceived(rawFsdMessage);
         }
-
-
 
         void CNetworkVatlib::fsdMessageSettingsChanged()
         {

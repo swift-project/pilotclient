@@ -213,9 +213,9 @@ namespace BlackGui
             ui->cb_FileWritingMode->setCurrentIndex(static_cast<int>(mode));
         }
 
-         QString CRawFsdMessagesComponent::rawFsdMessageToString(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage)
-         {
-            return QString("%1 %2").arg(rawFsdMessage.getReceptionTime().toString("HH:mm:ss"), rawFsdMessage.getRawMessage());
-         }
+        QString CRawFsdMessagesComponent::rawFsdMessageToString(const CRawFsdMessage &rawFsdMessage)
+        {
+            static const QString s("%1 %2");
+            return s.arg(rawFsdMessage.getFormattedUtcTimestampHmsz(), rawFsdMessage.getRawMessage());
     }
 } // namespace

@@ -12,14 +12,12 @@
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/airport.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/db/dbinfolist.h"
 #include "blackmisc/db/artifactlist.h"
 #include "blackmisc/db/distributionlist.h"
-#include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/network/urllog.h"
+#include "blackmisc/network/rawfsdmessagelist.h"
 #include "blackmisc/network/urlloglist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -348,6 +346,7 @@ namespace BlackMisc
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Db::CDistribution, BlackMisc::Db::CDistributionList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Network::CUrlLog, BlackMisc::Network::CUrlLogList>;
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Network::CRawFsdMessage, BlackMisc::Network::CRawFsdMessageList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CMatchingStatisticsEntry, BlackMisc::Simulation::CMatchingStatistics>;

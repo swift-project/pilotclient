@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_NETWORK_RAWFSDMESSAGE_H
 #define BLACKMISC_NETWORK_RAWFSDMESSAGE_H
 
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/metaclass.h"
@@ -27,14 +28,15 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object for a raw FSD message
-        class BLACKMISC_EXPORT CRawFsdMessage : public CValueObject<CRawFsdMessage>
+        class BLACKMISC_EXPORT CRawFsdMessage :
+            public CValueObject<CRawFsdMessage>,
+            public ITimestampBased
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexReceptionTime = CPropertyIndex::GlobalIndexCRawFsdMessage,
-                IndexRawMessage
+                IndexRawMessage = CPropertyIndex::GlobalIndexCRawFsdMessage,
             };
 
             //! Default constructor.
@@ -49,9 +51,6 @@ namespace BlackMisc
             //! Set raw message
             void setRawMessage(const QString &rawMessage) { m_rawMessage = rawMessage; }
 
-            //! Get reception time
-            const QDateTime &getReceptionTime() const { return m_receptionTime; }
-
             //! Returns true if the raw message is from the given PDU packet type
             bool isPacketType(const QString &type) const;
 
@@ -59,7 +58,7 @@ namespace BlackMisc
             bool containsString(const QString &str) const;
 
             //! Returns a list of all known packet types.
-            static const QStringList &getAllPacketTypes ();
+            static const QStringList &getAllPacketTypes();
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
@@ -72,12 +71,11 @@ namespace BlackMisc
 
         private:
             QString m_rawMessage;
-            QDateTime m_receptionTime = QDateTime::currentDateTime();
 
             BLACK_METACLASS(
                 CRawFsdMessage,
                 BLACK_METAMEMBER(rawMessage),
-                BLACK_METAMEMBER(receptionTime)
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch)
             );
         };
     } // namespace

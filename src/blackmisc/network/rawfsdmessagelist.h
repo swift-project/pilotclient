@@ -13,6 +13,7 @@
 #define BLACKMISC_NETWORK_RAWFSDMESSAGELIST_H
 
 #include "rawfsdmessage.h"
+#include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
@@ -28,7 +29,8 @@ namespace BlackMisc
         //! Value object encapsulating a list raw FSD messages.
         class BLACKMISC_EXPORT CRawFsdMessageList :
             public CSequence<CRawFsdMessage>,
-            public Mixin::MetaType<CRawFsdMessageList>
+            public Mixin::MetaType<CRawFsdMessageList>,
+            public ITimestampObjectList<CRawFsdMessage, CRawFsdMessageList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRawFsdMessageList)
