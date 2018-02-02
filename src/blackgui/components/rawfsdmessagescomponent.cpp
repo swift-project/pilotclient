@@ -92,7 +92,7 @@ namespace BlackGui
 
         void CRawFsdMessagesComponent::expandFilters(bool expand)
         {
-            if(expand)
+            if (expand)
             {
                 ui->gl_Filters->setHorizontalSpacing(7);
                 ui->gl_Filters->setVerticalSpacing(7);
@@ -105,20 +105,20 @@ namespace BlackGui
                 ui->gl_Filters->setContentsMargins(0, 0, 0, 0);
             }
 
-            for(int idx = 0; idx < ui->gl_Filters->count(); idx++)
+            for (int idx = 0; idx < ui->gl_Filters->count(); idx++)
             {
-                QLayoutItem * const item = ui->gl_Filters->itemAt(idx);
-                if(item->widget()) { item->widget()->setVisible(expand); }
+                QLayoutItem *const item = ui->gl_Filters->itemAt(idx);
+                if (item->widget()) { item->widget()->setVisible(expand); }
             }
         }
 
         void CRawFsdMessagesComponent::expandWritingToFile(bool expand)
         {
-            if(expand)
+            if (expand)
             {
-                 ui->gl_WriteToFile->setHorizontalSpacing(7);
-                 ui->gl_WriteToFile->setVerticalSpacing(7);
-                 ui->gl_WriteToFile->setContentsMargins(11, 11, 11, 11);
+                ui->gl_WriteToFile->setHorizontalSpacing(7);
+                ui->gl_WriteToFile->setVerticalSpacing(7);
+                ui->gl_WriteToFile->setContentsMargins(11, 11, 11, 11);
             }
             else
             {
@@ -127,10 +127,10 @@ namespace BlackGui
                 ui->gl_WriteToFile->setContentsMargins(0, 0, 0, 0);
             }
 
-            for(int idx = 0; idx < ui->gl_WriteToFile->count(); idx++)
+            for (int idx = 0; idx < ui->gl_WriteToFile->count(); idx++)
             {
-                QLayoutItem * const item = ui->gl_WriteToFile->itemAt(idx);
-                if(item->widget()) { item->widget()->setVisible(expand); }
+                QLayoutItem *const item = ui->gl_WriteToFile->itemAt(idx);
+                if (item->widget()) { item->widget()->setVisible(expand); }
             }
         }
 
@@ -192,8 +192,8 @@ namespace BlackGui
             if (m_buffer.size() == m_maxDisplayedMessages) { m_buffer.pop_front(); }
             m_buffer.push_back(rawFsdMessage.getRawMessage());
 
-            if (! m_filterPacketType.isEmpty() && ! rawFsdMessage.isPacketType(m_filterPacketType)) { return; }
-            if (! m_filterString.isEmpty() && ! rawFsdMessage.containsString(m_filterString)) { return; }
+            if (! m_filterPacketType.isEmpty() && !rawFsdMessage.isPacketType(m_filterPacketType)) { return; }
+            if (! m_filterString.isEmpty() && !rawFsdMessage.containsString(m_filterString)) { return; }
             ui->pte_RawFsdMessages->appendPlainText(rawFsdMessageToString(rawFsdMessage));
         }
 
@@ -217,5 +217,6 @@ namespace BlackGui
         {
             static const QString s("%1 %2");
             return s.arg(rawFsdMessage.getFormattedUtcTimestampHmsz(), rawFsdMessage.getRawMessage());
+        }
     }
 } // namespace
