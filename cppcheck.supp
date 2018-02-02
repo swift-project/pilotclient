@@ -16,6 +16,7 @@ variableScope:src/plugins/weatherdata/gfs/g2clib/*.c
 
 // std::initializer_list should always be passed by value
 passedByValue:src/blackmisc/input/actionhotkeylist.h
+passedByValue:src/blackmisc/network/rawfsdmessagelist.cpp
 passedByValue:src/blackmisc/logcategorylist.h
 passedByValue:src/blackmisc/platformset.cpp
 

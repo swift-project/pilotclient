@@ -1,4 +1,4 @@
-/* Copyright (C) 2017
+/* Copyright (C) 2018
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -13,12 +13,13 @@
 #define BLACKMISC_NETWORK_RAWFSDMESSAGELIST_H
 
 #include "rawfsdmessage.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
-#include <QStringList>
+#include "blackmisc/blackmiscexport.h"
+
 #include <QMetaType>
+#include <initializer_list>
 
 namespace BlackMisc
 {
@@ -27,7 +28,7 @@ namespace BlackMisc
         //! Value object encapsulating a list raw FSD messages.
         class BLACKMISC_EXPORT CRawFsdMessageList :
             public CSequence<CRawFsdMessage>,
-            public BlackMisc::Mixin::MetaType<CRawFsdMessageList>
+            public Mixin::MetaType<CRawFsdMessageList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CRawFsdMessageList)
@@ -51,7 +52,7 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CRawFsdMessageList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CRawFsdMessageList>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CRawFsdMessageList>)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CRawFsdMessage>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CRawFsdMessage>)
 
 #endif //guard

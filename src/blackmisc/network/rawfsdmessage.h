@@ -12,12 +12,11 @@
 #ifndef BLACKMISC_NETWORK_RAWFSDMESSAGE_H
 #define BLACKMISC_NETWORK_RAWFSDMESSAGE_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/metaclass.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QDateTime>
 #include <QMetaType>
@@ -34,7 +33,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexReceptionTime = BlackMisc::CPropertyIndex::GlobalIndexCRawFsdMessage,
+                IndexReceptionTime = CPropertyIndex::GlobalIndexCRawFsdMessage,
                 IndexRawMessage
             };
 
@@ -63,10 +62,10 @@ namespace BlackMisc
             static const QStringList &getAllPacketTypes ();
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;

@@ -52,16 +52,14 @@ namespace BlackMisc
             return allPacketTypes;
         }
 
-        CVariant CRawFsdMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CRawFsdMessage::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexReceptionTime:
-                return CVariant::fromValue(this->m_rawMessage);
-            case IndexRawMessage:
-                return CVariant::fromValue(this->m_receptionTime);
+            case IndexReceptionTime: return CVariant::fromValue(m_rawMessage);
+            case IndexRawMessage: return CVariant::fromValue(m_receptionTime);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -70,7 +68,7 @@ namespace BlackMisc
         void CRawFsdMessage::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CRawFsdMessage>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexRawMessage:
