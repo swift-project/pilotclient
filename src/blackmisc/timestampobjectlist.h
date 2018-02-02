@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_TIMESTAMPOBJECTLIST_H
 #define BLACKMISC_TIMESTAMPOBJECTLIST_H
 
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QList>
 #include <QtGlobal>
@@ -22,8 +23,7 @@ namespace BlackMisc
 {
     //! List of objects with timestamp.
     //! Such objects should implement \sa ITimestampBased
-    template<class OBJ, class CONTAINER>
-    class ITimestampObjectList
+    template<class OBJ, class CONTAINER> class ITimestampObjectList
     {
     public:
         //! List of objects before dateTime
@@ -92,8 +92,16 @@ namespace BlackMisc
         //! Sort by timestamp
         void sortOldestFirst();
 
-        //! Inserts as first object by keeping max. elements
-        void push_frontMaxElements(const OBJ &object, int maxElements);
+        //! Insert as first element by keeping maxElements and the latest first
+        void push_frontKeepLatestFirst(const OBJ &value, int maxElements = -1);
+
+        //! Is completelty sorted: latest last
+        //! \remark all object must have a valid timestamp
+        bool isSortedLatestLast() const;
+
+        //! Is completelty sorted: latest last
+        //! \remark all object must have a valid timestamp
+        bool isSortedLatestFirst() const;
 
     protected:
         //! Constructor
@@ -104,6 +112,33 @@ namespace BlackMisc
 
         //! Container
         CONTAINER &container();
+    };
+
+    //! List of objects with timestamp and offset.
+    //! Such objects should implement \sa ITimestampWithOffsetBased
+    template<class OBJ, class CONTAINER> class ITimestampWithOffsetObjectList : public ITimestampObjectList<OBJ, CONTAINER>
+    {
+    public:
+        //! Sort by adjusted timestamp
+        void sortAdjustedLatestFirst();
+
+        //! Sort by adjusted timestamp
+        void sortAdjustedOldestFirst();
+
+        //! Insert as first element by keeping maxElements and the latest first
+        void push_frontKeepLatestAdjustedFirst(const OBJ &value, int maxElements = -1);
+
+        //! Is completelty sorted: latest last
+        //! \remark all object must have a valid timestamp
+        bool isSortedAdjustedLatestLast() const;
+
+        //! Is completelty sorted: latest last
+        //! \remark all object must have a valid timestamp
+        bool isSortedAdjustedLatestFirst() const;
+
+    protected:
+        //! Constructor
+        ITimestampWithOffsetObjectList();
     };
 
     //! \cond PRIVATE

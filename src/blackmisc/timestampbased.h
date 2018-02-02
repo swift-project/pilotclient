@@ -161,6 +161,9 @@ namespace BlackMisc
         //! Milliseconds to add to timestamp for interpolation
         qint64 getTimeOffsetMs() const { return m_timeOffsetMs; }
 
+        //! Having a valid offset time
+        bool hasOffsetTime() const;
+
         //! Offset with unit
         QString getTimeOffsetWithUnit() const;
 

@@ -33,6 +33,7 @@
 
 #include <QDateTime>
 #include <algorithm>
+#include <limits>
 #include <iterator>
 #include <type_traits>
 
@@ -216,7 +217,7 @@ namespace BlackMisc
     void ITimestampObjectList<OBJ, CONTAINER>::sortLatestFirst()
     {
         this->container().sortOldestFirst();
-        std::reverse(this->container().begin(), this->container().end());
+        this->container().reverse();
     }
 
     template <class OBJ, class CONTAINER>
@@ -225,15 +226,111 @@ namespace BlackMisc
         this->container().sort(BlackMisc::Predicates::MemberLess(&OBJ::getMSecsSinceEpoch));
     }
 
-    template <class OBJ, class CONTAINER>
-    void ITimestampObjectList<OBJ, CONTAINER>::push_frontMaxElements(const OBJ &object, int maxElements)
+    template<class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(const OBJ &value, int maxElements)
     {
-        Q_ASSERT(maxElements > 1);
-        if (this->container().size() >= (maxElements - 1))
+        Q_ASSERT_X(maxElements < 0 || maxElements > 1, Q_FUNC_INFO, "Max.value wrong range");
+        CONTAINER &c = this->container();
+        if (!c.isEmpty() && value.isOlderThan(c.front()))
         {
-            this->container().truncate(maxElements - 1);
+            ITimestampObjectList::sortLatestFirst();
         }
-        this->container().push_front(object);
+        c.push_front(value);
+        if (maxElements < 0 || maxElements <= c.size()) { return; }
+        c.truncate(maxElements);
+    }
+
+    template<class OBJ, class CONTAINER>
+    bool ITimestampObjectList<OBJ, CONTAINER>::isSortedLatestLast() const
+    {
+        if (this->container().isEmpty()) { return true; }
+        qint64 max = -1;
+        for (const ITimestampBased &obj : this->container())
+        {
+            if (!obj.hasValidTimestamp()) { return false; }
+            if (obj.getMSecsSinceEpoch() < max) { return false; }
+            max = obj.getMSecsSinceEpoch();
+            continue;
+        }
+        return true;
+    }
+
+    template<class OBJ, class CONTAINER>
+    bool ITimestampObjectList<OBJ, CONTAINER>::isSortedLatestFirst() const
+    {
+        if (this->container().isEmpty()) { return true; }
+        qint64 min = std::numeric_limits <qint64>::max();
+        for (const ITimestampBased &obj : this->container())
+        {
+            if (!obj.hasValidTimestamp()) { return false; }
+            if (obj.getMSecsSinceEpoch() > min) { return false; }
+            min = obj.getMSecsSinceEpoch();
+            continue;
+        }
+        return true;
+    }
+
+    template <class OBJ, class CONTAINER>
+    void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::sortAdjustedLatestFirst()
+    {
+        this->container().sortAdjustedOldestFirst();
+        this->container().reverse();
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::sortAdjustedOldestFirst()
+    {
+        this->container().sort(Predicates::MemberLess(&OBJ::getAdjustedMSecsSinceEpoch));
+    }
+
+    template<class OBJ, class CONTAINER>
+    ITimestampWithOffsetObjectList<OBJ, CONTAINER>::ITimestampWithOffsetObjectList() : ITimestampObjectList<OBJ, CONTAINER>()
+    {
+        static_assert(std::is_base_of<ITimestampWithOffsetBased, OBJ>::value, "OBJ needs to implement ITimestampBased");
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestAdjustedFirst(const OBJ &value, int maxElements)
+    {
+        Q_ASSERT_X(maxElements < 0 || maxElements > 1, Q_FUNC_INFO, "Max.value wrong range");
+        CONTAINER &c = this->container();
+        if (!c.isEmpty() && value.isOlderThan(c.front()))
+        {
+            ITimestampWithOffsetObjectList::sortAdjustedLatestFirst();
+        }
+        c.push_front(value);
+        if (maxElements < 0 || maxElements <= c.size()) { return; }
+        c.truncate(maxElements);
+    }
+
+    template<class OBJ, class CONTAINER>
+    bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::isSortedAdjustedLatestLast() const
+    {
+        if (this->container().isEmpty()) { return true; }
+        qint64 max = -1;
+        for (const ITimestampWithOffsetBased &obj : this->container())
+        {
+            if (!obj.hasValidTimestamp()) { return false; }
+            if (obj.getAdjustedMSecsSinceEpoch() < max) { return false; }
+            max = obj.getAdjustedMSecsSinceEpoch();
+            continue;
+        }
+        return true;
+    }
+
+    template<class OBJ, class CONTAINER>
+    bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::isSortedAdjustedLatestFirst() const
+    {
+        if (this->container().isEmpty()) { return true; }
+        qint64 min = std::numeric_limits <qint64>::max();
+        for (const ITimestampWithOffsetBased &obj : this->container())
+        {
+            if (!obj.hasValidTimestamp()) { return false; }
+            if (obj.getAdjustedMSecsSinceEpoch() > min) { return false; }
+            min = obj.getAdjustedMSecsSinceEpoch();
+            continue;
+        }
+        return true;
     }
 
     // see here for the reason of thess forward instantiations
@@ -243,8 +340,6 @@ namespace BlackMisc
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
-    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
@@ -256,6 +351,9 @@ namespace BlackMisc
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CMatchingStatisticsEntry, BlackMisc::Simulation::CMatchingStatistics>;
+
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     //! \endcond
 
 } // namespace

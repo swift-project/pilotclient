@@ -178,6 +178,14 @@ namespace BlackMisc
         //! Insert as first element.
         void push_front(const T &value) { insert(begin(), value); }
 
+        //! Insert as first element by keep maxElements
+        void push_frontMaxElements(const T &value, int maxElements)
+        {
+            Q_ASSERT(maxElements > 1);
+            if (this->size() >= (maxElements - 1)) { this->truncate(maxElements - 1); }
+            this->push_front(value);
+        }
+
         //! Move-appends an element at the end of the sequence.
         void push_back(T &&value) { m_impl.push_back(std::move(value)); }
 
@@ -374,6 +382,12 @@ namespace BlackMisc
         {
             if (this->contains(key1, value1)) { replaceIf(key1, value1, replacement); }
             else { push_back(replacement); }
+        }
+
+        //! In-place reverse
+        void reverse()
+        {
+            std::reverse(begin(), end());
         }
 
         //! In-place sort by a given comparator predicate.

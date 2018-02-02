@@ -290,6 +290,11 @@ namespace BlackMisc
         return (i >= static_cast<int>(IndexOffsetMs)) && (i <= static_cast<int>(IndexOffsetWithUnit));
     }
 
+    bool ITimestampWithOffsetBased::hasOffsetTime() const
+    {
+        return m_timeOffsetMs != 0;
+    }
+
     QString ITimestampWithOffsetBased::getTimeOffsetWithUnit() const
     {
         static const QString os("%1ms");

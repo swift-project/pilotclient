@@ -10,7 +10,6 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/geo/elevationplane.h"
-
 #include <tuple>
 
 using namespace BlackMisc::PhysicalQuantities;

@@ -25,6 +25,5 @@ namespace BlackMisc
         CAircraftPartsList::CAircraftPartsList(std::initializer_list<CAircraftParts> il) :
             CSequence<CAircraftParts>(il)
         { }
-
     } // namespace
 } // namespace

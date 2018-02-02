@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of aircraft situations
         class BLACKMISC_EXPORT CAircraftSituationList :
             public CSequence<CAircraftSituation>,
-            public ITimestampObjectList<CAircraftSituation, CAircraftSituationList>,
+            public ITimestampWithOffsetObjectList<CAircraftSituation, CAircraftSituationList>,
             public ICallsignObjectList<CAircraftSituation, CAircraftSituationList>,
             public Mixin::MetaType<CAircraftSituationList>
         {

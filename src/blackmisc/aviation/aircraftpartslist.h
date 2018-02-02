@@ -28,7 +28,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of aircraft parts.
         class BLACKMISC_EXPORT CAircraftPartsList :
             public CSequence<CAircraftParts>,
-            public ITimestampObjectList<CAircraftParts, CAircraftPartsList>,
+            public ITimestampWithOffsetObjectList<CAircraftParts, CAircraftPartsList>,
             public BlackMisc::Mixin::MetaType<CAircraftPartsList>
         {
         public:
