@@ -30,9 +30,9 @@ namespace BlackMisc
         //! Value object for a list of airports.
         class BLACKMISC_EXPORT CAirportList :
             public CSequence<CAirport>,
-            public BlackMisc::Db::IDatastoreObjectList<CAirport, CAirportList, int>,
-            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAirport, CAirportList>,
-            public BlackMisc::Mixin::MetaType<CAirportList>
+            public Db::IDatastoreObjectList<CAirport, CAirportList, int>,
+            public Geo::IGeoObjectWithRelativePositionList<CAirport, CAirportList>,
+            public Mixin::MetaType<CAirportList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAirportList)
@@ -67,8 +67,12 @@ namespace BlackMisc
             //! All names
             QStringList allDescriptivesNames(bool sorted) const;
 
-            //! All names
+            //! All locations
+            //! \remark less locations than airports, since a location (e.g. New Yorrk) homes multiple airports
             QStringList allLocations(bool sorted) const;
+
+            //! All locations plus optional description
+            QStringList allLocationsPlusOptionalDescription(bool sorted) const;
 
             //! From our DB JSON
             static CAirportList fromDatabaseJson(const QJsonArray &array, CAirportList *inconsistent = nullptr);

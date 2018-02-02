@@ -77,6 +77,9 @@ namespace BlackMisc
             //! Get location (e.g. "London")
             const QString &getLocation() const { return m_location; }
 
+            //! Location plus optional name (if available and different from location)
+            QString getLocationPlusOptionalName() const;
+
             //! Set location
             void setLocation(const QString &location) { this->m_location = location; }
 

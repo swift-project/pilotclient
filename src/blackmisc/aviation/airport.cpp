@@ -16,6 +16,7 @@
 #include <QCoreApplication>
 #include <Qt>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -40,6 +41,14 @@ namespace BlackMisc
             m_descriptiveName(descriptiveName), m_icao(icao), m_position(position)
         { }
 
+        QString CAirport::getLocationPlusOptionalName() const
+        {
+            if (m_location.isEmpty()) { return this->getDescriptiveName(); }
+            if (m_descriptiveName.isEmpty()) { return this->getLocation(); }
+            if (this->getDescriptiveName() == this->getLocation()) { return this->getLocation(); }
+            return this->getLocation() % QStringLiteral(" (") % this->getDescriptiveName() % QStringLiteral(")");
+        }
+
         bool CAirport::matchesLocation(const QString &location) const
         {
             if (location.isEmpty()) { return false; }
@@ -54,8 +63,8 @@ namespace BlackMisc
 
         void CAirport::updateMissingParts(const CAirport &airport)
         {
-            if (!this->m_country.hasIsoCode() && airport.getCountry().hasIsoCode()) { this->m_country = airport.getCountry(); }
-            if (this->m_descriptiveName.isEmpty()) { this->m_descriptiveName = airport.getDescriptiveName(); }
+            if (!m_country.hasIsoCode() && airport.getCountry().hasIsoCode()) { m_country = airport.getCountry(); }
+            if (m_descriptiveName.isEmpty()) { m_descriptiveName = airport.getDescriptiveName(); }
         }
 
         bool CAirport::isNull() const
@@ -66,10 +75,10 @@ namespace BlackMisc
         QString CAirport::convertToQString(bool i18n) const
         {
             QString s = i18n ? QCoreApplication::translate("Aviation", "Airport") : "Airport";
-            if (!this->m_icao.isEmpty()) { s.append(' ').append(this->m_icao.toQString(i18n)); }
+            if (!m_icao.isEmpty()) { s.append(' ').append(m_icao.toQString(i18n)); }
 
             // position
-            s.append(' ').append(this->m_position.toQString(i18n));
+            s.append(' ').append(m_position.toQString(i18n));
             return s;
 
             // force strings for translation in resource files
@@ -102,18 +111,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexIcao:
-                return this->m_icao.propertyByIndex(index.copyFrontRemoved());
-            case IndexLocation:
-                return CVariant(this->m_location);
-            case IndexDescriptiveName:
-                return CVariant(this->m_descriptiveName);
-            case IndexPosition:
-                return this->m_position.propertyByIndex(index.copyFrontRemoved());
-            case IndexElevation:
-                return this->getElevation().propertyByIndex(index.copyFrontRemoved());
-            case IndexOperating:
-                return CVariant::from(this->isOperating());
+            case IndexIcao: return m_icao.propertyByIndex(index.copyFrontRemoved());
+            case IndexLocation: return CVariant(m_location);
+            case IndexDescriptiveName: return CVariant(m_descriptiveName);
+            case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
+            case IndexElevation: return this->getElevation().propertyByIndex(index.copyFrontRemoved());
+            case IndexOperating: return CVariant::from(this->isOperating());
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -128,7 +131,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexIcao:
-                this->m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexLocation:
                 this->setLocation(variant.toQString());
@@ -137,7 +140,7 @@ namespace BlackMisc
                 this->setDescriptiveName(variant.toQString());
                 break;
             case IndexPosition:
-                this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexOperating:
                 this->setOperating(variant.toBool());
@@ -157,16 +160,13 @@ namespace BlackMisc
 
         int CAirport::comparePropertyByIndex(const CPropertyIndex &index, const CAirport &compareValue) const
         {
-            if (index.isMyself()) { return this->m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao()); }
+            if (index.isMyself()) { return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao()); }
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexIcao:
-                return this->m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
-            case IndexLocation:
-                return this->m_location.compare(compareValue.getLocation(), Qt::CaseInsensitive);
-            case IndexDescriptiveName:
-                return this->m_descriptiveName.compare(compareValue.getDescriptiveName(), Qt::CaseInsensitive);
+            case IndexIcao: return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
+            case IndexLocation: return m_location.compare(compareValue.getLocation(), Qt::CaseInsensitive);
+            case IndexDescriptiveName: return m_descriptiveName.compare(compareValue.getDescriptiveName(), Qt::CaseInsensitive);
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
                 {

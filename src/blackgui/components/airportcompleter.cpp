@@ -99,7 +99,7 @@ namespace BlackGui
             const CAirportList airports = sGui->getWebDataServices()->getAirports();
             ui->le_Icao->setCompleter(new QCompleter(airports.allIcaoCodes(true), ui->le_Icao));
             ui->le_Name->setCompleter(new QCompleter(airports.allDescriptivesNames(true), ui->le_Name));
-            ui->le_Location->setCompleter(new QCompleter(airports.allLocations(true), ui->le_Location));
+            ui->le_Location->setCompleter(new QCompleter(airports.allLocationsPlusOptionalDescription(true), ui->le_Location));
 
             if (ui->le_Icao->completer()->popup())
             {

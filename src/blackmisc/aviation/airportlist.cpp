@@ -104,11 +104,26 @@ namespace BlackMisc
 
         QStringList CAirportList::allLocations(bool sorted) const
         {
-            QStringList locations;
+            QSet<QString> locations;
             for (const CAirport &airport : *this)
             {
                 if (airport.getLocation().isEmpty()) { continue; }
-                locations.push_back(airport.getLocation());
+                locations.insert(airport.getLocation());
+            }
+
+            QStringList locs = locations.toList();
+            if (sorted) { locs.sort(); }
+            return locs;
+        }
+
+        QStringList CAirportList::allLocationsPlusOptionalDescription(bool sorted) const
+        {
+            QStringList locations;
+            for (const CAirport &airport : *this)
+            {
+                const QString l = airport.getLocationPlusOptionalName();
+                if (l.isEmpty()) { continue; }
+                locations.push_back(l);
             }
             if (sorted) { locations.sort(); }
             return locations;
