@@ -525,7 +525,7 @@ namespace BlackCore
         /*!
          * We received an aircraft config packet.
          */
-        void aircraftConfigPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &incremental, bool isFull);
+        void aircraftConfigPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &incremental, int currentOffsetTime);
 
         /*!
          * We received a raw message for debugging purposes

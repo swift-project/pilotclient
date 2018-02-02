@@ -284,7 +284,8 @@ namespace BlackCore
 
                 if (this->isDisconnected())
                 {
-                    stopPositionTimers();
+                    this->stopPositionTimers();
+                    this->clearState();
                 }
 
                 emit this->connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
@@ -452,6 +453,7 @@ namespace BlackCore
         {
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "Can't connect while still connected");
             if (!m_net) { initializeSession(); }
+            this->clearState();
             QByteArray callsign = toFSD(m_loginMode == LoginAsObserver ?
                                         m_ownCallsign.getAsObserverCallsignString() :
                                         m_ownCallsign.asString());
@@ -491,13 +493,14 @@ namespace BlackCore
 
         void CNetworkVatlib::terminateConnection()
         {
-            stopPositionTimers();
+            this->stopPositionTimers();
             if (m_net && !isDisconnected())
             {
                 // Process all pending tasks before logging off
                 process();
                 Vat_Logoff(m_net.data());
             }
+            this->clearState();
         }
 
         void CNetworkVatlib::sendTextMessages(const BlackMisc::Network::CTextMessageList &messages)
@@ -867,7 +870,9 @@ namespace BlackCore
         void CNetworkVatlib::onPilotDisconnected(VatFsdClient *, const char *callsign, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
-            emit self->pilotDisconnected(CCallsign(self->fromFSD(callsign), CCallsign::Aircraft));
+            const CCallsign cs(self->fromFSD(callsign), CCallsign::Aircraft);
+            self->clearState(cs);
+            emit self->pilotDisconnected(cs);
         }
 
         void CNetworkVatlib::onControllerDisconnected(VatFsdClient *, const char *callsign, void *cbvar)
@@ -889,8 +894,11 @@ namespace BlackCore
                 CSpeed(position->groundSpeed, CSpeedUnit::kts()),
                 CAltitude({ 0, nullptr }, CAltitude::MeanSeaLevel)
             );
+
+            //! we set a dynamically updating offset time here
             situation.setCurrentUtcTime();
-            situation.setTimeOffsetMs(c_positionTimeOffsetMsec);
+            int offsetMs = self->markReceivedPositionAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            situation.setTimeOffsetMs(offsetMs);
 
             CTransponder::TransponderMode mode = CTransponder::StateStandby;
             switch (position->transponderMode)
@@ -944,8 +952,8 @@ namespace BlackCore
             const QJsonObject config = doc.object().value("config").toObject();
             if (config.empty()) return;
 
-            const bool isFull = config.take("is_full_data").toBool(false);
-            emit self->aircraftConfigPacketReceived(callsign, config, isFull);
+            const int offsetTimeMs = self->currentOffsetTime(callsign);
+            emit self->aircraftConfigPacketReceived(callsign, config, offsetTimeMs);
         }
 
         void CNetworkVatlib::onInterimPilotPositionUpdate(VatFsdClient *, const char *sender, const VatInterimPilotPosition *position, void *cbvar)
@@ -963,6 +971,7 @@ namespace BlackCore
             situation.setCurrentUtcTime();
             situation.setTimeOffsetMs(c_interimPositionTimeOffsetMsec);
             situation.setInterimFlag(true);
+            self->markReceivedPositionAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
 
             emit self->aircraftInterimPositionUpdate(situation);
         }
@@ -1156,6 +1165,50 @@ namespace BlackCore
                 m_pendingAtisQueries.remove(sender);
                 return;
             }
+        }
+
+        int CNetworkVatlib::markReceivedPositionAndGetOffsetTime(const CCallsign &callsign, qint64 markerTs)
+        {
+            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+
+            if (markerTs < 0) { markerTs = QDateTime::currentMSecsSinceEpoch(); }
+            if (!m_lastPositionUpdate.contains(callsign))
+            {
+                m_lastPositionUpdate.insert(callsign, markerTs);
+                return c_positionTimeOffsetMsec;
+            }
+            const qint64 oldTs = m_lastPositionUpdate.value(callsign);
+            m_lastPositionUpdate[callsign] = markerTs;
+
+            const int diff = oldTs - markerTs;
+            const int offsetTime = (oldTs > 0 && diff > 0 && diff < c_interimPositionTimeOffsetMsec) ?
+                                   c_interimPositionTimeOffsetMsec :
+                                   c_positionTimeOffsetMsec;
+            m_lastOffsetTime[callsign] = offsetTime;
+            return offsetTime;
+        }
+
+        int CNetworkVatlib::currentOffsetTime(const CCallsign &callsign) const
+        {
+            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+
+            if (!m_lastOffsetTime.contains(callsign)) { return c_positionTimeOffsetMsec; }
+            return m_lastOffsetTime.value(callsign);
+        }
+
+        void CNetworkVatlib::clearState()
+        {
+            m_pendingAtisQueries.clear();
+            m_lastPositionUpdate.clear();
+            m_lastOffsetTime.clear();
+        }
+
+        void CNetworkVatlib::clearState(const CCallsign &callsign)
+        {
+            if (callsign.isEmpty()) { return; }
+            m_pendingAtisQueries.remove(callsign);
+            m_lastPositionUpdate.remove(callsign);
+            m_lastOffsetTime.remove(callsign);
         }
 
         void CNetworkVatlib::onInfoQueryRequestReceived(VatFsdClient *, const char *callsignString, VatClientQueryType type, const char *, void *cbvar)

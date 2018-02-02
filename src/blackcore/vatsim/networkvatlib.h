@@ -141,6 +141,7 @@ namespace BlackCore
             static int constexpr c_processingIntervalMsec = 100;            //!< interval for the processing timer
             static int constexpr c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
             static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
+
             static bool getCmdLineClientIdAndKey(int &id, QString &key);
 
             void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
@@ -224,6 +225,18 @@ namespace BlackCore
             //! released as normal text message.
             void maybeHandleAtisReply(const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &receiver, const QString &message);
 
+            //! Remember when last position was received
+            int markReceivedPositionAndGetOffsetTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 markerTs = -1);
+
+            //! Current offset time
+            int currentOffsetTime(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+            //! Clear state when connection is terminated
+            void clearState();
+
+            //! Clear state for callsign
+            void clearState(const BlackMisc::Aviation::CCallsign &callsign);
+
             //! Deletion policy for QScopedPointer
             struct VatFsdClientDeleter
             {
@@ -259,7 +272,10 @@ namespace BlackCore
                 QDateTime m_queryTime = QDateTime::currentDateTimeUtc();
                 QStringList m_atisMessage;
             };
+
             QHash<BlackMisc::Aviation::CCallsign, PendingAtisQuery> m_pendingAtisQueries;
+            QHash<BlackMisc::Aviation::CCallsign, qint64> m_lastPositionUpdate;
+            QHash<BlackMisc::Aviation::CCallsign, qint64> m_lastOffsetTime;
 
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CNetworkVatlib::fsdMessageSettingsChanged };
             QFile m_rawFsdMessageLogFile;
