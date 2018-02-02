@@ -18,7 +18,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAircraftEngineList::CAircraftEngineList(std::initializer_list<bool> enginesOnOff)
         {
             int no = 1; // engines 1 based

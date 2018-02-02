@@ -32,8 +32,8 @@ namespace BlackMisc
         //! Value object encapsulating a list of aircraft engines.
         class BLACKMISC_EXPORT CAircraftEngineList :
             public CSequence<CAircraftEngine>,
-            public BlackMisc::Mixin::MetaType<CAircraftEngineList>,
-            public BlackMisc::Mixin::JsonOperators<CAircraftEngineList>
+            public Mixin::MetaType<CAircraftEngineList>,
+            public Mixin::JsonOperators<CAircraftEngineList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftEngineList)

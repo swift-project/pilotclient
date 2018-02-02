@@ -27,7 +27,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of voice rooms.
         class BLACKMISC_EXPORT CClientList :
             public CSequence<CClient>,
-            public BlackMisc::Aviation::ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>,
+            public BlackMisc::Aviation::ICallsignObjectList<CClient, CClientList>,
             public BlackMisc::Mixin::MetaType<CClientList>
         {
         public:
