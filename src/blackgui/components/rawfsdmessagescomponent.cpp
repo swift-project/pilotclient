@@ -190,7 +190,7 @@ namespace BlackGui
         void CRawFsdMessagesComponent::addFsdMessage(const CRawFsdMessage &rawFsdMessage)
         {
             if (m_buffer.size() == m_maxDisplayedMessages) { m_buffer.pop_front(); }
-            m_buffer.push_back(rawFsdMessage.getRawMessage());
+            m_buffer.push_backMaxElements(rawFsdMessage, m_maxDisplayedMessages);
 
             if (! m_filterPacketType.isEmpty() && !rawFsdMessage.isPacketType(m_filterPacketType)) { return; }
             if (! m_filterString.isEmpty() && !rawFsdMessage.containsString(m_filterString)) { return; }

@@ -186,6 +186,14 @@ namespace BlackMisc
             this->push_front(value);
         }
 
+        //! Insert as last element by keep maxElements
+        void push_backMaxElements(const T &value, int maxElements)
+        {
+            Q_ASSERT(maxElements > 1);
+            while (this->size() >= (maxElements - 1)) { this->pop_front(); }
+            this->push_back(value);
+        }
+
         //! Move-appends an element at the end of the sequence.
         void push_back(T &&value) { m_impl.push_back(std::move(value)); }
 
