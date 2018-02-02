@@ -327,7 +327,12 @@ namespace BlackMisc
                 m_aircraftParts.back().addMsecs(-10000); // number here does
                 m_aircraftParts.front().addMsecs(-5000); // not really matter
             }
-            m_aircraftParts.push_front(parts);
+
+            // we add new situations at front and keep the latest values (real time) first
+            m_aircraftParts.push_frontKeepLatestFirst(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
+            if (!hasOffset) { m_aircraftParts.front().setTimeOffsetMs(offset); }
+
+            // force remote provider to cleanup
             IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
 
             qint64 offset = 6000; //! \fixme copied from CNetworkVatlib::c_positionTimeOffsetMsec

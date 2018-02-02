@@ -519,9 +519,11 @@ namespace BlackCore
         emit this->changedAtcStationsOnline();
     }
 
-    void CAirspaceMonitor::testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts, bool incremental)
+    void CAirspaceMonitor::testAddAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool incremental)
     {
-        this->onAircraftConfigReceived(callsign, parts.toJson(), !incremental);
+        this->onAircraftConfigReceived(callsign,
+                                       incremental ? parts.toIncrementalJson() : parts.toJson(),
+                                       5000);
     }
 
     void CAirspaceMonitor::clear()
@@ -1097,11 +1099,6 @@ namespace BlackCore
         // store situation history
         CAircraftSituation fullSituation(situation);
         this->storeAircraftSituation(fullSituation);
-        {
-            //! \fixme Workaround to consolidate time offset from storeAircraftSituation
-            QReadLocker lock(&m_lockSituations);
-            fullSituation.setTimeOffsetMs(m_situationsByCallsign[callsign].front().getTimeOffsetMs());
-        }
         emit this->addedAircraftSituation(fullSituation);
 
         const bool existsInRange = this->isAircraftInRange(callsign);
@@ -1160,11 +1157,6 @@ namespace BlackCore
 
         // store situation history
         this->storeAircraftSituation(interimSituation);
-        {
-            //! \fixme Workaround to consolidate time offset from storeAircraftSituation
-            QReadLocker lock(&m_lockSituations);
-            interimSituation.setTimeOffsetMs(m_situationsByCallsign[callsign].front().getTimeOffsetMs());
-        }
         emit this->addedAircraftSituation(interimSituation);
 
         // if we have not aircraft in range yer, we stop here
@@ -1226,14 +1218,15 @@ namespace BlackCore
         this->updateAircraftInRange(callsign, vm);
     }
 
-    void CAirspaceMonitor::onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull)
+    void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        const CSimulatedAircraft simAircraft(getAircraftInRangeForCallsign(callsign));
+        const CSimulatedAircraft remoteAircraft(getAircraftInRangeForCallsign(callsign));
+        const bool isFull = jsonObject.value("is_full_data").toBool();
 
         // If we are not yet synchronized, we throw away any incremental packet
-        if (!simAircraft.hasValidCallsign()) { return; }
-        if (!simAircraft.isPartsSynchronized() && !isFull) { return; }
+        if (!remoteAircraft.hasValidCallsign()) { return; }
+        if (!remoteAircraft.isPartsSynchronized() && !isFull) { return; }
 
         CAircraftParts parts;
         try
@@ -1259,14 +1252,10 @@ namespace BlackCore
 
         // make sure in any case right time
         parts.setCurrentUtcTime();
+        parts.setTimeOffsetMs(currentOffset);
 
         // store part history (parts always absolute)
         this->storeAircraftParts(callsign, parts);
-        {
-            //! \fixme Workaround to consolidate time offset from storeAircraftParts
-            QReadLocker lock(&m_lockParts);
-            parts.setTimeOffsetMs(m_partsByCallsign[callsign].front().getTimeOffsetMs());
-        }
         emit this->addedAircraftParts(callsign, parts);
 
         if (m_enableAircraftPartsHistory)
@@ -1303,12 +1292,6 @@ namespace BlackCore
 
         // check sort order
         Q_ASSERT_X(situationList.size() < 2 || situationList[0].getMSecsSinceEpoch() >= situationList[1].getMSecsSinceEpoch(), Q_FUNC_INFO, "wrong sort order");
-
-        // a full position update received after an interim position update should use the time offset of the interim position
-        if (situationList.size() >= 2 && (situationList[0].isInterim() || situationList[1].isInterim()))
-        {
-            situationList[0].setTimeOffsetMs(std::min(situationList[0].getTimeOffsetMs(), situationList[1].getTimeOffsetMs()));
-        }
     }
 
     void CAirspaceMonitor::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
@@ -1316,19 +1299,10 @@ namespace BlackCore
         BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return; }
 
-        // get time offset from situation
-        qint64 timeOffsetMs = CNetworkVatlib::c_positionTimeOffsetMsec;
-        {
-            QReadLocker lock(&m_lockSituations);
-            const CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
-            if (!situationList.isEmpty()) { timeOffsetMs = situationList[0].getTimeOffsetMs(); }
-        }
-
         // list sorted from new to old
         QWriteLocker lock(&m_lockParts);
         CAircraftPartsList &partsList = m_partsByCallsign[callsign];
-        partsList.push_front(parts);
-        partsList.front().setTimeOffsetMs(timeOffsetMs);
+        partsList.push_frontKeepLatestAdjustedFirst(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
 
         // remove outdated parts (but never remove the most recent one)
         IRemoteAircraftProvider::removeOutdatedParts(partsList);

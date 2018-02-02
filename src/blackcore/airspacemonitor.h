@@ -388,7 +388,7 @@ namespace BlackCore
         void onReceivedAtcBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
         void onReadUnchangedAtcBookings();
         void onReceivedDataFile();
-        void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
+        void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset);
         void onAircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
         void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
     };
