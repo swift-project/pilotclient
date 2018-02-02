@@ -62,11 +62,14 @@ private:
     //! Menu clicked
     void onMenuClicked();
 
+    //! Init functions
+    //! @{
     void init();
     void initLogDisplay();
     void initStyleSheet();
     void initMenu();
     void initDynamicMenus();
+    //! @}
 
     void performGracefulShutdown();
     void consolidationSettingChanged();

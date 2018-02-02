@@ -79,7 +79,7 @@ namespace BlackMisc
             //! \remark parts logging has a \c bool \c log flag
             void attachLogger(CInterpolationLogger *logger) { m_logger = logger; }
 
-            //! Is logger attached
+            //! Is logger attached?
             bool hasAttachedLogger() const { return m_logger; }
 
             //! Get an interpolator info string (for debug info)

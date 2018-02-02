@@ -295,7 +295,7 @@ namespace BlackMisc
 
         const QRegularExpression &CAltitude::fpAltitudeRegExp()
         {
-            static thread_local QRegularExpression re("((FL|F)\\d{2,3})|(S\\d{2,4})|(A\\d{2,3})|(M\\d{2,4})|(\\d{3,5}(ft|m))");
+            thread_local const QRegularExpression re("((FL|F)\\d{2,3})|(S\\d{2,4})|(A\\d{2,3})|(M\\d{2,4})|(\\d{3,5}(ft|m))");
             return re;
         }
 

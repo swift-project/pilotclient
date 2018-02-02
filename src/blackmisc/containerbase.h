@@ -23,7 +23,6 @@
 
 namespace BlackMisc
 {
-
     //! Class providing static helper methods for different containers
     class CContainerHelper
     {
@@ -69,7 +68,6 @@ namespace BlackMisc
             if (a.size() < b.size()) { return -1; }
             if (b.size() < a.size()) { return 1; }
             return 0;
-
         }
 
         //! Return a new container of a different type, containing the same elements as this one.
@@ -101,7 +99,6 @@ namespace BlackMisc
             return derived().removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
         }
 
-    public:
         //! Simplifies composition, returns 0 for performance
         friend uint qHash(const Derived &) { return 0; }
 
@@ -199,7 +196,6 @@ namespace BlackMisc
         Derived &derived() { return static_cast<Derived &>(*this); }
         const Derived &derived() const { return static_cast<const Derived &>(*this); }
     };
-
 }
 
 #endif // guard

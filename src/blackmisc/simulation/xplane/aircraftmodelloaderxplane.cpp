@@ -132,7 +132,7 @@ namespace BlackMisc
                 if (modelDirs.isEmpty())
                 {
                     this->clearCache();
-                    emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
+                    emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
                     return;
                 }
 
@@ -273,7 +273,7 @@ namespace BlackMisc
                         else if (tokens.at(1) == QLatin1String("acf/_author"))
                         {
                             if (model.getDistributor().hasDescription()) { continue; }
-                            const thread_local QRegularExpression end("\\W\\s", QRegularExpression::UseUnicodePropertiesOption);
+                            thread_local const QRegularExpression end("\\W\\s", QRegularExpression::UseUnicodePropertiesOption);
                             QString author = line.mid(tokens.at(2).position());
                             author = author.left(author.indexOf(end)).trimmed();
                             if (author.isEmpty()) { continue; }

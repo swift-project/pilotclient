@@ -97,6 +97,7 @@ void CSwiftData::onStyleSheetsChanged()
 
 void CSwiftData::init()
 {
+    Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
     sGui->initMainApplicationWidget(this);
     this->initLogDisplay();
 

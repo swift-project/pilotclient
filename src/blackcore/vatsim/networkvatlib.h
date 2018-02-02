@@ -131,10 +131,16 @@ namespace BlackCore
             //! Command line options this library can handle
             static const QList<QCommandLineOption> &getCmdLineOptions();
 
-            static int const c_positionTimeOffsetMsec = 6000;           //!< offset time for received position updates
-            static int const c_interimPositionTimeOffsetMsec = 2000;    //!< offset time for received interim position updates
+            //! Offset times basically telling when to expect the next value from network plus some reserve
+            //! @{
+            static int constexpr c_positionTimeOffsetMsec = 6000;           //!< offset time for received position updates
+            static int constexpr c_interimPositionTimeOffsetMsec = 2000;    //!< offset time for received interim position updates
+            //! @}
 
         private:
+            static int constexpr c_processingIntervalMsec = 100;            //!< interval for the processing timer
+            static int constexpr c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
+            static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
             static bool getCmdLineClientIdAndKey(int &id, QString &key);
 
             void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
@@ -247,10 +253,7 @@ namespace BlackCore
             QTimer m_positionUpdateTimer;
             QTimer m_interimPositionUpdateTimer;
 
-            static int const c_processingIntervalMsec = 100;            //!< interval for the processing timer
-            static int const c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
-            static int const c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
-
+            //! Pending ATIS query since
             struct PendingAtisQuery
             {
                 QDateTime m_queryTime = QDateTime::currentDateTimeUtc();

@@ -282,12 +282,12 @@ namespace BlackCore
                     m_server.markAsDisconnected();
                 }
 
-                if (isDisconnected())
+                if (this->isDisconnected())
                 {
                     stopPositionTimers();
                 }
 
-                emit connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
+                emit this->connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
             }
         }
 
@@ -877,6 +877,8 @@ namespace BlackCore
 
         void CNetworkVatlib::onPilotPositionUpdate(VatFsdClient *, const char *callsignChar , const VatPilotPosition *position, void *cbvar)
         {
+            auto *self = cbvar_cast(cbvar);
+
             const CCallsign callsign(callsignChar, CCallsign::Aircraft);
             CAircraftSituation situation(
                 callsign,
@@ -908,7 +910,10 @@ namespace BlackCore
             }
             else
             {
-                CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).debug("Wrong transponder code '%1' for '%2'") << position->transponderCode << callsign;
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).debug("Wrong transponder code '%1' for '%2'") << position->transponderCode << callsign;
+                }
 
                 // I set a default: IFR standby is a reasonable default
                 transponder = CTransponder(2000, CTransponder::StateStandby);
@@ -918,8 +923,8 @@ namespace BlackCore
 
         void CNetworkVatlib::onAircraftConfigReceived(VatFsdClient *, const char *callsignChar, const char *aircraftConfig, void *cbvar)
         {
-            const QByteArray json = cbvar_cast(cbvar)->fromFSD(aircraftConfig).toUtf8();
             QJsonParseError parserError;
+            const QByteArray json = cbvar_cast(cbvar)->fromFSD(aircraftConfig).toUtf8();
             const QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
 
             if (parserError.error != QJsonParseError::NoError)
@@ -936,7 +941,7 @@ namespace BlackCore
                 return;
             }
 
-            QJsonObject config = doc.object().value("config").toObject();
+            const QJsonObject config = doc.object().value("config").toObject();
             if (config.empty()) return;
 
             const bool isFull = config.take("is_full_data").toBool(false);
@@ -1041,8 +1046,8 @@ namespace BlackCore
             CRawFsdMessage rawFsdMessage(fsdMessage);
             if (m_rawFsdMessageLogFile.isOpen())
             {
-                 QTextStream stream(&m_rawFsdMessageLogFile);
-                 stream << rawFsdMessage.toQString() << endl;
+                QTextStream stream(&m_rawFsdMessageLogFile);
+                stream << rawFsdMessage.toQString() << endl;
             }
             emit rawFsdMessageReceived(rawFsdMessage);
         }
@@ -1122,13 +1127,13 @@ namespace BlackCore
             PendingAtisQuery &pendingQuery = m_pendingAtisQueries[sender];
             pendingQuery.m_atisMessage.push_back(message);
 
-            // Wait maximum 3 seconds for the reply and release as text message after
-            if (pendingQuery.m_queryTime.secsTo(QDateTime::currentDateTimeUtc()) > 3)
+            // Wait maximum 5 seconds for the reply and release as text message after
+            if (pendingQuery.m_queryTime.secsTo(QDateTime::currentDateTimeUtc()) > 5)
             {
                 const QString atisMessage(pendingQuery.m_atisMessage.join(QChar::LineFeed));
                 CTextMessage tm(atisMessage, sender, receiver);
                 tm.setCurrentUtcTime();
-                consolidateTextMessage(tm);
+                this->consolidateTextMessage(tm);
                 m_pendingAtisQueries.remove(sender);
                 return;
             }
@@ -1136,7 +1141,7 @@ namespace BlackCore
             // 4 digits followed by z (e.g. 0200z) is always the last atis line.
             // Some controllers leave the logoff time empty. Hence we accept anything
             // between 0-4 digits.
-            QRegularExpression reLogoff("\\d{0,4}z");
+            thread_local const QRegularExpression reLogoff("\\d{0,4}z");
             if (reLogoff.match(message).hasMatch())
             {
                 emit atisLogoffTimeReplyReceived(sender, message);
@@ -1210,7 +1215,8 @@ namespace BlackCore
                 {
                     //  detect the stupid z1, z2, z3 placeholders
                     //! \fixme: Anything better as this stupid code here?
-                    const QString test = fixed.toLower().remove(QRegularExpression("[\\n\\t\\r]"));
+                    thread_local const QRegularExpression RegExp("[\\n\\t\\r]");
+                    const QString test = fixed.toLower().remove(RegExp);
                     if (test == "z") return;
                     if (test.startsWith("z") && test.length() == 2) return; // z1, z2, ..
                     if (test.length() == 1) return; // sometimes just z

@@ -200,7 +200,7 @@ namespace BlackGui
             const QString raw = rawString.trimmed();
             if (raw.isEmpty()) { return QStringList(); }
             QStringList dirs;
-            static thread_local QRegularExpression regExp("\n|\r\n|\r");
+            thread_local const QRegularExpression regExp("\n|\r\n|\r");
             const QStringList rawLines = raw.split(regExp);
             for (const QString &l : rawLines)
             {
