@@ -310,34 +310,45 @@ namespace BlackMisc
                 this->resetLastInterpolation(); // delete any leftover
 
                 // make sure we have enough situations to do start interpolating immediately without waiting for more updates
-                m_aircraftSituations = { situation, situation };
-                m_aircraftSituations.back().addMsecs(-10000); // number here does
-                m_aircraftSituations.front().addMsecs(-5000); // not really matter
+                // the offsets here (addMSecs) do not really matter
+                CAircraftSituation copy(situation);
+                copy.addMsecs(-2 * IRemoteAircraftProvider::DefaultOffsetTimeMs);
+                m_aircraftSituations.push_frontKeepLatestFirst(copy);
+                copy.addMsecs(IRemoteAircraftProvider::DefaultOffsetTimeMs);
+                m_aircraftSituations.push_frontKeepLatestFirst(copy);
             }
-            m_aircraftSituations.push_frontMaxElements(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+
+            // we add new situations at front and keep the latest values (real time) first
+            m_aircraftSituations.push_frontKeepLatestFirst(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
         }
 
         template <typename Derived>
         void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts)
         {
+            const bool hasOffset = parts.hasOffsetTime();
+            const qint64 offset =
+                hasOffset ?
+                parts.getTimeOffsetMs() :
+                m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
+
             if (m_aircraftParts.isEmpty())
             {
                 // make sure we have enough parts to do start interpolating immediately without waiting for more updates
-                m_aircraftParts = { parts, parts };
-                m_aircraftParts.back().addMsecs(-10000); // number here does
-                m_aircraftParts.front().addMsecs(-5000); // not really matter
+                // the offsets here (addMSecs) do not really matter
+                CAircraftParts copy(parts);
+                copy.setTimeOffsetMs(offset);
+                copy.addMsecs(-2 * offset);
+                m_aircraftParts.push_frontKeepLatestFirst(copy);
+                copy.addMsecs(offset);
+                m_aircraftParts.push_frontKeepLatestFirst(copy);
             }
 
             // we add new situations at front and keep the latest values (real time) first
-            m_aircraftParts.push_frontKeepLatestFirst(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
+            m_aircraftParts.push_frontKeepLatestFirst(parts, IRemoteAircraftProvider::MaxSituationsPerCallsign);
             if (!hasOffset) { m_aircraftParts.front().setTimeOffsetMs(offset); }
 
             // force remote provider to cleanup
             IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
-
-            qint64 offset = 6000; //! \fixme copied from CNetworkVatlib::c_positionTimeOffsetMsec
-            if (!m_aircraftSituations.isEmpty()) { offset = m_aircraftSituations.front().getTimeOffsetMs(); }
-            m_aircraftParts.front().setTimeOffsetMs(offset);
         }
 
         template<typename Derived>
