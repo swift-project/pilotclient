@@ -128,6 +128,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Incremental JSON object
+            QJsonObject toIncrementalJson() const;
+
         private:
             CAircraftLights m_lights;
             CAircraftEngineList m_engines;

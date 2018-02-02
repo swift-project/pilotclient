@@ -31,6 +31,14 @@ namespace BlackMisc
                    QStringLiteral(" on ground: ") % BlackMisc::boolToYesNo(m_isOnGround);
         }
 
+        QJsonObject CAircraftParts::toIncrementalJson() const
+        {
+            QJsonObject json = this->toJson();
+            json.remove("is_full_data");
+            json.insert("is_full_data", QJsonValue(false));
+            return json;
+        }
+
         CVariant CAircraftParts::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
