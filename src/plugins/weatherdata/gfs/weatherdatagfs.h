@@ -53,14 +53,6 @@ namespace BlackWxPlugin
             //! \copydoc BlackCore::IWeatherData::getWeatherData()
             virtual BlackMisc::Weather::CWeatherGrid getWeatherData() const override;
 
-        private slots:
-            //! Asyncronous fetching finished
-            //! \threadsafe
-            void ps_fetchingWeatherDataFinished();
-
-            //! Parsing
-            void ps_parseGfsFile(QNetworkReply *nwReplyPtr);
-
         private:
             enum Grib2CloudLevel
             {
@@ -137,8 +129,12 @@ namespace BlackWxPlugin
                 double surfaceTemperature = 0;
             };
 
-            BlackMisc::Network::CUrl getDownloadUrl() const;
+            //! Asyncronous fetching finished
+            //! \threadsafe
+            void fetchingWeatherDataFinished();
 
+            void parseGfsFile(QNetworkReply *nwReplyPtr);
+            BlackMisc::Network::CUrl getDownloadUrl() const;
             void parseGfsFileImpl(const QByteArray &gribData);
             void findNextGribMessage(unsigned char *buffer, g2int size, g2int iseek, g2int *lskip, g2int *lgrib);
             void createWeatherGrid(const gribfield *gfld);

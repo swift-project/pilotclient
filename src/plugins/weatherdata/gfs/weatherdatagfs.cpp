@@ -76,7 +76,7 @@ namespace BlackWxPlugin
                 const QUrl url = getDownloadUrl().toQUrl();
                 CLogMessage(this).debug() << "Started to download GFS data from" << url.toString();
                 QNetworkRequest request(url);
-                sApp->getFromNetwork(request, { this, &CWeatherDataGfs::ps_parseGfsFile });
+                sApp->getFromNetwork(request, { this, &CWeatherDataGfs::parseGfsFile });
             }
             else
             {
@@ -86,7 +86,7 @@ namespace BlackWxPlugin
                 {
                     parseGfsFileImpl(m_gribData);
                 });
-                m_parseGribFileWorker->then(this, &CWeatherDataGfs::ps_fetchingWeatherDataFinished);
+                m_parseGribFileWorker->then(this, &CWeatherDataGfs::fetchingWeatherDataFinished);
             }
         }
 
@@ -96,12 +96,12 @@ namespace BlackWxPlugin
             return m_weatherGrid;
         }
 
-        void CWeatherDataGfs::ps_fetchingWeatherDataFinished()
+        void CWeatherDataGfs::fetchingWeatherDataFinished()
         {
             emit fetchingFinished();
         }
 
-        void CWeatherDataGfs::ps_parseGfsFile(QNetworkReply *nwReplyPtr)
+        void CWeatherDataGfs::parseGfsFile(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
@@ -113,7 +113,7 @@ namespace BlackWxPlugin
             {
                 parseGfsFileImpl(m_gribData);
             });
-            m_parseGribFileWorker->then(this, &CWeatherDataGfs::ps_fetchingWeatherDataFinished);
+            m_parseGribFileWorker->then(this, &CWeatherDataGfs::fetchingWeatherDataFinished);
         }
 
         CUrl CWeatherDataGfs::getDownloadUrl() const
