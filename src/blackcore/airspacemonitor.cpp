@@ -1288,10 +1288,11 @@ namespace BlackCore
         // list from new to old
         QWriteLocker lock(&m_lockSituations);
         CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
-        situationList.push_frontMaxElements(situation, MaxSituationsPerCallsign);
+        situationList.push_frontMaxElements(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
 
         // check sort order
-        Q_ASSERT_X(situationList.size() < 2 || situationList[0].getMSecsSinceEpoch() >= situationList[1].getMSecsSinceEpoch(), Q_FUNC_INFO, "wrong sort order");
+        Q_ASSERT_X(situationList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
+        Q_ASSERT_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
     }
 
     void CAirspaceMonitor::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
@@ -1311,7 +1312,8 @@ namespace BlackCore
         m_aircraftSupportingParts.insert(callsign); // mark as callsign which supports parts
 
         // check sort order
-        Q_ASSERT_X(partsList.size() < 2 || partsList[0].getMSecsSinceEpoch() >= partsList[1].getMSecsSinceEpoch(), Q_FUNC_INFO, "wrong sort order");
+        Q_ASSERT_X(partsList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
+        Q_ASSERT_X(partsList.size() <= IRemoteAircraftProvider::MaxPartsPerCallsign, Q_FUNC_INFO, "Wrong size");
     }
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)

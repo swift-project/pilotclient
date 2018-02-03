@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/compare.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/range.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessage.h"
@@ -55,12 +56,18 @@ namespace BlackMisc
             Q_UNUSED(hints);
             status.reset();
 
-            // find the first situation not in the correct order, keep only the situations before that one
-            // any updates in wrong chronological order are discounted
-            const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
-            const auto validSituations = makeRange(m_aircraftSituations.begin(), end);
+            // with the latest updates of T243 the order and the offsets are supposed to be correct
+            // so even mixing fast/slow updates shall work
+            BLACK_VERIFY_X(m_aircraftSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+            Q_ASSERT_X(m_aircraftSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+
+            // Ref T243, KB 2018-02, can be removed in future, we verify situations above
+            // Situations are supposed to be in correct order
+            // const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+            // const auto validSituations = makeRange(m_aircraftSituations.begin(), end);
 
             // find the first situation earlier than the current time
+            const CAircraftSituationList &validSituations = m_aircraftSituations; // if needed, we could also copy here
             const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto && s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
             const auto situationsNewer = makeRange(validSituations.begin(), pivot);
             const auto situationsOlder = makeRange(pivot, validSituations.end());

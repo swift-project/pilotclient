@@ -236,9 +236,15 @@ namespace BlackMisc
                 return emptyParts;
             }
 
-            // find the first parts not in the correct order, keep only the parts before that one
-            const auto end = std::is_sorted_until(m_aircraftParts.begin(), m_aircraftParts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
-            const auto validParts = makeRange(m_aircraftParts.begin(), end);
+            // with the latest updates of T243 the order and the offsets are supposed to be correct
+            // so even mixing fast/slow updates shall work
+            Q_ASSERT_X(m_aircraftParts.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+
+            // Ref T243, KB 2018-02, can be removed in future, we verify parts above
+            // Parts are supposed to be in correct order
+            // const auto end = std::is_sorted_until(m_aircraftParts.begin(), m_aircraftParts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+            // const auto validParts = makeRange(m_aircraftParts.begin(), end);
+            const CAircraftPartsList &validParts = m_aircraftParts;
 
             // stop if we don't have any parts
             if (validParts.isEmpty()) { return {}; }

@@ -10,6 +10,7 @@
 #include "blackmisc/simulation/interpolatorspline.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
@@ -104,15 +105,18 @@ namespace BlackMisc
             // recalculate derivatives only if they changed
             if (currentTimeMsSinceEpoc > m_nextSampleAdjustedTime)
             {
-                // find the first situation not in the correct order, keep only the situations before that one
-                //! \todo KB 2-2018, IMHO the sorting by adjusted times is wrong. we should sort by received time
-                // when mixing fast/slow updates, the postion is represented when it is sent, not when it is used
-                // see example below
-                // so why do we check here only, and do not sort
-                const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
-                const auto validSituations = makeRange(m_aircraftSituations.begin(), end);
+                // with the latest updates of T243 the order and the offsets are supposed to be correct
+                // so even mixing fast/slow updates shall work
+                Q_ASSERT_X(m_aircraftSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+                Q_ASSERT_X(m_aircraftSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+
+                // Ref T243, KB 2018-02, can be removed in future, we verify situations above
+                // Situations are supposed to be in correct order
+                // const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+                // const auto validSituations = makeRange(m_aircraftSituations.begin(), end);
 
                 // find the first situation earlier than the current time
+                const CAircraftSituationList &validSituations = m_aircraftSituations; // if needed, we could also copy here
                 const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto && s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
                 const auto situationsNewer = makeRange(validSituations.begin(), pivot);
                 const auto situationsOlder = makeRange(pivot, validSituations.end());
