@@ -6,6 +6,7 @@ CONFIG += ordered
 OTHER_FILES += mkspecs/features/*.prf
 OTHER_FILES += mkspecs/features/*.pri
 OTHER_FILES += *.supp
+OTHER_FILES += .astylerc
 
 CheckMandatoryDependency(gl)
 CheckMandatoryDependency(glu)
