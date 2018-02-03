@@ -415,9 +415,9 @@ namespace BlackMisc
 
             return QStringLiteral("CS: ") % callsign.asString() % separator %
                    QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
-                   QStringLiteral(" type: ") % this->interpolationType() %
-                   QStringLiteral(" gnd.fa.: ") % QString::number(groundFactor) %
-                   QStringLiteral(" #nw.sit.: ") % QString::number(noNetworkSituations) %
+                   QStringLiteral(" | type: ") % this->interpolationType() %
+                   QStringLiteral(" | gnd.fa.: ") % QString::number(groundFactor) %
+                   QStringLiteral(" | #nw.sit.: ") % QString::number(noNetworkSituations) %
                    (
                        withHints ?
                        separator % QStringLiteral("hints: ") % usedHints.toQString(true) :
@@ -438,13 +438,13 @@ namespace BlackMisc
                        withDeltaTimes ?
                        separator %
                        QStringLiteral("cur.time: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
-                       QStringLiteral(" int.time: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsInterpolated) %
-                       QStringLiteral(" dt.cur.int.: ") %  QString::number(deltaCurrentToInterpolatedTime()) % QStringLiteral("ms") %
-                       QStringLiteral(" sample dt: ") % QString::number(deltaSampleTimesMs) % QStringLiteral("ms") %
-                       QStringLiteral(" fr.[0-1]: ") % QString::number(simulationTimeFraction) %
-                       QStringLiteral(" old int.pos.: ") % situationOldInterpolation.getTimestampAndOffset(true) %
-                       QStringLiteral(" new int.pos.: ") % situationNewInterpolation.getTimestampAndOffset(true) %
-                       QStringLiteral(" #int.pos.: ") % QString::number(interpolationSituations.size()) :
+                       QStringLiteral(" | int.time: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsInterpolated) %
+                       QStringLiteral(" | dt.cur.int.: ") %  QString::number(deltaCurrentToInterpolatedTime()) % QStringLiteral("ms") %
+                       QStringLiteral(" | sample dt: ") % QString::number(deltaSampleTimesMs) % QStringLiteral("ms") %
+                       QStringLiteral(" | fr.[0-1]: ") % QString::number(simulationTimeFraction) %
+                       QStringLiteral(" | old int.pos.: ") % situationOldInterpolation.getTimestampAndOffset(true) %
+                       QStringLiteral(" | new int.pos.: ") % situationNewInterpolation.getTimestampAndOffset(true) %
+                       QStringLiteral(" | #int.pos.: ") % QString::number(interpolationSituations.size()) :
                        QStringLiteral("")
                    ) %
                    (

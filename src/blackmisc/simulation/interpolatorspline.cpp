@@ -198,7 +198,7 @@ namespace BlackMisc
                 log.interpolator = 's';
                 log.deltaSampleTimesMs = dt2;
                 log.simulationTimeFraction = timeFraction;
-                log.noNetworkSituations = m_aircraftSituations. size();
+                log.noNetworkSituations = m_aircraftSituations.size();
                 log.tsInterpolated = interpolatedTime; // without offsets
             }
 
