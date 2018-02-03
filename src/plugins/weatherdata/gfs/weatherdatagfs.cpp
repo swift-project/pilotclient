@@ -98,7 +98,9 @@ namespace BlackWxPlugin
 
         void CWeatherDataGfs::fetchingWeatherDataFinished()
         {
-            emit fetchingFinished();
+            // If the worker is not destroyed yet, try again in 10 ms.
+            if (m_parseGribFileWorker) { QTimer::singleShot(10, this, &CWeatherDataGfs::fetchingWeatherDataFinished); }
+            else { emit fetchingFinished(); }
         }
 
         void CWeatherDataGfs::parseGfsFile(QNetworkReply *nwReplyPtr)
