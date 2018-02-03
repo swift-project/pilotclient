@@ -55,9 +55,11 @@ namespace BlackGui
             connect(ui->le_FilterText, &QLineEdit::returnPressed, this, &CRawFsdMessagesComponent::changeStringFilter);
             connect(ui->cb_FilterPacketType, &QComboBox::currentTextChanged, this, &CRawFsdMessagesComponent::changePacketTypeFilter);
             connect(ui->gb_Filter, &QGroupBox::toggled, this, &CRawFsdMessagesComponent::expandFilters);
-            connect(ui->gb_WriteToFile , &QGroupBox::toggled, this, &CRawFsdMessagesComponent::expandWritingToFile);
+            connect(ui->gb_WriteToFile, &QGroupBox::toggled, this, &CRawFsdMessagesComponent::expandWritingToFile);
             connect(ui->pb_SelectFileDir, &QPushButton::clicked, this, &CRawFsdMessagesComponent::selectFileDir);
             connect(ui->le_MaxDisplayedMessages, &QLineEdit::returnPressed, this, &CRawFsdMessagesComponent::changeMaxDisplayedMessages);
+            connect(ui->pb_EnableDisable, &QPushButton::clicked, this, &CRawFsdMessagesComponent::enableDisableRawFsdMessages);
+            connect(ui->pb_ClearMessages, &QPushButton::clicked, this, &CRawFsdMessagesComponent::clearAllMessages);
 
             QValidator *validator = new QIntValidator(10, 200, this);
             ui->le_MaxDisplayedMessages->setValidator(validator);
@@ -76,17 +78,25 @@ namespace BlackGui
             readSettings();
             // Connect them after settings are read. Otherwise they get called.
             connect(ui->cb_FileWritingMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &CRawFsdMessagesComponent::changeFileWritingMode);
-            connect(ui->cb_EnableRawFsdMessages, &QCheckBox::toggled, this, &CRawFsdMessagesComponent::enableRawFsdMessages);
         }
 
-        void CRawFsdMessagesComponent::enableRawFsdMessages(bool enable)
+        void CRawFsdMessagesComponent::enableDisableRawFsdMessages()
         {
-            ui->cb_FilterPacketType->setEnabled(enable);
-            ui->le_FilterText->setEnabled(enable);
-            ui->le_MaxDisplayedMessages->setEnabled(enable);
-            ui->le_FileDir->setEnabled(enable);
-            ui->pb_SelectFileDir->setEnabled(enable);
-            ui->cb_FileWritingMode->setEnabled(enable);
+            bool enable;
+            if (ui->pb_EnableDisable->text() == "Enable")
+            {
+                enable = true;
+                ui->pb_EnableDisable->setText("Disable");
+                ui->lbl_EnabledDisabled->setText("Enabled (Display + File)");
+                ui->lbl_EnabledDisabled->setStyleSheet("background: green;");
+            }
+            else
+            {
+                enable = false;
+                ui->pb_EnableDisable->setText("Enable");
+                ui->lbl_EnabledDisabled->setText("Disabled (Display + File)");
+                ui->lbl_EnabledDisabled->setStyleSheet("background: darkred;");
+            }
             m_setting.setProperty(Vatsim::CRawFsdMessageSettings::IndexRawFsdMessagesEnabled, CVariant::fromValue(enable));
         }
 
@@ -197,18 +207,29 @@ namespace BlackGui
             ui->pte_RawFsdMessages->appendPlainText(rawFsdMessageToString(rawFsdMessage));
         }
 
+        void CRawFsdMessagesComponent::clearAllMessages()
+        {
+            ui->pte_RawFsdMessages->clear();
+            m_buffer.clear();
+        }
+
         void CRawFsdMessagesComponent::readSettings()
         {
             const Vatsim::CRawFsdMessageSettings setting = m_setting.get();
             const bool enable = setting.areRawFsdMessagesEnabled();
-            ui->cb_EnableRawFsdMessages->setChecked(enable);
-            ui->cb_FilterPacketType->setEnabled(enable);
-            ui->le_FilterText->setEnabled(enable);
-            ui->le_MaxDisplayedMessages->setEnabled(enable);
-            ui->le_FileDir->setEnabled(enable);
+            if (enable)
+            {
+                ui->pb_EnableDisable->setText("Disable");
+                ui->lbl_EnabledDisabled->setText("Enabled (Display + File)");
+                ui->lbl_EnabledDisabled->setStyleSheet("background: green;");
+            }
+            else
+            {
+                ui->pb_EnableDisable->setText("Enable");
+                ui->lbl_EnabledDisabled->setText("Disabled (Display + File)");
+                ui->lbl_EnabledDisabled->setStyleSheet("background: darkred;");
+            }
             ui->le_FileDir->setText(setting.getFileDir());
-            ui->pb_SelectFileDir->setEnabled(enable);
-            ui->cb_FileWritingMode->setEnabled(enable);
             const CRawFsdMessageSettings::FileWriteMode mode = setting.getFileWriteMode();
             ui->cb_FileWritingMode->setCurrentIndex(static_cast<int>(mode));
         }

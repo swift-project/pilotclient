@@ -38,7 +38,7 @@ namespace BlackGui
 
         private:
             void setupConnections();
-            void enableRawFsdMessages(bool enable);
+            void enableDisableRawFsdMessages();
             void expandFilters(bool expand);
             void expandWritingToFile(bool expand);
             void changeStringFilter();
@@ -48,6 +48,7 @@ namespace BlackGui
             void selectFileDir();
             void changeFileWritingMode();
             void addFsdMessage(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);
+            void clearAllMessages();
             void readSettings();
 
             static QString rawFsdMessageToString(const BlackMisc::Network::CRawFsdMessage &rawFsdMessage);

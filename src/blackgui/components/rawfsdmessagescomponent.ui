@@ -22,7 +22,7 @@
   <property name="lineWidth">
    <number>0</number>
   </property>
-  <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0,0">
+  <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -35,27 +35,43 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="0" column="0" alignment="Qt::AlignRight">
-    <widget class="QCheckBox" name="cb_EnableRawFsdMessages">
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_EnabledDisabled">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Disabled</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="pb_EnableDisable">
      <property name="text">
       <string>Enable</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QPlainTextEdit" name="pte_RawFsdMessages">
-     <property name="lineWrapMode">
-      <enum>QPlainTextEdit::NoWrap</enum>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="maximumBlockCount">
-      <number>100</number>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="pb_ClearMessages">
+     <property name="text">
+      <string>Clear</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="2" column="0" colspan="3">
     <widget class="QGroupBox" name="gb_Filter">
      <property name="title">
       <string>Filter</string>
@@ -72,6 +88,9 @@
       </property>
       <item row="0" column="1">
        <widget class="QLabel" name="lbl_FilterText">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Text:</string>
         </property>
@@ -80,7 +99,7 @@
       <item row="1" column="0">
        <widget class="QComboBox" name="cb_FilterPacketType">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Packet Type Filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -90,7 +109,7 @@
       <item row="1" column="1">
        <widget class="QLineEdit" name="le_FilterText">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Text Filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -102,6 +121,9 @@
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_FilterPacketType">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Type:</string>
         </property>
@@ -110,7 +132,7 @@
       <item row="1" column="2">
        <widget class="QLineEdit" name="le_MaxDisplayedMessages">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="toolTip">
          <string>Maximum No. of lines displayed</string>
@@ -122,6 +144,9 @@
       </item>
       <item row="0" column="2">
        <widget class="QLabel" name="lbl_MaxDisplayedMessages">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Max Displayed Messages:</string>
         </property>
@@ -130,7 +155,20 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="0" column="0" colspan="3">
+    <widget class="QPlainTextEdit" name="pte_RawFsdMessages">
+     <property name="lineWrapMode">
+      <enum>QPlainTextEdit::NoWrap</enum>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="maximumBlockCount">
+      <number>100</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
     <widget class="QGroupBox" name="gb_WriteToFile">
      <property name="title">
       <string>Write to File</string>
@@ -144,6 +182,9 @@
      <layout class="QGridLayout" name="gl_WriteToFile">
       <item row="4" column="0">
        <widget class="QLabel" name="lbl_FileDir">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Directory:</string>
         </property>
@@ -151,6 +192,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_FileWriteMode">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Write Mode</string>
         </property>
@@ -159,7 +203,7 @@
       <item row="4" column="1">
        <widget class="QLineEdit" name="le_FileDir">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string/>
@@ -172,7 +216,7 @@
       <item row="4" column="2">
        <widget class="QPushButton" name="pb_SelectFileDir">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Set</string>
@@ -185,7 +229,7 @@
       <item row="1" column="1" colspan="2">
        <widget class="QComboBox" name="cb_FileWritingMode">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
        </widget>
       </item>
