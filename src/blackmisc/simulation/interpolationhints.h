@@ -22,9 +22,10 @@ namespace BlackMisc
     namespace Aviation { class CAircraftSituation; }
     namespace Simulation
     {
+        struct SituationLog;
+
         //! Hints for interpolator such as ground elevation
-        class BLACKMISC_EXPORT CInterpolationHints :
-            public CValueObject<CInterpolationHints>
+        class BLACKMISC_EXPORT CInterpolationHints : public CValueObject<CInterpolationHints>
         {
         public:
             //! Property indexes
@@ -56,16 +57,17 @@ namespace BlackMisc
 
             //! Get elevation from CInterpolationHints::getElevationProvider or CInterpolationHints::getElevation
             //! \remark avoid unnecessary calls on XPlane (calling elevation provider)
-            //! @param situation
-            //! @param useProvider using the provider if available
-            //! @param forceProvider use the provider and ignore any plane
+            //! \param situation where to check
+            //! \param useProvider using the provider if available
+            //! \param forceProvider use the provider and ignore any elevation plane
+            //! \param log optional chance to write info about elevation
             //! \see setElevationProvider
             //! \see setElevationPlane
-            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, bool useProvider, bool forceProvider = false) const;
+            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, bool useProvider, bool forceProvider = false, SituationLog *log = nullptr) const;
 
             //! Get elevation from CInterpolationHints::getElevationProvider or CInterpolationHints::getElevation
             //! \remark if validRadius is >= Geo::CElevationPlane::radius use validRadius
-            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, const PhysicalQuantities::CLength &validRadius, bool useProvider, bool forceProvider = false) const;
+            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, const PhysicalQuantities::CLength &validRadius, bool useProvider, bool forceProvider = false, SituationLog *log = nullptr) const;
 
             //! Check if elevation is within radius and can be used
             bool isWithinRange(const Geo::ICoordinateGeodetic &coordinate) const;
@@ -107,7 +109,7 @@ namespace BlackMisc
             //! Function object that can obtain ground elevation
             using ElevationProvider = std::function<Aviation::CAltitude(const Aviation::CAircraftSituation &)>;
 
-            //! Has elevation provider
+            //! Has elevation provider?
             bool hasElevationProvider() const;
 
             //! Set function object that can obtain ground elevation
@@ -131,9 +133,9 @@ namespace BlackMisc
         private:
             bool m_isVtol = false;           //!< VTOL aircraft?
             bool m_hasParts = false;         //!< Has valid aircraft parts?
-            bool m_logInterpolation = false; //!< log interpolation
+            bool m_logInterpolation = false; //!< Log.interpolation
             Aviation::CAircraftParts    m_aircraftParts;     //!< Aircraft parts
-            Geo::CElevationPlane        m_elevationPlane;    //!< aircraft's elevation if available
+            Geo::CElevationPlane        m_elevationPlane;    //!< Aircraft's elevation if available
             ElevationProvider           m_elevationProvider; //!< Provider of ground elevation (lazy computation)
             PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
 

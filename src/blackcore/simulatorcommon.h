@@ -260,7 +260,7 @@ namespace BlackCore
         void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign);
 
         //! Display a logged situation in simulator
-        void displayLoggedSituationInSimulator(const BlackMisc::Aviation::CCallsign &cs, bool stopLogging, int times = 10);
+        void displayLoggedSituationInSimulator(const BlackMisc::Aviation::CCallsign &cs, bool stopLogging, int times = 25);
 
         bool m_blinkCycle = false;            //!< used for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting

@@ -124,7 +124,7 @@ namespace BlackMisc
             return m_remoteAircraftProvider->getRemoteAircraftSupportingPartsCount();
         }
 
-        bool CRemoteAircraftAware::updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering)
+        bool CRemoteAircraftAware::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering)
         {
             Q_ASSERT_X(m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
             return m_remoteAircraftProvider->updateAircraftEnabled(callsign, enabledForRedering);
@@ -132,10 +132,10 @@ namespace BlackMisc
 
         void IRemoteAircraftProvider::removeOutdatedParts(CAircraftPartsList &partsList)
         {
-            // remove all outdated parts but one
-            const auto predicate = [now = partsList.front().getMSecsSinceEpoch()](const auto & p) { return p.getMSecsSinceEpoch() >= now - PartsPerCallsignMaxAgeInSeconds * 1000; };
-            const auto newEnd = std::find_if(partsList.rbegin(), partsList.rend(), predicate).base();
-            if (newEnd != partsList.end()) { partsList.erase(newEnd + 1, partsList.end()); }
+            // remove all outdated parts, but keep at least one
+            if (partsList.isEmpty()) { return; }
+            const qint64 ts = partsList.front().getMSecsSinceEpoch() - MaxPartsAgePerCallsignSecs * 1000;
+            partsList.removeBefore(ts);
         }
     } // namespace
 } // namespace

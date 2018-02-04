@@ -811,8 +811,15 @@ namespace BlackCore
 
         QString dm;
         static const QString sep("\n");
-        if (s.tsCurrent > 0) { dm = QStringLiteral("Situation: ") % s.toQString(true, true, true, true, true, true, sep); }
-        if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QStringLiteral("") : "\n\n") % QStringLiteral("Parts: ") % p.toQString(sep); }
+        if (s.tsCurrent > 0)
+        {
+            dm = QStringLiteral("Hints: ") % s.usedHints.asString(false, true) %
+                 QStringLiteral("\n") %
+                 QStringLiteral("Setup: ") % s.usedSetup.toQString(true) %
+                 QStringLiteral("\n\n") %
+                 QStringLiteral("Situation: ") % s.toQString(false, false, true, true, true, true, sep);
+        }
+        if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QStringLiteral("") : QStringLiteral("\n\n")) % QStringLiteral("Parts: ") % p.toQString(sep); }
         if (!dm.isEmpty()) { this->displayStatusMessage(CStatusMessage(this).info(dm)); }
 
         const int t = 4500 + (qrand() % 1000); // makes sure not always using the same time difference

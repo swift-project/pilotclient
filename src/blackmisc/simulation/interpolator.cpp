@@ -61,7 +61,9 @@ namespace BlackMisc
 
             // this code is used by linear and spline interpolator
             status.reset();
-            CInterpolationLogger::SituationLog log;
+            const bool doLogging = this->hasAttachedLogger() && hints.isLoggingInterpolation();
+            SituationLog log;
+            SituationLog *logP = doLogging ? &log : nullptr;
 
             // any data at all?
             if (m_aircraftSituations.isEmpty()) { return CAircraftSituation(m_callsign); }
@@ -77,7 +79,7 @@ namespace BlackMisc
             // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
             // * As XP uses lazy init we will call getGroundElevation only when needed
             // * default here via getElevationPlane
-            CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, currentSituation.getDistancePerTime(1000), false, false));
+            CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, currentSituation.getDistancePerTime(1000), true, false, logP));
             currentSituation.setGroundElevation(currentGroundElevation); // set as default
 
             // data, split situations by time
@@ -122,7 +124,7 @@ namespace BlackMisc
                     // if not having an ground elevation yet, we fetch from provider (if there is a provider)
                     if (!currentGroundElevation.isNull())
                     {
-                        currentGroundElevation = hints.getGroundElevation(currentSituation, true); // "expensive on XPlane" if provider is called
+                        currentGroundElevation = hints.getGroundElevation(currentSituation, true, false, logP); // "expensive on XPlane" if provider is called
                     }
 
                     if (!currentGroundElevation.isNull())
@@ -298,8 +300,9 @@ namespace BlackMisc
         void CInterpolator<Derived>::logParts(qint64 timestamp, const CAircraftParts &parts, bool empty, bool log) const
         {
             if (!log || !m_logger) { return; }
-            CInterpolationLogger::PartsLog logInfo;
+            PartsLog logInfo;
             logInfo.callsign = m_callsign;
+            logInfo.noNetworkParts = m_aircraftParts.size();
             logInfo.tsCurrent = timestamp;
             logInfo.parts = parts;
             logInfo.empty = empty;

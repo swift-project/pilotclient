@@ -406,8 +406,9 @@ namespace BlackMisc
             return s3.arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2), msSinceEpochToTime(t3));
         }
 
-        QString CInterpolationLogger::SituationLog::toQString(
-            bool withCurrentSituation, bool withHints, bool withSetup,
+        QString SituationLog::toQString(
+            bool withHints, bool withSetup,
+            bool withCurrentSituation,
             bool withElevation, bool withOtherPositions, bool withDeltaTimes, const QString &separator) const
         {
             const CAircraftSituation situationOldInterpolation = this->oldestInterpolationSituation();
@@ -431,7 +432,9 @@ namespace BlackMisc
                    (
                        withElevation ?
                        separator %
-                       QStringLiteral("transf.elv.: ") % QString::number(noTransferredElevations)  :
+                       QStringLiteral("Elev.: ") %
+                       QStringLiteral("transf.elv.: ") % QString::number(noTransferredElevations) %
+                       QStringLiteral(" | elv.info: ") % elevationInfo :
                        QStringLiteral("")
                    ) %
                    (
@@ -467,6 +470,7 @@ namespace BlackMisc
         {
             return QStringLiteral("CS: ") % callsign.asString() % separator %
                    QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+                   QStringLiteral(" | #nw.parts: ") % QString::number(noNetworkParts) %
                    separator %
                    QStringLiteral("parts: ") % parts.toQString(true);
         }

@@ -8,6 +8,7 @@
  */
 
 #include "interpolationhints.h"
+#include "interpolationlogger.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 
 using namespace BlackMisc::Aviation;
@@ -29,22 +30,54 @@ namespace BlackMisc
             m_isVtol(isVtolAircraft), m_hasParts(hasParts), m_logInterpolation(log)
         { }
 
-        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, bool useProvider, bool forceProvider) const
+        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, bool useProvider, bool forceProvider, SituationLog *log) const
         {
-            const bool validPlane = m_elevationPlane.isWithinRange(situation);
-            Q_ASSERT_X(!(forceProvider && !useProvider), Q_FUNC_INFO, "Invalid parameter combination");
-            if (forceProvider && useProvider && m_elevationProvider) { return m_elevationProvider(situation); }
-            if (!validPlane   && useProvider && m_elevationProvider) { return m_elevationProvider(situation); }
-            return validPlane ? this->m_elevationPlane.getAltitude() : CAltitude::null();
+            static const CLength null = CLength(0, CLengthUnit::nullUnit());
+            return this->getGroundElevation(situation, null, useProvider, forceProvider, log);
         }
 
-        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, const CLength &validRadius, bool useProvider, bool forceProvider) const
+        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, const CLength &validRadius, bool useProvider, bool forceProvider, SituationLog *log) const
         {
-            const bool validPlane = m_elevationPlane.isWithinRange(situation, CLength::maxValue(validRadius, m_elevationPlane.getRadius()));
             Q_ASSERT_X(!(forceProvider && !useProvider), Q_FUNC_INFO, "Invalid parameter combination");
-            if (forceProvider && useProvider && m_elevationProvider) { return m_elevationProvider(situation); }
-            if (!validPlane   && useProvider && m_elevationProvider) { return m_elevationProvider(situation); }
-            return validPlane ? this->m_elevationPlane.getAltitude() : CAltitude::null();
+            if (forceProvider && useProvider && m_elevationProvider)
+            {
+                if (log)
+                {
+                    static const QString lm("By provider (forced)");
+                    log->elevationInfo = lm;
+                }
+                return m_elevationProvider(situation);
+            }
+
+            const CLength radius = CLength::maxValue(validRadius, m_elevationPlane.getRadius());
+            const bool validPlane = m_elevationPlane.isWithinRange(situation, radius);
+            if (!validPlane && useProvider && m_elevationProvider)
+            {
+                if (log)
+                {
+                    static const QString lm("By provider (no valid plane)");
+                    log->elevationInfo = lm;
+                }
+                return m_elevationProvider(situation);
+            }
+
+            if (validPlane)
+            {
+                if (log)
+                {
+                    static const QString lm("Using elevation plane, radius: %1");
+                    log->elevationInfo = lm.arg(radius.valueRoundedWithUnit(CLengthUnit::m(), 1));
+                }
+                return m_elevationPlane.getAltitude();
+            }
+
+            if (log)
+            {
+                static const QString lm("Not using provider, no valid plane");
+                log->elevationInfo = lm;
+            }
+
+            return CAltitude::null();
         }
 
         void CInterpolationHints::resetElevationPlane()
@@ -81,8 +114,8 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCenterOfGravity: return this->m_cgAboveGround.propertyByIndex(index.copyFrontRemoved());
-            case IndexElevationPlane: return this->m_elevationPlane.propertyByIndex(index.copyFrontRemoved());
+            case IndexCenterOfGravity: return m_cgAboveGround.propertyByIndex(index.copyFrontRemoved());
+            case IndexElevationPlane: return m_elevationPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexIsVtolAircraft: return CVariant::fromValue(m_isVtol);
             default: return CValueObject::propertyByIndex(index);
             }
@@ -95,13 +128,13 @@ namespace BlackMisc
             switch (i)
             {
             case IndexCenterOfGravity:
-                this->m_cgAboveGround.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_cgAboveGround.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexElevationPlane:
-                this->m_elevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                m_elevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexIsVtolAircraft:
-                this->m_isVtol = variant.toBool();
+                m_isVtol = variant.toBool();
                 break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
@@ -121,10 +154,10 @@ namespace BlackMisc
                 ) %
                 QStringLiteral(" CG: ") % m_cgAboveGround.valueRoundedWithUnit(CLengthUnit::m(), 1) %
                 QStringLiteral(" elv.plane: ") % m_elevationPlane.toQString(i18n) %
-                QStringLiteral(" elv.pr: ") % boolToYesNo(m_elevationProvider ? true : false);
+                QStringLiteral(" elv.pr.: ") % boolToYesNo(m_elevationProvider ? true : false);
         }
 
-        QString CInterpolationHints::debugInfo(const Geo::CElevationPlane &deltaElevation) const
+        QString CInterpolationHints::debugInfo(const CElevationPlane &deltaElevation) const
         {
             static const QString s("Lat: %1 Lng: %2 Elv: %3");
             if (m_elevationPlane.isNull() || deltaElevation.isNull()) return "null";
