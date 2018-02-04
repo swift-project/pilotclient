@@ -227,15 +227,16 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     void ITimestampObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(const OBJ &value, int maxElements)
     {
-        Q_ASSERT_X(maxElements < 0 || maxElements > 1, Q_FUNC_INFO, "Max.value wrong range");
         CONTAINER &c = this->container();
+        if (maxElements > 0 && c.size() >= maxElements)
+        {
+            c.truncate(maxElements - 1);
+        }
         if (!c.isEmpty() && value.isOlderThan(c.front()))
         {
             ITimestampObjectList::sortLatestFirst();
         }
         c.push_front(value);
-        if (maxElements < 0 || maxElements <= c.size()) { return; }
-        c.truncate(maxElements);
     }
 
     template<class OBJ, class CONTAINER>
@@ -292,13 +293,15 @@ namespace BlackMisc
     {
         Q_ASSERT_X(maxElements < 0 || maxElements > 1, Q_FUNC_INFO, "Max.value wrong range");
         CONTAINER &c = this->container();
-        if (!c.isEmpty() && value.isOlderThan(c.front()))
+        if (maxElements > 0 && c.size() >= maxElements)
+        {
+            c.truncate(maxElements - 1);
+        }
+        if (!c.isEmpty() && value.isOlderThanAdjusted(c.front()))
         {
             ITimestampWithOffsetObjectList::sortAdjustedLatestFirst();
         }
         c.push_front(value);
-        if (maxElements < 0 || maxElements <= c.size()) { return; }
-        c.truncate(maxElements);
     }
 
     template<class OBJ, class CONTAINER>
@@ -311,7 +314,6 @@ namespace BlackMisc
             if (!obj.hasValidTimestamp()) { return false; }
             if (obj.getAdjustedMSecsSinceEpoch() < max) { return false; }
             max = obj.getAdjustedMSecsSinceEpoch();
-            continue;
         }
         return true;
     }

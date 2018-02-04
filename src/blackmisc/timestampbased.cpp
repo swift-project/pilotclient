@@ -30,13 +30,13 @@ namespace BlackMisc
 
     QDateTime ITimestampBased::getUtcTimestamp() const
     {
-        if (this->m_timestampMSecsSinceEpoch < 0) { return QDateTime(); }
-        return QDateTime::fromMSecsSinceEpoch(this->m_timestampMSecsSinceEpoch);
+        if (m_timestampMSecsSinceEpoch < 0) { return QDateTime(); }
+        return QDateTime::fromMSecsSinceEpoch(m_timestampMSecsSinceEpoch);
     }
 
     void ITimestampBased::setTimestampToNull()
     {
-        this->m_timestampMSecsSinceEpoch = -1;
+        m_timestampMSecsSinceEpoch = -1;
     }
 
     void ITimestampBased::setByYearMonthDayHourMinute(const QString &yyyyMMddhhmmsszzz)
@@ -76,48 +76,48 @@ namespace BlackMisc
     {
         if (timestamp.isValid())
         {
-            this->m_timestampMSecsSinceEpoch = timestamp.toMSecsSinceEpoch();
+            m_timestampMSecsSinceEpoch = timestamp.toMSecsSinceEpoch();
         }
         else
         {
-            this->m_timestampMSecsSinceEpoch = -1; // invalid
+            m_timestampMSecsSinceEpoch = -1; // invalid
         }
     }
 
     bool ITimestampBased::isNewerThan(const ITimestampBased &otherTimestampObj) const
     {
-        return this->m_timestampMSecsSinceEpoch > otherTimestampObj.m_timestampMSecsSinceEpoch;
+        return m_timestampMSecsSinceEpoch > otherTimestampObj.m_timestampMSecsSinceEpoch;
     }
 
     bool ITimestampBased::isNewerThan(qint64 mSecsSinceEpoch) const
     {
-        return this->m_timestampMSecsSinceEpoch > mSecsSinceEpoch;
+        return m_timestampMSecsSinceEpoch > mSecsSinceEpoch;
     }
 
     bool ITimestampBased::isOlderThan(const ITimestampBased &otherTimestampObj) const
     {
-        return this->m_timestampMSecsSinceEpoch < otherTimestampObj.m_timestampMSecsSinceEpoch;
+        return m_timestampMSecsSinceEpoch < otherTimestampObj.m_timestampMSecsSinceEpoch;
     }
 
     bool ITimestampBased::isOlderThan(qint64 mSecsSinceEpoch) const
     {
-        return this->m_timestampMSecsSinceEpoch < mSecsSinceEpoch;
+        return m_timestampMSecsSinceEpoch < mSecsSinceEpoch;
     }
 
     bool ITimestampBased::isOlderThanNowMinusOffset(int offsetMs) const
     {
         if (offsetMs <= 0) { return false; }
-        return this->m_timestampMSecsSinceEpoch < (QDateTime::currentMSecsSinceEpoch() - offsetMs);
+        return m_timestampMSecsSinceEpoch < (QDateTime::currentMSecsSinceEpoch() - offsetMs);
     }
 
     bool ITimestampBased::isSame(const ITimestampBased &otherTimestampObj) const
     {
-        return this->m_timestampMSecsSinceEpoch == otherTimestampObj.m_timestampMSecsSinceEpoch;
+        return m_timestampMSecsSinceEpoch == otherTimestampObj.m_timestampMSecsSinceEpoch;
     }
 
     qint64 ITimestampBased::msecsTo(const ITimestampBased &otherTimestampObj) const
     {
-        return otherTimestampObj.m_timestampMSecsSinceEpoch - this->m_timestampMSecsSinceEpoch;
+        return otherTimestampObj.m_timestampMSecsSinceEpoch - m_timestampMSecsSinceEpoch;
     }
 
     qint64 ITimestampBased::absMsecsTo(const ITimestampBased &otherTimestampObj) const
@@ -128,18 +128,18 @@ namespace BlackMisc
 
     qint64 ITimestampBased::msecsToNow() const
     {
-        if (this->m_timestampMSecsSinceEpoch < 0) return QDateTime::currentMSecsSinceEpoch();
-        return QDateTime::currentMSecsSinceEpoch() - this->m_timestampMSecsSinceEpoch;
+        if (m_timestampMSecsSinceEpoch < 0) return QDateTime::currentMSecsSinceEpoch();
+        return QDateTime::currentMSecsSinceEpoch() - m_timestampMSecsSinceEpoch;
     }
 
     void ITimestampBased::setCurrentUtcTime()
     {
-        this->m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
+        m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
     }
 
     void ITimestampBased::addMsecs(qint64 ms)
     {
-        this->m_timestampMSecsSinceEpoch += ms;
+        m_timestampMSecsSinceEpoch += ms;
     }
 
     QString ITimestampBased::getFormattedUtcTimestampMdhms() const
@@ -200,7 +200,7 @@ namespace BlackMisc
 
     bool ITimestampBased::hasValidTimestamp() const
     {
-        return this->m_timestampMSecsSinceEpoch >= 0;
+        return m_timestampMSecsSinceEpoch >= 0;
     }
 
     bool ITimestampBased::canHandleIndex(const CPropertyIndex &index)
@@ -250,7 +250,7 @@ namespace BlackMisc
             case IndexUtcTimestampFormattedDhms:
                 {
                     const QDateTime dt = QDateTime::fromString(variant.toQString());
-                    this->m_timestampMSecsSinceEpoch = dt.toMSecsSinceEpoch();
+                    m_timestampMSecsSinceEpoch = dt.toMSecsSinceEpoch();
                 }
                 return;
             default: break;
@@ -263,7 +263,7 @@ namespace BlackMisc
     int ITimestampBased::comparePropertyByIndex(const CPropertyIndex &index, const ITimestampBased &compareValue) const
     {
         Q_UNUSED(index);
-        return Compare::compare(this->m_timestampMSecsSinceEpoch, compareValue.m_timestampMSecsSinceEpoch);
+        return Compare::compare(m_timestampMSecsSinceEpoch, compareValue.m_timestampMSecsSinceEpoch);
     }
 
     QString ITimestampWithOffsetBased::getTimestampAndOffset(bool formatted) const
@@ -280,6 +280,26 @@ namespace BlackMisc
         static const QString ts("%1/%2 (%3)");
         if (!this->hasValidTimestamp()) { return ts.arg("-", "-", this->getTimeOffsetWithUnit()); }
         return ts.arg(this->getFormattedUtcTimestampHmsz()).arg(m_timestampMSecsSinceEpoch).arg(this->getTimeOffsetWithUnit());
+    }
+
+    bool ITimestampWithOffsetBased::isNewerThanAdjusted(const ITimestampWithOffsetBased &otherTimestampObj) const
+    {
+        return this->getAdjustedMSecsSinceEpoch() > otherTimestampObj.getAdjustedMSecsSinceEpoch();
+    }
+
+    bool ITimestampWithOffsetBased::isNewerThanAdjusted(qint64 mSecsSinceEpoch) const
+    {
+        return this->getAdjustedMSecsSinceEpoch() > mSecsSinceEpoch;
+    }
+
+    bool ITimestampWithOffsetBased::isOlderThanAdjusted(const ITimestampWithOffsetBased &otherTimestampObj) const
+    {
+        return this->getAdjustedMSecsSinceEpoch() < otherTimestampObj.getAdjustedMSecsSinceEpoch();
+    }
+
+    bool ITimestampWithOffsetBased::isOlderThanAdjusted(qint64 mSecsSinceEpoch) const
+    {
+        return this->getAdjustedMSecsSinceEpoch() < mSecsSinceEpoch;
     }
 
     bool ITimestampWithOffsetBased::canHandleIndex(const CPropertyIndex &index)

@@ -176,6 +176,18 @@ namespace BlackMisc
         //! Timestamp and offset
         QString getFormattedTimestampAndOffset(bool includeRawTimestamp) const;
 
+        //! Is this newer than other?
+        bool isNewerThanAdjusted(const ITimestampWithOffsetBased &otherTimestampObj) const;
+
+        //! Is newer than epoch value?
+        bool isNewerThanAdjusted(qint64 mSecsSinceEpoch) const;
+
+        //! Is this older than other?
+        bool isOlderThanAdjusted(const ITimestampWithOffsetBased &otherTimestampObj) const;
+
+        //! Is this older than other?
+        bool isOlderThanAdjusted(qint64 mSecsSinceEpoch) const;
+
     protected:
         //! Can given index be handled
         static bool canHandleIndex(const CPropertyIndex &index);
