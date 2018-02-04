@@ -76,7 +76,7 @@ namespace BlackMisc
 
             //! Get the interpolant for the given time point
             Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-                                       const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log) const;
+                                       const CInterpolationHints &hints, CInterpolationStatus &status, SituationLog &log) const;
         };
     } // ns
 } // ns

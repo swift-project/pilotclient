@@ -94,7 +94,7 @@ namespace BlackMisc
             Interpolant getInterpolant(
                 qint64 currentTimeMsSinceEpoc,
                 const CInterpolationAndRenderingSetup &setup,
-                const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log);
+                const CInterpolationHints &hints, CInterpolationStatus &status, SituationLog &log);
 
         private:
             qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset

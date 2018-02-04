@@ -97,7 +97,7 @@ namespace BlackMisc
 
         CInterpolatorSpline::Interpolant CInterpolatorSpline::getInterpolant(qint64 currentTimeMsSinceEpoc,
                 const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status,
-                CInterpolationLogger::SituationLog &log)
+                SituationLog &log)
         {
             Q_UNUSED(hints);
             Q_UNUSED(setup);

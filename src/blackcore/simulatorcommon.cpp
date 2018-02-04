@@ -806,8 +806,8 @@ namespace BlackCore
             return;
         }
 
-        const CInterpolationLogger::SituationLog s = m_interpolationLogger.getLastSituationLog(cs);
-        const CInterpolationLogger::PartsLog p = m_interpolationLogger.getLastPartsLog(cs);
+        const SituationLog s = m_interpolationLogger.getLastSituationLog(cs);
+        const PartsLog p = m_interpolationLogger.getLastPartsLog(cs);
 
         QString dm;
         static const QString sep("\n");

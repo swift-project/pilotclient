@@ -128,7 +128,7 @@ namespace BlackMisc
                    CStatusMessage(static_cast<CInterpolationLogger *>(nullptr)).error("Failed to write log file '%1'") << fileName;
         }
 
-        void CInterpolationLogger::logInterpolation(const CInterpolationLogger::SituationLog &log)
+        void CInterpolationLogger::logInterpolation(const SituationLog &log)
         {
             QWriteLocker l(&m_lockSituations);
             m_situationLogs.push_back(log);
@@ -138,7 +138,7 @@ namespace BlackMisc
             }
         }
 
-        void CInterpolationLogger::logParts(const CInterpolationLogger::PartsLog &log)
+        void CInterpolationLogger::logParts(const PartsLog &log)
         {
             QWriteLocker l(&m_lockParts);
             m_partsLogs.push_back(log);
@@ -150,19 +150,19 @@ namespace BlackMisc
             m_maxSituations = max;
         }
 
-        QList<CInterpolationLogger::SituationLog> CInterpolationLogger::getSituationsLog() const
+        QList<SituationLog> CInterpolationLogger::getSituationsLog() const
         {
             QReadLocker l(&m_lockSituations);
             return m_situationLogs;
         }
 
-        QList<CInterpolationLogger::PartsLog> CInterpolationLogger::getPartsLog() const
+        QList<PartsLog> CInterpolationLogger::getPartsLog() const
         {
             QReadLocker l(&m_lockParts);
             return m_partsLogs;
         }
 
-        QList<CInterpolationLogger::SituationLog> CInterpolationLogger::getSituationsLog(const CCallsign &cs) const
+        QList<SituationLog> CInterpolationLogger::getSituationsLog(const CCallsign &cs) const
         {
             const QList<SituationLog> copy(this->getSituationsLog());
             QList<SituationLog> logs;
@@ -174,7 +174,7 @@ namespace BlackMisc
             return logs;
         }
 
-        QList<CInterpolationLogger::PartsLog> CInterpolationLogger::getPartsLog(const CCallsign &cs) const
+        QList<PartsLog> CInterpolationLogger::getPartsLog(const CCallsign &cs) const
         {
             const QList<PartsLog> copy(this->getPartsLog());
             QList<PartsLog> logs;
@@ -186,14 +186,14 @@ namespace BlackMisc
             return logs;
         }
 
-        CInterpolationLogger::SituationLog CInterpolationLogger::getLastSituationLog() const
+        SituationLog CInterpolationLogger::getLastSituationLog() const
         {
             QReadLocker l(&m_lockSituations);
             if (m_situationLogs.isEmpty()) { return SituationLog(); }
             return m_situationLogs.last();
         }
 
-        CInterpolationLogger::SituationLog CInterpolationLogger::getLastSituationLog(const CCallsign &cs) const
+        SituationLog CInterpolationLogger::getLastSituationLog(const CCallsign &cs) const
         {
             const QList<SituationLog> copy(this->getSituationsLog(cs));
             if (copy.isEmpty()) { return SituationLog(); }
@@ -228,14 +228,14 @@ namespace BlackMisc
             return copy.last().parts;
         }
 
-        CInterpolationLogger::PartsLog CInterpolationLogger::getLastPartsLog() const
+        PartsLog CInterpolationLogger::getLastPartsLog() const
         {
             QReadLocker l(&m_lockParts);
             if (m_partsLogs.isEmpty()) { return PartsLog(); }
             return m_partsLogs.last();
         }
 
-        CInterpolationLogger::PartsLog CInterpolationLogger::getLastPartsLog(const CCallsign &cs) const
+        PartsLog CInterpolationLogger::getLastPartsLog(const CCallsign &cs) const
         {
             const QList<PartsLog> copy(this->getPartsLog(cs));
             if (copy.isEmpty()) { return PartsLog(); }
@@ -463,7 +463,7 @@ namespace BlackMisc
                    );
         }
 
-        QString CInterpolationLogger::PartsLog::toQString(const QString &separator) const
+        QString PartsLog::toQString(const QString &separator) const
         {
             return QStringLiteral("CS: ") % callsign.asString() % separator %
                    QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
@@ -471,7 +471,7 @@ namespace BlackMisc
                    QStringLiteral("parts: ") % parts.toQString(true);
         }
 
-        const QString &CInterpolationLogger::SituationLog::interpolationType() const
+        const QString &SituationLog::interpolationType() const
         {
             static const QString s("spline");
             static const QString l("linear");

@@ -28,6 +28,69 @@ namespace BlackMisc
     class CWorker;
     namespace Simulation
     {
+        //! Log entry for situation interpolation
+        struct BLACKMISC_EXPORT SituationLog
+        {
+            QChar interpolator;          //!< what interpolator is used
+            qint64 tsCurrent = -1;       //!< current timestamp
+            qint64 tsInterpolated = -1;  //!< timestamp interpolated
+            double groundFactor = -1;    //!< current ground factor
+            double vtolAircraft = false; //!< VTOL aircraft
+            double simulationTimeFraction = -1; //!< time fraction, expected 0..1
+            double deltaSampleTimesMs = -1;     //!< delta time between samples (i.e. 2 situations)
+            bool useParts = false;              //!< supporting aircraft parts
+            int noNetworkSituations = 0;        //!< available network situations
+            int noTransferredElevations = 0;    //!< transferred elevation to n situations
+            QString elevationInfo;              //!< info about elevation retrieval
+            Aviation::CCallsign callsign;       //!< current callsign
+            Aviation::CAircraftParts parts;     //!< corresponding parts used in interpolator
+            Aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (oldest at end)
+            Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
+            PhysicalQuantities::CLength  cgAboveGround;    //!< center of gravity
+            CInterpolationAndRenderingSetup usedSetup;     //!< used setup
+            CInterpolationHints usedHints; //!< hints
+
+            //! Delta time between interpolation and current time
+            double deltaCurrentToInterpolatedTime() const
+            {
+                return static_cast<double>(tsCurrent - tsInterpolated);
+            }
+
+            //! Full name of interpolator
+            const QString &interpolationType() const;
+
+            //! The oldest situation
+            const Aviation::CAircraftSituation &oldestInterpolationSituation() const
+            {
+                return interpolationSituations.frontOrDefault();
+            }
+
+            //! The newest situation
+            const Aviation::CAircraftSituation &newestInterpolationSituation() const
+            {
+                return interpolationSituations.backOrDefault();
+            }
+
+            //! To string
+            QString toQString(
+                bool withHints, bool withSetup,
+                bool withCurrentSituation, bool withElevation,
+                bool withOtherPositions, bool withDeltaTimes, const QString &separator = {" "}) const;
+        };
+
+        //! Log entry for parts interpolation
+        struct BLACKMISC_EXPORT PartsLog
+        {
+            qint64 tsCurrent = -1;  //!< current timestamp
+            bool empty = false;     //!< empty parts?
+            int noNetworkParts = 0; //!< available network situations
+            Aviation::CCallsign callsign;   //!< current callsign
+            Aviation::CAircraftParts parts; //!< parts to be logged
+
+            //! To string
+            QString toQString(const QString &separator = {" "}) const;
+        };
+
         //! Record internal state of interpolator for debugging
         class BLACKMISC_EXPORT CInterpolationLogger : public QObject
         {
@@ -122,6 +185,15 @@ namespace BlackMisc
             //! All log.file patterns
             static const QStringList &filePatterns();
 
+            //! Create readable time
+            static QString msSinceEpochToTime(qint64 ms);
+
+            //! Create readable time plus timestamp
+            static QString msSinceEpochToTimeAndTimestamp(qint64 ms);
+
+            //! Create readable time
+            static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
+
         private:
             //! Get log as HTML table
             static QString getHtmlInterpolationLog(const QList<SituationLog> &getSituationsLog);
@@ -134,15 +206,6 @@ namespace BlackMisc
 
             //! Status of file operation
             static CStatusMessage logStatusFileWriting(bool success, const QString &fileName);
-
-            //! Create readable time
-            static QString msSinceEpochToTime(qint64 ms);
-
-            //! Create readable time plus timestamp
-            static QString msSinceEpochToTimeAndTimestamp(qint64 ms);
-
-            //! Create readable time
-            static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
 
             mutable QReadWriteLock m_lockSituations; //!< lock logging situations
             mutable QReadWriteLock m_lockParts;      //!< lock logging parts
