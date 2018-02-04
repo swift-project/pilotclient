@@ -121,16 +121,19 @@ namespace BlackMisc
     }
 
     //! Bool to on/off
-    BLACKMISC_EXPORT QString boolToOnOff(bool v, bool  i18n = false);
+    BLACKMISC_EXPORT const QString &boolToOnOff(bool v);
 
     //! Bool to yes/no
-    BLACKMISC_EXPORT QString boolToYesNo(bool v, bool  i18n = false);
+    BLACKMISC_EXPORT const QString &boolToYesNo(bool v);
 
     //! Bool to true/false
-    BLACKMISC_EXPORT QString boolToTrueFalse(bool v, bool  i18n = false);
+    BLACKMISC_EXPORT const QString &boolToTrueFalse(bool v);
 
     //! Bool to enabled/disabled
-    BLACKMISC_EXPORT QString boolToEnabledDisabled(bool v, bool  i18n = false);
+    BLACKMISC_EXPORT const QString &boolToEnabledDisabled(bool v);
+
+    //! Bool isNull to null/no null
+    BLACKMISC_EXPORT const QString &boolToNullNotNull(bool isNull);
 
     //! Convert string to bool
     BLACKMISC_EXPORT bool stringToBool(const QString &boolString);
@@ -246,10 +249,10 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_STRING(DERIVED)                \
-            using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
-            using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
-            using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
-            using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
+    using ::BlackMisc::Mixin::String<DERIVED>::toQString;           \
+    using ::BlackMisc::Mixin::String<DERIVED>::toFormattedQString;  \
+    using ::BlackMisc::Mixin::String<DERIVED>::toStdString;         \
+    using ::BlackMisc::Mixin::String<DERIVED>::stringForStreaming;
     } // ns
 } // ns
 

@@ -26,28 +26,39 @@ namespace BlackMisc
         return splitString(s, [](QChar c) { return c == '\n' || c == '\r'; });
     }
 
-    QString boolToOnOff(bool v, bool i18n)
+    const QString &boolToOnOff(bool v)
     {
-        Q_UNUSED(i18n);
-        return v ? "on" : "off";
+        static const QString on("on");
+        static const QString off("off");
+        return v ? on : off;
     }
 
-    QString boolToYesNo(bool v, bool i18n)
+    const QString &boolToYesNo(bool v)
     {
-        Q_UNUSED(i18n);
-        return v ? "yes" : "no";
+        static const QString yes("yes");
+        static const QString no("no");
+        return v ? yes : no;
     }
 
-    QString boolToTrueFalse(bool v, bool i18n)
+    const QString &boolToTrueFalse(bool v)
     {
-        Q_UNUSED(i18n);
-        return v ? "true" : "false";
+        static const QString t("true");
+        static const QString f("false");
+        return v ? t : f;
     }
 
-    QString boolToEnabledDisabled(bool v, bool i18n)
+    const QString &boolToEnabledDisabled(bool v)
     {
-        Q_UNUSED(i18n);
-        return v ? "enabled" : "disabled";
+        static const QString e("enabled");
+        static const QString d("disabled");
+        return v ? e : d;
+    }
+
+    const QString &boolToNullNotNull(bool isNull)
+    {
+        static const QString n("null");
+        static const QString nn("not null");
+        return isNull ? n : nn;
     }
 
     bool stringToBool(const QString &string)
