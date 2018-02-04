@@ -421,7 +421,7 @@ namespace BlackMisc
                    QStringLiteral(" | #nw.sit.: ") % QString::number(noNetworkSituations) %
                    (
                        withHints ?
-                       separator % QStringLiteral("hints: ") % usedHints.toQString(true) :
+                       separator % QStringLiteral("hints: ") % usedHints.asString(false, true) :
                        QStringLiteral("")
                    ) %
                    (

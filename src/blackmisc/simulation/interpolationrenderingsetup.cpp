@@ -167,8 +167,8 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             return
-                QStringLiteral("Debug sim: ") % boolToYesNo(m_simulatorDebugMessages) %
-                QStringLiteral(" debug interpolator: ") % boolToYesNo(m_interpolatorDebugMessage) %
+                QStringLiteral("Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
+                QStringLiteral(" dbg.inter.msgs.: ") % boolToYesNo(m_interpolatorDebugMessages) %
                 QStringLiteral(" force full interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
                 QStringLiteral(" max.aircraft:") % QString::number(m_maxRenderedAircraft) %
                 QStringLiteral(" max.distance:") % m_maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::NM(), 2);
@@ -180,7 +180,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexInterpolatorDebugMessages: return CVariant::fromValue(m_interpolatorDebugMessage);
+            case IndexInterpolatorDebugMessages: return CVariant::fromValue(m_interpolatorDebugMessages);
             case IndexSimulatorDebugMessages: return CVariant::fromValue(m_simulatorDebugMessages);
             case IndexForceFullInterpolation: return CVariant::fromValue(m_forceFullInterpolation);
             case IndexMaxRenderedAircraft: return CVariant::fromValue(m_maxRenderedAircraft);
@@ -200,7 +200,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexInterpolatorDebugMessages: m_interpolatorDebugMessage = variant.toBool(); break;
+            case IndexInterpolatorDebugMessages: m_interpolatorDebugMessages = variant.toBool(); break;
             case IndexSimulatorDebugMessages: m_simulatorDebugMessages = variant.toBool(); break;
             case IndexForceFullInterpolation: m_forceFullInterpolation = variant.toBool(); break;
             case IndexMaxRenderedAircraft: m_maxRenderedAircraft = variant.toInt(); break;

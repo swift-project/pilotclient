@@ -144,16 +144,26 @@ namespace BlackMisc
 
         QString CInterpolationHints::convertToQString(bool i18n) const
         {
+            Q_UNUSED(i18n);
+            return this->asString(true, true);
+        }
+
+        QString CInterpolationHints::asString(bool withParts, bool withElevationPlane) const
+        {
             return
                 QStringLiteral("VTOL: ") % boolToYesNo(m_isVtol) %
                 QStringLiteral(" parts: ") % boolToYesNo(m_hasParts) %
                 (
-                    m_hasParts ?
-                    QStringLiteral(" parts: ") % m_aircraftParts.toQString(i18n) :
+                    withParts && m_hasParts ?
+                    QStringLiteral(" parts: ") % m_aircraftParts.toQString(true) :
                     QStringLiteral("")
                 ) %
                 QStringLiteral(" CG: ") % m_cgAboveGround.valueRoundedWithUnit(CLengthUnit::m(), 1) %
-                QStringLiteral(" elv.plane: ") % m_elevationPlane.toQString(i18n) %
+                (
+                    withElevationPlane ?
+                    QStringLiteral(" elv.plane: ") % m_elevationPlane.toQString(true) :
+                    QStringLiteral(" elv.plane: ") % boolToNullNotNull(m_elevationPlane.isNull())
+                ) %
                 QStringLiteral(" elv.pr.: ") % boolToYesNo(m_elevationProvider ? true : false);
         }
 

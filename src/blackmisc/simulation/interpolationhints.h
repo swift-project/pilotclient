@@ -127,6 +127,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Formatted as string
+            QString asString(bool withParts, bool withElevationPlane) const;
+
             //! For debugging
             QString debugInfo(const Geo::CElevationPlane &deltaElevation) const;
 
