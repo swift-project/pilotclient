@@ -12,8 +12,6 @@
 #ifndef BLACKSIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
 #define BLACKSIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
 
-
-
 #include "blackmisc/genericdbusinterface.h"
 
 #include <QDBusError>
@@ -36,7 +34,6 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         /*!
          * Proxy object connected to a real XSwiftBus::CService object via DBus
          */

@@ -243,9 +243,10 @@ namespace XSwiftBus
         {
             using namespace BlackMisc::PhysicalQuantities;
             using namespace BlackMisc::Aviation;
+            using namespace BlackMisc::Geo;
             CAircraftSituation situation(
                 callsign,
-                BlackMisc::Geo::CCoordinateGeodetic(latitude, longitude, altitude),
+                CCoordinateGeodetic(latitude, longitude, altitude),
                 CHeading(heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(pitch, CAngleUnit::deg()),
                 CAngle(roll, CAngleUnit::deg()),

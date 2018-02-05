@@ -50,7 +50,7 @@ namespace BlackMisc
         {
             if (coordinate.isNull()) { return false; }
             if (radius.isNull()) { return false; }
-            if (isNull()) { return false; }
+            if (this->isNull()) { return false; }
             const CLength d = this->calculateGreatCircleDistance(coordinate);
             const bool inRange = (radius >= d);
             return inRange;
