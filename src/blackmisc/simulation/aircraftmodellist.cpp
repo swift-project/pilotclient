@@ -321,6 +321,22 @@ namespace BlackMisc
             return m.getIconPath();
         }
 
+        CAircraftModelList CAircraftModelList::findModelsWithoutExistingFile() const
+        {
+            return this->findBy([](const CAircraftModel & model)
+            {
+                return !model.existsCorrespondingFile();
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findModelsWithExistingFile() const
+        {
+            return this->findBy([](const CAircraftModel & model)
+            {
+                return model.existsCorrespondingFile();
+            });
+        }
+
         QString CAircraftModelList::designatorToFamily(const CAircraftIcaoCode &aircraftIcaoCode) const
         {
             if (aircraftIcaoCode.hasFamily()) { return aircraftIcaoCode.getFamily(); }

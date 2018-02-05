@@ -124,7 +124,7 @@ namespace BlackMisc
             //! Find by livery code
             CAircraftModelList findByLiveryCode(const Aviation::CLivery &livery) const;
 
-            //! With file name
+            //! Models with file name
             CAircraftModelList findWithFileName() const;
 
             //! All models from given distributors
@@ -177,6 +177,12 @@ namespace BlackMisc
 
             //! Model icon path
             QString findModelIconPathByCallsign(const Aviation::CCallsign &callsign) const;
+
+            //! Find models where the filename is not set or the file no longer exists
+            CAircraftModelList findModelsWithoutExistingFile() const;
+
+            //! Find models where the filename is set and the file exists
+            CAircraftModelList findModelsWithExistingFile() const;
 
             //! All models of the FS (FSX, P3D, FS9) family
             CAircraftModelList getAllFsFamilyModels() const;
@@ -290,7 +296,7 @@ namespace BlackMisc
             //! From given CDistributorList update the model`s distributor order
             int updateDistributorOrder(const CDistributorList &distributors);
 
-            //! File name normalized for DB
+            //! All file names normalized for DB
             void normalizeFileNamesForDb();
 
             //! Score by aircraft ICAO code

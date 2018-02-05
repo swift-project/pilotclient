@@ -25,8 +25,8 @@
 #include <QString>
 #include <QtGlobal>
 #include <QStringBuilder>
+#include <QFileInfo>
 
-using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Db;
 
@@ -553,7 +553,7 @@ namespace BlackMisc
         {
             if (this->getModelType() == CAircraftModel::TypeOwnSimulatorModel)
             {
-                // this is local model, ignore
+                // this is already a local model, ignore
                 return;
             }
 
@@ -568,6 +568,32 @@ namespace BlackMisc
             // both not local, override empty values
             if (m_fileName.isEmpty()) { this->setFileName(model.getFileName()); }
             if (m_iconPath.isEmpty()) { this->setIconPath(model.getIconPath()); }
+        }
+
+        bool CAircraftModel::adjustLocalFileNames(const QString &newModelDir, const QString &stripModelDirIndicator)
+        {
+            if (!this->hasFileName()) { return false; }
+            const QString md = CFileUtils::normalizeFilePathToQtStandard(newModelDir);
+            int i = -1;
+            if (stripModelDirIndicator.isEmpty())
+            {
+                QString strip = md.mid(md.lastIndexOf('/'));
+                i = m_fileName.lastIndexOf(strip);
+            }
+            else
+            {
+                i = m_fileName.lastIndexOf(stripModelDirIndicator);
+            }
+            if (i < 0) { return false; }
+            m_fileName = CFileUtils::appendFilePaths(newModelDir, m_fileName.mid(i));
+            return true;
+        }
+
+        bool CAircraftModel::existsCorrespondingFile() const
+        {
+            if (!this->hasFileName()) { return false; }
+            const QFileInfo fi(this->getFileName());
+            return (fi.exists() && fi.isReadable());
         }
 
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
