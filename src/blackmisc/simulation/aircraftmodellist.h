@@ -12,16 +12,14 @@
 #ifndef BLACKMISC_SIMULATION_AIRCRAFTMODELLIST_H
 #define BLACKMISC_SIMULATION_AIRCRAFTMODELLIST_H
 
-#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/orderablelist.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
 
@@ -36,9 +34,9 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        class CAircraftIcaoCode;
         class CCallsign;
         class CLivery;
+        class CAirlineIcao;
     }
 
     namespace Simulation
@@ -266,6 +264,10 @@ namespace BlackMisc
 
             //! Aircraft designators
             QSet<QString> getAircraftDesignators() const;
+
+            //! Aircraft designators for airline
+            //! \remark gives all aircraft flown by an airline
+            QSet<QString> getAircraftDesignatorsForAirline(const Aviation::CAirlineIcaoCode &airlineCode) const;
 
             //! Airline designators
             QSet<QString> getAirlineDesignators() const;

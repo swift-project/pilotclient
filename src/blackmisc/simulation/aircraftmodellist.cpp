@@ -10,6 +10,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/compare.h"
@@ -692,6 +693,18 @@ namespace BlackMisc
             for (const CAircraftModel &model : *this)
             {
                 if (!model.hasAircraftDesignator()) { continue; }
+                designators.insert(model.getAircraftIcaoCodeDesignator());
+            }
+            return designators;
+        }
+
+        QSet<QString> CAircraftModelList::getAircraftDesignatorsForAirline(const CAirlineIcaoCode &airlineCode) const
+        {
+            QSet<QString> designators;
+            if (!airlineCode.hasValidDesignator()) { return designators; }
+            for (const CAircraftModel &model : *this)
+            {
+                if (model.getAirlineIcaoCode() != airlineCode) { continue; }
                 designators.insert(model.getAircraftIcaoCodeDesignator());
             }
             return designators;
