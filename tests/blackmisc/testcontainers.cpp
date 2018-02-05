@@ -46,7 +46,6 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackMiscTest
 {
-
     void CTestContainers::collectionBasics()
     {
         CCollection<int> c1;
@@ -267,7 +266,6 @@ namespace BlackMiscTest
                 QVERIFY2(situations.front().getMSecsSinceEpoch() == cTs, "Wrong front element");
             }
         }
-
     }
 
 } //namespace

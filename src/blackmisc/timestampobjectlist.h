@@ -95,11 +95,11 @@ namespace BlackMisc
         //! Insert as first element by keeping maxElements and the latest first
         void push_frontKeepLatestFirst(const OBJ &value, int maxElements = -1);
 
-        //! Is completelty sorted: latest last
+        //! Is completely sorted: latest last
         //! \remark all object must have a valid timestamp
         bool isSortedLatestLast() const;
 
-        //! Is completelty sorted: latest last
+        //! Is completely sorted: latest last
         //! \remark all object must have a valid timestamp
         bool isSortedLatestFirst() const;
 
@@ -128,11 +128,11 @@ namespace BlackMisc
         //! Insert as first element by keeping maxElements and the latest first
         void push_frontKeepLatestAdjustedFirst(const OBJ &value, int maxElements = -1);
 
-        //! Is completelty sorted: latest last
+        //! Is completely sorted: latest last
         //! \remark all object must have a valid timestamp
         bool isSortedAdjustedLatestLast() const;
 
-        //! Is completelty sorted: latest last
+        //! Is completely sorted: latest last
         //! \remark all object must have a valid timestamp
         bool isSortedAdjustedLatestFirst() const;
 

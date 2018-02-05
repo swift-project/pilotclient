@@ -26,7 +26,6 @@
 namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace BlackMiscTest
 {
-
     /*!
      * Interpolator classes basic tests
      */
@@ -48,9 +47,7 @@ namespace BlackMiscTest
 
         //! Test parts
         static BlackMisc::Aviation::CAircraftParts getTestParts(int number, qint64 ts, qint64 deltaT);
-
     };
-
 } // namespace
 
 //! \endcond
