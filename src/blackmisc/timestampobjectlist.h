@@ -125,8 +125,15 @@ namespace BlackMisc
         //! Sort by adjusted timestamp
         void sortAdjustedOldestFirst();
 
+        //! Any negative or zero offset time?
+        bool containsZeroOrNegativeOffsetTime() const;
+
         //! Insert as first element by keeping maxElements and the latest first
         void push_frontKeepLatestAdjustedFirst(const OBJ &value, int maxElements = -1);
+
+        //! Insert as first element by keeping maxElements and the latest first
+        //! \remark adjust offset so adjusted values are sorted
+        void push_frontKeepLatestFirstAdjustOffset(const OBJ &value, int maxElements = -1);
 
         //! Is completely sorted: latest last
         //! \remark all object must have a valid timestamp

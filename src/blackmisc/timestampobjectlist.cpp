@@ -232,17 +232,18 @@ namespace BlackMisc
         {
             c.truncate(maxElements - 1);
         }
-        if (!c.isEmpty() && value.isOlderThan(c.front()))
+        const bool needSort = !c.isEmpty() && value.isOlderThan(c.front());
+        c.push_front(value);
+        if (needSort)
         {
             ITimestampObjectList::sortLatestFirst();
         }
-        c.push_front(value);
     }
 
     template<class OBJ, class CONTAINER>
     bool ITimestampObjectList<OBJ, CONTAINER>::isSortedLatestLast() const
     {
-        if (this->container().isEmpty()) { return true; }
+        if (this->container().size() < 2) { return true; }
         qint64 max = -1;
         for (const ITimestampBased &obj : this->container())
         {
@@ -257,7 +258,7 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     bool ITimestampObjectList<OBJ, CONTAINER>::isSortedLatestFirst() const
     {
-        if (this->container().isEmpty()) { return true; }
+        if (this->container().size() < 2) { return true; }
         qint64 min = std::numeric_limits <qint64>::max();
         for (const ITimestampBased &obj : this->container())
         {
@@ -283,6 +284,16 @@ namespace BlackMisc
     }
 
     template<class OBJ, class CONTAINER>
+    bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::containsZeroOrNegativeOffsetTime() const
+    {
+        for (const ITimestampWithOffsetBased &obj : this->container())
+        {
+            if (obj.getTimeOffsetMs() <= 0) { return true; }
+        }
+        return false;
+    }
+
+    template<class OBJ, class CONTAINER>
     ITimestampWithOffsetObjectList<OBJ, CONTAINER>::ITimestampWithOffsetObjectList() : ITimestampObjectList<OBJ, CONTAINER>()
     {
         static_assert(std::is_base_of<ITimestampWithOffsetBased, OBJ>::value, "OBJ needs to implement ITimestampBased");
@@ -297,17 +308,41 @@ namespace BlackMisc
         {
             c.truncate(maxElements - 1);
         }
-        if (!c.isEmpty() && value.isOlderThanAdjusted(c.front()))
+        const bool needSort = !c.isEmpty() && value.isOlderThanAdjusted(c.front());
+        c.push_front(value);
+        if (needSort)
         {
             ITimestampWithOffsetObjectList::sortAdjustedLatestFirst();
         }
-        c.push_front(value);
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirstAdjustOffset(const OBJ &value, int maxElements)
+    {
+        ITimestampObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(value, maxElements);
+
+        // now sorted by timestamp
+        // this reflects normally the incoming order
+        CONTAINER &c = this->container();
+        if (c.size() < 2) { return; }
+        const ITimestampWithOffsetBased &front = c.front();
+        ITimestampWithOffsetBased &second = c[1];
+        if (!front.isOlderThanAdjusted(second)) { return; }
+        const qint64 maxOs = front.getAdjustedMSecsSinceEpoch() - second.getMSecsSinceEpoch();
+        const qint64 avgOs = (maxOs + qMax(front.getTimeOffsetMs(), maxOs)) / 2;
+        second.setTimeOffsetMs(avgOs);
+
+        // ts
+        //  8: os 2 adj 10
+        //  6: os 2 adj  8
+        //  5: os 5 adj 10 => max os 3
+        //  0: os 5 adj  5
     }
 
     template<class OBJ, class CONTAINER>
     bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::isSortedAdjustedLatestLast() const
     {
-        if (this->container().isEmpty()) { return true; }
+        if (this->container().size() < 2) { return true; }
         qint64 max = -1;
         for (const ITimestampWithOffsetBased &obj : this->container())
         {
@@ -321,14 +356,13 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::isSortedAdjustedLatestFirst() const
     {
-        if (this->container().isEmpty()) { return true; }
+        if (this->container().size() < 2) { return true; }
         qint64 min = std::numeric_limits <qint64>::max();
         for (const ITimestampWithOffsetBased &obj : this->container())
         {
             if (!obj.hasValidTimestamp()) { return false; }
             if (obj.getAdjustedMSecsSinceEpoch() > min) { return false; }
             min = obj.getAdjustedMSecsSinceEpoch();
-            continue;
         }
         return true;
     }

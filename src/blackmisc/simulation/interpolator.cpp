@@ -238,11 +238,7 @@ namespace BlackMisc
                 return emptyParts;
             }
 
-            // with the latest updates of T243 the order and the offsets are supposed to be correct
-            // so even mixing fast/slow updates shall work
-            Q_ASSERT_X(m_aircraftParts.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
-
-            // Ref T243, KB 2018-02, can be removed in future, we verify parts above
+            // Ref T243, KB 2018-02, can be removed in future, we verify parts when we add parts
             // Parts are supposed to be in correct order
             // const auto end = std::is_sorted_until(m_aircraftParts.begin(), m_aircraftParts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
             // const auto validParts = makeRange(m_aircraftParts.begin(), end);
@@ -328,36 +324,54 @@ namespace BlackMisc
             }
 
             // we add new situations at front and keep the latest values (real time) first
-            m_aircraftSituations.push_frontKeepLatestFirst(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+            m_aircraftSituations.push_frontKeepLatestFirstAdjustOffset(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+
+
+            // with the latest updates of T243 the order and the offsets are supposed to be correct
+            // so even mixing fast/slow updates shall work
+            Q_ASSERT_X(!m_aircraftSituations.containsZeroOrNegativeOffsetTime(), Q_FUNC_INFO, "Missing offset time");
+            Q_ASSERT_X(m_aircraftSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
         }
 
         template <typename Derived>
         void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts)
         {
             const bool hasOffset = parts.hasOffsetTime();
-            const qint64 offset =
-                hasOffset ?
-                parts.getTimeOffsetMs() :
-                m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
+            if (!hasOffset)
+            {
+                const qint64 offset =
+                    hasOffset ?
+                    parts.getTimeOffsetMs() :
+                    m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
+                CAircraftParts copy(parts);
+                copy.setTimeOffsetMs(offset);
+                CInterpolator<Derived>::addAircraftParts(copy);
+                return;
+            }
 
+            // here we have an offset
+            Q_ASSERT_X(parts.hasOffsetTime(), Q_FUNC_INFO, "Missing parts offset");
             if (m_aircraftParts.isEmpty())
             {
                 // make sure we have enough parts to do start interpolating immediately without waiting for more updates
                 // the offsets here (addMSecs) do not really matter
                 CAircraftParts copy(parts);
-                copy.setTimeOffsetMs(offset);
-                copy.addMsecs(-2 * offset);
+                copy.addMsecs(-2 * parts.getTimeOffsetMs());
                 m_aircraftParts.push_frontKeepLatestFirst(copy);
-                copy.addMsecs(offset);
+                copy.addMsecs(parts.getTimeOffsetMs());
                 m_aircraftParts.push_frontKeepLatestFirst(copy);
             }
 
             // we add new situations at front and keep the latest values (real time) first
-            m_aircraftParts.push_frontKeepLatestFirst(parts, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-            if (!hasOffset) { m_aircraftParts.front().setTimeOffsetMs(offset); }
+            m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxSituationsPerCallsign);
 
             // force remote provider to cleanup
             IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
+
+            // with the latest updates of T243 the order and the offsets are supposed to be correct
+            // so even mixing fast/slow updates shall work
+            Q_ASSERT_X(!m_aircraftParts.containsZeroOrNegativeOffsetTime(), Q_FUNC_INFO, "Missing offset time");
+            Q_ASSERT_X(m_aircraftParts.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
         }
 
         template<typename Derived>

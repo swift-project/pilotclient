@@ -1288,7 +1288,7 @@ namespace BlackCore
         // list from new to old
         QWriteLocker lock(&m_lockSituations);
         CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
-        situationList.push_frontMaxElements(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+        situationList.push_frontKeepLatestFirstAdjustOffset(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
 
         // check sort order
         Q_ASSERT_X(situationList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
@@ -1303,7 +1303,7 @@ namespace BlackCore
         // list sorted from new to old
         QWriteLocker lock(&m_lockParts);
         CAircraftPartsList &partsList = m_partsByCallsign[callsign];
-        partsList.push_frontKeepLatestAdjustedFirst(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
+        partsList.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
 
         // remove outdated parts (but never remove the most recent one)
         IRemoteAircraftProvider::removeOutdatedParts(partsList);
