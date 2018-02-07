@@ -34,6 +34,7 @@ namespace BlackMiscTest
         void findTests();
         void dictionaryBasics();
         void timestampList();
+        void offsetTimestampList();
     };
 } // namespace
 

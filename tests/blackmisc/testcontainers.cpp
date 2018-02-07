@@ -268,6 +268,43 @@ namespace BlackMiscTest
         }
     }
 
+    void CTestContainers::offsetTimestampList()
+    {
+        qsrand(QDateTime::currentDateTime().toTime_t());
+        CAircraftSituationList situations;
+        qint64 ts = 1000000;
+        const int no = 10;
+        const int max = 6;
+        int dt = 0;
+
+        for (int i = 0; i < no; ++i)
+        {
+            CAircraftSituation s;
+            s.setMSecsSinceEpoch(ts);
+            s.setCallsign("CS" + QString::number(i));
+
+            if (qrand() % 2 == 0)
+            {
+                // 4500-5500
+                dt = 4500 + (qrand() % 1000);
+                s.setTimeOffsetMs(6000);
+            }
+            else
+            {
+                // 900-1100
+                dt = 900 + (qrand() % 200);
+                s.setTimeOffsetMs(2000);
+            }
+
+            ts += dt;
+            situations.push_frontKeepLatestFirstAdjustOffset(s, max);
+
+            QVERIFY2(situations.size() <= max, "Wrong size");
+            QVERIFY2(situations.isSortedAdjustedLatestFirst(), "Wrong sort order");
+            QVERIFY2(!situations.hasInvalidTimestamps(), "Missing timestamps");
+            QVERIFY2(!situations.containsZeroOrNegativeOffsetTime(), "Missing offset time");
+        }
+    }
 } //namespace
 
 //! \endcond
