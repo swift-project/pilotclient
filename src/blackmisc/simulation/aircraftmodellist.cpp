@@ -452,17 +452,17 @@ namespace BlackMisc
 
         int CAircraftModelList::keepModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
         {
-            int cs = this->size();
+            const int cs = this->size();
             (*this) = (findByModelStrings(modelStrings, sensitivity));
-            int d = cs - this->size();
+            const int d = cs - this->size();
             return d;
         }
 
         int CAircraftModelList::removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
         {
-            int cs = this->size();
+            const int cs = this->size();
             (*this) = (this->findByNotInModelStrings(modelStrings, sensitivity));
-            int d = cs - this->size();
+            const int d = cs - this->size();
             return d;
         }
 

@@ -72,14 +72,9 @@ namespace BlackMisc
 
         QString CAircraftIcaoCode::getDesignatorDbKey() const
         {
-            if (this->isLoadedFromDb())
-            {
-                return this->getDesignator() + " " + this->getDbKeyAsStringInParentheses();
-            }
-            else
-            {
-                return this->getDesignator();
-            }
+            return (this->isLoadedFromDb()) ?
+                   this->getDesignator() % QStringLiteral(" ") % this->getDbKeyAsStringInParentheses() :
+                   this->getDesignator();
         }
 
         QString CAircraftIcaoCode::convertToQString(bool i18n) const

@@ -83,7 +83,7 @@ namespace BlackGui
         void CModelMatcherComponent::tabIndexChanged(int index)
         {
             if (index < 0) { return; }
-            QTabWidget *tw = CGuiUtility::parentTabWidget(this);
+            const QTabWidget *tw = CGuiUtility::parentTabWidget(this);
             Q_ASSERT_X(tw, Q_FUNC_INFO, "Cannot find parent tab widget");
             const QWidget *tabWidget = tw->currentWidget();
             const QWidget *myselfTabWidget = this->parentWidget();
@@ -140,8 +140,7 @@ namespace BlackGui
         {
             if (number > 0 && entity.testFlag(CEntityFlags::ModelEntity) && state == CEntityFlags::ReadFinished)
             {
-                QStringList modelStrings(sGui->getWebDataServices()->getModelStrings());
-                modelStrings.sort();
+                const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings(true));
                 ui->le_ModelString->setCompleter(new QCompleter(modelStrings, this));
             }
         }

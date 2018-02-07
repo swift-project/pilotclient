@@ -35,7 +35,7 @@ namespace BlackMisc
                 IndexSystemString
             };
 
-            //! Known system
+            //! Known systems
             enum System
             {
                 Unspecified, //!< unspecified

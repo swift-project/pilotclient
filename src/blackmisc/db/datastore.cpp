@@ -21,14 +21,14 @@ namespace BlackMisc
     {
         QString IDatastoreObjectWithIntegerKey::getDbKeyAsString() const
         {
-            if (this->m_dbKey < 0) { return ""; }
-            return QString::number(this->m_dbKey);
+            if (m_dbKey < 0) { return ""; }
+            return QString::number(m_dbKey);
         }
 
         QString IDatastoreObjectWithIntegerKey::getDbKeyAsStringInParentheses(const QString &prefix) const
         {
-            if (this->m_dbKey < 0) { return ""; }
-            return prefix + "(" + QString::number(this->m_dbKey) + ")";
+            if (m_dbKey < 0) { return ""; }
+            return prefix + "(" + QString::number(m_dbKey) + ")";
         }
 
         void IDatastoreObjectWithIntegerKey::setDbKey(const QString &key)
@@ -36,7 +36,7 @@ namespace BlackMisc
             bool ok;
             int k = key.toInt(&ok);
             if (!ok) { k = -1; }
-            this->m_dbKey = k;
+            m_dbKey = k;
         }
 
         bool IDatastoreObjectWithIntegerKey::isLoadedFromDb() const
@@ -68,7 +68,7 @@ namespace BlackMisc
 
         QJsonValue IDatastoreObjectWithIntegerKey::getDbKeyAsJsonValue() const
         {
-            if (this->hasValidDbKey()) { return QJsonValue(this->m_dbKey); }
+            if (this->hasValidDbKey()) { return QJsonValue(m_dbKey); }
             return QJsonValue();
         }
 
@@ -96,7 +96,7 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDbIntegerKey: return CVariant::from(this->m_dbKey);
+            case IndexDbIntegerKey: return CVariant::from(m_dbKey);
             case IndexDbKeyAsString: return CVariant::from(this->getDbKeyAsString());
             case IndexIsLoadedFromDb: return CVariant::from(this->hasValidDbKey());
             case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
@@ -112,10 +112,10 @@ namespace BlackMisc
             switch (i)
             {
             case IndexDbIntegerKey:
-                this->m_dbKey = variant.toInt();
+                m_dbKey = variant.toInt();
                 break;
             case IndexDbKeyAsString:
-                this->m_dbKey = stringToDbKey(variant.toQString());
+                m_dbKey = stringToDbKey(variant.toQString());
             default:
                 break;
             }
@@ -128,7 +128,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexDbKeyAsString: // fall thru
-            case IndexDbIntegerKey: return Compare::compare(this->m_dbKey, compareValue.getDbKey());
+            case IndexDbIntegerKey: return Compare::compare(m_dbKey, compareValue.getDbKey());
             case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
             default: break;
             }
@@ -145,14 +145,14 @@ namespace BlackMisc
 
         QJsonValue IDatastoreObjectWithStringKey::getDbKeyAsJsonValue() const
         {
-            if (this->hasValidDbKey()) { return QJsonValue(this->m_dbKey); }
+            if (this->hasValidDbKey()) { return QJsonValue(m_dbKey); }
             static const QJsonValue null;
             return null;
         }
 
         QString IDatastoreObjectWithStringKey::getDbKeyAsStringInParentheses(const QString &prefix) const
         {
-            if (this->m_dbKey.isEmpty()) { return ""; }
+            if (m_dbKey.isEmpty()) { return ""; }
             return prefix + "(" + m_dbKey + ")";
         }
 
@@ -190,9 +190,9 @@ namespace BlackMisc
             switch (i)
             {
             case IndexDbKeyAsString: // fall thru
-            case IndexDbStringKey: return CVariant::from(this->m_dbKey);
+            case IndexDbStringKey: return CVariant::from(m_dbKey);
             case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
-            case IndexIsLoadedFromDb: return CVariant::from(this->m_loadedFromDb);
+            case IndexIsLoadedFromDb: return CVariant::from(m_loadedFromDb);
             default:
                 break;
             }
@@ -207,10 +207,10 @@ namespace BlackMisc
             {
             case IndexDbStringKey:
             case IndexDbKeyAsString:
-                this->m_dbKey = variant.value<QString>();
+                m_dbKey = variant.value<QString>();
                 break;
             case IndexIsLoadedFromDb:
-                this->m_loadedFromDb = variant.toBool();
+                m_loadedFromDb = variant.toBool();
                 break;
             default:
                 break;
@@ -224,7 +224,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexDbKeyAsString: // fall thru
-            case IndexDbStringKey:  return this->m_dbKey.compare(compareValue.getDbKey());
+            case IndexDbStringKey:  return m_dbKey.compare(compareValue.getDbKey());
             case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
             default:
                 break;

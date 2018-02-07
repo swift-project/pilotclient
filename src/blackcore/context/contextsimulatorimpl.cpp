@@ -415,6 +415,9 @@ namespace BlackCore
             BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Remote aircraft with empty callsign");
             if (callsign.isEmpty()) { return; }
 
+            // here we find the best simulator model for a resolved model
+            // in the first step we already tried to find accurate ICAO codes etc.
+            // coming from CAirspaceMonitor::sendReadyForModelMatching
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
             const CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
@@ -423,8 +426,8 @@ namespace BlackCore
             const CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
             CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
-            addMatchingMessages(callsign, matchingMessages);
-            emit modelMatchingCompleted(remoteAircraft);
+            this->addMatchingMessages(callsign, matchingMessages);
+            emit this->modelMatchingCompleted(remoteAircraft);
         }
 
         void CContextSimulator::xCtxRemovedRemoteAircraft(const CCallsign &callsign)

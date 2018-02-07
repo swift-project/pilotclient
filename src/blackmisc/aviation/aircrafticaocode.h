@@ -80,8 +80,11 @@ namespace BlackMisc
             //! Designator and DB key
             QString getDesignatorDbKey() const;
 
+            //! Designator + Manufacturer
+            QString getDesignatorManufacturer() const;
+
             //! Set ICAO designator, e.g. "B737"
-            void setDesignator(const QString &icaoDesignator) { this->m_designator = icaoDesignator.trimmed().toUpper(); }
+            void setDesignator(const QString &icaoDesignator) { m_designator = icaoDesignator.trimmed().toUpper(); }
 
             //! Aircraft designator?
             bool hasDesignator() const;
@@ -99,10 +102,10 @@ namespace BlackMisc
             const QString &getIataCode() const { return m_iataCode; }
 
             //! Set IATA code
-            void setIataCode(const QString &iata) { this->m_iataCode = iata.toUpper().trimmed(); }
+            void setIataCode(const QString &iata) { m_iataCode = iata.toUpper().trimmed(); }
 
             //! Has IATA code?
-            bool hasIataCode() const { return !this->m_iataCode.isEmpty(); }
+            bool hasIataCode() const { return !m_iataCode.isEmpty(); }
 
             //! IATA code same as designator?
             bool isIataSameAsDesignator() const;
@@ -111,16 +114,16 @@ namespace BlackMisc
             const QString &getFamily() const { return m_family; }
 
             //! Set family
-            void setFamily(const QString &family) { this->m_family = family.toUpper().trimmed(); }
+            void setFamily(const QString &family) { m_family = family.toUpper().trimmed(); }
 
             //! Has family?
-            bool hasFamily() const { return !this->m_family.isEmpty(); }
+            bool hasFamily() const { return !m_family.isEmpty(); }
 
             //! Family same as designator?
             bool isFamilySameAsDesignator() const;
 
             //! Get type, e.g. "L2J"
-            const QString &getCombinedType() const { return this->m_combinedType; }
+            const QString &getCombinedType() const { return m_combinedType; }
 
             //! Combined type available?
             bool hasValidCombinedType() const;
@@ -138,7 +141,7 @@ namespace BlackMisc
             QString getAircraftType() const;
 
             //! Set type
-            void setCombinedType(const QString &type) { this->m_combinedType = type.trimmed().toUpper(); }
+            void setCombinedType(const QString &type) { m_combinedType = type.trimmed().toUpper(); }
 
             //! Get IACO model description, e.g. "A-330-200"
             const QString &getModelDescription() const { return m_modelDescription; }
@@ -159,9 +162,6 @@ namespace BlackMisc
             //! \remark * can be used as wildcard, e.g. L*J, L**
             bool matchesCombinedType(const QString &combinedType) const;
 
-            //! Designator + Manufacturer
-            QString getDesignatorManufacturer() const;
-
             //! Set the model description (ICAO description)
             void setModelDescription(const QString &modelDescription) { m_modelDescription = modelDescription.trimmed(); }
 
@@ -172,13 +172,13 @@ namespace BlackMisc
             void setModelSwiftDescription(const QString &modelDescription) { m_modelSwiftDescription = modelDescription.trimmed(); }
 
             //! Has model description?
-            bool hasModelDescription() const { return !this->m_modelDescription.isEmpty(); }
+            bool hasModelDescription() const { return !m_modelDescription.isEmpty(); }
 
             //! Has IATA model description?
-            bool hasModelIataDescription() const { return !this->m_modelIataDescription.isEmpty(); }
+            bool hasModelIataDescription() const { return !m_modelIataDescription.isEmpty(); }
 
             //! Has swift model description?
-            bool hasModelSwiftDescription() const { return !this->m_modelSwiftDescription.isEmpty(); }
+            bool hasModelSwiftDescription() const { return !m_modelSwiftDescription.isEmpty(); }
 
             //! Get manufacturer, e.g. "Airbus"
             const QString &getManufacturer() const { return m_manufacturer; }

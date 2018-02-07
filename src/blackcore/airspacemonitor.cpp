@@ -705,21 +705,23 @@ namespace BlackCore
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
         if (this->isConnected() && remoteAircraft.hasValidCallsign())
         {
-            const QString msg = QString("Ready for matching '%1' with model type '%2'").arg(callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString());
-            const CStatusMessage m = CMatchingUtils::logMessage(callsign, msg, getLogCategories());
+            const QString readyMsg = QString("Ready for matching '%1' with model type '%2'").arg(callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString());
+            const CStatusMessage m = CMatchingUtils::logMessage(callsign, readyMsg, getLogCategories());
             this->addReverseLookupMessage(callsign, m);
             emit this->readyForModelMatching(remoteAircraft);
         }
         else
         {
-            const CStatusMessage m = CMatchingUtils::logMessage(callsign, "Ignoring this aircraft, not found in range list", getLogCategories());
+            const CStatusMessage m = CMatchingUtils::logMessage(callsign, "Ignoring this aircraft, not found in range list, disconnected, or no callsign", getLogCategories());
             this->addReverseLookupMessage(callsign, m);
         }
     }
 
     void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
+        Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
+
         if (!this->isConnected()) { return; }
         const CAtcStationList stationsWithCallsign = m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
@@ -959,7 +961,7 @@ namespace BlackCore
             {
                 const QString resolvedTelephony = CAircraftMatcher::reverseLookupTelephonyDesignator(telephony);
                 airlineIcao.setTelephonyDesignator(resolvedTelephony);
-                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Setting resolved telephoy designator '%1' from '%2'").arg(resolvedTelephony, telephony), getLogCategories());
+                CMatchingUtils::addLogDetailsToList(log, callsign, QString("Setting resolved telephony designator '%1' from '%2'").arg(resolvedTelephony, telephony), getLogCategories());
             }
         }
 

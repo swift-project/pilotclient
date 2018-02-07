@@ -104,12 +104,17 @@ namespace BlackCore
         virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
         virtual bool updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) override;
         virtual void updateMarkAllAsNotRendered() override;
-        virtual void enableReverseLookupMessages(bool enabled) override;
-        virtual bool isReverseLookupMessagesEnabled() const override;
-        virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual bool isAircraftPartsHistoryEnabled() const override;
         virtual void enableAircraftPartsHistory(bool enabled) override;
+        //! @}
+
+        //! \ingroup remoteaircraftprovider
+        //! \ingroup reverselookup
+        //! @{
+        virtual void enableReverseLookupMessages(bool enabled) override;
+        virtual bool isReverseLookupMessagesEnabled() const override;
+        virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
         //! @}
 
         //! Returns the list of users we know about
@@ -289,6 +294,9 @@ namespace BlackCore
         //! Connected with network?
         bool isConnected() const;
 
+        //! Get the currently connected server
+        const BlackMisc::Network::CServer getConnectedServer() const;
+
         //! Supports VATSIM data file
         bool supportsVatsimDataFile() const;
 
@@ -342,23 +350,23 @@ namespace BlackCore
 
         //! Send the information if aircraft and(!) client are available
         //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
+        //! \sa reverseLookupModelWithFlightplanData
         void sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1);
 
         //! Reverse lookup messages
         //! \threadsafe
+        //! \ingroup reverselookup
+        //! @{
         void addReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CStatusMessageList &messages);
-
-        //! Reverse lookup messages
-        //! \threadsafe
         void addReverseLookupMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CStatusMessage &message);
-
-        //! Reverse lookup messages
-        //! \threadsafe
         void addReverseLookupMessage(
             const BlackMisc::Aviation::CCallsign &callsign, const QString &message,
             BlackMisc::CStatusMessage::StatusSeverity severity = BlackMisc::CStatusMessage::SeverityInfo);
+        //! @}
 
         //! Reverse lookup, if available flight plan data are considered
+        //! \remark this is where a model is created based on network data
+        //! \ingroup reverselookup
         BlackMisc::Simulation::CAircraftModel reverseLookupModelWithFlightplanData(
             const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao,
             const QString &airlineIcao, const QString &livery, const QString &modelString,

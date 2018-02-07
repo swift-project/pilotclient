@@ -66,6 +66,9 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="lbl_Enable">
+        <property name="toolTip">
+         <string>Enables / disables future message logging</string>
+        </property>
         <property name="text">
          <string>Enable:</string>
         </property>
