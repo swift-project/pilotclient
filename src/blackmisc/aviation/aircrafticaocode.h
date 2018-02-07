@@ -291,6 +291,12 @@ namespace BlackMisc
             //! \remark normally used with a selected set of ICAO codes or combined types
             int calculateScore(const CAircraftIcaoCode &otherCode, CStatusMessageList *log = nullptr) const;
 
+            //! Null ICAO?
+            bool isNull() const;
+
+            //! NULL object
+            static const CAircraftIcaoCode &null();
+
             //! Valid designator?
             static bool isValidDesignator(const QString &designator);
 

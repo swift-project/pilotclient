@@ -228,6 +228,12 @@ namespace BlackMisc
             //! Score against other code 0..100
             int calculateScore(const CAirlineIcaoCode &otherCode, CStatusMessageList *log = nullptr) const;
 
+            //! Null ICAO?
+            bool isNull() const;
+
+            //! NULL object
+            static const CAirlineIcaoCode &null();
+
             //! Valid designator?
             static bool isValidAirlineDesignator(const QString &airline);
 

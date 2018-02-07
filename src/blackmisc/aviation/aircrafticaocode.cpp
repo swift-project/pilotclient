@@ -196,6 +196,17 @@ namespace BlackMisc
             return score;
         }
 
+        bool CAircraftIcaoCode::isNull() const
+        {
+            return m_designator.isEmpty() && m_manufacturer.isEmpty() && m_modelDescription.isEmpty();
+        }
+
+        const CAircraftIcaoCode &CAircraftIcaoCode::null()
+        {
+            static const CAircraftIcaoCode null;
+            return null;
+        }
+
         bool CAircraftIcaoCode::hasDesignator() const
         {
             return !m_designator.isEmpty();

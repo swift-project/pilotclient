@@ -410,6 +410,17 @@ namespace BlackMisc
             return score;
         }
 
+        bool CAirlineIcaoCode::isNull() const
+        {
+            return m_designator.isNull() && m_iataCode.isNull() && m_telephonyDesignator.isNull();
+        }
+
+        const CAirlineIcaoCode &CAirlineIcaoCode::null()
+        {
+            static const CAirlineIcaoCode null;
+            return null;
+        }
+
         CAirlineIcaoCode CAirlineIcaoCode::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             if (!existsKey(json, prefix))

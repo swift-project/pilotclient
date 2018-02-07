@@ -423,5 +423,16 @@ namespace BlackMisc
             }
             return score;
         }
+
+        bool CLivery::isNull() const
+        {
+            return m_airline.isNull() && m_combinedCode.isEmpty() && m_description.isEmpty();
+        }
+
+        const CLivery &CLivery::null()
+        {
+            static const CLivery null;
+            return null;
+        }
     } // namespace
 } // namespace
