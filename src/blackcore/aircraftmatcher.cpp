@@ -69,7 +69,7 @@ namespace BlackCore
                 break;
             }
 
-            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Two invalid airline ICAO codes '%1', '%2'").arg(primaryIcao, secondaryIcao), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Two invalid airline ICAO codes (primary/secondary) '%1', '%2'").arg(primaryIcao, secondaryIcao), getLogCategories());
             if (airlineFromCallsign)
             {
                 const QString airlineSuffix = callsign.getAirlineSuffix();
@@ -94,8 +94,8 @@ namespace BlackCore
         static const QString format("hh:mm:ss.zzz");
         const QDateTime startTime = QDateTime::currentDateTimeUtc();
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Start matching: UTC %1 ---").arg(startTime.toString(format)));
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models\n%2").arg(modelSet.size()).arg(modelSet.coverageSummary()));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models\n%2").arg(modelSet.size()).arg(modelSet.extCoverageSummary(remoteAircraft.getModel())));
 
         // Before I really search I check some special conditions
         // 1) Manually set model (by user)
@@ -150,8 +150,8 @@ namespace BlackCore
         Q_ASSERT_X(matchedModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
         Q_ASSERT_X(matchedModel.getModelType() != CAircraftModel::TypeUnknown, Q_FUNC_INFO, "Missing model type");
 
-        QDateTime endTime = QDateTime::currentDateTimeUtc();
-        qint64 matchingTime = startTime.msecsTo(endTime);
+        const QDateTime endTime = QDateTime::currentDateTimeUtc();
+        const qint64 matchingTime = startTime.msecsTo(endTime);
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching end: UTC %1, time %2ms ---").arg(endTime.toString(format)).arg(matchingTime));
         return matchedModel;
     }
@@ -411,6 +411,7 @@ namespace BlackCore
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+
         if (candidate.isEmpty()) { return ""; }
         const QStringList designators = sApp->getWebDataServices()->getTelephonyDesignators();
         if (designators.contains(candidate, Qt::CaseInsensitive))
@@ -421,6 +422,56 @@ namespace BlackCore
 
         CMatchingUtils::addLogDetailsToList(log, callsign, QString("Airline name '%1' not found").arg(candidate));
         return "";
+    }
+
+    bool CAircraftMatcher::isKnowAircraftDesignator(const QString &candidate, const CCallsign &callsign, CStatusMessageList *log)
+    {
+        if (!CAircraftIcaoCode::isValidDesignator(candidate))
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("No valid ICAO designator '%1'").arg(candidate));
+            return false;
+        }
+
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+
+        const bool known = sApp->getWebDataServices()->containsAircraftIcaoDesignator(candidate);
+        static const QString sKnown("Known ICAO '%1'");
+        static const QString sUnknown("Unknown ICAO '%1'");
+        CMatchingUtils::addLogDetailsToList(log, callsign, known ? sKnown.arg(candidate) : sUnknown.arg(candidate));
+        return known;
+    }
+
+    CAircraftIcaoCode CAircraftMatcher::searchAmongAirlineAircraft(const QString &candidateString, const CAirlineIcaoCode &airline, const CCallsign &callsign, CStatusMessageList *log)
+    {
+        if (!airline.isLoadedFromDb())
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("No valid airline from DB '%1'").arg(airline.getDesignator()));
+            return CAircraftIcaoCode();
+        }
+
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+
+        const CAircraftIcaoCodeList aircraft = sApp->getWebDataServices()->getAircraftIcaoCodesForAirline(airline);
+        if (aircraft.isEmpty())
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("No aircraft known for airline '%1'").arg(airline.getDesignator()));
+            return CAircraftIcaoCode();
+        }
+
+        const QSet<QString> allIcaos = aircraft.allIcaoCodes();
+        const QString allIcaosStr = allIcaos.toList().join(", ");
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Aircraft '%1' known for airline '%2'").arg(allIcaosStr, airline.getDesignator()));
+
+        const CAircraftIcaoCode code = aircraft.findBestFuzzyMatchOrDefault(candidateString);
+        if (code.hasValidDesignator())
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Aircraft '%1' is best fuzzy search of '%2' for airline '%3'").arg(code.toQString(), candidateString, airline.getDesignator()));
+            return code;
+        }
+
+        return aircraft.front();
     }
 
     CAirlineIcaoCode CAircraftMatcher::callsignToAirline(const CCallsign &callsign, CStatusMessageList *log)

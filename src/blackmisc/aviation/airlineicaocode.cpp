@@ -81,6 +81,13 @@ namespace BlackMisc
             }
         }
 
+        QString CAirlineIcaoCode::getDesignatorDbKey() const
+        {
+            return (this->isLoadedFromDb()) ?
+                   this->getDesignator() % QStringLiteral(" ") % this->getDbKeyAsStringInParentheses() :
+                   this->getDesignator();
+        }
+
         QString CAirlineIcaoCode::getDesignatorNameCountry() const
         {
             QString s(this->getDesignator());
@@ -178,11 +185,11 @@ namespace BlackMisc
         QString CAirlineIcaoCode::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            return m_designator %
-                   QLatin1String(" (") % m_name % QLatin1String(")") %
-                   QLatin1String(" Op: ") % boolToYesNo(this->isOperating()) %
-                   QLatin1String(" VA: ") % boolToYesNo(this->isVirtualAirline()) %
-                   QLatin1String(" Mil: ") % boolToYesNo(this->isMilitary());
+            return this->getDesignatorDbKey() %
+                   (this->hasName() ? QStringLiteral(" ") % m_name : QStringLiteral("")) %
+                   QStringLiteral(" Op: ") % boolToYesNo(this->isOperating()) %
+                   QStringLiteral(" VA: ") % boolToYesNo(this->isVirtualAirline()) %
+                   QStringLiteral(" Mil: ") % boolToYesNo(this->isMilitary());
         }
 
         CVariant CAirlineIcaoCode::propertyByIndex(const CPropertyIndex &index) const

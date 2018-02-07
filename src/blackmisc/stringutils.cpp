@@ -12,6 +12,7 @@
 #include "stringutils.h"
 #include <QChar>
 #include <QTextCodec>
+#include <QStringBuilder>
 #include <QRegularExpression>
 
 namespace BlackMisc
@@ -321,6 +322,14 @@ namespace BlackMisc
     {
         if (cs == Qt::CaseSensitive) { return c1 == c2; }
         return caseInsensitiveStringCompare(c1, c2);
+    }
+
+    const QString inApostrophes(const QString &in, bool ignoreEmpty)
+    {
+        static const QString e;
+        static const QString ea("''");
+        if (in.isEmpty()) { return ignoreEmpty ? e : ea; }
+        return QStringLiteral("'") % in % QStringLiteral("'");
     }
 }
 

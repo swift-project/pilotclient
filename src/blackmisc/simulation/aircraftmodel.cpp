@@ -59,11 +59,11 @@ namespace BlackMisc
         QString CAircraftModel::convertToQString(bool i18n) const
         {
             const QString s =
-                m_modelString %
-                QLatin1String(" type: '") % this->getModelTypeAsString() %
-                QLatin1String("' ICAO: '") % this->getAircraftIcaoCode().toQString(i18n) %
-                QLatin1String("' {") % m_livery.toQString(i18n) %
-                QLatin1String("} file: '") % m_fileName % QLatin1String("'");
+                (this->hasModelString() ? inApostrophes(m_modelString, true) % QStringLiteral(" ") : QStringLiteral("")) %
+                QStringLiteral(" type: '") % this->getModelTypeAsString() %
+                QStringLiteral("' ICAO: '") % this->getAircraftIcaoCode().toQString(i18n) %
+                QStringLiteral("' {") % m_livery.toQString(i18n) %
+                QStringLiteral("} file: '") % m_fileName % QStringLiteral("'");
             return s;
         }
 

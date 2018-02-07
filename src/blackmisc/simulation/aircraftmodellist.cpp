@@ -82,6 +82,12 @@ namespace BlackMisc
             return this->contains(&CAircraftModel::getAircraftIcaoCodeDesignator, aircraftDesignator, &CAircraftModel::getAirlineIcaoCodeDesignator, airlineDesignator);
         }
 
+        bool CAircraftModelList::containsAirlineLivery(const CAirlineIcaoCode &airline) const
+        {
+            if (!airline.hasValidDesignator()) { return false; }
+            return this->contains(&CAircraftModel::getAirlineIcaoCode, airline);
+        }
+
         CAircraftModelList CAircraftModelList::findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             return this->findBy([ & ](const CAircraftModel & model)
@@ -726,6 +732,18 @@ namespace BlackMisc
             return designators;
         }
 
+        CAircraftIcaoCodeList CAircraftModelList::getAicraftIcaoCodesForAirline(const CAirlineIcaoCode &airlineCode) const
+        {
+            CAircraftIcaoCodeList icaos;
+            if (!airlineCode.hasValidDesignator()) { return icaos; }
+            for (const CAircraftModel &model : *this)
+            {
+                if (model.getAirlineIcaoCode() != airlineCode) { continue; }
+                icaos.insert(model.getAircraftIcaoCode());
+            }
+            return icaos;
+        }
+
         QSet<QString> CAircraftModelList::getAirlineDesignators() const
         {
             QSet<QString> designators;
@@ -807,7 +825,7 @@ namespace BlackMisc
             // normally prefer colors if there is no airline
             CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
             CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("--- Start scoring in list with %1 models").arg(this->size()));
-            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), this->coverageSummary());
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), this->extCoverageSummary(remoteModel));
 
             int c = 1;
             for (const CAircraftModel &model : *this)
@@ -1014,6 +1032,19 @@ namespace BlackMisc
                 QStringLiteral(" civilian: ") % QString::number(this->countCivilianAircraft()) % separator %
                 QStringLiteral("Different airlines: ") % QString::number(this->countDifferentAirlines()) % separator %
                 QStringLiteral("Combined types: ") % this->getCombinedTypesAsString();
+        }
+
+        QString CAircraftModelList::extCoverageSummary(const CAircraftModel &checkModel, const QString &separator) const
+        {
+            const bool combined = this->containsCombinedType(checkModel.getAircraftIcaoCode().getCombinedType());
+            const bool airline = checkModel.hasAirlineDesignator() && this->containsAirlineLivery(checkModel.getAirlineIcaoCode());
+            return coverageSummary(separator) % separator %
+                   QStringLiteral("Has combined: ") % boolToYesNo(combined) %
+                   (
+                       checkModel.hasAirlineDesignator() ?
+                       QStringLiteral(" airline '") % checkModel.getAirlineIcaoCodeDesignator() % QStringLiteral("': ") % boolToYesNo(airline) :
+                       QStringLiteral("")
+                   );
         }
     } // namespace
 } // namespace

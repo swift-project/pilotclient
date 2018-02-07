@@ -598,9 +598,9 @@ namespace BlackCore
         return QSet<int>();
     }
 
-    QStringList CWebDataServices::getModelStrings() const
+    QStringList CWebDataServices::getModelStrings(bool sort) const
     {
-        if (m_modelDataReader) { return m_modelDataReader->getModelStringList(); }
+        if (m_modelDataReader) { return m_modelDataReader->getModelStringList(sort); }
         return QStringList();
     }
 
@@ -644,6 +644,20 @@ namespace BlackCore
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAircraftIcaoCodeForDesignator(designator); }
         return CAircraftIcaoCode();
+    }
+
+    QSet<QString> CWebDataServices::getAircraftDesignatorsForAirline(const CAirlineIcaoCode &airline) const
+    {
+        if (!airline.hasValidDesignator()) { return QSet<QString>(); }
+        if (m_modelDataReader) { return m_modelDataReader->getAircraftDesignatorsForAirline(airline); }
+        return QSet<QString>();
+    }
+
+    CAircraftIcaoCodeList CWebDataServices::getAircraftIcaoCodesForAirline(const CAirlineIcaoCode &airline) const
+    {
+        if (!airline.hasValidDesignator()) { return CAircraftIcaoCodeList(); }
+        if (m_modelDataReader) { return m_modelDataReader->getAicraftIcaoCodesForAirline(airline); }
+        return CAircraftIcaoCodeList();
     }
 
     bool CWebDataServices::containsAircraftIcaoDesignator(const QString &designator) const

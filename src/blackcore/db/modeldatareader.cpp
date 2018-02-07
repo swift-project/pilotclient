@@ -112,6 +112,20 @@ namespace BlackCore
             return models.findByKey(dbKey);
         }
 
+        QSet<QString> CModelDataReader::getAircraftDesignatorsForAirline(const CAirlineIcaoCode &code) const
+        {
+            if (!code.hasValidDesignator()) { return QSet<QString>(); }
+            const CAircraftModelList models(this->getModels());
+            return models.getAircraftDesignatorsForAirline(code);
+        }
+
+        CAircraftIcaoCodeList CModelDataReader::getAicraftIcaoCodesForAirline(const CAirlineIcaoCode &code) const
+        {
+            if (!code.hasValidDesignator()) { return CAircraftIcaoCodeList(); }
+            const CAircraftModelList models(this->getModels());
+            return models.getAicraftIcaoCodesForAirline(code);
+        }
+
         CAircraftModelList CModelDataReader::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode)
         {
             if (aircraftDesignator.isEmpty()) { return CAircraftModelList(); }
@@ -151,9 +165,9 @@ namespace BlackCore
             return this->getModels().toDbKeySet();
         }
 
-        QStringList CModelDataReader::getModelStringList() const
+        QStringList CModelDataReader::getModelStringList(bool sort) const
         {
-            return this->getModels().getModelStringList(false);
+            return this->getModels().getModelStringList(sort);
         }
 
         bool CModelDataReader::areAllDataRead() const

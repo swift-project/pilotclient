@@ -90,6 +90,9 @@ namespace BlackMisc
             //! Get country, e.g. "FRANCE"
             const CCountry &getCountry() const { return m_country; }
 
+            //! Designator and DB key
+            QString getDesignatorDbKey() const;
+
             //! Combined string designator, name, country
             QString getDesignatorNameCountry() const;
 

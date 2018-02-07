@@ -73,7 +73,7 @@ namespace BlackCore
             const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
             BlackMisc::CStatusMessageList *log = nullptr) const;
 
-        //! Return the airline ICAO being valid
+        //! Return an valid airline ICAO code
         //! \threadsafe
         static BlackMisc::Aviation::CAirlineIcaoCode failoverValidAirlineIcaoDesignator(
             const BlackMisc::Aviation::CCallsign &callsign,
@@ -82,6 +82,7 @@ namespace BlackCore
 
         //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
+        //! \ingroup reverselookup
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(
             const BlackMisc::Aviation::CCallsign &callsign,
             const BlackMisc::Aviation::CAircraftIcaoCode &networkAircraftIcao,
@@ -91,12 +92,14 @@ namespace BlackCore
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe
+        //! \ingroup reverselookup
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(
             const BlackMisc::Simulation::CAircraftModel &modelToLookup,
             const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
+        //! \ingroup reverselookup
         static BlackMisc::Aviation::CAircraftIcaoCode reverseLookupAircraftIcao(
             const BlackMisc::Aviation::CAircraftIcaoCode &icaoDesignator,
             const BlackMisc::Aviation::CCallsign &logCallsign = BlackMisc::Aviation::CCallsign(),
@@ -104,25 +107,44 @@ namespace BlackCore
 
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
+        //! \ingroup reverselookup
         static BlackMisc::Aviation::CAirlineIcaoCode reverseLookupAirlineIcao(
             const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern,
             const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of standard livery
         //! \threadsafe
+        //! \ingroup reverselookup
         static BlackMisc::Aviation::CLivery reverseLookupStandardLivery(
             const BlackMisc::Aviation::CAirlineIcaoCode &airline,
             const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of airline name
         //! \threadsafe
+        //! \ingroup reverselookup
         static QString reverseLookupAirlineName(
             const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {}, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Lookup of telephony designator
         //! \threadsafe
+        //! \ingroup reverselookup
         static QString reverseLookupTelephonyDesignator(
             const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {},
+            BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Is this designator known?
+        //! \threadsafe
+        static bool isKnowAircraftDesignator(
+            const QString &candidate, const BlackMisc::Aviation::CCallsign &callsign = {},
+            BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Search among the airline aircraft
+        //! \remark only works if an airline is know
+        //! \threadsafe
+        static BlackMisc::Aviation::CAircraftIcaoCode searchAmongAirlineAircraft(
+            const QString &icaoString,
+            const BlackMisc::Aviation::CAirlineIcaoCode &airline,
+            const BlackMisc::Aviation::CCallsign &callsign = {},
             BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Turn callsign into airline

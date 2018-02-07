@@ -31,6 +31,7 @@
 #include <QReadWriteLock>
 #include <QString>
 #include <QStringList>
+#include <QSet>
 
 class QNetworkReply;
 
@@ -87,6 +88,14 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModel getModelForDbKey(int dbKey) const;
 
+            //! Get aircraft ICAO designators (e.g. B737, ..) for given airline
+            //! \threadsafe
+            QSet<QString> getAircraftDesignatorsForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
+
+            //! Get aircraft ICAO designators (e.g. B737, ..) for given airline
+            //! \threadsafe
+            BlackMisc::Aviation::CAircraftIcaoCodeList getAicraftIcaoCodesForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
+
             //! Get model for designator/combined code
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode);
@@ -117,7 +126,7 @@ namespace BlackCore
 
             //! Get model keys
             //! \threadsafe
-            QStringList getModelStringList() const;
+            QStringList getModelStringList(bool sort = false) const;
 
             //! All data read?
             //! \threadsafe

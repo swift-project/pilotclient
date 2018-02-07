@@ -15,9 +15,10 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/orderablelist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessagelist.h"
@@ -36,7 +37,7 @@ namespace BlackMisc
     {
         class CCallsign;
         class CLivery;
-        class CAirlineIcao;
+        class CAirlineIcaoCode;
     }
 
     namespace Simulation
@@ -77,6 +78,9 @@ namespace BlackMisc
 
             //! Contains any model with aircraft and airline ICAO designator?
             bool containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const;
+
+            //! Contains airline livery for given airline
+            bool containsAirlineLivery(const Aviation::CAirlineIcaoCode &airline) const;
 
             //! Contains any model matching any of of passed simulators?
             bool containsMatchingSimulator(const CSimulatorInfo &simulators) const;
@@ -275,6 +279,10 @@ namespace BlackMisc
             //! \remark gives all aircraft flown by an airline
             QSet<QString> getAircraftDesignatorsForAirline(const Aviation::CAirlineIcaoCode &airlineCode) const;
 
+            //! Aircraft ICAO codes for airline
+            //! \remark gives all aircraft flown by an airline
+            Aviation::CAircraftIcaoCodeList getAicraftIcaoCodesForAirline(const Aviation::CAirlineIcaoCode &airlineCode) const;
+
             //! Airline designators
             QSet<QString> getAirlineDesignators() const;
 
@@ -329,8 +337,12 @@ namespace BlackMisc
             //! As HTML summary
             QString asHtmlSummary() const;
 
-            //! What kind of models are represented here
+            //! What kind of models are represented here?
             QString coverageSummary(const QString &separator = "\n") const;
+
+            //! What kind of models are represented here?
+            //! \remark checking for some criteria in the given model
+            QString extCoverageSummary(const CAircraftModel &checkModel, const QString &separator = "\n") const;
         };
     } // ns
 } // ns

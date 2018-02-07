@@ -120,6 +120,9 @@ namespace BlackMisc
         return removeChars(string, [](QChar c) { return !c.isDigit(); });
     }
 
+    //! Return string in apostrophes
+    BLACKMISC_EXPORT const QString inApostrophes(const QString &in, bool ignoreEmpty = false);
+
     //! Bool to on/off
     BLACKMISC_EXPORT const QString &boolToOnOff(bool v);
 

@@ -216,7 +216,7 @@ namespace BlackCore
 
         //! Model strings
         //! \threadsafe
-        QStringList getModelStrings() const;
+        QStringList getModelStrings(bool sort = false) const;
 
         //! Model completer string
         //! \threadsafe
@@ -245,6 +245,14 @@ namespace BlackCore
         //! ICAO code for designator
         //! \threadsafe
         BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
+
+        //! Aircraft ICAO designators for airline
+        //! \threadsafe
+        QSet<QString> getAircraftDesignatorsForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &airline) const;
+
+        //! Aircraft ICAO codes for airline
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForAirline(const BlackMisc::Aviation::CAirlineIcaoCode &airline) const;
 
         //! Contains the given designator?
         //! \threadsafe

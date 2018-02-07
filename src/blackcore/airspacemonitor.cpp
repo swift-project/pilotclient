@@ -971,7 +971,17 @@ namespace BlackCore
             airlineIcao = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign, log);
         }
 
-        const CAircraftIcaoCode aircraftIcao(aircraftIcaoString);
+        CAircraftIcaoCode aircraftIcao(aircraftIcaoString);
+        const bool knownAircraftIcao = CAircraftMatcher::isKnowAircraftDesignator(aircraftIcaoString, callsign, log);
+        if (airlineIcao.isLoadedFromDb() && !knownAircraftIcao)
+        {
+            // we have no valid aircraft ICAO, so we do a fuzzy search among those
+            CAircraftIcaoCode foundIcao = CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
+            if (foundIcao.isLoadedFromDb()) { aircraftIcao = foundIcao; }
+        }
+
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Quality of aircraft ICAO: %1").arg(aircraftIcao.toQString(true)), getLogCategories());
+        CMatchingUtils::addLogDetailsToList(log, callsign, QString("Quality of airline ICAO: %1").arg(airlineIcao.toQString(true)), getLogCategories());
         return CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
     }
 
@@ -979,10 +989,14 @@ namespace BlackCore
     {
         const CCallsign callsign = aircraft.getCallsign();
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
+
         if (this->isAircraftInRange(callsign)) { return false; }
+        if (!sApp || sApp->isShuttingDown()) { return false; }
 
         CSimulatedAircraft newAircraft(aircraft);
         newAircraft.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition()); // distance from myself
+
+        Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
         sApp->getWebDataServices()->updateWithVatsimDataFileData(newAircraft);
 
         // store
@@ -1345,9 +1359,16 @@ namespace BlackCore
         return m_network && m_network->isConnected();
     }
 
+    const CServer CAirspaceMonitor::getConnectedServer() const
+    {
+        if (!this->isConnected()) { return CServer(); }
+        return m_network->getPresetServer();
+    }
+
     bool CAirspaceMonitor::supportsVatsimDataFile() const
     {
-        return sApp && sApp->getWebDataServices() && sApp->getWebDataServices()->getVatsimDataFileReader();
+        const bool dataFile = sApp && sApp->getWebDataServices() && sApp->getWebDataServices()->getVatsimDataFileReader();
+        return dataFile && this->getConnectedServer().getEcosystem().isSystem(CEcosystem::VATSIM);
     }
 
     CLength CAirspaceMonitor::calculateDistanceToOwnAircraft(const CAircraftSituation &situation) const
