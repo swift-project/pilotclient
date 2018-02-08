@@ -18,10 +18,9 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftModelSetLoader::CAircraftModelSetLoader(QObject *parent) :
-            QObject(parent)
+        CAircraftModelSetLoader::CAircraftModelSetLoader(QObject *parent) : QObject(parent)
         {
-            connect(&this->m_caches, &CModelSetCaches::cacheChanged, this, &CAircraftModelSetLoader::cacheChanged);
+            connect(&m_caches, &CModelSetCaches::cacheChanged, this, &CAircraftModelSetLoader::cacheChanged);
         }
 
         CAircraftModelSetLoader::~CAircraftModelSetLoader()
@@ -31,19 +30,19 @@ namespace BlackMisc
 
         CStatusMessage CAircraftModelSetLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_caches.getCurrentSimulator();
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : m_caches.getCurrentSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simulator"); }
-            const CStatusMessage m(this->m_caches.setCachedModels(models, sim));
+            const CStatusMessage m(m_caches.setCachedModels(models, sim));
             return m;
         }
 
         CStatusMessage CAircraftModelSetLoader::replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_caches.getCurrentSimulator();
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : m_caches.getCurrentSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
-            this->m_caches.synchronizeCache(sim);
-            CAircraftModelList allModels(this->m_caches.getSynchronizedCachedModels(sim));
+            m_caches.synchronizeCache(sim);
+            CAircraftModelList allModels(m_caches.getSynchronizedCachedModels(sim));
             const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
             {
@@ -59,25 +58,25 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
             if (this->getSimulator() == simulator) { return; }
-            this->m_caches.setCurrentSimulator(simulator);
-            this->m_caches.synchronizeCurrentCache();
+            m_caches.setCurrentSimulator(simulator);
+            m_caches.synchronizeCurrentCache();
             emit simulatorChanged(simulator);
         }
 
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels() const
         {
-            return this->m_caches.getCurrentCachedModels();
+            return m_caches.getCurrentCachedModels();
         }
 
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            return this->m_caches.getSynchronizedCachedModels(simulator);
+            return m_caches.getSynchronizedCachedModels(simulator);
         }
 
         int CAircraftModelSetLoader::getAircraftModelsCount() const
         {
-            return getAircraftModels().size();
+            return this->getAircraftModels().size();
         }
 
         CAircraftModel CAircraftModelSetLoader::getModelForModelString(const QString &modelString) const
@@ -88,27 +87,27 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelSetLoader::getCachedModels(const CSimulatorInfo &simulator) const
         {
-            return this->m_caches.getCachedModels(simulator);
+            return m_caches.getCachedModels(simulator);
         }
 
         QDateTime CAircraftModelSetLoader::getCacheTimestamp() const
         {
-            return this->m_caches.getCurrentCacheTimestamp();
+            return m_caches.getCurrentCacheTimestamp();
         }
 
         bool CAircraftModelSetLoader::synchronizeCache()
         {
-            return this->m_caches.synchronizeCurrentCache();
+            return m_caches.synchronizeCurrentCache();
         }
 
         bool CAircraftModelSetLoader::admitCache()
         {
-            return this->m_caches.admitCurrentCache();
+            return m_caches.admitCurrentCache();
         }
 
         bool CAircraftModelSetLoader::hasCachedData() const
         {
-            return !this->m_caches.getCurrentCachedModels().isEmpty();
+            return !m_caches.getCurrentCachedModels().isEmpty();
         }
 
         CStatusMessage CAircraftModelSetLoader::clearCache()
@@ -118,7 +117,7 @@ namespace BlackMisc
 
         CSimulatorInfo CAircraftModelSetLoader::getSimulator() const
         {
-            return this->m_caches.getCurrentSimulator();
+            return m_caches.getCurrentSimulator();
         }
 
         QString CAircraftModelSetLoader::getSimulatorAsString() const
@@ -133,7 +132,7 @@ namespace BlackMisc
 
         CSimulatorInfo CAircraftModelSetLoader::simulatorsWithInitializedModelSet() const
         {
-            return this->m_caches.simulatorsWithInitializedCache();
+            return m_caches.simulatorsWithInitializedCache();
         }
 
         void CAircraftModelSetLoader::gracefulShutdown()
@@ -143,12 +142,12 @@ namespace BlackMisc
 
         QString CAircraftModelSetLoader::getInfoString() const
         {
-            return this->m_caches.getInfoString();
+            return m_caches.getInfoString();
         }
 
         QString CAircraftModelSetLoader::getInfoStringFsFamily() const
         {
-            return this->m_caches.getInfoStringFsFamily();
+            return m_caches.getInfoStringFsFamily();
         }
     } // ns
 } // ns

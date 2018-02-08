@@ -29,15 +29,15 @@ namespace BlackGui
             ui->setupUi(this);
             this->setMode(CheckBoxes);
 
-            connect(ui->rb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::ps_RadioButtonChanged);
-            connect(ui->rb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::ps_RadioButtonChanged);
-            connect(ui->rb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::ps_RadioButtonChanged);
-            connect(ui->rb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::ps_RadioButtonChanged);
+            connect(ui->rb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
+            connect(ui->rb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
+            connect(ui->rb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
+            connect(ui->rb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
 
-            connect(ui->cb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::ps_CheckBoxChanged);
-            connect(ui->cb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::ps_CheckBoxChanged);
-            connect(ui->cb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::ps_CheckBoxChanged);
-            connect(ui->cb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::ps_CheckBoxChanged);
+            connect(ui->cb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
+            connect(ui->cb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
+            connect(ui->cb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
+            connect(ui->cb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
         }
 
         CSimulatorSelector::~CSimulatorSelector()
@@ -45,7 +45,7 @@ namespace BlackGui
 
         void CSimulatorSelector::setMode(CSimulatorSelector::Mode mode)
         {
-            this->m_mode = mode;
+            m_mode = mode;
             switch (mode)
             {
             default:
@@ -62,12 +62,12 @@ namespace BlackGui
 
         CSimulatorInfo CSimulatorSelector::getValue() const
         {
-            if (this->m_noSelectionMeansAll && this->isUnselected())
+            if (m_noSelectionMeansAll && this->isUnselected())
             {
                 return CSimulatorInfo::allSimulators();
             }
 
-            switch (this->m_mode)
+            switch (m_mode)
             {
             default:
             case CheckBoxes:
@@ -99,7 +99,7 @@ namespace BlackGui
 
         void CSimulatorSelector::setToLastSelection()
         {
-            const CSimulatorInfo sim = this->m_currentSimulator.get();
+            const CSimulatorInfo sim = m_currentSimulator.get();
             this->setValue(sim);
         }
 
@@ -118,7 +118,7 @@ namespace BlackGui
         bool CSimulatorSelector::isUnselected() const
         {
             bool c = false;
-            switch (this->m_mode)
+            switch (m_mode)
             {
             default:
             case CheckBoxes:
@@ -136,7 +136,7 @@ namespace BlackGui
         bool CSimulatorSelector::areAllSelected() const
         {
             bool c = false;
-            switch (this->m_mode)
+            switch (m_mode)
             {
             default:
             case CheckBoxes:
@@ -162,16 +162,16 @@ namespace BlackGui
             ui->hl_CheckBoxes->setContentsMargins(m);
         }
 
-        void CSimulatorSelector::ps_RadioButtonChanged(bool checked)
+        void CSimulatorSelector::radioButtonChanged(bool checked)
         {
-            if (this->m_mode != RadioButtons) { return; }
+            if (m_mode != RadioButtons) { return; }
             if (!checked) { return; } // only the checked ones are relevant, as the unchecked ones are accompanied with checked events
             emit this->changed(this->getValue());
         }
 
-        void CSimulatorSelector::ps_CheckBoxChanged(bool checked)
+        void CSimulatorSelector::checkBoxChanged(bool checked)
         {
-            if (this->m_mode != CheckBoxes) { return; }
+            if (m_mode != CheckBoxes) { return; }
             Q_UNUSED(checked);
             emit this->changed(this->getValue());
         }

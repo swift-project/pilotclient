@@ -24,14 +24,13 @@ namespace BlackMisc
         namespace Settings
         {
             //! Settings for models
-            class BLACKMISC_EXPORT CModelSettings :
-                public BlackMisc::CValueObject<CModelSettings>
+            class BLACKMISC_EXPORT CModelSettings : public CValueObject<CModelSettings>
             {
             public:
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexAllowExclude = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorSettings
+                    IndexAllowExclude = CPropertyIndex::GlobalIndexCSimulatorSettings
                 };
 
                 //! Default constructor
@@ -47,10 +46,10 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-                BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+                BlackMisc::CVariant propertyByIndex(const CPropertyIndex &index) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-                void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+                void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             private:
                 bool m_allowExcludeModels = false;  //!< Allow excluded models in sets
@@ -62,7 +61,7 @@ namespace BlackMisc
             };
 
             //! Trait for simulator settings
-            struct TModel : public BlackMisc::TSettingTrait<CModelSettings>
+            struct TModel : public TSettingTrait<CModelSettings>
             {
                 //! Key in data cache
                 static const char *key() { return "Models"; }
@@ -72,7 +71,7 @@ namespace BlackMisc
             };
 
             //! Mapping preferences for model distributor list
-            struct TDistributorListPreferences : public BlackMisc::TSettingTrait<BlackMisc::Simulation::CDistributorListPreferences>
+            struct TDistributorListPreferences : public TSettingTrait<Simulation::CDistributorListPreferences>
             {
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
                 static const QString &humanReadable() { static const QString name("Distributor preferences"); return name; }

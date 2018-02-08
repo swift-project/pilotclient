@@ -202,8 +202,7 @@ namespace BlackMisc
 
             //! Settings regarding message handling.
             //! Driver independent part, related to network
-            class BLACKMISC_EXPORT CSimulatorMessagesSettings :
-                public CValueObject<CSimulatorMessagesSettings>
+            class BLACKMISC_EXPORT CSimulatorMessagesSettings : public CValueObject<CSimulatorMessagesSettings>
             {
             public:
                 //! Properties by index

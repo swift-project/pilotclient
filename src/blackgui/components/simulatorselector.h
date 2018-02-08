@@ -46,7 +46,7 @@ namespace BlackGui
             explicit CSimulatorSelector(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSimulatorSelector();
+            virtual ~CSimulatorSelector();
 
             //! How to display
             void setMode(Mode mode);
@@ -79,12 +79,12 @@ namespace BlackGui
             //! Value has been changed
             void changed(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-        private slots:
+        private:
             //! Radio button changed
-            void ps_RadioButtonChanged(bool checked);
+            void radioButtonChanged(bool checked);
 
             //! Checkbox changed
-            void ps_CheckBoxChanged(bool checked);
+            void checkBoxChanged(bool checked);
 
         private:
             QScopedPointer<Ui::CSimulatorSelector> ui;

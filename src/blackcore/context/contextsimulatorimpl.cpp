@@ -30,6 +30,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QMetaObject>
 #include <QStringList>
@@ -37,6 +38,7 @@
 #include <Qt>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
@@ -58,7 +60,8 @@ namespace BlackCore
             this->setObjectName("CContextSimulator");
             CContextSimulator::registerHelp();
 
-            m_enableMatchingMessages = sApp->isDeveloperFlagSet();
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
+            m_enableMatchingMessages = CBuildConfig::isLocalDeveloperDebugBuild() ||  sApp->isDeveloperFlagSet();
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
 
@@ -134,7 +137,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (m_simulatorPlugin.first.isUnspecified())
             {
-                return BlackMisc::Simulation::CSimulatorInternals();
+                return CSimulatorInternals();
             }
 
             Q_ASSERT(m_simulatorPlugin.second);
@@ -184,7 +187,7 @@ namespace BlackCore
             if (m_simulatorPlugin.first.isUnspecified()) { return 0; }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return getModelSet().size();
+            return this->getModelSet().size();
         }
 
         CAircraftModelList CContextSimulator::getModelSetModelsStartingWith(const QString &modelString) const
@@ -196,7 +199,7 @@ namespace BlackCore
             }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return getModelSet().findModelsStartingWith(modelString);
+            return this->getModelSet().findModelsStartingWith(modelString);
         }
 
         bool CContextSimulator::setTimeSynchronization(bool enable, const CTime &offset)
@@ -205,7 +208,7 @@ namespace BlackCore
             if (m_simulatorPlugin.first.isUnspecified()) { return false; }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            bool c = m_simulatorPlugin.second->setTimeSynchronization(enable, offset);
+            const bool c = m_simulatorPlugin.second->setTimeSynchronization(enable, offset);
             if (!c) { return false; }
 
             CLogMessage(this).info(enable ? QStringLiteral("Set time syncronization to %1").arg(offset.toQString()) : QStringLiteral("Disabled time syncrhonization"));
@@ -278,7 +281,7 @@ namespace BlackCore
             ISimulator *simulator = factory->create(simulatorPluginInfo, ownAircraftProvider, renderedAircraftProvider, &m_weatherManager);
             Q_ASSERT_X(simulator, Q_FUNC_INFO, "no simulator driver can be created");
 
-            setRemoteAircraftProvider(renderedAircraftProvider);
+            this->setRemoteAircraftProvider(renderedAircraftProvider);
 
             // use simulator info from ISimulator as it can access the emulated driver settings
             const CSimulatorInfo simInfo = simulator->getSimulatorInfo();

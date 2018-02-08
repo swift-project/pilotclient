@@ -302,7 +302,7 @@ namespace BlackMisc
                 case CSimulatorInfo::FS9: return CFsCommonUtil::fs9Dir();
                 case CSimulatorInfo::FSX: return CFsCommonUtil::fsxDir();
                 case CSimulatorInfo::P3D: return CFsCommonUtil::p3dDir();
-                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir(); //! check XPlane
+                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir();
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;
