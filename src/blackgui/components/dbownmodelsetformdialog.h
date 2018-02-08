@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETDIALOG_H
-#define BLACKGUI_COMPONENTS_DBOWNMODELSETDIALOG_H
+#ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETFORMDIALOG_H
+#define BLACKGUI_COMPONENTS_DBOWNMODELSETFORMDIALOG_H
 
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -23,8 +23,7 @@
 class QWidget;
 
 namespace BlackMisc { class CLogCategoryList; }
-namespace Ui { class CDbOwnModelSetDialog; }
-
+namespace Ui { class CDbOwnModelSetFormDialog; }
 namespace BlackGui
 {
     namespace Components
@@ -32,7 +31,7 @@ namespace BlackGui
         /*!
          * Dialog to create new model set
          */
-        class CDbOwnModelSetDialog :
+        class CDbOwnModelSetFormDialog :
             public QDialog,
             public CDbMappingComponentAware
         {
@@ -43,10 +42,10 @@ namespace BlackGui
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Constructor
-            explicit CDbOwnModelSetDialog(QWidget *parent = nullptr);
+            explicit CDbOwnModelSetFormDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbOwnModelSetDialog();
+            virtual ~CDbOwnModelSetFormDialog();
 
             //! Last build set
             const BlackMisc::Simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
@@ -63,17 +62,16 @@ namespace BlackGui
             //! Exec and display simulator
             virtual int exec() override;
 
-        private slots:
-            //! Button clicked
-            void ps_buttonClicked();
-
-            //! Simulator changed
-            void ps_simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
         private:
-            QScopedPointer<Ui::CDbOwnModelSetDialog>  ui;
+            QScopedPointer<Ui::CDbOwnModelSetFormDialog>  ui;
             BlackMisc::Simulation::CAircraftModelList m_modelSet;
             BlackMisc::Simulation::CSimulatorInfo     m_simulatorInfo;
+
+            //! Button clicked
+            void buttonClicked();
+
+            //! Simulator changed
+            void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Check data
             bool checkData();

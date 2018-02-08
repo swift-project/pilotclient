@@ -9,12 +9,12 @@
 
 #include "blackcore/modelsetbuilder.h"
 #include "blackgui/components/dbmappingcomponent.h"
-#include "blackgui/components/dbownmodelsetdialog.h"
+#include "blackgui/components/dbownmodelsetformdialog.h"
 #include "blackgui/editors/ownmodelsetform.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/simulation/distributorlist.h"
-#include "ui_dbownmodelsetdialog.h"
+#include "ui_dbownmodelsetformdialog.h"
 
 #include <QPushButton>
 #include <QString>
@@ -30,38 +30,38 @@ namespace BlackGui
 {
     namespace Components
     {
-        const CLogCategoryList &CDbOwnModelSetDialog::getLogCategories()
+        const CLogCategoryList &CDbOwnModelSetFormDialog::getLogCategories()
         {
             static const CLogCategoryList cats({ CLogCategory("swift.ownmodelset"), CLogCategory::guiComponent()});
             return cats;
         }
 
-        CDbOwnModelSetDialog::CDbOwnModelSetDialog(QWidget *parent) :
+        CDbOwnModelSetFormDialog::CDbOwnModelSetFormDialog(QWidget *parent) :
             QDialog(parent),
             CDbMappingComponentAware(parent),
-            ui(new Ui::CDbOwnModelSetDialog)
+            ui(new Ui::CDbOwnModelSetFormDialog)
         {
             ui->setupUi(this);
-            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CDbOwnModelSetDialog::ps_buttonClicked);
-            connect(ui->pb_Ok, &QPushButton::clicked, this, &CDbOwnModelSetDialog::ps_buttonClicked);
-            connect(ui->form_OwnModelSet, &COwnModelSetForm::simulatorChanged, this, &CDbOwnModelSetDialog::ps_simulatorChanged);
+            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
+            connect(ui->pb_Ok, &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
+            connect(ui->form_OwnModelSet, &COwnModelSetForm::simulatorChanged, this, &CDbOwnModelSetFormDialog::simulatorChanged);
         }
 
-        CDbOwnModelSetDialog::~CDbOwnModelSetDialog()
+        CDbOwnModelSetFormDialog::~CDbOwnModelSetFormDialog()
         {
             // void
         }
 
-        void CDbOwnModelSetDialog::reloadData()
+        void CDbOwnModelSetFormDialog::reloadData()
         {
-            this->m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
-            Q_ASSERT_X(this->m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            ui->form_OwnModelSet->setSimulator(this->m_simulatorInfo);
+            m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
+            Q_ASSERT_X(m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            ui->form_OwnModelSet->setSimulator(m_simulatorInfo);
             ui->form_OwnModelSet->reloadData();
-            this->m_modelSet = this->getMappingComponent()->getOwnModelSet();
+            m_modelSet = this->getMappingComponent()->getOwnModelSet();
         }
 
-        int CDbOwnModelSetDialog::exec()
+        int CDbOwnModelSetFormDialog::exec()
         {
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             const CSimulatorInfo sim(this->getMappingComponent()->getOwnModelsSimulator());
@@ -71,7 +71,7 @@ namespace BlackGui
             return QDialog::exec();
         }
 
-        void CDbOwnModelSetDialog::ps_buttonClicked()
+        void CDbOwnModelSetFormDialog::buttonClicked()
         {
             const QObject *sender = QObject::sender();
             if (sender == ui->pb_Cancel)
@@ -80,12 +80,12 @@ namespace BlackGui
             }
             else if (sender == ui->pb_Ok)
             {
-                this->m_modelSet = this->buildSet(this->m_simulatorInfo, this->m_modelSet);
+                m_modelSet = this->buildSet(m_simulatorInfo, m_modelSet);
                 this->accept();
             }
         }
 
-        void CDbOwnModelSetDialog::ps_simulatorChanged(const CSimulatorInfo &simulator)
+        void CDbOwnModelSetFormDialog::simulatorChanged(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             this->setSimulator(simulator);
@@ -94,29 +94,29 @@ namespace BlackGui
             this->checkData();
         }
 
-        bool CDbOwnModelSetDialog::checkData()
+        bool CDbOwnModelSetFormDialog::checkData()
         {
             // models
-            Q_ASSERT_X(this->m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            Q_ASSERT_X(m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             const int c = this->getMappingComponent()->getOwnModelsCount();
             if (c < 1)
             {
-                const CStatusMessage m = CStatusMessage(this).error("No models for %1") << this->m_simulatorInfo.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).error("No models for %1") << m_simulatorInfo.toQString(true);
                 ui->form_OwnModelSet->showOverlayMessage(m);
                 return false;
             }
             return true;
         }
 
-        void CDbOwnModelSetDialog::setSimulator(const CSimulatorInfo &simulator)
+        void CDbOwnModelSetFormDialog::setSimulator(const CSimulatorInfo &simulator)
         {
-            Q_ASSERT_X(this->m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            this->m_simulatorInfo = simulator;
-            ui->form_OwnModelSet->setSimulator(this->m_simulatorInfo);
-            this->setWindowTitle("Create model set for " + this->m_simulatorInfo.toQString(true));
+            Q_ASSERT_X(m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            m_simulatorInfo = simulator;
+            ui->form_OwnModelSet->setSimulator(m_simulatorInfo);
+            this->setWindowTitle("Create model set for " + m_simulatorInfo.toQString(true));
         }
 
-        CAircraftModelList CDbOwnModelSetDialog::buildSet(const CSimulatorInfo &simulator, const CAircraftModelList &currentSet)
+        CAircraftModelList CDbOwnModelSetFormDialog::buildSet(const CSimulatorInfo &simulator, const CAircraftModelList &currentSet)
         {
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             const bool givenDistributorsOnly  = !ui->form_OwnModelSet->optionUseAllDistributors();
@@ -126,7 +126,7 @@ namespace BlackGui
             const bool sortByDistributor = ui->form_OwnModelSet->optionSortByDistributorPreferences();
             const bool consolidateWithDb = ui->form_OwnModelSet->optionConsolidateModelSetWithDbData();
 
-            this->m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
+            m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
             const CAircraftModelList models = this->getMappingComponent()->getOwnModels();
             const CDistributorList distributors = ui->form_OwnModelSet->getDistributorsBasedOnOptions();
 
