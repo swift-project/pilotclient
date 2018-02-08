@@ -119,12 +119,6 @@ namespace BlackGui
             const QStringList modelDirs(this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
             const QStringList excludeDirs(this->parseDirectories(ui->pte_ExcludeDirectories->toPlainText()));
 
-            if (simulatorDir.trimmed().isEmpty())
-            {
-                this->showOverlayMessage(CStatusMessage(this).validationError("Empty simulator directory"));
-                return;
-            }
-
             const QStringList relativeDirs = CFileUtils::makeDirectoriesRelative(excludeDirs, this->getFileBrowserModelDirectory(), m_fileCaseSensitivity);
             s.setSimulatorDirectory(simulatorDir);
             s.setModelDirectories(modelDirs);
