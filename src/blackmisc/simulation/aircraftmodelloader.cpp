@@ -21,6 +21,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Data;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
 
@@ -255,6 +256,11 @@ namespace BlackMisc
         QString IAircraftModelLoader::getInfoStringFsFamily() const
         {
             return m_caches.getInfoStringFsFamily();
+        }
+
+        CSimulatorSettings IAircraftModelLoader::getCurrentSimulatorSettings() const
+        {
+            return m_settings.getSettings(this->getSimulator());
         }
 
         std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simulator)

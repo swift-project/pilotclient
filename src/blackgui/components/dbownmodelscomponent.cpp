@@ -98,6 +98,14 @@ namespace BlackGui
             return m_modelLoader.get();
         }
 
+        bool CDbOwnModelsComponent::requestModelsInBackground(const CSimulatorInfo &simulator, bool onlyIfNotEmpty)
+        {
+            this->setSimulator(simulator);
+            if (onlyIfNotEmpty && this->getOwnModelsCount() > 0) { return false; }
+            this->requestSimulatorModels(simulator, onlyIfNotEmpty ? IAircraftModelLoader::InBackgroundNoCache : IAircraftModelLoader::LoadInBackground);
+            return true;
+        }
+
         CAircraftModel CDbOwnModelsComponent::getOwnModelForModelString(const QString &modelString) const
         {
             if (!m_modelLoader) { return CAircraftModel(); }
@@ -134,6 +142,7 @@ namespace BlackGui
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             this->loadInstalledModels(simulator, IAircraftModelLoader::InBackgroundWithCache);
+            ui->le_Simulator->setText(simulator.toQString());
         }
 
         int CDbOwnModelsComponent::getOwnModelsCount() const
@@ -431,7 +440,7 @@ namespace BlackGui
         {
             if (!this->initModelLoader(simulator))
             {
-                CLogMessage(this).error("Cannot load model loader for %1") << simulator.toQString();
+                CLogMessage(this).error("Cannot init model loader for %1") << simulator.toQString();
                 return;
             }
 
@@ -490,6 +499,7 @@ namespace BlackGui
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             ui->tvp_OwnAircraftModels->setSimulatorForLoading(simulator);
             this->requestSimulatorModelsWithCacheInBackground(simulator);
+            ui->le_Simulator->setText(simulator.toQString());
         }
     } // ns
 } // ns

@@ -61,7 +61,7 @@ namespace BlackMisc
                 CacheSkipped          = 1 << 3,   //!< ignore cache
                 CacheOnly             = 1 << 4,   //!< only read cache, never load from disk
                 InBackgroundWithCache = LoadInBackground | CacheFirst,   //!< Background, cached
-                InBackgroundNoCache   = LoadInBackground | CacheSkipped  //!< Background, not cached
+                InBackgroundNoCache   = LoadInBackground | CacheSkipped  //!< Background, not checking cache
             };
             Q_DECLARE_FLAGS(LoadMode, LoadModeFlag)
 
@@ -149,6 +149,12 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
             QString getInfoStringFsFamily() const;
+
+            //! Current simulator settings
+            Settings::CSimulatorSettings getCurrentSimulatorSettings() const;
+
+            //! Access to multi simulator settings
+            const Settings::CMultiSimulatorSettings &multiSimulatorSettings() const { return m_settings; }
 
             //! \name Implementations of the model interfaces (allows to set models modified in utility functions)
             //! @{

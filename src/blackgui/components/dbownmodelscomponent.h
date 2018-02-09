@@ -105,6 +105,9 @@ namespace BlackGui
             //! Access to model loader
             BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const;
 
+            //! Forced read for given simulator
+            bool requestModelsInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
+
             //! Graceful shutdown
             void gracefulShutdown();
 
