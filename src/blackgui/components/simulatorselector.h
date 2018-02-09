@@ -75,6 +75,9 @@ namespace BlackGui
             //! Set left margin
             void setLeftMargin(int margin);
 
+            //! Remember selection
+            void setRememberSelection(bool remember) { m_rememberSelection = remember; }
+
         signals:
             //! Value has been changed
             void changed(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -86,11 +89,18 @@ namespace BlackGui
             //! Checkbox changed
             void checkBoxChanged(bool checked);
 
-        private:
+            //! Remember last selection
+            void rememberSelection();
+
+            //! Last selection has been changed
+            void changedLastSelection();
+
             QScopedPointer<Ui::CSimulatorSelector> ui;
             Mode m_mode = CheckBoxes;
             bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
-            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TModelSetLastSelection> m_currentSimulator { this }; //!< current simulator
+            bool m_rememberSelection = false;   //!< remember last selection
+            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection>  m_currentSimulator  { this, &CSimulatorSelector::changedLastSelection }; //!< current simulator (used with radio buttons)
+            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelections> m_currentSimulators { this, &CSimulatorSelector::changedLastSelection }; //!< current simulators (used with multiple checkboxes)
         };
     } // ns
 } // ns

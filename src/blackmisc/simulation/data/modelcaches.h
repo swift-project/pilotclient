@@ -112,7 +112,7 @@ namespace BlackMisc
             };
 
             //! Last selection
-            struct TModelSetLastSelection : public BlackMisc::TDataTrait<BlackMisc::Simulation::CSimulatorInfo>
+            struct TSimulatorLastSelection : public BlackMisc::TDataTrait<BlackMisc::Simulation::CSimulatorInfo>
             {
                 //! First load is synchronous
                 static constexpr bool isPinned() { return true; }
@@ -121,7 +121,20 @@ namespace BlackMisc
                 static const BlackMisc::Simulation::CSimulatorInfo &defaultValue() { return CSimulatorInfo::guessDefaultSimulator(); }
 
                 //! Key
-                static const char *key() { return "modelsetlastselection"; }
+                static const char *key() { return "simulatorlastselection"; }
+            };
+
+            //! Last selections
+            struct TSimulatorLastSelections : public BlackMisc::TDataTrait<BlackMisc::Simulation::CSimulatorInfo>
+            {
+                //! First load is synchronous
+                static constexpr bool isPinned() { return true; }
+
+                //! Default simulator
+                static const BlackMisc::Simulation::CSimulatorInfo &defaultValue() { return CSimulatorInfo::guessDefaultSimulator(); }
+
+                //! Key
+                static const char *key() { return "simulatorlastselections"; }
             };
             //! @}
 
@@ -319,7 +332,7 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::changedFs9};   //!< FS9 cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::changedP3D };  //!< P3D cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_currentSimulator { this };                       //!< current simulator
+                BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_currentSimulator { this };                      //!< current simulator
 
                 //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);

@@ -135,7 +135,7 @@ namespace BlackGui
             // those caches do not harm if they exists default initialized
             //! \fixme this is a workaround, as it creates files on disk even if those are not copied. It was much nicer if the cache would init themself if the file appears
             BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
-            BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_modelSetCurrentSimulator { this };
+            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_modelSetCurrentSimulator { this };
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_modelsCurrentSimulator { this };
             BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
             BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_launcherSetup { this };

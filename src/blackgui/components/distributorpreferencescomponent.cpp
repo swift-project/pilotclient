@@ -48,6 +48,7 @@ namespace BlackGui
 
             ui->setupUi(this);
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
+            ui->comp_SimulatorSelector->setRememberSelection(true);
             ui->comp_SimulatorSelector->setValue(simulator);
 
             connect(ui->pb_All, &QPushButton::pressed, this, &CDistributorPreferencesComponent::ps_loadAll);

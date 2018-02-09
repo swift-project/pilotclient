@@ -58,6 +58,7 @@ namespace BlackGui
                 ui->wi_RadioButtons->setVisible(true);
                 break;
             }
+            this->setToLastSelection();
         }
 
         CSimulatorInfo CSimulatorSelector::getValue() const
@@ -99,8 +100,10 @@ namespace BlackGui
 
         void CSimulatorSelector::setToLastSelection()
         {
-            const CSimulatorInfo sim = m_currentSimulator.get();
-            this->setValue(sim);
+            const CSimulatorInfo simulator = (m_mode == RadioButtons) ?
+                                             m_currentSimulator.get() :
+                                             m_currentSimulators.get();
+            this->setValue(simulator);
         }
 
         void CSimulatorSelector::setAll()
@@ -166,6 +169,7 @@ namespace BlackGui
         {
             if (m_mode != RadioButtons) { return; }
             if (!checked) { return; } // only the checked ones are relevant, as the unchecked ones are accompanied with checked events
+            this->rememberSelection();
             emit this->changed(this->getValue());
         }
 
@@ -173,7 +177,27 @@ namespace BlackGui
         {
             if (m_mode != CheckBoxes) { return; }
             Q_UNUSED(checked);
+            this->rememberSelection();
             emit this->changed(this->getValue());
+        }
+
+        void CSimulatorSelector::rememberSelection()
+        {
+            if (!m_rememberSelection) { return; }
+            if (m_mode == RadioButtons)
+            {
+                m_currentSimulator.set(this->getValue());
+            }
+            else
+            {
+                m_currentSimulators.set(this->getValue());
+            }
+        }
+
+        void CSimulatorSelector::changedLastSelection()
+        {
+            // forece decoupled update
+            QTimer::singleShot(100, this, &CSimulatorSelector::setToLastSelection);
         }
     } // ns
 } // ns
