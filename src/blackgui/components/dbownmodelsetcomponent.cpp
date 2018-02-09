@@ -10,7 +10,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbownmodelsetcomponent.h"
-#include "blackgui/components/dbownmodelsetdialog.h"
+#include "blackgui/components/dbownmodelsetformdialog.h"
 #include "blackgui/menus/aircraftmodelmenus.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
@@ -77,12 +77,12 @@ namespace BlackGui
             connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_ShowMatrix, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
-            connect(&this->m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
+            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::ps_onRowCountChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::ps_viewModelChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::ps_onJsonDataLoaded);
 
-            const CSimulatorInfo simulator = this->m_modelSetLoader.getSimulator();
+            const CSimulatorInfo simulator = m_modelSetLoader.getSimulator();
             if (simulator.isSingleSimulator())
             {
                 ui->comp_SimulatorSelector->setValue(simulator);
@@ -149,7 +149,7 @@ namespace BlackGui
 
         const CSimulatorInfo CDbOwnModelSetComponent::getModelSetSimulator() const
         {
-            return this->m_modelSetLoader.getSimulator();
+            return m_modelSetLoader.getSimulator();
         }
 
         CStatusMessage CDbOwnModelSetComponent::addToModelSet(const CAircraftModel &model, const CSimulatorInfo &simulator)
@@ -173,7 +173,7 @@ namespace BlackGui
                                       "Cannot add data for " + simulator.toQString(true) + " to " + this->getModelSetSimulator().toQString(true), true);
             }
 
-            const bool allowExcludedModels = this->m_modelSettings.get().getAllowExcludedModels();
+            const bool allowExcludedModels = m_modelSettings.get().getAllowExcludedModels();
             CAircraftModelList updateModels(this->getModelSet());
             int d = updateModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (d > 0)
@@ -219,7 +219,7 @@ namespace BlackGui
                 const CAircraftModelList ml(ui->tvp_OwnModelSet->container());
                 if (!ml.isEmpty())
                 {
-                    const CStatusMessage m = this->m_modelSetLoader.setCachedModels(ml);
+                    const CStatusMessage m = m_modelSetLoader.setCachedModels(ml);
                     CLogMessage::preformatted(m);
                 }
             }
@@ -249,8 +249,8 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int realUnfilteredCount = ui->tvp_OwnModelSet->container().size();
-            bool canSave = this->getModelSetSimulator().isSingleSimulator() && (realUnfilteredCount > 0);
+            const int realUnfilteredCount = ui->tvp_OwnModelSet->container().size();
+            const bool canSave = this->getModelSetSimulator().isSingleSimulator() && (realUnfilteredCount > 0);
             ui->pb_SaveAsSetForSimulator->setEnabled(canSave);
             if (canSave)
             {
@@ -271,19 +271,14 @@ namespace BlackGui
             }
         }
 
-        void CDbOwnModelSetComponent::ps_distributorPreferencesChanged()
+        void CDbOwnModelSetComponent::distributorPreferencesChanged()
         {
-            const CDistributorListPreferences preferences = this->m_distributorPreferences.getThreadLocal();
+            const CDistributorListPreferences preferences = m_distributorPreferences.getThreadLocal();
             const CSimulatorInfo simuulator = preferences.getLastUpdatedSimulator();
             if (simuulator.isSingleSimulator())
             {
                 this->updateDistributorOrder(simuulator);
             }
-        }
-
-        void CDbOwnModelSetComponent::ps_modelSettingsChanged()
-        {
-            // void
         }
 
         void CDbOwnModelSetComponent::ps_viewModelChanged()
@@ -300,7 +295,7 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::updateViewToCurrentModels()
         {
-            const CAircraftModelList models(this->m_modelSetLoader.getAircraftModels());
+            const CAircraftModelList models(m_modelSetLoader.getAircraftModels());
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
         }
 
@@ -308,27 +303,27 @@ namespace BlackGui
         {
             // make sure both tabs display the same simulator
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
-            const CSimulatorInfo sim(this->getModelSetSimulator());
-            this->getMappingComponent()->setOwnModelsSimulator(sim);
-            if (!this->m_modelSetDialog)
+            const CSimulatorInfo simulator(this->getModelSetSimulator());
+            this->getMappingComponent()->setOwnModelsSimulator(simulator);
+            if (!m_modelSetFormDialog)
             {
-                this->m_modelSetDialog.reset(new CDbOwnModelSetDialog(this));
-                this->m_modelSetDialog->setMappingComponent(this->getMappingComponent());
+                m_modelSetFormDialog.reset(new CDbOwnModelSetFormDialog(this));
+                m_modelSetFormDialog->setMappingComponent(this->getMappingComponent());
             }
 
             if (this->getMappingComponent()->getOwnModelsCount() > 0)
             {
-                this->m_modelSetDialog->setModal(true);
-                this->m_modelSetDialog->reloadData();
-                QDialog::DialogCode rc = static_cast<QDialog::DialogCode>(this->m_modelSetDialog->exec());
+                m_modelSetFormDialog->setModal(true);
+                m_modelSetFormDialog->reloadData();
+                const QDialog::DialogCode rc = static_cast<QDialog::DialogCode>(m_modelSetFormDialog->exec());
                 if (rc == QDialog::Accepted)
                 {
-                    this->setModelSet(this->m_modelSetDialog->getModelSet(), this->m_modelSetDialog->getSimulatorInfo());
+                    this->setModelSet(m_modelSetFormDialog->getModelSet(), m_modelSetFormDialog->getSimulatorInfo());
                 }
             }
             else
             {
-                static const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << sim.toQString(true);
+                static const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << simulator.toQString(true);
                 this->getMappingComponent()->showOverlayMessage(m);
             }
         }
@@ -343,8 +338,8 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::setModelSetSimulator(const CSimulatorInfo &simulator)
         {
-            if (this->m_modelSetLoader.getSimulator() == simulator) { return; } // avoid unnecessary signals
-            this->m_modelSetLoader.changeSimulator(simulator);
+            if (m_modelSetLoader.getSimulator() == simulator) { return; } // avoid unnecessary signals
+            m_modelSetLoader.changeSimulator(simulator);
             ui->tvp_OwnModelSet->setSimulatorForLoading(simulator);
             ui->le_Simulator->setText(simulator.toQString(true));
             ui->comp_SimulatorSelector->setValue(simulator);
@@ -352,13 +347,13 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)
         {
-            CAircraftModelList modelSet = this->m_modelSetLoader.getAircraftModels(simulator);
+            CAircraftModelList modelSet = m_modelSetLoader.getAircraftModels(simulator);
             if (modelSet.isEmpty()) { return; }
-            const CDistributorListPreferences preferences = this->m_distributorPreferences.getThreadLocal();
+            const CDistributorListPreferences preferences = m_distributorPreferences.getThreadLocal();
             const CDistributorList distributors = preferences.getDistributors(simulator);
             if (distributors.isEmpty()) { return; }
             modelSet.updateDistributorOrder(distributors);
-            this->m_modelSetLoader.setModels(modelSet, simulator);
+            m_modelSetLoader.setModels(modelSet, simulator);
 
             // display?
             const CSimulatorInfo currentSimulator(this->getModelSetSimulator());
@@ -377,7 +372,7 @@ namespace BlackGui
             {
                 CDbOwnModelSetComponent *ownModelSetComp = qobject_cast<CDbOwnModelSetComponent *>(this->parent());
                 Q_ASSERT_X(ownModelSetComp, Q_FUNC_INFO, "Cannot access parent");
-                if (this->m_setActions.isEmpty())
+                if (m_setActions.isEmpty())
                 {
                     if (sims.fsx())
                     {
@@ -387,7 +382,7 @@ namespace BlackGui
                             Q_UNUSED(checked);
                             ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
                         });
-                        this->m_setActions.append(a);
+                        m_setActions.append(a);
 
                         a = new QAction(CIcons::appModels16(), "New set FSX models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
@@ -395,7 +390,7 @@ namespace BlackGui
                             Q_UNUSED(checked);
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FSX));
                         });
-                        this->m_setNewActions.append(a);
+                        m_setNewActions.append(a);
                     }
                     if (sims.p3d())
                     {
@@ -405,7 +400,7 @@ namespace BlackGui
                             Q_UNUSED(checked);
                             ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
                         });
-                        this->m_setActions.append(a);
+                        m_setActions.append(a);
 
                         a = new QAction(CIcons::appModels16(), "New set P3D models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
@@ -413,7 +408,7 @@ namespace BlackGui
                             Q_UNUSED(checked);
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::P3D));
                         });
-                        this->m_setNewActions.append(a);
+                        m_setNewActions.append(a);
                     }
                     if (sims.fs9())
                     {
@@ -423,7 +418,7 @@ namespace BlackGui
                             Q_UNUSED(checked);
                             ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
                         });
-                        this->m_setActions.append(a);
+                        m_setActions.append(a);
 
                         a = new QAction(CIcons::appModels16(), "New set FS9 models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
@@ -431,7 +426,7 @@ namespace BlackGui
                             Q_UNUSED(checked);
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FS9));
                         });
-                        this->m_setNewActions.append(a);
+                        m_setNewActions.append(a);
                     }
                     if (sims.xplane())
                     {
@@ -441,7 +436,7 @@ namespace BlackGui
                             Q_UNUSED(checked);
                             ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
                         });
-                        this->m_setActions.append(a);
+                        m_setActions.append(a);
 
                         a = new QAction(CIcons::appModels16(), "New set XPlane models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
@@ -449,16 +444,16 @@ namespace BlackGui
                             Q_UNUSED(checked);
                             ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::XPLANE));
                         });
-                        this->m_setNewActions.append(a);
+                        m_setNewActions.append(a);
                     }
 
                     QAction *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged);
-                    this->m_setActions.append(a);
+                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::distributorPreferencesChanged);
+                    m_setActions.append(a);
                 }
                 menuActions.addMenuModelSet();
-                menuActions.addActions(this->m_setActions, CMenuAction::pathModelSet());
-                menuActions.addActions(this->m_setNewActions, CMenuAction::pathModelSetNew());
+                menuActions.addActions(m_setActions, CMenuAction::pathModelSet());
+                menuActions.addActions(m_setNewActions, CMenuAction::pathModelSetNew());
             }
             this->nestedCustomMenu(menuActions);
         }

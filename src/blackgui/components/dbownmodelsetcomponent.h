@@ -38,7 +38,7 @@ namespace BlackGui
     namespace Components
     {
         class CDbMappingComponent;
-        class CDbOwnModelSetDialog;
+        class CDbOwnModelSetFormDialog;
 
         /*!
          * Handling of the own model set
@@ -123,16 +123,13 @@ namespace BlackGui
             //! JSON data have been loaded from disk
             void ps_onJsonDataLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Preferences changed
-            void ps_distributorPreferencesChanged();
-
-            //! Model settings changed
-            void ps_modelSettingsChanged();
-
             //! Model (of view) has been changed
             void ps_viewModelChanged();
 
         private:
+            //! Preferences changed
+            void distributorPreferencesChanged();
+
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
 
@@ -149,10 +146,10 @@ namespace BlackGui
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             QScopedPointer<Ui::CDbOwnModelSetComponent>    ui;
-            QScopedPointer<CDbOwnModelSetDialog>           m_modelSetDialog;
+            QScopedPointer<CDbOwnModelSetFormDialog>       m_modelSetFormDialog;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged }; //!< distributor preferences
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this, &CDbOwnModelSetComponent::ps_modelSettingsChanged }; //!< settings for models
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::distributorPreferencesChanged }; //!< distributor preferences
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this }; //!< settings for models
 
             // -------------------------- custom menus -----------------------------------
 
