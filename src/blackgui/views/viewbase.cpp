@@ -263,13 +263,13 @@ namespace BlackGui
                 {
                     static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestUpdate);
                     if (!this->isSignalConnected(requestSignal)) break;
-                    ma.addAction(BlackMisc::CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReload }); break;
+                    ma.addAction(CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReload }); break;
                 }
             case MenuBackend:
                 {
                     static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestNewBackendData);
                     if (!this->isSignalConnected(requestSignal)) break;
-                    ma.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReloadFromBackend }); break;
+                    ma.addAction(CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReloadFromBackend }); break;
                 }
             case MenuDisplayAutomatically:
                 {
@@ -278,8 +278,8 @@ namespace BlackGui
                     a->setChecked(this->displayAutomatically());
                     break;
                 }
-            case MenuRemoveSelectedRows: { ma.addAction(BlackMisc::CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_removeSelectedRows }, CShortcut::keyDelete()); break; }
-            case MenuClear: { ma.addAction(BlackMisc::CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_clear }); break; }
+            case MenuRemoveSelectedRows: { ma.addAction(CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_removeSelectedRows }, CShortcut::keyDelete()); break; }
+            case MenuClear: { ma.addAction(CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_clear }); break; }
             case MenuFilter:
                 {
                     if (m_filterWidget)
@@ -340,7 +340,7 @@ namespace BlackGui
             if (m_showingLoadIndicator)
             {
                 // just in case, if this ever will be dangling
-                menuActions.addAction(BlackMisc::CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::ps_hideLoadIndicator });
+                menuActions.addAction(CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::ps_hideLoadIndicator });
             }
 
             if (m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }
@@ -408,7 +408,7 @@ namespace BlackGui
             if (m_menus.testFlag(MenuSave) && !isEmpty()) { menuActions.addActions(this->initMenuActions(MenuSave)); }
 
             // resizing
-            menuActions.addAction(BlackMisc::CIcons::resize16(), "Resize", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::presizeOrFullResizeToContents });
+            menuActions.addAction(CIcons::resize16(), "Resize", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::presizeOrFullResizeToContents });
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches

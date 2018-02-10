@@ -64,7 +64,10 @@ namespace BlackGui
             void setToLastSelection();
 
             //! Set all, only making sense with checkboxes
-            void setAll();
+            void checkAll();
+
+            //! Unset all, only making sense with checkboxes
+            void uncheckAll();
 
             //! Not selected at all
             bool isUnselected() const;
@@ -77,6 +80,9 @@ namespace BlackGui
 
             //! Remember selection
             void setRememberSelection(bool remember) { m_rememberSelection = remember; }
+
+            //! Clear values
+            void clear();
 
         signals:
             //! Value has been changed

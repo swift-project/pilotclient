@@ -106,7 +106,7 @@ namespace BlackGui
             this->setValue(simulator);
         }
 
-        void CSimulatorSelector::setAll()
+        void CSimulatorSelector::checkAll()
         {
             // checkboxes
             ui->cb_FSX->setChecked(true);
@@ -116,6 +116,15 @@ namespace BlackGui
 
             // radio
             ui->rb_FSX->setChecked(true);
+        }
+
+        void CSimulatorSelector::uncheckAll()
+        {
+            // checkboxes
+            ui->cb_FSX->setChecked(false);
+            ui->cb_FS9->setChecked(false);
+            ui->cb_XPlane->setChecked(false);
+            ui->cb_P3D->setChecked(false);
         }
 
         bool CSimulatorSelector::isUnselected() const
@@ -163,6 +172,14 @@ namespace BlackGui
             m = ui->hl_CheckBoxes->contentsMargins();
             m.setLeft(margin);
             ui->hl_CheckBoxes->setContentsMargins(m);
+        }
+
+        void CSimulatorSelector::clear()
+        {
+            if (m_mode == CheckBoxes)
+            {
+                this->uncheckAll();
+            }
         }
 
         void CSimulatorSelector::radioButtonChanged(bool checked)

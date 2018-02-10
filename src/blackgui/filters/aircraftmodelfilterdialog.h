@@ -32,7 +32,7 @@ namespace BlackGui
         //! Form for a aircraft model filter
         class BLACKGUI_EXPORT CAircraftModelFilterDialog :
             public CFilterDialog,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
+            public Models::IModelFilterProvider<BlackMisc::Simulation::CAircraftModelList>
         {
             Q_OBJECT
 
@@ -49,7 +49,6 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CAircraftModelFilterDialog> ui;
         };
-
     } // namespace
 } // namespace
 

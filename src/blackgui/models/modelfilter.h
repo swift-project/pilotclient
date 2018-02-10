@@ -79,7 +79,6 @@ namespace BlackGui
             //! Get the filter, this is the filter itself, not its widget or dialog
             virtual std::unique_ptr<IModelFilter<ContainerType>> createModelFilter() const = 0;
         };
-
     } // namespace
 } // namespace
 #endif // guard

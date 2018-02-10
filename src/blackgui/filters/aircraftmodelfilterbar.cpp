@@ -37,7 +37,7 @@ namespace BlackGui
             ui(new Ui::CAircraftModelFilterBar)
         {
             ui->setupUi(this);
-            ui->frp_SimulatorSelector->setAll();
+            ui->frp_SimulatorSelector->checkAll();
             ui->comp_DistributorSelector->withDistributorDescription(false);
             this->setButtonsAndCount(ui->filter_Buttons);
 
@@ -135,7 +135,7 @@ namespace BlackGui
             ui->le_AirlineName->clear();
             ui->le_LiveryCode->clear();
             ui->le_FileName->clear();
-            ui->frp_SimulatorSelector->setAll();
+            ui->frp_SimulatorSelector->checkAll();
             ui->comp_DistributorSelector->clear();
             ui->cbt_IncludeExclude->setCheckState(Qt::PartiallyChecked);
             ui->cbt_Db->setCheckState(Qt::PartiallyChecked);

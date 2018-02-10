@@ -36,7 +36,6 @@ namespace BlackGui
             QString m_isoCode;
             QString m_name;
         };
-
     } // namespace
 } // namespace
 

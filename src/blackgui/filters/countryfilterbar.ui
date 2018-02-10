@@ -7,19 +7,16 @@
     <x>0</x>
     <y>0</y>
     <width>384</width>
-    <height>22</height>
+    <height>24</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Country filter bat</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
+   <string>Country filter bar</string>
   </property>
   <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
+   <enum>QFrame::Sunken</enum>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gl_CountryFilterBar">
    <property name="topMargin">
     <number>0</number>
    </property>

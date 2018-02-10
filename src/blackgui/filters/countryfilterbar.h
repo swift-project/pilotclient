@@ -24,7 +24,6 @@ class QWidget;
 
 namespace BlackMisc { class CCountryList; }
 namespace Ui { class CCountryFilterBar; }
-
 namespace BlackGui
 {
     namespace Filters
@@ -34,14 +33,14 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CCountryFilterBar :
             public CFilterWidget,
-            public BlackGui::Models::IModelFilterProvider<BlackMisc::CCountryList>
+            public Models::IModelFilterProvider<BlackMisc::CCountryList>
         {
         public:
             //! Constructor
             explicit CCountryFilterBar(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CCountryFilterBar();
+            virtual ~CCountryFilterBar();
 
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CCountryList>> createModelFilter() const override;
@@ -57,7 +56,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CCountryFilterBar> ui;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

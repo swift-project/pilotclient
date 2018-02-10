@@ -31,6 +31,8 @@ namespace BlackGui
             QFrame(parent),
             ui(new Ui::CDbAirlineIcaoComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+
             ui->setupUi(this);
             this->setViewWithIndicator(ui->tvp_AirlineIcao);
             ui->tvp_AirlineIcao->setResizeMode(CAirlineIcaoCodeView::ResizingOff);

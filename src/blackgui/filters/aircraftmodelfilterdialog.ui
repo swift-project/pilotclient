@@ -25,7 +25,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="bb_ButtonBox">
+    <widget class="QDialogButtonBox" name="bb_FilterDialog">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -47,7 +47,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>bb_ButtonBox</sender>
+   <sender>bb_FilterDialog</sender>
    <signal>accepted()</signal>
    <receiver>CAircraftModelFilterDialog</receiver>
    <slot>accept()</slot>
@@ -63,7 +63,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>bb_ButtonBox</sender>
+   <sender>bb_FilterDialog</sender>
    <signal>rejected()</signal>
    <receiver>CAircraftModelFilterDialog</receiver>
    <slot>reject()</slot>
