@@ -21,7 +21,9 @@
 #include <QScopedPointer>
 
 class QWidget;
+
 namespace Ui { class CDbDistributorComponent; }
+namespace BlackMisc { namespace Simulation { class CSimulatorInfo; }}
 namespace BlackGui
 {
     namespace Views { class CDistributorView; }
@@ -42,22 +44,23 @@ namespace BlackGui
             explicit CDbDistributorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbDistributorComponent();
+            virtual ~CDbDistributorComponent();
 
             //! Get the view
             BlackGui::Views::CDistributorView *view() const;
 
-        private slots:
-            //! Distributors have been read
-            void ps_distributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
-
-            //! Reload models
-            void ps_reload();
+            //! Filter by simulator
+            void filterBySimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         private:
             QScopedPointer<Ui::CDbDistributorComponent> ui;
-        };
 
+            //! Distributors have been read
+            void distributorsRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! Reload models
+            void reload();
+        };
     } // ns
 } // ns
 

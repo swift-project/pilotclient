@@ -38,8 +38,14 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item>
-    <widget class="QFrame" name="fr_Selector">
+   <item alignment="Qt::AlignLeft">
+    <widget class="BlackGui::Filters::CDistributorFilterBar" name="filter_Distributor">
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -71,6 +77,12 @@
    <class>BlackGui::Views::CDistributorView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/distributorview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Filters::CDistributorFilterBar</class>
+   <extends>QFrame</extends>
+   <header>blackgui/filters/distributorfilterbar.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -52,6 +52,8 @@ namespace BlackGui
             Q_ASSERT_X(m_modelSetDialog, Q_FUNC_INFO, "No model set dialog");
             m_modelSetDialog->setSimulator(simulator);
 
+            ui->comp_Distributors->filterBySimulator(simulator);
+
             // kind of hack, but simplest solution
             // we us the loader of the components directly,
             // avoid to fully init a loader logic here
