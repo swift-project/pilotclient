@@ -142,6 +142,7 @@ namespace BlackGui
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             this->loadInstalledModels(simulator, IAircraftModelLoader::InBackgroundWithCache);
+            ui->comp_SimulatorSelector->setValue(simulator);
             ui->le_Simulator->setText(simulator.toQString());
         }
 

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CFirstModelSetComponent</class>
+ <widget class="QFrame" name="CFirstModelSetComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Configure a 1st model set</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item alignment="Qt::AlignTop">
+    <widget class="QFrame" name="fr_Info">
+     <layout class="QGridLayout" name="gl_Info" columnstretch="1,5">
+      <item row="0" column="1">
+       <widget class="QLabel" name="lbl_Explaination">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The model set defines which aircraft you will use in the simulator. From all models you have installed on your disk you can select a subset actually being used.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_SwiftIcon">
+        <property name="text">
+         <string>&lt;html&gt;&lt;img src=&quot;:/own/icons/own/swift3D/sw3DOrange-32.png&quot;&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item alignment="Qt::AlignLeft|Qt::AlignTop">
+    <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="fr_Models">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_ModelDirectories">
+        <property name="text">
+         <string>Model directories:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_ModelDirectories">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Models">
+        <property name="text">
+         <string>Models:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QGridLayout" name="gl_Models">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pb_ModelSet">
+          <property name="text">
+           <string>show set</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pb_Models">
+          <property name="text">
+           <string> show models </string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="pb_ModelsTriggerReload">
+          <property name="text">
+           <string> trigger reload </string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLineEdit" name="le_ModelsInfo">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLineEdit" name="le_ModelSetInfo">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="1">
+       <widget class="QWidget" name="wi_OwnModels" native="true">
+        <layout class="QHBoxLayout" name="hl_OwnModels">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QWidget" name="wi_ModelSet" native="true">
+        <layout class="QHBoxLayout" name="hl_ModelSet">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_Distributor">
+        <property name="text">
+         <string>Distributors:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="BlackGui::Components::CDbDistributorComponent" name="comp_Distributors">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbDistributorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbdistributorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

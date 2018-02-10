@@ -168,13 +168,12 @@ BlackGui--Components--CDBusServerAddressSelector::disabled {
 }
 
 BlackGui--Components--CDownloadComponent,
-BlackGui--Components--CDownloadDialog {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
+BlackGui--Components--CDownloadDialog,
 BlackGui--Components--CRawFsdMessagesComponent,
-BlackGui--Components--CRawFsdMessagesDialog {
+BlackGui--Components--CRawFsdMessagesDialog,
+BlackGui--Components--CDbOwnModelsDialog,
+BlackGui--Components--CDbOwnModelSetDialog
+{
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }

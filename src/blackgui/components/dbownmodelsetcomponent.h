@@ -77,13 +77,24 @@ namespace BlackGui
             BlackMisc::CStatusMessage addToModelSet(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Current model set for simulator CDbOwnModelSetComponent::getModelSetSimulator
-            const BlackMisc::Simulation::CAircraftModelList &getModelSet() const;
+            //! \remark this the set from the container, which can be different from cache while updating
+            const BlackMisc::Simulation::CAircraftModelList &getModelSetFromView() const;
+
+            //! Current sount of model set for simulator CDbOwnModelSetComponent::getModelSetSimulator
+            //! \remark this the set from the container, which can be different from cache while updating
+            int getModelSetCountFromView() const;
+
+            //! \copydoc BlackMisc::Simulation::CAircraftModelSetLoader::getCachedModels
+            BlackMisc::Simulation::CAircraftModelList getModelSetFromLoader() const { return m_modelSetLoader.getCachedModels(this->getModelSetSimulator()); }
 
             //! Model set is for simulator
-            const BlackMisc::Simulation::CSimulatorInfo getModelSetSimulator() const;
+            BlackMisc::Simulation::CSimulatorInfo getModelSetSimulator() const;
 
             //! Simulator
-            void setModelSetSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Used model set loader
+            const BlackMisc::Simulation::CAircraftModelSetLoader &modelSetLoader() const { return m_modelSetLoader; }
 
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;
@@ -104,40 +115,36 @@ namespace BlackGui
             //! Replace or add models provided for a given simulator
             void replaceOrAddModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-        private slots:
+        private:
             //! Tab has been changed
-            void ps_tabIndexChanged(int index);
+            void tabIndexChanged(int index);
 
             //! Button was clicked
-            void ps_buttonClicked();
-
-            //! Change current simulator
-            void ps_changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-            //! Simulator has been changed (in loader)
-            void ps_onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void buttonClicked();
 
             //! View has changed row count
-            void ps_onRowCountChanged(int count, bool withFilter);
+            void onRowCountChanged(int count, bool withFilter);
 
             //! JSON data have been loaded from disk
-            void ps_onJsonDataLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void onJsonDataLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Model (of view) has been changed
-            void ps_viewModelChanged();
+            void viewModelChanged();
 
-        private:
             //! Preferences changed
             void distributorPreferencesChanged();
 
             //! Default file name
-            void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
+            void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Update view to current models
             void updateViewToCurrentModels();
 
             //! Create new set
             void createNewSet();
+
+            //! Unchecked version of setSimulator
+            void changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Show the airline/aircraft matrix
             void showAirlineAircraftMatrix() const;

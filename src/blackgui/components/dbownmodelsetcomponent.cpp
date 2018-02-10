@@ -72,15 +72,15 @@ namespace BlackGui
             //! \fixme maybe it would be better to set those in stylesheet file
             ui->pb_SaveAsSetForSimulator->setStyleSheet("padding-left: 3px; padding-right: 3px;");
 
-            connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
-            connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
-            connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
-            connect(ui->pb_ShowMatrix, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
-            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
-            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::ps_onRowCountChanged);
-            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::ps_viewModelChanged);
-            connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::ps_onJsonDataLoaded);
+            connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
+            connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
+            connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
+            connect(ui->pb_ShowMatrix, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
+            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::changeSimulator, Qt::QueuedConnection);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::onRowCountChanged);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::viewModelChanged);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::onJsonDataLoaded);
 
             const CSimulatorInfo simulator = m_modelSetLoader.getSimulator();
             if (simulator.isSingleSimulator())
@@ -107,7 +107,7 @@ namespace BlackGui
         void CDbOwnModelSetComponent::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            this->setModelSetSimulator(simulator);
+            this->setSimulator(simulator);
             if (models.isEmpty())
             {
                 ui->tvp_OwnModelSet->clear();
@@ -142,12 +142,17 @@ namespace BlackGui
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(updatedModels);
         }
 
-        const CAircraftModelList &CDbOwnModelSetComponent::getModelSet() const
+        const CAircraftModelList &CDbOwnModelSetComponent::getModelSetFromView() const
         {
             return ui->tvp_OwnModelSet->container();
         }
 
-        const CSimulatorInfo CDbOwnModelSetComponent::getModelSetSimulator() const
+        int CDbOwnModelSetComponent::getModelSetCountFromView() const
+        {
+            return ui->tvp_OwnModelSet->container().size();
+        }
+
+        CSimulatorInfo CDbOwnModelSetComponent::getModelSetSimulator() const
         {
             return m_modelSetLoader.getSimulator();
         }
@@ -164,7 +169,7 @@ namespace BlackGui
             if (!this->getModelSetSimulator().isSingleSimulator())
             {
                 // no sim yet, we set it
-                this->setModelSetSimulator(simulator);
+                this->setSimulator(simulator);
             }
             if (simulator != this->getModelSetSimulator())
             {
@@ -174,7 +179,7 @@ namespace BlackGui
             }
 
             const bool allowExcludedModels = m_modelSettings.get().getAllowExcludedModels();
-            CAircraftModelList updateModels(this->getModelSet());
+            CAircraftModelList updateModels(this->getModelSetFromView());
             int d = updateModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (d > 0)
             {
@@ -194,16 +199,16 @@ namespace BlackGui
             CDbMappingComponentAware::setMappingComponent(component);
             if (component)
             {
-                connect(this->getMappingComponent(), &CDbMappingComponent::tabIndexChanged, this, &CDbOwnModelSetComponent::ps_tabIndexChanged);
+                connect(this->getMappingComponent(), &CDbMappingComponent::tabIndexChanged, this, &CDbOwnModelSetComponent::tabIndexChanged);
             }
         }
 
-        void CDbOwnModelSetComponent::ps_tabIndexChanged(int index)
+        void CDbOwnModelSetComponent::tabIndexChanged(int index)
         {
             Q_UNUSED(index);
         }
 
-        void CDbOwnModelSetComponent::ps_buttonClicked()
+        void CDbOwnModelSetComponent::buttonClicked()
         {
             const QObject *sender = QObject::sender();
             if (sender == ui->pb_CreateNewSet)
@@ -229,23 +234,7 @@ namespace BlackGui
             }
         }
 
-        void CDbOwnModelSetComponent::ps_changeSimulator(const CSimulatorInfo &simulator)
-        {
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            if (this->getModelSetSimulator() == simulator) { return; } // avoid endless loops
-
-            this->setModelSetSimulator(simulator);
-            this->updateViewToCurrentModels();
-        }
-
-        void CDbOwnModelSetComponent::ps_onSimulatorChanged(const CSimulatorInfo &simulator)
-        {
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            if (this->getModelSetSimulator() == simulator) { return; } // avoid endless loops
-            this->ps_changeSimulator(simulator);
-        }
-
-        void CDbOwnModelSetComponent::ps_onRowCountChanged(int count, bool withFilter)
+        void CDbOwnModelSetComponent::onRowCountChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -263,11 +252,11 @@ namespace BlackGui
             }
         }
 
-        void CDbOwnModelSetComponent::ps_onJsonDataLoaded(const CSimulatorInfo &simulator)
+        void CDbOwnModelSetComponent::onJsonDataLoaded(const CSimulatorInfo &simulator)
         {
             if (simulator.isSingleSimulator())
             {
-                this->setModelSetSimulator(simulator);
+                this->setSimulator(simulator);
             }
         }
 
@@ -281,15 +270,15 @@ namespace BlackGui
             }
         }
 
-        void CDbOwnModelSetComponent::ps_viewModelChanged()
+        void CDbOwnModelSetComponent::viewModelChanged()
         {
             ui->pb_SaveAsSetForSimulator->setEnabled(true);
         }
 
-        void CDbOwnModelSetComponent::setSaveFileName(const CSimulatorInfo &sim)
+        void CDbOwnModelSetComponent::setSaveFileName(const CSimulatorInfo &simulator)
         {
-            Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            const QString name("modelset" + sim.toQString(true));
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const QString name("modelset" + simulator.toQString(true));
             ui->tvp_OwnModelSet->setSaveFileName(name);
         }
 
@@ -328,21 +317,29 @@ namespace BlackGui
             }
         }
 
+        void CDbOwnModelSetComponent::changeSimulator(const CSimulatorInfo &simulator)
+        {
+            m_modelSetLoader.setSimulator(simulator);
+            ui->tvp_OwnModelSet->setSimulatorForLoading(simulator);
+            ui->le_Simulator->setText(simulator.toQString(true));
+            ui->comp_SimulatorSelector->setValue(simulator);
+            this->updateViewToCurrentModels();
+        }
+
         void CDbOwnModelSetComponent::showAirlineAircraftMatrix() const
         {
-            const CAircraftModelList set(this->getModelSet());
+            const CAircraftModelList set(this->getModelSetFromView());
             const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(set, sGui->getTemporaryDirectory());
             if (file.isEmpty()) { return; }
             QDesktopServices::openUrl(QUrl::fromLocalFile(file));
         }
 
-        void CDbOwnModelSetComponent::setModelSetSimulator(const CSimulatorInfo &simulator)
+        void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
         {
-            if (m_modelSetLoader.getSimulator() == simulator) { return; } // avoid unnecessary signals
-            m_modelSetLoader.changeSimulator(simulator);
-            ui->tvp_OwnModelSet->setSimulatorForLoading(simulator);
-            ui->le_Simulator->setText(simulator.toQString(true));
-            ui->comp_SimulatorSelector->setValue(simulator);
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const CSimulatorInfo currentSimulator = m_modelSetLoader.getSimulator();
+            if (currentSimulator == simulator) { return; } // avoid unnecessary signals
+            this->changeSimulator(simulator);
         }
 
         void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)
@@ -380,7 +377,7 @@ namespace BlackGui
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
+                            ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
                         });
                         m_setActions.append(a);
 
@@ -398,7 +395,7 @@ namespace BlackGui
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
+                            ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
                         });
                         m_setActions.append(a);
 
@@ -416,7 +413,7 @@ namespace BlackGui
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
+                            ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
                         });
                         m_setActions.append(a);
 
@@ -434,7 +431,7 @@ namespace BlackGui
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
+                            ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
                         });
                         m_setActions.append(a);
 

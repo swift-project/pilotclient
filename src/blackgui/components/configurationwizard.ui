@@ -150,13 +150,20 @@
     <property name="bottomMargin">
      <number>4</number>
     </property>
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="BlackGui::Components::CInstallXSwiftBusComponent" name="comp_XSwiftBus">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" alignment="Qt::AlignRight">
+     <widget class="QPushButton" name="pb_SkipXSwiftBus">
+      <property name="text">
+       <string> I do not have X-Plane / I will do this later / Is already installed </string>
       </property>
      </widget>
     </item>
@@ -184,6 +191,45 @@
     </property>
     <item>
      <widget class="BlackGui::Components::CInitialDataLoadComponent" name="comp_DataLoad">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="BlackGui::Components::CFirstModelSetWizardPage" name="wp_FirstModelSet">
+   <property name="title">
+    <string>First model set</string>
+   </property>
+   <property name="subTitle">
+    <string>Configure a simple model set</string>
+   </property>
+   <layout class="QVBoxLayout" name="vl_FirstModelSet">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item alignment="Qt::AlignRight">
+     <widget class="QPushButton" name="pb_SkipFirstModelSet">
+      <property name="text">
+       <string> I will do that later (skip) </string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="BlackGui::Components::CFirstModelSetComponent" name="comp_FirstModelSet">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -281,7 +327,52 @@
    <header>blackgui/components/installxswiftbuscomponent.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CFirstModelSetComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/firstmodelsetcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CFirstModelSetWizardPage</class>
+   <extends>QWizardPage</extends>
+   <header>blackgui/components/firstmodelsetcomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pb_SkipFirstModelSet</sender>
+   <signal>clicked()</signal>
+   <receiver>CConfigurationWizard</receiver>
+   <slot>next()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>749</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>804</x>
+     <y>75</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_SkipXSwiftBus</sender>
+   <signal>clicked()</signal>
+   <receiver>CConfigurationWizard</receiver>
+   <slot>next()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>713</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>791</x>
+     <y>64</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

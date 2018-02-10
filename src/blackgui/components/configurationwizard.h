@@ -37,6 +37,7 @@ namespace BlackGui
                 ConfigSimulator,
                 XSwiftBus,
                 DataLoad,
+                FirstModelSet,
                 ConfigHotkeys
             };
 
