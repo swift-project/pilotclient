@@ -81,6 +81,9 @@ namespace BlackGui
             //! Remember selection
             void setRememberSelection(bool remember) { m_rememberSelection = remember; }
 
+            //! Is rembering selection?
+            bool isRememberingSelection() const { return m_rememberSelection; }
+
             //! Clear values
             void clear();
 
@@ -101,12 +104,18 @@ namespace BlackGui
             //! Last selection has been changed
             void changedLastSelection();
 
+            //! Last selection has been changed
+            void changedLastSelectionRb();
+
+            //! Last selection has been changed
+            void changedLastSelectionCb();
+
             QScopedPointer<Ui::CSimulatorSelector> ui;
             Mode m_mode = CheckBoxes;
             bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
             bool m_rememberSelection = false;   //!< remember last selection
-            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection>  m_currentSimulator  { this, &CSimulatorSelector::changedLastSelection }; //!< current simulator (used with radio buttons)
-            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelections> m_currentSimulators { this, &CSimulatorSelector::changedLastSelection }; //!< current simulators (used with multiple checkboxes)
+            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection>  m_currentSimulator  { this, &CSimulatorSelector::changedLastSelectionRb }; //!< current simulator (used with radio buttons)
+            BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelections> m_currentSimulators { this, &CSimulatorSelector::changedLastSelectionCb }; //!< current simulators (used with multiple checkboxes)
         };
     } // ns
 } // ns

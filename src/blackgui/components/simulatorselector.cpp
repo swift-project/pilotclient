@@ -213,7 +213,21 @@ namespace BlackGui
 
         void CSimulatorSelector::changedLastSelection()
         {
-            // forece decoupled update
+            // force decoupled update
+            QTimer::singleShot(100, this, &CSimulatorSelector::setToLastSelection);
+        }
+
+        void CSimulatorSelector::changedLastSelectionRb()
+        {
+            // force decoupled update
+            if (m_mode != RadioButtons) { return; }
+            QTimer::singleShot(100, this, &CSimulatorSelector::setToLastSelection);
+        }
+
+        void CSimulatorSelector::changedLastSelectionCb()
+        {
+            // force decoupled update
+            if (m_mode != CheckBoxes) { return; }
             QTimer::singleShot(100, this, &CSimulatorSelector::setToLastSelection);
         }
     } // ns
