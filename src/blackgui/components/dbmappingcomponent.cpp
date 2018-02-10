@@ -859,12 +859,12 @@ namespace BlackGui
         void CDbMappingComponent::setOwnModelSetSimulator(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            ui->comp_OwnModelSet->setModelSetSimulator(simulator);
+            ui->comp_OwnModelSet->setSimulator(simulator);
         }
 
         CAircraftModelList CDbMappingComponent::getOwnModelSet() const
         {
-            return ui->comp_OwnModelSet->getModelSet();
+            return ui->comp_OwnModelSet->getModelSetFromView();
         }
 
         CStatusMessage CDbMappingComponent::stashModel(const CAircraftModel &model, bool replace)

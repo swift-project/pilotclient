@@ -157,6 +157,13 @@ namespace BlackMisc
                 //! \threadsafe
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
+                //! Models
+                CAircraftModelList getSynchronizedCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+                //! Models
+                //! \threadsafe
+                CAircraftModelList getCurrentCachedModels() const;
+
                 //! Count of models for simulator
                 int getCachedModelsCount(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
@@ -168,13 +175,6 @@ namespace BlackMisc
 
                 //! Simulator which uses cache with filename
                 BlackMisc::Simulation::CSimulatorInfo getSimulatorForFilename(const QString &filename) const;
-
-                //! Models
-                CAircraftModelList getSynchronizedCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-                //! Models
-                //! \threadsafe
-                CAircraftModelList getCurrentCachedModels() const;
 
                 //! Cache timestamp
                 //! \threadsafe
@@ -251,6 +251,9 @@ namespace BlackMisc
                 void changedXP()  { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::XPLANE)); }
                 //! @}
 
+                //! Void version of synchronizeCurrentCache
+                void onLastSelectionChanged();
+
             private:
                 //! Emit cacheChanged() utility function (allows breakpoint)
                 void emitCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -289,7 +292,7 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheFs9> m_modelCacheFs9 {this, &CModelCaches::changedFs9 }; //!< FS9 cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheP3D> m_modelCacheP3D {this, &CModelCaches::changedP3D }; //!< P3D cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheXP>  m_modelCacheXP  {this, &CModelCaches::changedXP };  //!< XP cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_currentSimulator { this };              //!< current simulator
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_currentSimulator { this, &CModelCaches::onLastSelectionChanged }; //!< current simulator
 
                 //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -332,7 +335,7 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::changedFs9};   //!< FS9 cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::changedP3D };  //!< P3D cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::TSimulatorLastSelection> m_currentSimulator { this };                      //!< current simulator
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_currentSimulator { this, &CModelSetCaches::onLastSelectionChanged }; //!< current simulator
 
                 //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);

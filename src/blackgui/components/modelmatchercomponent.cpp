@@ -94,7 +94,7 @@ namespace BlackGui
         void CModelMatcherComponent::onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            m_modelSetLoader.changeSimulator(simulator);
+            m_modelSetLoader.setSimulator(simulator);
             m_matcher.setModelSet(m_modelSetLoader.getAircraftModels(), simulator);
             this->redisplay();
         }

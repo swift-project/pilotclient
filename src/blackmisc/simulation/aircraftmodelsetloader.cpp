@@ -20,7 +20,7 @@ namespace BlackMisc
     {
         CAircraftModelSetLoader::CAircraftModelSetLoader(QObject *parent) : QObject(parent)
         {
-            connect(&m_caches, &CModelSetCaches::cacheChanged, this, &CAircraftModelSetLoader::cacheChanged);
+            connect(&m_caches, &CModelSetCaches::cacheChanged, this, &CAircraftModelSetLoader::onModelsCacheChanged);
         }
 
         CAircraftModelSetLoader::~CAircraftModelSetLoader()
@@ -56,11 +56,9 @@ namespace BlackMisc
 
         void CAircraftModelSetLoader::changeSimulator(const CSimulatorInfo &simulator)
         {
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
-            if (this->getSimulator() == simulator) { return; }
             m_caches.setCurrentSimulator(simulator);
             m_caches.synchronizeCurrentCache();
-            emit simulatorChanged(simulator);
+            emit this->simulatorChanged(simulator);
         }
 
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels() const
@@ -115,6 +113,12 @@ namespace BlackMisc
             return this->setCachedModels(CAircraftModelList());
         }
 
+        void CAircraftModelSetLoader::onModelsCacheChanged(const CSimulatorInfo &simulator)
+        {
+            this->changeSimulator(simulator);
+            emit this->cacheChanged(simulator);
+        }
+
         CSimulatorInfo CAircraftModelSetLoader::getSimulator() const
         {
             return m_caches.getCurrentSimulator();
@@ -123,6 +127,13 @@ namespace BlackMisc
         QString CAircraftModelSetLoader::getSimulatorAsString() const
         {
             return this->getSimulator().toQString();
+        }
+
+        void CAircraftModelSetLoader::setSimulator(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
+            if (this->getSimulator() == simulator) { return; }
+            this->changeSimulator(simulator);
         }
 
         bool CAircraftModelSetLoader::supportsSimulator(const CSimulatorInfo &info)

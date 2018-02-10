@@ -37,6 +37,12 @@ namespace BlackMisc
                 return is.arg(this->getCachedModelsCount(CSimulatorInfo::FSX)).arg(this->getCachedModelsCount(CSimulatorInfo::P3D)).arg(this->getCachedModelsCount(CSimulatorInfo::FS9));
             }
 
+            void IMultiSimulatorModelCaches::onLastSelectionChanged()
+            {
+                this->synchronizeCurrentCache();
+                this->emitCacheChanged(this->getCurrentSimulator());
+            }
+
             void IMultiSimulatorModelCaches::emitCacheChanged(const CSimulatorInfo &simulator)
             {
                 emit this->cacheChanged(simulator);

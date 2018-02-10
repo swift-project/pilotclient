@@ -78,11 +78,15 @@ namespace BlackMisc
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
-            //! Which simulator is supported by that very loader
+            //! Current simulator
             CSimulatorInfo getSimulator() const;
 
             //! Supported simulators as string
             QString getSimulatorAsString() const;
+
+            //! Set simulator
+            //! \remark checked version, does nothing if simulator is alread set
+            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Is the given simulator supported?
             bool supportsSimulator(const BlackMisc::Simulation::CSimulatorInfo &info);
@@ -107,14 +111,6 @@ namespace BlackMisc
             virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->replaceOrAddCachedModels(models, simulator); }
             //! @}
 
-        signals:
-            //! Simulator has been changed
-            void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-            //! Cache changed
-            void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-        public slots:
             //! Set cache from outside, this should only be used in special cases.
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
             BlackMisc::CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
@@ -123,20 +119,32 @@ namespace BlackMisc
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
             BlackMisc::CStatusMessage replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
-            //! Change the simulator
-            void changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+        signals:
+            //! Simulator has been changed
+            void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Cache changed
+            void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         protected:
-            //! Cache timestamp
-            QDateTime getCacheTimestamp() const;
+            BlackMisc::Simulation::Data::CModelSetCaches m_caches { true, this }; //!< caches
+
+        private:
+            //! Change the simulator
+            //! \remark unckecked, does not check if simulator is the same
+            void changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Model cache has changed
+            void onModelsCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Any cached data?
             bool hasCachedData() const;
 
+            //! Cache timestamp
+            QDateTime getCacheTimestamp() const;
+
             //! Clear cache
             BlackMisc::CStatusMessage clearCache();
-
-            BlackMisc::Simulation::Data::CModelSetCaches m_caches { true, this }; //!< caches
         };
     } // namespace
 } // namespace
