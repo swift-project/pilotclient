@@ -41,19 +41,18 @@ namespace BlackGui
             //! Destructor
             virtual ~CSettingsNetworkServersComponent();
 
-        private slots:
+        private:
             //! Reload settings
-            void ps_reloadSettings();
+            void reloadSettings();
 
             //! Network server selected
-            void ps_serverSelected(const QModelIndex &index);
+            void serverSelected(const QModelIndex &index);
 
             //! Alter traffic server
-            void ps_alterTrafficServer();
+            void alterTrafficServer();
 
-        private:
             QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
-            BlackMisc::CSetting<BlackCore::Vatsim::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Vatsim::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::reloadSettings };
         };
     } // ns
 } // ns

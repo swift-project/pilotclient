@@ -45,16 +45,16 @@ namespace BlackGui
             ui->setupUi(this);
 
             // Settings server
-            connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_serverSelected);
-            this->ps_reloadSettings();
+            connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::alterTrafficServer);
+            connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::alterTrafficServer);
+            connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::serverSelected);
+            this->reloadSettings();
         }
 
         CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent()
         { }
 
-        void CSettingsNetworkServersComponent::ps_reloadSettings()
+        void CSettingsNetworkServersComponent::reloadSettings()
         {
             CServerList serverList(m_trafficNetworkServers.get());
 
@@ -67,13 +67,13 @@ namespace BlackGui
             ui->tvp_Servers->updateContainer(serverList);
         }
 
-        void CSettingsNetworkServersComponent::ps_serverSelected(const QModelIndex &index)
+        void CSettingsNetworkServersComponent::serverSelected(const QModelIndex &index)
         {
             const CServer clickedServer = ui->tvp_Servers->at(index);
             ui->form_Server->setServer(clickedServer);
         }
 
-        void CSettingsNetworkServersComponent::ps_alterTrafficServer()
+        void CSettingsNetworkServersComponent::alterTrafficServer()
         {
             const QObject *sender = QObject::sender();
             const CServer server(ui->form_Server->getServer());
@@ -106,7 +106,7 @@ namespace BlackGui
             }
 
             msg = m_trafficNetworkServers.setAndSave(serverList);
-            this->ps_reloadSettings(); // call manually as local object
+            this->reloadSettings(); // call manually as local object
 
             if (!msg.isEmpty())
             {
