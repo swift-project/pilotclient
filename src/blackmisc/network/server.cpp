@@ -75,6 +75,14 @@ namespace BlackMisc
             return withPw ? dvp : dvnp;
         }
 
+        const CServer &CServer::fscServer()
+        {
+            static const CServer fsc("FSC", "FSC e.V.", "OBF:AwJIKfgkQDJEIRnno29DJlB+UK0=", 6809,
+                                     CUser(),
+                                     CFsdSetup(), CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
+            return fsc;
+        }
+
         bool CServer::matchesName(const QString &name) const
         {
             return  m_name.length() == name.length() &&

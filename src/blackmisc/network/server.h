@@ -205,6 +205,9 @@ namespace BlackMisc
             //! swift FSD test server
             static const CServer &swiftFsdTestServer(bool withPw = false);
 
+            //! FSC server
+            static const CServer &fscServer();
+
         private:
             QString    m_name;
             QString    m_description;

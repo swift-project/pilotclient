@@ -234,7 +234,7 @@ namespace BlackCore
 
         CServerList CGlobalSetup::getFsdTestServersPlusHardcodedServers() const
         {
-            static const CServerList hardcoded({ CServer::swiftFsdTestServer() });
+            static const CServerList hardcoded({ CServer::swiftFsdTestServer(), CServer::fscServer() });
             CServerList testServers(m_fsdTestServers);
             testServers.addIfAddressNotExists(hardcoded);
             return testServers;
