@@ -40,6 +40,7 @@ HEADERS +=  *.h \
             $$PWD/simulation/fscommon/*.h \
             $$PWD/simulation/fsx/*.h \
             $$PWD/simulation/xplane/*.h \
+            $$PWD/thirdparty/*.h \
             $$PWD/test/*.h \
             $$PWD/weather/*.h
 
@@ -58,6 +59,7 @@ SOURCES +=  *.cpp \
             $$PWD/simulation/fscommon/*.cpp \
             $$PWD/simulation/fsx/*.cpp \
             $$PWD/simulation/xplane/*.cpp \
+            $$PWD/thirdparty/*.cpp \
             $$PWD/test/*.cpp \
             $$PWD/weather/*.cpp
 
