@@ -35,17 +35,17 @@ namespace BlackMisc
         }
 
         CUser::CUser(const QString &id, const QString &realname, const CCallsign &callsign)
-            : m_id(id.trimmed()), m_realname(realname), m_callsign(callsign)
+            : m_id(decode(id)), m_realname(decode(realname)), m_callsign(callsign)
         {
             this->deriveHomeBaseFromCallsign();
-            this->setRealName(realname); // extracts homebase if this is included in real name
+            this->setRealName(m_realname); // extracts homebase if this is included in real name
         }
 
         CUser::CUser(const QString &id, const QString &realname, const QString &email, const QString &password, const CCallsign &callsign)
-            : m_id(id.trimmed()), m_realname(realname), m_email(email), m_password(password), m_callsign(callsign)
+            : m_id(decode(id)), m_realname(decode(realname)), m_email(decode(email)), m_password(decode(password)), m_callsign(callsign)
         {
             this->deriveHomeBaseFromCallsign();
-            this->setRealName(realname); // extracts homebase
+            this->setRealName(m_realname); // extracts homebase
         }
 
         QString CUser::getRealNameAndHomeBase(const QString &separator) const
@@ -64,7 +64,7 @@ namespace BlackMisc
         QString CUser::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            if (m_realname.isEmpty()) return "<no realname>";
+            if (m_realname.isEmpty()) return QStringLiteral("<no realname>");
             QString s = m_realname;
             if (this->hasId())
             {
@@ -91,7 +91,7 @@ namespace BlackMisc
 
         void CUser::setRealName(const QString &realname)
         {
-            QString rn(removeAccents(realname.trimmed().simplified()));
+            QString rn(removeAccents(decode(realname).simplified()));
             if (rn.isEmpty())
             {
                 m_realname.clear();

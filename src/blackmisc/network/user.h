@@ -14,13 +14,14 @@
 
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/obfuscation.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
 #include <QString>
@@ -32,7 +33,9 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a user.
          */
-        class BLACKMISC_EXPORT CUser : public CValueObject<CUser>
+        class BLACKMISC_EXPORT CUser :
+            public CValueObject<CUser>,
+            public CObfuscation
         {
         public:
             /*!
@@ -70,7 +73,7 @@ namespace BlackMisc
             const QString &getPassword() const { return m_password; }
 
             //! Set password
-            void setPassword(const QString &pw) { m_password = pw.trimmed(); }
+            void setPassword(const QString &pw) { m_password = decode(pw); }
 
             //! Valid user object?
             bool isValid() const { return !isNull(); }
@@ -109,7 +112,7 @@ namespace BlackMisc
             const QString &getEmail() const { return m_email; }
 
             //! Set email.
-            void setEmail(const QString &email) { m_email = email.trimmed(); }
+            void setEmail(const QString &email) { m_email = decode(email); }
 
             //! Valid email?
             bool hasValidEmail() const { return !m_email.isEmpty(); }
@@ -118,7 +121,7 @@ namespace BlackMisc
             const QString &getId() const { return m_id; }
 
             //! Set id
-            void setId(const QString &id) { m_id = id.trimmed(); }
+            void setId(const QString &id) { m_id = decode(id); }
 
             //! Homebase
             const Aviation::CAirportIcaoCode &getHomeBase() const { return m_homebase; }

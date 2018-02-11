@@ -33,7 +33,7 @@ namespace BlackMisc
         CServer::CServer(
             const QString &name, const QString &description, const QString &address, int port, const CUser &user,
             const CFsdSetup &setup, const CEcosystem &ecosytem, ServerType serverType, bool isAcceptingConnections)
-            : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user),
+            : m_name(decode(name)), m_description(decode(description)), m_address(decode(address)), m_port(port), m_user(user),
               m_fsdSetup(setup), m_ecosystem(ecosytem),
               m_serverType(serverType), m_isAcceptingConnections(isAcceptingConnections)
         {}
@@ -65,11 +65,12 @@ namespace BlackMisc
         const CServer &CServer::swiftFsdTestServer(bool withPw)
         {
             // CUser("guest", "Guest Client project", "", "guest")
+            // use CObfuscation::endocde to get the strings
             static const CServer dvp("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
-                                     CUser("1234567", "Test User", "", "123456"),
+                                     CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", "OBF:AwKi3JkHNAczBno="),
                                      CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
             static const CServer dvnp("Testserver", "Client project testserver", "fsd.swift-project.org", 6809,
-                                      CUser("1234567", "Test User", "", ""),
+                                      CUser("OBF:AwJ6BweZqpmtmORL", "OBF:AwI/594lQTJGZnmSwB0=", "", ""),
                                       CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
             return withPw ? dvp : dvnp;
         }

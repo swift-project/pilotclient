@@ -12,11 +12,12 @@
 #ifndef BLACKMISC_NETWORK_SERVER_H
 #define BLACKMISC_NETWORK_SERVER_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/metaclass.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/network/ecosystem.h"
+#include "blackmisc/obfuscation.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/timestampbased.h"
@@ -33,7 +34,8 @@ namespace BlackMisc
         //! Value object encapsulating information of a server
         class BLACKMISC_EXPORT CServer :
             public CValueObject<CServer>,
-            public ITimestampBased
+            public ITimestampBased,
+            public CObfuscation
         {
         public:
             //! Properties by index
@@ -90,7 +92,7 @@ namespace BlackMisc
             const QString &getAddress() const { return m_address; }
 
             //! Set address (e.g. myserver.foo.com)
-            void setAddress(const QString &address) { m_address = address.trimmed(); }
+            void setAddress(const QString &address) { m_address = decode(address); }
 
             //! Get user
             const CUser &getUser() const { return m_user; }
@@ -105,7 +107,7 @@ namespace BlackMisc
             bool hasName() const { return !m_name.isEmpty(); }
 
             //! Set name
-            void setName(const QString &name) { m_name = name.trimmed(); }
+            void setName(const QString &name) { m_name = decode(name); }
 
             //! Matches server name?
             bool matchesName(const QString &name) const;
@@ -120,7 +122,7 @@ namespace BlackMisc
             const QString &getDescription() const { return m_description; }
 
             //! Set description
-            void setDescription(const QString &description) { m_description = description.trimmed().simplified(); }
+            void setDescription(const QString &description) { m_description = decode(description).simplified(); }
 
             //! Get port
             int getPort() const { return m_port; }
