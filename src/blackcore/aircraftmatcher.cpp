@@ -498,6 +498,8 @@ namespace BlackCore
         if ((r1 + r2) > 0)
         {
             CLogMessage(this).warning("Removed models for matcher, without string '%1', excluded '%2'") << r1 << r2;
+            if (r1 > 0) { CLogMessage(this).warning("Without string: %1") << models.findEmptyModelStrings().getModelStringList().join(", "); }
+            if (r2 > 0) { CLogMessage(this).warning("Excluded: %1") << models.findByModelMode(CAircraftModel::Exclude).getModelStringList().join(", "); }
         }
         if (modelsCleaned.isEmpty())
         {

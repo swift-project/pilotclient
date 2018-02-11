@@ -96,6 +96,14 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findEmptyModelStrings() const
+        {
+            return this->findBy([ & ](const CAircraftModel & model)
+            {
+                return !model.hasModelString();
+            });
+        }
+
         CAircraftModel CAircraftModelList::findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             if (modelString.isEmpty()) { return CAircraftModel(); }
@@ -294,6 +302,14 @@ namespace BlackMisc
             return this->findBy([ = ](const CAircraftModel & model)
             {
                 return (model.isVtol() == vtol);
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByModelMode(CAircraftModel::ModelMode mode) const
+        {
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return (model.getModelMode() == mode);
             });
         }
 

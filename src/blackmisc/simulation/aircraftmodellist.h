@@ -104,6 +104,9 @@ namespace BlackMisc
             //! \remark normally CAircraftModelList::findFirstByModelStringOrDefault would be used
             CAircraftModelList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
+            //! Find empty model strings
+            CAircraftModelList findEmptyModelStrings() const;
+
             //! Find first by model string
             CAircraftModel findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
@@ -175,6 +178,9 @@ namespace BlackMisc
 
             //! Find by VTOL flag, \c false returns non VTOL models
             CAircraftModelList findByVtolFlag(bool vtol) const;
+
+            //! Find by model mode
+            CAircraftModelList findByModelMode(CAircraftModel::ModelMode mode) const;
 
             //! Model icon path
             QString findModelIconPathByModelString(const QString &modelString) const;
