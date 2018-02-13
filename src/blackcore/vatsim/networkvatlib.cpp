@@ -454,6 +454,7 @@ namespace BlackCore
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "Can't connect while still connected");
             if (!m_net) { initializeSession(); }
             this->clearState();
+            m_filterPasswordFromLogin = true;
             QByteArray callsign = toFSD(m_loginMode == LoginAsObserver ?
                                         m_ownCallsign.getAsObserverCallsignString() :
                                         m_ownCallsign.asString());
@@ -1052,7 +1053,18 @@ namespace BlackCore
         void CNetworkVatlib::handleRawFsdMessage(const QString &fsdMessage)
         {
             if (!m_rawFsdMessagesEnabled) { return; }
-            CRawFsdMessage rawFsdMessage(fsdMessage);
+            QString fsdMessageFiltered(fsdMessage);
+            if (m_filterPasswordFromLogin)
+            {
+                if (fsdMessageFiltered.startsWith("FSD Sent=>#AP"))
+                {
+                    thread_local const QRegularExpression re("^(FSD Sent=>#AP\\w+:SERVER:\\d+:)[^:]+(:\\d:\\d+:\\d:.+)$");
+                    fsdMessageFiltered.replace(re, "\\1<password>\\2");
+                    m_filterPasswordFromLogin = false;
+                }
+            }
+
+            CRawFsdMessage rawFsdMessage(fsdMessageFiltered);
             rawFsdMessage.setCurrentUtcTime();
             if (m_rawFsdMessageLogFile.isOpen())
             {
