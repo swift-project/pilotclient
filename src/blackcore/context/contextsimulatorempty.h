@@ -87,6 +87,20 @@ namespace BlackCore
                 return BlackMisc::Simulation::CSimulatorInfo();
             }
 
+            //! \copydoc IContextSimulator::getModelSetLoaderSimulator
+            virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Simulation::CSimulatorInfo();
+            }
+
+            //! \copydoc IContextSimulator::setModelSetLoaderSimulator
+            virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override
+            {
+                Q_UNUSED(simulator);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
             //! \copydoc IContextSimulator::getModelSetStrings
             virtual QStringList getModelSetStrings() const override
             {
@@ -94,7 +108,7 @@ namespace BlackCore
                 return QStringList();
             }
 
-            //! \copydoc IContextSimulator::getModelSetStrings
+            //! \copydoc IContextSimulator::getModelSetCompleterStrings
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override
             {
                 Q_UNUSED(sorted);

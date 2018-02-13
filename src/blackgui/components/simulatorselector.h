@@ -87,6 +87,9 @@ namespace BlackGui
             //! Clear values
             void clear();
 
+            //! Set read only
+            void setReadOnly(bool readOnly);
+
         signals:
             //! Value has been changed
             void changed(const BlackMisc::Simulation::CSimulatorInfo &simulator);

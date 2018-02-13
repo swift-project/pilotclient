@@ -163,6 +163,21 @@ namespace BlackCore
             return m_aircraftMatcher.getModelSet();
         }
 
+        CSimulatorInfo CContextSimulator::getModelSetLoaderSimulator() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_modelSetLoader.getSimulator();
+        }
+
+        void CContextSimulator::setModelSetLoaderSimulator(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (this->isSimulatorAvailable()) { return; }
+            m_modelSetLoader.setSimulator(simulator);
+            m_aircraftMatcher.setModelSet(m_modelSetLoader.getAircraftModels(), simulator);
+        }
+
         CSimulatorInfo CContextSimulator::simulatorsWithInitializedModelSet() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

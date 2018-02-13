@@ -148,6 +148,15 @@ namespace BlackGui
             //! Check callsign entered
             BlackMisc::Aviation::CCallsign validateRenderedCallsign();
 
+            //! Set the status of the simulator
+            void setSimulatorSelector();
+
+            //! Changed selector
+            void onModelSetSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Plugin info has been changed
+            void onPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo);
+
             static constexpr int OverlayMessageMs = 5000;
             QScopedPointer<Ui::CMappingComponent> ui;
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update

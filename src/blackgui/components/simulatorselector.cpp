@@ -8,6 +8,7 @@
  */
 
 #include "blackgui/components/simulatorselector.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/compare.h"
 #include "ui_simulatorselector.h"
 
@@ -180,6 +181,15 @@ namespace BlackGui
             {
                 this->uncheckAll();
             }
+        }
+
+        void CSimulatorSelector::setReadOnly(bool readOnly)
+        {
+            CGuiUtility::checkBoxesReadOnly(this, readOnly);
+            ui->cb_FSX->setEnabled(!readOnly);
+            ui->cb_FS9->setEnabled(!readOnly);
+            ui->cb_XPlane->setEnabled(!readOnly);
+            ui->cb_P3D->setEnabled(!readOnly);
         }
 
         void CSimulatorSelector::radioButtonChanged(bool checked)

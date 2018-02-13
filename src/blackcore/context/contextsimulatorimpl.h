@@ -84,6 +84,8 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const override;
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
+            virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const override;
+            virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const override;
             virtual QStringList getModelSetStrings() const override;
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override;

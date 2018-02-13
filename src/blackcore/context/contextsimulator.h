@@ -148,6 +148,13 @@ namespace BlackCore
             //! \note might be slow since list can be big
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const = 0;
 
+            //! Get the model set loader simulator directly
+            virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const = 0;
+
+            //! Set the model set loader simulator directly
+            //! \note for testing purposes
+            virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+
             //! Simulators which have an initialized model set
             virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const = 0;
 

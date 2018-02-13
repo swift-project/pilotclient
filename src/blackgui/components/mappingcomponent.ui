@@ -288,6 +288,16 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="2" colspan="2">
+        <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -295,6 +305,12 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CSimulatorSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/simulatorselector.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>BlackGui::Views::CSimulatedAircraftView</class>
    <extends>QTableView</extends>

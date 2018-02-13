@@ -107,6 +107,16 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInfo>(QLatin1String("simulatorsWithInitializedModelSet"));
         }
 
+        CSimulatorInfo CContextSimulatorProxy::getModelSetLoaderSimulator() const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInfo>(QLatin1String("getModelSetLoaderSimulator"));
+        }
+
+        void CContextSimulatorProxy::setModelSetLoaderSimulator(const CSimulatorInfo &simulator)
+        {
+            m_dBusInterface->callDBus(QLatin1String("setModelSetLoaderSimulator"), simulator);
+        }
+
         QStringList CContextSimulatorProxy::getModelSetStrings() const
         {
             return m_dBusInterface->callDBusRet<QStringList>(QLatin1String("getModelSetStrings"));
