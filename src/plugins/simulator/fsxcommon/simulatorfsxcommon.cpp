@@ -385,6 +385,9 @@ namespace BlackSimPlugin
             aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevation, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
             aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
             aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitude, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
+            // set on ground also in situation for consistency and future usage
+            // it is duplicated in parts
+            aircraftSituation.setOnGround(simulatorOwnAircraft.simOnGround ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundOwnAircraft);
 
             const CAircraftLights lights(simulatorOwnAircraft.lightStrobe,
                                          simulatorOwnAircraft.lightLanding,
@@ -412,8 +415,8 @@ namespace BlackSimPlugin
                                        simulatorOwnAircraft.simOnGround);
 
             // set values
-            updateOwnSituation(aircraftSituation);
-            updateOwnParts(parts);
+            this->updateOwnSituation(aircraftSituation);
+            this->updateOwnParts(parts);
 
             // When I change cockpit values in the sim (from GUI to simulator, not originating from simulator)
             // it takes a little while before these values are set in the simulator.

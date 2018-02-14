@@ -84,6 +84,7 @@ namespace BlackMisc
             static const QString inter("interpolation");
             static const QString guess("guessing");
             static const QString unknown("unknown");
+            static const QString ownAircraft("own aircraft");
 
             switch (reliability)
             {
@@ -91,6 +92,7 @@ namespace BlackMisc
             case CAircraftSituation::OnGroundByElevationAndCG: return elvCg;
             case CAircraftSituation::OnGroundByGuessing: return guess;
             case CAircraftSituation::OnGroundByInterpolation: return inter;
+            case CAircraftSituation::OnGroundOwnAircraft: return ownAircraft;
             case CAircraftSituation::OnGroundReliabilityNoSet:
             default:
                 return unknown;

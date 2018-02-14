@@ -75,11 +75,12 @@ namespace BlackMisc
             //! Reliability of on ground information
             enum OnGroundReliability
             {
-                OnGroundByInterpolation,  //!< strongest
+                OnGroundByInterpolation,  //!< strongest for remote aircraft
                 OnGroundByElevationAndCG,
                 OnGroundByElevation,
                 OnGroundByGuessing,       //!< weakest
-                OnGroundReliabilityNoSet
+                OnGroundReliabilityNoSet,
+                OnGroundOwnAircraft,      //!< sending on ground
             };
 
             //! Default constructor.
