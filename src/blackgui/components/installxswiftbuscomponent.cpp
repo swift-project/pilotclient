@@ -206,7 +206,7 @@ namespace BlackGui
             const CRemoteFileList remoteFiles = artifacts.asRemoteFiles();
             if (!remoteFiles.isEmpty())
             {
-                const QStringList xSwiftBusFiles(remoteFiles.getNamesPlusSize(true));
+                const QStringList xSwiftBusFiles(remoteFiles.getNamesPlusSize(false));
                 ui->cb_DownloadFile->addItems(xSwiftBusFiles);
 
                 // current text
@@ -218,7 +218,7 @@ namespace BlackGui
                 }
                 ui->cb_DownloadFile->setCurrentText(
                     current.isEmpty() ?
-                    remoteFiles.backOrDefault().getNameAndSize() :
+                    remoteFiles.frontOrDefault().getNameAndSize() :
                     current
                 ); // latest version
             }

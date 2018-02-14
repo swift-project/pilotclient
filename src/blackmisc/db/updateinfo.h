@@ -58,6 +58,9 @@ namespace BlackMisc
             //! Artifacts (XSwiftBus)
             CArtifactList getArtifactsXSwiftBusLatestVersionFirst() const;
 
+            //! Artifacts (XSwiftBus)
+            CArtifactList getArtifactsXSwiftBusOldestVersionFirst() const;
+
             //! Artifacts for current platform
             //! \note sorted by version
             CArtifactList getArtifactsXSwiftBusForCurrentPlatform() const;

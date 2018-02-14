@@ -47,6 +47,13 @@ namespace BlackMisc
             return artifacts;
         }
 
+        CArtifactList CUpdateInfo::getArtifactsXSwiftBusOldestVersionFirst() const
+        {
+            CArtifactList artifacts(m_artifactsXSwiftBus);
+            artifacts.sortByVersion(Qt::DescendingOrder);
+            return artifacts;
+        }
+
         CArtifactList CUpdateInfo::getArtifactsXSwiftBusForCurrentPlatform() const
         {
             CArtifactList artifacts = m_artifactsXSwiftBus.findMatchingForCurrentPlatform();
