@@ -16,6 +16,8 @@
 #include <QList>
 #include <QStringList>
 
+using namespace BlackMisc;
+
 class QPixmap;
 
 const QJsonValue &operator >>(const QJsonValue &json, int &value)
@@ -308,74 +310,74 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QByteA
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const int &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const int &> &value)
 {
     json[value.first] = QJsonValue(value.second);
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qint16 &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const qint16 &> &value)
 {
     json[value.first] = QJsonValue(value.second);
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qulonglong &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const qulonglong &> &value)
 {
     json[value.first] = QJsonValue(static_cast<int>(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qlonglong &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const qlonglong &> &value)
 {
     json[value.first] = QJsonValue(value.second);
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const uint &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const uint &> &value)
 {
     json[value.first] = QJsonValue(static_cast<int>(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QString &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const QString &> &value)
 {
     json[value.first] = QJsonValue(value.second);
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QStringList &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const QStringList &> &value)
 {
     json[value.first] = QJsonValue(QJsonArray::fromStringList(value.second));
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const double &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const double &> &value)
 {
     json[value.first] = QJsonValue(value.second);
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const bool &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const bool &> &value)
 {
     json[value.first] = QJsonValue(value.second);
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QDateTime &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const QDateTime &> &value)
 {
     json[value.first] = QJsonValue(value.second.toString());
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QPixmap &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const QPixmap &> &value)
 {
     QString pm(BlackMisc::pixmapToPngHexString(value.second));
     json[value.first] = pm;
     return json;
 }
 
-QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QByteArray &> &value)
+QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const QByteArray &> &value)
 {
     QString pm(BlackMisc::bytesToHexString(value.second));
     json[value.first] = pm;
@@ -391,6 +393,13 @@ namespace BlackMisc
             if (json.isEmpty()) { return QJsonObject();}
             const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
             return acceptCacheFormat ? Json::swiftDataObjectValue(jsonDoc.object()) : jsonDoc.object();
+        }
+
+        QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format)
+        {
+            const QJsonDocument doc(jsonObject);
+            const QString strJson(doc.toJson(format));
+            return strJson;
         }
 
         QJsonArray jsonArrayFromString(const QString &json)

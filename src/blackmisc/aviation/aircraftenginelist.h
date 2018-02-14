@@ -53,6 +53,9 @@ namespace BlackMisc
             //! Engine number 1..x on?
             bool isEngineOn(int engineNumber) const;
 
+            //! Init some engines
+            void initEngines(int engineNumber, bool on);
+
             //! Is any engine on?
             bool isAnyEngineOn() const;
 

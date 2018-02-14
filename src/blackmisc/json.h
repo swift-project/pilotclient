@@ -239,6 +239,10 @@ namespace BlackMisc
         //! \ingroup JSON
         BLACKMISC_EXPORT QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat = false);
 
+        //! JSON Object from string
+        //! \ingroup JSON
+        BLACKMISC_EXPORT QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format = QJsonDocument::Indented);
+
         //! JSON Array from string
         //! \ingroup JSON
         BLACKMISC_EXPORT QJsonArray jsonArrayFromString(const QString &json);
@@ -444,7 +448,7 @@ namespace BlackMisc
 #define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)                      \
     using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::toJson;          \
     using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::convertFromJson;
-    } // Mixin
+    } // Mixin ns
 } // guard
 
 #endif // guard

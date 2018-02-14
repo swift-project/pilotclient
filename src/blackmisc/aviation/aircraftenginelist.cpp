@@ -43,6 +43,16 @@ namespace BlackMisc
             return this->getEngine(engineNumber).isOn();
         }
 
+        void CAircraftEngineList::initEngines(int engineNumber, bool on)
+        {
+            this->clear();
+            for (int e = 0; e < engineNumber; e++)
+            {
+                const CAircraftEngine engine(e + 1, on);
+                this->push_back(engine);
+            }
+        }
+
         bool CAircraftEngineList::isAnyEngineOn() const
         {
             return this->contains(&CAircraftEngine::isOn, true);

@@ -17,6 +17,7 @@
 #include "testdbus.h"
 #include "testflightplan.h"
 #include "testgeo.h"
+#include "testaircraftparts.h"
 #include "testicon.h"
 #include "testidentifier.h"
 #include "testinput.h"
@@ -57,6 +58,10 @@ namespace BlackMiscTest
         {
             CTestPropertyIndex piTests;
             status |= test.exec(&piTests, "blackmisc_propertyindex");
+        }
+        {
+            CTestAircraftParts apTests;
+            status |= test.exec(&apTests, "blackmisc_aircraftParts");
         }
         {
             CTestGeo geoTests;
