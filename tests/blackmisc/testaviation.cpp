@@ -50,18 +50,11 @@ using namespace BlackMisc::Geo;
 
 namespace BlackMiscTest
 {
-
-    /*
-     * Constructor
-     */
     CTestAviation::CTestAviation(QObject *parent): QObject(parent)
     {
         // void
     }
 
-    /*
-     * Basic tests
-     */
     void CTestAviation::headingBasics()
     {
         CHeading h1(180, CHeading::Magnetic, CAngleUnit::deg());
@@ -84,9 +77,6 @@ namespace BlackMiscTest
         QVERIFY2(h2.value() == 360, "Value shall be 360");
     }
 
-    /*
-     * COM and NAV units
-     */
     void CTestAviation::comAndNav()
     {
         CComSystem c1 = CComSystem::getCom1System(122.8);
@@ -98,9 +88,6 @@ namespace BlackMiscTest
         QVERIFY2(!CNavSystem::isValidCivilNavigationFrequency(CFrequency(200.0, CFrequencyUnit::MHz())), "Expect invalid nav frequency");
     }
 
-    /*
-     * COM and NAV units
-     */
     void CTestAviation::transponder()
     {
         CTransponder t1 = CTransponder::getStandardTransponder(7000, CTransponder::StateStandby);
@@ -120,9 +107,6 @@ namespace BlackMiscTest
         QVERIFY2(!tv.validValues(), "No valid transponder");
     }
 
-    /*
-     * Callsign
-     */
     void CTestAviation::callsignWithContainers()
     {
         CCallsign cs1("EDDm_twr");
@@ -150,9 +134,6 @@ namespace BlackMiscTest
         QVERIFY2(set.size() == 0, "Last should be gone");
     }
 
-    /*
-     * Copy and compare
-     */
     void CTestAviation::copyAndEqual()
     {
         CFrequency f1(123.45, CFrequencyUnit::MHz());

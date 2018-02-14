@@ -31,13 +31,16 @@ namespace BlackMisc
             CAircraftEngine() {}
 
             //! Constructor
+            //! \remark numbers are 1 based!
             CAircraftEngine(int number, bool on);
 
             //! Get engine number
+            //! \remark numbers are 1 based!
             int getNumber() const { return m_number; }
 
             //! Set engine number
-            void setNumber (int number);
+            //! \remark numbers are 1 based!
+            void setNumber(int number);
 
             //! Is on/off?
             bool isOn() const { return m_on; }

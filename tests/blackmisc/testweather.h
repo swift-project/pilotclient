@@ -21,7 +21,6 @@
 
 namespace BlackMiscTest
 {
-
     //! Aviation classes basic tests
     class CTestWeather : public QObject
     {
@@ -47,7 +46,6 @@ namespace BlackMiscTest
         //! Testing METAR decoder
         void metarDecoder();
     };
-
 } // namespace
 
 //! \endcond

@@ -26,92 +26,92 @@ namespace BlackMisc
 
         CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->getOwnAircraft();
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->getOwnAircraft();
         }
 
         CCoordinateGeodetic COwnAircraftAware::getOwnAircraftPosition() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->getOwnAircraftPosition();
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->getOwnAircraftPosition();
         }
 
         CAircraftSituation COwnAircraftAware::getOwnAircraftSituation() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->getOwnAircraftSituation();
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->getOwnAircraftSituation();
         }
 
         CAircraftParts COwnAircraftAware::getOwnAircraftParts() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->getOwnAircraftParts();
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->getOwnAircraftParts();
         }
 
         CAircraftModel COwnAircraftAware::getOwnAircraftModel() const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->getOwnAircraftModel();
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->getOwnAircraftModel();
         }
 
         CLength COwnAircraftAware::getDistanceToOwnAircraft(const Geo::ICoordinateGeodetic &position) const
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->getDistanceToOwnAircraft(position);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->getDistanceToOwnAircraft(position);
         }
 
         bool COwnAircraftAware::updateCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateCockpit(aircraft, originator);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateCockpit(aircraft, originator);
         }
 
         bool COwnAircraftAware::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateCockpit(com1, com2, transponder, originator);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateCockpit(com1, com2, transponder, originator);
         }
 
         bool COwnAircraftAware::updateActiveComFrequency(const CFrequency &frequency, CComSystem::ComUnit comUnit, const CIdentifier &originator)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateActiveComFrequency(frequency, comUnit, originator);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateActiveComFrequency(frequency, comUnit, originator);
         }
 
         bool COwnAircraftAware::updateSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateSelcal(selcal, originator);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateSelcal(selcal, originator);
         }
 
         bool COwnAircraftAware::updateOwnModel(const CAircraftModel &model)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateOwnModel(model);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateOwnModel(model);
         }
 
         bool COwnAircraftAware::updateOwnSituation(const CAircraftSituation &situation)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateOwnSituation(situation);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateOwnSituation(situation);
         }
 
         bool COwnAircraftAware::updateOwnParts(const CAircraftParts &parts)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateOwnParts(parts);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateOwnParts(parts);
         }
 
         bool COwnAircraftAware::updateOwnCallsign(const CCallsign &callsign)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateOwnCallsign(callsign);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateOwnCallsign(callsign);
         }
 
         bool COwnAircraftAware::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoData, const CAirlineIcaoCode &airlineIcaoCode)
         {
-            Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_ownAircraftProvider->updateOwnIcaoCodes(aircraftIcaoData, airlineIcaoCode);
+            Q_ASSERT_X(m_ownAircraftProvider, Q_FUNC_INFO, "No object available");
+            return m_ownAircraftProvider->updateOwnIcaoCodes(aircraftIcaoData, airlineIcaoCode);
         }
     } // namespace
 } // namespace

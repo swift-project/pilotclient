@@ -233,7 +233,7 @@ namespace BlackSimPlugin
                                 if (objectId == simObj.getObjectId())
                                 {
                                     const CCallsign callsign(simObj.getCallsign());
-                                    const CAircraftLights lights = remoteAircraftLights->toLights(); // as in simulator
+                                    const CAircraftLights lights(remoteAircraftLights->toLights()); // as in simulator
                                     simulatorFsxP3D->setCurrentLights(callsign, lights);
                                     if (simObj.getLightsAsSent().isNull())
                                     {

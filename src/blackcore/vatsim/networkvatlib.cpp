@@ -571,7 +571,7 @@ namespace BlackCore
             QStringList args;
             int id = 0;
             QString key;
-            if (!getCmdLineClientIdAndKey(id, key)) { return args; }
+            if (!CNetworkVatlib::getCmdLineClientIdAndKey(id, key)) { return args; }
             args << "--idAndKey";
             args << sApp->getParserValue("clientIdAndKey"); // as typed in
             return args;
@@ -672,7 +672,7 @@ namespace BlackCore
 
         void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
         {
-            QJsonObject config = getOwnAircraftParts().toJson();
+            QJsonObject config = this->getOwnAircraftParts().toJson();
             config.insert("is_full_data", true);
             QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
             data = convertToUnicodeEscaped(data);
@@ -754,11 +754,11 @@ namespace BlackCore
             // split parser values
             const QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
             if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
-            const auto stringList = clientIdAndKey.split(':');
+            const QStringList stringList = clientIdAndKey.split(':');
             const QString clientIdAsString = stringList[0];
             bool ok = true;
-            id = clientIdAsString.toInt(&ok, 0);
-            if (!ok) { return false; }
+            id = clientIdAsString.toInt(&ok, 0); // base 0 means C convention
+            if (!ok || id == 0) { return false; }
             key = stringList[1];
             return true;
         }
