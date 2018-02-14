@@ -291,9 +291,11 @@ namespace BlackGui
         void CDbOwnModelSetComponent::createNewSet()
         {
             // make sure both tabs display the same simulator
-            Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
+            // since we use the componet also in the launcher wizard, mc might not be existing
             const CSimulatorInfo simulator(this->getModelSetSimulator());
-            this->getMappingComponent()->setOwnModelsSimulator(simulator);
+            CDbMappingComponent *mc = this->getMappingComponent();
+            if (mc) { mc->setOwnModelsSimulator(simulator); }
+
             if (!m_modelSetFormDialog)
             {
                 m_modelSetFormDialog.reset(new CDbOwnModelSetFormDialog(this));
@@ -313,7 +315,7 @@ namespace BlackGui
             else
             {
                 static const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << simulator.toQString(true);
-                this->getMappingComponent()->showOverlayMessage(m);
+                if (mc) { mc->showOverlayMessage(m); }
             }
         }
 
