@@ -38,11 +38,6 @@ namespace BlackMisc
                 return m_simulatorDirectory;
             }
 
-            bool CSimulatorSettings::hasSimulatorDirectory() const
-            {
-                return !getSimulatorDirectory().isEmpty();
-            }
-
             void CSimulatorSettings::setModelDirectories(const QStringList &modelDirectories)
             {
                 m_modelDirectories = modelDirectories;
@@ -137,6 +132,11 @@ namespace BlackMisc
                 return CSimulatorSettings();
             }
 
+            CSpecializedSimulatorSettings CMultiSimulatorSettings::getSpecializedSettings(const CSimulatorInfo &simulator) const
+            {
+                return CSpecializedSimulatorSettings(this->getSettings(simulator), simulator);
+            }
+
             CStatusMessage CMultiSimulatorSettings::setSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -187,104 +187,44 @@ namespace BlackMisc
 
             QString CMultiSimulatorSettings::getSimulatorDirectoryIfNotDefault(const CSimulatorInfo &simulator) const
             {
-                const CSimulatorSettings s = this->getSettings(simulator);
-                const QString dir = s.getSimulatorDirectory();
-                if (dir.isEmpty() || dir == CMultiSimulatorSettings::getDefaultSimulatorDirectory(simulator))
-                {
-                    return QStringLiteral("");
-                }
-                return s.getSimulatorDirectory();
+                const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
+                return s.getSimulatorDirectoryIfNotDefault();
             }
 
             QString CMultiSimulatorSettings::getSimulatorDirectoryOrDefault(const CSimulatorInfo &simulator) const
             {
-                const CSimulatorSettings s = this->getSettings(simulator);
-                if (s.getSimulatorDirectory().isEmpty())
-                {
-                    return CMultiSimulatorSettings::getDefaultSimulatorDirectory(simulator);
-                }
-                return s.getSimulatorDirectory();
+                const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
+                return s.getSimulatorDirectoryOrDefault();
             }
 
             QStringList CMultiSimulatorSettings::getModelDirectoriesIfNotDefault(const CSimulatorInfo &simulator) const
             {
-                const CSimulatorSettings s = this->getSettings(simulator);
-                const QStringList dirs = s.getModelDirectories();
-                if (dirs.isEmpty() || dirs == CMultiSimulatorSettings::getDefaultModelDirectories(simulator))
-                {
-                    return QStringList();
-                }
-                return dirs;
+                const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
+                return s.getModelDirectoriesIfNotDefault();
             }
 
             QStringList CMultiSimulatorSettings::getModelDirectoriesOrDefault(const CSimulatorInfo &simulator) const
             {
-                const CSimulatorSettings s = this->getSettings(simulator);
-                if (s.getModelDirectories().isEmpty())
-                {
-                    return this->getDefaultModelDirectories(simulator);
-                }
-                return s.getModelDirectories();
+                const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
+                return s.getModelDirectoriesOrDefault();
             }
 
             QString CMultiSimulatorSettings::getFirstModelDirectoryOrDefault(const CSimulatorInfo &simulator) const
             {
-                const QStringList models(getModelDirectoriesOrDefault(simulator));
-                if (models.isEmpty()) { return ""; }
-                return models.first();
-            }
-
-            QStringList CMultiSimulatorSettings::getDefaultModelDirectories(const CSimulatorInfo &simulator) const
-            {
-                static const QStringList e;
-                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                switch (simulator.getSimulator())
-                {
-                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9AircraftDir().isEmpty()   ? e : QStringList({ CFsCommonUtil::fs9AircraftDir() });
-                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxSimObjectsDir().isEmpty() ? e : QStringList({ CFsCommonUtil::fsxSimObjectsDir() });
-                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dSimObjectsDir().isEmpty() ? e : QStringList({ CFsCommonUtil::p3dSimObjectsDir()});
-                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelDirectories();
-                default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                    break;
-                }
-                return QStringList();
+                const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
+                return s.getFirstModelDirectoryOrDefault();
             }
 
             QStringList CMultiSimulatorSettings::getModelExcludeDirectoryPatternsIfNotDefault(const CSimulatorInfo &simulator) const
             {
-                const CSimulatorSettings s = this->getSettings(simulator);
-                const QStringList patterns = s.getModelExcludeDirectoryPatterns();
-                if (patterns.isEmpty() || patterns == CMultiSimulatorSettings::getDefaultModelExcludeDirectoryPatterns(simulator))
-                {
-                    return QStringList();
-                }
-                return patterns;
+                const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
+                return s.getModelExcludeDirectoryPatternsIfNotDefault();
             }
 
             QStringList CMultiSimulatorSettings::getModelExcludeDirectoryPatternsOrDefault(const CSimulatorInfo &simulator) const
             {
-                const CSimulatorSettings s = this->getSettings(simulator);
-                QStringList exclude(s.getModelExcludeDirectoryPatterns());
-                if (!exclude.isEmpty()) { return exclude; }
-                exclude = this->getDefaultModelExcludeDirectoryPatterns(simulator);
-                return exclude;
-            }
-
-            QStringList CMultiSimulatorSettings::getDefaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator) const
-            {
-                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                switch (simulator.getSimulator())
-                {
-                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9AircraftObjectsExcludeDirectoryPatterns();
-                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns();
-                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns();
-                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelExcludeDirectoryPatterns();
-                default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                    break;
-                }
-                return QStringList();
+                const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
+                return s.getModelExcludeDirectoryPatternsOrDefault();
             }
 
             void CMultiSimulatorSettings::resetToDefaults(const CSimulatorInfo &simulator)
@@ -294,26 +234,19 @@ namespace BlackMisc
                 this->setAndSaveSettings(s, simulator);
             }
 
-            QString CMultiSimulatorSettings::getDefaultSimulatorDirectory(const CSimulatorInfo &simulator)
+            const QStringList &CMultiSimulatorSettings::defaultModelDirectories(const CSimulatorInfo &simulator) const
             {
-                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                switch (simulator.getSimulator())
-                {
-                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9Dir();
-                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxDir();
-                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dDir();
-                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir();
-                default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                    break;
-                }
-                static const QString empty;
-                return empty;
+                return CSpecializedSimulatorSettings::defaultModelDirectories(simulator);
             }
 
-            CSimulatorMessagesSettings::CSimulatorMessagesSettings()
+            const QStringList &CMultiSimulatorSettings::defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator)
             {
-                // void
+                return CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(simulator);
+            }
+
+            const QString &CMultiSimulatorSettings::defaultSimulatorDirectory(const CSimulatorInfo &simulator)
+            {
+                return CSpecializedSimulatorSettings::defaultSimulatorDirectory(simulator);
             }
 
             void CSimulatorMessagesSettings::setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity)
@@ -459,6 +392,182 @@ namespace BlackMisc
                 case IndexGloballyEnabled: this->setGloballyEnabled(variant.toBool()); break;
                 default: CValueObject::setPropertyByIndex(index, variant); break;
                 }
+            }
+
+            void CSpecializedSimulatorSettings::setSimulatorDirectory(const QString &simDir)
+            {
+                m_genericSettings.setSimulatorDirectory(simDir);
+            }
+
+            const QString &CSpecializedSimulatorSettings::getDefaultSimulatorDirectory() const
+            {
+                return CSpecializedSimulatorSettings::defaultSimulatorDirectory(m_simulator);
+            }
+
+            const QString &CSpecializedSimulatorSettings::getSimulatorDirectoryIfNotDefault() const
+            {
+                static const QString empty;
+                if (!m_genericSettings.hasSimulatorDirectory()) { return empty; }
+                if (m_genericSettings.getSimulatorDirectory() == CSpecializedSimulatorSettings::defaultSimulatorDirectory(m_simulator))
+                {
+                    return empty;
+                }
+                return m_genericSettings.getSimulatorDirectory();
+            }
+
+            const QString &CSpecializedSimulatorSettings::getSimulatorDirectoryOrDefault() const
+            {
+                return (m_genericSettings.hasSimulatorDirectory()) ?
+                       m_genericSettings.getSimulatorDirectory() :
+                       CSpecializedSimulatorSettings::defaultSimulatorDirectory(m_simulator);
+            }
+
+            const QStringList CSpecializedSimulatorSettings::getModelDirectoriesOrDefault() const
+            {
+                return m_genericSettings.hasModelDirectories() ?
+                       m_genericSettings.getModelDirectories() :
+                       this->getModelDirectoriesFromSimulatorDirectoryOrDefault();
+            }
+
+            const QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoy() const
+            {
+                if (!m_genericSettings.hasSimulatorDirectory()) { return QStringList(); }
+                const QString s(m_genericSettings.getSimulatorDirectory());
+                switch (m_simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: return QStringList({CFsCommonUtil::fs9AircraftDirFromSimDir(s)});
+                case CSimulatorInfo::FSX: return QStringList({CFsCommonUtil::fsxSimObjectsDirFromSimDir(s)});
+                case CSimulatorInfo::P3D: return QStringList({CFsCommonUtil::p3dSimObjectsDirFromSimDir(s)});
+                case CSimulatorInfo::XPLANE: return QStringList({CXPlaneUtil::modelDirectoriesFromSimDir(s)});
+                default: break;
+                }
+                return QStringList();
+            }
+
+            const QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoryOrDefault() const
+            {
+                if (!m_genericSettings.hasSimulatorDirectory()) { return CSpecializedSimulatorSettings::defaultModelDirectories(m_simulator); }
+                return this->getModelDirectoriesFromSimulatorDirectoy();
+            }
+
+            const QStringList &CSpecializedSimulatorSettings::getModelDirectoriesIfNotDefault() const
+            {
+                static const QStringList empty;
+                if (!m_genericSettings.hasModelDirectories()) { return empty; }
+                if (m_genericSettings.getModelDirectories() == CSpecializedSimulatorSettings::defaultModelDirectories(m_simulator))
+                {
+                    return empty;
+                }
+                return m_genericSettings.getModelDirectories();
+            }
+
+            const QStringList &CSpecializedSimulatorSettings::getDefaultModelExcludeDirectoryPatterns() const
+            {
+                return CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(m_simulator);
+            }
+
+            const QString CSpecializedSimulatorSettings::getFirstModelDirectoryOrDefault() const
+            {
+                static const QString empty;
+                if (this->getModelDirectoriesOrDefault().isEmpty()) { return empty; }
+                return this->getModelDirectoriesOrDefault().first();
+            }
+
+            const QStringList &CSpecializedSimulatorSettings::getDefaultModelDirectories() const
+            {
+                return CSpecializedSimulatorSettings::defaultModelDirectories(m_simulator);
+            }
+
+            const QStringList &CSpecializedSimulatorSettings::getModelExcludeDirectoryPatternsIfNotDefault() const
+            {
+                static const QStringList empty;
+                if (!m_genericSettings.hasModelExcludeDirectoryPatterns()) { return empty; }
+                if (m_genericSettings.getModelExcludeDirectoryPatterns() == CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(m_simulator))
+                {
+                    return empty;
+                }
+                return m_genericSettings.getModelExcludeDirectoryPatterns();
+            }
+
+            const QStringList &CSpecializedSimulatorSettings::getModelExcludeDirectoryPatternsOrDefault() const
+            {
+                return m_genericSettings.hasModelExcludeDirectoryPatterns() ?
+                       m_genericSettings.getModelExcludeDirectoryPatterns() :
+                       CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(m_simulator);
+            }
+
+            const QStringList &CSpecializedSimulatorSettings::defaultModelDirectories(const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                static const QStringList e;
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9:
+                    {
+                        if (CFsCommonUtil::fs9AircraftDir().isEmpty()) { return e; }
+                        static const QStringList md({ CFsCommonUtil::fs9AircraftDir() });
+                        return  md;
+                    }
+                case CSimulatorInfo::FSX:
+                    {
+                        if (CFsCommonUtil::fsxSimObjectsDir().isEmpty()) { return e; }
+                        static const QStringList md({ CFsCommonUtil::fsxSimObjectsDir() });
+                        return  md;
+                    }
+                case CSimulatorInfo::P3D:
+                    {
+                        if (CFsCommonUtil::p3dSimObjectsDir().isEmpty()) { return e; }
+                        static const QStringList md({ CFsCommonUtil::p3dSimObjectsDir() });
+                        return  md;
+                    }
+                case CSimulatorInfo::XPLANE:
+                    {
+                        return CXPlaneUtil::xplaneModelDirectories();
+                    }
+                default:
+                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    break;
+                }
+                return e;
+            }
+
+            const QString &CSpecializedSimulatorSettings::defaultSimulatorDirectory(const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9Dir();
+                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxDir();
+                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dDir();
+                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir();
+                default:
+                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    break;
+                }
+                static const QString empty;
+                return empty;
+            }
+
+            const QStringList &CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9AircraftObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns();
+                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelExcludeDirectoryPatterns();
+                default:
+                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    break;
+                }
+                static const QStringList empty;
+                return empty;
+            }
+
+            const QString CXPlaneSimulatorSettings::getPluginDirOrDefault() const
+            {
+                return CFileUtils::appendFilePaths(this->getSimulatorDirectoryOrDefault(), CXPlaneUtil::xplanePluginPath());
             }
         } // ns
     } // ns
