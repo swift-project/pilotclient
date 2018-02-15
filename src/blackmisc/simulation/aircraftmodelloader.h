@@ -39,10 +39,10 @@ namespace BlackMisc
          */
         class BLACKMISC_EXPORT IAircraftModelLoader :
             public QObject,
-            public BlackMisc::Simulation::IModelsSetable,
-            public BlackMisc::Simulation::IModelsUpdatable,
-            public BlackMisc::Simulation::IModelsPerSimulatorSetable,
-            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable
+            public IModelsSetable,
+            public IModelsUpdatable,
+            public IModelsPerSimulatorSetable,
+            public IModelsPerSimulatorUpdatable
         {
             Q_OBJECT
             Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)

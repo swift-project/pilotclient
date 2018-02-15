@@ -43,38 +43,37 @@ namespace BlackGui
             //! Destructor
             virtual ~CSettingsSimulatorComponent();
 
-        private slots:
+        private:
             //! Driver plugin enabled/disabled
-            void ps_pluginStateChanged(const QString &identifier, bool enabled);
+            void pluginStateChanged(const QString &identifier, bool enabled);
 
             //! Apply max.aircraft
-            void ps_onApplyMaxRenderedAircraft();
+            void onApplyMaxRenderedAircraft();
 
             //! Apply max.distance
-            void ps_onApplyMaxRenderedDistance();
+            void onApplyMaxRenderedDistance();
 
             //! Apply disable rendering
-            void ps_onApplyDisableRendering();
+            void onApplyDisableRendering();
 
             //! Apply time sync
-            void ps_onApplyTimeSync();
+            void onApplyTimeSync();
 
             //! Clear restricted rendering
-            void ps_clearRestricedRendering();
+            void clearRestricedRendering();
 
             //! Simulator plugin changed
-            void ps_simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
+            void simulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
             //! Open plugin details window
-            void ps_showPluginDetails(const QString &identifier);
+            void showPluginDetails(const QString &identifier);
 
             //! Show plugin config
-            void ps_showPluginConfig(const QString &identifier);
+            void showPluginConfig(const QString &identifier);
 
             //! Select/deselect enabled/disabled plugins
-            void ps_reloadPluginConfig();
+            void reloadPluginConfig();
 
-        private:
             //! Set the GUI values
             void setGuiValues();
 
@@ -84,7 +83,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
             bool m_pluginLoaded = false; //!< plugin loaded?
             BlackCore::CPluginManagerSimulator* m_plugins = nullptr;
-            BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::ps_reloadPluginConfig };
+            BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::reloadPluginConfig };
         };
     }
 } // namespace

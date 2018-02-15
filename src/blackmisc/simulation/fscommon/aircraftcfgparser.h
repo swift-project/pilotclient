@@ -35,7 +35,7 @@ namespace BlackMisc
         namespace FsCommon
         {
             //! Utility, parsing the aircraft.cfg files
-            class BLACKMISC_EXPORT CAircraftCfgParser : public BlackMisc::Simulation::IAircraftModelLoader
+            class BLACKMISC_EXPORT CAircraftCfgParser : public IAircraftModelLoader
             {
                 Q_OBJECT
 

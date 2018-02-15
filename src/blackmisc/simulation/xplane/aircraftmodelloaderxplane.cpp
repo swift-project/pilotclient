@@ -93,25 +93,25 @@ namespace BlackMisc
                 {
                     if (model.getDistributor().hasDescription() && !model.getName().contains(model.getDistributor().getDescription()))
                     {
-                        return "[ACF] " % model.getName() % " by " % model.getDistributor().getDescription();
+                        return QStringLiteral("[ACF] ") % model.getName() % QStringLiteral(" by ") % model.getDistributor().getDescription();
                     }
                     else
                     {
-                        return "[ACF] " % model.getName();
+                        return QStringLiteral("[ACF] ") % model.getName();
                     }
                 }
                 else if (model.hasAircraftDesignator())
                 {
                     if (model.getDistributor().hasDescription())
                     {
-                        return "[ACF] " % model.getAircraftIcaoCodeDesignator() % " by " % model.getDistributor().getDescription();
+                        return QStringLiteral("[ACF] ") % model.getAircraftIcaoCodeDesignator() % QStringLiteral(" by ") % model.getDistributor().getDescription();
                     }
                     else
                     {
-                        return "[ACF] " % model.getAircraftIcaoCodeDesignator();
+                        return QStringLiteral("[ACF] ") % model.getAircraftIcaoCodeDesignator();
                     }
                 }
-                return "[ACF]";
+                return QStringLiteral("[ACF]");
             }
 
             CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane() : IAircraftModelLoader(CSimulatorInfo::XPLANE)

@@ -35,7 +35,7 @@ namespace BlackMisc
             /*!
              * XPlane aircraft model loader
              */
-            class BLACKMISC_EXPORT CAircraftModelLoaderXPlane : public BlackMisc::Simulation::IAircraftModelLoader
+            class BLACKMISC_EXPORT CAircraftModelLoaderXPlane : public IAircraftModelLoader
             {
                 Q_OBJECT
 
@@ -74,10 +74,10 @@ namespace BlackMisc
                     QString objectName;   //!< Complete basename of the object file
                     QString textureName;  //!< Complete basename of the texture file. Can be empty.
 
-                    QString filePath;   //!< object filePath
-                    QString icao;       //!< Icao type of this model
-                    QString airline;    //!< Airline identifier. Can be empty.
-                    QString livery;     //!< Livery identifier. Can be empty.
+                    QString filePath; //!< object filePath
+                    QString icao;     //!< Icao type of this model
+                    QString airline;  //!< Airline identifier. Can be empty.
+                    QString livery;   //!< Livery identifier. Can be empty.
                 };
 
                 struct CSLPackage

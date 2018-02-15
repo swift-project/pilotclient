@@ -69,19 +69,19 @@ namespace BlackGui
             ui->le_MaxDistance->setValidator(new QIntValidator(ui->le_MaxDistance));
 
             // connects
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
-            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::ps_pluginStateChanged);
-            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::ps_showPluginDetails);
-            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::ps_showPluginConfig);
-            connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
-            connect(ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
-            connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
-            connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_clearRestricedRendering);
-            connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyDisableRendering);
-            connect(ui->le_MaxAircraft, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
-            connect(ui->le_MaxDistance, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
-            connect(ui->le_MaxAircraft, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
-            connect(ui->le_MaxDistance, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::simulatorPluginChanged);
+            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::pluginStateChanged);
+            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::showPluginDetails);
+            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::showPluginConfig);
+            connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
+            connect(ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync);
+            connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
+            connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::clearRestricedRendering);
+            connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
+            connect(ui->le_MaxAircraft, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
+            connect(ui->le_MaxDistance, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
+            connect(ui->le_MaxAircraft, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
+            connect(ui->le_MaxDistance, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
 
             // list all available simulators
             for (const auto &p : getAvailablePlugins())
@@ -91,10 +91,10 @@ namespace BlackGui
             }
 
             // config
-            ps_reloadPluginConfig();
+            reloadPluginConfig();
 
             // init
-            ps_simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
+            simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
         }
 
         CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
@@ -145,7 +145,7 @@ namespace BlackGui
             return sGui->getIContextSimulator()->getAvailableSimulatorPlugins();
         }
 
-        void CSettingsSimulatorComponent::ps_pluginStateChanged(const QString &identifier, bool enabled)
+        void CSettingsSimulatorComponent::pluginStateChanged(const QString &identifier, bool enabled)
         {
             Q_ASSERT(sGui && sGui->getIContextSimulator());
 
@@ -178,7 +178,7 @@ namespace BlackGui
             // changing of GUI state will be done via received signal
         }
 
-        void CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft()
+        void CSettingsSimulatorComponent::onApplyMaxRenderedAircraft()
         {
             // get initial aircraft to render
             CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
@@ -205,7 +205,7 @@ namespace BlackGui
             this->setGuiValues();
         }
 
-        void CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance()
+        void CSettingsSimulatorComponent::onApplyMaxRenderedDistance()
         {
             // get initial aircraft to render
             CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
@@ -229,7 +229,7 @@ namespace BlackGui
             }
         }
 
-        void CSettingsSimulatorComponent::ps_onApplyDisableRendering()
+        void CSettingsSimulatorComponent::onApplyDisableRendering()
         {
             CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
             setup.disableRendering();
@@ -237,7 +237,7 @@ namespace BlackGui
             this->setGuiValues();
         }
 
-        void CSettingsSimulatorComponent::ps_onApplyTimeSync()
+        void CSettingsSimulatorComponent::onApplyTimeSync()
         {
             const bool timeSync = ui->cb_TimeSync->isChecked();
             const QString os = ui->le_TimeSyncOffset->text();
@@ -256,7 +256,7 @@ namespace BlackGui
             }
         }
 
-        void CSettingsSimulatorComponent::ps_clearRestricedRendering()
+        void CSettingsSimulatorComponent::clearRestricedRendering()
         {
             CInterpolationAndRenderingSetup setup;
             setup.clearAllRenderingRestrictions();
@@ -264,7 +264,7 @@ namespace BlackGui
             this->setGuiValues();
         }
 
-        void CSettingsSimulatorComponent::ps_simulatorPluginChanged(const CSimulatorPluginInfo &info)
+        void CSettingsSimulatorComponent::simulatorPluginChanged(const CSimulatorPluginInfo &info)
         {
             // I intentionally do not set the selected plugin combobox here
             // as this would cause undesired roundtrips
@@ -283,7 +283,7 @@ namespace BlackGui
             this->setGuiValues();
         }
 
-        void CSettingsSimulatorComponent::ps_showPluginDetails(const QString &identifier)
+        void CSettingsSimulatorComponent::showPluginDetails(const QString &identifier)
         {
             const CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
             const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
@@ -303,7 +303,7 @@ namespace BlackGui
             w->show();
         }
 
-        void CSettingsSimulatorComponent::ps_showPluginConfig(const QString &identifier)
+        void CSettingsSimulatorComponent::showPluginConfig(const QString &identifier)
         {
             const CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
             const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
@@ -321,7 +321,7 @@ namespace BlackGui
             window->show();
         }
 
-        void CSettingsSimulatorComponent::ps_reloadPluginConfig()
+        void CSettingsSimulatorComponent::reloadPluginConfig()
         {
             // list all available simulators
             const auto enabledSimulators = m_enabledSimulators.getThreadLocal();

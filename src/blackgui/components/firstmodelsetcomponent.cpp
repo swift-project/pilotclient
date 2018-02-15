@@ -16,6 +16,7 @@
 #include <QStringList>
 
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackGui
 {
@@ -96,7 +97,7 @@ namespace BlackGui
             return this->modelSetComponent()->modelSetLoader();
         }
 
-        const Settings::CMultiSimulatorSettings &CFirstModelSetComponent::simulatorSettings() const
+        const CMultiSimulatorSettings &CFirstModelSetComponent::simulatorSettings() const
         {
             return this->modelLoader()->multiSimulatorSettings();
         }
