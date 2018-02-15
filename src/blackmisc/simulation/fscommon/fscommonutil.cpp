@@ -205,6 +205,12 @@ namespace BlackMisc
                 return dir;
             }
 
+            QString CFsCommonUtil::p3dSimObjectsDirFromSimDir(const QString &simDir)
+            {
+                if (simDir.isEmpty()) { return QStringLiteral(""); }
+                return CFileUtils::appendFilePaths(simDir, "SimObjects");
+            }
+
             const QStringList &CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns()
             {
                 static const QStringList exclude

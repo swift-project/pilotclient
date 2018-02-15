@@ -61,6 +61,9 @@ namespace BlackMisc
                 //! P3D's sim object dir, resolved from multiple sources
                 static const QString &p3dSimObjectsDir();
 
+                //! P3D aircraft dir, relative to simulator directory
+                static QString p3dSimObjectsDirFromSimDir(const QString &simDir);
+
                 //! Exclude directories for simObjects
                 static const QStringList &p3dSimObjectsExcludeDirectoryPatterns();
 

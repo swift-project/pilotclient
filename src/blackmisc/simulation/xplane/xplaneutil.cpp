@@ -101,25 +101,38 @@ namespace BlackMisc
 #endif
             }
 
-            QString CXPlaneUtil::xplaneRootDir()
+            const QString &CXPlaneUtil::xplaneRootDir()
             {
-                if (!xplane11Dir().isEmpty()) { return xplane11Dir(); }
-                else if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
-                else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
-                else { return {}; }
+                static const QString dir = []
+                {
+                    if (!xplane11Dir().isEmpty()) { return xplane11Dir(); }
+                    else if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
+                    else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
+                    else { return QString(); }
+                }();
+                return dir;
             }
 
             bool CXPlaneUtil::isXplaneRootDirExisting()
             {
-                const QDir dir(xplaneRootDir());
-                return dir.exists();
+                static const bool exists = QDir(xplaneRootDir()).exists();
+                return exists;
             }
 
-            QString CXPlaneUtil::xplanePluginDir()
+            const QString &CXPlaneUtil::xplanePluginDir()
             {
-                const QString xp = xplaneRootDir();
-                if (xp.isEmpty()) { return xp; }
-                return CFileUtils::appendFilePaths(xp, xplanePluginPath());
+                static const QString pd(xplaneRootDir().isEmpty() ? "" : CFileUtils::appendFilePaths(xplaneRootDir(), xplanePluginPath()));
+                return pd;
+            }
+
+            QString CXPlaneUtil::pluginDirFromSimDir(const QString &simulatorDir)
+            {
+                return CFileUtils::appendFilePaths(simulatorDir, xplanePluginPath());
+            }
+
+            QStringList CXPlaneUtil::modelDirectoriesFromSimDir(const QString &simulatorDir)
+            {
+                return QStringList({ simulatorDir });
             }
 
             QString CXPlaneUtil::xplanePluginPath()
@@ -130,19 +143,20 @@ namespace BlackMisc
 
             bool CXPlaneUtil::isXplanePluginDirDirExisting()
             {
-                const QDir dir(xplanePluginDir());
-                return dir.exists();
+                static const bool exists = QDir(xplanePluginDir()).exists();
+                return exists;
             }
 
-            QStringList CXPlaneUtil::xplaneModelDirectories()
+            const QStringList &CXPlaneUtil::xplaneModelDirectories()
             {
-                if (xplaneRootDir().isEmpty()) { return QStringList(); }
-                return QStringList({ xplaneRootDir() });
+                static const QStringList dirs = xplaneRootDir().isEmpty() ? QStringList() : QStringList({xplaneRootDir()});
+                return dirs;
             }
 
-            QStringList CXPlaneUtil::xplaneModelExcludeDirectoryPatterns()
+            const QStringList &CXPlaneUtil::xplaneModelExcludeDirectoryPatterns()
             {
-                return QStringList();
+                static const QStringList empty;
+                return empty;
             }
 
             QString CXPlaneUtil::xswiftbusLegacyDir(const QString &rootDir)

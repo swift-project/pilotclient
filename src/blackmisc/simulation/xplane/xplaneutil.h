@@ -40,14 +40,20 @@ namespace BlackMisc
 
                 //! XPlane root directory
                 //! In case more then one XPlane version is found, the path to the highest version is used
-                static QString xplaneRootDir();
+                static const QString &xplaneRootDir();
 
                 //! Is the xplaneRootDir existing?
                 static bool isXplaneRootDirExisting();
 
                 //! XPlane plugin directory
                 //! In case more then one XPlane version is found, the path to the highest version is used
-                static QString xplanePluginDir();
+                static const QString &xplanePluginDir();
+
+                //! Plugin directory from given simulator directory
+                static QString pluginDirFromSimDir(const QString &simulatorDir);
+
+                //! Model directories from simultaor directory
+                static QStringList modelDirectoriesFromSimDir(const QString &simulatorDir);
 
                 //! XPlane relative plugin path
                 static QString xplanePluginPath();
@@ -56,10 +62,10 @@ namespace BlackMisc
                 static bool isXplanePluginDirDirExisting();
 
                 //! Directories with models
-                static QStringList xplaneModelDirectories();
+                static const QStringList &xplaneModelDirectories();
 
                 //! Exclude directories for models
-                static QStringList xplaneModelExcludeDirectoryPatterns();
+                static const QStringList &xplaneModelExcludeDirectoryPatterns();
 
                 //! XSwiftBus legacy directory
                 static QString xswiftbusLegacyDir(const QString &rootDir);
