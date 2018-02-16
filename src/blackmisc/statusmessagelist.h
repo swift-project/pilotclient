@@ -24,6 +24,7 @@
 #include <QJsonArray>
 #include <QMetaType>
 #include <QtGlobal>
+#include <QMap>
 
 namespace BlackMisc
 {
@@ -109,6 +110,9 @@ namespace BlackMisc
 
         //! Find worst severity
         CStatusMessage::StatusSeverity worstSeverity() const;
+
+        //! Count number of messages per severity
+        QMap<int, int> countSeverities() const;
 
         //! Merge into a single message
         CStatusMessage toSingleMessage() const;

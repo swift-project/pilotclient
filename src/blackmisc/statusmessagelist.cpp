@@ -186,6 +186,20 @@ namespace BlackMisc
         return s;
     }
 
+    QMap<int, int> CStatusMessageList::countSeverities() const
+    {
+        QMap<int, int> counts;
+        counts.insert(SeverityDebug, 0);
+        counts.insert(SeverityInfo, 0);
+        counts.insert(SeverityWarning, 0);
+        counts.insert(SeverityError, 0);
+        for (const CStatusMessage &m : *this)
+        {
+            counts[m.getSeverity()]++;
+        }
+        return counts;
+    }
+
     CStatusMessage CStatusMessageList::toSingleMessage() const
     {
         if (this->isEmpty()) { return CStatusMessage(); }
