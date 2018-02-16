@@ -38,7 +38,7 @@ namespace BlackGui
     namespace Components
     {
         CDbOwnModelsComponent::CDbOwnModelsComponent(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CDbOwnModelsComponent)
         {
             ui->setupUi(this);
@@ -457,10 +457,10 @@ namespace BlackGui
             m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), modelDirectories);
         }
 
-        void CDbOwnModelsComponent::onOwnModelsLoadingFinished(const CStatusMessage &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
+        void CDbOwnModelsComponent::onOwnModelsLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
-            if (status.isSuccess() && m_modelLoader)
+            if (statusMessages.isSuccess() && m_modelLoader)
             {
                 const CAircraftModelList models(m_modelLoader->getAircraftModels());
                 const int modelsLoaded = models.size();
@@ -474,7 +474,11 @@ namespace BlackGui
             else
             {
                 ui->tvp_OwnAircraftModels->clear();
-                CLogMessage(this).error("Loading of models failed, simulator '%1', details: %2") << simulator.toQString() << status.getMessage();
+                CLogMessage(this).error("Loading of models failed, simulator '%1'") << simulator.toQString();
+            }
+
+            if (statusMessages.hasWarningOrErrorMessages()) {
+                this->showOverlayMessages(statusMessages);
             }
 
             // cache loads may occur in background, do not adjust UI settings

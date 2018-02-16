@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_DBOWNMODELSCOMPONENT_H
 
 #include "blackgui/menus/menudelegate.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -44,7 +45,7 @@ namespace BlackGui
          * Handling of own models on disk (the models installed for the simulator)
          */
         class CDbOwnModelsComponent :
-            public QFrame,
+            public COverlayMessagesFrame,
             public BlackMisc::Simulation::IModelsSetable,
             public BlackMisc::Simulation::IModelsUpdatable,
             public BlackMisc::Simulation::IModelsPerSimulatorSetable,
@@ -131,7 +132,7 @@ namespace BlackGui
             void loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
 
             //! Model loading finished
-            void onOwnModelsLoadingFinished(const BlackMisc::CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
+            void onOwnModelsLoadingFinished(const BlackMisc::CStatusMessageList &statusMessages, const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadFinishedInfo info);
 
             //! Request simulator models
             void requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
