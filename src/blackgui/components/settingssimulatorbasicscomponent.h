@@ -79,16 +79,25 @@ namespace BlackGui
             void reset();
 
             //! Simulator has been changed
-            void simulatorChanged();
+            void onSimulatorChanged();
 
             //! Optimize for small layout
             void setSmallLayout(bool small);
 
             //! Exclude directories from line edit
+            QStringList parseModelDirectories() const;
+
+            //! Exclude directories
             QStringList parseDirectories(const QString &rawString) const;
 
             //! Add a directory
             QStringList addDirectory(const QString &directory, const QStringList &existingDirs);
+
+            //! Remove a directory
+            QStringList removeDirectory(const QString &directory, const QStringList &existingDirs);
+
+            //! Remove directories
+            QStringList removeDirectories(const QStringList &directories, const QStringList &existingDirs);
 
             //! Display the directories
             void displayExcludeDirectoryPatterns(const QStringList &dirs);
@@ -97,7 +106,7 @@ namespace BlackGui
             void displayModelDirectories(const QStringList &dirs);
 
             //! Current settings
-            BlackMisc::Simulation::Settings::CSimulatorSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
             //! Display simulator`s settings
             void displaySettings(const BlackMisc::Simulation::CSimulatorInfo &simulator);

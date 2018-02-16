@@ -190,10 +190,8 @@ namespace BlackGui
 
         QString CInstallXSwiftBusComponent::getXPlanePluginDirectory() const
         {
-            const CSimulatorSettings settings = m_simulatorSettings.getSettings(CSimulatorInfo::XPLANE);
-            if (!settings.hasSimulatorDirectory()) { return CXPlaneUtil::xplanePluginDir(); }
-            const QString dir = CFileUtils::appendFilePaths(settings.getSimulatorDirectory(), CXPlaneUtil::xplanePluginPath());
-            return dir;
+            const CXPlaneSimulatorSettings settings = m_simulatorSettings.getSettings(CSimulatorInfo::XPLANE);
+            return settings.getPluginDirOrDefault();
         }
 
         void CInstallXSwiftBusComponent::updatesChanged()
