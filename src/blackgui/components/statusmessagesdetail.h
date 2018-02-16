@@ -53,6 +53,9 @@ namespace BlackGui
             //! Show a filter bar
             void showFilterBar();
 
+            //! Hide a filter bar
+            void hideFilterBar();
+
             //! Clear
             void clear();
 

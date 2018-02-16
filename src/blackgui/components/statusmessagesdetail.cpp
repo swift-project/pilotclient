@@ -65,6 +65,11 @@ namespace BlackGui
             ui->filter_LogMessages->show();
         }
 
+        void CStatusMessagesDetail::hideFilterBar()
+        {
+            ui->filter_LogMessages->hide();
+        }
+
         void CStatusMessagesDetail::clear()
         {
             ui->tvp_StatusMessages->clear();

@@ -83,6 +83,11 @@ namespace BlackGui
             ui->comp_StatusMessages->showFilterBar();
         }
 
+        void CLogComponent::hideFilterBar()
+        {
+            ui->comp_StatusMessages->hideFilterBar();
+        }
+
         void CLogComponent::showDetails(bool details)
         {
             ui->comp_StatusMessages->showDetails(details);

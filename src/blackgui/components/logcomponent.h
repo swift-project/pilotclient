@@ -71,6 +71,9 @@ namespace BlackGui
             //! \copydoc BlackGui::Components::CStatusMessagesDetail::showFilterBar
             void showFilterBar();
 
+            //! \copydoc BlackGui::Components::CStatusMessagesDetail::hideFilterBar
+            void hideFilterBar();
+
             //! \copydoc BlackGui::Components::CStatusMessagesDetail::showDetails
             void showDetails(bool details);
 

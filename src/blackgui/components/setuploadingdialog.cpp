@@ -53,6 +53,8 @@ namespace BlackGui
             this->displayBootstrapUrls();
             this->displayGlobalSetup();
             this->displayOtherVersionsInfo();
+
+            ui->comp_Messages->hideFilterBar(); // saves space, we only expect aview messages
         }
         CSetupLoadingDialog::CSetupLoadingDialog(const BlackMisc::CStatusMessageList &msgs, QWidget *parent) : CSetupLoadingDialog(parent)
         {
