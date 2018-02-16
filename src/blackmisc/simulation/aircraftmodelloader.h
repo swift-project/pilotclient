@@ -18,7 +18,7 @@
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <QDateTime>
 #include <QFlags>
@@ -151,7 +151,7 @@ namespace BlackMisc
             QString getInfoStringFsFamily() const;
 
             //! Current simulator settings
-            Settings::CSimulatorSettings getCurrentSimulatorSettings() const;
+            Settings::CSpecializedSimulatorSettings getCurrentSimulatorSettings() const;
 
             //! Access to multi simulator settings
             const Settings::CMultiSimulatorSettings &multiSimulatorSettings() const { return m_settings; }
@@ -180,7 +180,7 @@ namespace BlackMisc
 
         signals:
             //! Parsing is finished or cache has been loaded
-            void loadingFinished(const BlackMisc::CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, LoadFinishedInfo info);
+            void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
 
         protected:
             //! Constructor
@@ -199,10 +199,10 @@ namespace BlackMisc
             virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QStringList &modelDirectories) = 0;
 
             //! Loading finished, also logs messages
-            void loadFinished(const CStatusMessage &status, const CSimulatorInfo &simulator, LoadFinishedInfo info);
+            void onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, LoadFinishedInfo info);
 
             //! A cache has been changed
-            void cacheChanged(const CSimulatorInfo &simInfo);
+            void onCacheChanged(const CSimulatorInfo &simInfo);
 
             //! Get model directories from settings if empty, otherwise checked and UNC path fixed
             QStringList getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const;

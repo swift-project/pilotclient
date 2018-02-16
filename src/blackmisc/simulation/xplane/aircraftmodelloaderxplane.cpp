@@ -149,9 +149,10 @@ namespace BlackMisc
                         if (modelConsolidation) { modelConsolidation(models, true); }
                         return models;
                     });
-                    m_parserWorker->thenWithResult<CAircraftModelList>(this, [this](const auto & models)
+                    m_parserWorker->thenWithResult<CAircraftModelList>(this, [ = ](const auto & models)
                     {
                         this->updateInstalledModels(models);
+                        emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
                     });
                 }
                 else if (mode.testFlag(LoadDirectly))
@@ -169,7 +170,7 @@ namespace BlackMisc
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
                 this->setCachedModels(models);
-                emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, "Updated '%1' models") << models.size(), this->getSimulator(), ParsedData);
+                emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, "Updated '%1' models") << models.size(), this->getSimulator(), ParsedData);
             }
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
@@ -336,7 +337,8 @@ namespace BlackMisc
                     {
                         if (installedModels.containsModelString(plane.getModelName()))
                         {
-                            CLogMessage(this).warning("Model %1 exists already! Potential model string conflict! Ignoring it.") << plane.getModelName();
+                            const CStatusMessage msg = CStatusMessage(this).warning("Model %1 exists already! Potential model string conflict! Ignoring it.") << plane.getModelName();
+                            m_loadingMessages.push_back(msg);
                             continue;
                         }
 
@@ -704,13 +706,15 @@ namespace BlackMisc
                             bool result = it.value()(tokens, package, package.path, lineNum);
                             if (!result)
                             {
-                                CLogMessage(this).warning("Ignoring CSL package %1") << package.name;
+                                const CStatusMessage m = CStatusMessage(this).warning("Ignoring CSL package %1") << package.name;
+                                m_loadingMessages.push_back(m);
                                 break;
                             }
                         }
                         else
                         {
-                            CLogMessage(this).warning("Unrecognized command %1 in %2") << tokens[0] << package.name;
+                            const CStatusMessage m = CStatusMessage(this).warning("Unrecognized command %1 in %2") << tokens[0] << package.name;
+                            m_loadingMessages.push_back(m);
                             break;
                         }
                     }

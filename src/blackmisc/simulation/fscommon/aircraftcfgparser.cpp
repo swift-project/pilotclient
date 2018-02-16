@@ -107,9 +107,7 @@ namespace BlackMisc
                         }
                         else
                         {
-                            CStatusMessage status = m_loadingMessages.toSingleMessage();
-                            status.setSeverity(CStatusMessage::SeverityError);
-                            emit this->loadingFinished(status, simulator, ParsedData);
+                            emit this->loadingFinished(m_loadingMessages, simulator, ParsedData);
                         }
                     });
                 }

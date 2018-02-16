@@ -18,6 +18,7 @@
 #include <QDir>
 #include <Qt>
 #include <QtGlobal>
+#include <QMap>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::Data;
@@ -35,8 +36,8 @@ namespace BlackMisc
             m_caches.setCurrentSimulator(simulator);
 
             // first connect is an internal connection to log info about load status
-            connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::loadFinished);
-            connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::cacheChanged);
+            connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished);
+            connect(&m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::onCacheChanged);
         }
 
         QString IAircraftModelLoader::enumToString(IAircraftModelLoader::LoadFinishedInfo info)
@@ -110,7 +111,7 @@ namespace BlackMisc
             }
         }
 
-        void IAircraftModelLoader::loadFinished(const CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator, LoadFinishedInfo info)
+        void IAircraftModelLoader::onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, LoadFinishedInfo info)
         {
             Q_UNUSED(info);
 
@@ -118,17 +119,22 @@ namespace BlackMisc
             // so there is some redundancy here between status and m_loadingMessages
             m_loadingInProgress = false;
 
-            if (m_loadingMessages.hasWarningOrErrorMessages())
+            const QMap<int, int> counts = statusMsgs.countSeverities();
+            const int errors = counts.value(SeverityError);
+            const int warnings = counts.value(SeverityWarning);
+
+            if (statusMsgs.hasWarningOrErrorMessages())
             {
-                CLogMessage::preformatted(m_loadingMessages);
+                CLogMessage(this).log(m_loadingMessages.worstSeverity(),
+                                      "Message loading produced %1 error and %2 warning messages") << errors << warnings;
             }
             else
             {
-                CLogMessage(this).info("Loading finished, success '%1' for '%2'") << status.getMessage() << simulator.toQString();
+                CLogMessage(this).info("Loading finished, success for '%1'") << simulator.toQString();
             }
         }
 
-        void IAircraftModelLoader::cacheChanged(const CSimulatorInfo &simInfo)
+        void IAircraftModelLoader::onCacheChanged(const CSimulatorInfo &simInfo)
         {
             static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "Cached changed");
             emit this->loadingFinished(status, simInfo, CacheLoaded);
@@ -211,10 +217,11 @@ namespace BlackMisc
             const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
             if (m_skipLoadingEmptyModelDir && modelDirs.isEmpty())
             {
-                const CStatusMessage status = CStatusMessage(this, CStatusMessage::SeverityWarning, "Empty or not existing %1 directory '%2', skipping read")
+                const CStatusMessage status = CStatusMessage(this, CStatusMessage::SeverityWarning,
+                                              "Empty or not existing %1 directory '%2', skipping read")
                                               << simulator.toQString() << modelDirectories.join(", ");
                 m_loadingMessages.push_back(status);
-                emit loadingFinished(status, simulator, LoadingSkipped);
+                emit this->loadingFinished(m_loadingMessages, simulator, LoadingSkipped);
                 return;
             }
 
@@ -258,9 +265,9 @@ namespace BlackMisc
             return m_caches.getInfoStringFsFamily();
         }
 
-        CSimulatorSettings IAircraftModelLoader::getCurrentSimulatorSettings() const
+        CSpecializedSimulatorSettings IAircraftModelLoader::getCurrentSimulatorSettings() const
         {
-            return m_settings.getSettings(this->getSimulator());
+            return m_settings.getSpecializedSettings(this->getSimulator());
         }
 
         std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simulator)
