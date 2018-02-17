@@ -16,7 +16,7 @@
 #include "blackinput/joystick.h"
 #include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/collection.h"
-#include <QSet>
+#include <QVector>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -80,6 +80,8 @@ namespace BlackInput
         //! Enumerate all attached joystick devices
         HRESULT enumJoystickDevices();
 
+        void filterJoystickDevices();
+
         //! Create a joystick device
         HRESULT createJoystickDevice();
 
@@ -105,11 +107,12 @@ namespace BlackInput
         //! Joystick button enumeration callback
         static BOOL CALLBACK enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef);
 
-        IDirectInput8 *m_directInput = nullptr; //!< DirectInput object
-        IDirectInputDevice8 *m_directInputDevice = nullptr; //!< DirectInput device
-        QList<CJoystickDeviceData> m_availableJoystickDevices; //!< List of found and available joystick devices
-
-        QList<CJoystickDeviceInput> m_joystickDeviceInputs; //!< List of available device buttons
+        // todo RW: Try to use QScopedPointer. So far I could not find out how to use it with
+        // IDirectInput8::CreateDevice
+        IDirectInput8 *m_directInput; //!< DirectInput object
+        IDirectInputDevice8 *m_directInputDevice; //!< DirectInput device
+        QVector<CJoystickDeviceData> m_availableJoystickDevices; //!< List of found and available joystick devices
+        QVector<CJoystickDeviceInput> m_joystickDeviceInputs; //!< List of available device buttons
 
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
 

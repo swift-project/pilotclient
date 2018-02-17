@@ -9,7 +9,6 @@
 
 #include "joystickwindows.h"
 #include "blackmisc/logmessage.h"
-#include <QDebug>
 
 // Qt5 defines UNICODE, hence we can expect an wchar_t strings.
 // If it fails to compile, because of char/wchar_t errors, you are most likely
@@ -27,34 +26,46 @@ namespace BlackInput
     ATOM CJoystickWindows::m_helperWindowClass = 0;
     HWND CJoystickWindows::m_helperWindow = nullptr;
 
-    CJoystickWindows::CJoystickWindows(QObject *parent) :
-        IJoystick(parent)
+    CJoystickWindows::CJoystickWindows(QObject *parent) : IJoystick(parent)
     {
         // Initialize COM
         CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
-        initDirectInput();
-        enumJoystickDevices();
+        this->initDirectInput();
+        this->enumJoystickDevices();
+        this->filterJoystickDevices();
         if (!m_availableJoystickDevices.isEmpty()) { createJoystickDevice(); }
     }
 
     CJoystickWindows::~CJoystickWindows()
     {
+        // release device before input
+        if (m_directInputDevice)
+        {
+            m_directInputDevice->Release();
+            m_directInputDevice = nullptr;
+        }
+        if (m_directInput)
+        {
+            m_directInput->Release();
+            m_directInput = nullptr;
+        }
+
         CoUninitialize();
     }
 
-    void CJoystickWindows::timerEvent(QTimerEvent * /* event */)
+    void CJoystickWindows::timerEvent(QTimerEvent *event)
     {
-        pollDeviceState();
+        Q_UNUSED(event);
+        this->pollDeviceState();
     }
 
     HRESULT CJoystickWindows::initDirectInput()
     {
-        HRESULT hr;
-        if (FAILED(hr = CoCreateInstance(CLSID_DirectInput8, nullptr, CLSCTX_INPROC_SERVER,
-                                         IID_IDirectInput8, (LPVOID *)&m_directInput)))
+        HRESULT hr = CoCreateInstance(CLSID_DirectInput8, nullptr, CLSCTX_INPROC_SERVER, IID_IDirectInput8, (LPVOID *)&m_directInput);
+        if (FAILED(hr))
         {
-            // TODO Print an error
+            CLogMessage(this).error("Cannot create instance %1") << GetLastError();
             return hr;
         }
 
@@ -89,20 +100,54 @@ namespace BlackInput
         return hr;
     }
 
+    void CJoystickWindows::filterJoystickDevices()
+    {
+        IDirectInputDevice8 *directInputDevice = nullptr;
+        DIDEVCAPS deviceCaps;
+        deviceCaps.dwSize = sizeof(DIDEVCAPS);
+        HRESULT hr = S_OK;
+        for (auto i = m_availableJoystickDevices.begin(); i != m_availableJoystickDevices.end();)
+        {
+            // Create device
+            hr = m_directInput->CreateDevice(i->guidDevice, &directInputDevice, nullptr);
+            if (FAILED(hr))
+            {
+                i = m_availableJoystickDevices.erase(i);
+                continue;
+            }
+
+            hr = directInputDevice->GetCapabilities(&deviceCaps);
+            if (FAILED(hr))
+            {
+                i = m_availableJoystickDevices.erase(i);
+                continue;
+            }
+
+            // Filter devices with 0 buttons
+            if (deviceCaps.dwButtons == 0)
+            {
+                i = m_availableJoystickDevices.erase(i);
+                continue;
+            }
+
+            if (directInputDevice)
+            {
+                directInputDevice->Release();
+                directInputDevice = nullptr;
+            }
+
+            ++i;
+        }
+    }
+
     HRESULT CJoystickWindows::createJoystickDevice()
     {
         HRESULT hr = S_OK;
 
-        DIPROPDWORD dipdw;
-
         // Check if device list is empty first
         if (m_availableJoystickDevices.isEmpty()) return E_FAIL;
 
-        ZeroMemory(&dipdw, sizeof(DIPROPDWORD));
-        dipdw.diph.dwSize = sizeof(DIPROPDWORD);
-        dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-
-        // FIXME: Take the first device for the time being
+        // FIXME: Take the first device with number of buttons > 0
         // For the future, the user should be able to choose which device
         // he wants to use.
         const CJoystickDeviceData &deviceData = m_availableJoystickDevices.constFirst();
@@ -147,7 +192,7 @@ namespace BlackInput
             return hr;
         }
 
-        qDebug() << "No. of buttons:" << deviceCaps.dwButtons;
+        CLogMessage(this).info("Created joystick device '%1' with %2 buttons") << deviceData.deviceName << deviceCaps.dwButtons;
 
         startTimer(50);
         return hr;
@@ -191,7 +236,6 @@ namespace BlackInput
         }
 
         return 0;
-
     }
 
     void CJoystickWindows::updateAndSendButtonStatus(qint32 buttonIndex, bool isPressed)
@@ -275,8 +319,7 @@ namespace BlackInput
         //if (isXInputDevice( &pdidInstance->guidProduct )) return DIENUM_CONTINUE;
 
         obj->addJoystickDevice(pdidInstance);
-        qDebug() << "Found joystick device" << QString::fromWCharArray(pdidInstance->tszInstanceName);
-
+        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick device" << QString::fromWCharArray(pdidInstance->tszInstanceName);
         return true;
     }
 
@@ -288,7 +331,7 @@ namespace BlackInput
         if (dev->guidType != GUID_Button) return DIENUM_CONTINUE;
 
         joystick->addJoystickDeviceInput(dev);
-        qDebug() << "Found joystick button" << QString::fromWCharArray(dev->tszName);
+        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick button" << QString::fromWCharArray(dev->tszName);
 
         return DIENUM_CONTINUE;
     }
