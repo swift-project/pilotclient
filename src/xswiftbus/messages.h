@@ -97,10 +97,13 @@ namespace XSwiftBus
         //! \copydoc XSwiftBus::CMessageBox::maxLineLength
         int maxLineLength() const { return m_messageBox.maxLineLength(); }
 
+        //! Toggles the visibility of the message box
+        void toggle() { if (m_visible) { hide(); } else { show(); } }
+
     private:
         void show() { m_messageBox.show(); m_visible = true; }
         void hide() { m_messageBox.hide(); m_visible = false; }
-        void toggle() { if (m_visible) { hide(); } else { show(); } }
+
         void scrollUp();
         void scrollDown();
         void scrollToTop();

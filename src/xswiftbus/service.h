@@ -238,6 +238,9 @@ namespace XSwiftBus
         //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully extended)
         double getSpeedBrakeRatio() const { return m_speedBrakeRatio.get(); }
 
+        //! \copydoc XSwiftBus::CMessageBoxControl::toggle
+        void toggleMessageBoxVisibility() { m_messages.toggle(); }
+
     private:
         CMessageBoxControl m_messages { 128, 128, 16 };
         BlackMisc::Simulation::XPlane::CNavDataReferenceList m_airports;

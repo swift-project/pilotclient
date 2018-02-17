@@ -58,7 +58,8 @@ namespace XSwiftBus
         CTraffic *m_traffic = nullptr;
         CWeather *m_weather = nullptr;
         CMenu m_menu;
-        QVector<CMenuItem> m_startServerMenuItems;
+        CMenuItem m_startServerMenuItem;
+        CMenuItem m_toggleMessageWindowMenuItem;
 
         void startServer(const QString &address);
         void tryStartServer(const QString &address);

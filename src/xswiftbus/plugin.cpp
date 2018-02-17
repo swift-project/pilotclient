@@ -29,14 +29,16 @@ namespace XSwiftBus
     CPlugin::CPlugin()
         : m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
-        m_startServerMenuItems.push_back(m_menu.item("Start server on session bus", [this]{ startServer(BlackMisc::CDBusServer::sessionBusAddress()); }));
-        m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemBusAddress()); }));
-        m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress("localhost")); }));
+        m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(BlackMisc::CDBusServer::sessionBusAddress()); });
+        m_toggleMessageWindowMenuItem = m_menu.item("Toggle Message Window", [this] { if(m_service) { m_service->toggleMessageBoxVisibility(); } });
+        // m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemBusAddress()); }));
+        // m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress("localhost")); }));
     }
 
     void CPlugin::startServer(const QString &address)
     {
-        for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
+        // for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
+        m_startServerMenuItem.setEnabled(false);
 
         m_service = new CService(this);
         m_traffic = new CTraffic(this);
