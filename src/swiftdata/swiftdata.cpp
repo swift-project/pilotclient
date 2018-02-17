@@ -152,10 +152,7 @@ void CSwiftData::initMenu()
 
 void CSwiftData::performGracefulShutdown()
 {
-    if (m_updater)
-    {
-        m_updater->abandonAndWait();
-    }
+    if (m_updater) { m_updater->abandonAndWait(); }
 }
 
 void CSwiftData::consolidationSettingChanged()

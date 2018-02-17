@@ -34,8 +34,8 @@ namespace BlackGui
         }
 
         HWND hWindow = FindWindow(lpClassName.data(), lpWindowName.data());
+        if (hWindow) { return QWindow::fromWinId(reinterpret_cast<WId>(hWindow)); }
 
-        if (hWindow) return QWindow::fromWinId(reinterpret_cast<WId>(hWindow));
-        else return nullptr;
+        return nullptr;
     }
 }

@@ -89,6 +89,7 @@ namespace BlackGui
                 ui->le_Simulator->setText(simulator.toQString(true));
                 QTimer::singleShot(500, [this]()
                 {
+                    if (!sApp || sApp->isShuttingDown()) { return; }
                     this->updateViewToCurrentModels();
                 });
             }

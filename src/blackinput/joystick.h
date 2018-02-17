@@ -42,4 +42,4 @@ namespace BlackInput
     };
 }
 
-#endif // BLACKINPUT_JOYSTICK_H
+#endif // guard

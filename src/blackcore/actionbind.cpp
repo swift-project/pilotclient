@@ -19,7 +19,7 @@ namespace BlackCore
     QString CActionBind::registerAction(const QString &action, const QPixmap &icon)
     {
         const QString a = CActionBind::normalizeAction(action);
-        auto inputManger = CInputManager::instance();
+        CInputManager *inputManger = CInputManager::instance();
         Q_ASSERT_X(inputManger, Q_FUNC_INFO, "Missing input manager");
         inputManger->registerAction(a, icon);
         return a;

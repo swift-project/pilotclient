@@ -21,7 +21,6 @@ namespace BlackGui
     class BLACKGUI_EXPORT CWindowFinderWindows : public IWindowFinder
     {
     public:
-
         //! Constructor
         CWindowFinderWindows() {}
 
@@ -30,7 +29,6 @@ namespace BlackGui
 
         //! \copydoc IWindowFinder::findForeignWindow
         virtual QWindow *findForeignWindow(const QString &windowName, const QString &className) override;
-
     };
 }
 
