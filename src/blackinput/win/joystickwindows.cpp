@@ -20,7 +20,6 @@ using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-
     const TCHAR *CJoystickWindows::m_helperWindowClassName = TEXT("HelperWindow");
     const TCHAR *CJoystickWindows::m_helperWindowName = TEXT("JoystickCatcherWindow");
     ATOM CJoystickWindows::m_helperWindowClass = 0;
@@ -86,6 +85,12 @@ namespace BlackInput
 
     HRESULT CJoystickWindows::enumJoystickDevices()
     {
+        if (!m_directInput)
+        {
+            CLogMessage(this).warning("No direct input");
+            return E_FAIL;
+        }
+
         HRESULT hr;
         if (FAILED(hr = m_directInput->EnumDevices(DI8DEVTYPE_JOYSTICK, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY)))
         {
@@ -145,7 +150,7 @@ namespace BlackInput
         HRESULT hr = S_OK;
 
         // Check if device list is empty first
-        if (m_availableJoystickDevices.isEmpty()) return E_FAIL;
+        if (m_availableJoystickDevices.isEmpty()) { return E_FAIL; }
 
         // FIXME: Take the first device with number of buttons > 0
         // For the future, the user should be able to choose which device

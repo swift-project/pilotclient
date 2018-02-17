@@ -52,7 +52,6 @@ namespace BlackInput
         Q_OBJECT
 
     public:
-
         //! Copy Constructor
         CJoystickWindows(CJoystickWindows const &) = delete;
 
@@ -63,12 +62,10 @@ namespace BlackInput
         virtual ~CJoystickWindows();
 
     protected:
-
         //! Timer based updates
         virtual void timerEvent(QTimerEvent *event) override;
 
     private:
-
         friend class IJoystick;
 
         //! Constructor
@@ -109,8 +106,8 @@ namespace BlackInput
 
         // todo RW: Try to use QScopedPointer. So far I could not find out how to use it with
         // IDirectInput8::CreateDevice
-        IDirectInput8 *m_directInput; //!< DirectInput object
-        IDirectInputDevice8 *m_directInputDevice; //!< DirectInput device
+        IDirectInput8 *m_directInput = nullptr; //!< DirectInput object
+        IDirectInputDevice8 *m_directInputDevice = nullptr; //!< DirectInput device
         QVector<CJoystickDeviceData> m_availableJoystickDevices; //!< List of found and available joystick devices
         QVector<CJoystickDeviceInput> m_joystickDeviceInputs; //!< List of available device buttons
 
@@ -120,9 +117,7 @@ namespace BlackInput
         static const WCHAR *m_helperWindowName; //!< Helper window name
         static ATOM m_helperWindowClass;
         static HWND m_helperWindow; //!< Helper window handle
-
     };
-
 } // namespace BlackInput
 
-#endif // BLACKINPUT_JOYSTICK_WINDOWS_H
+#endif // guard
