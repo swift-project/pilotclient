@@ -114,6 +114,11 @@ namespace BlackMisc
         return QDir::cleanPath(path1 + QChar('/') + path2);
     }
 
+    QString CFileUtils::appendFilePathsAndFixUnc(const QString &path1, const QString &path2)
+    {
+        return CFileUtils::fixWindowsUncPath(appendFilePaths(path1, path2));
+    }
+
     QString CFileUtils::stripFileFromPath(const QString &path)
     {
         if (path.endsWith('/'))  { return path; }
@@ -124,6 +129,11 @@ namespace BlackMisc
     QString CFileUtils::appendFilePaths(const QString &path1, const QString &path2, const QString &path3)
     {
         return CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);
+    }
+
+    QString CFileUtils::appendFilePathsAndFixUnc(const QString &path1, const QString &path2, const QString &path3)
+    {
+        return CFileUtils::fixWindowsUncPath(CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3));
     }
 
     bool CFileUtils::copyRecursively(const QString &sourceDir, const QString &destinationDir)

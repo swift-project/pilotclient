@@ -67,12 +67,20 @@ namespace BlackMisc
         //! \sa CNetworkUtils::buildUrl for URLs
         static QString appendFilePaths(const QString &path1, const QString &path2);
 
-        //! Strip file from path a/b/c.json a/b
-        static QString stripFileFromPath(const QString &path);
+        //! Append file paths
+        //! \sa CNetworkUtils::buildUrl for URLs
+        static QString appendFilePathsAndFixUnc(const QString &path1, const QString &path2);
 
         //! Append file paths
         //! \sa CNetworkUtils::buildUrl for URLs
         static QString appendFilePaths(const QString &path1, const QString &path2, const QString &path3);
+
+        //! Append file paths
+        //! \sa CNetworkUtils::buildUrl for URLs
+        static QString appendFilePathsAndFixUnc(const QString &path1, const QString &path2, const QString &path3);
+
+        //! Strip file from path a/b/c.json a/b
+        static QString stripFileFromPath(const QString &path);
 
         //! If `sourceDir` is a directory, copies it recursively, so that `sourceDir` becomes `destinationDir`.
         //! If it is a file, just copies the file.

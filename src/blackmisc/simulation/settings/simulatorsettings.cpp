@@ -567,7 +567,7 @@ namespace BlackMisc
 
             const QString CXPlaneSimulatorSettings::getPluginDirOrDefault() const
             {
-                return CFileUtils::appendFilePaths(this->getSimulatorDirectoryOrDefault(), CXPlaneUtil::xplanePluginPath());
+                return CFileUtils::appendFilePathsAndFixUnc(this->getSimulatorDirectoryOrDefault(), CXPlaneUtil::xplanePluginPath());
             }
         } // ns
     } // ns
