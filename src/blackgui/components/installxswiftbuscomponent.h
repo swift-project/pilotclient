@@ -76,6 +76,12 @@ namespace BlackGui
             //! Full filename + path for the downloaded XSwiftBus file
             BlackMisc::Network::CRemoteFile getRemoteFileSelected() const;
 
+            //! Download dir from UI
+            QString downloadDir() const;
+
+            //! XSwiftBus dir from UI
+            QString xSwiftBusDir() const;
+
             //! Is the download dir existing?
             bool existsDownloadDir() const;
 
