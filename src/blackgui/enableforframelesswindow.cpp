@@ -9,6 +9,7 @@
 
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/foreignwindows.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/worker.h"
@@ -34,7 +35,7 @@ using namespace BlackMisc;
 namespace BlackGui
 {
     CEnableForFramelessWindow::CEnableForFramelessWindow(CEnableForFramelessWindow::WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyName, QWidget *correspondingWidget) :
-        m_windowMode(mode), m_mainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget), m_framelessPropertyName(framelessPropertyName)
+        m_windowMode(mode), m_isMainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget), m_framelessPropertyName(framelessPropertyName)
     {
         Q_ASSERT(correspondingWidget);
         Q_ASSERT(!m_framelessPropertyName.isEmpty());
@@ -75,6 +76,12 @@ namespace BlackGui
         }
         m_widget->setWindowFlags(flags);
         this->windowFlagsChanged();
+    }
+
+    void CEnableForFramelessWindow::activate()
+    {
+        if (!m_widget) { return; }
+        m_widget->setWindowState(Qt::WindowActive);
     }
 
     CEnableForFramelessWindow::WindowMode CEnableForFramelessWindow::stringToWindowMode(const QString &s)
