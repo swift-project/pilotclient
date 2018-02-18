@@ -41,6 +41,7 @@ namespace BlackInput
         // release device before input
         if (m_directInputDevice)
         {
+            m_directInputDevice->Unacquire();
             m_directInputDevice->Release();
             m_directInputDevice = nullptr;
         }
@@ -75,7 +76,8 @@ namespace BlackInput
             return E_FAIL;
         }
 
-        if (FAILED(hr = m_directInput->Initialize(instance, DIRECTINPUT_VERSION)))
+        hr = m_directInput->Initialize(instance, DIRECTINPUT_VERSION);
+        if (FAILED(hr))
         {
             CLogMessage(this).error("Direct input init failed");
             return hr;
@@ -92,7 +94,7 @@ namespace BlackInput
         }
 
         HRESULT hr;
-        if (FAILED(hr = m_directInput->EnumDevices(DI8DEVTYPE_JOYSTICK, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY)))
+        if (FAILED(hr = m_directInput->EnumDevices(DI8DEVCLASS_GAMECTRL, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY)))
         {
             CLogMessage(this).error("Error reading joystick devices");
             return hr;
@@ -158,6 +160,7 @@ namespace BlackInput
         const CJoystickDeviceData &deviceData = m_availableJoystickDevices.constFirst();
 
         // Create device
+        Q_ASSERT_X(m_directInput, Q_FUNC_INFO, "We should not get here without direct input");
         if (FAILED(hr = m_directInput->CreateDevice(deviceData.guidDevice, &m_directInputDevice, nullptr)))
         {
             // FIXME: print error message
@@ -167,8 +170,7 @@ namespace BlackInput
         createHelperWindow();
 
         // Set cooperative level
-        if (FAILED(hr = m_directInputDevice->SetCooperativeLevel(m_helperWindow, DISCL_NONEXCLUSIVE |
-                        DISCL_BACKGROUND)))
+        if (FAILED(hr = m_directInputDevice->SetCooperativeLevel(m_helperWindow, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)))
         {
             // FIXME: print error message
             return hr;
@@ -281,6 +283,12 @@ namespace BlackInput
         DIJOYSTATE2 state;
         HRESULT hr = S_OK;
 
+        if (!m_directInputDevice)
+        {
+            CLogMessage(this).warning("No input device");
+            return S_FALSE;
+        }
+
         if (FAILED(hr = m_directInputDevice->Poll()))
         {
             if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED)
@@ -355,5 +363,4 @@ namespace BlackInput
                lhs.m_offset == rhs.m_offset &&
                lhs.m_name == rhs.m_name;
     }
-
-} // namespace BlackInput
+} // ns

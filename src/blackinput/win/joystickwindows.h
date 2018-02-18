@@ -29,17 +29,17 @@ namespace BlackInput
     //! Joystick device data
     struct CJoystickDeviceData
     {
-        GUID guidDevice; //!< Device GUID
-        GUID guidProduct; //!< Product GUID
-        QString deviceName; //!< Device name
+        GUID guidDevice;     //!< Device GUID
+        GUID guidProduct;    //!< Product GUID
+        QString deviceName;  //!< Device name
         QString productName; //!< Product name
     };
 
     //! Joystick device input/button
     struct CJoystickDeviceInput
     {
-        int m_number; //!< Input number
-        int m_offset; //!< Input offset
+        int m_number;   //!< Input number
+        int m_offset;   //!< Input offset
         QString m_name; //!< Input name
     };
 
@@ -98,18 +98,17 @@ namespace BlackInput
         void addJoystickDeviceInput(const DIDEVICEOBJECTINSTANCE *dev);
 
         //! Joystick enumeration callback
-        static BOOL CALLBACK enumJoysticksCallback(const DIDEVICEINSTANCE *
-                pdidInstance, VOID *pContext);
+        static BOOL CALLBACK enumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *pContext);
 
         //! Joystick button enumeration callback
         static BOOL CALLBACK enumObjectsCallback(const DIDEVICEOBJECTINSTANCE *dev, LPVOID pvRef);
 
-        // todo RW: Try to use QScopedPointer. So far I could not find out how to use it with
-        // IDirectInput8::CreateDevice
-        IDirectInput8 *m_directInput = nullptr; //!< DirectInput object
-        IDirectInputDevice8 *m_directInputDevice = nullptr; //!< DirectInput device
+        // todo RW: Try to use QScopedPointer. So far I could not find out how to use it with IDirectInput8::CreateDevice
+        // remark KB: if created with CoCreateInstance we do not "own" the object and cannot free the memory, and must use release
+        IDirectInput8 *m_directInput = nullptr;                  //!< DirectInput object
+        IDirectInputDevice8 *m_directInputDevice = nullptr;      //!< DirectInput device
         QVector<CJoystickDeviceData> m_availableJoystickDevices; //!< List of found and available joystick devices
-        QVector<CJoystickDeviceInput> m_joystickDeviceInputs; //!< List of available device buttons
+        QVector<CJoystickDeviceInput> m_joystickDeviceInputs;    //!< List of available device buttons
 
         BlackMisc::Input::CHotkeyCombination m_buttonCombination;
 
@@ -118,6 +117,6 @@ namespace BlackInput
         static ATOM m_helperWindowClass;
         static HWND m_helperWindow; //!< Helper window handle
     };
-} // namespace BlackInput
+} // ns
 
 #endif // guard
