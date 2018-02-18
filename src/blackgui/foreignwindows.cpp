@@ -14,55 +14,93 @@
 #include <QWindow>
 #include <QtGlobal>
 
+using namespace BlackMisc::Simulation;
+
 namespace BlackGui
 {
     QScopedPointer<IWindowFinder> CForeignWindows::m_windowFinder(IWindowFinder::create());
 
     QWindow *CForeignWindows::getFS9Window()
     {
-        QWindow *simulatorWindow = nullptr;
-        simulatorWindow = m_windowFinder->findForeignWindow("", "FS98MAIN");
-
+        if (!m_windowFinder) { return nullptr; }
+        QWindow *simulatorWindow = m_windowFinder->findForeignWindow("", "FS98MAIN");
         return simulatorWindow;
     }
 
     QWindow *CForeignWindows::getFSXWindow()
     {
-        QWindow *simulatorWindow = nullptr;
-        simulatorWindow = m_windowFinder->findForeignWindow("", "FS98MAIN");
+        if (!m_windowFinder) { return nullptr; }
+        QWindow *simulatorWindow = m_windowFinder->findForeignWindow("", "FS98MAIN");
+        return simulatorWindow;
+    }
 
+    QWindow *CForeignWindows::getP3DWindow()
+    {
+        if (!m_windowFinder) { return nullptr; }
+        QWindow *simulatorWindow = m_windowFinder->findForeignWindow("", "FS98MAIN");
         return simulatorWindow;
     }
 
     QWindow *CForeignWindows::getXPlaneWindow()
     {
         QWindow *simulatorWindow = nullptr;
+
         // FIXME:
         // Use datarefs Sim/operation/windows/system window via xswiftbus to grab the OS's native window handle
         // http://www.xsquawkbox.net/xpsdk/mediawiki/sim%252Foperation%252Fwindows%252Fsystem_window
         // For the time being, use IWindowFinder.
         // The if condition is to prevent a crash on Linux/MacOS.
         if (!m_windowFinder.isNull()) simulatorWindow = m_windowFinder->findForeignWindow("X-System", "");
-
         return simulatorWindow;
     }
 
-    void CForeignWindows::setSimulatorAsParent(QWindow *simulatorWindow, QWidget *child)
+    QWindow *CForeignWindows::getFirstFoundSimulatorWindow()
     {
-        if (!simulatorWindow) return;
-        if (!child) return;
+        QWindow *w = CForeignWindows::getP3DWindow(); if (w) { return w; }
+        w = CForeignWindows::getXPlaneWindow(); if (w) { return w; }
+        w = CForeignWindows::getFSXWindow(); if (w) { return w; }
+        w = CForeignWindows::getFS9Window();
+        return w;
+    }
 
-        bool isVisible = child->isVisible();
+    QWindow *CForeignWindows::getSimulatorWindow(const CSimulatorInfo &simulator)
+    {
+        switch (simulator.getSimulator())
+        {
+        case CSimulatorInfo::FS9: return CForeignWindows::getFS9Window();
+        case CSimulatorInfo::FSX: return CForeignWindows::getFSXWindow();
+        case CSimulatorInfo::P3D: return CForeignWindows::getP3DWindow();
+        case CSimulatorInfo::XPLANE: return CForeignWindows::getXPlaneWindow();
+        default: break;
+        }
+        return nullptr;
+    }
+
+    bool CForeignWindows::setSimulatorAsParent(QWindow *simulatorWindow, QWidget *child)
+    {
+        if (!simulatorWindow) { return false; }
+        if (!child) {return false; }
 
         // If visible, hide it during the reparent. Otherwise setting the parent will have no effect.
-        if (isVisible) child->hide();
+        const bool isVisible = child->isVisible();
+        if (isVisible) {child->hide(); }
 
         QWindow *childWindow = child->windowHandle();
-        Q_ASSERT_X(childWindow, "CForeignWindows::setSimulatorAsParent", "Native resources for child widget have not yet been allocated. Did you call QWidget::show() before?");
+        Q_ASSERT_X(childWindow, Q_FUNC_INFO, "Native resources for child widget have not yet been allocated. Did you call QWidget::show() before?");
 
         childWindow->setTransientParent(simulatorWindow);
 
         // If it was visible before, make it visible again
-        if (isVisible) child->show();
+        if (isVisible) { child->show(); }
+        return true;
+    }
+
+    bool CForeignWindows::unsetSimulatorAsParent(QWidget *child)
+    {
+        if (!child) { return false; }
+        if (!child->windowHandle()) { return false; }
+        if (!child->windowHandle()->transientParent()) { return false; }
+        child->windowHandle()->setTransientParent(nullptr);
+        return true;
     }
 }
