@@ -11,9 +11,12 @@
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiactionbind.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/foreignwindows.h"
+
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/logmessage.h"
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
 
@@ -82,13 +85,54 @@ void SwiftGuiStd::onMenuClicked()
     }
 }
 
+void SwiftGuiStd::attachSimulatorWindow()
+{
+    this->activateWindow(); // attaching requires active window
+    QWindow *w = CForeignWindows::getFirstFoundSimulatorWindow();
+    if (!w)
+    {
+        CLogMessage(this).warning("No simulator window found");
+        return;
+    }
+    const bool a = CForeignWindows::setSimulatorAsParent(w, this);
+    if (a)
+    {
+        CLogMessage(this).info("Attached to simulator");
+    }
+    else
+    {
+        CLogMessage(this).warning("No simulator window found");
+    }
+}
+
+void SwiftGuiStd::detachSimulatorWindow()
+{
+    if (CForeignWindows::unsetSimulatorAsParent(this))
+    {
+        CLogMessage(this).info("Detached simulator window");
+    }
+    else
+    {
+        CLogMessage(this).info("No simulator window to detach");
+    }
+}
+
 void SwiftGuiStd::initMenus()
 {
-    Q_ASSERT(ui->menu_InfoAreas);
-    Q_ASSERT(ui->comp_MainInfoArea);
+    Q_ASSERT_X(ui->menu_InfoAreas, Q_FUNC_INFO, "No menu");
+    Q_ASSERT_X(ui->menu_Window, Q_FUNC_INFO, "No menu");
+    Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "no main area");
     sGui->addMenuFile(*ui->menu_File);
     sGui->addMenuInternals(*ui->menu_Internals);
     sGui->addMenuWindow(*ui->menu_Window);
+    ui->menu_Window->addSeparator();
+    QAction *a = ui->menu_Window->addAction("Attach simulator window");
+    bool c = connect(a, &QAction::triggered, this, &SwiftGuiStd::attachSimulatorWindow);
+    Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
+    a = ui->menu_Window->addAction("Detach simulator window");
+    c = connect(a, &QAction::triggered, this, &SwiftGuiStd::detachSimulatorWindow);
+    Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
+
     sGui->addMenuHelp(*ui->menu_Help);
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
     ui->menu_MovingMap->setIcon(CIcons::swiftMap16());

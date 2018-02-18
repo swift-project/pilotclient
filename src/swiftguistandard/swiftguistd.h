@@ -205,6 +205,12 @@ private:
     //! Menu item clicked
     void onMenuClicked();
 
+    //! Attach the simulator window
+    void attachSimulatorWindow();
+
+    //! Detach simulator window
+    void detachSimulatorWindow();
+
     //! Kicked from network
     void onKickedFromNetwork(const QString &kickMessage);
 
