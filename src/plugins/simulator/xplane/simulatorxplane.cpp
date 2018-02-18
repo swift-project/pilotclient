@@ -79,7 +79,6 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         CSimulatorXPlane::CSimulatorXPlane(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                            IOwnAircraftProvider *ownAircraftProvider,
                                            IRemoteAircraftProvider *remoteAircraftProvider,
@@ -247,6 +246,7 @@ namespace BlackSimPlugin
                 connect(m_service, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitOwnAircraftModelChanged);
                 connect(m_service, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
+                connect(m_traffic, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
                 if (m_watcher) { m_watcher->setConnection(m_conn); }
                 loadCslPackages();
                 emitSimulatorCombinedStatus();
@@ -375,8 +375,25 @@ namespace BlackSimPlugin
         {
             if (!isConnected()) { return false; }
 
-            m_traffic->setInterpolatorMode(callsign.asString(), mode == CInterpolatorMulti::ModeSpline);
-            return true;
+            if(c_driverInterpolation)
+            {
+                if (mode == CInterpolatorMulti::ModeUnknown) { return false; }
+                if (callsign.isEmpty())
+                {
+                    const int c = m_xplaneAircrafts.setInterpolatorModes(mode);
+                    return c > 0;
+                }
+                else
+                {
+                    if (!m_xplaneAircrafts.contains(callsign)) { return false; }
+                    return m_xplaneAircrafts[callsign].setInterpolatorMode(mode);
+                }
+            }
+            else
+            {
+                m_traffic->setInterpolatorMode(callsign.asString(), mode == CInterpolatorMulti::ModeSpline);
+                return true;
+            }
         }
 
         QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
@@ -398,8 +415,15 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
-            //! \todo XP implement isRenderedAircraft correctly. This is a workaround, but not telling me if a callsign is really(!) visible in simulator
-            return getAircraftInRangeForCallsign(callsign).isRendered();
+            if (c_driverInterpolation)
+            {
+                return m_xplaneAircrafts.contains(callsign);
+            }
+            else
+            {
+                //! \todo XP implement isRenderedAircraft correctly. This is a workaround, but not telling me if a callsign is really(!) visible in simulator
+                return getAircraftInRangeForCallsign(callsign).isRendered();
+            }
         }
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
@@ -487,90 +511,174 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
             Q_ASSERT(isConnected());
-            //! \todo XPlane driver check if already exists, how?
-            //! \todo XPlane driver set correct return value
+            if (c_driverInterpolation)
+            {
+                // entry checks
+                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+                Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
+                Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
-            CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-            QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-            m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
-                                newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                livery);
+                m_xplaneAircrafts.insert(newRemoteAircraft.getCallsign(), CXPlaneMPAircraft(newRemoteAircraft, &m_interpolationLogger));
+                CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+                QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
+                m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
+                                    newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
+                                    newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
+                                    livery);
 
-            CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
+                CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
 
-            bool rendered = true;
-            updateAircraftRendered(newRemoteAircraft.getCallsign(), rendered);
+                bool rendered = true;
+                updateAircraftRendered(newRemoteAircraft.getCallsign(), rendered);
 
-            CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
-            remoteAircraftCopy.setRendered(rendered);
-            emit aircraftRenderingChanged(remoteAircraftCopy);
-            return true;
+                CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
+                remoteAircraftCopy.setRendered(rendered);
+                emit aircraftRenderingChanged(remoteAircraftCopy);
+                return true;
+            }
+            else
+            {
+                CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+                QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
+                m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
+                                    newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
+                                    newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
+                                    livery);
+
+                CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
+
+                bool rendered = true;
+                updateAircraftRendered(newRemoteAircraft.getCallsign(), rendered);
+
+                CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
+                remoteAircraftCopy.setRendered(rendered);
+                emit aircraftRenderingChanged(remoteAircraftCopy);
+                return true;
+            }
         }
 
         void CSimulatorXPlane::onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
         {
             Q_ASSERT(isConnected());
-            using namespace BlackMisc::PhysicalQuantities;
-            m_traffic->addPlanePosition(situation.getCallsign().asString(),
-                                        situation.latitude().value(CAngleUnit::deg()),
-                                        situation.longitude().value(CAngleUnit::deg()),
-                                        situation.getAltitude().value(CLengthUnit::ft()),
-                                        situation.getPitch().value(CAngleUnit::deg()),
-                                        situation.getBank().value(CAngleUnit::deg()),
-                                        situation.getHeading().value(CAngleUnit::deg()),
-                                        situation.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(),
-                                        situation.getTimeOffsetMs());
-
-            if (! isRemoteAircraftSupportingParts(situation.getCallsign()))
+            if (c_driverInterpolation)
             {
-                // if aircraft not supporting parts then guess the basics (onGround, gear, lights)
-                //! \todo not working for vtol
-                BlackMisc::Aviation::CAircraftParts parts;
-                parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
-                parts.setTimeOffsetMs(situation.getTimeOffsetMs());
-                if (situation.getGroundSpeed() < CSpeed(50, CSpeedUnit::kts()))
+                if (m_xplaneAircrafts.contains(situation.getCallsign()))
                 {
-                    const auto nearestAirport = std::min_element(m_airportsInRange.cbegin(), m_airportsInRange.cend(), [&situation](auto &&a, auto &&b)
-                    {
-                        return calculateEuclideanDistanceSquared(situation, a) < calculateEuclideanDistanceSquared(situation, b);
-                    });
-                    if (nearestAirport != m_airportsInRange.cend() && situation.getAltitude() - nearestAirport->getElevation() < CLength(50, CLengthUnit::ft()))
-                    {
-                        parts.setOnGround(true);
-                        parts.setGearDown(true);
-                    }
+                    m_xplaneAircrafts[situation.getCallsign()].addAircraftSituation(situation);
                 }
-                if (situation.getAltitude() < CAltitude(10000, CLengthUnit::ft()))
-                {
-                    parts.setLights({ true, true, true, true, true, true, true, true });
-                }
-                else
-                {
-                    parts.setLights({ true, false, false, true, true, true, true, true });
-                }
-                onRemoteProviderAddedAircraftParts(situation.getCallsign(), parts);
             }
+            else
+            {
+                using namespace BlackMisc::PhysicalQuantities;
+                m_traffic->addPlanePosition(situation.getCallsign().asString(),
+                                            situation.latitude().value(CAngleUnit::deg()),
+                                            situation.longitude().value(CAngleUnit::deg()),
+                                            situation.getAltitude().value(CLengthUnit::ft()),
+                                            situation.getPitch().value(CAngleUnit::deg()),
+                                            situation.getBank().value(CAngleUnit::deg()),
+                                            situation.getHeading().value(CAngleUnit::deg()),
+                                            situation.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(),
+                                            situation.getTimeOffsetMs());
+
+                if (! isRemoteAircraftSupportingParts(situation.getCallsign()))
+                {
+                    // if aircraft not supporting parts then guess the basics (onGround, gear, lights)
+                    //! \todo not working for vtol
+                    BlackMisc::Aviation::CAircraftParts parts;
+                    parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
+                    parts.setTimeOffsetMs(situation.getTimeOffsetMs());
+                    if (situation.getGroundSpeed() < CSpeed(50, CSpeedUnit::kts()))
+                    {
+                        const auto nearestAirport = std::min_element(m_airportsInRange.cbegin(), m_airportsInRange.cend(), [&situation](auto &&a, auto &&b)
+                        {
+                            return calculateEuclideanDistanceSquared(situation, a) < calculateEuclideanDistanceSquared(situation, b);
+                        });
+                        if (nearestAirport != m_airportsInRange.cend() && situation.getAltitude() - nearestAirport->getElevation() < CLength(50, CLengthUnit::ft()))
+                        {
+                            parts.setOnGround(true);
+                            parts.setGearDown(true);
+                        }
+                    }
+                    if (situation.getAltitude() < CAltitude(10000, CLengthUnit::ft()))
+                    {
+                        parts.setLights({ true, true, true, true, true, true, true, true });
+                    }
+                    else
+                    {
+                        parts.setLights({ true, false, false, true, true, true, true, true });
+                    }
+                    onRemoteProviderAddedAircraftParts(situation.getCallsign(), parts);
+                }
+            }
+
+
         }
 
         void CSimulatorXPlane::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
         {
             Q_ASSERT(isConnected());
-            m_traffic->addPlaneSurfaces(callsign.asString(), parts.isGearDown() ? 1 : 0,
-                                        parts.getFlapsPercent() / 100.0, parts.isSpoilersOut() ? 1 : 0, parts.isSpoilersOut() ? 1 : 0, parts.getFlapsPercent() / 100.0,
-                                        0, parts.isAnyEngineOn() ? 0 : 0.75, 0, 0, 0,
-                                        parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
-                                        0, parts.isOnGround(), parts.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(), parts.getTimeOffsetMs());
-            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false);
+
+            if (c_driverInterpolation)
+            {
+                if (m_xplaneAircrafts.contains(callsign))
+                {
+                    m_xplaneAircrafts[callsign].addAircraftParts(parts);
+                }
+            }
+            else
+            {
+                m_traffic->addPlaneSurfaces(callsign.asString(), parts.isGearDown() ? 1 : 0,
+                                            parts.getFlapsPercent() / 100.0, parts.isSpoilersOut() ? 1 : 0, parts.isSpoilersOut() ? 1 : 0, parts.getFlapsPercent() / 100.0,
+                                            0, parts.isAnyEngineOn() ? 0 : 0.75, 0, 0, 0,
+                                            parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
+                                            0, parts.isOnGround(), parts.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(), parts.getTimeOffsetMs());
+                m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false);
+            }
         }
 
         bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
         {
             Q_ASSERT(isConnected());
-            m_traffic->removePlane(callsign.asString());
-            updateAircraftRendered(callsign, false);
-            CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
-            return true;
+
+            if (c_driverInterpolation)
+            {
+                // only remove from sim
+                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
+                if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
+
+                // clean up anyway
+                m_hints.remove(callsign);
+
+                // really remove from simulator
+                if (!m_xplaneAircrafts.contains(callsign)) { return false; } // already fully removed or not yet added
+                CXPlaneMPAircraft &xplaneAircraft = m_xplaneAircrafts[callsign];
+
+                // avoid further data from simulator
+                // this->stopRequestingDataForSimObject(simObject);
+
+                m_traffic->removePlane(callsign.asString());
+
+                 m_xplaneAircrafts.remove(callsign);
+
+                // mark in provider
+                const bool updated = this->updateAircraftRendered(callsign, false);
+                if (updated)
+                {
+                    CSimulatedAircraft aircraft(xplaneAircraft.getAircraft());
+                    aircraft.setRendered(false);
+                    emit this->aircraftRenderingChanged(aircraft);
+                }
+
+                // bye
+                return true;
+            }
+            else
+            {
+                m_traffic->removePlane(callsign.asString());
+                updateAircraftRendered(callsign, false);
+                CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
+                return true;
+            }
         }
 
         int CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
@@ -578,11 +686,26 @@ namespace BlackSimPlugin
             Q_ASSERT(isConnected());
             //! \todo XP driver obtain number of removed aircraft
             resetHighlighting();
-            int r = getAircraftInRangeCount();
-            m_traffic->removeAllPlanes();
-            updateMarkAllAsNotRendered();
-            CLogMessage(this).info("XP: Removed all aircraft");
-            return r;
+
+            if (c_driverInterpolation)
+            {
+                // remove one by one
+                int r = 0;
+                const CCallsignSet callsigns = m_xplaneAircrafts.getAllCallsigns();
+                for (const CCallsign &cs : callsigns)
+                {
+                    if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
+                }
+                return r;
+            }
+            else
+            {
+                int r = getAircraftInRangeCount();
+                m_traffic->removeAllPlanes();
+                updateMarkAllAsNotRendered();
+                CLogMessage(this).info("XP: Removed all aircraft");
+                return r;
+            }
         }
 
         CCallsignSet CSimulatorXPlane::physicallyRenderedAircraft() const
@@ -699,6 +822,187 @@ namespace BlackSimPlugin
 
             m_weather->setPrecipitationRatio(cloudLayers.frontOrDefault().getPrecipitationRate());
             m_weather->setThunderstormRatio(0.0);
+        }
+
+        void CSimulatorXPlane::updateRemoteAircraft()
+        {
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
+
+            const int remoteAircraftNo = this->getAircraftInRangeCount();
+            if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
+
+            // interpolate and send to simulator
+            m_interpolationRequest++;
+            const bool enableAircraftParts = m_interpolationRenderingSetup.isAircraftPartsEnabled();
+            const CCallsignSet aircraftWithParts = enableAircraftParts ? this->remoteAircraftSupportingParts() : CCallsignSet(); // optimization, fetch all parts supporting aircraft in one step (one lock)
+
+            // values used for position and parts
+            const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
+            const CCallsignSet callsignsToLog(m_interpolationRenderingSetup.getLogCallsigns());
+
+            // interpolation for all remote aircraft
+            const QList<CXPlaneMPAircraft> xplaneAircrafts(m_xplaneAircrafts.values());
+            for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircrafts)
+            {
+                const CCallsign callsign(xplaneAircraft.getCallsign());
+                Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
+
+                // fetch parts, as they are needed for ground interpolation
+                const bool useAircraftParts = enableAircraftParts && aircraftWithParts.contains(callsign);
+                const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
+                const CInterpolationAndRenderingSetup setup(this->getInterpolationAndRenderingSetup());
+                CPartsStatus partsStatus(useAircraftParts);
+                const CAircraftParts parts = useAircraftParts ? xplaneAircraft.getInterpolatedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
+
+                // get interpolated situation
+                CInterpolationStatus interpolatorStatus;
+                CInterpolationHints hints(m_hints[callsign]);
+                hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
+                hints.setLoggingInterpolation(logInterpolationAndParts);
+                const CAircraftSituation interpolatedSituation = xplaneAircraft.getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
+
+                if (interpolatorStatus.hasValidSituation())
+                {
+                    // update situation
+                    if (!xplaneAircraft.isSameAsSent(interpolatedSituation))
+                    {
+                        m_xplaneAircrafts[xplaneAircraft.getCallsign()].setPositionAsSent(interpolatedSituation);
+                        m_traffic->setPlanePosition(interpolatedSituation.getCallsign().asString(),
+                                                    interpolatedSituation.latitude().value(CAngleUnit::deg()),
+                                                    interpolatedSituation.longitude().value(CAngleUnit::deg()),
+                                                    interpolatedSituation.getAltitude().value(CLengthUnit::ft()),
+                                                    interpolatedSituation.getPitch().value(CAngleUnit::deg()),
+                                                    interpolatedSituation.getBank().value(CAngleUnit::deg()),
+                                                    interpolatedSituation.getHeading().value(CAngleUnit::deg()));
+                    }
+                }
+                else
+                {
+                    CLogMessage(this).warning("Invalid situation for callsign: '%1' info: '%2'")
+                            << callsign
+                            << interpolatorStatus.toQString();
+                }
+
+                if (useAircraftParts)
+                {
+                    this->updateRemoteAircraftParts(xplaneAircraft, parts, partsStatus);
+                }
+                else
+                {
+                    // guess on position, but not every frame
+                    if (m_interpolationRequest % GuessRemoteAircraftPartsCycle == 0)
+                    {
+                        this->guessAndUpdateRemoteAircraftParts(xplaneAircraft, interpolatedSituation, interpolatorStatus);
+                    }
+                }
+            } // all callsigns
+
+            const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;
+            m_statsUpdateAircraftTimeTotalMs += dt;
+            m_statsUpdateAircraftCountMs++;
+            m_statsUpdateAircraftTimeAvgMs = m_statsUpdateAircraftTimeTotalMs / m_statsUpdateAircraftCountMs;
+        }
+
+        bool CSimulatorXPlane::updateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft, const CAircraftParts &parts, const CPartsStatus &partsStatus)
+        {
+            if (!partsStatus.isSupportingParts()) { return false; }
+            return this->sendRemoteAircraftPartsToSimulator(xplaneAircraft, parts);
+        }
+
+        bool CSimulatorXPlane::guessAndUpdateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft, const CAircraftSituation &interpolatedSituation, const CInterpolationStatus &interpolationStatus)
+        {
+            if (!interpolationStatus.isInterpolated()) { return false; }
+
+            CAircraftLights lights;
+            CAircraftParts parts; // init members
+            const bool isOnGround = interpolatedSituation.isOnGround() == CAircraftSituation::OnGround;
+            const double gsKts = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts());
+
+            parts.setEngines({ true, true, true, true });
+            lights.setCabinOn(true);
+            lights.setRecognitionOn(true);
+
+            // when first detected moving, lights on
+            if (isOnGround)
+            {
+                parts.setGearDown(true);
+                lights.setTaxiOn(true);
+                lights.setBeaconOn(true);
+                lights.setNavOn(true);
+
+                if (gsKts > 5)
+                {
+                    // mode taxi
+                    lights.setTaxiOn(true);
+                    lights.setLandingOn(false);
+                }
+                else if (gsKts > 30)
+                {
+                    // mode accelaration for takeoff
+                    lights.setTaxiOn(false);
+                    lights.setLandingOn(true);
+                }
+                else
+                {
+                    // slow movements or parking
+                    lights.setTaxiOn(false);
+                    lights.setLandingOn(false);
+                    parts.setEngines({ false, false, false, false });
+                }
+            }
+            else
+            {
+                // not on ground
+                parts.setGearDown(false);
+                lights.setTaxiOn(false);
+                lights.setBeaconOn(true);
+                lights.setNavOn(true);
+                // landing lights for < 10000ft (normally MSL, here ignored)
+                lights.setLandingOn(interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000);
+
+                if (!xplaneAircraft.isVtol() && interpolatedSituation.hasGroundElevation())
+                {
+                    if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 1000)
+                    {
+                        parts.setGearDown(true);
+                        parts.setFlapsPercent(25);
+                    }
+                    else if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 2000)
+                    {
+                        parts.setGearDown(true);
+                        parts.setFlapsPercent(10);
+                    }
+                }
+            }
+
+            parts.setLights(lights);
+            return this->sendRemoteAircraftPartsToSimulator(xplaneAircraft, parts);
+        }
+
+        bool CSimulatorXPlane::sendRemoteAircraftPartsToSimulator(const CXPlaneMPAircraft &xplaneAircraft, const CAircraftParts &parts)
+        {
+            // same as in simulator or same as already send to simulator?
+            if (xplaneAircraft.getPartsAsSent() == parts)
+            {
+                return true;
+            }
+
+            m_traffic->setPlaneSurfaces(xplaneAircraft.getCallsign().asString(),
+                                        parts.isGearDown() ? 1 : 0,
+                                        parts.getFlapsPercent() / 100.0,
+                                        parts.isSpoilersOut() ? 1 : 0,
+                                        parts.isSpoilersOut() ? 1 : 0,
+                                        parts.getFlapsPercent() / 100.0,
+                                        0, parts.isAnyEngineOn() ? 0 : 0.75,
+                                        0, 0, 0,
+                                        parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
+                                        0, parts.isOnGround());
+
+            CAircraftLights lights = parts.getLights();
+            lights.setRecognitionOn(parts.isAnyEngineOn());
+            lights.setCabinOn(parts.isAnyEngineOn());
+
+            return true;
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

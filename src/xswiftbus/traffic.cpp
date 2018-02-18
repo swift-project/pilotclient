@@ -21,6 +21,7 @@
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
 #include <QDateTime>
+#include <QDebug>
 #include <QStringList>
 #include <cstring>
 #include <cmath>
@@ -74,6 +75,7 @@ namespace XSwiftBus
     CTraffic::CTraffic(QObject *parent) :
         QObject(parent)
     {
+        XPLMRegisterDrawCallback(CTraffic::drawCallback, xplm_Phase_Airplanes, 0, this);
     }
 
     CTraffic::~CTraffic()
@@ -123,6 +125,21 @@ namespace XSwiftBus
         {
             m_initialized = false;
             XPMPMultiplayerCleanup();
+        }
+
+        XPLMUnregisterDrawCallback(CTraffic::drawCallback, xplm_Phase_Airplanes, 0, this);
+    }
+
+    void CTraffic::emitSimFrame()
+    {
+        qint64 currentMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
+
+        // The draw callback is called twice for unknown reasons each frame. We can filter the second one by
+        // requiring a minimum offset of 5 ms (equal to 200 fps).
+        if (currentMSecsSinceEpoch > m_timestampLastSimFrame + 5)
+        {
+            emit simFrame();
+            m_timestampLastSimFrame = currentMSecsSinceEpoch;
         }
     }
 
@@ -258,6 +275,17 @@ namespace XSwiftBus
         }
     }
 
+    void CTraffic::setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
+    {
+        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        plane->position.lat = latitude;
+        plane->position.lon = longitude;
+        plane->position.elevation = altitude;
+        plane->position.pitch = static_cast<float>(pitch);
+        plane->position.roll = static_cast<float>(roll);
+        plane->position.heading = static_cast<float>(heading);
+    }
+
     void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
                                     double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
     {
@@ -292,6 +320,32 @@ namespace XSwiftBus
             parts.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
             parts.setTimeOffsetMs(timeOffset);
             plane->interpolator.addAircraftParts(parts);
+        }
+    }
+
+    void CTraffic::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
+                                    double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround)
+    {
+        Q_UNUSED(onGround);
+        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        if (plane)
+        {
+            plane->hasSurfaces = true;
+            plane->targetGearPosition = gear;
+            plane->surfaces.flapRatio = flap;
+            plane->surfaces.spoilerRatio = spoiler;
+            plane->surfaces.speedBrakeRatio = speedBrake;
+            plane->surfaces.slatRatio = slat;
+            plane->surfaces.wingSweep = wingSweep;
+            plane->surfaces.thrust = thrust;
+            plane->surfaces.yokePitch = elevator;
+            plane->surfaces.yokeHeading = rudder;
+            plane->surfaces.yokeRoll = aileron;
+            plane->surfaces.lights.landLights = landLight;
+            plane->surfaces.lights.bcnLights = beaconLight;
+            plane->surfaces.lights.strbLights = strobeLight;
+            plane->surfaces.lights.navLights = navLight;
+            plane->surfaces.lights.flashPattern = lightPattern;
         }
     }
 
@@ -343,6 +397,20 @@ namespace XSwiftBus
         {
         case xpmpDataType_Position:
             {
+            if (c_driverInterpolation)
+            {
+                const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
+                io_position->lat = plane->position.lat;
+                io_position->lon = plane->position.lon;
+                io_position->elevation = plane->position.elevation;
+                io_position->pitch = plane->position.pitch;
+                io_position->roll = plane->position.roll;
+                io_position->heading = plane->position.heading;
+                std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
+                return xpmpData_NewData;
+            }
+            else
+            {
                 BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
                 BlackMisc::Simulation::CInterpolationStatus status;
                 const auto situation = plane->interpolator.getInterpolatedSituation(-1, setup, plane->hints(), status);
@@ -364,16 +432,23 @@ namespace XSwiftBus
                 return xpmpData_NewData;
             }
 
+            }
+
         case xpmpDataType_Surfaces:
             if (plane->hasSurfaces)
             {
                 const auto currentTime = QDateTime::currentMSecsSinceEpoch();
-                while (! plane->pendingSurfaces.isEmpty() && plane->pendingSurfaces.constFirst().first <= currentTime)
+
+                if (! c_driverInterpolation)
                 {
-                    //! \todo if gear is currently retracted, look ahead and pull gear position from pendingSurfaces up to 5 seconds in the future
-                    plane->pendingSurfaces.constFirst().second(plane);
-                    plane->pendingSurfaces.pop_front();
+                    while (! plane->pendingSurfaces.isEmpty() && plane->pendingSurfaces.constFirst().first <= currentTime)
+                    {
+                        //! \todo if gear is currently retracted, look ahead and pull gear position from pendingSurfaces up to 5 seconds in the future
+                        plane->pendingSurfaces.constFirst().second(plane);
+                        plane->pendingSurfaces.pop_front();
+                    }
                 }
+
                 if (plane->surfaces.gearPosition != plane->targetGearPosition)
                 {
                     // interpolate gear position
@@ -410,6 +485,15 @@ namespace XSwiftBus
 
         default: return xpmpData_Unavailable;
         }
+    }
+
+    int CTraffic::drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon)
+    {
+        Q_UNUSED(phase);
+        Q_UNUSED(isBefore);
+        CTraffic *traffic = static_cast<CTraffic *>(refcon);
+        traffic->emitSimFrame();
+        return 1;
     }
 
 }

@@ -22,6 +22,7 @@
 #include <QVector>
 #include <QStringList>
 #include "XPMPMultiplayer.h"
+#include <XPLM/XPLMDisplay.h>
 #include <functional>
 #include <utility>
 
@@ -65,6 +66,10 @@ namespace XSwiftBus
         //! Called by XPluginStart
         static void initLegacyData();
 
+    signals:
+        //! Signal emitted for each simulator rendering frame
+        void simFrame();
+
     public slots:
         //! Initialize the multiplayer planes rendering and return true if successful
         bool initialize();
@@ -99,12 +104,19 @@ namespace XSwiftBus
         //! Remove all traffic aircraft
         void removeAllPlanes();
 
-        //! Set the position of a traffic aircraft
+        //! Add the position of a traffic aircraft
         void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset);
 
-        //! Set the flight control surfaces and lights of a traffic aircraft
+        //! Set the position of a traffic aircraft
+        void setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading);
+
+        //! Add the flight control surfaces and lights of a traffic aircraft
         void addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
             double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset);
+
+        //! Set the flight control surfaces and lights of a traffic aircraft
+        void setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
+            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround);
 
         //! Set the transponder of a traffic aircraft
         void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
@@ -115,6 +127,10 @@ namespace XSwiftBus
     private:
         bool m_initialized = false;
         bool m_enabled = false;
+
+        static constexpr bool c_driverInterpolation = true;
+
+        void emitSimFrame();
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
@@ -137,16 +153,20 @@ namespace XSwiftBus
             float targetGearPosition = 0;
             qint64 prevSurfacesLerpTime = 0;
             XPMPPlaneRadar_t xpdr;
+            XPMPPlanePosition_t position;
             Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_);
         };
         QHash<QString, Plane *> m_planesByCallsign;
         QHash<void *, Plane *> m_planesById;
+        qint64 m_timestampLastSimFrame = QDateTime::currentMSecsSinceEpoch();
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)
         {
             return static_cast<CTraffic *>(self)->getPlaneData(id, dataType, io_data);
         }
+
+        static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
     };
 }
 

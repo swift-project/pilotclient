@@ -12,6 +12,7 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
+#include "xplanempaircraft.h"
 #include "blackcore/simulator.h"
 #include "blackcore/simulatorcommon.h"
 #include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
@@ -143,6 +144,25 @@ namespace BlackSimPlugin
             void loadCslPackages();
             QString findCslPackage(const QString &modelFileName);
 
+            //! Update remote aircraft
+            //! \remark this is where the interpolated data are set
+            void updateRemoteAircraft();
+
+            //! Update remote aircraft parts (send to XSwiftBus)
+            bool updateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft,
+                                           const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Simulation::CPartsStatus &partsStatus);
+
+            //! Update remote aircraft parts by guessing (send to XSwiftBus)
+            bool guessAndUpdateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft,
+                                                   const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, const BlackMisc::Simulation::CInterpolationStatus &interpolationStatus);
+
+            //! Send parts to simulator
+            bool sendRemoteAircraftPartsToSimulator(const CXPlaneMPAircraft &xplaneAircraft, const BlackMisc::Aviation::CAircraftParts &parts);
+
+            static constexpr bool c_driverInterpolation = true;
+            static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
+
+            // XSwiftBus interpolation
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
             CXSwiftBusServiceProxy *m_service { nullptr };
@@ -152,6 +172,10 @@ namespace BlackSimPlugin
             QTimer *m_slowTimer { nullptr };
             BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
+
+            // Driver Interpolation
+            CXPlaneMPAircrafts m_xplaneAircrafts;   //!< XPlane multiplayer aircrafts
+            int m_interpolationRequest = 0;         //!< current interpolation request
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks
