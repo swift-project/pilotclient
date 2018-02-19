@@ -178,6 +178,12 @@ namespace BlackMisc
         return s;
     }
 
+    const QString &CDirectoryUtils::shareTestDirectory()
+    {
+        static const QString test(CFileUtils::appendFilePaths(CDirectoryUtils::shareDirectory(), "test"));
+        return test;
+    }
+
     const QString &CDirectoryUtils::bootstrapFileName()
     {
         static const QString n("bootstrap.json");
