@@ -331,6 +331,14 @@ namespace BlackMisc
         if (in.isEmpty()) { return ignoreEmpty ? e : ea; }
         return QStringLiteral("'") % in % QStringLiteral("'");
     }
+
+    const QString inQuotes(const QString &in, bool ignoreEmpty)
+    {
+        static const QString e;
+        static const QString ea("\"\"");
+        if (in.isEmpty()) { return ignoreEmpty ? e : ea; }
+        return QStringLiteral("\"") % in % QStringLiteral("\"");
+    }
 }
 
 //! \endcond

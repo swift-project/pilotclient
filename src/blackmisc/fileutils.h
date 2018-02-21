@@ -151,6 +151,9 @@ namespace BlackMisc
         //! Fix UNC file paths
         static QStringList fixWindowsUncPaths(const QStringList &filePaths);
 
+        //! To Windows path using "\" delimiter
+        static QString toWindowsLocalPath(const QString &path);
+
         //! Human readable (GB, MB, ..) file size
         static QString humanReadableFileSize(qint64 size);
 

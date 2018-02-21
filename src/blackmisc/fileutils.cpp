@@ -406,6 +406,12 @@ namespace BlackMisc
         return fixedPaths;
     }
 
+    QString CFileUtils::toWindowsLocalPath(const QString &path)
+    {
+        QString p = CFileUtils::fixWindowsUncPath(path);
+        return p.replace('/', '\\');
+    }
+
     QString CFileUtils::humanReadableFileSize(qint64 size)
     {
         // from https://stackoverflow.com/a/30958189/356726

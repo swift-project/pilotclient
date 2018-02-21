@@ -123,6 +123,9 @@ namespace BlackMisc
     //! Return string in apostrophes
     BLACKMISC_EXPORT const QString inApostrophes(const QString &in, bool ignoreEmpty = false);
 
+    //! Return string in quotes
+    BLACKMISC_EXPORT const QString inQuotes(const QString &in, bool ignoreEmpty = false);
+
     //! Bool to on/off
     BLACKMISC_EXPORT const QString &boolToOnOff(bool v);
 
