@@ -12,6 +12,7 @@
 //! \ingroup testblackmisc
 
 #include "testaviation.h"
+#include "testcompress.h"
 #include "testblackmiscmain.h"
 #include "testcontainers.h"
 #include "testdbus.h"
@@ -47,6 +48,10 @@ namespace BlackMiscTest
         BlackMisc::Test::CTest test(argc, argv);
 
         int status = 0;
+        {
+            CTestCompress compressTest;
+            status |= test.exec(&compressTest, "blackmisc_compress");
+        }
         {
             CTestPhysicalQuantities pqBaseTests;
             status |= test.exec(&pqBaseTests, "blackmisc_physicalQuantities");
