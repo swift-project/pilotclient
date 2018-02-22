@@ -32,7 +32,11 @@ namespace BlackMisc
 
         //! External program existing?
         //! \remark relies on external 7zip command line
-        static bool hasZip7();
+        static bool hasZip7(QStringList *stdOutAndError = nullptr);
+
+        //! Uses which to determine if 7Zip exists
+        //! \remark for UNIX systems, using which
+        static bool whichZip7(QStringList *stdOutAndError = nullptr);
 
     private:
         //! Ctor
