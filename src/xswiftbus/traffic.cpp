@@ -18,6 +18,7 @@
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/aviation/callsign.h"
 #include "XPMPMultiplayer.h"
+#include "XPMPPlaneRenderer.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
 #include <QDateTime>
@@ -31,8 +32,10 @@
 namespace XSwiftBus
 {
 
-    CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_)
-        : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), interpolator(callsign)
+    CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_, QString modelName_)
+        : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_),
+          interpolator(callsign)
+
     {
         std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
         surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
@@ -225,7 +228,7 @@ namespace XSwiftBus
 
         if (id)
         {
-            auto plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery);
+            auto plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery, modelName);
             m_planesByCallsign[callsign] = plane;
             m_planesById[id] = plane;
         }
@@ -391,7 +394,8 @@ namespace XSwiftBus
             double elevation = plane->position.elevation;
             double groundElevation = plane->terrainProbe.getElevation(lat, lon, elevation);
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
-            constexpr double fudgeFactor = 3.0; //! \fixme Value should be different for each plane, derived from the CSL model geometry
+            double fudgeFactor = 3.0;
+            actualVertOffsetInfo(qPrintable(plane->modelName), nullptr, &fudgeFactor);
             emit remoteAircraftData(plane->callsign, lat, lon, groundElevation, fudgeFactor);
         }
     }

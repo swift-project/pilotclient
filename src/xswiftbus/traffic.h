@@ -148,6 +148,7 @@ namespace XSwiftBus
             QString aircraftIcao;
             QString airlineIcao;
             QString livery;
+            QString modelName;
             bool hasSurfaces = false;
             bool hasXpdr = false;
             char label[32] {};
@@ -160,7 +161,7 @@ namespace XSwiftBus
             qint64 prevSurfacesLerpTime = 0;
             XPMPPlaneRadar_t xpdr;
             XPMPPlanePosition_t position;
-            Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_);
+            Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_, QString modelName_);
         };
         QHash<QString, Plane *> m_planesByCallsign;
         QHash<void *, Plane *> m_planesById;

@@ -1024,7 +1024,10 @@ namespace BlackSimPlugin
 
             CInterpolationHints &hints = m_hints[callsign];
             hints.setElevationPlane(elevation); // update elevation
-            hints.setCGAboveGround({ modelVerticalOffset, CLengthUnit::ft() }); // normally never changing, but if user changes ModelMatching update possible
+            // The entire vertical offset (CG offset) is still very experimental in X-Plane. Libxplanemp simply calculates the lowest Y
+            // value from all the OpenGL model vertices. I assume its in meters.
+            // The unit of modelVerticalOffset is still very unknown. This needs to be confirmed.
+            hints.setCGAboveGround({ modelVerticalOffset, CLengthUnit::m() });
 
             // set it in the remote aircraft provider
             this->updateAircraftGroundElevation(callsign, elevation);
