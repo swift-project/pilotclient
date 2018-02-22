@@ -223,6 +223,8 @@ namespace BlackSimPlugin
                     m_xplaneData.speedBrakeRatio > 0.5, engines, m_xplaneData.onGroundAll
                 };
                 updateOwnParts(parts);
+
+                requestRemoteAircraftDataFromXPlane();
             }
         }
 
@@ -247,6 +249,7 @@ namespace BlackSimPlugin
                 connect(m_service, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
                 connect(m_traffic, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
+                connect(m_traffic, &CXSwiftBusTrafficProxy::remoteAircraftData, this, &CSimulatorXPlane::updateRemoteAircraftFromSimulator);
                 if (m_watcher) { m_watcher->setConnection(m_conn); }
                 loadCslPackages();
                 emitSimulatorCombinedStatus();
@@ -1003,6 +1006,28 @@ namespace BlackSimPlugin
             lights.setCabinOn(parts.isAnyEngineOn());
 
             return true;
+        }
+
+        void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()
+        {
+            if (!isConnected()) { return; }
+            m_traffic->requestRemoteAircraftData();
+        }
+
+        void CSimulatorXPlane::updateRemoteAircraftFromSimulator(const QString &callsign_, double latitude, double longitude, double groundElevation, double modelVerticalOffset)
+        {
+            CCallsign callsign(callsign_);
+            if (!m_xplaneAircrafts.contains(callsign)) { return; }
+
+            CElevationPlane elevation(CLatitude(latitude, CAngleUnit::deg()), CLongitude(longitude, CAngleUnit::deg()), CAltitude(groundElevation, CLengthUnit::m()));
+            elevation.setSinglePointRadius();
+
+            CInterpolationHints &hints = m_hints[callsign];
+            hints.setElevationPlane(elevation); // update elevation
+            hints.setCGAboveGround({ modelVerticalOffset, CLengthUnit::ft() }); // normally never changing, but if user changes ModelMatching update possible
+
+            // set it in the remote aircraft provider
+            this->updateAircraftGroundElevation(callsign, elevation);
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

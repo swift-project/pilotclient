@@ -70,6 +70,9 @@ namespace XSwiftBus
         //! Signal emitted for each simulator rendering frame
         void simFrame();
 
+        //! Remote aircraft data
+        void remoteAircraftData(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
+
     public slots:
         //! Initialize the multiplayer planes rendering and return true if successful
         bool initialize();
@@ -123,6 +126,9 @@ namespace XSwiftBus
 
         //! Set interpolation mode for a traffic aircraft
         void setInterpolatorMode(const QString &callsign, bool spline);
+
+        //! Request traffic plane data. A signal remoteAircraftData will be emitted for each known plane
+        void requestRemoteAircraftData();
 
     private:
         bool m_initialized = false;

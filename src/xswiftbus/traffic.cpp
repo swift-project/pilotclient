@@ -380,6 +380,22 @@ namespace XSwiftBus
         }
     }
 
+    void CTraffic::requestRemoteAircraftData()
+    {
+        if (m_planesByCallsign.empty()) { return; }
+        const QList<Plane *> planes = m_planesByCallsign.values();
+        for (const Plane *plane : planes)
+        {
+            double lat = plane->position.lat;
+            double lon = plane->position.lon;
+            double elevation = plane->position.elevation;
+            double groundElevation = plane->terrainProbe.getElevation(lat, lon, elevation);
+            if (std::isnan(groundElevation)) { groundElevation = 0.0; }
+            constexpr double fudgeFactor = 3.0; //! \fixme Value should be different for each plane, derived from the CSL model geometry
+            emit remoteAircraftData(plane->callsign, lat, lon, groundElevation, fudgeFactor);
+        }
+    }
+
     //! memcmp function which ignores the header ("size" member) and compares only the payload (the rest of the struct)
     template <typename T>
     int memcmpPayload(T *dst, T *src)

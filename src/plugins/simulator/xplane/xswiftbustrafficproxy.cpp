@@ -115,5 +115,10 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setInterpolatorMode"), callsign, spline);
         }
 
+        void CXSwiftBusTrafficProxy::requestRemoteAircraftData()
+        {
+            m_dbusInterface->callDBus(QLatin1String("requestRemoteAircraftData"));
+        }
+
     }
 }

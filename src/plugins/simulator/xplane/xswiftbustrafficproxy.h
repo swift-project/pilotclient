@@ -65,6 +65,9 @@ namespace BlackSimPlugin
             //! \copydoc XSwiftBus::CTraffic::simFrame
             void simFrame();
 
+            //! \copydoc XSwiftBus::CTraffic::remoteAircraftData
+            void remoteAircraftData(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
+
         public slots:
             //! \copydoc XSwiftBus::CTraffic::initialize
             bool initialize();
@@ -118,6 +121,9 @@ namespace BlackSimPlugin
 
             //! \copydoc XSwiftBus::CTraffic::setInterpolatorMode
             void setInterpolatorMode(const QString &callsign, bool spline);
+
+            //! \copydoc XSwiftBus::CTraffic::requestRemoteAircraftData
+            void requestRemoteAircraftData();
         };
 
     }

@@ -159,6 +159,9 @@ namespace BlackSimPlugin
             //! Send parts to simulator
             bool sendRemoteAircraftPartsToSimulator(const CXPlaneMPAircraft &xplaneAircraft, const BlackMisc::Aviation::CAircraftParts &parts);
 
+            void requestRemoteAircraftDataFromXPlane();
+            void updateRemoteAircraftFromSimulator(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
+
             static constexpr bool c_driverInterpolation = true;
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
 
