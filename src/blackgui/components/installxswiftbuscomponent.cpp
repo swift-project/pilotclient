@@ -12,6 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/compressutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/fileutils.h"
@@ -157,13 +158,23 @@ namespace BlackGui
         {
             this->hideLoading();
             if (sGui && sGui->isShuttingDown()) { return; }
-            if (status.isWarningOrAbove() || !this->existsXSwiftBusPluginDir())
+            if (status.isWarningOrAbove())
             {
-                this->showOverlayMessage(status, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+                this->showOverlayMessage(status);
                 return;
             }
+            if (!this->existsXSwiftBusPluginDir())
+            {
+                const CStatusMessage msg = CStatusMessage(this).warning("No valid install directory, cannot continue.");
+                this->showOverlayMessage(msg);
+                return;
+            }
+
             static const QString confirm("Install in '%1'?");
-            this->showOverlayMessagesWithConfirmation(status, false, confirm.arg(ui->le_XSwiftBusPluginDir->text()), [ = ] { this->installXSwiftBus(); });
+            this->showOverlayMessagesWithConfirmation(status, false, confirm.arg(ui->le_XSwiftBusPluginDir->text()), [ = ]
+            {
+                QTimer::singleShot(0, this, &CInstallXSwiftBusComponent::installXSwiftBus);
+            });
         }
 
         CRemoteFile CInstallXSwiftBusComponent::getRemoteFileSelected() const
