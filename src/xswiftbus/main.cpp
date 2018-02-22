@@ -36,6 +36,11 @@ XSwiftBus::CPlugin *g_plugin;
 
 PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
 {
+#if APL
+    // https://developer.x-plane.com/2014/12/mac-plugin-developers-you-should-be-using-native-paths/
+    XPLMEnableFeature("XPLM_USE_NATIVE_PATHS",1);
+#endif
+
     std::strcpy(o_name, "XSwiftBus");
     std::strcpy(o_sig, "org.swift-project.xswiftbus");
     std::strcpy(o_desc, "Allows swift to connect to X-Plane via D-Bus IPC");

@@ -32,7 +32,10 @@ namespace XSwiftBus
         char xplanePath[512];
         XPLMGetSystemPath(xplanePath);
 #ifdef Q_OS_MAC
-        HFS2PosixPath(xplanePath, xplanePath, sizeof(xplanePath));
+        if (XPLMIsFeatureEnabled("XPLM_USE_NATIVE_PATHS") == 0)
+        {
+            HFS2PosixPath(xplanePath, xplanePath, sizeof(xplanePath));
+        }
         g_sep = "/";
 #else
         g_sep = XPLMGetDirectorySeparator();
