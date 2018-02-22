@@ -542,7 +542,6 @@ namespace BlackMisc
 
             bool CAircraftModelLoaderXPlane::parseObj8AircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
             {
-                Q_UNUSED(package)
                 // OBJ8_AIRCRAFT <path>
                 if (tokens.size() != 2)
                 {
@@ -550,9 +549,6 @@ namespace BlackMisc
                 }
 
                 package.planes.push_back(CSLPlane());
-                package.planes.back().dirNames << package.path.mid(package.path.lastIndexOf('/') + 1);
-                package.planes.back().objectName = tokens[1];
-                package.planes.back().filePath = package.path;
                 // Package name and object name uniquely identify an OBJ8 aircraft.
                 // File path just points to the package root.
                 return true;
@@ -560,14 +556,58 @@ namespace BlackMisc
 
             bool CAircraftModelLoaderXPlane::parseObj8Command(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
             {
-                Q_UNUSED(package)
-                // OBJ8 <group> <animate YES|NO> <filename>
-                if (tokens.size() != 4)
+                // OBJ8 <group> <animate YES|NO> <filename> {<texture filename> {<lit texture filename>}}
+                if (tokens.size() < 4 || tokens.size() > 6)
                 {
-                    CLogMessage(this).warning("%1 - %2: OBJ8 command requires 3 arguments.") << path << lineNum;
+                    CLogMessage(this).warning("%1 - %2: OBJ8 command takes 3-5 arguments.") << path << lineNum;
                 }
 
-                // command contains no useful information for us
+                if (tokens[1] != "SOLID") { return true; }
+
+                QString relativePath(tokens[3]);
+                normalizePath(relativePath);
+                QString fullPath(relativePath);
+                if (!doPackageSub(fullPath))
+                {
+                    CLogMessage(this).warning("%1 - %2: package not found.") << path << lineNum;
+                    return false;
+                }
+
+                QStringList dirNames;
+                dirNames.append(relativePath.split('/', QString::SkipEmptyParts));
+                // Replace the first one being the package name with the package root dir
+                QString packageRootDir = package.path.mid(package.path.lastIndexOf('/') + 1);
+                dirNames.replace(0, packageRootDir);
+                // Remove the last one being the obj itself
+                dirNames.removeLast();
+
+                QFileInfo fileInfo(fullPath);
+                package.planes.back().dirNames = dirNames;
+                package.planes.back().objectName = fileInfo.completeBaseName();
+                package.planes.back().filePath = fullPath;
+
+                if (tokens.size() >= 5)
+                {
+                    // Load regular texture
+                    QString relativeTexPath = dirNames.join('/') + '/' + tokens[4];
+                    normalizePath(relativeTexPath);
+                    QString absoluteTexPath(relativeTexPath);
+
+                    if (!doPackageSub(absoluteTexPath))
+                    {
+                        CLogMessage(this).warning("%1 - %2: package not found.") << path << lineNum;
+                        return false;
+                    }
+
+                    QFileInfo fileInfo(absoluteTexPath);
+                    if (!fileInfo.exists())
+                    {
+                        CLogMessage(this).warning("Texture %1 does not exist.") << absoluteTexPath;
+                        return false;
+                    }
+
+                    package.planes.back().textureName = fileInfo.completeBaseName();
+                }
                 return true;
             }
 
@@ -685,6 +725,7 @@ namespace BlackMisc
                     { "ICAO", std::bind(&CAircraftModelLoaderXPlane::parseIcaoCommand, this, _1, _2, _3, _4) },
                     { "AIRLINE", std::bind(&CAircraftModelLoaderXPlane::parseAirlineCommand, this, _1, _2, _3, _4) },
                     { "LIVERY", std::bind(&CAircraftModelLoaderXPlane::parseLiveryCommand, this, _1, _2, _3, _4) },
+                    { "VERT_OFFSET", std::bind(&CAircraftModelLoaderXPlane::parseDummyCommand, this, _1, _2, _3, _4) },
                 };
 
                 int lineNum = 0;

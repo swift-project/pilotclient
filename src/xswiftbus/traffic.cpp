@@ -99,7 +99,8 @@ namespace XSwiftBus
     {
         if (! s_legacyDataOK) { return false; }
 
-        auto err = XPMPMultiplayerInit(preferences, preferences);
+        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep;
+        auto err = XPMPMultiplayerInit(preferences, preferences, qPrintable(dir));
         if (*err) { cleanup(); return false; }
         m_initialized = true;
 
