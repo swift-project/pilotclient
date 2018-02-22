@@ -12,6 +12,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/compressutils.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Json;
@@ -344,16 +345,10 @@ namespace BlackCore
                     if (!ok) break; // malformed size
                     if (size < 1) break;
 
-                    // Length header, unsigned, big-endian, 32-bit integer
-                    QByteArray lengthHeader;
-                    QDataStream stream(&lengthHeader, QIODevice::WriteOnly);
-                    stream.setByteOrder(QDataStream::BigEndian);
-                    stream << size;
-
                     QByteArray ba;
                     ba.append(content.mid(contentIndex));
                     ba = QByteArray::fromBase64(ba);
-                    ba.insert(0, lengthHeader); // adding 4 bytes length header
+                    ba.insert(0, CCompressUtils::lengthHeader(size)); // adding 4 bytes length header
                     byteData = qUncompress(ba);
                 }
                 while (false);
@@ -399,13 +394,13 @@ namespace BlackCore
         QHttpPart CDatabaseUtils::getJsonTextMultipart(const QJsonObject &json, bool compress)
         {
             const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));
-            return getJsonTextMultipart(bytes, compress);
+            return CDatabaseUtils::getJsonTextMultipart(bytes, compress);
         }
 
         QHttpPart CDatabaseUtils::getJsonTextMultipart(const QJsonArray &json, bool compress)
         {
             const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));
-            return getJsonTextMultipart(bytes, compress);
+            return CDatabaseUtils::getJsonTextMultipart(bytes, compress);
         }
 
         QHttpPart CDatabaseUtils::getJsonTextMultipart(const QByteArray &bytes, bool compress)
