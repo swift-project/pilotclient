@@ -21,6 +21,7 @@ namespace XSwiftBus
 
     CService::CService(QObject *parent) : QObject(parent)
     {
+        m_messages.addMessage( { "xswiftbus started.", 0, 255, 255 } );
         m_airportUpdater = new QTimer(this);
         m_airportUpdater->start(60000);
         connect(m_airportUpdater, &QTimer::timeout, this, &CService::updateAirportsInRange);

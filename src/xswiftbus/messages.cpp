@@ -83,7 +83,9 @@ namespace XSwiftBus
         m_scrollToTopCommand("org/swift-project/xswiftbus/scroll_top", "Scroll to top of XSwiftBus text messages", [this] { scrollToTop(); }),
         m_scrollToBottomCommand("org/swift-project/xswiftbus/scroll_bottom", "Scroll to bottom of XSwiftBus text messages", [this] { scrollToBottom(); }),
         m_debugCommand("org/swift-project/xswiftbus/debug", "", [this] { static int c = 0; this->addMessage({ "hello " + std::to_string(c++), 0, .75, 0 }); })
-    {}
+    {
+        show();
+    }
 
     void CMessageBoxControl::addMessage(const CMessage &message)
     {
@@ -91,7 +93,6 @@ namespace XSwiftBus
         m_messages.push_back(message);
         if (m_position + 1 >= m_messages.size() || ! m_visible)
         {
-            show();
             scrollToBottom();
         }
     }
@@ -128,8 +129,6 @@ namespace XSwiftBus
 
     void CMessageBoxControl::scrollToBottom()
     {
-        if (! m_visible) { return; }
-
         m_position = m_messages.size();
         updateVisibleLines();
     }
