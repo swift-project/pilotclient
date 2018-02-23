@@ -14,6 +14,7 @@
 
 #include "drawable.h"
 #include "command.h"
+#include "datarefs.h"
 #include <vector>
 #include <string>
 #include <array>
@@ -48,7 +49,7 @@ namespace XSwiftBus
         //! \param right Number of "virtual pixels" between screen right edge and box right edge.
         //! \param top Number of "virtual pixels" between screen top edge and box top edge.
         CMessageBox(int left, int right, int top) : CDrawable(xplm_Phase_Window, true),
-            c_boxLeft(left), c_boxRight(c_screenWidth - right), c_boxTop(c_screenHeight - top) {}
+            m_boxLeft(left), m_boxRight(right), m_boxTop(top) {}
 
         //! Set messages to draw in message box, from a pair of iterators.
         template <typename Iterator>
@@ -75,11 +76,13 @@ namespace XSwiftBus
         std::vector<CMessage> m_messages;
         bool m_upArrow = false;
         bool m_downArrow = false;
-        const int c_boxLeft = 0;
-        const int c_boxRight = 0;
-        const int c_boxTop = 0;
-        constexpr static int c_screenWidth = 1024;
-        constexpr static int c_screenHeight = 768;
+        int m_boxLeft = 0;
+        int m_boxRight = 0;
+        int m_boxTop = 0;
+
+        // Screen
+        DataRef<xplane::data::sim::graphics::view::window_width> m_screenWidth;
+        DataRef<xplane::data::sim::graphics::view::window_height> m_screenHeight;
     };
 
     /*!
@@ -113,7 +116,7 @@ namespace XSwiftBus
         bool m_visible = false;
         std::vector<CMessage> m_messages;
         size_t m_position = 0;
-        const size_t c_maxVisibleLines = 8;
+        const size_t c_maxVisibleLines = 5;
         const size_t c_maxTotalLines = 1024;
         CMessageBox m_messageBox;
 

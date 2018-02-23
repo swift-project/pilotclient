@@ -26,11 +26,14 @@ namespace XSwiftBus
         static int lineHeight = 0;
         if (! lineHeight)
         {
-            XPLMGetFontDimensions(xplmFont_Basic, nullptr, &lineHeight, nullptr);
+            XPLMGetFontDimensions(xplmFont_Proportional, nullptr, &lineHeight, nullptr);
         }
         static const int lineSpace = lineHeight / 3;
-        const int boxBottom = c_boxTop - lineSpace * 2 - (lineHeight + lineSpace) * messageCount;
-        XPLMDrawTranslucentDarkBox(c_boxLeft, c_boxTop, c_boxRight, boxBottom);
+        const int boxTop = m_screenHeight.get() - m_boxTop;
+        const int boxBottom = boxTop - lineSpace * 2 - (lineHeight + lineSpace) * messageCount;
+        const int boxRight = m_screenWidth.get() - m_boxRight;
+        const int boxLeft = m_boxLeft;
+        XPLMDrawTranslucentDarkBox(boxLeft, boxTop, boxRight, boxBottom);
 
         static int arrowWidth = 0, arrowHeight = 0;
         if (! arrowHeight)
@@ -38,21 +41,21 @@ namespace XSwiftBus
             XPGetElementDefaultDimensions(xpElement_LittleUpArrow, &arrowWidth, &arrowHeight, nullptr);
         }
 
-        static const int x = c_boxLeft + lineSpace;
+        static const int x = boxLeft + lineSpace;
         if (m_upArrow)
         {
-            const int y = c_boxTop - lineSpace - arrowHeight;
+            const int y = boxTop - lineSpace - arrowHeight;
             XPDrawElement(x, y, x + arrowWidth, y + arrowHeight, xpElement_LittleUpArrow, 0);
         }
         if (m_downArrow)
         {
-            const int y = c_boxTop - (lineHeight + lineSpace) * messageCount;
+            const int y = boxTop - (lineHeight + lineSpace) * messageCount;
             XPDrawElement(x, y, x + arrowWidth, y + arrowHeight, xpElement_LittleDownArrow, 0);
         }
         for (int i = 0; i < messageCount; ++i)
         {
-            const int y = c_boxTop - (lineHeight + lineSpace) * (i + 1);
-            XPLMDrawString(m_messages[i].m_rgb.data(), x + arrowWidth + arrowWidth / 2, y, const_cast<char*>(m_messages[i].m_text.c_str()), nullptr, xplmFont_Basic);
+            const int y = boxTop - (lineHeight + lineSpace) * (i + 1);
+            XPLMDrawString(m_messages[i].m_rgb.data(), x + arrowWidth + arrowWidth / 2, y, const_cast<char*>(m_messages[i].m_text.c_str()), nullptr, xplmFont_Proportional);
         }
     }
 
@@ -62,8 +65,10 @@ namespace XSwiftBus
         if (! len)
         {
             int charWidth;
-            XPLMGetFontDimensions(xplmFont_Basic, &charWidth, nullptr, nullptr);
-            len = (c_boxRight - c_boxLeft - 20) / charWidth;
+            XPLMGetFontDimensions(xplmFont_Proportional, &charWidth, nullptr, nullptr);
+            const int boxRight = m_screenWidth.get() - m_boxRight;
+            const int boxLeft = m_boxLeft;
+            len = (boxRight - boxLeft - 20) / charWidth;
         }
         return len;
     }
