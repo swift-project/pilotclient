@@ -15,6 +15,7 @@
 #include "blackmisc/logmessage.h"
 #include "ui_settingscomponent.h"
 
+#include <QAction>
 #include <QComboBox>
 #include <QLineEdit>
 #include <QSlider>
