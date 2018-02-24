@@ -13,7 +13,6 @@ using namespace BlackMisc::Input;
 
 namespace BlackInput
 {
-
     static const auto &keyMapping()
     {
         static const QHash<int, KeyCode> hash
@@ -69,13 +68,11 @@ namespace BlackInput
     CKeyboardWindows::CKeyboardWindows(QObject *parent) :
         IKeyboard(parent),
         m_keyboardHook(nullptr)
-    {
-    }
+    { }
 
     CKeyboardWindows::~CKeyboardWindows()
     {
-        if (m_keyboardHook)
-            UnhookWindowsHookEx(m_keyboardHook);
+        if (m_keyboardHook) { UnhookWindowsHookEx(m_keyboardHook); }
     }
 
     bool CKeyboardWindows::init()
@@ -95,7 +92,7 @@ namespace BlackInput
             if (key == Key_Unknown) { return; }
             m_keyCombination.addKeyboardKey(CKeyboardKey(key));
         }
-        else if ((event == WM_KEYUP) || (event == WM_SYSKEYUP) )
+        else if ((event == WM_KEYUP) || (event == WM_SYSKEYUP))
         {
             auto key = keyMapping().value(vkcode);
             if (key == Key_Unknown) { return; }
@@ -112,7 +109,7 @@ namespace BlackInput
     {
         if (nCode == HC_ACTION)
         {
-            KBDLLHOOKSTRUCT *keyboardEvent =reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+            KBDLLHOOKSTRUCT *keyboardEvent = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
             WPARAM vkCode = keyboardEvent->vkCode;
             g_keyboardWindows->processKeyEvent(vkCode, wParam);
         }

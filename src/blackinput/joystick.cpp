@@ -24,8 +24,7 @@ namespace BlackInput
 
     IJoystick::IJoystick(QObject *parent) :
         QObject(parent)
-    {
-    }
+    {  }
 
     std::unique_ptr<IJoystick> IJoystick::create(QObject *parent)
     {

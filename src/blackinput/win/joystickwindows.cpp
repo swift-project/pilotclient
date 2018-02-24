@@ -33,7 +33,7 @@ namespace BlackInput
         this->initDirectInput();
         this->enumJoystickDevices();
         this->filterJoystickDevices();
-        if (!m_availableJoystickDevices.isEmpty()) { createJoystickDevice(); }
+        if (!m_availableJoystickDevices.isEmpty()) { this->createJoystickDevice(); }
     }
 
     CJoystickWindows::~CJoystickWindows()
@@ -167,7 +167,7 @@ namespace BlackInput
             return hr;
         }
 
-        createHelperWindow();
+        this->createHelperWindow();
 
         // Set cooperative level
         if (FAILED(hr = m_directInputDevice->SetCooperativeLevel(m_helperWindow, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)))
@@ -201,7 +201,7 @@ namespace BlackInput
 
         CLogMessage(this).info("Created joystick device '%1' with %2 buttons") << deviceData.deviceName << deviceCaps.dwButtons;
 
-        startTimer(50);
+        this->startTimer(50);
         return hr;
     }
 
@@ -210,13 +210,13 @@ namespace BlackInput
         HINSTANCE hInstance = GetModuleHandle(nullptr);
         WNDCLASS wce;
 
-        /* Make sure window isn't created twice. */
+        // Make sure window isn't created twice
         if (m_helperWindow != nullptr)
         {
             return 0;
         }
 
-        /* Create the class. */
+        // Create the class
         ZeroMemory(&wce, sizeof(WNDCLASS));
         wce.lpfnWndProc = DefWindowProc;
         wce.lpszClassName = (LPCWSTR) m_helperWindowClassName;
@@ -317,7 +317,7 @@ namespace BlackInput
 
         for (CJoystickDeviceInput input : m_joystickDeviceInputs)
         {
-            qint32 buttonIndex = input.m_offset - DIJOFS_BUTTON0;
+            const qint32 buttonIndex = input.m_offset - DIJOFS_BUTTON0;
             updateAndSendButtonStatus(buttonIndex, state.rgbButtons[buttonIndex] & 0x80);
         }
 

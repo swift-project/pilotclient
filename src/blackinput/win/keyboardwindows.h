@@ -26,55 +26,46 @@
 
 namespace BlackInput
 {
-    //! \brief Windows implemenation of IKeyboard using hook procedure
+    //! Windows implemenation of IKeyboard using hook procedure
     class BLACKINPUT_EXPORT CKeyboardWindows : public IKeyboard
     {
         Q_OBJECT
+
     public:
+        //! Copy Constructor
+        CKeyboardWindows(CKeyboardWindows const &) = delete;
 
-        //! \brief Copy Constructor
-        CKeyboardWindows(CKeyboardWindows const&) = delete;
+        //! Assignment operator
+        CKeyboardWindows &operator=(CKeyboardWindows const &) = delete;
 
-        //! \brief Assignment operator
-        CKeyboardWindows &operator=(CKeyboardWindows const&) = delete;
-
-        //! \brief Destructor
+        //! Destructor
         virtual ~CKeyboardWindows();
 
-        //! \brief Keyboard hook handle
+        //! Keyboard hook handle
         HHOOK keyboardHook() const { return m_keyboardHook; }
 
         //! \private
         void processKeyEvent(WPARAM vkCode, uint event);
 
     protected:
-
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
 
     private:
-
         friend class IKeyboard;
 
-        //! \brief Constructor
+        //! Constructor
         CKeyboardWindows(QObject *parent = nullptr);
 
         void addKey(WPARAM vkcode);
         void removeKey(WPARAM vkcode);
 
-        /*!
-         * \brief Keyboard hook procedure
-         * \param nCode
-         * \param wParam
-         * \param lParam
-         * \return
-         */
+        //! Keyboard hook procedure
         static LRESULT CALLBACK keyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-
-        BlackMisc::Input::CHotkeyCombination m_keyCombination;    //!< Set of virtual keys pressed in the last cycle
-        HHOOK m_keyboardHook;                   //!< Keyboard hook handle
+        BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Set of virtual keys pressed in the last cycle
+        HHOOK m_keyboardHook; //!< Keyboard hook handle
     };
 }
 
-#endif // BLACKINPUT_KEYBOARD_WINDOWS_H
+#endif // guard
