@@ -38,16 +38,17 @@ namespace BlackInput
 
     CJoystickWindows::~CJoystickWindows()
     {
-        // release device before input
         if (m_directInputDevice)
         {
-            m_directInputDevice->Unacquire();
-            m_directInputDevice->Release();
-            m_directInputDevice = nullptr;
+            // currently disabled as it causes crashi
+            // m_directInputDevice->Release();
+            // m_directInputDevice = nullptr;
         }
+
         if (m_directInput)
         {
-            m_directInput->Release();
+            //! \todo hack without input device this crashes
+            if (m_directInputDevice) { m_directInput->Release(); }
             m_directInput = nullptr;
         }
 
