@@ -78,6 +78,10 @@ namespace BlackCore
                                    "driverMessages", this, SIGNAL(driverMessages(BlackMisc::CStatusMessageList)));
 
             Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "requestUiConsoleMessage", this, SIGNAL(requestUiConsoleMessage(QString, bool)));
+
+            Q_ASSERT(s);
             Q_UNUSED(s);
             this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());
         }

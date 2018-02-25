@@ -820,7 +820,11 @@ namespace BlackCore
                  QStringLiteral("Situation: ") % s.toQString(false, false, true, true, true, true, sep);
         }
         if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QStringLiteral("") : QStringLiteral("\n\n")) % QStringLiteral("Parts: ") % p.toQString(sep); }
-        if (!dm.isEmpty()) { this->displayStatusMessage(CStatusMessage(this).info(dm)); }
+        if (!dm.isEmpty())
+        {
+            this->displayStatusMessage(CStatusMessage(this).info(dm));
+            emit this->requestUiConsoleMessage(dm, true);
+        }
 
         const int t = 4500 + (qrand() % 1000); // makes sure not always using the same time difference
         QTimer::singleShot(t, this, [ = ]

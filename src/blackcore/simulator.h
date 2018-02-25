@@ -223,6 +223,9 @@ namespace BlackCore
         //! Relevant simulator messages to be explicitly displayed
         void driverMessages(const BlackMisc::CStatusMessageList &messages);
 
+        //! Request a console message (whatever the console maybe)
+        void requestUiConsoleMessage(const QString &driverMessage, bool clear);
+
     protected:
         //! Default constructor
         ISimulator(QObject *parent = nullptr);

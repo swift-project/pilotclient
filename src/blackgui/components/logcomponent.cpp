@@ -104,6 +104,16 @@ namespace BlackGui
             ui->comp_StatusMessages->clear();
         }
 
+        void CLogComponent::clearConsole()
+        {
+            ui->tep_StatusPageConsole->clear();
+        }
+
+        void CLogComponent::clearMessages()
+        {
+            ui->comp_StatusMessages->clear();
+        }
+
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
         {
             if (statusMessage.isEmpty()) return;

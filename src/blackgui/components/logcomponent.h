@@ -83,6 +83,12 @@ namespace BlackGui
             //! Clear
             void clear();
 
+            //! Clear
+            void clearConsole();
+
+            //! Clear
+            void clearMessages();
+
             //! Append status message to console
             void appendStatusMessageToConsole(const BlackMisc::CStatusMessage &statusMessage);
 

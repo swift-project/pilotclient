@@ -9,9 +9,6 @@
 
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
-#include "blackconfig/buildconfig.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/context/contextnetwork.h"
 #include "blackgui/components/aircraftcomponent.h"
 #include "blackgui/components/atcstationcomponent.h"
 #include "blackgui/components/cockpitcomponent.h"
@@ -30,12 +27,16 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackcore/webdataservices.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QAction>
 #include <QHBoxLayout>
@@ -62,6 +63,7 @@ void SwiftGuiStd::init()
     // POST(!) GUI init
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
     Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "Missing web services");
+    Q_ASSERT_X(sGui->supportsContexts(), Q_FUNC_INFO, "Missing contexts");
 
     if (m_init) { return; }
 
@@ -118,6 +120,9 @@ void SwiftGuiStd::init()
     this->initGuiSignals();
 
     // signal / slots contexts / timers
+    Q_ASSERT_X(sGui->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+    Q_ASSERT_X(sGui->getIContextSimulator(), Q_FUNC_INFO, "Missing simulator context");
+
     bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::onConnectionStatusChanged, Qt::QueuedConnection);
     Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::kicked, this, &SwiftGuiStd::onKickedFromNetwork, Qt::QueuedConnection);
@@ -125,6 +130,15 @@ void SwiftGuiStd::init()
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived, Qt::QueuedConnection);
     Q_ASSERT(s);
     s = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent, Qt::QueuedConnection);
+    Q_ASSERT(s);
+    s = connect(sGui->getIContextSimulator(), &IContextSimulator::requestUiConsoleMessage, this, [ = ](const QString & logMsg, bool clear)
+    {
+        if (logMsg.isEmpty()) { return; }
+        CLogComponent *log = ui->comp_MainInfoArea->getLogComponent();
+        Q_ASSERT_X(log, Q_FUNC_INFO, "Missing log component");
+        if (clear) { log->clearConsole(); }
+        log->appendPlainTextToConsole(logMsg);
+    }, Qt::QueuedConnection);
     Q_ASSERT(s);
     s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
     Q_ASSERT(s);
@@ -194,12 +208,12 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &SwiftGuiStd::onChangedWindowOpacity);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::textEntered, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLineText);
-    connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::audioPressed, [ = ]
     {
         ui->comp_MainInfoArea->getCockpitComponent()->showAudio();
         ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaCockpit);
     });
+    connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
 
     // menu
     connect(ui->menu_TestLocationsEDDF, &QAction::triggered, this, &SwiftGuiStd::onMenuClicked);
