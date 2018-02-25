@@ -132,15 +132,14 @@ namespace BlackSimPlugin
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! @}
 
-        private slots:
-            void ps_serviceUnregistered();
-            void ps_setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
-            void ps_emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
-                                                const QString &modelString, const QString &name, const QString &description);
-            void ps_fastTimerTimeout();
-            void ps_slowTimerTimeout();
-
         private:
+            void serviceUnregistered();
+            void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
+            void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
+                                             const QString &modelString, const QString &name, const QString &description);
+            void fastTimerTimeout();
+            void slowTimerTimeout();
+
             void loadCslPackages();
             QString findCslPackage(const QString &modelFileName);
 
@@ -171,14 +170,14 @@ namespace BlackSimPlugin
             CXSwiftBusServiceProxy *m_service { nullptr };
             CXSwiftBusTrafficProxy *m_traffic { nullptr };
             CXSwiftBusWeatherProxy *m_weather { nullptr };
-            QTimer *m_fastTimer { nullptr };
-            QTimer *m_slowTimer { nullptr };
+            QTimer m_fastTimer;
+            QTimer m_slowTimer;
             BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
 
             // Driver Interpolation
-            CXPlaneMPAircrafts m_xplaneAircrafts;   //!< XPlane multiplayer aircrafts
-            int m_interpolationRequest = 0;         //!< current interpolation request
+            CXPlaneMPAircrafts m_xplaneAircraft; //!< XPlane multiplayer aircraft
+            int m_interpolationRequest = 0;      //!< current interpolation request
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks
@@ -212,7 +211,7 @@ namespace BlackSimPlugin
                 double seaLeveLPressure;
             } m_xplaneData;
 
-            void resetData()
+            void resetXPlaneData()
             {
                 m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, false, 122800, 122800, 122800, 122800, 2000, 0, false, false, false, false,
                                  false, false, 0, 0, {}, 0.0, 0.0
@@ -241,14 +240,12 @@ namespace BlackSimPlugin
             //! \brief Check if XSwiftBus service is already registered
             bool isXSwiftBusRunning() const;
 
-        private slots:
-            void ps_serviceRegistered(const QString &serviceName);
-            void ps_xswiftbusServerSettingChanged();
+            void serviceRegistered(const QString &serviceName);
+            void xSwiftBusServerSettingChanged();
 
-        private:
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::ps_xswiftbusServerSettingChanged };
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TXSwiftBusServer> m_xswiftbusServerSetting { this, &CSimulatorXPlaneListener::xSwiftBusServerSettingChanged };
         };
 
         //! Factory for creating CSimulatorXPlane instance
@@ -268,7 +265,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }
         };
-
     } // ns
 } // ns
 
