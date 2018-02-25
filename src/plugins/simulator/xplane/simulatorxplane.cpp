@@ -651,23 +651,20 @@ namespace BlackSimPlugin
 
                 // really remove from simulator
                 if (!m_xplaneAircraft.contains(callsign)) { return false; } // already fully removed or not yet added
-                CXPlaneMPAircraft &xplaneAircraft = m_xplaneAircraft[callsign];
-
-                // avoid further data from simulator
-                // this->stopRequestingDataForSimObject(simObject);
-
-                m_traffic->removePlane(callsign.asString());
-
-                m_xplaneAircraft.remove(callsign);
 
                 // mark in provider
                 const bool updated = this->updateAircraftRendered(callsign, false);
                 if (updated)
                 {
+                    Q_ASSERT_X(m_xplaneAircraft.contains(callsign), Q_FUNC_INFO, "Aircraft removed");
+                    const CXPlaneMPAircraft &xplaneAircraft = m_xplaneAircraft[callsign];
                     CSimulatedAircraft aircraft(xplaneAircraft.getAircraft());
                     aircraft.setRendered(false);
                     emit this->aircraftRenderingChanged(aircraft);
                 }
+
+                m_traffic->removePlane(callsign.asString());
+                m_xplaneAircraft.remove(callsign);
 
                 // bye
                 return true;

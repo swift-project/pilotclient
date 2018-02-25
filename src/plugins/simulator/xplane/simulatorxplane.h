@@ -37,9 +37,9 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QTimer>
 
 class QDBusServiceWatcher;
-class QTimer;
 
 namespace BlackMisc
 {
