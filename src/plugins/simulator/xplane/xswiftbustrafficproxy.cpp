@@ -19,7 +19,6 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         CXSwiftBusTrafficProxy::CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
@@ -119,6 +118,5 @@ namespace BlackSimPlugin
         {
             m_dbusInterface->callDBus(QLatin1String("requestRemoteAircraftData"));
         }
-
     }
 }

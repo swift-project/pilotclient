@@ -29,7 +29,6 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         /*!
          * Proxy object connected to a real XSwiftBus::CTraffic object via DBus
          */
@@ -125,7 +124,6 @@ namespace BlackSimPlugin
             //! \copydoc XSwiftBus::CTraffic::requestRemoteAircraftData
             void requestRemoteAircraftData();
         };
-
     }
 }
 

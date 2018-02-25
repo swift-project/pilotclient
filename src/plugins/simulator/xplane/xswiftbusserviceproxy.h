@@ -376,9 +376,7 @@ namespace BlackSimPlugin
             double getSpeedBrakeRatio() const;
             void getSpeedBrakeRatioAsync(double *o_speedBrakeRatio);
             //! @}
-
         };
-
     }
 }
 

@@ -208,9 +208,11 @@ namespace BlackCore
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser);
 
         //! Display a debug log message based on BlackMisc::Simulation::CInterpolationAndRenderingSetup
+        //! remark shows log messages of functions calls
         void debugLogMessage(const QString &msg) const;
 
         //! Display a debug log message based on BlackMisc::Simulation::CInterpolationAndRenderingSetup
+        //! remark shows log messages of functions calls
         void debugLogMessage(const QString &funcInfo, const QString &msg) const;
 
         //! Show log messages?
