@@ -176,8 +176,8 @@ namespace BlackSimPlugin
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
 
             // Driver Interpolation
-            CXPlaneMPAircrafts m_xplaneAircraft; //!< XPlane multiplayer aircraft
-            int m_interpolationRequest = 0;      //!< current interpolation request
+            CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
+            int m_interpolationRequest = 0; //!< current interpolation request
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks

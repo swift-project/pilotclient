@@ -106,12 +106,12 @@ namespace BlackSimPlugin
             return m_interpolator->getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
         }
 
-        CCallsignSet CXPlaneMPAircrafts::getAllCallsigns() const
+        CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const
         {
             return CCallsignSet(this->keys());
         }
 
-        int CXPlaneMPAircrafts::setInterpolatorModes(CInterpolatorMulti::Mode mode)
+        int CXPlaneMPAircraftObjects::setInterpolatorModes(CInterpolatorMulti::Mode mode)
         {
             int c = 0;
             for (const CCallsign &cs : this->keys())

@@ -381,13 +381,13 @@ namespace BlackSimPlugin
                 if (mode == CInterpolatorMulti::ModeUnknown) { return false; }
                 if (callsign.isEmpty())
                 {
-                    const int c = m_xplaneAircraft.setInterpolatorModes(mode);
+                    const int c = m_xplaneAircraftObjects.setInterpolatorModes(mode);
                     return c > 0;
                 }
                 else
                 {
-                    if (!m_xplaneAircraft.contains(callsign)) { return false; }
-                    return m_xplaneAircraft[callsign].setInterpolatorMode(mode);
+                    if (!m_xplaneAircraftObjects.contains(callsign)) { return false; }
+                    return m_xplaneAircraftObjects[callsign].setInterpolatorMode(mode);
                 }
             }
             else
@@ -418,7 +418,7 @@ namespace BlackSimPlugin
         {
             if (c_driverInterpolation)
             {
-                return m_xplaneAircraft.contains(callsign);
+                return m_xplaneAircraftObjects.contains(callsign);
             }
             else
             {
@@ -520,7 +520,7 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
                 Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
-                m_xplaneAircraft.insert(newRemoteAircraft.getCallsign(), CXPlaneMPAircraft(newRemoteAircraft, &m_interpolationLogger));
+                m_xplaneAircraftObjects.insert(newRemoteAircraft.getCallsign(), CXPlaneMPAircraft(newRemoteAircraft, &m_interpolationLogger));
                 CAircraftModel aircraftModel = newRemoteAircraft.getModel();
                 QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
                 m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
@@ -564,9 +564,9 @@ namespace BlackSimPlugin
             Q_ASSERT(isConnected());
             if (c_driverInterpolation)
             {
-                if (m_xplaneAircraft.contains(situation.getCallsign()))
+                if (m_xplaneAircraftObjects.contains(situation.getCallsign()))
                 {
-                    m_xplaneAircraft[situation.getCallsign()].addAircraftSituation(situation);
+                    m_xplaneAircraftObjects[situation.getCallsign()].addAircraftSituation(situation);
                 }
             }
             else
@@ -620,9 +620,9 @@ namespace BlackSimPlugin
 
             if (c_driverInterpolation)
             {
-                if (m_xplaneAircraft.contains(callsign))
+                if (m_xplaneAircraftObjects.contains(callsign))
                 {
-                    m_xplaneAircraft[callsign].addAircraftParts(parts);
+                    m_xplaneAircraftObjects[callsign].addAircraftParts(parts);
                 }
             }
             else
@@ -650,21 +650,21 @@ namespace BlackSimPlugin
                 m_hints.remove(callsign);
 
                 // really remove from simulator
-                if (!m_xplaneAircraft.contains(callsign)) { return false; } // already fully removed or not yet added
+                if (!m_xplaneAircraftObjects.contains(callsign)) { return false; } // already fully removed or not yet added
 
                 // mark in provider
                 const bool updated = this->updateAircraftRendered(callsign, false);
                 if (updated)
                 {
-                    Q_ASSERT_X(m_xplaneAircraft.contains(callsign), Q_FUNC_INFO, "Aircraft removed");
-                    const CXPlaneMPAircraft &xplaneAircraft = m_xplaneAircraft[callsign];
+                    Q_ASSERT_X(m_xplaneAircraftObjects.contains(callsign), Q_FUNC_INFO, "Aircraft removed");
+                    const CXPlaneMPAircraft &xplaneAircraft = m_xplaneAircraftObjects[callsign];
                     CSimulatedAircraft aircraft(xplaneAircraft.getAircraft());
                     aircraft.setRendered(false);
                     emit this->aircraftRenderingChanged(aircraft);
                 }
 
                 m_traffic->removePlane(callsign.asString());
-                m_xplaneAircraft.remove(callsign);
+                m_xplaneAircraftObjects.remove(callsign);
 
                 // bye
                 return true;
@@ -688,7 +688,7 @@ namespace BlackSimPlugin
             {
                 // remove one by one
                 int r = 0;
-                const CCallsignSet callsigns = m_xplaneAircraft.getAllCallsigns();
+                const CCallsignSet callsigns = m_xplaneAircraftObjects.getAllCallsigns();
                 for (const CCallsign &cs : callsigns)
                 {
                     if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
@@ -838,7 +838,7 @@ namespace BlackSimPlugin
             const CCallsignSet callsignsToLog(m_interpolationRenderingSetup.getLogCallsigns());
 
             // interpolation for all remote aircraft
-            const QList<CXPlaneMPAircraft> xplaneAircrafts(m_xplaneAircraft.values());
+            const QList<CXPlaneMPAircraft> xplaneAircrafts(m_xplaneAircraftObjects.values());
             for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircrafts)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
@@ -863,7 +863,7 @@ namespace BlackSimPlugin
                     // update situation
                     if (!xplaneAircraft.isSameAsSent(interpolatedSituation))
                     {
-                        m_xplaneAircraft[xplaneAircraft.getCallsign()].setPositionAsSent(interpolatedSituation);
+                        m_xplaneAircraftObjects[xplaneAircraft.getCallsign()].setPositionAsSent(interpolatedSituation);
                         m_traffic->setPlanePosition(interpolatedSituation.getCallsign().asString(),
                                                     interpolatedSituation.latitude().value(CAngleUnit::deg()),
                                                     interpolatedSituation.longitude().value(CAngleUnit::deg()),
@@ -1011,7 +1011,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::updateRemoteAircraftFromSimulator(const QString &callsign_, double latitude, double longitude, double groundElevation, double modelVerticalOffset)
         {
             CCallsign callsign(callsign_);
-            if (!m_xplaneAircraft.contains(callsign)) { return; }
+            if (!m_xplaneAircraftObjects.contains(callsign)) { return; }
 
             CElevationPlane elevation(CLatitude(latitude, CAngleUnit::deg()), CLongitude(longitude, CAngleUnit::deg()), CAltitude(groundElevation, CLengthUnit::m()));
             elevation.setSinglePointRadius();

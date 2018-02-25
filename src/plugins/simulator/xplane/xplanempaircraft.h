@@ -109,7 +109,7 @@ namespace BlackSimPlugin
         };
 
         //! Simulator objects (aka AI aircraft)
-        class CXPlaneMPAircrafts : public QHash<BlackMisc::Aviation::CCallsign, CXPlaneMPAircraft>
+        class CXPlaneMPAircraftObjects : public QHash<BlackMisc::Aviation::CCallsign, CXPlaneMPAircraft>
         {
         public:
             //! Get all callsigns
