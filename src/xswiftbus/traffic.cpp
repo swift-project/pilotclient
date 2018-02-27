@@ -281,6 +281,7 @@ namespace XSwiftBus
     void CTraffic::setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
     {
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        if (!plane) { return; }
         plane->position.lat = latitude;
         plane->position.lon = longitude;
         plane->position.elevation = altitude;
@@ -292,6 +293,8 @@ namespace XSwiftBus
     void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
                                     double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
     {
+        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        if (!plane) { return; }
         const auto surfaces = std::make_pair(relativeTime + timeOffset + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane * plane)
         {
             plane->hasSurfaces = true;
@@ -312,18 +315,14 @@ namespace XSwiftBus
             plane->surfaces.lights.flashPattern = lightPattern;
         });
 
-        const auto plane = m_planesByCallsign.value(callsign, nullptr);
-        if (plane)
-        {
-            if (plane->hasSurfaces) { plane->pendingSurfaces.push_back(surfaces); }
-            else { surfaces.second(plane); }
+        if (plane->hasSurfaces) { plane->pendingSurfaces.push_back(surfaces); }
+        else { surfaces.second(plane); }
 
-            BlackMisc::Aviation::CAircraftParts parts;
-            parts.setOnGround(onGround);
-            parts.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
-            parts.setTimeOffsetMs(timeOffset);
-            plane->interpolator.addAircraftParts(parts);
-        }
+        BlackMisc::Aviation::CAircraftParts parts;
+        parts.setOnGround(onGround);
+        parts.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+        parts.setTimeOffsetMs(timeOffset);
+        plane->interpolator.addAircraftParts(parts);
     }
 
     void CTraffic::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
@@ -331,38 +330,35 @@ namespace XSwiftBus
     {
         Q_UNUSED(onGround);
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
-        if (plane)
-        {
-            plane->hasSurfaces = true;
-            plane->targetGearPosition = gear;
-            plane->surfaces.flapRatio = flap;
-            plane->surfaces.spoilerRatio = spoiler;
-            plane->surfaces.speedBrakeRatio = speedBrake;
-            plane->surfaces.slatRatio = slat;
-            plane->surfaces.wingSweep = wingSweep;
-            plane->surfaces.thrust = thrust;
-            plane->surfaces.yokePitch = elevator;
-            plane->surfaces.yokeHeading = rudder;
-            plane->surfaces.yokeRoll = aileron;
-            plane->surfaces.lights.landLights = landLight;
-            plane->surfaces.lights.bcnLights = beaconLight;
-            plane->surfaces.lights.strbLights = strobeLight;
-            plane->surfaces.lights.navLights = navLight;
-            plane->surfaces.lights.flashPattern = lightPattern;
-        }
+        if (!plane) { return; }
+
+        plane->hasSurfaces = true;
+        plane->targetGearPosition = static_cast<float>(gear);
+        plane->surfaces.flapRatio = static_cast<float>(flap);
+        plane->surfaces.spoilerRatio = static_cast<float>(spoiler);
+        plane->surfaces.speedBrakeRatio = static_cast<float>(speedBrake);
+        plane->surfaces.slatRatio = static_cast<float>(slat);
+        plane->surfaces.wingSweep = static_cast<float>(wingSweep);
+        plane->surfaces.thrust = static_cast<float>(thrust);
+        plane->surfaces.yokePitch = static_cast<float>(elevator);
+        plane->surfaces.yokeHeading = static_cast<float>(rudder);
+        plane->surfaces.yokeRoll = static_cast<float>(aileron);
+        plane->surfaces.lights.landLights = landLight;
+        plane->surfaces.lights.bcnLights = beaconLight;
+        plane->surfaces.lights.strbLights = strobeLight;
+        plane->surfaces.lights.navLights = navLight;
+        plane->surfaces.lights.flashPattern = lightPattern;
     }
 
     void CTraffic::setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident)
     {
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
-        if (plane)
-        {
-            plane->hasXpdr = true;
-            plane->xpdr.code = code;
-            if (ident) { plane->xpdr.mode = xpmpTransponderMode_ModeC_Ident; }
-            else if (modeC) { plane->xpdr.mode = xpmpTransponderMode_ModeC; }
-            else { plane->xpdr.mode = xpmpTransponderMode_Standby; }
-        }
+        if (!plane) { return; }
+        plane->hasXpdr = true;
+        plane->xpdr.code = code;
+        if (ident) { plane->xpdr.mode = xpmpTransponderMode_ModeC_Ident; }
+        else if (modeC) { plane->xpdr.mode = xpmpTransponderMode_ModeC; }
+        else { plane->xpdr.mode = xpmpTransponderMode_Standby; }
     }
 
     void CTraffic::setInterpolatorMode(const QString &callsign, bool spline)
