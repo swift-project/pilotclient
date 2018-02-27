@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/verify.h"
 #include "XPMPMultiplayer.h"
 #include "XPMPPlaneRenderer.h"
 #include <XPLM/XPLMProcessing.h>
@@ -31,7 +32,6 @@
 
 namespace XSwiftBus
 {
-
     CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_, QString modelName_)
         : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_),
           interpolator(callsign)
@@ -227,7 +227,7 @@ namespace XSwiftBus
 
         if (id)
         {
-            auto plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery, modelName);
+            Plane *plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery, modelName);
             m_planesByCallsign[callsign] = plane;
             m_planesById[id] = plane;
         }
@@ -235,20 +235,20 @@ namespace XSwiftBus
 
     void CTraffic::removePlane(const QString &callsign)
     {
-        auto plane = m_planesByCallsign.value(callsign, nullptr);
-        if (plane)
-        {
-            m_planesByCallsign.remove(callsign);
-            m_planesById.remove(plane->id);
-            XPMPDestroyPlane(plane->id);
-            delete plane;
-        }
+        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
+        if (!plane) { return; }
+        m_planesByCallsign.remove(callsign);
+        m_planesById.remove(plane->id);
+        XPMPDestroyPlane(plane->id);
+        delete plane;
     }
 
     void CTraffic::removeAllPlanes()
     {
-        for (auto plane : BlackMisc::as_const(m_planesByCallsign))
+        for (Plane *plane : BlackMisc::as_const(m_planesByCallsign))
         {
+            BLACK_VERIFY_X(plane, Q_FUNC_INFO, "Missing Plane");
+            if (!plane) { continue; }
             XPMPDestroyPlane(plane->id);
             delete plane;
         }
@@ -258,29 +258,28 @@ namespace XSwiftBus
 
     void CTraffic::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset)
     {
-        const auto plane = m_planesByCallsign.value(callsign, nullptr);
-        if (plane)
-        {
-            using namespace BlackMisc::PhysicalQuantities;
-            using namespace BlackMisc::Aviation;
-            using namespace BlackMisc::Geo;
-            CAircraftSituation situation(
-                callsign,
-                CCoordinateGeodetic(latitude, longitude, altitude),
-                CHeading(heading, CHeading::True, CAngleUnit::deg()),
-                CAngle(pitch, CAngleUnit::deg()),
-                CAngle(roll, CAngleUnit::deg()),
-                CSpeed(0, CSpeedUnit::kts())
-            );
-            situation.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
-            situation.setTimeOffsetMs(timeOffset);
-            plane->interpolator.addAircraftSituation(situation);
-        }
+        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
+        if (!plane) { return; }
+
+        using namespace BlackMisc::PhysicalQuantities;
+        using namespace BlackMisc::Aviation;
+        using namespace BlackMisc::Geo;
+        CAircraftSituation situation(
+            callsign,
+            CCoordinateGeodetic(latitude, longitude, altitude),
+            CHeading(heading, CHeading::True, CAngleUnit::deg()),
+            CAngle(pitch, CAngleUnit::deg()),
+            CAngle(roll, CAngleUnit::deg()),
+            CSpeed(0, CSpeedUnit::kts())
+        );
+        situation.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+        situation.setTimeOffsetMs(timeOffset);
+        plane->interpolator.addAircraftSituation(situation);
     }
 
     void CTraffic::setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
     {
-        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
         if (!plane) { return; }
         plane->position.lat = latitude;
         plane->position.lon = longitude;
@@ -293,7 +292,7 @@ namespace XSwiftBus
     void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
                                     double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
     {
-        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
         if (!plane) { return; }
         const auto surfaces = std::make_pair(relativeTime + timeOffset + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane * plane)
         {
@@ -329,7 +328,7 @@ namespace XSwiftBus
                                     double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround)
     {
         Q_UNUSED(onGround);
-        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
         if (!plane) { return; }
 
         plane->hasSurfaces = true;
@@ -352,7 +351,7 @@ namespace XSwiftBus
 
     void CTraffic::setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident)
     {
-        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
         if (!plane) { return; }
         plane->hasXpdr = true;
         plane->xpdr.code = code;
@@ -363,7 +362,7 @@ namespace XSwiftBus
 
     void CTraffic::setInterpolatorMode(const QString &callsign, bool spline)
     {
-        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
         if (plane)
         {
             plane->interpolator.setMode(spline ? BlackMisc::Simulation::CInterpolatorMulti::ModeSpline
@@ -384,6 +383,9 @@ namespace XSwiftBus
         const QList<Plane *> planes = m_planesByCallsign.values();
         for (const Plane *plane : planes)
         {
+            BLACK_VERIFY_X(plane, Q_FUNC_INFO, "Missing Plane");
+            if (!plane) { continue; }
+
             double lat = plane->position.lat;
             double lon = plane->position.lon;
             double elevation = plane->position.elevation;
@@ -406,8 +408,8 @@ namespace XSwiftBus
 
     int CTraffic::getPlaneData(void *id, int dataType, void *io_data)
     {
-        auto plane = m_planesById.value(id, nullptr);
-        if (! plane) { return xpmpData_Unavailable; }
+        Plane *plane = m_planesById.value(id, nullptr);
+        if (!plane) { return xpmpData_Unavailable; }
 
         switch (dataType)
         {
