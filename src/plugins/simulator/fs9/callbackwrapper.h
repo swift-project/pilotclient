@@ -42,7 +42,6 @@ namespace BlackSimPlugin
             }
 
         private:
-
             QPointer<Object> m_object;
             MemberFunction m_memberFunction;
         };

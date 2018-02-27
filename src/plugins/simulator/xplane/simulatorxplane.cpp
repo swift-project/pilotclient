@@ -135,22 +135,22 @@ namespace BlackSimPlugin
         {
             if (isConnected())
             {
-                m_service->getLatitudeAsync(&m_xplaneData.latitude);
-                m_service->getLongitudeAsync(&m_xplaneData.longitude);
-                m_service->getAltitudeMSLAsync(&m_xplaneData.altitude);
-                m_service->getGroundSpeedAsync(&m_xplaneData.groundspeed);
-                m_service->getPitchAsync(&m_xplaneData.pitch);
-                m_service->getRollAsync(&m_xplaneData.roll);
-                m_service->getTrueHeadingAsync(&m_xplaneData.trueHeading);
-                m_service->getCom1ActiveAsync(&m_xplaneData.com1Active);
-                m_service->getCom1StandbyAsync(&m_xplaneData.com1Standby);
-                m_service->getCom2ActiveAsync(&m_xplaneData.com2Active);
-                m_service->getCom2StandbyAsync(&m_xplaneData.com2Standby);
-                m_service->getTransponderCodeAsync(&m_xplaneData.xpdrCode);
-                m_service->getTransponderModeAsync(&m_xplaneData.xpdrMode);
-                m_service->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
-                m_service->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
-                m_service->getQNHAsync(&m_xplaneData.seaLeveLPressure);
+                m_serviceProxy->getLatitudeAsync(&m_xplaneData.latitude);
+                m_serviceProxy->getLongitudeAsync(&m_xplaneData.longitude);
+                m_serviceProxy->getAltitudeMSLAsync(&m_xplaneData.altitude);
+                m_serviceProxy->getGroundSpeedAsync(&m_xplaneData.groundspeed);
+                m_serviceProxy->getPitchAsync(&m_xplaneData.pitch);
+                m_serviceProxy->getRollAsync(&m_xplaneData.roll);
+                m_serviceProxy->getTrueHeadingAsync(&m_xplaneData.trueHeading);
+                m_serviceProxy->getCom1ActiveAsync(&m_xplaneData.com1Active);
+                m_serviceProxy->getCom1StandbyAsync(&m_xplaneData.com1Standby);
+                m_serviceProxy->getCom2ActiveAsync(&m_xplaneData.com2Active);
+                m_serviceProxy->getCom2StandbyAsync(&m_xplaneData.com2Standby);
+                m_serviceProxy->getTransponderCodeAsync(&m_xplaneData.xpdrCode);
+                m_serviceProxy->getTransponderModeAsync(&m_xplaneData.xpdrMode);
+                m_serviceProxy->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
+                m_serviceProxy->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
+                m_serviceProxy->getQNHAsync(&m_xplaneData.seaLeveLPressure);
 
                 CAircraftSituation situation;
                 situation.setPosition({ m_xplaneData.latitude, m_xplaneData.longitude, 0 });
@@ -192,17 +192,17 @@ namespace BlackSimPlugin
         {
             if (isConnected())
             {
-                m_service->getAircraftModelPathAsync(&m_xplaneData.aircraftModelPath);
-                m_service->getAircraftIcaoCodeAsync(&m_xplaneData.aircraftIcaoCode);
-                m_service->getBeaconLightsOnAsync(&m_xplaneData.beaconLightsOn);
-                m_service->getLandingLightsOnAsync(&m_xplaneData.landingLightsOn);
-                m_service->getNavLightsOnAsync(&m_xplaneData.navLightsOn);
-                m_service->getStrobeLightsOnAsync(&m_xplaneData.strobeLightsOn);
-                m_service->getTaxiLightsOnAsync(&m_xplaneData.taxiLightsOn);
-                m_service->getFlapsDeployRatioAsync(&m_xplaneData.flapsReployRatio);
-                m_service->getGearDeployRatioAsync(&m_xplaneData.gearReployRatio);
-                m_service->getEngineN1PercentageAsync(&m_xplaneData.enginesN1Percentage);
-                m_service->getSpeedBrakeRatioAsync(&m_xplaneData.speedBrakeRatio);
+                m_serviceProxy->getAircraftModelPathAsync(&m_xplaneData.aircraftModelPath);
+                m_serviceProxy->getAircraftIcaoCodeAsync(&m_xplaneData.aircraftIcaoCode);
+                m_serviceProxy->getBeaconLightsOnAsync(&m_xplaneData.beaconLightsOn);
+                m_serviceProxy->getLandingLightsOnAsync(&m_xplaneData.landingLightsOn);
+                m_serviceProxy->getNavLightsOnAsync(&m_xplaneData.navLightsOn);
+                m_serviceProxy->getStrobeLightsOnAsync(&m_xplaneData.strobeLightsOn);
+                m_serviceProxy->getTaxiLightsOnAsync(&m_xplaneData.taxiLightsOn);
+                m_serviceProxy->getFlapsDeployRatioAsync(&m_xplaneData.flapsReployRatio);
+                m_serviceProxy->getGearDeployRatioAsync(&m_xplaneData.gearReployRatio);
+                m_serviceProxy->getEngineN1PercentageAsync(&m_xplaneData.enginesN1Percentage);
+                m_serviceProxy->getSpeedBrakeRatioAsync(&m_xplaneData.speedBrakeRatio);
 
                 CAircraftEngineList engines;
                 for (int engineNumber = 0; engineNumber < m_xplaneData.enginesN1Percentage.size(); ++engineNumber)
@@ -217,7 +217,7 @@ namespace BlackSimPlugin
                         m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
                         m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false
                     },
-                    m_xplaneData.gearReployRatio > 0, static_cast<int>(m_xplaneData.flapsReployRatio * 100) ,
+                    m_xplaneData.gearReployRatio > 0, static_cast<int>(m_xplaneData.flapsReployRatio * 100),
                     m_xplaneData.speedBrakeRatio > 0.5, engines, m_xplaneData.onGroundAll
                 };
                 updateOwnParts(parts);
@@ -228,26 +228,26 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::isConnected() const
         {
-            return m_service && m_traffic && m_weather;
+            return m_serviceProxy && m_trafficProxy && m_weatherProxy;
         }
 
         bool CSimulatorXPlane::connectTo()
         {
             if (isConnected()) { return true; }
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
-            m_service = new CXSwiftBusServiceProxy(m_conn, this);
-            m_traffic = new CXSwiftBusTrafficProxy(m_conn, this);
-            m_weather = new CXSwiftBusWeatherProxy(m_conn, this);
+            m_serviceProxy = new CXSwiftBusServiceProxy(m_conn, this);
+            m_trafficProxy = new CXSwiftBusTrafficProxy(m_conn, this);
+            m_weatherProxy = new CXSwiftBusWeatherProxy(m_conn, this);
 
-            if (m_service->isValid() && m_traffic->isValid() && m_weather->isValid() && m_traffic->initialize())
+            if (m_serviceProxy->isValid() && m_trafficProxy->isValid() && m_weatherProxy->isValid() && m_trafficProxy->initialize())
             {
-                emitOwnAircraftModelChanged(m_service->getAircraftModelPath(), m_service->getAircraftModelFilename(), m_service->getAircraftLivery(),
-                                            m_service->getAircraftIcaoCode(), m_service->getAircraftModelString(), m_service->getAircraftName(), m_service->getAircraftDescription());
-                connect(m_service, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
-                connect(m_service, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
-                m_service->updateAirportsInRange();
-                connect(m_traffic, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
-                connect(m_traffic, &CXSwiftBusTrafficProxy::remoteAircraftData, this, &CSimulatorXPlane::updateRemoteAircraftFromSimulator);
+                emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(), m_serviceProxy->getAircraftLivery(),
+                                            m_serviceProxy->getAircraftIcaoCode(), m_serviceProxy->getAircraftModelString(), m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
+                connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitOwnAircraftModelChanged);
+                connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
+                m_serviceProxy->updateAirportsInRange();
+                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
+                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftData, this, &CSimulatorXPlane::updateRemoteAircraftFromSimulator);
                 if (m_watcher) { m_watcher->setConnection(m_conn); }
                 loadCslPackages();
                 emitSimulatorCombinedStatus();
@@ -263,19 +263,19 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::disconnectFrom()
         {
             if (!this->isConnected()) { return true; } // avoid emit if already disconnected
-            if (m_traffic)
+            if (m_trafficProxy)
             {
-                m_traffic->cleanup();
+                m_trafficProxy->cleanup();
             }
 
             m_conn = QDBusConnection { "default" };
             if (m_watcher) { m_watcher->setConnection(m_conn); }
-            delete m_service;
-            delete m_traffic;
-            delete m_weather;
-            m_service = nullptr;
-            m_traffic = nullptr;
-            m_weather = nullptr;
+            delete m_serviceProxy;
+            delete m_trafficProxy;
+            delete m_weatherProxy;
+            m_serviceProxy = nullptr;
+            m_trafficProxy = nullptr;
+            m_weatherProxy = nullptr;
             emitSimulatorCombinedStatus();
             return true;
         }
@@ -284,12 +284,12 @@ namespace BlackSimPlugin
         {
             m_conn = QDBusConnection { "default" };
             if (m_watcher) { m_watcher->setConnection(m_conn); }
-            delete m_service;
-            delete m_traffic;
-            delete m_weather;
-            m_service = nullptr;
-            m_traffic = nullptr;
-            m_weather = nullptr;
+            delete m_serviceProxy;
+            delete m_trafficProxy;
+            delete m_weatherProxy;
+            m_serviceProxy = nullptr;
+            m_trafficProxy = nullptr;
+            m_weatherProxy = nullptr;
             emitSimulatorCombinedStatus();
         }
 
@@ -322,7 +322,7 @@ namespace BlackSimPlugin
             case CStatusMessage::SeverityError: color = "red"; break;
             }
 
-            m_service->addTextMessage("swift: " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
+            m_serviceProxy->addTextMessage("swift: " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
             isInFunction = false;
         }
 
@@ -336,7 +336,7 @@ namespace BlackSimPlugin
             else if (message.isPrivateMessage()) { color = "magenta"; }
             else { color = "lime"; }
 
-            m_service->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
+            m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
         }
 
         void CSimulatorXPlane::setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
@@ -392,7 +392,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                m_traffic->setInterpolatorMode(callsign.asString(), mode == CInterpolatorMulti::ModeSpline);
+                m_trafficProxy->setInterpolatorMode(callsign.asString(), mode == CInterpolatorMulti::ModeSpline);
                 return true;
             }
         }
@@ -442,14 +442,14 @@ namespace BlackSimPlugin
                 m_xplaneData.com2Standby = aircraft.getCom2System().getFrequencyStandby().valueRounded(CFrequencyUnit::kHz(), 0);
                 m_xplaneData.xpdrCode = aircraft.getTransponderCode();
                 m_xplaneData.xpdrMode = xpdrMode(aircraft.getTransponderMode());
-                m_service->setCom1Active(m_xplaneData.com1Active);
-                m_service->setCom1Standby(m_xplaneData.com1Standby);
-                m_service->setCom2Active(m_xplaneData.com2Active);
-                m_service->setCom2Standby(m_xplaneData.com2Standby);
-                m_service->setTransponderCode(m_xplaneData.xpdrCode);
-                m_service->setTransponderMode(m_xplaneData.xpdrMode);
+                m_serviceProxy->setCom1Active(m_xplaneData.com1Active);
+                m_serviceProxy->setCom1Standby(m_xplaneData.com1Standby);
+                m_serviceProxy->setCom2Active(m_xplaneData.com2Active);
+                m_serviceProxy->setCom2Standby(m_xplaneData.com2Standby);
+                m_serviceProxy->setTransponderCode(m_xplaneData.xpdrCode);
+                m_serviceProxy->setTransponderMode(m_xplaneData.xpdrMode);
 
-                m_service->cancelAllPendingAsyncCalls(); // in case there is already a reply with some old data incoming
+                m_serviceProxy->cancelAllPendingAsyncCalls(); // in case there is already a reply with some old data incoming
                 return true;
             }
             return false;
@@ -490,12 +490,13 @@ namespace BlackSimPlugin
             {
                 Q_ASSERT(package.s.endsWith('/'));
                 package.s.chop(1);
-                m_traffic->loadPlanesPackage(package.s);
+                m_trafficProxy->loadPlanesPackage(package.s);
             }
         }
 
         QString CSimulatorXPlane::findCslPackage(const QString &modelFile)
         {
+            //! \todo KB 2018-02 KB when I have removed the CSL dir (acciedently) there was no warning here
             const QFileInfo info(modelFile);
             QDir dir = info.isDir() ? QDir(modelFile) : info.dir();
             do
@@ -523,10 +524,10 @@ namespace BlackSimPlugin
                 m_xplaneAircraftObjects.insert(newRemoteAircraft.getCallsign(), CXPlaneMPAircraft(newRemoteAircraft, &m_interpolationLogger));
                 CAircraftModel aircraftModel = newRemoteAircraft.getModel();
                 QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-                m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
-                                    newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                    newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                    livery);
+                m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
+                                         newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
+                                         newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
+                                         livery);
 
                 CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
 
@@ -542,10 +543,10 @@ namespace BlackSimPlugin
             {
                 CAircraftModel aircraftModel = newRemoteAircraft.getModel();
                 QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-                m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
-                                    newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                    newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                    livery);
+                m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
+                                         newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
+                                         newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
+                                         livery);
 
                 CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
 
@@ -572,15 +573,15 @@ namespace BlackSimPlugin
             else
             {
                 using namespace BlackMisc::PhysicalQuantities;
-                m_traffic->addPlanePosition(situation.getCallsign().asString(),
-                                            situation.latitude().value(CAngleUnit::deg()),
-                                            situation.longitude().value(CAngleUnit::deg()),
-                                            situation.getAltitude().value(CLengthUnit::ft()),
-                                            situation.getPitch().value(CAngleUnit::deg()),
-                                            situation.getBank().value(CAngleUnit::deg()),
-                                            situation.getHeading().value(CAngleUnit::deg()),
-                                            situation.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(),
-                                            situation.getTimeOffsetMs());
+                m_trafficProxy->addPlanePosition(situation.getCallsign().asString(),
+                                                 situation.latitude().value(CAngleUnit::deg()),
+                                                 situation.longitude().value(CAngleUnit::deg()),
+                                                 situation.getAltitude().value(CLengthUnit::ft()),
+                                                 situation.getPitch().value(CAngleUnit::deg()),
+                                                 situation.getBank().value(CAngleUnit::deg()),
+                                                 situation.getHeading().value(CAngleUnit::deg()),
+                                                 situation.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(),
+                                                 situation.getTimeOffsetMs());
 
                 if (! isRemoteAircraftSupportingParts(situation.getCallsign()))
                 {
@@ -591,7 +592,7 @@ namespace BlackSimPlugin
                     parts.setTimeOffsetMs(situation.getTimeOffsetMs());
                     if (situation.getGroundSpeed() < CSpeed(50, CSpeedUnit::kts()))
                     {
-                        const auto nearestAirport = std::min_element(m_airportsInRange.cbegin(), m_airportsInRange.cend(), [&situation](auto && a, auto && b)
+                        const auto nearestAirport = std::min_element(m_airportsInRange.cbegin(), m_airportsInRange.cend(), [&situation](auto &&a, auto &&b)
                         {
                             return calculateEuclideanDistanceSquared(situation, a) < calculateEuclideanDistanceSquared(situation, b);
                         });
@@ -627,12 +628,12 @@ namespace BlackSimPlugin
             }
             else
             {
-                m_traffic->addPlaneSurfaces(callsign.asString(), parts.isGearDown() ? 1 : 0,
-                                            parts.getFlapsPercent() / 100.0, parts.isSpoilersOut() ? 1 : 0, parts.isSpoilersOut() ? 1 : 0, parts.getFlapsPercent() / 100.0,
-                                            0, parts.isAnyEngineOn() ? 0 : 0.75, 0, 0, 0,
-                                            parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
-                                            0, parts.isOnGround(), parts.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(), parts.getTimeOffsetMs());
-                m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false);
+                m_trafficProxy->addPlaneSurfaces(callsign.asString(), parts.isGearDown() ? 1 : 0,
+                                                 parts.getFlapsPercent() / 100.0, parts.isSpoilersOut() ? 1 : 0, parts.isSpoilersOut() ? 1 : 0, parts.getFlapsPercent() / 100.0,
+                                                 0, parts.isAnyEngineOn() ? 0 : 0.75, 0, 0, 0,
+                                                 parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
+                                                 0, parts.isOnGround(), parts.getMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch(), parts.getTimeOffsetMs());
+                m_trafficProxy->setPlaneTransponder(callsign.asString(), 2000, true, false);
             }
         }
 
@@ -663,7 +664,7 @@ namespace BlackSimPlugin
                     emit this->aircraftRenderingChanged(aircraft);
                 }
 
-                m_traffic->removePlane(callsign.asString());
+                m_trafficProxy->removePlane(callsign.asString());
                 m_xplaneAircraftObjects.remove(callsign);
 
                 // bye
@@ -671,7 +672,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                m_traffic->removePlane(callsign.asString());
+                m_trafficProxy->removePlane(callsign.asString());
                 updateAircraftRendered(callsign, false);
                 CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
                 return true;
@@ -698,7 +699,7 @@ namespace BlackSimPlugin
             else
             {
                 const int r = getAircraftInRangeCount();
-                m_traffic->removeAllPlanes();
+                m_trafficProxy->removeAllPlanes();
                 this->updateMarkAllAsNotRendered();
                 CLogMessage(this).info("XP: Removed all aircraft");
                 return r;
@@ -736,7 +737,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
         {
             Q_ASSERT(isConnected());
-            m_weather->setUseRealWeather(false);
+            m_weatherProxy->setUseRealWeather(false);
 
             // todo: find the closest
             CGridPoint gridPoint = weatherGrid.front();
@@ -745,14 +746,14 @@ namespace BlackSimPlugin
             auto visibilityLayers = gridPoint.getVisibilityLayers();
             visibilityLayers.sortBy(&CVisibilityLayer::getBase);
             const CVisibilityLayer visibilityLayer = visibilityLayers.frontOrDefault();
-            m_weather->setVisibility(visibilityLayer.getVisibility().value(CLengthUnit::m()));
+            m_weatherProxy->setVisibility(visibilityLayer.getVisibility().value(CLengthUnit::m()));
 
             CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
             temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
             const CTemperatureLayer temperatureLayer = temperatureLayers.frontOrDefault();
-            m_weather->setTemperature(temperatureLayer.getTemperature().value(CTemperatureUnit::C()));
-            m_weather->setDewPoint(temperatureLayer.getDewPoint().value(CTemperatureUnit::C()));
-            m_weather->setQNH(gridPoint.getSurfacePressure().value(CPressureUnit::inHg()));
+            m_weatherProxy->setTemperature(temperatureLayer.getTemperature().value(CTemperatureUnit::C()));
+            m_weatherProxy->setDewPoint(temperatureLayer.getDewPoint().value(CTemperatureUnit::C()));
+            m_weatherProxy->setQNH(gridPoint.getSurfacePressure().value(CPressureUnit::inHg()));
 
             int layerNumber = 0;
             CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
@@ -792,7 +793,7 @@ namespace BlackSimPlugin
                 default: type = 0;
                 }
 
-                m_weather->setCloudLayer(layerNumber, base, top, type, coverage);
+                m_weatherProxy->setCloudLayer(layerNumber, base, top, type, coverage);
                 layerNumber++;
             }
 
@@ -813,12 +814,12 @@ namespace BlackSimPlugin
                 int altitudeMeter = windLayer.getLevel().value(CLengthUnit::m());
                 double directionDeg = windLayer.getDirection().value(CAngleUnit::deg());
                 int speedKts = windLayer.getSpeed().value(CSpeedUnit::kts());
-                m_weather->setWindLayer(layerNumber, altitudeMeter, directionDeg, speedKts, 0, 0, 0);
+                m_weatherProxy->setWindLayer(layerNumber, altitudeMeter, directionDeg, speedKts, 0, 0, 0);
                 layerNumber++;
             }
 
-            m_weather->setPrecipitationRatio(cloudLayers.frontOrDefault().getPrecipitationRate());
-            m_weather->setThunderstormRatio(0.0);
+            m_weatherProxy->setPrecipitationRatio(cloudLayers.frontOrDefault().getPrecipitationRate());
+            m_weatherProxy->setThunderstormRatio(0.0);
         }
 
         void CSimulatorXPlane::updateRemoteAircraft()
@@ -864,13 +865,13 @@ namespace BlackSimPlugin
                     if (!xplaneAircraft.isSameAsSent(interpolatedSituation))
                     {
                         m_xplaneAircraftObjects[xplaneAircraft.getCallsign()].setPositionAsSent(interpolatedSituation);
-                        m_traffic->setPlanePosition(interpolatedSituation.getCallsign().asString(),
-                                                    interpolatedSituation.latitude().value(CAngleUnit::deg()),
-                                                    interpolatedSituation.longitude().value(CAngleUnit::deg()),
-                                                    interpolatedSituation.getAltitude().value(CLengthUnit::ft()),
-                                                    interpolatedSituation.getPitch().value(CAngleUnit::deg()),
-                                                    interpolatedSituation.getBank().value(CAngleUnit::deg()),
-                                                    interpolatedSituation.getHeading().value(CAngleUnit::deg()));
+                        m_trafficProxy->setPlanePosition(interpolatedSituation.getCallsign().asString(),
+                                                         interpolatedSituation.latitude().value(CAngleUnit::deg()),
+                                                         interpolatedSituation.longitude().value(CAngleUnit::deg()),
+                                                         interpolatedSituation.getAltitude().value(CLengthUnit::ft()),
+                                                         interpolatedSituation.getPitch().value(CAngleUnit::deg()),
+                                                         interpolatedSituation.getBank().value(CAngleUnit::deg()),
+                                                         interpolatedSituation.getHeading().value(CAngleUnit::deg()));
                     }
                 }
                 else
@@ -984,16 +985,16 @@ namespace BlackSimPlugin
                 return true;
             }
 
-            m_traffic->setPlaneSurfaces(xplaneAircraft.getCallsign().asString(),
-                                        parts.isGearDown() ? 1 : 0,
-                                        parts.getFlapsPercent() / 100.0,
-                                        parts.isSpoilersOut() ? 1 : 0,
-                                        parts.isSpoilersOut() ? 1 : 0,
-                                        parts.getFlapsPercent() / 100.0,
-                                        0, parts.isAnyEngineOn() ? 0 : 0.75,
-                                        0, 0, 0,
-                                        parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
-                                        0, parts.isOnGround());
+            m_trafficProxy->setPlaneSurfaces(xplaneAircraft.getCallsign().asString(),
+                                             parts.isGearDown() ? 1 : 0,
+                                             parts.getFlapsPercent() / 100.0,
+                                             parts.isSpoilersOut() ? 1 : 0,
+                                             parts.isSpoilersOut() ? 1 : 0,
+                                             parts.getFlapsPercent() / 100.0,
+                                             0, parts.isAnyEngineOn() ? 0 : 0.75,
+                                             0, 0, 0,
+                                             parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
+                                             0, parts.isOnGround());
 
             CAircraftLights lights = parts.getLights();
             lights.setRecognitionOn(parts.isAnyEngineOn());
@@ -1005,7 +1006,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()
         {
             if (!isConnected()) { return; }
-            m_traffic->requestRemoteAircraftData();
+            m_trafficProxy->requestRemoteAircraftData();
         }
 
         void CSimulatorXPlane::updateRemoteAircraftFromSimulator(const QString &callsign_, double latitude, double longitude, double groundElevation, double modelVerticalOffset)

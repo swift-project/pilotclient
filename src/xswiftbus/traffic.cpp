@@ -35,7 +35,6 @@ namespace XSwiftBus
     CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_, QString modelName_)
         : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_),
           interpolator(callsign)
-
     {
         std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
         surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
@@ -418,41 +417,40 @@ namespace XSwiftBus
         {
         case xpmpDataType_Position:
             {
-            if (c_driverInterpolation)
-            {
-                const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
-                io_position->lat = plane->position.lat;
-                io_position->lon = plane->position.lon;
-                io_position->elevation = plane->position.elevation;
-                io_position->pitch = plane->position.pitch;
-                io_position->roll = plane->position.roll;
-                io_position->heading = plane->position.heading;
-                std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
-                return xpmpData_NewData;
-            }
-            else
-            {
-                BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
-                BlackMisc::Simulation::CInterpolationStatus status;
-                const auto situation = plane->interpolator.getInterpolatedSituation(-1, setup, plane->hints(), status);
-                if (! status.hasValidSituation()) { return xpmpData_Unavailable; }
+                if (c_driverInterpolation)
+                {
+                    const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
+                    io_position->lat = plane->position.lat;
+                    io_position->lon = plane->position.lon;
+                    io_position->elevation = plane->position.elevation;
+                    io_position->pitch = plane->position.pitch;
+                    io_position->roll = plane->position.roll;
+                    io_position->heading = plane->position.heading;
+                    std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
+                    return xpmpData_NewData;
+                }
+                else
+                {
+                    BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
+                    BlackMisc::Simulation::CInterpolationStatus status;
+                    const auto situation = plane->interpolator.getInterpolatedSituation(-1, setup, plane->hints(), status);
+                    if (! status.hasValidSituation()) { return xpmpData_Unavailable; }
 
-                //! \fixme KB 2018-01 commented out with T229. Change detection needs to go somewhere else
-                // if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
+                    //! \fixme KB 2018-01 commented out with T229. Change detection needs to go somewhere else
+                    // if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 
-                using namespace BlackMisc::PhysicalQuantities;
-                using namespace BlackMisc::Aviation;
-                const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
-                io_position->lat = situation.latitude().value(CAngleUnit::deg());
-                io_position->lon = situation.longitude().value(CAngleUnit::deg());
-                io_position->elevation = situation.getAltitude().value(CLengthUnit::ft());
-                io_position->pitch = static_cast<float>(situation.getPitch().value(CAngleUnit::deg()));
-                io_position->roll = static_cast<float>(situation.getBank().value(CAngleUnit::deg()));
-                io_position->heading = static_cast<float>(situation.getHeading().value(CAngleUnit::deg()));
-                std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
-                return xpmpData_NewData;
-            }
-
+                    using namespace BlackMisc::PhysicalQuantities;
+                    using namespace BlackMisc::Aviation;
+                    const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
+                    io_position->lat = situation.latitude().value(CAngleUnit::deg());
+                    io_position->lon = situation.longitude().value(CAngleUnit::deg());
+                    io_position->elevation = situation.getAltitude().value(CLengthUnit::ft());
+                    io_position->pitch = static_cast<float>(situation.getPitch().value(CAngleUnit::deg()));
+                    io_position->roll = static_cast<float>(situation.getBank().value(CAngleUnit::deg()));
+                    io_position->heading = static_cast<float>(situation.getHeading().value(CAngleUnit::deg()));
+                    std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
+                    return xpmpData_NewData;
+                }
             }
 
         case xpmpDataType_Surfaces:
@@ -516,7 +514,6 @@ namespace XSwiftBus
         traffic->emitSimFrame();
         return 1;
     }
-
 }
 
 //! \endcond

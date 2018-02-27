@@ -57,14 +57,13 @@ namespace BlackSimPlugin
             //! Does the remote object exist?
             bool isValid() const { return m_dbusInterface->isValid(); }
 
-        private:
-            BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
-
         signals:
             //! \copydoc XSwiftBus::CTraffic::simFrame
+            //! \remark from simulator to driver
             void simFrame();
 
             //! \copydoc XSwiftBus::CTraffic::remoteAircraftData
+            //! \remark from simulator to driver for elevation and CG
             void remoteAircraftData(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
 
         public slots:
@@ -109,11 +108,11 @@ namespace BlackSimPlugin
 
             //! \copydoc XSwiftBus::CTraffic::addPlaneSurfaces
             void addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset);
+                                  double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset);
 
             //! \copydoc XSwiftBus::CTraffic::setPlaneSurfaces
             void setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround);
+                                  double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround);
 
             //! \copydoc XSwiftBus::CTraffic::setPlaneTransponder
             void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
@@ -123,8 +122,11 @@ namespace BlackSimPlugin
 
             //! \copydoc XSwiftBus::CTraffic::requestRemoteAircraftData
             void requestRemoteAircraftData();
+
+        private:
+            BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

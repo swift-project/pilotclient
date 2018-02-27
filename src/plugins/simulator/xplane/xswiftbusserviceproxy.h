@@ -45,14 +45,14 @@ namespace BlackSimPlugin
             //! Service name
             static const QString &InterfaceName()
             {
-                static QString s(XSWIFTBUS_SERVICE_INTERFACENAME);
+                static const QString s(XSWIFTBUS_SERVICE_INTERFACENAME);
                 return s;
             }
 
             //! Service path
             static const QString &ObjectPath()
             {
-                static QString s(XSWIFTBUS_SERVICE_OBJECTPATH);
+                static const QString s(XSWIFTBUS_SERVICE_OBJECTPATH);
                 return s;
             }
 
@@ -72,10 +72,10 @@ namespace BlackSimPlugin
             template <typename T>
             std::function<void(QDBusPendingCallWatcher *)> setterCallback(T *obj)
             {
-                return [this, obj] (QDBusPendingCallWatcher *watcher)
+                return [this, obj](QDBusPendingCallWatcher * watcher)
                 {
                     QDBusPendingReply<T> reply = *watcher;
-                    if (reply.isError()) { emit asyncMethodError(reply.error()); }
+                    if (reply.isError()) { emit this->asyncMethodError(reply.error()); }
                     else { *obj = reply; }
                     watcher->deleteLater();
                 };
@@ -86,7 +86,8 @@ namespace BlackSimPlugin
             void asyncMethodError(QDBusError error);
 
             //! \copydoc XSwiftBus::CService::aircraftModelChanged
-            void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
+            void aircraftModelChanged(
+                const QString &path, const QString &filename, const QString &livery,
                 const QString &icao, const QString &modelString, const QString &name, const QString &description);
 
             //! \copydoc XSwiftBus::CService::airportsInRangeUpdated

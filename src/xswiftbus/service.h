@@ -283,7 +283,6 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel2::controls::speedbrake_ratio> m_speedBrakeRatio;
         DataRef<xplane::data::sim::weather::barometer_sealevel_inhg> m_qnhInhg;
     };
-
 }
 
 #endif // guard

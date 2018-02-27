@@ -8,10 +8,8 @@
  */
 
 #include "xswiftbustrafficproxy.h"
-
 #include <QLatin1String>
-
-class QDBusConnection;
+#include <QDBusConnection>
 
 #define XSWIFTBUS_SERVICENAME "org.swift-project.xswiftbus"
 
@@ -22,7 +20,7 @@ namespace BlackSimPlugin
         CXSwiftBusTrafficProxy::CXSwiftBusTrafficProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
-            if (! dummy) { m_dbusInterface->relayParentSignals(); }
+            if (!dummy) { m_dbusInterface->relayParentSignals(); }
         }
 
         bool CXSwiftBusTrafficProxy::initialize()
@@ -91,17 +89,17 @@ namespace BlackSimPlugin
         }
 
         void CXSwiftBusTrafficProxy::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
+                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
         {
             m_dbusInterface->callDBus(QLatin1String("addPlaneSurfaces"), callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron,
-                landLight, beaconLight, strobeLight, navLight, lightPattern, onGround, relativeTime, timeOffset);
+                                      landLight, beaconLight, strobeLight, navLight, lightPattern, onGround, relativeTime, timeOffset);
         }
 
         void CXSwiftBusTrafficProxy::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround)
+                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround)
         {
             m_dbusInterface->callDBus(QLatin1String("setPlaneSurfaces"), callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron,
-                landLight, beaconLight, strobeLight, navLight, lightPattern, onGround);
+                                      landLight, beaconLight, strobeLight, navLight, lightPattern, onGround);
         }
 
         void CXSwiftBusTrafficProxy::setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident)

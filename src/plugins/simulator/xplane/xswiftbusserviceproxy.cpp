@@ -19,11 +19,10 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         CXSwiftBusServiceProxy::CXSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
-            if (! dummy) { m_dbusInterface->relayParentSignals(); }
+            if (!dummy) { m_dbusInterface->relayParentSignals(); }
         }
 
         void CXSwiftBusServiceProxy::addTextMessage(const QString &text, double red, double green, double blue)
@@ -465,5 +464,5 @@ namespace BlackSimPlugin
         {
             m_dbusInterface->callDBusAsync(QLatin1String("getSpeedBrakeRatio"), setterCallback(o_speedBrakeRatio));
         }
-    }
-}
+    } // ns
+} // ns

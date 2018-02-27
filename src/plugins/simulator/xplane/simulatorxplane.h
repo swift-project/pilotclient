@@ -167,9 +167,9 @@ namespace BlackSimPlugin
             // XSwiftBus interpolation
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
-            CXSwiftBusServiceProxy *m_service { nullptr };
-            CXSwiftBusTrafficProxy *m_traffic { nullptr };
-            CXSwiftBusWeatherProxy *m_weather { nullptr };
+            CXSwiftBusServiceProxy *m_serviceProxy { nullptr };
+            CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
+            CXSwiftBusWeatherProxy *m_weatherProxy { nullptr };
             QTimer m_fastTimer;
             QTimer m_slowTimer;
             BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft

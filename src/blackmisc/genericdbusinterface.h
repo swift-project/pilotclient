@@ -28,16 +28,13 @@
 
 namespace BlackMisc
 {
-
     /*!
      * Used for hand written interface based on virtual methods.
      * Allows to relay a message to DBus in a single code line
      */
     class CGenericDBusInterface : public QDBusAbstractInterface
     {
-
     public:
-
         //! Constructor
         CGenericDBusInterface(const QString &serviceName, const QString &path, const QString &interfaceName, const QDBusConnection &connection, QObject *parent = 0) :
             QDBusAbstractInterface(serviceName, path, interfaceName.toUtf8().constData(), connection, parent)
@@ -64,15 +61,15 @@ namespace BlackMisc
 
         //! Call DBus, no return value
         template <typename... Args>
-        void callDBus(QLatin1String method, Args&&... args)
+        void callDBus(QLatin1String method, Args &&... args)
         {
-            QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
+            const QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             this->asyncCallWithArgumentList(method, argumentList);
         }
 
         //! Call DBus with synchronous return value
         template <typename Ret, typename... Args>
-        Ret callDBusRet(QLatin1String method, Args&&... args)
+        Ret callDBusRet(QLatin1String method, Args &&... args)
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             QDBusPendingReply<Ret> pr = this->asyncCallWithArgumentList(method, argumentList);
@@ -82,7 +79,7 @@ namespace BlackMisc
         //! Call DBus with asynchronous return value
         //! Callback can be any callable object taking a single argument of type QDBusPendingCallWatcher*.
         template <typename Func, typename... Args>
-        void callDBusAsync(QLatin1String method, Func callback, Args&&... args)
+        void callDBusAsync(QLatin1String method, Func callback, Args &&... args)
         {
             QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
             QDBusPendingCall pc = this->asyncCallWithArgumentList(method, argumentList);
@@ -101,6 +98,6 @@ namespace BlackMisc
             }
         }
     };
-}
+} // ns
 
 #endif // guard
