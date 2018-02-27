@@ -313,14 +313,14 @@ namespace BlackSimPlugin
             if (isInFunction) { return; }
             isInFunction = true;
 
-            QColor color;
-            switch (message.getSeverity())
+            QColor color = "cyan";
+            /* switch (message.getSeverity())
             {
             case CStatusMessage::SeverityDebug: color = "teal"; break;
             case CStatusMessage::SeverityInfo: color = "cyan"; break;
             case CStatusMessage::SeverityWarning: color = "orange"; break;
             case CStatusMessage::SeverityError: color = "red"; break;
-            }
+            } */
 
             m_serviceProxy->addTextMessage("swift: " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
             isInFunction = false;
