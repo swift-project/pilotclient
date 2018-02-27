@@ -83,7 +83,7 @@ namespace BlackSimPlugin
 
         signals:
             //! Emitted if an asynchronous method call caused a DBus error
-            void asyncMethodError(QDBusError error);
+            BLACK_NO_RELAY void asyncMethodError(QDBusError error);
 
             //! \copydoc XSwiftBus::CService::aircraftModelChanged
             void aircraftModelChanged(

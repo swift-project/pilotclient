@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_GENERICDBUSINTERFACE_H
 #define BLACKMISC_GENERICDBUSINTERFACE_H
 
+#include "logmessage.h"
 #include <QDBusAbstractInterface>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
@@ -50,12 +51,16 @@ namespace BlackMisc
 
             for (int i = superMetaObject->methodOffset(), count = metaObject->methodCount(); i < count; ++i)
             {
-                QMetaMethod method = metaObject->method(i);
+                const QMetaMethod method = metaObject->method(i);
                 if (method.methodType() != QMetaMethod::Signal) { continue; }
                 if (method.tag() && strcmp(method.tag(), "BLACK_NO_RELAY") == 0) { continue; }
 
-                this->connection().connect(this->service(), this->path(), this->interface(), method.name(), this->parent(),
-                    method.methodSignature().prepend("2")); // the reason for this "2" can be found in the definition of SIGNAL() macro
+                const QByteArray signature = method.methodSignature().prepend("2"); // the reason for this "2" can be found in the definition of SIGNAL() macro
+                const bool c = this->connection().connect(this->service(), this->path(), this->interface(), method.name(), this->parent(), signature);
+                if (!c)
+                {
+                    CLogMessage(this).error("Cannot connect signal: %1") << QString(signature);
+                }
             }
         }
 
