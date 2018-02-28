@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 
-#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -50,16 +50,17 @@ namespace BlackMisc
                 static const QString &xplanePluginDir();
 
                 //! Plugin directory from given simulator directory
-                static QString pluginDirFromSimDir(const QString &simulatorDir);
+                static QString pluginDirFromRootDir(const QString &rootDir = CXPlaneUtil::xplaneRootDir());
 
                 //! Model directories from simultaor directory
                 static QStringList modelDirectoriesFromSimDir(const QString &simulatorDir);
 
-                //! XPlane relative plugin path
-                static QString xplanePluginPath();
-
                 //! Is the xplanePluginDir existing?
                 static bool isXplanePluginDirDirExisting();
+
+                //! All sub directories of the plugin directory
+                //! \remark uses CXPlaneUtil::xplanePluginPath as default
+                static QStringList pluginSubdirectories(const QString &pluginDir = {});
 
                 //! Directories with models
                 static const QStringList &xplaneModelDirectories();
@@ -67,8 +68,34 @@ namespace BlackMisc
                 //! Exclude directories for models
                 static const QStringList &xplaneModelExcludeDirectoryPatterns();
 
+                //! XSwiftBus plugin directory
+                static QString xswiftbusPluginDir(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
+
                 //! XSwiftBus legacy directory
-                static QString xswiftbusLegacyDir(const QString &rootDir);
+                static QString xswiftbusLegacyDir(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
+
+                //! Finds conflicting plugins
+                //! \remark uses CXPlaneUtil::xplanePluginPath as default
+                static QStringList findConflictingPlugins(const QString &pluginDir = {});
+
+                //! \remark uses CXPlaneUtil::xplanePluginPath as default
+                static QStringList findAllXplFiles(const QString &pluginDir = {});
+
+                //! Newer XSwiftBus build
+                static bool hasNewerXSwiftBusBuild(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
+
+                //! Copy a XSwiftBus build
+                //! \remark only copying in a local build environment
+                static int copyXSwiftBusBuildFiles(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
+
+                //! XPlane relative plugin path
+                static const QString &xplanePluginPathName();
+
+                //! XSwiftBus path name
+                static const QString &xswiftbusPathName();
+
+                //! Filter filter for xpl files
+                static const QStringList &xplFileFilter();
 
             private:
                 //! Concatenates dirs for used OS
