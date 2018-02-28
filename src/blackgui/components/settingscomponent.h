@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include <QColor>
 #include <QObject>
 #include <QScopedPointer>
@@ -56,6 +57,9 @@ namespace BlackGui
 
             //! \copydoc CAudioSetupComponent::playNotificationSounds
             bool playNotificationSounds() const;
+
+            //! Settings for given simulator
+            BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
         signals:
             //! Change the windows opacity 0..100

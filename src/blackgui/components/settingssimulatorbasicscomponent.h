@@ -52,6 +52,9 @@ namespace BlackGui
             //! Save data
             void save();
 
+            //! Settings for given simulator
+            BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const { return m_settings.getSpecializedSettings(simulator); }
+
         private:
             QScopedPointer<Ui::CSettingsSimulatorBasicsComponent> ui;
             BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_settings { this };

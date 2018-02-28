@@ -31,6 +31,8 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Input;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackConfig;
@@ -124,6 +126,11 @@ namespace BlackGui
         bool CSettingsComponent::playNotificationSounds() const
         {
             return ui->comp_AudioSetup->playNotificationSounds();
+        }
+
+        CSpecializedSimulatorSettings CSettingsComponent::getSimulatorSettings(const CSimulatorInfo &simulator) const
+        {
+            return ui->comp_SettingsSimulatorBasics->getSimulatorSettings(simulator);
         }
 
         void CSettingsComponent::setSettingsTab(CSettingsComponent::SettingTab tab)
