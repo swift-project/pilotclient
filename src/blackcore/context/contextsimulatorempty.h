@@ -87,6 +87,13 @@ namespace BlackCore
                 return BlackMisc::Simulation::CSimulatorInfo();
             }
 
+            //! \copydoc IContextSimulator::verifyPrerequisites
+            virtual BlackMisc::CStatusMessageList verifyPrerequisites() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::CStatusMessageList();
+            }
+
             //! \copydoc IContextSimulator::getModelSetLoaderSimulator
             virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const override
             {

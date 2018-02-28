@@ -26,13 +26,14 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
+
 #include "blackmisc/worker.h"
 
 #include <QObject>
@@ -87,6 +88,7 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const override;
             virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
             virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const override;
+            virtual BlackMisc::CStatusMessageList verifyPrerequisites() const override;
             virtual QStringList getModelSetStrings() const override;
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override;
             virtual int getModelSetCount() const override;
@@ -225,12 +227,15 @@ namespace BlackCore
             CAircraftMatcher m_aircraftMatcher; //!< Model matcher
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
-            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
-            BlackMisc::CSettingReadOnly<Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
-            QString m_networkSessionId; //! Network session of CServer::getServerSessionId, if not connected empty
             bool m_initallyAddAircrafts = false;
             bool m_enableMatchingMessages = true;
             bool m_isWeatherActivated = false;
+
+            // settings
+            BlackMisc::Simulation::Settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories of XPlane
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
+            BlackMisc::CSettingReadOnly<Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
+            QString m_networkSessionId; //! Network session of CServer::getServerSessionId, if not connected empty
         };
     } // namespace
 } // namespace

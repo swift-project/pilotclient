@@ -32,7 +32,7 @@ namespace BlackCore
         CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(nullptr)
         {
             this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
-                serviceName , IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                 connection, this);
             this->relaySignals(serviceName, connection);
         }
@@ -109,6 +109,11 @@ namespace BlackCore
         CSimulatorInfo CContextSimulatorProxy::simulatorsWithInitializedModelSet() const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInfo>(QLatin1String("simulatorsWithInitializedModelSet"));
+        }
+
+        CStatusMessageList CContextSimulatorProxy::verifyPrerequisites() const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1String("verifyPrerequisites"));
         }
 
         CSimulatorInfo CContextSimulatorProxy::getModelSetLoaderSimulator() const

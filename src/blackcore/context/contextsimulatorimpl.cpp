@@ -17,6 +17,7 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
@@ -44,6 +45,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::XPlane;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Settings;
@@ -182,6 +184,37 @@ namespace BlackCore
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_modelSetLoader.simulatorsWithInitializedModelSet();
+        }
+
+        CStatusMessageList CContextSimulator::verifyPrerequisites() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            CStatusMessageList msgs;
+            if (!sApp || !sApp->isNetworkAccessible())
+            {
+                msgs.push_back(CStatusMessage(this).error("No network interface, simulation will not work properly"));
+            }
+            const CSimulatorInfo sims = this->simulatorsWithInitializedModelSet();
+            if (sims.isNoSimulator())
+            {
+                msgs.push_back(CStatusMessage(this).error("No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher."));
+            }
+            else if (sims.xplane() || CSimulatorInfo(m_enabledSimulators.get()).xplane())
+            {
+                // ever used with XPlane
+                const QString pluginDir = CXPlaneUtil::pluginDirFromRootDir(m_simulatorSettings.getSimulatorDirectoryOrDefault(CSimulatorInfo::XPLANE));
+                const QDir dir(pluginDir);
+                if (dir.exists())
+                {
+                    // only check if we are on a XP machine
+                    const QStringList conflicts = CXPlaneUtil::findConflictingPlugins(pluginDir);
+                    if (!conflicts.isEmpty())
+                    {
+                        msgs.push_back(CStatusMessage(this).warning("Possible conflict with other XPlane plugins: '%1'") << (conflicts.join(", ")));
+                    }
+                }
+            }
+            return msgs;
         }
 
         QStringList CContextSimulator::getModelSetStrings() const
