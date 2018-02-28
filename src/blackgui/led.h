@@ -11,8 +11,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_LED_H
-#define BLACKGUI_LED_H
+#ifndef BLACKGUI_LEDWIDGET_H
+#define BLACKGUI_LEDWIDGET_H
 
 #include "blackgui/blackguiexport.h"
 

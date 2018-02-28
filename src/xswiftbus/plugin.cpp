@@ -92,5 +92,4 @@ namespace XSwiftBus
             m_service->updateAirportsInRange();
         }
     }
-
 }

@@ -28,12 +28,11 @@
 
 namespace BlackMisc
 {
-
     //! Status messages, e.g. from Core -> GUI
     class BLACKMISC_EXPORT CStatusMessageList :
         public CSequence<CStatusMessage>,
         public ITimestampObjectList<CStatusMessage, CStatusMessageList>,
-        public BlackMisc::Mixin::MetaType<CStatusMessageList>
+        public Mixin::MetaType<CStatusMessageList>
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CStatusMessageList)
