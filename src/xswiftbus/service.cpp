@@ -18,7 +18,6 @@
 
 namespace XSwiftBus
 {
-
     CService::CService(QObject *parent) : QObject(parent)
     {
         m_messages.addMessage( { "xswiftbus started.", 0, 255, 255 } );

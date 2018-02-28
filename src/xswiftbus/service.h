@@ -54,14 +54,14 @@ namespace XSwiftBus
         //! DBus interface name
         static const QString &InterfaceName()
         {
-            static QString s(XSWIFTBUS_SERVICE_INTERFACENAME);
+            static const QString s(XSWIFTBUS_SERVICE_INTERFACENAME);
             return s;
         }
 
         //! DBus object path
         static const QString &ObjectPath()
         {
-            static QString s(XSWIFTBUS_SERVICE_OBJECTPATH);
+            static const QString s(XSWIFTBUS_SERVICE_OBJECTPATH);
             return s;
         }
 
@@ -70,7 +70,8 @@ namespace XSwiftBus
 
     signals:
         //! Emitted when the model or livery changes.
-        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
+        void aircraftModelChanged(
+            const QString &path, const QString &filename, const QString &livery,
             const QString &icao, const QString &modelString, const QString &name, const QString &description);
 
         //! Airports in range updated.
@@ -228,10 +229,12 @@ namespace XSwiftBus
         QList<double> getEngineN1Percentage() const
         {
             QList<double> list;
-            list.reserve(getNumberOfEngines());
-            for (int engineNumber = 0; engineNumber < getNumberOfEngines(); ++engineNumber)
+            const int number = getNumberOfEngines();
+            list.reserve(number);
+            for (int engineNumber = 0; engineNumber < number; ++engineNumber)
+            {
                 list.append(m_enginesN1Percentage.getAt(engineNumber));
-
+            }
             return list;
         }
 
