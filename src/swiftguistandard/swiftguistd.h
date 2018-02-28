@@ -16,18 +16,18 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include "blackcore/actionbind.h"
-#include "blackcore/network.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/navigatordialog.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/guiactionbind.h"
+#include "blackcore/actionbind.h"
+#include "blackcore/network.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/loghandler.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QMainWindow>
@@ -251,7 +251,7 @@ private:
     void navigatorClosed();
 
     //! Checks if model set is available
-    void verifyModelSet();
+    void verifyPrerequisites();
 
     //! Ckeck if the DB data have been loaded
     void checkDbDataLoaded();

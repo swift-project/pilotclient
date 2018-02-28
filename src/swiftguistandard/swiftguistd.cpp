@@ -17,6 +17,7 @@
 #include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/settingscomponent.h"
+#include "blackgui/copyxswiftbusdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
@@ -396,14 +397,35 @@ void SwiftGuiStd::navigatorClosed()
     this->showNormal();
 }
 
-void SwiftGuiStd::verifyModelSet()
+void SwiftGuiStd::verifyPrerequisites()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
-    const CSimulatorInfo sims = sGui->getIContextSimulator()->simulatorsWithInitializedModelSet();
-    if (sims.isNoSimulator())
+
+    CStatusMessageList msgs;
+    if (!sGui->supportsContexts() || !sGui->getIContextSimulator())
     {
-        CLogMessage(this).error("No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher.");
+        msgs.push_back(CStatusMessage(this).error("No simulator context"));
     }
+    else
+    {
+        msgs.push_back(sGui->getIContextSimulator()->verifyPrerequisites());
+    }
+
+    if (msgs.hasWarningOrErrorMessages())
+    {
+        if (msgs.size() > 1)
+        {
+            this->displayInOverlayWindow(msgs);
+        }
+        else
+        {
+            this->displayInOverlayWindow(msgs.front());
+        }
+    }
+
+    const QString xPlaneRootDir = ui->comp_MainInfoArea->getSettingsComponent()->getSimulatorSettings(CSimulatorInfo::XPLANE).getSimulatorDirectoryOrDefault();
+    const int c = CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(xPlaneRootDir, this);
+    if (c > 0) { CLogMessage(this).info("Copied %1 files from build directory") << c; }
 }
 
 void SwiftGuiStd::checkDbDataLoaded()

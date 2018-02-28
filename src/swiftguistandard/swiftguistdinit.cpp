@@ -175,11 +175,7 @@ void SwiftGuiStd::init()
     emit sGui->startUpCompleted(true);
     m_init = true;
 
-    QTimer::singleShot(2500, this, &SwiftGuiStd::verifyModelSet);
-    if (!sGui->isNetworkAccessible())
-    {
-        CLogMessage(this).error("No network interface, software will not work properly");
-    }
+    QTimer::singleShot(2500, this, &SwiftGuiStd::verifyPrerequisites);
 }
 
 void SwiftGuiStd::initStyleSheet()
