@@ -45,4 +45,12 @@ namespace BlackGui
         m_mwaOverlayFrame->showOverlayMessage(message, timeOutMs);
         return true;
     }
+
+    bool IMainWindowAccess::displayInOverlayWindow(const CStatusMessageList &messages, int timeOutMs)
+    {
+        if (messages.isEmpty()) { return false; }
+        if (!m_mwaOverlayFrame) { return false; }
+        m_mwaOverlayFrame->showOverlayMessages(messages, false, timeOutMs);
+        return true;
+    }
 } // ns

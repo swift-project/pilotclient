@@ -11,7 +11,7 @@
 #define BLACKGUI_MAINWINDOWACCESS_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <QObject>
 #include <QString>
@@ -39,6 +39,9 @@ namespace BlackGui
 
         //! Display in overlay window
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
+
+        //! Display in overlay window
+        virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
 
     protected:
         Components::CLogComponent *m_mwaLogComponent = nullptr; //!< the log component if any
