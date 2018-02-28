@@ -45,6 +45,25 @@ namespace BlackMisc
         return pDir;
     }
 
+    const QString &CDirectoryUtils::getXSwiftBusBuildDirectory()
+    {
+        if (!CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            static const QString e;
+            return e;
+        }
+
+        // the xswiftbus directory in out, not in dist
+        static const QString bd = []
+        {
+            QDir dir(binDirectory());
+            if (!dir.cdUp()) { return QString(); }
+            if (!dir.cd("xswiftbus")) { return QString(); }
+            return dir.absolutePath();
+        }();
+        return bd;
+    }
+
     QString CDirectoryUtils::executableFilePath(const QString &executable)
     {
         Q_ASSERT_X(!executable.isEmpty(), Q_FUNC_INFO, "Missing executable file path");
@@ -401,6 +420,14 @@ namespace BlackMisc
         return !dir.isEmpty();
     }
 
+    bool CDirectoryUtils::mkPathIfNotExisting(const QString &dir)
+    {
+        const QDir d(dir);
+        if (d.exists()) { return true; }
+        QDir mkDir;
+        return mkDir.mkpath(dir);
+    }
+
     QStringList CDirectoryUtils::getExistingUnemptyDirectories(const QStringList &directories)
     {
         QStringList dirs;
@@ -445,6 +472,40 @@ namespace BlackMisc
             }
         }
         return found;
+    }
+
+    int CDirectoryUtils::copyDirectoryRecursively(const QString &fromDir, const QString &toDir, bool replaceOnConflict)
+    {
+        QDir dir(fromDir);
+        const QStringList fromFiles = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+        if (!mkPathIfNotExisting(toDir)) { return -1; }
+
+        int count = 0;
+        for (const QString &copyFile : fromFiles)
+        {
+            const QString from = CFileUtils::appendFilePaths(fromDir, copyFile);
+            const QString to = CFileUtils::appendFilePaths(toDir, copyFile);
+            if (QFile::exists(to))
+            {
+                if (!replaceOnConflict) { continue; }
+                if (!QFile::remove(to)) { return -1; }
+            }
+            if (!QFile::copy(from, to)) { return -1; }
+            count++;
+        }
+
+        const QStringList subDirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QString &copyDir : subDirs)
+        {
+            const QString fromSubDir = CFileUtils::appendFilePaths(fromDir, copyDir);
+            const QString toSubDir = CFileUtils::appendFilePaths(toDir, copyDir);
+            if (!mkPathIfNotExisting(toDir)) { return -1; }
+
+            const int c = copyDirectoryRecursively(fromSubDir, toSubDir, replaceOnConflict);
+            if (c < 0) { return -1; }
+            count += c;
+        }
+        return count;
     }
 
     CDirectoryUtils::DirComparison CDirectoryUtils::compareTwoDirectories(const QString &dirSource, const QString &dirTarget, bool nestedDirs)

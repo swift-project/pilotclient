@@ -17,6 +17,7 @@
 #include <QMap>
 #include <QSet>
 #include <QString>
+#include <QDateTime>
 #include <QFileInfoList>
 
 namespace BlackMisc
@@ -35,6 +36,10 @@ namespace BlackMisc
 
         //! Plugins directory
         static const QString &pluginsDirectory();
+
+        //! The build directory
+        //! \remark if is a local build
+        static const QString &getXSwiftBusBuildDirectory();
 
         //! The executable file path
         static QString executableFilePath(const QString &executable);
@@ -128,6 +133,13 @@ namespace BlackMisc
 
         //! Exists directory and does it contains files
         static bool existsUnemptyDirectory(const QString &testDir);
+
+        //! Make directory if not already existing
+        //! \remark returns true if path exists or was created
+        static bool mkPathIfNotExisting(const QString &dir);
+
+        //! Copy directory recursively
+        static int copyDirectoryRecursively(const QString &fromDir, const QString &toDir, bool replaceOnConflict);
 
         //! Get the existing directories
         static QStringList getExistingUnemptyDirectories(const QStringList &directories);

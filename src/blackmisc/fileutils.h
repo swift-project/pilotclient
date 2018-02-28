@@ -82,10 +82,6 @@ namespace BlackMisc
         //! Strip file from path a/b/c.json a/b
         static QString stripFileFromPath(const QString &path);
 
-        //! If `sourceDir` is a directory, copies it recursively, so that `sourceDir` becomes `destinationDir`.
-        //! If it is a file, just copies the file.
-        static bool copyRecursively(const QString &sourceDir, const QString &destinationDir);
-
         //! Normalize file path to Qt standard, e.g by turning \ to /
         static QString normalizeFilePathToQtStandard(const QString &filePath);
 
@@ -130,7 +126,7 @@ namespace BlackMisc
         static QFileInfoList enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
 
         //! Returns path to the newest file in dir, optionally matching a wildcard, or empty string.
-        static QString findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
+        static QFileInfo findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
 
         //! Get all swift executables
         static const QStringList &getSwiftExecutables();

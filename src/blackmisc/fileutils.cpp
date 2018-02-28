@@ -10,7 +10,6 @@
 #include "blackmisc/worker.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/math/mathutils.h"
-
 #include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
@@ -116,7 +115,8 @@ namespace BlackMisc
 
     QString CFileUtils::appendFilePathsAndFixUnc(const QString &path1, const QString &path2)
     {
-        return CFileUtils::fixWindowsUncPath(appendFilePaths(path1, path2));
+        static const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
+        return win ? CFileUtils::fixWindowsUncPath(appendFilePaths(path1, path2)) : appendFilePaths(path1, path2);
     }
 
     QString CFileUtils::stripFileFromPath(const QString &path)
@@ -133,38 +133,10 @@ namespace BlackMisc
 
     QString CFileUtils::appendFilePathsAndFixUnc(const QString &path1, const QString &path2, const QString &path3)
     {
-        return CFileUtils::fixWindowsUncPath(CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3));
-    }
-
-    bool CFileUtils::copyRecursively(const QString &sourceDir, const QString &destinationDir)
-    {
-        QFileInfo sourceFileInfo(sourceDir);
-        if (sourceFileInfo.isDir())
-        {
-            QDir targetDir(destinationDir);
-            if (!targetDir.mkpath("."))
-            {
-                return false;
-            }
-
-            const QDir originDir(sourceFileInfo.absoluteFilePath());
-            const auto fileNames = originDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
-            for (const QString &fileName : fileNames)
-            {
-                if (!copyRecursively(originDir.absoluteFilePath(fileName), targetDir.absoluteFilePath(fileName)))
-                {
-                    return false;
-                }
-            }
-        }
-        else
-        {
-            if (!QFile::copy(sourceDir, destinationDir))
-            {
-                return false;
-            }
-        }
-        return true;
+        static const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
+        return win ?
+               CFileUtils::fixWindowsUncPath(CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3)) :
+               CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);
     }
 
     QString CFileUtils::normalizeFilePathToQtStandard(const QString &filePath)
@@ -325,7 +297,7 @@ namespace BlackMisc
         return result;
     }
 
-    QString CFileUtils::findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
+    QFileInfo CFileUtils::findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
         if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
         const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
@@ -335,7 +307,7 @@ namespace BlackMisc
         {
             return a.lastModified() < b.lastModified();
         });
-        return it->filePath();
+        return *it;
     }
 
     const QStringList &CFileUtils::getSwiftExecutables()
@@ -390,6 +362,8 @@ namespace BlackMisc
 
     QString CFileUtils::fixWindowsUncPath(const QString &filePath)
     {
+        static const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
+        if (!win) { return filePath; }
         if (!filePath.startsWith('/')) { return filePath; }
         if (filePath.startsWith("//")) { return filePath; }
         static const QString f("/%1");
@@ -398,6 +372,9 @@ namespace BlackMisc
 
     QStringList CFileUtils::fixWindowsUncPaths(const QStringList &filePaths)
     {
+        static const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
+        if (!win) { return filePaths; }
+
         QStringList fixedPaths;
         for (const QString &path : filePaths)
         {
