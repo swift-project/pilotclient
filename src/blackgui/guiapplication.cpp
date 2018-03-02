@@ -419,6 +419,14 @@ namespace BlackGui
         return m->displayInOverlayWindow(message, timeOutMs);
     }
 
+    bool CGuiApplication::displayInOverlayWindow(const CStatusMessageList &messages, int timeOutMs)
+    {
+        IMainWindowAccess *m = mainWindowAccess();
+        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        if (!m) { return false; }
+        return m->displayInOverlayWindow(messages, timeOutMs);
+    }
+
     bool CGuiApplication::displayTextInConsole(const QString &text)
     {
         IMainWindowAccess *m = mainWindowAccess();
