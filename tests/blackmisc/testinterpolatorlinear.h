@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKMISCTEST_TESTINTERPOLATOR_H
-#define BLACKMISCTEST_TESTINTERPOLATOR_H
+#ifndef BLACKMISCTEST_TESTINTERPOLATORLINEAR_H
+#define BLACKMISCTEST_TESTINTERPOLATORLINEAR_H
 
 //! \cond PRIVATE_TESTS
 
@@ -19,7 +19,6 @@
 
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-
 #include <QObject>
 #include <QtGlobal>
 
@@ -29,17 +28,17 @@ namespace BlackMiscTest
     /*!
      * Interpolator classes basic tests
      */
-    class CTestInterpolator : public QObject
+    class CTestInterpolatorLinear : public QObject
     {
         Q_OBJECT
 
     public:
         //! Standard test case constructor
-        explicit CTestInterpolator(QObject *parent = nullptr) : QObject(parent) {}
+        explicit CTestInterpolatorLinear(QObject *parent = nullptr) : QObject(parent) {}
 
     private slots:
         //! Basic unit tests for interpolator
-        void linearInterpolator();
+        void basicInterpolatorTests();
 
     private:
         //! Test situation for testing

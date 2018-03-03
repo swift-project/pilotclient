@@ -14,7 +14,7 @@
  * \ingroup testblackmisc
  */
 
-#include "testinterpolator.h"
+#include "testinterpolatorlinear.h"
 #include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
@@ -53,7 +53,7 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackMiscTest
 {
-    void CTestInterpolator::linearInterpolator()
+    void CTestInterpolatorLinear::basicInterpolatorTests()
     {
         CCallsign cs("SWIFT");
         CInterpolatorLinear interpolator(cs);
@@ -154,7 +154,7 @@ namespace BlackMiscTest
         qDebug() << timeMs << "ms" << "for" << fetchedParts << "fetched parts";
     }
 
-    CAircraftSituation CTestInterpolator::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset)
+    CAircraftSituation CTestInterpolatorLinear::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset)
     {
         const CAltitude alt(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
         const CLatitude lat(number, CAngleUnit::deg());
@@ -171,7 +171,7 @@ namespace BlackMiscTest
         return s;
     }
 
-    CAircraftParts CTestInterpolator::getTestParts(int number, qint64 ts, qint64 deltaT)
+    CAircraftParts CTestInterpolatorLinear::getTestParts(int number, qint64 ts, qint64 deltaT)
     {
         CAircraftLights l(true, false, true, false, true, false);
         CAircraftEngineList e({ CAircraftEngine(1, true), CAircraftEngine(2, false), CAircraftEngine(3, true) });
