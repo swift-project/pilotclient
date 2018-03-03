@@ -68,6 +68,9 @@ namespace BlackMisc
             //! Get aircraft lights
             CAircraftLights getLights() const { return m_lights; }
 
+            //! Reference to lights, meant wor easy direct changes of the values
+            CAircraftLights &lights() { return m_lights; }
+
             //! Set aircraft lights
             void setLights(const CAircraftLights &lights) { m_lights = lights; }
 
@@ -98,6 +101,9 @@ namespace BlackMisc
             //! Get engines
             CAircraftEngineList getEngines() const { return m_engines; }
 
+            //! Direct access to engines, meant for simple value modifications
+            CAircraftEngineList &engines() { return m_engines; }
+
             //! Engine with number
             CAircraftEngine getEngine(int number) const;
 
@@ -120,9 +126,11 @@ namespace BlackMisc
             void setOnGround(bool onGround) { m_isOnGround = onGround; }
 
             //! Is aircraft on ground? (Smoothly interpolated between 0 and 1.)
+            //! \remark 1..on ground 0..not on ground
             double isOnGroundInterpolated() const;
 
             //! Set aircraft on ground. (Smoothly interpolated between 0 and 1.)
+            //! \remark 1..on ground 0..not on ground
             void setOnGroundInterpolated(double onGround) { m_isOnGroundInterpolated = onGround; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
@@ -135,9 +143,9 @@ namespace BlackMisc
             CAircraftLights m_lights;
             CAircraftEngineList m_engines;
             int m_flapsPercentage  = 0;
-            bool m_gearDown     = false;
-            bool m_spoilersOut  = false;
-            bool m_isOnGround   = false;
+            bool m_gearDown    = false;
+            bool m_spoilersOut = false;
+            bool m_isOnGround  = false;
             double m_isOnGroundInterpolated = -1;
 
             BLACK_METACLASS(

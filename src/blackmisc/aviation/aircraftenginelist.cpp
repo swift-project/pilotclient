@@ -34,13 +34,27 @@ namespace BlackMisc
 
         CAircraftEngine CAircraftEngineList::getEngine(int engineNumber) const
         {
-            Q_ASSERT(engineNumber >= 0);
+            Q_ASSERT(engineNumber > 0);
             return this->findBy(&CAircraftEngine::getNumber, engineNumber).frontOrDefault();
         }
 
         bool CAircraftEngineList::isEngineOn(int engineNumber) const
         {
+            Q_ASSERT(engineNumber > 0);
             return this->getEngine(engineNumber).isOn();
+        }
+
+        void CAircraftEngineList::setEngineOn(int engineNumber, bool on)
+        {
+            Q_ASSERT(engineNumber > 0);
+            for (CAircraftEngine &engine : *this)
+            {
+                if (engine.getNumber() == engineNumber)
+                {
+                    engine.setOn(on);
+                    break;
+                }
+            }
         }
 
         void CAircraftEngineList::initEngines(int engineNumber, bool on)
@@ -64,7 +78,7 @@ namespace BlackMisc
 
             for (const auto &e : *this)
             {
-                QJsonObject value = e.toJson();
+                const QJsonObject value = e.toJson();
                 map.insert(QString::number(e.getNumber()), value);
             }
             return map;
@@ -72,11 +86,11 @@ namespace BlackMisc
 
         void CAircraftEngineList::convertFromJson(const QJsonObject &json)
         {
-            clear();
+            this->clear();
             for (const auto &e : json.keys())
             {
                 CAircraftEngine engine;
-                int number = e.toInt();
+                const int number = e.toInt();
                 CJsonScope scope(e);
                 Q_UNUSED(scope);
                 engine.convertFromJson(json.value(e).toObject());

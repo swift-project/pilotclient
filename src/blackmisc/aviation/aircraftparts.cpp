@@ -23,12 +23,12 @@ namespace BlackMisc
         QString CAircraftParts::convertToQString(bool i18n) const
         {
             return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
-                   QStringLiteral(" lights: ") % m_lights.toQString(i18n) %
-                   QStringLiteral(" gear down: ") % BlackMisc::boolToYesNo(m_gearDown) %
-                   QStringLiteral(" flaps pct: ") % QString::number(m_flapsPercentage) %
-                   QStringLiteral(" spoilers out: ") % BlackMisc::boolToYesNo(m_spoilersOut) %
-                   QStringLiteral(" engines on: ") % m_engines.toQString(i18n) %
-                   QStringLiteral(" on ground: ") % BlackMisc::boolToYesNo(m_isOnGround);
+                   QStringLiteral(" on ground: ") % BlackMisc::boolToYesNo(m_isOnGround) %
+                   QStringLiteral(" | lights: ") % m_lights.toQString(i18n) %
+                   QStringLiteral(" | gear down: ") % BlackMisc::boolToYesNo(m_gearDown) %
+                   QStringLiteral(" | flaps pct: ") % QString::number(m_flapsPercentage) %
+                   QStringLiteral(" | spoilers out: ") % BlackMisc::boolToYesNo(m_spoilersOut) %
+                   QStringLiteral(" | engines on: ") % m_engines.toQString(i18n);
         }
 
         QJsonObject CAircraftParts::toIncrementalJson() const

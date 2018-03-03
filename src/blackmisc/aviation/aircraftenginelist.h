@@ -48,10 +48,16 @@ namespace BlackMisc
             CAircraftEngineList(const CSequence<CAircraftEngine> &other);
 
             //! Get engine 1..n
+            //! \remark 1 based, not 0 based
             CAircraftEngine getEngine(int engineNumber) const;
 
             //! Engine number 1..x on?
+            //! \remark 1 based, not 0 based
             bool isEngineOn(int engineNumber) const;
+
+            //! Set engine on/off
+            //! \remark 1 based, not 0 based
+            void setEngineOn(int engineNumber, bool on);
 
             //! Init some engines
             void initEngines(int engineNumber, bool on);
