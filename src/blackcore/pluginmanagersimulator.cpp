@@ -87,7 +87,7 @@ namespace BlackCore
         }
     }
 
-    BlackMisc::CSequence<QString> CPluginManagerSimulator::acceptedIids() const
+    CSequence<QString> CPluginManagerSimulator::acceptedIids() const
     {
         return
         {

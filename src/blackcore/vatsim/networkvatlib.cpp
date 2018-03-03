@@ -898,7 +898,7 @@ namespace BlackCore
 
             //! we set a dynamically updating offset time here
             situation.setCurrentUtcTime();
-            int offsetMs = self->markReceivedPositionAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            const int offsetMs = self->markReceivedPositionAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
             situation.setTimeOffsetMs(offsetMs);
 
             CTransponder::TransponderMode mode = CTransponder::StateStandby;

@@ -222,10 +222,11 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(qint64 currentTimeMsSinceEpoch,
-                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
+        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(
+            qint64 currentTimeMsSinceEpoch,
+            const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
         {
-            // this code is used by linear and spline interpolator
+            // (!) this code is used by linear and spline interpolator
             Q_UNUSED(setup);
             partsStatus.reset();
             if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
@@ -246,8 +247,8 @@ namespace BlackMisc
 
             // stop if we don't have any parts
             if (validParts.isEmpty()) { return {}; }
-            partsStatus.setSupportsParts(true);
 
+            partsStatus.setSupportsParts(true);
             CAircraftParts currentParts;
             do
             {
@@ -343,9 +344,9 @@ namespace BlackMisc
                     hasOffset ?
                     parts.getTimeOffsetMs() :
                     m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
-                CAircraftParts copy(parts);
-                copy.setTimeOffsetMs(offset);
-                CInterpolator<Derived>::addAircraftParts(copy);
+                CAircraftParts partsCopy(parts);
+                partsCopy.setTimeOffsetMs(offset);  // we set the offset of the situation
+                CInterpolator<Derived>::addAircraftParts(partsCopy);
                 return;
             }
 

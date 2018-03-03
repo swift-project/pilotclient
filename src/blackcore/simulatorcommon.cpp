@@ -48,9 +48,9 @@ using namespace BlackCore::Db;
 namespace BlackCore
 {
     CSimulatorCommon::CSimulatorCommon(const CSimulatorPluginInfo &info,
-                                       IOwnAircraftProvider    *ownAircraftProvider,
+                                       IOwnAircraftProvider *ownAircraftProvider,
                                        IRemoteAircraftProvider *remoteAircraftProvider,
-                                       IWeatherGridProvider    *weatherGridProvider,
+                                       IWeatherGridProvider *weatherGridProvider,
                                        QObject *parent)
         : ISimulator(parent),
           COwnAircraftAware(ownAircraftProvider),

@@ -27,10 +27,10 @@ namespace BlackMisc
     namespace Aviation
     {
         CAircraftSituation::CAircraftSituation()
-            : m_groundElevation( { 0, nullptr }, CAltitude::MeanSeaLevel) {}
+            : m_groundElevation({ 0, nullptr }, CAltitude::MeanSeaLevel) {}
 
         CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign)
-            : m_correspondingCallsign(correspondingCallsign), m_groundElevation( { 0, nullptr }, CAltitude::MeanSeaLevel)
+            : m_correspondingCallsign(correspondingCallsign), m_groundElevation({ 0, nullptr }, CAltitude::MeanSeaLevel)
         {}
 
         CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)

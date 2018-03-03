@@ -69,9 +69,10 @@ using namespace BlackMisc::Weather;
 
 namespace
 {
-    inline QString xswiftbusServiceName()
+    inline const QString &xswiftbusServiceName()
     {
-        return QStringLiteral("org.swift-project.xswiftbus");
+        static const QString name("org.swift-project.xswiftbus");
+        return name;
     }
 }
 
@@ -303,7 +304,7 @@ namespace BlackSimPlugin
             this->reverseLookupAndUpdateOwnAircraftModel(model);
         }
 
-        void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
+        void CSimulatorXPlane::displayStatusMessage(const CStatusMessage &message) const
         {
             // No assert here as status message may come because of network problems
             if (!isConnected()) { return; }
@@ -586,7 +587,7 @@ namespace BlackSimPlugin
                 if (! isRemoteAircraftSupportingParts(situation.getCallsign()))
                 {
                     // if aircraft not supporting parts then guess the basics (onGround, gear, lights)
-                    //! \todo not working for vtol
+                    //! \todo not working for VTOL
                     BlackMisc::Aviation::CAircraftParts parts;
                     parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
                     parts.setTimeOffsetMs(situation.getTimeOffsetMs());
@@ -1009,23 +1010,23 @@ namespace BlackSimPlugin
             m_trafficProxy->requestRemoteAircraftData();
         }
 
-        void CSimulatorXPlane::updateRemoteAircraftFromSimulator(const QString &callsign_, double latitude, double longitude, double groundElevation, double modelVerticalOffset)
+        void CSimulatorXPlane::updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters)
         {
-            CCallsign callsign(callsign_);
-            if (!m_xplaneAircraftObjects.contains(callsign)) { return; }
+            const CCallsign cs(callsign);
+            if (!m_xplaneAircraftObjects.contains(cs)) { return; }
 
-            CElevationPlane elevation(CLatitude(latitude, CAngleUnit::deg()), CLongitude(longitude, CAngleUnit::deg()), CAltitude(groundElevation, CLengthUnit::m()));
+            CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()), CLongitude(longitudeDeg, CAngleUnit::deg()), CAltitude(elevationMeters, CLengthUnit::m()));
             elevation.setSinglePointRadius();
 
-            CInterpolationHints &hints = m_hints[callsign];
-            hints.setElevationPlane(elevation); // update elevation
             // The entire vertical offset (CG offset) is still very experimental in X-Plane. Libxplanemp simply calculates the lowest Y
             // value from all the OpenGL model vertices. I assume its in meters.
             // The unit of modelVerticalOffset is still very unknown. This needs to be confirmed.
-            hints.setCGAboveGround({ modelVerticalOffset, CLengthUnit::m() });
+            CInterpolationHints &hints = m_hints[cs];
+            hints.setElevationPlane(elevation); // update elevation
+            hints.setCGAboveGround({ modelVerticalOffsetMeters, CLengthUnit::m() });
 
             // set it in the remote aircraft provider
-            this->updateAircraftGroundElevation(callsign, elevation);
+            this->updateAircraftGroundElevation(cs, elevation);
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

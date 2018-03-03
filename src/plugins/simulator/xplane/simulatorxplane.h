@@ -159,7 +159,7 @@ namespace BlackSimPlugin
             bool sendRemoteAircraftPartsToSimulator(const CXPlaneMPAircraft &xplaneAircraft, const BlackMisc::Aviation::CAircraftParts &parts);
 
             void requestRemoteAircraftDataFromXPlane();
-            void updateRemoteAircraftFromSimulator(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
+            void updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
 
             static constexpr bool c_driverInterpolation = true;
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
@@ -237,7 +237,7 @@ namespace BlackSimPlugin
             virtual void stopImpl() override;
 
         private:
-            //! \brief Check if XSwiftBus service is already registered
+            //! Check if XSwiftBus service is already registered
             bool isXSwiftBusRunning() const;
 
             void serviceRegistered(const QString &serviceName);
