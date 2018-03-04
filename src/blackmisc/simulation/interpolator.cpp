@@ -239,10 +239,7 @@ namespace BlackMisc
                 return emptyParts;
             }
 
-            // Ref T243, KB 2018-02, can be removed in future, we verify parts when we add parts
-            // Parts are supposed to be in correct order
-            // const auto end = std::is_sorted_until(m_aircraftParts.begin(), m_aircraftParts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
-            // const auto validParts = makeRange(m_aircraftParts.begin(), end);
+            // Parts are supposed to be in correct order, latest first
             const CAircraftPartsList &validParts = m_aircraftParts;
 
             // stop if we don't have any parts
@@ -257,8 +254,9 @@ namespace BlackMisc
                 const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
                 const auto partsOlder = makeRange(pivot, validParts.end());
 
-                if (partsOlder.isEmpty()) { currentParts = *(partsNewer.end() - 1); break; }
-                currentParts = partsOlder.front();
+                // if (partsOlder.isEmpty()) { currentParts = *(partsNewer.end() - 1); break; }
+                if (partsOlder.isEmpty()) { currentParts = *(partsNewer.begin()); break; }
+                currentParts = partsOlder.front(); // latest older parts
                 if (currentParts.isOnGround()) { break; }
 
                 // here we know aircraft is not on ground, and we check if it was recently on ground or if it will be on ground soon
@@ -335,15 +333,12 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts)
+        void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts, bool adjustZeroOffset)
         {
-            const bool hasOffset = parts.hasOffsetTime();
-            if (!hasOffset)
+            const bool adjustOffset = adjustZeroOffset && !parts.hasNonZeroOffsetTime();
+            if (adjustOffset)
             {
-                const qint64 offset =
-                    hasOffset ?
-                    parts.getTimeOffsetMs() :
-                    m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
+                const qint64 offset = m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
                 CAircraftParts partsCopy(parts);
                 partsCopy.setTimeOffsetMs(offset);  // we set the offset of the situation
                 CInterpolator<Derived>::addAircraftParts(partsCopy);
@@ -351,17 +346,9 @@ namespace BlackMisc
             }
 
             // here we have an offset
-            Q_ASSERT_X(parts.hasOffsetTime(), Q_FUNC_INFO, "Missing parts offset");
-            if (m_aircraftParts.isEmpty())
-            {
-                // make sure we have enough parts to do start interpolating immediately without waiting for more updates
-                // the offsets here (addMSecs) do not really matter
-                CAircraftParts copy(parts);
-                copy.addMsecs(-2 * parts.getTimeOffsetMs());
-                m_aircraftParts.push_frontKeepLatestFirst(copy);
-                copy.addMsecs(parts.getTimeOffsetMs());
-                m_aircraftParts.push_frontKeepLatestFirst(copy);
-            }
+            // unlike situations we do not add parts for spline interpolation
+            // this is not needed, as parts do not need 3 values
+            Q_ASSERT_X(!adjustZeroOffset || parts.hasNonZeroOffsetTime(), Q_FUNC_INFO, "Missing parts offset");
 
             // we add new situations at front and keep the latest values (real time) first
             m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxSituationsPerCallsign);
@@ -371,8 +358,17 @@ namespace BlackMisc
 
             // with the latest updates of T243 the order and the offsets are supposed to be correct
             // so even mixing fast/slow updates shall work
-            Q_ASSERT_X(!m_aircraftParts.containsZeroOrNegativeOffsetTime(), Q_FUNC_INFO, "Missing offset time");
+            Q_ASSERT_X(adjustZeroOffset ? !m_aircraftParts.containsZeroOrNegativeOffsetTime() : !m_aircraftParts.containsNegativeOffsetTime(), Q_FUNC_INFO, "Missing offset time");
             Q_ASSERT_X(m_aircraftParts.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+        }
+
+        template<typename Derived>
+        void CInterpolator<Derived>::addAircraftParts(const CAircraftPartsList &parts, bool adjustZeroOffset)
+        {
+            for (const CAircraftParts &p : parts)
+            {
+                this->addAircraftParts(p, adjustZeroOffset);
+            }
         }
 
         template<typename Derived>
@@ -392,6 +388,26 @@ namespace BlackMisc
         void CInterpolator<Derived>::resetLastInterpolation()
         {
             m_lastInterpolation.setNull();
+        }
+
+        template<typename Derived>
+        void CInterpolator<Derived>::clear()
+        {
+            this->resetLastInterpolation();
+            m_aircraftParts.clear();
+            m_aircraftSituations.clear();
+        }
+
+        template<typename Derived>
+        int CInterpolator<Derived>::maxSituations() const
+        {
+            return IRemoteAircraftProvider::MaxSituationsPerCallsign;
+        }
+
+        template<typename Derived>
+        int CInterpolator<Derived>::maxParts() const
+        {
+            return IRemoteAircraftProvider::MaxSituationsPerCallsign;
         }
 
         template <typename Derived>
@@ -519,3 +535,45 @@ namespace BlackMisc
         //! \endcond
     } // namespace
 } // namespace
+
+
+/**
+        template <typename Derived>
+        void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts, bool adjustZeroOffset)
+        {
+            const bool adjustOffset = adjustZeroOffset && !parts.hasNonZeroOffsetTime();
+            if (adjustOffset)
+            {
+                const qint64 offset = m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
+                CAircraftParts partsCopy(parts);
+                partsCopy.setTimeOffsetMs(offset);  // we set the offset of the situation
+                CInterpolator<Derived>::addAircraftParts(partsCopy);
+                return;
+            }
+
+            // here we have an offset
+            Q_ASSERT_X(!adjustZeroOffset || parts.hasNonZeroOffsetTime(), Q_FUNC_INFO, "Missing parts offset");
+            if (m_aircraftParts.isEmpty())
+            {
+                // make sure we have enough parts to do start interpolating immediately without waiting for more updates
+                // the offsets here (addMSecs) do not really matter
+                const qint64 minOffset = 100;
+                CAircraftParts copy(parts);
+                copy.addMsecs(-2 * std::max(parts.getTimeOffsetMs(), minOffset));
+                m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(copy);
+                copy.addMsecs(parts.getTimeOffsetMs());
+                m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(copy);
+            }
+
+            // we add new situations at front and keep the latest values (real time) first
+            m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+
+            // force remote provider to cleanup
+            IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
+
+            // with the latest updates of T243 the order and the offsets are supposed to be correct
+            // so even mixing fast/slow updates shall work
+            Q_ASSERT_X(adjustZeroOffset ? !m_aircraftParts.containsZeroOrNegativeOffsetTime() : !m_aircraftParts.containsNegativeOffsetTime(), Q_FUNC_INFO, "Missing offset time");
+            Q_ASSERT_X(m_aircraftParts.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+        }
+**/

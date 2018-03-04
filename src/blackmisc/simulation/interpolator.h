@@ -59,7 +59,11 @@ namespace BlackMisc
             bool hasAircraftSituations() const { return !m_aircraftSituations.isEmpty(); }
 
             //! Add a new aircraft parts
-            void addAircraftParts(const Aviation::CAircraftParts &parts);
+            void addAircraftParts(const Aviation::CAircraftParts &parts, bool adjustZeroOffset = true);
+
+            //! Add a new aircraft parts
+            //! \remark mainly needed in unit tests
+            void addAircraftParts(const Aviation::CAircraftPartsList &parts, bool adjustZeroOffset = true);
 
             //! Any aircraft parts?
             bool hasAircraftParts() const { return !m_aircraftParts.isEmpty(); }
@@ -88,6 +92,16 @@ namespace BlackMisc
             //! Reset last interpolation to null
             //! \remark mainly needed in UNIT tests
             void resetLastInterpolation();
+
+            //! Clear all data
+            //! \remark mainly needed in interpolation
+            void clear();
+
+            //! Max situations kept
+            int maxSituations() const;
+
+            //! Max parts kept
+            int maxParts() const;
 
         protected:
             Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
