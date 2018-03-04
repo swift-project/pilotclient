@@ -29,7 +29,7 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAircraftPartsList :
             public CSequence<CAircraftParts>,
             public ITimestampWithOffsetObjectList<CAircraftParts, CAircraftPartsList>,
-            public BlackMisc::Mixin::MetaType<CAircraftPartsList>
+            public Mixin::MetaType<CAircraftPartsList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAircraftPartsList)
@@ -42,8 +42,10 @@ namespace BlackMisc
 
             //! Construct from initializer list.
             CAircraftPartsList(std::initializer_list<CAircraftParts> il);
-        };
 
+            //! Set on ground for all entries
+            int setOnGround(bool onGround);
+        };
     } //namespace
 } // namespace
 

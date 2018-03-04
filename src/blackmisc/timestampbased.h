@@ -162,7 +162,7 @@ namespace BlackMisc
         qint64 getTimeOffsetMs() const { return m_timeOffsetMs; }
 
         //! Having a valid offset time
-        bool hasOffsetTime() const;
+        bool hasNonZeroOffsetTime() const;
 
         //! Offset with unit
         QString getTimeOffsetWithUnit() const;

@@ -294,6 +294,16 @@ namespace BlackMisc
     }
 
     template<class OBJ, class CONTAINER>
+    bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::containsNegativeOffsetTime() const
+    {
+        for (const ITimestampWithOffsetBased &obj : this->container())
+        {
+            if (obj.getTimeOffsetMs() < 0) { return true; }
+        }
+        return false;
+    }
+
+    template<class OBJ, class CONTAINER>
     ITimestampWithOffsetObjectList<OBJ, CONTAINER>::ITimestampWithOffsetObjectList() : ITimestampObjectList<OBJ, CONTAINER>()
     {
         static_assert(std::is_base_of<ITimestampWithOffsetBased, OBJ>::value, "OBJ needs to implement ITimestampBased");

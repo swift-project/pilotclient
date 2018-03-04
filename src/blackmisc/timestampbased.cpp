@@ -310,7 +310,7 @@ namespace BlackMisc
         return (i >= static_cast<int>(IndexOffsetMs)) && (i <= static_cast<int>(IndexOffsetWithUnit));
     }
 
-    bool ITimestampWithOffsetBased::hasOffsetTime() const
+    bool ITimestampWithOffsetBased::hasNonZeroOffsetTime() const
     {
         return m_timeOffsetMs != 0;
     }

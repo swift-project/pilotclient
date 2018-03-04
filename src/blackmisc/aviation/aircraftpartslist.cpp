@@ -25,5 +25,17 @@ namespace BlackMisc
         CAircraftPartsList::CAircraftPartsList(std::initializer_list<CAircraftParts> il) :
             CSequence<CAircraftParts>(il)
         { }
+
+        int CAircraftPartsList::setOnGround(bool onGround)
+        {
+            int c = 0;
+            for (CAircraftParts &p : *this)
+            {
+                if (p.isOnGround() == onGround) { continue; }
+                p.setOnGround(onGround);
+                c++;
+            }
+            return c;
+        }
     } // namespace
 } // namespace

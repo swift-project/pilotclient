@@ -128,6 +128,9 @@ namespace BlackMisc
         //! Any negative or zero offset time?
         bool containsZeroOrNegativeOffsetTime() const;
 
+        //! Any negative offset time?
+        bool containsNegativeOffsetTime() const;
+
         //! Insert as first element by keeping maxElements and the latest first
         void push_frontKeepLatestAdjustedFirst(const OBJ &value, int maxElements = -1);
 
