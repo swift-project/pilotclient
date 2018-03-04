@@ -48,14 +48,27 @@ namespace BlackMiscTest
         deltaGnd = deltaJson21.value("on_ground").toBool(false);
         QVERIFY2(deltaGnd == true, "Values shall be false");
 
+        ap2 = ap1;
+        ap2.lights().setLandingOn(false);
+        deltaJson12 = getIncrementalObject(ap1.getLights().toJson(), ap2.getLights().toJson());
+        QVERIFY2(deltaJson12.size() == 1, "Expect 1 value (landing) changed");
+
+        // same on parts object
+        deltaJson12 = getIncrementalObject(ap1.toJson(), ap2.toJson());
+        QVERIFY2(deltaJson12.size() == 1, "Expect 1 value (lights) changed");
+
+        ap2.engines().setEngineOn(2, false);
+        ap2Json = ap2.toJson();
+        deltaJson12 = getIncrementalObject(ap1Json, ap2Json);
+        QVERIFY2(deltaJson12.size() == 2, "Expect 2 value (lights, engines) changed");
+
         // const QString json1 = stringFromJsonObject(deltaJson12);
         // const QString json2 = stringFromJsonObject(deltaJson21);
     }
 
     CAircraftParts CTestAircraftParts::testParts1() const
     {
-        CAircraftLights lights;
-        lights.allLightsOn();
+        const CAircraftLights lights = CAircraftLights::allLightsOn();
         CAircraftEngineList engines;
         engines.initEngines(4, true);
         const bool onGround = true;
