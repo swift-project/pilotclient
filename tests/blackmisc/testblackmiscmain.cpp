@@ -22,7 +22,8 @@
 #include "testicon.h"
 #include "testidentifier.h"
 #include "testinput.h"
-#include "testinterpolator.h"
+#include "testinterpolatorlinear.h"
+#include "testinterpolatorparts.h"
 #include "testlibrarypath.h"
 #include "testmath.h"
 #include "testphysicalquantities.h"
@@ -113,8 +114,12 @@ namespace BlackMiscTest
             status |= test.exec(&mathTests, "blackmisc_math");
         }
         {
-            CTestInterpolator interpolatorTests;
-            status |= test.exec(&interpolatorTests, "blackmisc_interpolator");
+            CTestInterpolatorLinear interpolatorTests;
+            status |= test.exec(&interpolatorTests, "blackmisc_interpolatorlinear");
+        }
+        {
+            CTestInterpolatorParts interpolatorParts;
+            status |= test.exec(&interpolatorParts, "blackmisc_interpolatorparts");
         }
         {
             CTestLibraryPath libraryPathTests;
