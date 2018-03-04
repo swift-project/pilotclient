@@ -47,6 +47,9 @@ namespace BlackMisc
         //! Objects without valid timestamp
         CONTAINER findInvalidTimestamps() const;
 
+        //! Find closest (or default)
+        OBJ findClosestTimeDistance(qint64 msSinceEpoch) const;
+
         //! Has invalid timestamp
         bool hasInvalidTimestamps() const;
 
@@ -146,7 +149,10 @@ namespace BlackMisc
         //! \remark all object must have a valid timestamp
         bool isSortedAdjustedLatestFirst() const;
 
-    protected:
+        //! Closest adjusted time difference
+        OBJ findClosestTimeDistanceAdjusted(qint64 msSinceEpoch) const;
+
+protected:
         //! Constructor
         ITimestampWithOffsetObjectList();
     };

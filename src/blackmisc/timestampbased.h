@@ -46,6 +46,9 @@ namespace BlackMisc
         //! Timestamp as ms value
         qint64 getMSecsSinceEpoch() const { return m_timestampMSecsSinceEpoch; }
 
+        //! Time difference in ms
+        qint64 getTimeDifferenceMs(qint64 compareTime) const { return compareTime - this->getMSecsSinceEpoch(); }
+
         //! Set to null
         void setTimestampToNull();
 
@@ -169,6 +172,9 @@ namespace BlackMisc
 
         //! Timestamp with offset added for interpolation
         qint64 getAdjustedMSecsSinceEpoch() const { return this->getMSecsSinceEpoch() + this->getTimeOffsetMs(); }
+
+        //! Time difference in ms (this -> compare)
+        qint64 getAdjustedTimeDifferenceMs(qint64 compareTime) const { return this->getAdjustedMSecsSinceEpoch() - compareTime; }
 
         //! Timestamp and offset
         QString getTimestampAndOffset(bool formatted) const;

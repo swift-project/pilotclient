@@ -102,6 +102,17 @@ namespace BlackMisc
         });
     }
 
+    template<class OBJ, class CONTAINER>
+    OBJ ITimestampObjectList<OBJ, CONTAINER>::findClosestTimeDistance(qint64 msSinceEpoch) const
+    {
+        if (this->container().isEmpty()) { return OBJ(); }
+        const auto closest = std::min_element(this->container().cbegin(), this->container().cend(), [ = ](const ITimestampBased & a, const ITimestampBased & b)
+        {
+            return qAbs(a.getTimeDifferenceMs(msSinceEpoch)) < qAbs(b.getTimeDifferenceMs(msSinceEpoch));
+        });
+        return *closest;
+    }
+
     template <class OBJ, class CONTAINER>
     bool ITimestampObjectList<OBJ, CONTAINER>::hasInvalidTimestamps() const
     {
@@ -375,6 +386,17 @@ namespace BlackMisc
             min = obj.getAdjustedMSecsSinceEpoch();
         }
         return true;
+    }
+
+    template<class OBJ, class CONTAINER>
+    OBJ ITimestampWithOffsetObjectList<OBJ, CONTAINER>::findClosestTimeDistanceAdjusted(qint64 msSinceEpoch) const
+    {
+        if (this->container().isEmpty()) { return OBJ(); }
+        const auto closest = std::min_element(this->container().cbegin(), this->container().cend(), [ = ](const ITimestampWithOffsetBased & a, const ITimestampWithOffsetBased & b)
+        {
+            return qAbs(a.getAdjustedTimeDifferenceMs(msSinceEpoch)) < qAbs(b.getAdjustedTimeDifferenceMs(msSinceEpoch));
+        });
+        return *closest;
     }
 
     // see here for the reason of thess forward instantiations
