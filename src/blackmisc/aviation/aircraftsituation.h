@@ -73,14 +73,20 @@ namespace BlackMisc
             };
 
             //! Reliability of on ground information
-            enum OnGroundReliability
+            enum OnGroundDetails
             {
+                NotSet,
+                // interpolated situation
                 OnGroundByInterpolation,  //!< strongest for remote aircraft
                 OnGroundByElevationAndCG,
                 OnGroundByElevation,
                 OnGroundByGuessing,       //!< weakest
-                OnGroundReliabilityNoSet,
-                OnGroundOwnAircraft,      //!< sending on ground
+                // received situation
+                InFromNetworkSituation,   //!< received from network
+                InFromParts,
+                InNoGroundInfo,
+                // send information
+                OutOnGroundOwnAircraft    //!< sending on ground
             };
 
             //! Default constructor.
@@ -149,16 +155,16 @@ namespace BlackMisc
             void setOnGround(CAircraftSituation::IsOnGround onGround) { m_isOnGround = static_cast<int>(onGround); }
 
             //! Set on ground
-            void setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundReliability reliability);
+            void setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails reliability);
 
             //! On ground reliability
-            OnGroundReliability getOnGroundReliability() const { return static_cast<CAircraftSituation::OnGroundReliability>(m_onGroundReliability); }
+            OnGroundDetails getOnGroundDetails() const { return static_cast<CAircraftSituation::OnGroundDetails>(m_onGroundDetails); }
 
             //! On ground reliability as string
-            const QString &getOnGroundReliabilityAsString() const;
+            const QString &getOnDetailsAsString() const;
 
             //! Reliability
-            void setOnGroundReliabiliy(CAircraftSituation::OnGroundReliability onGroundReliability) { m_onGroundReliability = static_cast<int>(onGroundReliability); }
+            void setOnGroundReliabiliy(CAircraftSituation::OnGroundDetails onGroundReliability) { m_onGroundDetails = static_cast<int>(onGroundReliability); }
 
             //! On ground info as string
             QString getOnGroundInfo() const;
@@ -254,7 +260,7 @@ namespace BlackMisc
             static const QString &isOnGroundToString(IsOnGround onGround);
 
             //! Enum to string
-            static const QString &onGroundReliabilityToString(OnGroundReliability reliability);
+            static const QString &onGroundDetailsToString(OnGroundDetails reliability);
 
         private:
             CCallsign m_correspondingCallsign;
@@ -264,9 +270,9 @@ namespace BlackMisc
             PhysicalQuantities::CAngle m_pitch;
             PhysicalQuantities::CAngle m_bank;
             PhysicalQuantities::CSpeed m_groundSpeed;
-            CAltitude m_groundElevation{0, CAltitude::MeanSeaLevel, PhysicalQuantities::CLengthUnit::nullUnit()};
+            CAltitude m_groundElevation{ 0, CAltitude::MeanSeaLevel, PhysicalQuantities::CLengthUnit::nullUnit() };
             int m_isOnGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
-            int m_onGroundReliability = static_cast<int>(CAircraftSituation::OnGroundReliabilityNoSet);
+            int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSet);
             bool m_isInterim = false;
 
             BLACK_METACLASS(
@@ -280,7 +286,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(groundSpeed),
                 BLACK_METAMEMBER(groundElevation),
                 BLACK_METAMEMBER(isOnGround),
-                BLACK_METAMEMBER(onGroundReliability),
+                BLACK_METAMEMBER(onGroundDetails),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(timeOffsetMs),
                 BLACK_METAMEMBER(isInterim)
@@ -291,6 +297,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::IsOnGround)
-Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::OnGroundReliability)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::OnGroundDetails)
 
 #endif // guard

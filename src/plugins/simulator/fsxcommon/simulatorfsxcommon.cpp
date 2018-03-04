@@ -387,7 +387,7 @@ namespace BlackSimPlugin
             aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitude, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
             // set on ground also in situation for consistency and future usage
             // it is duplicated in parts
-            aircraftSituation.setOnGround(simulatorOwnAircraft.simOnGround ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundOwnAircraft);
+            aircraftSituation.setOnGround(simulatorOwnAircraft.simOnGround ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OutOnGroundOwnAircraft);
 
             const CAircraftLights lights(simulatorOwnAircraft.lightStrobe,
                                          simulatorOwnAircraft.lightLanding,

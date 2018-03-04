@@ -77,23 +77,29 @@ namespace BlackMisc
             }
         }
 
-        const QString &CAircraftSituation::onGroundReliabilityToString(CAircraftSituation::OnGroundReliability reliability)
+        const QString &CAircraftSituation::onGroundDetailsToString(CAircraftSituation::OnGroundDetails reliability)
         {
-            static const QString elv("elevation");
-            static const QString elvCg("elevation/CG");
-            static const QString inter("interpolation");
-            static const QString guess("guessing");
+            static const QString intElv("elevation");
+            static const QString intElvCg("elevation/CG");
+            static const QString intInter("interpolation");
+            static const QString intGuess("guessing");
             static const QString unknown("unknown");
-            static const QString ownAircraft("own aircraft");
+            static const QString outOwnAircraft("own aircraft");
+            static const QString inNetwork("from network");
+            static const QString inFromParts("from parts");
+            static const QString InNoGroundInfo("no gnd.info");
 
             switch (reliability)
             {
-            case CAircraftSituation::OnGroundByElevation: return elv;
-            case CAircraftSituation::OnGroundByElevationAndCG: return elvCg;
-            case CAircraftSituation::OnGroundByGuessing: return guess;
-            case CAircraftSituation::OnGroundByInterpolation: return inter;
-            case CAircraftSituation::OnGroundOwnAircraft: return ownAircraft;
-            case CAircraftSituation::OnGroundReliabilityNoSet:
+            case CAircraftSituation::OnGroundByElevation: return intElv;
+            case CAircraftSituation::OnGroundByElevationAndCG: return intElvCg;
+            case CAircraftSituation::OnGroundByGuessing: return intGuess;
+            case CAircraftSituation::OnGroundByInterpolation: return intInter;
+            case CAircraftSituation::OutOnGroundOwnAircraft: return outOwnAircraft;
+            case CAircraftSituation::InFromNetworkSituation: return inNetwork;
+            case CAircraftSituation::InFromParts: return inFromParts;
+            case CAircraftSituation::InNoGroundInfo: return InNoGroundInfo;
+            case CAircraftSituation::NotSet:
             default:
                 return unknown;
             }
@@ -120,8 +126,8 @@ namespace BlackMisc
             case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
             case IndexIsOnGround: return CVariant::fromValue(m_isOnGround);
             case IndexIsOnGroundString: return CVariant::fromValue(this->isOnGroundAsString());
-            case IndexOnGroundReliability: return CVariant::fromValue(m_onGroundReliability);
-            case IndexOnGroundReliabilityString: return CVariant::fromValue(this->getOnGroundReliabilityAsString());
+            case IndexOnGroundReliability: return CVariant::fromValue(m_onGroundDetails);
+            case IndexOnGroundReliabilityString: return CVariant::fromValue(this->getOnDetailsAsString());
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -141,7 +147,7 @@ namespace BlackMisc
             case IndexGroundElevation: m_groundElevation.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexIsOnGround: m_isOnGround = variant.toInt(); break;
-            case IndexOnGroundReliability: m_onGroundReliability = variant.toInt(); break;
+            case IndexOnGroundReliability: m_onGroundDetails = variant.toInt(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
@@ -165,7 +171,7 @@ namespace BlackMisc
                 return Compare::compare(m_isOnGround, compareValue.m_isOnGround);
             case IndexOnGroundReliability:
             case IndexOnGroundReliabilityString:
-                return Compare::compare(m_onGroundReliability, compareValue.m_onGroundReliability);
+                return Compare::compare(m_onGroundDetails, compareValue.m_onGroundDetails);
             default: break;
             }
             const QString assertMsg("No comparison for index " + index.toQString());
@@ -187,7 +193,7 @@ namespace BlackMisc
             m_bank.setNull();
             m_groundElevation.setNull();
             m_groundSpeed.setNull();
-            m_onGroundReliability = CAircraftSituation::OnGroundReliabilityNoSet;
+            m_onGroundDetails = CAircraftSituation::NotSet;
         }
 
         const QString &CAircraftSituation::isOnGroundAsString() const
@@ -198,23 +204,23 @@ namespace BlackMisc
         bool CAircraftSituation::isOnGroundInfoAvailable() const
         {
             return this->isOnGround() != CAircraftSituation::OnGroundSituationUnknown &&
-                   this->getOnGroundReliability() != CAircraftSituation::OnGroundReliabilityNoSet;
+                   this->getOnGroundDetails() != CAircraftSituation::NotSet;
         }
 
-        void CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundReliability reliability)
+        void CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails reliability)
         {
             this->setOnGround(onGround);
             this->setOnGroundReliabiliy(reliability);
         }
 
-        const QString &CAircraftSituation::getOnGroundReliabilityAsString() const
+        const QString &CAircraftSituation::getOnDetailsAsString() const
         {
-            return CAircraftSituation::onGroundReliabilityToString(this->getOnGroundReliability());
+            return CAircraftSituation::onGroundDetailsToString(this->getOnGroundDetails());
         }
 
         QString CAircraftSituation::getOnGroundInfo() const
         {
-            return this->isOnGroundAsString() % QLatin1Char(' ') % this->getOnGroundReliabilityAsString();
+            return this->isOnGroundAsString() % QLatin1Char(' ') % this->getOnDetailsAsString();
         }
 
         bool CAircraftSituation::hasGroundElevation() const
