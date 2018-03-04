@@ -134,8 +134,12 @@ namespace BlackMisc
         {
             // remove all outdated parts, but keep at least one
             if (partsList.isEmpty()) { return; }
-            const qint64 ts = partsList.front().getMSecsSinceEpoch() - MaxPartsAgePerCallsignSecs * 1000;
+
+            // we expect the latest value at front
+            // but to make sure we do the search
+            const qint64 ts = partsList.latestTimestampMsecsSinceEpoch() - MaxPartsAgePerCallsignSecs * 1000;
             partsList.removeBefore(ts);
+            Q_ASSERT_X(partsList.size() >= 1, Q_FUNC_INFO, "Need at least 1 value");
         }
     } // namespace
 } // namespace
