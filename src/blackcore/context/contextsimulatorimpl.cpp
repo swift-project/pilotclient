@@ -456,7 +456,7 @@ namespace BlackCore
                     sim->disconnect(this);
                     sim->unload();
                     sim->deleteLater();
-                    emit simulatorPluginChanged(CSimulatorPluginInfo());
+                    emit this->simulatorPluginChanged(CSimulatorPluginInfo());
                 }
             }
         }
@@ -475,7 +475,7 @@ namespace BlackCore
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
             const CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
-            updateAircraftModel(callsign, aircraftModel, identifier());
+            this->updateAircraftModel(callsign, aircraftModel, identifier());
             const CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
             CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
@@ -728,6 +728,12 @@ namespace BlackCore
                 return m_simulatorPlugin.second->parseCommandLine(commandLine, originator);
             }
             return false;
+        }
+
+        ISimulator *CContextSimulator::simulator() const
+        {
+            if (!this->isSimulatorAvailable()) { return nullptr; }
+            return m_simulatorPlugin.second;
         }
 
         void CContextSimulator::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)

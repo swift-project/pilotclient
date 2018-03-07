@@ -14,7 +14,7 @@
 #include "blackcore/context/contextnetworkimpl.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/context/contextownaircraftimpl.h"
-#include "blackcore/context/contextsimulator.h"
+#include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/webdataservices.h"
@@ -449,6 +449,23 @@ namespace BlackCore
             if (!m_airspace) { return; }
             if (!m_airspace->analyzer()) { return; }
             m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft, maxRenderedDistance);
+        }
+
+        void CContextNetwork::xCtxSimulatorStatusChanged(int status)
+        {
+            const ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
+            if (m_network)
+            {
+                if (simStatus.testFlag(ISimulator::Connected))
+                {
+                    const CContextSimulator *sim = this->getRuntime()->getCContextSimulator();
+                    m_network->setSimulationEnvironmentProvider(sim ? sim->simulator() : nullptr);
+                }
+                else
+                {
+                    m_network->setSimulationEnvironmentProvider(nullptr);
+                }
+            }
         }
 
         void CContextNetwork::updateMetars(const BlackMisc::Weather::CMetarList &metars)

@@ -134,6 +134,9 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".ris parts on|off", "aircraft parts"});
             }
 
+            //! Simulator object
+            ISimulator *simulator() const;
+
         protected:
             //! Constructor
             CContextSimulator(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);

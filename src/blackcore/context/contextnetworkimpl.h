@@ -238,6 +238,10 @@ namespace BlackCore
             //! \sa CAirspaceAnalyzer
             //! \ingroup crosscontextfunction
             void xCtxSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
+
+            //! Status of simulator changed
+            //! \ingroup crosscontextfunction
+            void xCtxSimulatorStatusChanged(int status);
         };
     } // ns
 } // ns
