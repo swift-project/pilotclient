@@ -193,10 +193,13 @@ namespace BlackMisc
             bool isNegativeWithEpsilonConsidered() const;
 
             //! Make value always positive
-            void makePositive();
+            const PQ &makePositive();
 
             //! Make value always negative
-            void makeNegative();
+            const PQ &makeNegative();
+
+            //! Absolute value (always >=0)
+            PQ abs() const;
 
             //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
             void marshallToDbus(QDBusArgument &argument) const;
@@ -239,6 +242,9 @@ namespace BlackMisc
 
             //! Minimum of 2 quantities
             static const PQ &minValue(const PQ &pq1, const PQ &pq2);
+
+            //! NULL PQ
+            static const PQ &null();
 
         protected:
             //! Constructor with double

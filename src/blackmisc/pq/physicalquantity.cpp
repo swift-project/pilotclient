@@ -147,15 +147,25 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        void CPhysicalQuantity<MU, PQ>::makePositive()
+        const PQ &CPhysicalQuantity<MU, PQ>::makePositive()
         {
             if (m_value < 0) { m_value *= -1.0; }
+            return *this->derived();
         }
 
         template <class MU, class PQ>
-        void CPhysicalQuantity<MU, PQ>::makeNegative()
+        const PQ &CPhysicalQuantity<MU, PQ>::makeNegative()
         {
             if (m_value > 0) { m_value *= -1.0; }
+            return *this->derived();
+        }
+
+        template<class MU, class PQ>
+        PQ CPhysicalQuantity<MU, PQ>::abs() const
+        {
+            if (m_value >= 0) { return *this->derived(); }
+            PQ copy(*this->derived());
+            return copy.makePositive();
         }
 
         template <class MU, class PQ>
@@ -371,6 +381,13 @@ namespace BlackMisc
             if (pq1.isNull()) { return pq2; }
             if (pq2.isNull()) { return pq1; }
             return pq1 < pq2 ? pq1 : pq2;
+        }
+
+        template<class MU, class PQ>
+        const PQ &CPhysicalQuantity<MU, PQ>::null()
+        {
+            static const PQ n(0, MU::nullUnit());
+            return n;
         }
 
         template <class MU, class PQ>
