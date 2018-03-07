@@ -184,11 +184,11 @@ namespace BlackCore
             BlackMisc::CSetting<Vatsim::TCurrentTrafficServer> m_currentNetworkServer { this };
 
             //! Station has been changed, needed to tune in/out voice room
-            //! \ingroup crosscontextslot
+            //! \ingroup crosscontextfunction
             void xCtxChangedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
             //! Simulator model has been changed
-            //! \ingroup crosscontextslot
+            //! \ingroup crosscontextfunction
             void xCtxChangedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Web data loaded

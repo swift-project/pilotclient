@@ -76,11 +76,11 @@ namespace BlackCore
         Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
 
     public:
-        //! Constructor
-        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, QObject *parent);
-
         //! Log categories
         static const BlackMisc::CLogCategoryList &getLogCategories();
+
+        //! Constructor
+        CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, QObject *parent);
 
         //! \ingroup remoteaircraftprovider
         //! @{

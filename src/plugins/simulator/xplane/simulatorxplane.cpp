@@ -221,9 +221,9 @@ namespace BlackSimPlugin
                     m_xplaneData.gearReployRatio > 0, static_cast<int>(m_xplaneData.flapsReployRatio * 100),
                     m_xplaneData.speedBrakeRatio > 0.5, engines, m_xplaneData.onGroundAll
                 };
-                updateOwnParts(parts);
 
-                requestRemoteAircraftDataFromXPlane();
+                this->updateOwnParts(parts);
+                this->requestRemoteAircraftDataFromXPlane();
             }
         }
 
@@ -250,8 +250,8 @@ namespace BlackSimPlugin
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftData, this, &CSimulatorXPlane::updateRemoteAircraftFromSimulator);
                 if (m_watcher) { m_watcher->setConnection(m_conn); }
-                loadCslPackages();
-                emitSimulatorCombinedStatus();
+                this->loadCslPackages();
+                this->emitSimulatorCombinedStatus();
                 return true;
             }
             else

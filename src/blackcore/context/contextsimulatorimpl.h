@@ -143,7 +143,7 @@ namespace BlackCore
 
         private:
             //  ------------ slots connected with network or other contexts ---------
-            //! \ingroup crosscontextslot
+            //! \ingroup crosscontextfunction
             //! @{
 
             //! Remote aircraft added
