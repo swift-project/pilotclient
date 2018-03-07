@@ -52,10 +52,7 @@ namespace BlackCore
                                        IRemoteAircraftProvider *remoteAircraftProvider,
                                        IWeatherGridProvider *weatherGridProvider,
                                        QObject *parent)
-        : ISimulator(parent),
-          COwnAircraftAware(ownAircraftProvider),
-          CRemoteAircraftAware(remoteAircraftProvider),
-          CWeatherGridAware(weatherGridProvider),
+        : ISimulator(ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent),
           m_simulatorPluginInfo(info)
     {
         this->setObjectName("Simulator: " + info.getIdentifier());

@@ -13,6 +13,8 @@
 #define BLACKCORE_NETWORK_H
 
 #include "blackcoreexport.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -53,7 +55,10 @@ namespace BlackCore
      *          which is connected to an INetwork slot, then at least one of those connections
      *          must be a Qt::QueuedConnection.
      */
-    class BLACKCORE_EXPORT INetwork : public QObject
+    class BLACKCORE_EXPORT INetwork :
+        public QObject,
+        public BlackMisc::Simulation::COwnAircraftAware, // network vatlib consumes own aircraft data and sets ICAO/callsign data
+        public BlackMisc::Simulation::CSimulationEnvironmentAware // allows to consume ground elevations
     {
         Q_OBJECT
 
@@ -61,7 +66,9 @@ namespace BlackCore
         /*!
          * Constructor
          */
-        INetwork(QObject *parent = nullptr) : QObject(parent) {}
+        INetwork(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr) :
+            QObject(parent),
+            BlackMisc::Simulation::COwnAircraftAware(ownAircraft) {}
 
     public:
         /*!

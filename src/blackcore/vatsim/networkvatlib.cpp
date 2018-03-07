@@ -84,7 +84,7 @@ namespace BlackCore
         }
 
         CNetworkVatlib::CNetworkVatlib(IOwnAircraftProvider *ownAircraft, QObject *parent)
-            : INetwork(parent), COwnAircraftAware(ownAircraft),
+            : INetwork(ownAircraft, parent),
               m_loginMode(LoginNormal),
               m_status(vatStatusDisconnected),
               m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
@@ -828,9 +828,9 @@ namespace BlackCore
         void CNetworkVatlib::onTextMessageReceived(VatFsdClient *, const char *from, const char *to, const char *msg, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
-            CCallsign sender(self->fromFSD(from));
-            CCallsign receiver(self->fromFSD(to));
-            QString message(self->fromFSD(msg));
+            const CCallsign sender(self->fromFSD(from));
+            const CCallsign receiver(self->fromFSD(to));
+            const QString message(self->fromFSD(msg));
 
             // Other FSD servers send the controller ATIS as text message. The following conditions need to be met:
             // * non-VATSIM server. VATSIM has a specific ATIS message
@@ -881,7 +881,7 @@ namespace BlackCore
             emit cbvar_cast(cbvar)->atcDisconnected(CCallsign(cbvar_cast(cbvar)->fromFSD(callsign), CCallsign::Atc));
         }
 
-        void CNetworkVatlib::onPilotPositionUpdate(VatFsdClient *, const char *callsignChar , const VatPilotPosition *position, void *cbvar)
+        void CNetworkVatlib::onPilotPositionUpdate(VatFsdClient *, const char *callsignChar, const VatPilotPosition *position, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
 
@@ -892,8 +892,7 @@ namespace BlackCore
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),
-                CSpeed(position->groundSpeed, CSpeedUnit::kts()),
-                CAltitude({ 0, nullptr }, CAltitude::MeanSeaLevel)
+                CSpeed(position->groundSpeed, CSpeedUnit::kts())
             );
 
             //! we set a dynamically updating offset time here
@@ -942,7 +941,7 @@ namespace BlackCore
             }
 
             auto *self = cbvar_cast(cbvar);
-            CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
+            const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
             const QJsonObject packet = doc.object();
             if (packet == JsonPackets::aircraftConfigRequest())
             {
@@ -966,8 +965,7 @@ namespace BlackCore
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),
-                CSpeed(0.0, nullptr), // There is no speed information in a interim packet
-                CAltitude({ 0, nullptr }, CAltitude::MeanSeaLevel)
+                CSpeed::null() // There is no speed information in a interim packet
             );
             situation.setCurrentUtcTime();
             situation.setTimeOffsetMs(c_interimPositionTimeOffsetMsec);
@@ -1091,7 +1089,6 @@ namespace BlackCore
             Vat_SetFsdMessageHandler(m_net.data(), CNetworkVatlib::onRawFsdMessage, this);
 
             if (setting.getFileWriteMode() == CRawFsdMessageSettings::None || setting.getFileDir().isEmpty()) { return; }
-
             if (setting.getFileWriteMode() == CRawFsdMessageSettings::Truncate)
             {
                 QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
@@ -1258,7 +1255,7 @@ namespace BlackCore
             int flags = 0;
             if (capabilityFlags & vatCapsAtcInfo) { flags |= AcceptsAtisResponses; }
             if (capabilityFlags & vatCapsFastPos) { flags |= SupportsInterimPosUpdates; }
-            if (capabilityFlags & vatCapsAircraftInfo) { flags |= SupportsIcaoCodes; }
+            if (capabilityFlags & vatCapsAircraftInfo)   { flags |= SupportsIcaoCodes; }
             if (capabilityFlags & vatCapsAircraftConfig) { flags |= SupportsAircraftConfigs; }
             auto *self = cbvar_cast(cbvar);
             emit self->capabilitiesReplyReceived(self->fromFSD(callsign), flags);

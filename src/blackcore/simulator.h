@@ -12,15 +12,19 @@
 #ifndef BLACKCORE_SIMULATOR_H
 #define BLACKCORE_SIMULATOR_H
 
-#include "blackconfig/buildconfig.h"
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/simulation/interpolatormulti.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/simulationenvironmentprovider.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/weather/weathergridprovider.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/statusmessage.h"
@@ -28,6 +32,7 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/simplecommandparser.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QFlags>
 #include <QObject>
@@ -37,13 +42,6 @@ namespace BlackMisc
 {
     namespace Aviation { class CCallsign; }
     namespace Network { class CTextMessage; }
-    namespace Simulation
-    {
-        class CSimulatorInternals;
-        class IOwnAircraftProvider;
-        class IRemoteAircraftProvider;
-    }
-    namespace Weather { class IWeatherGridProvider; }
 }
 
 namespace BlackCore
@@ -51,9 +49,14 @@ namespace BlackCore
     //! Interface to a simulator.
     class BLACKCORE_EXPORT ISimulator :
         public QObject,
+        public BlackMisc::Simulation::COwnAircraftAware,    // gain access to in memory own aircraft data
+        public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
+        public BlackMisc::Weather::CWeatherGridAware,       // gain access to in memory weather grid
+        public BlackMisc::Simulation::ISimulationEnvironmentProvider, // give access to elevation
         public BlackMisc::CIdentifiable
     {
         Q_OBJECT
+        Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
 
     public:
         //! ISimulator status
@@ -228,7 +231,10 @@ namespace BlackCore
 
     protected:
         //! Default constructor
-        ISimulator(QObject *parent = nullptr);
+        ISimulator(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                   BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                   BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                   QObject *parent = nullptr);
 
         //! Are we connected to the simulator?
         virtual bool isConnected() const = 0;

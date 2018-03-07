@@ -20,10 +20,7 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -32,7 +29,7 @@
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/interpolationlogger.h"
-#include "blackmisc/weather/weathergridprovider.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
@@ -58,12 +55,7 @@ namespace BlackMisc
 namespace BlackCore
 {
     //! Common base class with providers, interface and some base functionality
-    class BLACKCORE_EXPORT CSimulatorCommon :
-        public BlackCore::ISimulator,
-        public BlackMisc::Simulation::COwnAircraftAware,    // gain access to in memory own aircraft data
-        public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
-        public BlackMisc::Weather::CWeatherGridAware        // gain access to in memory weather grid
-    {
+    class BLACKCORE_EXPORT CSimulatorCommon : public BlackCore::ISimulator {
         Q_OBJECT
 
     public:
@@ -268,10 +260,10 @@ namespace BlackCore
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         int m_timerCounter = 0;               //!< allows to calculate n seconds
         QTimer m_oneSecondTimer;              //!< multi purpose timer
-        BlackMisc::Simulation::CSimulatorPluginInfo   m_simulatorPluginInfo;                //!< info object
-        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;                //!< all other aircraft are to be ignored
-        BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;              //!< callsigns which will be rendered
-        BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections;  //!< connected signal/slots
+        BlackMisc::Simulation::CSimulatorPluginInfo   m_simulatorPluginInfo;               //!< info object
+        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;               //!< all other aircraft are to be ignored
+        BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;             //!< callsigns which will be rendered
+        BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections; //!< connected signal/slots
 
         // statistics values of how often those functions are called
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)

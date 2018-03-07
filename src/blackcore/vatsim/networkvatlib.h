@@ -15,8 +15,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
 #include "blackcore/vatsim/vatsimsettings.h"
-#include "blackmisc/tokenbucket.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftparts.h"
@@ -26,6 +24,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/tokenbucket.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/digestsignal.h"
 
@@ -56,9 +55,7 @@ namespace BlackCore
     namespace Vatsim
     {
         //! Implementation of INetwork using the vatlib shim
-        class BLACKCORE_EXPORT CNetworkVatlib :
-            public INetwork,
-            public BlackMisc::Simulation::COwnAircraftAware // network vatlib consumes own aircraft data and sets ICAO/callsign data
+        class BLACKCORE_EXPORT CNetworkVatlib : public INetwork
         {
             Q_OBJECT
 

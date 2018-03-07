@@ -14,21 +14,23 @@
 #include <Qt>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
     ISimulator::SimulatorStatus ISimulator::getSimulatorStatus() const
     {
-        if (!this->isConnected()) { return Disconnected; }
+        if (!this->isConnected()) { return ISimulator::Disconnected; }
         const SimulatorStatus status =
             Connected
-            | (this->isSimulating() ? Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0))
-            | (this->isPaused() ? Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
+            | (this->isSimulating() ? ISimulator::Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0))
+            | (this->isPaused() ? ISimulator::Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
         return status;
     }
 
@@ -39,12 +41,12 @@ namespace BlackCore
 
     void ISimulator::registerHelp()
     {
-        if (BlackMisc::CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
-        BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
-        BlackMisc::CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
-        if (BlackConfig::CBuildConfig::isCompiledWithFsuipcSupport())
+        if (CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
+        CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+        CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
+        if (CBuildConfig::isCompiledWithFsuipcSupport())
         {
-            BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
+            CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
         }
     }
 
@@ -59,9 +61,12 @@ namespace BlackCore
         return s.join(", ");
     }
 
-    ISimulator::ISimulator(QObject *parent) :
+    ISimulator::ISimulator(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, IWeatherGridProvider *weatherGridProvider, QObject *parent) :
         QObject(parent),
-        BlackMisc::CIdentifiable(this)
+        COwnAircraftAware(ownAircraftProvider),
+        CRemoteAircraftAware(remoteAircraftProvider),
+        CWeatherGridAware(weatherGridProvider),
+        CIdentifiable(this)
     {
         ISimulator::registerHelp();
     }
@@ -114,5 +119,4 @@ namespace BlackCore
         this->stopImpl();
         m_isRunning = false;
     }
-
 } // namespace
