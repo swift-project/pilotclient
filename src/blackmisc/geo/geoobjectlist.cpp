@@ -8,14 +8,16 @@
  */
 
 #include "blackmisc/geo/geoobjectlist.h"
+#include "blackmisc/geo/geo.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/xplane/navdatareference.h"
 
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
@@ -51,6 +53,68 @@ namespace BlackMisc
             });
         }
 
+        template<class OBJ, class CONTAINER>
+        CONTAINER IGeoObjectList<OBJ, CONTAINER>::findWithGeodeticMSLHeight() const
+        {
+            return this->container().findBy(&OBJ::hasMSLGeodeticHeight, true);
+        }
+
+        template<class OBJ, class CONTAINER>
+        bool IGeoObjectList<OBJ, CONTAINER>::containsObjectInRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
+        {
+            return this->container().containsBy([&](const OBJ & geoObj)
+            {
+                const CLength d = coordinate.calculateGreatCircleDistance(geoObj);
+                return d <= range;
+            });
+        }
+
+        template<class OBJ, class CONTAINER>
+        typename IGeoObjectList<OBJ, CONTAINER>::MinMaxAverageHeight IGeoObjectList<OBJ, CONTAINER>::findMinMaxAverageHeight() const
+        {
+            MinMaxAverageHeight stats{ CAltitude::null(), CAltitude::null(), CAltitude::null(), 0 };
+            int c = 0;
+            double avgFt = 0;
+            for (const OBJ &obj : this->container())
+            {
+                if (!obj.hasMSLGeodeticHeight()) { continue; }
+                const CAltitude alt = obj.geodeticHeight();
+                if (std::get<0>(stats).isNull() || std::get<0>(stats) > alt)
+                {
+                    std::get<0>(stats) = alt;
+                }
+                if (std::get<1>(stats).isNull() || std::get<1>(stats) < alt)
+                {
+                    std::get<1>(stats) = alt;
+                }
+                avgFt += alt.value(CLengthUnit::ft());
+            }
+
+            std::get<2>(stats) = CAltitude(avgFt / c, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+            std::get<3>(stats) = c;
+            return stats;
+        }
+
+        template <class OBJ, class CONTAINER>
+        int IGeoObjectList<OBJ, CONTAINER>::removeOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range)
+        {
+            const int size = this->container().size();
+            const CONTAINER copy = this->container().findWithinRange(coordinate, range);
+            const int d = size - copy.size();
+            if (d > 0) { *this = copy; }
+            return d;
+        }
+
+        template<class OBJ, class CONTAINER>
+        int IGeoObjectList<OBJ, CONTAINER>::removeWithoutGeodeticHeight()
+        {
+            const int size = this->container().size();
+            const CONTAINER copy = this->findWithGeodeticMSLHeight();
+            const int d = size - copy.size();
+            if (d > 0) { *this = copy; }
+            return d;
+        }
+
         template <class OBJ, class CONTAINER>
         CONTAINER IGeoObjectList<OBJ, CONTAINER>::findClosest(int number, const ICoordinateGeodetic &coordinate) const
         {
@@ -58,8 +122,43 @@ namespace BlackMisc
             {
                 return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
             });
-            closest.truncate(number);
+            Q_ASSERT_X(closest.size() <= number, Q_FUNC_INFO, "size exceeded");
             return closest;
+        }
+
+        template<class OBJ, class CONTAINER>
+        OBJ IGeoObjectList<OBJ, CONTAINER>::findClosestWithinRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
+        {
+            OBJ closest;
+            CLength distance = CLength::null();
+            for (const OBJ &obj : this->container())
+            {
+                const CLength d = coordinate.calculateGreatCircleDistance(obj);
+                if (d > range) { continue; }
+                if (distance.isNull() || distance > d)
+                {
+                    distance = d;
+                    closest = obj;
+                }
+            }
+            return closest;
+        }
+
+        template<class OBJ, class CONTAINER>
+        void IGeoObjectList<OBJ, CONTAINER>::sortByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate)
+        {
+            this->container().sort([ & ](const OBJ & a, const OBJ & b)
+            {
+                return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
+            });
+        }
+
+        template<class OBJ, class CONTAINER>
+        CONTAINER IGeoObjectList<OBJ, CONTAINER>::sortedByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate)
+        {
+            CONTAINER copy(this->container());
+            copy.sortByEuclideanDistanceSquared(coordinate);
+            return copy;
         }
 
         template <class OBJ, class CONTAINER>
@@ -111,7 +210,7 @@ namespace BlackMisc
             if (this->container().size() >= number) { return (this->container()); }
             CONTAINER closest(this->container());
             closest.partiallySortByDistanceToOwnAircraft(number);
-            closest.truncate(number);
+            Q_ASSERT_X(closest.size() <= number, Q_FUNC_INFO, "size exceeded");
             return closest;
         }
 
@@ -120,9 +219,10 @@ namespace BlackMisc
         //! \cond PRIVATE
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectList<BlackMisc::Geo::CCoordinateGeodetic, BlackMisc::Geo::CCoordinateGeodeticList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectList<BlackMisc::Simulation::XPlane::CNavDataReference, BlackMisc::Simulation::XPlane::CNavDataReferenceList>;
-
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;

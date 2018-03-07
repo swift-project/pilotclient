@@ -17,6 +17,7 @@ namespace BlackMisc
         void registerMetadata()
         {
             CCoordinateGeodetic::registerMetadata();
+            CCoordinateGeodeticList::registerMetadata();
             CLatitude::registerMetadata();
             CLongitude::registerMetadata();
             CElevationPlane::registerMetadata();

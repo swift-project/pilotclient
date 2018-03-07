@@ -12,9 +12,13 @@
 #ifndef BLACKMISC_GEO_GEOOBJECTLIST_H
 #define BLACKMISC_GEO_GEOOBJECTLIST_H
 
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/pq/length.h"
+
+#include <QList>
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -24,6 +28,8 @@ namespace BlackMisc
         class CAtcStationList;
         class CAirport;
         class CAirportList;
+        class CAircraftSituation;
+        class CAircraftSituationList;
     }
 
     namespace Simulation
@@ -41,19 +47,48 @@ namespace BlackMisc
     namespace Geo
     {
         class ICoordinateGeodetic;
+        class CCoordinateGeodetic;
+        class CCoordinateGeodeticList;
 
         //! List of objects with geo coordinates.
         template<class OBJ, class CONTAINER>
         class IGeoObjectList
         {
         public:
+            //! For statistics
+            using MinMaxAverageHeight = std::tuple<Aviation::CAltitude, Aviation::CAltitude, Aviation::CAltitude, int>;
+
             //! Find 0..n objects within range of given coordinate
-            //! \param coordinate    other position
-            //! \param range         within range of other position
-            CONTAINER findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
+            //! \param coordinate other position
+            //! \param range      within range of other position
+            CONTAINER findWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
+
+            //! Elements with geodetic height (only MSL)
+            CONTAINER findWithGeodeticMSLHeight() const;
+
+            //! Any object in range
+            bool containsObjectInRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
+
+            //! Find min/max/average height
+            MinMaxAverageHeight findMinMaxAverageHeight() const;
+
+            //! Remove outside range
+            int removeOutsideRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range);
+
+            //! Remove if there is no geodetic height
+            int removeWithoutGeodeticHeight();
 
             //! Find 0..n objects closest to the given coordinate.
-            CONTAINER findClosest(int number, const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
+            CONTAINER findClosest(int number, const ICoordinateGeodetic &coordinate) const;
+
+            //! Find closest within range to the given coordinate
+            OBJ findClosestWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
+
+            //! Sort by distance
+            void sortByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate);
+
+            //! Sorted by distance
+            CONTAINER sortedByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate);
 
         protected:
             //! Constructor
@@ -69,6 +104,8 @@ namespace BlackMisc
         //! \cond PRIVATE
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Geo::CCoordinateGeodetic, BlackMisc::Geo::CCoordinateGeodeticList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Simulation::XPlane::CNavDataReference, BlackMisc::Simulation::XPlane::CNavDataReferenceList>;
         //! \endcond
@@ -79,7 +116,7 @@ namespace BlackMisc
         {
         public:
             //! Calculate distances, then sort by range
-            void sortByRange(const BlackMisc::Geo::ICoordinateGeodetic &position, bool updateValues);
+            void sortByRange(const ICoordinateGeodetic &position, bool updateValues);
 
             //! If distance is already set, just sort
             void sortByDistanceToOwnAircraft();
@@ -91,10 +128,10 @@ namespace BlackMisc
             CONTAINER getClosestObjects(int number) const;
 
             //! Calculate distances, remove if outside range
-            void removeIfOutsideRange(const BlackMisc::Geo::ICoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &maxDistance, bool updateValues);
+            void removeIfOutsideRange(const ICoordinateGeodetic &position, const PhysicalQuantities::CLength &maxDistance, bool updateValues);
 
             //! Calculate distances
-            void calculcateAndUpdateRelativeDistanceAndBearing(const BlackMisc::Geo::ICoordinateGeodetic &position);
+            void calculcateAndUpdateRelativeDistanceAndBearing(const ICoordinateGeodetic &position);
 
         protected:
             //! Constructor

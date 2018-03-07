@@ -95,6 +95,9 @@ namespace BlackMisc
             //! Geodetic height null?
             bool isGeodeticHeightNull() const { return this->geodeticHeight().isNull(); }
 
+            //! Geodetic height not null and Aviation::CAltitude::MeanSeaLevel
+            bool hasMSLGeodeticHeight() const { return !this->geodeticHeight().isNull() && this->geodeticHeight().getReferenceDatum() == Aviation::CAltitude::MeanSeaLevel; }
+
             //! Is null, means vector x, y, z == 0
             //! \remark this is a default implementation, concrete implementations of ICoordinateGeodetic might override it
             virtual bool isNull() const { return this->normalVector().isNull(); }

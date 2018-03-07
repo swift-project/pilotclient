@@ -19,6 +19,7 @@ passedByValue:src/blackmisc/input/actionhotkeylist.h
 passedByValue:src/blackmisc/network/rawfsdmessagelist.cpp
 passedByValue:src/blackmisc/logcategorylist.h
 passedByValue:src/blackmisc/platformset.cpp
+passedByValue:src/blackmisc/geo/coordinategeodeticlist.cpp
 
 // Shared pointers should be passed by value
 passedByValue:src/blackmisc/lockfree.h
