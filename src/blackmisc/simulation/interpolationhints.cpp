@@ -30,10 +30,41 @@ namespace BlackMisc
             m_isVtol(isVtolAircraft), m_hasParts(hasParts), m_logInterpolation(log)
         { }
 
+        const CElevationPlane &CInterpolationHints::getElevationPlane(ICoordinateGeodetic &reference, const CLength &radius, SituationLog *log) const
+        {
+            if (m_elevationPlane.isNull())
+            {
+                if (log)
+                {
+                    static const QString lm("By provider (no valid plane)");
+                    log->elevationInfo = lm;
+                }
+                return CElevationPlane::null();
+            }
+            const CLength d = reference.calculateGreatCircleDistance(m_elevationPlane);
+            if (d <= radius)
+            {
+                if (log)
+                {
+                    static const QString lm("Using elevation plane, distance: %1");
+                    log->elevationInfo = lm.arg(d.valueRoundedWithUnit(CLengthUnit::m(), 1));
+                }
+                return m_elevationPlane;
+            }
+            else
+            {
+                if (log)
+                {
+                    static const QString lm("Invalid elevation plane, distance: %1");
+                    log->elevationInfo = lm.arg(d.valueRoundedWithUnit(CLengthUnit::m(), 1));
+                }
+                return CElevationPlane::null();
+            }
+        }
+
         CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, bool useProvider, bool forceProvider, SituationLog *log) const
         {
-            static const CLength null = CLength(0, CLengthUnit::nullUnit());
-            return this->getGroundElevation(situation, null, useProvider, forceProvider, log);
+            return this->getGroundElevation(situation, CLength::null(), useProvider, forceProvider, log);
         }
 
         CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, const CLength &validRadius, bool useProvider, bool forceProvider, SituationLog *log) const
@@ -46,6 +77,7 @@ namespace BlackMisc
                     static const QString lm("By provider (forced)");
                     log->elevationInfo = lm;
                 }
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Elevation provider must no longer be used");
                 return m_elevationProvider(situation);
             }
 
@@ -80,6 +112,16 @@ namespace BlackMisc
             return CAltitude::null();
         }
 
+        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, const CLength &validRadius, SituationLog *log) const
+        {
+            return this->getGroundElevation(situation, validRadius, false, false, log);
+        }
+
+        CAltitude CInterpolationHints::getGroundElevation(const CAircraftSituation &situation, SituationLog *log) const
+        {
+            return this->getGroundElevation(situation, CLength::null(), log);
+        }
+
         void CInterpolationHints::resetElevationPlane()
         {
             m_elevationPlane = CElevationPlane();
@@ -87,7 +129,7 @@ namespace BlackMisc
 
         bool CInterpolationHints::isWithinRange(const Geo::ICoordinateGeodetic &coordinate) const
         {
-            if (m_elevationPlane.isNull()) return false;
+            if (m_elevationPlane.isNull()) { return false; }
             return m_elevationPlane.isWithinRange(coordinate);
         }
 

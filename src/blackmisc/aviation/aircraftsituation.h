@@ -16,6 +16,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
@@ -39,6 +40,9 @@ namespace BlackMisc
     namespace Geo { class CElevationPlane; }
     namespace Aviation
     {
+        class CAircraftParts;
+        class CAircraftPartsList;
+
         //! Value object encapsulating information of an aircraft's situation
         class BLACKMISC_EXPORT CAircraftSituation :
             public CValueObject<CAircraftSituation>,
@@ -60,7 +64,7 @@ namespace BlackMisc
                 IndexOnGroundReliabilityString,
                 IndexPitch,
                 IndexGroundSpeed,
-                IndexGroundElevation,
+                IndexGroundElevationPlane,
                 IndexCallsign
             };
 
@@ -82,9 +86,9 @@ namespace BlackMisc
                 OnGroundByElevation,
                 OnGroundByGuessing,       //!< weakest
                 // received situation
-                InFromNetworkSituation,   //!< received from network
-                InFromParts,
-                InNoGroundInfo,
+                InFromNetwork,            //!< received from network
+                InFromParts,              //!< set from aircraft parts
+                InNoGroundInfo,           //!< not know
                 // send information
                 OutOnGroundOwnAircraft    //!< sending on ground
             };
@@ -101,7 +105,7 @@ namespace BlackMisc
                                const PhysicalQuantities::CAngle &pitch = {},
                                const PhysicalQuantities::CAngle &bank = {},
                                const PhysicalQuantities::CSpeed &gs = {},
-                               const CAltitude &groundElevation = { 0, nullptr });
+                               const Geo::CElevationPlane &groundElevation = {});
 
             //! Comprehensive constructor
             CAircraftSituation(const CCallsign &correspondingCallsign,
@@ -110,7 +114,7 @@ namespace BlackMisc
                                const PhysicalQuantities::CAngle &pitch = {},
                                const PhysicalQuantities::CAngle &bank = {},
                                const PhysicalQuantities::CSpeed &gs = {},
-                               const CAltitude &groundElevation = { 0, nullptr });
+                               const Geo::CElevationPlane &groundElevation = {});
 
             //! \copydoc Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
@@ -152,10 +156,13 @@ namespace BlackMisc
             bool isOnGroundInfoAvailable() const;
 
             //! Set on ground
+            void setOnGround(bool onGround) { this->setOnGround(onGround ? OnGround : NotOnGround); }
+
+            //! Set on ground
             void setOnGround(CAircraftSituation::IsOnGround onGround) { m_isOnGround = static_cast<int>(onGround); }
 
             //! Set on ground
-            void setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails reliability);
+            void setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details);
 
             //! On ground reliability
             OnGroundDetails getOnGroundDetails() const { return static_cast<CAircraftSituation::OnGroundDetails>(m_onGroundDetails); }
@@ -163,8 +170,8 @@ namespace BlackMisc
             //! On ground reliability as string
             const QString &getOnDetailsAsString() const;
 
-            //! Reliability
-            void setOnGroundReliabiliy(CAircraftSituation::OnGroundDetails onGroundReliability) { m_onGroundDetails = static_cast<int>(onGroundReliability); }
+            //! On ground details
+            void setOnGroundDetails(CAircraftSituation::OnGroundDetails details) { m_onGroundDetails = static_cast<int>(details); }
 
             //! On ground info as string
             QString getOnGroundInfo() const;
@@ -179,19 +186,29 @@ namespace BlackMisc
             virtual std::array<double, 3> normalVectorDouble() const override { return m_position.normalVectorDouble(); }
 
             //! Elevation of the ground directly beneath
-            const CAltitude &getGroundElevation() const { return m_groundElevation; }
+            const CAltitude &getGroundElevation() const { return m_groundElevationPlane.getAltitude(); }
+
+            //! Elevation of the ground directly beneath
+            const Geo::CElevationPlane &getGroundElevationPlane() const { return m_groundElevationPlane; }
 
             //! Is ground elevation value available
             bool hasGroundElevation() const;
 
+            //! Has inbound ground information
+            bool hasInboundGroundInformation() const;
+
+            //! Elevation of the ground directly beneath at the given situation
+            void setGroundElevation(const Aviation::CAltitude &altitude);
+
             //! Elevation of the ground directly beneath
-            void setGroundElevation(const CAltitude &elevation) { m_groundElevation = elevation; }
+            void setGroundElevation(const Geo::CElevationPlane &elevationPlane) { m_groundElevationPlane = elevationPlane; }
 
             //! Set elevation of the ground directly beneath, but checked
-            bool setGroundElevationChecked(const CAltitude &elevation, bool ignoreNullValues = true, bool overrideExisting = true);
+            //! \remark override if better
+            bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane);
 
-            //! Set elevation of the ground directly beneath, but checked
-            bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, bool ignoreNullValues = true, bool overrideExisting = true);
+            //! Distance of ground elevation
+            const PhysicalQuantities::CLength &getGroundElevationDistance() const;
 
             //! Height above ground.
             PhysicalQuantities::CLength getHeightAboveGround() const;
@@ -206,7 +223,7 @@ namespace BlackMisc
             const CAltitude &getAltitude() const { return m_position.geodeticHeight(); }
 
             //! Get altitude under consideration of ground elevation
-            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = {}, bool *corrected = nullptr) const;
+            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = {}, bool forceToGround = true, bool *corrected = nullptr) const;
 
             //! Set altitude
             void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
@@ -250,6 +267,20 @@ namespace BlackMisc
             //! Set flag indicating this is an interim position update
             void setInterimFlag(bool flag) { m_isInterim = flag; }
 
+            //! Transfer ground flag from parts
+            //! \param parts containing the gnd flag
+            //! \param alwaysSetDetails mark as CAircraftSituation::InFromParts regardless of parts
+            //! \param timeDeviationFactor 0..1 (of offset time) small deviations from time are accepted
+            //! \param differenceMs returns time difference
+            bool adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
+
+            //! Transfer ground flag from parts list
+            //! \param partsList containing the gnd flag
+            //! \param alwaysSetDetails mark as CAircraftSituation::InFromParts regardless of parts
+            //! \param timeDeviationFactor 0..1 (of offset time) small deviations from time are accepted
+            //! \param differenceMs returns time difference
+            bool adjustGroundFlag(const CAircraftPartsList &partsList, double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
+
             //! Get flag indicating this is an interim position update
             bool isInterim() const { return m_isInterim; }
 
@@ -270,7 +301,7 @@ namespace BlackMisc
             PhysicalQuantities::CAngle m_pitch;
             PhysicalQuantities::CAngle m_bank;
             PhysicalQuantities::CSpeed m_groundSpeed;
-            CAltitude m_groundElevation{ 0, CAltitude::MeanSeaLevel, PhysicalQuantities::CLengthUnit::nullUnit() };
+            Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
             int m_isOnGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSet);
             bool m_isInterim = false;
@@ -284,7 +315,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(pitch),
                 BLACK_METAMEMBER(bank),
                 BLACK_METAMEMBER(groundSpeed),
-                BLACK_METAMEMBER(groundElevation),
+                BLACK_METAMEMBER(groundElevationPlane),
                 BLACK_METAMEMBER(isOnGround),
                 BLACK_METAMEMBER(onGroundDetails),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),

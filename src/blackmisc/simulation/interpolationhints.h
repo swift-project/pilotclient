@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Get elevation plane
             const Geo::CElevationPlane &getElevationPlane() const { return m_elevationPlane;}
 
+            //! Get elevation plane
+            const Geo::CElevationPlane &getElevationPlane(Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &radius, SituationLog *log = nullptr) const;
+
             //! Set elevation
             //! \remark used to store a ground elevation and use it as well for nearby situatons
             void setElevationPlane(const Geo::CElevationPlane &elevation) { m_elevationPlane = elevation; }
@@ -55,6 +58,8 @@ namespace BlackMisc
             //! Elevation plane set to null
             void resetElevationPlane();
 
+        private:
+            //! \todo KB 2018-03 ground flag refactoring
             //! Get elevation from CInterpolationHints::getElevationProvider or CInterpolationHints::getElevation
             //! \remark avoid unnecessary calls on XPlane (calling elevation provider)
             //! \param situation where to check
@@ -63,12 +68,23 @@ namespace BlackMisc
             //! \param log optional chance to write info about elevation
             //! \see setElevationProvider
             //! \see setElevationPlane
+            //! \deprecated
             Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, bool useProvider, bool forceProvider = false, SituationLog *log = nullptr) const;
 
             //! Get elevation from CInterpolationHints::getElevationProvider or CInterpolationHints::getElevation
             //! \remark if validRadius is >= Geo::CElevationPlane::radius use validRadius
+            //! \deprecated
             Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, const PhysicalQuantities::CLength &validRadius, bool useProvider, bool forceProvider = false, SituationLog *log = nullptr) const;
 
+            //! Get ground elevation by using the elevation plane
+            //! \deprecated
+            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, const PhysicalQuantities::CLength &validRadius, SituationLog *log = nullptr) const;
+
+            //! Get ground elevation by using the elevation plane
+            //! \deprecated
+            Aviation::CAltitude getGroundElevation(const Aviation::CAircraftSituation &situation, SituationLog *log = nullptr) const;
+
+        public:
             //! Check if elevation is within radius and can be used
             bool isWithinRange(const Geo::ICoordinateGeodetic &coordinate) const;
 
@@ -110,12 +126,14 @@ namespace BlackMisc
             using ElevationProvider = std::function<Aviation::CAltitude(const Aviation::CAircraftSituation &)>;
 
             //! Has elevation provider?
+            //! \deprecated
             bool hasElevationProvider() const;
 
             //! Set function object that can obtain ground elevation
             //! \remark either a provider can be used or an elevation plan can be set
             //! \see setElevationPlane
             //! \see getGroundElevation
+            //! \deprecated
             void setElevationProvider(const ElevationProvider &ep) { m_elevationProvider = ep; }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex

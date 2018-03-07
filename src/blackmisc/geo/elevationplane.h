@@ -12,14 +12,15 @@
 #ifndef BLACKMISC_GEO_ELEVATIONPLANE_H
 #define BLACKMISC_GEO_ELEVATIONPLANE_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {
     namespace Geo
     {
         //! Plane of same elevation, can be a single point or larger area (e.g. airport)
+        //! \remark 100km/h 1sec => 28m
         class BLACKMISC_EXPORT CElevationPlane :
             public CValueObject<CElevationPlane, CCoordinateGeodetic>
         {
@@ -73,6 +74,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
+            //! Compare by index
+            int comparePropertyByIndex(const CPropertyIndex &index, const CElevationPlane &elevationPlane) const;
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -84,6 +88,9 @@ namespace BlackMisc
 
             //! Radius for major airport
             static const PhysicalQuantities::CLength &majorAirportRadius();
+
+            //! NULL plane
+            static const CElevationPlane &null();
 
         private:
             PhysicalQuantities::CLength m_radius { 0, nullptr }; //!< elevation is valid in radius

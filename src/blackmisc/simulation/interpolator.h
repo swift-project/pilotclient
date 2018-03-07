@@ -112,9 +112,6 @@ namespace BlackMisc
             //! Constructor
             CInterpolator(const QString &objectName, const Aviation::CCallsign &callsign, QObject *parent);
 
-            //! Set the ground elevation from hints
-            static void setGroundElevationFromHint(const CInterpolationHints &hints, Aviation::CAircraftSituation &situation, bool override = true);
-
             //! Set on ground flag
             static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, Aviation::CAircraftSituation &situation);
 

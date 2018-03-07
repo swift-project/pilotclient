@@ -89,13 +89,14 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexRadius:
-                m_radius.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            default:
-                CCoordinateGeodetic::setPropertyByIndex(index, variant);
-                break;
+            case IndexRadius: m_radius.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            default: CCoordinateGeodetic::setPropertyByIndex(index, variant); break;
             }
+        }
+
+        int CElevationPlane::comparePropertyByIndex(const CPropertyIndex &index, const CElevationPlane &elevationPlane) const
+        {
+            return this->getAltitude().comparePropertyByIndex(index, elevationPlane.getAltitude());
         }
 
         // 100km/h 27,8m/s
@@ -117,6 +118,12 @@ namespace BlackMisc
         {
             static const CLength l(1000.0, CLengthUnit::m());
             return l;
+        }
+
+        const CElevationPlane &CElevationPlane::null()
+        {
+            static const CElevationPlane p;
+            return p;
         }
     } // namespace
 } // namespace

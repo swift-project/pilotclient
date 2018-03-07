@@ -120,8 +120,8 @@ namespace BlackMisc
             // do not call for XP (lazy init)
             if (!hints.hasElevationProvider())
             {
-                CInterpolator::setGroundElevationFromHint(hints, oldSituation, false);
-                CInterpolator::setGroundElevationFromHint(hints, newSituation, false);
+                oldSituation.setGroundElevationChecked(hints.getElevationPlane());
+                newSituation.setGroundElevationChecked(hints.getElevationPlane());
             }
 
             CAircraftSituation currentSituation(oldSituation); // also sets ground elevation if available

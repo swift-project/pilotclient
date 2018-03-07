@@ -74,12 +74,14 @@ namespace BlackMisc
                 currentSituation.setCallsign(m_callsign);
             }
 
+            //! \todo KB 2018-03 ground flag refactoring
             // Update current position by hints' elevation
             // * for XP provided by hints.getElevationProvider at current position
             // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
             // * As XP uses lazy init we will call getGroundElevation only when needed
             // * default here via getElevationPlane
-            CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, currentSituation.getDistancePerTime(1000), true, false, logP));
+            // CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, currentSituation.getDistancePerTime(1000), true, false, logP));
+            const CElevationPlane currentGroundElevation = hints.getElevationPlane(currentSituation, currentSituation.getDistancePerTime(1000), logP);
             currentSituation.setGroundElevation(currentGroundElevation); // set as default
 
             // data, split situations by time
@@ -408,15 +410,6 @@ namespace BlackMisc
         int CInterpolator<Derived>::maxParts() const
         {
             return IRemoteAircraftProvider::MaxSituationsPerCallsign;
-        }
-
-        template <typename Derived>
-        void CInterpolator<Derived>::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation, bool override)
-        {
-            if (!override && situation.hasGroundElevation()) { return; }
-            const CAltitude elevation = hints.getGroundElevation(situation, false);
-            if (elevation.isNull()) { return; }
-            situation.setGroundElevation(elevation);
         }
 
         template <typename Derived>

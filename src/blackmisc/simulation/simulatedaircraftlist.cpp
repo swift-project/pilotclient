@@ -20,8 +20,8 @@
 #include <QString>
 #include <tuple>
 
-using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 
@@ -160,13 +160,13 @@ namespace BlackMisc
             return c;
         }
 
-        int CSimulatedAircraftList::setGroundElevation(const CCallsign &callsign, const CAltitude &elevation, bool onlyFirst)
+        int CSimulatedAircraftList::setGroundElevationChecked(const CCallsign &callsign, const CElevationPlane &elevation, bool onlyFirst)
         {
             int c = 0;
             for (CSimulatedAircraft &aircraft : (*this))
             {
                 if (aircraft.getCallsign() != callsign) { continue; }
-                aircraft.setGroundElevation(elevation);
+                aircraft.setGroundElevationChecked(elevation);
                 c++;
                 if (onlyFirst) break;
             }
@@ -227,7 +227,7 @@ namespace BlackMisc
             return c;
         }
 
-        int CSimulatedAircraftList::countAircraftPartsSyncronized() const
+        int CSimulatedAircraftList::countAircraftPartsSynchronized() const
         {
             int c = 0;
             for (const CSimulatedAircraft &aircraft : (*this))

@@ -12,16 +12,15 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 #define BLACKMISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/collection.h"
 #include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/variant.h"
-
 #include <QMetaType>
 
 namespace BlackMisc
@@ -92,7 +91,7 @@ namespace BlackMisc
             int setAircraftSituation(const Aviation::CCallsign &callsign, const Aviation::CAircraftSituation &situation, bool onlyFirst = true);
 
             //! Set ground elevation
-            int setGroundElevation(const Aviation::CCallsign &callsign, const Aviation::CAltitude &elevation, bool onlyFirst = true);
+            int setGroundElevationChecked(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, bool onlyFirst = true);
 
             //! Enabled?
             bool isEnabled(const Aviation::CCallsign &callsign) const;
@@ -110,7 +109,7 @@ namespace BlackMisc
             int countRendered() const;
 
             //! Number of aircraft with parts
-            int countAircraftPartsSyncronized() const;
+            int countAircraftPartsSynchronized() const;
         };
     } //namespace
 } // namespace

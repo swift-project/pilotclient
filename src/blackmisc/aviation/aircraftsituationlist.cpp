@@ -30,29 +30,52 @@ namespace BlackMisc
             CSequence<CAircraftSituation>(il)
         { }
 
-        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, bool ignoreNullValues, bool overrideExisting)
+        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, qint64 newerThanAdjustedMs)
         {
-            if (ignoreNullValues && elevationPlane.isNull()) { return 0; }
+            if (elevationPlane.isNull()) { return 0; }
             int c = 0;
             for (CAircraftSituation &s : *this)
             {
-                const bool set = s.setGroundElevationChecked(elevationPlane, ignoreNullValues, overrideExisting);
+                if (newerThanAdjustedMs >= 0 && s.getAdjustedMSecsSinceEpoch() <= newerThanAdjustedMs) { continue; }
+                const bool set = s.setGroundElevationChecked(elevationPlane);
                 if (set) { c++; }
             }
             return c;
         }
 
-        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, qint64 newerThanAdjustedMs, bool ignoreNullValues, bool overrideExisting)
+        int CAircraftSituationList::adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor)
         {
-            if (ignoreNullValues && elevationPlane.isNull()) { return 0; }
             int c = 0;
-            for (CAircraftSituation &s : *this)
+            for (CAircraftSituation &situation : *this)
             {
-                if (s.getAdjustedMSecsSinceEpoch() <= newerThanAdjustedMs) { continue; }
-                const bool set = s.setGroundElevationChecked(elevationPlane, ignoreNullValues, overrideExisting);
-                if (set) { c++; }
+                if (situation.adjustGroundFlag(parts, timeDeviationFactor)) { c++; };
             }
             return c;
+        }
+
+        int CAircraftSituationList::extrapolateGroundFlag()
+        {
+            if (this->isEmpty()) { return 0; }
+            CAircraftSituationList withInfo = this->findByInboundGroundInformation(true);
+            withInfo.sortLatestFirst();
+            if (withInfo.isEmpty()) { return 0; }
+            const CAircraftSituation latest = withInfo.front();
+
+            int c = 0;
+            for (CAircraftSituation &situation : *this)
+            {
+                if (situation.isNewerThanAdjusted(latest))
+                {
+                    situation.setOnGround(latest.isOnGround(), latest.getOnGroundDetails());
+                    c++;
+                }
+            }
+            return c;
+        }
+
+        CAircraftSituationList CAircraftSituationList::findByInboundGroundInformation(bool hasGroundInfo) const
+        {
+            return this->findBy(&CAircraftSituation::hasInboundGroundInformation, hasGroundInfo);
         }
     } // namespace
 } // namespace

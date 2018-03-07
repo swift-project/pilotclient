@@ -274,7 +274,7 @@ namespace BlackCore
     bool CAirspaceMonitor::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
     {
         QWriteLocker l(&m_lockAircraft);
-        const int c = m_aircraftInRange.setGroundElevation(callsign, elevation.geodeticHeight());
+        const int c = m_aircraftInRange.setGroundElevationChecked(callsign, elevation);
         return c > 0;
     }
 
@@ -1230,7 +1230,7 @@ namespace BlackCore
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
 
         // update
-        const CPropertyIndexVariantMap vm( {CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, CVariant::from(frequency));
+        const CPropertyIndexVariantMap vm({CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, CVariant::from(frequency));
         this->updateAircraftInRange(callsign, vm);
     }
 

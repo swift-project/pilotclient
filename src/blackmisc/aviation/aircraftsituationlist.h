@@ -14,6 +14,7 @@
 
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
+#include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
@@ -28,11 +29,12 @@ namespace BlackMisc
     namespace Geo { class CElevationPlane; }
     namespace Aviation
     {
-        class CAircraftSituation;
+        class CAircraftParts;
 
         //! Value object encapsulating a list of aircraft situations
         class BLACKMISC_EXPORT CAircraftSituationList :
             public CSequence<CAircraftSituation>,
+            public Geo::IGeoObjectList<CAircraftSituation, CAircraftSituationList>,
             public ITimestampWithOffsetObjectList<CAircraftSituation, CAircraftSituationList>,
             public ICallsignObjectList<CAircraftSituation, CAircraftSituationList>,
             public Mixin::MetaType<CAircraftSituationList>
@@ -50,10 +52,16 @@ namespace BlackMisc
             CAircraftSituationList(std::initializer_list<CAircraftSituation> il);
 
             //! Set ground elevation from elevation plane
-            int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, bool ignoreNullValues = true, bool overrideExisting = true);
+            int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, qint64 newerThanAdjustedMs = -1);
 
-            //! Set ground elevation from elevation plane
-            int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, qint64 newerThanAdjustedMs, bool ignoreNullValues = true, bool overrideExisting = true);
+            //! Adjust flag by using CAircraftSituation::adjustGroundFlag
+            int adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor = 0.1);
+
+            //! Extrapolate ground flag into the future
+            int extrapolateGroundFlag();
+
+            //! Find if having inbound information
+            CAircraftSituationList findByInboundGroundInformation(bool hasGroundInfo) const;
         };
     } // namespace
 } // namespace
