@@ -1027,6 +1027,7 @@ namespace BlackSimPlugin
 
             // set it in the remote aircraft provider
             this->updateAircraftGroundElevation(cs, elevation);
+            this->rememberGroundElevation(elevation);
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

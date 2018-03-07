@@ -25,6 +25,13 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/simulationenvironmentprovider.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -40,12 +47,6 @@
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/angle.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
 
 namespace BlackMisc
 {
@@ -69,7 +70,8 @@ namespace BlackCore
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
         public BlackMisc::Simulation::IRemoteAircraftProvider, // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
+        public BlackMisc::Simulation::COwnAircraftAware,       // used to obtain in memory information about own aircraft
+        public BlackMisc::Simulation::CSimulationEnvironmentAware, // elevation info etc.
         public BlackMisc::CIdentifiable
     {
         Q_OBJECT

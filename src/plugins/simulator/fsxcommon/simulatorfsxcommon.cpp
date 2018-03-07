@@ -496,6 +496,9 @@ namespace BlackSimPlugin
 
             // set it in the remote aircraft provider
             this->updateAircraftGroundElevation(simObject.getCallsign(), elevation);
+
+            // and in elevation provider
+            this->rememberGroundElevation(elevation);
         }
 
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
