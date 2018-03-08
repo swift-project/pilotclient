@@ -373,13 +373,13 @@ namespace BlackCore
         CClientList CContextNetwork::getOtherClients() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_airspace->getOtherClients();
+            return m_airspace->getClients();
         }
 
         CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignSet &callsigns) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            return m_airspace->getOtherClientsForCallsigns(callsigns);
+            return m_airspace->getClientsForCallsigns(callsigns);
         }
 
         CServerList CContextNetwork::getVatsimFsdServers() const

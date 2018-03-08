@@ -105,7 +105,7 @@ namespace BlackCore
 
         if (this->supportsVatsimDataFile())
         {
-            connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::onReceivedDataFile);
+            connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::onReceivedVatsimDataFile);
         }
 
         // Force snapshot in the main event loop
@@ -400,35 +400,11 @@ namespace BlackCore
         return users;
     }
 
-    CClientList CAirspaceMonitor::getOtherClientsForCallsigns(const CCallsignSet &callsigns) const
-    {
-        CClientList clients;
-        if (callsigns.isEmpty()) { return clients; }
-        clients.push_back(this->getOtherClients().findByCallsigns(callsigns));
-        return clients;
-    }
-
-    CClient CAirspaceMonitor::getOtherClientOrDefaultForCallsign(const CCallsign &callsign) const
-    {
-        return this->getOtherClients().findFirstByCallsign(callsign);
-    }
-
-    bool CAirspaceMonitor::hasClientInfo(const CCallsign &callsign) const
-    {
-        return this->getOtherClients().containsCallsign(callsign);
-    }
-
     bool CAirspaceMonitor::isAircraftInRange(const CCallsign &callsign) const
     {
         if (callsign.isEmpty()) { return false; }
         QReadLocker l(&m_lockAircraft);
         return m_aircraftInRange.containsCallsign(callsign);
-    }
-
-    CClientList CAirspaceMonitor::getOtherClients() const
-    {
-        QReadLocker l(&m_lockClient);
-        return m_otherClients;
     }
 
     CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem)
@@ -532,7 +508,7 @@ namespace BlackCore
         m_tempFsInnPackets.clear();
         this->removeAllOnlineAtcStations();
         this->removeAllAircraft();
-        this->removeAllOtherClients();
+        this->clearClients();
     }
 
     void CAirspaceMonitor::gracefulShutdown()
@@ -568,7 +544,7 @@ namespace BlackCore
         this->updateOrAddClient(callsign, vm, false);
     }
 
-    void CAirspaceMonitor::onCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags)
+    void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, quint32 flags)
     {
         if (!this->isConnected() || callsign.isEmpty()) { return; }
         CPropertyIndexVariantMap capabilities;
@@ -623,12 +599,6 @@ namespace BlackCore
         m_flightPlanCache.clear();
     }
 
-    void CAirspaceMonitor::removeAllOtherClients()
-    {
-        QWriteLocker l1(&m_lockClient);
-        m_otherClients.clear();
-    }
-
     void CAirspaceMonitor::removeFromAircraftCachesAndLogs(const CCallsign &callsign)
     {
         if (callsign.isEmpty()) { return; }
@@ -666,10 +636,10 @@ namespace BlackCore
         emit this->changedAtcStationsBooked(); // treat as stations were changed
     }
 
-    void CAirspaceMonitor::onReceivedDataFile()
+    void CAirspaceMonitor::onReceivedVatsimDataFile()
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        CClientList clients(this->getOtherClients()); // copy
+        CClientList clients(this->getClients()); // copy
         bool changed = false;
         for (auto client = clients.begin(); client != clients.end(); ++client)
         {
@@ -680,8 +650,7 @@ namespace BlackCore
             client->setVoiceCapabilities(vc);
         }
         if (!changed) { return; }
-        QWriteLocker l(&m_lockClient);
-        m_otherClients = clients;
+        this->setClients(clients);
     }
 
     void CAirspaceMonitor::sendReadyForModelMatching(const CCallsign &callsign, int trial)
@@ -769,8 +738,7 @@ namespace BlackCore
     void CAirspaceMonitor::onAtcControllerDisconnected(const CCallsign &callsign)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-
-        m_otherClients.removeByCallsign(callsign);
+        this->removeClient(callsign);
         if (m_atcStationsOnline.containsCallsign(callsign))
         {
             const CAtcStation removedStation = m_atcStationsOnline.findFirstByCallsign(callsign);
@@ -889,7 +857,7 @@ namespace BlackCore
                                             arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
                                             getLogCategories());
 
-        const CClient client = this->getOtherClientOrDefaultForCallsign(callsign);
+        const CClient client = this->getClientOrDefaultForCallsign(callsign);
         this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
         this->addReverseLookupMessages(callsign, reverseLookupMessages);
         this->sendReadyForModelMatching(callsign); // ICAO codes received
@@ -1020,34 +988,6 @@ namespace BlackCore
         if (c > 0)
         {
             emit this->changedAircraftInRange();
-        }
-        return c;
-    }
-
-    bool CAirspaceMonitor::addNewClient(const CClient &client)
-    {
-        const CCallsign callsign = client.getCallsign();
-        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "invalid callsign");
-        if (this->hasClientInfo(callsign)) { return false; }
-        QWriteLocker l(&m_lockClient);
-        m_otherClients.push_back(client);
-        return true;
-    }
-
-    int CAirspaceMonitor::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
-    {
-        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
-        int c = 0;
-        if (!this->hasClientInfo(callsign))
-        {
-            CClient client(callsign);
-            c = client.apply(vm).size();
-            this->addNewClient(client);
-        }
-        else
-        {
-            QWriteLocker l(&m_lockClient);
-            c = m_otherClients.applyIfCallsign(callsign, vm, skipEqualValues);
         }
         return c;
     }
@@ -1213,8 +1153,8 @@ namespace BlackCore
 
         { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftSupportingParts.remove(callsign); }
         { QWriteLocker l2(&m_lockSituations); m_situationsByCallsign.remove(callsign); }
-        { QWriteLocker l3(&m_lockClient); m_otherClients.removeByCallsign(callsign); }
         { QWriteLocker l4(&m_lockPartsHistory); m_aircraftPartsHistory.remove(callsign); }
+        this->removeClient(callsign);
 
         bool removedCallsign = false;
         {

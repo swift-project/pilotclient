@@ -39,14 +39,14 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/clientprovider.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/angle.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/identifier.h"
 
 namespace BlackMisc
 {
@@ -69,12 +69,14 @@ namespace BlackCore
     //! Central instance of data for \sa IRemoteAircraftProvider.
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
+        public BlackMisc::Network::IClientProvider,            // those data will be provided from the class CAirspaceMonitor
         public BlackMisc::Simulation::IRemoteAircraftProvider, // those data will be provided from the class CAirspaceMonitor
         public BlackMisc::Simulation::COwnAircraftAware,       // used to obtain in memory information about own aircraft
         public BlackMisc::Simulation::CSimulationEnvironmentAware, // elevation info etc.
         public BlackMisc::CIdentifiable
     {
         Q_OBJECT
+        Q_INTERFACES(BlackMisc::Network::IClientProvider)
         Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
 
     public:
@@ -134,22 +136,6 @@ namespace BlackCore
         //! \remarks returns a value only if the flight plan is already cached or can be obtained from VATSIM reader
         //! \threadsafe
         BlackMisc::Aviation::CFlightPlanRemarks tryToGetFlightPlanRemarks(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-        //! Returns this list of other clients we know about
-        //! \threadsafe
-        BlackMisc::Network::CClientList getOtherClients() const;
-
-        //! Returns a list of other clients corresponding to the given callsigns
-        //! \threadsafe
-        BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
-
-        //! Other client for the given callsigns
-        //! \threadsafe
-        BlackMisc::Network::CClient getOtherClientOrDefaultForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-        //! Client info for given callsign?
-        //! \threadsafe
-        bool hasClientInfo(const BlackMisc::Aviation::CCallsign &callsign) const;
 
         //! Returns the current online ATC stations (consolidated with booked stations)
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
@@ -245,7 +231,6 @@ namespace BlackCore
 
         BlackMisc::Aviation::CAtcStationList          m_atcStationsOnline; //!< online ATC stations
         BlackMisc::Aviation::CAtcStationList          m_atcStationsBooked; //!< booked ATC stations
-        BlackMisc::Network::CClientList               m_otherClients;      //!< client informatiom, thread safe access required
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftInRange;   //!< aircraft, thread safe access required
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_reverseLookupMessages;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_aircraftPartsHistory;
@@ -268,7 +253,6 @@ namespace BlackCore
         mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign
         mutable QReadWriteLock m_lockParts;        //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
         mutable QReadWriteLock m_lockAircraft;     //!< lock aircraft: m_aircraftInRange
-        mutable QReadWriteLock m_lockClient;       //!< lock clients: m_otherClients
         mutable QReadWriteLock m_lockMessages;     //!< lock for messages
         mutable QReadWriteLock m_lockPartsHistory; //!< lock for aircraft parts
 
@@ -278,10 +262,6 @@ namespace BlackCore
         //! Remove all aircraft in range
         //! \threadsafe
         void removeAllAircraft();
-
-        //! Remove all other clients
-        //! \threadsafe
-        void removeAllOtherClients();
 
         //! Remove data from caches and logs
         //! \threadsafe
@@ -332,14 +312,6 @@ namespace BlackCore
         //! Update aircraft
         //! \threadsafe
         int updateAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
-
-        //! Add new client if not yet existing
-        //! \threadsafe
-        bool addNewClient(const BlackMisc::Network::CClient &client);
-
-        //! Update client by callsign
-        //! \threadsafe
-        int updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
 
         //! Update online stations by callsign
         int updateOnlineStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
@@ -397,7 +369,7 @@ namespace BlackCore
         void onFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
         void onReceivedAtcBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
         void onReadUnchangedAtcBookings();
-        void onReceivedDataFile();
+        void onReceivedVatsimDataFile();
         void onAircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset);
         void onAircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
         void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
