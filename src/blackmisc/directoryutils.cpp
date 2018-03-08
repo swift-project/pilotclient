@@ -9,9 +9,9 @@
 
 //! \cond PRIVATE
 
-#include "blackmisc/directoryutils.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/range.h"
+#include "directoryutils.h"
+#include "fileutils.h"
+#include "range.h"
 #include "blackconfig/buildconfig.h"
 #include <QCoreApplication>
 #include <QDir>
@@ -416,7 +416,7 @@ namespace BlackMisc
     {
         if (testDir.isEmpty()) { return false; }
         const QDir dir(testDir);
-        if (!dir.exists()) { return false; }
+        if (!CDirectoryUtils::isDirExisting(dir)) { return false; }
         return !dir.isEmpty();
     }
 
@@ -436,6 +436,33 @@ namespace BlackMisc
             if (existsUnemptyDirectory(dir)) { dirs << dir; }
         }
         return dirs;
+    }
+
+    bool CDirectoryUtils::isDirExisting(const QString &path)
+    {
+        if (!CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            const QDir dir(path);
+            return dir.exists();
+        }
+
+        // Windows
+        if (!CFileUtils::isWindowsUncPath(path))
+        {
+            const QDir dir(path);
+            return dir.exists();
+        }
+        const QString machine(CFileUtils::windowsUncMachine(path));
+        if (!CFileUtils::canPingUncMachine(machine)) { return false; }
+
+        const QDir dir(path);
+        return dir.exists();
+    }
+
+    bool CDirectoryUtils::isDirExisting(const QDir &dir)
+    {
+        if (!CFileUtils::isWindowsUncPath(dir.absolutePath())) { return dir.exists(); }
+        return CDirectoryUtils::isDirExisting(dir.absolutePath());
     }
 
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)

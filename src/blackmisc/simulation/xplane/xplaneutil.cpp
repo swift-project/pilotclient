@@ -157,8 +157,8 @@ namespace BlackMisc
             QStringList CXPlaneUtil::pluginSubdirectories(const QString &pluginDir)
             {
                 const QString dirName = pluginDir.isEmpty() ? xplaneRootDir() : pluginDir;
+                if (!CDirectoryUtils::isDirExisting(dirName)) { return QStringList(); }
                 const QDir dir(dirName);
-                if (!dir.exists()) { return QStringList(); }
                 return dir.entryList(QDir::Dirs, QDir::Name | QDir::IgnoreCase);
             }
 
@@ -180,7 +180,7 @@ namespace BlackMisc
                 if (!rootDir.isEmpty())
                 {
                     const QString xswiftbusDir = CFileUtils::appendFilePathsAndFixUnc(CXPlaneUtil::pluginDirFromRootDir(xplaneRootDir), CXPlaneUtil::xswiftbusPathName());
-                    if (QDir(xswiftbusDir).exists())
+                    if (CDirectoryUtils::isDirExisting(xswiftbusDir))
                     {
                         return xswiftbusDir;
                     }
@@ -197,7 +197,7 @@ namespace BlackMisc
                 if (!rootDir.isEmpty())
                 {
                     const QString xswiftbusLegacy = CFileUtils::appendFilePathsAndFixUnc(xplaneRootDir, legacyPath);
-                    if (QDir(xswiftbusLegacy).exists())
+                    if (CDirectoryUtils::isDirExisting(xswiftbusLegacy))
                     {
                         return xswiftbusLegacy;
                     }

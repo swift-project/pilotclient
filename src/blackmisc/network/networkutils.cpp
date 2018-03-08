@@ -74,7 +74,14 @@ namespace BlackMisc
             }
             process.start();
             process.waitForFinished();
-            return process.exitCode() == 0;
+            const int rc = process.exitCode();
+            if (rc != 0) { return false; }
+
+            const QString std = process.readAllStandardOutput();
+            const QString err = process.readAllStandardError();
+            if (std.contains("unreachable", Qt::CaseInsensitive)) { return false; }
+            if (err.contains("unreachable", Qt::CaseInsensitive)) { return false; }
+            return true;
         }
 
         bool CNetworkUtils::canPing(const CUrl &url)
@@ -92,7 +99,7 @@ namespace BlackMisc
                 if (address.isNull()) { continue; }
                 if (address.protocol() == QAbstractSocket::IPv4Protocol)
                 {
-                    QString a = address.toString();
+                    const QString a = address.toString();
                     ips.append(a);
                 }
             }

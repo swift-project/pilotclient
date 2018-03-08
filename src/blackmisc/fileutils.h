@@ -147,6 +147,15 @@ namespace BlackMisc
         //! Fix UNC file paths
         static QStringList fixWindowsUncPaths(const QStringList &filePaths);
 
+        //! Windows UNC path?
+        static bool isWindowsUncPath(const QString &filePath);
+
+        //! Machine in Windows UNC path
+        static QString windowsUncMachine(const QString &filePath);
+
+        //! Can connect the UNC machine
+        static bool canPingUncMachine(const QString &machine);
+
         //! To Windows path using "\" delimiter
         static QString toWindowsLocalPath(const QString &path);
 

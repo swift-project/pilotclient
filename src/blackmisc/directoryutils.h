@@ -18,6 +18,7 @@
 #include <QSet>
 #include <QString>
 #include <QDateTime>
+#include <QDir>
 #include <QFileInfoList>
 
 namespace BlackMisc
@@ -143,6 +144,14 @@ namespace BlackMisc
 
         //! Get the existing directories
         static QStringList getExistingUnemptyDirectories(const QStringList &directories);
+
+        //! Directory existing? Also checking UNC paths upfront.
+        //! \remark Motivation: if an UNC cannot be accessed (e.g. machine is down) it can take very long before functions like QDir respond
+        //! \remark for non-UNC paths it is the same as the QDir checks
+        //! @{
+        static bool isDirExisting(const QString &path);
+        static bool isDirExisting(const QDir &dir);
+        //! @}
 
         //! Result of directory comparison
         struct DirComparison

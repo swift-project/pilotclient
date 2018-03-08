@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/math/mathutils.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/fileutils.h"
-#include "blackmisc/math/mathutils.h"
 #include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
@@ -21,10 +22,12 @@
 #include <QLockFile>
 #include <QTextStream>
 #include <QtGlobal>
+#include <QMap>
 #include <algorithm>
 
 using namespace BlackConfig;
 using namespace BlackMisc::Math;
+using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
@@ -381,6 +384,59 @@ namespace BlackMisc
             fixedPaths << fixWindowsUncPath(path);
         }
         return fixedPaths;
+    }
+
+    bool CFileUtils::isWindowsUncPath(const QString &filePath)
+    {
+        if (filePath.startsWith("//") || filePath.startsWith("\\\\")) { return true; }
+        if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; } // "/tmp" is valid on Unix/Mac
+
+        // Windows here
+        const QString fp = fixWindowsUncPath(filePath);
+        return (fp.startsWith("//") || fp.startsWith("\\\\"));
+    }
+
+    QString CFileUtils::windowsUncMachine(const QString &filePath)
+    {
+        if (!CFileUtils::isWindowsUncPath(filePath)) { return QStringLiteral(""); }
+        QString f = filePath;
+        f.replace("\\", "/");
+        f.replace("//", "");
+        if (f.startsWith("/")) { f = f.mid(1); }
+        const int i = f.indexOf('/');
+        if (i < 0) { return f; }
+        return f.left(i);
+    }
+
+    bool CFileUtils::canPingUncMachine(const QString &machine)
+    {
+        static QMap<QString, qint64> good;
+        static QMap<QString, qint64> bad;
+
+        if (machine.isEmpty()) { return false; }
+        const QString m = machine.toLower();
+        if (good.contains(m)) { return true; } // good ones we only test once
+        if (bad.contains(m))
+        {
+            const qint64 ts = bad.value(m);
+            const qint64 dt = QDateTime::currentSecsSinceEpoch() - ts;
+            if (dt < 1000 * 60) { return false; } // still bad
+
+            // outdated, test again
+        }
+
+        const bool p = CNetworkUtils::canPing(m);
+        if (p)
+        {
+            good.insert(m, QDateTime::currentSecsSinceEpoch());
+            bad.remove(m);
+        }
+        else
+        {
+            bad.insert(m, QDateTime::currentSecsSinceEpoch());
+            good.remove(m);
+        }
+        return p;
     }
 
     QString CFileUtils::toWindowsLocalPath(const QString &path)

@@ -479,7 +479,7 @@ namespace BlackCore
             if (part2 == "show")
             {
                 const QDir dir(CInterpolationLogger::getLogDirectory());
-                if (dir.exists())
+                if (CDirectoryUtils::isDirExisting(dir))
                 {
                     const QUrl dirUrl = QUrl::fromLocalFile(dir.absolutePath());
                     QDesktopServices::openUrl(dirUrl); // show dir in browser

@@ -203,8 +203,7 @@ namespace BlackCore
             {
                 // ever used with XPlane
                 const QString pluginDir = CXPlaneUtil::pluginDirFromRootDir(m_simulatorSettings.getSimulatorDirectoryOrDefault(CSimulatorInfo::XPLANE));
-                const QDir dir(pluginDir);
-                if (dir.exists())
+                if (CDirectoryUtils::isDirExisting(pluginDir))
                 {
                     // only check if we are on a XP machine
                     const QStringList conflicts = CXPlaneUtil::findConflictingPlugins(pluginDir);
