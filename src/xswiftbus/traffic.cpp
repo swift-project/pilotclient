@@ -14,8 +14,6 @@
 #endif
 #include "traffic.h"
 #include "utils.h"
-#include "blackmisc/simulation/interpolator.h"
-#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/verify.h"
 #include "XPMPMultiplayer.h"
@@ -33,8 +31,7 @@
 namespace XSwiftBus
 {
     CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_, QString modelName_)
-        : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_),
-          interpolator(callsign)
+        : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_)
     {
         std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
         surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
@@ -228,27 +225,6 @@ namespace XSwiftBus
         m_planesById.clear();
     }
 
-    void CTraffic::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset)
-    {
-        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
-        if (!plane) { return; }
-
-        using namespace BlackMisc::PhysicalQuantities;
-        using namespace BlackMisc::Aviation;
-        using namespace BlackMisc::Geo;
-        CAircraftSituation situation(
-            callsign,
-            CCoordinateGeodetic(latitude, longitude, altitude),
-            CHeading(heading, CHeading::True, CAngleUnit::deg()),
-            CAngle(pitch, CAngleUnit::deg()),
-            CAngle(roll, CAngleUnit::deg()),
-            CSpeed(0, CSpeedUnit::kts())
-        );
-        situation.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
-        situation.setTimeOffsetMs(timeOffset);
-        // plane->interpolator.addAircraftSituation(situation);
-    }
-
     void CTraffic::setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
     {
         Plane *plane = m_planesByCallsign.value(callsign, nullptr);
@@ -259,41 +235,6 @@ namespace XSwiftBus
         plane->position.pitch = static_cast<float>(pitch);
         plane->position.roll = static_cast<float>(roll);
         plane->position.heading = static_cast<float>(heading);
-    }
-
-    void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                                    double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
-    {
-        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
-        if (!plane) { return; }
-        const auto surfaces = std::make_pair(relativeTime + timeOffset + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane * plane)
-        {
-            plane->hasSurfaces = true;
-            plane->targetGearPosition = gear;
-            plane->surfaces.flapRatio = flap;
-            plane->surfaces.spoilerRatio = spoiler;
-            plane->surfaces.speedBrakeRatio = speedBrake;
-            plane->surfaces.slatRatio = slat;
-            plane->surfaces.wingSweep = wingSweep;
-            plane->surfaces.thrust = thrust;
-            plane->surfaces.yokePitch = elevator;
-            plane->surfaces.yokeHeading = rudder;
-            plane->surfaces.yokeRoll = aileron;
-            plane->surfaces.lights.landLights = landLight;
-            plane->surfaces.lights.bcnLights = beaconLight;
-            plane->surfaces.lights.strbLights = strobeLight;
-            plane->surfaces.lights.navLights = navLight;
-            plane->surfaces.lights.flashPattern = lightPattern;
-        });
-
-        if (plane->hasSurfaces) { plane->pendingSurfaces.push_back(surfaces); }
-        else { surfaces.second(plane); }
-
-//        BlackMisc::Aviation::CAircraftParts parts;
-//        parts.setOnGround(onGround);
-//        parts.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
-//        parts.setTimeOffsetMs(timeOffset);
-//        plane->interpolator.addAircraftParts(parts);
     }
 
     void CTraffic::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
@@ -330,23 +271,6 @@ namespace XSwiftBus
         if (ident) { plane->xpdr.mode = xpmpTransponderMode_ModeC_Ident; }
         else if (modeC) { plane->xpdr.mode = xpmpTransponderMode_ModeC; }
         else { plane->xpdr.mode = xpmpTransponderMode_Standby; }
-    }
-
-    void CTraffic::setInterpolatorMode(const QString &callsign, bool spline)
-    {
-        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
-        if (plane)
-        {
-            plane->interpolator.setMode(spline ? BlackMisc::Simulation::CInterpolatorMulti::ModeSpline
-                                        : BlackMisc::Simulation::CInterpolatorMulti::ModeLinear);
-        }
-        else if (callsign.isEmpty())
-        {
-            for (const auto &callsign : BlackMisc::makeKeysRange(BlackMisc::as_const(m_planesByCallsign)))
-            {
-                setInterpolatorMode(callsign, spline);
-            }
-        }
     }
 
     void CTraffic::requestRemoteAircraftData()
@@ -387,56 +311,21 @@ namespace XSwiftBus
         {
         case xpmpDataType_Position:
             {
-                if (c_driverInterpolation)
-                {
-                    const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
-                    io_position->lat = plane->position.lat;
-                    io_position->lon = plane->position.lon;
-                    io_position->elevation = plane->position.elevation;
-                    io_position->pitch = plane->position.pitch;
-                    io_position->roll = plane->position.roll;
-                    io_position->heading = plane->position.heading;
-                    std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
-                    return xpmpData_NewData;
-                }
-                else
-                {
-                    BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign setup;
-                    BlackMisc::Simulation::CInterpolationStatus status;
-                    BlackMisc::Aviation::CAircraftSituation situation = plane->interpolator.getInterpolatedSituation(-1, setup, status);
-                    if (! status.hasValidSituation()) { return xpmpData_Unavailable; }
-
-                    //! \fixme KB 2018-01 commented out with T229. Change detection needs to go somewhere else
-                    // if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
-
-                    using namespace BlackMisc::PhysicalQuantities;
-                    using namespace BlackMisc::Aviation;
-                    const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
-                    io_position->lat = situation.latitude().value(CAngleUnit::deg());
-                    io_position->lon = situation.longitude().value(CAngleUnit::deg());
-                    io_position->elevation = situation.getAltitude().value(CLengthUnit::ft());
-                    io_position->pitch = static_cast<float>(situation.getPitch().value(CAngleUnit::deg()));
-                    io_position->roll = static_cast<float>(situation.getBank().value(CAngleUnit::deg()));
-                    io_position->heading = static_cast<float>(situation.getHeading().value(CAngleUnit::deg()));
-                    std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
-                    return xpmpData_NewData;
-                }
+                const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
+                io_position->lat = plane->position.lat;
+                io_position->lon = plane->position.lon;
+                io_position->elevation = plane->position.elevation;
+                io_position->pitch = plane->position.pitch;
+                io_position->roll = plane->position.roll;
+                io_position->heading = plane->position.heading;
+                std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
+                return xpmpData_NewData;
             }
 
         case xpmpDataType_Surfaces:
             if (plane->hasSurfaces)
             {
                 const auto currentTime = QDateTime::currentMSecsSinceEpoch();
-
-                if (! c_driverInterpolation)
-                {
-                    while (! plane->pendingSurfaces.isEmpty() && plane->pendingSurfaces.constFirst().first <= currentTime)
-                    {
-                        //! \todo if gear is currently retracted, look ahead and pull gear position from pendingSurfaces up to 5 seconds in the future
-                        plane->pendingSurfaces.constFirst().second(plane);
-                        plane->pendingSurfaces.pop_front();
-                    }
-                }
 
                 if (plane->surfaces.gearPosition != plane->targetGearPosition)
                 {

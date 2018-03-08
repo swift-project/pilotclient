@@ -371,24 +371,16 @@ namespace BlackSimPlugin
         {
             if (!isConnected()) { return false; }
 
-            if (c_driverInterpolation)
+            if (mode == CInterpolatorMulti::ModeUnknown) { return false; }
+            if (callsign.isEmpty())
             {
-                if (mode == CInterpolatorMulti::ModeUnknown) { return false; }
-                if (callsign.isEmpty())
-                {
-                    const int c = m_xplaneAircraftObjects.setInterpolatorModes(mode);
-                    return c > 0;
-                }
-                else
-                {
-                    if (!m_xplaneAircraftObjects.contains(callsign)) { return false; }
-                    return m_xplaneAircraftObjects[callsign].setInterpolatorMode(mode);
-                }
+                const int c = m_xplaneAircraftObjects.setInterpolatorModes(mode);
+                return c > 0;
             }
             else
             {
-                m_trafficProxy->setInterpolatorMode(callsign.asString(), mode == CInterpolatorMulti::ModeSpline);
-                return true;
+                if (!m_xplaneAircraftObjects.contains(callsign)) { return false; }
+                return m_xplaneAircraftObjects[callsign].setInterpolatorMode(mode);
             }
         }
 
@@ -403,15 +395,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
-            if (c_driverInterpolation)
-            {
-                return m_xplaneAircraftObjects.contains(callsign);
-            }
-            else
-            {
-                //! \todo XP implement isRenderedAircraft correctly. This is a workaround, but not telling me if a callsign is really(!) visible in simulator
-                return getAircraftInRangeForCallsign(callsign).isRendered();
-            }
+            return m_xplaneAircraftObjects.contains(callsign);
         }
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
@@ -501,48 +485,27 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
             Q_ASSERT(isConnected());
-            if (c_driverInterpolation)
-            {
-                // entry checks
-                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
-                Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
-                Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
+            // entry checks
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+            Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
+            Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
-                m_xplaneAircraftObjects.insert(newRemoteAircraft.getCallsign(), CXPlaneMPAircraft(newRemoteAircraft, &m_interpolationLogger));
-                CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-                QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-                m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
-                                         newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                         newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                         livery);
+            m_xplaneAircraftObjects.insert(newRemoteAircraft.getCallsign(), CXPlaneMPAircraft(newRemoteAircraft, &m_interpolationLogger));
+            CAircraftModel aircraftModel = newRemoteAircraft.getModel();
+            QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
+            m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
+                                     newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
+                                     newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
+                                     livery);
 
-                CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
+            CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
 
-                bool rendered = true;
-                updateAircraftRendered(newRemoteAircraft.getCallsign(), rendered);
+            bool rendered = true;
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), rendered);
 
-                CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
-                remoteAircraftCopy.setRendered(rendered);
-                emit this->aircraftRenderingChanged(remoteAircraftCopy);
-            }
-            else
-            {
-                CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-                QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
-                m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
-                                         newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                         newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                         livery);
-
-                CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
-
-                bool rendered = true;
-                updateAircraftRendered(newRemoteAircraft.getCallsign(), rendered);
-
-                CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
-                remoteAircraftCopy.setRendered(rendered);
-                emit this->aircraftRenderingChanged(remoteAircraftCopy);
-            }
+            CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
+            remoteAircraftCopy.setRendered(rendered);
+            emit this->aircraftRenderingChanged(remoteAircraftCopy);
             return true;
         }
 
@@ -550,39 +513,29 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
 
-            if (c_driverInterpolation)
+            // only remove from sim
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
+            if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
+
+            // really remove from simulator
+            if (!m_xplaneAircraftObjects.contains(callsign)) { return false; } // already fully removed or not yet added
+
+            // mark in provider
+            const bool updated = this->updateAircraftRendered(callsign, false);
+            if (updated)
             {
-                // only remove from sim
-                Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
-                if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
-
-                // really remove from simulator
-                if (!m_xplaneAircraftObjects.contains(callsign)) { return false; } // already fully removed or not yet added
-
-                // mark in provider
-                const bool updated = this->updateAircraftRendered(callsign, false);
-                if (updated)
-                {
-                    Q_ASSERT_X(m_xplaneAircraftObjects.contains(callsign), Q_FUNC_INFO, "Aircraft removed");
-                    const CXPlaneMPAircraft &xplaneAircraft = m_xplaneAircraftObjects[callsign];
-                    CSimulatedAircraft aircraft(xplaneAircraft.getAircraft());
-                    aircraft.setRendered(false);
-                    emit this->aircraftRenderingChanged(aircraft);
-                }
-
-                m_trafficProxy->removePlane(callsign.asString());
-                m_xplaneAircraftObjects.remove(callsign);
-
-                // bye
-                return true;
+                Q_ASSERT_X(m_xplaneAircraftObjects.contains(callsign), Q_FUNC_INFO, "Aircraft removed");
+                const CXPlaneMPAircraft &xplaneAircraft = m_xplaneAircraftObjects[callsign];
+                CSimulatedAircraft aircraft(xplaneAircraft.getAircraft());
+                aircraft.setRendered(false);
+                emit this->aircraftRenderingChanged(aircraft);
             }
-            else
-            {
-                m_trafficProxy->removePlane(callsign.asString());
-                this->updateAircraftRendered(callsign, false);
-                CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
-                return true;
-            }
+
+            m_trafficProxy->removePlane(callsign.asString());
+            m_xplaneAircraftObjects.remove(callsign);
+
+            // bye
+            return true;
         }
 
         int CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
@@ -591,25 +544,14 @@ namespace BlackSimPlugin
             //! \todo XP driver obtain number of removed aircraft
             resetHighlighting();
 
-            if (c_driverInterpolation)
+            // remove one by one
+            int r = 0;
+            const CCallsignSet callsigns = m_xplaneAircraftObjects.getAllCallsigns();
+            for (const CCallsign &cs : callsigns)
             {
-                // remove one by one
-                int r = 0;
-                const CCallsignSet callsigns = m_xplaneAircraftObjects.getAllCallsigns();
-                for (const CCallsign &cs : callsigns)
-                {
-                    if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
-                }
-                return r;
+                if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
             }
-            else
-            {
-                const int r = getAircraftInRangeCount();
-                m_trafficProxy->removeAllPlanes();
-                this->updateMarkAllAsNotRendered();
-                CLogMessage(this).info("XP: Removed all aircraft");
-                return r;
-            }
+            return r;
         }
 
         CCallsignSet CSimulatorXPlane::physicallyRenderedAircraft() const

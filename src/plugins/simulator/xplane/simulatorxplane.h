@@ -155,7 +155,6 @@ namespace BlackSimPlugin
             void requestRemoteAircraftDataFromXPlane();
             void updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
 
-            static constexpr bool c_driverInterpolation = true;
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
 
             // XSwiftBus interpolation

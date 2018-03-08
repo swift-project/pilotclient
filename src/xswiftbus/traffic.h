@@ -14,9 +14,7 @@
 
 #include "datarefs.h"
 #include "terrainprobe.h"
-#include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/simulation/interpolatormulti.h"
+#include <QDateTime>
 #include <QObject>
 #include <QHash>
 #include <QVector>
@@ -106,15 +104,8 @@ namespace XSwiftBus
         //! Remove all traffic aircraft
         void removeAllPlanes();
 
-        //! Add the position of a traffic aircraft
-        void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset);
-
         //! Set the position of a traffic aircraft
         void setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading);
-
-        //! Add the flight control surfaces and lights of a traffic aircraft
-        void addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset);
 
         //! Set the flight control surfaces and lights of a traffic aircraft
         void setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
@@ -123,17 +114,12 @@ namespace XSwiftBus
         //! Set the transponder of a traffic aircraft
         void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
 
-        //! Set interpolation mode for a traffic aircraft
-        void setInterpolatorMode(const QString &callsign, bool spline);
-
         //! Request traffic plane data. A signal remoteAircraftData will be emitted for each known plane
         void requestRemoteAircraftData();
 
     private:
         bool m_initialized = false;
         bool m_enabled = false;
-
-        static constexpr bool c_driverInterpolation = true;
 
         void emitSimFrame();
 
@@ -151,10 +137,8 @@ namespace XSwiftBus
             bool hasSurfaces = false;
             bool hasXpdr = false;
             char label[32] {};
-            BlackMisc::Simulation::CInterpolatorMulti interpolator;
             CTerrainProbe terrainProbe;
             XPMPPlaneSurfaces_t surfaces;
-            QVector<std::pair<qint64, std::function<void(Plane *)>>> pendingSurfaces;
             float targetGearPosition = 0;
             qint64 prevSurfacesLerpTime = 0;
             XPMPPlaneRadar_t xpdr;
