@@ -43,6 +43,11 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCoreTest
 {
+    CTestNetwork::CTestNetwork(QObject *parent) :
+        QObject(parent),
+        m_networkVatlib(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), parent)
+    {}
+
     void CTestNetwork::networkTest(BlackCore::INetwork *net)
     {
         const CServer fsdServer = CServer::swiftFsdTestServer(true);
@@ -76,7 +81,7 @@ namespace BlackCoreTest
 
         EXPECT_UNIT(e)
         .send(&INetwork::sendPing, "server")
-        .expect(&INetwork::pongReceived, [](const CCallsign &callsign, const PhysicalQuantities::CTime &elapsedTime)
+        .expect(&INetwork::pongReceived, [](const CCallsign & callsign, const PhysicalQuantities::CTime & elapsedTime)
         {
             qDebug() << "PONG" << callsign << elapsedTime;
         })

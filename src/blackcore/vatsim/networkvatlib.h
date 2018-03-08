@@ -64,7 +64,10 @@ namespace BlackCore
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Constructor
-            CNetworkVatlib(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent = nullptr);
+            CNetworkVatlib(
+                BlackMisc::Network::IClientProvider *clientProvider,
+                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CNetworkVatlib();

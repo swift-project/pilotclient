@@ -118,6 +118,12 @@ namespace BlackMisc
             if (m_clientProvider) { return m_clientProvider->removeClient(callsign); }
             return 0;
         }
+
+        CClientProviderDummy *CClientProviderDummy::instance()
+        {
+            static CClientProviderDummy *dummy = new CClientProviderDummy();
+            return dummy;
+        }
     }
     // namespace
 } // namespace

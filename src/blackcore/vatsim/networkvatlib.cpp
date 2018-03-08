@@ -83,8 +83,9 @@ namespace BlackCore
             return cats;
         }
 
-        CNetworkVatlib::CNetworkVatlib(IOwnAircraftProvider *ownAircraft, QObject *parent)
-            : INetwork(ownAircraft, parent),
+        CNetworkVatlib::CNetworkVatlib(IClientProvider *clientProvider,
+                                       IOwnAircraftProvider *ownAircraftProvider, QObject *parent)
+            : INetwork(clientProvider, ownAircraftProvider, parent),
               m_loginMode(LoginNormal),
               m_status(vatStatusDisconnected),
               m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)

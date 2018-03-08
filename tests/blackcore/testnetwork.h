@@ -33,10 +33,7 @@ namespace BlackCoreTest
 
     public:
         //! Constructor.
-        explicit CTestNetwork(QObject *parent = nullptr) :
-            QObject(parent),
-            m_networkVatlib(BlackMisc::Simulation::COwnAircraftProviderDummy::instance(), parent)
-        {}
+        explicit CTestNetwork(QObject *parent = nullptr);
 
     private slots:
         //! Test the vatlib

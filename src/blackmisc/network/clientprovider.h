@@ -105,8 +105,16 @@ namespace BlackMisc
             CClientAware() {}
 
             //! Constructor
-            CClientAware(IClientProvider *clientProvider) : m_clientProvider(clientProvider) { Q_ASSERT(clientProvider); }
+            CClientAware(IClientProvider *clientProvider) : m_clientProvider(clientProvider) { }
             IClientProvider *m_clientProvider = nullptr; //!< access to object
+        };
+
+        //! Client provider dummy for testing
+        class BLACKMISC_EXPORT CClientProviderDummy: public IClientProvider
+        {
+        public:
+            //! Dummy instance
+            static CClientProviderDummy *instance();
         };
     } // namespace
 } // namespace

@@ -45,18 +45,18 @@ using namespace BlackCore;
 using namespace BlackCore::Vatsim;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 
 namespace BlackSample
 {
-
     Client::Client(QObject *parent)
         : QObject(parent),
           COwnAircraftAware(COwnAircraftProviderDummy::instance()),
           CIdentifiable("samples:cmdClient"),
-          m_net(new CNetworkVatlib(COwnAircraftProviderDummy::instance(), this))
+          m_net(new CNetworkVatlib(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), this))
     {
         connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);
         connect(m_net, &INetwork::atcDisconnected,                  this, &Client::atcDisconnected);

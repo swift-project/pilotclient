@@ -65,7 +65,7 @@ namespace BlackCore
             CContextNetwork::registerHelp();
 
             // 1. Init by "network driver"
-            m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);
+            m_network = new CNetworkVatlib(nullptr, this->getRuntime()->getCContextOwnAircraft(), this);
             connect(m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged);
             connect(m_network, &INetwork::kicked, this, &CContextNetwork::kicked);
             connect(m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::textMessagesReceived);
@@ -80,6 +80,7 @@ namespace BlackCore
             // 3. Airspace contents
             Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
             m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(), m_network, this);
+            m_network->setClientProvider(m_airspace);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
             connect(m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
@@ -146,6 +147,7 @@ namespace BlackCore
         {
             this->disconnect(); // all signals
             if (this->isConnected()) { this->disconnectFromNetwork(); }
+            if (m_network)  { m_network->setClientProvider(nullptr); }
             if (m_airspace) { m_airspace->gracefulShutdown(); }
         }
 
