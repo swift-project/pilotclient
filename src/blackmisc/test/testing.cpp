@@ -26,7 +26,6 @@
 #include <QtGlobal>
 #include <tuple>
 
-using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
@@ -52,10 +51,10 @@ namespace BlackMisc
             // from WGS is slow, so static const (only 1 time init)
             // https://dev.vatsim-germany.org/issues/322#note-2
             static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CAltitude(index, CLengthUnit::ft()));
-            QString cs = QString("%1_TWR").arg(index);
-            QString usr = QString("Joe %1").arg(index);
-            QString id = QString("00000%1").arg(index).right(6);
-            double f = 118.0 + (index % 30) * 0.25;
+            const QString cs = QString("%1_TWR").arg(index);
+            const QString usr = QString("Joe %1").arg(index);
+            const QString id = QString("00000%1").arg(index).right(6);
+            const double f = 118.0 + (index % 30) * 0.25;
 
             const QDateTime dtFrom = QDateTime::currentDateTimeUtc();
             const QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
@@ -109,8 +108,8 @@ namespace BlackMisc
             for (int i = 0; i < number; i++)
             {
                 const char cc = 65 + (i % 26);
-                QString icao = QString("EXX%1").arg(QLatin1Char(cc));
-                BlackMisc::Aviation::CAirport a(icao);
+                const QString icao = QString("EXX%1").arg(QLatin1Char(cc));
+                CAirport a(icao);
                 a.setPosition(CCoordinateGeodetic(i, i, i));
                 list.push_back(a);
             }

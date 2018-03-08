@@ -65,7 +65,7 @@ using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {
-    CAirspaceMonitor::CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, INetwork *network, QObject *parent)
+    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, INetwork *network, QObject *parent)
         : QObject(parent),
           COwnAircraftAware(ownAircraftProvider),
           CIdentifiable(this),
