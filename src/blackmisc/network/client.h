@@ -12,18 +12,16 @@
 #ifndef BLACKMISC_NETWORK_CLIENT_H
 #define BLACKMISC_NETWORK_CLIENT_H
 
+#include "user.h"
+#include "voicecapabilities.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
-
 #include <QMetaType>
 #include <QString>
 
@@ -51,25 +49,29 @@ namespace BlackMisc
             };
 
             //! The Capabilities enum
-            enum Capabilities
+            enum Capability
             {
-                FsdWithInterimPositions = CPropertyIndex::GlobalIndexClientCapabilities, //!< interim positions
-                FsdWithIcaoCodes,       //!< basically means it is a pilot client handling ICAO code pacakages
-                FsdAtisCanBeReceived,   //!< ATIS
-                FsdWithAircraftConfig   //!< Aircraft parts
+                None = 0,
+                FsdWithInterimPositions = 1 << 0,
+                FsdWithIcaoCodes        = 1 << 1, //!< basically means it is a pilot client handling ICAO code packages
+                FsdAtisCanBeReceived    = 1 << 2, //!< ATIS
+                FsdWithAircraftConfig   = 1 << 3, //!< Aircraft parts
+                FsdWithGroundFlag       = 1 << 4, //!< supports gnd. flag (in position)
+                FsdModelString          = 1 << 5
             };
+            Q_DECLARE_FLAGS(Capabilities, Capability)
 
             //! Default constructor.
             CClient() = default;
 
             //! Construct by callsign and optional model string
-            CClient(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelString = {});
+            CClient(const Aviation::CCallsign &callsign, const QString &modelString = {});
 
             //! Constructor.
             CClient(const CUser &user) : m_user(user) {}
 
             //! Callsign used with other client
-            const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_user.getCallsign(); }
+            const Aviation::CCallsign &getCallsign() const { return m_user.getCallsign(); }
 
             //! ATC client
             bool isAtc() const { return getCallsign().isAtcAlikeCallsign(); }
@@ -78,19 +80,28 @@ namespace BlackMisc
             bool isValid() const;
 
             //! Get capabilities
-            CPropertyIndexVariantMap getCapabilities() const { return m_capabilities; }
-
-            //! Set capability
-            void setCapability(bool hasCapability, Capabilities capability);
+            Capabilities getCapabilities() const { return static_cast<Capabilities>(m_capabilities); }
 
             //! Set capabilities
-            void setCapabilities(const CPropertyIndexVariantMap &capabilities);
+            void setCapabilities(const Capabilities &capabilities);
 
             //! Get capabilities
             QString getCapabilitiesAsString() const;
 
             //! Has capability?
-            bool hasCapability(Capabilities capability) const;
+            bool hasCapability(Capability capability) const;
+
+            //! Supports aircraft parts?
+            bool hasAircraftPartsCapability() const;
+
+            //! Supports gnd.flag?
+            bool hasGndFlagCapability() const;
+
+            //! Add capability
+            void addCapability(Capability capability);
+
+            //! Remove capability
+            void removeCapability(Capability capability);
 
             //! Get voice capabilities
             const CVoiceCapabilities &getVoiceCapabilities() const { return m_voiceCapabilities;}
@@ -126,7 +137,7 @@ namespace BlackMisc
             bool hasQueriedModelString() const { return !m_modelString.isEmpty(); }
 
             //! Set model
-            void setQueriedModelString(const QString &modelString) { m_modelString = modelString.trimmed(); }
+            void setQueriedModelString(const QString &modelString);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             CIcon toIcon() const { return m_user.toIcon(); }
@@ -142,7 +153,7 @@ namespace BlackMisc
 
         private:
             CUser m_user;
-            CPropertyIndexVariantMap m_capabilities;
+            int m_capabilities = static_cast<int>(None);
             QString m_modelString;
             QString m_server;
             CVoiceCapabilities m_voiceCapabilities;
@@ -151,7 +162,7 @@ namespace BlackMisc
                 CClient,
                 BLACK_METAMEMBER(user),
                 BLACK_METAMEMBER(modelString),
-                BLACK_METAMEMBER(capabilities, 0, DisabledForComparison | DisabledForJson),
+                BLACK_METAMEMBER(capabilities),
                 BLACK_METAMEMBER(server),
                 BLACK_METAMEMBER(voiceCapabilities)
             );

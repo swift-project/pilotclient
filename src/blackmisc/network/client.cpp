@@ -38,42 +38,64 @@ namespace BlackMisc
             return m_user.hasCallsign();
         }
 
-        void CClient::setCapability(bool hasCapability, CClient::Capabilities capability)
+        void CClient::addCapability(CClient::Capability capability)
         {
-            m_capabilities.addValue(static_cast<int>(capability), hasCapability);
+            Capabilities cap = this->getCapabilities();
+            cap |= capability;
+            this->setCapabilities(cap);
         }
 
-        void CClient::setCapabilities(const CPropertyIndexVariantMap &capabilities)
+        void CClient::removeCapability(CClient::Capability capability)
         {
-            m_capabilities = capabilities;
+            Capabilities cap = this->getCapabilities();
+            cap &= ~capability;
+            this->setCapabilities(cap);
+
+        }
+
+        void CClient::setCapabilities(const Capabilities &capabilities)
+        {
+            m_capabilities = static_cast<int>(capabilities);
         }
 
         QString CClient::getCapabilitiesAsString() const
         {
+            const Capabilities cap = this->getCapabilities();
             QStringList sl;
-            if (this->hasCapability(FsdAtisCanBeReceived)) sl << "ATIS";
-            if (this->hasCapability(FsdWithInterimPositions)) sl << "interim pos.";
-            if (this->hasCapability(FsdWithIcaoCodes)) sl << "ICAO";
-            if (this->hasCapability(FsdWithAircraftConfig)) sl << "aircraft config";
-            if (sl.isEmpty()) return "";
+            if (cap.testFlag(FsdAtisCanBeReceived)) sl << "ATIS";
+            if (cap.testFlag(FsdWithInterimPositions)) sl << "interim pos.";
+            if (cap.testFlag(FsdWithIcaoCodes)) sl << "ICAO";
+            if (cap.testFlag(FsdWithAircraftConfig)) sl << "aircraft config";
+            if (cap.testFlag(FsdWithGroundFlag)) sl << "gnd.flag";
+            if (cap.testFlag(FsdModelString)) sl << "modelstring";
+            if (sl.isEmpty()) { return QStringLiteral(""); }
             return sl.join(", ");
         }
 
-        bool CClient::hasCapability(CClient::Capabilities capability) const
+        bool CClient::hasCapability(Capability capability) const
         {
-            if (m_capabilities.contains(capability))
-            {
-                return m_capabilities.value(capability).toBool();
-            }
-            else
-            {
-                return false;
-            }
+            return this->getCapabilities().testFlag(capability);
+        }
+
+        bool CClient::hasAircraftPartsCapability() const
+        {
+            return this->hasCapability(FsdWithAircraftConfig);
+        }
+
+        bool CClient::hasGndFlagCapability() const
+        {
+            return this->hasCapability(FsdWithGroundFlag);
         }
 
         void CClient::setUserCallsign(const Aviation::CCallsign &callsign)
         {
             m_user.setCallsign(callsign);
+        }
+
+        void CClient::setQueriedModelString(const QString &modelString)
+        {
+            m_modelString = modelString.trimmed();
+            if (!modelString.isEmpty()) { this->addCapability(CClient::FsdModelString); }
         }
 
         CVariant CClient::propertyByIndex(const CPropertyIndex &index) const
@@ -82,28 +104,17 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCapabilities:
-                return CVariant::fromValue(m_capabilities);
-            case IndexCapabilitiesString:
-                return CVariant(this->getCapabilitiesAsString());
-            case IndexCallsign:
-                return this->getCallsign().propertyByIndex(index.copyFrontRemoved());
-            case IndexUser:
-                return this->getUser().propertyByIndex(index.copyFrontRemoved());
-            case IndexModelString:
-                return CVariant(m_modelString);
-            case IndexServer:
-                return CVariant(m_server);
-            case IndexVoiceCapabilities:
-                return m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
-            case IndexVoiceCapabilitiesPixmap:
-                return CVariant::from(m_voiceCapabilities.toPixmap());
-            case IndexVoiceCapabilitiesIcon:
-                return CVariant::fromValue(m_voiceCapabilities.toIcon());
-            case IndexVoiceCapabilitiesString:
-                return CVariant(m_voiceCapabilities.toQString(true));
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexCapabilities: return CVariant::fromValue(m_capabilities);
+            case IndexCapabilitiesString: return CVariant(this->getCapabilitiesAsString());
+            case IndexCallsign: return this->getCallsign().propertyByIndex(index.copyFrontRemoved());
+            case IndexUser: return this->getUser().propertyByIndex(index.copyFrontRemoved());
+            case IndexModelString: return CVariant(m_modelString);
+            case IndexServer: return CVariant(m_server);
+            case IndexVoiceCapabilities: return m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
+            case IndexVoiceCapabilitiesPixmap: return CVariant::from(m_voiceCapabilities.toPixmap());
+            case IndexVoiceCapabilitiesIcon: return CVariant::fromValue(m_voiceCapabilities.toIcon());
+            case IndexVoiceCapabilitiesString: return CVariant(m_voiceCapabilities.toQString(true));
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -113,27 +124,13 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCapabilities:
-                m_capabilities = variant.value<CPropertyIndexVariantMap>();
-                break;
-            case IndexModelString:
-                m_modelString = variant.toQString();
-                break;
-            case IndexServer:
-                m_server = variant.toQString();
-                break;
-            case IndexUser:
-                m_user.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexCallsign:
-                m_user.setCallsign(variant.value<BlackMisc::Aviation::CCallsign>());
-                break;
-            case IndexVoiceCapabilities:
-                m_voiceCapabilities.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexCapabilities: m_capabilities = variant.toInt(); break;
+            case IndexModelString: m_modelString = variant.toQString(); break;
+            case IndexServer: m_server = variant.toQString(); break;
+            case IndexUser: m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCallsign: m_user.setCallsign(variant.value<BlackMisc::Aviation::CCallsign>()); break;
+            case IndexVoiceCapabilities: m_voiceCapabilities.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
     } // namespace

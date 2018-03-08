@@ -27,8 +27,8 @@ namespace BlackMisc
         //! Value object encapsulating a list of voice rooms.
         class BLACKMISC_EXPORT CClientList :
             public CSequence<CClient>,
-            public BlackMisc::Aviation::ICallsignObjectList<CClient, CClientList>,
-            public BlackMisc::Mixin::MetaType<CClientList>
+            public Aviation::ICallsignObjectList<CClient, CClientList>,
+            public Mixin::MetaType<CClientList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CClientList)
@@ -38,6 +38,12 @@ namespace BlackMisc
 
             //! Construct from a base class object.
             CClientList(const CSequence &other);
+
+            //! Has client for callsign the given capability?
+            bool hasCapability(const Aviation::CCallsign &callsign, CClient::Capability capability) const;
+
+            //! Capabilities of client for callsign
+            CClient::Capabilities getCapabilities(const Aviation::CCallsign &callsign) const;
         };
     } //namespace
 } // namespace

@@ -119,16 +119,16 @@ namespace BlackMisc
 
         CClientList CTesting::getClients(int number)
         {
-            BlackMisc::Network::CClientList list;
+            CClientList list;
             for (int i = 0; i < number; i++)
             {
-                CCallsign cs(QString("DXX%1").arg(i));
-                QString rn = QString("Joe Doe%1").arg(i);
+                const CCallsign cs(QString("DXX%1").arg(i));
+                const QString rn = QString("Joe Doe%1").arg(i);
                 CUser user(QString::number(i), rn, cs);
                 user.setCallsign(cs);
                 CClient client(user);
-                client.setCapability(true, CClient::FsdWithInterimPositions);
-                client.setCapability(true, CClient::FsdWithIcaoCodes);
+                client.addCapability(CClient::FsdWithInterimPositions);
+                client.addCapability(CClient::FsdWithIcaoCodes);
                 const QString myFooModel = QString("fooModel %1").arg(i);
                 client.setQueriedModelString(myFooModel);
                 list.push_back(client);
