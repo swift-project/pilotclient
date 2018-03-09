@@ -166,7 +166,9 @@ namespace BlackGui
             }
             else
             {
-                beginRemoveRows(QModelIndex(), 0, 0);
+                QModelIndex parent;
+                if (rowCount(parent) == 0) { return; }
+                beginRemoveRows(parent, 0, 0);
                 this->removeIf(&CAtcStation::getCallsign, station.getCallsign());
                 endRemoveRows();
             }
