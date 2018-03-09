@@ -56,6 +56,12 @@ namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CMappingComponent::getLogCategories()
+        {
+            static const CLogCategoryList cats({ CLogCategory::mapping(), CLogCategory::guiComponent() });
+            return cats;
+        }
+
         CMappingComponent::CMappingComponent(QWidget *parent) :
             COverlayMessagesFrame(parent),
             CIdentifiable(this),
@@ -137,17 +143,12 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::onChangedSimulatedAircraftInView);
 
             // with external core models might be already available
+            this->onModelSetSimulatorChanged(ui->comp_SimulatorSelector->getValue());
             this->onModelSetChanged();
         }
 
         CMappingComponent::~CMappingComponent()
         { }
-
-        const CLogCategoryList &CMappingComponent::getLogCategories()
-        {
-            static const CLogCategoryList cats({ CLogCategory::mapping(), CLogCategory::guiComponent() });
-            return cats;
-        }
 
         int CMappingComponent::countCurrentMappings() const
         {
@@ -177,6 +178,9 @@ namespace BlackGui
             {
                 CLogMessage(this).info("Models loaded, you can update the model view");
             }
+
+            // change completer
+            ui->completer_ModelStrings->setSimulator(ui->comp_SimulatorSelector->getValue());
         }
 
         void CMappingComponent::onRowCountChanged(int count, bool withFilter)
@@ -287,8 +291,11 @@ namespace BlackGui
         void CMappingComponent::onModelSetSimulatorChanged(const CSimulatorInfo &simulator)
         {
             if (!sGui || !sGui->supportsContexts()) { return; }
+            if (sGui->isShuttingDown()) { return; }
             if (sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
             sGui->getIContextSimulator()->setModelSetLoaderSimulator(simulator);
+
+            // completer will be changed in onModelSetChanged
         }
 
         void CMappingComponent::onPluginChanged(const CSimulatorPluginInfo &pluginInfo)

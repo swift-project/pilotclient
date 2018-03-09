@@ -67,6 +67,12 @@ namespace BlackGui
             //! Set the currently selected source
             void selectSource(CompleterSourceFlag source);
 
+            //! Change the simulator
+            bool setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Get current simulator
+            BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
+
             //! Clear
             void clear();
 
@@ -76,7 +82,7 @@ namespace BlackGui
 
         private:
             //! Set the completer
-            void setCompleter();
+            void setCompleter(bool simChanged);
 
             //! Init the GUI
             void initGui();
@@ -92,8 +98,10 @@ namespace BlackGui
 
         private:
             QScopedPointer <Ui::CAircraftModelStringCompleter> ui;
+            // model set completer data are fetched from context
             BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this }; //!< all models, works locally only
-            CompleterSourceFlag m_currentSourceWithData = None;
+            BlackMisc::Simulation::CSimulatorInfo m_currentSimulator;
+            CompleterSourceFlag m_currentDataSource = None;
         };
     } // ns
 } // ns

@@ -155,7 +155,7 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CSimulatorInfo getModelSetLoaderSimulator() const = 0;
 
             //! Set the model set loader simulator directly
-            //! \note for testing purposes
+            //! \note for testing purposes and can be used if no simulator is connected
             virtual void setModelSetLoaderSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
             //! Simulators which have an initialized model set

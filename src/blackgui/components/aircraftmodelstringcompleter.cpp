@@ -40,11 +40,13 @@ namespace BlackGui
             connect(ui->rb_Db, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
             connect(ui->rb_ModelSet, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
             connect(ui->rb_OwnModels, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
+            connect(&m_modelCaches, &CModelCaches::cacheChanged, this, &CAircraftModelStringCompleter::setSimulator, Qt::QueuedConnection);
 
+            CSimulatorInfo sim = CSimulatorInfo(CSimulatorInfo::P3D); // default
             if (sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CAircraftModelStringCompleter::onSimulatorConnected);
-                const CSimulatorInfo sim(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator());
+                sim = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
                 if (sim.isSingleSimulator())
                 {
                     m_modelCaches.setCurrentSimulator(sim);
@@ -52,8 +54,10 @@ namespace BlackGui
                 else
                 {
                     this->setSourceVisible(OwnModels, false);
+                    sim = m_modelCaches.getCurrentSimulator();
                 }
             }
+            this->setSimulator(sim);
         }
 
         CAircraftModelStringCompleter::~CAircraftModelStringCompleter()
@@ -98,37 +102,53 @@ namespace BlackGui
             }
         }
 
+        bool CAircraftModelStringCompleter::setSimulator(const CSimulatorInfo &simulator)
+        {
+            if (this->getSimulator() == simulator) { return false; }
+            m_currentSimulator = simulator;
+            m_modelCaches.setCurrentSimulator(simulator); // all models
+            QTimer::singleShot(100, this, [ = ] { this->setCompleter(true); });
+            return true;
+        }
+
+        CSimulatorInfo CAircraftModelStringCompleter::getSimulator() const
+        {
+            return m_currentSimulator;
+        }
+
         void CAircraftModelStringCompleter::clear()
         {
             ui->le_modelString->clear();
         }
 
-        void CAircraftModelStringCompleter::setCompleter()
+        void CAircraftModelStringCompleter::setCompleter(bool simChanged)
         {
             QStringList modelStrings;
-            CompleterSourceFlag sourceWithData = None;
+            CompleterSourceFlag dataSource = None;
+            QString simInfo = m_currentSimulator.toQString();
             if (ui->rb_Db->isChecked())
             {
-                if (m_currentSourceWithData == DB) { return; }
+                if (!simChanged && m_currentDataSource == DB) { return; }
                 modelStrings = sGui->getWebDataServices()->getModelCompleterStrings();
-                if (!modelStrings.isEmpty()) { sourceWithData = DB; }
+                dataSource = DB;
+                simInfo = QStringLiteral("DB models");
             }
             else if (ui->rb_ModelSet->isChecked())
             {
-                if (m_currentSourceWithData == ModelSet) { return; }
+                if (!simChanged && m_currentDataSource == ModelSet) { return; }
                 modelStrings = sGui->getIContextSimulator()->getModelSetCompleterStrings(true);
-                if (!modelStrings.isEmpty()) { sourceWithData = ModelSet; }
+                dataSource = ModelSet;
             }
             else if (ui->rb_OwnModels->isChecked())
             {
-                if (m_currentSourceWithData == OwnModels) { return; }
+                if (!simChanged && m_currentDataSource == OwnModels) { return; }
                 modelStrings = m_modelCaches.getCurrentCachedModels().toCompleterStrings();
-                if (!modelStrings.isEmpty()) { sourceWithData = OwnModels; }
+                dataSource = OwnModels;
             }
 
-            m_currentSourceWithData = sourceWithData;
+            m_currentDataSource = dataSource;
             ui->le_modelString->setCompleter(new QCompleter(modelStrings, this));
-            ui->le_modelString->setPlaceholderText(QString("model strings (%1)").arg(modelStrings.size()));
+            ui->le_modelString->setPlaceholderText(QString("model strings (%1/%2)").arg(modelStrings.size()).arg(simInfo));
         }
 
         void CAircraftModelStringCompleter::onTextChanged()
@@ -138,7 +158,7 @@ namespace BlackGui
 
         void CAircraftModelStringCompleter::initGui()
         {
-            this->setCompleter();
+            this->setCompleter(true);
         }
 
         void CAircraftModelStringCompleter::onSimulatorConnected(int status)
