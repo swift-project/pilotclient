@@ -315,6 +315,11 @@ namespace BlackMisc
         return m_timeOffsetMs != 0;
     }
 
+    void ITimestampWithOffsetBased::addMsecsToOffsetTime(qint64 msToAdd)
+    {
+        m_timeOffsetMs += msToAdd;
+    }
+
     QString ITimestampWithOffsetBased::getTimeOffsetWithUnit() const
     {
         static const QString os("%1ms");

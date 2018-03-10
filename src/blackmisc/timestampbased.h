@@ -167,6 +167,9 @@ namespace BlackMisc
         //! Having a valid offset time
         bool hasNonZeroOffsetTime() const;
 
+        //! Adds a value to offset time
+        void addMsecsToOffsetTime(qint64 msToAdd);
+
         //! Offset with unit
         QString getTimeOffsetWithUnit() const;
 

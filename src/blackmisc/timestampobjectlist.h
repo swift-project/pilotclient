@@ -106,6 +106,9 @@ namespace BlackMisc
         //! \remark all object must have a valid timestamp
         bool isSortedLatestFirst() const;
 
+        //! Adds a time to all values
+        void addMsecs(qint64 msToAdd);
+
     protected:
         //! Constructor
         ITimestampObjectList();
@@ -134,6 +137,9 @@ namespace BlackMisc
         //! Any negative offset time?
         bool containsNegativeOffsetTime() const;
 
+        //! Adds a time to all offset values
+        void addMsecsToOffset(qint64 msToAdd);
+
         //! Insert as first element by keeping maxElements and the latest first
         void push_frontKeepLatestAdjustedFirst(const OBJ &value, int maxElements = -1);
 
@@ -152,7 +158,7 @@ namespace BlackMisc
         //! Closest adjusted time difference
         OBJ findClosestTimeDistanceAdjusted(qint64 msSinceEpoch) const;
 
-protected:
+    protected:
         //! Constructor
         ITimestampWithOffsetObjectList();
     };

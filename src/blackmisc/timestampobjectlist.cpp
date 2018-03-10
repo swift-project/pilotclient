@@ -261,7 +261,6 @@ namespace BlackMisc
             if (!obj.hasValidTimestamp()) { return false; }
             if (obj.getMSecsSinceEpoch() < max) { return false; }
             max = obj.getMSecsSinceEpoch();
-            continue;
         }
         return true;
     }
@@ -276,9 +275,18 @@ namespace BlackMisc
             if (!obj.hasValidTimestamp()) { return false; }
             if (obj.getMSecsSinceEpoch() > min) { return false; }
             min = obj.getMSecsSinceEpoch();
-            continue;
         }
         return true;
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::addMsecs(qint64 msToAdd)
+    {
+        if (msToAdd == 0) { return; }
+        for (ITimestampBased &obj : this->container())
+        {
+            obj.addMsecs(msToAdd);
+        }
     }
 
     template <class OBJ, class CONTAINER>
@@ -312,6 +320,15 @@ namespace BlackMisc
             if (obj.getTimeOffsetMs() < 0) { return true; }
         }
         return false;
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::addMsecsToOffset(qint64 msToAdd)
+    {
+        for (ITimestampWithOffsetBased &obj : this->container())
+        {
+            obj.addMsecsToOffsetTime(msToAdd);
+        }
     }
 
     template<class OBJ, class CONTAINER>
