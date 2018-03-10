@@ -1241,10 +1241,14 @@ namespace BlackCore
         BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return; }
 
+        CAircraftSituation correctedSituation = situation;
+        const CAircraftPartsList parts = this->remoteAircraftParts(callsign);
+        if (!parts.isEmpty()) { correctedSituation.adjustGroundFlag(parts); }
+
         // list from new to old
         QWriteLocker lock(&m_lockSituations);
         CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
-        situationList.push_frontKeepLatestFirstAdjustOffset(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+        situationList.push_frontKeepLatestFirstAdjustOffset(correctedSituation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
 
         // check sort order
         Q_ASSERT_X(situationList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
@@ -1257,19 +1261,31 @@ namespace BlackCore
         if (callsign.isEmpty()) { return; }
 
         // list sorted from new to old
-        QWriteLocker lock(&m_lockParts);
-        CAircraftPartsList &partsList = m_partsByCallsign[callsign];
-        partsList.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
+        CAircraftPartsList correctiveParts;
+        {
+            QWriteLocker lock(&m_lockParts);
+            CAircraftPartsList &partsList = m_partsByCallsign[callsign];
+            partsList.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
 
-        // remove outdated parts (but never remove the most recent one)
-        IRemoteAircraftProvider::removeOutdatedParts(partsList);
+            // remove outdated parts (but never remove the most recent one)
+            IRemoteAircraftProvider::removeOutdatedParts(partsList);
+            correctiveParts = partsList;
 
-        // aircraft supporting parts
-        m_aircraftSupportingParts.insert(callsign); // mark as callsign which supports parts
+            // aircraft supporting parts
+            m_aircraftSupportingParts.insert(callsign); // mark as callsign which supports parts
 
-        // check sort order
-        Q_ASSERT_X(partsList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
-        Q_ASSERT_X(partsList.size() <= IRemoteAircraftProvider::MaxPartsPerCallsign, Q_FUNC_INFO, "Wrong size");
+            // check sort order
+            Q_ASSERT_X(partsList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
+            Q_ASSERT_X(partsList.size() <= IRemoteAircraftProvider::MaxPartsPerCallsign, Q_FUNC_INFO, "Wrong size");
+        }
+
+        // adjust gnd.flag from parts
+        if (!correctiveParts.isEmpty())
+        {
+            QWriteLocker lock(&m_lockSituations);
+            CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
+            situationList.adjustGroundFlag(parts);
+        }
     }
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)

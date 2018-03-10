@@ -290,6 +290,7 @@ namespace BlackCore
 
         //! Store an aircraft situation
         //! \threadsafe
+        //! \remark sets gnd flag from parts if parts are available
         void storeAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Store an aircraft part
