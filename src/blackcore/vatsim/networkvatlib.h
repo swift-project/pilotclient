@@ -16,14 +16,15 @@
 #include "blackcore/network.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/fsdsetup.h"
+#include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/tokenbucket.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/digestsignal.h"
@@ -182,6 +183,7 @@ namespace BlackCore
             QString fromFSD(const char *cstr) const;
             QStringList fromFSD(const char **cstrArray, int size) const;
             bool isInterimPositionUpdateEnabledForServer() const;
+            const BlackMisc::Network::CFsdSetup &getSetupForServer() const;
             void startPositionTimers();
             void stopPositionTimers();
             void initializeSession();

@@ -260,10 +260,10 @@ namespace BlackCore
         {
             switch (status)
             {
-            case vatStatusConnecting:        return INetwork::Connecting;
-            case vatStatusConnected:         return INetwork::Connected;
-            case vatStatusDisconnected:      return INetwork::Disconnected;
-            case vatStatusDisconnecting:     return INetwork::Disconnecting;
+            case vatStatusConnecting:    return INetwork::Connecting;
+            case vatStatusConnected:     return INetwork::Connected;
+            case vatStatusDisconnected:  return INetwork::Disconnected;
+            case vatStatusDisconnecting: return INetwork::Disconnecting;
             }
             qFatal("unrecognised connection status");
             return INetwork::DisconnectedError;
@@ -343,8 +343,13 @@ namespace BlackCore
 
         bool CNetworkVatlib::isInterimPositionUpdateEnabledForServer() const
         {
-            const CFsdSetup::SendReceiveDetails d = m_server.getFsdSetup().getSendReceiveDetails();
-            return (d & CFsdSetup::SendIterimPositions) || (d & CFsdSetup::ReceiveInterimPositions);
+            const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
+            return (d & CFsdSetup::SendInterimPositions) || (d & CFsdSetup::ReceiveInterimPositions);
+        }
+
+        const CFsdSetup &CNetworkVatlib::getSetupForServer() const
+        {
+            return m_server.getFsdSetup();
         }
 
         void CNetworkVatlib::startPositionTimers()
@@ -364,7 +369,7 @@ namespace BlackCore
             QString escaped;
             for (const auto &ch : str)
             {
-                ushort code = ch.unicode();
+                const ushort code = ch.unicode();
                 if (code < 0x80)
                 {
                     escaped += ch;
@@ -391,11 +396,11 @@ namespace BlackCore
             }
             else if (simInfo.getSimulator() == "p3d")
             {
-                return vatSimTypeP3Dv1;
+                return vatSimTypeP3Dv4; // we always set the latest, as we have only one flag
             }
             else if (simInfo.getSimulator() == "xplane")
             {
-                return vatSimTypeXPLANE10;
+                return vatSimTypeXPLANE11; // latest, as there is only one flag
             }
             else
             {
@@ -489,8 +494,7 @@ namespace BlackCore
             }
 
             Vat_Logon(m_net.data());
-
-            startPositionTimers();
+            this->startPositionTimers();
         }
 
         void CNetworkVatlib::terminateConnection()
@@ -530,7 +534,7 @@ namespace BlackCore
                 freqsVec.clear();
                 freqsVec.push_back(message.getFrequency().valueRounded(CFrequencyUnit::kHz(), 0));
                 Vat_SendRadioMessage(m_net.data(), freqsVec.data(), freqsVec.size(), toFSD(message.getMessage()));
-                emit textMessageSent(message);
+                emit this->textMessageSent(message);
             }
         }
 
@@ -699,8 +703,9 @@ namespace BlackCore
 
         void CNetworkVatlib::sendIncrementalAircraftConfig()
         {
-            if (!isConnected()) { return; }
-            const CAircraftParts currentParts(getOwnAircraftParts());
+            if (!this->isConnected()) { return; }
+            if (!this->getSetupForServer().sendAircraftParts()) { return; }
+            const CAircraftParts currentParts(this->getOwnAircraftParts());
 
             // If it hasn't changed, return
             if (m_sentAircraftConfig == currentParts) { return; }
@@ -794,7 +799,7 @@ namespace BlackCore
             data[2] = myAircraft.getAircraftIcaoCodeDesignator();
             data[7] = myAircraft.getAircraftIcaoCombinedType();
             data[8] = myAircraft.hasModelString() ? myAircraft.getModel().getModelString() : defaultModelString();
-            sendCustomPacket(callsign, "FSIPI", data);
+            this->sendCustomPacket(callsign, "FSIPI", data);
         }
 
         void CNetworkVatlib::broadcastAircraftConfig(const QJsonObject &config)
@@ -932,16 +937,18 @@ namespace BlackCore
 
         void CNetworkVatlib::onAircraftConfigReceived(VatFsdClient *, const char *callsignChar, const char *aircraftConfig, void *cbvar)
         {
+            auto *self = cbvar_cast(cbvar);
+
             QJsonParseError parserError;
-            const QByteArray json = cbvar_cast(cbvar)->fromFSD(aircraftConfig).toUtf8();
+            const QByteArray json = self->fromFSD(aircraftConfig).toUtf8();
             const QJsonDocument doc = QJsonDocument::fromJson(json, &parserError);
 
             if (parserError.error != QJsonParseError::NoError)
             {
-                CLogMessage(static_cast<CNetworkVatlib *>(nullptr)).warning("Failed to parse aircraft config packet: %1") << parserError.errorString();
+                CLogMessage(self).warning("Failed to parse aircraft config packet: '%1' packet: '%2'") << parserError.errorString() << QString(json);
+                return; // we cannot parse the packet, so we give up here
             }
 
-            auto *self = cbvar_cast(cbvar);
             const CCallsign callsign(self->fromFSD(callsignChar), CCallsign::Aircraft);
             const QJsonObject packet = doc.object();
             if (packet == JsonPackets::aircraftConfigRequest())
@@ -950,8 +957,9 @@ namespace BlackCore
                 return;
             }
 
+            if (!self->getSetupForServer().receiveAircraftParts()) { return; }
             const QJsonObject config = doc.object().value("config").toObject();
-            if (config.empty()) return;
+            if (config.empty()) { return; }
 
             const int offsetTimeMs = self->currentOffsetTime(callsign);
             emit self->aircraftConfigPacketReceived(callsign, config, offsetTimeMs);
