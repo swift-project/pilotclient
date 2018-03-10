@@ -33,26 +33,34 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexTextCodec = BlackMisc::CPropertyIndex::GlobalIndexCFsdSetup,
+                IndexTextCodec = CPropertyIndex::GlobalIndexCFsdSetup,
                 IndexSendReceiveDetails
             };
 
             //! Send/receive details
             enum SendReceiveDetailsFlag
             {
-                Nothing                 = 0,         //!< nothing
-                SendAircraftParts       = 1 << 0,    //!< aircraft parts out
-                SendIterimPositions     = 1 << 1,    //!< interim positions in
-                ReceiveAircraftParts    = 1 << 2,    //!< fast position updates out
-                ReceiveInterimPositions = 1 << 3,    //!< fast position updates in
-                AllSending              = SendAircraftParts | SendIterimPositions,        //!< all out
-                AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions, //!< all in
-                All                     = AllReceive | AllSending                         //!< all
+                Nothing                 = 0,      //!< nothing
+                SendAircraftParts       = 1 << 0, //!< aircraft parts out
+                SendInterimPositions    = 1 << 1, //!< interim positions out
+                SendGndFlag             = 1 << 2, //!< gnd.flag out (position)
+                ReceiveAircraftParts    = 1 << 3, //!< aircraft parts in
+                ReceiveInterimPositions = 1 << 4, //!< fast position updates in
+                ReceiveGndFlag          = 1 << 5, //!< gnd.flag in (position)
+                AllSending              = SendAircraftParts | SendInterimPositions | SendGndFlag,          //!< all out
+                AllReceive              = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
+                All                     = AllReceive | AllSending, //!< all
+                AllSendingWithoutGnd    = SendAircraftParts | SendInterimPositions,       //!< all out, but no gnd.flag
+                AllReceiveWithoutGnd    = ReceiveAircraftParts | ReceiveInterimPositions, //!< all in, but no gnd.flag
+                AllWithoutGnd           = AllReceiveWithoutGnd | AllSendingWithoutGnd     //!< all, but no gnd.flag
             };
             Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
             //! Default constructor.
             CFsdSetup() {}
+
+            //! Constructor.
+            CFsdSetup(SendReceiveDetails sendReceive);
 
             //! Constructor.
             CFsdSetup(const QString &codec, SendReceiveDetails sendReceive = All);
@@ -70,16 +78,27 @@ namespace BlackMisc
             void setSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive = sendReceive; }
 
             //! Set send / receive details
-            void setSendReceiveDetails(bool partsSend, bool partsReceive, bool interimSend, bool interimReceive);
+            void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive);
+
+            //! FSD setup flags
+            //! @{
+            bool sendAircraftParts() const { return this->getSendReceiveDetails().testFlag(SendAircraftParts); }
+            bool sendGndFlag() const { return this->getSendReceiveDetails().testFlag(SendGndFlag); }
+            bool sendInterimPositions() const { return this->getSendReceiveDetails().testFlag(SendInterimPositions); }
+
+            bool receiveAircraftParts() const { return this->getSendReceiveDetails().testFlag(ReceiveAircraftParts); }
+            bool receiveGndFlag() const { return this->getSendReceiveDetails().testFlag(ReceiveGndFlag); }
+            bool receiveInterimPositions() const { return this->getSendReceiveDetails().testFlag(ReceiveInterimPositions); }
+            //! @}
 
             //! Validate, provide details about issues
-            BlackMisc::CStatusMessageList validate() const;
+            CStatusMessageList validate() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;

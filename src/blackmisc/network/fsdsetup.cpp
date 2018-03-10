@@ -24,6 +24,9 @@ namespace BlackMisc
 {
     namespace Network
     {
+        CFsdSetup::CFsdSetup(SendReceiveDetails sendReceive) : m_sendReceive(sendReceive)
+        { }
+
         CFsdSetup::CFsdSetup(const QString &codec, SendReceiveDetails sendReceive)
             : m_textCodec(codec), m_sendReceive(sendReceive) {}
 
@@ -41,26 +44,30 @@ namespace BlackMisc
 
         QString CFsdSetup::sendReceiveDetailsToString(SendReceiveDetails details)
         {
-            static const QString ds("Send parts; %1 interim: %2 Receive parts: %3 interim: %4");
+            static const QString ds("Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6");
             return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts)),
-                          boolToYesNo(details.testFlag(SendIterimPositions)),
+                          boolToYesNo(details.testFlag(SendGndFlag)),
+                          boolToYesNo(details.testFlag(SendInterimPositions)),
                           boolToYesNo(details.testFlag(ReceiveAircraftParts)),
+                          boolToYesNo(details.testFlag(ReceiveGndFlag)),
                           boolToYesNo(details.testFlag(ReceiveInterimPositions)));
         }
 
-        void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool interimSend, bool interimReceive)
+        void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive)
         {
             SendReceiveDetails s = Nothing;
-            if (partsSend) { s |= SendAircraftParts; }
+            if (partsSend)    { s |= SendAircraftParts; }
             if (partsReceive) { s |= ReceiveAircraftParts; }
-            if (interimSend) { s |= SendIterimPositions; }
+            if (gndSend)      { s |= SendGndFlag; }
+            if (gndReceive)   { s |= ReceiveGndFlag; }
+            if (interimSend)  { s |= SendInterimPositions; }
             if (interimReceive) { s |= ReceiveInterimPositions; }
             this->setSendReceiveDetails(s);
         }
 
         const CFsdSetup &CFsdSetup::vatsimStandard()
         {
-            static const CFsdSetup s;
+            static const CFsdSetup s(AllWithoutGnd);
             return s;
         }
 
