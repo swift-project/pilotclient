@@ -78,6 +78,56 @@ namespace BlackMiscTest
         QCOMPARE(p.isOnGroundInterpolated(), 0.0);
     }
 
+    void CTestInterpolatorParts::partsToSituationGndFlag()
+    {
+        CCallsign cs("SWIFT");
+
+        // fixed time so everything can be debugged
+        const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch()
+        const qint64 deltaT = 5000; // ms
+        const int number = 10;
+
+        CAircraftPartsList partsOnGround;
+        for (int i = 0; i < number; i++)
+        {
+            const CAircraftParts p = getTestParts(i, ts, deltaT, true);
+            partsOnGround.push_back(p);
+        }
+
+        CAircraftPartsList partsNotOnGround;
+        for (int i = 0; i < number; i++)
+        {
+            const CAircraftParts p = getTestParts(i, ts, deltaT, false);
+            partsNotOnGround.push_back(p);
+        }
+
+        CAircraftSituationList situations;
+        for (int i = 0; i < number; i++)
+        {
+            CAircraftSituation s = getTestSituation(cs, i, ts, deltaT, 0);
+            s.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::NotSet);
+            situations.push_back(s);
+        }
+
+        CAircraftSituation s0 = situations[0];
+        s0.adjustGroundFlag(partsOnGround);
+        QVERIFY2(s0.isOnGround(), "Supposed to be on ground");
+
+        s0 = situations[0];
+        s0.adjustGroundFlag(partsNotOnGround);
+        QVERIFY2(!s0.isOnGround(), "Supposed to be not on ground");
+
+        qint64 distanceMs = -1;
+        const qint64 Offset = 33;
+        partsOnGround.addMsecsToOffset(Offset);
+        CAircraftSituation s1 = situations[1];
+        s1.setOnGroundDetails(CAircraftSituation::NotSet);
+        s1.adjustGroundFlag(partsOnGround, true, 0.1, &distanceMs);
+        QVERIFY2(s1.getOnGround(), "Supposed to be on ground");
+        QVERIFY2(distanceMs == deltaT - Offset, "Offset time wrong");
+        QVERIFY2(s1.getOnGroundDetails() == CAircraftSituation::InFromParts, "Wrong details");
+    }
+
     CAircraftParts CTestInterpolatorParts::getTestParts(int number, qint64 ts, qint64 deltaT, bool onGround)
     {
         CAircraftLights l(true, false, true, false, true, false);
@@ -87,6 +137,24 @@ namespace BlackMiscTest
         p.setTimeOffsetMs(0);
         p.setOnGround(onGround);
         return p;
+    }
+
+    CAircraftSituation CTestInterpolatorParts::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset)
+    {
+        const CAltitude alt(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
+        const CLatitude lat(number, CAngleUnit::deg());
+        const CLongitude lng(180.0 + number, CAngleUnit::deg());
+        const CHeading heading(number * 10, CHeading::True, CAngleUnit::deg());
+        const CAngle bank(number, CAngleUnit::deg());
+        const CAngle pitch(number, CAngleUnit::deg());
+        const CSpeed gs(number * 10, CSpeedUnit::km_h());
+        const CAltitude gndElev({ 0, CLengthUnit::m() }, CAltitude::MeanSeaLevel);
+        const CCoordinateGeodetic c(lat, lng, alt);
+        CAircraftSituation s(callsign, c, heading, pitch, bank, gs);
+        s.setGroundElevation(gndElev);
+        s.setMSecsSinceEpoch(ts - deltaT * number); // values in past
+        s.setTimeOffsetMs(offset);
+        return s;
     }
 } // namespace
 

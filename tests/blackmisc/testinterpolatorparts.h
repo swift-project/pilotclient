@@ -18,6 +18,7 @@
  */
 
 #include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 
 #include <QObject>
 #include <QtGlobal>
@@ -39,9 +40,15 @@ namespace BlackMiscTest
         //! Basic unit tests for interpolator
         void groundFlagInterpolation();
 
+        //! Tests adjusting the ground flag by parts
+        void partsToSituationGndFlag();
+
     private:
         //! Test parts
         static BlackMisc::Aviation::CAircraftParts getTestParts(int number, qint64 ts, qint64 deltaT, bool onGround);
+
+        //! Test situation for testing
+        static BlackMisc::Aviation::CAircraftSituation getTestSituation(const BlackMisc::Aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset);
     };
 } // namespace
 
