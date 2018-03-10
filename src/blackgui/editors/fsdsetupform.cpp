@@ -41,6 +41,7 @@ namespace BlackGui
             CFsdSetup s(ui->le_TextCodec->text().trimmed().toLower());
             s.setSendReceiveDetails(
                 ui->cb_AircraftPartsSend->isChecked(), ui->cb_AircraftPartsReceive->isChecked(),
+                ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
                 ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked()
             );
             return s;
@@ -52,7 +53,7 @@ namespace BlackGui
             return fsd;
         }
 
-        void CFsdSetupForm::setValue(const BlackMisc::Network::CFsdSetup &setup)
+        void CFsdSetupForm::setValue(const CFsdSetup &setup)
         {
             ui->le_TextCodec->setText(setup.getTextCodec());
             const CFsdSetup::SendReceiveDetails d = setup.getSendReceiveDetails();
@@ -60,7 +61,7 @@ namespace BlackGui
             ui->cb_AircraftPartsReceive->setChecked(d & CFsdSetup::ReceiveAircraftParts);
             ui->cb_AircraftPartsSend->setChecked(d & CFsdSetup::SendAircraftParts);
             ui->cb_FastPositionReceive->setChecked(d & CFsdSetup::ReceiveInterimPositions);
-            ui->cb_FastPositionSend->setChecked(d & CFsdSetup::SendIterimPositions);
+            ui->cb_FastPositionSend->setChecked(d & CFsdSetup::SendInterimPositions);
         }
 
         bool CFsdSetupForm::isFsdSetupEnabled() const
@@ -88,6 +89,8 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_AircraftPartsSend, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionReceive, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FastPositionSend, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_GndFlagReceive, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_GndFlagSend, readonly);
             this->forceStyleSheetUpdate();
         }
 
@@ -120,6 +123,8 @@ namespace BlackGui
             ui->cb_AircraftPartsSend->setChecked(true);
             ui->cb_FastPositionReceive->setChecked(true);
             ui->cb_FastPositionSend->setChecked(true);
+            ui->cb_GndFlagReceive->setChecked(true);
+            ui->cb_GndFlagSend->setChecked(true);
             ui->le_TextCodec->setText("latin1");
         }
     } // ns
