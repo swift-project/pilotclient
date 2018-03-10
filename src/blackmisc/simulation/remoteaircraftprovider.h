@@ -102,6 +102,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
+            //! Get the latest aircraft parts (if any, otherwise default)
+            //! \threadsafe
+            BlackMisc::Aviation::CAircraftParts getLatestAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const;
+
             //! Number of aircraft supporting parts
             //! \threadsafe
             virtual int getRemoteAircraftSupportingPartsCount() const = 0;

@@ -130,6 +130,13 @@ namespace BlackMisc
             return m_remoteAircraftProvider->updateAircraftEnabled(callsign, enabledForRedering);
         }
 
+        CAircraftParts IRemoteAircraftProvider::getLatestAircraftParts(const CCallsign &callsign) const
+        {
+            static const CAircraftParts empty;
+            const CAircraftPartsList parts = this->remoteAircraftParts(callsign, -1);
+            return parts.isEmpty() ? empty : parts.latestObject();
+        }
+
         void IRemoteAircraftProvider::removeOutdatedParts(CAircraftPartsList &partsList)
         {
             // remove all outdated parts, but keep at least one
