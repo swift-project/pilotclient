@@ -22,6 +22,12 @@ namespace BlackMisc
             return this->getSystemString();
         }
 
+        const CEcosystem &CEcosystem::unspecified()
+        {
+            static const CEcosystem e(Unspecified);
+            return e;
+        }
+
         const CEcosystem &CEcosystem::vatsim()
         {
             static const CEcosystem e(VATSIM);

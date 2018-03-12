@@ -82,6 +82,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Unspecified
+            static const CEcosystem &unspecified();
+
             //! VATSIM eco system
             static const CEcosystem &vatsim();
 
