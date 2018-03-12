@@ -34,7 +34,7 @@ namespace BlackGui
             explicit CSettingsVatsimReadersComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsVatsimReadersComponent();
+            virtual ~CSettingsVatsimReadersComponent();
 
         private slots:
             void ps_settingsChanged();

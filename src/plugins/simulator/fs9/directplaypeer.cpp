@@ -20,6 +20,7 @@
 #include <QMutexLocker>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 
 namespace BlackSimPlugin
 {
@@ -31,7 +32,7 @@ namespace BlackSimPlugin
             return cats;
         }
 
-        CDirectPlayPeer::CDirectPlayPeer(QObject *owner, const BlackMisc::Aviation::CCallsign &callsign)
+        CDirectPlayPeer::CDirectPlayPeer(QObject *owner, const CCallsign &callsign)
             : CContinuousWorker(owner, "peer_" + callsign.toQString()),
               m_callsign(callsign),
               m_mutexHostList(QMutex::Recursive),
@@ -103,7 +104,7 @@ namespace BlackSimPlugin
                     // Proceeed only, if the sender is our local player
                     if (pReceiveMsg->dpnidSender == m_playerUser)
                     {
-                        QByteArray messageData = QByteArray((char *)pReceiveMsg->pReceiveData, pReceiveMsg->dwReceiveDataSize);
+                        const QByteArray messageData = QByteArray((char *)pReceiveMsg->pReceiveData, pReceiveMsg->dwReceiveDataSize);
                         emit customPacketReceived(messageData);
                     }
                     break;

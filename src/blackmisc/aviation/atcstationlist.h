@@ -32,9 +32,9 @@ namespace BlackMisc
         //! Value object for a list of ATC stations.
         class BLACKMISC_EXPORT CAtcStationList :
             public CSequence<CAtcStation>,
-            public BlackMisc::Aviation::ICallsignObjectList<CAtcStation, CAtcStationList>,
-            public BlackMisc::Geo::IGeoObjectWithRelativePositionList<CAtcStation, CAtcStationList>,
-            public BlackMisc::Mixin::MetaType<CAtcStationList>
+            public Aviation::ICallsignObjectList<CAtcStation, CAtcStationList>,
+            public Geo::IGeoObjectWithRelativePositionList<CAtcStation, CAtcStationList>,
+            public Mixin::MetaType<CAtcStationList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAtcStationList)

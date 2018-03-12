@@ -78,7 +78,7 @@ namespace BlackSimPlugin
             //! Creates a new DirectPlay device address
             HRESULT createHostAddress();
 
-            BlackMisc::Aviation::CCallsign m_callsign; //!< Peer callsign
+            const BlackMisc::Aviation::CCallsign m_callsign; //!< Peer callsign
 
             IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address
             IDirectPlay8Address *m_deviceAddress = nullptr; //!< DirectPlay device address

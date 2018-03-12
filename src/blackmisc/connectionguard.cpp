@@ -29,7 +29,7 @@ namespace BlackMisc
 
     CConnectionGuard::~CConnectionGuard()
     {
-        disconnectAll();
+        this->disconnectAll();
     }
 
     int CConnectionGuard::disconnectAll()

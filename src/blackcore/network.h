@@ -66,9 +66,7 @@ namespace BlackCore
         Q_OBJECT
 
     protected:
-        /*!
-         * Constructor
-         */
+        //! Constructor
         INetwork(
             BlackMisc::Network::IClientProvider *clientProvider,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
@@ -78,30 +76,22 @@ namespace BlackCore
             BlackMisc::Simulation::COwnAircraftAware(ownAircraftProvider) {}
 
     public:
-        /*!
-         * Destructor.
-         */
+        //! Destructor
         virtual ~INetwork() {}
 
-        /*!
-         * Underlying library info.
-         */
+        //! Underlying library info.
         virtual const QString &getLibraryInfo(bool detailed) const = 0;
 
-        /*!
-         * Flags for capabilities bitfield.
-         */
-        enum
-        {
-            AcceptsAtisResponses        = 1 << 0,
-            SupportsInterimPosUpdates   = 1 << 1,
-            SupportsIcaoCodes           = 1 << 2,
-            SupportsAircraftConfigs     = 1 << 3
-        };
+        //! Flags for capabilities bitfield
+//        enum Capability
+//        {
+//            AcceptsAtisResponses        = 1 << 0,
+//            SupportsInterimPosUpdates   = 1 << 1,
+//            SupportsIcaoCodes           = 1 << 2,
+//            SupportsAircraftConfigs     = 1 << 3
+//        };
 
-        /*!
-         * Login modes
-         */
+        //! Login modes
         enum LoginMode
         {
             LoginNormal = 0,    //!< Normal login
@@ -109,9 +99,7 @@ namespace BlackCore
             LoginStealth        //!< Login stealth mode
         };
 
-        /*!
-         * Status of the connection.
-         */
+        //! Status of the connection.
         enum ConnectionStatus
         {
             Disconnected = 0,   //!< Not connected
@@ -124,9 +112,7 @@ namespace BlackCore
         };
         Q_ENUM(ConnectionStatus)
 
-        /*!
-         * Convert a ConnectionStatus to a string.
-         */
+        //! Convert a ConnectionStatus to a string.
         static QString connectionStatusToString(ConnectionStatus status)
         {
             const int index = staticMetaObject.indexOfEnumerator("ConnectionStatus");

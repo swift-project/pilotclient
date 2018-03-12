@@ -15,7 +15,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/weather/weathergrid.h"
-
 #include <QObject>
 
 namespace BlackCore

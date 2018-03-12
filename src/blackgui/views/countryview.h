@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COUNTRYVIEW_H
-#define BLACKGUI_COUNTRYVIEW_H
+#ifndef BLACKGUI_VIEWS_COUNTRYVIEW_H
+#define BLACKGUI_VIEWS_COUNTRYVIEW_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/countrylistmodel.h"
@@ -20,7 +20,6 @@
 class QWidget;
 
 namespace BlackMisc { class CCountry; }
-
 namespace BlackGui
 {
     namespace Views
@@ -32,6 +31,6 @@ namespace BlackGui
             //! Constructor
             explicit CCountryView(QWidget *parent = nullptr);
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

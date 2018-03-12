@@ -90,7 +90,7 @@ namespace BlackGui
         Q_ASSERT_X(CInputManager::instance(), Q_FUNC_INFO, "Missing input manager");
         if (this->hasTarget())
         {
-            CInputManager::instance()->unbind(this->m_index);
+            CInputManager::instance()->unbind(m_index);
         }
         this->reset();
     }

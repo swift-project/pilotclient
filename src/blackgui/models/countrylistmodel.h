@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COUNTRYLISTMODEL_H
-#define BLACKGUI_COUNTRYLISTMODEL_H
+#ifndef BLACKGUI_MODELS_COUNTRYLISTMODEL_H
+#define BLACKGUI_MODELS_COUNTRYLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeldbobjects.h"

@@ -21,5 +21,5 @@ namespace BlackGui
             this->standardInit(new CCountryListModel(this));
             this->setMenu(MenuDefaultDbViews);
         }
-    }
-} // namespace
+    } // ns
+} // ns
