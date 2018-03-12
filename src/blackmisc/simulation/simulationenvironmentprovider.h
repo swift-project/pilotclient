@@ -149,6 +149,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::Simulation::ISimulationEnvironmentProvider, "BlackMisc::Simulation::ISimulationEnvironmentProvider")
+Q_DECLARE_INTERFACE(BlackMisc::Simulation::ISimulationEnvironmentProvider, "org.swift-project.blackmisc::simulation::isimulationenvironmentprovider")
 
 #endif // guard

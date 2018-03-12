@@ -82,6 +82,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::Network::IEcosystemProvider, "BlackMisc::Network::IEcosystemProvider")
+Q_DECLARE_INTERFACE(BlackMisc::Network::IEcosystemProvider, "org.swift-project.blackmisc::network::iecosystemprovider")
 
 #endif // guard

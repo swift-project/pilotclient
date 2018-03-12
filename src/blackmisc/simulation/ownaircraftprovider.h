@@ -167,6 +167,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::Simulation::IOwnAircraftProvider, "BlackMisc::Simulation::IOwnAircraftProvider")
+Q_DECLARE_INTERFACE(BlackMisc::Simulation::IOwnAircraftProvider, "org.swift-project.blackmisc::simulation::iownaircraftprovider")
 
 #endif // guard

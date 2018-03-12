@@ -118,6 +118,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::Network::IClientProvider, "BlackMisc::Network::IClientProvider")
+Q_DECLARE_INTERFACE(BlackMisc::Network::IClientProvider, "org.swift-project.blackmisc::network::iclientprovider")
 
 #endif // guard

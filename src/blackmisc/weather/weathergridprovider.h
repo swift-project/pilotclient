@@ -48,6 +48,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::Weather::IWeatherGridProvider, "BlackMisc::Weather::IWeatherGridProvider")
+Q_DECLARE_INTERFACE(BlackMisc::Weather::IWeatherGridProvider, "org.swift-project.blackmisc::weather::iweathergridprovider")
 
 #endif // guard
