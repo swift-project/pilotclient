@@ -34,11 +34,6 @@ namespace BlackCore
         return status;
     }
 
-    const CSimulatorInfo &ISimulator::getSimulatorInfo() const
-    {
-        return this->getSimulatorPluginInfo().getSimulatorInfo();
-    }
-
     void ISimulator::registerHelp()
     {
         if (CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
@@ -61,11 +56,14 @@ namespace BlackCore
         return s.join(", ");
     }
 
-    ISimulator::ISimulator(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, IWeatherGridProvider *weatherGridProvider, QObject *parent) :
+    ISimulator::ISimulator(
+        const CSimulatorPluginInfo &pluginInfo, IOwnAircraftProvider *ownAircraftProvider,
+        IRemoteAircraftProvider *remoteAircraftProvider, IWeatherGridProvider *weatherGridProvider, QObject *parent) :
         QObject(parent),
         COwnAircraftAware(ownAircraftProvider),
         CRemoteAircraftAware(remoteAircraftProvider),
         CWeatherGridAware(weatherGridProvider),
+        ISimulationEnvironmentProvider(pluginInfo),
         CIdentifiable(this)
     {
         ISimulator::registerHelp();

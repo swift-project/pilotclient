@@ -105,8 +105,7 @@ namespace BlackMisc
             CClientAware() {}
 
             //! Constructor
-            CClientAware(IClientProvider *clientProvider) : m_clientProvider(clientProvider) { }
-            IClientProvider *m_clientProvider = nullptr; //!< access to object
+            CClientAware(IClientProvider *clientProvider) : IProviderAware(clientProvider) { }
         };
 
         //! Client provider dummy for testing

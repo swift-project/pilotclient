@@ -55,7 +55,8 @@ namespace BlackMisc
 namespace BlackCore
 {
     //! Common base class with providers, interface and some base functionality
-    class BLACKCORE_EXPORT CSimulatorCommon : public BlackCore::ISimulator {
+    class BLACKCORE_EXPORT CSimulatorCommon : public ISimulator
+    {
         Q_OBJECT
 
     public:
@@ -66,11 +67,9 @@ namespace BlackCore
         virtual ~CSimulatorCommon();
 
         // --------- ISimulator implementations ------------
-        virtual BlackMisc::Simulation::CAircraftModel getDefaultModel() const override;
         virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) override;
         virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
-        virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const override;
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
         virtual void setWeatherActivated(bool activated) override;
@@ -154,10 +153,6 @@ namespace BlackCore
         virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
         //! @}
 
-        //! New plugin info
-        //! \remark normally only used by
-        void setNewPluginInfo(const BlackMisc::Simulation::CSimulatorPluginInfo &info, const BlackMisc::Simulation::CAircraftModel &defaultModel);
-
         //! Max.airports in range
         int maxAirportsInRange() const;
 
@@ -222,8 +217,7 @@ namespace BlackCore
         int    m_statsUpdateAircraftCountMs = 0;                           //!< statistics update count
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;                       //!< statistics update time
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;                         //!< statistics update time
-        BlackMisc::Simulation::CAircraftModel m_defaultModel;              //!< default model
-        BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals;   //!< setup object
+        BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log interpolation
 
         // setup for logging etc.
@@ -260,10 +254,9 @@ namespace BlackCore
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         int m_timerCounter = 0;               //!< allows to calculate n seconds
         QTimer m_oneSecondTimer;              //!< multi purpose timer
-        BlackMisc::Simulation::CSimulatorPluginInfo   m_simulatorPluginInfo;               //!< info object
-        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;               //!< all other aircraft are to be ignored
-        BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;             //!< callsigns which will be rendered
-        BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections; //!< connected signal/slots
+        BlackMisc::Simulation::CSimulatedAircraftList  m_highlightedAircraft;               //!< all other aircraft are to be ignored
+        BlackMisc::Aviation::CCallsignSet              m_callsignsToBeRendered;             //!< callsigns which will be rendered
+        BlackMisc::CConnectionGuard                    m_remoteAircraftProviderConnections; //!< connected signal/slots
 
         // statistics values of how often those functions are called
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)

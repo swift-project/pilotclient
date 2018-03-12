@@ -121,6 +121,9 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
         //! @}
 
+        //! \copydoc BlackMisc::IProvider::asQObject
+        virtual QObject *asQObject() override { return this; }
+
         //! Returns the list of users we know about
         BlackMisc::Network::CUserList getUsers() const;
 

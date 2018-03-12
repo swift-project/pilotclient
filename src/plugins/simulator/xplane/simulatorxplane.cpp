@@ -100,14 +100,8 @@ namespace BlackSimPlugin
             m_fastTimer.start(100);
             m_slowTimer.start(1000);
 
-            m_defaultModel =
-            {
-                "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines",
-                CAircraftModel::TypeModelMatchingDefaultModel,
-                "A320 AUA",
-                CAircraftIcaoCode("A320", "L2J")
-            };
-
+            this->setDefaultModel({ "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines", CAircraftModel::TypeModelMatchingDefaultModel,
+                                    "A320 AUA", CAircraftIcaoCode("A320", "L2J")});
             this->resetXPlaneData();
         }
 

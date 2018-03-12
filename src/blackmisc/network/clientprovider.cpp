@@ -85,37 +85,37 @@ namespace BlackMisc
 
         CClientList CClientAware::getClients() const
         {
-            if (m_clientProvider) { return m_clientProvider->getClients(); }
+            if (this->provider()) { return this->provider()->getClients(); }
             return CClientList();
         }
 
         CClient CClientAware::getClientOrDefaultForCallsign(const Aviation::CCallsign &callsign) const
         {
-            if (m_clientProvider) { return m_clientProvider->getClientOrDefaultForCallsign(callsign); }
+            if (this->provider()) { return this->provider()->getClientOrDefaultForCallsign(callsign); }
             return CClient();
         }
 
         bool CClientAware::hasClientInfo(const CCallsign &callsign) const
         {
-            if (m_clientProvider) { return m_clientProvider->hasClientInfo(callsign); }
+            if (this->provider()) { return this->provider()->hasClientInfo(callsign); }
             return false;
         }
 
         bool CClientAware::addNewClient(const CClient &client)
         {
-            if (m_clientProvider) { return m_clientProvider->addNewClient(client); }
+            if (this->provider()) { return this->provider()->addNewClient(client); }
             return false;
         }
 
         int CClientAware::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
         {
-            if (m_clientProvider) { return m_clientProvider->updateOrAddClient(callsign, vm, skipEqualValues); }
+            if (this->provider()) { return this->provider()->updateOrAddClient(callsign, vm, skipEqualValues); }
             return 0;
         }
 
         int CClientAware::removeClient(const CCallsign &callsign)
         {
-            if (m_clientProvider) { return m_clientProvider->removeClient(callsign); }
+            if (this->provider()) { return this->provider()->removeClient(callsign); }
             return 0;
         }
 

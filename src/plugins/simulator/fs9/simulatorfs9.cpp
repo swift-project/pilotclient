@@ -117,13 +117,11 @@ namespace BlackSimPlugin
                 emit this->simulatorStatusChanged(ISimulator::Disconnected);
             });
 
-            m_defaultModel =
+            this->setDefaultModel(
             {
-                "Boeing 737-400",
-                CAircraftModel::TypeModelMatchingDefaultModel,
-                "B737-400 default model",
-                CAircraftIcaoCode("B734", "L2J")
-            };
+                "Boeing 737-400", CAircraftModel::TypeModelMatchingDefaultModel,
+                "B737-400 default model", CAircraftIcaoCode("B734", "L2J")
+            });
         }
 
         bool CSimulatorFs9::isConnected() const

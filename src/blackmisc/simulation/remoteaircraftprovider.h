@@ -19,6 +19,7 @@
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/provider.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/identifier.h"
 
@@ -44,7 +45,7 @@ namespace BlackMisc
         //! \note Can not be derived from QObject (as for the signals), as this would create multiple
         //!       inheritance. Hence Q_DECLARE_INTERFACE is used.
         //! \ingroup remoteaircraftprovider
-        class BLACKMISC_EXPORT IRemoteAircraftProvider
+        class BLACKMISC_EXPORT IRemoteAircraftProvider : public IProvider
         {
         public:
             static constexpr int MaxSituationsPerCallsign = 6;    //!< How many situations we keep per callsign
@@ -185,7 +186,7 @@ namespace BlackMisc
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
-        class BLACKMISC_EXPORT CRemoteAircraftAware
+        class BLACKMISC_EXPORT CRemoteAircraftAware : public IProviderAware<IRemoteAircraftProvider>
         {
         public:
             //! \copydoc IRemoteAircraftProvider::getAircraftInRange
@@ -246,15 +247,14 @@ namespace BlackMisc
             void updateMarkAllAsNotRendered();
 
             //! Set remote aircraft provider
-            void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { m_remoteAircraftProvider = remoteAircraftProvider; }
+            void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { this->setProvider(remoteAircraftProvider); }
 
         protected:
             //! Default constructor
             CRemoteAircraftAware() {}
 
             //! Constructor
-            CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : m_remoteAircraftProvider(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
-            IRemoteAircraftProvider *m_remoteAircraftProvider = nullptr; //!< access to object
+            CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : IProviderAware(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
         };
     } // namespace
 } // namespace

@@ -30,13 +30,13 @@ namespace BlackSimPlugin
                                      QObject *parent) :
             CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent)
         {
-            m_defaultModel =
+            this->setDefaultModel(
             {
                 "Boeing 737-800 Paint1",
                 CAircraftModel::TypeModelMatchingDefaultModel,
                 "B737-800 default model",
                 CAircraftIcaoCode("B738", "L2J")
-            };
+            });
         }
     } // ns
 } // ns

@@ -9,19 +9,16 @@
 
 #include "blackmisc/weather/weathergridprovider.h"
 
-using namespace BlackMisc;
-
 namespace BlackMisc
 {
     namespace Weather
     {
-
-        void CWeatherGridAware::requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid,
-                                                   const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback)
+        void CWeatherGridAware::requestWeatherGrid(
+            const CWeatherGrid &weatherGrid,
+            const CSlot<void(const CWeatherGrid &)> &callback)
         {
-            Q_ASSERT_X(this->m_weatherGridProvider, Q_FUNC_INFO, "No object available");
-            this->m_weatherGridProvider->requestWeatherGrid(weatherGrid, callback);
+            Q_ASSERT_X(this->hasProvider(), Q_FUNC_INFO, "No object available");
+            this->provider()->requestWeatherGrid(weatherGrid, callback);
         }
-
     } // namespace
 } // namespace

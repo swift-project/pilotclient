@@ -12,17 +12,18 @@
 #ifndef BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 #define BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/provider.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/identifier.h"
 
 #include <QObject>
 #include <QtGlobal>
@@ -40,7 +41,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Direct threadsafe in memory access to own aircraft
-        class BLACKMISC_EXPORT IOwnAircraftProvider
+        class BLACKMISC_EXPORT IOwnAircraftProvider : public IProvider
         {
         public:
             //! Own aircraft
@@ -108,9 +109,12 @@ namespace BlackMisc
         };
 
         //! Delegating class which can be directly used to access an \sa IOwnAircraftProvider instance
-        class BLACKMISC_EXPORT COwnAircraftAware
+        class BLACKMISC_EXPORT COwnAircraftAware : public IProviderAware<IOwnAircraftProvider>
         {
         public:
+            //! Set the provider
+            void setOwnAircraftProvider(IOwnAircraftProvider *provider) { this->setProvider(provider); }
+
             //! \copydoc IOwnAircraftProvider::getOwnAircraft
             CSimulatedAircraft getOwnAircraft() const;
 
@@ -158,8 +162,7 @@ namespace BlackMisc
 
         protected:
             //! Constructor
-            COwnAircraftAware(IOwnAircraftProvider *ownAircraftProvider) : m_ownAircraftProvider(ownAircraftProvider) { Q_ASSERT(ownAircraftProvider); }
-            IOwnAircraftProvider *m_ownAircraftProvider = nullptr; //!< access to object
+            COwnAircraftAware(IOwnAircraftProvider *ownAircraftProvider) : IProviderAware(ownAircraftProvider) { Q_ASSERT(ownAircraftProvider); }
         };
     } // namespace
 } // namespace

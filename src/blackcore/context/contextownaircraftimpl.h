@@ -64,6 +64,7 @@ namespace BlackCore
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)
             Q_INTERFACES(BlackMisc::Simulation::IOwnAircraftProvider)
+            Q_INTERFACES(BlackMisc::IProvider)
             friend class BlackCore::CCoreFacade;
             friend class IContextOwnAircraft;
 
@@ -105,6 +106,9 @@ namespace BlackCore
             //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnParts
             //! \ingroup ownaircraftprovider
             virtual bool updateOwnParts(const BlackMisc::Aviation::CAircraftParts &parts) override;
+
+            //! \copydoc BlackMisc::IProvider::asQObject
+            virtual QObject *asQObject() override { return this; }
 
         public slots:
             //! \copydoc IContextOwnAircraft::getOwnAircraft()

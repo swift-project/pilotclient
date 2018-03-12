@@ -12,16 +12,16 @@
 #ifndef BLACKMISC_WEATHER_WEATHERGRIDPROVIDER_H
 #define BLACKMISC_WEATHER_WEATHERGRIDPROVIDER_H
 
+#include "blackmisc/weather/weathergrid.h"
+#include "blackmisc/provider.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/slot.h"
-#include "blackmisc/weather/weathergrid.h"
 
 #include <QObject>
 #include <QtGlobal>
 
 namespace BlackMisc
 {
-
     namespace Weather
     {
         //! Direct threadsafe in memory access to weather grid
@@ -29,24 +29,22 @@ namespace BlackMisc
         {
         public:
             //! Request weather grid
-            virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid,
-                                            const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback) = 0;
+            virtual void requestWeatherGrid(const CWeatherGrid &weatherGrid,
+                                            const CSlot<void(const CWeatherGrid &)> &callback) = 0;
         };
 
         //! Delegating class which can be directly used to access an \sa IWeatherGridProvider instance
-        class BLACKMISC_EXPORT CWeatherGridAware
+        class BLACKMISC_EXPORT CWeatherGridAware : public IProviderAware<IWeatherGridProvider>
         {
         public:
             //! \copydoc IWeatherGridProvider::requestWeatherGrid
-            virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid,
-                                            const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback);
+            virtual void requestWeatherGrid(const CWeatherGrid &weatherGrid,
+                                            const CSlot<void(const CWeatherGrid &)> &callback);
 
         protected:
             //! Constructor
-            CWeatherGridAware(IWeatherGridProvider *weatherGridProvider) : m_weatherGridProvider(weatherGridProvider) { Q_ASSERT(weatherGridProvider); }
-            IWeatherGridProvider *m_weatherGridProvider = nullptr; //!< access to object
+            CWeatherGridAware(IWeatherGridProvider *weatherGridProvider) : IProviderAware(weatherGridProvider) { Q_ASSERT(weatherGridProvider); }
         };
-
     } // namespace
 } // namespace
 

@@ -52,15 +52,14 @@ namespace BlackCore
                                        IRemoteAircraftProvider *remoteAircraftProvider,
                                        IWeatherGridProvider *weatherGridProvider,
                                        QObject *parent)
-        : ISimulator(ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent),
-          m_simulatorPluginInfo(info)
+        : ISimulator(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent)
     {
         this->setObjectName("Simulator: " + info.getIdentifier());
         CSimulatorCommon::registerHelp();
 
         // provider signals, hook up with remote aircraft provider
         m_remoteAircraftProviderConnections.append(
-            m_remoteAircraftProvider->connectRemoteAircraftProviderSignals(
+            CRemoteAircraftAware::provider()->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
                 std::bind(&CSimulatorCommon::rapOnRemoteProviderAddedAircraftSituation, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::rapOnRemoteProviderAddedAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
@@ -82,7 +81,7 @@ namespace BlackCore
         }
 
         // info
-        CLogMessage(this).info("Initialized simulator driver: '%1'") << m_simulatorPluginInfo.toQString();
+        CLogMessage(this).info("Initialized simulator driver: '%1'") << this->getSimulatorInfo().toQString();
     }
 
     CSimulatorCommon::~CSimulatorCommon()
@@ -123,12 +122,6 @@ namespace BlackCore
 
         // will be added with next snapshot onRecalculatedRenderedAircraft
         return false;
-    }
-
-    void CSimulatorCommon::setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel)
-    {
-        m_simulatorPluginInfo = info;
-        m_defaultModel = defaultModel;
     }
 
     int CSimulatorCommon::maxAirportsInRange() const
@@ -300,16 +293,6 @@ namespace BlackCore
     void CSimulatorCommon::onSwiftDbAirportsRead()
     {
         // void, can be overridden in specialized drivers
-    }
-
-    CAircraftModel CSimulatorCommon::getDefaultModel() const
-    {
-        return m_defaultModel;
-    }
-
-    const CSimulatorPluginInfo &CSimulatorCommon::getSimulatorPluginInfo() const
-    {
-        return m_simulatorPluginInfo;
     }
 
     const CSimulatorInternals &CSimulatorCommon::getSimulatorInternals() const

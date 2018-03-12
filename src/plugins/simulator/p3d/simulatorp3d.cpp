@@ -32,13 +32,8 @@ namespace BlackSimPlugin
                                      QObject *parent) :
             CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent)
         {
-            m_defaultModel =
-            {
-                "LOCKHEED L049_2",
-                CAircraftModel::TypeModelMatchingDefaultModel,
-                "Constellation in TWA livery",
-                CAircraftIcaoCode("CONI", "L4P")
-            };
+            this->setDefaultModel(CAircraftModel("LOCKHEED L049_2", CAircraftModel::TypeModelMatchingDefaultModel,
+                                                 "Constellation in TWA livery", CAircraftIcaoCode("CONI", "L4P")));
         }
     } // namespace
 } // namespace

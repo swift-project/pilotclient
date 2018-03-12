@@ -12,8 +12,14 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATIONENVIRONMENTPROVIDER_H
 #define BLACKMISC_SIMULATION_SIMULATIONENVIRONMENTPROVIDER_H
 
+#include "simulatorplugininfo.h"
+#include "aircraftmodel.h"
+#include "blackmisc/provider.h"
 #include "blackmisc/geo/coordinategeodeticlist.h"
 #include "blackmisc/geo/elevationplane.h"
+
+#include <QMap>
+#include <QObject>
 
 namespace BlackMisc
 {
@@ -21,7 +27,7 @@ namespace BlackMisc
     {
         //! Direct in memory access to elevation data
         //! \remark we are interested in elevations of airports
-        class BLACKMISC_EXPORT ISimulationEnvironmentProvider
+        class BLACKMISC_EXPORT ISimulationEnvironmentProvider : public IProvider
         {
         public:
             //! All remembered coordiantes
@@ -29,20 +35,55 @@ namespace BlackMisc
             //! \threadsafe
             Geo::CCoordinateGeodeticList getElevationCoordinates() const;
 
-            //! Only keep closest ones
-            //! \threadsafe
-            int cleanUpElevations(const Geo::ICoordinateGeodetic &referenceCoordinate, int maxNumber = MaxElevations);
-
             //! Find closest elevation
             //! \threadsafe
             Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range);
+
+            //! Get the represented plugin
+            //! \threadsafe
+            CSimulatorPluginInfo getSimulatorPluginInfo() const;
+
+            //! Get the represented simulator
+            //! \threadsafe
+            CSimulatorInfo getSimulatorInfo() const;
+
+            //! Default model
+            //! \threadsafe
+            CAircraftModel getDefaultModel() const;
+
+            //! Get CG per callsign, NULL if not found
+            PhysicalQuantities::CLength getCG(const Aviation::CCallsign &callsign) const;
+
+            //! Has a CG?
+            bool hasCG(const Aviation::CCallsign &callsign) const;
+
+        protected:
+            //! Ctor
+            ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo);
+
+            //! New plugin info and default model
+            //! \remark normally only used by emulated driver
+            void setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel);
+
+            //! Default model
+            void setDefaultModel(const CAircraftModel &defaultModel);
+
+            //! Clear default model
+            void clearDefaultModel();
+
+            //! Clear elevations
+            void clearElevations();
+
+            //! Clear CGs
+            void clearCGs();
 
             //! Clear data
             //! \threadsafe
             void clearSimulationEnvironmentData();
 
-        protected:
-            static constexpr int MaxElevations = 1000;  //!< How many elevations we keep
+            //! Only keep closest ones
+            //! \threadsafe
+            int cleanUpElevations(const Geo::ICoordinateGeodetic &referenceCoordinate, int maxNumber = MaxElevations);
 
             //! Remember a given elevation
             //! \threadsafe
@@ -52,28 +93,58 @@ namespace BlackMisc
             //! \threadsafe
             bool rememberGroundElevation(const Geo::CElevationPlane &elevationPlane) ;
 
+            //! Insert or replace a CG
+            //! \remark passing a NULL value will remove the CG
+            //! \threadsafe
+            bool insertCG(const PhysicalQuantities::CLength &cg, const Aviation::CCallsign &cs);
+
+            //! Remove a CG
+            //! \threadsafe
+            int removeCG(const Aviation::CCallsign &cs);
+
+            static constexpr int MaxElevations = 1000;  //!< How many elevations we keep
+
         private:
+            CAircraftModel m_defaultModel; //!< default model
+            CSimulatorPluginInfo m_simulatorPluginInfo; //!< info object
             Geo::CCoordinateGeodeticList m_elvCoordinates;
+            QMap<Aviation::CCallsign, PhysicalQuantities::CLength> m_cgs; //! CGs
             mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates
+            mutable QReadWriteLock m_lockCG; //!< lock CGs
+            mutable QReadWriteLock m_lockModel; //!< lock models
         };
 
         //! Class which can be directly used to access an \sa ISimulationEnvironmentProvider object
-        class BLACKMISC_EXPORT CSimulationEnvironmentAware
+        class BLACKMISC_EXPORT CSimulationEnvironmentAware : public IProviderAware<ISimulationEnvironmentProvider>
         {
         public:
-            //! Elevations, can be changed over time as it comes from simulator
-            void setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider) { m_simEnvironmentProvider = provider; }
+            //! Set the provider
+            void setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider) { this->setProvider(provider); }
 
-            //! Find closest elevation
+            //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRange
             Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range);
+
+            //! \copydoc ISimulationEnvironmentProvider::getSimulatorPluginInfo
+            CSimulatorPluginInfo getSimulatorPluginInfo() const;
+
+            //! \copydoc ISimulationEnvironmentProvider::getSimulatorPluginInfo
+            CSimulatorInfo getSimulatorInfo() const;
+
+            //! \copydoc ISimulationEnvironmentProvider::getDefaultModel
+            CAircraftModel getDefaultModel() const;
+
+            //! \copydoc ISimulationEnvironmentProvider::getCG
+            PhysicalQuantities::CLength getCG(const Aviation::CCallsign &callsign) const;
+
+            //! \copydoc ISimulationEnvironmentProvider::hasCG
+            bool hasCG(const Aviation::CCallsign &callsign) const;
 
         protected:
             //! Default constructor
             CSimulationEnvironmentAware() {}
 
             //! Constructor
-            CSimulationEnvironmentAware(ISimulationEnvironmentProvider *simEnvProvider) : m_simEnvironmentProvider(simEnvProvider) { Q_ASSERT(simEnvProvider); }
-            ISimulationEnvironmentProvider *m_simEnvironmentProvider = nullptr; //!< access to object
+            CSimulationEnvironmentAware(ISimulationEnvironmentProvider *simEnvProvider) : IProviderAware(simEnvProvider) { Q_ASSERT(simEnvProvider); }
         };
     } // namespace
 } // namespace

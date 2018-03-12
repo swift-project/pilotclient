@@ -57,6 +57,7 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
+        Q_INTERFACES(BlackMisc::IProvider)
 
     public:
         //! ISimulator status
@@ -83,12 +84,6 @@ namespace BlackCore
         //! Is time synchronization on?
         virtual bool isTimeSynchronized() const = 0;
 
-        //! Get the simulator info (metadata of plugin)
-        virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const = 0;
-
-        //! Get simulator info (default implementation)
-        const BlackMisc::Simulation::CSimulatorInfo &getSimulatorInfo() const;
-
         //! Get the setup (simulator environemnt)
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const = 0;
 
@@ -97,9 +92,6 @@ namespace BlackCore
 
         //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
-
-        //! Get default aircraft model
-        virtual BlackMisc::Simulation::CAircraftModel getDefaultModel() const = 0;
 
         //! Logically add a new aircraft. Depending on max. aircraft, enabled status etc.
         //! it will physically added to the simulator.
@@ -184,6 +176,9 @@ namespace BlackCore
         //! Is overall (swift) application shutting down
         virtual bool isShuttingDown() const = 0;
 
+        //! \copydoc BlackMisc::IProvider::asQObject
+        virtual QObject *asQObject() override { return this; }
+
         //! Set interpolation mode, empty callsign applies to all know callsigns
         //! \return Returns true if the mode changed, otherwise false. Note that some implementations always return true.
         virtual bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode, const BlackMisc::Aviation::CCallsign &callsign) = 0;
@@ -231,7 +226,8 @@ namespace BlackCore
 
     protected:
         //! Default constructor
-        ISimulator(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+        ISimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo,
+                   BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                    BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                    QObject *parent = nullptr);

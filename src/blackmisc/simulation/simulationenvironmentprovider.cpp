@@ -9,7 +9,9 @@
 
 #include "simulationenvironmentprovider.h"
 
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -32,6 +34,28 @@ namespace BlackMisc
         {
             if (!elevationPlane.hasMSLGeodeticHeight()) { return false; }
             return this->rememberGroundElevation(elevationPlane, elevationPlane.getRadius());
+        }
+
+        bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const Aviation::CCallsign &cs)
+        {
+            if (cs.isEmpty()) { return false; }
+            const bool remove = cg.isNull();
+            QWriteLocker l(&m_lockCG);
+            if (remove)
+            {
+                m_cgs.remove(cs);
+            }
+            else
+            {
+                m_cgs[cs] = cg;
+            }
+            return true;
+        }
+
+        int ISimulationEnvironmentProvider::removeCG(const CCallsign &cs)
+        {
+            QWriteLocker l(&m_lockCG);
+            return m_cgs.remove(cs);
         }
 
         CCoordinateGeodeticList ISimulationEnvironmentProvider::getElevationCoordinates() const
@@ -58,16 +82,105 @@ namespace BlackMisc
             return this->getElevationCoordinates().findClosestWithinRange(reference, range);
         }
 
-        void ISimulationEnvironmentProvider::clearSimulationEnvironmentData()
+        CSimulatorPluginInfo ISimulationEnvironmentProvider::getSimulatorPluginInfo() const
+        {
+            QReadLocker l(&m_lockModel);
+            return m_simulatorPluginInfo;
+        }
+
+        CSimulatorInfo ISimulationEnvironmentProvider::getSimulatorInfo() const
+        {
+            return this->getSimulatorPluginInfo().getSimulatorInfo();
+        }
+
+        CAircraftModel ISimulationEnvironmentProvider::getDefaultModel() const
+        {
+            QReadLocker l(&m_lockModel);
+            return m_defaultModel;
+        }
+
+        CLength ISimulationEnvironmentProvider::getCG(const Aviation::CCallsign &callsign) const
+        {
+            QReadLocker l(&m_lockCG);
+            if (!m_cgs.contains(callsign)) { return CLength::null(); }
+            return m_cgs.value(callsign);
+        }
+
+        bool ISimulationEnvironmentProvider::hasCG(const Aviation::CCallsign &callsign) const
+        {
+            QReadLocker l(&m_lockCG);
+            return m_cgs.contains(callsign);
+        }
+
+        ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) : m_simulatorPluginInfo(pluginInfo)
+        { }
+
+        void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel)
+        {
+            QWriteLocker l(&m_lockModel);
+            m_simulatorPluginInfo = info;
+            m_defaultModel = defaultModel;
+        }
+
+        void ISimulationEnvironmentProvider::setDefaultModel(const CAircraftModel &defaultModel)
+        {
+            QWriteLocker l(&m_lockModel);
+            m_defaultModel = defaultModel;
+        }
+
+        void ISimulationEnvironmentProvider::clearDefaultModel()
+        {
+            QWriteLocker l(&m_lockModel);
+            m_defaultModel = CAircraftModel();
+        }
+
+        void ISimulationEnvironmentProvider::clearElevations()
         {
             QWriteLocker l(&m_lockElvCoordinates);
             m_elvCoordinates.clear();
         }
 
+        void ISimulationEnvironmentProvider::clearCGs()
+        {
+            QWriteLocker l(&m_lockCG);
+            m_cgs.clear();
+        }
+
+        void ISimulationEnvironmentProvider::clearSimulationEnvironmentData()
+        {
+            this->clearDefaultModel();
+            this->clearElevations();
+            this->clearCGs();
+        }
+
         CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range)
         {
-            if (!m_simEnvironmentProvider) { return CElevationPlane::null(); }
-            return m_simEnvironmentProvider->findClosestElevationWithinRange(reference, range);
+            if (!this->hasProvider()) { return CElevationPlane::null(); }
+            return this->provider()->findClosestElevationWithinRange(reference, range);
+        }
+
+        CSimulatorPluginInfo CSimulationEnvironmentAware::getSimulatorPluginInfo() const
+        {
+            if (!this->hasProvider()) { return CSimulatorPluginInfo(); }
+            return this->provider()->getSimulatorPluginInfo();
+        }
+
+        CSimulatorInfo CSimulationEnvironmentAware::getSimulatorInfo() const
+        {
+            if (!this->hasProvider()) { return CSimulatorInfo(); }
+            return this->provider()->getSimulatorInfo();
+        }
+
+        CAircraftModel CSimulationEnvironmentAware::getDefaultModel() const
+        {
+            if (!this->hasProvider()) { return CAircraftModel(); }
+            return this->provider()->getDefaultModel();
+        }
+
+        bool CSimulationEnvironmentAware::hasCG(const CCallsign &callsign) const
+        {
+            if (!this->hasProvider()) { return false; }
+            return this->provider()->hasCG(callsign);
         }
     } // namespace
 } // namespace
