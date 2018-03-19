@@ -23,9 +23,8 @@ namespace BlackMisc
             m_linear(callsign, this)
         {}
 
-        CAircraftSituation CInterpolatorMulti::getInterpolatedSituation(
-            qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup,
+        CAircraftSituation CInterpolatorMulti::getInterpolatedSituation(qint64 currentTimeSinceEpoc,
+            const CInterpolationAndRenderingSetupPerCallsign &setup,
             const CInterpolationHints &hints, CInterpolationStatus &status)
         {
             switch (m_mode)
@@ -38,7 +37,7 @@ namespace BlackMisc
         }
 
         CAircraftParts CInterpolatorMulti::getInterpolatedParts(
-            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
+            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
             CPartsStatus &partsStatus, bool log) const
         {
             switch (m_mode)

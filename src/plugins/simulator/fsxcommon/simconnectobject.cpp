@@ -162,7 +162,7 @@ namespace BlackSimPlugin
 
         CAircraftSituation CSimConnectObject::getInterpolatedSituation(
             qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup,
+            const CInterpolationAndRenderingSetupPerCallsign &setup,
             const CInterpolationHints &hints, CInterpolationStatus &status) const
         {
             Q_ASSERT(m_interpolator);
@@ -170,7 +170,8 @@ namespace BlackSimPlugin
         }
 
         CAircraftParts CSimConnectObject::getInterpolatedParts(
-            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
+            qint64 currentTimeSinceEpoc,
+            const CInterpolationAndRenderingSetupPerCallsign &setup,
             CPartsStatus &partsStatus, bool log) const
         {
             Q_ASSERT(m_interpolator);

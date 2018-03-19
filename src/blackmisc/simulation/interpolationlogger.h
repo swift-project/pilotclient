@@ -47,7 +47,7 @@ namespace BlackMisc
             Aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (oldest at end)
             Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
             PhysicalQuantities::CLength  cgAboveGround;    //!< center of gravity
-            CInterpolationAndRenderingSetup usedSetup;     //!< used setup
+            CInterpolationAndRenderingSetupPerCallsign usedSetup; //!< used setup
             CInterpolationHints usedHints; //!< hints
 
             //! Delta time between interpolation and current time

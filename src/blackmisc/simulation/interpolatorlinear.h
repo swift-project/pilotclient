@@ -49,8 +49,8 @@ namespace BlackMisc
 
                 //! Perform the interpolation
                 //! @{
-                Geo::CCoordinateGeodetic interpolatePosition(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const;
-                Aviation::CAltitude interpolateAltitude(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const;
+                Geo::CCoordinateGeodetic interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const;
+                Aviation::CAltitude interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const;
                 //! @}
 
                 //! Interpolator for pitch, bank, heading, groundspeed
@@ -75,7 +75,7 @@ namespace BlackMisc
             };
 
             //! Get the interpolant for the given time point
-            Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetup &setup,
+            Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
                                        const CInterpolationHints &hints, CInterpolationStatus &status, SituationLog &log) const;
         };
     } // ns

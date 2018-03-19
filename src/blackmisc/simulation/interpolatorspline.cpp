@@ -96,7 +96,7 @@ namespace BlackMisc
         }
 
         CInterpolatorSpline::Interpolant CInterpolatorSpline::getInterpolant(qint64 currentTimeMsSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status,
+                const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints, CInterpolationStatus &status,
                 SituationLog &log)
         {
             Q_UNUSED(hints);
@@ -117,7 +117,7 @@ namespace BlackMisc
 
                 // find the first situation earlier than the current time
                 const CAircraftSituationList &validSituations = m_aircraftSituations; // if needed, we could also copy here
-                const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto && s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
+                const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
                 const auto situationsNewer = makeRange(validSituations.begin(), pivot);
                 const auto situationsOlder = makeRange(pivot, validSituations.end());
 
@@ -205,7 +205,7 @@ namespace BlackMisc
             return m_interpolant;
         }
 
-        CCoordinateGeodetic CInterpolatorSpline::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const
+        CCoordinateGeodetic CInterpolatorSpline::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const
         {
             Q_UNUSED(setup);
             Q_UNUSED(hints);
@@ -219,7 +219,7 @@ namespace BlackMisc
             return currentPosition;
         }
 
-        CAltitude CInterpolatorSpline::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const
+        CAltitude CInterpolatorSpline::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const
         {
             Q_UNUSED(setup);
             Q_UNUSED(hints);

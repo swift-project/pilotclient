@@ -45,12 +45,11 @@ namespace BlackMisc
             const CLogCategoryList &getLogCategories();
 
             //! Current interpolated situation
-            Aviation::CAircraftSituation getInterpolatedSituation(
-                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status);
+            Aviation::CAircraftSituation getInterpolatedSituation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints, CInterpolationStatus &status);
 
             //! Parts before given offset time (aka pending parts)
             Aviation::CAircraftParts getInterpolatedParts(
-                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
+                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log = false) const;
 
             //! Add a new aircraft situation
             void addAircraftSituation(const Aviation::CAircraftSituation &situation);

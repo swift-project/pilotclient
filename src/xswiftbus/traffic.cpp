@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/verify.h"
 #include "XPMPMultiplayer.h"
@@ -56,7 +57,7 @@ namespace XSwiftBus
         using namespace BlackMisc::Aviation;
         using namespace BlackMisc::Simulation;
 
-        CInterpolationAndRenderingSetup setup;
+        CInterpolationAndRenderingSetupPerCallsign setup;
         CInterpolationHints hints;
         CPartsStatus status;
         constexpr double fudgeFactor = 3.0; //! \fixme Value should be different for each plane, derived from the CSL model geometry
@@ -429,9 +430,9 @@ namespace XSwiftBus
                 }
                 else
                 {
-                    BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
+                    BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign setup;
                     BlackMisc::Simulation::CInterpolationStatus status;
-                    const auto situation = plane->interpolator.getInterpolatedSituation(-1, setup, plane->hints(), status);
+                    BlackMisc::Aviation::CAircraftSituation situation = plane->interpolator.getInterpolatedSituation(-1, setup, plane->hints(), status);
                     if (! status.hasValidSituation()) { return xpmpData_Unavailable; }
 
                     //! \fixme KB 2018-01 commented out with T229. Change detection needs to go somewhere else

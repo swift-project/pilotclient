@@ -54,7 +54,7 @@ namespace BlackMisc
         template <typename Derived>
         CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(
             qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints,
+            const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints,
             CInterpolationStatus &status)
         {
             Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
@@ -224,9 +224,8 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(
-            qint64 currentTimeMsSinceEpoch,
-            const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
+        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(qint64 currentTimeMsSinceEpoch,
+                const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log) const
         {
             // (!) this code is used by linear and spline interpolator
             Q_UNUSED(setup);

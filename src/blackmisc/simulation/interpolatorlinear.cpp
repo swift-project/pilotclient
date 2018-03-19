@@ -50,7 +50,7 @@ namespace BlackMisc
         {}
 
         CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(qint64 currentTimeMsSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, SituationLog &log) const
+                const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints, CInterpolationStatus &status, SituationLog &log) const
         {
             Q_UNUSED(setup);
             Q_UNUSED(hints);
@@ -68,7 +68,7 @@ namespace BlackMisc
 
             // find the first situation earlier than the current time
             const CAircraftSituationList &validSituations = m_aircraftSituations; // if needed, we could also copy here
-            const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto && s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
+            const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
             const auto situationsNewer = makeRange(validSituations.begin(), pivot);
             const auto situationsOlder = makeRange(pivot, validSituations.end());
 
@@ -159,7 +159,7 @@ namespace BlackMisc
             return { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };
         }
 
-        CCoordinateGeodetic CInterpolatorLinear::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const
+        CCoordinateGeodetic CInterpolatorLinear::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const
         {
             Q_UNUSED(setup);
             Q_UNUSED(hints);
@@ -175,7 +175,7 @@ namespace BlackMisc
             return currentPosition;
         }
 
-        CAltitude CInterpolatorLinear::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const
+        CAltitude CInterpolatorLinear::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const
         {
             Q_UNUSED(setup);
             Q_UNUSED(hints);

@@ -85,7 +85,7 @@ namespace BlackMiscTest
         // interpolation functional check
         CInterpolationStatus status;
         const CInterpolationHints hints;
-        const CInterpolationAndRenderingSetup setup;
+        const CInterpolationAndRenderingSetupPerCallsign setup;
         double latOld = 360.0;
         double lngOld = 360.0;
         for (qint64 currentTime = ts - 2 * deltaT + offset; currentTime < ts + offset; currentTime += (deltaT / 20))

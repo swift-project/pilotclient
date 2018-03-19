@@ -49,7 +49,7 @@ namespace BlackMiscTest
 
         // interpolation functional check
         CPartsStatus status;
-        const CInterpolationAndRenderingSetup setup;
+        const CInterpolationAndRenderingSetupPerCallsign setup;
         qint64 oldestTs = parts.oldestTimestampMsecsSinceEpoch();
 
         // Testing for a time >> last time

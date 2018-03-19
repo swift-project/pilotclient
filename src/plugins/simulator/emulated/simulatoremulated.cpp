@@ -430,12 +430,12 @@ namespace BlackSimPlugin
         void CSimulatorEmulated::fetchFromInterpolator()
         {
             const qint64 now = QDateTime::currentMSecsSinceEpoch();
-            const CInterpolationAndRenderingSetup setup = this->getInterpolationAndRenderingSetup(); // threadsafe copy
             for (const CSimulatedAircraft &aircraft : m_renderedAircraft)
             {
                 const CCallsign cs = aircraft.getCallsign();
                 if (!m_interpolators.contains(cs)) { continue; }
-                const bool log = setup.isLogCallsign(cs);
+                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(cs); // threadsafe copy
+                const bool log = setup.logInterpolation();
                 CInterpolatorMulti *im = m_interpolators[cs];
                 CInterpolationStatus statusInterpolation;
                 CPartsStatus statusParts;
