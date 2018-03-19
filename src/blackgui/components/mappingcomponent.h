@@ -55,6 +55,16 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Tab widget
+            enum TabWidget {
+                TabRenderedAircraft = 0,
+                TabAircraftModels,
+                TabInterpolatorSetup,
+                TabStatistics,
+                TabMatchingLog,
+                TabPartsLog
+            };
+
             //! Constructor
             explicit CMappingComponent(QWidget *parent = nullptr);
 
@@ -118,8 +128,14 @@ namespace BlackGui
             //! Enable / disable aircraft
             void onMenuToggleEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Widget changed
+            void onTabWidgetChanged(int index);
+
             //! Highlight in simulator
             void onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Show / hide model details
+            void showAircraftModelDetails(bool show);
 
             //! Adding a remote aircraft failed
             void addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);

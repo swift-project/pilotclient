@@ -31,7 +31,7 @@
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QTabWidget" name="tw_ListViews">
+     <widget class="QTabWidget" name="tw_SpecializedViews">
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -146,28 +146,6 @@
         </property>
         <item>
          <widget class="BlackGui::Components::CModelMatcherLogComponent" name="comp_MatchingLog"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tb_AircraftPartsHistory">
-       <attribute name="title">
-        <string>Aircraft parts log</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="vl_AircraftPartsHistory">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="BlackGui::Components::CAircraftPartsHistory" name="comp_AircraftPartsHistory"/>
         </item>
        </layout>
       </widget>
@@ -325,12 +303,6 @@
    <class>BlackGui::Components::CModelMatcherLogComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/modelmatcherlogcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CAircraftPartsHistory</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/aircraftpartshistory.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -72,7 +72,7 @@ namespace BlackGui
             Q_ASSERT_X(sGui->getIContextNetwork(), Q_FUNC_INFO, "need network context");
 
             ui->setupUi(this);
-            ui->tw_ListViews->setCurrentIndex(0);
+            ui->tw_SpecializedViews->setCurrentIndex(0);
 
             ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnAircraftModelClient);
             ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
@@ -139,6 +139,8 @@ namespace BlackGui
             connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CMappingComponent::tokenBucketUpdate);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::onConnectionStatusChanged);
 
+            connect(ui->tw_SpecializedViews, &QTabWidget::currentChanged, this, &CMappingComponent::onTabWidgetChanged);
+
             // requires simulator context
             connect(ui->tvp_RenderedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::onChangedSimulatedAircraftInView);
 
@@ -188,15 +190,15 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            const int am = ui->tw_ListViews->indexOf(ui->tb_AircraftModels);
-            const int cm = ui->tw_ListViews->indexOf(ui->tb_CurrentMappings);
+            const int am = ui->tw_SpecializedViews->indexOf(ui->tb_AircraftModels);
+            const int cm = ui->tw_SpecializedViews->indexOf(ui->tb_CurrentMappings);
             const QString amf = ui->tvp_AircraftModels->derivedModel()->hasFilter() ? "F" : "";
-            QString a = ui->tw_ListViews->tabBar()->tabText(am);
-            QString c = ui->tw_ListViews->tabBar()->tabText(cm);
+            QString a = ui->tw_SpecializedViews->tabBar()->tabText(am);
+            QString c = ui->tw_SpecializedViews->tabBar()->tabText(cm);
             a = CGuiUtility::replaceTabCountValue(a, this->countAircraftModels()) + amf;
             c = CGuiUtility::replaceTabCountValue(c, this->countCurrentMappings());
-            ui->tw_ListViews->tabBar()->setTabText(am, a);
-            ui->tw_ListViews->tabBar()->setTabText(cm, c);
+            ui->tw_SpecializedViews->tabBar()->setTabText(am, a);
+            ui->tw_SpecializedViews->tabBar()->setTabText(cm, c);
         }
 
         void CMappingComponent::onChangedSimulatedAircraftInView(const CVariant &object, const CPropertyIndex &index)
@@ -426,6 +428,25 @@ namespace BlackGui
             }
         }
 
+        void CMappingComponent::showAircraftModelDetails(bool show)
+        {
+            QList<int> sizes = ui->sp_MappingComponentSplitter->sizes();
+            Q_ASSERT_X(sizes.size() == 2, Q_FUNC_INFO, "Wrong splitter sizes");
+            const int total = sizes[0] + sizes[1];
+            QList<int> newSizes({0, 0});
+            if (show)
+            {
+                newSizes[0] = total * 0.8;
+                newSizes[1] = total * 0.2;
+            }
+            else
+            {
+                newSizes[0] = total;
+                newSizes[1] = 0;
+            }
+            ui->sp_MappingComponentSplitter->setSizes(newSizes);
+        }
+
         void CMappingComponent::addingRemoteAircraftFailed(const CSimulatedAircraft &aircraft, const CStatusMessage &message)
         {
             this->tokenBucketUpdate();
@@ -439,6 +460,14 @@ namespace BlackGui
             {
                 sGui->getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled());
             }
+        }
+
+        void CMappingComponent::onTabWidgetChanged(int index)
+        {
+            Q_UNUSED(index);
+            const TabWidget w = static_cast<TabWidget>(index);
+            const bool show = (w == TabAircraftModels) || (w == TabRenderedAircraft);
+            this->showAircraftModelDetails(show);
         }
 
         void CMappingComponent::updateRenderedAircraftView(bool forceUpdate)
