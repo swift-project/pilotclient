@@ -1,0 +1,171 @@
+R"(<node>
+  <interface name="org.swift_project.xswiftbus.service">
+    <method name="addTextMessage">
+      <arg name="text" type="s" direction="in"/>
+      <arg name="red" type="d" direction="in"/>
+      <arg name="green" type="d" direction="in"/>
+      <arg name="blue" type="d" direction="in"/>
+    </method>
+    <method name="getOwnAircraftSituationData">
+      <arg name="lat" type="d" direction="out"/>
+      <arg name="lon" type="d" direction="out"/>
+      <arg name="alt" type="d" direction="out"/>
+      <arg name="gs" type="d" direction="out"/>
+      <arg name="pitch" type="d" direction="out"/>
+      <arg name="roll" type="d" direction="out"/>
+      <arg name="trueHeading" type="d" direction="out"/>
+      <arg name="qnh" type="d" direction="out"/>
+    </method>
+    <method name="updateAirportsInRange">
+    </method>
+    <method name="getAircraftModelPath">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getAircraftModelFilename">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getAircraftModelString">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getAircraftName">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getAircraftLivery">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getAircraftIcaoCode">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getAircraftDescription">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getXPlaneVersionMajor">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getXPlaneVersionMinor">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getXPlaneInstallationPath">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getXPlanePreferencesPath">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="isPaused">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="isUsingRealTime">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getLatitude">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getLongitude">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getAltitudeMSL">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getHeightAGL">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getGroundSpeed">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getIndicatedAirspeed">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getTrueAirspeed">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getPitch">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getRoll">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getTrueHeading">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getAnyWheelOnGround">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getAllWheelsOnGround">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getCom1Active">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getCom1Standby">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getCom2Active">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getCom2Standby">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getTransponderCode">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getTransponderMode">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getTransponderIdent">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getBeaconLightsOn">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getLandingLightsOn">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getNavLightsOn">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getStrobeLightsOn">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getTaxiLightsOn">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getQNH">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="setCom1Active">
+      <arg name="freq" type="i" direction="in"/>
+    </method>
+    <method name="setCom1Standby">
+      <arg name="freq" type="i" direction="in"/>
+    </method>
+    <method name="setCom2Active">
+      <arg name="freq" type="i" direction="in"/>
+    </method>
+    <method name="setCom2Standby">
+      <arg name="freq" type="i" direction="in"/>
+    </method>
+    <method name="setTransponderCode">
+      <arg name="code" type="i" direction="in"/>
+    </method>
+    <method name="setTransponderMode">
+      <arg name="mode" type="i" direction="in"/>
+    </method>
+    <method name="getFlapsDeployRatio">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getGearDeployRatio">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="getNumberOfEngines">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="getEngineN1Percentage">
+      <arg type="ad" direction="out"/>
+    </method>
+    <method name="getSpeedBrakeRatio">
+      <arg type="d" direction="out"/>
+    </method>
+    <method name="toggleMessageBoxVisibility">
+    </method>
+  </interface>
+</node>)"

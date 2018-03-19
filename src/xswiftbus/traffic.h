@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "dbusobject.h"
 #include "datarefs.h"
 #include "terrainprobe.h"
 #include <QDateTime>
@@ -34,14 +35,11 @@ namespace XSwiftBus
     /*!
      * XSwiftBus service object for traffic aircraft which is accessible through DBus
      */
-    class CTraffic : public QObject
+    class CTraffic : public CDBusObject
     {
-        Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", XSWIFTBUS_TRAFFIC_INTERFACENAME)
-
     public:
         //! Constructor
-        CTraffic(QObject *parent);
+        CTraffic(CDBusConnection *dbusConnection);
 
         //! Destructor
         virtual ~CTraffic();
@@ -63,14 +61,6 @@ namespace XSwiftBus
         //! Called by XPluginStart
         static void initLegacyData();
 
-    signals:
-        //! Signal emitted for each simulator rendering frame
-        void simFrame();
-
-        //! Remote aircraft data
-        void remoteAircraftData(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
-
-    public slots:
         //! Initialize the multiplayer planes rendering and return true if successful
         bool initialize();
 
@@ -117,11 +107,17 @@ namespace XSwiftBus
         //! Request traffic plane data. A signal remoteAircraftData will be emitted for each known plane
         void requestRemoteAircraftData();
 
+        int processDBus() override;
+
+    protected:
+         DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
+
     private:
         bool m_initialized = false;
         bool m_enabled = false;
 
         void emitSimFrame();
+        void emitRemoteAircraftData(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
@@ -145,6 +141,7 @@ namespace XSwiftBus
             XPMPPlanePosition_t position;
             Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_, QString modelName_);
         };
+
         QHash<QString, Plane *> m_planesByCallsign;
         QHash<void *, Plane *> m_planesById;
         qint64 m_timestampLastSimFrame = QDateTime::currentMSecsSinceEpoch();
@@ -154,8 +151,6 @@ namespace XSwiftBus
         {
             return static_cast<CTraffic *>(self)->getPlaneData(id, dataType, io_data);
         }
-
-        static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
     };
 }
 

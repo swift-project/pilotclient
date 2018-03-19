@@ -12,14 +12,14 @@
 #include "traffic.h"
 #include "weather.h"
 #include "utils.h"
-#include "blackmisc/librarypath.h"
-#include "blackmisc/logmessage.h"
+#include "XPLM/XPLMProcessing.h"
 #include <QTimer>
 #include <functional>
+#include <thread>
 
 namespace {
-    inline QString xswiftbusServiceName() {
-        return QStringLiteral("org.swift-project.xswiftbus");
+    inline std::string xswiftbusServiceName() {
+        return std::string("org.swift-project.xswiftbus");
     }
 }
 
@@ -27,54 +27,50 @@ namespace XSwiftBus
 {
 
     CPlugin::CPlugin()
-        : m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
+        : m_dbusConnection(std::make_unique<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("XSwiftBus"))
     {
-        m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(BlackMisc::CDBusServer::sessionBusAddress()); });
+        m_startServerMenuItem = m_menu.item("Start XSwiftBus", [this]{ startServer(CDBusConnection::SessionBus); });
         m_toggleMessageWindowMenuItem = m_menu.item("Toggle Message Window", [this] { if(m_service) { m_service->toggleMessageBoxVisibility(); } });
         // m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemBusAddress()); }));
         // m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress("localhost")); }));
+
+        m_dbusThread = std::thread([this]()
+        {
+            while(!m_shouldStop)
+            {
+                m_dbusConnection->runBlockingEventLoop();
+            }
+        });
+
+        XPLMRegisterFlightLoopCallback(flightLoopCallback, -1, this);
     }
 
-    void CPlugin::startServer(const QString &address)
+    CPlugin::~CPlugin()
     {
+        XPLMUnregisterFlightLoopCallback(flightLoopCallback, this);
+        m_dbusConnection->close();
+        m_shouldStop = true;
+        if (m_dbusThread.joinable()) { m_dbusThread.join(); }
+    }
+
+    void CPlugin::startServer(CDBusConnection::BusType bus)
+    {
+        (void) bus;
         // for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
         m_startServerMenuItem.setEnabled(false);
 
-        m_service = new CService(this);
-        m_traffic = new CTraffic(this);
-        m_weather = new CWeather(this);
+        // Todo: retry if it fails
+        bool success = m_dbusConnection->connect(CDBusConnection::SessionBus, xswiftbusServiceName());
 
-        // XPLM API does not like to be called from a QTimer slot, so move the recurring part into a separate method.
-        tryStartServer(address);
-    }
-
-    void CPlugin::tryStartServer(const QString &address)
-    {
-        // Make sure that there are no calls to XPLM in this method
-        Q_ASSERT(! m_server);
-        auto previousLibraryPath = BlackMisc::getCustomLibraryPath();
-        auto libraryPath = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus";
-        #if !defined (Q_OS_MAC) && defined(WORD_SIZE_64)
-        libraryPath = libraryPath + g_sep + "64";
-        #endif
-        BlackMisc::setCustomLibraryPath(libraryPath);
-
-        QString message;
-        if (!BlackMisc::CDBusServer::isP2PAddress(address) && !BlackMisc::CDBusServer::isDBusAvailable(address, message))
+        if (!success)
         {
-            constexpr int msec = 30000;
-            BlackMisc::CLogMessage(this).warning("DBus daemon not available. (%1) Trying again in %2 sec.") << message << (msec / 1000);
-            QTimer::singleShot(msec, this, [&] { tryStartServer(address); });
-            BlackMisc::setCustomLibraryPath(previousLibraryPath);
+            // Print error
             return;
         }
 
-        m_server = new BlackMisc::CDBusServer(xswiftbusServiceName(), address, this);
-        BlackMisc::setCustomLibraryPath(previousLibraryPath);
-
-        m_server->addObject(CService::ObjectPath(), m_service);
-        m_server->addObject(CTraffic::ObjectPath(), m_traffic);
-        m_server->addObject(CWeather::ObjectPath(), m_weather);
+        m_service = new CService(m_dbusConnection.get());
+        m_traffic = new CTraffic(m_dbusConnection.get());
+        m_weather = new CWeather(m_dbusConnection.get());
     }
 
     void CPlugin::onAircraftModelChanged()
@@ -91,5 +87,14 @@ namespace XSwiftBus
         {
             m_service->updateAirportsInRange();
         }
+    }
+
+    float CPlugin::flightLoopCallback(float, float, int, void *refcon)
+    {
+        auto *plugin = static_cast<CPlugin *>(refcon);
+        if (plugin->m_service) { plugin->m_service->processDBus(); }
+        if (plugin->m_weather) { plugin->m_weather->processDBus(); }
+        if (plugin->m_traffic) { plugin->m_traffic->processDBus(); }
+        return -1;
     }
 }

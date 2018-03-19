@@ -20,14 +20,12 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#include "dbusconnection.h"
 #include "menus.h"
-
-#pragma push_macro("interface")
-#undef interface
-#include "blackmisc/dbusserver.h"
-#pragma pop_macro("interface")
-
+#include <QObject>
 #include <QVector>
+#include <memory>
+#include <thread>
 
 namespace XSwiftBus
 {
@@ -46,6 +44,9 @@ namespace XSwiftBus
         //! Constructor
         CPlugin();
 
+        //! Destructor
+        ~CPlugin();
+
         //! Called by XPluginReceiveMessage when the model is changed
         void onAircraftModelChanged();
 
@@ -53,7 +54,7 @@ namespace XSwiftBus
         void onAircraftRepositioned();
 
     private:
-        BlackMisc::CDBusServer *m_server = nullptr;
+        std::unique_ptr<CDBusConnection> m_dbusConnection;
         CService *m_service = nullptr;
         CTraffic *m_traffic = nullptr;
         CWeather *m_weather = nullptr;
@@ -61,8 +62,12 @@ namespace XSwiftBus
         CMenuItem m_startServerMenuItem;
         CMenuItem m_toggleMessageWindowMenuItem;
 
-        void startServer(const QString &address);
-        void tryStartServer(const QString &address);
+        std::thread m_dbusThread;
+        bool m_shouldStop = false;
+
+        void startServer(CDBusConnection::BusType bus);
+
+        static float flightLoopCallback(float, float, int, void *refcon);
     };
 }
 

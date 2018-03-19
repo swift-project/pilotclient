@@ -9,6 +9,11 @@ CONFIG += blackmisc
 
 INCLUDEPATH += $$EXTERNALSROOT/common/include/XPLM
 
+LIBS += -levent_core -ldbus-1
+
+OTHER_FILES += \
+    org.swift_project.xswiftbus.*.xml
+
 win32 {
     equals(WORD_SIZE,64): LIBS += -lXPLM_64 -lXPWidgets_64
     equals(WORD_SIZE,32): LIBS += -lXPLM -lXPWidgets
@@ -33,6 +38,11 @@ HEADERS += *.h
 SOURCES += $$files(libxplanemp/src/*.cpp)
 HEADERS += $$files(libxplanemp/src/*.h) $$files(libxplanemp/include/*.h)
 INCLUDEPATH += ./libxplanemp ./libxplanemp/include ./libxplanemp/src
+
+unix:!macx {
+    INCLUDEPATH *= /usr/include/dbus-1.0
+    INCLUDEPATH *= /usr/lib/x86_64-linux-gnu/dbus-1.0/include
+}
 
 # PlatformUtils also not used
 SOURCES -= $$files(libxplanemp/src/PlatformUtils.*.cpp)
@@ -102,10 +112,12 @@ win32 {
     dep_target.files *= $$DestRoot/bin/dbus-daemon.exe
     win32-g++ {
         dep_target.files *= $$DestRoot/bin/libdbus-1-3.dll
+        dep_target.files *= $$DestRoot/bin/libevent_core.dll
     }
     else {
         dep_target.files *= $$DestRoot/bin/dbus-1-3.dll
         dep_target.files *= $$DestRoot/bin/expat.dll
+        dep_target.files *= $$DestRoot/bin/libevent_core.dll
     }
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Core$${DLL_DEBUG_SUFFIX}.dll
     dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Gui$${DLL_DEBUG_SUFFIX}.dll
@@ -124,6 +136,7 @@ win32 {
     legacy_data_target.files *= LegacyData
 } else:macx: {
     dep_target.files *= $$DestRoot/lib/libdbus-1.3.dylib
+    dep_target.files *= $$DestRoot/lib/libevent_core.2.1.8.dylib
     dep_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtCore.framework/ &&
     dep_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtGui.framework/ &&
     dep_target.extra += rsync -avzl --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/$$XSWIFTBUS_DIR/QtWidgets.framework/ &&
@@ -154,7 +167,9 @@ win32 {
     fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtDBus.framework/Versions/5/QtDBus\" \"@loader_path/QtDBus.framework/Versions/5/QtDBus\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
     fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtNetwork.framework/Versions/5/QtNetwork\" \"@loader_path/QtNetwork.framework/Versions/5/QtNetwork\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
     fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtCore.framework/Versions/5/QtCore\" \"@loader_path/QtCore.framework/Versions/5/QtCore\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
-    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtXml.framework/Versions/5/QtXml\" \"@loader_path/QtXml.framework/Versions/5/QtXml\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib)
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtXml.framework/Versions/5/QtXml\" \"@loader_path/QtXml.framework/Versions/5/QtXml\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/libblackmisc.0.dylib) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/libevent_core.2.1.8.dylib\" \"@loader_path/libevent_core.2.1.8.dylib\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/libdbus-1.3.dylib\" \"@loader_path/libdbus-1.3.dylib\" $$shell_path($$PREFIX/$$XSWIFTBUS_DIR/mac.xpl)
     QMAKE_EXTRA_TARGETS += fix_plugin_rpath
 
     fix_plugin_rpath.depends += fix_misc_rpath

@@ -14,7 +14,6 @@
 #include "utils.h"
 #include "traffic.h"
 #include "service.h"
-#include "blackmisc/dbus.h"
 #include <XPLM/XPLMPlanes.h>
 
 #if ! defined(XPLM210)
@@ -55,18 +54,11 @@ PLUGIN_API void XPluginStop()
 
 PLUGIN_API int XPluginEnable()
 {
-    qRegisterMetaType<QDoubleList>();
-    qDBusRegisterMetaType<QDoubleList>();
-
     QXPlaneMessageHandler::install();
     g_qApp = QSharedApplication::sharedInstance();
     QXPlaneEventLoop::exec();
 
     g_plugin = new XSwiftBus::CPlugin;
-
-    // Here we can be safely assume that QtDBus was loaded by the process
-    preventQtDBusDllUnload();
-
     return 1;
 }
 

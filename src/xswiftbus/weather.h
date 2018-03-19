@@ -15,8 +15,8 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#include "dbusobject.h"
 #include "datarefs.h"
-#include <QObject>
 
 //! \cond PRIVATE
 #define XSWIFTBUS_WEATHER_INTERFACENAME "org.swift_project.xswiftbus.weather"
@@ -29,30 +29,26 @@ namespace XSwiftBus
     /*!
      * XSwiftBus weather object which is accessible through DBus
      */
-    class CWeather : public QObject
+    class CWeather : public CDBusObject
     {
-        Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", XSWIFTBUS_WEATHER_INTERFACENAME)
-
     public:
         //! Constructor
-        CWeather(QObject *parent) : QObject(parent) {}
+        CWeather(CDBusConnection *dbusConnection);
 
         //! DBus interface name
-        static const QString &InterfaceName()
+        static const std::string &InterfaceName()
         {
-            static QString s(XSWIFTBUS_WEATHER_INTERFACENAME);
+            static std::string s(XSWIFTBUS_WEATHER_INTERFACENAME);
             return s;
         }
 
         //! DBus object path
-        static const QString &ObjectPath()
+        static const std::string &ObjectPath()
         {
-            static QString s(XSWIFTBUS_WEATHER_OBJECTPATH);
+            static std::string s(XSWIFTBUS_WEATHER_OBJECTPATH);
             return s;
         }
 
-    public slots:
         //! True if the sim is using X-Plane built-in real weather source.
         bool isUsingRealWeather() const { return m_useRealWeather.get(); }
 
@@ -100,6 +96,10 @@ namespace XSwiftBus
         //! \param shearSpeed Wind speed gain in knots (e.g. speed=10 and shearSpeed=5 means speed varies between 10 and 15).
         //! \param turbulence Amount of turbulence [0,10].
         void setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence);
+
+        virtual int processDBus() override;
+    protected:
+        virtual DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 
     private:
         DataRef<xplane::data::sim::weather::use_real_weather_bool> m_useRealWeather;

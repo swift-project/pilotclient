@@ -58,11 +58,11 @@ namespace BlackSimPlugin
             bool isValid() const { return m_dbusInterface->isValid(); }
 
         signals:
-            //! \copydoc XSwiftBus::CTraffic::simFrame
+            //! Simulator frame
             //! \remark from simulator to driver
             void simFrame();
 
-            //! \copydoc XSwiftBus::CTraffic::remoteAircraftData
+            //! Remote aircraft data
             //! \remark from simulator to driver for elevation and CG
             void remoteAircraftData(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
 

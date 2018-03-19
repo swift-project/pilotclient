@@ -14,7 +14,6 @@
 #endif
 #include "traffic.h"
 #include "utils.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/verify.h"
 #include "XPMPMultiplayer.h"
 #include "XPMPPlaneRenderer.h"
@@ -43,10 +42,10 @@ namespace XSwiftBus
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
     }
 
-    CTraffic::CTraffic(QObject *parent) :
-        QObject(parent)
+    CTraffic::CTraffic(CDBusConnection *dbusConnection) :
+        CDBusObject(dbusConnection)
     {
-        XPLMRegisterDrawCallback(CTraffic::drawCallback, xplm_Phase_Airplanes, 0, this);
+        registerDBusObjectPath(XSWIFTBUS_TRAFFIC_INTERFACENAME, XSWIFTBUS_TRAFFIC_OBJECTPATH);
     }
 
     CTraffic::~CTraffic()
@@ -98,21 +97,23 @@ namespace XSwiftBus
             m_initialized = false;
             XPMPMultiplayerCleanup();
         }
-
-        XPLMUnregisterDrawCallback(CTraffic::drawCallback, xplm_Phase_Airplanes, 0, this);
     }
 
     void CTraffic::emitSimFrame()
     {
-        qint64 currentMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
+        sendDBusSignal("simFrame");
+    }
 
-        // The draw callback is called twice for unknown reasons each frame. We can filter the second one by
-        // requiring a minimum offset of 5 ms (equal to 200 fps).
-        if (currentMSecsSinceEpoch > m_timestampLastSimFrame + 5)
-        {
-            emit simFrame();
-            m_timestampLastSimFrame = currentMSecsSinceEpoch;
-        }
+    void CTraffic::emitRemoteAircraftData(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset)
+    {
+        CDBusMessage signalRemoteAircraftData = CDBusMessage::createSignal(XSWIFTBUS_TRAFFIC_OBJECTPATH, XSWIFTBUS_TRAFFIC_INTERFACENAME, "remoteAircraftData");
+        signalRemoteAircraftData.beginArgumentWrite();
+        signalRemoteAircraftData.appendArgument(callsign.toStdString());
+        signalRemoteAircraftData.appendArgument(latitude);
+        signalRemoteAircraftData.appendArgument(longitude);
+        signalRemoteAircraftData.appendArgument(elevation);
+        signalRemoteAircraftData.appendArgument(modelVerticalOffset);
+        sendDBusMessage(signalRemoteAircraftData);
     }
 
     int g_maxPlanes = 100;
@@ -214,7 +215,8 @@ namespace XSwiftBus
 
     void CTraffic::removeAllPlanes()
     {
-        for (Plane *plane : BlackMisc::as_const(m_planesByCallsign))
+        const QList<Plane *> planes = m_planesByCallsign.values();
+        for (Plane *plane : planes)
         {
             BLACK_VERIFY_X(plane, Q_FUNC_INFO, "Missing Plane");
             if (!plane) { continue; }
@@ -289,8 +291,251 @@ namespace XSwiftBus
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             double fudgeFactor = 3.0;
             actualVertOffsetInfo(qPrintable(plane->modelName), nullptr, &fudgeFactor);
-            emit remoteAircraftData(plane->callsign, lat, lon, groundElevation, fudgeFactor);
+            emitRemoteAircraftData(plane->callsign, lat, lon, groundElevation, fudgeFactor);
         }
+    }
+
+    const char *introspection_traffic =
+        DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
+#include "org.swift_project.xswiftbus.traffic.xml"
+        ;
+
+    DBusHandlerResult CTraffic::dbusMessageHandler(const CDBusMessage &message_)
+    {
+        CDBusMessage message(message_);
+        const std::string sender = message.getSender();
+        const dbus_uint32_t serial = message.getSerial();
+        const bool wantsReply = message.wantsReply();
+
+        if (message.getInterfaceName() == DBUS_INTERFACE_INTROSPECTABLE)
+        {
+            if (message.getMethodName() == "Introspect")
+            {
+                sendDBusReply(sender, serial, introspection_traffic);
+            }
+        }
+        else if (message.getInterfaceName() == XSWIFTBUS_TRAFFIC_INTERFACENAME)
+        {
+            if (message.getMethodName() == "initialize")
+            {
+                sendDBusReply(sender, serial, initialize());
+            }
+            else if (message.getMethodName() == "cleanup")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                queueDBusCall([ = ]()
+                {
+                    cleanup();
+                });
+            }
+            else if (message.getMethodName() == "loadPlanesPackage")
+            {
+                std::string path;
+                message.beginArgumentRead();
+                message.getArgument(path);
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, loadPlanesPackage(QString::fromStdString(path)));
+                });
+            }
+            else if (message.getMethodName() == "setDefaultIcao")
+            {
+                std::string defaultIcao;
+                message.beginArgumentRead();
+                message.getArgument(defaultIcao);
+                queueDBusCall([ = ]()
+                {
+                    setDefaultIcao(QString::fromStdString(defaultIcao));
+                });
+            }
+            else if (message.getMethodName() == "setDrawingLabels")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                bool drawing = true;
+                message.beginArgumentRead();
+                message.getArgument(drawing);
+                queueDBusCall([ = ]()
+                {
+                    setDrawingLabels(drawing);
+                });
+
+            }
+            else if (message.getMethodName() == "isDrawingLabels")
+            {
+                queueDBusCall([ = ]()
+                {
+                    sendDBusReply(sender, serial, isDrawingLabels());
+                });
+            }
+            else if (message.getMethodName() == "setMaxPlanes")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                int planes = 100;
+                message.beginArgumentRead();
+                message.getArgument(planes);
+                queueDBusCall([ = ]()
+                {
+                    setMaxPlanes(planes);
+                });
+            }
+            else if (message.getMethodName() == "setMaxDrawDistance")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                double nauticalMiles = 100;
+                message.beginArgumentRead();
+                message.getArgument(nauticalMiles);
+                queueDBusCall([ = ]()
+                {
+                    setMaxDrawDistance(nauticalMiles);
+                });
+
+            }
+            else if (message.getMethodName() == "addPlane")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::string callsign;
+                std::string modelName;
+                std::string aircraftIcao;
+                std::string airlineIcao;
+                std::string livery;
+                message.beginArgumentRead();
+                message.getArgument(callsign);
+                message.getArgument(modelName);
+                message.getArgument(aircraftIcao);
+                message.getArgument(airlineIcao);
+                message.getArgument(livery);
+
+                queueDBusCall([ = ]()
+                {
+                    addPlane(QString::fromStdString(callsign), QString::fromStdString(modelName), QString::fromStdString(aircraftIcao), QString::fromStdString(airlineIcao), QString::fromStdString(livery));
+                });
+            }
+            else if (message.getMethodName() == "removePlane")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::string callsign;
+                message.beginArgumentRead();
+                message.getArgument(callsign);
+                queueDBusCall([ = ]()
+                {
+                    removePlane(QString::fromStdString(callsign));
+                });
+            }
+            else if (message.getMethodName() == "removeAllPlanes")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                queueDBusCall([ = ]()
+                {
+                    removeAllPlanes();
+                });
+            }
+            else if (message.getMethodName() == "setPlanePosition")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::string callsign;
+                double latitude = 0.0;
+                double longitude = 0.0;
+                double altitude = 0.0;
+                double pitch = 0.0;
+                double roll = 0.0;
+                double heading = 0.0;
+                message.beginArgumentRead();
+                message.getArgument(callsign);
+                message.getArgument(latitude);
+                message.getArgument(longitude);
+                message.getArgument(altitude);
+                message.getArgument(pitch);
+                message.getArgument(roll);
+                message.getArgument(heading);
+                queueDBusCall([ = ]()
+                {
+                    setPlanePosition(QString::fromStdString(callsign), latitude, longitude, altitude, pitch, roll, heading);
+                });
+            }
+            else if (message.getMethodName() == "setPlaneSurfaces")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::string callsign;
+                double gear = 0.0;
+                double flap = 0.0;
+                double spoiler = 0.0;
+                double speedBrake = 0.0;
+                double slat = 0.0;
+                double wingSweep = 0.0;
+                double thrust = 0.0;
+                double elevator = 0.0;
+                double rudder = 0.0;
+                double aileron = 0.0;
+                bool landLight = false;
+                bool beaconLight = false;
+                bool strobeLight = false;
+                bool navLight = false;
+                bool lightPattern = false;
+                bool onGround = false;
+                message.beginArgumentRead();
+                message.getArgument(callsign);
+                message.getArgument(gear);
+                message.getArgument(flap);
+                message.getArgument(spoiler);
+                message.getArgument(speedBrake);
+                message.getArgument(slat);
+                message.getArgument(wingSweep);
+                message.getArgument(thrust);
+                message.getArgument(elevator);
+                message.getArgument(rudder);
+                message.getArgument(aileron);
+                message.getArgument(landLight);
+                message.getArgument(beaconLight);
+                message.getArgument(strobeLight);
+                message.getArgument(navLight);
+                message.getArgument(lightPattern);
+                message.getArgument(onGround);
+                queueDBusCall([ = ]()
+                {
+                    setPlaneSurfaces(QString::fromStdString(callsign), gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator,
+                                     rudder, aileron, landLight, beaconLight, strobeLight, navLight, lightPattern,
+                                     onGround);
+                });
+            }
+            else if (message.getMethodName() == "setPlaneTransponder")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::string callsign;
+                int code = 0;
+                bool modeC = false;
+                bool ident = false;
+                message.beginArgumentRead();
+                message.getArgument(callsign);
+                message.getArgument(code);
+                message.getArgument(modeC);
+                message.getArgument(ident);
+                queueDBusCall([ = ]()
+                {
+                    setPlaneTransponder(QString::fromStdString(callsign), code, modeC, ident);
+                });
+            }
+            else if (message.getMethodName() == "requestRemoteAircraftData")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                queueDBusCall([ = ]()
+                {
+                    requestRemoteAircraftData();
+                });
+            }
+            else
+            {
+                // Unknown message. Tell DBus that we cannot handle it
+                return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+            }
+        }
+        return DBUS_HANDLER_RESULT_HANDLED;
+    }
+
+    int CTraffic::processDBus()
+    {
+        emitSimFrame();
+        invokeQueuedDBusCalls();
+        return 1;
     }
 
     //! memcmp function which ignores the header ("size" member) and compares only the payload (the rest of the struct)
@@ -304,6 +549,7 @@ namespace XSwiftBus
 
     int CTraffic::getPlaneData(void *id, int dataType, void *io_data)
     {
+        QHash<void *, Plane *> planesById = m_planesById;
         Plane *plane = m_planesById.value(id, nullptr);
         if (!plane) { return xpmpData_Unavailable; }
 
@@ -363,15 +609,6 @@ namespace XSwiftBus
 
         default: return xpmpData_Unavailable;
         }
-    }
-
-    int CTraffic::drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon)
-    {
-        Q_UNUSED(phase);
-        Q_UNUSED(isBefore);
-        CTraffic *traffic = static_cast<CTraffic *>(refcon);
-        traffic->emitSimFrame();
-        return 1;
     }
 }
 

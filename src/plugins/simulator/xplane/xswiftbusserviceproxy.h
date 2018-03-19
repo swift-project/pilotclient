@@ -85,12 +85,12 @@ namespace BlackSimPlugin
             //! Emitted if an asynchronous method call caused a DBus error
             BLACK_NO_RELAY void asyncMethodError(QDBusError error);
 
-            //! \copydoc XSwiftBus::CService::aircraftModelChanged
+            //! Own aircraft model changed
             void aircraftModelChanged(
                 const QString &path, const QString &filename, const QString &livery,
                 const QString &icao, const QString &modelString, const QString &name, const QString &description);
 
-            //! \copydoc XSwiftBus::CService::airportsInRangeUpdated
+            //! Airports in range are updated
             void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
 
         public slots:

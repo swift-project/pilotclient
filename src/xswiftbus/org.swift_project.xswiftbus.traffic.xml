@@ -1,0 +1,76 @@
+R"(<node>
+  <interface name="org.swift_project.xswiftbus.traffic">
+    <method name="initialize">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="cleanup">
+    </method>
+    <method name="loadPlanesPackage">
+      <arg name="path" type="s" direction="in"/>
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="setDefaultIcao">
+      <arg name="defaultIcao" type="s" direction="in"/>
+    </method>
+    <method name="setDrawingLabels">
+      <arg name="drawing" type="b" direction="in"/>
+    </method>
+    <method name="isDrawingLabels">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="setMaxPlanes">
+      <arg name="planes" type="i" direction="in"/>
+    </method>
+    <method name="setMaxDrawDistance">
+      <arg name="nauticalMiles" type="d" direction="in"/>
+    </method>
+    <method name="addPlane">
+      <arg name="callsign" type="s" direction="in"/>
+      <arg name="modelName" type="s" direction="in"/>
+      <arg name="aircraftIcao" type="s" direction="in"/>
+      <arg name="airlineIcao" type="s" direction="in"/>
+      <arg name="livery" type="s" direction="in"/>
+    </method>
+    <method name="removePlane">
+      <arg name="callsign" type="s" direction="in"/>
+    </method>
+    <method name="removeAllPlanes">
+    </method>
+    <method name="setPlanePosition">
+      <arg name="callsign" type="s" direction="in"/>
+      <arg name="latitude" type="d" direction="in"/>
+      <arg name="longitude" type="d" direction="in"/>
+      <arg name="altitude" type="d" direction="in"/>
+      <arg name="pitch" type="d" direction="in"/>
+      <arg name="roll" type="d" direction="in"/>
+      <arg name="heading" type="d" direction="in"/>
+    </method>
+    <method name="setPlaneSurfaces">
+      <arg name="callsign" type="s" direction="in"/>
+      <arg name="gear" type="d" direction="in"/>
+      <arg name="flap" type="d" direction="in"/>
+      <arg name="spoiler" type="d" direction="in"/>
+      <arg name="speedBrake" type="d" direction="in"/>
+      <arg name="slat" type="d" direction="in"/>
+      <arg name="wingSweep" type="d" direction="in"/>
+      <arg name="thrust" type="d" direction="in"/>
+      <arg name="elevator" type="d" direction="in"/>
+      <arg name="rudder" type="d" direction="in"/>
+      <arg name="aileron" type="d" direction="in"/>
+      <arg name="landLight" type="b" direction="in"/>
+      <arg name="beaconLight" type="b" direction="in"/>
+      <arg name="strobeLight" type="b" direction="in"/>
+      <arg name="navLight" type="b" direction="in"/>
+      <arg name="lightPattern" type="i" direction="in"/>
+      <arg name="onGround" type="b" direction="in"/>
+    </method>
+    <method name="setPlaneTransponder">
+      <arg name="callsign" type="s" direction="in"/>
+      <arg name="code" type="i" direction="in"/>
+      <arg name="modeC" type="b" direction="in"/>
+      <arg name="ident" type="b" direction="in"/>
+    </method>
+    <method name="requestRemoteAircraftData">
+    </method>
+  </interface>
+</node>)"

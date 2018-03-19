@@ -15,6 +15,8 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+
+#include "dbusobject.h"
 #include "datarefs.h"
 #include "messages.h"
 #include "blackmisc/simulation/xplane/navdatareference.h"
@@ -30,26 +32,20 @@ class QTimer;
 #define XSWIFTBUS_SERVICE_OBJECTPATH "/xswiftbus/service"
 //! \endcond
 
-//! Typedef needed to use QList<double> as a DBus argument
-using QDoubleList = QList<double>;
-
-//! Typedef needed to use QList<double> as a DBus argument
-Q_DECLARE_METATYPE(QDoubleList)
-
 namespace XSwiftBus
 {
 
     /*!
      * XSwiftBus service object which is accessible through DBus
      */
-    class CService : public QObject
+    class CService : public CDBusObject
     {
-        Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", XSWIFTBUS_SERVICE_INTERFACENAME)
-
     public:
         //! Constructor
-        CService(QObject *parent);
+        CService(CDBusConnection *connection);
+
+        //! Destructor
+        ~CService() override = default;
 
         //! DBus interface name
         static const QString &InterfaceName()
@@ -68,16 +64,6 @@ namespace XSwiftBus
         //! Called by XPluginReceiveMessage when the model changes.
         void onAircraftModelChanged();
 
-    signals:
-        //! Emitted when the model or livery changes.
-        void aircraftModelChanged(
-            const QString &path, const QString &filename, const QString &livery,
-            const QString &icao, const QString &modelString, const QString &name, const QString &description);
-
-        //! Airports in range updated.
-        void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QDoubleList &lats, const QDoubleList &lons, const QDoubleList &alts);
-
-    public slots:
         //! Add a text message to the on-screen display, with RGB components in the range [0,1]
         void addTextMessage(const QString &text, double red, double green, double blue);
 
@@ -244,7 +230,19 @@ namespace XSwiftBus
         //! \copydoc XSwiftBus::CMessageBoxControl::toggle
         void toggleMessageBoxVisibility() { m_messages.toggle(); }
 
+        int processDBus() override;
+
+    protected:
+        DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
+
     private:
+        void emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
+                                      const QString &icao, const QString &modelString, const QString &name,
+                                      const QString &description);
+
+        void emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes, const std::vector<std::string> &names,
+                                        const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts);
+
         CMessageBoxControl m_messages { 128, 128, 16 };
         BlackMisc::Simulation::XPlane::CNavDataReferenceList m_airports;
         QTimer *m_airportUpdater = nullptr;
