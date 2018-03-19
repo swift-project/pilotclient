@@ -139,7 +139,7 @@ namespace BlackCore
         int               m_periodicTime = -1;        //!< Periodic time after which the task is repeated
         QDateTime         m_updateTimestamp;          //!< when file/resource was read
         uint              m_contentHash = 0;          //!< has of the content given
-        std::atomic<bool> m_markedAsFailed { false }; //!< marker if reading failed
+        std::atomic_bool  m_markedAsFailed { false }; //!< marker if reading failed
         bool              m_unitTest { false };       //!< mark as unit test
         BlackMisc::Network::CUrlLogList m_urlReadLog; //!< URL based reading can be logged
     };

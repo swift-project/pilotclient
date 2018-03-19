@@ -39,9 +39,11 @@ namespace BlackSimPlugin
             };
 
             //! Constructor
-            CFs9Client(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelName,
+            CFs9Client(const BlackMisc::Aviation::CCallsign &callsign,
+                       const QString &modelName,
                        const BlackMisc::PhysicalQuantities::CTime &updateInterval,
-                       BlackMisc::Simulation::CInterpolationLogger *logger, QObject *owner);
+                       BlackMisc::Simulation::CInterpolationLogger *logger,
+                       BlackCore::ISimulator *owner);
 
             //! Destructor
             virtual ~CFs9Client();
@@ -79,11 +81,13 @@ namespace BlackSimPlugin
             //! Enumerate all FS9 session hosts
             HRESULT enumDirectPlayHosts();
 
+            //! Create host address
             HRESULT createHostAddress();
 
             //! Start hosting session
             HRESULT connectToSession(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Close the connection
             HRESULT closeConnection();
 
             void sendMultiplayerPosition(const BlackMisc::Aviation::CAircraftSituation &situation);

@@ -50,14 +50,14 @@ namespace BlackCore
 
     QDateTime CThreadedReader::getUpdateTimestamp() const
     {
-        QReadLocker lock(&this->m_lock);
-        return this->m_updateTimestamp;
+        QReadLocker lock(&m_lock);
+        return m_updateTimestamp;
     }
 
     void CThreadedReader::setUpdateTimestamp(const QDateTime &updateTimestamp)
     {
-        QWriteLocker lock(&this->m_lock);
-        this->m_updateTimestamp = updateTimestamp;
+        QWriteLocker lock(&m_lock);
+        m_updateTimestamp = updateTimestamp;
     }
 
     bool CThreadedReader::updatedWithinLastMs(qint64 timeLastMs)
@@ -105,31 +105,31 @@ namespace BlackCore
     {
         uint oldHash = 0;
         {
-            QReadLocker rl(&this->m_lock);
-            oldHash = this->m_contentHash;
+            QReadLocker rl(&m_lock);
+            oldHash = m_contentHash;
         }
         uint newHash = qHash(startPosition < 0 ? content : content.mid(startPosition));
         if (oldHash == newHash) { return false; }
         {
-            QWriteLocker wl(&this->m_lock);
-            this->m_contentHash = newHash;
+            QWriteLocker wl(&m_lock);
+            m_contentHash = newHash;
         }
         return true;
     }
 
     bool CThreadedReader::isMarkedAsFailed() const
     {
-        return this->m_markedAsFailed;
+        return m_markedAsFailed;
     }
 
     void CThreadedReader::setMarkedAsFailed(bool failed)
     {
-        this->m_markedAsFailed = failed;
+        m_markedAsFailed = failed;
     }
 
     CUrlLogList CThreadedReader::getReadLog() const
     {
-        QReadLocker rl(&this->m_lock);
+        QReadLocker rl(&m_lock);
         return m_urlReadLog;
     }
 
@@ -165,15 +165,14 @@ namespace BlackCore
     bool CThreadedReader::doWorkCheck() const
     {
         // sApp->hasWebDataServices() cannot be used, as some readers are already used during init phase
-        if (!m_unitTest && (!sApp || sApp->isShuttingDown())) { return false; }
         if (!isEnabled())  { return false; }
         if (isAbandoned()) { return false; }
+        if (!m_unitTest && (!sApp || sApp->isShuttingDown())) { return false; }
         return true;
     }
 
     QNetworkReply *CThreadedReader::getFromNetworkAndLog(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
     {
-        // returned QNetworkReply normally nullptr since QAM is in different thread
         QWriteLocker wl(&m_lock);
         const CUrlLogList outdatedPendingUrls = m_urlReadLog.findOutdatedPending(OutdatedPendingCallMs);
         if (!outdatedPendingUrls.isEmpty())
@@ -184,6 +183,8 @@ namespace BlackCore
 
         const int id = m_urlReadLog.addPendingUrl(url);
         wl.unlock();
+
+        // returned QNetworkReply normally nullptr since QAM is in different thread
         return sApp->getFromNetwork(url, id, callback);
     }
 

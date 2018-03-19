@@ -16,8 +16,8 @@
 #include "fs9client.h"
 #include "lobbyclient.h"
 #include "../fscommon/simulatorfscommon.h"
-#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -33,7 +33,7 @@ namespace BlackSimPlugin
     namespace Fs9
     {
         //! FS9 Simulator Implementation
-        class CSimulatorFs9 : public BlackSimPlugin::FsCommon::CSimulatorFsCommon
+        class CSimulatorFs9 : public FsCommon::CSimulatorFsCommon
         {
             Q_OBJECT
 

@@ -484,6 +484,8 @@ namespace BlackCore
         /*!
          * We received a reply to one of our queries.
          * \sa sendCapabilitiesQuery
+         * @param callsign
+         * @param capabilitiesFlags as in BlackMisc::Network::CClient
          */
         void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, int capabilitiesFlags);
 

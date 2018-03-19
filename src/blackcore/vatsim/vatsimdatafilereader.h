@@ -41,7 +41,7 @@ namespace BlackCore
     {
         //! Read vatsim data file
         //! \sa http://info.vroute.net/vatsim-data.txt
-        class BLACKCORE_EXPORT CVatsimDataFileReader : public BlackCore::CThreadedReader
+        class BLACKCORE_EXPORT CVatsimDataFileReader : public CThreadedReader
         {
             Q_OBJECT
 

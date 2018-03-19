@@ -32,10 +32,10 @@ namespace BlackMisc
 
         //! Value object encapsulating a list of distributors.
         class BLACKMISC_EXPORT CDistributorList :
-            public BlackMisc::CSequence<CDistributor>,
-            public BlackMisc::Db::IDatastoreObjectList<CDistributor, CDistributorList, QString>,
-            public BlackMisc::IOrderableList<CDistributor, CDistributorList>,
-            public BlackMisc::Mixin::MetaType<CDistributorList>
+            public CSequence<CDistributor>,
+            public Db::IDatastoreObjectList<CDistributor, CDistributorList, QString>,
+            public IOrderableList<CDistributor, CDistributorList>,
+            public Mixin::MetaType<CDistributorList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDistributorList)
