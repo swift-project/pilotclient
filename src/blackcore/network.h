@@ -82,15 +82,6 @@ namespace BlackCore
         //! Underlying library info.
         virtual const QString &getLibraryInfo(bool detailed) const = 0;
 
-        //! Flags for capabilities bitfield
-//        enum Capability
-//        {
-//            AcceptsAtisResponses        = 1 << 0,
-//            SupportsInterimPosUpdates   = 1 << 1,
-//            SupportsIcaoCodes           = 1 << 2,
-//            SupportsAircraftConfigs     = 1 << 3
-//        };
-
         //! Login modes
         enum LoginMode
         {

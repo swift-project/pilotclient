@@ -544,22 +544,17 @@ namespace BlackCore
         this->updateOrAddClient(callsign, vm, false);
     }
 
-    void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, quint32 flags)
+    void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, int clientCaps)
     {
         if (!this->isConnected() || callsign.isEmpty()) { return; }
-        CPropertyIndexVariantMap capabilities;
-        capabilities.addValue(CClient::FsdAtisCanBeReceived, (flags & INetwork::AcceptsAtisResponses));
-        capabilities.addValue(CClient::FsdWithInterimPositions, (flags & INetwork::SupportsInterimPosUpdates));
-        capabilities.addValue(CClient::FsdWithIcaoCodes, (flags & INetwork::SupportsIcaoCodes));
-        capabilities.addValue(CClient::FsdWithAircraftConfig, (flags & INetwork::SupportsAircraftConfigs));
-
-        CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(capabilities));
-        const CVoiceCapabilities caps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
-        vm.addValue({CClient::IndexVoiceCapabilities}, caps);
+        CClient::Capabilities caps = static_cast<CClient::Capabilities>(clientCaps);
+        const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
+        CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(clientCaps));
+        vm.addValue({CClient::IndexVoiceCapabilities}, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
 
         // for aircraft parts
-        if (flags & INetwork::SupportsAircraftConfigs) { m_network->sendAircraftConfigQuery(callsign); }
+        if (caps.testFlag(CClient::FsdWithAircraftConfig)) { m_network->sendAircraftConfigQuery(callsign); }
     }
 
     void CAirspaceMonitor::onServerReplyReceived(const CCallsign &callsign, const QString &server)

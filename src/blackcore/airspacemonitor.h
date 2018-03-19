@@ -361,7 +361,7 @@ namespace BlackCore
         void onCustomFSInnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
 
         void onRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
-        void onCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
+        void onCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, int clientCaps);
         void onServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void onFlightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
         void onAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);

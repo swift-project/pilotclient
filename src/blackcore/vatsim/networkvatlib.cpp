@@ -1261,13 +1261,13 @@ namespace BlackCore
 
         void CNetworkVatlib::onCapabilitiesReplyReceived(VatFsdClient *, const char *callsign, int capabilityFlags, void *cbvar)
         {
-            int flags = 0;
-            if (capabilityFlags & vatCapsAtcInfo) { flags |= AcceptsAtisResponses; }
-            if (capabilityFlags & vatCapsFastPos) { flags |= SupportsInterimPosUpdates; }
-            if (capabilityFlags & vatCapsAircraftInfo)   { flags |= SupportsIcaoCodes; }
-            if (capabilityFlags & vatCapsAircraftConfig) { flags |= SupportsAircraftConfigs; }
+            CClient::Capabilities caps = CClient::None;
+            if (capabilityFlags & vatCapsAtcInfo) { caps |= CClient::FsdAtisCanBeReceived; }
+            if (capabilityFlags & vatCapsFastPos) { caps |= CClient::FsdWithInterimPositions; }
+            if (capabilityFlags & vatCapsAircraftInfo)   { caps |= CClient::FsdWithIcaoCodes; }
+            if (capabilityFlags & vatCapsAircraftConfig) { caps |= CClient::FsdWithAircraftConfig; }
             auto *self = cbvar_cast(cbvar);
-            emit self->capabilitiesReplyReceived(self->fromFSD(callsign), flags);
+            emit self->capabilitiesReplyReceived(self->fromFSD(callsign), static_cast<int>(caps));
         }
 
         void CNetworkVatlib::onAtisReplyReceived(VatFsdClient *, const char *callsign, const VatControllerAtis *atis, void *cbvar)
