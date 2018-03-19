@@ -183,11 +183,17 @@ namespace BlackCore
             //! Is time synchronization on?
             virtual bool isTimeSynchronized() const = 0;
 
-            //! Set interpolation and rendering
-            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
+            //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::getInterpolationSetupGlobal
+            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const = 0;
 
-            //! Set interpolation and rendering
-            virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) = 0;
+            //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::getInterpolationSetupsPerCallsign
+            virtual BlackMisc::Simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const = 0;
+
+            //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
+            virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) = 0;
+
+            //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
+            virtual void setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups) = 0;
 
             //! Time synchronization offset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;

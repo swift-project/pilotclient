@@ -161,17 +161,31 @@ namespace BlackCore
                 return false;
             }
 
-            //! \copydoc ISimulator::getInterpolationAndRenderingSetup
-            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override
+            //! \copydoc ISimulator::getInterpolationSetupGlobal
+            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::Simulation::CInterpolationAndRenderingSetup();
+                return BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal();
+            }
+
+            //! \copydoc ISimulator::getInterpolationSetupsPerCallsign
+            virtual BlackMisc::Simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Simulation::CInterpolationSetupList();
             }
 
             //! \copydoc ISimulator::setInterpolationAndRenderingSetup
-            virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) override
+            virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override
             {
                 Q_UNUSED(setup);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
+            //! \copydoc ISimulator::setInterpolationSetupPerCallsign
+            virtual void setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups) override
+            {
+                Q_UNUSED(setups);
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 

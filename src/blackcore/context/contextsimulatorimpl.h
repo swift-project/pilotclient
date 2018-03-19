@@ -19,20 +19,20 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/weathermanager.h"
 #include "blackcore/network.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
+#include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/settingscache.h"
 
 #include "blackmisc/worker.h"
 
@@ -96,8 +96,10 @@ namespace BlackCore
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
             virtual bool isTimeSynchronized() const override;
-            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
-            virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) override;
+            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const override;
+            virtual BlackMisc::Simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const override;
+            virtual void setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups) override;
+            virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;

@@ -271,15 +271,31 @@ namespace BlackCore
             return m_simulatorPlugin.second->isTimeSynchronized();
         }
 
-        CInterpolationAndRenderingSetup CContextSimulator::getInterpolationAndRenderingSetup() const
+        CInterpolationAndRenderingSetupGlobal CContextSimulator::getInterpolationAndRenderingSetupGlobal() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return CInterpolationAndRenderingSetup(); }
+            if (m_simulatorPlugin.first.isUnspecified()) { return CInterpolationAndRenderingSetupGlobal(); }
             Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getInterpolationAndRenderingSetup();
+            return m_simulatorPlugin.second->getInterpolationSetupGlobal();
         }
 
-        void CContextSimulator::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
+        CInterpolationSetupList CContextSimulator::getInterpolationAndRenderingSetupsPerCallsign() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_simulatorPlugin.first.isUnspecified()) { return CInterpolationSetupList(); }
+            Q_ASSERT(m_simulatorPlugin.second);
+            return m_simulatorPlugin.second->getInterpolationSetupsPerCallsign();
+        }
+
+        void CContextSimulator::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_simulatorPlugin.first.isUnspecified()) { return; }
+            Q_ASSERT(m_simulatorPlugin.second);
+            return m_simulatorPlugin.second->setInterpolationSetupsPerCallsign(setups);
+        }
+
+        void CContextSimulator::setInterpolationAndRenderingSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << setup; }
             if (m_simulatorPlugin.first.isUnspecified()) { return; }
@@ -702,7 +718,7 @@ namespace BlackCore
             if (!parser.isKnownCommand()) { return false; }
             if (parser.matchesCommand("ris"))
             {
-                CInterpolationAndRenderingSetup rs = this->getInterpolationAndRenderingSetup();
+                CInterpolationAndRenderingSetupGlobal rs = this->getInterpolationAndRenderingSetupGlobal();
                 const QString p1 = parser.part(1);
                 if (p1 == "show")
                 {
@@ -714,10 +730,10 @@ namespace BlackCore
                 }
                 if (!parser.hasPart(2)) { return false; }
                 const bool on = stringToBool(parser.part(2));
-                if (p1 == "debug") { rs.setDriverDebuggingMessages(on); }
+                if (p1 == "debug") { rs.setSimulatorDebuggingMessages(on); }
                 else if (p1 == "parts") { rs.setEnabledAircraftParts(on); }
                 else { return false; }
-                this->setInterpolationAndRenderingSetup(rs);
+                this->setInterpolationAndRenderingSetupGlobal(rs);
                 CLogMessage(this, CLogCategory::cmdLine()).info("Setup is: '%1'") << rs.toQString(true);
                 return true;
             }

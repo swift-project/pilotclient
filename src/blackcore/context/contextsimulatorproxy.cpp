@@ -166,14 +166,24 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("isTimeSynchronized"));
         }
 
-        CInterpolationAndRenderingSetup CContextSimulatorProxy::getInterpolationAndRenderingSetup() const
+        CInterpolationAndRenderingSetupGlobal CContextSimulatorProxy::getInterpolationAndRenderingSetupGlobal() const
         {
-            return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetup>(QLatin1String("getInterpolationAndRenderingSetup"));
+            return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetupGlobal>(QLatin1String("getInterpolationAndRenderingSetupGlobal"));
         }
 
-        void CContextSimulatorProxy::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
+        CInterpolationSetupList CContextSimulatorProxy::getInterpolationAndRenderingSetupsPerCallsign() const
         {
-            m_dBusInterface->callDBus(QLatin1String("setInterpolationAndRenderingSetup"), setup);
+            return m_dBusInterface->callDBusRet<CInterpolationSetupList>(QLatin1String("getInterpolationAndRenderingSetupsPerCallsign"));
+        }
+
+        void CContextSimulatorProxy::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups)
+        {
+            m_dBusInterface->callDBus(QLatin1String("setInterpolationAndRenderingSetupsPerCallsign"), setups);
+        }
+
+        void CContextSimulatorProxy::setInterpolationAndRenderingSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
+        {
+            m_dBusInterface->callDBus(QLatin1String("setInterpolationAndRenderingSetupGlobal"), setup);
         }
 
         CTime CContextSimulatorProxy::getTimeSynchronizationOffset() const
