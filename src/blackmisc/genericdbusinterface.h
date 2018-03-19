@@ -69,7 +69,7 @@ namespace BlackMisc
         void callDBus(QLatin1String method, Args &&... args)
         {
             const QList<QVariant> argumentList { QVariant::fromValue(std::forward<Args>(args))... };
-            this->asyncCallWithArgumentList(method, argumentList);
+            this->callWithArgumentList(QDBus::NoBlock, method, argumentList);
         }
 
         //! Call DBus with synchronous return value
