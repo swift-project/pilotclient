@@ -51,7 +51,7 @@ namespace BlackCore
                                         "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(int)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "modelSetChanged", this, SIGNAL(modelSetChanged()));
+                                   "modelSetChanged", this, SIGNAL(modelSetChanged(BlackMisc::Simulation::CSimulatorInfo)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Simulation::CAircraftModel)));

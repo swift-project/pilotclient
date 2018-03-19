@@ -143,8 +143,9 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::onChangedSimulatedAircraftInView);
 
             // with external core models might be already available
-            this->onModelSetSimulatorChanged(ui->comp_SimulatorSelector->getValue());
-            this->onModelSetChanged();
+            const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
+            this->onModelSetSimulatorChanged(sim);
+            this->onModelSetChanged(sim);
         }
 
         CMappingComponent::~CMappingComponent()
@@ -168,7 +169,7 @@ namespace BlackGui
             return ui->tvp_AircraftModels->container().findModelsStartingWith(modelName, cs);
         }
 
-        void CMappingComponent::onModelSetChanged()
+        void CMappingComponent::onModelSetChanged(const CSimulatorInfo &simulator)
         {
             if (ui->tvp_AircraftModels->displayAutomatically())
             {
@@ -176,7 +177,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage(this).info("Models loaded, you can update the model view");
+                CLogMessage(this).info("Model set loaded ('%1'), you can update the model view") << simulator.toQString(true);
             }
 
             // change completer

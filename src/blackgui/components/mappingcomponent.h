@@ -79,9 +79,9 @@ namespace BlackGui
 
         private:
             //! Aircraft models available
-            void onModelSetChanged();
+            void onModelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Changed count
+            //! Changed count of rendered or aircraft model count
             void onRowCountChanged(int count, bool withFilter);
 
             //! Simulated aircraft did change in view

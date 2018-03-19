@@ -68,7 +68,8 @@ namespace BlackCore
             this->restoreSimulatorPlugins();
 
             connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
-            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CContextSimulator::modelSetChanged);
+            // seems to be redundant, as changed sim will cause changed cache
+            // connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDigestSignal::modelSetChanged);
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
             // deferred init of last model set, if no other data are set in meantime
@@ -534,7 +535,7 @@ namespace BlackCore
         void CContextSimulator::onModelSetChanged(const CSimulatorInfo &simulator)
         {
             Q_UNUSED(simulator);
-            emit this->modelSetChanged();
+            emit this->modelSetChanged(simulator);
         }
 
         void CContextSimulator::xCtxTextMessagesReceived(const Network::CTextMessageList &textMessages)
