@@ -102,7 +102,7 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::setGuiValues()
         {
-            const CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
+            const CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
 
             // time sync
             ui->cb_TimeSync->setEnabled(m_pluginLoaded);
@@ -181,17 +181,17 @@ namespace BlackGui
         void CSettingsSimulatorComponent::onApplyMaxRenderedAircraft()
         {
             // get initial aircraft to render
-            CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
+            CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
             const int noRequested = ui->le_MaxAircraft->text().isEmpty() ? setup.InfiniteAircraft() : ui->le_MaxAircraft->text().toInt();
             const int oldValue = setup.getMaxRenderedAircraft();
             if (oldValue == noRequested) { return; }
 
             // set value
             setup.setMaxRenderedAircraft(noRequested);
-            sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
+            sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
 
             // re-read real value
-            setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
+            setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
             const int noRendered = setup.getMaxRenderedAircraft();
             if (noRequested == noRendered)
             {
@@ -208,7 +208,7 @@ namespace BlackGui
         void CSettingsSimulatorComponent::onApplyMaxRenderedDistance()
         {
             // get initial aircraft to render
-            CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
+            CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
             CLength newDistance(0, nullptr);
             if (!ui->le_MaxDistance->text().isEmpty())
             {
@@ -224,16 +224,16 @@ namespace BlackGui
             {
                 CLogMessage(this).info("Max.distance requested: %1") << newDistance.valueRoundedWithUnit(2, true);
                 setup.setMaxRenderedDistance(newDistance);
-                sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
+                sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
                 this->setGuiValues();
             }
         }
 
         void CSettingsSimulatorComponent::onApplyDisableRendering()
         {
-            CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
+            CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
             setup.disableRendering();
-            sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
+            sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
             this->setGuiValues();
         }
 
@@ -258,9 +258,9 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::clearRestricedRendering()
         {
-            CInterpolationAndRenderingSetup setup;
+            CInterpolationAndRenderingSetupGlobal setup;
             setup.clearAllRenderingRestrictions();
-            sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
+            sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
             this->setGuiValues();
         }
 
