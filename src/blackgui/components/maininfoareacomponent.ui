@@ -6,31 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1630</width>
+    <width>1779</width>
     <height>79</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Main info area</string>
-  </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>:/own/icons/own/swift/swift24.png</normaloff>:/own/icons/own/swift/swift24.png</iconset>
-  </property>
-  <property name="styleSheet">
-   <string notr="true"/>
-  </property>
-  <property name="animated">
-   <bool>false</bool>
-  </property>
-  <property name="documentMode">
-   <bool>false</bool>
-  </property>
-  <property name="dockNestingEnabled">
-   <bool>false</bool>
-  </property>
-  <property name="dockOptions">
-   <set>QMainWindow::AllowTabbedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="qw_centralWidgetEmptyUsedAsPadding">
    <property name="enabled">
@@ -44,10 +25,10 @@
    </property>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Cockpit">
-   <property name="maximumSize">
+   <property name="minimumSize">
     <size>
-     <width>524287</width>
-     <height>524287</height>
+     <width>125</width>
+     <height>33</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -577,7 +558,7 @@
     <set>Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Rendering</string>
+    <string>Models</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
@@ -626,27 +607,18 @@
     </layout>
    </widget>
   </widget>
-  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Log">
-   <property name="minimumSize">
-    <size>
-     <width>125</width>
-     <height>70</height>
-    </size>
-   </property>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Interpolation">
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Log</string>
+    <string>Interpolation</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="QWidget" name="qw_LogOuter">
-    <layout class="QVBoxLayout" name="vl_LogOuter">
-     <property name="spacing">
-      <number>0</number>
-     </property>
+   <widget class="QWidget" name="qw_InterpolationOuter">
+    <layout class="QVBoxLayout" name="vl_InterpolationOuter">
      <property name="leftMargin">
       <number>0</number>
      </property>
@@ -660,11 +632,8 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QFrame" name="fr_LogInner">
-       <layout class="QVBoxLayout" name="vl_LogInner">
-        <property name="spacing">
-         <number>0</number>
-        </property>
+      <widget class="QFrame" name="fr_InterpolationInner">
+       <layout class="QVBoxLayout" name="vl_InterpolationInner">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -678,7 +647,14 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CLogComponent" name="comp_Log"/>
+         <widget class="BlackGui::Components::CInterpolationComponent" name="comp_Interpolation">
+          <property name="minimumSize">
+           <size>
+            <width>125</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -748,6 +724,66 @@
         </property>
         <item>
          <widget class="BlackGui::Components::CSettingsComponent" name="comp_Settings"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Log">
+   <property name="minimumSize">
+    <size>
+     <width>125</width>
+     <height>70</height>
+    </size>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Log</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="qw_LogOuter">
+    <layout class="QVBoxLayout" name="vl_LogOuter">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="fr_LogInner">
+       <layout class="QVBoxLayout" name="vl_LogInner">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CLogComponent" name="comp_Log"/>
         </item>
        </layout>
       </widget>
@@ -827,6 +863,12 @@
    <class>BlackGui::Components::CWeatherComponent</class>
    <extends>QTabWidget</extends>
    <header>blackgui/components/weathercomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInterpolationComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/interpolationcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

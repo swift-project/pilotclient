@@ -14,7 +14,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/infoarea.h"
-
 #include <QObject>
 #include <QScopedPointer>
 #include <QSize>
@@ -23,7 +22,6 @@ class QPixmap;
 class QWidget;
 
 namespace Ui { class CMainInfoAreaComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -35,6 +33,7 @@ namespace BlackGui
         class CFlightPlanComponent;
         class CLogComponent;
         class CMappingComponent;
+        class CInterpolationComponent;
         class CSettingsComponent;
         class CSimulatorComponent;
         class CTextMessageComponent;
@@ -57,18 +56,19 @@ namespace BlackGui
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaCockpit      = 0,
-                InfoAreaAircraft     = 1,
-                InfoAreaAtc          = 2,
-                InfoAreaUsers        = 3,
-                InfoAreaTextMessages = 4,
-                InfoAreaSimulator    = 5,
-                InfoAreaFlightPlan   = 6,
-                InfoAreaWeather      = 7,
-                InfoAreaMappings     = 8,
-                InfoAreaLog          = 9,
-                InfoAreaSettings     = 10,
-                InfoAreaNone         = -1
+                InfoAreaCockpit       = 0,
+                InfoAreaAircraft      = 1,
+                InfoAreaAtc           = 2,
+                InfoAreaUsers         = 3,
+                InfoAreaTextMessages  = 4,
+                InfoAreaSimulator     = 5,
+                InfoAreaFlightPlan    = 6,
+                InfoAreaWeather       = 7,
+                InfoAreaMapping       = 8, //!< aka rendering, models
+                InfoAreaInterpolation = 9,
+                InfoAreaSettings      = 10,
+                InfoAreaLog           = 11,
+                InfoAreaNone          = -1
             };
 
             //! Cockpit
@@ -81,7 +81,10 @@ namespace BlackGui
             CAircraftComponent *getAircraftComponent();
 
             //! Mappings
-            CMappingComponent *getMappingComponet();
+            CMappingComponent *getMappingComponent();
+
+            //! Interpolation
+            CInterpolationComponent *getInterpolationComponent();
 
             //! User component
             CUserComponent *getUserComponent();

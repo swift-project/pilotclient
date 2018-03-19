@@ -47,6 +47,7 @@ namespace BlackGui
             connect(ui->pb_MainFlightplan, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_MainLog, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_MainMappings, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
+            connect(ui->pb_MainInterpolation, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_MainSettings, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_MainSimulator, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
             connect(ui->pb_MainTextMessages, &QPushButton::released, this, &CMainKeypadAreaComponent::buttonSelected);
@@ -109,7 +110,7 @@ namespace BlackGui
             if (ia != CMainInfoAreaComponent::InfoAreaNone)
             {
                 Q_ASSERT(senderButton->isCheckable());
-                emit selectedMainInfoAreaDockWidget(ia);
+                emit this->selectedMainInfoAreaDockWidget(ia);
                 senderButton->setChecked(true); // re-check if got unchecked, we use checked buttons like normal buttons
                 return;
             }
@@ -189,7 +190,8 @@ namespace BlackGui
             if (button == ui->pb_MainCockpit) return CMainInfoAreaComponent::InfoAreaCockpit;
             if (button == ui->pb_MainFlightplan) return CMainInfoAreaComponent::InfoAreaFlightPlan;
             if (button == ui->pb_MainLog) return CMainInfoAreaComponent::InfoAreaLog;
-            if (button == ui->pb_MainMappings) return CMainInfoAreaComponent::InfoAreaMappings;
+            if (button == ui->pb_MainMappings) return CMainInfoAreaComponent::InfoAreaMapping;
+            if (button == ui->pb_MainInterpolation) return CMainInfoAreaComponent::InfoAreaInterpolation;
             if (button == ui->pb_MainSettings) return CMainInfoAreaComponent::InfoAreaSettings;
             if (button == ui->pb_MainSimulator) return CMainInfoAreaComponent::InfoAreaSimulator;
             if (button == ui->pb_MainTextMessages) return CMainInfoAreaComponent::InfoAreaTextMessages;
@@ -207,7 +209,8 @@ namespace BlackGui
             case CMainInfoAreaComponent::InfoAreaCockpit: return ui->pb_MainCockpit;
             case CMainInfoAreaComponent::InfoAreaFlightPlan: return ui->pb_MainFlightplan;
             case CMainInfoAreaComponent::InfoAreaLog: return ui->pb_MainLog;
-            case CMainInfoAreaComponent::InfoAreaMappings: return ui->pb_MainMappings;
+            case CMainInfoAreaComponent::InfoAreaMapping: return ui->pb_MainMappings;
+            case CMainInfoAreaComponent::InfoAreaInterpolation: return ui->pb_MainInterpolation;
             case CMainInfoAreaComponent::InfoAreaSettings: return ui->pb_MainSettings;
             case CMainInfoAreaComponent::InfoAreaSimulator: return ui->pb_MainSimulator;
             case CMainInfoAreaComponent::InfoAreaTextMessages: return ui->pb_MainTextMessages;
@@ -226,6 +229,7 @@ namespace BlackGui
             ui->pb_MainFlightplan->setChecked(false);
             ui->pb_MainLog->setChecked(false);
             ui->pb_MainMappings->setChecked(false);
+            ui->pb_MainInterpolation->setChecked(false);
             ui->pb_MainSettings->setChecked(false);
             ui->pb_MainSimulator->setChecked(false);
             ui->pb_MainTextMessages->setChecked(false);

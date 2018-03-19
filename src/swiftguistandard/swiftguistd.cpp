@@ -201,6 +201,13 @@ void SwiftGuiStd::setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
     ui->comp_MainInfoArea->selectArea(infoArea);
 }
 
+void SwiftGuiStd::setSettingsPage(int settingsTabIndex)
+{
+    this->setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
+    if (settingsTabIndex < 0) { return; }
+    ui->comp_MainInfoArea->getSettingsComponent()->setCurrentIndex(settingsTabIndex);
+}
+
 bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
 {
     return ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);

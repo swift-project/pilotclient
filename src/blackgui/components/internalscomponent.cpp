@@ -69,10 +69,6 @@ namespace BlackGui
             connect(ui->cb_DebugContextOwnAircraft, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
             connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
 
-            connect(ui->cb_DebugDriver, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
-            connect(ui->cb_ForceFullInterpolation, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
-            connect(ui->cb_EnableParts, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
-
             connect(ui->pb_SendTextMessage, &QPushButton::pressed, this, &CInternalsComponent::sendTextMessage);
             connect(ui->tb_LogStatusMessage, &QPushButton::pressed, this, &CInternalsComponent::logStatusMessage);
             connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::logStatusMessage);
@@ -82,7 +78,6 @@ namespace BlackGui
             connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::requestPartsFromNetwork);
 
             connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
-
             contextFlagsToGui();
         }
 
@@ -154,14 +149,6 @@ namespace BlackGui
             else if (sender == ui->cb_DebugContextNetwork) { sGui->getIContextNetwork()->setDebugEnabled(debug);}
             else if (sender == ui->cb_DebugContextOwnAircraft) { sGui->getIContextOwnAircraft()->setDebugEnabled(debug); }
             else if (sender == ui->cb_DebugContextSimulator)   { sGui->getIContextSimulator()->setDebugEnabled(debug);}
-            else if (sender == ui->cb_DebugDriver || sender == ui->cb_EnableParts || sender == ui->cb_ForceFullInterpolation)
-            {
-                CInterpolationAndRenderingSetup setup;
-                setup.setForceFullInterpolation(ui->cb_ForceFullInterpolation->isChecked());
-                setup.setDriverDebuggingMessages(ui->cb_DebugDriver->isChecked());
-                setup.setEnabledAircraftParts(ui->cb_EnableParts->isChecked());
-                sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
-            }
         }
 
         void CInternalsComponent::sendTextMessage()

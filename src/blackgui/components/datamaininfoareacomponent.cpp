@@ -91,7 +91,7 @@ namespace BlackGui
 
         QSize CDataMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
         {
-            InfoArea area = static_cast<InfoArea>(areaIndex);
+            const InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
             case InfoAreaData:
@@ -105,19 +105,14 @@ namespace BlackGui
 
         const QPixmap &CDataMainInfoAreaComponent::indexToPixmap(int areaIndex) const
         {
-            InfoArea area = static_cast<InfoArea>(areaIndex);
+            const InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
-            case InfoAreaData:
-                return CIcons::appDatabase16();
-            case InfoAreaMapping:
-                return CIcons::appMappings16();
-            case InfoAreaSettings:
-                return CIcons::appSettings16();
-            case InfoAreaLog:
-                return CIcons::appLog16();
-            default:
-                return CIcons::empty();
+            case InfoAreaData: return CIcons::appDatabase16();
+            case InfoAreaMapping: return CIcons::appMappings16();
+            case InfoAreaSettings: return CIcons::appSettings16();
+            case InfoAreaLog: return CIcons::appLog16();
+            default: return CIcons::empty();
             }
         }
     } // ns

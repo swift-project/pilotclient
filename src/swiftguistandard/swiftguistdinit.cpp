@@ -15,6 +15,7 @@
 #include "blackgui/components/flightplancomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/logincomponent.h"
+#include "blackgui/components/interpolationcomponent.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/mainkeypadareacomponent.h"
 #include "blackgui/components/mappingcomponent.h"
@@ -138,7 +139,8 @@ void SwiftGuiStd::init()
         Q_ASSERT_X(log, Q_FUNC_INFO, "Missing log component");
         if (clear) { log->clearConsole(); }
         log->appendPlainTextToConsole(logMsg);
-    }, Qt::QueuedConnection);
+    },
+    Qt::QueuedConnection);
     Q_ASSERT(s);
     s = connect(&m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::handleTimerBasedUpdates);
     Q_ASSERT(s);
@@ -201,7 +203,7 @@ void SwiftGuiStd::initGuiSignals()
     // main keypad
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this, &SwiftGuiStd::setMainPageInfoArea);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &SwiftGuiStd::loginRequested);
-    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &SwiftGuiStd::onChangedWindowOpacity);
+    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this, &SwiftGuiStd::onChangedWindowOpacity);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::textEntered, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLineText);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::audioPressed, [ = ]
@@ -247,8 +249,14 @@ void SwiftGuiStd::initGuiSignals()
 
     // text messages
     connect(ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
-    connect(ui->comp_MainInfoArea->getMappingComponet(), &CMappingComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
+    connect(ui->comp_MainInfoArea->getMappingComponent(), &CMappingComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
     connect(ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
+
+    // interpolation
+    connect(ui->comp_MainInfoArea->getInterpolationComponent(), &CInterpolationComponent::requestRenderingRestrictionsWidget, [ = ]
+    {
+        this->setSettingsPage(CSettingsComponent::SettingTabSimulator);
+    });
 
     // main info area
     connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this, &SwiftGuiStd::onChangedMainInfoAreaFloating);

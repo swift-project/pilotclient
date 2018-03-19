@@ -773,6 +773,11 @@ namespace BlackMisc
         return tableRelationship16();
     }
 
+    const QPixmap &CIcons::appInterpolation16()
+    {
+        return paperPlane16();
+    }
+
     const QPixmap &CIcons::appLog16()
     {
         return monitorError16();

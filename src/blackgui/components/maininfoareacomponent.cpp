@@ -46,9 +46,14 @@ namespace BlackGui
             return ui->comp_Aircraft;
         }
 
-        CMappingComponent *CMainInfoAreaComponent::getMappingComponet()
+        CMappingComponent *CMainInfoAreaComponent::getMappingComponent()
         {
             return ui->comp_Mappings;
+        }
+
+        CInterpolationComponent *CMainInfoAreaComponent::getInterpolationComponent()
+        {
+            return ui->comp_Interpolation;
         }
 
         CUserComponent *CMainInfoAreaComponent::getUserComponent()
@@ -110,7 +115,7 @@ namespace BlackGui
 
         QSize CMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
         {
-            InfoArea area = static_cast<InfoArea>(areaIndex);
+            const InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
             case InfoAreaCockpit:
@@ -120,7 +125,8 @@ namespace BlackGui
             case InfoAreaLog:
             case InfoAreaSimulator:
                 return QSize(400, 300);
-            case InfoAreaMappings:
+            case InfoAreaMapping:
+            case InfoAreaInterpolation:
             case InfoAreaSettings:
             case InfoAreaTextMessages:
             case InfoAreaWeather:
@@ -140,33 +146,22 @@ namespace BlackGui
 
         const QPixmap &CMainInfoAreaComponent::indexToPixmap(int areaIndex) const
         {
-            InfoArea area = static_cast<InfoArea>(areaIndex);
+            const InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
-            case InfoAreaCockpit:
-                return CIcons::appCockpit16();
-            case InfoAreaUsers:
-                return CIcons::appUsers16();
-            case InfoAreaWeather:
-                return CIcons::appWeather16();
-            case InfoAreaAtc:
-                return CIcons::appAtc16();
-            case InfoAreaAircraft:
-                return CIcons::appAircraft16();
-            case InfoAreaSettings:
-                return CIcons::appSettings16();
-            case InfoAreaFlightPlan:
-                return CIcons::appFlightPlan16();
-            case InfoAreaTextMessages:
-                return CIcons::appTextMessages16();
-            case InfoAreaSimulator:
-                return CIcons::appSimulator16();
-            case InfoAreaMappings:
-                return CIcons::appMappings16();
-            case InfoAreaLog:
-                return CIcons::appLog16();
-            default:
-                return CIcons::empty();
+            case InfoAreaCockpit: return CIcons::appCockpit16();
+            case InfoAreaUsers: return CIcons::appUsers16();
+            case InfoAreaWeather: return CIcons::appWeather16();
+            case InfoAreaAtc: return CIcons::appAtc16();
+            case InfoAreaAircraft: return CIcons::appAircraft16();
+            case InfoAreaSettings: return CIcons::appSettings16();
+            case InfoAreaFlightPlan: return CIcons::appFlightPlan16();
+            case InfoAreaTextMessages: return CIcons::appTextMessages16();
+            case InfoAreaSimulator: return CIcons::appSimulator16();
+            case InfoAreaMapping: return CIcons::appMappings16();
+            case InfoAreaLog: return CIcons::appLog16();
+            case InfoAreaInterpolation: return CIcons::appInterpolation16();
+            default: return CIcons::empty();
             }
         }
     } // namespace

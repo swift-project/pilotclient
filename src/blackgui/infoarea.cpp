@@ -660,7 +660,7 @@ namespace BlackGui
 
     int CInfoArea::countDockedWidgetInfoAreas() const
     {
-        if (!m_tabBar) return 0;
+        if (!m_tabBar) { return 0; }
         return m_tabBar->count();
     }
 
@@ -671,7 +671,7 @@ namespace BlackGui
         const QString t(m_tabBar->tabText(tabBarIndex));
 
         // we have a title and search by that (best option, as order does not matter)
-        if (!t.isEmpty()) { return getDockWidgetInfoAreaByWindowTitle(t); }
+        if (!t.isEmpty()) { return this->getDockWidgetInfoAreaByWindowTitle(t); }
 
         // no title, we assume the n-th not floating tab is correct
         // this will work if the order in m_dockWidgetInfoAreas matches

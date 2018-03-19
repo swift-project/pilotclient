@@ -551,6 +551,9 @@ namespace BlackMisc
         //! Application mappings
         static const QPixmap &appMappings16();
 
+        //! Application interpolation
+        static const QPixmap &appInterpolation16();
+
         //! Application log/status messages
         static const QPixmap &appLog16();
 

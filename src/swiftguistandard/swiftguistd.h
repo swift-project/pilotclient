@@ -199,6 +199,9 @@ private:
     //! Set the main info area
     void setMainPageInfoArea(BlackGui::Components::CMainInfoAreaComponent::InfoArea infoArea);
 
+    //! Display the settings page
+    void setSettingsPage(int settingsTabIndex = -1);
+
     //! Login requested
     void loginRequested();
 
