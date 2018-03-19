@@ -12,46 +12,44 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATIONRENDERINGSETUP_H
 #define BLACKMISC_SIMULATION_INTERPOLATIONRENDERINGSETUP_H
 
-#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexlist.h"
 #include "blackmisc/valueobject.h"
 #include <QString>
 
 namespace BlackMisc
 {
+    namespace Network { class CClient; }
     namespace Simulation
     {
-        /*!
-         * Value object for interpolator and rendering
-         */
-        class BLACKMISC_EXPORT CInterpolationAndRenderingSetup :
-            public CValueObject<CInterpolationAndRenderingSetup>
+        //! Value object for interpolator and rendering base class
+        class BLACKMISC_EXPORT CInterpolationAndRenderingSetupBase
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexInterpolatorDebugMessages = CPropertyIndex::GlobalIndexCInterpolatioRenderingSetup,
+                IndexLogInterpolation = CPropertyIndex::GlobalIndexCInterpolatioRenderingSetup,
                 IndexSimulatorDebugMessages,
                 IndexForceFullInterpolation,
-                IndexMaxRenderedAircraft,
-                IndexMaxRenderedDistance,
+                IndexSendGndFlagToSimulator,
+                IndexEnableGndFlag,
                 IndexEnabledAircraftParts
             };
 
-            //! Constructor.
-            CInterpolationAndRenderingSetup();
-
-            //! Considered as "all aircraft"
-            static int InfiniteAircraft();
-
-            //! Debugging messages
+            //! Debugging messages for simulation
             bool showSimulatorDebugMessages() const { return m_simulatorDebugMessages; }
 
-            //! Debugging messages
-            void setDriverDebuggingMessages(bool debug) { m_simulatorDebugMessages = debug; }
+            //! Debugging messages for simulation
+            void setSimulatorDebuggingMessages(bool debug) { m_simulatorDebugMessages = debug; }
+
+            //! Log.interpolation
+            bool logInterpolation() const { return m_logInterpolation; }
+
+            //! Log.interpolation
+            void setLogInterpolation(bool log) { m_logInterpolation = log; }
 
             //! Full interpolation
             bool isForcingFullInterpolation() const { return m_forceFullInterpolation; }
@@ -59,29 +57,87 @@ namespace BlackMisc
             //! Force full interpolation
             void setForceFullInterpolation(bool force) { m_forceFullInterpolation = force; }
 
-            //! Max. number of aircraft rendered
-            int getMaxRenderedAircraft() const;
-
-            //! Max. number of aircraft rendered
-            bool setMaxRenderedAircraft(int maxRenderedAircraft);
-
-            //! Max. distance for rendering
-            bool setMaxRenderedDistance(const PhysicalQuantities::CLength &distance);
-
             //! Set enabled aircraft parts
             bool setEnabledAircraftParts(bool enabled);
+
+            //! Aircraft parts enabled
+            bool isAircraftPartsEnabled() const { return m_enabledAircraftParts; }
+
+            //! Set gnd flag enabled
+            bool setEnabledGndFLag(bool enabled);
+
+            //! Aircraft parts enabled
+            bool isGndFlagEnabled() const { return m_enabledGndFlag; }
+
+            //! Send GND flag to simulator
+            bool sendGndFlagToSimulator() const { return m_sendGndToSim; }
+
+            //! Set sending
+            bool setSendGndFlagToSimulator(bool sendFLag);
+
+            //! Consolidate with a network client
+            void consolidateWithClient(const Network::CClient &client);
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+        protected:
+            //! Constructor
+            CInterpolationAndRenderingSetupBase();
+
+            //! Can handle index?
+            static bool canHandleIndex(int index);
+
+            bool m_logInterpolation       = false; //!< Debug messages in interpolator
+            bool m_simulatorDebugMessages = false; //!< Debug messages of simulator (aka plugin)
+            bool m_forceFullInterpolation = false; //!< always do a full interpolation, even if aircraft is not moving
+            bool m_enabledAircraftParts   = true;  //!< Enable aircraft parts
+            bool m_enabledGndFlag         = true;  //!< Enable gnd.flag
+            bool m_sendGndToSim           = true;  //!< Send the gnd.flag to simulator
+        };
+
+        //! Value object for interpolator and rendering
+        class BLACKMISC_EXPORT CInterpolationAndRenderingSetupGlobal :
+            public CValueObject<CInterpolationAndRenderingSetupGlobal>,
+            public CInterpolationAndRenderingSetupBase
+        {
+        public:
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexMaxRenderedAircraft = CInterpolationAndRenderingSetupBase::IndexEnabledAircraftParts + 1,
+                IndexMaxRenderedDistance
+            };
+
+            //! Constructor.
+            CInterpolationAndRenderingSetupGlobal();
+
+            //! Considered as "all aircraft"
+            static int InfiniteAircraft();
+
+            //! Max.number of aircraft rendered
+            int getMaxRenderedAircraft() const;
+
+            //! Max.number of aircraft rendered
+            bool setMaxRenderedAircraft(int maxRenderedAircraft);
+
+            //! Max.distance for rendering
+            bool setMaxRenderedDistance(const PhysicalQuantities::CLength &distance);
 
             //! Disable
             void clearMaxRenderedDistance();
 
-            //! Rendering enabled (at all)
+            //! Rendering enabled (at all)?
             bool isRenderingEnabled() const;
 
             //! Rendering enabled, but restricted
             bool isRenderingRestricted() const;
-
-            //! Aircraft parts enabled
-            bool isAircraftPartsEnabled() const;
 
             //! Max.distance for rendering
             PhysicalQuantities::CLength getMaxRenderedDistance() const { return m_maxRenderedDistance; }
@@ -101,20 +157,8 @@ namespace BlackMisc
             //! Text describing the restrictions
             QString getRenderRestrictionText() const;
 
-            //! Add a callsign which will be logged
-            void addCallsignToLog(const Aviation::CCallsign &callsign);
-
-            //! Remove a callsign from logging
-            void removeCallsignFromLog(const Aviation::CCallsign &callsign);
-
-            //! Clear all interpolator log callsigns
-            void clearInterpolatorLogCallsigns();
-
-            //! Callsigns for logging
-            BlackMisc::Aviation::CCallsignSet getLogCallsigns() const;
-
-            //! Log the given callsign?
-            bool isLogCallsign(const Aviation::CCallsign &callsign) const;
+            //! Set all base values
+            void setBaseValues(const CInterpolationAndRenderingSetupBase &baseValues);
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -126,28 +170,75 @@ namespace BlackMisc
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
         private:
-            bool m_interpolatorDebugMessages = false; //! Debug messages in interpolator
-            bool m_simulatorDebugMessages    = false; //! Debug messages of simulator (aka plugin)
-            bool m_forceFullInterpolation    = false; //! always do a full interpolation, even if aircraft is not moving
-            bool m_enabledAircraftParts      = true;  //! Update aircraft parts
-            int  m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
+            int m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
             PhysicalQuantities::CLength m_maxRenderedDistance { 0, nullptr }; //!< max.distance for rendering
-            Aviation::CCallsignSet m_callsignsToLog;
 
             BLACK_METACLASS(
-                CInterpolationAndRenderingSetup,
-                BLACK_METAMEMBER(interpolatorDebugMessages),
+                CInterpolationAndRenderingSetupGlobal,
+                BLACK_METAMEMBER(logInterpolation),
                 BLACK_METAMEMBER(simulatorDebugMessages),
                 BLACK_METAMEMBER(forceFullInterpolation),
+                BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
+                BLACK_METAMEMBER(enabledGndFlag),
                 BLACK_METAMEMBER(maxRenderedAircraft),
-                BLACK_METAMEMBER(maxRenderedDistance),
-                BLACK_METAMEMBER(callsignsToLog, 0, DisabledForComparison)
+                BLACK_METAMEMBER(maxRenderedDistance)
+            );
+        };
+
+        //! Value object for interpolator and rendering per callsign
+        class BLACKMISC_EXPORT CInterpolationAndRenderingSetupPerCallsign :
+            public CValueObject<CInterpolationAndRenderingSetupPerCallsign>,
+            public CInterpolationAndRenderingSetupBase
+        {
+        public:
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexCallsign = CInterpolationAndRenderingSetupGlobal::IndexMaxRenderedDistance + 1
+            };
+
+            //! Constructor
+            CInterpolationAndRenderingSetupPerCallsign();
+
+            //! Constructor from global setup
+            CInterpolationAndRenderingSetupPerCallsign(const Aviation::CCallsign &callsign, const CInterpolationAndRenderingSetupGlobal &globalSetup);
+
+            //! Properties unequal to global setup
+            CPropertyIndexList unequalToGlobal(const CInterpolationAndRenderingSetupGlobal &globalSetup) const;
+
+            //! Equal to global setup?
+            bool isEqualToGlobal(const CInterpolationAndRenderingSetupGlobal &globalSetup) const;
+
+            //! Get callsign
+            const Aviation::CCallsign &getCallsign() const { return m_callsign; }
+
+            //! Set callsign
+            void setCallsign(const Aviation::CCallsign &callsign) { m_callsign = callsign; }
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+        private:
+            Aviation::CCallsign m_callsign;
+
+            BLACK_METACLASS(
+                CInterpolationAndRenderingSetupPerCallsign,
+                BLACK_METAMEMBER(logInterpolation),
+                BLACK_METAMEMBER(simulatorDebugMessages),
+                BLACK_METAMEMBER(forceFullInterpolation),
+                BLACK_METAMEMBER(sendGndToSim),
+                BLACK_METAMEMBER(enabledAircraftParts),
+                BLACK_METAMEMBER(enabledGndFlag)
             );
         };
     } // namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationAndRenderingSetup)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal)
 
 #endif // guard

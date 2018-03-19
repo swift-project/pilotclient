@@ -29,7 +29,8 @@ namespace BlackMisc
             CDistributor::registerMetadata();
             CDistributorList::registerMetadata();
             CDistributorListPreferences::registerMetadata();
-            CInterpolationAndRenderingSetup::registerMetadata();
+            CInterpolationAndRenderingSetupPerCallsign::registerMetadata();
+            CInterpolationAndRenderingSetupGlobal::registerMetadata();
             CInterpolationHints::registerMetadata();
             CMatchingStatisticsEntry::registerMetadata();
             CMatchingStatistics::registerMetadata();
