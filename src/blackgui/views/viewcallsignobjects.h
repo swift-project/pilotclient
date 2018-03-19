@@ -45,8 +45,14 @@ namespace BlackGui
             //! Remove callsigns
             int removeCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns);
 
+            //! Remove callsign
+            int removeCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
             //! Update or insert data (based on callsign)
             int replaceOrAddObjectsByCallsign(const ContainerType &container);
+
+            //! Update or insert data (based on callsign)
+            int replaceOrAddObjectByCallsign(const ObjectType &object);
 
             //! Reselect by callsigns
             virtual void selectObjects(const ContainerType &selectedObjects) override;

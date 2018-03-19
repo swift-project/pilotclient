@@ -33,6 +33,8 @@ namespace BlackMisc
     {
         class CSimulatedAircraft;
         class CSimulatedAircraftList;
+        class CInterpolationAndRenderingSetupPerCallsign;
+        class CInterpolationSetupList;
     }
 
     namespace Network
@@ -91,10 +93,13 @@ namespace BlackMisc
             QHash<BlackMisc::Aviation::CCallsign, CONTAINER> splitPerCallsign() const;
 
             //! Replace or add objects by callsign
+            int replaceOrAddObjectByCallsign(const OBJ &otherObject);
+
+            //! Replace or add objects by callsign
             int replaceOrAddObjectsByCallsign(const CONTAINER &others);
 
             //! Incremental update or add object
-            int incrementalUpdateOrAdd(const OBJ &objectBeforeChanged, const BlackMisc::CPropertyIndexVariantMap &changedValues);
+            int incrementalUpdateOrAdd(const OBJ &objectBeforeChanged, const CPropertyIndexVariantMap &changedValues);
 
             //! Sort by callsign
             void sortByCallsign();
@@ -115,6 +120,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CFlightPlan, BlackMisc::Aviation::CFlightPlanList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
         //! \endcond
 

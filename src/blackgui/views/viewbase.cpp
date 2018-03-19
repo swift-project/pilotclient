@@ -15,6 +15,7 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/loadindicator.h"
 #include "blackgui/models/allmodels.h"
+#include "blackgui/models/allmodelcontainers.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/menus/fontmenus.h"
@@ -22,47 +23,12 @@
 #include "blackgui/views/viewbase.h"
 #include "blackgui/views/viewbaseproxystyle.h"
 #include "blackgui/views/viewbaseitemdelegate.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/airport.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/country.h"
-#include "blackmisc/countrylist.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/identifierlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/namevariantpair.h"
 #include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/network/client.h"
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/userlist.h"
 #include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/propertyindexlist.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/matchingstatisticsentry.h"
-#include "blackmisc/simulation/matchingstatistics.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/weather/cloudlayerlist.h"
-#include "blackmisc/weather/temperaturelayerlist.h"
-#include "blackmisc/weather/windlayerlist.h"
 #include "blackmisc/worker.h"
 
 #include <QApplication>
@@ -1430,7 +1396,7 @@ namespace BlackGui
             // Clear highlighting
             if (this->derivedModel()->hasHighlightedRows())
             {
-                menuActions.addAction(CIcons::refresh16(), "Clear highlighting", CMenuAction::pathViewClearHighlighting(), nullptr , { this, &CViewBaseNonTemplate::clearHighlighting });
+                menuActions.addAction(CIcons::refresh16(), "Clear highlighting", CMenuAction::pathViewClearHighlighting(), nullptr, { this, &CViewBaseNonTemplate::clearHighlighting });
             }
         }
 
@@ -1644,6 +1610,7 @@ namespace BlackGui
         template class CViewBase<BlackGui::Models::CCountryListModel, BlackMisc::CCountryList, BlackMisc::CCountry>;
         template class CViewBase<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor>;
         template class CViewBase<BlackGui::Models::CIdentifierListModel, BlackMisc::CIdentifierList, BlackMisc::CIdentifier>;
+        template class CViewBase<BlackGui::Models::CInterpolationSetupListModel, BlackMisc::Simulation::CInterpolationSetupList, BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>;
         template class CViewBase<BlackGui::Models::CLiveryListModel, BlackMisc::Aviation::CLiveryList, BlackMisc::Aviation::CLivery>;
         template class CViewBase<BlackGui::Models::CMatchingStatisticsModel, BlackMisc::Simulation::CMatchingStatistics, BlackMisc::Simulation::CMatchingStatisticsEntry>;
         template class CViewBase<BlackGui::Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>;

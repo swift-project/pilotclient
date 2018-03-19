@@ -7,14 +7,15 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/predicates.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/flightplanlist.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/network/clientlist.h"
+#include "blackmisc/predicates.h"
 
 #include <QtGlobal>
 
@@ -180,6 +181,17 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER>
+        int ICallsignObjectList<OBJ, CONTAINER>::replaceOrAddObjectByCallsign(const OBJ &otherObject)
+        {
+            const CCallsign cs(otherObject.getCallsign());
+            if (cs.isEmpty()) { return 0; }
+            CONTAINER &copy(this->container());
+            copy.removeByCallsign(cs);
+            copy.push_back(otherObject);
+            return 1;
+        }
+
+        template<class OBJ, class CONTAINER>
         int ICallsignObjectList<OBJ, CONTAINER>::replaceOrAddObjectsByCallsign(const CONTAINER &others)
         {
             if (others.isEmpty()) { return 0; }
@@ -188,7 +200,7 @@ namespace BlackMisc
             for (const OBJ &obj : others)
             {
                 const CCallsign cs(obj.getCallsign());
-                if (cs.isEmpty()) continue;
+                if (cs.isEmpty()) { continue; }
                 copy.removeByCallsign(cs);
                 copy.push_back(obj);
                 c++;
@@ -237,6 +249,7 @@ namespace BlackMisc
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Aviation::CFlightPlan, BlackMisc::Aviation::CFlightPlanList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList>;
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ICallsignObjectList<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
         //! \endcond
 

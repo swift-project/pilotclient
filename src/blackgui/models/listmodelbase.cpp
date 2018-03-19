@@ -13,49 +13,13 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/airport.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/liverylist.h"
+#include "blackgui/models/allmodelcontainers.h"
 #include "blackmisc/compare.h"
-#include "blackmisc/country.h"
-#include "blackmisc/countrylist.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/identifierlist.h"
-#include "blackmisc/namevariantpair.h"
-#include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/network/client.h"
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/serverlist.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/userlist.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/matchingstatisticsentry.h"
-#include "blackmisc/simulation/matchingstatistics.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
-#include "blackmisc/weather/cloudlayerlist.h"
-#include "blackmisc/weather/temperaturelayerlist.h"
-#include "blackmisc/weather/windlayerlist.h"
 #include "blackmisc/worker.h"
 
 #include <QFlags>
@@ -793,6 +757,7 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, true>;
         template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>;
         template class CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, true>;
+        template class CListModelBase<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList, false>;
         template class CListModelBase<BlackMisc::Simulation::CMatchingStatisticsEntry, BlackMisc::Simulation::CMatchingStatistics, true>;
         template class CListModelBase<BlackMisc::Weather::CCloudLayer, BlackMisc::Weather::CCloudLayerList, false>;
         template class CListModelBase<BlackMisc::Weather::CTemperatureLayer, BlackMisc::Weather::CTemperatureLayerList, false>;

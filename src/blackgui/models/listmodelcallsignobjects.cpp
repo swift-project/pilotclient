@@ -55,5 +55,6 @@ namespace BlackGui
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
         template class CListModelCallsignObjects<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, true>;
         template class CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>;
+        template class CListModelCallsignObjects<BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign, BlackMisc::Simulation::CInterpolationSetupList, false>;
     } // namespace
 } // namespace

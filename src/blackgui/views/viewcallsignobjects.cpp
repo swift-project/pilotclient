@@ -9,6 +9,7 @@
 
 #include "blackgui/views/viewcallsignobjects.h"
 #include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/models/interpolationsetupmodel.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackmisc/icons.h"
 
@@ -68,6 +69,14 @@ namespace BlackGui
             return selected.getCallsigns();
         }
 
+        template<class ModelClass, class ContainerType, class ObjectType>
+        int CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::removeCallsign(const CCallsign &callsign)
+        {
+            if (callsign.isEmpty()) { return 0; }
+            const CCallsignSet set({ callsign });
+            return this->removeCallsigns(set);
+        }
+
         template <class ModelClass, class ContainerType, class ObjectType>
         int CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::removeCallsigns(const CCallsignSet &callsigns)
         {
@@ -88,7 +97,17 @@ namespace BlackGui
         {
             if (container.isEmpty()) { return 0; }
             ContainerType copy(this->container());
-            int c = copy.replaceOrAddObjectsByCallsign(container);
+            const int c = copy.replaceOrAddObjectsByCallsign(container);
+            if (c == 0) { return 0; }
+            this->updateContainerMaybeAsync(copy);
+            return c;
+        }
+
+        template<class ModelClass, class ContainerType, class ObjectType>
+        int CViewWithCallsignObjects<ModelClass, ContainerType, ObjectType>::replaceOrAddObjectByCallsign(const ObjectType &object)
+        {
+            ContainerType copy(this->container());
+            const int c = copy.replaceOrAddObjectByCallsign(object);
             if (c == 0) { return 0; }
             this->updateContainerMaybeAsync(copy);
             return c;
@@ -104,6 +123,7 @@ namespace BlackGui
         }
 
         template class CViewWithCallsignObjects<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>;
+        template class CViewWithCallsignObjects<BlackGui::Models::CInterpolationSetupListModel, BlackMisc::Simulation::CInterpolationSetupList, BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign>;
         template class CViewWithCallsignObjects<BlackGui::Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>;
 
     } // namespace

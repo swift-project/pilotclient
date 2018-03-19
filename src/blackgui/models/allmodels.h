@@ -22,6 +22,7 @@
 #include "blackgui/models/countrylistmodel.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackgui/models/identifierlistmodel.h"
+#include "blackgui/models/interpolationsetupmodel.h"
 #include "blackgui/models/liverylistmodel.h"
 #include "blackgui/models/matchingstatisticsmodel.h"
 #include "blackgui/models/namevariantpairlistmodel.h"
