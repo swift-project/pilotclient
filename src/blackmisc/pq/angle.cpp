@@ -86,12 +86,12 @@ namespace BlackMisc
 
         double CAngle::piFactor() const
         {
-            return BlackMisc::Math::CMathUtils::round(this->value(CAngleUnit::rad()) / BlackMisc::Math::CMathUtils::PI() , 6);
+            return Math::CMathUtils::round(this->value(CAngleUnit::rad()) / Math::CMathUtils::PI(), 6);
         }
 
         const double &CAngle::PI()
         {
-            return BlackMisc::Math::CMathUtils::PI();
+            return Math::CMathUtils::PI();
         }
 
         double CAngle::sin() const

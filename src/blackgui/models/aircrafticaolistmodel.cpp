@@ -45,13 +45,6 @@ namespace BlackGui
             // default sort order
             this->setSortColumnByPropertyIndex(CAircraftIcaoCode::IndexAircraftDesignator);
             this->m_sortOrder = Qt::AscendingOrder;
-
-            // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ModelAircraftIcaoList", "ICAO");
-            (void)QT_TRANSLATE_NOOP("ModelAircraftIcaoList", "distance");
-            (void)QT_TRANSLATE_NOOP("ModelAircraftIcaoList", "name");
-            (void)QT_TRANSLATE_NOOP("ModelAircraftIcaoList", "elevation");
-            (void)QT_TRANSLATE_NOOP("ModelAircraftIcaoList", "bearing");
         }
     } // ns
 } // ns

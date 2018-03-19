@@ -59,13 +59,13 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Weather;
+using namespace Aviation;
+using namespace Network;
+using namespace PhysicalQuantities;
+using namespace Simulation;
+using namespace Geo;
+using namespace Simulation;
+using namespace Weather;
 
 namespace
 {
@@ -113,22 +113,22 @@ namespace BlackSimPlugin
         }
 
         // convert xplane squawk mode to swift squawk mode
-        BlackMisc::Aviation::CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
+        CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
         {
-            if (ident) { return BlackMisc::Aviation::CTransponder::StateIdent; }
-            if (xplaneMode == 0 || xplaneMode == 1) { return BlackMisc::Aviation::CTransponder::StateStandby; }
-            return BlackMisc::Aviation::CTransponder::ModeC;
+            if (ident) { return CTransponder::StateIdent; }
+            if (xplaneMode == 0 || xplaneMode == 1) { return CTransponder::StateStandby; }
+            return CTransponder::ModeC;
         }
 
         // convert swift squawk mode to xplane squawk mode
-        int xpdrMode(BlackMisc::Aviation::CTransponder::TransponderMode mode)
+        int xpdrMode(CTransponder::TransponderMode mode)
         {
-            return mode == BlackMisc::Aviation::CTransponder::StateStandby ? 1 : 2;
+            return mode == CTransponder::StateStandby ? 1 : 2;
         }
 
         void CSimulatorXPlane::fastTimerTimeout()
         {
-            if (isConnected())
+            if (this->isConnected())
             {
                 m_serviceProxy->getLatitudeAsync(&m_xplaneData.latitude);
                 m_serviceProxy->getLongitudeAsync(&m_xplaneData.longitude);
@@ -321,7 +321,7 @@ namespace BlackSimPlugin
             isInFunction = false;
         }
 
-        void CSimulatorXPlane::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
+        void CSimulatorXPlane::displayTextMessage(const Network::CTextMessage &message) const
         {
             Q_ASSERT(isConnected());
 
@@ -334,7 +334,7 @@ namespace BlackSimPlugin
             m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
         }
 
-        void CSimulatorXPlane::setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
+        void CSimulatorXPlane::setAirportsInRange(const QStringList &icaos, const QStringList &names, const CSequence<double> &lats, const CSequence<double> &lons, const CSequence<double> &alts)
         {
             //! \todo restrict to maxAirportsInRange()
             m_airportsInRange.clear();
@@ -345,19 +345,19 @@ namespace BlackSimPlugin
             auto altIt = alts.begin();
             for (; icaoIt != icaos.end() && nameIt != names.end() && latIt != lats.end() && lonIt != lons.end() && altIt != alts.end(); ++icaoIt, ++nameIt, ++latIt, ++lonIt, ++altIt)
             {
-                using namespace BlackMisc::PhysicalQuantities;
-                using namespace BlackMisc::Geo;
+                using namespace PhysicalQuantities;
+                using namespace Geo;
 
                 m_airportsInRange.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CAltitude(*altIt, CLengthUnit::m()) }, *nameIt });
             }
         }
 
-        BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
+        CAirportList CSimulatorXPlane::getAirportsInRange() const
         {
             return m_airportsInRange;
         }
 
-        bool CSimulatorXPlane::setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset)
+        bool CSimulatorXPlane::setTimeSynchronization(bool enable, const PhysicalQuantities::CTime &offset)
         {
             Q_UNUSED(offset);
             if (enable)
@@ -394,19 +394,11 @@ namespace BlackSimPlugin
 
         QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
         {
-            if (str == BlackMisc::CDBusServer::sessionBusAddress())
-            {
-                return QDBusConnection::sessionBus();
-            }
-            else if (str == BlackMisc::CDBusServer::systemBusAddress())
-            {
-                return QDBusConnection::systemBus();
-            }
-            else
-            {
-                Q_UNREACHABLE();
-                return QDBusConnection("NO CONNECTION");
-            }
+            if (str == CDBusServer::sessionBusAddress()) { return QDBusConnection::sessionBus(); }
+            if (str == CDBusServer::systemBusAddress())  { return QDBusConnection::systemBus(); }
+
+            Q_UNREACHABLE();
+            return QDBusConnection("NO CONNECTION");
         }
 
         bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
@@ -422,9 +414,9 @@ namespace BlackSimPlugin
             }
         }
 
-        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        bool CSimulatorXPlane::updateOwnSimulatorCockpit(const Simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            Q_ASSERT(isConnected());
+            Q_ASSERT(this->isConnected());
             if (originator == this->identifier()) { return false; }
             auto com1 = CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
             auto com2 = CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
@@ -452,7 +444,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            Q_ASSERT(isConnected());
+            Q_ASSERT(this->isConnected());
             if (originator == this->identifier()) { return false; }
             Q_UNUSED(selcal);
 
@@ -532,7 +524,6 @@ namespace BlackSimPlugin
                 CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
                 remoteAircraftCopy.setRendered(rendered);
                 emit this->aircraftRenderingChanged(remoteAircraftCopy);
-                return true;
             }
             else
             {
@@ -551,11 +542,11 @@ namespace BlackSimPlugin
                 CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
                 remoteAircraftCopy.setRendered(rendered);
                 emit this->aircraftRenderingChanged(remoteAircraftCopy);
-                return true;
             }
+            return true;
         }
 
-        void CSimulatorXPlane::onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+        void CSimulatorXPlane::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
         {
             Q_ASSERT(isConnected());
             if (c_driverInterpolation)
@@ -567,7 +558,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                using namespace BlackMisc::PhysicalQuantities;
+                using namespace PhysicalQuantities;
                 m_trafficProxy->addPlanePosition(situation.getCallsign().asString(),
                                                  situation.latitude().value(CAngleUnit::deg()),
                                                  situation.longitude().value(CAngleUnit::deg()),
@@ -582,7 +573,7 @@ namespace BlackSimPlugin
                 {
                     // if aircraft not supporting parts then guess the basics (onGround, gear, lights)
                     //! \todo not working for VTOL
-                    BlackMisc::Aviation::CAircraftParts parts;
+                    CAircraftParts parts;
                     parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
                     parts.setTimeOffsetMs(situation.getTimeOffsetMs());
                     if (situation.getGroundSpeed() < CSpeed(50, CSpeedUnit::kts()))
@@ -610,10 +601,9 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorXPlane::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
+        void CSimulatorXPlane::onRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
         {
-            Q_ASSERT(isConnected());
-
+            Q_ASSERT(this->isConnected());
             if (c_driverInterpolation)
             {
                 if (m_xplaneAircraftObjects.contains(callsign))
@@ -632,7 +622,7 @@ namespace BlackSimPlugin
             }
         }
 
-        bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
+        bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             Q_ASSERT(isConnected());
 
@@ -668,7 +658,7 @@ namespace BlackSimPlugin
             else
             {
                 m_trafficProxy->removePlane(callsign.asString());
-                updateAircraftRendered(callsign, false);
+                this->updateAircraftRendered(callsign, false);
                 CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
                 return true;
             }
@@ -704,14 +694,14 @@ namespace BlackSimPlugin
         CCallsignSet CSimulatorXPlane::physicallyRenderedAircraft() const
         {
             //! \todo XP driver, return list of callsigns really present in the simulator
-            return getAircraftInRange().findByRendered(true).getCallsigns(); // just a poor workaround
+            return this->getAircraftInRange().findByRendered(true).getCallsigns(); // just a poor workaround
         }
 
         bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             // remove upfront, and then enable / disable again
             auto callsign = aircraft.getCallsign();
-            if (!isPhysicallyRenderedAircraft(callsign)) { return false; }
+            if (!this->isPhysicallyRenderedAircraft(callsign)) { return false; }
             this->physicallyRemoveRemoteAircraft(callsign);
             return this->changeRemoteAircraftEnabled(aircraft);
         }
@@ -729,7 +719,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
+        void CSimulatorXPlane::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
             Q_ASSERT(isConnected());
             m_weatherProxy->setUseRealWeather(false);
@@ -806,9 +796,9 @@ namespace BlackSimPlugin
             windLayers.truncate(3);
             for (const auto &windLayer : windLayers)
             {
-                int altitudeMeter = windLayer.getLevel().value(CLengthUnit::m());
-                double directionDeg = windLayer.getDirection().value(CAngleUnit::deg());
-                int speedKts = windLayer.getSpeed().value(CSpeedUnit::kts());
+                const int altitudeMeter = windLayer.getLevel().value(CLengthUnit::m());
+                const double directionDeg = windLayer.getDirection().value(CAngleUnit::deg());
+                const int speedKts = windLayer.getSpeed().value(CSpeedUnit::kts());
                 m_weatherProxy->setWindLayer(layerNumber, altitudeMeter, directionDeg, speedKts, 0, 0, 0);
                 layerNumber++;
             }

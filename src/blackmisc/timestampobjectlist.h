@@ -144,7 +144,7 @@ namespace BlackMisc
         void push_frontKeepLatestAdjustedFirst(const OBJ &value, int maxElements = -1);
 
         //! Insert as first element by keeping maxElements and the latest first
-        //! \remark adjust offset so adjusted values are sorted
+        //! \remark adjust offset to average offset of two adjacent elements so adjusted values are sorted
         void push_frontKeepLatestFirstAdjustOffset(const OBJ &value, int maxElements = -1);
 
         //! Is completely sorted: latest last
