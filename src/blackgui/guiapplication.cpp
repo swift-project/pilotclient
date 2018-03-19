@@ -34,10 +34,10 @@
 #include <QCloseEvent>
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
 #include <QEventLoop>
+#include <QApplication>
 #include <QGuiApplication>
 #include <QIcon>
 #include <QKeySequence>
@@ -85,6 +85,9 @@ namespace BlackGui
     {
         this->addWindowModeOption();
         this->addWindowResetSizeOption();
+
+        // notify when app goes down
+        connect(qGuiApp, &QGuiApplication::lastWindowClosed, this, &CGuiApplication::gracefulShutdown);
 
         if (!sGui)
         {
@@ -879,11 +882,12 @@ namespace BlackGui
 
     void CGuiApplication::gracefulShutdown()
     {
+        if (m_shutdownInProgress) { return; }
+        CApplication::gracefulShutdown();
         if (m_saveMainWidgetState)
         {
             this->saveWindowGeometryAndState();
         }
-        CApplication::gracefulShutdown();
     }
 
     void CGuiApplication::settingsChanged()

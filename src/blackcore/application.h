@@ -564,6 +564,8 @@ namespace BlackCore
         bool               m_started = false;                  //!< started with success?
         bool               m_singleApplication = true;         //!< only one instance of that application
         bool               m_alreadyRunning = false;           //!< Application already running
+        std::atomic_bool   m_shutdown { false };               //!< is being shutdown?
+        std::atomic_bool   m_shutdownInProgress { false };     //!< shutdown in progress?
 
     private:
         //! Problem with network access manager
@@ -611,7 +613,6 @@ namespace BlackCore
         CCoreFacadeConfig                      m_coreFacadeConfig;          //!< Core facade config if any
         CWebReaderFlags::WebReader             m_webReadersUsed;            //!< Readers to be used
         Db::CDatabaseReaderConfigList          m_dbReaderConfig;            //!< Load or used caching?
-        std::atomic<bool>                      m_shutdown { false };        //!< is being shutdown?
         bool m_useContexts = false;            //!< use contexts
         bool m_useWebData = false;             //!< use web data
         bool m_signalStartup = true;           //!< signal startup automatically

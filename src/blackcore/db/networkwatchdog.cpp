@@ -207,6 +207,7 @@ namespace BlackCore
         void CNetworkWatchdog::gracefulShutdown()
         {
             this->pingDbClientService(PingCompleteShutdown);
+            this->quit();
         }
 
         void CNetworkWatchdog::pingDbClientService(CNetworkWatchdog::PingType type, bool force)

@@ -105,7 +105,7 @@ namespace BlackCore
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
         m_accessManager(new QNetworkAccessManager(this)),
         m_applicationInfo(application),
-        m_cookieManager( {}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+        m_cookieManager({}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -125,7 +125,13 @@ namespace BlackCore
     {
         if (!sApp)
         {
+            // notify when app goes down
+            connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
+
+            // metadata
             if (withMetadata) { CApplication::registerMetadata(); }
+
+            // unit test
             if (this->getApplicationInfo().application() == CApplicationInfo::UnitTest)
             {
                 const QString tempPath(this->getTemporaryDirectory());
@@ -174,9 +180,6 @@ namespace BlackCore
             // startup done
             connect(this, &CApplication::startUpCompleted, this, &CApplication::onStartUpCompleted, Qt::QueuedConnection);
             connect(this, &CApplication::coreFacadeStarted, this, &CApplication::onCoreFacadeStarted, Qt::QueuedConnection);
-
-            // notify when app goes down
-            connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
         }
     }
 
@@ -751,7 +754,7 @@ namespace BlackCore
 
     void CApplication::exit(int retcode)
     {
-        if (instance()) { instance()->gracefulShutdown(); }
+        if (sApp) { instance()->gracefulShutdown(); }
 
         // when the event loop is not running, this does nothing
         QCoreApplication::exit(retcode);
@@ -956,8 +959,10 @@ namespace BlackCore
     void CApplication::gracefulShutdown()
     {
         if (m_shutdown) { return; }
+        if (m_shutdownInProgress) { return; }
+        m_shutdownInProgress = true;
 
-        // before marked as shutdown
+        // before marked as shutdown, otherwise URL
         if (m_networkWatchDog)
         {
             m_networkWatchDog->gracefulShutdown();

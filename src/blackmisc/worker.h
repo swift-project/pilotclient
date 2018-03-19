@@ -315,6 +315,12 @@ namespace BlackMisc
         //! Called when the thread is finished.
         virtual void cleanup() {}
 
+        //! Owner of the worker
+        //! @{
+        const QObject *owner() const { return m_owner; }
+        QObject *owner() { return m_owner; }
+        //! @}
+
         QTimer m_updateTimer { this }; //!< timer which can be used by implementing classes
 
     private:

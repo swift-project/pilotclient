@@ -36,7 +36,7 @@ namespace BlackMisc
         auto handle = m_handle.load();
         if (handle)
         {
-            auto status = WaitForSingleObject(handle, 0);
+            const auto status = WaitForSingleObject(handle, 0);
             if (isRunning())
             {
                 switch (status)
@@ -50,7 +50,12 @@ namespace BlackMisc
         }
 #endif
         quit();
+
+        const qint64 beforeWait = QDateTime::currentMSecsSinceEpoch();
         wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
+        const qint64 delta = QDateTime::currentMSecsSinceEpoch() - beforeWait;
+        BLACK_VERIFY_X(delta < 30 * 1000, Q_FUNC_INFO, "Wait timeout");
+        Q_UNUSED(delta);
     }
 
     CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
@@ -67,7 +72,7 @@ namespace BlackMisc
         worker->setObjectName(name);
 
         worker->moveToThread(thread);
-        bool s = QMetaObject::invokeMethod(worker, "ps_runTask");
+        const bool s = QMetaObject::invokeMethod(worker, "ps_runTask");
         Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke");
         Q_UNUSED(s);
         thread->start();
@@ -153,21 +158,31 @@ namespace BlackMisc
 
     void CContinuousWorker::quit() noexcept
     {
-        Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
-        setEnabled(false);
+        this->setEnabled(false);
+
+        // already in different thread? otherwise return
+        if (CThreadUtils::isApplicationThreadObjectThread(this)) { return; }
+
         // remark: cannot stop timer here, as I am normally not in the correct thread
         thread()->quit();
     }
 
     void CContinuousWorker::quitAndWait() noexcept
     {
-        Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
-        Q_ASSERT_X(!CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called by own thread, will deadlock");
+        this->quit();
 
-        setEnabled(false);
+        // already in different thread? otherwise return
+        if (CThreadUtils::isApplicationThreadObjectThread(this)) { return; }
+
+        // Called by own thread, will deadlock, return
+        if (CThreadUtils::isCurrentThreadObjectThread(this)) { return; }
         auto *ownThread = thread();
-        quit();
-        ownThread->wait();
+
+        const qint64 beforeWait = QDateTime::currentMSecsSinceEpoch();
+        ownThread->wait(30 * 1000); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed, sometimes (very rarely) hanging here during shutdown
+        const qint64 delta = QDateTime::currentMSecsSinceEpoch() - beforeWait;
+        BLACK_VERIFY_X(delta < 30 * 1000, Q_FUNC_INFO, "Wait timeout");
+        Q_UNUSED(delta);
     }
 
     void CContinuousWorker::startUpdating(int updateTimeSecs)

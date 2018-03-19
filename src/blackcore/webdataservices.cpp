@@ -892,19 +892,20 @@ namespace BlackCore
 
     void CWebDataServices::gracefulShutdown()
     {
+        if (m_shuttingDown) { return; }
         m_shuttingDown = true;
         this->disconnect(); // all signals
-        if (m_vatsimMetarReader)    { m_vatsimMetarReader->setEnabled(false); }
-        if (m_vatsimBookingReader)  { m_vatsimBookingReader->setEnabled(false); }
-        if (m_vatsimDataFileReader) { m_vatsimDataFileReader->setEnabled(false); }
-        if (m_vatsimStatusReader)   { m_vatsimStatusReader->setEnabled(false); }
-        if (m_modelDataReader)      { m_modelDataReader->setEnabled(false); }
-        if (m_airportDataReader)    { m_airportDataReader->setEnabled(false); }
-        if (m_icaoDataReader)       { m_icaoDataReader->setEnabled(false); }
-        if (m_dbInfoDataReader)     { m_dbInfoDataReader->setEnabled(false); }
+        if (m_vatsimMetarReader)    { m_vatsimMetarReader->quitAndWait(); m_vatsimMetarReader = nullptr; }
+        if (m_vatsimBookingReader)  { m_vatsimBookingReader->quitAndWait(); m_vatsimBookingReader = nullptr; }
+        if (m_vatsimDataFileReader) { m_vatsimDataFileReader->quitAndWait(); m_vatsimDataFileReader = nullptr; }
+        if (m_vatsimStatusReader)   { m_vatsimStatusReader->quitAndWait(); m_vatsimStatusReader = nullptr; }
+        if (m_modelDataReader)      { m_modelDataReader->quitAndWait(); m_modelDataReader = nullptr; }
+        if (m_airportDataReader)    { m_airportDataReader->quitAndWait(); m_airportDataReader = nullptr; }
+        if (m_icaoDataReader)       { m_icaoDataReader->quitAndWait(); m_icaoDataReader = nullptr; }
+        if (m_dbInfoDataReader)     { m_dbInfoDataReader->quitAndWait(); m_dbInfoDataReader = nullptr; }
 
         // DB writer is no threaded reader, it has a special role
-        if (m_databaseWriter)       { m_databaseWriter->gracefulShutdown(); }
+        if (m_databaseWriter)       { m_databaseWriter->gracefulShutdown(); m_databaseWriter = nullptr; }
     }
 
     CEntityFlags::Entity CWebDataServices::allDbEntitiesForUsedReaders() const
@@ -1287,6 +1288,7 @@ namespace BlackCore
 
     void CWebDataServices::readDeferredInBackground(CEntityFlags::Entity entities, int delayMs)
     {
+        if (m_shuttingDown) { return; }
         if (entities == CEntityFlags::NoEntity) { return; }
         QTimer::singleShot(delayMs, [ = ]()
         {
@@ -1296,6 +1298,8 @@ namespace BlackCore
 
     void CWebDataServices::readInBackground(CEntityFlags::Entity entities)
     {
+        if (m_shuttingDown) { return; }
+
         m_initialRead = true; // read started
         if (CEntityFlags::anySwiftDbEntity(entities))
         {
@@ -1324,6 +1328,8 @@ namespace BlackCore
 
     bool CWebDataServices::waitForDbInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
+        if (m_shuttingDown) { return false; }
+
         Q_ASSERT_X(m_dbInfoDataReader, Q_FUNC_INFO, "need reader");
         if (m_dbInfoDataReader->areAllInfoObjectsRead()) { return true; }
         if (!m_dbInfoObjectTimeout.isValid()) { m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
@@ -1333,6 +1339,8 @@ namespace BlackCore
 
     bool CWebDataServices::waitForSharedInfoObjectsThenRead(CEntityFlags::Entity entities)
     {
+        if (m_shuttingDown) { return false; }
+
         Q_ASSERT_X(m_sharedInfoDataReader, Q_FUNC_INFO, "need reader");
         if (m_sharedInfoDataReader->areAllInfoObjectsRead()) { return true; }
         if (!m_sharedInfoObjectsTimeout.isValid()) { m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(10 * 1000); }
@@ -1342,9 +1350,10 @@ namespace BlackCore
 
     bool CWebDataServices::waitForInfoObjectsThenRead(CEntityFlags::Entity entities, const QString &info, CInfoDataReader *infoReader, QDateTime &timeOut)
     {
-        Q_ASSERT_X(infoReader, Q_FUNC_INFO, "Need info data reader");
+        if (m_shuttingDown) { return false; }
 
         // this will called for each entity readers, i.e. model reader, ICAO reader ...
+        Q_ASSERT_X(infoReader, Q_FUNC_INFO, "Need info data reader");
         const int waitForInfoObjectsMs = 1000; // ms
 
         if (infoReader->areAllInfoObjectsRead())

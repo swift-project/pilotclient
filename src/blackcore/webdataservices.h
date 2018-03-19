@@ -42,6 +42,7 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -580,7 +581,7 @@ namespace BlackCore
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;           //!< how to read DB data
         bool                                     m_initialRead = false;      //!< initial read started
         bool                                     m_signalledHeaders = false; //!< headers loading has been signalled
-        bool                                     m_shuttingDown = false;     //!< shutting down?
+        std::atomic_bool                         m_shuttingDown { false };   //!< shutting down?
         QDateTime                                m_dbInfoObjectTimeout;      //!< started reading DB info objects
         QDateTime                                m_sharedInfoObjectsTimeout; //!< started reading shared info objects
         QSet<BlackMisc::Network::CEntityFlags::Entity> m_signalledEntities;  //!< remember signalled entites
