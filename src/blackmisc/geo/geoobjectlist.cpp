@@ -122,7 +122,7 @@ namespace BlackMisc
             {
                 return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
             });
-            Q_ASSERT_X(closest.size() <= number, Q_FUNC_INFO, "size exceeded");
+            Q_ASSERT_X(closest.size() > number, Q_FUNC_INFO, "size exceeded");
             return closest;
         }
 
