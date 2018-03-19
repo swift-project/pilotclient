@@ -47,11 +47,17 @@ namespace BlackGui
         CCallsignCompleter::~CCallsignCompleter()
         { }
 
-        BlackMisc::Aviation::CCallsign CCallsignCompleter::getCallsign() const
+        CCallsign CCallsignCompleter::getCallsign(bool onlyKnownCallsign) const
         {
             const QString csString = ui->le_Callsign->text().trimmed().toUpper();
-            if (!this->isValidKnownCallsign(csString)) { return CCallsign(); }
+            const bool valid = onlyKnownCallsign ? this->isValidKnownCallsign(csString) : CCallsign::isValidAircraftCallsign(csString);
+            if (!valid) { return CCallsign(); }
             return CCallsign(csString, CCallsign::Aircraft);
+        }
+
+        void CCallsignCompleter::setCallsign(const CCallsign &cs)
+        {
+            ui->le_Callsign->setText(cs.asString());
         }
 
         QString CCallsignCompleter::getRawCallsignString() const
@@ -63,6 +69,13 @@ namespace BlackGui
         {
             const QString csString = ui->le_Callsign->text().trimmed().toUpper();
             return this->isValidKnownCallsign(csString);
+        }
+
+        void CCallsignCompleter::setReadOnly(bool readOnly)
+        {
+            if (ui->le_Callsign->isReadOnly() == readOnly) { return; }
+            ui->le_Callsign->setReadOnly(readOnly);
+            this->setStyleSheet(this->styleSheet());
         }
 
         void CCallsignCompleter::updateCallsignsFromContext()

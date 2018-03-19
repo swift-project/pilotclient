@@ -42,13 +42,19 @@ namespace BlackGui
             virtual ~CCallsignCompleter();
 
             //! Get the entered callsign
-            BlackMisc::Aviation::CCallsign getCallsign() const;
+            BlackMisc::Aviation::CCallsign getCallsign(bool onlyKnownCallsign = true) const;
+
+            //! Prefill wit callsign
+            void setCallsign(const BlackMisc::Aviation::CCallsign &cs);
 
             //! String as entered
             QString getRawCallsignString() const;
 
             //! Is valid callsign?
             bool hasValidCallsign() const;
+
+            //! Set read only
+            void setReadOnly(bool readOnly);
 
         signals:
             //! Callsign entered
