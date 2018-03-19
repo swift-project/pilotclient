@@ -100,7 +100,7 @@ namespace BlackCore
         Q_ASSERT_X(remoteAircraft.hasModelString(), Q_FUNC_INFO, "Missing model string");
         Q_ASSERT_X(remoteAircraft.hasCallsign(), Q_FUNC_INFO, "Missing callsign");
 
-        const bool renderingRestricted = this->getInterpolationAndRenderingSetup().isRenderingRestricted();
+        const bool renderingRestricted = this->getInterpolationSetupGlobal().isRenderingRestricted();
         if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Restricted: %1 cs: '%2' enabled: %3").arg(boolToYesNo(renderingRestricted), remoteAircraft.getCallsignAsString(), boolToYesNo(remoteAircraft.isEnabled()))); }
         if (!remoteAircraft.isEnabled()) { return false; }
 
@@ -114,7 +114,7 @@ namespace BlackCore
     bool CSimulatorCommon::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
         // if not restriced, directly change
-        if (!this->getInterpolationAndRenderingSetup().isRenderingRestricted())
+        if (!this->getInterpolationSetupGlobal().isRenderingRestricted())
         {
             m_statsPhysicallyAddedAircraft++;
             this->callPhysicallyRemoveRemoteAircraft(callsign); return true;
@@ -214,7 +214,7 @@ namespace BlackCore
 
     bool CSimulatorCommon::showDebugLogMessage() const
     {
-        return this->getInterpolationAndRenderingSetup().showSimulatorDebugMessages();
+        return this->getInterpolationSetupGlobal().showSimulatorDebugMessages();
     }
 
     void CSimulatorCommon::reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
@@ -350,24 +350,13 @@ namespace BlackCore
         return renderedOnes.intersection(disabledOnes);
     }
 
-    void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
+    void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetupGlobal &setup)
     {
-        {
-            QWriteLocker lock(&m_interpolationRenderingSetupMutex);
-            if (m_interpolationRenderingSetup == setup) { return; }
-            m_interpolationRenderingSetup = setup;
-        }
-
+        if (!this->setInterpolationSetupGlobal(setup)) { return; }
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
 
         emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
-    }
-
-    CInterpolationAndRenderingSetup CSimulatorCommon::getInterpolationAndRenderingSetup() const
-    {
-        QReadLocker lock(&m_interpolationRenderingSetupMutex);
-        return m_interpolationRenderingSetup;
     }
 
     void CSimulatorCommon::highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime)
@@ -424,16 +413,14 @@ namespace BlackCore
             if (part2 == "off" || part2 == "false")
             {
                 CStatusMessage(this).info("Disabled interpolation logging");
-                QWriteLocker l(&m_interpolationRenderingSetupMutex);
-                m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
+                this->clearInterpolationLogCallsigns();
                 return true;
             }
             if (part2 == "clear" || part2 == "clr")
             {
                 m_interpolationLogger.clearLog();
                 CStatusMessage(this).info("Cleared interpolation logging");
-                QWriteLocker l(&m_interpolationRenderingSetupMutex);
-                m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
+                this->clearInterpolationLogCallsigns();
                 return true;
             }
             if (part2.startsWith("max"))
@@ -449,10 +436,7 @@ namespace BlackCore
             if (part2 == "write" || part2 == "save")
             {
                 // stop logging of other log
-                {
-                    QWriteLocker l(&m_interpolationRenderingSetupMutex);
-                    m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
-                }
+                this->clearInterpolationLogCallsigns();
 
                 // write
                 m_interpolationLogger.writeLogInBackground();
@@ -479,8 +463,7 @@ namespace BlackCore
             if (this->getAircraftInRangeCallsigns().contains(cs))
             {
                 CLogMessage(this).info("Will log interpolation for '%1'") << cs.asString();
-                QWriteLocker l(&m_interpolationRenderingSetupMutex);
-                m_interpolationRenderingSetup.addCallsignToLog(cs);
+                this->setLogCallsign(true, cs);
                 return true;
             }
             else
@@ -494,38 +477,25 @@ namespace BlackCore
         {
             const CCallsign cs(parser.hasPart(2) ? parser.part(2) : "");
             const bool changed = this->setInterpolatorMode(CInterpolatorMulti::modeFromString(part1), cs);
-            CLogMessage(this).info(changed ?
-                                   "Changed interpolation mode" :
-                                   "Unchanged interpolation mode");
+            CLogMessage(this).info(changed ? "Changed interpolation mode" : "Unchanged interpolation mode");
             return true;
         } // spline/linear
 
         if (part1.startsWith("pos"))
         {
             CCallsign cs(parser.part(2).toUpper());
-            const CInterpolationAndRenderingSetup s = this->getInterpolationAndRenderingSetup();
             if (!cs.isValid())
             {
-
-                if (s.getLogCallsigns().size() != 1) { return false; }
+                const CCallsignSet csSet = this->getLogCallsigns();
+                if (csSet.size() != 1) { return false; }
 
                 // if there is just one we take that one
-                cs = s.getLogCallsigns().toQList().front();
+                cs = *csSet.begin();
             }
 
-            bool addedCallsign = false;
-            {
-                const bool isLoggedCallsign = s.isLogCallsign(cs);
-                QWriteLocker l(&m_interpolationRenderingSetupMutex);
-                if (!isLoggedCallsign)
-                {
-                    m_interpolationRenderingSetup.addCallsignToLog(cs);
-                    addedCallsign = true;
-                }
-            }
-
+            this->setLogCallsign(true, cs);
             CLogMessage(this).info("Display position for '%1'") << cs.asString();
-            this->displayLoggedSituationInSimulator(cs, addedCallsign);
+            this->displayLoggedSituationInSimulator(cs, true);
             return true;
         }
 
@@ -769,8 +739,8 @@ namespace BlackCore
     {
         if (cs.isEmpty()) { return; }
         if (this->isShuttingDown()) { return; }
-        const CInterpolationAndRenderingSetup setup = this->getInterpolationAndRenderingSetup();
-        const bool logsCs = setup.isLogCallsign(cs);
+        const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(cs);
+        const bool logsCs = setup.logInterpolation();
         if (!logsCs) { return; }
 
         stopLogging = stopLogging || !this->isSimulating(); // stop when sim was stopped
@@ -781,8 +751,7 @@ namespace BlackCore
         if (!stopLogging && !inRange) { return; }
         if (stopLogging && (times < 1 || !inRange))
         {
-            QWriteLocker wl(&m_interpolationRenderingSetupMutex);
-            m_interpolationRenderingSetup.removeCallsignFromLog(cs);
+            this->setLogCallsign(false, cs);
             return;
         }
 

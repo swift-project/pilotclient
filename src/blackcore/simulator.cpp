@@ -19,7 +19,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Weather;
 
 namespace BlackCore
@@ -32,6 +32,14 @@ namespace BlackCore
             | (this->isSimulating() ? ISimulator::Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0))
             | (this->isPaused() ? ISimulator::Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
         return status;
+    }
+
+    CInterpolationAndRenderingSetupPerCallsign ISimulator::getInterpolationSetupConsolidated(const CCallsign &callsign) const
+    {
+        CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
+        const CClient client = this->getClientOrDefaultForCallsign(callsign);
+        setup.consolidateWithClient(client);
+        return setup;
     }
 
     void ISimulator::registerHelp()
@@ -64,6 +72,7 @@ namespace BlackCore
         CRemoteAircraftAware(remoteAircraftProvider),
         CWeatherGridAware(weatherGridProvider),
         ISimulationEnvironmentProvider(pluginInfo),
+        IInterpolationSetupProvider(),
         CIdentifiable(this)
     {
         ISimulator::registerHelp();

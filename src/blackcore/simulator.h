@@ -22,8 +22,10 @@
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
+#include "blackmisc/simulation/interpolationsetupprovider.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/network/clientprovider.h"
 #include "blackmisc/weather/weathergridprovider.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
@@ -52,12 +54,14 @@ namespace BlackCore
         public BlackMisc::Simulation::COwnAircraftAware,    // gain access to in memory own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
         public BlackMisc::Weather::CWeatherGridAware,       // gain access to in memory weather grid
-        public BlackMisc::Simulation::ISimulationEnvironmentProvider, // give access to elevation
+        public BlackMisc::Network::CClientAware,            // the network client with its capabilities
+        public BlackMisc::Simulation::ISimulationEnvironmentProvider, // give access to elevation etc.
+        public BlackMisc::Simulation::IInterpolationSetupProvider,    // setup
         public BlackMisc::CIdentifiable
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
-        Q_INTERFACES(BlackMisc::IProvider)
+        Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
 
     public:
         //! ISimulator status
@@ -141,13 +145,13 @@ namespace BlackCore
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
-        //! Debugging messages etc.
+        //! Consolidate setup with other data like from BlackMisc::Simulation::IRemoteAircraftProvider
         //! \threadsafe
-        virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
+        BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupConsolidated(const BlackMisc::Aviation::CCallsign &callsign) const;
 
         //! Enable debugging messages etc.
         //! \threadsafe
-        virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) = 0;
+        virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) = 0;
 
         //! Is the aircraft rendered (displayed in simulator)?
         //! This shall only return true if the aircraft is really visible in the simulator

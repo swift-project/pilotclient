@@ -67,8 +67,7 @@ namespace BlackCore
         virtual ~CSimulatorCommon();
 
         // --------- ISimulator implementations ------------
-        virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) override;
-        virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
+        virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const override;
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
@@ -219,10 +218,6 @@ namespace BlackCore
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;                         //!< statistics update time
         BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log interpolation
-
-        // setup for logging etc.
-        mutable QReadWriteLock m_interpolationRenderingSetupMutex; //!< mutex protecting setup object
-        BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
