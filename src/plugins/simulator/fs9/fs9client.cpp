@@ -14,6 +14,7 @@
 #include "multiplayerpacketparser.h"
 #include "directplayerror.h"
 #include "directplayutils.h"
+#include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -25,11 +26,23 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
+using namespace BlackCore;
 
 namespace BlackSimPlugin
 {
     namespace Fs9
     {
+        CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName, const CTime &updateInterval,
+                               CInterpolationLogger *logger, ISimulator *owner) :
+            CDirectPlayPeer(owner, callsign),
+            m_updateInterval(updateInterval),
+            m_interpolator(callsign),
+            m_modelName(modelName)
+        {
+            m_interpolator.attachLogger(logger);
+            Q_ASSERT_X(this->simulator(), Q_FUNC_INFO, "Wrong owner, expect simulator object");
+        }
+
         MPPositionVelocity aircraftSituationToFS9(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double updateInterval)
         {
             MPPositionVelocity positionVelocity;
@@ -70,12 +83,12 @@ namespace BlackSimPlugin
             // We want the distance in Latitude direction. Longitude must be equal for old and new position.
             helperPosition.setLatitude(newPosition.latitude());
             helperPosition.setLongitude(oldPosition.longitude());
-            CLength distanceLatitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
+            const CLength distanceLatitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
 
             // Now we want the Longitude distance. Latitude must be equal for old and new position.
             helperPosition.setLatitude(oldPosition.latitude());
             helperPosition.setLongitude(newSituation.longitude());
-            CLength distanceLongitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
+            const CLength distanceLongitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
 
             // Latitude and Longitude velocity
             positionVelocity.lat_velocity = distanceLatitudeObj.value(CLengthUnit::ft()) * 65536.0 / updateInterval;
@@ -91,12 +104,12 @@ namespace BlackSimPlugin
             MPPositionSlewMode positionSlewMode;
 
             // Latitude - integer and decimal places
-            double latitude = situation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
+            const double latitude = situation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
             positionSlewMode.lat_i = static_cast<qint32>(latitude);
             positionSlewMode.lat_f = qAbs((latitude - positionSlewMode.lat_i) * 65536);
 
             // Longitude - integer and decimal places
-            double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
+            const double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
             positionSlewMode.lon_hi = static_cast<qint32>(longitude);
             positionSlewMode.lon_lo = qAbs((longitude - positionSlewMode.lon_hi) * 65536);
 
@@ -116,16 +129,6 @@ namespace BlackSimPlugin
             positionSlewMode.pbh = pbhstrct.pbh;
 
             return positionSlewMode;
-        }
-
-        CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName, const CTime &updateInterval,
-                               BlackMisc::Simulation::CInterpolationLogger *logger, QObject *owner) :
-            CDirectPlayPeer(owner, callsign),
-            m_updateInterval(updateInterval),
-            m_interpolator(callsign),
-            m_modelName(modelName)
-        {
-            m_interpolator.attachLogger(logger);
         }
 
         CFs9Client::~CFs9Client()
@@ -165,28 +168,16 @@ namespace BlackSimPlugin
             }
         }
 
-        void CFs9Client::setInterpolationSetup(const CInterpolationAndRenderingSetup &setup)
-        {
-            QWriteLocker lock(&m_interpolationSetupMutex);
-            m_interpolationSetup = setup;
-        }
-
-        CInterpolationAndRenderingSetup CFs9Client::getInterpolationSetup() const
-        {
-            QReadLocker lock(&m_interpolationSetupMutex);
-            return m_interpolationSetup;
-        }
-
         void CFs9Client::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
 
             if (m_clientStatus == Disconnected) { return; }
-
             CInterpolationStatus status;
             CInterpolationHints hints; // \fixme 201701 #865 KB if there is an elevation provider for FS9 add it here or set elevation
-            hints.setLoggingInterpolation(this->getInterpolationSetup().getLogCallsigns().contains(m_callsign));
-            const CAircraftSituation situation = m_interpolator.getInterpolatedSituation(-1, m_interpolationSetup, hints, status);
+            CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupPerCallsignOrDefault(m_callsign);
+            hints.setLoggingInterpolation(setup.logInterpolation());
+            const CAircraftSituation situation = m_interpolator.getInterpolatedSituation(-1, setup, hints, status);
 
             // Test only for successful position. FS9 requires constant positions
             if (!status.hasValidSituation()) { return; }
@@ -218,7 +209,7 @@ namespace BlackSimPlugin
             }
 
             // Now set up the Application Description
-            DPN_APPLICATION_DESC    dpAppDesc;
+            DPN_APPLICATION_DESC dpAppDesc;
             ZeroMemory(&dpAppDesc, sizeof(DPN_APPLICATION_DESC));
             dpAppDesc.dwSize = sizeof(DPN_APPLICATION_DESC);
             dpAppDesc.guidApplication = CFs9Sdk::guid();
@@ -339,7 +330,7 @@ namespace BlackSimPlugin
             HRESULT hr = S_OK;
 
             if (m_clientStatus == Disconnected) { return hr; }
-            BlackMisc::CLogMessage(this).debug() << "Closing DirectPlay connection for " << m_callsign;
+            CLogMessage(this).debug() << "Closing DirectPlay connection for " << m_callsign;
             if (FAILED(hr = m_directPlayPeer->Close(0)))
             {
                 return logDirectPlayError(hr);
@@ -386,6 +377,11 @@ namespace BlackSimPlugin
             MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.size());
             message = MultiPlayerPacketParser::writeMessage(message, mpChangePlayerPlane);
             sendMessage(message);
+        }
+
+        const ISimulator *CFs9Client::simulator() const
+        {
+            return qobject_cast<const ISimulator *>(this->owner());
         }
     }
 }

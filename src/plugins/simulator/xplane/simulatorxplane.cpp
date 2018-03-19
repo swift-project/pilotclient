@@ -826,12 +826,10 @@ namespace BlackSimPlugin
 
             // interpolate and send to simulator
             m_interpolationRequest++;
-            const bool enableAircraftParts = m_interpolationRenderingSetup.isAircraftPartsEnabled();
-            const CCallsignSet aircraftWithParts = enableAircraftParts ? this->remoteAircraftSupportingParts() : CCallsignSet(); // optimization, fetch all parts supporting aircraft in one step (one lock)
+            const CCallsignSet aircraftWithParts = this->remoteAircraftSupportingParts(); // optimization, fetch all parts supporting aircraft in one step (one lock)
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
-            const CCallsignSet callsignsToLog(m_interpolationRenderingSetup.getLogCallsigns());
 
             // interpolation for all remote aircraft
             const QList<CXPlaneMPAircraft> xplaneAircrafts(m_xplaneAircraftObjects.values());
@@ -841,9 +839,9 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
                 // fetch parts, as they are needed for ground interpolation
-                const bool useAircraftParts = enableAircraftParts && aircraftWithParts.contains(callsign);
-                const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
-                const CInterpolationAndRenderingSetup setup(this->getInterpolationAndRenderingSetup());
+                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
+                const bool useAircraftParts = aircraftWithParts.contains(callsign) && setup.isAircraftPartsEnabled();
+                const bool logInterpolationAndParts = setup.logInterpolation();
                 CPartsStatus partsStatus(useAircraftParts);
                 const CAircraftParts parts = useAircraftParts ? xplaneAircraft.getInterpolatedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 

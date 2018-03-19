@@ -13,14 +13,15 @@
 #include "directplaypeer.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/pq/time.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/pq/time.h"
 #include <QMutex>
 #include <QScopedPointer>
 #include <QReadWriteLock>
 
 //! \file
 
+namespace BlackCore { class ISimulator; }
 namespace BlackSimPlugin
 {
     namespace Fs9
@@ -53,10 +54,6 @@ namespace BlackSimPlugin
 
             //! Get interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() { return &m_interpolator; }
-
-            //! Set interpolation setup
-            //! \threadsafe
-            void setInterpolationSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup);
 
         public slots:
             //! Send new text message
@@ -94,12 +91,10 @@ namespace BlackSimPlugin
             void sendMultiplayerParamaters();
             void sendMultiplayerChangePlayerPlane();
 
-            BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationSetup() const;
+            const BlackCore::ISimulator *simulator() const;
 
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
             BlackMisc::Simulation::CInterpolatorMulti m_interpolator;
-            BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationSetup;
-            mutable QReadWriteLock m_interpolationSetupMutex;
             QString m_modelName;
             int m_timerId = 0;
 
@@ -109,8 +104,8 @@ namespace BlackSimPlugin
             PLAYER_INFO_STRUCT m_playerInfo;
             DPN_PLAYER_INFO m_player;
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackSimPlugin::Fs9::CFs9Client::ClientStatus)
 
