@@ -28,6 +28,12 @@ namespace BlackMisc
             return this->provider()->isAircraftInRange(callsign);
         }
 
+        bool CRemoteAircraftAware::isVtolAircraft(const CCallsign &callsign) const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->isVtolAircraft(callsign);
+        }
+
         int CRemoteAircraftAware::getAircraftInRangeCount() const
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");

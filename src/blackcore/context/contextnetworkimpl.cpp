@@ -531,6 +531,12 @@ namespace BlackCore
             return m_airspace->isAircraftInRange(callsign);
         }
 
+        bool CContextNetwork::isVtolAircraft(const CCallsign &callsign) const
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_airspace->isVtolAircraft(callsign);
+        }
+
         CSimulatedAircraft CContextNetwork::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }

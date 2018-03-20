@@ -36,7 +36,7 @@ namespace BlackMisc
             return this->rememberGroundElevation(elevationPlane, elevationPlane.getRadius());
         }
 
-        bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const Aviation::CCallsign &cs)
+        bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const CCallsign &cs)
         {
             if (cs.isEmpty()) { return false; }
             const bool remove = cg.isNull();
@@ -77,7 +77,7 @@ namespace BlackMisc
             return delta;
         }
 
-        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range)
+        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
         {
             return this->getElevationCoordinates().findClosestWithinRange(reference, range);
         }
@@ -153,7 +153,7 @@ namespace BlackMisc
             this->clearCGs();
         }
 
-        CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range)
+        CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
         {
             if (!this->hasProvider()) { return CElevationPlane::null(); }
             return this->provider()->findClosestElevationWithinRange(reference, range);
@@ -175,6 +175,12 @@ namespace BlackMisc
         {
             if (!this->hasProvider()) { return CAircraftModel(); }
             return this->provider()->getDefaultModel();
+        }
+
+        CLength CSimulationEnvironmentAware::getCG(const CCallsign &callsign) const
+        {
+            if (!this->hasProvider()) { return CLength::null(); }
+            return this->provider()->getCG(callsign);
         }
 
         bool CSimulationEnvironmentAware::hasCG(const CCallsign &callsign) const

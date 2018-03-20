@@ -407,6 +407,13 @@ namespace BlackCore
         return m_aircraftInRange.containsCallsign(callsign);
     }
 
+    bool CAirspaceMonitor::isVtolAircraft(const CCallsign &callsign) const
+    {
+        if (callsign.isEmpty()) { return false; }
+        const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
+        return aircraft.isVtol();
+    }
+
     CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem)
     {
         CAtcStation station;

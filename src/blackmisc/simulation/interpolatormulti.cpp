@@ -24,13 +24,13 @@ namespace BlackMisc
         {}
 
         CAircraftSituation CInterpolatorMulti::getInterpolatedSituation(qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            const CInterpolationHints &hints, CInterpolationStatus &status)
+                const CInterpolationAndRenderingSetupPerCallsign &setup,
+                CInterpolationStatus &status)
         {
             switch (m_mode)
             {
-            case ModeLinear: return m_linear.getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
-            case ModeSpline: return m_spline.getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
+            case ModeLinear: return m_linear.getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
+            case ModeSpline: return m_spline.getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
             default: break;
             }
             return {};

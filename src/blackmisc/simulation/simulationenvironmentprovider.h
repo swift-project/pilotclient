@@ -37,7 +37,7 @@ namespace BlackMisc
 
             //! Find closest elevation
             //! \threadsafe
-            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range);
+            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
 
             //! Get the represented plugin
             //! \threadsafe
@@ -122,7 +122,7 @@ namespace BlackMisc
             void setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider) { this->setProvider(provider); }
 
             //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRange
-            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range);
+            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
 
             //! \copydoc ISimulationEnvironmentProvider::getSimulatorPluginInfo
             CSimulatorPluginInfo getSimulatorPluginInfo() const;

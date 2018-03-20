@@ -63,8 +63,8 @@ namespace BlackMisc
 
                 //! Perform the interpolation
                 //! @{
-                Geo::CCoordinateGeodetic interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const;
-                Aviation::CAltitude interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const;
+                Geo::CCoordinateGeodetic interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup) const;
+                Aviation::CAltitude interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup) const;
                 //! @}
 
                 //! Interpolator for pitch, bank, heading, groundspeed
@@ -92,8 +92,7 @@ namespace BlackMisc
 
             //! Strategy used by CInterpolator::getInterpolatedSituation
             Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc,
-                                       const CInterpolationAndRenderingSetupPerCallsign &setup,
-                                       const CInterpolationHints &hints, CInterpolationStatus &status, SituationLog &log);
+                                       const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status, SituationLog &log);
 
         private:
             qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset

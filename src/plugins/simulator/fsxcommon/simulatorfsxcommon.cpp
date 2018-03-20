@@ -15,7 +15,6 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/interpolatormulti.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/geo/elevationplane.h"
@@ -489,11 +488,6 @@ namespace BlackSimPlugin
             CElevationPlane elevation(remoteAircraftData.latitude, remoteAircraftData.longitude, remoteAircraftData.elevation);
             elevation.setSinglePointRadius();
 
-            // const QString debug(hints.debugInfo(elevation));
-            CInterpolationHints &hints = m_hints[simObject.getCallsign()];
-            hints.setElevationPlane(elevation); // update elevation
-            hints.setCGAboveGround({ remoteAircraftData.cgToGround, CLengthUnit::ft() }); // normally never changing, but if user changes ModelMatching update possible
-
             // set it in the remote aircraft provider
             this->updateAircraftGroundElevation(simObject.getCallsign(), elevation);
 
@@ -915,7 +909,6 @@ namespace BlackSimPlugin
 
             // clean up anyway
             this->removeFromAddPendingAndAddAgainAircraft(callsign);
-            m_hints.remove(callsign);
 
             // really remove from simulator
             if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
@@ -1126,10 +1119,7 @@ namespace BlackSimPlugin
 
                 // get interpolated situation
                 CInterpolationStatus interpolatorStatus;
-                CInterpolationHints hints(m_hints[callsign]);
-                hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
-                hints.setLoggingInterpolation(logInterpolationAndParts);
-                const CAircraftSituation interpolatedSituation = simObject.getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
+                const CAircraftSituation interpolatedSituation = simObject.getInterpolatedSituation(currentTimestamp, setup, interpolatorStatus);
 
                 if (interpolatorStatus.hasValidSituation())
                 {

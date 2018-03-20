@@ -94,6 +94,7 @@ namespace BlackCore
         virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual int getAircraftInRangeCount() const override;
         virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const override;
+        virtual bool isVtolAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
         virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;

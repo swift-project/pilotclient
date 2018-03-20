@@ -27,7 +27,6 @@
 #include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/pq/length.h"
@@ -221,7 +220,6 @@ namespace BlackCore
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
-        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< hints for callsign, contains last ground elevation fetched
 
         // weather
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?

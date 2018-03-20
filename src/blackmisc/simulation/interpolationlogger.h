@@ -13,7 +13,6 @@
 #define BLACKMISC_SIMULATION_INTERPOLATIONLOGGER_H
 
 #include "interpolationrenderingsetup.h"
-#include "interpolationhints.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
@@ -48,7 +47,6 @@ namespace BlackMisc
             Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
             PhysicalQuantities::CLength  cgAboveGround;    //!< center of gravity
             CInterpolationAndRenderingSetupPerCallsign usedSetup; //!< used setup
-            CInterpolationHints usedHints; //!< hints
 
             //! Delta time between interpolation and current time
             double deltaCurrentToInterpolatedTime() const
@@ -72,10 +70,9 @@ namespace BlackMisc
             }
 
             //! To string
-            QString toQString(
-                bool withHints, bool withSetup,
-                bool withCurrentSituation, bool withElevation,
-                bool withOtherPositions, bool withDeltaTimes, const QString &separator = {" "}) const;
+            QString toQString(bool withSetup,
+                              bool withCurrentSituation, bool withElevation,
+                              bool withOtherPositions, bool withDeltaTimes, const QString &separator = {" "}) const;
         };
 
         //! Log entry for parts interpolation

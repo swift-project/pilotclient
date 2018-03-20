@@ -16,7 +16,6 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/interpolator.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/simplecommandparser.h"
@@ -571,7 +570,6 @@ namespace BlackCore
         CStatusMessageList msgs;
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
         if (!m_addAgainAircraftWhenRemoved.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_addAgainAircraftWhenRemoved not empty: '%1'") << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", ")); }
-        if (!m_hints.isEmpty()) { msgs.push_back(CStatusMessage(this).error("m_hints not empty: '%1'") << CCallsignSet(m_hints.keys()).getCallsignStrings(true).join(", ")); }
         return msgs;
     }
 
@@ -679,7 +677,6 @@ namespace BlackCore
         // rendering related stuff
         m_addAgainAircraftWhenRemoved.clear();
         m_callsignsToBeRendered.clear();
-        m_hints.clear();
 
         this->resetHighlighting();
         this->resetAircraftStatistics();
@@ -762,11 +759,9 @@ namespace BlackCore
         static const QString sep("\n");
         if (s.tsCurrent > 0)
         {
-            dm = QStringLiteral("Hints: ") % s.usedHints.asString(false, true) %
-                 QStringLiteral("\n") %
-                 QStringLiteral("Setup: ") % s.usedSetup.toQString(true) %
+            dm = QStringLiteral("Setup: ") % s.usedSetup.toQString(true) %
                  QStringLiteral("\n\n") %
-                 QStringLiteral("Situation: ") % s.toQString(false, false, true, true, true, true, sep);
+                 QStringLiteral("Situation: ") % s.toQString(false, true, true, true, true, sep);
         }
         if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QStringLiteral("") : QStringLiteral("\n\n")) % QStringLiteral("Parts: ") % p.toQString(sep); }
         if (!dm.isEmpty())

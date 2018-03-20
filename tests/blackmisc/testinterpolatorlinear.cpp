@@ -34,7 +34,6 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 
 #include <QCoreApplication>
@@ -84,7 +83,6 @@ namespace BlackMiscTest
 
         // interpolation functional check
         CInterpolationStatus status;
-        const CInterpolationHints hints;
         const CInterpolationAndRenderingSetupPerCallsign setup;
         double latOld = 360.0;
         double lngOld = 360.0;
@@ -93,9 +91,9 @@ namespace BlackMiscTest
             // This will use time range
             // from:  ts - 2 * deltaT + offset
             // to:    ts              + offset
-            CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                (currentTime, setup, hints, status)
-                                               );
+            CAircraftSituation currentSituation(
+                interpolator.getInterpolatedSituation(currentTime, setup, status)
+            );
             QVERIFY2(status.isInterpolated(), "Value was not interpolated");
             const double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
             const double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
@@ -123,9 +121,9 @@ namespace BlackMiscTest
                 // This will use range
                 // from:  ts - 2* deltaT + offset
                 // to:    ts             + offset
-                CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                    (currentTime, setup, hints, status)
-                                                   );
+                CAircraftSituation currentSituation(
+                    interpolator.getInterpolatedSituation(currentTime, setup, status)
+                );
                 QVERIFY2(status.isInterpolated(), "Not interpolated");
                 QVERIFY2(!currentSituation.getCallsign().isEmpty(), "Empty callsign");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");

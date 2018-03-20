@@ -632,9 +632,6 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "wrong thread");
                 if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
-                // clean up anyway
-                m_hints.remove(callsign);
-
                 // really remove from simulator
                 if (!m_xplaneAircraftObjects.contains(callsign)) { return false; } // already fully removed or not yet added
 
@@ -837,10 +834,7 @@ namespace BlackSimPlugin
 
                 // get interpolated situation
                 CInterpolationStatus interpolatorStatus;
-                CInterpolationHints hints(m_hints[callsign]);
-                hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
-                hints.setLoggingInterpolation(logInterpolationAndParts);
-                const CAircraftSituation interpolatedSituation = xplaneAircraft.getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
+                const CAircraftSituation interpolatedSituation = xplaneAircraft.getInterpolatedSituation(currentTimestamp, setup, interpolatorStatus);
 
                 if (interpolatorStatus.hasValidSituation())
                 {
@@ -999,13 +993,8 @@ namespace BlackSimPlugin
 
             CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()), CLongitude(longitudeDeg, CAngleUnit::deg()), CAltitude(elevationMeters, CLengthUnit::m()));
             elevation.setSinglePointRadius();
-
-            // The entire vertical offset (CG offset) is still very experimental in X-Plane. Libxplanemp simply calculates the lowest Y
-            // value from all the OpenGL model vertices. I assume its in meters.
-            // The unit of modelVerticalOffset is still very unknown. This needs to be confirmed.
-            CInterpolationHints &hints = m_hints[cs];
-            hints.setElevationPlane(elevation); // update elevation
-            hints.setCGAboveGround({ modelVerticalOffsetMeters, CLengthUnit::m() });
+            this->rememberGroundElevation(elevation);
+            this->insertCG(CLength(modelVerticalOffsetMeters, CLengthUnit::m()), callsign);
 
             // set it in the remote aircraft provider
             this->updateAircraftGroundElevation(cs, elevation);

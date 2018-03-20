@@ -15,7 +15,6 @@
 #include "traffic.h"
 #include "utils.h"
 #include "blackmisc/simulation/interpolator.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/verify.h"
@@ -45,34 +44,6 @@ namespace XSwiftBus
 
         std::strncpy(label, qPrintable(callsign), sizeof(label));
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
-    }
-
-    BlackMisc::Simulation::CInterpolationHints CTraffic::Plane::hints()
-    {
-        //! \todo MS 865 CInterpolationAndRenderingSetup allows to setup interpolation in the GUI
-        //        Also to disable aircraft parts / or logging parts (log file). I wonder if you want to consider it here
-        //        e.g. interpolator->getInterpolatorSetup().getLogCallsigns().contains(callsign)
-        //        if the setup is needed more than once, store it here to avoid multiple locks
-        using namespace BlackMisc::PhysicalQuantities;
-        using namespace BlackMisc::Aviation;
-        using namespace BlackMisc::Simulation;
-
-        CInterpolationAndRenderingSetupPerCallsign setup;
-        CInterpolationHints hints;
-        CPartsStatus status;
-        constexpr double fudgeFactor = 3.0; //! \fixme Value should be different for each plane, derived from the CSL model geometry
-        hints.setAircraftParts(interpolator.getInterpolatedParts(-1, setup, status));
-        hints.setCGAboveGround({ fudgeFactor, CLengthUnit::m() }); // fudge factor
-        hints.setElevationProvider([this](const auto & situation)
-        {
-            const auto meters = terrainProbe.getElevation(
-                                    situation.latitude().value(CAngleUnit::deg()),
-                                    situation.longitude().value(CAngleUnit::deg()),
-                                    situation.getAltitude().value(CLengthUnit::m()));
-            if (std::isnan(meters)) { return CAltitude::null(); }
-            return CAltitude(CLength(meters, CLengthUnit::m()), CAltitude::MeanSeaLevel);
-        });
-        return hints;
     }
 
     CTraffic::CTraffic(QObject *parent) :
@@ -432,7 +403,7 @@ namespace XSwiftBus
                 {
                     BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign setup;
                     BlackMisc::Simulation::CInterpolationStatus status;
-                    BlackMisc::Aviation::CAircraftSituation situation = plane->interpolator.getInterpolatedSituation(-1, setup, plane->hints(), status);
+                    BlackMisc::Aviation::CAircraftSituation situation = plane->interpolator.getInterpolatedSituation(-1, setup, status);
                     if (! status.hasValidSituation()) { return xpmpData_Unavailable; }
 
                     //! \fixme KB 2018-01 commented out with T229. Change detection needs to go somewhere else

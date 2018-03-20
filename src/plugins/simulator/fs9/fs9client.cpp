@@ -15,7 +15,6 @@
 #include "directplayerror.h"
 #include "directplayutils.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logmessage.h"
@@ -174,10 +173,8 @@ namespace BlackSimPlugin
 
             if (m_clientStatus == Disconnected) { return; }
             CInterpolationStatus status;
-            CInterpolationHints hints; // \fixme 201701 #865 KB if there is an elevation provider for FS9 add it here or set elevation
             CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupPerCallsignOrDefault(m_callsign);
-            hints.setLoggingInterpolation(setup.logInterpolation());
-            const CAircraftSituation situation = m_interpolator.getInterpolatedSituation(-1, setup, hints, status);
+            const CAircraftSituation situation = m_interpolator.getInterpolatedSituation(-1, setup, status);
 
             // Test only for successful position. FS9 requires constant positions
             if (!status.hasValidSituation()) { return; }

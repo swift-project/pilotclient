@@ -19,7 +19,6 @@
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/distributorlistpreferences.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/simulation/matchingstatistics.h"

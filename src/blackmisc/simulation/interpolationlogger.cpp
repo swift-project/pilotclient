@@ -407,7 +407,7 @@ namespace BlackMisc
         }
 
         QString SituationLog::toQString(
-            bool withHints, bool withSetup,
+            bool withSetup,
             bool withCurrentSituation,
             bool withElevation, bool withOtherPositions, bool withDeltaTimes, const QString &separator) const
         {
@@ -419,11 +419,6 @@ namespace BlackMisc
                    QStringLiteral(" | type: ") % this->interpolationType() %
                    QStringLiteral(" | gnd.fa.: ") % QString::number(groundFactor) %
                    QStringLiteral(" | #nw.sit.: ") % QString::number(noNetworkSituations) %
-                   (
-                       withHints ?
-                       separator % QStringLiteral("hints: ") % usedHints.asString(false, true) :
-                       QStringLiteral("")
-                   ) %
                    (
                        withSetup ?
                        separator % QStringLiteral("setup: ") % usedSetup.toQString(true) :

@@ -9,7 +9,6 @@
 
 #include "interpolator.h"
 #include "blackconfig/buildconfig.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolatorspline.h"
@@ -54,14 +53,14 @@ namespace BlackMisc
         template <typename Derived>
         CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(
             qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints,
+            const CInterpolationAndRenderingSetupPerCallsign &setup,
             CInterpolationStatus &status)
         {
             Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
             // this code is used by linear and spline interpolator
             status.reset();
-            const bool doLogging = this->hasAttachedLogger() && hints.isLoggingInterpolation();
+            const bool doLogging = this->hasAttachedLogger() && setup.logInterpolation();
             SituationLog log;
             SituationLog *logP = doLogging ? &log : nullptr;
 
@@ -81,15 +80,15 @@ namespace BlackMisc
             // * As XP uses lazy init we will call getGroundElevation only when needed
             // * default here via getElevationPlane
             // CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, currentSituation.getDistancePerTime(1000), true, false, logP));
-            const CElevationPlane currentGroundElevation = hints.getElevationPlane(currentSituation, currentSituation.getDistancePerTime(1000), logP);
-            currentSituation.setGroundElevation(currentGroundElevation); // set as default
+            const CElevationPlane currentGroundElevation = this->findClosestElevationWithinRange(currentSituation, currentSituation.getDistancePerTime(1000));
+            currentSituation.setGroundElevationChecked(currentGroundElevation); // set as default
 
             // data, split situations by time
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
 
             // interpolant function from derived class
             // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
-            const auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, hints, status, log);
+            const auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, status, log);
 
             // succeeded so far?
             if (!status.isInterpolated())
@@ -99,12 +98,12 @@ namespace BlackMisc
             }
 
             // use derived interpolant function
-            currentSituation.setPosition(interpolant.interpolatePosition(setup, hints));
-            currentSituation.setAltitude(interpolant.interpolateAltitude(setup, hints));
+            currentSituation.setPosition(interpolant.interpolatePosition(setup));
+            currentSituation.setAltitude(interpolant.interpolateAltitude(setup));
             currentSituation.setMSecsSinceEpoch(interpolant.getInterpolatedTime());
 
             // PBH before ground so we can use PBH in guessing ground
-            if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || status.isInterpolated())
+            if (setup.isForcingFullInterpolation() || status.isInterpolated())
             {
                 const auto pbh = interpolant.pbh();
                 currentSituation.setHeading(pbh.getHeading());
@@ -118,9 +117,9 @@ namespace BlackMisc
             constexpr double NoGroundFactor = -1;
             double groundFactor = NoGroundFactor;
 
-            if (hints.hasAircraftParts())
+            if (setup.isAircraftPartsEnabled())
             {
-                groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
+                // groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
                 if (groundFactor > 0.0)
                 {
                     // if not having an ground elevation yet, we fetch from provider (if there is a provider)
@@ -131,8 +130,9 @@ namespace BlackMisc
 
                     if (!currentGroundElevation.isNull())
                     {
-                        Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
-                        const CAltitude groundElevationCG = currentGroundElevation.withOffset(hints.getCGAboveGround());
+                        Q_ASSERT_X(currentGroundElevation.getAltitude().getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
+                        const CLength cg = this->getCG(m_callsign);
+                        const CAltitude groundElevationCG = currentGroundElevation.getAltitude().withOffset(cg);
                         currentSituation.setGroundElevationChecked(currentGroundElevation);
                         // alt = ground + aboveGround * groundFactor
                         //     = ground + (altitude - ground) * groundFactor
@@ -146,7 +146,7 @@ namespace BlackMisc
 
             // depending on ground factor set ground flag and reliability
             // it will use the hints ground flag or elevation/CG or guessing
-            CInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
+            // CInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
 
             // we transfer ground elevation for future usage
             if (currentSituation.hasGroundElevation())
@@ -165,7 +165,6 @@ namespace BlackMisc
                 log.callsign = m_callsign;
                 log.groundFactor = groundFactor;
                 log.situationCurrent = currentSituation;
-                log.usedHints = hints;
                 log.usedSetup = setup;
                 m_logger->logInterpolation(log);
             }
@@ -412,7 +411,7 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        void CInterpolator<Derived>::setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, CAircraftSituation &situation)
+        void CInterpolator<Derived>::setGroundFlagFromInterpolator(double groundFactor, CAircraftSituation &situation) const
         {
             // by interpolation
             if (groundFactor >= 1.0)
@@ -428,15 +427,17 @@ namespace BlackMisc
 
             // on elevation and CG
             // remark: to some extend redundant as situation.getCorrectedAltitude() already corrects altitude
+            Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
             if (situation.hasGroundElevation())
             {
                 static const CLength onGroundThresholdLimit(1.0, CLengthUnit::m());
                 static const CLength notOnGroundThresholdLimit(10.0, CLengthUnit::m()); // upper boundary
                 CLength offset = onGroundThresholdLimit; // very small offset from allowed
-                CAircraftSituation::OnGroundReliability reliability = CAircraftSituation::OnGroundByElevation;
-                if (hints.hasCGAboveGround())
+                CAircraftSituation::OnGroundDetails reliability = CAircraftSituation::OnGroundByElevation;
+                CLength cg = this->getCG(m_callsign);
+                if (!cg.isNull())
                 {
-                    offset += hints.getCGAboveGround();
+                    offset += cg;
                     reliability = CAircraftSituation::OnGroundByElevationAndCG;
                 }
                 else
@@ -465,7 +466,7 @@ namespace BlackMisc
             }
 
             // for VTOL aircraft we give up
-            if (hints.isVtolAircraft())
+            if (this->isVtolAircraft(m_callsign))
             {
                 situation.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::OnGroundReliabilityNoSet);
                 return;

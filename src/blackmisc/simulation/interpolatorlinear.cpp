@@ -14,7 +14,6 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/verify.h"
@@ -49,11 +48,12 @@ namespace BlackMisc
             m_pbh(m_simulationTimeFraction, situation1, situation2)
         {}
 
-        CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(qint64 currentTimeMsSinceEpoc,
-                const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints, CInterpolationStatus &status, SituationLog &log) const
+        CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(
+            qint64 currentTimeMsSinceEpoc,
+            const CInterpolationAndRenderingSetupPerCallsign &setup,
+            CInterpolationStatus &status, SituationLog &log) const
         {
             Q_UNUSED(setup);
-            Q_UNUSED(hints);
             status.reset();
 
             // with the latest updates of T243 the order and the offsets are supposed to be correct
@@ -118,11 +118,10 @@ namespace BlackMisc
 
             // take hint into account to calculate elevation and above ground level
             // do not call for XP (lazy init)
-            if (!hints.hasElevationProvider())
-            {
-                oldSituation.setGroundElevationChecked(hints.getElevationPlane());
-                newSituation.setGroundElevationChecked(hints.getElevationPlane());
-            }
+            const CElevationPlane planeOld = this->findClosestElevationWithinRange(oldSituation, CElevationPlane::singlePointRadius());
+            const CElevationPlane planeNew = this->findClosestElevationWithinRange(newSituation, CElevationPlane::singlePointRadius());
+            oldSituation.setGroundElevationChecked(planeOld);
+            newSituation.setGroundElevationChecked(planeNew);
 
             CAircraftSituation currentSituation(oldSituation); // also sets ground elevation if available
 
@@ -144,7 +143,7 @@ namespace BlackMisc
             currentSituation.setMSecsSinceEpoch(interpolatedTime);
             status.setInterpolatedAndCheckSituation(true, currentSituation);
 
-            if (this->hasAttachedLogger() && hints.isLoggingInterpolation())
+            if (this->hasAttachedLogger() && setup.logInterpolation())
             {
                 log.tsCurrent = currentTimeMsSinceEpoc;
                 log.deltaSampleTimesMs = sampleDeltaTimeMs;
@@ -159,10 +158,9 @@ namespace BlackMisc
             return { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };
         }
 
-        CCoordinateGeodetic CInterpolatorLinear::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const
+        CCoordinateGeodetic CInterpolatorLinear::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup) const
         {
             Q_UNUSED(setup);
-            Q_UNUSED(hints);
 
             const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());
             const std::array<double, 3> newVec(m_newSituation.getPosition().normalVectorDouble());
@@ -175,10 +173,9 @@ namespace BlackMisc
             return currentPosition;
         }
 
-        CAltitude CInterpolatorLinear::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const
+        CAltitude CInterpolatorLinear::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup) const
         {
             Q_UNUSED(setup);
-            Q_UNUSED(hints);
 
             // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
             // avoid underflow below ground elevation by using getCorrectedAltitude

@@ -14,6 +14,8 @@
 
 #include "interpolationrenderingsetup.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/interpolationsetupprovider.h"
+#include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
@@ -29,7 +31,6 @@ namespace BlackMisc
     namespace Aviation { class CCallsign; }
     namespace Simulation
     {
-        class CInterpolationHints;
         class CInterpolationLogger;
         class CInterpolatorLinear;
         class CInterpolatorSpline;
@@ -38,14 +39,18 @@ namespace BlackMisc
 
         //! Interpolator, calculation inbetween positions
         template <typename Derived>
-        class CInterpolator : public QObject
+        class CInterpolator :
+            public CSimulationEnvironmentAware,
+            public CInterpolationSetupAware,
+            public CRemoteAircraftAware,
+            public QObject
         {
         public:
             //! Log categories
             const CLogCategoryList &getLogCategories();
 
             //! Current interpolated situation
-            Aviation::CAircraftSituation getInterpolatedSituation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints, CInterpolationStatus &status);
+            Aviation::CAircraftSituation getInterpolatedSituation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status);
 
             //! Parts before given offset time (aka pending parts)
             Aviation::CAircraftParts getInterpolatedParts(
@@ -78,7 +83,6 @@ namespace BlackMisc
             }
 
             //! Attach an observer to read the interpolator's state for debugging
-            //! \remark situation logging requires CInterpolationHints::isLoggingInterpolation to be \c true
             //! \remark parts logging has a \c bool \c log flag
             void attachLogger(CInterpolationLogger *logger) { m_logger = logger; }
 
@@ -112,7 +116,7 @@ namespace BlackMisc
             CInterpolator(const QString &objectName, const Aviation::CCallsign &callsign, QObject *parent);
 
             //! Set on ground flag
-            static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, Aviation::CAircraftSituation &situation);
+            void setGroundFlagFromInterpolator(double groundFactor, Aviation::CAircraftSituation &situation) const;
 
         private:
             CInterpolationLogger *m_logger = nullptr;

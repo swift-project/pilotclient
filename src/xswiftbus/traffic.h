@@ -31,7 +31,6 @@
 #define XSWIFTBUS_TRAFFIC_OBJECTPATH "/xswiftbus/traffic"
 //! \endcond
 
-namespace BlackMisc { namespace Simulation { class CInterpolationHints; } }
 namespace XSwiftBus
 {
     /*!
@@ -154,7 +153,6 @@ namespace XSwiftBus
             char label[32] {};
             BlackMisc::Simulation::CInterpolatorMulti interpolator;
             CTerrainProbe terrainProbe;
-            BlackMisc::Simulation::CInterpolationHints hints();
             XPMPPlaneSurfaces_t surfaces;
             QVector<std::pair<qint64, std::function<void(Plane *)>>> pendingSurfaces;
             float targetGearPosition = 0;

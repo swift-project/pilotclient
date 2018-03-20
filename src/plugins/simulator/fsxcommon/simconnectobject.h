@@ -164,7 +164,7 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 qint64 currentTimeSinceEpoc,
                 const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
-                const BlackMisc::Simulation::CInterpolationHints &hints, BlackMisc::Simulation::CInterpolationStatus &status) const;
+                BlackMisc::Simulation::CInterpolationStatus &status) const;
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedParts
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(

@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/simulation/interpolatorspline.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
 
@@ -95,11 +94,12 @@ namespace BlackMisc
             }
         }
 
-        CInterpolatorSpline::Interpolant CInterpolatorSpline::getInterpolant(qint64 currentTimeMsSinceEpoc,
-                const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints, CInterpolationStatus &status,
-                SituationLog &log)
+        CInterpolatorSpline::Interpolant CInterpolatorSpline::getInterpolant(
+            qint64 currentTimeMsSinceEpoc,
+            const CInterpolationAndRenderingSetupPerCallsign &setup,
+            CInterpolationStatus &status,
+            SituationLog &log)
         {
-            Q_UNUSED(hints);
             Q_UNUSED(setup);
 
             // recalculate derivatives only if they changed
@@ -135,17 +135,19 @@ namespace BlackMisc
                 // - on an airport the plane does not move very fast, or not at all
                 // - and the elevation remains (almost) constant for a wider area
                 // - flying the ground elevation not really matters
-                if (!hints.getElevationPlane().isNull())
-                {
-                    // do not override existing values
-                    m_s[0].setGroundElevationChecked(hints.getElevationPlane());
-                    m_s[1].setGroundElevationChecked(hints.getElevationPlane());
-                    m_s[2].setGroundElevationChecked(hints.getElevationPlane());
-                }
+                const CElevationPlane plane0 = this->findClosestElevationWithinRange(m_s[0], CElevationPlane::singlePointRadius());
+                const CElevationPlane plane1 = this->findClosestElevationWithinRange(m_s[1], CElevationPlane::singlePointRadius());
+                const CElevationPlane plane2 = this->findClosestElevationWithinRange(m_s[2], CElevationPlane::singlePointRadius());
 
-                const double a0 = m_s[0].getCorrectedAltitude(hints.getCGAboveGround()).value();
-                const double a1 = m_s[1].getCorrectedAltitude(hints.getCGAboveGround()).value();
-                const double a2 = m_s[2].getCorrectedAltitude(hints.getCGAboveGround()).value();
+                // do not override existing values
+                m_s[0].setGroundElevationChecked(plane0);
+                m_s[1].setGroundElevationChecked(plane1);
+                m_s[2].setGroundElevationChecked(plane2);
+
+                const CLength cg = this->getCG(m_callsign);
+                const double a0 = m_s[0].getCorrectedAltitude(cg).value();
+                const double a1 = m_s[1].getCorrectedAltitude(cg).value();
+                const double a2 = m_s[2].getCorrectedAltitude(cg).value();
 
                 const std::array<std::array<double, 3>, 3> normals {{ m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() }};
                 PosArray pa;
@@ -190,7 +192,7 @@ namespace BlackMisc
             status.setInterpolated(true);
             m_interpolant.setTimes(currentTimeMsSinceEpoc, timeFraction, interpolatedTime);
 
-            if (this->hasAttachedLogger() && hints.isLoggingInterpolation())
+            if (this->hasAttachedLogger() && setup.logInterpolation())
             {
                 log.interpolationSituations.push_back(m_s[0]);
                 log.interpolationSituations.push_back(m_s[1]);
@@ -205,10 +207,9 @@ namespace BlackMisc
             return m_interpolant;
         }
 
-        CCoordinateGeodetic CInterpolatorSpline::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const
+        CCoordinateGeodetic CInterpolatorSpline::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup) const
         {
             Q_UNUSED(setup);
-            Q_UNUSED(hints);
 
             const double newX = evalSplineInterval(m_currentTimeMsSinceEpoc, m_pa.t[1], m_pa.t[2], m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
             const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, m_pa.t[1], m_pa.t[2], m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
@@ -219,10 +220,9 @@ namespace BlackMisc
             return currentPosition;
         }
 
-        CAltitude CInterpolatorSpline::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup, const CInterpolationHints &hints) const
+        CAltitude CInterpolatorSpline::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup) const
         {
             Q_UNUSED(setup);
-            Q_UNUSED(hints);
 
             const double newA = evalSplineInterval(m_currentTimeMsSinceEpoc, m_pa.t[1], m_pa.t[2], m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
             return CAltitude(newA, m_altitudeUnit);

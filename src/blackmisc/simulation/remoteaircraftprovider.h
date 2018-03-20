@@ -75,6 +75,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
+            //! Is VTOL aircraft?
+            //! \threadsafe
+            virtual bool isVtolAircraft(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
             //! Current snapshot
             //! \threadsafe
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const = 0;
@@ -194,6 +198,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::isAircraftInRange
             bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+            //! \copydoc IRemoteAircraftProvider::isVtolAircraft
+            bool isVtolAircraft(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
             int getAircraftInRangeCount() const;

@@ -92,10 +92,10 @@ namespace BlackSimPlugin
         CAircraftSituation CXPlaneMPAircraft::getInterpolatedSituation(
             qint64 currentTimeSinceEpoc,
             const CInterpolationAndRenderingSetupPerCallsign &setup,
-            const CInterpolationHints &hints, CInterpolationStatus &status) const
+            CInterpolationStatus &status) const
         {
             Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
+            return m_interpolator->getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
         }
 
         CAircraftParts CXPlaneMPAircraft::getInterpolatedParts(

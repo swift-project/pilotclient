@@ -15,7 +15,6 @@
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolator.h"
@@ -38,11 +37,11 @@ namespace BlackMisc
 
             //! \copydoc CInterpolator::getInterpolatedSituation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-                qint64, const CInterpolationAndRenderingSetupGlobal &, const CInterpolationHints &, CInterpolationStatus &) { return {}; }
+                qint64, const CInterpolationAndRenderingSetupPerCallsign &, CInterpolationStatus &) { return {}; }
 
             //! \copydoc CInterpolator::getInterpolatedParts
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                qint64, const CInterpolationAndRenderingSetupGlobal &, CPartsStatus &, bool = false) const { return {}; }
+                qint64, const CInterpolationAndRenderingSetupPerCallsign &, CPartsStatus &, bool = false) const { return {}; }
 
             //! \copydoc CInterpolator::addAircraftSituation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &) {}

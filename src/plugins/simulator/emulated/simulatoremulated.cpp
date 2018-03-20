@@ -439,11 +439,8 @@ namespace BlackSimPlugin
                 CInterpolatorMulti *im = m_interpolators[cs];
                 CInterpolationStatus statusInterpolation;
                 CPartsStatus statusParts;
-                CInterpolationHints hints;
                 Q_ASSERT_X(im, Q_FUNC_INFO, "interpolator missing");
-                if (m_hints.contains(cs)) { hints = m_hints[cs]; }
-                hints.setLoggingInterpolation(log);
-                const CAircraftSituation s = im->getInterpolatedSituation(now, setup, hints, statusInterpolation);
+                const CAircraftSituation s = im->getInterpolatedSituation(now, setup, statusInterpolation);
                 const CAircraftParts p = im->getInterpolatedParts(now, setup, statusParts, log);
                 m_countInterpolatedParts++;
                 m_countInterpolatedSituations++;
