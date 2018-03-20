@@ -32,6 +32,13 @@ namespace BlackMisc
             return (isWithinRange(coordinate)) ? geodeticHeight() : CAltitude::null();
         }
 
+        CAltitude CElevationPlane::getAltitudeInUnit(const CLengthUnit &unit) const
+        {
+            CAltitude a = this->geodeticHeight();
+            a.switchUnit(unit);
+            return a;
+        }
+
         bool CElevationPlane::isNull() const
         {
             return m_radius.isNull() || CCoordinateGeodetic::isNull();
