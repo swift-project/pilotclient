@@ -31,9 +31,8 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         /*!
-         * \brief Heading as used in aviation, can be true or magnetic heading
+         * Heading as used in aviation, can be true or magnetic heading
          * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
          */
         class BLACKMISC_EXPORT CHeading :
@@ -67,22 +66,25 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
-            //! \brief Default constructor: 0 heading true
-            CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
+            //! Default constructor: 0
+            CHeading() : CAngle(0, PhysicalQuantities::CAngleUnit::rad()), m_north(True) {}
 
-            //! \brief Constructor
-            CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
+            //! Constructor
+            CHeading(double value, const PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(True) {}
 
-            //! \brief Constructor by CAngle
+            //! Constructor
+            CHeading(double value, ReferenceNorth north, const PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
+
+            //! Constructor by CAngle
             CHeading(const CAngle &heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
 
-            //! \brief Magnetic heading?
+            //! Magnetic heading?
             bool isMagneticHeading() const { return Magnetic == this->m_north; }
 
-            //! \brief True heading?
+            //! True heading?
             bool isTrueHeading() const { return True == this->m_north; }
 
-            //! \brief Get reference north (magnetic or true)
+            //! Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
         private:
@@ -93,8 +95,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(north)
             );
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)
 
