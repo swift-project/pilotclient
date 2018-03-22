@@ -488,10 +488,8 @@ namespace BlackSimPlugin
             CElevationPlane elevation(remoteAircraftData.latitude, remoteAircraftData.longitude, remoteAircraftData.elevation);
             elevation.setSinglePointRadius();
 
-            // set it in the remote aircraft provider
+            // set it in the remote aircraft provider and in elevation provider
             this->updateAircraftGroundElevation(simObject.getCallsign(), elevation);
-
-            // and in elevation provider
             this->rememberGroundElevation(elevation);
         }
 
@@ -1095,14 +1093,14 @@ namespace BlackSimPlugin
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
-            const CCallsignSet callsignsToLog(this->getLogCallsigns());
 
             // interpolation for all remote aircraft
             const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
+
             for (const CSimConnectObject &simObject : simObjects)
             {
                 // happening if aircraft is not yet added to simulator or to be deleted
-                if (simObject.isPendingAdded()) { continue; }
+                if (simObject.isPendingAdded())   { continue; }
                 if (simObject.isPendingRemoved()) { continue; }
                 if (!simObject.hasCurrentLightsInSimulator()) { continue; } // wait until we have light state
 
@@ -1110,10 +1108,11 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
                 Q_ASSERT_X(simObject.hasValidRequestAndObjectId(), Q_FUNC_INFO, "Missing ids");
 
-                // fetch parts, as they are needed for ground interpolation
+                // fetch parts
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
                 const bool useAircraftParts = setup.isAircraftPartsEnabled() && aircraftWithParts.contains(callsign);
-                const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
+                const bool logInterpolationAndParts = setup.logInterpolation();
+                const bool sendGround = setup.sendGndFlagToSimulator();
                 CPartsStatus partsStatus(useAircraftParts);
                 const CAircraftParts parts = useAircraftParts ? simObject.getInterpolatedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
@@ -1125,6 +1124,7 @@ namespace BlackSimPlugin
                 {
                     // update situation
                     SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(interpolatedSituation);
+                    if (!sendGround) { position.OnGround = 0.0; }
                     if (!simObject.isSameAsSent(position))
                     {
                         m_simConnectObjects[simObject.getCallsign()].setPositionAsSent(position);
@@ -1170,73 +1170,12 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftSituation &interpolatedSituation, const CInterpolationStatus &interpolationStatus)
         {
-            if (!simObj.hasValidRequestAndObjectId()) { return false; }
+            if (!simObj.hasValidRequestAndObjectId())  { return false; }
             if (!interpolationStatus.isInterpolated()) { return false; }
 
-            CAircraftLights lights;
-            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWintoutLights = {}; // init members
-            const bool isOnGround = interpolatedSituation.isOnGround() == CAircraftSituation::OnGround;
-            const double gsKts = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts());
-            ddRemoteAircraftPartsWintoutLights.setAllEngines(true);
-            lights.setCabinOn(true);
-            lights.setRecognitionOn(true);
-
-            // when first detected moving, lights on
-            if (isOnGround)
-            {
-                ddRemoteAircraftPartsWintoutLights.gearHandlePosition = 1;
-                lights.setTaxiOn(true);
-                lights.setBeaconOn(true);
-                lights.setNavOn(true);
-
-                if (gsKts > 5)
-                {
-                    // mode taxi
-                    lights.setTaxiOn(true);
-                    lights.setLandingOn(false);
-                }
-                else if (gsKts > 30)
-                {
-                    // mode accelaration for takeoff
-                    lights.setTaxiOn(false);
-                    lights.setLandingOn(true);
-                }
-                else
-                {
-                    // slow movements or parking
-                    lights.setTaxiOn(false);
-                    lights.setLandingOn(false);
-                    ddRemoteAircraftPartsWintoutLights.setAllEngines(false);
-                }
-            }
-            else
-            {
-                // not on ground
-                ddRemoteAircraftPartsWintoutLights.gearHandlePosition = 0;
-                lights.setTaxiOn(false);
-                lights.setBeaconOn(true);
-                lights.setNavOn(true);
-                // landing lights for < 10000ft (normally MSL, here ignored)
-                lights.setLandingOn(interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000);
-
-                if (!simObj.isVtol() && interpolatedSituation.hasGroundElevation())
-                {
-                    if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 1000)
-                    {
-                        ddRemoteAircraftPartsWintoutLights.gearHandlePosition = 1;
-                        ddRemoteAircraftPartsWintoutLights.flapsTrailingEdgeRightPercent = 25;
-                        ddRemoteAircraftPartsWintoutLights.flapsTrailingEdgeLeftPercent = 25;
-                    }
-                    else if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 2000)
-                    {
-                        ddRemoteAircraftPartsWintoutLights.gearHandlePosition = 1;
-                        ddRemoteAircraftPartsWintoutLights.flapsTrailingEdgeRightPercent = 10;
-                        ddRemoteAircraftPartsWintoutLights.flapsTrailingEdgeLeftPercent = 10;
-                    }
-                }
-            }
-
-            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftPartsWintoutLights, lights);
+            const CAircraftParts parts = CAircraftParts::guessedParts(interpolatedSituation, simObj.isVtol(), 4);
+            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts);
+            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
         }
 
         bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftParts &parts, const CPartsStatus &partsStatus)
@@ -1244,23 +1183,8 @@ namespace BlackSimPlugin
             if (!simObj.hasValidRequestAndObjectId()) { return false; }
             if (!partsStatus.isSupportingParts()) { return false; }
 
-            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights; // no init, all values will be set
-            ddRemoteAircraftPartsWithoutLights.flapsLeadingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
-            ddRemoteAircraftPartsWithoutLights.flapsLeadingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
-            ddRemoteAircraftPartsWithoutLights.flapsTrailingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
-            ddRemoteAircraftPartsWithoutLights.flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
-            ddRemoteAircraftPartsWithoutLights.spoilersHandlePosition = parts.isSpoilersOut() ? 1 : 0;
-            ddRemoteAircraftPartsWithoutLights.gearHandlePosition = parts.isGearDown() ? 1 : 0;
-            ddRemoteAircraftPartsWithoutLights.engine1Combustion = parts.isEngineOn(1) ? 1 : 0;
-            ddRemoteAircraftPartsWithoutLights.engine2Combustion = parts.isEngineOn(2) ? 1 : 0;
-            ddRemoteAircraftPartsWithoutLights.engine3Combustion = parts.isEngineOn(3) ? 1 : 0;
-            ddRemoteAircraftPartsWithoutLights.engine4Combustion = parts.isEngineOn(4) ? 1 : 0;
-
-            CAircraftLights lights = parts.getLights();
-            lights.setRecognitionOn(parts.isAnyEngineOn());
-            lights.setCabinOn(parts.isAnyEngineOn());
-
-            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftPartsWithoutLights, parts.getLights());
+            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // no init, all values will be set
+            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
         }
 
         bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftPartsWithoutLights, const CAircraftLights &lights)
@@ -1384,7 +1308,7 @@ namespace BlackSimPlugin
 
             if (situation.isOnGroundInfoAvailable())
             {
-                const bool onGround = (situation.isOnGround() == CAircraftSituation::OnGround);
+                const bool onGround = (situation.getOnGround() == CAircraftSituation::OnGround);
                 position.OnGround = onGround ? 1U : 0U;
             }
             return position;
@@ -1528,7 +1452,8 @@ namespace BlackSimPlugin
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
             m_sendIdTraces.clear();
-            // m_simConnectObjects  cleared below
+            // cleared below:
+            // m_simConnectObjects
             // m_simConnectObjectsPositionAndPartsTraces
             // m_addPendingAircraft
             CSimulatorFsCommon::reset(); // clears all pending aircraft etc

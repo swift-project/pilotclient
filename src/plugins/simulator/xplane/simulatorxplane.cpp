@@ -888,79 +888,14 @@ namespace BlackSimPlugin
         {
             if (!interpolationStatus.isInterpolated()) { return false; }
 
-            CAircraftLights lights;
-            CAircraftParts parts; // init members
-            const bool isOnGround = interpolatedSituation.isOnGround() == CAircraftSituation::OnGround;
-            const double gsKts = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts());
-
-            parts.setEngines({ true, true, true, true });
-            lights.setCabinOn(true);
-            lights.setRecognitionOn(true);
-
-            // when first detected moving, lights on
-            if (isOnGround)
-            {
-                parts.setGearDown(true);
-                lights.setTaxiOn(true);
-                lights.setBeaconOn(true);
-                lights.setNavOn(true);
-
-                if (gsKts > 5)
-                {
-                    // mode taxi
-                    lights.setTaxiOn(true);
-                    lights.setLandingOn(false);
-                }
-                else if (gsKts > 30)
-                {
-                    // mode accelaration for takeoff
-                    lights.setTaxiOn(false);
-                    lights.setLandingOn(true);
-                }
-                else
-                {
-                    // slow movements or parking
-                    lights.setTaxiOn(false);
-                    lights.setLandingOn(false);
-                    parts.setEngines({ false, false, false, false });
-                }
-            }
-            else
-            {
-                // not on ground
-                parts.setGearDown(false);
-                lights.setTaxiOn(false);
-                lights.setBeaconOn(true);
-                lights.setNavOn(true);
-                // landing lights for < 10000ft (normally MSL, here ignored)
-                lights.setLandingOn(interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000);
-
-                if (!xplaneAircraft.isVtol() && interpolatedSituation.hasGroundElevation())
-                {
-                    if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 1000)
-                    {
-                        parts.setGearDown(true);
-                        parts.setFlapsPercent(25);
-                    }
-                    else if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 2000)
-                    {
-                        parts.setGearDown(true);
-                        parts.setFlapsPercent(10);
-                    }
-                }
-            }
-
-            parts.setLights(lights);
+            const CAircraftParts parts = CAircraftParts::guessedParts(interpolatedSituation, xplaneAircraft.isVtol());
             return this->sendRemoteAircraftPartsToSimulator(xplaneAircraft, parts);
         }
 
         bool CSimulatorXPlane::sendRemoteAircraftPartsToSimulator(const CXPlaneMPAircraft &xplaneAircraft, const CAircraftParts &parts)
         {
             // same as in simulator or same as already send to simulator?
-            if (xplaneAircraft.getPartsAsSent() == parts)
-            {
-                return true;
-            }
+            if (xplaneAircraft.getPartsAsSent() == parts) { return true; }
 
             m_trafficProxy->setPlaneSurfaces(xplaneAircraft.getCallsign().asString(),
                                              parts.isGearDown() ? 1 : 0,
@@ -972,11 +907,6 @@ namespace BlackSimPlugin
                                              0, 0, 0,
                                              parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
                                              0, parts.isOnGround());
-
-            CAircraftLights lights = parts.getLights();
-            lights.setRecognitionOn(parts.isAnyEngineOn());
-            lights.setCabinOn(parts.isAnyEngineOn());
-
             return true;
         }
 
@@ -998,7 +928,6 @@ namespace BlackSimPlugin
 
             // set it in the remote aircraft provider
             this->updateAircraftGroundElevation(cs, elevation);
-            this->rememberGroundElevation(elevation);
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
