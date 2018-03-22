@@ -643,7 +643,7 @@ namespace BlackCore
         {
             Q_ASSERT(m_airspace);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
-            bool c = m_airspace->updateAircraftModel(callsign, model, originator);
+            const bool c = m_airspace->updateAircraftModel(callsign, model, originator);
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -686,7 +686,7 @@ namespace BlackCore
 
         bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
-            bool c = m_airspace->updateAircraftRendered(callsign, rendered);
+            const bool c = m_airspace->updateAircraftRendered(callsign, rendered);
             return c;
         }
 

@@ -127,10 +127,6 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) = 0;
 
-            //! Ground elevation of aircraft
-            //! \threadsafe
-            virtual bool updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) = 0;
-
             //! Mark all as not rendered
             //! \threadsafe
             virtual void updateMarkAllAsNotRendered() = 0;
@@ -146,6 +142,10 @@ namespace BlackMisc
             //! Change fast position updates
             //! \threadsafe
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) = 0;
+
+            //! Ground elevation of aircraft
+            //! \threadsafe
+            virtual bool updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) = 0;
 
             //! Get reverse lookup meesages
             //! \threadsafe
@@ -179,9 +179,9 @@ namespace BlackMisc
             //! \note receiver is required for connection type
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
-                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
+                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,
                 std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)> addedPartsSlot,
-                std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshot
             ) = 0;
 

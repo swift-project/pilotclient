@@ -142,7 +142,7 @@ namespace BlackMisc
 
         bool CRemoteAircraftProviderDummy::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
-            CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, CVariant::fromValue(elevation));
+            CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundElevationPlane }, CVariant::fromValue(elevation));
             const int c = this->m_aircraft.applyIfCallsign(callsign, vm);
             return c > 0;
         }
