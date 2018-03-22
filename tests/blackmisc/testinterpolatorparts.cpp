@@ -111,11 +111,11 @@ namespace BlackMiscTest
 
         CAircraftSituation s0 = situations[0];
         s0.adjustGroundFlag(partsOnGround);
-        QVERIFY2(s0.isOnGround(), "Supposed to be on ground");
+        QVERIFY2(s0.getOnGround(), "Supposed to be on ground");
 
         s0 = situations[0];
         s0.adjustGroundFlag(partsNotOnGround);
-        QVERIFY2(!s0.isOnGround(), "Supposed to be not on ground");
+        QVERIFY2(!s0.getOnGround(), "Supposed to be not on ground");
 
         qint64 distanceMs = -1;
         const qint64 Offset = 33;

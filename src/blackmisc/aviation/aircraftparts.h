@@ -29,6 +29,8 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        class CAircraftSituation;
+
         //! Value object encapsulating information of aircraft's parts
         class BLACKMISC_EXPORT CAircraftParts :
             public CValueObject<CAircraftParts>,
@@ -68,7 +70,10 @@ namespace BlackMisc
             //! Get aircraft lights
             CAircraftLights getLights() const { return m_lights; }
 
-            //! Reference to lights, meant wor easy direct changes of the values
+            //! Lights adjusted depending on engines
+            CAircraftLights getAdjustedLights() const;
+
+            //! Reference to lights, meant for easy direct changes of the values
             CAircraftLights &lights() { return m_lights; }
 
             //! Set aircraft lights
@@ -125,12 +130,17 @@ namespace BlackMisc
             //! Set aircraft on ground
             void setOnGround(bool onGround) { m_isOnGround = onGround; }
 
+            //! Guess the parts
+            void guessParts(const CAircraftSituation &situation);
+
             //! Is aircraft on ground? (Smoothly interpolated between 0 and 1.)
             //! \remark 1..on ground 0..not on ground
+            //! \deprecated
             double isOnGroundInterpolated() const;
 
             //! Set aircraft on ground. (Smoothly interpolated between 0 and 1.)
             //! \remark 1..on ground 0..not on ground
+            //! \deprecated
             void setOnGroundInterpolated(double onGround) { m_isOnGroundInterpolated = onGround; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
@@ -138,6 +148,9 @@ namespace BlackMisc
 
             //! Incremental JSON object
             QJsonObject toIncrementalJson() const;
+
+            //! Guessed parts
+            static CAircraftParts guessedParts(const CAircraftSituation &situation, bool vtol = false, int engineNumber = 4);
 
         private:
             CAircraftLights m_lights;

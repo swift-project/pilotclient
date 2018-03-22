@@ -26,6 +26,8 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        class CAircraftSituation;
+
         //! Value object encapsulating information about aircraft's lights
         class BLACKMISC_EXPORT CAircraftLights :
             public CValueObject<CAircraftLights>,
@@ -111,6 +113,9 @@ namespace BlackMisc
             //! All off
             void setAllOff();
 
+            //! Guess the lights
+            void guessLights(const CAircraftSituation &situation);
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -125,6 +130,9 @@ namespace BlackMisc
 
             //! Returns object with all lights switched off
             static CAircraftLights allLightsOff();
+
+            //! Guessed lights
+            static CAircraftLights guessedLights(const CAircraftSituation &situation);
 
         private:
             bool m_strobeOn = false;

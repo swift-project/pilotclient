@@ -7,14 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/aircraftparts.h"
+#include "aircraftparts.h"
+#include "aircraftlights.h"
+#include "aircraftsituation.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
 
 #include "QStringBuilder"
 #include <QtGlobal>
 
-using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -37,6 +39,45 @@ namespace BlackMisc
             json.remove("is_full_data");
             json.insert("is_full_data", QJsonValue(false));
             return json;
+        }
+
+        CAircraftParts CAircraftParts::guessedParts(const CAircraftSituation &situation, bool vtol, int engineNumber)
+        {
+            CAircraftParts parts;
+            CAircraftEngineList engines;
+            parts.setLights(CAircraftLights::guessedLights(situation));
+
+            const bool onGround = situation.isOnGround();
+            if (onGround)
+            {
+                parts.setGearDown(true);
+                engines.initEngines(engineNumber, situation.isMoving());
+            }
+            else
+            {
+                parts.setGearDown(false);
+                engines.initEngines(engineNumber, true);
+                if (vtol)
+                {
+
+                }
+                else if (situation.hasGroundElevation())
+                {
+                    const double aGroundFt = situation.getHeightAboveGround().value(CLengthUnit::ft());
+                    if (aGroundFt < 1000)
+                    {
+                        parts.setGearDown(true);
+                        parts.setFlapsPercent(25);
+                    }
+                    else if (aGroundFt < 2000)
+                    {
+                        parts.setGearDown(true);
+                        parts.setFlapsPercent(10);
+                    }
+                }
+            }
+            parts.setEngines(engines);
+            return parts;
         }
 
         CVariant CAircraftParts::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -92,6 +133,15 @@ namespace BlackMisc
             return 0;
         }
 
+        CAircraftLights CAircraftParts::getAdjustedLights() const
+        {
+            CAircraftLights lights = this->getLights();
+            const bool anyEngine = this->isAnyEngineOn();
+            lights.setRecognitionOn(anyEngine);
+            lights.setCabinOn(anyEngine);
+            return lights;
+        }
+
         void CAircraftParts::setAllLightsOn()
         {
             m_lights.setAllOn();
@@ -115,6 +165,11 @@ namespace BlackMisc
         bool CAircraftParts::isAnyEngineOn() const
         {
             return m_engines.isAnyEngineOn();
+        }
+
+        void CAircraftParts::guessParts(const CAircraftSituation &situation)
+        {
+            *this = guessedParts(situation);
         }
 
         double CAircraftParts::isOnGroundInterpolated() const

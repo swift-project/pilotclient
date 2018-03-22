@@ -98,9 +98,14 @@ namespace BlackMisc
             case CAircraftSituation::InFromParts: return inFromParts;
             case CAircraftSituation::InNoGroundInfo: return InNoGroundInfo;
             case CAircraftSituation::NotSet:
-            default:
-                return unknown;
+            default: return unknown;
             }
+        }
+
+        const CLength &CAircraftSituation::deltaNearGround()
+        {
+            static const CLength small(0.5, CLengthUnit::m());
+            return small;
         }
 
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -122,8 +127,8 @@ namespace BlackMisc
             case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundElevationPlane: return m_groundElevationPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsOnGround: return CVariant::fromValue(m_isOnGround);
-            case IndexIsOnGroundString: return CVariant::fromValue(this->isOnGroundAsString());
+            case IndexIsOnGround: return CVariant::fromValue(m_onGround);
+            case IndexIsOnGroundString: return CVariant::fromValue(this->onGroundAsString());
             case IndexOnGroundReliability: return CVariant::fromValue(m_onGroundDetails);
             case IndexOnGroundReliabilityString: return CVariant::fromValue(this->getOnDetailsAsString());
             default: return CValueObject::propertyByIndex(index);
@@ -144,7 +149,7 @@ namespace BlackMisc
             case IndexGroundSpeed: m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexGroundElevationPlane: m_groundElevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-            case IndexIsOnGround: m_isOnGround = variant.toInt(); break;
+            case IndexIsOnGround: m_onGround = variant.toInt(); break;
             case IndexOnGroundReliability: m_onGroundDetails = variant.toInt(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
@@ -166,7 +171,7 @@ namespace BlackMisc
             case IndexCallsign: return m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexIsOnGround:
             case IndexIsOnGroundString:
-                return Compare::compare(m_isOnGround, compareValue.m_isOnGround);
+                return Compare::compare(m_onGround, compareValue.m_onGround);
             case IndexOnGroundReliability:
             case IndexOnGroundReliabilityString:
                 return Compare::compare(m_onGroundDetails, compareValue.m_onGroundDetails);
@@ -194,21 +199,71 @@ namespace BlackMisc
             m_onGroundDetails = CAircraftSituation::NotSet;
         }
 
-        const QString &CAircraftSituation::isOnGroundAsString() const
+        const QString &CAircraftSituation::onGroundAsString() const
         {
-            return CAircraftSituation::isOnGroundToString(this->isOnGround());
+            return CAircraftSituation::isOnGroundToString(this->getOnGround());
         }
 
         bool CAircraftSituation::isOnGroundInfoAvailable() const
         {
-            return this->isOnGround() != CAircraftSituation::OnGroundSituationUnknown &&
+            return this->getOnGround() != CAircraftSituation::OnGroundSituationUnknown &&
                    this->getOnGroundDetails() != CAircraftSituation::NotSet;
+        }
+
+        void CAircraftSituation::setOnGround(bool onGround)
+        {
+            this->setOnGround(onGround ? OnGround : NotOnGround);
+        }
+
+        void CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround)
+        {
+            m_onGround = static_cast<int>(onGround);
+            m_onGroundFactor = (onGround == OnGround) ?  1.0 : 0.0;
         }
 
         void CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details)
         {
             this->setOnGround(onGround);
             this->setOnGroundDetails(details);
+        }
+
+        void CAircraftSituation::setOnGroundFactor(double groundFactor)
+        {
+            if (groundFactor < 0.0) { m_onGroundFactor = -1.0; return; }
+            if (groundFactor > 1.0) { m_onGroundFactor =  1.0; return; }
+            m_onGroundFactor = groundFactor;
+        }
+
+        bool CAircraftSituation::guessOnGround(bool vtol, const PhysicalQuantities::CLength &cg)
+        {
+            if (this->getOnGroundDetails() == NotSet) { return false; }
+            IsOnGround og = this->isOnGroundByElevation(cg);
+            if (og != OnGroundSituationUnknown)
+            {
+                this->setOnGround(og, CAircraftSituation::OnGroundByGuessing);
+                return true;
+            }
+
+            // we guess on speed, pitch and bank by excluding situations
+            this->setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
+            if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 10)  { return true; }
+            if (qAbs(this->getBank().value(CAngleUnit::deg())) > 10)   { return true; }
+            if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 50) { return true; }
+
+            // on VTOL we stop here
+            if (vtol) { return false; }
+
+            // not sure, but this is a guess
+            this->setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+            return true;
+        }
+
+        CLength CAircraftSituation::getGroundDistance(const CLength &centerOfGravity) const
+        {
+            if (centerOfGravity.isNull() || !this->hasGroundElevation()) { return CLength::null(); }
+            const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
+            const CLength groundDistance = (this->getAltitude() - groundPlusCG);
+            return groundDistance;
         }
 
         const QString &CAircraftSituation::getOnDetailsAsString() const
@@ -218,7 +273,15 @@ namespace BlackMisc
 
         QString CAircraftSituation::getOnGroundInfo() const
         {
-            return this->isOnGroundAsString() % QLatin1Char(' ') % this->getOnDetailsAsString();
+            return this->onGroundAsString() % QLatin1Char(' ') % this->getOnDetailsAsString();
+        }
+
+        CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation(const CLength &cg) const
+        {
+            const CLength groundDistance = this->getGroundDistance(cg);
+            if (groundDistance.isNull()) { return OnGroundSituationUnknown; }
+            if (groundDistance.isNegativeWithEpsilonConsidered() || groundDistance.abs() < deltaNearGround()) { return OnGround; }
+            return NotOnGround;
         }
 
         bool CAircraftSituation::hasGroundElevation() const
@@ -292,18 +355,17 @@ namespace BlackMisc
             }
             else
             {
-                static const CLength small(0.5, CLengthUnit::m());
                 const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
-                const CLength groundDistance = (this->getAltitude() - groundPlusCG);
-                if (groundDistance.abs() < small) { return this->getAltitude(); }
-                const bool toGround = (this->getAltitude() < groundPlusCG) || (forceToGround && this->isOnGround() == OnGround);
-                if (toGround)
-                {
-                    // underflow or overflow forced to ground
-                    if (corrected) { *corrected = true; }
-                    return groundPlusCG;
-                }
-                return this->getAltitude();
+                if (groundPlusCG.isNull()) { return this->getAltitude(); }
+                const CLength groundDistance = this->getAltitude() - groundPlusCG;
+                const bool underOrNearGround = groundDistance.isNegativeWithEpsilonConsidered() || groundDistance.abs() < deltaNearGround();
+                const bool forceDragGnd = (dragToGround && this->getOnGround() == OnGround) && (this->hasInboundGroundInformation() || this->getOnGroundDetails() == OnGroundByGuessing);
+                const bool toGround = underOrNearGround || forceDragGnd;
+                if (!toGround) { return this->getAltitude(); }
+
+                // underflow or overflow forced to ground
+                if (corrected) { *corrected = true; }
+                return groundPlusCG;
             }
         }
 
@@ -311,6 +373,12 @@ namespace BlackMisc
         {
             Q_ASSERT(altitude.getAltitudeType() == CAltitude::PressureAltitude);
             m_pressureAltitude = altitude;
+        }
+
+        bool CAircraftSituation::isMoving() const
+        {
+            const double gsKmh = this->getGroundSpeed().value(CSpeedUnit::km_h());
+            return gsKmh >= 1.0;
         }
 
         CLength CAircraftSituation::getDistancePerTime(const CTime &time) const

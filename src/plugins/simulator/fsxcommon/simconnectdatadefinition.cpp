@@ -8,6 +8,8 @@
  */
 
 #include "simconnectdatadefinition.h"
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/logmessage.h"
 #include <tuple>
 
@@ -186,6 +188,16 @@ namespace BlackSimPlugin
             return hr;
         }
 
+        DataDefinitionRemoteAircraftPartsWithoutLights::DataDefinitionRemoteAircraftPartsWithoutLights()
+        {
+            this->resetToInvalid();
+        }
+
+        DataDefinitionRemoteAircraftPartsWithoutLights::DataDefinitionRemoteAircraftPartsWithoutLights(const CAircraftParts &parts)
+        {
+            this->initFromParts(parts);
+        }
+
         bool DataDefinitionRemoteAircraftPartsWithoutLights::operator==(const DataDefinitionRemoteAircraftPartsWithoutLights &rhs) const
         {
             return std::tie(flapsLeadingEdgeLeftPercent, flapsLeadingEdgeRightPercent, flapsTrailingEdgeLeftPercent, flapsTrailingEdgeRightPercent,
@@ -202,6 +214,19 @@ namespace BlackSimPlugin
             engine2Combustion = on ? 1 : 0;
             engine3Combustion = on ? 1 : 0;
             engine4Combustion = on ? 1 : 0;
+        }
+
+        void DataDefinitionRemoteAircraftPartsWithoutLights::setEngine(int number1based, bool on)
+        {
+            double v = on ? 1.0 : 0.0;
+            switch (number1based)
+            {
+            case 1: engine1Combustion = v; break;
+            case 2: engine2Combustion = v; break;
+            case 3: engine3Combustion = v; break;
+            case 4: engine4Combustion = v; break;
+            default: break;
+            }
         }
 
         void DataDefinitionRemoteAircraftPartsWithoutLights::resetAllFlaps()
@@ -229,6 +254,21 @@ namespace BlackSimPlugin
             engine2Combustion = -1;
             engine3Combustion = -1;
             engine4Combustion = -1;
+        }
+
+        void DataDefinitionRemoteAircraftPartsWithoutLights::initFromParts(const CAircraftParts &parts)
+        {
+            gearHandlePosition = parts.isGearDown() ? 1.0 : 0.0;
+            flapsTrailingEdgeLeftPercent = flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
+            flapsLeadingEdgeLeftPercent = flapsLeadingEdgeRightPercent = parts.getFlapsPercent() * 0.2 / 100.0;
+            spoilersHandlePosition = parts.isSpoilersOut() ? 1.0 : 0.0;
+            this->setAllEngines(false); // init
+
+            int e = 1;
+            for (const CAircraftEngine &engine : parts.getEngines())
+            {
+                this->setEngine(e++, engine.isOn());
+            }
         }
 
         CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const

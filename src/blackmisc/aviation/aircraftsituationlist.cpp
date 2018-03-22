@@ -66,7 +66,7 @@ namespace BlackMisc
             {
                 if (situation.isNewerThanAdjusted(latest))
                 {
-                    situation.setOnGround(latest.isOnGround(), latest.getOnGroundDetails());
+                    situation.setOnGround(latest.getOnGround(), latest.getOnGroundDetails());
                     c++;
                 }
             }

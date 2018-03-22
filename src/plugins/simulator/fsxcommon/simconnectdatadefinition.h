@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <QString>
 
+namespace BlackMisc { namespace Aviation { class CAircraftParts; }}
 namespace BlackSimPlugin
 {
     namespace FsxCommon
@@ -85,11 +86,20 @@ namespace BlackSimPlugin
             double engine3Combustion;             //!< Engine 3 combustion flag
             double engine4Combustion;             //!< Engine 4 combustion flag
 
+            //! Ctor
+            DataDefinitionRemoteAircraftPartsWithoutLights();
+
+            //! Ctor
+            DataDefinitionRemoteAircraftPartsWithoutLights(const BlackMisc::Aviation::CAircraftParts &parts);
+
             //! Equal to other parts
             bool operator==(const DataDefinitionRemoteAircraftPartsWithoutLights &rhs) const;
 
             //! All engines on/off
             void setAllEngines(bool on);
+
+            //! Set given engine
+            void setEngine(int number1based, bool on);
 
             //! Reset all flaps
             void resetAllFlaps();
@@ -99,6 +109,9 @@ namespace BlackSimPlugin
 
             //! Reset to invalid values
             void resetToInvalid();
+
+            //! Init from parts
+            void initFromParts(const BlackMisc::Aviation::CAircraftParts &parts);
         };
 
         //! Data for aircraft lighs

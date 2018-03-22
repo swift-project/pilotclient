@@ -8,11 +8,12 @@
  */
 
 #include "blackmisc/aviation/aircraftlights.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
 #include <QStringBuilder>
 
-using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -34,6 +35,52 @@ namespace BlackMisc
         CAircraftLights CAircraftLights::allLightsOff()
         {
             return CAircraftLights {false, false, false, false, false, false, false, false};
+        }
+
+        CAircraftLights CAircraftLights::guessedLights(const CAircraftSituation &situation)
+        {
+            const bool isOnGround = situation.getOnGround() == CAircraftSituation::OnGround;
+            const double gsKts = situation.getGroundSpeed().value(CSpeedUnit::kts());
+            CAircraftLights lights;
+            lights.setCabinOn(true);
+            lights.setRecognitionOn(true);
+
+            // when first detected moving, lights on
+            if (isOnGround)
+            {
+                lights.setTaxiOn(true);
+                lights.setBeaconOn(true);
+                lights.setNavOn(true);
+
+                if (gsKts > 5)
+                {
+                    // mode taxi
+                    lights.setTaxiOn(true);
+                    lights.setLandingOn(false);
+                }
+                else if (gsKts > 30)
+                {
+                    // mode accelaration for takeoff
+                    lights.setTaxiOn(false);
+                    lights.setLandingOn(true);
+                }
+                else
+                {
+                    // slow movements or parking
+                    lights.setTaxiOn(false);
+                    lights.setLandingOn(false);
+                }
+            }
+            else
+            {
+                // not on ground
+                lights.setTaxiOn(false);
+                lights.setBeaconOn(true);
+                lights.setNavOn(true);
+                // landing lights for < 10000ft (normally MSL, here ignored)
+                lights.setLandingOn(situation.getAltitude().value(CLengthUnit::ft()) < 10000);
+            }
+            return lights;
         }
 
         QString CAircraftLights::convertToQString(bool i18n) const
@@ -58,24 +105,15 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexBeacon:
-                return CVariant::from(m_beaconOn);
-            case IndexLanding:
-                return CVariant::from(m_landingOn);
-            case IndexLogo:
-                return CVariant::from(m_logoOn);
-            case IndexNav:
-                return CVariant::from(m_navOn);
-            case IndexStrobe:
-                return CVariant::from(m_strobeOn);
-            case IndexTaxi:
-                return CVariant::from(m_taxiOn);
-            case IndexRecognition:
-                return CVariant::from(m_recognition);
-            case IndexCabin:
-                return CVariant::from(m_cabin);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexBeacon: return CVariant::from(m_beaconOn);
+            case IndexLanding: return CVariant::from(m_landingOn);
+            case IndexLogo: return CVariant::from(m_logoOn);
+            case IndexNav: return CVariant::from(m_navOn);
+            case IndexStrobe: return CVariant::from(m_strobeOn);
+            case IndexTaxi: return CVariant::from(m_taxiOn);
+            case IndexRecognition: return CVariant::from(m_recognition);
+            case IndexCabin: return CVariant::from(m_cabin);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -87,33 +125,15 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexBeacon:
-                this->m_beaconOn = variant.toBool();
-                break;
-            case IndexLanding:
-                this->m_landingOn = variant.toBool();
-                break;
-            case IndexLogo:
-                this->m_logoOn = variant.toBool();
-                break;
-            case IndexNav:
-                this->m_navOn = variant.toBool();
-                break;
-            case IndexStrobe:
-                this->m_strobeOn = variant.toBool();
-                break;
-            case IndexTaxi:
-                this->m_taxiOn = variant.toBool();
-                break;
-            case IndexCabin:
-                this->m_cabin = variant.toBool();
-                break;
-            case IndexRecognition:
-                this->m_recognition = variant.toBool();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexBeacon: m_beaconOn = variant.toBool(); break;
+            case IndexLanding: m_landingOn = variant.toBool(); break;
+            case IndexLogo: m_logoOn = variant.toBool(); break;
+            case IndexNav: m_navOn = variant.toBool(); break;
+            case IndexStrobe: m_strobeOn = variant.toBool(); break;
+            case IndexTaxi: m_taxiOn = variant.toBool(); break;
+            case IndexCabin: m_cabin = variant.toBool(); break;
+            case IndexRecognition: m_recognition = variant.toBool(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -139,6 +159,11 @@ namespace BlackMisc
             m_taxiOn = false;
             m_recognition = false;
             m_cabin = false;
+        }
+
+        void CAircraftLights::guessLights(const CAircraftSituation &situation)
+        {
+            *this = guessedLights(situation);
         }
     } // namespace
 } // namespace

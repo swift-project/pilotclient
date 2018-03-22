@@ -147,22 +147,37 @@ namespace BlackMisc
             virtual Geo::CLongitude longitude() const override { return m_position.longitude(); }
 
             //! On ground?
-            IsOnGround isOnGround() const { return static_cast<CAircraftSituation::IsOnGround>(m_isOnGround); }
+            IsOnGround getOnGround() const { return static_cast<CAircraftSituation::IsOnGround>(m_onGround); }
+
+            //! Is on ground?
+            bool isOnGround() const { return this->getOnGround() == OnGround; }
 
             //! On ground?
-            const QString &isOnGroundAsString() const;
+            const QString &onGroundAsString() const;
 
             //! On ground info available?
             bool isOnGroundInfoAvailable() const;
 
             //! Set on ground
-            void setOnGround(bool onGround) { this->setOnGround(onGround ? OnGround : NotOnGround); }
+            void setOnGround(bool onGround);
 
             //! Set on ground
-            void setOnGround(CAircraftSituation::IsOnGround onGround) { m_isOnGround = static_cast<int>(onGround); }
+            void setOnGround(CAircraftSituation::IsOnGround onGround);
 
             //! Set on ground
             void setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details);
+
+            //! On ground factor 0..1 (on ground), -1 not set
+            double getOnGroundFactor() const { return m_onGroundFactor; }
+
+            //! Set on ground factor 0..1 (on ground), -1 not set
+            void setOnGroundFactor(double groundFactor);
+
+            //! Guess on ground flag
+            bool guessOnGround(bool vtol = false, const PhysicalQuantities::CLength &cg = PhysicalQuantities::CLength::null());
+
+            //! Distance to ground, null if impossible to calculate
+            PhysicalQuantities::CLength getGroundDistance(const PhysicalQuantities::CLength &centerOfGravity) const;
 
             //! On ground reliability
             OnGroundDetails getOnGroundDetails() const { return static_cast<CAircraftSituation::OnGroundDetails>(m_onGroundDetails); }
@@ -190,6 +205,9 @@ namespace BlackMisc
 
             //! Elevation of the ground directly beneath
             const Geo::CElevationPlane &getGroundElevationPlane() const { return m_groundElevationPlane; }
+
+            //! Is on ground by elevation data, requires elevation and CG
+            IsOnGround isOnGroundByElevation(const PhysicalQuantities::CLength &cg) const;
 
             //! Is ground elevation value available
             bool hasGroundElevation() const;
@@ -222,8 +240,9 @@ namespace BlackMisc
             //! Get altitude
             const CAltitude &getAltitude() const { return m_position.geodeticHeight(); }
 
-            //! Get altitude under consideration of ground elevation
-            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = {}, bool forceToGround = true, bool *corrected = nullptr) const;
+            //! Get altitude under consideration of ground elevation and ground flag
+            //! \remark with dragToGround it will also compensate overflows, otherwise ony underflow
+            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = PhysicalQuantities::CLength::null(), bool dragToGround = true, bool *corrected = nullptr) const;
 
             //! Set altitude
             void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
@@ -251,6 +270,9 @@ namespace BlackMisc
 
             //! Set ground speed
             void setGroundSpeed(const PhysicalQuantities::CSpeed &groundspeed) { m_groundSpeed = groundspeed; }
+
+            //! Is moving? Means ground speed > epsilon
+            bool isMoving() const;
 
             //! Distance per time
             PhysicalQuantities::CLength getDistancePerTime(const PhysicalQuantities::CTime &time) const;
@@ -293,18 +315,22 @@ namespace BlackMisc
             //! Enum to string
             static const QString &onGroundDetailsToString(OnGroundDetails reliability);
 
+            //! Delta distance, near to ground
+            static const PhysicalQuantities::CLength &deltaNearGround();
+
         private:
             CCallsign m_correspondingCallsign;
-            Geo::CCoordinateGeodetic m_position; // NULL position
+            Geo::CCoordinateGeodetic m_position; //!< NULL position as default
             Aviation::CAltitude m_pressureAltitude { 0, nullptr };
-            CHeading m_heading;
-            PhysicalQuantities::CAngle m_pitch;
-            PhysicalQuantities::CAngle m_bank;
-            PhysicalQuantities::CSpeed m_groundSpeed;
-            Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
-            int m_isOnGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
-            int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSet);
+            CHeading m_heading { 0, nullptr };
+            PhysicalQuantities::CAngle m_pitch { 0, nullptr };
+            PhysicalQuantities::CAngle m_bank  { 0, nullptr };
+            PhysicalQuantities::CSpeed m_groundSpeed { 0, nullptr };
             bool m_isInterim = false;
+            Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
+            int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
+            int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSet);
+            double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
 
             BLACK_METACLASS(
                 CAircraftSituation,
@@ -316,8 +342,9 @@ namespace BlackMisc
                 BLACK_METAMEMBER(bank),
                 BLACK_METAMEMBER(groundSpeed),
                 BLACK_METAMEMBER(groundElevationPlane),
-                BLACK_METAMEMBER(isOnGround),
+                BLACK_METAMEMBER(onGround),
                 BLACK_METAMEMBER(onGroundDetails),
+                BLACK_METAMEMBER(onGroundFactor),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(timeOffsetMs),
                 BLACK_METAMEMBER(isInterim)
