@@ -1243,9 +1243,35 @@ namespace BlackCore
         BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return; }
 
-        CAircraftSituation correctedSituation = situation;
-        const CAircraftPartsList parts = this->remoteAircraftParts(callsign);
-        if (!parts.isEmpty()) { correctedSituation.adjustGroundFlag(parts); }
+        CAircraftSituation correctedSituation(situation);
+        if (!correctedSituation.hasGroundElevation() && !correctedSituation.canLikelySkipNearGroundInterpolation())
+        {
+            const CElevationPlane ep = this->findClosestElevationWithinRange(correctedSituation, correctedSituation.getDistancePerTime(1000));
+            correctedSituation.setGroundElevation(ep);
+        }
+
+        // do we already have ground details?
+        if (situation.getOnGroundDetails() == CAircraftSituation::NotSet)
+        {
+            const CClient client = this->getClientOrDefaultForCallsign(callsign);
+            if (client.hasCapability(CClient::FsdWithGroundFlag))
+            {
+                // we rely on situation gnd.flag
+                correctedSituation.setOnGroundDetails(CAircraftSituation::InFromNetwork);
+            }
+            else if (client.hasCapability(CClient::FsdWithAircraftConfig))
+            {
+                const CAircraftPartsList parts = this->remoteAircraftParts(callsign);
+                if (!parts.isEmpty()) { correctedSituation.adjustGroundFlag(parts); }
+            }
+        }
+
+        if (situation.getOnGroundDetails() != CAircraftSituation::NotSet)
+        {
+            const bool vtol = this->isVtolAircraft(callsign);
+            const CLength cg = this->getCG(callsign);
+            correctedSituation.guessOnGround(vtol, cg);
+        }
 
         // list from new to old
         QWriteLocker lock(&m_lockSituations);
