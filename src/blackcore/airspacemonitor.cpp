@@ -189,19 +189,19 @@ namespace BlackCore
     bool CAirspaceMonitor::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockParts);
-        return m_aircraftSupportingParts.contains(callsign);
+        return m_aircraftWithParts.contains(callsign);
     }
 
     int CAirspaceMonitor::getRemoteAircraftSupportingPartsCount() const
     {
         QReadLocker l(&m_lockParts);
-        return m_aircraftSupportingParts.size();
+        return m_aircraftWithParts.size();
     }
 
     CCallsignSet CAirspaceMonitor::remoteAircraftSupportingParts() const
     {
         QReadLocker l(&m_lockParts);
-        return m_aircraftSupportingParts;
+        return m_aircraftWithParts;
     }
 
     QList<QMetaObject::Connection> CAirspaceMonitor::connectRemoteAircraftProviderSignals(
@@ -592,7 +592,7 @@ namespace BlackCore
         }
 
         // locked members
-        { QWriteLocker l(&m_lockParts); m_partsByCallsign.clear(); m_aircraftSupportingParts.clear(); }
+        { QWriteLocker l(&m_lockParts); m_partsByCallsign.clear(); m_aircraftWithParts.clear(); }
         { QWriteLocker l(&m_lockSituations); m_situationsByCallsign.clear(); }
         { QWriteLocker l(&m_lockMessages); m_reverseLookupMessages.clear(); }
         { QWriteLocker l(&m_lockAircraft); m_aircraftInRange.clear(); }
@@ -1153,7 +1153,7 @@ namespace BlackCore
         // in case of inconsistencies I always remove here
         this->removeFromAircraftCachesAndLogs(callsign);
 
-        { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftSupportingParts.remove(callsign); }
+        { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftWithParts.remove(callsign); }
         { QWriteLocker l2(&m_lockSituations); m_situationsByCallsign.remove(callsign); }
         { QWriteLocker l4(&m_lockPartsHistory); m_aircraftPartsHistory.remove(callsign); }
         this->removeClient(callsign);
@@ -1300,7 +1300,7 @@ namespace BlackCore
             correctiveParts = partsList;
 
             // aircraft supporting parts
-            m_aircraftSupportingParts.insert(callsign); // mark as callsign which supports parts
+            m_aircraftWithParts.insert(callsign); // mark as callsign which supports parts
 
             // check sort order
             Q_ASSERT_X(partsList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");

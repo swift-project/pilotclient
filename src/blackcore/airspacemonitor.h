@@ -241,9 +241,9 @@ namespace BlackCore
         QMap<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
 
         // hashs, because not sorted by key but keeping order
-        CSituationsPerCallsign            m_situationsByCallsign;    //!< situations, for performance reasons per callsign, thread safe access required
-        CPartsPerCallsign                 m_partsByCallsign;         //!< parts, for performance reasons per callsign, thread safe access required
-        BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts, thread safe access required
+        CSituationsPerCallsign            m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
+        CPartsPerCallsign                 m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
+        BlackMisc::Aviation::CCallsignSet m_aircraftWithParts;    //!< aircraft supporting parts, thread safe access required
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
 
