@@ -572,12 +572,11 @@ namespace BlackMisc
         for (const QString &sourceFile : as_const(comp.sameNameInSource))
         {
             const QFileInfo source(sourceFile);
-            const QFileInfo target(*targetIt++);
-            if (source.lastModified() == target.lastModified() && source.size() == target.size())
-            {
-                // same
-            }
-            else if (source.lastModified() < target.lastModified())
+            const QFileInfo target(*targetIt);
+            ++targetIt; // avoid cpp check warning
+            if (source.lastModified() == target.lastModified() && source.size() == target.size()) { continue; }
+
+            if (source.lastModified() < target.lastModified())
             {
                 comp.newerInTarget.insert(target.canonicalFilePath());
             }
