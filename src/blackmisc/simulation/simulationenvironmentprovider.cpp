@@ -17,15 +17,20 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        bool ISimulationEnvironmentProvider::rememberGroundElevation(const ICoordinateGeodetic &elevationCoordinate, const PhysicalQuantities::CLength &epsilon)
+        bool ISimulationEnvironmentProvider::rememberGroundElevation(const ICoordinateGeodetic &elevationCoordinate, const CLength &epsilon)
         {
             {
                 QReadLocker l(&m_lockElvCoordinates);
-                if (m_elvCoordinates.containsObjectInRange(elevationCoordinate, epsilon)) { return false; }
+                if (m_elvCoordinates.containsObjectInRange(elevationCoordinate, minRange(epsilon))) { return false; }
             }
             {
+                // we keep latest at fron
+                // * we assume we find them faster
+                // * and need the more frequently (the recent ones)
                 QWriteLocker l(&m_lockElvCoordinates);
-                m_elvCoordinates.push_back(elevationCoordinate);
+                if (m_elvCoordinates.size() > MaxElevations) { m_elvCoordinates.pop_back(); }
+                m_elvCoordinates.push_front(elevationCoordinate);
+
             }
             return true;
         }
@@ -40,13 +45,14 @@ namespace BlackMisc
         {
             if (cs.isEmpty()) { return false; }
             const bool remove = cg.isNull();
-            QWriteLocker l(&m_lockCG);
             if (remove)
             {
+                QWriteLocker l(&m_lockCG);
                 m_cgs.remove(cs);
             }
             else
             {
+                QWriteLocker l(&m_lockCG);
                 m_cgs[cs] = cg;
             }
             return true;
@@ -56,6 +62,13 @@ namespace BlackMisc
         {
             QWriteLocker l(&m_lockCG);
             return m_cgs.remove(cs);
+        }
+
+        CLength ISimulationEnvironmentProvider::minRange(const CLength &range)
+        {
+            return (range < CElevationPlane::singlePointRadius()) ?
+                   CElevationPlane::singlePointRadius() :
+                   range;
         }
 
         CCoordinateGeodeticList ISimulationEnvironmentProvider::getElevationCoordinates() const
@@ -72,15 +85,17 @@ namespace BlackMisc
             coordinates.sortByEuclideanDistanceSquared(referenceCoordinate);
             coordinates.truncate(maxNumber);
             const int delta = size - coordinates.size();
-            QWriteLocker l(&m_lockElvCoordinates);
-            m_elvCoordinates = coordinates;
+            {
+                QWriteLocker l(&m_lockElvCoordinates);
+                m_elvCoordinates = coordinates;
+            }
             return delta;
         }
 
         CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
         {
-            const CLength r = range < CElevationPlane::singlePointRadius() ? CElevationPlane::singlePointRadius() : range;
-            return this->getElevationCoordinates().findClosestWithinRange(reference, r);
+            const CCoordinateGeodetic coordinate = this->getElevationCoordinates().findClosestWithinRange(reference, minRange(range));
+            return CElevationPlane(coordinate, reference); // plane with radis = distnace to reference
         }
 
         CSimulatorPluginInfo ISimulationEnvironmentProvider::getSimulatorPluginInfo() const
@@ -109,8 +124,16 @@ namespace BlackMisc
 
         bool ISimulationEnvironmentProvider::hasCG(const Aviation::CCallsign &callsign) const
         {
+            if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
             return m_cgs.contains(callsign);
+        }
+
+        bool ISimulationEnvironmentProvider::hasSameCG(const CLength &cg, const CCallsign &callsign) const
+        {
+            if (callsign.isEmpty()) { return false; }
+            QReadLocker l(&m_lockCG);
+            return m_cgs[callsign] == cg;
         }
 
         ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) : m_simulatorPluginInfo(pluginInfo)

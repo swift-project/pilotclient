@@ -52,10 +52,16 @@ namespace BlackMisc
             CAircraftModel getDefaultModel() const;
 
             //! Get CG per callsign, NULL if not found
+            //! \threadsafe
             PhysicalQuantities::CLength getCG(const Aviation::CCallsign &callsign) const;
 
             //! Has a CG?
+            //! \threadsafe
             bool hasCG(const Aviation::CCallsign &callsign) const;
+
+            //! Has the same CG?
+            //! \threadsafe
+            bool hasSameCG(const PhysicalQuantities::CLength &cg, const Aviation::CCallsign &callsign) const;
 
         protected:
             //! Ctor
@@ -63,18 +69,22 @@ namespace BlackMisc
 
             //! New plugin info and default model
             //! \remark normally only used by emulated driver
+            //! \threadsafe
             void setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel);
 
             //! Default model
+            //! \threadsafe
             void setDefaultModel(const CAircraftModel &defaultModel);
 
             //! Clear default model
+            //! \threadsafe
             void clearDefaultModel();
 
             //! Clear elevations
             void clearElevations();
 
             //! Clear CGs
+            //! \threadsafe
             void clearCGs();
 
             //! Clear data
@@ -101,6 +111,9 @@ namespace BlackMisc
             //! Remove a CG
             //! \threadsafe
             int removeCG(const Aviation::CCallsign &cs);
+
+            //! Min.range considered as single point
+            static PhysicalQuantities::CLength minRange(const PhysicalQuantities::CLength &range);
 
             static constexpr int MaxElevations = 1000;  //!< How many elevations we keep
 
