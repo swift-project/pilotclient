@@ -79,7 +79,8 @@ namespace BlackMisc
 
         CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
         {
-            return this->getElevationCoordinates().findClosestWithinRange(reference, range);
+            const CLength r = range < CElevationPlane::singlePointRadius() ? CElevationPlane::singlePointRadius() : range;
+            return this->getElevationCoordinates().findClosestWithinRange(reference, r);
         }
 
         CSimulatorPluginInfo ISimulationEnvironmentProvider::getSimulatorPluginInfo() const
