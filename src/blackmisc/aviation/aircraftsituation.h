@@ -274,6 +274,9 @@ namespace BlackMisc
             //! Is moving? Means ground speed > epsilon
             bool isMoving() const;
 
+            //! Situation looks like an aircraft not near ground
+            bool canLikelySkipNearGroundInterpolation() const;
+
             //! Distance per time
             PhysicalQuantities::CLength getDistancePerTime(const PhysicalQuantities::CTime &time) const;
 

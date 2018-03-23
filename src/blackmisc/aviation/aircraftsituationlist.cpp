@@ -77,5 +77,20 @@ namespace BlackMisc
         {
             return this->findBy(&CAircraftSituation::hasInboundGroundInformation, hasGroundInfo);
         }
+
+        bool CAircraftSituationList::hasSituationWithoutGroundElevation() const
+        {
+            return this->contains(&CAircraftSituation::hasGroundElevation, false);
+        }
+
+        bool CAircraftSituationList::hasGroundElevationOutsideRange(const CLength &range) const
+        {
+            for (const CAircraftSituation &situation : *this)
+            {
+                if (!situation.hasGroundElevation()) { return true; }
+                if (situation.getGroundElevationPlane().getRadius() > range) { return true; }
+            }
+            return false;
+        }
     } // namespace
 } // namespace

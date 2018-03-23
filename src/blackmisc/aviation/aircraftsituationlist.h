@@ -62,6 +62,12 @@ namespace BlackMisc
 
             //! Find if having inbound information
             CAircraftSituationList findByInboundGroundInformation(bool hasGroundInfo) const;
+
+            //! Any situation without ground info
+            bool hasSituationWithoutGroundElevation() const;
+
+            //! Any situation outside range
+            bool hasGroundElevationOutsideRange(const PhysicalQuantities::CLength &range) const;
         };
     } // namespace
 } // namespace

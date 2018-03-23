@@ -8,6 +8,7 @@
  */
 
 #include "elevationplane.h"
+#include "coordinategeodetic.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/propertyindex.h"
 
@@ -25,6 +26,12 @@ namespace BlackMisc
                          this->longitude().valueRoundedWithUnit(6, i18n),
                          this->geodeticHeight().valueRoundedWithUnit(6, i18n),
                          m_radius.valueRoundedWithUnit(2, i18n));
+        }
+
+        CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate) :
+            CCoordinateGeodetic(coordinate)
+        {
+            m_radius = this->calculateGreatCircleDistance(rangeCoordinate);
         }
 
         const CAltitude &CElevationPlane::getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const

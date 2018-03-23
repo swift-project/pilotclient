@@ -381,6 +381,12 @@ namespace BlackMisc
             return gsKmh >= 1.0;
         }
 
+        bool CAircraftSituation::canLikelySkipNearGroundInterpolation() const
+        {
+            if (this->getGroundSpeed().value(CSpeedUnit::kts()) > 250) { return true; }
+            return false;
+        }
+
         CLength CAircraftSituation::getDistancePerTime(const CTime &time) const
         {
             if (this->getGroundSpeed().isNull()) { return CLength(0, CLengthUnit::nullUnit()); }

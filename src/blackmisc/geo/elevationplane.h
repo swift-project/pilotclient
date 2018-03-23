@@ -21,8 +21,7 @@ namespace BlackMisc
     {
         //! Plane of same elevation, can be a single point or larger area (e.g. airport)
         //! \remark 100km/h 1sec => 28m
-        class BLACKMISC_EXPORT CElevationPlane :
-            public CValueObject<CElevationPlane, CCoordinateGeodetic>
+        class BLACKMISC_EXPORT CElevationPlane : public CCoordinateGeodetic
         {
         public:
             //! Properties by index
@@ -34,8 +33,11 @@ namespace BlackMisc
             //! Default constructor
             CElevationPlane() {}
 
+            //! Plane at given coordinates with range to 2nd coordinate
+            CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate);
+
             //! Constructors from CCoordinateGeodetic
-            using CValueObject<CElevationPlane, CCoordinateGeodetic>::CValueObject;
+            using CCoordinateGeodetic::CCoordinateGeodetic;
 
             //! Radius
             const PhysicalQuantities::CLength &getRadius() const { return m_radius; }
