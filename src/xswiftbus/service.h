@@ -19,11 +19,12 @@
 #include "dbusobject.h"
 #include "datarefs.h"
 #include "messages.h"
-#include "blackmisc/simulation/xplane/navdatareference.h"
+#include "navdatareference.h"
 #include <XPLM/XPLMNavigation.h>
 #include <QStringList>
 #include <QObject>
 #include <QList>
+#include <QFileInfo>
 
 class QTimer;
 
@@ -34,6 +35,68 @@ class QTimer;
 
 namespace XSwiftBus
 {
+
+    //! Simplified implementation of \sa BlackMisc::Simulation::CDistributor
+    class CDistributor
+    {
+    public:
+        CDistributor() = default;
+        CDistributor(const QString &distributor) : m_distributor(distributor) {}
+
+        bool hasDescription() const { return !m_description.isEmpty(); }
+        QString getDescription() const { return m_description; }
+
+    private:
+        QString m_distributor;
+        QString m_description;
+    };
+
+    //! Simplified implementation of \sa BlackMisc::Simulation::CAircraftModel
+    class CAircraftModel
+    {
+    public:
+        CAircraftModel() = default;
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::hasDescription
+        bool hasDescription() const { return !m_description.isEmpty(); }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::hasAircraftDesignator
+        bool hasAircraftDesignator() const { return !m_icao.isEmpty(); }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::getName
+        QString getName() const { return m_name; }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::getDistributor
+        CDistributor getDistributor() const { return m_distributor; }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::getAircraftIcaoCodeDesignator
+        QString getAircraftIcaoCodeDesignator() const { return m_icao; }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::getModelString
+        QString getModelString() const { return m_modelString; }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::setAircraftIcaoCode
+        void setAircraftIcaoCode(const QString &icao) { m_icao = icao; }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::setDescription
+        void setDescription(const QString &description) { m_description = description; }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::setName
+        void setName(const QString &name) { m_name = name; }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::setDistributor
+        void setDistributor(const CDistributor &distributor) { m_distributor = distributor; }
+
+        //! \copydoc BlackMisc::Simulation::CAircraftModel::setModelString
+        void setModelString(const QString &modelString) { m_modelString = modelString; }
+
+    private:
+        QString m_name;
+        QString m_icao;
+        QString m_description;
+        CDistributor m_distributor;
+        QString m_modelString;
+    };
 
     /*!
      * XSwiftBus service object which is accessible through DBus
@@ -244,9 +307,13 @@ namespace XSwiftBus
                                         const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts);
 
         CMessageBoxControl m_messages { 128, 128, 16 };
-        BlackMisc::Simulation::XPlane::CNavDataReferenceList m_airports;
+        std::vector<CNavDataReference> m_airports;
         QTimer *m_airportUpdater = nullptr;
         void readAirportsDatabase();
+
+        std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);
+
+        static CAircraftModel extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo);
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;

@@ -14,7 +14,6 @@
 #endif
 #include "traffic.h"
 #include "utils.h"
-#include "blackmisc/verify.h"
 #include "XPMPMultiplayer.h"
 #include "XPMPPlaneRenderer.h"
 #include <XPLM/XPLMProcessing.h>
@@ -22,6 +21,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QStringList>
+#include <cassert>
 #include <cstring>
 #include <cmath>
 
@@ -218,8 +218,7 @@ namespace XSwiftBus
         const QList<Plane *> planes = m_planesByCallsign.values();
         for (Plane *plane : planes)
         {
-            BLACK_VERIFY_X(plane, Q_FUNC_INFO, "Missing Plane");
-            if (!plane) { continue; }
+            assert(plane);
             XPMPDestroyPlane(plane->id);
             delete plane;
         }
@@ -281,9 +280,7 @@ namespace XSwiftBus
         const QList<Plane *> planes = m_planesByCallsign.values();
         for (const Plane *plane : planes)
         {
-            BLACK_VERIFY_X(plane, Q_FUNC_INFO, "Missing Plane");
-            if (!plane) { continue; }
-
+            assert(plane);
             double lat = plane->position.lat;
             double lon = plane->position.lon;
             double elevation = plane->position.elevation;

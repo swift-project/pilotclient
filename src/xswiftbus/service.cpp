@@ -8,16 +8,19 @@
  */
 
 #include "service.h"
-#include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
 #include <QDebug>
 #include <QTimer>
+#include <QRegularExpression>
+#include <QStringBuilder>
+#include <QDir>
 
 // clazy:excludeall=reserve-candidates
 
 namespace XSwiftBus
 {
+
     CService::CService(CDBusConnection *connection) : CDBusObject(connection)
     {
         registerDBusObjectPath(XSWIFTBUS_SERVICE_INTERFACENAME, XSWIFTBUS_SERVICE_OBJECTPATH);
@@ -33,7 +36,7 @@ namespace XSwiftBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        const auto model = BlackMisc::Simulation::XPlane::CAircraftModelLoaderXPlane::extractAcfProperties(path, QFileInfo(path));
+        const auto model = extractAcfProperties(path, QFileInfo(path));
         emitAircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode(), model.getModelString(), model.getName(), getAircraftDescription());
     }
 
@@ -82,7 +85,7 @@ namespace XSwiftBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        const auto model = BlackMisc::Simulation::XPlane::CAircraftModelLoaderXPlane::extractAcfProperties(path, QFileInfo(path));
+        const auto model = extractAcfProperties(path, QFileInfo(path));
         return model.getModelString();
     }
 
@@ -91,7 +94,7 @@ namespace XSwiftBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        const auto model = BlackMisc::Simulation::XPlane::CAircraftModelLoaderXPlane::extractAcfProperties(path, QFileInfo(path));
+        const auto model = extractAcfProperties(path, QFileInfo(path));
         return model.getName();
     }
 
@@ -138,8 +141,7 @@ namespace XSwiftBus
                 XPLMGetNavAidInfo(i, nullptr, &lat, &lon, nullptr, nullptr, nullptr, icao, nullptr, nullptr);
                 if (icao[0] != 0)
                 {
-                    using namespace BlackMisc::Math;
-                    m_airports.push_back(BlackMisc::Simulation::XPlane::CNavDataReference(i, lat, lon));
+                    m_airports.emplace_back(i, lat, lon);
                 }
             }
         }
@@ -147,15 +149,14 @@ namespace XSwiftBus
 
     void CService::updateAirportsInRange()
     {
-        if (m_airports.isEmpty())
+        if (m_airports.empty())
         {
             readAirportsDatabase();
         }
-        using namespace BlackMisc::Math;
-        using namespace BlackMisc::Geo;
         std::vector<std::string> icaos, names;
         std::vector<double> lats, lons, alts;
-        for (const auto &navref : m_airports.findClosest(20, CCoordinateGeodetic(getLatitude(), getLongitude(), 0)))
+        std::vector<CNavDataReference> closestAirports = findClosestAirports(20, getLatitude(), getLongitude());
+        for (const auto &navref : closestAirports)
         {
             float lat, lon, alt;
             char icao[32], name[256];
@@ -659,6 +660,123 @@ namespace XSwiftBus
         signalAirportsInRangeUpdated.appendArgument(lons);
         signalAirportsInRangeUpdated.appendArgument(alts);
         sendDBusMessage(signalAirportsInRangeUpdated);
+    }
+
+    std::vector<CNavDataReference> CService::findClosestAirports(int number, double latitude, double longitude)
+    {
+        CNavDataReference ref(0, latitude, longitude);
+        auto compareFunction = [ & ](const CNavDataReference & a, const CNavDataReference & b)
+        {
+            return calculateGreatCircleDistance(a, ref) < calculateGreatCircleDistance(b, ref);
+        };
+
+        auto closestAirports = m_airports;
+        std::partial_sort(closestAirports.begin(), closestAirports.begin() + number, closestAirports.end(), compareFunction);
+        closestAirports.resize(number);
+        return closestAirports;
+    }
+
+    QString descriptionForFlyableModel(const CAircraftModel &model)
+    {
+        if (!model.getName().isEmpty())
+        {
+            if (model.getDistributor().hasDescription() && !model.getName().contains(model.getDistributor().getDescription()))
+            {
+                return QStringLiteral("[ACF] ") % model.getName() % QStringLiteral(" by ") % model.getDistributor().getDescription();
+            }
+            else
+            {
+                return QStringLiteral("[ACF] ") % model.getName();
+            }
+        }
+        else if (model.hasAircraftDesignator())
+        {
+            if (model.getDistributor().hasDescription())
+            {
+                return QStringLiteral("[ACF] ") % model.getAircraftIcaoCodeDesignator() % QStringLiteral(" by ") % model.getDistributor().getDescription();
+            }
+            else
+            {
+                return QStringLiteral("[ACF] ") % model.getAircraftIcaoCodeDesignator();
+            }
+        }
+        return QStringLiteral("[ACF]");
+    }
+
+    QString stringForFlyableModel(const CAircraftModel &model, const QFileInfo &acfFile)
+    {
+        if (model.getDistributor().hasDescription())
+        {
+            if (!model.getName().isEmpty())
+            {
+                if (model.getName().contains(model.getDistributor().getDescription()))
+                {
+                    return model.getName();
+                }
+                else
+                {
+                    return model.getDistributor().getDescription() % ' ' % model.getName();
+                }
+            }
+            else if (model.hasAircraftDesignator())
+            {
+                return model.getDistributor().getDescription() % ' ' % model.getAircraftIcaoCodeDesignator();
+            }
+        }
+        return acfFile.dir().dirName() % ' ' % acfFile.baseName();
+    }
+
+    CAircraftModel CService::extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo)
+    {
+        CAircraftModel model;
+        QFile file(filePath);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return model; }
+
+        QTextStream ts(&file);
+        if (ts.readLine() == "I" && ts.readLine().contains("version") && ts.readLine() == "ACF")
+        {
+            while (!ts.atEnd())
+            {
+                const QString line = ts.readLine();
+                QVector<QStringRef> tokens = line.splitRef(' ', QString::SkipEmptyParts);
+                if (tokens.size() < 3 || tokens.at(0) != QLatin1String("P")) { continue; }
+                if (tokens.at(1) == QLatin1String("acf/_ICAO"))
+                {
+                    const QString icao(tokens.at(2).toString());
+                    model.setAircraftIcaoCode(icao);
+                }
+                else if (tokens.at(1) == QLatin1String("acf/_descrip"))
+                {
+                    const QString desc(line.mid(tokens.at(2).position()));
+                    model.setDescription("[ACF] " % desc);
+                }
+                else if (tokens.at(1) == QLatin1String("acf/_name"))
+                {
+                    const QString name(line.mid(tokens.at(2).position()));
+                    model.setName(name);
+                }
+                else if (tokens.at(1) == QLatin1String("acf/_studio"))
+                {
+                    const CDistributor dist(line.mid(tokens.at(2).position()));
+                    model.setDistributor(dist);
+                }
+                else if (tokens.at(1) == QLatin1String("acf/_author"))
+                {
+                    if (model.getDistributor().hasDescription()) { continue; }
+                    thread_local const QRegularExpression end("\\W\\s", QRegularExpression::UseUnicodePropertiesOption);
+                    QString author = line.mid(tokens.at(2).position());
+                    author = author.left(author.indexOf(end)).trimmed();
+                    if (author.isEmpty()) { continue; }
+                    const CDistributor dist(author);
+                    model.setDistributor(dist);
+                }
+            }
+        }
+        file.close();
+
+        model.setModelString(stringForFlyableModel(model, fileInfo));
+        if (!model.hasDescription()) { model.setDescription(descriptionForFlyableModel(model)); }
+        return model;
     }
 
 }
