@@ -78,6 +78,13 @@ namespace BlackCore
         ISimulator::registerHelp();
     }
 
+    void ISimulator::rememberElevationAndCG(const CCallsign &callsign, const Geo::CElevationPlane &elevation, const CLength &cg)
+    {
+        if (callsign.isEmpty()) { return; }
+        if (!elevation.isNull()) { this->rememberGroundElevation(elevation); }
+        if (!cg.isNull() && !this->hasSameCG(cg, callsign)) { this->insertCG(cg, callsign); }
+    }
+
     void ISimulator::emitSimulatorCombinedStatus(SimulatorStatus oldStatus)
     {
         const SimulatorStatus newStatus = this->getSimulatorStatus();

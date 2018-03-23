@@ -485,12 +485,9 @@ namespace BlackSimPlugin
             }
 
             // CElevationPlane: deg, deg, feet
-            CElevationPlane elevation(remoteAircraftData.latitude, remoteAircraftData.longitude, remoteAircraftData.elevation);
+            CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt);
             elevation.setSinglePointRadius();
-
-            // set it in the remote aircraft provider and in elevation provider
-            this->updateAircraftGroundElevation(simObject.getCallsign(), elevation);
-            this->rememberGroundElevation(elevation);
+            this->rememberElevationAndCG(simObject.getCallsign(), elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));
         }
 
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)

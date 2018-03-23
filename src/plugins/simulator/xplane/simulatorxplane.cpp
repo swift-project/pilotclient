@@ -923,11 +923,7 @@ namespace BlackSimPlugin
 
             CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()), CLongitude(longitudeDeg, CAngleUnit::deg()), CAltitude(elevationMeters, CLengthUnit::m()));
             elevation.setSinglePointRadius();
-            this->rememberGroundElevation(elevation);
-            this->insertCG(CLength(modelVerticalOffsetMeters, CLengthUnit::m()), callsign);
-
-            // set it in the remote aircraft provider
-            this->updateAircraftGroundElevation(cs, elevation);
+            this->rememberElevationAndCG(callsign, elevation, CLength(modelVerticalOffsetMeters, CLengthUnit::m()));
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

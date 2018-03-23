@@ -258,6 +258,9 @@ namespace BlackCore
         //! Remove all remote aircraft
         virtual int physicallyRemoveAllRemoteAircraft() = 0;
 
+        //! Set elevation and CG in the providers
+        void rememberElevationAndCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &cg);
+
         //! Emit the combined status
         //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal status values no signal will be sent
         //! \sa simulatorStatusChanged;
