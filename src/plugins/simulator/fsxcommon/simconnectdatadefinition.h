@@ -133,14 +133,14 @@ namespace BlackSimPlugin
         //! Data for AI object sent back from simulator
         struct DataDefinitionRemoteAircraftSimData
         {
-            double latitude;   //!< Latitude (deg)
-            double longitude;  //!< Longitude (deg)
-            double altitude;   //!< Altitude (ft)
-            double elevation;  //!< Elevation (ft)
-            double cgToGround; //!< Static CG to ground (ft)
+            double latitudeDeg;  //!< Latitude (deg)
+            double longitudeDeg; //!< Longitude (deg)
+            double altitudeFt;   //!< Altitude (ft)
+            double elevationFt;  //!< Elevation (ft)
+            double cgToGroundFt; //!< Static CG to ground (ft)
 
             //! Above ground ft
-            double aboveGround() const { return altitude - elevation; }
+            double aboveGround() const { return altitudeFt - elevationFt; }
         };
 
         //! Data struct simulator environment
