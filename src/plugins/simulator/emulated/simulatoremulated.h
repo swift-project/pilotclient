@@ -124,12 +124,6 @@ namespace BlackSimPlugin
             // just logged
             virtual int physicallyRemoveAllRemoteAircraft() override;
 
-            //! \name Remote aircraft provider overrides
-            //! @{
-            virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-            virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
-            //! @}
-
             //! \copydoc BlackCore::CSimulatorCommon::parseDetails
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 

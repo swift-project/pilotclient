@@ -32,13 +32,6 @@
 
 namespace BlackMisc
 {
-    namespace Aviation
-    {
-        class CAircraftParts;
-        class CAircraftSituation;
-        class CCallsign;
-    }
-
     namespace Simulation
     {
         //! Dummy implementation for testing purpose, not thread safe
@@ -56,8 +49,14 @@ namespace BlackMisc
             //! For testing, add new situation and fire signals
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
+            //! For testing, add new situation and fire signals
+            void insertNewSituations(const BlackMisc::Aviation::CAircraftSituationList &situations);
+
             //! For testing, add new parts and fire signals
             void insertNewAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
+
+            //! For testing, add new parts and fire signals
+            void insertNewAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftPartsList &partsList);
 
             //! Clear all data
             void clear();
@@ -68,17 +67,21 @@ namespace BlackMisc
             virtual Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isAircraftInRange(const Aviation::CCallsign &callsign) const override;
+            virtual bool isVtolAircraft(const Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
             virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
+            virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const override;
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
+            virtual int getRemoteAircraftSupportingPartsCount() const override;
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
             virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
-                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
+                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,
                 std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)>    addedPartsSlot,
-                std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
@@ -113,7 +116,6 @@ namespace BlackMisc
             BlackMisc::Aviation::CAircraftSituationList m_situations;
             CPartsPerCallsign m_parts;
         };
-
     } // namespace
 } // namespace
 

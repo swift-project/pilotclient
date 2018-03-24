@@ -76,6 +76,12 @@ namespace BlackMisc
             return this->provider()->remoteAircraftParts(callsign, cutoffTimeBefore);
         }
 
+        int CRemoteAircraftAware::remoteAircraftPartsCount(const CCallsign &callsign, qint64 cutoffTimeBefore) const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->remoteAircraftPartsCount(callsign, cutoffTimeBefore);
+        }
+
         CCallsignSet CRemoteAircraftAware::remoteAircraftSupportingParts() const
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");

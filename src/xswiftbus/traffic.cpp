@@ -246,7 +246,7 @@ namespace XSwiftBus
         );
         situation.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
         situation.setTimeOffsetMs(timeOffset);
-        plane->interpolator.addAircraftSituation(situation);
+        // plane->interpolator.addAircraftSituation(situation);
     }
 
     void CTraffic::setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
@@ -289,11 +289,11 @@ namespace XSwiftBus
         if (plane->hasSurfaces) { plane->pendingSurfaces.push_back(surfaces); }
         else { surfaces.second(plane); }
 
-        BlackMisc::Aviation::CAircraftParts parts;
-        parts.setOnGround(onGround);
-        parts.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
-        parts.setTimeOffsetMs(timeOffset);
-        plane->interpolator.addAircraftParts(parts);
+//        BlackMisc::Aviation::CAircraftParts parts;
+//        parts.setOnGround(onGround);
+//        parts.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+//        parts.setTimeOffsetMs(timeOffset);
+//        plane->interpolator.addAircraftParts(parts);
     }
 
     void CTraffic::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,

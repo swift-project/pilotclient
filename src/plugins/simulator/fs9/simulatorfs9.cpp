@@ -415,20 +415,6 @@ namespace BlackSimPlugin
             m_fsuipc->write(weatherGrid);
         }
 
-        void CSimulatorFs9::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
-        {
-            const auto it = m_hashFs9Clients.find(situation.getCallsign());
-            if (it == m_hashFs9Clients.end()) { return; }
-            QTimer::singleShot(0, it->data(), [client = *it, situation] { client->getInterpolator()->addAircraftSituation(situation); });
-        }
-
-        void CSimulatorFs9::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
-        {
-            const auto it = m_hashFs9Clients.find(callsign);
-            if (it == m_hashFs9Clients.end()) { return; }
-            QTimer::singleShot(0, it->data(), [client = *it, parts] { client->getInterpolator()->addAircraftParts(parts); });
-        }
-
         CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
                 const QSharedPointer<CFs9Host> &fs9Host,
                 const QSharedPointer<CLobbyClient> &lobbyClient) :

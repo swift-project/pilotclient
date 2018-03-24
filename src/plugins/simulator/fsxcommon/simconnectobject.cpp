@@ -28,38 +28,6 @@ namespace BlackSimPlugin
             m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign()))
         {
             m_interpolator->attachLogger(logger);
-
-            // if available set situation and parts
-            if (aircraft.isPartsSynchronized()) { this->addAircraftParts(aircraft.getParts()); }
-            if (aircraft.getSituation().hasValidTimestamp()) { this->addAircraftSituation(aircraft.getSituation()); }
-        }
-
-        CSimConnectObject::CSimConnectObject(const CAircraftSituation &situation) :
-            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(situation.getCallsign()))
-        {
-            if (situation.hasValidTimestamp()) { this->addAircraftSituation(situation); }
-        }
-
-        CSimConnectObject::CSimConnectObject(const CAircraftParts &parts, const CCallsign &callsign) :
-            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(callsign))
-        {
-            if (parts.hasValidTimestamp()) { this->addAircraftParts(parts); }
-        }
-
-        void CSimConnectObject::addAircraftParts(const CAircraftParts &parts)
-        {
-            Q_ASSERT(m_interpolator);
-            Q_ASSERT(parts.hasValidTimestamp());
-            m_interpolator->addAircraftParts(parts);
-            m_aircraft.setParts(parts);
-        }
-
-        void CSimConnectObject::addAircraftSituation(const CAircraftSituation &situation)
-        {
-            Q_ASSERT(m_interpolator);
-            Q_ASSERT(situation.hasValidTimestamp());
-            m_interpolator->addAircraftSituation(situation);
-            m_aircraft.setSituation(situation); // update with last situation
         }
 
         void CSimConnectObject::invalidatePartsAsSent()

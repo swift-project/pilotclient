@@ -34,12 +34,6 @@ namespace BlackSimPlugin
                               DWORD requestId,
                               BlackMisc::Simulation::CInterpolationLogger *logger);
 
-            //! Constructor providing initial situation
-            CSimConnectObject(const BlackMisc::Aviation::CAircraftSituation &situation);
-
-            //! Constructor providing initial parts
-            CSimConnectObject(const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Aviation::CCallsign &callsign);
-
             //! Destructor
             ~CSimConnectObject() {}
 
@@ -54,12 +48,6 @@ namespace BlackSimPlugin
 
             //! Set the aircraft
             void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) { m_aircraft = aircraft; }
-
-            //! Add parts for interpolator
-            void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
-
-            //! Add situation for interpolator
-            void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! Get current lights (requested from simulator)
             const BlackMisc::Aviation::CAircraftLights &getCurrentLightsInSimulator() const { return m_currentLightsInSim; }

@@ -101,7 +101,11 @@ namespace BlackMisc
 
             //! All parts (per callsign, time history)
             //! \threadsafe
-            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const = 0;
+            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const = 0;
+
+            //! All parts (per callsign, time history)
+            //! \threadsafe
+            virtual int remoteAircraftPartsCount(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const = 0;
 
             //! Is remote aircraft supporting parts?
             //! \threadsafe
@@ -220,14 +224,17 @@ namespace BlackMisc
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
             BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const;
 
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
+            int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const;
+
             //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
-            BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const;
+            BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const;
+
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftPartsCount
+            int remoteAircraftPartsCount(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
             BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const;
-
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
-            int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
             bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;

@@ -80,12 +80,6 @@ namespace BlackSimPlugin
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! @}
 
-            //! \name Remote aircraft provider overrides
-            //! @{
-            virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-            virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
-            //! @}
-
         private:
             //! Dispatch FSUIPC reading
             //! \remark very frequently called

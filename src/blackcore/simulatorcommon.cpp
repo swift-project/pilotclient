@@ -60,8 +60,8 @@ namespace BlackCore
         m_remoteAircraftProviderConnections.append(
             CRemoteAircraftAware::provider()->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
-                std::bind(&CSimulatorCommon::rapOnRemoteProviderAddedAircraftSituation, this, std::placeholders::_1),
-                std::bind(&CSimulatorCommon::rapOnRemoteProviderAddedAircraftParts, this, std::placeholders::_1, std::placeholders::_2),
+                nullptr,
+                nullptr,
                 std::bind(&CSimulatorCommon::rapOnRemoteProviderRemovedAircraft, this, std::placeholders::_1),
                 std::bind(&CSimulatorCommon::rapOnRecalculatedRenderedAircraft, this, std::placeholders::_1))
         );
@@ -561,8 +561,6 @@ namespace BlackCore
         m_statsUpdateAircraftTimeTotalMs = 0;
         m_statsPhysicallyAddedAircraft = 0;
         m_statsPhysicallyRemovedAircraft = 0;
-        m_statsPartsAdded = 0;
-        m_statsSituationAdded = 0;
     }
 
     CStatusMessageList CSimulatorCommon::debugVerifyStateAfterAllAircraftRemoved() const
@@ -635,17 +633,6 @@ namespace BlackCore
         }
     }
 
-    void CSimulatorCommon::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
-    {
-        Q_UNUSED(situation);
-    }
-
-    void CSimulatorCommon::onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
-    {
-        Q_UNUSED(callsign);
-        Q_UNUSED(parts);
-    }
-
     void CSimulatorCommon::reset()
     {
         this->clearAllRemoteAircraftData();
@@ -698,20 +685,6 @@ namespace BlackCore
     {
         if (!this->isConnected()) return;
         this->onRecalculatedRenderedAircraft(snapshot);
-    }
-
-    void CSimulatorCommon::rapOnRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
-    {
-        if (!this->isConnected()) return;
-        m_statsSituationAdded++;
-        this->onRemoteProviderAddedAircraftSituation(situation);
-    }
-
-    void CSimulatorCommon::rapOnRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
-    {
-        if (!this->isConnected()) return;
-        m_statsPartsAdded++;
-        this->onRemoteProviderAddedAircraftParts(callsign, parts);
     }
 
     void CSimulatorCommon::rapOnRemoteProviderRemovedAircraft(const CCallsign &callsign)

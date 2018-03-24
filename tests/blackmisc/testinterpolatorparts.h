@@ -45,10 +45,10 @@ namespace BlackMiscTest
 
     private:
         //! Test parts
-        static BlackMisc::Aviation::CAircraftParts getTestParts(int number, qint64 ts, qint64 deltaT, bool onGround);
+        static BlackMisc::Aviation::CAircraftParts createTestParts(int number, qint64 ts, qint64 deltaT, bool onGround);
 
         //! Test situation for testing
-        static BlackMisc::Aviation::CAircraftSituation getTestSituation(const BlackMisc::Aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset);
+        static BlackMisc::Aviation::CAircraftSituation createTestSituation(const BlackMisc::Aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset);
     };
 } // namespace
 

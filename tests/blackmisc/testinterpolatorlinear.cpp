@@ -15,6 +15,9 @@
  */
 
 #include "testinterpolatorlinear.h"
+#include "blackmisc/simulation/interpolator.h"
+#include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
@@ -23,18 +26,15 @@
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
-#include "blackmisc/compare.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/simulation/interpolator.h"
-#include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/compare.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -55,7 +55,9 @@ namespace BlackMiscTest
     void CTestInterpolatorLinear::basicInterpolatorTests()
     {
         CCallsign cs("SWIFT");
+        CRemoteAircraftProviderDummy provider;
         CInterpolatorLinear interpolator(cs);
+        interpolator.setRemoteAircraftProvider(&provider);
 
         // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
@@ -68,14 +70,14 @@ namespace BlackMiscTest
             // check height above ground
             CLength hag = (s.getAltitude() - s.getGroundElevation());
             QVERIFY2(s.getHeightAboveGround() == hag, "Wrong elevation");
-            interpolator.addAircraftSituation(s);
+            provider.insertNewSituation(s);
         }
 
         constexpr int partsCount = 10;
         for (int i = partsCount - 1; i >= 0; i--)
         {
             CAircraftParts p(getTestParts(i, ts, deltaT));
-            interpolator.addAircraftParts(p);
+            provider.insertNewAircraftParts(cs, p);
         }
 
         // make sure signals are processed, if the interpolator depends on those signals

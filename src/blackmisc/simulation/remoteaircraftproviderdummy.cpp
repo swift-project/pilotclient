@@ -15,7 +15,7 @@
 #include "blackmisc/dictionary.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/variant.h"
-
+#include <QTimer>
 #include <QHash>
 
 using namespace BlackMisc::Aviation;
@@ -53,6 +53,16 @@ namespace BlackMisc
             return getAircraftInRangeForCallsign(callsign).getModel();
         }
 
+        bool CRemoteAircraftProviderDummy::isAircraftInRange(const CCallsign &callsign) const
+        {
+            return m_aircraft.containsCallsign(callsign);
+        }
+
+        bool CRemoteAircraftProviderDummy::isVtolAircraft(const CCallsign &callsign) const
+        {
+            return m_aircraft.findFirstByCallsign(callsign).isVtol();
+        }
+
         CAirspaceAircraftSnapshot CRemoteAircraftProviderDummy::getLatestAirspaceAircraftSnapshot() const
         {
             return CAirspaceAircraftSnapshot(m_aircraft);
@@ -64,6 +74,11 @@ namespace BlackMisc
             return m_parts.value(callsign).findBefore(cutoffTimeBefore);
         }
 
+        int CRemoteAircraftProviderDummy::remoteAircraftPartsCount(const CCallsign &callsign, qint64 cutoffTimeBefore) const
+        {
+            return this->remoteAircraftParts(callsign, cutoffTimeBefore).size();
+        }
+
         CAircraftSituationList CRemoteAircraftProviderDummy::remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const
         {
             return m_situations.findByCallsign(callsign);
@@ -72,6 +87,11 @@ namespace BlackMisc
         int CRemoteAircraftProviderDummy::remoteAircraftSituationsCount(const CCallsign &callsign) const
         {
             return remoteAircraftSituations(callsign).size();
+        }
+
+        int CRemoteAircraftProviderDummy::getRemoteAircraftSupportingPartsCount() const
+        {
+            return m_parts.keys().size();
         }
 
         CCallsignSet CRemoteAircraftProviderDummy::remoteAircraftSupportingParts() const
@@ -95,9 +115,9 @@ namespace BlackMisc
             Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
             QList<QMetaObject::Connection> c(
             {
-                connect(this, &CRemoteAircraftProviderDummy::addedRemoteAircraftSituation, receiver, situationSlot) ,
-                connect(this, &CRemoteAircraftProviderDummy::addedRemoteAircraftParts, receiver, partsSlot) ,
-                connect(this, &CRemoteAircraftProviderDummy::removedRemoteAircraft, receiver, removedAircraftSlot) ,
+                connect(this, &CRemoteAircraftProviderDummy::addedRemoteAircraftSituation, receiver, situationSlot),
+                connect(this, &CRemoteAircraftProviderDummy::addedRemoteAircraftParts, receiver, partsSlot),
+                connect(this, &CRemoteAircraftProviderDummy::removedRemoteAircraft, receiver, removedAircraftSlot),
                 connect(this, &CRemoteAircraftProviderDummy::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot)
             });
             return c;
@@ -106,7 +126,7 @@ namespace BlackMisc
         bool CRemoteAircraftProviderDummy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRendering));
-            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
@@ -114,7 +134,7 @@ namespace BlackMisc
         {
             Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::from(model));
-            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
@@ -122,34 +142,34 @@ namespace BlackMisc
         {
             Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexNetworkModel, CVariant::from(model));
-            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
         bool CRemoteAircraftProviderDummy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionUpdates)
         {
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositionUpdates));
-            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
         bool CRemoteAircraftProviderDummy::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexRendered, CVariant::fromValue(rendered));
-            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
         bool CRemoteAircraftProviderDummy::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
             CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundElevationPlane }, CVariant::fromValue(elevation));
-            const int c = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int c = m_aircraft.applyIfCallsign(callsign, vm);
             return c > 0;
         }
 
         void CRemoteAircraftProviderDummy::updateMarkAllAsNotRendered()
         {
-            this->m_aircraft.markAllAsNotRendered();
+            m_aircraft.markAllAsNotRendered();
         }
 
         CStatusMessageList CRemoteAircraftProviderDummy::getReverseLookupMessages(const CCallsign &callsign) const
@@ -186,14 +206,39 @@ namespace BlackMisc
 
         void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)
         {
-            this->m_situations.push_front(situation);
+            m_situations.push_frontKeepLatestAdjustedFirst(situation);
             emit addedRemoteAircraftSituation(situation);
+        }
+
+        void CRemoteAircraftProviderDummy::insertNewSituations(const CAircraftSituationList &situations)
+        {
+            for (const CAircraftSituation &situation : situations)
+            {
+                m_situations.push_frontKeepLatestAdjustedFirst(situation);
+                QTimer::singleShot(0, this, [ = ]
+                {
+                    emit this->addedRemoteAircraftSituation(situation);
+                });
+            }
         }
 
         void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
         {
-            this->m_parts[callsign].push_front(parts);
+            m_parts[callsign].push_frontKeepLatestAdjustedFirst(parts);
             emit addedRemoteAircraftParts(callsign, parts);
+        }
+
+        void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CCallsign &callsign, const CAircraftPartsList &partsList)
+        {
+            CAircraftPartsList &pl = m_parts[callsign];
+            for (const CAircraftParts &parts : partsList)
+            {
+                pl.push_frontKeepLatestAdjustedFirst(parts);
+                QTimer::singleShot(0, this, [ = ]
+                {
+                    emit this->addedRemoteAircraftParts(callsign, parts);
+                });
+            }
         }
 
         void CRemoteAircraftProviderDummy::clear()
@@ -202,6 +247,5 @@ namespace BlackMisc
             m_parts.clear();
             m_aircraft.clear();
         }
-
     } // namespace
 } // namespace

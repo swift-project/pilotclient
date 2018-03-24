@@ -1465,46 +1465,6 @@ namespace BlackSimPlugin
             CSimulatorFsCommon::clearAllRemoteAircraftData();
         }
 
-        void CSimulatorFsxCommon::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
-        {
-            if (m_simConnectObjects.contains(situation.getCallsign()))
-            {
-                m_simConnectObjects[situation.getCallsign()].addAircraftSituation(situation);
-            }
-            else
-            {
-                // trace for future usage
-                if (m_simConnectObjectsPositionAndPartsTraces.contains(situation.getCallsign()))
-                {
-                    m_simConnectObjectsPositionAndPartsTraces[situation.getCallsign()].addAircraftSituation(situation);
-                }
-                else
-                {
-                    m_simConnectObjectsPositionAndPartsTraces.insert(situation.getCallsign(), CSimConnectObject(situation));
-                }
-            }
-        }
-
-        void CSimulatorFsxCommon::onRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
-        {
-            if (m_simConnectObjects.contains(callsign))
-            {
-                m_simConnectObjects[callsign].addAircraftParts(parts);
-            }
-            else
-            {
-                // trace for future usage
-                if (m_simConnectObjectsPositionAndPartsTraces.contains(callsign))
-                {
-                    m_simConnectObjectsPositionAndPartsTraces[callsign].addAircraftParts(parts);
-                }
-                else
-                {
-                    m_simConnectObjectsPositionAndPartsTraces.insert(callsign, CSimConnectObject(parts, callsign));
-                }
-            }
-        }
-
         QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
         {
             static const QString positionStr("Lat: %1deg lng: %2deg alt: %3ft pitch: %4deg bank: %5deg hdg: %6deg airspeed: %7kts onGround: %8");

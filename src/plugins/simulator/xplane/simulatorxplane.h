@@ -108,12 +108,6 @@ namespace BlackSimPlugin
             static QDBusConnection connectionFromString(const QString &str);
 
         protected:
-            //! \name Remote aircraft provider overrides
-            //! @{
-            virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-            virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
-            //! @}
-
             //! \copydoc BlackCore::ISimulator::isConnected
             virtual bool isConnected() const override;
 

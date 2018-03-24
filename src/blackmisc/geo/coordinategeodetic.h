@@ -196,8 +196,8 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CCoordinateGeodetic : public CValueObject<CCoordinateGeodetic>, public ICoordinateGeodetic
         {
         public:
-            //! Default constructor
-            CCoordinateGeodetic() : CCoordinateGeodetic(0, 0, 0) {}
+            //! Default constructor (null coordinate)
+            CCoordinateGeodetic() {}
 
             //! Constructor by normal vector
             CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
@@ -260,7 +260,11 @@ namespace BlackMisc
             void setNormalVector(double x, double y, double z) { m_x = x; m_y = y; m_z = z; }
 
             //! Set to null
-            void setNull() { this->setNormalVector(0, 0, 0); }
+            void setNull()
+            {
+                this->setNormalVector(0, 0, 0);
+                m_geodeticHeight.setNull();
+            }
 
             //! Is null?
             virtual bool isNull() const override { return m_x == 0 && m_y == 0 && m_z == 0; }

@@ -314,23 +314,6 @@ namespace BlackSimPlugin
             return CSimulatorCommon::physicallyRemoveAllRemoteAircraft();
         }
 
-        void CSimulatorEmulated::onRemoteProviderAddedAircraftSituation(const CAircraftSituation &situation)
-        {
-            const CCallsign cs = situation.getCallsign();
-            if (!m_interpolators.contains(cs)) { return; }
-            CInterpolatorMulti *im = m_interpolators[cs];
-            Q_ASSERT_X(im, Q_FUNC_INFO, "no interpolator");
-            im->addAircraftSituation(situation);
-        }
-
-        void BlackSimPlugin::Emulated::CSimulatorEmulated::onRemoteProviderAddedAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
-        {
-            if (!m_interpolators.contains(callsign)) { return; }
-            CInterpolatorMulti *im = m_interpolators[callsign];
-            Q_ASSERT_X(im, Q_FUNC_INFO, "no interpolator");
-            im->addAircraftParts(parts);
-        }
-
         bool CSimulatorEmulated::parseDetails(const CSimpleCommandParser &parser)
         {
             if (m_monitorWidget && parser.isKnownCommand())

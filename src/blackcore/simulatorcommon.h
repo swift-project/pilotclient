@@ -112,12 +112,6 @@ namespace BlackCore
         //!  Counter removed aircraft
         int getStatisticsPhysicallyRemovedAircraft() const { return m_statsPhysicallyRemovedAircraft; }
 
-        //!  Counter situation added
-        int getStatisticsSituationAdded() const { return m_statsSituationAdded; }
-
-        //!  Counter added parts
-        int getStatisticsPartsAdded() const { return m_statsPartsAdded; }
-
     protected:
         //! Constructor
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -143,12 +137,6 @@ namespace BlackCore
         //! @{
         //! Recalculate the rendered aircraft, this happens when restrictions are applied (max. aircraft, range)
         virtual void onRecalculatedRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
-
-        //! Provider added situation
-        virtual void onRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-
-        //! Provider added parts
-        virtual void onRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
         //! @}
 
         //! Max.airports in range
@@ -232,8 +220,6 @@ namespace BlackCore
     private:
         // remote aircraft provider ("rap") bound
         void rapOnRecalculatedRenderedAircraft(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
-        void rapOnRemoteProviderAddedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void rapOnRemoteProviderAddedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
         void rapOnRemoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         // call with counters updated
@@ -255,8 +241,6 @@ namespace BlackCore
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)
         int m_statsPhysicallyAddedAircraft = 0;   //!< statistics, how many aircraft added
         int m_statsPhysicallyRemovedAircraft = 0; //!< statistics, how many aircraft removed
-        int m_statsPartsAdded = 0;                //!< statistics, how many aircraft parts added
-        int m_statsSituationAdded = 0;            //!< statistics, how many situations added
     };
 } // namespace
 

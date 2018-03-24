@@ -114,6 +114,12 @@ namespace BlackCore
             return m_airspace->remoteAircraftParts(callsign, cutoffTimeBefore);
         }
 
+        int CContextNetwork::remoteAircraftPartsCount(const CCallsign &callsign, qint64 cutoffTimeBefore) const
+        {
+            Q_ASSERT(m_airspace);
+            return m_airspace->remoteAircraftPartsCount(callsign, cutoffTimeBefore);
+        }
+
         int CContextNetwork::remoteAircraftSituationsCount(const CCallsign &callsign) const
         {
             Q_ASSERT(m_airspace);

@@ -53,12 +53,6 @@ namespace BlackSimPlugin
             //! Set the aircraft
             void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) { m_aircraft = aircraft; }
 
-            //! Add parts for interpolator
-            void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
-
-            //! Add situation for interpolator
-            void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-
             //! Parts as sent to simulator
             const BlackMisc::Aviation::CAircraftParts &getPartsAsSent() const { return m_partsAsSent; }
 
