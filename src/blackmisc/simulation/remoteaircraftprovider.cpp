@@ -167,7 +167,14 @@ namespace BlackMisc
             // list from new to old
             QWriteLocker lock(&m_lockSituations);
             CAircraftSituationList &situationList = m_situationsByCallsign[situation.getCallsign()];
-            situationList.push_frontKeepLatestFirstAdjustOffset(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+            if (situationList.isEmpty())
+            {
+                situationList.prefillLatestAdjustedFirst(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+            }
+            else
+            {
+                situationList.push_frontKeepLatestFirstAdjustOffset(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+            }
 
             // check sort order
             Q_ASSERT_X(situationList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");

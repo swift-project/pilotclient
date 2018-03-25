@@ -378,6 +378,20 @@ namespace BlackMisc
     }
 
     template<class OBJ, class CONTAINER>
+    void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::prefillLatestAdjustedFirst(const OBJ &value, int elements, qint64 deltaTimeMs)
+    {
+        this->container().clear();
+        const qint64 os = -1 * qAbs(deltaTimeMs < 0 ? value.getTimeOffsetMs() : deltaTimeMs);
+        this->container().push_front(value);
+        for (int i = 1; i < elements; i++)
+        {
+            OBJ copy(value);
+            copy.addMsecs(os * i);
+            this->container().push_back(copy);
+        }
+    }
+
+    template<class OBJ, class CONTAINER>
     bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::isSortedAdjustedLatestLast() const
     {
         if (this->container().size() < 2) { return true; }
