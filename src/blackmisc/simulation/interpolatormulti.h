@@ -14,7 +14,6 @@
 
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolatorspline.h"
-#include "blackmisc/simulation/interpolatordummy.h"
 
 namespace BlackMisc
 {
@@ -89,13 +88,7 @@ namespace BlackMisc
         private:
             Mode m_mode = ModeSpline;
             CInterpolatorSpline m_spline;
-#ifdef QT_DEBUG
-            //! only in a dev.environment, otherwise replaced by low footprint dummy driver
             CInterpolatorLinear m_linear;
-#else
-            //! Low footprint dummy interpolator in non-debug compile
-            CInterpolatorDummy m_linear;
-#endif
         };
 
         /**
