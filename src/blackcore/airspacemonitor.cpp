@@ -7,21 +7,21 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/vatsim/networkvatlib.h"
+#include "blackcore/vatsim/vatsimbookingreader.h"
+#include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/airspaceanalyzer.h"
 #include "blackcore/airspacemonitor.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/application.h"
-#include "blackcore/vatsim/networkvatlib.h"
-#include "blackcore/vatsim/vatsimbookingreader.h"
-#include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/modulator.h"
 #include "blackmisc/aviation/transponder.h"
+#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -29,12 +29,10 @@
 #include "blackmisc/test/testing.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
-#include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/range.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/variant.h"
@@ -66,14 +64,13 @@ using namespace BlackCore::Vatsim;
 namespace BlackCore
 {
     CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, INetwork *network, QObject *parent)
-        : QObject(parent),
+        : CRemoteAircraftProvider(parent),
           COwnAircraftAware(ownAircraftProvider),
-          CIdentifiable(this),
           m_network(network),
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
     {
         this->setObjectName("CAirspaceMonitor");
-        m_enableReverseLookupMsgs = sApp->isDeveloperFlagSet();
+        this->enableReverseLookupMessages(sApp->isDeveloperFlagSet());
 
         connect(m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::onAtcPositionUpdate);
         connect(m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::onAtisReceived);
@@ -116,172 +113,30 @@ namespace BlackCore
         connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
     }
 
+    bool CAirspaceMonitor::updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates)
+    {
+        const bool r = CRemoteAircraftProvider::updateFastPositionEnabled(callsign, enableFastPositonUpdates);
+        if (m_network && sApp && !sApp->isShuttingDown())
+        {
+            // thread safe update of m_network
+            QTimer::singleShot(0, m_network, [ = ]
+            {
+                if (m_network) { m_network->addInterimPositionReceiver(callsign); }
+            });
+        }
+        return r;
+    }
+
     const CLogCategoryList &CAirspaceMonitor::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
+        static const CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
         return cats;
-    }
-
-    CSimulatedAircraftList CAirspaceMonitor::getAircraftInRange() const
-    {
-        QReadLocker l(&m_lockAircraft);
-        return m_aircraftInRange;
-    }
-
-    CCallsignSet CAirspaceMonitor::getAircraftInRangeCallsigns() const
-    {
-        return this->getAircraftInRange().getCallsigns();
-    }
-
-    CSimulatedAircraft CAirspaceMonitor::getAircraftInRangeForCallsign(const CCallsign &callsign) const
-    {
-        const CSimulatedAircraft aircraft = this->getAircraftInRange().findFirstByCallsign(callsign);
-        return aircraft;
-    }
-
-    CAircraftModel CAirspaceMonitor::getAircraftInRangeModelForCallsign(const CCallsign &callsign) const
-    {
-        const CSimulatedAircraft aircraft(getAircraftInRangeForCallsign(callsign)); // threadsafe
-        return aircraft.getModel();
-    }
-
-    int CAirspaceMonitor::getAircraftInRangeCount() const
-    {
-        return this->getAircraftInRange().size();
     }
 
     CAirspaceAircraftSnapshot CAirspaceMonitor::getLatestAirspaceAircraftSnapshot() const
     {
         Q_ASSERT_X(m_analyzer, Q_FUNC_INFO, "No analyzer");
         return m_analyzer->getLatestAirspaceAircraftSnapshot();
-    }
-
-    CAircraftSituationList CAirspaceMonitor::remoteAircraftSituations(const CCallsign &callsign) const
-    {
-        QReadLocker l(&m_lockSituations);
-        static const CAircraftSituationList empty;
-        if (!m_situationsByCallsign.contains(callsign)) { return empty; }
-        return m_situationsByCallsign[callsign];
-    }
-
-    int CAirspaceMonitor::remoteAircraftSituationsCount(const CCallsign &callsign) const
-    {
-        QReadLocker l(&m_lockSituations);
-        if (!m_situationsByCallsign.contains(callsign)) { return -1; }
-        return m_situationsByCallsign[callsign].size();
-    }
-
-    CAircraftPartsList CAirspaceMonitor::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
-    {
-        QReadLocker l(&m_lockParts);
-        static const CAircraftPartsList empty;
-        if (!m_partsByCallsign.contains(callsign)) { return empty; }
-        if (cutoffTimeValuesBefore < 0)
-        {
-            return m_partsByCallsign[callsign];
-        }
-        else
-        {
-            return m_partsByCallsign[callsign].findBefore(cutoffTimeValuesBefore);
-        }
-    }
-
-    bool CAirspaceMonitor::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
-    {
-        QReadLocker l(&m_lockParts);
-        return m_aircraftWithParts.contains(callsign);
-    }
-
-    int CAirspaceMonitor::getRemoteAircraftSupportingPartsCount() const
-    {
-        QReadLocker l(&m_lockParts);
-        return m_aircraftWithParts.size();
-    }
-
-    CCallsignSet CAirspaceMonitor::remoteAircraftSupportingParts() const
-    {
-        QReadLocker l(&m_lockParts);
-        return m_aircraftWithParts;
-    }
-
-    QList<QMetaObject::Connection> CAirspaceMonitor::connectRemoteAircraftProviderSignals(
-        QObject *receiver,
-        std::function<void(const CAircraftSituation &)>                                     situationFunction,
-        std::function<void(const BlackMisc::Aviation::CCallsign &, const CAircraftParts &)> partsFunction,
-        std::function<void(const CCallsign &)>                                              removedAircraftFunction,
-        std::function<void(const CAirspaceAircraftSnapshot &)>                              aircraftSnapshotFunction
-    )
-    {
-        Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
-
-        // bind does not allow to define connection type, so we use receiver as workaround
-        const QMetaObject::Connection uc; // unconnected
-        const QMetaObject::Connection c1 = situationFunction ? connect(this, &CAirspaceMonitor::addedAircraftSituation, receiver, situationFunction) : uc;
-        Q_ASSERT_X(c1 || !situationFunction, Q_FUNC_INFO, "connect failed");
-        const QMetaObject::Connection c2 = partsFunction ? connect(this, &CAirspaceMonitor::addedAircraftParts, receiver, partsFunction) : uc;
-        Q_ASSERT_X(c2 || !partsFunction, Q_FUNC_INFO, "connect failed");
-        const QMetaObject::Connection c3 = removedAircraftFunction ? connect(this, &CAirspaceMonitor::removedAircraft, receiver, removedAircraftFunction) : uc;
-        Q_ASSERT_X(c3 || !removedAircraftFunction, Q_FUNC_INFO, "connect failed");
-        // trick is to use the Qt::QueuedConnection signal here
-        // analyzer (own thread) -> airspaceAircraftSnapshot -> AirspaceMonitor -> airspaceAircraftSnapshot queued in main thread
-        const QMetaObject::Connection c4 = aircraftSnapshotFunction ? connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, receiver, aircraftSnapshotFunction, Qt::QueuedConnection) : uc;
-        Q_ASSERT_X(c4 || !aircraftSnapshotFunction, Q_FUNC_INFO, "connect failed");
-        return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
-    }
-
-    bool CAirspaceMonitor::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering)
-    {
-        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRedering));
-        const int c = this->updateAircraftInRange(callsign, vm);
-        return c > 0;
-    }
-
-    bool CAirspaceMonitor::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
-    {
-        if (CIdentifiable::isMyIdentifier(originator)) { return false; }
-        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::from(model));
-        const int c = this->updateAircraftInRange(callsign, vm);
-        return c > 0;
-    }
-
-    bool CAirspaceMonitor::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
-    {
-        if (CIdentifiable::isMyIdentifier(originator)) { return false; }
-        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexNetworkModel, CVariant::from(model));
-        const int c = this->updateAircraftInRange(callsign, vm);
-        return c > 0;
-    }
-
-    bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
-    {
-        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositonUpdates));
-        const int c = this->updateAircraftInRange(callsign, vm);
-        {
-            QReadLocker l(&m_lockAircraft);
-            const CSimulatedAircraftList enabledAircraft = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
-            m_network->setInterimPositionReceivers(enabledAircraft.getCallsigns());
-        }
-        return c > 0;
-    }
-
-    bool CAirspaceMonitor::updateAircraftRendered(const CCallsign &callsign, bool rendered)
-    {
-        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexRendered, CVariant::fromValue(rendered));
-        const int c = this->updateAircraftInRange(callsign, vm);
-        return c > 0;
-    }
-
-    bool CAirspaceMonitor::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
-    {
-        QWriteLocker l(&m_lockAircraft);
-        const int c = m_aircraftInRange.setGroundElevationChecked(callsign, elevation);
-        return c > 0;
-    }
-
-    void CAirspaceMonitor::updateMarkAllAsNotRendered()
-    {
-        QWriteLocker l(&m_lockAircraft);
-        m_aircraftInRange.markAllAsNotRendered();
     }
 
     CFlightPlan CAirspaceMonitor::loadFlightPlanFromNetwork(const CCallsign &callsign)
@@ -400,20 +255,6 @@ namespace BlackCore
         return users;
     }
 
-    bool CAirspaceMonitor::isAircraftInRange(const CCallsign &callsign) const
-    {
-        if (callsign.isEmpty()) { return false; }
-        QReadLocker l(&m_lockAircraft);
-        return m_aircraftInRange.containsCallsign(callsign);
-    }
-
-    bool CAirspaceMonitor::isVtolAircraft(const CCallsign &callsign) const
-    {
-        if (callsign.isEmpty()) { return false; }
-        const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
-        return aircraft.isVtol();
-    }
-
     CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem)
     {
         CAtcStation station;
@@ -421,42 +262,6 @@ namespace BlackCore
         if (stations.isEmpty()) { return station; }
         stations.sortByDistanceToOwnAircraft();
         return stations.front();
-    }
-
-    void CAirspaceMonitor::enableReverseLookupMessages(bool enabled)
-    {
-        QWriteLocker l(&m_lockMessages);
-        m_enableReverseLookupMsgs = enabled;
-    }
-
-    bool CAirspaceMonitor::isReverseLookupMessagesEnabled() const
-    {
-        QReadLocker l(&m_lockMessages);
-        return m_enableReverseLookupMsgs;
-    }
-
-    CStatusMessageList CAirspaceMonitor::getReverseLookupMessages(const CCallsign &callsign) const
-    {
-        QReadLocker l(&m_lockMessages);
-        return m_reverseLookupMessages.value(callsign);
-    }
-
-    CStatusMessageList CAirspaceMonitor::getAircraftPartsHistory(const CCallsign &callsign) const
-    {
-        QReadLocker l(&m_lockPartsHistory);
-        return m_aircraftPartsHistory.value(callsign);
-    }
-
-    bool CAirspaceMonitor::isAircraftPartsHistoryEnabled() const
-    {
-        QReadLocker l(&m_lockPartsHistory);
-        return m_enableAircraftPartsHistory;
-    }
-
-    void CAirspaceMonitor::enableAircraftPartsHistory(bool enabled)
-    {
-        QWriteLocker l(&m_lockPartsHistory);
-        m_enableAircraftPartsHistory = enabled;
     }
 
     void CAirspaceMonitor::requestDataUpdates()
@@ -545,9 +350,9 @@ namespace BlackCore
         }
 
         // Client
-        const CVoiceCapabilities caps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
+        const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({CClient::IndexUser, CUser::IndexRealName}, realname);
-        vm.addValue({ CClient::IndexVoiceCapabilities }, caps);
+        vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
     }
 
@@ -585,17 +390,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::removeAllAircraft()
     {
-        for (const CSimulatedAircraft &aircraft : getAircraftInRange())
-        {
-            const CCallsign cs(aircraft.getCallsign());
-            emit removedAircraft(cs);
-        }
-
-        // locked members
-        { QWriteLocker l(&m_lockParts); m_partsByCallsign.clear(); m_aircraftWithParts.clear(); }
-        { QWriteLocker l(&m_lockSituations); m_situationsByCallsign.clear(); }
-        { QWriteLocker l(&m_lockMessages); m_reverseLookupMessages.clear(); }
-        { QWriteLocker l(&m_lockAircraft); m_aircraftInRange.clear(); }
+        CRemoteAircraftProvider::removeAllAircraft();
 
         // non thread safe parts
         m_flightPlanCache.clear();
@@ -605,9 +400,7 @@ namespace BlackCore
     {
         if (callsign.isEmpty()) { return; }
         m_flightPlanCache.remove(callsign);
-
-        QWriteLocker l(&m_lockMessages);
-        m_reverseLookupMessages.remove(callsign);
+        this->removeReverseLookupMessages(callsign);
     }
 
     void CAirspaceMonitor::onReceivedAtcBookings(const CAtcStationList &bookedStations)
@@ -819,7 +612,7 @@ namespace BlackCore
         if (!callsign.isValid()) { return; }
         if (!this->isConnected()) { return; }
 
-        const bool isAircraft = m_aircraftInRange.containsCallsign(callsign);
+        const bool isAircraft = this->isAircraftInRange(callsign);
         const bool isAtc = m_atcStationsOnline.containsCallsign(callsign);
         if (!isAircraft && !isAtc)
         {
@@ -865,38 +658,6 @@ namespace BlackCore
         this->sendReadyForModelMatching(callsign); // ICAO codes received
 
         emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
-    }
-
-    void CAirspaceMonitor::addReverseLookupMessages(const CCallsign &callsign, const CStatusMessageList &messages)
-    {
-        if (callsign.isEmpty()) { return; }
-        if (messages.isEmpty()) { return; }
-        QWriteLocker l(&m_lockMessages);
-        if (!m_enableReverseLookupMsgs) { return; }
-        if (m_reverseLookupMessages.contains(callsign))
-        {
-            CStatusMessageList &msgs = m_reverseLookupMessages[callsign];
-            msgs.push_back(messages);
-        }
-        else
-        {
-            m_reverseLookupMessages.insert(callsign, messages);
-        }
-    }
-
-    void CAirspaceMonitor::addReverseLookupMessage(const CCallsign &callsign, const CStatusMessage &message)
-    {
-        if (callsign.isEmpty()) { return; }
-        if (message.isEmpty()) { return; }
-        this->addReverseLookupMessages(callsign, CStatusMessageList({ message }));
-    }
-
-    void CAirspaceMonitor::addReverseLookupMessage(const CCallsign &callsign, const QString &message, CStatusMessage::StatusSeverity severity)
-    {
-        if (callsign.isEmpty()) { return; }
-        if (message.isEmpty()) { return; }
-        const CStatusMessage m = CMatchingUtils::logMessage(callsign, message, getLogCategories(), severity);
-        this->addReverseLookupMessage(callsign, m);
     }
 
     CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(
@@ -960,7 +721,6 @@ namespace BlackCore
         const CCallsign callsign = aircraft.getCallsign();
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
-        if (this->isAircraftInRange(callsign)) { return false; }
         if (!sApp || sApp->isShuttingDown()) { return false; }
 
         CSimulatedAircraft newAircraft(aircraft);
@@ -969,29 +729,7 @@ namespace BlackCore
         Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
         sApp->getWebDataServices()->updateWithVatsimDataFileData(newAircraft);
 
-        // store
-        {
-            QWriteLocker l(&m_lockAircraft);
-            m_aircraftInRange.push_back(newAircraft);
-        }
-        emit this->addedAircraft(aircraft);
-        emit this->changedAircraftInRange();
-        return true;
-    }
-
-    int CAirspaceMonitor::updateAircraftInRange(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
-    {
-        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
-        int c = 0;
-        {
-            QWriteLocker l(&m_lockAircraft);
-            c = m_aircraftInRange.applyIfCallsign(callsign, vm, skipEqualValues);
-        }
-        if (c > 0)
-        {
-            emit this->changedAircraftInRange();
-        }
-        return c;
+        return CRemoteAircraftProvider::addNewAircraftInRange(newAircraft);
     }
 
     int CAirspaceMonitor::updateOnlineStation(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues, bool sendSignal)
@@ -1057,7 +795,6 @@ namespace BlackCore
         // store situation history
         CAircraftSituation fullSituation(situation);
         this->storeAircraftSituation(fullSituation);
-        emit this->addedAircraftSituation(fullSituation);
 
         const bool existsInRange = this->isAircraftInRange(callsign);
         const bool hasFsInnPacket = m_tempFsInnPackets.contains(callsign);
@@ -1100,11 +837,7 @@ namespace BlackCore
         // Interim packets do not have groundspeed, hence set the last known value.
         // If there is no full position available yet, throw this interim position away.
         CAircraftSituation interimSituation(situation);
-        CAircraftSituationList history;
-        {
-            QReadLocker l(&m_lockSituations);
-            history = m_situationsByCallsign[callsign];
-        }
+        CAircraftSituationList history = this->remoteAircraftSituations(callsign);
         if (history.empty()) { return; } // we need one full situation at least
         const CAircraftSituation lastSituation = history.latestObject();
         if (lastSituation.getPosition() == interimSituation.getPosition()) { return; } // same position, ignore
@@ -1115,7 +848,6 @@ namespace BlackCore
 
         // store situation history
         this->storeAircraftSituation(interimSituation);
-        emit this->addedAircraftSituation(interimSituation);
 
         // if we have not aircraft in range yer, we stop here
         if (!this->isAircraftInRange(callsign)) { return; }
@@ -1152,19 +884,9 @@ namespace BlackCore
 
         // in case of inconsistencies I always remove here
         this->removeFromAircraftCachesAndLogs(callsign);
-
-        { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftWithParts.remove(callsign); }
-        { QWriteLocker l2(&m_lockSituations); m_situationsByCallsign.remove(callsign); }
-        { QWriteLocker l4(&m_lockPartsHistory); m_aircraftPartsHistory.remove(callsign); }
+        const bool removed = CRemoteAircraftProvider::removeAircraft(callsign);
         this->removeClient(callsign);
-
-        bool removedCallsign = false;
-        {
-            QWriteLocker l(&m_lockAircraft);
-            const int c = m_aircraftInRange.removeByCallsign(callsign);
-            removedCallsign = c > 0;
-        }
-        if (removedCallsign) { emit this->removedAircraft(callsign); }
+        if (removed) { emit this->removedAircraft(callsign); }
     }
 
     void CAirspaceMonitor::onFrequencyReceived(const CCallsign &callsign, const CFrequency &frequency)
@@ -1179,62 +901,7 @@ namespace BlackCore
     void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset)
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        const CSimulatedAircraft remoteAircraft(getAircraftInRangeForCallsign(callsign));
-        const bool isFull = jsonObject.value("is_full_data").toBool();
-
-        // If we are not yet synchronized, we throw away any incremental packet
-        if (!remoteAircraft.hasValidCallsign()) { return; }
-        if (!remoteAircraft.isPartsSynchronized() && !isFull) { return; }
-
-        CAircraftParts parts;
-        try
-        {
-            if (isFull)
-            {
-                parts.convertFromJson(jsonObject);
-            }
-            else
-            {
-                // incremental update
-                parts = this->remoteAircraftParts(callsign).frontOrDefault();
-                const QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
-                parts.convertFromJson(config);
-            }
-        }
-        catch (const CJsonException &ex)
-        {
-            CStatusMessage message = ex.toStatusMessage(this, "Invalid parts packet");
-            message.setSeverity(CStatusMessage::SeverityDebug);
-            CLogMessage::preformatted(message);
-        }
-
-        // make sure in any case right time
-        parts.setCurrentUtcTime();
-        parts.setTimeOffsetMs(currentOffset);
-
-        // store part history (parts always absolute)
-        this->storeAircraftParts(callsign, parts);
-        emit this->addedAircraftParts(callsign, parts);
-
-        if (m_enableAircraftPartsHistory)
-        {
-            const QJsonDocument doc(jsonObject);
-            const QString partsAsString = doc.toJson(QJsonDocument::Compact);
-            const CStatusMessage message(getLogCategories(), CStatusMessage::SeverityInfo, callsign.isEmpty() ? callsign.toQString() + ": " + partsAsString.trimmed() : partsAsString.trimmed());
-            if (m_aircraftPartsHistory.contains(callsign))
-            {
-                CStatusMessageList &msgs = m_aircraftPartsHistory[callsign];
-                msgs.push_back(message);
-            }
-            else
-            {
-                m_aircraftPartsHistory.insert(callsign, message);
-            }
-        }
-
-        // here I expect always a changed value
-        QWriteLocker l(&m_lockAircraft);
-        m_aircraftInRange.setAircraftParts(callsign, parts);
+        this->storeAircraftParts(callsign, jsonObject, currentOffset);
     }
 
     void CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation)
@@ -1273,47 +940,7 @@ namespace BlackCore
             correctedSituation.guessOnGround(vtol, cg);
         }
 
-        // list from new to old
-        QWriteLocker lock(&m_lockSituations);
-        CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
-        situationList.push_frontKeepLatestFirstAdjustOffset(correctedSituation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-
-        // check sort order
-        Q_ASSERT_X(situationList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
-        Q_ASSERT_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
-    }
-
-    void CAirspaceMonitor::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
-    {
-        BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
-        if (callsign.isEmpty()) { return; }
-
-        // list sorted from new to old
-        CAircraftPartsList correctiveParts;
-        {
-            QWriteLocker lock(&m_lockParts);
-            CAircraftPartsList &partsList = m_partsByCallsign[callsign];
-            partsList.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
-
-            // remove outdated parts (but never remove the most recent one)
-            IRemoteAircraftProvider::removeOutdatedParts(partsList);
-            correctiveParts = partsList;
-
-            // aircraft supporting parts
-            m_aircraftWithParts.insert(callsign); // mark as callsign which supports parts
-
-            // check sort order
-            Q_ASSERT_X(partsList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
-            Q_ASSERT_X(partsList.size() <= IRemoteAircraftProvider::MaxPartsPerCallsign, Q_FUNC_INFO, "Wrong size");
-        }
-
-        // adjust gnd.flag from parts
-        if (!correctiveParts.isEmpty())
-        {
-            QWriteLocker lock(&m_lockSituations);
-            CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
-            situationList.adjustGroundFlag(parts);
-        }
+        CRemoteAircraftProvider::storeAircraftSituation(correctedSituation);
     }
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)

@@ -49,15 +49,17 @@ namespace BlackMiscTest
             const CAircraftParts p = createTestParts(i, ts, deltaT, true);
             parts.push_back(p);
         }
+        QVERIFY2(parts.size() == number, "Wrong parts size of list");
 
         // interpolation functional check
         CPartsStatus status;
         const CInterpolationAndRenderingSetupPerCallsign setup;
-        qint64 oldestTs = parts.oldestTimestampMsecsSinceEpoch();
+        const qint64 oldestTs = parts.oldestTimestampMsecsSinceEpoch();
 
         // Testing for a time >> last time
         // all on ground flags true
-        provider.insertNewAircraftParts(cs, parts); // we work with 0 offsets here
+        provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
+        QVERIFY2(provider.remoteAircraftPartsCount(cs) == parts.size(), "Wrong parts size");
         CAircraftParts p = interpolator.getInterpolatedParts(farFuture, setup, status);
         qint64 pTs = p.getAdjustedMSecsSinceEpoch();
         QVERIFY2(status.isSupportingParts(), "Should support parts");
@@ -75,7 +77,7 @@ namespace BlackMiscTest
         provider.clear();
 
         parts.setOnGround(false);
-        provider.insertNewAircraftParts(cs, parts); // we work with 0 offsets here
+        provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
         p = interpolator.getInterpolatedParts(farFuture, setup, status);
         pTs = p.getAdjustedMSecsSinceEpoch();
         QVERIFY2(status.isSupportingParts(), "Should support parts");

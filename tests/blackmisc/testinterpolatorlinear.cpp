@@ -77,7 +77,7 @@ namespace BlackMiscTest
         for (int i = partsCount - 1; i >= 0; i--)
         {
             CAircraftParts p(getTestParts(i, ts, deltaT));
-            provider.insertNewAircraftParts(cs, p);
+            provider.insertNewAircraftParts(cs, p, false);
         }
 
         // make sure signals are processed, if the interpolator depends on those signals

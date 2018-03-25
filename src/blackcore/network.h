@@ -349,6 +349,16 @@ namespace BlackCore
         virtual void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &receiver) = 0;
 
         /*!
+         * Add callsign receiving regular interim position updates.
+         */
+        virtual void addInterimPositionReceiver(const BlackMisc::Aviation::CCallsign &receiver)
+        {
+            BlackMisc::Aviation::CCallsignSet set = this->getInterimPositionReceivers();
+            set.push_back(receiver);
+            this->setInterimPositionReceivers(set);
+        }
+
+        /*!
          * Get the group of callsigns receiving regular interim position updates.
          */
         virtual const BlackMisc::Aviation::CCallsignSet &getInterimPositionReceivers() const = 0;
