@@ -22,8 +22,6 @@
 #endif
 #include "dbusconnection.h"
 #include "menus.h"
-#include <QObject>
-#include <QVector>
 #include <memory>
 #include <thread>
 
@@ -36,10 +34,8 @@ namespace XSwiftBus
     /*!
      * Main plugin class
      */
-    class CPlugin : public QObject
+    class CPlugin
     {
-        Q_OBJECT
-
     public:
         //! Constructor
         CPlugin();

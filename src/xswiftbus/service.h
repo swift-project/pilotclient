@@ -21,12 +21,7 @@
 #include "messages.h"
 #include "navdatareference.h"
 #include <XPLM/XPLMNavigation.h>
-#include <QStringList>
-#include <QObject>
-#include <QList>
-#include <QFileInfo>
-
-class QTimer;
+#include <string>
 
 //! \cond PRIVATE
 #define XSWIFTBUS_SERVICE_INTERFACENAME "org.swift_project.xswiftbus.service"
@@ -40,15 +35,20 @@ namespace XSwiftBus
     class CDistributor
     {
     public:
+        //! Default constructor
         CDistributor() = default;
-        CDistributor(const QString &distributor) : m_distributor(distributor) {}
 
-        bool hasDescription() const { return !m_description.isEmpty(); }
-        QString getDescription() const { return m_description; }
+        //! Constructor
+        CDistributor(const std::string &description) : m_description(description) {}
+
+        //! \copydoc BlackMisc::Simulation::CDistributor::hasDescription
+        bool hasDescription() const { return !m_description.empty(); }
+
+        //! \copydoc BlackMisc::Simulation::CDistributor::getDescription
+        std::string getDescription() const { return m_description; }
 
     private:
-        QString m_distributor;
-        QString m_description;
+        std::string m_description;
     };
 
     //! Simplified implementation of \sa BlackMisc::Simulation::CAircraftModel
@@ -58,44 +58,44 @@ namespace XSwiftBus
         CAircraftModel() = default;
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::hasDescription
-        bool hasDescription() const { return !m_description.isEmpty(); }
+        bool hasDescription() const { return !m_description.empty(); }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::hasAircraftDesignator
-        bool hasAircraftDesignator() const { return !m_icao.isEmpty(); }
+        bool hasAircraftDesignator() const { return !m_icao.empty(); }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::getName
-        QString getName() const { return m_name; }
+        std::string getName() const { return m_name; }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::getDistributor
         CDistributor getDistributor() const { return m_distributor; }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::getAircraftIcaoCodeDesignator
-        QString getAircraftIcaoCodeDesignator() const { return m_icao; }
+        std::string getAircraftIcaoCodeDesignator() const { return m_icao; }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::getModelString
-        QString getModelString() const { return m_modelString; }
+        std::string getModelString() const { return m_modelString; }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::setAircraftIcaoCode
-        void setAircraftIcaoCode(const QString &icao) { m_icao = icao; }
+        void setAircraftIcaoCode(const std::string &icao) { m_icao = icao; }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::setDescription
-        void setDescription(const QString &description) { m_description = description; }
+        void setDescription(const std::string &description) { m_description = description; }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::setName
-        void setName(const QString &name) { m_name = name; }
+        void setName(const std::string &name) { m_name = name; }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::setDistributor
         void setDistributor(const CDistributor &distributor) { m_distributor = distributor; }
 
         //! \copydoc BlackMisc::Simulation::CAircraftModel::setModelString
-        void setModelString(const QString &modelString) { m_modelString = modelString; }
+        void setModelString(const std::string &modelString) { m_modelString = modelString; }
 
     private:
-        QString m_name;
-        QString m_icao;
-        QString m_description;
+        std::string m_name;
+        std::string m_icao;
+        std::string m_description;
         CDistributor m_distributor;
-        QString m_modelString;
+        std::string m_modelString;
     };
 
     /*!
@@ -111,16 +111,16 @@ namespace XSwiftBus
         ~CService() override = default;
 
         //! DBus interface name
-        static const QString &InterfaceName()
+        static const std::string &InterfaceName()
         {
-            static const QString s(XSWIFTBUS_SERVICE_INTERFACENAME);
+            static const std::string s(XSWIFTBUS_SERVICE_INTERFACENAME);
             return s;
         }
 
         //! DBus object path
-        static const QString &ObjectPath()
+        static const std::string &ObjectPath()
         {
-            static const QString s(XSWIFTBUS_SERVICE_OBJECTPATH);
+            static const std::string s(XSWIFTBUS_SERVICE_OBJECTPATH);
             return s;
         }
 
@@ -128,31 +128,31 @@ namespace XSwiftBus
         void onAircraftModelChanged();
 
         //! Add a text message to the on-screen display, with RGB components in the range [0,1]
-        void addTextMessage(const QString &text, double red, double green, double blue);
+        void addTextMessage(const std::string &text, double red, double green, double blue);
 
         //! Called by newly connected client to cause airportsInRangeUpdated to be emitted.
         void updateAirportsInRange();
 
         //! Get full path to current aircraft model
-        QString getAircraftModelPath() const;
+        std::string getAircraftModelPath() const;
 
         //! Get base filename of current aircraft model
-        QString getAircraftModelFilename() const;
+        std::string getAircraftModelFilename() const;
 
         //! Get canonical swift model string of current aircraft model
-        QString getAircraftModelString() const;
+        std::string getAircraftModelString() const;
 
         //! Get name of current aircraft model
-        QString getAircraftName() const;
+        std::string getAircraftName() const;
 
         //! Get path to current aircraft livery
-        QString getAircraftLivery() const { return m_liveryPath.get().c_str(); }
+        std::string getAircraftLivery() const { return m_liveryPath.get(); }
 
         //! Get the ICAO code of the current aircraft model
-        QString getAircraftIcaoCode() const { return m_icao.get().c_str(); }
+        std::string getAircraftIcaoCode() const { return m_icao.get(); }
 
         //! Get the description of the current aircraft model
-        QString getAircraftDescription() const { return m_descrip.get().c_str(); }
+        std::string getAircraftDescription() const { return m_descrip.get(); }
 
         //! Get major version number
         int getXPlaneVersionMajor() const;
@@ -161,10 +161,10 @@ namespace XSwiftBus
         int getXPlaneVersionMinor() const;
 
         //! Get root of X-Plane install path
-        QString getXPlaneInstallationPath() const;
+        std::string getXPlaneInstallationPath() const;
 
         //! Get full path to X-Plane preferences file
-        QString getXPlanePreferencesPath() const;
+        std::string getXPlanePreferencesPath() const;
 
         //! True if sim is paused
         bool isPaused() const { return m_paused.get(); }
@@ -275,14 +275,14 @@ namespace XSwiftBus
         int getNumberOfEngines() const { return m_numberOfEngines.get(); }
 
         //! Get the N1 speed as percent of max (per engine)
-        QList<double> getEngineN1Percentage() const
+        std::vector<double> getEngineN1Percentage() const
         {
-            QList<double> list;
-            const int number = getNumberOfEngines();
+            std::vector<double> list;
+            const auto number = static_cast<unsigned int>(getNumberOfEngines());
             list.reserve(number);
-            for (int engineNumber = 0; engineNumber < number; ++engineNumber)
+            for (unsigned int engineNumber = 0; engineNumber < number; ++engineNumber)
             {
-                list.append(m_enginesN1Percentage.getAt(engineNumber));
+                list.push_back(m_enginesN1Percentage.getAt(engineNumber));
             }
             return list;
         }
@@ -299,21 +299,20 @@ namespace XSwiftBus
         DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 
     private:
-        void emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
-                                      const QString &icao, const QString &modelString, const QString &name,
-                                      const QString &description);
+        void emitAircraftModelChanged(const std::string &path, const std::string &filename, const std::string &livery,
+                                      const std::string &icao, const std::string &modelString, const std::string &name,
+                                      const std::string &description);
 
         void emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes, const std::vector<std::string> &names,
                                         const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts);
 
         CMessageBoxControl m_messages { 128, 128, 16 };
         std::vector<CNavDataReference> m_airports;
-        QTimer *m_airportUpdater = nullptr;
         void readAirportsDatabase();
 
         std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);
 
-        static CAircraftModel extractAcfProperties(const QString &filePath, const QFileInfo &fileInfo);
+        static CAircraftModel extractAcfProperties(const std::string &filePath);
 
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;

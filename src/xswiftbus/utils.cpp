@@ -15,19 +15,19 @@
 
 #include "utils.h"
 #include <XPMPMultiplayerCSL.h>
-#include <QString>
-#include <QtGlobal>
+#include <string>
+#include <sstream>
 
 namespace XSwiftBus
 {
 
-    QString g_xplanePath;
-    QString g_sep;
+    std::string g_xplanePath;
+    std::string g_sep;
 
     //! Init global xplane path
     void initXPlanePath()
     {
-        if (!g_xplanePath.isEmpty() && !g_sep.isEmpty()) {}
+        if (!g_xplanePath.empty() && !g_sep.empty()) {}
 
         char xplanePath[512];
         XPLMGetSystemPath(xplanePath);
@@ -41,6 +41,116 @@ namespace XSwiftBus
         g_sep = XPLMGetDirectorySeparator();
 #endif
         g_xplanePath = xplanePath;
+    }
+
+    std::string getDirName(const string &filePath)
+    {
+        std::string seperator = "/\\";
+        std::size_t sepPos = filePath.find_last_of(seperator);
+        if(sepPos != std::string::npos)
+        {
+            return filePath.substr(0, sepPos);
+        }
+        else
+        {
+            return {};
+        }
+    }
+
+    std::string getFileName(const std::string &filePath)
+    {
+        std::string seperator = "/\\";
+        std::size_t sepPos = filePath.find_last_of(seperator);
+        if(sepPos != std::string::npos)
+        {
+            return filePath.substr(sepPos + 1, filePath.size() - 1);
+        }
+        else
+        {
+            return filePath;
+        }
+    }
+
+    std::string getBaseName(const std::string &filePath)
+    {
+        std::string seperator = ".";
+        std::string fileName = getFileName(filePath);
+        std::size_t sepPos = fileName.find(seperator);
+        if(sepPos != std::string::npos)
+        {
+             return fileName.substr(0, sepPos);
+        }
+        else
+        {
+            return fileName;
+        }
+    }
+
+    std::vector<std::string> split(const std::string &str, size_t maxSplitCount)
+    {
+        std::string s(str);
+        std::string delimiter = " ";
+        size_t pos = 0;
+        std::vector<std::string> tokens;
+        while ((pos = s.find(delimiter)) != std::string::npos)
+        {
+            tokens.push_back(s.substr(0, pos));
+            s.erase(0, pos + delimiter.length());
+            if (tokens.size() == maxSplitCount) { break; }
+        }
+        tokens.push_back(s);
+        return tokens;
+    }
+
+    void Logger::print(const std::string &filePath, int line, MsgType type, const std::string &message)
+    {
+        (void) line;
+        (void) type;
+
+        assert(!filePath.empty());
+        std::ostringstream ss;
+
+        ss << "xswiftbus";
+        ss << ' ';
+
+    #if defined(XSWIFTBUS_ENABLE_TRACE_LOG)
+        switch (type)
+        {
+        case DebugMsg:
+            ss << "Debug";
+            break;
+        case InfoMsg:
+            ss << "Info";
+            break;
+        case WarningMsg:
+            ss << "Warning";
+            break;
+        case FatalMsg:
+            ss << "Fatal";
+        }
+        ss << ' ';
+
+        std::string seperator = "/\\";
+        std::size_t sepPos = filePath.find_last_of(seperator);
+        if(sepPos != std::string::npos)
+        {
+             ss << filePath.substr(sepPos + 1, filePath.size() - 1);
+        }
+        else
+        {
+            ss << filePath;
+        }
+        ss << ' ';
+
+        ss << line;
+        ss << " : ";
+    #endif
+
+        ss << message;
+        ss << "\n";
+
+        std::string buffer = ss.str();
+        XPLMDebugString(buffer.c_str());
     }
 
 }

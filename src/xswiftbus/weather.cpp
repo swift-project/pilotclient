@@ -10,7 +10,7 @@
 //! \cond PRIVATE
 
 #include "weather.h"
-#include <QDebug>
+#include "utils.h"
 
 namespace XSwiftBus
 {
@@ -37,7 +37,7 @@ namespace XSwiftBus
         case 0: setCloudLayerImpl(m_cloudLayer0, base, tops, type, coverage); break;
         case 1: setCloudLayerImpl(m_cloudLayer1, base, tops, type, coverage); break;
         case 2: setCloudLayerImpl(m_cloudLayer2, base, tops, type, coverage); break;
-        default: qDebug() << "Invalid cloud layer" << layer; break;
+        default: DEBUG_LOG("Invalid cloud layer"); break;
         }
     }
 
@@ -60,7 +60,7 @@ namespace XSwiftBus
         case 0: setWindLayerImpl(m_windLayer0, altitude, direction, speed, shearDirection, shearSpeed, turbulence); break;
         case 1: setWindLayerImpl(m_windLayer1, altitude, direction, speed, shearDirection, shearSpeed, turbulence); break;
         case 2: setWindLayerImpl(m_windLayer2, altitude, direction, speed, shearDirection, shearSpeed, turbulence); break;
-        default: qDebug() << "Invalid wind layer" << layer; break;
+        default: DEBUG_LOG("Invalid wind layer"); break;
         }
     }
 

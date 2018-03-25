@@ -15,11 +15,6 @@
 #include "dbusobject.h"
 #include "datarefs.h"
 #include "terrainprobe.h"
-#include <QDateTime>
-#include <QObject>
-#include <QHash>
-#include <QVector>
-#include <QStringList>
 #include "XPMPMultiplayer.h"
 #include <XPLM/XPLMDisplay.h>
 #include <functional>
@@ -42,19 +37,19 @@ namespace XSwiftBus
         CTraffic(CDBusConnection *dbusConnection);
 
         //! Destructor
-        virtual ~CTraffic();
+        ~CTraffic() override;
 
         //! DBus interface name
-        static const QString &InterfaceName()
+        static const std::string &InterfaceName()
         {
-            static QString s(XSWIFTBUS_TRAFFIC_INTERFACENAME);
+            static std::string s(XSWIFTBUS_TRAFFIC_INTERFACENAME);
             return s;
         }
 
         //! DBus object path
-        static const QString &ObjectPath()
+        static const std::string &ObjectPath()
         {
-            static QString s(XSWIFTBUS_TRAFFIC_OBJECTPATH);
+            static std::string s(XSWIFTBUS_TRAFFIC_OBJECTPATH);
             return s;
         }
 
@@ -68,10 +63,10 @@ namespace XSwiftBus
         void cleanup();
 
         //! Load a collection of planes from the given directory and return true if successful
-        bool loadPlanesPackage(const QString &path);
+        bool loadPlanesPackage(const std::string &path);
 
         //! Set the ICAO code to use for aircraft without a model match
-        void setDefaultIcao(const QString &defaultIcao);
+        void setDefaultIcao(const std::string &defaultIcao);
 
         //! Set whether the plugin draws type and callsign labels above aircraft
         void setDrawingLabels(bool drawing);
@@ -86,23 +81,23 @@ namespace XSwiftBus
         void setMaxDrawDistance(double nauticalMiles);
 
         //! Introduce a new traffic aircraft
-        void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
+        void addPlane(const std::string &callsign, const std::string &modelName, const std::string &aircraftIcao, const std::string &airlineIcao, const std::string &livery);
 
         //! Remove a traffic aircraft
-        void removePlane(const QString &callsign);
+        void removePlane(const std::string &callsign);
 
         //! Remove all traffic aircraft
         void removeAllPlanes();
 
         //! Set the position of a traffic aircraft
-        void setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading);
+        void setPlanePosition(const std::string &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading);
 
         //! Set the flight control surfaces and lights of a traffic aircraft
-        void setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
+        void setPlaneSurfaces(const std::string &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
             double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround);
 
         //! Set the transponder of a traffic aircraft
-        void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
+        void setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident);
 
         //! Request traffic plane data. A signal remoteAircraftData will be emitted for each known plane
         void requestRemoteAircraftData();
@@ -117,7 +112,7 @@ namespace XSwiftBus
         bool m_enabled = false;
 
         void emitSimFrame();
-        void emitRemoteAircraftData(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
+        void emitRemoteAircraftData(const std::string &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
@@ -125,26 +120,27 @@ namespace XSwiftBus
         struct Plane
         {
             void *id = nullptr;
-            QString callsign;
-            QString aircraftIcao;
-            QString airlineIcao;
-            QString livery;
-            QString modelName;
+            std::string callsign;
+            std::string aircraftIcao;
+            std::string airlineIcao;
+            std::string livery;
+            std::string modelName;
             bool hasSurfaces = false;
             bool hasXpdr = false;
             char label[32] {};
             CTerrainProbe terrainProbe;
             XPMPPlaneSurfaces_t surfaces;
             float targetGearPosition = 0;
-            qint64 prevSurfacesLerpTime = 0;
+            std::chrono::system_clock::time_point prevSurfacesLerpTime;
             XPMPPlaneRadar_t xpdr;
             XPMPPlanePosition_t position;
-            Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_, QString modelName_);
+            Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_,
+                  const std::string &livery_, const std::string &modelName_);
         };
 
-        QHash<QString, Plane *> m_planesByCallsign;
-        QHash<void *, Plane *> m_planesById;
-        qint64 m_timestampLastSimFrame = QDateTime::currentMSecsSinceEpoch();
+        std::unordered_map<std::string, Plane *> m_planesByCallsign;
+        std::unordered_map<void *, Plane *> m_planesById;
+        std::chrono::system_clock::time_point m_timestampLastSimFrame = std::chrono::system_clock::now();
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)

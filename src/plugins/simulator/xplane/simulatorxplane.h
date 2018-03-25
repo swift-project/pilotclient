@@ -190,6 +190,7 @@ namespace BlackSimPlugin
 
             void requestRemoteAircraftDataFromXPlane();
             void updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
+            void updateAirportsInRange();
 
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
 
@@ -201,6 +202,7 @@ namespace BlackSimPlugin
             CXSwiftBusWeatherProxy *m_weatherProxy { nullptr };
             QTimer m_fastTimer;
             QTimer m_slowTimer;
+            QTimer m_airportUpdater;
             BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
 

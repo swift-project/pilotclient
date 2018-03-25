@@ -18,18 +18,17 @@
 #include "XPMPPlaneRenderer.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
-#include <QDateTime>
-#include <QDebug>
-#include <QStringList>
 #include <cassert>
 #include <cstring>
 #include <cmath>
+#include <ctime>
+#include <algorithm>
 
 // clazy:excludeall=reserve-candidates
 
 namespace XSwiftBus
 {
-    CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_, QString modelName_)
+    CTraffic::Plane::Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_, const std::string &livery_, const std::string &modelName_)
         : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), modelName(modelName_)
     {
         std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
@@ -38,8 +37,9 @@ namespace XSwiftBus
         surfaces.size = sizeof(surfaces);
         xpdr.size = sizeof(xpdr);
 
-        std::strncpy(label, qPrintable(callsign), sizeof(label));
-        surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
+        std::strncpy(label, callsign.c_str(), sizeof(label));
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        surfaces.lights.timeOffset = static_cast<uint16_t>(std::rand() % 0xffff);
     }
 
     CTraffic::CTraffic(CDBusConnection *dbusConnection) :
@@ -60,8 +60,12 @@ namespace XSwiftBus
         initXPlanePath();
         auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "LegacyData" + g_sep;
 
-        auto err = XPMPMultiplayerInitLegacyData(qPrintable(dir + "CSL"), qPrintable(dir + "related.txt"),
-                   qPrintable(dir + "lights.png"), qPrintable(dir + "Doc8643.txt"), "C172", preferences, preferences);
+        std::string csl = dir + "CSL";
+        std::string related = dir + "related.txt";
+        std::string doc8643 = dir + "Doc8643.txt";
+        std::string lights = dir + "lights.png";
+        auto err = XPMPMultiplayerInitLegacyData(csl.c_str(), related.c_str(), lights.c_str(), doc8643.c_str(),
+                   "C172", preferences, preferences);
         if (*err) { s_legacyDataOK = false; }
     }
 
@@ -70,7 +74,7 @@ namespace XSwiftBus
         if (! s_legacyDataOK) { return false; }
 
         auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep;
-        auto err = XPMPMultiplayerInit(preferences, preferences, qPrintable(dir));
+        auto err = XPMPMultiplayerInit(preferences, preferences, dir.c_str());
         if (*err) { cleanup(); return false; }
         m_initialized = true;
 
@@ -104,11 +108,11 @@ namespace XSwiftBus
         sendDBusSignal("simFrame");
     }
 
-    void CTraffic::emitRemoteAircraftData(const QString &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset)
+    void CTraffic::emitRemoteAircraftData(const std::string &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset)
     {
         CDBusMessage signalRemoteAircraftData = CDBusMessage::createSignal(XSWIFTBUS_TRAFFIC_OBJECTPATH, XSWIFTBUS_TRAFFIC_INTERFACENAME, "remoteAircraftData");
         signalRemoteAircraftData.beginArgumentWrite();
-        signalRemoteAircraftData.appendArgument(callsign.toStdString());
+        signalRemoteAircraftData.appendArgument(callsign);
         signalRemoteAircraftData.appendArgument(latitude);
         signalRemoteAircraftData.appendArgument(longitude);
         signalRemoteAircraftData.appendArgument(elevation);
@@ -141,19 +145,21 @@ namespace XSwiftBus
         return def;
     }
 
-    bool CTraffic::loadPlanesPackage(const QString &path)
+    bool CTraffic::loadPlanesPackage(const std::string &path)
     {
         initXPlanePath();
         auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "LegacyData" + g_sep;
 
-        auto err = XPMPLoadCSLPackage(qPrintable(path), qPrintable(dir + "related.txt"), qPrintable(dir + "Doc8643.txt"));
+        std::string related = dir + "related.txt";
+        std::string doc8643 = dir + "Doc8643.txt";
+        auto err = XPMPLoadCSLPackage(path.c_str(), related.c_str(), doc8643.c_str());
         if (*err) { return false; }
         return true;
     }
 
-    void CTraffic::setDefaultIcao(const QString &defaultIcao)
+    void CTraffic::setDefaultIcao(const std::string &defaultIcao)
     {
-        XPMPSetDefaultPlaneICAO(qPrintable(defaultIcao));
+        XPMPSetDefaultPlaneICAO(defaultIcao.c_str());
     }
 
     void CTraffic::setDrawingLabels(bool drawing)
@@ -183,16 +189,16 @@ namespace XSwiftBus
         g_drawDistance = static_cast<float>(nauticalMiles);
     }
 
-    void CTraffic::addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
+    void CTraffic::addPlane(const std::string &callsign, const std::string &modelName, const std::string &aircraftIcao, const std::string &airlineIcao, const std::string &livery)
     {
         XPMPPlaneID id = nullptr;
-        if (modelName.isEmpty())
+        if (modelName.empty())
         {
-            id = XPMPCreatePlane(qPrintable(aircraftIcao), qPrintable(airlineIcao), qPrintable(livery), getPlaneData, static_cast<void *>(this));
+            id = XPMPCreatePlane(aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, static_cast<void *>(this));
         }
         else
         {
-            id = XPMPCreatePlaneWithModelName(qPrintable(modelName), qPrintable(aircraftIcao), qPrintable(airlineIcao), qPrintable(livery), getPlaneData, static_cast<void *>(this));
+            id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, static_cast<void *>(this));
         }
 
         if (id)
@@ -203,21 +209,23 @@ namespace XSwiftBus
         }
     }
 
-    void CTraffic::removePlane(const QString &callsign)
+    void CTraffic::removePlane(const std::string &callsign)
     {
-        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
-        if (!plane) { return; }
-        m_planesByCallsign.remove(callsign);
-        m_planesById.remove(plane->id);
+        auto planeIt = m_planesByCallsign.find(callsign);
+        if (planeIt == m_planesByCallsign.end()) { return; }
+
+        Plane *plane = planeIt->second;
+        m_planesByCallsign.erase(callsign);
+        m_planesById.erase(plane->id);
         XPMPDestroyPlane(plane->id);
         delete plane;
     }
 
     void CTraffic::removeAllPlanes()
     {
-        const QList<Plane *> planes = m_planesByCallsign.values();
-        for (Plane *plane : planes)
+        for (const auto &kv : m_planesByCallsign)
         {
+            Plane *plane = kv.second;
             assert(plane);
             XPMPDestroyPlane(plane->id);
             delete plane;
@@ -226,9 +234,12 @@ namespace XSwiftBus
         m_planesById.clear();
     }
 
-    void CTraffic::setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
+    void CTraffic::setPlanePosition(const std::string &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
     {
-        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
+        auto planeIt = m_planesByCallsign.find(callsign);
+        if (planeIt == m_planesByCallsign.end()) { return; }
+
+        Plane *plane = planeIt->second;
         if (!plane) { return; }
         plane->position.lat = latitude;
         plane->position.lon = longitude;
@@ -238,11 +249,14 @@ namespace XSwiftBus
         plane->position.heading = static_cast<float>(heading);
     }
 
-    void CTraffic::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
+    void CTraffic::setPlaneSurfaces(const std::string &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
                                     double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround)
     {
-        Q_UNUSED(onGround);
-        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
+        (void) onGround;
+        auto planeIt = m_planesByCallsign.find(callsign);
+        if (planeIt == m_planesByCallsign.end()) { return; }
+
+        Plane *plane = planeIt->second;
         if (!plane) { return; }
 
         plane->hasSurfaces = true;
@@ -263,9 +277,12 @@ namespace XSwiftBus
         plane->surfaces.lights.flashPattern = lightPattern;
     }
 
-    void CTraffic::setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident)
+    void CTraffic::setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident)
     {
-        Plane *plane = m_planesByCallsign.value(callsign, nullptr);
+        auto planeIt = m_planesByCallsign.find(callsign);
+        if (planeIt == m_planesByCallsign.end()) { return; }
+
+        Plane *plane = planeIt->second;
         if (!plane) { return; }
         plane->hasXpdr = true;
         plane->xpdr.code = code;
@@ -277,9 +294,9 @@ namespace XSwiftBus
     void CTraffic::requestRemoteAircraftData()
     {
         if (m_planesByCallsign.empty()) { return; }
-        const QList<Plane *> planes = m_planesByCallsign.values();
-        for (const Plane *plane : planes)
+        for (const auto &kv : m_planesByCallsign)
         {
+            Plane *plane = kv.second;
             assert(plane);
             double lat = plane->position.lat;
             double lon = plane->position.lon;
@@ -287,7 +304,7 @@ namespace XSwiftBus
             double groundElevation = plane->terrainProbe.getElevation(lat, lon, elevation);
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             double fudgeFactor = 3.0;
-            actualVertOffsetInfo(qPrintable(plane->modelName), nullptr, &fudgeFactor);
+            actualVertOffsetInfo(plane->modelName.c_str(), nullptr, &fudgeFactor);
             emitRemoteAircraftData(plane->callsign, lat, lon, groundElevation, fudgeFactor);
         }
     }
@@ -332,7 +349,7 @@ namespace XSwiftBus
                 message.getArgument(path);
                 queueDBusCall([ = ]()
                 {
-                    sendDBusReply(sender, serial, loadPlanesPackage(QString::fromStdString(path)));
+                    sendDBusReply(sender, serial, loadPlanesPackage(path));
                 });
             }
             else if (message.getMethodName() == "setDefaultIcao")
@@ -342,7 +359,7 @@ namespace XSwiftBus
                 message.getArgument(defaultIcao);
                 queueDBusCall([ = ]()
                 {
-                    setDefaultIcao(QString::fromStdString(defaultIcao));
+                    setDefaultIcao(defaultIcao);
                 });
             }
             else if (message.getMethodName() == "setDrawingLabels")
@@ -404,7 +421,7 @@ namespace XSwiftBus
 
                 queueDBusCall([ = ]()
                 {
-                    addPlane(QString::fromStdString(callsign), QString::fromStdString(modelName), QString::fromStdString(aircraftIcao), QString::fromStdString(airlineIcao), QString::fromStdString(livery));
+                    addPlane(callsign, modelName, aircraftIcao, airlineIcao, livery);
                 });
             }
             else if (message.getMethodName() == "removePlane")
@@ -415,7 +432,7 @@ namespace XSwiftBus
                 message.getArgument(callsign);
                 queueDBusCall([ = ]()
                 {
-                    removePlane(QString::fromStdString(callsign));
+                    removePlane(callsign);
                 });
             }
             else if (message.getMethodName() == "removeAllPlanes")
@@ -446,7 +463,7 @@ namespace XSwiftBus
                 message.getArgument(heading);
                 queueDBusCall([ = ]()
                 {
-                    setPlanePosition(QString::fromStdString(callsign), latitude, longitude, altitude, pitch, roll, heading);
+                    setPlanePosition(callsign, latitude, longitude, altitude, pitch, roll, heading);
                 });
             }
             else if (message.getMethodName() == "setPlaneSurfaces")
@@ -489,7 +506,7 @@ namespace XSwiftBus
                 message.getArgument(onGround);
                 queueDBusCall([ = ]()
                 {
-                    setPlaneSurfaces(QString::fromStdString(callsign), gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator,
+                    setPlaneSurfaces(callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator,
                                      rudder, aileron, landLight, beaconLight, strobeLight, navLight, lightPattern,
                                      onGround);
                 });
@@ -508,7 +525,7 @@ namespace XSwiftBus
                 message.getArgument(ident);
                 queueDBusCall([ = ]()
                 {
-                    setPlaneTransponder(QString::fromStdString(callsign), code, modeC, ident);
+                    setPlaneTransponder(callsign, code, modeC, ident);
                 });
             }
             else if (message.getMethodName() == "requestRemoteAircraftData")
@@ -546,8 +563,9 @@ namespace XSwiftBus
 
     int CTraffic::getPlaneData(void *id, int dataType, void *io_data)
     {
-        QHash<void *, Plane *> planesById = m_planesById;
-        Plane *plane = m_planesById.value(id, nullptr);
+        auto planeIt = m_planesById.find(id);
+        assert(planeIt != m_planesById.end());
+        Plane *plane = planeIt->second;
         if (!plane) { return xpmpData_Unavailable; }
 
         switch (dataType)
@@ -568,18 +586,20 @@ namespace XSwiftBus
         case xpmpDataType_Surfaces:
             if (plane->hasSurfaces)
             {
-                const auto currentTime = QDateTime::currentMSecsSinceEpoch();
+                const auto now = std::chrono::system_clock::now();
 
                 if (plane->surfaces.gearPosition != plane->targetGearPosition)
                 {
                     // interpolate gear position
                     constexpr float gearMoveTimeMs = 5000;
                     const auto gearPositionDiffRemaining = plane->targetGearPosition - plane->surfaces.gearPosition;
-                    const auto gearPositionDiffThisFrame = (currentTime - plane->prevSurfacesLerpTime) / gearMoveTimeMs;
+
+                    auto diffMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - plane->prevSurfacesLerpTime);
+                    const auto gearPositionDiffThisFrame = (diffMs.count()) / gearMoveTimeMs;
                     plane->surfaces.gearPosition += std::copysign(gearPositionDiffThisFrame, gearPositionDiffRemaining);
-                    plane->surfaces.gearPosition = qBound(0.0f, plane->surfaces.gearPosition, 1.0f);
+                    plane->surfaces.gearPosition = std::max(0.0f, std::min(plane->surfaces.gearPosition, 1.0f));
                 }
-                plane->prevSurfacesLerpTime = currentTime;
+                plane->prevSurfacesLerpTime = now;
                 const auto io_surfaces = static_cast<XPMPPlaneSurfaces_t *>(io_data);
 
                 if (memcmpPayload(io_surfaces, &plane->surfaces))

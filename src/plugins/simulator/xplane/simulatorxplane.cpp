@@ -97,8 +97,10 @@ namespace BlackSimPlugin
             m_slowTimer.setObjectName(this->objectName().append(":m_slowTimer"));
             connect(&m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::fastTimerTimeout);
             connect(&m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::slowTimerTimeout);
+            connect(&m_airportUpdater, &QTimer::timeout, this, &CSimulatorXPlane::updateAirportsInRange);
             m_fastTimer.start(100);
             m_slowTimer.start(1000);
+            m_airportUpdater.start(60000);
 
             this->setDefaultModel({ "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines", CAircraftModel::TypeModelMatchingDefaultModel,
                                     "A320 AUA", CAircraftIcaoCode("A320", "L2J")});
@@ -791,6 +793,11 @@ namespace BlackSimPlugin
             CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()), CLongitude(longitudeDeg, CAngleUnit::deg()), CAltitude(elevationMeters, CLengthUnit::m()));
             elevation.setSinglePointRadius();
             this->rememberElevationAndCG(callsign, elevation, CLength(modelVerticalOffsetMeters, CLengthUnit::m()));
+        }
+
+        void CSimulatorXPlane::updateAirportsInRange()
+        {
+            if (this->isConnected()) { m_serviceProxy->updateAirportsInRange(); }
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

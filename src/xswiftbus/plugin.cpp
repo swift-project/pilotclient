@@ -13,7 +13,6 @@
 #include "weather.h"
 #include "utils.h"
 #include "XPLM/XPLMProcessing.h"
-#include <QTimer>
 #include <functional>
 #include <thread>
 
@@ -71,6 +70,8 @@ namespace XSwiftBus
         m_service = new CService(m_dbusConnection.get());
         m_traffic = new CTraffic(m_dbusConnection.get());
         m_weather = new CWeather(m_dbusConnection.get());
+
+        INFO_LOG("XSwiftBus started.");
     }
 
     void CPlugin::onAircraftModelChanged()
