@@ -343,6 +343,7 @@ namespace BlackMisc
                 m_situationsByCallsign[callsign] = situations;
             }
 
+            // aircraft updates
             QWriteLocker l(&m_lockAircraft);
             const int c = m_aircraftInRange.setGroundElevationChecked(callsign, elevation);
             return c > 0;

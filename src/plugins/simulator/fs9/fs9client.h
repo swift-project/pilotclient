@@ -63,11 +63,10 @@ namespace BlackSimPlugin
             //! Client status changed
             void statusChanged(const BlackMisc::Aviation::CCallsign &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
 
-        protected slots:
-            //! Timer event slot
+        protected:
+            //! \copydoc QObject::timerEvent
             virtual void timerEvent(QTimerEvent *event) override;
 
-        protected:
             //! \copydoc BlackMisc::CContinuousWorker::initialize
             virtual void initialize() override;
 
@@ -87,10 +86,14 @@ namespace BlackSimPlugin
             //! Close the connection
             HRESULT closeConnection();
 
+            //! Send functions
+            //! @{
             void sendMultiplayerPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
             void sendMultiplayerParamaters();
             void sendMultiplayerChangePlayerPlane();
+            //! @}
 
+            //! Simulator interface
             const BlackCore::ISimulator *simulator() const;
 
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;

@@ -201,9 +201,10 @@ namespace BlackCore
         //! Angle calculation
         BlackMisc::PhysicalQuantities::CAngle calculateBearingToOwnAircraft(const BlackMisc::Aviation::CAircraftSituation &situation) const;
 
-        //! Store an aircraft situation
+        //! Store an aircraft situation under consideration of gnd.flags/CG and elevation
         //! \threadsafe
         //! \remark sets gnd flag from parts if parts are available
+        //! \remark uses gnd elevation if found
         void storeAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Add or update aircraft
@@ -220,7 +221,7 @@ namespace BlackCore
         //! Update booked station by callsign
         int updateBookedStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
 
-        //! Call ps_customFSInnPacketReceived with stored packet
+        //! Call CAirspaceMonitor::onCustomFSInnPacketReceived with stored packet
         void recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Send the information if aircraft and(!) client are available

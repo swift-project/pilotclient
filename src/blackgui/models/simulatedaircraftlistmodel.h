@@ -48,6 +48,6 @@ namespace BlackGui
         private:
             AircraftMode m_mode = NotSet;
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

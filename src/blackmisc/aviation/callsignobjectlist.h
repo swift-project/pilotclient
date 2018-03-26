@@ -51,10 +51,10 @@ namespace BlackMisc
         {
         public:
             //! Contains callsign?
-            bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            bool containsCallsign(const CCallsign &callsign) const;
 
             //! Apply for given callsign
-            int applyIfCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &variantMap, bool skipEqualValues = true);
+            int applyIfCallsign(const CCallsign &callsign, const CPropertyIndexVariantMap &variantMap, bool skipEqualValues = true);
 
             //! All callsigns
             BlackMisc::Aviation::CCallsignSet getCallsigns() const;

@@ -24,7 +24,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        //! Direct in memory access to client (network client) data
+        //! Direct in memory access to interpolation setup, normally implemented by simulator
         class BLACKMISC_EXPORT IInterpolationSetupProvider : public IProvider
         {
         public:

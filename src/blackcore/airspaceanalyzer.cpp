@@ -209,6 +209,6 @@ namespace BlackCore
             if (!wasValid) { return; } // ignore the 1st snapshot
         }
 
-        emit airspaceAircraftSnapshot(snapshot);
+        emit this->airspaceAircraftSnapshot(snapshot);
     }
 } // ns

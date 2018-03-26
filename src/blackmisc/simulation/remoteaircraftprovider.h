@@ -119,11 +119,11 @@ namespace BlackMisc
             //! \threadsafe
             virtual Aviation::CCallsignSet remoteAircraftSupportingParts() const = 0;
 
-            //! Enable/disable rendering
+            //! Enable/disable enabled aircraft
             //! \threadsafe
             virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) = 0;
 
-            //! Rendered?
+            //! Aircraft rendered?
             //! \threadsafe
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) = 0;
 
@@ -358,8 +358,8 @@ namespace BlackMisc
             CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
             CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
             Aviation::CCallsignSet m_aircraftWithParts;    //!< aircraft supporting parts, thread safe access required
-            int m_situationsAdded = 0; //!< total number of situations added
-            int m_partsAdded = 0;      //!< total number of parts added
+            int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
+            int m_partsAdded = 0;      //!< total number of parts added, thread safe access required
 
             CSimulatedAircraftList m_aircraftInRange; //!< aircraft, thread safe access required
             QMap<Aviation::CCallsign, CStatusMessageList> m_reverseLookupMessages;
