@@ -8,6 +8,7 @@
  */
 
 #include "clientprovider.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 
 using namespace BlackMisc::Aviation;
 
@@ -81,6 +82,24 @@ namespace BlackMisc
         {
             QWriteLocker l(&m_lockClient);
             return m_clients.removeByCallsign(callsign);
+        }
+
+        bool IClientProvider::autoAdjustCientGndCapability(const CAircraftSituation &situation)
+        {
+            if (situation.getCallsign().isEmpty()) { return false; } // no callsign
+            if (!situation.isOnGround()) { return false; } // nothing to adjust
+            if (situation.getOnGroundDetails() != CAircraftSituation::InFromNetwork) { return false; } // not from network
+
+            CClient client = this->getClientOrDefaultForCallsign(situation.getCallsign());
+
+            // need to change?
+            if (!client.isValid()) { return false; } // no client
+            if (client.hasGndFlagCapability()) { return false; } // already set
+
+            client.addCapability(CClient::FsdWithGroundFlag);
+            QWriteLocker l(&m_lockClient);
+            m_clients.replaceOrAddObjectByCallsign(client);
+            return true;
         }
 
         CClientList CClientAware::getClients() const

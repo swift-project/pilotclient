@@ -19,6 +19,7 @@
 
 namespace BlackMisc
 {
+    namespace Aviation { class CAircraftSituation; }
     namespace Network
     {
         //! Direct in memory access to client (network client) data
@@ -60,6 +61,10 @@ namespace BlackMisc
             //! Remove client
             //! \threadsafe
             int removeClient(const Aviation::CCallsign &callsign);
+
+            //! Adjust gnd.flag capability from situation
+            //! \threadsafe
+            bool autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation);
 
         private:
             CClientList m_clients;

@@ -792,9 +792,11 @@ namespace BlackCore
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
+        // update client info
+        this->autoAdjustCientGndCapability(situation);
+
         // store situation history
-        CAircraftSituation fullSituation(situation);
-        this->storeAircraftSituation(fullSituation);
+        this->storeAircraftSituation(situation); // updates situation
 
         const bool existsInRange = this->isAircraftInRange(callsign);
         const bool hasFsInnPacket = m_tempFsInnPackets.contains(callsign);
@@ -803,7 +805,7 @@ namespace BlackCore
         {
             CSimulatedAircraft aircraft;
             aircraft.setCallsign(callsign);
-            aircraft.setSituation(fullSituation);
+            aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
             this->addNewAircraftInRange(aircraft);
             this->sendInitialPilotQueries(callsign, true, !hasFsInnPacket);
@@ -817,9 +819,9 @@ namespace BlackCore
             // update, aircraft already exists
             CPropertyIndexVariantMap vm;
             vm.addValue(CSimulatedAircraft::IndexTransponder, transponder);
-            vm.addValue(CSimulatedAircraft::IndexSituation, fullSituation);
-            vm.addValue(CSimulatedAircraft::IndexRelativeDistance, this->calculateDistanceToOwnAircraft(fullSituation));
-            vm.addValue(CSimulatedAircraft::IndexRelativeBearing, this->calculateBearingToOwnAircraft(fullSituation));
+            vm.addValue(CSimulatedAircraft::IndexSituation, situation);
+            vm.addValue(CSimulatedAircraft::IndexRelativeDistance, this->calculateDistanceToOwnAircraft(situation));
+            vm.addValue(CSimulatedAircraft::IndexRelativeBearing, this->calculateBearingToOwnAircraft(situation));
             this->updateAircraftInRange(callsign, vm);
         }
 
