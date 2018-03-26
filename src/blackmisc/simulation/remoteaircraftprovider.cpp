@@ -121,8 +121,8 @@ namespace BlackMisc
             }
 
             // locked members
-            { QWriteLocker l(&m_lockParts); m_partsByCallsign.clear(); m_aircraftWithParts.clear(); }
-            { QWriteLocker l(&m_lockSituations); m_situationsByCallsign.clear(); }
+            { QWriteLocker l(&m_lockParts); m_partsByCallsign.clear(); m_aircraftWithParts.clear(); m_partsAdded = 0; m_partsLastModified.clear(); }
+            { QWriteLocker l(&m_lockSituations); m_situationsByCallsign.clear();  m_situationsAdded = 0; m_situationsLastModified.clear(); }
             { QWriteLocker l(&m_lockPartsHistory); m_aircraftPartsHistory.clear(); }
             { QWriteLocker l(&m_lockMessages); m_reverseLookupMessages.clear(); }
             { QWriteLocker l(&m_lockAircraft); m_aircraftInRange.clear(); }
@@ -164,8 +164,13 @@ namespace BlackMisc
 
         void CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation)
         {
+            if (situation.getCallsign().isEmpty()) { return; }
+            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+
             // list from new to old
             QWriteLocker lock(&m_lockSituations);
+            m_situationsAdded++;
+            m_situationsLastModified[situation.getCallsign()] = ts;
             CAircraftSituationList &situationList = m_situationsByCallsign[situation.getCallsign()];
             if (situationList.isEmpty())
             {
@@ -187,9 +192,12 @@ namespace BlackMisc
             if (callsign.isEmpty()) { return; }
 
             // list sorted from new to old
+            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
             CAircraftPartsList correctiveParts;
             {
                 QWriteLocker lock(&m_lockParts);
+                m_partsAdded++;
+                m_partsLastModified[callsign] = ts;
                 CAircraftPartsList &partsList = m_partsByCallsign[callsign];
                 partsList.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
 
@@ -207,7 +215,8 @@ namespace BlackMisc
             {
                 QWriteLocker lock(&m_lockSituations);
                 CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
-                situationList.adjustGroundFlag(parts);
+                const int c = situationList.adjustGroundFlag(parts);
+                if (c > 0) { m_situationsLastModified[callsign] = ts; }
             }
         }
 
@@ -418,6 +427,30 @@ namespace BlackMisc
             m_enableAircraftPartsHistory = enabled;
         }
 
+        int CRemoteAircraftProvider::aircraftSituationsAdded() const
+        {
+            QReadLocker l(&m_lockSituations);
+            return m_situationsAdded;
+        }
+
+        qint64 CRemoteAircraftProvider::situationsLastModified(const CCallsign &callsign) const
+        {
+            QReadLocker l(&m_lockSituations);
+            return m_situationsLastModified.value(callsign, -1);
+        }
+
+        qint64 CRemoteAircraftProvider::partsLastModified(const CCallsign &callsign) const
+        {
+            QReadLocker l(&m_lockParts);
+            return m_partsLastModified.value(callsign, -1);
+        }
+
+        int CRemoteAircraftProvider::aircraftPartsAdded() const
+        {
+            QReadLocker l(&m_lockParts);
+            return m_partsAdded;
+        }
+
         bool CRemoteAircraftProvider::isAircraftInRange(const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return false; }
@@ -456,8 +489,8 @@ namespace BlackMisc
 
         bool CRemoteAircraftProvider::removeAircraft(const CCallsign &callsign)
         {
-            { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftWithParts.remove(callsign); }
-            { QWriteLocker l2(&m_lockSituations); m_situationsByCallsign.remove(callsign); }
+            { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftWithParts.remove(callsign); m_partsLastModified.remove(callsign); }
+            { QWriteLocker l2(&m_lockSituations); m_situationsByCallsign.remove(callsign); m_situationsLastModified.remove(callsign); }
             { QWriteLocker l4(&m_lockPartsHistory); m_aircraftPartsHistory.remove(callsign); }
             bool removedCallsign = false;
             {
@@ -574,6 +607,30 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
             this->provider()->updateMarkAllAsNotRendered();
+        }
+
+        int CRemoteAircraftAware::aircraftSituationsAdded() const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->aircraftSituationsAdded();
+        }
+
+        int CRemoteAircraftAware::aircraftPartsAdded() const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->aircraftPartsAdded();
+        }
+
+        qint64 CRemoteAircraftAware::situationsLastModified(const CCallsign &callsign) const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->situationsLastModified(callsign);
+        }
+
+        qint64 CRemoteAircraftAware::partsLastModified(const CCallsign &callsign) const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->partsLastModified(callsign);
         }
 
         bool CRemoteAircraftAware::isRemoteAircraftSupportingParts(const CCallsign &callsign) const

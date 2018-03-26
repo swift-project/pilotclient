@@ -171,6 +171,22 @@ namespace BlackMisc
             //! \threadsafe
             virtual void enableAircraftPartsHistory(bool enabled) = 0;
 
+            //! Number of situations added
+            //! \threadsafe
+            virtual int aircraftSituationsAdded() const = 0;
+
+            //! Number of parts added
+            //! \threadsafe
+            virtual int aircraftPartsAdded() const = 0;
+
+            //! When last modified
+            //! \threadsafe
+            virtual qint64 situationsLastModified(const Aviation::CCallsign &callsign) const = 0;
+
+            //! When last modified
+            //! \threadsafe
+            virtual qint64 partsLastModified(const Aviation::CCallsign &callsign) const = 0;
+
             //! Destructor
             virtual ~IRemoteAircraftProvider() {}
 
@@ -239,6 +255,10 @@ namespace BlackMisc
             virtual CStatusMessageList getAircraftPartsHistory(const Aviation::CCallsign &callsign) const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
             virtual void enableAircraftPartsHistory(bool enabled) override;
+            virtual int aircraftSituationsAdded() const override;
+            virtual int aircraftPartsAdded() const override;
+            virtual qint64 situationsLastModified(const Aviation::CCallsign &callsign) const override;
+            virtual qint64 partsLastModified(const Aviation::CCallsign &callsign) const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const Aviation::CAircraftSituation &)> addedSituationSlot,
@@ -338,10 +358,14 @@ namespace BlackMisc
             CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
             CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
             Aviation::CCallsignSet m_aircraftWithParts;    //!< aircraft supporting parts, thread safe access required
+            int m_situationsAdded = 0; //!< total number of situations added
+            int m_partsAdded = 0;      //!< total number of parts added
 
             CSimulatedAircraftList m_aircraftInRange; //!< aircraft, thread safe access required
             QMap<Aviation::CCallsign, CStatusMessageList> m_reverseLookupMessages;
             QMap<Aviation::CCallsign, CStatusMessageList> m_aircraftPartsHistory;
+            QMap<Aviation::CCallsign, qint64> m_situationsLastModified;
+            QMap<Aviation::CCallsign, qint64> m_partsLastModified;
 
             bool m_enableReverseLookupMsgs = false;   //!< shall we log. information about the matching process
             bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts
@@ -420,6 +444,18 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
             void updateMarkAllAsNotRendered();
+
+            //! \copydoc IRemoteAircraftProvider::aircraftSituationsAdded
+            int aircraftSituationsAdded() const;
+
+            //! \copydoc IRemoteAircraftProvider::aircraftPartsAdded
+            int aircraftPartsAdded() const;
+
+            //! \copydoc IRemoteAircraftProvider::situationsLastModified
+            qint64 situationsLastModified(const Aviation::CCallsign &callsign) const;
+
+            //! \copydoc IRemoteAircraftProvider::partsLastModified
+            qint64 partsLastModified(const Aviation::CCallsign &callsign) const;
 
             //! Set remote aircraft provider
             void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { this->setProvider(remoteAircraftProvider); }

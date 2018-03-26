@@ -130,6 +130,10 @@ namespace BlackCore
             virtual int getRemoteAircraftSupportingPartsCount() const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
             virtual void enableAircraftPartsHistory(bool enabled) override;
+            virtual int aircraftSituationsAdded() const override;
+            virtual int aircraftPartsAdded() const override;
+            virtual qint64 situationsLastModified(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual qint64 partsLastModified(const BlackMisc::Aviation::CCallsign &callsign) const override;
             //! @}
 
             //! In transition state, e.g. connecting, disconnecting.
