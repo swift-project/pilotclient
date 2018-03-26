@@ -35,7 +35,7 @@ namespace BlackMisc
             {}
 
             //! Position arrays for interpolation
-            struct PosArray
+            struct BLACKMISC_EXPORT PosArray
             {
                 //! Init all values to zero
                 void initToZero();
@@ -50,7 +50,7 @@ namespace BlackMisc
             };
 
             //! Cubic function that performs the actual interpolation
-            class Interpolant
+            class BLACKMISC_EXPORT Interpolant
             {
             public:
                 //! Default
