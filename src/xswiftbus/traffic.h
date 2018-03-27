@@ -15,7 +15,9 @@
 #include "dbusobject.h"
 #include "datarefs.h"
 #include "terrainprobe.h"
+#include "menus.h"
 #include "XPMPMultiplayer.h"
+#include "XPLMCamera.h"
 #include <XPLM/XPLMDisplay.h>
 #include <functional>
 #include <utility>
@@ -52,6 +54,9 @@ namespace XSwiftBus
             static std::string s(XSWIFTBUS_TRAFFIC_OBJECTPATH);
             return s;
         }
+
+        //! Set plane view submenu
+        void setPlaneViewMenu(const CMenu &planeViewSubMenu) { m_planeViewSubMenu = planeViewSubMenu; }
 
         //! Called by XPluginStart
         static void initLegacyData();
@@ -113,9 +118,11 @@ namespace XSwiftBus
 
         void emitSimFrame();
         void emitRemoteAircraftData(const std::string &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
+        void orbitRemotePlane(const std::string &callsign);
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
+        static int orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
 
         struct Plane
         {
@@ -141,6 +148,10 @@ namespace XSwiftBus
         std::unordered_map<std::string, Plane *> m_planesByCallsign;
         std::unordered_map<void *, Plane *> m_planesById;
         std::chrono::system_clock::time_point m_timestampLastSimFrame = std::chrono::system_clock::now();
+
+        CMenu m_planeViewSubMenu;
+        std::unordered_map<std::string, CMenuItem> m_planeViewMenuItems;
+        std::string m_planeViewCallsign;
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)

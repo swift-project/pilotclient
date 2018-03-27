@@ -57,6 +57,7 @@ namespace XSwiftBus
         CMenu m_menu;
         CMenuItem m_startServerMenuItem;
         CMenuItem m_toggleMessageWindowMenuItem;
+        CMenu m_planeViewSubMenu;
 
         std::thread m_dbusThread;
         bool m_shouldStop = false;

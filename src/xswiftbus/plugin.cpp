@@ -32,6 +32,7 @@ namespace XSwiftBus
         m_toggleMessageWindowMenuItem = m_menu.item("Toggle Message Window", [this] { if(m_service) { m_service->toggleMessageBoxVisibility(); } });
         // m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemBusAddress()); }));
         // m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress("localhost")); }));
+        m_planeViewSubMenu = m_menu.subMenu("Plane View");
 
         m_dbusThread = std::thread([this]()
         {
@@ -70,6 +71,8 @@ namespace XSwiftBus
         m_service = new CService(m_dbusConnection.get());
         m_traffic = new CTraffic(m_dbusConnection.get());
         m_weather = new CWeather(m_dbusConnection.get());
+
+        m_traffic->setPlaneViewMenu(m_planeViewSubMenu);
 
         INFO_LOG("XSwiftBus started.");
     }

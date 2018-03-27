@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "XPMPMultiplayer.h"
 #include "XPMPPlaneRenderer.h"
+#include "XPLMGraphics.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
 #include <cassert>
@@ -120,6 +121,20 @@ namespace XSwiftBus
         sendDBusMessage(signalRemoteAircraftData);
     }
 
+    void CTraffic::orbitRemotePlane(const std::string &callsign)
+    {
+        m_planeViewCallsign = callsign;
+
+        /* This is the hotkey callback.  First we simulate a joystick press and
+         * release to put us in 'free view 1'.  This guarantees that no panels
+         * are showing and we are an external view. */
+        XPLMCommandButtonPress(xplm_joy_v_fr1);
+        XPLMCommandButtonRelease(xplm_joy_v_fr1);
+
+        /* Now we control the camera until the view changes. */
+        XPLMControlCamera(xplm_ControlCameraUntilViewChanges, orbitPlaneFunc, this);
+    }
+
     int g_maxPlanes = 100;
     float g_drawDistance = 50.0f;
 
@@ -206,11 +221,17 @@ namespace XSwiftBus
             Plane *plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery, modelName);
             m_planesByCallsign[callsign] = plane;
             m_planesById[id] = plane;
+
+            // Create view menu item
+            CMenuItem planeViewMenuItem = m_planeViewSubMenu.item(callsign, [this, callsign] { orbitRemotePlane(callsign); });
+            m_planeViewMenuItems[callsign] = planeViewMenuItem;
         }
     }
 
     void CTraffic::removePlane(const std::string &callsign)
     {
+        m_planeViewMenuItems.erase(callsign);
+
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt == m_planesByCallsign.end()) { return; }
 
@@ -232,6 +253,7 @@ namespace XSwiftBus
         }
         m_planesByCallsign.clear();
         m_planesById.clear();
+        m_planeViewMenuItems.clear();
     }
 
     void CTraffic::setPlanePosition(const std::string &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
@@ -626,6 +648,55 @@ namespace XSwiftBus
 
         default: return xpmpData_Unavailable;
         }
+    }
+
+    int CTraffic::orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon)
+    {
+        auto *traffic = static_cast<CTraffic *>(refcon);
+
+        if (isLosingControl == 1)
+        {
+            // traffic->m_planeViewCallsign.clear();
+            return 0;
+        }
+
+        if (cameraPosition)
+        {
+            int w, h, x, y;
+            // First get the screen size and mouse location. We will use this to decide
+            // what part of the orbit we are in. The mouse will move us up-down and around.
+            // fixme: In a future update, change the orbit only while right mouse button is pressed.
+            XPLMGetScreenSize(&w, &h);
+            XPLMGetMouseLocation(&x, &y);
+            double heading = 360.0 * static_cast<double>(x) / static_cast<double>(w);
+            double pitch = 20.0 * ((static_cast<double>(y) / static_cast<double>(h)) * 2.0 - 1.0);
+
+            // Now calculate where the camera should be positioned to be 200
+            // meters from the plane and pointing at the plane at the pitch and
+            // heading we wanted above.
+            double dx = -50.0 * sin(heading * M_PI / 180.0);
+            double dz = 50.0 * cos(heading * M_PI / 180.0);
+            double dy = -50.0 * tan(pitch * M_PI / 180.0);
+
+            auto planeIt = traffic->m_planesByCallsign.find(traffic->m_planeViewCallsign);
+            if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }
+            Plane *plane = planeIt->second;
+
+            double lx, ly, lz;
+            static const double kFtToMeters = 0.3048;
+            XPLMWorldToLocal(plane->position.lat, plane->position.lon, plane->position.elevation * kFtToMeters, &lx, &ly, &lz);
+
+            // Fill out the camera position info.
+            cameraPosition->x = static_cast<float>(lx + dx);
+            cameraPosition->y = static_cast<float>(ly + dy);
+            cameraPosition->z = static_cast<float>(lz + dz);
+            cameraPosition->pitch = static_cast<float>(pitch);
+            cameraPosition->heading = static_cast<float>(heading);
+            cameraPosition->roll = 0;
+        }
+
+        // Return 1 to indicate we want to keep controlling the camera.
+        return 1;
     }
 }
 
