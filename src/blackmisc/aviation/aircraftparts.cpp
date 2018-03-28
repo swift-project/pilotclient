@@ -171,14 +171,5 @@ namespace BlackMisc
         {
             *this = guessedParts(situation);
         }
-
-        double CAircraftParts::isOnGroundInterpolated() const
-        {
-            if (m_isOnGroundInterpolated < 0)
-            {
-                return m_isOnGround ? 1.0 : 0.0;
-            }
-            return m_isOnGroundInterpolated;
-        }
     } // namespace
 } // namespace

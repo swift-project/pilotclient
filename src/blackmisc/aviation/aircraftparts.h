@@ -133,16 +133,6 @@ namespace BlackMisc
             //! Guess the parts
             void guessParts(const CAircraftSituation &situation);
 
-            //! Is aircraft on ground? (Smoothly interpolated between 0 and 1.)
-            //! \remark 1..on ground 0..not on ground
-            //! \deprecated
-            double isOnGroundInterpolated() const;
-
-            //! Set aircraft on ground. (Smoothly interpolated between 0 and 1.)
-            //! \remark 1..on ground 0..not on ground
-            //! \deprecated
-            void setOnGroundInterpolated(double onGround) { m_isOnGroundInterpolated = onGround; }
-
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -159,7 +149,6 @@ namespace BlackMisc
             bool m_gearDown    = false;
             bool m_spoilersOut = false;
             bool m_isOnGround  = false;
-            double m_isOnGroundInterpolated = -1;
 
             BLACK_METACLASS(
                 CAircraftParts,
@@ -169,7 +158,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER_NAMED(spoilersOut, "spoilers_out"),
                 BLACK_METAMEMBER_NAMED(engines, "engines"),
                 BLACK_METAMEMBER_NAMED(isOnGround, "on_ground"),
-                BLACK_METAMEMBER(isOnGroundInterpolated, 0, DisabledForJson | DisabledForComparison),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison),
                 BLACK_METAMEMBER(timeOffsetMs, 0, DisabledForJson | DisabledForComparison)
             );
