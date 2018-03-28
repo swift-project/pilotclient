@@ -83,6 +83,9 @@ namespace BlackMisc
             //! Normal vector with double precision
             virtual std::array<double, 3> normalVectorDouble() const = 0;
 
+            //! Is equal, epsilon considered
+            bool equalNormalVectorDouble(const std::array<double, 3> &otherVector) const;
+
             //! Latitude as string
             QString latitudeAsString() const { return this->latitude().toQString(true); }
 

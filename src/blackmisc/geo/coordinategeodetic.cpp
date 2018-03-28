@@ -69,6 +69,18 @@ namespace BlackMisc
             return (coordinate1.normalVector() - coordinate2.normalVector()).lengthSquared();
         }
 
+        bool ICoordinateGeodetic::equalNormalVectorDouble(const std::array<double, 3> &otherVector) const
+        {
+            static const double epsilon = std::numeric_limits<double>::epsilon();
+            const std::array<double, 3> thisVector = this->normalVectorDouble();
+            for (unsigned int i = 0; i < otherVector.size(); i++)
+            {
+                const double d = thisVector[i] - otherVector[i];
+                if (qAbs(d) > epsilon) { return false; }
+            }
+            return true;
+        }
+
         CLength ICoordinateGeodetic::calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const
         {
             return Geo::calculateGreatCircleDistance((*this), otherCoordinate);
