@@ -24,13 +24,12 @@ namespace BlackMisc
                 if (m_elvCoordinates.containsObjectInRange(elevationCoordinate, minRange(epsilon))) { return false; }
             }
             {
-                // we keep latest at fron
+                // we keep latest at front
                 // * we assume we find them faster
                 // * and need the more frequently (the recent ones)
                 QWriteLocker l(&m_lockElvCoordinates);
                 if (m_elvCoordinates.size() > MaxElevations) { m_elvCoordinates.pop_back(); }
                 m_elvCoordinates.push_front(elevationCoordinate);
-
             }
             return true;
         }
@@ -95,7 +94,19 @@ namespace BlackMisc
         CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
         {
             const CCoordinateGeodetic coordinate = this->getElevationCoordinates().findClosestWithinRange(reference, minRange(range));
-            return CElevationPlane(coordinate, reference); // plane with radis = distnace to reference
+            const bool found = !coordinate.isNull();
+            {
+                QWriteLocker l{&m_lockElvCoordinates };
+                if (found) { m_elvFound++; }
+                else { m_elvMissed++; }
+            }
+            return CElevationPlane(coordinate, reference); // plane with radis = distance to reference
+        }
+
+        QPair<int, int> ISimulationEnvironmentProvider::getElevationsFoundMissed() const
+        {
+            QReadLocker l(&m_lockElvCoordinates);
+            return QPair<int, int>(m_elvFound, m_elvMissed);
         }
 
         CSimulatorPluginInfo ISimulationEnvironmentProvider::getSimulatorPluginInfo() const
@@ -162,6 +173,7 @@ namespace BlackMisc
         {
             QWriteLocker l(&m_lockElvCoordinates);
             m_elvCoordinates.clear();
+            m_elvFound = m_elvMissed = 0;
         }
 
         void ISimulationEnvironmentProvider::clearCGs()
@@ -181,6 +193,12 @@ namespace BlackMisc
         {
             if (!this->hasProvider()) { return CElevationPlane::null(); }
             return this->provider()->findClosestElevationWithinRange(reference, range);
+        }
+
+        QPair<int, int> CSimulationEnvironmentAware::getElevationsFoundMissed() const
+        {
+            if (!this->hasProvider()) { return QPair<int, int>(0, 0); }
+            return this->provider()->getElevationsFoundMissed();
         }
 
         CSimulatorPluginInfo CSimulationEnvironmentAware::getSimulatorPluginInfo() const

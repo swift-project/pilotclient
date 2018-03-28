@@ -20,6 +20,7 @@
 
 #include <QMap>
 #include <QObject>
+#include <QPair>
 
 namespace BlackMisc
 {
@@ -38,6 +39,10 @@ namespace BlackMisc
             //! Find closest elevation
             //! \threadsafe
             Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
+
+            //! Elevations found/missed statistics
+            //! \threadsafe
+            QPair<int, int> getElevationsFoundMissed() const;
 
             //! Get the represented plugin
             //! \threadsafe
@@ -122,6 +127,8 @@ namespace BlackMisc
             CSimulatorPluginInfo m_simulatorPluginInfo; //!< info object
             Geo::CCoordinateGeodeticList m_elvCoordinates;
             QMap<Aviation::CCallsign, PhysicalQuantities::CLength> m_cgs; //! CGs
+            mutable int m_elvFound = 0;   //!< statistics only
+            mutable int m_elvMissed = 0;  //!< statistics only
             mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates
             mutable QReadWriteLock m_lockCG; //!< lock CGs
             mutable QReadWriteLock m_lockModel; //!< lock models
@@ -136,6 +143,9 @@ namespace BlackMisc
 
             //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRange
             Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
+
+            //! \copydoc ISimulationEnvironmentProvider::getElevationsFoundMissed
+            QPair<int, int> getElevationsFoundMissed() const;
 
             //! \copydoc ISimulationEnvironmentProvider::getSimulatorPluginInfo
             CSimulatorPluginInfo getSimulatorPluginInfo() const;
