@@ -108,6 +108,19 @@ namespace BlackMisc
             return c;
         }
 
+        int CSimulatedAircraftList::setFastPositionUpdates(const CCallsign &callsign, bool fastPositions, bool onlyFirst)
+        {
+            int c = 0;
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                aircraft.setFastPositionUpdates(fastPositions);
+                c++;
+                if (onlyFirst) break;
+            }
+            return c;
+        }
+
         int CSimulatedAircraftList::setEnabled(const CCallsign &callsign, bool enabled, bool onlyFirst)
         {
             int c = 0;
@@ -134,7 +147,7 @@ namespace BlackMisc
             return c;
         }
 
-        int CSimulatedAircraftList::setAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool onlyFirst)
+        int CSimulatedAircraftList::setAircraftPartsSynchronized(const CCallsign &callsign, const CAircraftParts &parts, bool onlyFirst)
         {
             int c = 0;
             for (CSimulatedAircraft &aircraft : (*this))

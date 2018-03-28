@@ -188,6 +188,12 @@ namespace BlackMisc
             //! On ground details
             void setOnGroundDetails(CAircraftSituation::OnGroundDetails details) { m_onGroundDetails = static_cast<int>(details); }
 
+            //! Set on ground as interpolated from ground fatcor
+            bool setOnGroundFromGroundFactorFromInterpolation(double threshold = 0.5);
+
+            //! Set on ground by underflow detection, detects below ground scenarios
+            bool setOnGroundByUnderflowDetection(const PhysicalQuantities::CLength &cg);
+
             //! On ground info as string
             QString getOnGroundInfo() const;
 

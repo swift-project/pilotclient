@@ -79,13 +79,16 @@ namespace BlackMisc
             int setRendered(const Aviation::CCallsign &callsign, bool rendered, bool onlyFirst = true);
 
             //! Mark given callsign as enabled
-            int setEnabled(const Aviation::CCallsign &callsign, bool enabled, bool onlyFirst = true);
+            int setEnabled(const Aviation::CCallsign &callsign, bool enabled, bool onlyFirst);
+
+            //! Mark as fast position enabled
+            int setFastPositionUpdates(const Aviation::CCallsign &callsign, bool fastPositions, bool onlyFirst = true);
 
             //! Set model
             int setAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, bool onlyFirst = true);
 
-            //! Set aircraft parts
-            int setAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool onlyFirst = true);
+            //! Set aircraft parts and mark as synchronized
+            int setAircraftPartsSynchronized(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool onlyFirst = true);
 
             //! Set aircraft parts
             int setAircraftSituation(const Aviation::CCallsign &callsign, const Aviation::CAircraftSituation &situation, bool onlyFirst = true);

@@ -229,9 +229,15 @@ namespace BlackMisc
 
         void CAircraftSituation::setOnGroundFactor(double groundFactor)
         {
-            if (groundFactor < 0.0) { m_onGroundFactor = -1.0; return; }
-            if (groundFactor > 1.0) { m_onGroundFactor =  1.0; return; }
-            m_onGroundFactor = groundFactor;
+            double gf = groundFactor;
+            do
+            {
+                if (groundFactor < 0.0)   { gf = -1.0; break; }
+                if (groundFactor < 0.001) { gf =  0.0; break; }
+                if (groundFactor > 0.999) { gf =  1.0; break; }
+            }
+            while (false);
+            m_onGroundFactor = gf;
         }
 
         bool CAircraftSituation::guessOnGround(bool vtol, const PhysicalQuantities::CLength &cg)
@@ -269,6 +275,29 @@ namespace BlackMisc
         const QString &CAircraftSituation::getOnDetailsAsString() const
         {
             return CAircraftSituation::onGroundDetailsToString(this->getOnGroundDetails());
+        }
+
+        bool CAircraftSituation::setOnGroundFromGroundFactorFromInterpolation(double threshold)
+        {
+            this->setOnGroundDetails(OnGroundByInterpolation);
+            if (this->getOnGroundFactor() < 0.0)
+            {
+                this->setOnGround(NotSet);
+                return false;
+            }
+
+            // set on ground but leave factor untouched
+            const bool og = this->getOnGroundFactor() > threshold; // 1.0 means on ground
+            m_onGround = og ? OnGround : NotOnGround;
+            return true;
+        }
+
+        bool CAircraftSituation::setOnGroundByUnderflowDetection(const CLength &cg)
+        {
+            IsOnGround og = this->isOnGroundByElevation(cg);
+            if (og == OnGroundSituationUnknown) { return false; }
+            this->setOnGround(og, OnGroundByElevationAndCG);
+            return true;
         }
 
         QString CAircraftSituation::getOnGroundInfo() const
