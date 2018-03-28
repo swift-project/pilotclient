@@ -32,7 +32,7 @@ namespace BlackSimPlugin
 
         bool CXPlaneMPAircraft::isSameAsSent(const CAircraftSituation &position) const
         {
-            return m_positionAsSent == position;
+            return m_situationAsSent == position;
         }
 
         void CXPlaneMPAircraft::toggleInterpolatorMode()

@@ -165,7 +165,7 @@ namespace BlackSimPlugin
             CXSwiftBusWeatherProxy *m_weatherProxy { nullptr };
             QTimer m_fastTimer;
             QTimer m_slowTimer;
-            BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft
+            BlackMisc::Aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
 
             // Driver Interpolation

@@ -146,6 +146,12 @@ namespace BlackSimPlugin
             return m_interpolator->getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
         }
 
+        const CAircraftSituation &CSimConnectObject::getLastInterpolatedSituation() const
+        {
+            if (!m_interpolator) { return CAircraftSituation::null(); }
+            return m_interpolator->getLastInterpolatedSituation();
+        }
+
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts)
         {
             // First check, if this request id belongs to us

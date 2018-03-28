@@ -55,8 +55,11 @@ namespace BlackSimPlugin
             //! Parts as sent to simulator
             void setPartsAsSent(const BlackMisc::Aviation::CAircraftParts &parts) { m_partsAsSent = parts; }
 
+            //! Situation as sent to simulator
+            const BlackMisc::Aviation::CAircraftSituation &getSituationAsSent() const { return m_situationAsSent; }
+
             //! Position as sent
-            void setPositionAsSent(const BlackMisc::Aviation::CAircraftSituation &position) { m_positionAsSent = position; }
+            void setSituationAsSent(const BlackMisc::Aviation::CAircraftSituation &position) { m_situationAsSent = position; }
 
             //! Same as sent
             bool isSameAsSent(const BlackMisc::Aviation::CAircraftSituation &position) const;
@@ -94,7 +97,7 @@ namespace BlackSimPlugin
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
             QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
-            BlackMisc::Aviation::CAircraftSituation m_positionAsSent;
+            BlackMisc::Aviation::CAircraftSituation m_situationAsSent;
             BlackMisc::Aviation::CAircraftParts m_partsAsSent;
         };
 

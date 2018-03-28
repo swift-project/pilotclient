@@ -327,6 +327,12 @@ namespace BlackMisc
             //! Delta distance, near to ground
             static const PhysicalQuantities::CLength &deltaNearGround();
 
+            //! Null situation
+            static const CAircraftSituation &null();
+
+            //! A default CG if not other value is available
+            static const PhysicalQuantities::CLength &defaultCG();
+
         private:
             CCallsign m_correspondingCallsign;
             Geo::CCoordinateGeodetic m_position; //!< NULL position as default

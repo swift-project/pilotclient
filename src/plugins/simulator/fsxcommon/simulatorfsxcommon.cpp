@@ -485,6 +485,9 @@ namespace BlackSimPlugin
             }
 
             // CElevationPlane: deg, deg, feet
+            // we only remember near ground
+            if (simObject.getLastInterpolatedSituation().canLikelySkipNearGroundInterpolation()) { return; }
+
             CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt);
             elevation.setSinglePointRadius();
             this->rememberElevationAndCG(simObject.getCallsign(), elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));

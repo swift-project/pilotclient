@@ -707,7 +707,7 @@ namespace BlackSimPlugin
                     // update situation
                     if (!xplaneAircraft.isSameAsSent(interpolatedSituation))
                     {
-                        m_xplaneAircraftObjects[xplaneAircraft.getCallsign()].setPositionAsSent(interpolatedSituation);
+                        m_xplaneAircraftObjects[xplaneAircraft.getCallsign()].setSituationAsSent(interpolatedSituation);
                         m_trafficProxy->setPlanePosition(interpolatedSituation.getCallsign().asString(),
                                                          interpolatedSituation.latitude().value(CAngleUnit::deg()),
                                                          interpolatedSituation.longitude().value(CAngleUnit::deg()),
@@ -784,8 +784,10 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters)
         {
+            // we skip if we are not near ground
             const CCallsign cs(callsign);
             if (!m_xplaneAircraftObjects.contains(cs)) { return; }
+            if (m_xplaneAircraftObjects[cs].getSituationAsSent().canLikelySkipNearGroundInterpolation()) { return; }
 
             CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()), CLongitude(longitudeDeg, CAngleUnit::deg()), CAltitude(elevationMeters, CLengthUnit::m()));
             elevation.setSinglePointRadius();

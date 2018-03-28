@@ -10,7 +10,7 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/geo/elevationplane.h"
-#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/comparefunctions.h"
@@ -106,6 +106,18 @@ namespace BlackMisc
         {
             static const CLength small(0.5, CLengthUnit::m());
             return small;
+        }
+
+        const CAircraftSituation &CAircraftSituation::null()
+        {
+            static const CAircraftSituation n;
+            return n;
+        }
+
+        const CLength &CAircraftSituation::defaultCG()
+        {
+            static const CLength cg(2.5, CLengthUnit::m());
+            return cg;
         }
 
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -412,7 +424,19 @@ namespace BlackMisc
 
         bool CAircraftSituation::canLikelySkipNearGroundInterpolation() const
         {
+            // those we can exclude
+            if (this->isOnGround() && this->hasInboundGroundInformation()) { return false; }
+
+            // cases where we can skip
+            if (this->isNull()) { return true; }
             if (this->getGroundSpeed().value(CSpeedUnit::kts()) > 250) { return true; }
+
+            if (this->hasGroundElevation())
+            {
+                static const CLength threshold(400, CLengthUnit::m());
+                const CLength a = this->getHeightAboveGround();
+                if (!a.isNull() && a >= threshold) { return true; } // too high for ground
+            }
             return false;
         }
 

@@ -161,6 +161,9 @@ namespace BlackSimPlugin
                 const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
                 BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;
 
+            //! Last interpolated situation
+            const BlackMisc::Aviation::CAircraftSituation &getLastInterpolatedSituation() const;
+
             //! Interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 
