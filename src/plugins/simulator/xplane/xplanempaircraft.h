@@ -17,6 +17,7 @@
 #include <QSharedPointer>
 #include <QStringList>
 
+namespace BlackCore { class ISimulator; }
 namespace BlackSimPlugin
 {
     namespace XPlane
@@ -30,13 +31,8 @@ namespace BlackSimPlugin
 
             //! Constructor providing initial situation/parts
             CXPlaneMPAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
+                              BlackCore::ISimulator *simulator,
                               BlackMisc::Simulation::CInterpolationLogger *logger);
-
-            //! Constructor providing initial situation
-            CXPlaneMPAircraft(const BlackMisc::Aviation::CAircraftSituation &situation);
-
-            //! Constructor providing initial parts
-            CXPlaneMPAircraft(const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Destructor
             ~CXPlaneMPAircraft() {}

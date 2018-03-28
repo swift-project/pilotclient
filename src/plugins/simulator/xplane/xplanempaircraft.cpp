@@ -8,8 +8,10 @@
  */
 
 #include "xplanempaircraft.h"
+#include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 
+using namespace BlackCore;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 
@@ -20,21 +22,13 @@ namespace BlackSimPlugin
         CXPlaneMPAircraft::CXPlaneMPAircraft()
         { }
 
-        CXPlaneMPAircraft::CXPlaneMPAircraft(const CSimulatedAircraft &aircraft,
-                                             CInterpolationLogger *logger) :
+        CXPlaneMPAircraft::CXPlaneMPAircraft(
+            const CSimulatedAircraft &aircraft, ISimulator *simulator, CInterpolationLogger *logger) :
             m_aircraft(aircraft),
-            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign()))
+            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger))
         {
             m_interpolator->attachLogger(logger);
         }
-
-        CXPlaneMPAircraft::CXPlaneMPAircraft(const CAircraftSituation &situation) :
-            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(situation.getCallsign()))
-        { }
-
-        CXPlaneMPAircraft::CXPlaneMPAircraft(const CAircraftParts &parts, const CCallsign &callsign) :
-            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(callsign))
-        { }
 
         bool CXPlaneMPAircraft::isSameAsSent(const CAircraftSituation &position) const
         {

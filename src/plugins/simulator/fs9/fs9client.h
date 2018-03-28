@@ -44,7 +44,7 @@ namespace BlackSimPlugin
                        const QString &modelName,
                        const BlackMisc::PhysicalQuantities::CTime &updateInterval,
                        BlackMisc::Simulation::CInterpolationLogger *logger,
-                       BlackCore::ISimulator *owner);
+                       BlackCore::ISimulator *simulator);
 
             //! Destructor
             virtual ~CFs9Client();

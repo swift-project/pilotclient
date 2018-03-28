@@ -490,7 +490,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(!newRemoteAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "empty callsign");
             Q_ASSERT_X(newRemoteAircraft.hasModelString(), Q_FUNC_INFO, "missing model string");
 
-            m_xplaneAircraftObjects.insert(newRemoteAircraft.getCallsign(), CXPlaneMPAircraft(newRemoteAircraft, &m_interpolationLogger));
+            m_xplaneAircraftObjects.insert(newRemoteAircraft.getCallsign(), CXPlaneMPAircraft(newRemoteAircraft, this, &m_interpolationLogger));
             CAircraftModel aircraftModel = newRemoteAircraft.getModel();
             QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
             m_trafficProxy->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),

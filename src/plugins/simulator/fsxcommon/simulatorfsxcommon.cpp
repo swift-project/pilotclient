@@ -1527,7 +1527,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                simObject = CSimConnectObject(aircraft, requestId, &m_interpolationLogger);
+                simObject = CSimConnectObject(aircraft, requestId, this, this, this->getRemoteAircraftProvider(), &m_interpolationLogger);
             }
             m_simConnectObjects.insert(aircraft.getCallsign(), simObject);
             return simObject;

@@ -460,6 +460,9 @@ namespace BlackMisc
             //! Set remote aircraft provider
             void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { this->setProvider(remoteAircraftProvider); }
 
+            //! Get the aircraft provider
+            IRemoteAircraftProvider *getRemoteAircraftProvider() const { return this->getProvider(); }
+
         protected:
             //! Default constructor
             CRemoteAircraftAware() {}

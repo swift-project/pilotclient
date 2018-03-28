@@ -32,6 +32,7 @@ namespace BlackSimPlugin
             //! Constructor providing initial situation/parts
             CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
                               DWORD requestId,
+                              BlackMisc::Simulation::ISimulationEnvironmentProvider *p1, BlackMisc::Simulation::IInterpolationSetupProvider *p2, BlackMisc::Simulation::IRemoteAircraftProvider *p3,
                               BlackMisc::Simulation::CInterpolationLogger *logger);
 
             //! Destructor

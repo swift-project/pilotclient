@@ -8,11 +8,12 @@
  */
 
 #include "simconnectobject.h"
-#include "simconnectobject.h"
+#include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore;
 
 namespace BlackSimPlugin
 {
@@ -23,12 +24,11 @@ namespace BlackSimPlugin
 
         CSimConnectObject::CSimConnectObject(const CSimulatedAircraft &aircraft,
                                              DWORD requestId,
+                                             ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
                                              CInterpolationLogger *logger) :
             m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
-            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign()))
-        {
-            m_interpolator->attachLogger(logger);
-        }
+            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), p1, p2, p3, logger))
+        { }
 
         void CSimConnectObject::invalidatePartsAsSent()
         {

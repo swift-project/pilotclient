@@ -285,7 +285,7 @@ namespace BlackSimPlugin
             CSimulatedAircraft aircraft(remoteAircraft);
             aircraft.setRendered(true);
             const CCallsign cs = aircraft.getCallsign();
-            m_interpolators.insert(cs, CInterpolatorMultiWrapper(cs, &m_interpolationLogger, this));
+            m_interpolators.insert(cs, CInterpolatorMultiWrapper(cs, this, this, this->getRemoteAircraftProvider(), &m_interpolationLogger));
             m_renderedAircraft.push_back(aircraft); // my simulator list
             this->updateAircraftRendered(cs, true); // in provider
             emit this->aircraftRenderingChanged(aircraft);

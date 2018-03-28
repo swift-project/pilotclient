@@ -37,6 +37,9 @@ namespace BlackMisc
         //! Has provider?
         bool hasProvider() const { return m_provider; }
 
+        //! Provider
+        PROVIDER *getProvider() const { return m_provider; }
+
         //! Set the provider
         //! \remark use individual names to disambiguate
         void setProvider(PROVIDER *provider)
