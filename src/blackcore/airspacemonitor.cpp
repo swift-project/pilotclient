@@ -904,6 +904,13 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         this->storeAircraftParts(callsign, jsonObject, currentOffset);
+
+        // update client capability
+        CClient client = this->getClientOrDefaultForCallsign(callsign);
+        if (client.hasCapability(CClient::FsdWithAircraftConfig)) { return; }
+        client.addCapability(CClient::FsdWithAircraftConfig);
+        const int caps = client.getCapabilities();
+        this->updateOrAddClient(callsign, CPropertyIndexVariantMap(CClient::IndexCapabilities, CVariant::from(caps)));
     }
 
     void CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation)
