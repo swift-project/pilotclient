@@ -26,6 +26,10 @@ namespace BlackGui
             //! Selected objects
             virtual ContainerType selectedObjects() const = 0;
 
+            //! Unselected objects
+            //! \remark for filtered models this only returns the unselected filtered objects
+            virtual ContainerType unselectedObjects() const = 0;
+
             //! Select
             virtual void selectObjects(const ContainerType &selectedObjects) = 0;
         };

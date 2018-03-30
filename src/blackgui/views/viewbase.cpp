@@ -73,7 +73,7 @@ namespace BlackGui
             QTableView(parent)
         {
             this->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::ps_customMenuRequested);
+            connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::customMenuRequested);
             connect(this, &QTableView::clicked, this, &CViewBaseNonTemplate::ps_clicked);
             connect(this, &QTableView::doubleClicked, this, &CViewBaseNonTemplate::ps_doubleClicked);
             this->horizontalHeader()->setSortIndicatorShown(true);
@@ -239,13 +239,13 @@ namespace BlackGui
                 }
             case MenuDisplayAutomatically:
                 {
-                    QAction *a = ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_toggleAutoDisplay });
+                    QAction *a = ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::toggleAutoDisplay });
                     a->setCheckable(true);
                     a->setChecked(this->displayAutomatically());
                     break;
                 }
             case MenuRemoveSelectedRows: { ma.addAction(CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_removeSelectedRows }, CShortcut::keyDelete()); break; }
-            case MenuClear: { ma.addAction(CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_clear }); break; }
+            case MenuClear: { ma.addAction(CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::clear }); break; }
             case MenuFilter:
                 {
                     if (m_filterWidget)
@@ -306,7 +306,7 @@ namespace BlackGui
             if (m_showingLoadIndicator)
             {
                 // just in case, if this ever will be dangling
-                menuActions.addAction(CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::ps_hideLoadIndicator });
+                menuActions.addAction(CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::hideLoacIndicatorForced });
             }
 
             if (m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }
@@ -355,17 +355,17 @@ namespace BlackGui
             {
                 if (sm != MultiSelection)
                 {
-                    menuActions.addAction("Switch to multi selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_setMultiSelection });
+                    menuActions.addAction("Switch to multi selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::setMultiSelection });
                 }
 
                 if (sm != ExtendedSelection)
                 {
-                    menuActions.addAction("Switch to extended selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_setExtendedSelection });
+                    menuActions.addAction("Switch to extended selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::setExtendedSelection });
                 }
 
                 if (sm != SingleSelection)
                 {
-                    menuActions.addAction("Switch to single selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_setSingleSelection });
+                    menuActions.addAction("Switch to single selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::setSingleSelection });
                 }
             }
 
@@ -398,7 +398,7 @@ namespace BlackGui
             actionInteractiveResize->setCheckable(true);
             actionInteractiveResize->setChecked(autoResize);
             actionInteractiveResize->setEnabled(enabled);
-            connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::ps_toggleResizeMode);
+            connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::toggleResizeMode);
         }
 
         void CViewBaseNonTemplate::resizeEvent(QResizeEvent *event)
@@ -428,6 +428,20 @@ namespace BlackGui
             return this->selectionModel()->selectedRows();
         }
 
+        QModelIndexList CViewBaseNonTemplate::unselectedRows() const
+        {
+            QModelIndexList selected = this->selectedRows();
+            QModelIndexList unselected;
+            const int rows = this->rowCount();
+            for (int r = 0; r < rows; r++)
+            {
+                const QModelIndex mi = this->model()->index(r, 0);
+                if (selected.contains(mi)) { continue; }
+                unselected.push_back(mi);
+            }
+            return unselected;
+        }
+
         void CViewBaseNonTemplate::selectRows(const QSet<int> &rows)
         {
             if (!this->selectionModel()) { return; }
@@ -447,6 +461,11 @@ namespace BlackGui
         {
             if (!this->hasSelection()) { return 0;}
             return this->selectedRows().count();
+        }
+
+        int CViewBaseNonTemplate::unselectedRowCount() const
+        {
+            return this->rowCount() - this->selectedRowCount();
         }
 
         bool CViewBaseNonTemplate::hasSingleSelectedRow() const
@@ -581,11 +600,6 @@ namespace BlackGui
             emit this->requestNewBackendData();
         }
 
-        void CViewBaseNonTemplate::ps_hideLoadIndicator()
-        {
-            this->hideLoadIndicator();
-        }
-
         void CViewBaseNonTemplate::onModelChanged()
         {
             this->updateSortIndicator();
@@ -662,7 +676,7 @@ namespace BlackGui
         {
             if (!m_showingLoadIndicator) { return; }
             m_showingLoadIndicator = false;
-            emit loadIndicatorVisibilityChanged(m_showingLoadIndicator);
+            emit this->loadIndicatorVisibilityChanged(m_showingLoadIndicator);
             if (!m_loadIndicator) { return; }
             m_loadIndicator->stopAnimation(loadingId);
         }
@@ -670,9 +684,9 @@ namespace BlackGui
         bool CViewBaseNonTemplate::isResizeConditionMet(int containerSize) const
         {
             if (m_resizeMode == ResizingAlways) { return true; }
-            if (m_resizeMode == PresizeSubset) { return false; }
-            if (m_resizeMode == ResizingOff) { return false; }
-            if (m_resizeMode == ResizingOnce) { return m_resizeCount < 1; }
+            if (m_resizeMode == PresizeSubset)  { return false; }
+            if (m_resizeMode == ResizingOff)    { return false; }
+            if (m_resizeMode == ResizingOnce)   { return m_resizeCount < 1; }
             if (m_resizeMode == ResizingAuto)
             {
                 if (reachedResizeThreshold(containerSize)) { return false; }
@@ -715,7 +729,7 @@ namespace BlackGui
             this->setVisible(true);
         }
 
-        void CViewBaseNonTemplate::ps_customMenuRequested(QPoint pos)
+        void CViewBaseNonTemplate::customMenuRequested(QPoint pos)
         {
             QMenu menu;
             CMenuActions menuActions;
@@ -737,32 +751,25 @@ namespace BlackGui
             menu.exec(globalPos);
         }
 
-        void CViewBaseNonTemplate::ps_toggleResizeMode(bool checked)
+        void CViewBaseNonTemplate::toggleResizeMode(bool checked)
         {
-            if (checked)
-            {
-                m_resizeMode = ResizingAuto;
-            }
-            else
-            {
-                m_resizeMode = ResizingOff;
-            }
+            m_resizeMode = checked ? ResizingAuto : ResizingOff;
         }
 
-        void CViewBaseNonTemplate::ps_toggleAutoDisplay()
+        void CViewBaseNonTemplate::toggleAutoDisplay()
         {
-            QAction *a = qobject_cast<QAction *>(QObject::sender());
+            const QAction *a = qobject_cast<const QAction *>(QObject::sender());
             if (!a) { return; }
             Q_ASSERT_X(a->isCheckable(), Q_FUNC_INFO, "object not checkable");
             m_displayAutomatically = a->isChecked();
         }
 
-        void CViewBaseNonTemplate::ps_setSingleSelection()
+        void CViewBaseNonTemplate::setSingleSelection()
         {
             this->setSelectionMode(SingleSelection);
         }
 
-        void CViewBaseNonTemplate::ps_setExtendedSelection()
+        void CViewBaseNonTemplate::setExtendedSelection()
         {
             if (this->allowsMultipleSelectedRows())
             {
@@ -770,7 +777,7 @@ namespace BlackGui
             }
         }
 
-        void CViewBaseNonTemplate::ps_setMultiSelection()
+        void CViewBaseNonTemplate::setMultiSelection()
         {
             if (this->allowsMultipleSelectedRows())
             {
@@ -784,7 +791,7 @@ namespace BlackGui
             this->removeSelectedRows();
         }
 
-        void CViewBaseNonTemplate::ps_updatedIndicator()
+        void CViewBaseNonTemplate::updatedIndicator()
         {
             this->update();
         }
@@ -986,7 +993,20 @@ namespace BlackGui
         {
             if (!this->hasSelection()) { return ContainerType(); }
             ContainerType c;
-            QModelIndexList indexes = this->selectedRows();
+            const QModelIndexList indexes = this->selectedRows();
+            for (const QModelIndex &i : indexes)
+            {
+                c.push_back(this->at(i));
+            }
+            return c;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        ContainerType CViewBase<ModelClass, ContainerType, ObjectType>::unselectedObjects() const
+        {
+            if (!this->hasSelection()) { return this->containerOrFilteredContainer(); }
+            ContainerType c;
+            const QModelIndexList indexes = this->unselectedRows();
             for (const QModelIndex &i : indexes)
             {
                 c.push_back(this->at(i));

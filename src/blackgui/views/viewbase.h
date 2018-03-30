@@ -202,11 +202,17 @@ namespace BlackGui
             //! Selected rows if any
             QModelIndexList selectedRows() const;
 
+            //! Unselected (not selected) rows if any
+            virtual QModelIndexList unselectedRows() const;
+
             //! Select given rows
             void selectRows(const QSet<int> &rows);
 
             //! Number of selected rows
             int selectedRowCount() const;
+
+            //! Unselected row count
+            int unselectedRowCount() const;
 
             //! Single selected row
             bool hasSingleSelectedRow() const;
@@ -350,6 +356,9 @@ namespace BlackGui
             //! Hide loading indicator
             void hideLoadIndicator(int loadingId = -1);
 
+            //! Parameterless version of hideLoadIndicator
+            void hideLoacIndicatorForced() { this->hideLoadIndicator(); }
+
             //! Remove selected rows
             virtual int removeSelectedRows() = 0;
 
@@ -368,7 +377,7 @@ namespace BlackGui
 
             //! Method creating the menu
             //! \remarks override this method to contribute to the menu
-            //! \sa BlackGui::Views::CViewBaseNonTemplate::ps_customMenuRequested
+            //! \sa BlackGui::Views::CViewBaseNonTemplate::customMenuRequested
             virtual void customMenu(Menus::CMenuActions &menuActions);
 
             //! \name Functions from QTableView
@@ -493,9 +502,6 @@ namespace BlackGui
             //! Trigger reload from backend by signal requestNewBackendData()
             void ps_triggerReloadFromBackend();
 
-            //! Hide load indicator (no parameters)
-            void ps_hideLoadIndicator();
-
             //! Copy
             virtual void ps_copy() = 0;
 
@@ -512,32 +518,28 @@ namespace BlackGui
             virtual void ps_toggleHighlightDbData() {}
 
         private slots:
-            //! Custom menu was requested
-            void ps_customMenuRequested(QPoint pos);
-
-            //! Toggle the resize mode
-            void ps_toggleResizeMode(bool checked);
-
-            //! Indicator has been updated
-            void ps_updatedIndicator();
-
-            //! Toggle auto display flag
-            void ps_toggleAutoDisplay();
-
-            //! \name Change selection modes
-            //! @{
-            void ps_setMultiSelection();
-            void ps_setExtendedSelection();
-            void ps_setSingleSelection();
-            //! @}
-
-            //! Clear the model
-            virtual void ps_clear() { this->clear(); }
-
             //! Remove selected rows
             void ps_removeSelectedRows();
 
         private:
+            //! \name Change selection modes @{
+            void setMultiSelection();
+            void setExtendedSelection();
+            void setSingleSelection();
+            //! @}
+
+            //! Toggle auto display flag
+            void toggleAutoDisplay();
+
+            //! Custom menu was requested
+            void customMenuRequested(QPoint pos);
+
+            //! Indicator has been updated
+            void updatedIndicator();
+
+            //! Toggle the resize mode
+            void toggleResizeMode(bool checked);
+
             //! Set the filter widget internally
             //! \remarks used for dialog and filter widget
             void setFilterWidgetImpl(QWidget *filterWidget);
@@ -587,10 +589,11 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CListModelBase::containerOrFilteredContainer
             const ContainerType &containerOrFilteredContainer(bool *filtered = nullptr) const;
 
-            //! \name Selection model interface
+            //! \name Selection model interface ISelectionModel
             //! @{
             virtual void selectObjects(const ContainerType &selectedObjects) override;
             virtual ContainerType selectedObjects() const override;
+            virtual ContainerType unselectedObjects() const override;
             //! @}
 
             //! First selected, the only one, or default
