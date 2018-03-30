@@ -55,6 +55,7 @@ namespace BlackMisc
                    QStringLiteral(" pitch: ") % (m_pitch.toQString(i18n)) %
                    QStringLiteral(" heading: ") % (m_heading.toQString(i18n)) %
                    QStringLiteral(" og: ") % this->getOnGroundInfo() %
+                   QStringLiteral(" factor: ") % QString::number(m_onGroundFactor, 'f', 2) %
                    QStringLiteral(" gs: ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
                    QStringLiteral(" ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
                    QStringLiteral(" elevation: ") % (m_groundElevationPlane.toQString(i18n));
@@ -100,6 +101,26 @@ namespace BlackMisc
             case CAircraftSituation::NotSet:
             default: return unknown;
             }
+        }
+
+        const QString &CAircraftSituation::altitudeCorrectionToString(CAircraftSituation::AltitudeCorrection correction)
+        {
+            static const QString under("underflow");
+            static const QString dragged("dragged to gnd");
+            static const QString no("no correction");
+            static const QString noElv("no elv.");
+            static const QString unknown("unknown");
+            static const QString agl("AGL");
+            switch (correction)
+            {
+            case Underflow: return under;
+            case DraggedToGround: return dragged;
+            case NoElevation: return noElv;
+            case NoCorrection: return no;
+            case AGL: return agl;
+            default: break;
+            }
+            return unknown;
         }
 
         const CLength &CAircraftSituation::deltaNearGround()
@@ -383,31 +404,60 @@ namespace BlackMisc
             return this->getAltitude() - gh;
         }
 
-        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &centerOfGravity, bool dragToGround, bool *corrected) const
+        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &centerOfGravity, bool enableDragToGround, AltitudeCorrection *correctetion) const
         {
-            if (corrected) { *corrected = false; }
-            if (!this->hasGroundElevation()) { return this->getAltitude(); }
+            if (correctetion) { *correctetion = UnknownCorrection; }
+            if (!this->hasGroundElevation())
+            {
+                if (correctetion) { *correctetion = NoElevation; }
+                return this->getAltitude();
+            }
 
             // above ground
             if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
             {
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "Unsupported");
+                if (correctetion) { *correctetion = AGL; }
                 return this->getAltitude();
             }
             else
             {
                 const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
-                if (groundPlusCG.isNull()) { return this->getAltitude(); }
+                if (groundPlusCG.isNull())
+                {
+                    if (correctetion) { *correctetion = NoElevation; }
+                    return this->getAltitude();
+                }
                 const CLength groundDistance = this->getAltitude() - groundPlusCG;
-                const bool underOrNearGround = groundDistance.isNegativeWithEpsilonConsidered() || groundDistance.abs() < deltaNearGround();
-                const bool forceDragGnd = (dragToGround && this->getOnGround() == OnGround) && (this->hasInboundGroundInformation() || this->getOnGroundDetails() == OnGroundByGuessing);
-                const bool toGround = underOrNearGround || forceDragGnd;
-                if (!toGround) { return this->getAltitude(); }
+                const bool underflow = groundDistance.isNegativeWithEpsilonConsidered();
+                if (underflow)
+                {
+                    if (correctetion) { *correctetion = Underflow; }
+                    return groundPlusCG;
+                }
+                const bool nearGround =  groundDistance.abs() < deltaNearGround();
+                if (nearGround)
+                {
+                    if (correctetion) { *correctetion = NoCorrection; }
+                    return groundPlusCG;
+                }
+                const bool forceDragToGround = (enableDragToGround && this->getOnGround() == OnGround) && (this->hasInboundGroundInformation() || this->getOnGroundDetails() == OnGroundByGuessing);
+                if (forceDragToGround)
+                {
+                    if (correctetion) { *correctetion = DraggedToGround; }
+                    return groundPlusCG;
+                }
 
-                // underflow or overflow forced to ground
-                if (corrected) { *corrected = true; }
-                return groundPlusCG;
+                if (correctetion) { *correctetion = NoCorrection; }
+                return this->getAltitude();
             }
+        }
+
+        CAircraftSituation::AltitudeCorrection CAircraftSituation::correctAltitude(const CLength &centerOfGravity, bool enableDragToGround)
+        {
+            CAircraftSituation::AltitudeCorrection altCor = CAircraftSituation::UnknownCorrection;
+            this->setAltitude(this->getCorrectedAltitude(centerOfGravity, enableDragToGround, &altCor));
+            return altCor;
         }
 
         void CAircraftSituation::setPressureAltitude(const CAltitude &altitude)

@@ -93,6 +93,17 @@ namespace BlackMisc
                 OutOnGroundOwnAircraft    //!< sending on ground
             };
 
+            //! How was altitude corrected
+            enum AltitudeCorrection
+            {
+                NoCorrection,
+                Underflow,
+                DraggedToGround,
+                AGL,
+                NoElevation,
+                UnknownCorrection
+            };
+
             //! Default constructor.
             CAircraftSituation();
 
@@ -248,7 +259,10 @@ namespace BlackMisc
 
             //! Get altitude under consideration of ground elevation and ground flag
             //! \remark with dragToGround it will also compensate overflows, otherwise ony underflow
-            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = PhysicalQuantities::CLength::null(), bool dragToGround = true, bool *corrected = nullptr) const;
+            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = PhysicalQuantities::CLength::null(), bool enableDragToGround = true, AltitudeCorrection *correctetion = nullptr) const;
+
+            //! Set the corrected altitude from CAircraftSituation::getCorrectedAltitude
+            AltitudeCorrection correctAltitude(const PhysicalQuantities::CLength &centerOfGravity = PhysicalQuantities::CLength::null(), bool enableDragToGround = true);
 
             //! Set altitude
             void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
@@ -323,6 +337,9 @@ namespace BlackMisc
 
             //! Enum to string
             static const QString &onGroundDetailsToString(OnGroundDetails reliability);
+
+            //! Enum to string
+            static const QString &altitudeCorrectionToString(AltitudeCorrection correction);
 
             //! Delta distance, near to ground
             static const PhysicalQuantities::CLength &deltaNearGround();
