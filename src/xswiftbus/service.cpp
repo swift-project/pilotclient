@@ -158,8 +158,8 @@ namespace XSwiftBus
             float lat, lon, alt;
             char icao[32], name[256];
             XPLMGetNavAidInfo(navref.id(), nullptr, &lat, &lon, &alt, nullptr, nullptr, icao, name, nullptr);
-            icaos.push_back(icao);
-            names.push_back(name);
+            icaos.emplace_back(icao);
+            names.emplace_back(name);
             lats.push_back(lat);
             lons.push_back(lon);
             alts.push_back(alt);
