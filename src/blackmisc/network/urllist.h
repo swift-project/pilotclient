@@ -47,7 +47,7 @@ namespace BlackMisc
             CUrl getRandomUrl() const;
 
             //! Random location for distributed load, tested
-            CUrl getRandomWorkingUrl(int maxTrials = 2) const;
+            CUrl getRandomWorkingUrl(int maxTrials = 2, int timeoutMs = -1) const;
 
             //! Random location for distributed load
             CUrl getRandomWithout(const CUrlList &exclude) const;

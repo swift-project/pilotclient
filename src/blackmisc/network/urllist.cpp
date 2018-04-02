@@ -45,18 +45,19 @@ namespace BlackMisc
             return (*this)[i];
         }
 
-        CUrl CUrlList::getRandomWorkingUrl(int maxTrials) const
+        CUrl CUrlList::getRandomWorkingUrl(int maxTrials, int timeoutMs) const
         {
             if (this->isEmpty()) { return CUrl(); }
             if (maxTrials < 1) { return CUrl();}
             CUrlList trials;
 
+            if (timeoutMs < 0) { timeoutMs = CNetworkUtils::getTimeoutMs(); }
             for (int t = 0; t < maxTrials && t < this->size(); t++)
             {
                 CUrl url(getRandomWithout(trials));
                 trials.push_back(url);
                 QString message;
-                if (CNetworkUtils::canConnect(url, message)) { return url; }
+                if (CNetworkUtils::canConnect(url, message, timeoutMs)) { return url; }
             }
             return CUrl();
         }

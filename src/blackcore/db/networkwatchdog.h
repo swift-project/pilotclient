@@ -79,6 +79,9 @@ namespace BlackCore
             //! \threadsafe
             int getCheckCount() const { return m_checkCount; }
 
+            //! Last URL used for ping /DB ping service)
+            QString getLastPingDbUrl() const;
+
             //! Number of completed checks
             //! \threadsafe
             QString getCheckInfo() const;
@@ -119,6 +122,8 @@ namespace BlackCore
             void changedInternetAccessibility(bool available);
 
         private:
+            static constexpr int CanConnectTimeMs = 5000;
+
             //! Do work, i.e. check connectivity
             void doWork();
 
@@ -159,8 +164,9 @@ namespace BlackCore
             std::atomic_int  m_badCountInternet { 0 }; //! Total number of Internet failing count (only when network is accessible)
             std::atomic_int  m_goodCountDb { 0 };
             std::atomic_int  m_goodCountInternet { 0 };
+            QString m_lastPingUrl;
             BlackMisc::Network::CUrl m_workingSharedUrl;
-            mutable QReadWriteLock m_lockSharedUrl;
+            mutable QReadWriteLock m_lockUrl;
         };
     } // ns
 } // ns
