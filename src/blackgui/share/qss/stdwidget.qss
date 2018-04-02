@@ -417,7 +417,8 @@ QMenuBar::item {
   border-radius: 4px;
 }
 
-QMenuBar::item:selected { /* when selected using mouse or keyboard */
+/* when selected using mouse or keyboard */
+QMenuBar::item:selected {
   background: black;
 }
 
@@ -584,6 +585,11 @@ QTableView, QTreeView, QListView {
 
 /** explicitly setting font color avoids black when pressing CTRL-S **/
 QTableView::item:selected {
+  background-color: blue;
+  color: white;
+}
+
+QListView::item:selected {
   background-color: blue;
   color: white;
 }

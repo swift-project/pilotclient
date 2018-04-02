@@ -16,6 +16,7 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/components/logcomponent.h"
+#include "blackgui/components/dbloaddatadialog.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/copyxswiftbusdialog.h"
 #include "blackgui/guiapplication.h"
@@ -440,61 +441,15 @@ void SwiftGuiStd::checkDbDataLoaded()
     if (!sGui || sGui->isShuttingDown()) { return; }
     Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
     Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Wrong thread, needs to run in main thread");
-    CEntityFlags::Entity loadEntities = sGui->getWebDataServices()->getEntitiesWithNewerSharedFile(CEntityFlags::AllDbEntities);
-    const CEntityFlags::Entity checkForEmpty = CEntityFlags::entityFlagToEntity(CEntityFlags::AllDbEntitiesNoInfoObjects) & ~loadEntities;
-
-    // it can happen the timestamps are not newer, but the data are empty
-    // - can happen if caches are copied and the TS does not represent the DB timestamp
-    // - cache files have been deleted
-    // - sync all DB entities
-    //   - fast if there are no data
-    //   - no impact if already synced
-    //   - slow if newer synced before and all has to be done now
-    if (!m_dbDataLoading) { sGui->getWebDataServices()->synchronizeDbCaches(checkForEmpty); }
-
-    // we have no newer timestamps, but incomplete data
-    loadEntities |= sGui->getWebDataServices()->getEmptyEntities();
+    CEntityFlags::Entity loadEntities = sGui->getWebDataServices()->getSychronizedEntitiesWithNewerSharedFileOrEmpty(!m_dbDataLoading);
     if (loadEntities == CEntityFlags::NoEntity)
     {
         m_dbDataLoading = false;
         return;
     }
 
-    CStatusMessage sm = m_dbDataLoading ?
-                        CStatusMessage(this).info("Loading in progress:") :
-                        CStatusMessage(this).info("New data for shared files:");
-    CStatusMessageList sms(sm);
-    const QSet<CEntityFlags::Entity> newSingleEntities = CEntityFlags::asSingleEntities(loadEntities);
-    const QString m = m_dbDataLoading ? QStringLiteral("Loading data for '%1'") : QStringLiteral("Load data for '%1'?");
-    for (CEntityFlags::Entity newSingleEntity : newSingleEntities)
-    {
-        sm = CStatusMessage(this).info(m) << CEntityFlags::flagToString(newSingleEntity);
-        sms.push_back(sm);
-    }
-
-    constexpr int checkAgain = 5000;
-    if (m_dbDataLoading)
-    {
-        // already loading
-        ui->fr_CentralFrameInside->showOverlayMessages(sms, false, 1.2 * checkAgain);
-        return;
-    }
-
-    // data need to be loaded
-    constexpr int delay = 2500; // allow to init GUI completely before showing overlays
-    QTimer::singleShot(delay, this, [ = ]
-    {
-        // delayed call
-        auto lambda = [ = ]()
-        {
-            sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(loadEntities, false);
-            m_dbDataLoading = true;
-
-            // re-check
-            QTimer::singleShot(checkAgain, this, &SwiftGuiStd::checkDbDataLoaded);
-        };
-        ui->fr_CentralFrameInside->showOverlayMessagesWithConfirmation(sms, false, "Load DB data?", lambda);
-    });
+    if (!m_dbLoadDialog) { m_dbLoadDialog.reset(new CDbLoadDataDialog(this)); }
+    m_dbLoadDialog->newerOrEmptyEntitiesDetected(loadEntities);
 }
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const

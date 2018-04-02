@@ -44,6 +44,7 @@ class QTimer;
 class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CAltitude; } }
+namespace BlackGui { namespace Components { class CDbLoadDataDialog; }}
 namespace Ui { class SwiftGuiStd; }
 
 //! swift GUI
@@ -101,7 +102,8 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
-    QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{new BlackGui::Components::CNavigatorDialog()}; // if I pass the parent, the dialog is always centered over the parent
+    QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{ new BlackGui::Components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
+    QScopedPointer<BlackGui::Components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
     BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::displayStatusMessageInGui };
