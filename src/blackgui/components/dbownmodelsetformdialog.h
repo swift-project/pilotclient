@@ -63,7 +63,7 @@ namespace BlackGui
             virtual int exec() override;
 
         private:
-            QScopedPointer<Ui::CDbOwnModelSetFormDialog>  ui;
+            QScopedPointer<Ui::CDbOwnModelSetFormDialog> ui;
             BlackMisc::Simulation::CAircraftModelList m_modelSet;
             BlackMisc::Simulation::CSimulatorInfo     m_simulatorInfo;
 

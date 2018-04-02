@@ -169,30 +169,14 @@ namespace BlackMisc
             const ICoordinateGeodetic::ColumnIndex i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
             switch (i)
             {
-            case IndexGeodeticHeight:
-                m_geodeticHeight.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexLatitude:
-                this->setLatitude(variant.value<CLatitude>());
-                break;
-            case IndexLongitude:
-                this->setLongitude(variant.value<CLongitude>());
-                break;
-            case IndexLatitudeAsString:
-                this->setLatitude(CLatitude::fromWgs84(variant.toQString()));
-                break;
-            case IndexLongitudeAsString:
-                this->setLongitude(CLongitude::fromWgs84(variant.toQString()));
-                break;
-            case IndexGeodeticHeightAsString:
-                m_geodeticHeight.parseFromString(variant.toQString());
-                break;
-            case IndexNormalVector:
-                this->setNormalVector(variant.value<QVector3D>());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexGeodeticHeight: m_geodeticHeight.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexLatitude: this->setLatitude(variant.value<CLatitude>()); break;
+            case IndexLongitude: this->setLongitude(variant.value<CLongitude>()); break;
+            case IndexLatitudeAsString: this->setLatitude(CLatitude::fromWgs84(variant.toQString())); break;
+            case IndexLongitudeAsString: this->setLongitude(CLongitude::fromWgs84(variant.toQString())); break;
+            case IndexGeodeticHeightAsString: m_geodeticHeight.parseFromString(variant.toQString()); break;
+            case IndexNormalVector: this->setNormalVector(variant.value<QVector3D>()); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 

@@ -394,8 +394,8 @@ namespace BlackCore
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             m_modelCache.set(models, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
+            this->updateReaderUrl(this->getBaseUrl(CDbFlags::DbReading));
             this->emitAndLogDataRead(CEntityFlags::ModelEntity, n, res);
         }
 

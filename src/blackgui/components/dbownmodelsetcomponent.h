@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
-#define BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_CDBOWNMODELSETCOMPONENT_H
+#define BLACKGUI_COMPONENTS_CDBOWNMODELSETCOMPONENT_H
 
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/menus/menudelegate.h"

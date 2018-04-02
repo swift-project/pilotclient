@@ -92,10 +92,12 @@ namespace BlackMisc
             virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const = 0;
 
             //! Number of remote aircraft situations for callsign
+            //! \remark latest situations first
             //! \threadsafe
             virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const = 0;
 
             //! All parts (per callsign, time history)
+            //! \remark latest parts first
             //! \threadsafe
             virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const = 0;
 
@@ -342,16 +344,17 @@ namespace BlackMisc
             int updateAircraftInRange(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
 
             //! Store an aircraft situation
+            //! \remark latest situations are kept first
             //! \threadsafe
             void storeAircraftSituation(const Aviation::CAircraftSituation &situation);
 
             //! Store an aircraft part
+            //! \remark latest parts are kept first
             //! \threadsafe
+            //! @{
             void storeAircraftParts(const Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool removeOutdated);
-
-            //! Store an aircraft part
-            //! \threadsafe
             void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset);
+            //! @}
 
         private:
             // hashs, because not sorted by key but keeping order
