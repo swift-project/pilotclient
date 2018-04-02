@@ -20,6 +20,7 @@
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QByteArray>
 #include <QJsonDocument>
@@ -503,7 +504,9 @@ namespace BlackCore
 
         CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing app object, URLs cannot be obtained");
+            BLACK_VERIFY_X(sApp, Q_FUNC_INFO, "Missing app object, URLs cannot be obtained");
+            if (!sApp) { return CUrl(); }
+
             switch (mode)
             {
             case CDbFlags::DbReading:
