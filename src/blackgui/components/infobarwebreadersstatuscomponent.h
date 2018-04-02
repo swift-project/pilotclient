@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/led.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/network/entityflags.h"
 
 #include <QFrame>
@@ -72,8 +73,11 @@ namespace BlackGui
             //! Data have been read
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
-            //! DB or network accessibility changed
-            void accessibilityChanged(bool accessible);
+            //! Network accessibility changed
+            void networkAccessibilityChanged(bool accessible);
+
+            //! DB accessibility changed
+            void dbAccessibilityChanged(bool accessible, const BlackMisc::Network::CUrl &testedUrl);
 
             //! Check server status
             void checkServerAndData();

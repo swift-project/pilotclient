@@ -113,7 +113,7 @@ namespace BlackCore
 
         signals:
             //! DB was available, but not longer is and vice versa
-            void changedSwiftDbAccessibility(bool available);
+            void changedSwiftDbAccessibility(bool available, const BlackMisc::Network::CUrl &url);
 
             //! Internet was available, but not longer is and vice versa
             void changedInternetAccessibility(bool available);

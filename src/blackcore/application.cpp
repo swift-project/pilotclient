@@ -1064,15 +1064,15 @@ namespace BlackCore
         }
     }
 
-    void CApplication::onChangedSwiftDbAccessibility(bool accessible)
+    void CApplication::onChangedSwiftDbAccessibility(bool accessible, const CUrl &url)
     {
         if (accessible)
         {
-            CLogMessage(this).info("swift DB reported accessible");
+            CLogMessage(this).info("swift DB reported accessible: '%1'") << url.toQString();
         }
         else
         {
-            CLogMessage(this).warning("swift DB not accessible");
+            CLogMessage(this).warning("swift DB not accessible: '%1'") << url.toQString();
             if (m_networkWatchDog)
             {
                 CLogMessage(this).warning(m_networkWatchDog->getCheckInfo());

@@ -492,7 +492,7 @@ namespace BlackCore
         void changedInternetAccessibility(bool accessible);
 
         //! DB accessibility changed
-        void changedSwiftDbAccessibility(bool accessible);
+        void changedSwiftDbAccessibility(bool accessible, const BlackMisc::Network::CUrl &testedUrl);
 
     protected:
         //! Setup read/synchronized
@@ -575,7 +575,7 @@ namespace BlackCore
         void onChangedInternetAccessibility(bool accessible);
 
         //! Changed swift DB accessibility
-        void onChangedSwiftDbAccessibility(bool accessible);
+        void onChangedSwiftDbAccessibility(bool accessible, const BlackMisc::Network::CUrl &url);
 
         //! init logging system
         void initLogging();

@@ -38,9 +38,9 @@ namespace BlackGui
             m_timer.setObjectName("CInfoBarWebReadersStatusBase::CheckSwiftDbTimer");
             bool c = connect(&m_timer, &QTimer::timeout, this,  &CInfoBarWebReadersStatusBase::checkServerAndData);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
-            c = connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarWebReadersStatusBase::accessibilityChanged);
+            c = connect(sGui, &CGuiApplication::changedInternetAccessibility, this, &CInfoBarWebReadersStatusBase::networkAccessibilityChanged);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
-            c = connect(sGui, &CGuiApplication::changedSwiftDbAccessibility, this, &CInfoBarWebReadersStatusBase::accessibilityChanged);
+            c = connect(sGui, &CGuiApplication::changedSwiftDbAccessibility, this, &CInfoBarWebReadersStatusBase::dbAccessibilityChanged);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
 
             if (sGui->hasWebDataServices())
@@ -85,9 +85,16 @@ namespace BlackGui
             if (!leds.isEmpty()) { this->setLedReadStates(leds, readState); }
         }
 
-        void CInfoBarWebReadersStatusBase::accessibilityChanged(bool accessible)
+        void CInfoBarWebReadersStatusBase::networkAccessibilityChanged(bool accessible)
         {
             Q_UNUSED(accessible);
+            this->checkServerAndData();
+        }
+
+        void CInfoBarWebReadersStatusBase::dbAccessibilityChanged(bool accessible, const CUrl &testedUrl)
+        {
+            Q_UNUSED(accessible);
+            Q_UNUSED(testedUrl);
             this->checkServerAndData();
         }
 

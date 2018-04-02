@@ -70,7 +70,7 @@ namespace BlackCore
 
         QString CNetworkWatchdog::getCheckInfo() const
         {
-            static const QString info("Internet accessible: %1 (good: %2/ bad: %3), swift DB accessible: %4 (good: %5/bad: %6)");
+            static const QString info("Internet accessible: %1 (good: %2 / bad: %3), swift DB accessible: %4 (good: %5 / bad: %6)");
             return info.
                    arg(boolToYesNo(this->isInternetAccessible())).arg(m_goodCountInternet).arg(m_badCountInternet).
                    arg(boolToYesNo(this->isSwiftDbAccessible())).arg(m_goodCountDb).arg(m_badCountDb);
@@ -247,11 +247,12 @@ namespace BlackCore
             // trigger really queued
             if (oldDbAccessible != m_dbAccessible)
             {
-                QTimer::singleShot(0, this, [this] { emit this->changedSwiftDbAccessibility(m_dbAccessible);});
+                const CUrl testUrl(this->dbTestUrl());
+                QTimer::singleShot(0, this, [=] { emit this->changedSwiftDbAccessibility(m_dbAccessible, testUrl); });
             }
             if (oldInternetAccessible != m_internetAccessible)
             {
-                QTimer::singleShot(0, this, [this] { emit this->changedInternetAccessibility(m_internetAccessible);});
+                QTimer::singleShot(0, this, [this] { emit this->changedInternetAccessibility(m_internetAccessible); });
             }
         }
 
@@ -261,7 +262,7 @@ namespace BlackCore
             this->setWorkingSharedUrl(workingUrl);
         }
 
-        BlackMisc::Network::CUrl CNetworkWatchdog::dbTestUrl()
+        CUrl CNetworkWatchdog::dbTestUrl()
         {
             // requires global setup to be read
             const CUrl testUrl(sApp->getGlobalSetup().getDbHomePageUrl());
