@@ -416,6 +416,11 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CEntityFlags::Entity getEmptyEntities(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllDbEntities) const;
 
+        //! Synchronized entities either empty or with newer shared file
+        //! \remark will synchronize entities
+        //! \threadsafe
+        BlackMisc::Network::CEntityFlags::Entity getSychronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData = true, BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllDbEntities);
+
         //! Cache count for entity
         //! \threadsafe
         int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
@@ -423,6 +428,10 @@ namespace BlackCore
         //! Count for entity from DB entity objects
         //! \threadsafe
         int getDbInfoObjectCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+        //! Count for 1-n entities from DB entity objects
+        //! \threadsafe
+        int getDbInfoObjectsCount(BlackMisc::Network::CEntityFlags::Entity entities, bool stopIfNotFound = true) const;
 
         //! Count for entity from shared entity objects
         //! \threadsafe

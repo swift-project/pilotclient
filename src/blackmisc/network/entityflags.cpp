@@ -44,23 +44,33 @@ namespace BlackMisc
             }
         }
 
-        QString CEntityFlags::flagToString(CEntityFlags::Entity flag)
+        QString CEntityFlags::flagToString(CEntityFlags::Entity entities)
+        {
+            return entitiesToString(entities, ", ");
+        }
+
+        QStringList CEntityFlags::entitiesToStringList(CEntityFlags::Entity entities)
         {
             QStringList list;
-            if (flag.testFlag(AircraftIcaoEntity)) list << "Aircraft ICAO";
-            if (flag.testFlag(AirlineIcaoEntity)) list << "Airline ICAO";
-            if (flag.testFlag(AirportEntity)) list << "Airport";
-            if (flag.testFlag(BookingEntity)) list << "VATSIM bookings";
-            if (flag.testFlag(CountryEntity)) list << "Country";
-            if (flag.testFlag(DistributorEntity)) list << "Distributor";
-            if (flag.testFlag(DbInfoObjectEntity)) list << "Info objects (DB)";
-            if (flag.testFlag(SharedInfoObjectEntity)) list << "Info objects (shared)";
-            if (flag.testFlag(LiveryEntity)) list << "Livery";
-            if (flag.testFlag(ModelEntity)) list << "Model";
-            if (flag.testFlag(NoEntity)) list << "no data";
-            if (flag.testFlag(VatsimDataFile)) list << "VATSIM data file";
-            if (flag.testFlag(VatsimStatusFile)) list << "VATSIM status file";
-            return list.join(", ");
+            if (entities.testFlag(AircraftIcaoEntity)) list << "Aircraft ICAO";
+            if (entities.testFlag(AirlineIcaoEntity)) list << "Airline ICAO";
+            if (entities.testFlag(AirportEntity)) list << "Airport";
+            if (entities.testFlag(BookingEntity)) list << "VATSIM bookings";
+            if (entities.testFlag(CountryEntity)) list << "Country";
+            if (entities.testFlag(DistributorEntity)) list << "Distributor";
+            if (entities.testFlag(DbInfoObjectEntity)) list << "Info objects (DB)";
+            if (entities.testFlag(SharedInfoObjectEntity)) list << "Info objects (shared)";
+            if (entities.testFlag(LiveryEntity)) list << "Livery";
+            if (entities.testFlag(ModelEntity)) list << "Model";
+            if (entities.testFlag(NoEntity)) list << "no data";
+            if (entities.testFlag(VatsimDataFile)) list << "VATSIM data file";
+            if (entities.testFlag(VatsimStatusFile)) list << "VATSIM status file";
+            return list;
+        }
+
+        QString CEntityFlags::entitiesToString(CEntityFlags::Entity entities, const QString &separator)
+        {
+            return entitiesToStringList(entities).join(separator);
         }
 
         bool CEntityFlags::isSingleEntity(BlackMisc::Network::CEntityFlags::Entity flag)
@@ -73,9 +83,9 @@ namespace BlackMisc
             return state == ReadFinished || state == ReadFinishedRestricted;
         }
 
-        int CEntityFlags::numberOfEntities(BlackMisc::Network::CEntityFlags::Entity flag)
+        int CEntityFlags::numberOfEntities(BlackMisc::Network::CEntityFlags::Entity entities)
         {
-            const int c = static_cast<int>(std::bitset<(sizeof(flag) * 8)>(flag).count());
+            const int c = static_cast<int>(std::bitset<(sizeof(entities) * 8)>(entities).count());
             return c;
         }
 
@@ -100,12 +110,9 @@ namespace BlackMisc
             {
             case ReadFinished:
             case ReadFinishedRestricted:
-            case StartRead:
-                return CStatusMessage::SeverityInfo;
-            case ReadSkipped:
-                return CStatusMessage::SeverityWarning;
-            case ReadFailed:
-                return CStatusMessage::SeverityError;
+            case StartRead: return CStatusMessage::SeverityInfo;
+            case ReadSkipped: return CStatusMessage::SeverityWarning;
+            case ReadFailed: return CStatusMessage::SeverityError;
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Missing state");
                 return CStatusMessage::SeverityInfo;
@@ -165,6 +172,18 @@ namespace BlackMisc
             if (name.contains("countr", Qt::CaseInsensitive)) { return CountryEntity; } // singular/plural
             if (name.contains("liver", Qt::CaseInsensitive)) { return LiveryEntity; } // singular/plural
             return NoEntity;
+        }
+
+        CEntityFlags::Entity CEntityFlags::multipleEntitiesByNames(const QStringList &names)
+        {
+            CEntityFlags::Entity entities = NoEntity;
+            for (const QString &name : names)
+            {
+                const CEntityFlags::Entity singleEntity = CEntityFlags::singleEntityByName(name);
+                if (singleEntity == NoEntity) { continue; }
+                entities |= singleEntity;
+            }
+            return entities;
         }
 
         CEntityFlags::EntitySet CEntityFlags::asSingleEntities(Entity entities)

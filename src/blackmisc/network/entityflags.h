@@ -17,7 +17,7 @@
 
 #include <QFlags>
 #include <QMetaType>
-#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {
@@ -43,7 +43,7 @@ namespace BlackMisc
                 ModelEntity            = 1 << 7,           //!< models
                 BookingEntity          = 1 << 8,           //!< bookings
                 MetarEntity            = 1 << 9,           //!< METAR
-                VatsimDataFile         = 1 << 10,           //!< the VATSIM data file (multiple data entities)
+                VatsimDataFile         = 1 << 10,          //!< the VATSIM data file (multiple data entities)
                 VatsimStatusFile       = 1 << 11,          //!< the VATSIM status file (URLs for data files etc.)
                 AirportEntity          = 1 << 12,          //!< airports
                 AllEntities            = ((1 << 13) - 1),  //!< everything
@@ -63,18 +63,25 @@ namespace BlackMisc
             //! State of operation
             enum ReadState
             {
-                StartRead,                 //!< reading has been started
-                ReadFinished,              //!< reading done
-                ReadFinishedRestricted,    //!< finished a timestamp restricted read
-                ReadFailed,                //!< reading failed
-                ReadSkipped                //!< read skipped, e.g. because network is down
+                StartRead,               //!< reading has been started
+                ReadFinished,            //!< reading done
+                ReadFinishedRestricted,  //!< finished a timestamp restricted read
+                ReadFailed,              //!< reading failed
+                ReadSkipped              //!< read skipped, e.g. because network is down
             };
 
             //! Convert to string
             static QString flagToString(CEntityFlags::EntityFlag flag);
 
             //! Convert to string
-            static QString flagToString(CEntityFlags::Entity flag);
+            //! \deprecated use entities to string
+            static QString flagToString(CEntityFlags::Entity entities);
+
+            //! Entities to string list
+            static QStringList entitiesToStringList(CEntityFlags::Entity entities);
+
+            //! Entities to string list
+            static QString entitiesToString(CEntityFlags::Entity entities, const QString &separator = ", ");
 
             //! Representing single entity?
             static bool isSingleEntity(CEntityFlags::Entity flag);
@@ -83,7 +90,7 @@ namespace BlackMisc
             static bool isFinishedReadState(ReadState state);
 
             //! Represented number of entities
-            static int numberOfEntities(CEntityFlags::Entity flag);
+            static int numberOfEntities(CEntityFlags::Entity entities);
 
             //! Convert to string
             static QString flagToString(ReadState flag);
@@ -108,6 +115,9 @@ namespace BlackMisc
 
             //! Get by name
             static Entity singleEntityByName(const QString &name);
+
+            //! Get by multiple names
+            static Entity multipleEntitiesByNames(const QStringList &names);
 
             //! As set of single entities
             static EntitySet asSingleEntities(Entity entities);

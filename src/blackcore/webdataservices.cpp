@@ -456,6 +456,25 @@ namespace BlackCore
         return emptyEntities;
     }
 
+    CEntityFlags::Entity CWebDataServices::getSychronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData, CEntityFlags::Entity entities)
+    {
+        CEntityFlags::Entity loadEntities = this->getEntitiesWithNewerSharedFile(entities);
+        const CEntityFlags::Entity checkForEmptyEntities = CEntityFlags::entityFlagToEntity(CEntityFlags::AllDbEntitiesNoInfoObjects) & ~loadEntities;
+
+        // it can happen the timestamps are not newer, but the data are empty
+        // - can happen if caches are copied and the TS does not represent the DB timestamp
+        // - cache files have been deleted
+        // - sync all DB entities
+        //   - fast if there are no data
+        //   - no impact if already synced
+        //   - slow if newer synced before and all has to be done now
+        if (syncData) { this->synchronizeDbCaches(checkForEmptyEntities); }
+
+        // we have no newer timestamps, but incomplete data
+        loadEntities |= this->getEmptyEntities();
+        return loadEntities;
+    }
+
     int CWebDataServices::getCacheCount(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
@@ -474,8 +493,22 @@ namespace BlackCore
 
     int CWebDataServices::getDbInfoObjectCount(CEntityFlags::Entity entity) const
     {
-        if (!m_dbInfoDataReader) return -1;
+        if (!m_dbInfoDataReader) { return -1; }
         return this->getInfoObjectCount(entity, m_dbInfoDataReader);
+    }
+
+    int CWebDataServices::getDbInfoObjectsCount(CEntityFlags::Entity entities, bool stopIfNotFound) const
+    {
+        if (!m_dbInfoDataReader) { return -1; }
+        int total = 0;
+        CEntityFlags::EntitySet set = CEntityFlags::asSingleEntities(entities);
+        for (CEntityFlags::Entity single : set)
+        {
+            const int c = this->getDbInfoObjectCount(single);
+            if (c < 0 && stopIfNotFound) { return -1; }
+            if (c > 0) { total += c; }
+        }
+        return total;
     }
 
     int CWebDataServices::getSharedInfoObjectCount(CEntityFlags::Entity entity) const
