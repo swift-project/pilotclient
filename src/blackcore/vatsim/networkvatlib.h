@@ -134,8 +134,8 @@ namespace BlackCore
 
             //! Offset times basically telling when to expect the next value from network plus some reserve
             //! @{
-            static int constexpr c_positionTimeOffsetMsec = 6000;           //!< offset time for received position updates
-            static int constexpr c_interimPositionTimeOffsetMsec = 2000;    //!< offset time for received interim position updates
+            static qint64 constexpr c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates
+            static qint64 constexpr c_interimPositionTimeOffsetMsec = 2000; //!< offset time for received interim position updates
             //! @}
 
         private:
@@ -228,10 +228,10 @@ namespace BlackCore
             void maybeHandleAtisReply(const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &receiver, const QString &message);
 
             //! Remember when last position was received
-            int markReceivedPositionAndGetOffsetTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 markerTs = -1);
+            qint64 receivedPositionFixTsAndGetOffsetTime(const BlackMisc::Aviation::CCallsign &callsign, qint64 markerTs = -1);
 
             //! Current offset time
-            int currentOffsetTime(const BlackMisc::Aviation::CCallsign &callsign) const;
+            qint64 currentOffsetTime(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Clear state when connection is terminated
             void clearState();

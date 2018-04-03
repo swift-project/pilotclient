@@ -903,7 +903,7 @@ namespace BlackCore
 
             //! we set a dynamically updating offset time here
             situation.setCurrentUtcTime();
-            const int offsetMs = self->markReceivedPositionAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            const int offsetMs = self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
             situation.setTimeOffsetMs(offsetMs);
 
             CTransponder::TransponderMode mode = CTransponder::StateStandby;
@@ -979,7 +979,7 @@ namespace BlackCore
             situation.setCurrentUtcTime();
             situation.setTimeOffsetMs(c_interimPositionTimeOffsetMsec);
             situation.setInterimFlag(true);
-            self->markReceivedPositionAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
 
             emit self->aircraftInterimPositionUpdate(situation);
         }
@@ -1184,7 +1184,7 @@ namespace BlackCore
             }
         }
 
-        int CNetworkVatlib::markReceivedPositionAndGetOffsetTime(const CCallsign &callsign, qint64 markerTs)
+        qint64 CNetworkVatlib::receivedPositionFixTsAndGetOffsetTime(const CCallsign &callsign, qint64 markerTs)
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
@@ -1197,15 +1197,15 @@ namespace BlackCore
             const qint64 oldTs = m_lastPositionUpdate.value(callsign);
             m_lastPositionUpdate[callsign] = markerTs;
 
-            const int diff = oldTs - markerTs;
-            const int offsetTime = (oldTs > 0 && diff > 0 && diff < c_interimPositionTimeOffsetMsec) ?
-                                   c_interimPositionTimeOffsetMsec :
-                                   c_positionTimeOffsetMsec;
+            const qint64 diff = oldTs - markerTs;
+            const qint64 offsetTime = (oldTs > 0 && diff > 0 && diff < c_interimPositionTimeOffsetMsec) ?
+                                      c_interimPositionTimeOffsetMsec :
+                                      c_positionTimeOffsetMsec;
             m_lastOffsetTime[callsign] = offsetTime;
             return offsetTime;
         }
 
-        int CNetworkVatlib::currentOffsetTime(const CCallsign &callsign) const
+        qint64 CNetworkVatlib::currentOffsetTime(const CCallsign &callsign) const
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
