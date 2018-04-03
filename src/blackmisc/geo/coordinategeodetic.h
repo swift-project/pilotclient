@@ -205,6 +205,9 @@ namespace BlackMisc
             //! Constructor by normal vector
             CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
 
+            //! Constructor by normal vector
+            CCoordinateGeodetic(const std::array<double, 3> &normalVector);
+
             //! Constructor by values
             CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const Aviation::CAltitude &geodeticHeight);
 
@@ -261,6 +264,9 @@ namespace BlackMisc
 
             //! Set normal vector
             void setNormalVector(double x, double y, double z) { m_x = x; m_y = y; m_z = z; }
+
+            //! Set normal vector
+            void setNormalVector(const std::array<double, 3> &normalVector);
 
             //! Set to null
             void setNull()

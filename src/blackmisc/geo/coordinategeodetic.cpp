@@ -180,6 +180,11 @@ namespace BlackMisc
             }
         }
 
+        CCoordinateGeodetic::CCoordinateGeodetic(const std::array<double, 3> &normalVector)
+        {
+            this->setNormalVector(normalVector);
+        }
+
         CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const CAltitude &geodeticHeight) :
             m_x(latitude.cos() * longitude.cos()),
             m_y(latitude.cos() * longitude.sin()),
@@ -194,11 +199,10 @@ namespace BlackMisc
             CCoordinateGeodetic({ latitudeDegrees, PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, PhysicalQuantities::CAngleUnit::deg() }, { heightFeet, PhysicalQuantities::CLengthUnit::ft() }) {}
 
         CCoordinateGeodetic::CCoordinateGeodetic(const ICoordinateGeodetic &coordinate) :
-            m_x(coordinate.normalVectorDouble()[0]),
-            m_y(coordinate.normalVectorDouble()[1]),
-            m_z(coordinate.normalVectorDouble()[2]),
             m_geodeticHeight(coordinate.geodeticHeight())
-        { }
+        {
+            this->setNormalVector(coordinate.normalVectorDouble());
+        }
 
         CLatitude CCoordinateGeodetic::latitude() const
         {
@@ -246,6 +250,14 @@ namespace BlackMisc
         void CCoordinateGeodetic::setGeodeticHeightToNull()
         {
             this->setGeodeticHeight(CAltitude::null());
+        }
+
+        void CCoordinateGeodetic::setNormalVector(const std::array<double, 3> &normalVector)
+        {
+            Q_ASSERT_X(normalVector.size() == 3, Q_FUNC_INFO, "Wrong vector size");
+            m_x = normalVector[0];
+            m_y = normalVector[1];
+            m_z = normalVector[2];
         }
 
         CCoordinateGeodetic &CCoordinateGeodetic::switchUnit(const CLengthUnit &unit)
