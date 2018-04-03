@@ -38,7 +38,11 @@ namespace BlackMisc
 
             //! Find closest elevation
             //! \threadsafe
-            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
+            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, bool autoRequest = false) const;
+
+            //! Request elevation, there is no guaranteed the requested elevation will be available in the provider
+            //! \threadsafe
+            virtual bool requestElevation(const Geo::ICoordinateGeodetic &reference) const = 0;
 
             //! Elevations found/missed statistics
             //! \threadsafe
@@ -142,7 +146,10 @@ namespace BlackMisc
             void setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider) { this->setProvider(provider); }
 
             //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRange
-            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
+            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, bool autoRequest = false) const;
+
+            //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRange
+            bool requestElevation(const Geo::ICoordinateGeodetic &reference) const;
 
             //! \copydoc ISimulationEnvironmentProvider::getElevationsFoundMissed
             QPair<int, int> getElevationsFoundMissed() const;

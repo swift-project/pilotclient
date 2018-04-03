@@ -112,6 +112,12 @@ namespace BlackSimPlugin
             m_watcher = nullptr;
         }
 
+        bool CSimulatorXPlane::requestElevation(const Geo::ICoordinateGeodetic &reference) const
+        {
+            //! \todo KB 2018-04 implement a function fetching the probe value (async) and write it back to provider
+            return ISimulator::requestElevation(reference);
+        }
+
         // convert xplane squawk mode to swift squawk mode
         CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
         {

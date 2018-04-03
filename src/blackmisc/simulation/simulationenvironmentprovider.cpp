@@ -91,14 +91,21 @@ namespace BlackMisc
             return delta;
         }
 
-        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
+        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, bool autoRequest) const
         {
             const CCoordinateGeodetic coordinate = this->getElevationCoordinates().findClosestWithinRange(reference, minRange(range));
             const bool found = !coordinate.isNull();
             {
                 QWriteLocker l{&m_lockElvCoordinates };
-                if (found) { m_elvFound++; }
-                else { m_elvMissed++; }
+                if (found)
+                {
+                    m_elvFound++;
+                }
+                else
+                {
+                    m_elvMissed++;
+                    if (autoRequest) { this->requestElevation(reference); }
+                }
             }
             return CElevationPlane(coordinate, reference); // plane with radis = distance to reference
         }
@@ -189,10 +196,16 @@ namespace BlackMisc
             this->clearCGs();
         }
 
-        CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
+        CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, bool autoRequest) const
         {
             if (!this->hasProvider()) { return CElevationPlane::null(); }
-            return this->provider()->findClosestElevationWithinRange(reference, range);
+            return this->provider()->findClosestElevationWithinRange(reference, range, autoRequest);
+        }
+
+        bool CSimulationEnvironmentAware::requestElevation(const ICoordinateGeodetic &reference) const
+        {
+            if (!this->hasProvider()) { return false; }
+            return this->provider()->requestElevation(reference);
         }
 
         QPair<int, int> CSimulationEnvironmentAware::getElevationsFoundMissed() const

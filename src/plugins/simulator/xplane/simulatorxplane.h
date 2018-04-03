@@ -104,6 +104,9 @@ namespace BlackSimPlugin
             virtual void unload() override;
             //! @}
 
+            //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
+            virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference) const override;
+
             //! Creates an appropriate dbus connection from the string describing it
             static QDBusConnection connectionFromString(const QString &str);
 

@@ -42,6 +42,14 @@ namespace BlackCore
         return setup;
     }
 
+    bool ISimulator::requestElevation(const Geo::ICoordinateGeodetic &reference) const
+    {
+        if (this->isShuttingDown()) { return false; }
+        if (reference.isNull()) { return false; }
+        Q_UNUSED(reference);
+        return false;
+    }
+
     void ISimulator::registerHelp()
     {
         if (CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
@@ -56,11 +64,11 @@ namespace BlackCore
     QString ISimulator::statusToString(SimulatorStatus status)
     {
         QStringList s;
-        if (status.testFlag(Unspecified)) s << "Unspecified";
-        if (status.testFlag(Disconnected)) s << "Disconnected";
-        if (status.testFlag(Connected)) s << "Connected";
-        if (status.testFlag(Simulating)) s << "Simulating";
-        if (status.testFlag(Paused)) s << "Paused";
+        if (status.testFlag(Unspecified))  { s << QStringLiteral("Unspecified"); }
+        if (status.testFlag(Disconnected)) { s << QStringLiteral("Disconnected"); }
+        if (status.testFlag(Connected))    { s << QStringLiteral("Connected"); }
+        if (status.testFlag(Simulating))   { s << QStringLiteral("Simulating"); }
+        if (status.testFlag(Paused))       { s << QStringLiteral("Paused"); }
         return s.join(", ");
     }
 

@@ -180,6 +180,10 @@ namespace BlackCore
         //! Is overall (swift) application shutting down
         virtual bool isShuttingDown() const = 0;
 
+        //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
+        //! \remark needs to be overridden if the concrete driver supports such an option
+        virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference) const override;
+
         //! \copydoc BlackMisc::IProvider::asQObject
         virtual QObject *asQObject() override { return this; }
 
