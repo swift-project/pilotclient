@@ -60,7 +60,7 @@ namespace BlackMisc
             //! Index
             enum ColumnIndex
             {
-                IndexUnit = BlackMisc::CPropertyIndex::GlobalIndexCPhysicalQuantity,
+                IndexUnit = CPropertyIndex::GlobalIndexCPhysicalQuantity,
                 IndexValue,
                 IndexValueRounded0DigitsWithUnit,
                 IndexValueRounded1DigitsWithUnit,
@@ -70,11 +70,11 @@ namespace BlackMisc
             };
 
             //! Unit
-            MU getUnit() const;
+            const MU &getUnit() const { return m_unit; }
 
             //! Simply set unit, do no calclulate conversion
             //! \sa switchUnit
-            void setUnit(MU unit) { this->m_unit = unit; }
+            void setUnit(MU unit) { m_unit = unit; }
 
             //! Set unit by string
             void setUnitBySymbol(const QString &unitName);
