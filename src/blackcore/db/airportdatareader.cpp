@@ -215,6 +215,7 @@ namespace BlackCore
                     Q_FUNC_INFO);
             }
 
+            if (!this->doWorkCheck()) { return; }
             const int size = airports.size();
             qint64 latestTimestamp = airports.latestTimestampMsecsSinceEpoch();
             if (size > 0 && latestTimestamp < 0)

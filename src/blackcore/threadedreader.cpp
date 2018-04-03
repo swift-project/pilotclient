@@ -157,7 +157,7 @@ namespace BlackCore
     void CThreadedReader::doWork()
     {
         if (!doWorkCheck()) { return; }
-        doWorkImpl();
+        this->doWorkImpl();
         Q_ASSERT(m_periodicTime > 0);
         m_updateTimer.start(m_periodicTime); // restart
     }
@@ -165,8 +165,8 @@ namespace BlackCore
     bool CThreadedReader::doWorkCheck() const
     {
         // sApp->hasWebDataServices() cannot be used, as some readers are already used during init phase
-        if (!isEnabled())  { return false; }
-        if (isAbandoned()) { return false; }
+        if (!this->isEnabled())  { return false; }
+        if (this->isAbandoned()) { return false; }
         if (!m_unitTest && (!sApp || sApp->isShuttingDown())) { return false; }
         return true;
     }

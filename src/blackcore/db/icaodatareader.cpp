@@ -292,6 +292,7 @@ namespace BlackCore
                     Q_FUNC_INFO);
             }
 
+            if (!this->doWorkCheck()) { return; }
             const int n = codes.size();
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch(); // ignores duplicates
             if (n > 0 && latestTimestamp < 0)
@@ -342,6 +343,7 @@ namespace BlackCore
                     Q_FUNC_INFO);
             }
 
+            if (!this->doWorkCheck()) { return; }
             const int n = codes.size();
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
@@ -382,6 +384,7 @@ namespace BlackCore
                 countries  = CCountryList::fromDatabaseJson(res);
             }
 
+            if (!this->doWorkCheck()) { return; }
             const int n = countries.size();
             qint64 latestTimestamp = countries.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)

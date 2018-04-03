@@ -301,6 +301,7 @@ namespace BlackCore
                 liveries  = CLiveryList::fromDatabaseJson(res);
             }
 
+            if (!this->doWorkCheck()) { return; }
             const int n = liveries.size();
             qint64 latestTimestamp = liveries.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
@@ -343,6 +344,7 @@ namespace BlackCore
                 distributors = CDistributorList::fromDatabaseJson(res);
             }
 
+            if (!this->doWorkCheck()) { return; }
             const int n = distributors.size();
             qint64 latestTimestamp = distributors.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
@@ -386,6 +388,7 @@ namespace BlackCore
             }
 
             // synchronized update
+            if (!this->doWorkCheck()) { return; }
             const int n = models.size();
             qint64 latestTimestamp = models.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
