@@ -240,7 +240,7 @@ namespace XSwiftBus
         void emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes, const std::vector<std::string> &names,
                                         const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts);
 
-        CMessageBoxControl m_messages { 128, 128, 16 };
+        CMessageBoxControl m_messages { 16, 16, 16 };
         std::vector<CNavDataReference> m_airports;
         void readAirportsDatabase();
 

@@ -26,7 +26,7 @@ namespace XSwiftBus
         static int lineHeight = 0;
         if (! lineHeight)
         {
-            XPLMGetFontDimensions(xplmFont_Proportional, nullptr, &lineHeight, nullptr);
+            XPLMGetFontDimensions(xplmFont_Basic, nullptr, &lineHeight, nullptr);
         }
         static const int lineSpace = lineHeight / 3;
         const int boxTop = m_screenHeight.get() - m_boxTop;
@@ -55,7 +55,7 @@ namespace XSwiftBus
         for (int i = 0; i < messageCount; ++i)
         {
             const int y = boxTop - (lineHeight + lineSpace) * (i + 1);
-            XPLMDrawString(m_messages[i].m_rgb.data(), x + arrowWidth + arrowWidth / 2, y, const_cast<char*>(m_messages[i].m_text.c_str()), nullptr, xplmFont_Proportional);
+            XPLMDrawString(m_messages[i].m_rgb.data(), x + arrowWidth + arrowWidth / 2, y, const_cast<char*>(m_messages[i].m_text.c_str()), nullptr, xplmFont_Basic);
         }
     }
 
@@ -65,7 +65,7 @@ namespace XSwiftBus
         if (! len)
         {
             int charWidth;
-            XPLMGetFontDimensions(xplmFont_Proportional, &charWidth, nullptr, nullptr);
+            XPLMGetFontDimensions(xplmFont_Basic, &charWidth, nullptr, nullptr);
             const int boxRight = m_screenWidth.get() - m_boxRight;
             const int boxLeft = m_boxLeft;
             len = (boxRight - boxLeft - 20) / charWidth;
