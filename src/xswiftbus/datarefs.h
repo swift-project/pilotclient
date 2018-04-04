@@ -97,6 +97,12 @@ namespace XSwiftBus
         //! Set the value of the dataref (if it is writable)
         void set(DataRefType d) { DataRefImpl::implSet(d); }
 
+        //! Set as integer, avoids cast warnings such as "possible loss of data"
+        void setAsInt(int d) { this->set(static_cast<DataRefType>(d)); }
+
+        //! Set as integer, avoids cast warnings such as "possible loss of data"
+        void setAsDouble(double d) { this->set(static_cast<DataRefType>(d)); }
+
         //! Get the value of the dataref
         DataRefType get() const { return DataRefImpl::implGet<DataRefType>(); }
     };

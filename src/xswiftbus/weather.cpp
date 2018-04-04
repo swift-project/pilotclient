@@ -24,10 +24,10 @@ namespace XSwiftBus
     template <class T>
     void setCloudLayerImpl(T &layer, int base, int tops, int type, int coverage)
     {
-        layer.base.set(base);
-        layer.tops.set(tops);
+        layer.base.setAsInt(base);
+        layer.tops.setAsInt(tops);
         layer.type.set(type);
-        layer.coverage.set(coverage);
+        layer.coverage.setAsInt(coverage);
     }
 
     void CWeather::setCloudLayer(int layer, int base, int tops, int type, int coverage)
@@ -45,12 +45,12 @@ namespace XSwiftBus
     template <class T>
     void setWindLayerImpl(T &layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
     {
-        layer.altitude.set(altitude);
+        layer.altitude.setAsInt(altitude);
         layer.direction.set(static_cast<float>(direction));
-        layer.speed.set(speed);
-        layer.shearDirection.set(shearDirection);
-        layer.shearSpeed.set(shearSpeed);
-        layer.turbulence.set(turbulence);
+        layer.speed.setAsInt(speed);
+        layer.shearDirection.setAsInt(shearDirection);
+        layer.shearSpeed.setAsInt(shearSpeed);
+        layer.turbulence.setAsInt(turbulence);
     }
 
     void CWeather::setWindLayer(int layer, int altitude, double direction, int speed, int shearDirection, int shearSpeed, int turbulence)
@@ -248,7 +248,6 @@ namespace XSwiftBus
         invokeQueuedDBusCalls();
         return 1;
     }
-
 }
 
 //! \endcond

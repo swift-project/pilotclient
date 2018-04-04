@@ -59,10 +59,10 @@ namespace XSwiftBus
         void setVisibility(double visibilityM) { m_visibilityM.set(static_cast<float>(visibilityM)); }
 
         //! Set temperature at sea level in degrees C.
-        void setTemperature(int degreesC) { m_temperatureC.set(degreesC); }
+        void setTemperature(int degreesC) { m_temperatureC.setAsInt(degreesC); }
 
         //! Set dew point at sea level in degrees C.
-        void setDewPoint(int degreesC) { m_dewPointC.set(degreesC); }
+        void setDewPoint(int degreesC) { m_dewPointC.setAsInt(degreesC); }
 
         //! Set barometric pressure at sea level in inches of mercury.
         void setQNH(double inHg) { m_qnhInhg.set(static_cast<float>(inHg)); }
@@ -77,7 +77,7 @@ namespace XSwiftBus
         void setTurbulenceRatio(double turbulenceRatio) { m_turbulenceRatio.set(static_cast<float>(turbulenceRatio)); }
 
         //! Set runway friction, 0=dry, 1=damp, 2=wet.
-        void setRunwayFriction(int friction) { m_runwayFriction.set(friction); }
+        void setRunwayFriction(int friction) { m_runwayFriction.setAsInt(friction); }
 
         //! Set a cloud layer.
         //! \param layer Layer 0, 1, or 2.
