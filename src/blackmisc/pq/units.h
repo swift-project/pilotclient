@@ -27,6 +27,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QtGlobal>
+#include <QtMath>
 #include <cstddef>
 
 //
@@ -213,7 +214,6 @@ namespace BlackMisc
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
             }
-
 
             //! Sexagesimal degree (degrees, minutes, decimal minutes)
             static CAngleUnit sexagesimalDegMin()

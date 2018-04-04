@@ -674,9 +674,10 @@ namespace XSwiftBus
             // Now calculate where the camera should be positioned to be 200
             // meters from the plane and pointing at the plane at the pitch and
             // heading we wanted above.
-            double dx = -50.0 * sin(heading * M_PI / 180.0);
-            double dz = 50.0 * cos(heading * M_PI / 180.0);
-            double dy = -50.0 * tan(pitch * M_PI / 180.0);
+            static const double PI = std::acos(-1);
+            double dx = -50.0 * sin(heading * PI / 180.0);
+            double dz = 50.0 * cos(heading * PI / 180.0);
+            double dy = -50.0 * tan(pitch * PI / 180.0);
 
             auto planeIt = traffic->m_planesByCallsign.find(traffic->m_planeViewCallsign);
             if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }

@@ -7,33 +7,34 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "navdatareference.h"
 #include <cmath>
 
 namespace XSwiftBus
 {
-
-    //! Converts degree to radian
     inline double degreeToRadian(double angle)
     {
-        return M_PI * angle / 180.0;
+        static const double PI = acos(-1);
+        return PI * angle / 180.0;
     }
 
-    //! Returns the great circle distance between to nav data references
     double calculateGreatCircleDistance(const CNavDataReference &a, const CNavDataReference &b)
     {
         const static double c_earthRadiusKm = 6372.8;
 
-        double latRad1 = degreeToRadian(a.latitude());
-        double latRad2 = degreeToRadian(b.latitude());
-        double lonRad1 = degreeToRadian(a.longitude());
-        double lonRad2 = degreeToRadian(b.longitude());
+        const double latRad1 = degreeToRadian(a.latitude());
+        const double latRad2 = degreeToRadian(b.latitude());
+        const double lonRad1 = degreeToRadian(a.longitude());
+        const double lonRad2 = degreeToRadian(b.longitude());
 
-        double diffLa = latRad2 - latRad1;
-        double doffLo = lonRad2 - lonRad1;
+        const double diffLa = latRad2 - latRad1;
+        const double doffLo = lonRad2 - lonRad1;
 
-        double computation = asin(sqrt(sin(diffLa / 2) * sin(diffLa / 2) + cos(latRad1) * cos(latRad2) * sin(doffLo / 2) * sin(doffLo / 2)));
+        const double computation = asin(sqrt(sin(diffLa / 2) * sin(diffLa / 2) + cos(latRad1) * cos(latRad2) * sin(doffLo / 2) * sin(doffLo / 2)));
         return 2 * c_earthRadiusKm * computation;
     }
+} // ns
 
-}
+//! \endcond
