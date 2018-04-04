@@ -68,6 +68,39 @@ namespace BlackSimPlugin
         class CXSwiftBusTrafficProxy;
         class CXSwiftBusWeatherProxy;
 
+        //! X-Plane data
+        //! \todo Add units to members? pitchDeg?, altitudeFt?
+        struct XPlaneData
+        {
+            QString aircraftModelPath;          //!< Aircraft model path
+            QString aircraftIcaoCode;           //!< Aircraft model path
+            double latitude;                    //!< Longitude [deg]
+            double longitude;                   //!< Latitude [deg]
+            double altitude;                    //!< Altitude [m]
+            double groundspeed;                 //!< Ground speed [m/s]
+            double pitch;                       //!< Pitch [deg]
+            double roll;                        //!< Roll [deg]
+            double trueHeading;                 //!< True heading [deg]
+            bool onGroundAll;                   //!< All wheels on ground?
+            int com1Active;                     //!< COM1 active [kHz]
+            int com1Standby;                    //!< COM1 standby [kHz]
+            int com2Active;                     //!< COM2 active [kHz]
+            int com2Standby;                    //!< COM2 standby [kHz]
+            int xpdrCode;                       //!< Transpondder code
+            int xpdrMode;                       //!< Transponder mode (off=0,stdby=1,on=2,test=3)
+            bool xpdrIdent;                     //!< Is transponder in ident?
+            bool beaconLightsOn;                //!< Beacon lights on?
+            bool landingLightsOn;               //!< Landing lights on?
+            bool navLightsOn;                   //!< NAV lights on?
+            bool strobeLightsOn;                //!< Strobe lights on?
+            bool taxiLightsOn;                  //!< Taxi lights on?
+            double flapsReployRatio;            //!< Flaps deployment ratio [%]
+            double gearReployRatio;             //!< Gear deployment ratio [%]
+            QList<double> enginesN1Percentage;  //!< N1 per engine [%]
+            double speedBrakeRatio;             //!< Speed break ratio [%]
+            double seaLeveLPressure;            //!< Sea level pressure [inhg]
+        };
+
         //! X-Plane ISimulator implementation
         class CSimulatorXPlane : public BlackCore::CSimulatorCommon
         {
@@ -175,37 +208,7 @@ namespace BlackSimPlugin
             CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
             int m_interpolationRequest = 0; //!< current interpolation request
 
-            //! \todo Add units to members? pitchDeg?, altitudeFt?
-            struct // data is written by DBus async method callbacks
-            {
-                QString aircraftModelPath;
-                QString aircraftIcaoCode;
-                double latitude;
-                double longitude;
-                double altitude;
-                double groundspeed;
-                double pitch;
-                double roll;
-                double trueHeading;
-                bool onGroundAll;
-                int com1Active;
-                int com1Standby;
-                int com2Active;
-                int com2Standby;
-                int xpdrCode;
-                int xpdrMode;
-                bool xpdrIdent;
-                bool beaconLightsOn;
-                bool landingLightsOn;
-                bool navLightsOn;
-                bool strobeLightsOn;
-                bool taxiLightsOn;
-                double flapsReployRatio;
-                double gearReployRatio;
-                QList<double> enginesN1Percentage;
-                double speedBrakeRatio;
-                double seaLeveLPressure;
-            } m_xplaneData;
+            XPlaneData m_xplaneData;
 
             void resetXPlaneData()
             {

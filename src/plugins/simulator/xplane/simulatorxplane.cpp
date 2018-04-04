@@ -136,13 +136,7 @@ namespace BlackSimPlugin
         {
             if (this->isConnected())
             {
-                m_serviceProxy->getLatitudeAsync(&m_xplaneData.latitude);
-                m_serviceProxy->getLongitudeAsync(&m_xplaneData.longitude);
-                m_serviceProxy->getAltitudeMSLAsync(&m_xplaneData.altitude);
-                m_serviceProxy->getGroundSpeedAsync(&m_xplaneData.groundspeed);
-                m_serviceProxy->getPitchAsync(&m_xplaneData.pitch);
-                m_serviceProxy->getRollAsync(&m_xplaneData.roll);
-                m_serviceProxy->getTrueHeadingAsync(&m_xplaneData.trueHeading);
+                m_serviceProxy->getOwnAircraftSituationData(&m_xplaneData);
                 m_serviceProxy->getCom1ActiveAsync(&m_xplaneData.com1Active);
                 m_serviceProxy->getCom1StandbyAsync(&m_xplaneData.com1Standby);
                 m_serviceProxy->getCom2ActiveAsync(&m_xplaneData.com2Active);
@@ -151,7 +145,6 @@ namespace BlackSimPlugin
                 m_serviceProxy->getTransponderModeAsync(&m_xplaneData.xpdrMode);
                 m_serviceProxy->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
                 m_serviceProxy->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
-                m_serviceProxy->getQNHAsync(&m_xplaneData.seaLeveLPressure);
 
                 CAircraftSituation situation;
                 situation.setPosition({ m_xplaneData.latitude, m_xplaneData.longitude, 0 });

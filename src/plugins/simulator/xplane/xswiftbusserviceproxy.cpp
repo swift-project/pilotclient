@@ -8,6 +8,7 @@
  */
 
 #include "xswiftbusserviceproxy.h"
+#include "simulatorxplane.h"
 
 #include <QLatin1String>
 
@@ -23,6 +24,27 @@ namespace BlackSimPlugin
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(XSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
             if (!dummy) { m_dbusInterface->relayParentSignals(); }
+        }
+
+        void CXSwiftBusServiceProxy::getOwnAircraftSituationData(XPlaneData *o_xplaneData)
+        {
+            std::function<void(QDBusPendingCallWatcher *)> callback = [this, o_xplaneData](QDBusPendingCallWatcher * watcher)
+            {
+                QDBusPendingReply<double, double, double, double, double, double, double, double> reply = *watcher;
+                if (!reply.isError())
+                {
+                    o_xplaneData->latitude = reply.argumentAt<0>();
+                    o_xplaneData->longitude = reply.argumentAt<1>();
+                    o_xplaneData->altitude = reply.argumentAt<2>();
+                    o_xplaneData->groundspeed = reply.argumentAt<3>();
+                    o_xplaneData->pitch = reply.argumentAt<4>();
+                    o_xplaneData->roll = reply.argumentAt<5>();
+                    o_xplaneData->trueHeading = reply.argumentAt<6>();
+                    o_xplaneData->seaLeveLPressure = reply.argumentAt<7>();
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getOwnAircraftSituationData"), callback);
         }
 
         void CXSwiftBusServiceProxy::addTextMessage(const QString &text, double red, double green, double blue)
