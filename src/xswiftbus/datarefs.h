@@ -27,7 +27,7 @@ namespace XSwiftBus
     class DataRefImpl
     {
     public:
-        DataRefImpl(char const* name) : m_ref(XPLMFindDataRef(name))
+        DataRefImpl(char const *name) : m_ref(XPLMFindDataRef(name))
         {
             if (! m_ref)
             {
@@ -50,7 +50,7 @@ namespace XSwiftBus
     class ArrayDataRefImpl
     {
     public:
-        ArrayDataRefImpl(char const* name, int size) : m_ref(XPLMFindDataRef(name)), m_size(size)
+        ArrayDataRefImpl(char const *name, int size) : m_ref(XPLMFindDataRef(name)), m_size(size)
         {
             if (! m_ref)
             {
@@ -60,7 +60,7 @@ namespace XSwiftBus
         }
 
         template <typename T>
-        void implSetAll(std::vector<T> const&);
+        void implSetAll(std::vector<T> const &);
 
         template <typename T>
         std::vector<T> implGetAll() const;
@@ -126,7 +126,7 @@ namespace XSwiftBus
         using DataRefType = typename DataRefTraits::type;
 
         //! Set the value of the whole array (if it is writable)
-        void setAll(std::vector<DataRefType> const& a) { ArrayDataRefImpl::implSetAll(a); }
+        void setAll(std::vector<DataRefType> const &a) { ArrayDataRefImpl::implSetAll(a); }
 
         //! Get the value of the whole array
         std::vector<DataRefType> getAll() const { return ArrayDataRefImpl::implGetAll<DataRefType>(); }
@@ -158,18 +158,18 @@ namespace XSwiftBus
         }
 
         //! Set the value of the whole string (if it is writable)
-        void set(std::string const& s) { setSubstr(0, s); }
+        void set(std::string const &s) { setSubstr(0, s); }
 
         //! Get the value of the whole string
         std::string get() const { return getSubstr(0, DataRefTraits::size); }
 
         //! Set the value of part of the string (if it is writable)
-        void setSubstr(size_t offset, std::string const& s)
+        void setSubstr(size_t offset, std::string const &s)
         { assert((s.size() + 1) <= (DataRefTraits::size - offset)); XPLMSetDatab(m_ref, s.c_str(), offset, s.size() + 1); }
 
         //! Get the value of part of the string
         std::string getSubstr(size_t offset, size_t size) const
-        { std::string s (size, 0); XPLMGetDatab(m_ref, &s[0], (int)offset, (int)size); size = s.find(char(0)); if (size != std::string::npos) s.resize(size); return s; }
+        { std::string s(size, 0); XPLMGetDatab(m_ref, &s[0], (int)offset, (int)size); size = s.find(char(0)); if (size != std::string::npos) s.resize(size); return s; }
 
     private:
         XPLMDataRef m_ref;
@@ -189,13 +189,13 @@ namespace XSwiftBus
     inline double DataRefImpl::implGet<double>() const { return XPLMGetDatad(m_ref); }
 
     template <>
-    inline void ArrayDataRefImpl::implSetAll<int>(std::vector<int> const& v) { assert((int)v.size() <= m_size); XPLMSetDatavi(m_ref, const_cast<int*>(&v[0]), 0, (int)v.size()); }
+    inline void ArrayDataRefImpl::implSetAll<int>(std::vector<int> const &v) { assert((int)v.size() <= m_size); XPLMSetDatavi(m_ref, const_cast<int *>(&v[0]), 0, (int)v.size()); }
     template <>
-    inline void ArrayDataRefImpl::implSetAll<float>(std::vector<float> const& v) { assert((int)v.size() <= m_size); XPLMSetDatavf(m_ref, const_cast<float*>(&v[0]), 0, (int)v.size()); }
+    inline void ArrayDataRefImpl::implSetAll<float>(std::vector<float> const &v) { assert((int)v.size() <= m_size); XPLMSetDatavf(m_ref, const_cast<float *>(&v[0]), 0, (int)v.size()); }
     template <>
-    inline std::vector<int> ArrayDataRefImpl::implGetAll<int>() const { std::vector<int> v (m_size); XPLMGetDatavi(m_ref, &v[0], 0, m_size); return v; }
+    inline std::vector<int> ArrayDataRefImpl::implGetAll<int>() const { std::vector<int> v(m_size); XPLMGetDatavi(m_ref, &v[0], 0, m_size); return v; }
     template <>
-    inline std::vector<float> ArrayDataRefImpl::implGetAll<float>() const { std::vector<float> v (m_size); XPLMGetDatavf(m_ref, &v[0], 0, m_size); return v; }
+    inline std::vector<float> ArrayDataRefImpl::implGetAll<float>() const { std::vector<float> v(m_size); XPLMGetDatavf(m_ref, &v[0], 0, m_size); return v; }
 
     template <>
     inline void ArrayDataRefImpl::implSetAt<int>(int i, int d) { assert(i <= m_size); XPLMSetDatavi(m_ref, &d, i, 1); }

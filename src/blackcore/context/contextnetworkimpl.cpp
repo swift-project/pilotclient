@@ -161,61 +161,37 @@ namespace BlackCore
         {
             if (this->isDebugEnabled()) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             QString msg;
-            if (!server.getUser().hasCredentials())
-            {
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid user credentials");
-            }
-            else if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator())
-            {
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid ICAO data for own aircraft");
-            }
-            else if (!CNetworkUtils::canConnect(server, msg, 5000))
-            {
-                return CStatusMessage(CStatusMessage::SeverityError, msg);
-            }
-            else if (m_network->isConnected())
-            {
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Already connected");
-            }
-            else if (this->isPendingConnection())
-            {
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Pending connection, please wait");
-            }
-            else
-            {
-                m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
-                this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
-                const CSimulatedAircraft ownAircraft(this->ownAircraft());
-                m_network->presetServer(server);
+            if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid user credentials"); }
+            if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid ICAO data for own aircraft"); }
+            if (!CNetworkUtils::canConnect(server, msg, 5000)) { return CStatusMessage(CStatusMessage::SeverityError, msg); }
+            if (m_network->isConnected()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Already connected"); }
+            if (this->isPendingConnection()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Pending connection, please wait"); }
 
-                // Fall back to observer mode, if no simulator is available or not simulating
-                if (!CBuildConfig::isLocalDeveloperDebugBuild() && !this->getIContextSimulator()->isSimulatorSimulating())
-                {
-                    CLogMessage(this).info("No simulator connected or connected simulator not simulating. Falling back to observer mode");
-                    mode = INetwork::LoginAsObserver;
-                }
+            m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
+            this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
+            const CSimulatedAircraft ownAircraft(this->ownAircraft());
+            m_network->presetServer(server);
 
-                m_network->presetLoginMode(mode);
-                m_network->presetCallsign(ownAircraft.getCallsign());
-                m_network->presetIcaoCodes(ownAircraft);
-                if (getIContextSimulator())
-                {
-                    m_network->presetSimulatorInfo(getIContextSimulator()->getSimulatorPluginInfo());
-                }
-                else
-                {
-                    m_network->presetSimulatorInfo(CSimulatorPluginInfo());
-                }
-                m_network->initiateConnection();
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection pending " + server.getAddress() + " " + QString::number(server.getPort()));
+            // Fall back to observer mode, if no simulator is available or not simulating
+            if (!CBuildConfig::isLocalDeveloperDebugBuild() && !this->getIContextSimulator()->isSimulatorSimulating())
+            {
+                CLogMessage(this).info("No simulator connected or connected simulator not simulating. Falling back to observer mode");
+                mode = INetwork::LoginAsObserver;
             }
+
+            m_network->presetLoginMode(mode);
+            m_network->presetCallsign(ownAircraft.getCallsign());
+            m_network->presetIcaoCodes(ownAircraft);
+
+            const CSimulatorPluginInfo sim = this->getIContextSimulator() ? this->getIContextSimulator()->getSimulatorPluginInfo() : CSimulatorPluginInfo();
+            m_network->presetSimulatorInfo(sim);
+            m_network->initiateConnection();
+            return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityInfo, "Connection pending " + server.getAddress() + " " + QString::number(server.getPort()));
         }
 
         CServer CContextNetwork::getConnectedServer() const
         {
-            return this->isConnected() ?
-                   m_network->getPresetServer() :
-                   CServer();
+            return this->isConnected() ? m_network->getPresetServer() : CServer();
         }
 
         CStatusMessage CContextNetwork::disconnectFromNetwork()
@@ -300,7 +276,7 @@ namespace BlackCore
                 else
                 {
                     bool isNumber;
-                    double frequencyMhz = receiver.toDouble(&isNumber);
+                    const double frequencyMhz = receiver.toDouble(&isNumber);
                     if (isNumber)
                     {
                         CFrequency radioFrequency = CFrequency(frequencyMhz, CFrequencyUnit::MHz());
