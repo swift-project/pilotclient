@@ -48,6 +48,7 @@ namespace BlackMisc
             int c = 0;
             for (CAircraftSituation &situation : *this)
             {
+                situation.setOnGroundDetails(CAircraftSituation::InFromParts);
                 if (situation.adjustGroundFlag(parts, timeDeviationFactor)) { c++; };
             }
             return c;
@@ -91,6 +92,30 @@ namespace BlackMisc
                 if (situation.getGroundElevationPlane().getRadius() > range) { return true; }
             }
             return false;
+        }
+
+        bool CAircraftSituationList::containsOnGroundDetails(CAircraftSituation::OnGroundDetails details) const
+        {
+            return this->contains(&CAircraftSituation::getOnGroundDetails, details);
+        }
+
+        bool CAircraftSituationList::areAllOnGroundDetailsSame(CAircraftSituation::OnGroundDetails details) const
+        {
+            for (const CAircraftSituation &situation : *this)
+            {
+                if (situation.getOnGroundDetails() != details) { return false; }
+            }
+            return true;
+        }
+
+        int CAircraftSituationList::setOnGroundDetails(CAircraftSituation::OnGroundDetails details)
+        {
+            int c = 0;
+            for (CAircraftSituation &situation : *this)
+            {
+                if (situation.setOnGroundDetails(details)) { c++; }
+            }
+            return c;
         }
     } // namespace
 } // namespace

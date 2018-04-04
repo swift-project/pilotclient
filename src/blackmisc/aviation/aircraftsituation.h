@@ -197,7 +197,7 @@ namespace BlackMisc
             const QString &getOnDetailsAsString() const;
 
             //! On ground details
-            void setOnGroundDetails(CAircraftSituation::OnGroundDetails details) { m_onGroundDetails = static_cast<int>(details); }
+            bool setOnGroundDetails(CAircraftSituation::OnGroundDetails details);
 
             //! Set on ground as interpolated from ground fatcor
             bool setOnGroundFromGroundFactorFromInterpolation(double threshold = 0.5);
@@ -320,14 +320,14 @@ namespace BlackMisc
             //! \param alwaysSetDetails mark as CAircraftSituation::InFromParts regardless of parts
             //! \param timeDeviationFactor 0..1 (of offset time) small deviations from time are accepted
             //! \param differenceMs returns time difference
-            bool adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
+            bool adjustGroundFlag(const CAircraftParts &parts, bool alwaysSetDetails, double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
 
             //! Transfer ground flag from parts list
             //! \param partsList containing the gnd flag
             //! \param alwaysSetDetails mark as CAircraftSituation::InFromParts regardless of parts
             //! \param timeDeviationFactor 0..1 (of offset time) small deviations from time are accepted
             //! \param differenceMs returns time difference
-            bool adjustGroundFlag(const CAircraftPartsList &partsList, double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
+            bool adjustGroundFlag(const CAircraftPartsList &partsList, bool alwaysSetDetails, double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
 
             //! Get flag indicating this is an interim position update
             bool isInterim() const { return m_isInterim; }

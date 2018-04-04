@@ -310,6 +310,17 @@ namespace BlackMisc
             return CAircraftSituation::onGroundDetailsToString(this->getOnGroundDetails());
         }
 
+        bool CAircraftSituation::setOnGroundDetails(CAircraftSituation::OnGroundDetails details)
+        {
+            if (details != OnGroundByGuessing)
+            {
+                m_onGroundGuessingDetails.clear();
+            }
+            if (this->getOnGroundDetails() == details) { return false; }
+            m_onGroundDetails = static_cast<int>(details);
+            return true;
+        }
+
         bool CAircraftSituation::setOnGroundFromGroundFactorFromInterpolation(double threshold)
         {
             this->setOnGroundDetails(OnGroundByInterpolation);
@@ -512,12 +523,14 @@ namespace BlackMisc
             m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
         }
 
-        bool CAircraftSituation::adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor, qint64 *differenceMs)
+        bool CAircraftSituation::adjustGroundFlag(const CAircraftParts &parts, bool alwaysSetDetails, double timeDeviationFactor, qint64 *differenceMs)
         {
             Q_ASSERT_X(timeDeviationFactor >= 0 && timeDeviationFactor <= 1.0, Q_FUNC_INFO, "Expect 0..1");
             static const qint64 Max = std::numeric_limits<qint64>::max();
             if (differenceMs) { *differenceMs = Max; }
+
             if (this->getOnGroundDetails() == CAircraftSituation::InFromNetwork) { return false; }
+            if (alwaysSetDetails) { this->setOnGroundDetails(InFromParts); }
             const qint64 d = this->getAdjustedTimeDifferenceMs(parts.getAdjustedMSecsSinceEpoch());
             const bool adjust = (d >= 0) || qAbs(d) < (timeDeviationFactor * parts.getTimeOffsetMs()); // future or past within deviation range
             if (!adjust) { return false; }
@@ -527,14 +540,16 @@ namespace BlackMisc
             return true;
         }
 
-        bool CAircraftSituation::adjustGroundFlag(const CAircraftPartsList &partsList, double timeDeviationFactor, qint64 *differenceMs)
+        bool CAircraftSituation::adjustGroundFlag(const CAircraftPartsList &partsList, bool alwaysSetDetails, double timeDeviationFactor, qint64 *differenceMs)
         {
             Q_ASSERT_X(timeDeviationFactor >= 0 && timeDeviationFactor <= 1.0, Q_FUNC_INFO, "Expect 0..1");
-            if (this->getOnGroundDetails() == CAircraftSituation::InFromNetwork) { return false; }
-            if (partsList.isEmpty()) { return false; }
-
             static const qint64 Max = std::numeric_limits<qint64>::max();
             if (differenceMs) { *differenceMs = Max; }
+
+            if (this->getOnGroundDetails() == CAircraftSituation::InFromNetwork) { return false; }
+            if (alwaysSetDetails) { this->setOnGroundDetails(InFromParts); }
+            if (partsList.isEmpty()) { return false; }
+
             CAircraftParts bestParts;
             bool adjust = false;
             qint64 bestDistance = Max;

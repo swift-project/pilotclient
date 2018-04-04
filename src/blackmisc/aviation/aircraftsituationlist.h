@@ -68,6 +68,15 @@ namespace BlackMisc
 
             //! Any situation outside range
             bool hasGroundElevationOutsideRange(const PhysicalQuantities::CLength &range) const;
+
+            //! Contains on ground details
+            bool containsOnGroundDetails(CAircraftSituation::OnGroundDetails details) const;
+
+            //! Are all on ground details the same
+            bool areAllOnGroundDetailsSame(CAircraftSituation::OnGroundDetails details) const;
+
+            //! Set on ground details for all situations
+            int setOnGroundDetails(CAircraftSituation::OnGroundDetails details);
         };
     } // namespace
 } // namespace
