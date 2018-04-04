@@ -75,20 +75,20 @@ namespace BlackSound
         CSoundGenerator(const QList<Tone> &tones, BlackMisc::Audio::CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
 
         //! Destructor
-        ~CSoundGenerator();
+        virtual ~CSoundGenerator();
 
         //! Set volume
         //! \param volume 0..100
         void setVolume(int volume)
         {
-            this->m_audioOutput->setVolume(qreal(volume / 100.0));
+            m_audioOutput->setVolume(qreal(volume / 100.0));
         }
 
         //! Close device, buffer stays intact
         void stop(bool destructor = false);
 
         //! Duration of one cycle
-        qint64 singleCyleDurationMs() const { return calculateDurationMs(this->m_tones); }
+        qint64 singleCyleDurationMs() const { return calculateDurationMs(m_tones); }
 
         //! \copydoc QIODevice::readData()
         virtual qint64 readData(char *data, qint64 maxlen) override;
@@ -103,13 +103,13 @@ namespace BlackSound
         //! \copydoc QIODevice::seek()
         virtual bool seek(qint64 pos) override
         {
-            return this->m_endReached ? false : QIODevice::seek(pos);
+            return m_endReached ? false : QIODevice::seek(pos);
         }
 
         //! \copydoc QIODevice::atEnd()
         virtual bool atEnd() const override
         {
-            return this->m_endReached ? true : QIODevice::atEnd();
+            return m_endReached ? true : QIODevice::atEnd();
         }
 
         //! Default audio format fo play these sounds
@@ -154,11 +154,10 @@ namespace BlackSound
         //! \see BlackMisc::Aviation::CSelcal
         static void playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Audio::CAudioDeviceInfo &audioDevice);
 
-
         //! One cycle of tones takes t milliseconds
         BlackMisc::PhysicalQuantities::CTime oneCycleDurationMs() const
         {
-            return BlackMisc::PhysicalQuantities::CTime(this->m_oneCycleDurationMs, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
+            return BlackMisc::PhysicalQuantities::CTime(m_oneCycleDurationMs, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
         }
 
         //! Play given file

@@ -52,94 +52,94 @@ namespace BlackSound
     CSoundGenerator::~CSoundGenerator()
     {
         this->stop(true);
-        if (this->m_ownThread) { this->m_ownThread->deleteLater(); }
+        if (m_ownThread) { m_ownThread->deleteLater(); }
     }
 
     void CSoundGenerator::start(int volume, bool pull)
     {
-        if (this->m_buffer.isEmpty()) this->generateData();
+        if (m_buffer.isEmpty()) this->generateData();
         this->open(QIODevice::ReadOnly);
-        this->m_audioOutput->setVolume(qreal(0.01 * volume));
+        m_audioOutput->setVolume(qreal(0.01 * volume));
 
         if (pull)
         {
             // For an output device, the QAudioOutput class will pull data from the QIODevice
             // (using QIODevice::read()) when more audio data is required.
-            this->m_audioOutput->start(this); // pull
+            m_audioOutput->start(this); // pull
         }
         else
         {
             // In push mode, the audio device provides a QIODevice instance that can be
             // written or read to as needed. Typically this results in simpler code but more buffering, which may affect latency.
-            if (!this->m_pushTimer)
+            if (!m_pushTimer)
             {
-                this->m_pushTimer = new QTimer(this);
-                bool ok = connect(this->m_pushTimer, &QTimer::timeout, this, &CSoundGenerator::pushTimerExpired);
+                m_pushTimer = new QTimer(this);
+                bool ok = connect(m_pushTimer, &QTimer::timeout, this, &CSoundGenerator::pushTimerExpired);
                 Q_ASSERT(ok);
                 Q_UNUSED(ok); // suppress Clang warning in release build
-                this->m_pushTimer->start(20);
+                m_pushTimer->start(20);
             }
-            this->m_pushModeIODevice = this->m_audioOutput->start(); // push, IO device not owned
+            m_pushModeIODevice = m_audioOutput->start(); // push, IO device not owned
         }
     }
 
     void CSoundGenerator::startInOwnThread(int volume)
     {
-        this->m_ownThread = new QThread(); // deleted by signals, hence no parent
-        this->moveToThread(this->m_ownThread);
+        m_ownThread = new QThread(); // deleted by signals, hence no parent
+        this->moveToThread(m_ownThread);
         // connect(this, &CSoundGenerator::startThread, this, &CSoundGenerator::start);
 
-        connect(this->m_ownThread, &QThread::started, this, [ = ]() { this->start(volume, false); });
-        connect(this, &CSoundGenerator::stopping, this->m_ownThread, &QThread::quit);
+        connect(m_ownThread, &QThread::started, this, [ = ]() { this->start(volume, false); });
+        connect(this, &CSoundGenerator::stopping, m_ownThread, &QThread::quit);
 
         // in auto delete mode force deleteLater when thread is finished
-        if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
+        if (m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
         {
-            connect(this->m_ownThread, &QThread::finished, this, &CSoundGenerator::deleteLater);
+            connect(m_ownThread, &QThread::finished, this, &CSoundGenerator::deleteLater);
         }
 
         // start thread and begin processing by calling start via signal startThread
-        this->m_ownThread->start();
+        m_ownThread->start();
     }
 
     void CSoundGenerator::stop(bool destructor)
     {
-        // this->m_audioOutput->setVolume(0); // Bug or feature, killing the applicaions volume?
+        // m_audioOutput->setVolume(0); // Bug or feature, killing the applicaions volume?
         if (this->isOpen())
         {
             // 1. isOpen avoids redundant signals
             // 2. OK in destructor, see http://stackoverflow.com/a/14024955/356726
             this->close(); // close IO Device
-            this->m_audioOutput->stop();
-            if (this->m_pushTimer) this->m_pushTimer->stop();
+            m_audioOutput->stop();
+            if (m_pushTimer) { m_pushTimer->stop(); }
             emit this->stopped();
         }
-        this->m_position = 0;
+        m_position = 0;
         if (destructor) return;
 
         // trigger own termination
-        if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
+        if (m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
         {
             emit this->stopping();
-            if (!this->m_ownThread) this->deleteLater(); // with own thread, thread signal will call deleteLater
+            if (!m_ownThread) this->deleteLater(); // with own thread, thread signal will call deleteLater
         }
     }
 
     void CSoundGenerator::pushTimerExpired()
     {
-        if (this->m_pushModeIODevice && !this->m_endReached && this->m_audioOutput->state() != QAudio::StoppedState)
+        if (m_pushModeIODevice && !m_endReached && m_audioOutput->state() != QAudio::StoppedState)
         {
-            int chunks = this->m_audioOutput->bytesFree() / this->m_audioOutput->periodSize();
+            int chunks = m_audioOutput->bytesFree() / m_audioOutput->periodSize();
             while (chunks)
             {
                 // periodSize-> Returns the period size in bytes.
                 //! \todo looks wrong: read() will memcpy from m_buffer.constData() to m_buffer.data()
-                const qint64 len = this->read(m_buffer.data(), this->m_audioOutput->periodSize());
+                const qint64 len = this->read(m_buffer.data(), m_audioOutput->periodSize());
                 if (len >= 0)
                 {
-                    this->m_pushModeIODevice->write(m_buffer.constData(), len);
+                    m_pushModeIODevice->write(m_buffer.constData(), len);
                 }
-                if (len != this->m_audioOutput->periodSize())
+                if (len != m_audioOutput->periodSize())
                 {
                     break; // not a complete period, so buffer is completely read
                 }
@@ -148,12 +148,12 @@ namespace BlackSound
         }
         else
         {
-            if (this->m_pushTimer)
+            if (m_pushTimer)
             {
-                this->m_pushTimer->stop();
-                this->m_pushTimer->disconnect(this);
+                m_pushTimer->stop();
+                m_pushTimer->disconnect(this);
             }
-            if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
+            if (m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
             {
                 this->stop();
             }
@@ -162,14 +162,14 @@ namespace BlackSound
 
     void CSoundGenerator::generateData()
     {
-        Q_ASSERT(this->m_tones.size() > 0);
-        const int bytesPerSample = this->m_audioFormat.sampleSize() / 8;
-        const int bytesForAllChannels = this->m_audioFormat.channelCount() * bytesPerSample;
+        Q_ASSERT(m_tones.size() > 0);
+        const int bytesPerSample = m_audioFormat.sampleSize() / 8;
+        const int bytesForAllChannels = m_audioFormat.channelCount() * bytesPerSample;
 
         qint64 totalLength = 0;
-        foreach(Tone t, this->m_tones)
+        foreach(Tone t, m_tones)
         {
-            totalLength += this->m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
+            totalLength += m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
         }
 
         Q_ASSERT(totalLength % bytesForAllChannels == 0);
@@ -178,16 +178,16 @@ namespace BlackSound
         m_buffer.resize(totalLength);
         unsigned char *bufferPointer = reinterpret_cast<unsigned char *>(m_buffer.data()); // clazy:exclude=detaching-member
 
-        foreach(Tone t, this->m_tones)
+        foreach(Tone t, m_tones)
         {
-            qint64 bytesPerTone = this->m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
+            qint64 bytesPerTone = m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
             qint64 last0AmplitudeSample = bytesPerTone; // last sample when amplitude was 0
             int sampleIndexPerTone = 0;
             while (bytesPerTone)
             {
                 // http://hyperphysics.phy-astr.gsu.edu/hbase/audio/sumdif.html
                 // http://math.stackexchange.com/questions/164369/how-do-you-calculate-the-frequency-perceived-by-humans-of-two-sinusoidal-waves-a
-                const double pseudoTime = double(sampleIndexPerTone % this->m_audioFormat.sampleRate()) / this->m_audioFormat.sampleRate();
+                const double pseudoTime = double(sampleIndexPerTone % m_audioFormat.sampleRate()) / m_audioFormat.sampleRate();
                 double amplitude = 0.0; // amplitude -1 -> +1 , 0 is silence
                 if (t.m_frequencyHz > 10)
                 {
@@ -217,7 +217,7 @@ namespace BlackSound
                 }
 
                 // generate this for all channels, usually 1 channel
-                for (int i = 0; i < this->m_audioFormat.channelCount(); ++i)
+                for (int i = 0; i < m_audioFormat.channelCount(); ++i)
                 {
                     this->writeAmplitudeToBuffer(amplitude, bufferPointer);
                     bufferPointer += bytesPerSample;
@@ -235,7 +235,7 @@ namespace BlackSound
                     double amplitude = 0.0; // amplitude -1 -> +1 , 0 is silence
 
                     // generate this for all channels, usually 1 channel
-                    for (int i = 0; i < this->m_audioFormat.channelCount(); ++i)
+                    for (int i = 0; i < m_audioFormat.channelCount(); ++i)
                     {
                         this->writeAmplitudeToBuffer(amplitude, bufferPointer);
                         bufferPointer += bytesPerSample;
@@ -248,20 +248,20 @@ namespace BlackSound
 
     void CSoundGenerator::writeAmplitudeToBuffer(const double amplitude, unsigned char *bufferPointer)
     {
-        if (this->m_audioFormat.sampleSize() == 8 && this->m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
+        if (m_audioFormat.sampleSize() == 8 && m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
         {
             const quint8 value = static_cast<quint8>((1.0 + amplitude) / 2 * 255);
             *reinterpret_cast<quint8 *>(bufferPointer) = value;
         }
-        else if (this->m_audioFormat.sampleSize() == 8 && this->m_audioFormat.sampleType() == QAudioFormat::SignedInt)
+        else if (m_audioFormat.sampleSize() == 8 && m_audioFormat.sampleType() == QAudioFormat::SignedInt)
         {
             const qint8 value = static_cast<qint8>(amplitude * 127);
             *reinterpret_cast<qint8 *>(bufferPointer) = value;
         }
-        else if (this->m_audioFormat.sampleSize() == 16 && this->m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
+        else if (m_audioFormat.sampleSize() == 16 && m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
         {
             quint16 value = static_cast<quint16>((1.0 + amplitude) / 2 * 65535);
-            if (this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
+            if (m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
             {
                 qToLittleEndian<quint16>(value, bufferPointer);
             }
@@ -270,10 +270,10 @@ namespace BlackSound
                 qToBigEndian<quint16>(value, bufferPointer);
             }
         }
-        else if (this->m_audioFormat.sampleSize() == 16 && this->m_audioFormat.sampleType() == QAudioFormat::SignedInt)
+        else if (m_audioFormat.sampleSize() == 16 && m_audioFormat.sampleType() == QAudioFormat::SignedInt)
         {
             qint16 value = static_cast<qint16>(amplitude * 32767);
-            if (this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
+            if (m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
             {
                 qToLittleEndian<qint16>(value, bufferPointer);
             }
@@ -323,11 +323,11 @@ namespace BlackSound
 
         // DATA header
         memcpy(&header.data.descriptor.id[0], "data", 4);
-        qToLittleEndian<quint32>(quint32(this->m_buffer.size()),
+        qToLittleEndian<quint32>(quint32(m_buffer.size()),
                                  reinterpret_cast<unsigned char *>(&header.data.descriptor.size));
 
         success = file.write(reinterpret_cast<const char *>(&header), headerLength) == headerLength;
-        success = success && file.write(this->m_buffer) == this->m_buffer.size();
+        success = success && file.write(m_buffer) == m_buffer.size();
         file.close();
         return success;
     }
@@ -346,7 +346,7 @@ namespace BlackSound
     qint64 CSoundGenerator::readData(char *data, qint64 len)
     {
         if (len < 1) { return 0; }
-        if (this->m_endReached)
+        if (m_endReached)
         {
             this->stop(); // all data read, we can stop output
             return 0;
@@ -357,12 +357,12 @@ namespace BlackSound
         {
             const qint64 chunkSize = qMin((m_buffer.size() - m_position), (len - total));
             memcpy(data + total, m_buffer.constData() + m_position, chunkSize);
-            this->m_position = (m_position + chunkSize) % m_buffer.size();
+            m_position = (m_position + chunkSize) % m_buffer.size();
             total += chunkSize;
             if (m_position == 0 &&
                     (m_playMode == CNotificationSounds::Single || m_playMode == CNotificationSounds::SingleWithAutomaticDeletion))
             {
-                this->m_endReached = true;
+                m_endReached = true;
                 break;
             }
         }
@@ -466,14 +466,14 @@ namespace BlackSound
         generator->deleteLater();
     }
 
-    void CSoundGenerator::playSelcal(int volume, const BlackMisc::Aviation::CSelcal &selcal, const QAudioDeviceInfo &device)
+    void CSoundGenerator::playSelcal(int volume, const CSelcal &selcal, const QAudioDeviceInfo &device)
     {
         QList<CSoundGenerator::Tone> tones;
         if (selcal.isValid())
         {
             QList<CFrequency> frequencies = selcal.getFrequencies();
             Q_ASSERT(frequencies.size() == 4);
-            const BlackMisc::PhysicalQuantities::CTime oneSec(1000.0, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
+            const CTime oneSec(1000.0, CTimeUnit::ms());
             Tone t1(frequencies.at(0), frequencies.at(1), oneSec);
             Tone t2(CFrequency(), oneSec / 5.0);
             Tone t3(frequencies.at(2), frequencies.at(3), oneSec);
