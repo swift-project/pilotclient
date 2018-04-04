@@ -938,7 +938,7 @@ namespace BlackCore
             else if (client.hasCapability(CClient::FsdWithAircraftConfig))
             {
                 const CAircraftPartsList parts = this->remoteAircraftParts(callsign);
-                if (!parts.isEmpty()) { correctedSituation.adjustGroundFlag(parts); }
+                if (!parts.isEmpty()) { correctedSituation.adjustGroundFlag(parts, true); }
             }
         }
 

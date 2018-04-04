@@ -117,11 +117,11 @@ namespace BlackMiscTest
         }
 
         CAircraftSituation s0 = situations[0];
-        s0.adjustGroundFlag(partsOnGround);
+        s0.adjustGroundFlag(partsOnGround, true);
         QVERIFY2(s0.getOnGround(), "Supposed to be on ground");
 
         s0 = situations[0];
-        s0.adjustGroundFlag(partsNotOnGround);
+        s0.adjustGroundFlag(partsNotOnGround, true);
         QVERIFY2(!s0.getOnGround(), "Supposed to be not on ground");
 
         qint64 distanceMs = -1;

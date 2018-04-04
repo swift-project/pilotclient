@@ -181,6 +181,12 @@ namespace BlackMisc
                 situationList.push_frontKeepLatestFirstAdjustOffset(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
             }
 
+            // unify all inbound ground information
+            if (situation.hasInboundGroundInformation())
+            {
+                situationList.setOnGroundDetails(situation.getOnGroundDetails());
+            }
+
             // check sort order
             Q_ASSERT_X(situationList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
             Q_ASSERT_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
