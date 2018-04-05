@@ -48,6 +48,14 @@ namespace BlackMisc
                 IndexOnGround
             };
 
+            //! Parts Details
+            enum PartsDetails
+            {
+                NotSet,
+                FSDAircraftParts,
+                GuessedParts
+            };
+
             //! Default constructor
             CAircraftParts() {}
 
@@ -130,6 +138,15 @@ namespace BlackMisc
             //! Set aircraft on ground
             void setOnGround(bool onGround) { m_isOnGround = onGround; }
 
+            //! Get parts details
+            PartsDetails getPartsDetails() const { return static_cast<PartsDetails>(m_partsDetails); }
+
+            //! Parts details as string
+            const QString &getPartsDetailsAsString() const { return partsDetailsToString(this->getPartsDetails()); }
+
+            //! Set parts details
+            void setPartsDetails(PartsDetails details) { m_partsDetails = static_cast<int>(details); }
+
             //! Guess the parts
             void guessParts(const CAircraftSituation &situation);
 
@@ -142,9 +159,13 @@ namespace BlackMisc
             //! Guessed parts
             static CAircraftParts guessedParts(const CAircraftSituation &situation, bool vtol = false, int engineNumber = 4);
 
+            //! Convert to QString
+            static const QString &partsDetailsToString(PartsDetails details);
+
         private:
             CAircraftLights m_lights;
             CAircraftEngineList m_engines;
+            int m_partsDetails = static_cast<int>(NotSet);
             int m_flapsPercentage  = 0;
             bool m_gearDown    = false;
             bool m_spoilersOut = false;
@@ -158,6 +179,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER_NAMED(spoilersOut, "spoilers_out"),
                 BLACK_METAMEMBER_NAMED(engines, "engines"),
                 BLACK_METAMEMBER_NAMED(isOnGround, "on_ground"),
+                BLACK_METAMEMBER(partsDetails, 0, DisabledForJson | DisabledForComparison),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison),
                 BLACK_METAMEMBER(timeOffsetMs, 0, DisabledForJson | DisabledForComparison)
             );

@@ -257,9 +257,10 @@ namespace BlackMisc
                 CLogMessage::preformatted(message);
             }
 
-            // make sure in any case right time
+            // make sure in any case right time and correct details
             parts.setCurrentUtcTime();
             parts.setTimeOffsetMs(currentOffset);
+            parts.setPartsDetails(CAircraftParts::FSDAircraftParts);
 
             // store part history (parts always absolute)
             this->storeAircraftParts(callsign, parts, false);

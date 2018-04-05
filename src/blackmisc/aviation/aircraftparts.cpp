@@ -25,7 +25,8 @@ namespace BlackMisc
         QString CAircraftParts::convertToQString(bool i18n) const
         {
             return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
-                   QStringLiteral(" on ground: ") % BlackMisc::boolToYesNo(m_isOnGround) %
+                   QStringLiteral(" details: ") % this->getPartsDetailsAsString() %
+                   QStringLiteral(" | on ground: ") % BlackMisc::boolToYesNo(m_isOnGround) %
                    QStringLiteral(" | lights: ") % m_lights.toQString(i18n) %
                    QStringLiteral(" | gear down: ") % BlackMisc::boolToYesNo(m_gearDown) %
                    QStringLiteral(" | flaps pct: ") % QString::number(m_flapsPercentage) %
@@ -77,7 +78,24 @@ namespace BlackMisc
                 }
             }
             parts.setEngines(engines);
+            parts.setPartsDetails(GuessedParts);
             return parts;
+        }
+
+        const QString &CAircraftParts::partsDetailsToString(CAircraftParts::PartsDetails details)
+        {
+            static const QString guessed("guessed");
+            static const QString notset("not set");
+            static const QString fsd("FSD parts");
+
+            switch (details)
+            {
+            case GuessedParts: return guessed;
+            case FSDAircraftParts: return fsd;
+            case NotSet: break;
+            default: break;
+            }
+            return notset;
         }
 
         CVariant CAircraftParts::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
