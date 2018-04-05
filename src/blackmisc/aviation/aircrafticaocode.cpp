@@ -164,7 +164,7 @@ namespace BlackMisc
                 }
                 else if (this->hasValidCombinedType())
                 {
-                    if (this->getEngineCount() == otherCode.getEngineCount()) { score += 2; }
+                    if (this->getEnginesCount() == otherCode.getEnginesCount()) { score += 2; }
                     if (this->getEngineType() == otherCode.getEngineType()) { score += 2; }
                     if (this->getAircraftType() == otherCode.getAircraftType()) { score += 2; }
                     CMatchingUtils::addLogDetailsToList(log, *this, QString("Added combined code parts: %1").arg(score));
@@ -249,7 +249,7 @@ namespace BlackMisc
             return m_combinedType.right(1);
         }
 
-        int CAircraftIcaoCode::getEngineCount() const
+        int CAircraftIcaoCode::getEnginesCount() const
         {
             if (m_combinedType.length() < 2) { return -1; }
             const QString c(m_combinedType.mid(1, 1));
@@ -321,7 +321,7 @@ namespace BlackMisc
             }
             if (c != '*')
             {
-                if (getEngineCount() != c.digitValue()) { return false; }
+                if (getEnginesCount() != c.digitValue()) { return false; }
             }
             if (et == '*') { return true; }
             const QString cet = this->getEngineType();

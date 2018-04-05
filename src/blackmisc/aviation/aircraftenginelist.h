@@ -59,6 +59,9 @@ namespace BlackMisc
             //! \remark 1 based, not 0 based
             void setEngineOn(int engineNumber, bool on);
 
+            //! Copy one engine multiple times (number) and set the number of engines to number
+            void setEngines(const CAircraftEngine &engine, int engineNumber);
+
             //! Init some engines
             void initEngines(int engineNumber, bool on);
 

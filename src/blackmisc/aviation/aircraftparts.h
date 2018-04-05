@@ -59,12 +59,12 @@ namespace BlackMisc
             //! Default constructor
             CAircraftParts() {}
 
+            //! Default constructor
+            CAircraftParts(int flapsPercent);
+
             //! Constructor
             CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut,
-                           const CAircraftEngineList &engines, bool onGround)
-                : m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
-                  m_spoilersOut(spoilersOut), m_isOnGround(onGround)
-            {}
+                           const CAircraftEngineList &engines, bool onGround);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -132,6 +132,9 @@ namespace BlackMisc
             //! Set engines
             void setEngines(const CAircraftEngineList &engines) { m_engines = engines; }
 
+            //! \copydoc CAircraftEngineList::setEngines
+            void setEngines(const CAircraftEngine &engine, int engineNumber);
+
             //! Is aircraft on ground?
             bool isOnGround() const { return m_isOnGround; }
 
@@ -148,7 +151,7 @@ namespace BlackMisc
             void setPartsDetails(PartsDetails details) { m_partsDetails = static_cast<int>(details); }
 
             //! Guess the parts
-            void guessParts(const CAircraftSituation &situation);
+            void guessParts(const CAircraftSituation &situation, bool vtol = false, int engineNumber = 2);
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -156,8 +159,14 @@ namespace BlackMisc
             //! Incremental JSON object
             QJsonObject toIncrementalJson() const;
 
+            //! NULL parts object?
+            bool isNull() const;
+
+            //! NULL parts object
+            static const CAircraftParts &null();
+
             //! Guessed parts
-            static CAircraftParts guessedParts(const CAircraftSituation &situation, bool vtol = false, int engineNumber = 4);
+            static CAircraftParts guessedParts(const CAircraftSituation &situation, bool vtol = false, int engineNumber = 2);
 
             //! Convert to QString
             static const QString &partsDetailsToString(PartsDetails details);

@@ -762,7 +762,7 @@ namespace BlackGui
                 const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
                 if (icao.isLoadedFromDb())
                 {
-                    if (icao.getEngineCount() >= 2 && icao.getEngineType() == "J")
+                    if (icao.getEnginesCount() >= 2 && icao.getEngineType() == "J")
                     {
                         // jet with >=2 engines
                         msgs.push_back(CStatusMessage(this).validationInfo("Jet >=2 engines"));

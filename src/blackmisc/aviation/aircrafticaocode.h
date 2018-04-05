@@ -132,7 +132,7 @@ namespace BlackMisc
             QString getEngineType() const;
 
             //! Engine count if any, -1 if no value is set
-            int getEngineCount() const;
+            int getEnginesCount() const;
 
             //! Engine count as string, if not available ""
             QString getEngineCountString() const;

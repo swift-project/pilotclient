@@ -169,6 +169,9 @@ namespace BlackMisc
             //! Aircraft ICAO code
             const Aviation::CAircraftIcaoCode &getAircraftIcaoCode() const { return m_aircraftIcao; }
 
+            //! \copydoc BlackMisc::Aviation::CAircraftIcaoCode::getEngineCount
+            int getEngineCount() const { return m_aircraftIcao.getEnginesCount(); }
+
             //! Aircraft ICAO code designator
             const QString &getAircraftIcaoCodeDesignator() const { return m_aircraftIcao.getDesignator(); }
 

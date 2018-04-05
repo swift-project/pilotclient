@@ -31,7 +31,7 @@ namespace BlackMisc
             init();
         }
 
-        CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_models( {model, model})
+        CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_models({model, model})
         {
             this->setCallsign(model.getCallsign());
             init();
@@ -226,8 +226,14 @@ namespace BlackMisc
 
         void CSimulatedAircraft::initTransponder()
         {
-            CTransponder xpdr(7000, CTransponder::StateStandby);
+            const CTransponder xpdr(7000, CTransponder::StateStandby);
             this->setTransponder(xpdr);
+        }
+
+        int CSimulatedAircraft::getEnginesCount() const
+        {
+            const int engines = this->getModel().getAircraftIcaoCode().getEnginesCount();
+            return engines >= 0 ? engines : m_parts.getEnginesCount();
         }
 
         CAircraftLights CSimulatedAircraft::getLights() const

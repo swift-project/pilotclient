@@ -57,6 +57,17 @@ namespace BlackMisc
             }
         }
 
+        void CAircraftEngineList::setEngines(const CAircraftEngine &engine, int engineNumber)
+        {
+            this->clear();
+            for (int e = 0; e < engineNumber; e++)
+            {
+                CAircraftEngine copy(engine);
+                copy.setNumber(e + 1); // 1 based
+                this->push_back(engine);
+            }
+        }
+
         void CAircraftEngineList::initEngines(int engineNumber, bool on)
         {
             this->clear();

@@ -22,6 +22,13 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        CAircraftParts::CAircraftParts(int flapsPercent) : m_flapsPercentage(flapsPercent) {}
+
+        CAircraftParts::CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut, const CAircraftEngineList &engines, bool onGround)
+            : m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
+              m_spoilersOut(spoilersOut), m_isOnGround(onGround)
+        {}
+
         QString CAircraftParts::convertToQString(bool i18n) const
         {
             return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
@@ -40,6 +47,17 @@ namespace BlackMisc
             json.remove("is_full_data");
             json.insert("is_full_data", QJsonValue(false));
             return json;
+        }
+
+        bool CAircraftParts::isNull() const
+        {
+            return this->getPartsDetails() == NotSet && m_flapsPercentage < 0;
+        }
+
+        const CAircraftParts &CAircraftParts::null()
+        {
+            static const CAircraftParts null(-1);
+            return null;
         }
 
         CAircraftParts CAircraftParts::guessedParts(const CAircraftSituation &situation, bool vtol, int engineNumber)
@@ -185,9 +203,16 @@ namespace BlackMisc
             return m_engines.isAnyEngineOn();
         }
 
-        void CAircraftParts::guessParts(const CAircraftSituation &situation)
+        void CAircraftParts::setEngines(const CAircraftEngine &engine, int engineNumber)
         {
-            *this = guessedParts(situation);
+            CAircraftEngineList engines;
+            engines.setEngines(engine, engineNumber);
+            m_engines = engines;
+        }
+
+        void CAircraftParts::guessParts(const CAircraftSituation &situation, bool vtol, int engineNumber)
+        {
+            *this = guessedParts(situation, vtol, engineNumber);
         }
     } // namespace
 } // namespace
