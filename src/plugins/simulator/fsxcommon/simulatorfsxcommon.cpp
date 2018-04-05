@@ -1108,17 +1108,19 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
                 Q_ASSERT_X(simObject.hasValidRequestAndObjectId(), Q_FUNC_INFO, "Missing ids");
 
-                // fetch parts
+                // setup
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
                 const bool useAircraftParts = setup.isAircraftPartsEnabled() && aircraftWithParts.contains(callsign);
                 const bool logInterpolationAndParts = setup.logInterpolation();
                 const bool sendGround = setup.sendGndFlagToSimulator();
                 CPartsStatus partsStatus(useAircraftParts);
-                const CAircraftParts parts = useAircraftParts ? simObject.getInterpolatedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
-                // get interpolated situation
+                // Interpolated situation
                 CInterpolationStatus interpolatorStatus;
                 const CAircraftSituation interpolatedSituation = simObject.getInterpolatedSituation(currentTimestamp, setup, interpolatorStatus);
+
+                // Interpolated parts
+                const CAircraftParts parts = useAircraftParts ? simObject.getInterpolatedOrGuessedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts::guessedParts(interpolatedSituation, simObject.isVtol(), simObject.getEngineCount());
 
                 if (interpolatorStatus.hasValidSituation())
                 {
@@ -1152,30 +1154,12 @@ namespace BlackSimPlugin
                 {
                     this->updateRemoteAircraftParts(simObject, parts, partsStatus);
                 }
-                else
-                {
-                    // guess on position, but not every frame
-                    if (m_interpolationRequest % GuessRemoteAircraftPartsCycle == 0)
-                    {
-                        this->guessAndUpdateRemoteAircraftParts(simObject, interpolatedSituation, interpolatorStatus);
-                    }
-                }
             } // all callsigns
 
             const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;
             m_statsUpdateAircraftTimeTotalMs += dt;
             m_statsUpdateAircraftCountMs++;
             m_statsUpdateAircraftTimeAvgMs = m_statsUpdateAircraftTimeTotalMs / m_statsUpdateAircraftCountMs;
-        }
-
-        bool CSimulatorFsxCommon::guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftSituation &interpolatedSituation, const CInterpolationStatus &interpolationStatus)
-        {
-            if (!simObj.hasValidRequestAndObjectId())  { return false; }
-            if (!interpolationStatus.isInterpolated()) { return false; }
-
-            const CAircraftParts parts = CAircraftParts::guessedParts(interpolatedSituation, simObj.isVtol(), 4);
-            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts);
-            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
         }
 
         bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftParts &parts, const CPartsStatus &partsStatus)

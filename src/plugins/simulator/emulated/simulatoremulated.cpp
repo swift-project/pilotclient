@@ -424,7 +424,7 @@ namespace BlackSimPlugin
                 CPartsStatus statusParts;
                 Q_ASSERT_X(im, Q_FUNC_INFO, "interpolator missing");
                 const CAircraftSituation s = im->getInterpolatedSituation(now, setup, statusInterpolation);
-                const CAircraftParts p = im->getInterpolatedParts(now, setup, statusParts, log);
+                const CAircraftParts p = im->getInterpolatedOrGuessedParts(now, setup, statusParts, log);
                 m_countInterpolatedParts++;
                 m_countInterpolatedSituations++;
                 Q_UNUSED(s);
