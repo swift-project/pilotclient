@@ -686,22 +686,24 @@ namespace BlackSimPlugin
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
 
             // interpolation for all remote aircraft
-            const QList<CXPlaneMPAircraft> xplaneAircrafts(m_xplaneAircraftObjects.values());
-            for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircrafts)
+            const QList<CXPlaneMPAircraft> xplaneAircraftList(m_xplaneAircraftObjects.values());
+            for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircraftList)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
-                // fetch parts, as they are needed for ground interpolation
+                // setup
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
                 const bool useAircraftParts = aircraftWithParts.contains(callsign) && setup.isAircraftPartsEnabled();
                 const bool logInterpolationAndParts = setup.logInterpolation();
                 CPartsStatus partsStatus(useAircraftParts);
-                const CAircraftParts parts = useAircraftParts ? xplaneAircraft.getInterpolatedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
-                // get interpolated situation
+                // interpolated situation
                 CInterpolationStatus interpolatorStatus;
                 const CAircraftSituation interpolatedSituation = xplaneAircraft.getInterpolatedSituation(currentTimestamp, setup, interpolatorStatus);
+
+                // perts
+                const CAircraftParts parts = useAircraftParts ? xplaneAircraft.getInterpolatedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts::guessedParts(interpolatedSituation, xplaneAircraft.isVtol(), xplaneAircraft.getEngineCount());
 
                 if (interpolatorStatus.hasValidSituation())
                 {
@@ -729,14 +731,6 @@ namespace BlackSimPlugin
                 {
                     this->updateRemoteAircraftParts(xplaneAircraft, parts, partsStatus);
                 }
-                else
-                {
-                    // guess on position, but not every frame
-                    if (m_interpolationRequest % GuessRemoteAircraftPartsCycle == 0)
-                    {
-                        this->guessAndUpdateRemoteAircraftParts(xplaneAircraft, interpolatedSituation, interpolatorStatus);
-                    }
-                }
             } // all callsigns
 
             const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;
@@ -748,14 +742,6 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::updateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft, const CAircraftParts &parts, const CPartsStatus &partsStatus)
         {
             if (!partsStatus.isSupportingParts()) { return false; }
-            return this->sendRemoteAircraftPartsToSimulator(xplaneAircraft, parts);
-        }
-
-        bool CSimulatorXPlane::guessAndUpdateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft, const CAircraftSituation &interpolatedSituation, const CInterpolationStatus &interpolationStatus)
-        {
-            if (!interpolationStatus.isInterpolated()) { return false; }
-
-            const CAircraftParts parts = CAircraftParts::guessedParts(interpolatedSituation, xplaneAircraft.isVtol());
             return this->sendRemoteAircraftPartsToSimulator(xplaneAircraft, parts);
         }
 

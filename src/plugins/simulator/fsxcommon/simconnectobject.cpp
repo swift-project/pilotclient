@@ -24,11 +24,13 @@ namespace BlackSimPlugin
 
         CSimConnectObject::CSimConnectObject(const CSimulatedAircraft &aircraft,
                                              DWORD requestId,
-                                             ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                                             ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteAircraftProvider,
                                              CInterpolationLogger *logger) :
             m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
-            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), p1, p2, p3, logger))
-        { }
+            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simEnvProvider, setupProvider, remoteAircraftProvider, logger))
+        {
+            m_interpolator->initCorrespondingModel(aircraft.getModel());
+        }
 
         void CSimConnectObject::invalidatePartsAsSent()
         {
@@ -144,6 +146,15 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(m_interpolator);
             return m_interpolator->getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+        }
+
+        CAircraftParts CSimConnectObject::getInterpolatedOrGuessedParts(
+            qint64 currentTimeSinceEpoc,
+            const CInterpolationAndRenderingSetupPerCallsign &setup,
+            CPartsStatus &partsStatus, bool log) const
+        {
+            Q_ASSERT(m_interpolator);
+            return m_interpolator->getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
         }
 
         const CAircraftSituation &CSimConnectObject::getLastInterpolatedSituation() const

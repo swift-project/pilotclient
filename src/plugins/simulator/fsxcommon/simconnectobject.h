@@ -32,7 +32,8 @@ namespace BlackSimPlugin
             //! Constructor providing initial situation/parts
             CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
                               DWORD requestId,
-                              BlackMisc::Simulation::ISimulationEnvironmentProvider *p1, BlackMisc::Simulation::IInterpolationSetupProvider *p2, BlackMisc::Simulation::IRemoteAircraftProvider *p3,
+                              BlackMisc::Simulation::ISimulationEnvironmentProvider *simEnvProvider, BlackMisc::Simulation::IInterpolationSetupProvider *setupProvider,
+                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                               BlackMisc::Simulation::CInterpolationLogger *logger);
 
             //! Destructor
@@ -134,6 +135,9 @@ namespace BlackSimPlugin
             //! VTOL?
             bool isVtol() const { return m_aircraft.isVtol(); }
 
+            //! Engine count
+            int getEngineCount() const { return m_aircraft.getEnginesCount(); }
+
             //! Was the object really added to simulator
             bool hasValidRequestAndObjectId() const;
 
@@ -157,6 +161,12 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedParts
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
+                qint64 currentTimeSinceEpoc,
+                const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
+                BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;
+
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedOrGuessedParts
+            BlackMisc::Aviation::CAircraftParts getInterpolatedOrGuessedParts(
                 qint64 currentTimeSinceEpoc,
                 const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
                 BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;

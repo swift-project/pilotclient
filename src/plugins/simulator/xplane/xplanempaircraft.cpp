@@ -28,6 +28,7 @@ namespace BlackSimPlugin
             m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger))
         {
             m_interpolator->attachLogger(logger);
+            m_interpolator->initCorrespondingModel(aircraft.getModel());
         }
 
         bool CXPlaneMPAircraft::isSameAsSent(const CAircraftSituation &position) const

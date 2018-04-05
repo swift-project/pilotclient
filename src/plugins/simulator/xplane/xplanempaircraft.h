@@ -67,6 +67,9 @@ namespace BlackSimPlugin
             //! VTOL?
             bool isVtol() const { return m_aircraft.isVtol(); }
 
+            //! Engine count
+            int getEngineCount() const { return m_aircraft.getEnginesCount(); }
+
             //! \copydoc BlackMisc::Simulation::CInterpolatorMulti::toggleMode
             void toggleInterpolatorMode();
 
