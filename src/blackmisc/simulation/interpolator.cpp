@@ -20,27 +20,71 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
+#include <QTimer>
 #include <QDateTime>
 #include <QStringBuilder>
 
 using namespace BlackConfig;
-using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
     namespace Simulation
     {
         template <typename Derived>
-        CInterpolator<Derived>::CInterpolator(const QString &objectName, const CCallsign &callsign, QObject *parent) :
-            QObject(parent),
-            m_callsign(callsign)
+        CInterpolator<Derived>::CInterpolator(const CCallsign &callsign,
+                                              ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider,
+                                              IRemoteAircraftProvider *remoteAircraftProvider,
+                                              CInterpolationLogger *logger) : m_callsign(callsign)
         {
-            this->setObjectName(objectName + " for " + callsign.asString());
+            // normally when created m_cg is still null since there is no CG in the provider yet
+
+            if (simEnvProvider) { this->setSimulationEnvironmentProvider(simEnvProvider); }
+            if (setupProvider) { this->setInterpolationSetupProvider(setupProvider); }
+            if (remoteAircraftProvider)
+            {
+                this->setRemoteAircraftProvider(remoteAircraftProvider);
+                QTimer::singleShot(2500, [ = ]
+                {
+                    if (m_model.hasModelString()) { return; } // set in-between
+                    this->initCorrespondingModel();
+                });
+            }
+            this->attachLogger(logger);
+        }
+
+        template<typename Derived>
+        bool CInterpolator<Derived>::verifyInterpolationSituations(const CAircraftSituation &oldest, const CAircraftSituation &newer, const CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup)
+        {
+            if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
+            CAircraftSituationList situations;
+
+            // oldest last, null ignored
+            if (!latest.isNull()) { situations.push_back(latest); }
+            if (!newer.isNull())  { situations.push_back(newer); }
+            if (!oldest.isNull()) { situations.push_back(oldest); }
+
+            const bool sort1 = situations.isSortedLatestFirst();
+            BLACK_VERIFY_X(sort1, Q_FUNC_INFO, "Wrong timestamp order");
+            const bool sort2 = situations.isSortedAdjustedLatestFirst();
+            BLACK_VERIFY_X(sort2, Q_FUNC_INFO, "Wrong adjusted timestamp order");
+
+            bool details = true;
+            if (setup.isAircraftPartsEnabled())
+            {
+                if (situations.containsOnGroundDetails(CAircraftSituation::InFromParts))
+                {
+                    // if a client supports parts, all situations are supposed to be parts based
+                    details = situations.areAllOnGroundDetailsSame(CAircraftSituation::InFromParts);
+                    BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
+                }
+            }
+
+            // result
+            return sort1 && sort2 && details;
         }
 
         template <typename Derived>
@@ -60,28 +104,28 @@ namespace BlackMisc
 
             // this code is used by linear and spline interpolator
             status.reset();
-            const bool doLogging = this->hasAttachedLogger() && setup.logInterpolation();
             SituationLog log;
-            SituationLog *logP = doLogging ? &log : nullptr;
+            const bool doLogging = this->hasAttachedLogger() && setup.logInterpolation();
 
             // any data at all?
-            if (m_aircraftSituations.isEmpty()) { return CAircraftSituation(m_callsign); }
-            CAircraftSituation currentSituation = m_lastInterpolation.isNull() ? m_aircraftSituations.front() : m_lastInterpolation;
+            const CAircraftSituationList situations = this->remoteAircraftSituations(m_callsign);
+            if (situations.isEmpty()) { return CAircraftSituation(m_callsign); }
+            CAircraftSituation currentSituation = m_lastInterpolation.isNull() ? situations.front() : m_lastInterpolation;
             if (currentSituation.getCallsign() != m_callsign)
             {
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
                 currentSituation.setCallsign(m_callsign);
             }
 
-            //! \todo KB 2018-03 ground flag refactoring
-            // Update current position by hints' elevation
-            // * for XP provided by hints.getElevationProvider at current position
-            // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
-            // * As XP uses lazy init we will call getGroundElevation only when needed
-            // * default here via getElevationPlane
-            // CAltitude currentGroundElevation(hints.getGroundElevation(currentSituation, currentSituation.getDistancePerTime(1000), true, false, logP));
-            const CElevationPlane currentGroundElevation = this->findClosestElevationWithinRange(currentSituation, currentSituation.getDistancePerTime(1000));
-            currentSituation.setGroundElevationChecked(currentGroundElevation); // set as default
+            // set elevation if available
+            if (!currentSituation.hasGroundElevation())
+            {
+                const CElevationPlane currentGroundElevation = this->findClosestElevationWithinRange(currentSituation, currentSituation.getDistancePerTime(1000));
+                currentSituation.setGroundElevationChecked(currentGroundElevation); // set as default
+            }
+
+            // fetch CG once
+            if (m_cg.isNull()) { m_cg = this->getCG(m_callsign); }
 
             // data, split situations by time
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
@@ -97,75 +141,34 @@ namespace BlackMisc
                 return currentSituation;
             }
 
+            // Pitch bank heading
+            // first, so follow up steps could use those values
+            const auto pbh = interpolant.pbh();
+            currentSituation.setHeading(pbh.getHeading());
+            currentSituation.setPitch(pbh.getPitch());
+            currentSituation.setBank(pbh.getBank());
+            currentSituation.setGroundSpeed(pbh.getGroundSpeed());
+
             // use derived interpolant function
-            currentSituation.setPosition(interpolant.interpolatePosition(setup));
-            currentSituation.setAltitude(interpolant.interpolateAltitude(setup));
-            currentSituation.setMSecsSinceEpoch(interpolant.getInterpolatedTime());
+            currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation);
 
-            // PBH before ground so we can use PBH in guessing ground
-            if (setup.isForcingFullInterpolation() || status.isInterpolated())
-            {
-                const auto pbh = interpolant.pbh();
-                currentSituation.setHeading(pbh.getHeading());
-                currentSituation.setPitch(pbh.getPitch());
-                currentSituation.setBank(pbh.getBank());
-                currentSituation.setGroundSpeed(pbh.getGroundSpeed());
-                status.setInterpolatedAndCheckSituation(true, currentSituation);
-            }
-
-            // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
-            constexpr double NoGroundFactor = -1;
-            double groundFactor = NoGroundFactor;
-
-            if (setup.isAircraftPartsEnabled())
-            {
-                // groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
-                if (groundFactor > 0.0)
-                {
-                    // if not having an ground elevation yet, we fetch from provider (if there is a provider)
-                    if (!currentGroundElevation.isNull())
-                    {
-                        currentGroundElevation = hints.getGroundElevation(currentSituation, true, false, logP); // "expensive on XPlane" if provider is called
-                    }
-
-                    if (!currentGroundElevation.isNull())
-                    {
-                        Q_ASSERT_X(currentGroundElevation.getAltitude().getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
-                        const CLength cg = this->getCG(m_callsign);
-                        const CAltitude groundElevationCG = currentGroundElevation.getAltitude().withOffset(cg);
-                        currentSituation.setGroundElevationChecked(currentGroundElevation);
-                        // alt = ground + aboveGround * groundFactor
-                        //     = ground + (altitude - ground) * groundFactor
-                        //     = ground (1 - groundFactor) + altitude * groundFactor
-                        currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor) +
-                                                               groundElevationCG * groundFactor,
-                                                               CAltitude::MeanSeaLevel));
-                    }
-                }
-            }
-
-            // depending on ground factor set ground flag and reliability
-            // it will use the hints ground flag or elevation/CG or guessing
-            // CInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
-
-            // we transfer ground elevation for future usage
-            if (currentSituation.hasGroundElevation())
-            {
-                CElevationPlane ep(currentSituation);
-                ep.setSinglePointRadius();
-
-                // transfer to newer situations
-                log.noTransferredElevations = m_aircraftSituations.setGroundElevationChecked(ep, currentTimeMsSinceEpoc);
-            }
+            // correct itself
+            const CAircraftSituation::AltitudeCorrection altCorrection = currentSituation.correctAltitude(m_cg, true);
+            status.setInterpolatedAndCheckSituation(true, currentSituation);
 
             // logging
             if (doLogging)
             {
+                static const QString elv("found %1 missed %2");
+                const QPair<int, int> elvStats = this->getElevationsFoundMissed();
                 log.tsCurrent = currentTimeMsSinceEpoc;
                 log.callsign = m_callsign;
-                log.groundFactor = groundFactor;
+                log.groundFactor = currentSituation.getOnGroundFactor();
+                log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
                 log.situationCurrent = currentSituation;
                 log.usedSetup = setup;
+                log.elevationInfo = elv.arg(elvStats.first).arg(elvStats.second);
+                log.cgAboveGround = m_cg;
                 m_logger->logInterpolation(log);
             }
 
@@ -223,152 +226,83 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(qint64 currentTimeMsSinceEpoch,
-                const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log) const
+        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(
+            qint64 currentTimeMsSinceEpoch,
+            const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log) const
         {
             // (!) this code is used by linear and spline interpolator
             Q_UNUSED(setup);
             partsStatus.reset();
             if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
 
+            // Parts are supposed to be in correct order, latest first
+            const CAircraftPartsList validParts = this->remoteAircraftParts(m_callsign);
+
             // log for empty parts aircraft parts
-            if (m_aircraftParts.isEmpty())
+            if (validParts.isEmpty())
             {
                 static const CAircraftParts emptyParts;
-                this->logParts(currentTimeMsSinceEpoch, emptyParts, true, log);
+                this->logParts(currentTimeMsSinceEpoch, emptyParts, validParts.size(), true, log);
                 return emptyParts;
             }
-
-            // Parts are supposed to be in correct order, latest first
-            const CAircraftPartsList &validParts = m_aircraftParts;
-
-            // stop if we don't have any parts
-            if (validParts.isEmpty()) { return {}; }
 
             partsStatus.setSupportsParts(true);
             CAircraftParts currentParts;
             do
             {
                 // find the first parts earlier than the current time
-                const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [ = ](auto && p) { return p.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoch; });
+                const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [ = ](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoch; });
                 const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
                 const auto partsOlder = makeRange(pivot, validParts.end());
 
                 // if (partsOlder.isEmpty()) { currentParts = *(partsNewer.end() - 1); break; }
                 if (partsOlder.isEmpty()) { currentParts = *(partsNewer.begin()); break; }
                 currentParts = partsOlder.front(); // latest older parts
-                if (currentParts.isOnGround()) { break; }
-
-                // here we know aircraft is not on ground, and we check if it was recently on ground or if it will be on ground soon
-                const auto latestTakeoff = std::adjacent_find(partsOlder.begin(), partsOlder.end(), [](auto &&, auto && p) { return p.isOnGround(); });
-                const auto soonestLanding = std::find_if(partsNewer.begin(), partsNewer.end(), [](auto && p) { return p.isOnGround(); });
-
-                // maxSecs is the maximum effective value of `secondsSinceTakeoff` and `secondsUntilLanding`. If `secondsSinceTakeoff > significantPast` then `takeoffFactor > 1`
-                //         and if `secondsUntilLanding > predictableFuture` then `landingFactor > 1`, and `std::min(std::min(takeoffFactor, landingFactor), 1.0)` ensures `>1` is ignored.
-                //         but if the offset < 5s then we must use a smaller value for the landing, hence `std::min(max, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0)`.
-                const double maxSecs = 5.0; // preferred length of time over which to blend the onground flag, when possible
-
-                // our clairvoyance is limited by the time offset (all times here in seconds)
-                const double significantPastSecs = maxSecs;
-                const double predictableFutureSecs = soonestLanding == partsNewer.end() ? maxSecs : std::min(maxSecs, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0);
-                const double secondsSinceTakeoff = latestTakeoff == partsOlder.end() ? maxSecs : (currentTimeMsSinceEpoch - latestTakeoff->getAdjustedMSecsSinceEpoch()) / 1000.0;
-                const double secondsUntilLanding = soonestLanding == partsNewer.end() ? maxSecs : (soonestLanding->getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoch) / 1000.0;
-                Q_ASSERT(secondsSinceTakeoff >= 0.0);
-                Q_ASSERT(secondsUntilLanding >= 0.0);
-
-                //! \fixme In future, will we need to be able to support time offsets of zero?
-                BLACK_VERIFY(predictableFutureSecs != 0);
-                if (predictableFutureSecs == 0) { break; } // avoid divide by zero
-
-                const double takeoffFactor = secondsSinceTakeoff / significantPastSecs;
-                const double landingFactor = secondsUntilLanding / predictableFutureSecs;
-                const double airborneFactor = std::min(std::min(takeoffFactor, landingFactor), 1.0);
-                currentParts.setOnGroundInterpolated(1.0 - smootherStep(airborneFactor));
             }
             while (false);
 
-            this->logParts(currentTimeMsSinceEpoch, currentParts, false, log);
+            this->logParts(currentTimeMsSinceEpoch, currentParts, validParts.size(), false, log);
             return currentParts;
         }
 
         template<typename Derived>
-        void CInterpolator<Derived>::logParts(qint64 timestamp, const CAircraftParts &parts, bool empty, bool log) const
+        CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts(qint64 currentTimeMsSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log) const
+        {
+            CAircraftParts parts = this->getInterpolatedParts(currentTimeMsSinceEpoch, setup, partsStatus, log);
+            if (!partsStatus.isSupportingParts())
+            {
+                if (!m_model.hasModelString())
+                {
+                    const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(m_callsign);
+                    // m_model = aircraft.getModel();
+                }
+
+                // check if model has been thru model matching
+                if (m_model.hasModelString())
+                {
+                    parts.guessParts(this->getLastInterpolatedSituation(), m_model.isVtol(), m_model.getEngineCount());
+                }
+                else
+                {
+                    // default guess
+                    parts.guessParts(this->getLastInterpolatedSituation());
+                }
+            }
+            this->logParts(currentTimeMsSinceEpoch, parts, 0, false, log);
+            return parts;
+        }
+
+        template<typename Derived>
+        void CInterpolator<Derived>::logParts(qint64 timestamp, const CAircraftParts &parts, int partsNo, bool empty, bool log) const
         {
             if (!log || !m_logger) { return; }
             PartsLog logInfo;
             logInfo.callsign = m_callsign;
-            logInfo.noNetworkParts = m_aircraftParts.size();
+            logInfo.noNetworkParts = partsNo;
             logInfo.tsCurrent = timestamp;
             logInfo.parts = parts;
             logInfo.empty = empty;
             m_logger->logParts(logInfo);
-        }
-
-        template <typename Derived>
-        void CInterpolator<Derived>::addAircraftSituation(const CAircraftSituation &situation)
-        {
-            Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
-            Q_ASSERT_X(situation.getCallsign() == m_callsign, Q_FUNC_INFO, "Wrong callsign");
-            if (m_aircraftSituations.isEmpty())
-            {
-                this->resetLastInterpolation(); // delete any leftover
-
-                // make sure we have enough situations to do start interpolating immediately without waiting for more updates
-                // the offsets here (addMSecs) do not really matter
-                CAircraftSituation copy(situation);
-                copy.addMsecs(-2 * IRemoteAircraftProvider::DefaultOffsetTimeMs);
-                m_aircraftSituations.push_frontKeepLatestFirst(copy);
-                copy.addMsecs(IRemoteAircraftProvider::DefaultOffsetTimeMs);
-                m_aircraftSituations.push_frontKeepLatestFirst(copy);
-            }
-
-            // we add new situations at front and keep the latest values (real time) first
-            m_aircraftSituations.push_frontKeepLatestFirstAdjustOffset(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-
-
-            // with the latest updates of T243 the order and the offsets are supposed to be correct
-            // so even mixing fast/slow updates shall work
-            Q_ASSERT_X(!m_aircraftSituations.containsZeroOrNegativeOffsetTime(), Q_FUNC_INFO, "Missing offset time");
-            Q_ASSERT_X(m_aircraftSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
-        }
-
-        template <typename Derived>
-        void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts, bool adjustZeroOffset)
-        {
-            const bool adjustOffset = adjustZeroOffset && !parts.hasNonZeroOffsetTime();
-            if (adjustOffset)
-            {
-                const qint64 offset = m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
-                CAircraftParts partsCopy(parts);
-                partsCopy.setTimeOffsetMs(offset);  // we set the offset of the situation
-                CInterpolator<Derived>::addAircraftParts(partsCopy);
-                return;
-            }
-
-            // here we have an offset
-            // unlike situations we do not add parts for spline interpolation
-            // this is not needed, as parts do not need 3 values
-            Q_ASSERT_X(!adjustZeroOffset || parts.hasNonZeroOffsetTime(), Q_FUNC_INFO, "Missing parts offset");
-
-            // we add new situations at front and keep the latest values (real time) first
-            m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-
-            // force remote provider to cleanup
-            IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
-
-            // with the latest updates of T243 the order and the offsets are supposed to be correct
-            // so even mixing fast/slow updates shall work
-            Q_ASSERT_X(adjustZeroOffset ? !m_aircraftParts.containsZeroOrNegativeOffsetTime() : !m_aircraftParts.containsNegativeOffsetTime(), Q_FUNC_INFO, "Missing offset time");
-            Q_ASSERT_X(m_aircraftParts.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
-        }
-
-        template<typename Derived>
-        void CInterpolator<Derived>::addAircraftParts(const CAircraftPartsList &parts, bool adjustZeroOffset)
-        {
-            for (const CAircraftParts &p : parts)
-            {
-                this->addAircraftParts(p, adjustZeroOffset);
-            }
         }
 
         template<typename Derived>
@@ -377,9 +311,9 @@ namespace BlackMisc
             return QStringLiteral("Callsign: ") %
                    m_callsign.asString() %
                    QStringLiteral(" situations: ") %
-                   QString::number(m_aircraftSituations.size()) %
+                   QString::number(this->remoteAircraftSituationsCount(m_callsign)) %
                    QStringLiteral(" parts: ") %
-                   QString::number(m_aircraftParts.size()) %
+                   QString::number(this->remoteAircraftPartsCount(m_callsign)) %
                    QStringLiteral(" 1st interpolation: ") %
                    boolToYesNo(m_lastInterpolation.isNull());
         }
@@ -394,92 +328,24 @@ namespace BlackMisc
         void CInterpolator<Derived>::clear()
         {
             this->resetLastInterpolation();
-            m_aircraftParts.clear();
-            m_aircraftSituations.clear();
+            m_model = CAircraftModel();
         }
 
         template<typename Derived>
-        int CInterpolator<Derived>::maxSituations() const
+        void CInterpolator<Derived>::initCorrespondingModel(const CAircraftModel &model)
         {
-            return IRemoteAircraftProvider::MaxSituationsPerCallsign;
-        }
-
-        template<typename Derived>
-        int CInterpolator<Derived>::maxParts() const
-        {
-            return IRemoteAircraftProvider::MaxSituationsPerCallsign;
-        }
-
-        template <typename Derived>
-        void CInterpolator<Derived>::setGroundFlagFromInterpolator(double groundFactor, CAircraftSituation &situation) const
-        {
-            // by interpolation
-            if (groundFactor >= 1.0)
+            if (model.hasModelString())
             {
-                situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByInterpolation);
-                return;
+                m_model = model;
             }
-            if (groundFactor < 1.0 && groundFactor >= 0.0)
+            else
             {
-                situation.setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByInterpolation);
-                return;
+                CAircraftModel model = this->getAircraftInRangeForCallsign(m_callsign).getModel();
+                if (model.hasModelString())
+                {
+                    m_model = model;
+                }
             }
-
-            // on elevation and CG
-            // remark: to some extend redundant as situation.getCorrectedAltitude() already corrects altitude
-            Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
-            if (situation.hasGroundElevation())
-            {
-                static const CLength onGroundThresholdLimit(1.0, CLengthUnit::m());
-                static const CLength notOnGroundThresholdLimit(10.0, CLengthUnit::m()); // upper boundary
-                CLength offset = onGroundThresholdLimit; // very small offset from allowed
-                CAircraftSituation::OnGroundDetails reliability = CAircraftSituation::OnGroundByElevation;
-                CLength cg = this->getCG(m_callsign);
-                if (!cg.isNull())
-                {
-                    offset += cg;
-                    reliability = CAircraftSituation::OnGroundByElevationAndCG;
-                }
-                else
-                {
-                    // increase offset a bit
-                    offset += CLength(1.0, CLengthUnit::m());
-                }
-
-                Q_ASSERT_X(situation.getGroundElevation().getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL elevation");
-                if (situation.getHeightAboveGround() <= offset)
-                {
-                    // lower boundary underflow, we can tell we are on ground
-                    const CAircraftSituation::IsOnGround og = CAircraftSituation::OnGround;
-                    situation.setOnGround(og, reliability);
-                    return; // for underflow we can stop here
-                }
-                else if (situation.getHeightAboveGround() >= notOnGroundThresholdLimit)
-                {
-                    // upper boundary
-                    const CAircraftSituation::IsOnGround og = CAircraftSituation::NotOnGround;
-                    situation.setOnGround(og, reliability);
-                    return;
-                }
-
-                // within an interval were we cannot really tell and continue
-            }
-
-            // for VTOL aircraft we give up
-            if (this->isVtolAircraft(m_callsign))
-            {
-                situation.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::OnGroundReliabilityNoSet);
-                return;
-            }
-
-            // we guess on speed, pitch and bank by excluding situations
-            situation.setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
-            if (qAbs(situation.getPitch().value(CAngleUnit::deg())) > 10) { return; }
-            if (qAbs(situation.getBank().value(CAngleUnit::deg())) > 10)  { return; }
-            if (situation.getGroundSpeed().value(CSpeedUnit::km_h()) > 50) { return; }
-
-            // not sure, but this is a guess
-            situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
         }
 
         void CInterpolationStatus::setInterpolatedAndCheckSituation(bool succeeded, const CAircraftSituation &situation)
@@ -528,45 +394,3 @@ namespace BlackMisc
         //! \endcond
     } // namespace
 } // namespace
-
-
-/**
-        template <typename Derived>
-        void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts, bool adjustZeroOffset)
-        {
-            const bool adjustOffset = adjustZeroOffset && !parts.hasNonZeroOffsetTime();
-            if (adjustOffset)
-            {
-                const qint64 offset = m_aircraftSituations.isEmpty() ? IRemoteAircraftProvider::DefaultOffsetTimeMs : m_aircraftSituations.front().getTimeOffsetMs();
-                CAircraftParts partsCopy(parts);
-                partsCopy.setTimeOffsetMs(offset);  // we set the offset of the situation
-                CInterpolator<Derived>::addAircraftParts(partsCopy);
-                return;
-            }
-
-            // here we have an offset
-            Q_ASSERT_X(!adjustZeroOffset || parts.hasNonZeroOffsetTime(), Q_FUNC_INFO, "Missing parts offset");
-            if (m_aircraftParts.isEmpty())
-            {
-                // make sure we have enough parts to do start interpolating immediately without waiting for more updates
-                // the offsets here (addMSecs) do not really matter
-                const qint64 minOffset = 100;
-                CAircraftParts copy(parts);
-                copy.addMsecs(-2 * std::max(parts.getTimeOffsetMs(), minOffset));
-                m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(copy);
-                copy.addMsecs(parts.getTimeOffsetMs());
-                m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(copy);
-            }
-
-            // we add new situations at front and keep the latest values (real time) first
-            m_aircraftParts.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-
-            // force remote provider to cleanup
-            IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
-
-            // with the latest updates of T243 the order and the offsets are supposed to be correct
-            // so even mixing fast/slow updates shall work
-            Q_ASSERT_X(adjustZeroOffset ? !m_aircraftParts.containsZeroOrNegativeOffsetTime() : !m_aircraftParts.containsNegativeOffsetTime(), Q_FUNC_INFO, "Missing offset time");
-            Q_ASSERT_X(m_aircraftParts.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
-        }
-**/

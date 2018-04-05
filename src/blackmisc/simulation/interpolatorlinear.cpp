@@ -8,7 +8,6 @@
  */
 
 #include "interpolatorlinear.h"
-#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -48,6 +47,46 @@ namespace BlackMisc
             m_pbh(m_simulationTimeFraction, situation1, situation2)
         {}
 
+        CAircraftSituation CInterpolatorLinear::Interpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation) const
+        {
+            const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());
+            const std::array<double, 3> newVec(m_newSituation.getPosition().normalVectorDouble());
+
+            // Interpolate position: pos = (posB - posA) * t + posA
+            CCoordinateGeodetic newPosition;
+            newPosition.setNormalVector((newVec[0] - oldVec[0]) * m_simulationTimeFraction + oldVec[0],
+                                        (newVec[1] - oldVec[1]) * m_simulationTimeFraction + oldVec[1],
+                                        (newVec[2] - oldVec[2]) * m_simulationTimeFraction + oldVec[2]);
+
+            // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
+            // avoid underflow below ground elevation by using getCorrectedAltitude
+            const CAltitude oldAlt(m_oldSituation.getCorrectedAltitude());
+            const CAltitude newAlt(m_newSituation.getCorrectedAltitude());
+            Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
+            const CAltitude altitude((newAlt - oldAlt)
+                                     * m_simulationTimeFraction
+                                     + oldAlt,
+                                     oldAlt.getReferenceDatum());
+
+            CAircraftSituation newSituation(situation);
+            newSituation.setPosition(newPosition);
+            newSituation.setAltitude(altitude);
+            newSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
+
+            const double oldGroundFactor = m_oldSituation.getOnGroundFactor();
+            const double newGroundFactor = m_newSituation.getOnGroundFactor();
+            do
+            {
+                if (gfEqualAirborne(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(false); break; }
+                if (gfEqualOnGround(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(true); break; }
+                const double groundFactor = (newGroundFactor - oldGroundFactor) * m_simulationTimeFraction + oldGroundFactor;
+                newSituation.setOnGroundFactor(groundFactor);
+                newSituation.setOnGroundFromGroundFactorFromInterpolation();
+            }
+            while (false);
+            return newSituation;
+        }
+
         CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(
             qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetupPerCallsign &setup,
@@ -58,16 +97,11 @@ namespace BlackMisc
 
             // with the latest updates of T243 the order and the offsets are supposed to be correct
             // so even mixing fast/slow updates shall work
-            BLACK_VERIFY_X(m_aircraftSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
-            Q_ASSERT_X(m_aircraftSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
-
-            // Ref T243, KB 2018-02, can be removed in future, we verify situations above
-            // Situations are supposed to be in correct order
-            // const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
-            // const auto validSituations = makeRange(m_aircraftSituations.begin(), end);
+            const CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign); // if needed, we could also copy here
+            BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+            Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
 
             // find the first situation earlier than the current time
-            const CAircraftSituationList &validSituations = m_aircraftSituations; // if needed, we could also copy here
             const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
             const auto situationsNewer = makeRange(validSituations.begin(), pivot);
             const auto situationsOlder = makeRange(pivot, validSituations.end());
@@ -147,7 +181,7 @@ namespace BlackMisc
             {
                 log.tsCurrent = currentTimeMsSinceEpoc;
                 log.deltaSampleTimesMs = sampleDeltaTimeMs;
-                log.simulationTimeFraction = simulationTimeFraction;
+                log.simTimeFraction = simulationTimeFraction;
                 log.deltaSampleTimesMs = sampleDeltaTimeMs;
                 log.tsInterpolated = interpolatedTime;
                 log.interpolationSituations.clear();
@@ -156,36 +190,6 @@ namespace BlackMisc
             }
 
             return { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };
-        }
-
-        CCoordinateGeodetic CInterpolatorLinear::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup) const
-        {
-            Q_UNUSED(setup);
-
-            const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());
-            const std::array<double, 3> newVec(m_newSituation.getPosition().normalVectorDouble());
-
-            // Interpolate position: pos = (posB - posA) * t + posA
-            CCoordinateGeodetic currentPosition;
-            currentPosition.setNormalVector((newVec[0] - oldVec[0]) * m_simulationTimeFraction + oldVec[0],
-                                            (newVec[1] - oldVec[1]) * m_simulationTimeFraction + oldVec[1],
-                                            (newVec[2] - oldVec[2]) * m_simulationTimeFraction + oldVec[2]);
-            return currentPosition;
-        }
-
-        CAltitude CInterpolatorLinear::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup) const
-        {
-            Q_UNUSED(setup);
-
-            // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
-            // avoid underflow below ground elevation by using getCorrectedAltitude
-            const CAltitude oldAlt(m_oldSituation.getCorrectedAltitude());
-            const CAltitude newAlt(m_newSituation.getCorrectedAltitude());
-            Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
-            return CAltitude((newAlt - oldAlt)
-                             * m_simulationTimeFraction
-                             + oldAlt,
-                             oldAlt.getReferenceDatum());
         }
     } // namespace
 } // namespace

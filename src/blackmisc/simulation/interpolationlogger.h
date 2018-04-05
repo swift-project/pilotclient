@@ -35,17 +35,17 @@ namespace BlackMisc
             qint64 tsInterpolated = -1;  //!< timestamp interpolated
             double groundFactor = -1;    //!< current ground factor
             double vtolAircraft = false; //!< VTOL aircraft
-            double simulationTimeFraction = -1; //!< time fraction, expected 0..1
-            double deltaSampleTimesMs = -1;     //!< delta time between samples (i.e. 2 situations)
-            bool useParts = false;              //!< supporting aircraft parts
-            int noNetworkSituations = 0;        //!< available network situations
-            int noTransferredElevations = 0;    //!< transferred elevation to n situations
-            QString elevationInfo;              //!< info about elevation retrieval
-            Aviation::CCallsign callsign;       //!< current callsign
-            Aviation::CAircraftParts parts;     //!< corresponding parts used in interpolator
+            double simTimeFraction = -1; //!< time fraction, expected 0..1
+            double deltaSampleTimesMs = -1; //!< delta time between samples (i.e. 2 situations)
+            bool useParts = false;          //!< supporting aircraft parts
+            int noNetworkSituations = 0;    //!< available network situations
+            QString elevationInfo;          //!< info about elevation retrieval
+            QString altCorrection;          //!< info about altitude correction as CAircraftSituation::AltitudeCorrection
+            Aviation::CCallsign callsign;   //!< current callsign
+            Aviation::CAircraftParts parts; //!< corresponding parts used in interpolator
             Aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (oldest at end)
             Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
-            PhysicalQuantities::CLength  cgAboveGround;    //!< center of gravity
+            PhysicalQuantities::CLength cgAboveGround;     //!< center of gravity
             CInterpolationAndRenderingSetupPerCallsign usedSetup; //!< used setup
 
             //! Delta time between interpolation and current time

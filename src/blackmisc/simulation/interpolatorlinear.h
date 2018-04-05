@@ -29,13 +29,12 @@ namespace BlackMisc
         //! Linear interpolator, calculation inbetween positions
         class BLACKMISC_EXPORT CInterpolatorLinear : public CInterpolator<CInterpolatorLinear>
         {
-            Q_OBJECT
-
         public:
             //! Constructor
-            CInterpolatorLinear(const BlackMisc::Aviation::CCallsign &callsign, QObject *parent = nullptr) :
-                CInterpolator("CInterpolatorLinear", callsign, parent)
-            {}
+            CInterpolatorLinear(const Aviation::CCallsign &callsign,
+                                ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                                CInterpolationLogger *logger = nullptr) :
+                CInterpolator(callsign, p1, p2, p3, logger) {}
 
             //! Linear function that performs the actual interpolation
             class Interpolant
@@ -48,10 +47,7 @@ namespace BlackMisc
                 //! @}
 
                 //! Perform the interpolation
-                //! @{
-                Geo::CCoordinateGeodetic interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup) const;
-                Aviation::CAltitude interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup) const;
-                //! @}
+                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation) const;
 
                 //! Interpolator for pitch, bank, heading, groundspeed
                 const CInterpolatorPbh &pbh() const { return m_pbh; }
@@ -71,7 +67,7 @@ namespace BlackMisc
                 Aviation::CAircraftSituation m_newSituation;
                 double m_simulationTimeFraction = 0.0; //!< 0..1
                 qint64 m_interpolatedTime = 0; //!< "Real time "of interpolated situation
-                const CInterpolatorPbh m_pbh;
+                const CInterpolatorPbh m_pbh;  //!< pitch, bank, ground speed and heading
             };
 
             //! Get the interpolant for the given time point

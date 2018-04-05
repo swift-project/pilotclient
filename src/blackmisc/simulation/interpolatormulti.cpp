@@ -17,10 +17,9 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CInterpolatorMulti::CInterpolatorMulti(const CCallsign &callsign, QObject *parent) :
-            QObject(parent),
-            m_spline(callsign, this),
-            m_linear(callsign, this)
+        CInterpolatorMulti::CInterpolatorMulti(const CCallsign &callsign, ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3, CInterpolationLogger *logger) :
+            m_spline(callsign, p1, p2, p3, logger),
+            m_linear(callsign, p1, p2, p3, logger)
         {}
 
         CAircraftSituation CInterpolatorMulti::getInterpolatedSituation(qint64 currentTimeSinceEpoc,
@@ -42,6 +41,7 @@ namespace BlackMisc
         {
             switch (m_mode)
             {
+            // currently calls the same interpolation for parts
             case ModeLinear: return m_linear.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
             case ModeSpline: return m_spline.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
             default: break;
@@ -49,38 +49,29 @@ namespace BlackMisc
             return {};
         }
 
-        void CInterpolatorMulti::addAircraftSituation(const CAircraftSituation &situation)
-        {
-            m_linear.addAircraftSituation(situation);
-            m_spline.addAircraftSituation(situation);
-        }
-
-        bool CInterpolatorMulti::hasAircraftSituations() const
+        CAircraftParts CInterpolatorMulti::getInterpolatedOrGuessedParts(
+            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
+            CPartsStatus &partsStatus, bool log) const
         {
             switch (m_mode)
             {
-            case ModeLinear: return m_linear.hasAircraftSituations();
-            case ModeSpline: return m_spline.hasAircraftSituations();
+            // currently calls the same interpolation for parts
+            case ModeLinear: return m_linear.getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            case ModeSpline: return m_spline.getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
             default: break;
             }
-            return false;
+            return {};
         }
 
-        void CInterpolatorMulti::addAircraftParts(const CAircraftParts &parts)
-        {
-            m_linear.addAircraftParts(parts);
-            m_spline.addAircraftParts(parts);
-        }
-
-        bool CInterpolatorMulti::hasAircraftParts() const
+        const CAircraftSituation &CInterpolatorMulti::getLastInterpolatedSituation() const
         {
             switch (m_mode)
             {
-            case ModeLinear: return m_linear.hasAircraftParts();
-            case ModeSpline: return m_spline.hasAircraftParts();
+            case ModeLinear: return m_linear.getLastInterpolatedSituation();
+            case ModeSpline: return m_spline.getLastInterpolatedSituation();
             default: break;
             }
-            return false;
+            return CAircraftSituation::null();
         }
 
         void CInterpolatorMulti::attachLogger(CInterpolationLogger *logger)
@@ -89,18 +80,17 @@ namespace BlackMisc
             m_spline.attachLogger(logger);
         }
 
+        void CInterpolatorMulti::initCorrespondingModel(const CAircraftModel &model)
+        {
+            m_linear.initCorrespondingModel(model);
+            m_spline.initCorrespondingModel(model);
+        }
+
         bool CInterpolatorMulti::setMode(Mode mode)
         {
-#ifdef QT_DEBUG
-            if (m_mode != mode)
-            {
-                m_mode = mode;
-                return true;
-            }
-#else
-            Q_UNUSED(mode);
-#endif
-            return false;
+            if (m_mode == mode) { return false; }
+            m_mode = mode;
+            return true;
         }
 
         bool CInterpolatorMulti::setMode(const QString &mode)
@@ -156,14 +146,9 @@ namespace BlackMisc
         CInterpolatorMultiWrapper::CInterpolatorMultiWrapper()
         { }
 
-        CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const CCallsign &callsign, QObject *parent)
+        CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const Aviation::CCallsign &callsign, ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3, CInterpolationLogger *logger)
         {
-            m_interpolator.reset(new CInterpolatorMulti(callsign, parent));
-        }
-
-        CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const CCallsign &callsign, CInterpolationLogger *logger, QObject *parent)
-        {
-            m_interpolator.reset(new CInterpolatorMulti(callsign, parent));
+            m_interpolator.reset(new CInterpolatorMulti(callsign, p1, p2, p3));
             m_interpolator->attachLogger(logger);
         }
     } // ns

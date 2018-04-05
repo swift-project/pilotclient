@@ -32,8 +32,7 @@ namespace BlackMiscTest
     {
         CCallsign cs("SWIFT");
         CRemoteAircraftProviderDummy provider;
-        CInterpolatorSpline interpolator(cs);
-        interpolator.setRemoteAircraftProvider(&provider);
+        CInterpolatorSpline interpolator(cs, nullptr, nullptr, &provider);
 
         // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch()
@@ -64,12 +63,10 @@ namespace BlackMiscTest
         qint64 pTs = p.getAdjustedMSecsSinceEpoch();
         QVERIFY2(status.isSupportingParts(), "Should support parts");
         QVERIFY2(pTs == ts, "Expect latest ts");
-        QCOMPARE(p.isOnGroundInterpolated(), 1.0);
         p = interpolator.getInterpolatedParts(farPast, setup, status);
         pTs = p.getAdjustedMSecsSinceEpoch();
         QVERIFY2(status.isSupportingParts(), "Should support parts");
         QVERIFY2(pTs == oldestTs, "Expect oldest ts");
-        QCOMPARE(p.isOnGroundInterpolated(), 1.0);
 
         // Testing for a time >> last time
         // all on ground flags true
@@ -82,7 +79,6 @@ namespace BlackMiscTest
         pTs = p.getAdjustedMSecsSinceEpoch();
         QVERIFY2(status.isSupportingParts(), "Should support parts");
         QVERIFY2(p.getAdjustedMSecsSinceEpoch() == pTs, "Expect latest ts");
-        QCOMPARE(p.isOnGroundInterpolated(), 0.0);
     }
 
     void CTestInterpolatorParts::partsToSituationGndFlag()

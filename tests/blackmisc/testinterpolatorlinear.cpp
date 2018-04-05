@@ -56,8 +56,7 @@ namespace BlackMiscTest
     {
         CCallsign cs("SWIFT");
         CRemoteAircraftProviderDummy provider;
-        CInterpolatorLinear interpolator(cs);
-        interpolator.setRemoteAircraftProvider(&provider);
+        CInterpolatorLinear interpolator(cs, nullptr, nullptr, &provider);
 
         // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();

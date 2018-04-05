@@ -310,7 +310,7 @@ namespace BlackMisc
 
                     QStringLiteral("<td>") % msSinceEpochToTime(log.tsInterpolated) % QStringLiteral("</td>") %
                     QStringLiteral("<td>") % QString::number(log.deltaSampleTimesMs) % QStringLiteral("ms</td>") %
-                    QStringLiteral("<td>") % QString::number(log.simulationTimeFraction) % QStringLiteral("</td>");
+                    QStringLiteral("<td>") % QString::number(log.simTimeFraction) % QStringLiteral("</td>");
 
                 tableRows +=
                     QStringLiteral("<td class=\"old\">") % situationOld.latitudeAsString() % QStringLiteral("</td>") %
@@ -376,14 +376,8 @@ namespace BlackMisc
 
         void CInterpolationLogger::clearLog()
         {
-            {
-                QWriteLocker l(&m_lockSituations);
-                m_situationLogs.clear();
-            }
-            {
-                QWriteLocker l(&m_lockParts);
-                m_partsLogs.clear();
-            }
+            { QWriteLocker l(&m_lockSituations); m_situationLogs.clear(); }
+            { QWriteLocker l(&m_lockParts); m_partsLogs.clear(); }
         }
 
         QString CInterpolationLogger::msSinceEpochToTime(qint64 ms)
@@ -418,6 +412,8 @@ namespace BlackMisc
                    QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
                    QStringLiteral(" | type: ") % this->interpolationType() %
                    QStringLiteral(" | gnd.fa.: ") % QString::number(groundFactor) %
+                   QStringLiteral(" | CG: ") % cgAboveGround.valueRoundedWithUnit(CLengthUnit::m(), 1) %
+                   QStringLiteral(" | alt.cor.: ") % altCorrection %
                    QStringLiteral(" | #nw.sit.: ") % QString::number(noNetworkSituations) %
                    (
                        withSetup ?
@@ -427,9 +423,7 @@ namespace BlackMisc
                    (
                        withElevation ?
                        separator %
-                       QStringLiteral("Elev.: ") %
-                       QStringLiteral("transf.elv.: ") % QString::number(noTransferredElevations) %
-                       QStringLiteral(" | elv.info: ") % elevationInfo :
+                       QStringLiteral("Elev info.: ") % elevationInfo :
                        QStringLiteral("")
                    ) %
                    (
@@ -439,7 +433,7 @@ namespace BlackMisc
                        QStringLiteral(" | int.time: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsInterpolated) %
                        QStringLiteral(" | dt.cur.int.: ") %  QString::number(deltaCurrentToInterpolatedTime()) % QStringLiteral("ms") %
                        QStringLiteral(" | sample dt: ") % QString::number(deltaSampleTimesMs) % QStringLiteral("ms") %
-                       QStringLiteral(" | fr.[0-1]: ") % QString::number(simulationTimeFraction) %
+                       QStringLiteral(" | fr.[0-1]: ") % QString::number(simTimeFraction) %
                        QStringLiteral(" | old int.pos.: ") % situationOldInterpolation.getTimestampAndOffset(true) %
                        QStringLiteral(" | new int.pos.: ") % situationNewInterpolation.getTimestampAndOffset(true) %
                        QStringLiteral(" | #int.pos.: ") % QString::number(interpolationSituations.size()) :

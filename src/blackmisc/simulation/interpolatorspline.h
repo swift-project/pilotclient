@@ -26,13 +26,12 @@ namespace BlackMisc
         //! Cubic spline interpolator
         class BLACKMISC_EXPORT CInterpolatorSpline : public CInterpolator<CInterpolatorSpline>
         {
-            Q_OBJECT
-
         public:
             //! Constructor
-            CInterpolatorSpline(const Aviation::CCallsign &callsign, QObject *parent = nullptr) :
-                CInterpolator("CInterpolatorSpline", callsign, parent)
-            {}
+            CInterpolatorSpline(const Aviation::CCallsign &callsign,
+                                ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                                CInterpolationLogger *logger = nullptr) :
+                CInterpolator(callsign, p1, p2, p3, logger) {}
 
             //! Position arrays for interpolation
             struct BLACKMISC_EXPORT PosArray
@@ -43,9 +42,8 @@ namespace BlackMisc
                 //! Zero initialized position array
                 static const PosArray &zeroPosArray();
 
-                //! 3 coordinates for spline interpolation
-                //! @{
-                std::array<double, 3> x, y, z, a, t, dx, dy, dz, da;
+                //! 3 coordinates for spline interpolation @{
+                std::array<double, 3> x, y, z, a, gnd, t, dx, dy, dz, da, dgnd;
                 //! @}
             };
 
@@ -62,10 +60,7 @@ namespace BlackMisc
                     m_pa(pa), m_altitudeUnit(altitudeUnit), m_pbh(pbh) {}
 
                 //! Perform the interpolation
-                //! @{
-                Geo::CCoordinateGeodetic interpolatePosition(const CInterpolationAndRenderingSetupPerCallsign &setup) const;
-                Aviation::CAltitude interpolateAltitude(const CInterpolationAndRenderingSetupPerCallsign &setup) const;
-                //! @}
+                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation) const;
 
                 //! Interpolator for pitch, bank, heading, groundspeed
                 const CInterpolatorPbh &pbh() const { return m_pbh; }
@@ -83,11 +78,11 @@ namespace BlackMisc
                 void setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs);
 
             private:
-                PosArray m_pa;
+                PosArray m_pa; //! current positions array, latest values last
                 PhysicalQuantities::CLengthUnit m_altitudeUnit;
                 CInterpolatorPbh m_pbh;
-                qint64 m_currentTimeMsSinceEpoc { 0 };
-                qint64 m_interpolatedTime { 0 }; //!< represented "real time" at interpolated situation
+                qint64 m_currentTimeMsSinceEpoc { -1 };
+                qint64 m_interpolatedTime { -1 }; //!< represented "real time" at interpolated situation
             };
 
             //! Strategy used by CInterpolator::getInterpolatedSituation
@@ -95,11 +90,23 @@ namespace BlackMisc
                                        const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status, SituationLog &log);
 
         private:
+            //! Update the elevations used in CInterpolatorSpline::m_s
+            bool updateElevations();
+
+            //! Are any elevations missing in CInterpolatorSpline::m_s
+            bool areAnyElevationsMissing() const;
+
+            //! Ground relevant
+            bool isAnySituationNearGroundRelevant() const;
+
+            //! Are the altitude units all the same
+            bool areAltitudeUnitsSame(const PhysicalQuantities::CLengthUnit &compare = PhysicalQuantities::CLengthUnit::nullUnit()) const;
+
             qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset
             qint64 m_nextSampleAdjustedTime = 0; //!< previous sample time + offset
             qint64 m_prevSampleTime = 0; //!< previous sample "real time"
             qint64 m_nextSampleTime = 0; //!< next sample "real time"
-            std::array<Aviation::CAircraftSituation, 3> m_s;
+            std::array<Aviation::CAircraftSituation, 3> m_s; //!< used situations
             Interpolant m_interpolant;
         };
     } // ns

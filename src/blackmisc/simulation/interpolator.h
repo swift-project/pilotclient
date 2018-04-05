@@ -16,9 +16,11 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/interpolationsetupprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/logcategorylist.h"
 
 #include <QObject>
@@ -27,8 +29,6 @@
 
 namespace BlackMisc
 {
-    class CWorker;
-    namespace Aviation { class CCallsign; }
     namespace Simulation
     {
         class CInterpolationLogger;
@@ -42,8 +42,7 @@ namespace BlackMisc
         class CInterpolator :
             public CSimulationEnvironmentAware,
             public CInterpolationSetupAware,
-            public CRemoteAircraftAware,
-            public QObject
+            public CRemoteAircraftAware
         {
         public:
             //! Log categories
@@ -52,25 +51,14 @@ namespace BlackMisc
             //! Current interpolated situation
             Aviation::CAircraftSituation getInterpolatedSituation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status);
 
-            //! Parts before given offset time (aka pending parts)
-            Aviation::CAircraftParts getInterpolatedParts(
-                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log = false) const;
+            //! Parts before given offset time
+            Aviation::CAircraftParts getInterpolatedParts(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log = false) const;
 
-            //! Add a new aircraft situation
-            void addAircraftSituation(const Aviation::CAircraftSituation &situation);
+            //! Interpolated parts, if not available guessed parts
+            Aviation::CAircraftParts getInterpolatedOrGuessedParts(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log = false) const;
 
-            //! Any aircraft situations?
-            bool hasAircraftSituations() const { return !m_aircraftSituations.isEmpty(); }
-
-            //! Add a new aircraft parts
-            void addAircraftParts(const Aviation::CAircraftParts &parts, bool adjustZeroOffset = true);
-
-            //! Add a new aircraft parts
-            //! \remark mainly needed in unit tests
-            void addAircraftParts(const Aviation::CAircraftPartsList &parts, bool adjustZeroOffset = true);
-
-            //! Any aircraft parts?
-            bool hasAircraftParts() const { return !m_aircraftParts.isEmpty(); }
+            //! Latest interpolation result
+            const Aviation::CAircraftSituation &getLastInterpolatedSituation() const { return m_lastInterpolation; }
 
             //! Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
             //!
@@ -97,32 +85,62 @@ namespace BlackMisc
             void resetLastInterpolation();
 
             //! Clear all data
-            //! \remark mainly needed in interpolation
+            //! \remark mainly needed in UNIT tests
             void clear();
 
-            //! Max situations kept
-            int maxSituations() const;
-
-            //! Max parts kept
-            int maxParts() const;
+            //! Init, or re-init the corressponding model
+            //! \remark either by passing a model or using the provider
+            void initCorrespondingModel(const CAircraftModel &model = {});
 
         protected:
-            Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
-            Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts for one aircraft
-            Aviation::CCallsign m_callsign;                        //!< callsign
-            Aviation::CAircraftSituation m_lastInterpolation;      //!< last interpolation
-
             //! Constructor
-            CInterpolator(const QString &objectName, const Aviation::CCallsign &callsign, QObject *parent);
+            CInterpolator(const Aviation::CCallsign &callsign,
+                          ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *p3,
+                          CInterpolationLogger *logger);
 
-            //! Set on ground flag
-            void setGroundFlagFromInterpolator(double groundFactor, Aviation::CAircraftSituation &situation) const;
+            const Aviation::CCallsign    m_callsign; //!< corresponding callsign
+            PhysicalQuantities::CLength  m_cg { 0, nullptr } ; //!< fetched once, stays constant
+            Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() }; //!< latest interpolation
+            CAircraftModel m_model; //!< corresponding model
+
+            //! Equal double values?
+            static bool doubleEpsilonEqual(double d1, double d2)
+            {
+                return qAbs(d1 - d2) < std::numeric_limits<double>::epsilon();
+            }
+
+            //! Both on ground
+            static bool gfEqualOnGround(double oldGroundFactor, double newGroundFactor)
+            {
+                return doubleEpsilonEqual(1.0, oldGroundFactor) && doubleEpsilonEqual(1.0, newGroundFactor);
+            }
+
+            //! Both not on ground
+            static bool gfEqualAirborne(double oldGroundFactor, double newGroundFactor)
+            {
+                return doubleEpsilonEqual(0.0, oldGroundFactor) && doubleEpsilonEqual(0.0, newGroundFactor);
+            }
+
+            //! Plane is starting
+            static bool gfStarting(double oldGroundFactor, double newGroundFactor)
+            {
+                return doubleEpsilonEqual(0.0, oldGroundFactor) && doubleEpsilonEqual(1.0, newGroundFactor);
+            }
+
+            //! Plane is landing
+            static bool gfLanding(double oldGroundFactor, double newGroundFactor)
+            {
+                return doubleEpsilonEqual(1.0, oldGroundFactor) && doubleEpsilonEqual(0.0, newGroundFactor);
+            }
+
+            //! Verify gnd flag, times, ... true means "OK"
+            bool verifyInterpolationSituations(const Aviation::CAircraftSituation &oldest, const Aviation::CAircraftSituation &newer, const Aviation::CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup);
 
         private:
             CInterpolationLogger *m_logger = nullptr;
 
             //! Log parts
-            void logParts(qint64 timestamp, const Aviation::CAircraftParts &parts, bool empty, bool log) const;
+            void logParts(qint64 timestamp, const Aviation::CAircraftParts &parts, int partsNo, bool empty, bool log) const;
 
             Derived *derived() { return static_cast<Derived *>(this); }
             const Derived *derived() const { return static_cast<const Derived *>(this); }
@@ -134,14 +152,9 @@ namespace BlackMisc
         public:
             //! Constructor
             //! @{
-            CInterpolatorPbh()
-            {}
-            CInterpolatorPbh(const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) :
-                m_oldSituation(older), m_newSituation(newer)
-            {}
-            CInterpolatorPbh(double time, const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) :
-                m_simulationTimeFraction(time), m_oldSituation(older), m_newSituation(newer)
-            {}
+            CInterpolatorPbh() {}
+            CInterpolatorPbh(const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) : m_oldSituation(older), m_newSituation(newer) {}
+            CInterpolatorPbh(double time, const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) : m_simulationTimeFraction(time), m_oldSituation(older), m_newSituation(newer) {}
             //! @}
 
             //! Getter

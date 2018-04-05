@@ -19,42 +19,38 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        /*!
-         * Multiplexed interpolator which allows switching between modes at runtime.
-         * \remark currently switching mode is only a developer feature, see https://swift-project.slack.com/archives/C04J6J76N/p1504536854000049
-         */
-        class BLACKMISC_EXPORT CInterpolatorMulti : public QObject
+        //! Multiplexed interpolator which allows switching between modes at runtime.
+        class BLACKMISC_EXPORT CInterpolatorMulti
         {
         public:
             //! Constructor
-            CInterpolatorMulti(const Aviation::CCallsign &callsign, QObject *parent = nullptr);
+            CInterpolatorMulti(const Aviation::CCallsign &callsign,
+                               ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                               CInterpolationLogger *logger = nullptr);
 
             //! \copydoc CInterpolator::getInterpolatedSituation
             Aviation::CAircraftSituation getInterpolatedSituation(
-                qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetupPerCallsign &setup,
+                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
                 CInterpolationStatus &status);
 
             //! \copydoc CInterpolator::getInterpolatedParts
             Aviation::CAircraftParts getInterpolatedParts(
-                qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetupPerCallsign &setup,
+                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
                 CPartsStatus &partsStatus, bool log = false) const;
 
-            //! \copydoc CInterpolator::addAircraftSituation
-            void addAircraftSituation(const Aviation::CAircraftSituation &situation);
+            //! \copydoc CInterpolator::getInterpolatedOrGuessedParts
+            Aviation::CAircraftParts getInterpolatedOrGuessedParts(
+                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
+                CPartsStatus &partsStatus, bool log) const;
 
-            //! \copydoc CInterpolator::hasAircraftSituations
-            bool hasAircraftSituations() const;
-
-            //! \copydoc CInterpolator::addAircraftParts
-            void addAircraftParts(const Aviation::CAircraftParts &parts);
-
-            //! \copydoc CInterpolator::hasAircraftParts
-            bool hasAircraftParts() const;
+            //! \copydoc CInterpolator::getLastInterpolatedSituation
+            const Aviation::CAircraftSituation &getLastInterpolatedSituation() const;
 
             //! \copydoc CInterpolator::attachLogger
             void attachLogger(CInterpolationLogger *logger);
+
+            //! \copydoc CInterpolator::initCorrespondingModel
+            void initCorrespondingModel(const CAircraftModel &model);
 
             //! Supported interpolation modes.
             enum Mode
@@ -102,10 +98,10 @@ namespace BlackMisc
             CInterpolatorMultiWrapper();
 
             //! Constructor
-            CInterpolatorMultiWrapper(const Aviation::CCallsign &callsign, QObject *parent = nullptr);
-
-            //! Constructor
-            CInterpolatorMultiWrapper(const Aviation::CCallsign &callsign, CInterpolationLogger *logger, QObject *parent = nullptr);
+            CInterpolatorMultiWrapper(
+                const Aviation::CCallsign &callsign,
+                ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                CInterpolationLogger *logger = nullptr);
 
             //! Has interpolator initialized?
             bool hasInterpolator() const { return m_interpolator; }
