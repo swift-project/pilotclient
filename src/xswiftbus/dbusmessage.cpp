@@ -116,7 +116,7 @@ namespace XSwiftBus
         DBusMessageIter arrayIterator;
         dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_DOUBLE_AS_STRING, &arrayIterator);
         const double *ptr = array.data();
-        dbus_message_iter_append_fixed_array(&arrayIterator, DBUS_TYPE_DOUBLE, &ptr, array.size());
+        dbus_message_iter_append_fixed_array(&arrayIterator, DBUS_TYPE_DOUBLE, &ptr, static_cast<int>(array.size()));
         dbus_message_iter_close_container(&m_messageIterator, &arrayIterator);
     }
 
@@ -124,7 +124,7 @@ namespace XSwiftBus
     {
         DBusMessageIter arrayIterator;
         dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_STRING_AS_STRING, &arrayIterator);
-        for (const auto & i : array)
+        for (const auto &i : array)
         {
             const char *ptr = i.c_str();
             dbus_message_iter_append_basic(&arrayIterator, DBUS_TYPE_STRING, &ptr);

@@ -21,7 +21,7 @@ namespace XSwiftBus
     CService::CService(CDBusConnection *connection) : CDBusObject(connection)
     {
         registerDBusObjectPath(XSWIFTBUS_SERVICE_INTERFACENAME, XSWIFTBUS_SERVICE_OBJECTPATH);
-        m_messages.addMessage( { "xswiftbus started.", 0, 255, 255 } );
+        m_messages.addMessage({ "xswiftbus started.", 0, 255, 255 });
         updateAirportsInRange();
     }
 
@@ -201,14 +201,14 @@ namespace XSwiftBus
                 message.getArgument(green);
                 message.getArgument(blue);
 
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     addTextMessage(text, red, green, blue);
                 });
             }
             else if (message.getMethodName() == "getOwnAircraftSituationData")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     double lat = m_latitude.get();
                     double lon = m_longitude.get();
@@ -234,276 +234,276 @@ namespace XSwiftBus
             else if (message.getMethodName() == "updateAirportsInRange")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     updateAirportsInRange();
                 });
             }
             else if (message.getMethodName() == "getAircraftModelPath")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAircraftModelPath());
-                 });
+                });
             }
             else if (message.getMethodName() == "getAircraftModelFilename")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAircraftModelFilename());
                 });
             }
             else if (message.getMethodName() == "getAircraftModelString")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAircraftModelString());
-                 });
+                });
             }
             else if (message.getMethodName() == "getAircraftName")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAircraftName());
-                 });
+                });
             }
             else if (message.getMethodName() == "getAircraftLivery")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAircraftLivery());
-                 });
+                });
             }
             else if (message.getMethodName() == "getAircraftIcaoCode")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAircraftIcaoCode());
-                 });
+                });
             }
             else if (message.getMethodName() == "getAircraftDescription")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAircraftDescription());
-                 });
+                });
             }
             else if (message.getMethodName() == "getXPlaneVersionMajor")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getXPlaneVersionMajor());
-                 });
+                });
             }
             else if (message.getMethodName() == "getXPlaneVersionMinor")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getXPlaneVersionMinor());
                 });
             }
             else if (message.getMethodName() == "getXPlaneInstallationPath")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getXPlaneInstallationPath());
-                 });
+                });
             }
             else if (message.getMethodName() == "getXPlanePreferencesPath")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getXPlanePreferencesPath());
-                 });
+                });
             }
             else if (message.getMethodName() == "isPaused")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, isPaused());
-                 });
+                });
             }
             else if (message.getMethodName() == "isUsingRealTime")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, isUsingRealTime());
-                 });
+                });
             }
             else if (message.getMethodName() == "getLatitude")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getLatitude());
-                 });
+                });
             }
             else if (message.getMethodName() == "getLongitude")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getLongitude());
-                 });
+                });
             }
             else if (message.getMethodName() == "getAltitudeMSL")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAltitudeMSL());
-                 });
+                });
             }
             else if (message.getMethodName() == "getHeightAGL")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getHeightAGL());
-                 });
+                });
             }
             else if (message.getMethodName() == "getGroundSpeed")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getGroundSpeed());
-                 });
+                });
             }
             else if (message.getMethodName() == "getIndicatedAirspeed")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getIndicatedAirspeed());
-                 });
+                });
             }
             else if (message.getMethodName() == "getTrueAirspeed")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getTrueAirspeed());
-                 });
+                });
             }
             else if (message.getMethodName() == "getPitch")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getPitch());
-                 });
+                });
             }
             else if (message.getMethodName() == "getRoll")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getRoll());
-                 });
+                });
             }
             else if (message.getMethodName() == "getTrueHeading")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getTrueHeading());
-                 });
+                });
             }
             else if (message.getMethodName() == "getAnyWheelOnGround")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAnyWheelOnGround());
-                 });
+                });
             }
             else if (message.getMethodName() == "getAllWheelsOnGround")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getAllWheelsOnGround());
-                 });
+                });
             }
             else if (message.getMethodName() == "getCom1Active")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getCom1Active());
-                 });
+                });
             }
             else if (message.getMethodName() == "getCom1Standby")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getCom1Standby());
-                 });
+                });
             }
             else if (message.getMethodName() == "getCom2Active")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getCom2Active());
-                 });
+                });
             }
             else if (message.getMethodName() == "getCom2Standby")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getCom2Standby());
-                 });
+                });
             }
             else if (message.getMethodName() == "getTransponderCode")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getTransponderCode());
-                 });
+                });
             }
             else if (message.getMethodName() == "getTransponderMode")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getTransponderMode());
-                 });
+                });
             }
             else if (message.getMethodName() == "getTransponderIdent")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getTransponderIdent());
-                 });
+                });
             }
             else if (message.getMethodName() == "getBeaconLightsOn")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getBeaconLightsOn());
-                 });
+                });
             }
             else if (message.getMethodName() == "getLandingLightsOn")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getLandingLightsOn());
-                 });
+                });
             }
             else if (message.getMethodName() == "getNavLightsOn")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getNavLightsOn());
-                 });
+                });
             }
             else if (message.getMethodName() == "getStrobeLightsOn")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getStrobeLightsOn());
-                 });
+                });
             }
             else if (message.getMethodName() == "getTaxiLightsOn")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getTaxiLightsOn());
-                 });
+                });
             }
             else if (message.getMethodName() == "getQNH")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getQNH());
-                 });
+                });
             }
             else if (message.getMethodName() == "setCom1Active")
             {
@@ -511,10 +511,10 @@ namespace XSwiftBus
                 int frequency = 0;
                 message.beginArgumentRead();
                 message.getArgument(frequency);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setCom1Active(frequency);
-                 });
+                });
             }
             else if (message.getMethodName() == "setCom1Standby")
             {
@@ -522,10 +522,10 @@ namespace XSwiftBus
                 int frequency = 0;
                 message.beginArgumentRead();
                 message.getArgument(frequency);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setCom1Standby(frequency);
-                 });
+                });
             }
             else if (message.getMethodName() == "setCom2Active")
             {
@@ -533,10 +533,10 @@ namespace XSwiftBus
                 int frequency = 0;
                 message.beginArgumentRead();
                 message.getArgument(frequency);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setCom2Active(frequency);
-                 });
+                });
             }
             else if (message.getMethodName() == "setCom2Standby")
             {
@@ -544,10 +544,10 @@ namespace XSwiftBus
                 int frequency = 0;
                 message.beginArgumentRead();
                 message.getArgument(frequency);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setCom2Standby(frequency);
-                 });
+                });
             }
             else if (message.getMethodName() == "setTransponderCode")
             {
@@ -555,10 +555,10 @@ namespace XSwiftBus
                 int code = 0;
                 message.beginArgumentRead();
                 message.getArgument(code);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setTransponderCode(code);
-                 });
+                });
             }
             else if (message.getMethodName() == "setTransponderMode")
             {
@@ -566,54 +566,54 @@ namespace XSwiftBus
                 int mode = 0;
                 message.beginArgumentRead();
                 message.getArgument(mode);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     setTransponderMode(mode);
-                 });
+                });
             }
             else if (message.getMethodName() == "getFlapsDeployRatio")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getFlapsDeployRatio());
-                 });
+                });
             }
             else if (message.getMethodName() == "getGearDeployRatio")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getGearDeployRatio());
-                 });
+                });
             }
             else if (message.getMethodName() == "getNumberOfEngines")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getNumberOfEngines());
-                 });
+                });
             }
             else if (message.getMethodName() == "getEngineN1Percentage")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     std::vector<double> array = getEngineN1Percentage();
                     sendDBusReply(sender, serial, array);
-                 });
+                });
             }
             else if (message.getMethodName() == "getSpeedBrakeRatio")
             {
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     sendDBusReply(sender, serial, getSpeedBrakeRatio());
-                 });
+                });
             }
             else if (message.getMethodName() == "toggleMessageBoxVisibility")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                queueDBusCall([=]()
+                queueDBusCall([ = ]()
                 {
                     toggleMessageBoxVisibility();
-                 });
+                });
             }
             else
             {
@@ -647,7 +647,7 @@ namespace XSwiftBus
     }
 
     void CService::emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes, const std::vector<std::string> &names,
-                                              const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts)
+            const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts)
     {
         CDBusMessage signalAirportsInRangeUpdated = CDBusMessage::createSignal(XSWIFTBUS_SERVICE_OBJECTPATH, XSWIFTBUS_SERVICE_INTERFACENAME, "airportsInRangeUpdated");
         signalAirportsInRangeUpdated.beginArgumentWrite();
@@ -730,7 +730,7 @@ namespace XSwiftBus
         CAircraftModel model;
 
         std::ifstream fs(filePath, std::ios::in | std::ios::binary);
-        if(!fs.is_open()) { return model; }
+        if (!fs.is_open()) { return model; }
 
         std::string i;
         std::string version;

@@ -875,9 +875,9 @@ namespace BlackSimPlugin
 
             // create AI
             bool adding = false;
-            CSimulatedAircraft addedAircraft(newRemoteAircraft);
+            const CSimulatedAircraft addedAircraft(newRemoteAircraft);
             const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
-            const SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
+            const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(addedAircraft.getSituation());
             const QString modelString(addedAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 

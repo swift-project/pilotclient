@@ -272,7 +272,7 @@ namespace BlackCore
                             const QMap<QString, QString> clientPartsMap = clientPartsToMap(currentLine, clientSectionAttributes);
                             const CCallsign callsign = CCallsign(clientPartsMap["callsign"]);
                             if (callsign.isEmpty()) { break; }
-                            const BlackMisc::Network::CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
+                            const CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
                             const QString clientType = clientPartsMap["clienttype"].toLower();
                             if (clientType.isEmpty()) { break; } // sometimes type is empty
                             const double lat = clientPartsMap["latitude"].toDouble();
@@ -405,7 +405,7 @@ namespace BlackCore
                 // warnings, if required
                 if (!illegalEquipmentCodes.isEmpty())
                 {
-                    logInconsistentData(
+                    CVatsimDataFileReader::logInconsistentData(
                         CStatusMessage(this, CStatusMessage::SeverityInfo, "Illegal / ignored equipment code(s) in VATSIM data file: " + illegalEquipmentCodes.join(", "))
                     );
                 }
