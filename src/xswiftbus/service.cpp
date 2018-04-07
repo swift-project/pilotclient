@@ -38,7 +38,7 @@ namespace XSwiftBus
     {
         if (text.empty()) { return; }
         static const std::string ellipsis = "...";
-        int lineLength = m_messages.maxLineLength() - ellipsis.size();
+        const int lineLength = static_cast<int>(m_messages.maxLineLength() - ellipsis.size());
         std::vector<std::string> wrappedLines;
         for (size_t i = 0; i < text.size(); i += lineLength)
         {
