@@ -267,6 +267,15 @@ namespace BlackSimPlugin
             return msgs;
         }
 
+        bool CSimulatorFsxCommon::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
+        {
+            Q_UNUSED(callsign);
+            if (this->isShuttingDown()) { return false; }
+            if (reference.isNull()) { return false; }
+            this->physicallyAddAITerrainProbe(reference);
+            return false;
+        }
+
         bool CSimulatorFsxCommon::stillDisplayReceiveExceptions()
         {
             m_receiveExceptionCount++;
@@ -359,7 +368,14 @@ namespace BlackSimPlugin
         SIMCONNECT_DATA_REQUEST_ID CSimulatorFsxCommon::obtainRequestIdForSimData()
         {
             const SIMCONNECT_DATA_REQUEST_ID id = m_requestIdSimData++;
-            if (id > RequestSimDataEnd) { m_requestIdSimData = RequestSimDataStart; }
+            if (id > RequestIdSimDataEnd) { m_requestIdSimData = RequestIdSimDataStart; }
+            return id;
+        }
+
+        SIMCONNECT_DATA_REQUEST_ID CSimulatorFsxCommon::obtainRequestIdForProbe()
+        {
+            const SIMCONNECT_DATA_REQUEST_ID id = m_requestIdProbe++;
+            if (id > RequestIdTerrainProbeEnd) { m_requestIdProbe = RequestIdTerrainProbeStart; }
             return id;
         }
 
@@ -745,6 +761,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
+            if (this->isShuttingDown()) { return; }
             this->dispatch();
         }
 
@@ -768,6 +785,13 @@ namespace BlackSimPlugin
             CSimpleCommandParser::registerCommand({".drv sendid on|off", "Trace simConnect sendId on|off"});
         }
 
+        CCallsign CSimulatorFsxCommon::getCallsignForPendingProbeRequests(DWORD requestId, bool remove)
+        {
+            const CCallsign cs = m_pendingProbeRequests.value(requestId);
+            if (remove) { m_pendingProbeRequests.remove(requestId); }
+            return cs;
+        }
+
         const QString &CSimulatorFsxCommon::modeToString(CSimulatorFsxCommon::AircraftAddMode mode)
         {
             static const QString e("external call");
@@ -789,7 +813,9 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::dispatch()
         {
-            const HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
+            // call CSimulatorFsxCommon::SimConnectProc or specialized P3D version
+            Q_ASSERT_X(m_dispatchProc, Q_FUNC_INFO, "Missing DispatchProc");
+            const HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, m_dispatchProc, this);
             if (hr != S_OK)
             {
                 m_dispatchErrors++;
@@ -897,6 +923,28 @@ namespace BlackSimPlugin
                 adding = true;
             }
             return adding;
+        }
+
+        bool CSimulatorFsxCommon::physicallyAddAITerrainProbe(const ICoordinateGeodetic &coordinate)
+        {
+            if (coordinate.isNull()) { return false; }
+            return false;
+
+            // entry checks
+            /**
+            Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
+
+            const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForProbe();
+            const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::coordinateToFsxPosition(coordinate);
+            const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(""), qPrintable(""), initialPosition, requestId);
+            if (hr != S_OK)
+            {
+                const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create terrain AI: '%1'") << requestId;
+                CLogMessage::preformatted(msg);
+            }
+
+            return hr == S_OK;
+            **/
         }
 
         bool CSimulatorFsxCommon::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
@@ -1278,10 +1326,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(!situation.isGeodeticHeightNull(), Q_FUNC_INFO, "Missing height");
             Q_ASSERT_X(!situation.isPositionNull(), Q_FUNC_INFO,  "Missing position");
 
-            SIMCONNECT_DATA_INITPOSITION position;
-            position.Latitude = situation.latitude().value(CAngleUnit::deg());
-            position.Longitude = situation.longitude().value(CAngleUnit::deg());
-            position.Altitude = situation.getAltitude().value(CLengthUnit::ft()); // already corrected in interpolator if there is an underflow
+            SIMCONNECT_DATA_INITPOSITION position = CSimulatorFsxCommon::coordinateToFsxPosition(situation);
             position.Heading = situation.getHeading().value(CAngleUnit::deg());
             position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
 
@@ -1295,6 +1340,20 @@ namespace BlackSimPlugin
                 const bool onGround = (situation.getOnGround() == CAircraftSituation::OnGround);
                 position.OnGround = onGround ? 1U : 0U;
             }
+            return position;
+        }
+
+        SIMCONNECT_DATA_INITPOSITION CSimulatorFsxCommon::coordinateToFsxPosition(const ICoordinateGeodetic &coordinate)
+        {
+            SIMCONNECT_DATA_INITPOSITION position;
+            position.Latitude = coordinate.latitude().value(CAngleUnit::deg());
+            position.Longitude = coordinate.longitude().value(CAngleUnit::deg());
+            position.Altitude = coordinate.geodeticHeight().value(CLengthUnit::ft()); // already corrected in interpolator if there is an underflow
+            position.Heading = 0;
+            position.Airspeed = 0;
+            position.Pitch = 0;
+            position.Bank  = 0;
+            position.OnGround = 0;
             return position;
         }
 
@@ -1432,7 +1491,7 @@ namespace BlackSimPlugin
             m_syncDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
             m_interpolationRequest  = 0;
-            m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimDataStart);
+            m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
             m_sendIdTraces.clear();

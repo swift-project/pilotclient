@@ -9,6 +9,7 @@
 
 #include "blackcore/simulator.h"
 #include "blackcore/application.h"
+#include "blackmisc/logmessage.h"
 
 #include <QFlag>
 #include <Qt>
@@ -42,12 +43,22 @@ namespace BlackCore
         return setup;
     }
 
-    bool ISimulator::requestElevation(const Geo::ICoordinateGeodetic &reference) const
+    bool ISimulator::requestElevation(const Geo::ICoordinateGeodetic &reference, const CCallsign &callsign)
     {
-        if (this->isShuttingDown()) { return false; }
-        if (reference.isNull()) { return false; }
         Q_UNUSED(reference);
+        Q_UNUSED(callsign);
         return false;
+    }
+
+    void ISimulator::callbackReceivedRequestedElevation(const Geo::CElevationPlane &plane, const CCallsign &callsign)
+    {
+        if (this->isShuttingDown()) { return; }
+
+        // CLogMessage(this).info("'%1' Received req. elevation") << callsign.asString();
+        this->rememberGroundElevation(plane);
+        const int updated = this->updateAircraftGroundElevation(callsign, plane);
+        if (updated < 1) { return; }
+        emit this->receivedRequestedElevation(plane, callsign);
     }
 
     void ISimulator::registerHelp()

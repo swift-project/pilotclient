@@ -43,7 +43,6 @@ addStaticLibraryDependency(fsuipc)
 msvc: QMAKE_LFLAGS *= /ignore:4099
 
 DISTFILES += simulatorp3d.json
-
 DESTDIR = $$DestRoot/bin/plugins/simulator
 
 win32 {

@@ -38,11 +38,15 @@ namespace BlackMisc
 
             //! Find closest elevation
             //! \threadsafe
-            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, bool autoRequest = false) const;
+            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
+
+            //! Find closest elevation
+            //! \threadsafe
+            Geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const Aviation::CCallsign &callsign);
 
             //! Request elevation, there is no guaranteed the requested elevation will be available in the provider
             //! \threadsafe
-            virtual bool requestElevation(const Geo::ICoordinateGeodetic &reference) const = 0;
+            virtual bool requestElevation(const Geo::ICoordinateGeodetic &reference, const Aviation::CCallsign &callsign) = 0;
 
             //! Elevations found/missed statistics
             //! \threadsafe
@@ -146,10 +150,13 @@ namespace BlackMisc
             void setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider) { this->setProvider(provider); }
 
             //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRange
-            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, bool autoRequest = false) const;
+            Geo::CElevationPlane findClosestElevationWithinRange(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const;
 
-            //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRange
-            bool requestElevation(const Geo::ICoordinateGeodetic &reference) const;
+            //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRangeOrRequest
+            Geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const Aviation::CCallsign &callsign);
+
+            //! \copydoc ISimulationEnvironmentProvider::requestElevation
+            bool requestElevation(const Geo::ICoordinateGeodetic &reference, const Aviation::CCallsign &callsign);
 
             //! \copydoc ISimulationEnvironmentProvider::getElevationsFoundMissed
             QPair<int, int> getElevationsFoundMissed() const;

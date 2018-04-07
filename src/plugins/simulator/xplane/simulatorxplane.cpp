@@ -114,10 +114,10 @@ namespace BlackSimPlugin
             m_watcher = nullptr;
         }
 
-        bool CSimulatorXPlane::requestElevation(const Geo::ICoordinateGeodetic &reference) const
+        bool CSimulatorXPlane::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
             //! \todo KB 2018-04 implement a function fetching the probe value (async) and write it back to provider
-            return ISimulator::requestElevation(reference);
+            return ISimulator::requestElevation(reference, callsign);
         }
 
         // convert xplane squawk mode to swift squawk mode

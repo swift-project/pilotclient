@@ -113,9 +113,6 @@ namespace BlackSimPlugin
             //! Destructor
             virtual ~CSimulatorFsxCommon();
 
-            //! SimConnect Callback
-            static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
-
             //! \name ISimulator implementations
             //! @{
             virtual bool connectTo() override;
@@ -134,7 +131,13 @@ namespace BlackSimPlugin
             virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
             //! @}
 
+            //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
+            virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
+
         protected:
+            //! SimConnect Callback
+            static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
+
             //! \name Interface implementations
             //! @{
             virtual bool isConnected() const override;
@@ -161,8 +164,30 @@ namespace BlackSimPlugin
             //! @}
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
+            //! Get new request id, overflow safe
+            SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimData();
+
+            //! Get new request id, overflow safe
+            SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForProbe();
+
+            //! Request for sim data (request in range of sim data)?
+            static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestIdSimDataStart + RequestSimDataOffset) && requestId < (RequestIdSimDataStart + RequestSimDataOffset + MaxSimObjects); }
+
+            //! Request for lights (request in range of lights)?
+            static bool isRequestForLights(DWORD requestId) { return requestId >= (RequestIdSimDataStart + RequestLightsOffset) && requestId < (RequestIdSimDataStart + RequestLightsOffset + MaxSimObjects); }
+
+            //! Request for probe (elevation)?
+            static bool isRequestForProbe(DWORD requestId) { return requestId >= RequestIdTerrainProbeStart && requestId <= RequestIdTerrainProbeEnd; }
+
             //! Register help
             static void registerHelp();
+
+            //! Callsign for pending request
+            BlackMisc::Aviation::CCallsign getCallsignForPendingProbeRequests(DWORD requestId, bool remove);
+
+            HANDLE m_hSimConnect = nullptr; //!< handle to SimConnect object
+            DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be overriden by specialized P3D function
+            QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests
 
         private:
             //! Reason for adding an aircraft
@@ -182,9 +207,12 @@ namespace BlackSimPlugin
             void dispatch();
 
             //! Implementation of add remote aircraft, which also handles FSX specific adding one by one
-            //! \remark main purpose of this function is to only add one aircraft at a time,
-            //!         and only if simulator is not paused/stopped
+            //! \remark main purpose of this function is to only add one aircraft at a time, and only if simulator is not paused/stopped
             bool physicallyAddRemoteAircraftImpl(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft, AircraftAddMode addMode);
+
+            //! Add AI object for terrain probe
+            //! \remark experimental
+            bool physicallyAddAITerrainProbe(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
 
             //! Remove aircraft no longer in provider
             //! \remark kind of cleanup function, in an ideal this should never need to cleanup something
@@ -223,9 +251,6 @@ namespace BlackSimPlugin
 
             //! Simulator is going down
             void onSimExit();
-
-            //! Get new request id, overflow safe
-            SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimData();
 
             //! Init when connected
             HRESULT initWhenConnected();
@@ -285,6 +310,9 @@ namespace BlackSimPlugin
             //! Format conversion
             SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
 
+            //! Format conversion
+            SIMCONNECT_DATA_INITPOSITION coordinateToFsxPosition(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
+
             //! Sync time with user's computer
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
 
@@ -315,12 +343,6 @@ namespace BlackSimPlugin
             //! Insert an new SimConnect object
             CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId);
 
-            //! Request for sim data (request in range of sim data)?
-            static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestSimDataOffset) && requestId < (RequestSimDataStart + RequestSimDataOffset + MaxSimObjects); }
-
-            //! Request for lights (request in range of lights)?
-            static bool isRequestForLights(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestLightsOffset) && requestId < (RequestSimDataStart + RequestLightsOffset + MaxSimObjects); }
-
             //! Encapsulates creating QString from FSX string data
             static QString fsxCharToQString(const char *fsxChar, int size = -1);
 
@@ -329,10 +351,12 @@ namespace BlackSimPlugin
             static constexpr int IgnoreReceiveExceptions = 10;       //!< skip exceptions when displayed more than x times
             static constexpr int MaxSimObjects = 10000;              //!< max.number of SimObjects at the same time
             static constexpr int MaxSendIdTraces = 10000;            //!< max.traces of send id
-            static constexpr int RequestSimDataStart = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
-            static constexpr int RequestSimDataEnd = RequestSimDataStart + MaxSimObjects - 1;
-            static constexpr int RequestSimDataOffset = 0 * MaxSimObjects;
-            static constexpr int RequestLightsOffset  = 1 * MaxSimObjects;
+            static constexpr int RequestIdSimDataStart = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
+            static constexpr int RequestIdSimDataEnd = RequestIdSimDataStart + MaxSimObjects - 1;
+            static constexpr int RequestSimDataOffset = 0 * MaxSimObjects; //!< range for sim data requests
+            static constexpr int RequestLightsOffset  = 1 * MaxSimObjects; //!< range for lights
+            static constexpr int RequestIdTerrainProbeStart = 2 * MaxSimObjects + RequestIdSimDataEnd + 1; //!< range for terrain probe
+            static constexpr int RequestIdTerrainProbeEnd = (RequestIdTerrainProbeStart + 1000) - 1;
             static constexpr int AddPendingAircraftIntervalMs = 20 * 1000;
             static constexpr int DispatchIntervalMs = 10;      //!< how often with run the FSX event queue
             static constexpr int DeferSimulatingFlagMs = 1500; //!< simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we defer detection
@@ -349,11 +373,11 @@ namespace BlackSimPlugin
             int  m_interpolationRequest = 0;        //!< current interpolation request
             int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa dispatch
             int  m_receiveExceptionCount = 0;       //!< exceptions
-            HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             QList<TraceFsxSendId> m_sendIdTraces;   //!< Send id traces for debugging
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
-            SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimDataStart); //!< request id, use obtainRequestId() to get id
+            SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);    //!< request id, use obtainRequestIdForSimData() to get id
+            SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForProbe() to get id
             BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
             QTimer m_addPendingAircraftTimer; //!< updating of aircraft awaiting to be added
         };

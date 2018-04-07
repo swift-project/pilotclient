@@ -31,6 +31,13 @@ namespace BlackSimPlugin
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                 QObject *parent = nullptr);
+
+            //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
+            virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
+
+        protected:
+            //! SimConnect Callback
+            static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
         };
 
         //! Listener for P3D

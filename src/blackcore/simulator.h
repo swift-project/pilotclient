@@ -182,7 +182,7 @@ namespace BlackCore
 
         //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
         //! \remark needs to be overridden if the concrete driver supports such an option
-        virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference) const override;
+        virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc BlackMisc::IProvider::asQObject
         virtual QObject *asQObject() override { return this; }
@@ -235,6 +235,9 @@ namespace BlackCore
         //! Request a console message (whatever the console maybe)
         void requestUiConsoleMessage(const QString &driverMessage, bool clear);
 
+        //! A requested elevation has been received
+        void receivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
+
     protected:
         //! Default constructor
         ISimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo,
@@ -267,6 +270,9 @@ namespace BlackCore
 
         //! Set elevation and CG in the providers
         void rememberElevationAndCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &cg);
+
+        //! A requested elevation has been received
+        virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Emit the combined status
         //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal status values no signal will be sent

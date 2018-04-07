@@ -91,7 +91,7 @@ namespace BlackMisc
             return delta;
         }
 
-        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, bool autoRequest) const
+        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
         {
             const CCoordinateGeodetic coordinate = this->getElevationCoordinates().findClosestWithinRange(reference, minRange(range));
             const bool found = !coordinate.isNull();
@@ -100,14 +100,24 @@ namespace BlackMisc
                 if (found)
                 {
                     m_elvFound++;
+                    return CElevationPlane(coordinate, reference); // plane with radis = distance to reference
                 }
                 else
                 {
                     m_elvMissed++;
-                    if (autoRequest) { this->requestElevation(reference); }
+                    return CElevationPlane::null();
                 }
             }
-            return CElevationPlane(coordinate, reference); // plane with radis = distance to reference
+        }
+
+        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRangeOrRequest(const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
+        {
+            const CElevationPlane ep = ISimulationEnvironmentProvider::findClosestElevationWithinRange(reference, range);
+            if (ep.isNull())
+            {
+                this->requestElevation(reference, callsign);
+            }
+            return ep;
         }
 
         QPair<int, int> ISimulationEnvironmentProvider::getElevationsFoundMissed() const
@@ -196,16 +206,22 @@ namespace BlackMisc
             this->clearCGs();
         }
 
-        CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, bool autoRequest) const
+        CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
         {
             if (!this->hasProvider()) { return CElevationPlane::null(); }
-            return this->provider()->findClosestElevationWithinRange(reference, range, autoRequest);
+            return this->provider()->findClosestElevationWithinRange(reference, range);
         }
 
-        bool CSimulationEnvironmentAware::requestElevation(const ICoordinateGeodetic &reference) const
+        CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRangeOrRequest(const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
+        {
+            if (!this->hasProvider()) { return CElevationPlane::null(); }
+            return this->provider()->findClosestElevationWithinRangeOrRequest(reference, range, callsign);
+        }
+
+        bool CSimulationEnvironmentAware::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
             if (!this->hasProvider()) { return false; }
-            return this->provider()->requestElevation(reference);
+            return this->provider()->requestElevation(reference, callsign);
         }
 
         QPair<int, int> CSimulationEnvironmentAware::getElevationsFoundMissed() const
