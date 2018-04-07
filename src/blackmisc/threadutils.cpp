@@ -16,14 +16,14 @@
 
 namespace BlackMisc
 {
-    bool CThreadUtils::isCurrentThreadObjectThread(QObject *toBeTested)
+    bool CThreadUtils::isCurrentThreadObjectThread(const QObject *toBeTested)
     {
         Q_ASSERT_X(toBeTested, Q_FUNC_INFO, "missing QObject");
         Q_ASSERT_X(toBeTested->thread(), Q_FUNC_INFO, "missing thread");
         return (QThread::currentThread() == toBeTested->thread());
     }
 
-    bool CThreadUtils::isApplicationThreadObjectThread(QObject *toBeTested)
+    bool CThreadUtils::isApplicationThreadObjectThread(const QObject *toBeTested)
     {
         Q_ASSERT_X(toBeTested, Q_FUNC_INFO, "missing QObject");
         Q_ASSERT_X(toBeTested->thread(), Q_FUNC_INFO, "missing thread");

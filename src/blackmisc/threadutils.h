@@ -29,11 +29,11 @@ namespace BlackMisc
 
         //! Is the current thread the QObject's thread?
         //! \remarks can be used as ASSERT check for threaded objects
-        static bool isCurrentThreadObjectThread(QObject *toBeTested);
+        static bool isCurrentThreadObjectThread(const QObject *toBeTested);
 
         //! Is the application thread the QObject's thread?
         //! \remarks can be used as ASSERT check for threaded objects
-        static bool isApplicationThreadObjectThread(QObject *toBeTested);
+        static bool isApplicationThreadObjectThread(const QObject *toBeTested);
 
         //! Is the current thread the Application thread?
         //! \remarks can be used as ASSERT check for threaded objects
