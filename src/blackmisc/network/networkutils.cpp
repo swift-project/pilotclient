@@ -50,7 +50,7 @@ namespace BlackMisc
     {
         int CNetworkUtils::getTimeoutMs()
         {
-            return 3000;
+            return 5000;
         }
 
         int CNetworkUtils::getLongTimeoutMs()

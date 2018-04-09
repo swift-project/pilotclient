@@ -123,6 +123,7 @@ namespace BlackGui
 
         void CAircraftModelStringCompleter::setCompleter(bool simChanged)
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             QStringList modelStrings;
             CompleterSourceFlag dataSource = None;
             QString simInfo = m_currentSimulator.toQString();
@@ -133,7 +134,7 @@ namespace BlackGui
                 dataSource = DB;
                 simInfo = QStringLiteral("DB models");
             }
-            else if (ui->rb_ModelSet->isChecked())
+            else if (ui->rb_ModelSet->isChecked() && sGui && sGui->getIContextSimulator())
             {
                 if (!simChanged && m_currentDataSource == ModelSet) { return; }
                 modelStrings = sGui->getIContextSimulator()->getModelSetCompleterStrings(true);

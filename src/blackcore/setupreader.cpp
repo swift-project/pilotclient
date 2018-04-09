@@ -76,8 +76,8 @@ namespace BlackCore
         const CGlobalSetup cachedSetup = m_setup.get();
         const bool cacheAvailable = cachedSetup.wasLoaded();
         msgs.push_back(cacheAvailable ?
-                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized and contains data") :
-                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized, but no data in cache"));
+                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Cached setup synchronized and contains data") :
+                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Cached setup synchronized, but no data in cache"));
 
         if (m_bootstrapMode == CacheOnly)
         {
@@ -218,7 +218,7 @@ namespace BlackCore
 
     CStatusMessageList CSetupReader::triggerReadSetup()
     {
-        if (m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
+        if (!sApp || m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
         if (!sApp->isInternetAccessible())
         {
             const CStatusMessage m(this, CStatusMessage::SeverityInfo, "No network/internet, will try to recover");
@@ -228,9 +228,10 @@ namespace BlackCore
             return msgs;
         }
 
-        const CUrl url(m_bootstrapUrls.obtainNextWorkingUrl());
+        const CUrl url(m_bootstrapUrls.obtainNextWorkingUrl(false, CNetworkUtils::getLongTimeoutMs()));
         if (url.isEmpty())
         {
+            m_bootstrapUrls.reset();
             const CStatusMessage m(this, CStatusMessage::SeverityError,
                                    "Cannot read setup, URLs: " + m_bootstrapUrls.toQString() +
                                    " failed URLs: " + m_bootstrapUrls.getFailedUrls().toQString());
