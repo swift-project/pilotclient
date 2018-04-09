@@ -220,6 +220,12 @@ namespace BlackCore
                 c = connect(this->getCContextSimulator(), &CContextSimulator::renderRestrictionsChanged,
                             this->getCContextNetwork(), &CContextNetwork::xCtxSimulatorRenderRestrictionsChanged);
                 Q_ASSERT(c);
+                c = connect(this->getCContextSimulator(), &CContextSimulator::simulatorStatusChanged,
+                            this->getCContextNetwork(), &CContextNetwork::xCtxSimulatorStatusChanged);
+                Q_ASSERT(c);
+
+                // set provider
+                this->getCContextNetwork()->setSimulationEnvironmentProvider(this->getCContextSimulator()->simulator());
             }
 
             // only if own aircraft runs locally
