@@ -44,6 +44,7 @@ namespace BlackMisc
         //! \remark use individual names to disambiguate
         void setProvider(PROVIDER *provider)
         {
+            if (m_provider == provider) { return; }
             if (m_provider) { m_lastProviderConnections.disconnectAll(); }
             m_provider = provider; // new provider
             IProvider *iProvider = dynamic_cast<IProvider *>(provider);

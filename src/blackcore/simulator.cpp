@@ -72,6 +72,11 @@ namespace BlackCore
         return s.join(", ");
     }
 
+    bool ISimulator::isAnyConnectedStatus(SimulatorStatus status)
+    {
+        return (status.testFlag(Connected) || status.testFlag(Simulating) || status.testFlag(Paused));
+    }
+
     ISimulator::ISimulator(
         const CSimulatorPluginInfo &pluginInfo, IOwnAircraftProvider *ownAircraftProvider,
         IRemoteAircraftProvider *remoteAircraftProvider, IWeatherGridProvider *weatherGridProvider, QObject *parent) :

@@ -34,6 +34,10 @@ namespace BlackMisc
             m_radius = this->calculateGreatCircleDistance(rangeCoordinate);
         }
 
+        CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CLength &radius) :
+            CCoordinateGeodetic(coordinate), m_radius(radius)
+        { }
+
         const CAltitude &CElevationPlane::getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const
         {
             return (isWithinRange(coordinate)) ? geodeticHeight() : CAltitude::null();

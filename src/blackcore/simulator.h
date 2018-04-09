@@ -207,6 +207,9 @@ namespace BlackCore
         //! Status to string
         static QString statusToString(SimulatorStatus status);
 
+        //! Any connected status?
+        static bool isAnyConnectedStatus(SimulatorStatus status);
+
     signals:
         //! Simulator combined status
         void simulatorStatusChanged(SimulatorStatus status);

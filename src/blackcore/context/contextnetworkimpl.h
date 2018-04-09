@@ -217,6 +217,9 @@ namespace BlackCore
             //! \remarks normally only for core facade internal usage
             CAirspaceMonitor *airspace() const { return m_airspace; }
 
+            //! Set the provider
+            void setSimulationEnvironmentProvider(BlackMisc::Simulation::ISimulationEnvironmentProvider *provider);
+
         private:
             CAirspaceMonitor           *m_airspace = nullptr;
             INetwork                   *m_network  = nullptr;

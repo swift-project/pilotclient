@@ -97,6 +97,12 @@ namespace BlackCore
             return this;
         }
 
+        void CContextNetwork::setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider)
+        {
+            if (m_airspace) { m_airspace->setSimulationEnvironmentProvider(provider); }
+            if (m_network) { m_network->setSimulationEnvironmentProvider(provider); }
+        }
+
         CContextNetwork::~CContextNetwork()
         {
             this->gracefulShutdown();
@@ -438,17 +444,14 @@ namespace BlackCore
         void CContextNetwork::xCtxSimulatorStatusChanged(int status)
         {
             const ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
-            if (m_network)
+            if (ISimulator::isAnyConnectedStatus(simStatus))
             {
-                if (simStatus.testFlag(ISimulator::Connected))
-                {
-                    const CContextSimulator *sim = this->getRuntime()->getCContextSimulator();
-                    m_network->setSimulationEnvironmentProvider(sim ? sim->simulator() : nullptr);
-                }
-                else
-                {
-                    m_network->setSimulationEnvironmentProvider(nullptr);
-                }
+                const CContextSimulator *sim = this->getRuntime()->getCContextSimulator();
+                this->setSimulationEnvironmentProvider(sim ? sim->simulator() : nullptr);
+            }
+            else
+            {
+                this->setSimulationEnvironmentProvider(nullptr);
             }
         }
 
