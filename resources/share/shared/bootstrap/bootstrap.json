@@ -29,7 +29,11 @@
         }]
     },
     "sharedUrls": {
-        "containerbase": [{
+        "containerbase": [
+		{
+            "url": "https://datastore.swift-project.net/shared"
+        },
+		{
             "url": "https://datastore.swift-project.org/shared"
         },
         {

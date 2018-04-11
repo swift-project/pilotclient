@@ -3,9 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="style.css">
-<title>Datenspeicherung</title>
+<title>Stored data/Datenspeicherung</title>
 </head>
 <body>
+	<h1>Stored data</h1>
+	<table>
+		<tr>
+			<th colspan="2">Which private data do we store at "swift" and why?</th>
+		</tr>
+		<tr>
+			<th>What do we save?</th>
+			<th>Why?</th>
+		</tr>
+		<tr>
+			<td>
+			User accounts: The user accounts contain the real name (z.B. Joe Doe),
+			email, the Id number of the associated network (e.g. VATSIM), country of the user, 
+			user name (user account).
+			
+			With each login we log date and time, origin of login (e.g. via browser, the swift client),
+			furthermore creation time of the user account.
+			
+			Hint: User account in swift are normally subject of self administation, so the user can 
+			change the profile.
+			</td>
+			<td>
+			The Email address is required for notifcation such as forgotten password.
+			The unique id is used for SSO (single sign on) with third party authentication systems (e.g. VATSIM)
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Change history: We store a change history who and when change something.
+			Overall picture: We deal with flight simulation data,
+			no high security or critical data.
+			</td>
+			<td>
+			We store the change history in case we need to crosscheck and verify information.
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2">What data are stored in the developer area of phabricator?</th>
+		</tr>
+		<tr>
+			<th>What do we save?</th>
+			<th>Why?</th>
+		</tr>
+		<tr>
+			<td>
+			User accounts consists of real name (e.g. Joe Doe), email, the id number of the associated
+			network (e.g. VATSIM), user name (user account). Passwords are not saved in clear text
+			and admistered by the user himself.
+			
+			Hint: Users can change their profile (see below)
+			</td>
+			<td>
+			Needed for user administration and change history.
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Change history: All changes of tasks, bug reports, software artifacts are logged.
+			(who and when was the changed applied?).
+			</td>
+			<td>
+			In a software project we need to know, who and why a software omponent has been changed.
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Version control: We use <a href="https://de.wikipedia.org/wiki/Git">git</a> as version control system.
+			The commit history shows who has changed which part in swift and when this has happened.
+			</td>
+			<td>
+			Further details can be found in the git doscumentation.
+			</td>
+		<tr>	
+		<tr>
+			<th colspan="2">Where can I see/verify my data?</th>
+		</tr>
+		<tr>
+			<th>Self administration</th>
+			<th>Why?</th>
+		</tr>
+		<tr>
+			<td>
+			Your master data (profile) in <a href="https://datastore.swift-project.org">datastore</a> and in <a href="https://dev.swift-project.org/">Phabricator</a>
+			can be self administered. For VATSIM a simplified Single-Sign-On has been established, 
+			sharring the VATSIM data with swift (the password is NOT transferred).
+			</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="2">Recommendations</th>
+		</tr>
+		<tr>
+			<th>email and passwords</th>
+			<th>Why?</th>
+		</tr>
+		<tr>
+			<td>
+			If possible use an individual email address for swift only.
+			Please use safe passwords, but none you use otherwise.
+			</td>
+			<td>
+			In case of any security breach you can lock/dismiss this individual email
+			and password and no other accounts/systems can be compromissed. 
+			</td>
+		</tr>
+	</table>
+
+
 	<h1>Datenspeicherung</h1>
 	<table>
 		<tr>
@@ -109,7 +218,7 @@
 			</td>
 			<td>
 			Im Fall eines Datenlecks bei swift können sie Ihre email löschen/sperren und
-			aus das Passwort kann nicht bei einem anderen Ihrer Konten verwendet werden. 
+			das Passwort kann nicht bei einem anderen Ihrer Konten verwendet werden. 
 			</td>
 		</tr>
 	</table>
