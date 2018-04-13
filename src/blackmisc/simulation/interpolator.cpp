@@ -43,17 +43,22 @@ namespace BlackMisc
             // normally when created m_cg is still null since there is no CG in the provider yet
 
             if (simEnvProvider) { this->setSimulationEnvironmentProvider(simEnvProvider); }
-            if (setupProvider) { this->setInterpolationSetupProvider(setupProvider); }
+            if (setupProvider)  { this->setInterpolationSetupProvider(setupProvider); }
             if (remoteAircraftProvider)
             {
                 this->setRemoteAircraftProvider(remoteAircraftProvider);
-                QTimer::singleShot(2500, [ = ]
-                {
-                    if (m_model.hasModelString()) { return; } // set in-between
-                    this->initCorrespondingModel();
-                });
+                QObject::connect(&m_initTimer, &QTimer::timeout, [ = ] { this->deferredInit(); });
+                m_initTimer.setSingleShot(true);
+                m_initTimer.start(2500);
             }
             this->attachLogger(logger);
+        }
+
+        template<typename Derived>
+        void CInterpolator<Derived>::deferredInit()
+        {
+            if (m_model.hasModelString()) { return; } // set in-between
+            this->initCorrespondingModel();
         }
 
         template<typename Derived>
@@ -268,15 +273,10 @@ namespace BlackMisc
         template<typename Derived>
         CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts(qint64 currentTimeMsSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log) const
         {
-            CAircraftParts parts = this->getInterpolatedParts(currentTimeMsSinceEpoch, setup, partsStatus, log);
+            CAircraftParts parts;
+            if (setup.isAircraftPartsEnabled()) { parts = this->getInterpolatedParts(currentTimeMsSinceEpoch, setup, partsStatus, log); }
             if (!partsStatus.isSupportingParts())
             {
-                if (!m_model.hasModelString())
-                {
-                    const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(m_callsign);
-                    // m_model = aircraft.getModel();
-                }
-
                 // check if model has been thru model matching
                 if (m_model.hasModelString())
                 {

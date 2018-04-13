@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QString>
 #include <QtGlobal>
+#include <QTimer>
 
 namespace BlackMisc
 {
@@ -102,6 +103,7 @@ namespace BlackMisc
             PhysicalQuantities::CLength  m_cg { 0, nullptr } ; //!< fetched once, stays constant
             Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() }; //!< latest interpolation
             CAircraftModel m_model; //!< corresponding model
+            qint64 m_situationsLastModifiedUsed { -1 }; //!< based on situations last updated
 
             //! Equal double values?
             static bool doubleEpsilonEqual(double d1, double d2)
@@ -138,9 +140,13 @@ namespace BlackMisc
 
         private:
             CInterpolationLogger *m_logger = nullptr;
+            QTimer m_initTimer; //!< timer to init model, will be deleted when interpolator is deleted and cancel the call
 
             //! Log parts
             void logParts(qint64 timestamp, const Aviation::CAircraftParts &parts, int partsNo, bool empty, bool log) const;
+
+            //! Deferred init
+            void deferredInit();
 
             Derived *derived() { return static_cast<Derived *>(this); }
             const Derived *derived() const { return static_cast<const Derived *>(this); }
