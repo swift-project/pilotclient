@@ -94,6 +94,12 @@ namespace BlackSimPlugin
                 const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
                 BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;
 
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedOrGuessedParts
+            BlackMisc::Aviation::CAircraftParts getInterpolatedOrGuessedParts(
+                qint64 currentTimeSinceEpoc,
+                const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
+                BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;
+
             //! Interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 

@@ -693,17 +693,16 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
                 // setup
-                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
-                const bool useAircraftParts = aircraftWithParts.contains(callsign) && setup.isAircraftPartsEnabled();
+                const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
                 const bool logInterpolationAndParts = setup.logInterpolation();
-                CPartsStatus partsStatus(useAircraftParts);
 
                 // interpolated situation
                 CInterpolationStatus interpolatorStatus;
                 const CAircraftSituation interpolatedSituation = xplaneAircraft.getInterpolatedSituation(currentTimestamp, setup, interpolatorStatus);
 
                 // perts
-                const CAircraftParts parts = useAircraftParts ? xplaneAircraft.getInterpolatedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts) : CAircraftParts::guessedParts(interpolatedSituation, xplaneAircraft.isVtol(), xplaneAircraft.getEngineCount());
+                CPartsStatus partsStatus;
+                const CAircraftParts parts = xplaneAircraft.getInterpolatedOrGuessedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts);
 
                 if (interpolatorStatus.hasValidSituation())
                 {
@@ -727,10 +726,7 @@ namespace BlackSimPlugin
                             << interpolatorStatus.toQString();
                 }
 
-                if (useAircraftParts)
-                {
-                    this->updateRemoteAircraftParts(xplaneAircraft, parts, partsStatus);
-                }
+                this->updateRemoteAircraftParts(xplaneAircraft, parts, partsStatus);
             } // all callsigns
 
             const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;

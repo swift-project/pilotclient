@@ -78,6 +78,15 @@ namespace BlackSimPlugin
             return m_interpolator->getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
         }
 
+        CAircraftParts CXPlaneMPAircraft::getInterpolatedOrGuessedParts(
+            qint64 currentTimeSinceEpoc,
+            const CInterpolationAndRenderingSetupPerCallsign &setup,
+            CPartsStatus &partsStatus, bool log) const
+        {
+            Q_ASSERT(m_interpolator);
+            return m_interpolator->getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+        }
+
         CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const
         {
             return CCallsignSet(this->keys());
