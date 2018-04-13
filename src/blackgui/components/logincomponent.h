@@ -201,6 +201,9 @@ namespace BlackGui
             //! Tab widget (server) changed
             void onServerTabWidgetChanged(int index);
 
+            //! Has contexts
+            bool hasContexts();
+
             static const int OverlayMessageMs = 5000;
             QScopedPointer<Ui::CLoginComponent> ui;
             QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;

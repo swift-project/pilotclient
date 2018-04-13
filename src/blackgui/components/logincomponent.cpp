@@ -385,6 +385,15 @@ namespace BlackGui
             ui->editor_Pilot->setUser(server.getUser(), true);
         }
 
+        bool CLoginComponent::hasContexts()
+        {
+            if (!sApp || !sApp->supportsContexts()) { return false; }
+            if (!sApp->getIContextSimulator()) { return false; }
+            if (!sApp->getIContextNetwork()) { return false; }
+            if (!sApp->getIContextOwnAircraft()) { return false; }
+            return true;
+        }
+
         CLoginComponent::CGuiAircraftValues CLoginComponent::getAircraftValuesFromGui() const
         {
             CGuiAircraftValues values;
@@ -435,9 +444,7 @@ namespace BlackGui
 
         void CLoginComponent::setOwnModelAndIcaoValues()
         {
-            Q_ASSERT(sGui->getIContextOwnAircraft());
-            Q_ASSERT(sGui->getIContextSimulator());
-
+            if (!this->hasContexts()) { return; }
             CAircraftModel model;
             const bool simulating = sGui->getIContextSimulator() &&
                                     (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
@@ -505,7 +512,7 @@ namespace BlackGui
 
         bool CLoginComponent::validateAircraftValues()
         {
-            const CGuiAircraftValues values = getAircraftValuesFromGui();
+            const CGuiAircraftValues values = this->getAircraftValuesFromGui();
 
             const bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
             ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
