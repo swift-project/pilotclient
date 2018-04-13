@@ -204,6 +204,18 @@ namespace BlackSimPlugin
             return CSimConnectObject();
         }
 
+        CSimConnectObject CSimConnectObjects::markObjectAsAdded(DWORD objectId)
+        {
+            for (const CCallsign &cs : this->keys())
+            {
+                CSimConnectObject &simObject = (*this)[cs];
+                if (simObject.getObjectId() != objectId) { continue; }
+                simObject.setConfirmedAdded(true);
+                return simObject;
+            }
+            return CSimConnectObject();
+        }
+
         CSimConnectObject CSimConnectObjects::getSimObjectForRequestId(DWORD requestId) const
         {
             for (const CSimConnectObject &simObject : this->values())
@@ -215,8 +227,15 @@ namespace BlackSimPlugin
 
         bool CSimConnectObjects::isKnownSimObjectId(DWORD objectId) const
         {
-            const CSimConnectObject simObject(getSimObjectForObjectId(objectId));
+            const CSimConnectObject simObject(this->getSimObjectForObjectId(objectId));
             return simObject.hasValidRequestAndObjectId() && objectId == simObject.getObjectId();
+        }
+
+        bool CSimConnectObjects::removeByObjectId(DWORD objectId)
+        {
+            const CSimConnectObject simObject(this->getSimObjectForObjectId(objectId));
+            const int c = this->remove(simObject.getCallsign());
+            return c > 0;
         }
 
         bool CSimConnectObjects::containsPendingAdded() const
@@ -257,6 +276,16 @@ namespace BlackSimPlugin
             return c;
         }
 
+        int CSimConnectObjects::countConfirmedAdded()
+        {
+            int c = 0;
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.isConfirmedAdded()) { c++; }
+            }
+            return c;
+        }
+
         CCallsignSet CSimConnectObjects::getPendingAddedCallsigns() const
         {
             CCallsignSet callsigns;
@@ -275,6 +304,25 @@ namespace BlackSimPlugin
                 if (simObject.isPendingRemoved()) { callsigns.push_back(simObject.getCallsign()); }
             }
             return callsigns;
+        }
+
+        QList<CSimConnectObject> CSimConnectObjects::getByType(CSimConnectObject::SimObjectType type) const
+        {
+            QList<CSimConnectObject> objs;
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.getType() == type) { objs.push_back(simObject); }
+            }
+            return objs;
+        }
+
+        bool CSimConnectObjects::containsType(CSimConnectObject::SimObjectType type) const
+        {
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.getType() == type) { return true; }
+            }
+            return false;
         }
 
         void CSimConnectObjects::toggleInterpolatorModes()

@@ -26,8 +26,18 @@ namespace BlackSimPlugin
         class CSimConnectObject
         {
         public:
+            //! Type
+            enum SimObjectType
+            {
+                Aircraft,
+                Probe
+            };
+
             //! Constructor
             CSimConnectObject();
+
+            //! Constructor
+            CSimConnectObject(SimObjectType type) : m_type(type) {}
 
             //! Constructor providing initial situation/parts
             CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
@@ -47,6 +57,12 @@ namespace BlackSimPlugin
 
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
+
+            //! Object type
+            SimObjectType getType() const { return m_type; }
+
+            //! Set the type
+            void setType(SimObjectType type) { m_type = type; }
 
             //! Set the aircraft
             void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) { m_aircraft = aircraft; }
@@ -179,6 +195,7 @@ namespace BlackSimPlugin
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
+            SimObjectType m_type = Aircraft;
             DWORD m_requestId = 0;
             DWORD m_objectId  = 0;
             bool m_validRequestId = false;
@@ -207,11 +224,17 @@ namespace BlackSimPlugin
             //! Get object per object id
             CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
 
+            //! Mark as added if existing
+            CSimConnectObject markObjectAsAdded(DWORD objectId);
+
             //! Get object per request id
             CSimConnectObject getSimObjectForRequestId(DWORD requestId) const;
 
             //! Is the object id one of our AI objects?
             bool isKnownSimObjectId(DWORD objectId) const;
+
+            //! Remove by id
+            bool removeByObjectId(DWORD objectId);
 
             //! Pending add condition
             bool containsPendingAdded() const;
@@ -224,6 +247,9 @@ namespace BlackSimPlugin
 
             //! Number of pending removed
             int countPendingRemoved() const;
+
+            //! Objects not pending
+            int countConfirmedAdded();
 
             //! Get all callsigns
             BlackMisc::Aviation::CCallsignSet getAllCallsigns() const;
@@ -239,6 +265,12 @@ namespace BlackSimPlugin
 
             //! Callsigns of pending removed callsigns
             BlackMisc::Aviation::CCallsignSet getPendingRemovedCallsigns() const;
+
+            //! Get by type
+            QList<CSimConnectObject> getByType(CSimConnectObject::SimObjectType type) const;
+
+            //! Contains object of type
+            bool containsType(CSimConnectObject::SimObjectType type) const;
 
             //! Toggle interpolator modes
             void toggleInterpolatorModes();
