@@ -345,9 +345,12 @@ namespace BlackMisc
             CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
             const int updated = situations.setGroundElevationChecked(elevation);
             if (updated < 1) { return false; }
+            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+
             {
                 QWriteLocker l(&m_lockSituations);
                 m_situationsByCallsign[callsign] = situations;
+                m_situationsLastModified[callsign] = ts;
             }
 
             // aircraft updates

@@ -19,11 +19,13 @@
 #include "blackmisc/range.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessage.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QDateTime>
 #include <QList>
 #include <array>
 
+using namespace BlackConfig;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
@@ -90,7 +92,7 @@ namespace BlackMisc
         CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(
             qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CInterpolationStatus &status, SituationLog &log) const
+            CInterpolationStatus &status, SituationLog &log)
         {
             Q_UNUSED(setup);
             status.reset();
@@ -98,8 +100,14 @@ namespace BlackMisc
             // with the latest updates of T243 the order and the offsets are supposed to be correct
             // so even mixing fast/slow updates shall work
             const CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign); // if needed, we could also copy here
-            BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
-            Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+            m_situationsLastModifiedUsed = this->situationsLastModified(m_callsign);
+
+            // checks
+            if (!CBuildConfig::isReleaseBuild())
+            {
+                BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+                Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+            }
 
             // find the first situation earlier than the current time
             const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
@@ -150,17 +158,22 @@ namespace BlackMisc
                 Q_ASSERT(oldSituation.getAdjustedMSecsSinceEpoch() < newSituation.getAdjustedMSecsSinceEpoch());
             }
 
-            // take hint into account to calculate elevation and above ground level
-            // do not call for XP (lazy init)
-            const CElevationPlane planeOld = this->findClosestElevationWithinRange(oldSituation, CElevationPlane::singlePointRadius());
-            const CElevationPlane planeNew = this->findClosestElevationWithinRange(newSituation, CElevationPlane::singlePointRadius());
-            oldSituation.setGroundElevationChecked(planeOld);
-            newSituation.setGroundElevationChecked(planeNew);
+            // adjust ground if required
+            if (!oldSituation.canLikelySkipNearGroundInterpolation() && !oldSituation.hasGroundElevation())
+            {
+                const CElevationPlane planeOld = this->findClosestElevationWithinRange(oldSituation, CElevationPlane::singlePointRadius());
+                oldSituation.setGroundElevationChecked(planeOld);
+            }
+            if (!newSituation.canLikelySkipNearGroundInterpolation() && !newSituation.hasGroundElevation())
+            {
+                const CElevationPlane planeNew = this->findClosestElevationWithinRange(newSituation, CElevationPlane::singlePointRadius());
+                newSituation.setGroundElevationChecked(planeNew);
+            }
 
             CAircraftSituation currentSituation(oldSituation); // also sets ground elevation if available
 
             // Time between start and end packet
-            const double sampleDeltaTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - oldSituation.getAdjustedMSecsSinceEpoch();
+            const qint64 sampleDeltaTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - oldSituation.getAdjustedMSecsSinceEpoch();
             Q_ASSERT_X(sampleDeltaTimeMs >= 0, Q_FUNC_INFO, "Negative delta time");
             log.interpolator = 'l';
 

@@ -32,9 +32,9 @@ namespace BlackMisc
         public:
             //! Constructor
             CInterpolatorLinear(const Aviation::CCallsign &callsign,
-                                ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                                ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteAircraftProvider,
                                 CInterpolationLogger *logger = nullptr) :
-                CInterpolator(callsign, p1, p2, p3, logger) {}
+                CInterpolator(callsign, simEnvProvider, setupProvider, remoteAircraftProvider, logger) {}
 
             //! Linear function that performs the actual interpolation
             class Interpolant
@@ -71,7 +71,7 @@ namespace BlackMisc
             };
 
             //! Get the interpolant for the given time point
-            Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status, SituationLog &log) const;
+            Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status, SituationLog &log);
         };
     } // ns
 } // ns
