@@ -66,35 +66,50 @@ namespace BlackMisc
             CAircraftEngineList engines;
             parts.setLights(CAircraftLights::guessedLights(situation));
 
+            // set some reasonable defaults
             const bool onGround = situation.isOnGround();
-            if (onGround)
+            parts.setGearDown(onGround);
+            engines.initEngines(engineNumber, !onGround || situation.isMoving());
+
+            if (situation.hasGroundElevation())
             {
-                parts.setGearDown(true);
-                engines.initEngines(engineNumber, situation.isMoving());
+                const double aGroundFt = situation.getHeightAboveGround().value(CLengthUnit::ft());
+                if (aGroundFt < 1000)
+                {
+                    parts.setGearDown(true);
+                    parts.setFlapsPercent(25);
+                }
+                else if (aGroundFt < 2000)
+                {
+                    parts.setGearDown(true);
+                    parts.setFlapsPercent(10);
+                }
+                else
+                {
+                    parts.setGearDown(false);
+                    parts.setFlapsPercent(0);
+                }
             }
             else
             {
-                parts.setGearDown(false);
-                engines.initEngines(engineNumber, true);
-                if (vtol)
+                if (!situation.hasInboundGroundInformation())
                 {
-
-                }
-                else if (situation.hasGroundElevation())
-                {
-                    const double aGroundFt = situation.getHeightAboveGround().value(CLengthUnit::ft());
-                    if (aGroundFt < 1000)
+                    // the ground flag is not reliable and we have no ground elevation
+                    if (situation.getOnGroundDetails() == CAircraftSituation::OnGroundByGuessing)
                     {
-                        parts.setGearDown(true);
-                        parts.setFlapsPercent(25);
+                        // should be OK
                     }
-                    else if (aGroundFt < 2000)
+                    else
                     {
-                        parts.setGearDown(true);
-                        parts.setFlapsPercent(10);
+                        if (!vtol)
+                        {
+                            const bool gearDown = situation.getGroundSpeed().value(CSpeedUnit::kts()) < 60;
+                            parts.setGearDown(gearDown);
+                        }
                     }
                 }
             }
+
             parts.setEngines(engines);
             parts.setPartsDetails(GuessedParts);
             return parts;

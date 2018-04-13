@@ -129,7 +129,7 @@ namespace BlackMisc
         {
             static const QString html = "Model: %1 changed: %2%3Simulator: %4 Mode: %5 Distributor: %6%7Aircraft ICAO: %8%9Livery: %10";
             return html
-                   .arg(this->getModelStringAndDbKey(), this->getFormattedUtcTimestampYmdhms() , separator,
+                   .arg(this->getModelStringAndDbKey(), this->getFormattedUtcTimestampYmdhms(), separator,
                         this->getSimulator().toQString(true), this->getModelModeAsString(), this->getDistributor().getIdAndDescription(), separator,
                         this->getAircraftIcaoCode().asHtmlSummary(), separator)
                    .arg(this->getLivery().asHtmlSummary("&nbsp;")).replace(" ", "&nbsp;");
@@ -692,19 +692,30 @@ namespace BlackMisc
             return !changed;
         }
 
-        QString CAircraftModel::modelTypeToString(CAircraftModel::ModelType type)
+        const QString &CAircraftModel::modelTypeToString(CAircraftModel::ModelType type)
         {
+            static const QString queried("queried");
+            static const QString matching("matching");
+            static const QString db("database");
+            static const QString def("map.default");
+            static const QString ownSim("own simulator");
+            static const QString set("set");
+            static const QString fsinn("FSInn");
+            static const QString probe("probe");
+            static const QString unknown("unknown");
+
             switch (type)
             {
-            case TypeQueriedFromNetwork: return "queried";
-            case TypeModelMatching: return "matching";
-            case TypeDatabaseEntry: return "database";
-            case TypeModelMatchingDefaultModel: return "map. default";
-            case TypeOwnSimulatorModel: return "own simulator";
-            case TypeManuallySet: return "set";
-            case TypeFSInnData: return "FSInn";
+            case TypeQueriedFromNetwork: return queried;
+            case TypeModelMatching: return matching;
+            case TypeDatabaseEntry: return db;
+            case TypeModelMatchingDefaultModel: return def;
+            case TypeOwnSimulatorModel: return ownSim;
+            case TypeManuallySet: return set;
+            case TypeFSInnData: return fsinn;
+            case TypeTerrainProbe: return probe;
             case TypeUnknown:
-            default: return "unknown";
+            default: return unknown;
             }
         }
 

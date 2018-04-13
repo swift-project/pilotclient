@@ -65,7 +65,8 @@ namespace BlackMisc
                 TypeDatabaseEntry,             //!< used along with mapping definition
                 TypeManuallySet,               //!< manually set, e.g. from GUI
                 TypeOwnSimulatorModel,         //!< represents own simulator model
-                TypeVPilotRuleBased            //!< based on a vPilot rule
+                TypeVPilotRuleBased,           //!< based on a vPilot rule
+                TypeTerrainProbe               //!< peudo aircraft used for terrain probing (FSX)
             };
 
             //! Mode, decides if a model is supposed to be used in the model set for model matching
@@ -263,7 +264,7 @@ namespace BlackMisc
             ModelType getModelType() const { return m_modelType; }
 
             //! Model type
-            QString getModelTypeAsString() const { return modelTypeToString(getModelType()); }
+            const QString &getModelTypeAsString() const { return modelTypeToString(getModelType()); }
 
             //! Set type
             void setModelType(ModelType type) { m_modelType = type; }
@@ -404,7 +405,7 @@ namespace BlackMisc
             // ---------------- end file related functions --------------
 
             //! Model type
-            static QString modelTypeToString(ModelType type);
+            static const QString &modelTypeToString(ModelType type);
 
             //! File path used for DB
             static QString normalizeFileNameForDb(const QString &filePath);
@@ -430,16 +431,16 @@ namespace BlackMisc
             Aviation::CCallsign m_callsign;             //!< aircraft's callsign if any
             Aviation::CAircraftIcaoCode m_aircraftIcao; //!< ICAO code if available
             Aviation::CLivery m_livery;                 //!< livery information
-            CSimulatorInfo m_simulator;                            //!< model for given simulator
-            CDistributor   m_distributor;                          //!< who designed or distributed the model
-            QString        m_modelString;                          //!< Simulator model key, unique
-            QString        m_name;                                 //!< Model name
-            QString        m_description;                          //!< descriptive text
-            QString        m_fileName;                             //!< file name
-            QString        m_iconPath;                             //!< a file representing the aircraft as icon
-            qint64         m_fileTimestamp = -1;                   //!< file timestamp of originating file (if applicable)
-            ModelType      m_modelType = TypeUnknown;              //!< model string is coming representing ...?
-            ModelMode      m_modelMode = Include;                  //!< model mode (include / exclude)
+            CSimulatorInfo m_simulator;                 //!< model for given simulator
+            CDistributor   m_distributor;               //!< who designed or distributed the model
+            QString        m_modelString;               //!< Simulator model key, unique
+            QString        m_name;                      //!< Model name
+            QString        m_description;               //!< descriptive text
+            QString        m_fileName;                  //!< file name
+            QString        m_iconPath;                  //!< a file representing the aircraft as icon
+            qint64         m_fileTimestamp = -1;        //!< file timestamp of originating file (if applicable)
+            ModelType      m_modelType = TypeUnknown;   //!< model string is coming representing ...?
+            ModelMode      m_modelMode = Include;       //!< model mode (include / exclude)
 
             BLACK_METACLASS(
                 CAircraftModel,

@@ -703,6 +703,12 @@ namespace BlackMisc
             return i;
         }
 
+        const CAircraftIcaoCode &CAircraftIcaoCode::unassignedIcao()
+        {
+            static const CAircraftIcaoCode z(getUnassignedDesignator());
+            return z;
+        }
+
         const QStringList &CAircraftIcaoCode::getSpecialDesignators()
         {
             static const QStringList s({ "ZZZZ", "SHIP", "BALL", "GLID", "ULAC", "GYRO", "UHEL" });

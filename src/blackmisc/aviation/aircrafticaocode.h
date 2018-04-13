@@ -309,6 +309,9 @@ namespace BlackMisc
             //! The unassigned designator ("ZZZZ")
             static const QString &getUnassignedDesignator();
 
+            //! Unassigned ICAO code "ZZZZ"
+            static const CAircraftIcaoCode &unassignedIcao();
+
             //! List of the special designators ("ZZZZ", "UHEL", ...)
             static const QStringList &getSpecialDesignators();
 
