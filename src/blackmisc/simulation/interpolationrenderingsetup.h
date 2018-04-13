@@ -60,6 +60,9 @@ namespace BlackMisc
             //! Set enabled aircraft parts
             bool setEnabledAircraftParts(bool enabled);
 
+            //! Mask enabled aircraft parts
+            bool maskEnabledAircraftParts(bool mask);
+
             //! Aircraft parts enabled
             bool isAircraftPartsEnabled() const { return m_enabledAircraftParts; }
 

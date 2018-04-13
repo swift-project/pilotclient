@@ -51,6 +51,12 @@ namespace BlackMisc
             return true;
         }
 
+        bool CInterpolationAndRenderingSetupBase::maskEnabledAircraftParts(bool mask)
+        {
+            const bool masked = mask && m_enabledAircraftParts;
+            return this->setEnabledAircraftParts(masked);
+        }
+
         CVariant CInterpolationAndRenderingSetupBase::propertyByIndex(const CPropertyIndex &index) const
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -89,11 +95,11 @@ namespace BlackMisc
             Q_UNUSED(i18n);
             return
                 QStringLiteral("Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
-                QStringLiteral(" log interpolation: ") % boolToYesNo(m_logInterpolation) %
-                QStringLiteral(" force full interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
-                QStringLiteral(" parts: ") % boolToYesNo(m_enabledAircraftParts) %
-                QStringLiteral(" gnd: ") % boolToYesNo(m_enabledGndFlag) %
-                QStringLiteral(" send gnd: ") % boolToYesNo(m_sendGndToSim);
+                QStringLiteral(" | log interpolation: ") % boolToYesNo(m_logInterpolation) %
+                QStringLiteral(" | force full interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
+                QStringLiteral(" | enable parts: ") % boolToYesNo(m_enabledAircraftParts) %
+                QStringLiteral(" | enable gnd: ") % boolToYesNo(m_enabledGndFlag) %
+                QStringLiteral(" | send gnd: ") % boolToYesNo(m_sendGndToSim);
         }
 
         bool CInterpolationAndRenderingSetupBase::canHandleIndex(int index)
