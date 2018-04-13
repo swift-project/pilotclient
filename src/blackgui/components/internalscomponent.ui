@@ -375,7 +375,7 @@
                 <string>Request from network</string>
                </property>
                <property name="text">
-                <string>request (network)</string>
+                <string> request (network) </string>
                </property>
               </widget>
              </item>

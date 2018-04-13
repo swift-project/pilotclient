@@ -44,7 +44,7 @@ namespace BlackMisc
             //! \threadsafe
             Geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const Geo::ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range, const Aviation::CCallsign &callsign);
 
-            //! Request elevation, there is no guaranteed the requested elevation will be available in the provider
+            //! Request elevation, there is no guarantee the requested elevation will be available in the provider
             //! \threadsafe
             virtual bool requestElevation(const Geo::ICoordinateGeodetic &reference, const Aviation::CCallsign &callsign) = 0;
 

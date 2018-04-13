@@ -100,7 +100,7 @@ namespace BlackMisc
                 if (found)
                 {
                     m_elvFound++;
-                    return CElevationPlane(coordinate, reference); // plane with radis = distance to reference
+                    return CElevationPlane(coordinate, reference); // plane with radius = distance to reference
                 }
                 else
                 {

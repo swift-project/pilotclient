@@ -159,8 +159,8 @@ namespace BlackCore
             QString modelString;
         };
 
-        BlackMisc::Aviation::CAtcStationList          m_atcStationsOnline; //!< online ATC stations
-        BlackMisc::Aviation::CAtcStationList          m_atcStationsBooked; //!< booked ATC stations
+        BlackMisc::Aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
+        BlackMisc::Aviation::CAtcStationList m_atcStationsBooked; //!< booked ATC stations
         QMap<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
@@ -193,6 +193,7 @@ namespace BlackCore
         const BlackMisc::Network::CServer getConnectedServer() const;
 
         //! Supports VATSIM data file
+        //! \remark depends on currently connected Ecosystem
         bool supportsVatsimDataFile() const;
 
         //! Distance calculation
