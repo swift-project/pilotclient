@@ -105,15 +105,27 @@ namespace BlackMisc
             Q_UNUSED(setup);
 
             // recalculate derivatives only if they changed
+            bool recalculate = currentTimeMsSinceEpoc > m_nextSampleAdjustedTime; // new step
+            const qint64 lastModified = this->situationsLastModified(m_callsign);
+            if (!recalculate && (lastModified > m_situationsLastModifiedUsed) && this->isAnySituationNearGroundRelevant())
+            {
+                recalculate = this->areAnyElevationsMissing();
+            }
+
             int situationsSize = -1;
-            if (currentTimeMsSinceEpoc > m_nextSampleAdjustedTime)
+            if (recalculate)
             {
                 // with the latest updates of T243 the order and the offsets are supposed to be correct
                 // so even mixing fast/slow updates shall work
                 const CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
                 situationsSize = validSituations.size();
-                Q_ASSERT_X(validSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
-                Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+                m_situationsLastModifiedUsed = lastModified;
+
+                if (!CBuildConfig::isReleaseBuild())
+                {
+                    Q_ASSERT_X(validSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+                    Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+                }
 
                 // find the first situation earlier than the current time
                 const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
@@ -126,9 +138,9 @@ namespace BlackMisc
 
                 const std::array<std::array<double, 3>, 3> normals {{ m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() }};
                 PosArray pa;
-                pa.x = {{ normals[0][0], normals[1][0], normals[2][0] }}; // oldest
+                pa.x = {{ normals[0][0], normals[1][0], normals[2][0] }}; // oldest -> latest
                 pa.y = {{ normals[0][1], normals[1][1], normals[2][1] }};
-                pa.z = {{ normals[0][2], normals[1][2], normals[2][2] }}; // latest
+                pa.z = {{ normals[0][2], normals[1][2], normals[2][2] }};
                 pa.t = {{ static_cast<double>(m_s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[2].getAdjustedMSecsSinceEpoch()) }};
 
                 pa.dx = getDerivatives(pa.t, pa.x);
