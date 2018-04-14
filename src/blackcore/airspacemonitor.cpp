@@ -922,7 +922,8 @@ namespace BlackCore
         CAircraftSituation correctedSituation(situation);
         if (!correctedSituation.hasGroundElevation() && !correctedSituation.canLikelySkipNearGroundInterpolation())
         {
-            const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, correctedSituation.getDistancePerTime(1000), callsign);
+            const CLength distance(correctedSituation.getDistancePerTime(1000));
+            const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
             correctedSituation.setGroundElevation(ep);
         }
 

@@ -266,7 +266,7 @@ namespace BlackSimPlugin
             void updateRemoteAircraft();
 
             //! Update remote aircraft parts (send to FSX)
-            bool updateRemoteAircraftParts(const CSimConnectObject &simObj,
+            bool updateRemoteAircraftParts(const CSimConnectObject &simObject,
                                            const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Simulation::CPartsStatus &partsStatus);
 
             //! Send parts to simulator
@@ -379,7 +379,7 @@ namespace BlackSimPlugin
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);    //!< request id, use obtainRequestIdForSimData() to get id
             SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForProbe() to get id
             BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
-            QTimer m_addPendingAircraftTimer; //!< updating of aircraft awaiting to be added
+            QTimer m_addPendingSimObjTimer; //!< updating of sim objects awaiting to be added
         };
 
         //! Listener for FSX

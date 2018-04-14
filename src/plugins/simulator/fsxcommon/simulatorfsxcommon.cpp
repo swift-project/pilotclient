@@ -54,12 +54,12 @@ namespace BlackSimPlugin
             Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
 
-            m_addPendingAircraftTimer.setInterval(AddPendingAircraftIntervalMs);
+            m_addPendingSimObjTimer.setInterval(AddPendingAircraftIntervalMs);
             m_useFsuipc = false;
             // default model will be set in derived class
 
             CSimulatorFsxCommon::registerHelp();
-            connect(&m_addPendingAircraftTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::addPendingAircraftByTimer);
+            connect(&m_addPendingSimObjTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::addPendingAircraftByTimer);
         }
 
         CSimulatorFsxCommon::~CSimulatorFsxCommon()
@@ -382,7 +382,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
         {
             CSimulatedAircraft myAircraft(getOwnAircraft());
-            BlackMisc::Geo::CCoordinateGeodetic position;
+            CCoordinateGeodetic position;
             position.setLatitude(CLatitude(simulatorOwnAircraft.latitude, CAngleUnit::deg()));
             position.setLongitude(CLongitude(simulatorOwnAircraft.longitude, CAngleUnit::deg()));
 
@@ -535,10 +535,11 @@ namespace BlackSimPlugin
             if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty()) { return false; }
 
             // we know the object has been created. But it can happen it is directly removed afterwards
-            QTimer::singleShot(500, this, [ = ]
+            const CSimulatedAircraft verifyAircraft(simObject.getAircraft());
+            QTimer::singleShot(1000, this, [ = ]
             {
                 // also triggers new add if required
-                this->verifyAddedRemoteAircraft(simObject.getAircraft());
+                this->verifyAddedRemoteAircraft(verifyAircraft);
             });
             return true;
         }

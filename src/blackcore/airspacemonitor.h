@@ -115,17 +115,17 @@ namespace BlackCore
         //! Request updates of bookings
         void requestAtcBookingsUpdate();
 
-        //! Create dummy entries for performance tests
-        void testCreateDummyOnlineAtcStations(int number);
-
-        //! Test injected aircraft parts
-        void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
-
         //! Analyzer
         CAirspaceAnalyzer *analyzer() const { return m_analyzer; }
 
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
+
+        //! Create dummy entries for performance tests
+        void testCreateDummyOnlineAtcStations(int number);
+
+        //! Test injected aircraft parts
+        void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
 
     signals:
         //! Online ATC stations were changed
