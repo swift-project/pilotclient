@@ -659,8 +659,10 @@ namespace BlackGui
             {
                 if (ui->cb_Heavy->isChecked())
                 {
+                    const QPointer<CFlightPlanComponent> guard(this);
                     QTimer::singleShot(10, this, [ = ]
                     {
+                        if (guard.isNull()) { return; }
                         ui->cb_Tcas->setChecked(false);
                         this->buildPrefixIcaoSuffix();
                     });
@@ -671,8 +673,10 @@ namespace BlackGui
             {
                 if (ui->cb_Tcas->isChecked())
                 {
+                    const QPointer<CFlightPlanComponent> guard(this);
                     QTimer::singleShot(10, this, [ = ]
                     {
+                        if (guard.isNull()) { return; }
                         ui->cb_Heavy->setChecked(false);
                         this->buildPrefixIcaoSuffix();
                     });

@@ -69,7 +69,12 @@ namespace BlackGui
         bool CConfigurationWizard::event(QEvent *event)
         {
             if (event->type() != QEvent::EnterWhatsThisMode) { return QDialog::event(event); }
-            QTimer::singleShot(0, this, [ = ] { sGui->showHelp(this); });
+            const QPointer<CConfigurationWizard> guard(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (guard.isNull() || !sGui || sGui->isShuttingDown()) { return; }
+                sGui->showHelp(this);
+            });
             return true;
         }
 

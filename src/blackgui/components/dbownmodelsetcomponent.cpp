@@ -87,9 +87,10 @@ namespace BlackGui
             {
                 ui->comp_SimulatorSelector->setValue(simulator);
                 ui->le_Simulator->setText(simulator.toQString(true));
-                QTimer::singleShot(500, [this]()
+                const QPointer<CDbOwnModelSetComponent> guard(this);
+                QTimer::singleShot(500, [ = ]()
                 {
-                    if (!sApp || sApp->isShuttingDown()) { return; }
+                    if (guard.isNull() || !sApp || sApp->isShuttingDown()) { return; }
                     this->updateViewToCurrentModels();
                 });
             }

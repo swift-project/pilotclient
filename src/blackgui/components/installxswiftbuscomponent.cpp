@@ -218,7 +218,12 @@ namespace BlackGui
                 if (reply == QMessageBox::Yes)
                 {
                     const CStatusMessage msg = CStatusMessage(this).info("Using existing file '%1'") << saveAsFile;
-                    QTimer::singleShot(100, this, [ = ] { this->downloadedXSwiftBusFile(msg); });
+                    const QPointer<CInstallXSwiftBusComponent> guard(this);
+                    QTimer::singleShot(100, this, [ = ]
+                    {
+                        if (guard.isNull()) { return; }
+                        this->downloadedXSwiftBusFile(msg);
+                    });
                     return;
                 }
             }

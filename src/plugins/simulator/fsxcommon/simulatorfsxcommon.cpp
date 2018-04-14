@@ -25,6 +25,7 @@
 #include "blackconfig/buildconfig.h"
 
 #include <QTimer>
+#include <QPointer>
 #include <type_traits>
 
 using namespace BlackConfig;
@@ -1004,7 +1005,12 @@ namespace BlackSimPlugin
             }
 
             // cleanup function, actually this should not be needed
-            QTimer::singleShot(100, this, &CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider);
+            const QPointer<CSimulatorFsxCommon> guard(this);
+            QTimer::singleShot(100, this, [ = ]
+            {
+                if (guard.isNull()) { return; }
+                CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider();
+            });
 
             // bye
             return true;

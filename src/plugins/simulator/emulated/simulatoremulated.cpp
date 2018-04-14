@@ -59,8 +59,10 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::connectTo()
         {
+            const QPointer<CSimulatorEmulated> guard(this);
             QTimer::singleShot(1000, this, [ = ]
             {
+                if (guard.isNull()) { return; }
                 this->emitSimulatorCombinedStatus();
                 m_monitorWidget->show();
             });
@@ -439,8 +441,10 @@ namespace BlackSimPlugin
         void CSimulatorEmulatedListener::startImpl()
         {
             if (this->isShuttingDown()) { return; }
+            const QPointer<CSimulatorEmulatedListener> guard(this);
             QTimer::singleShot(2000, this, [ = ]
             {
+                if (guard.isNull()) { return; }
                 Q_ASSERT_X(this->getPluginInfo().isValid(), Q_FUNC_INFO, "Invalid plugin");
                 emit this->simulatorStarted(this->getPluginInfo());
             });

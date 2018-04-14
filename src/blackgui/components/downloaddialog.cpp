@@ -50,7 +50,12 @@ namespace BlackGui
 
         void CDownloadDialog::showAndStartDownloading()
         {
-            QTimer::singleShot(0, this, [ = ] { ui->comp_Download->triggerDownloadingOfFiles(2500); });
+            const QPointer<CDownloadDialog> guard(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (guard.isNull()) { return; }
+                ui->comp_Download->triggerDownloadingOfFiles(2500);
+            });
             this->show();
         }
 

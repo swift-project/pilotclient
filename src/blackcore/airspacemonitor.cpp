@@ -119,8 +119,10 @@ namespace BlackCore
         if (m_network && sApp && !sApp->isShuttingDown())
         {
             // thread safe update of m_network
+            const QPointer<CAirspaceMonitor> guard(this);
             QTimer::singleShot(0, m_network, [ = ]
             {
+                if (guard.isNull()) { return; }
                 if (m_network) { m_network->addInterimPositionReceiver(callsign); }
             });
         }
@@ -459,8 +461,10 @@ namespace BlackCore
         if (trial < 2 && !complete)
         {
             this->addReverseLookupMessage(callsign, "Wait for further data");
+            const QPointer<CAirspaceMonitor> guard(this);
             QTimer::singleShot(1500, this, [ = ]()
             {
+                if (guard.isNull()) { return; }
                 this->sendReadyForModelMatching(callsign, trial + 1); // recursive
             });
             return;

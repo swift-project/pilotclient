@@ -1179,7 +1179,12 @@ namespace BlackCore
         // and trigger read
         if (sApp->isInternetAccessible())
         {
-            QTimer::singleShot(0, m_sharedInfoDataReader, [this]() { m_sharedInfoDataReader->read(); });
+            const QPointer<CWebDataServices> guard(this);
+            QTimer::singleShot(0, m_sharedInfoDataReader, [ = ]()
+            {
+                if (guard.isNull()) { return; }
+                m_sharedInfoDataReader->read();
+            });
         }
         else
         {
