@@ -13,6 +13,7 @@
 
 #include "testconnectivity.h"
 #include "blackcore/application.h"
+#include "blackcore/db/networkwatchdog.h"
 #include <QDateTime>
 #include <QDebug>
 #include <QTest>
@@ -20,6 +21,7 @@
 #include <QtDebug>
 
 using namespace BlackCore;
+using namespace BlackCore::Db;
 using namespace BlackMisc::Network;
 
 namespace BlackCoreTest
@@ -85,6 +87,12 @@ namespace BlackCoreTest
     void CTestConnectivity::testNetworkWatchdog()
     {
         QVERIFY2(sApp->getNetworkWatchdog(), "No network watchdog");
+        const CUrl dbUrl = CNetworkWatchdog::dbTestUrl();
+        qDebug() << "Using DB test URL: " << dbUrl.toQString();
+        const bool ok = CNetworkUtils::canPing(dbUrl);
+        if (!ok) { QSKIP(qPrintable("Cannot ping " + dbUrl.getFullUrl())); }
+
+        // only if URL is reachable
         QTRY_VERIFY2_WITH_TIMEOUT(sApp->isSwiftDbAccessible(), "Watchdog cannot connect db", 20000);
         QTRY_VERIFY2_WITH_TIMEOUT(sApp->getNetworkWatchdog()->getCheckCount() >= m_networkCheckCount + 1, "Timeout of network check", 30000);
         qDebug() << "Current network check count:" << sApp->getNetworkWatchdog()->getCheckCount();

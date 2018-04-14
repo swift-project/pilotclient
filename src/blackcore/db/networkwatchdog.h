@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_DB_NETWORKWATCHDOG_H
 #define BLACKCORE_DB_NETWORKWATCHDOG_H
 
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/network/url.h"
 #include <atomic>
@@ -23,7 +24,7 @@ namespace BlackCore
     namespace Db
     {
         //! Monitoring the swift DB, internet access, shared URLs
-        class CNetworkWatchdog : public BlackMisc::CContinuousWorker
+        class BLACKCORE_EXPORT CNetworkWatchdog : public BlackMisc::CContinuousWorker
         {
             Q_OBJECT
 
@@ -114,6 +115,11 @@ namespace BlackCore
             //! \remark depends on BlackCore::Application::getGlobalSetup()
             static bool isDbUrl(const BlackMisc::Network::CUrl &url);
 
+            //! The URL being tested
+            //! \remark depends on BlackCore::Application::getGlobalSetup()
+            //! \private primarily accessible for unit tests
+            static BlackMisc::Network::CUrl dbTestUrl();
+
         signals:
             //! DB was available, but not longer is and vice versa
             void changedSwiftDbAccessibility(bool available, const BlackMisc::Network::CUrl &url);
@@ -138,10 +144,6 @@ namespace BlackCore
 
             //! Received reply of client service ping
             void replyPingClientService(QNetworkReply *nwReply);
-
-            //! The URL being tested
-            //! \remark depends on BlackCore::Application::getGlobalSetup()
-            static BlackMisc::Network::CUrl dbTestUrl();
 
             //! The DB server
             //! \remark depends on BlackCore::Application::getGlobalSetup()
