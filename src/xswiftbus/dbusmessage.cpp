@@ -171,6 +171,68 @@ namespace XSwiftBus
         value = std::string(str);
     }
 
+    void CDBusMessage::getArgument(std::vector<int> &value)
+    {
+        DBusMessageIter arrayIterator;
+        dbus_message_iter_recurse(&m_messageIterator, &arrayIterator);
+        do
+        {
+            if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_INT32) { return; }
+            dbus_int32_t i;
+            dbus_message_iter_get_basic(&arrayIterator, &i);
+            value.push_back(i);
+        }
+        while (dbus_message_iter_next(&arrayIterator));
+        dbus_message_iter_next(&m_messageIterator);
+    }
+
+    void CDBusMessage::getArgument(std::vector<bool> &value)
+    {
+        if (dbus_message_iter_get_arg_type(&m_messageIterator) != DBUS_TYPE_ARRAY) { return; }
+        DBusMessageIter arrayIterator;
+        dbus_message_iter_recurse(&m_messageIterator, &arrayIterator);
+        do
+        {
+            if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_BOOLEAN) { return; }
+            dbus_bool_t b;
+            dbus_message_iter_get_basic(&arrayIterator, &b);
+            bool v = b == TRUE ? true : false;
+            value.push_back(v);
+        }
+        while (dbus_message_iter_next(&arrayIterator));
+        dbus_message_iter_next(&m_messageIterator);
+    }
+
+    void CDBusMessage::getArgument(std::vector<double> &value)
+    {
+        DBusMessageIter arrayIterator;
+        dbus_message_iter_recurse(&m_messageIterator, &arrayIterator);
+        do
+        {
+            if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_DOUBLE) { return; }
+            double d;
+            dbus_message_iter_get_basic(&arrayIterator, &d);
+            value.push_back(d);
+        }
+        while (dbus_message_iter_next(&arrayIterator));
+        dbus_message_iter_next(&m_messageIterator);
+    }
+
+    void CDBusMessage::getArgument(std::vector<std::string> &value)
+    {
+        DBusMessageIter arrayIterator;
+        dbus_message_iter_recurse(&m_messageIterator, &arrayIterator);
+        do
+        {
+            if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_STRING) { return; }
+            const char *str = nullptr;
+            dbus_message_iter_get_basic(&arrayIterator, &str);
+            value.push_back(std::string(str));
+        }
+        while (dbus_message_iter_next(&arrayIterator));
+        dbus_message_iter_next(&m_messageIterator);
+    }
+
     CDBusMessage CDBusMessage::createSignal(const std::string &path, const std::string &interfaceName, const std::string &signalName)
     {
         DBusMessage *signal = dbus_message_new_signal(path.c_str(), interfaceName.c_str(), signalName.c_str());

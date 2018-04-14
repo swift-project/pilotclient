@@ -177,12 +177,6 @@ namespace BlackSimPlugin
             //! \remark this is where the interpolated data are set
             void updateRemoteAircraft();
 
-            //! Update remote aircraft parts (send to XSwiftBus)
-            bool updateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft, const BlackMisc::Simulation::CInterpolationResult &result);
-
-            //! Send parts to simulator
-            bool sendRemoteAircraftPartsToSimulator(const CXPlaneMPAircraft &xplaneAircraft, const BlackMisc::Aviation::CAircraftParts &parts);
-
             void requestRemoteAircraftDataFromXPlane();
             void updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
             void updateAirportsInRange();

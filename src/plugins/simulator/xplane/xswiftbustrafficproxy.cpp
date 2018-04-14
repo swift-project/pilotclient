@@ -13,6 +13,10 @@
 
 #define XSWIFTBUS_SERVICENAME "org.swift-project.xswiftbus"
 
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackSimPlugin
 {
     namespace XPlane
@@ -78,25 +82,16 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("removeAllPlanes"));
         }
 
-        void CXSwiftBusTrafficProxy::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset)
+        void CXSwiftBusTrafficProxy::setPlanePositions(const QStringList &callsigns, const QList<double> &latitudes, const QList<double> &longitudes, const QList<double> &altitudes,
+                const QList<double> &pitches, const QList<double> &rolles, const QList<double> &headings)
         {
-            m_dbusInterface->callDBus(QLatin1String("addPlanePosition"), callsign, latitude, longitude, altitude, pitch, roll, heading, relativeTime, timeOffset);
+            m_dbusInterface->callDBus(QLatin1String("setPlanePositions"), callsigns, latitudes, longitudes, altitudes, pitches, rolles, headings);
         }
 
-        void CXSwiftBusTrafficProxy::setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
-        {
-            m_dbusInterface->callDBus(QLatin1String("setPlanePosition"), callsign, latitude, longitude, altitude, pitch, roll, heading);
-        }
-
-        void CXSwiftBusTrafficProxy::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset)
-        {
-            m_dbusInterface->callDBus(QLatin1String("addPlaneSurfaces"), callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron,
-                                      landLight, beaconLight, strobeLight, navLight, lightPattern, onGround, relativeTime, timeOffset);
-        }
-
-        void CXSwiftBusTrafficProxy::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround)
+        void CXSwiftBusTrafficProxy::setPlaneSurfaces(const QStringList &callsign, const QList<double> &gear, const QList<double> &flap, const QList<double> &spoiler,
+                const QList<double> &speedBrake, const QList<double> &slat, const QList<double> &wingSweep, const QList<double> &thrust,
+                const QList<double> &elevator, const QList<double> &rudder, const QList<double> &aileron, const QList<bool> &landLight,
+                const QList<bool> &beaconLight, const QList<bool> &strobeLight, const QList<bool> &navLight, const QList<int> &lightPattern, const QList<bool> &onGround)
         {
             m_dbusInterface->callDBus(QLatin1String("setPlaneSurfaces"), callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron,
                                       landLight, beaconLight, strobeLight, navLight, lightPattern, onGround);
@@ -115,6 +110,29 @@ namespace BlackSimPlugin
         void CXSwiftBusTrafficProxy::requestRemoteAircraftData()
         {
             m_dbusInterface->callDBus(QLatin1String("requestRemoteAircraftData"));
+        }
+
+        void CXSwiftBusTrafficProxy::getEelevationAtPosition(const CCallsign &callsign, double latitude, double longitude, double altitude,
+                                                             const ElevationCallback &setter)
+        {
+            std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher * watcher)
+            {
+                QDBusPendingReply<QString, double> reply = *watcher;
+                if (!reply.isError())
+                {
+                    CCallsign cs(reply.argumentAt<0>());
+                    double elevationMeters = reply.argumentAt<1>();
+                    CAltitude elevationAlt(elevationMeters, CLengthUnit::m());
+                    elevationAlt.switchUnit(CLengthUnit::ft());
+                    CElevationPlane elevation(CLatitude(latitude, CAngleUnit::deg()),
+                                              CLongitude(longitude, CAngleUnit::deg()),
+                                              elevationAlt);
+                    elevation.setSinglePointRadius();
+                    setter(elevation, cs);
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getEelevationAtPosition"), callback, callsign.asString(), latitude, longitude, altitude);
         }
     }
 }

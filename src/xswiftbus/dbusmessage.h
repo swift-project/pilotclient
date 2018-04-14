@@ -77,6 +77,10 @@ namespace XSwiftBus
         void getArgument(bool &value);
         void getArgument(double &value);
         void getArgument(std::string &value);
+        void getArgument(std::vector<int> &value);
+        void getArgument(std::vector<bool> &value);
+        void getArgument(std::vector<double> &value);
+        void getArgument(std::vector<std::string> &value);
         //! @}
 
         //! Creates a DBus message containing a DBus signal

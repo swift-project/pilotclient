@@ -94,12 +94,15 @@ namespace XSwiftBus
         //! Remove all traffic aircraft
         void removeAllPlanes();
 
-        //! Set the position of a traffic aircraft
-        void setPlanePosition(const std::string &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading);
+        //! Set the position of multiple traffic aircrafts
+        void setPlanePositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitude,
+                               std::vector<double> pitchs, std::vector<double> rolls, std::vector<double> headings);
 
-        //! Set the flight control surfaces and lights of a traffic aircraft
-        void setPlaneSurfaces(const std::string &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround);
+        //! Set the flight control surfaces and lights of multiple traffic aircrafts
+        void setPlaneSurfaces(const std::vector<std::string> &callsign, const std::vector<double> &gear, const std::vector<double> &flap, const std::vector<double> &spoiler,
+                              const std::vector<double> &speedBrake, const std::vector<double> &slat, const std::vector<double> &wingSweep, const std::vector<double> &thrust,
+                              const std::vector<double> &elevator, const std::vector<double> &rudder, const std::vector<double> &aileron, const std::vector<bool> &landLight,
+                              const std::vector<bool> &beaconLight, const std::vector<bool> &strobeLight, const std::vector<bool> &navLight, const std::vector<int> &lightPattern, const std::vector<bool> &onGround);
 
         //! Set the transponder of a traffic aircraft
         void setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident);
@@ -107,14 +110,18 @@ namespace XSwiftBus
         //! Request traffic plane data. A signal remoteAircraftData will be emitted for each known plane
         void requestRemoteAircraftData();
 
+        //! Get the ground elevation at an arbitrary position
+        double getEelevationAtPosition(const std::string &callsign, double latitude, double longitude, double altitude);
+
         int processDBus() override;
 
     protected:
-         DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
+        DBusHandlerResult dbusMessageHandler(const CDBusMessage &message) override;
 
     private:
         bool m_initialized = false;
         bool m_enabled = false;
+        CTerrainProbe m_terrainProbe;
 
         void emitSimFrame();
         void emitRemoteAircraftData(const std::string &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
@@ -123,6 +130,7 @@ namespace XSwiftBus
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
         static int orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
+        static int drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon);
 
         struct Plane
         {
@@ -152,6 +160,9 @@ namespace XSwiftBus
         CMenu m_planeViewSubMenu;
         std::unordered_map<std::string, CMenuItem> m_planeViewMenuItems;
         std::string m_planeViewCallsign;
+
+        DataRef<xplane::data::sim::graphics::view::world_render_type> m_worldRenderType;
+        bool m_emitSimFrame = true;
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)

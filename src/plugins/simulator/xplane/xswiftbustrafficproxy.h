@@ -13,6 +13,8 @@
 #define BLACKSIMPLUGIN_XSWIFTBUS_TRAFFIC_PROXY_H
 
 #include "blackmisc/genericdbusinterface.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/geo/elevationplane.h"
 
 #include <QObject>
 #include <QString>
@@ -37,6 +39,8 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
+            using ElevationCallback = std::function<void (const BlackMisc::Geo::CElevationPlane &, const BlackMisc::Aviation::CCallsign &)>;
+
             //! Service name
             static const QString &InterfaceName()
             {
@@ -100,19 +104,15 @@ namespace BlackSimPlugin
             //! \copydoc XSwiftBus::CTraffic::removeAllPlanes
             void removeAllPlanes();
 
-            //! \deprecated XSwiftBus::CTraffic::addPlanePosition
-            void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime, qint64 timeOffset);
-
-            //! \copydoc XSwiftBus::CTraffic::setPlanePosition
-            void setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading);
-
-            //! \deprecated XSwiftBus::CTraffic::addPlaneSurfaces
-            void addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                                  double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime, qint64 timeOffset);
+            //! \copydoc XSwiftBus::CTraffic::setPlanePositions
+            void setPlanePositions(const QStringList &callsigns, const QList<double> &latitudes, const QList<double> &longitudes, const QList<double> &altitudes,
+                                   const QList<double> &pitches, const QList<double> &rolles, const QList<double> &headings);
 
             //! \copydoc XSwiftBus::CTraffic::setPlaneSurfaces
-            void setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                                  double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround);
+            void setPlaneSurfaces(const QStringList &callsign, const QList<double> &gear, const QList<double> &flap, const QList<double> &spoiler,
+                                  const QList<double> &speedBrake, const QList<double> &slat, const QList<double> &wingSweep, const QList<double> &thrust,
+                                  const QList<double> &elevator, const QList<double> &rudder, const QList<double> &aileron, const QList<bool> &landLight,
+                                  const QList<bool> &beaconLight, const QList<bool> &strobeLight, const QList<bool> &navLight, const QList<int> &lightPattern, const QList<bool> &onGround);
 
             //! \copydoc XSwiftBus::CTraffic::setPlaneTransponder
             void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
@@ -122,6 +122,10 @@ namespace BlackSimPlugin
 
             //! \copydoc XSwiftBus::CTraffic::requestRemoteAircraftData
             void requestRemoteAircraftData();
+
+            //! \copydoc XSwiftBus::CTraffic::getEelevationAtPosition
+            void getEelevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitude, double longitude, double altitude,
+                                         const ElevationCallback &setter);
 
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;

@@ -47,10 +47,12 @@ namespace XSwiftBus
         CDBusObject(dbusConnection)
     {
         registerDBusObjectPath(XSWIFTBUS_TRAFFIC_INTERFACENAME, XSWIFTBUS_TRAFFIC_OBJECTPATH);
+        XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
     }
 
     CTraffic::~CTraffic()
     {
+        XPLMUnregisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
         cleanup();
     }
 
@@ -106,7 +108,8 @@ namespace XSwiftBus
 
     void CTraffic::emitSimFrame()
     {
-        sendDBusSignal("simFrame");
+        if (m_emitSimFrame) { sendDBusSignal("simFrame"); }
+        m_emitSimFrame = !m_emitSimFrame;
     }
 
     void CTraffic::emitRemoteAircraftData(const std::string &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset)
@@ -256,47 +259,57 @@ namespace XSwiftBus
         m_planeViewMenuItems.clear();
     }
 
-    void CTraffic::setPlanePosition(const std::string &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
+    void CTraffic::setPlanePositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitudes,
+                                     std::vector<double> pitches, std::vector<double> rolles, std::vector<double> headings)
     {
-        auto planeIt = m_planesByCallsign.find(callsign);
-        if (planeIt == m_planesByCallsign.end()) { return; }
+        for (size_t i = 0; i < callsigns.size(); i++)
+        {
+            auto planeIt = m_planesByCallsign.find(callsigns.at(i));
+            if (planeIt == m_planesByCallsign.end()) { return; }
 
-        Plane *plane = planeIt->second;
-        if (!plane) { return; }
-        plane->position.lat = latitude;
-        plane->position.lon = longitude;
-        plane->position.elevation = altitude;
-        plane->position.pitch = static_cast<float>(pitch);
-        plane->position.roll = static_cast<float>(roll);
-        plane->position.heading = static_cast<float>(heading);
+            Plane *plane = planeIt->second;
+            if (!plane) { return; }
+            plane->position.lat = latitudes.at(i);
+            plane->position.lon = longitudes.at(i);
+            plane->position.elevation = altitudes.at(i);
+            plane->position.pitch = static_cast<float>(pitches.at(i));
+            plane->position.roll = static_cast<float>(rolles.at(i));
+            plane->position.heading = static_cast<float>(headings.at(i));
+        }
     }
 
-    void CTraffic::setPlaneSurfaces(const std::string &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                                    double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround)
+    void CTraffic::setPlaneSurfaces(const std::vector<std::string> &callsign, const std::vector<double> &gear, const std::vector<double> &flap, const std::vector<double> &spoiler,
+                                    const std::vector<double> &speedBrake, const std::vector<double> &slat, const std::vector<double> &wingSweep, const std::vector<double> &thrust,
+                                    const std::vector<double> &elevator, const std::vector<double> &rudder, const std::vector<double> &aileron, const std::vector<bool> &landLight,
+                                    const std::vector<bool> &beaconLight, const std::vector<bool> &strobeLight, const std::vector<bool> &navLight, const std::vector<int> &lightPattern, const std::vector<bool> &onGround)
     {
-        (void) onGround;
-        auto planeIt = m_planesByCallsign.find(callsign);
-        if (planeIt == m_planesByCallsign.end()) { return; }
+        (void)onGround;
 
-        Plane *plane = planeIt->second;
-        if (!plane) { return; }
+        for (size_t i = 0; i < callsign.size(); i++)
+        {
+            auto planeIt = m_planesByCallsign.find(callsign.at(i));
+            if (planeIt == m_planesByCallsign.end()) { return; }
 
-        plane->hasSurfaces = true;
-        plane->targetGearPosition = static_cast<float>(gear);
-        plane->surfaces.flapRatio = static_cast<float>(flap);
-        plane->surfaces.spoilerRatio = static_cast<float>(spoiler);
-        plane->surfaces.speedBrakeRatio = static_cast<float>(speedBrake);
-        plane->surfaces.slatRatio = static_cast<float>(slat);
-        plane->surfaces.wingSweep = static_cast<float>(wingSweep);
-        plane->surfaces.thrust = static_cast<float>(thrust);
-        plane->surfaces.yokePitch = static_cast<float>(elevator);
-        plane->surfaces.yokeHeading = static_cast<float>(rudder);
-        plane->surfaces.yokeRoll = static_cast<float>(aileron);
-        plane->surfaces.lights.landLights = landLight;
-        plane->surfaces.lights.bcnLights = beaconLight;
-        plane->surfaces.lights.strbLights = strobeLight;
-        plane->surfaces.lights.navLights = navLight;
-        plane->surfaces.lights.flashPattern = lightPattern;
+            Plane *plane = planeIt->second;
+            if (!plane) { return; }
+
+            plane->hasSurfaces = true;
+            plane->targetGearPosition = static_cast<float>(gear.at(i));
+            plane->surfaces.flapRatio = static_cast<float>(flap.at(i));
+            plane->surfaces.spoilerRatio = static_cast<float>(spoiler.at(i));
+            plane->surfaces.speedBrakeRatio = static_cast<float>(speedBrake.at(i));
+            plane->surfaces.slatRatio = static_cast<float>(slat.at(i));
+            plane->surfaces.wingSweep = static_cast<float>(wingSweep.at(i));
+            plane->surfaces.thrust = static_cast<float>(thrust.at(i));
+            plane->surfaces.yokePitch = static_cast<float>(elevator.at(i));
+            plane->surfaces.yokeHeading = static_cast<float>(rudder.at(i));
+            plane->surfaces.yokeRoll = static_cast<float>(aileron.at(i));
+            plane->surfaces.lights.landLights = landLight.at(i);
+            plane->surfaces.lights.bcnLights = beaconLight.at(i);
+            plane->surfaces.lights.strbLights = strobeLight.at(i);
+            plane->surfaces.lights.navLights = navLight.at(i);
+            plane->surfaces.lights.flashPattern = lightPattern.at(i);
+        }
     }
 
     void CTraffic::setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident)
@@ -326,8 +339,23 @@ namespace XSwiftBus
             double groundElevation = plane->terrainProbe.getElevation(lat, lon, elevation);
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             double fudgeFactor = 3.0;
-            actualVertOffsetInfo(plane->modelName.c_str(), nullptr, &fudgeFactor);
+            XPMPGetVerticalOffset(plane->id, &fudgeFactor);
+            // actualVertOffsetInfo(plane->modelName.c_str(), nullptr, &fudgeFactor);
             emitRemoteAircraftData(plane->callsign, lat, lon, groundElevation, fudgeFactor);
+        }
+    }
+
+    double CTraffic::getEelevationAtPosition(const std::string &callsign, double latitude, double longitude, double altitude)
+    {
+        auto planeIt = m_planesByCallsign.find(callsign);
+        if (planeIt != m_planesByCallsign.end())
+        {
+            Plane *plane = planeIt->second;
+            return plane->terrainProbe.getElevation(latitude, longitude, altitude);
+        }
+        else
+        {
+            return m_terrainProbe.getElevation(latitude, longitude, altitude);
         }
     }
 
@@ -465,49 +493,49 @@ namespace XSwiftBus
                     removeAllPlanes();
                 });
             }
-            else if (message.getMethodName() == "setPlanePosition")
+            else if (message.getMethodName() == "setPlanePositions")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                std::string callsign;
-                double latitude = 0.0;
-                double longitude = 0.0;
-                double altitude = 0.0;
-                double pitch = 0.0;
-                double roll = 0.0;
-                double heading = 0.0;
+                std::vector<std::string> callsigns;
+                std::vector<double> latitudes;
+                std::vector<double> longitudes;
+                std::vector<double> altitudes;
+                std::vector<double> pitches;
+                std::vector<double> rolles;
+                std::vector<double> headings;
                 message.beginArgumentRead();
-                message.getArgument(callsign);
-                message.getArgument(latitude);
-                message.getArgument(longitude);
-                message.getArgument(altitude);
-                message.getArgument(pitch);
-                message.getArgument(roll);
-                message.getArgument(heading);
+                message.getArgument(callsigns);
+                message.getArgument(latitudes);
+                message.getArgument(longitudes);
+                message.getArgument(altitudes);
+                message.getArgument(pitches);
+                message.getArgument(rolles);
+                message.getArgument(headings);
                 queueDBusCall([ = ]()
                 {
-                    setPlanePosition(callsign, latitude, longitude, altitude, pitch, roll, heading);
+                    setPlanePositions(callsigns, latitudes, longitudes, altitudes, pitches, rolles, headings);
                 });
             }
             else if (message.getMethodName() == "setPlaneSurfaces")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                std::string callsign;
-                double gear = 0.0;
-                double flap = 0.0;
-                double spoiler = 0.0;
-                double speedBrake = 0.0;
-                double slat = 0.0;
-                double wingSweep = 0.0;
-                double thrust = 0.0;
-                double elevator = 0.0;
-                double rudder = 0.0;
-                double aileron = 0.0;
-                bool landLight = false;
-                bool beaconLight = false;
-                bool strobeLight = false;
-                bool navLight = false;
-                bool lightPattern = false;
-                bool onGround = false;
+                std::vector<std::string> callsign;
+                std::vector<double> gear;
+                std::vector<double> flap;
+                std::vector<double> spoiler;
+                std::vector<double> speedBrake;
+                std::vector<double> slat;
+                std::vector<double> wingSweep;
+                std::vector<double> thrust;
+                std::vector<double> elevator;
+                std::vector<double> rudder;
+                std::vector<double> aileron;
+                std::vector<bool> landLight;
+                std::vector<bool> beaconLight;
+                std::vector<bool> strobeLight;
+                std::vector<bool> navLight;
+                std::vector<int> lightPattern;
+                std::vector<bool> onGround;
                 message.beginArgumentRead();
                 message.getArgument(callsign);
                 message.getArgument(gear);
@@ -558,6 +586,26 @@ namespace XSwiftBus
                     requestRemoteAircraftData();
                 });
             }
+            else if (message.getMethodName() == "getEelevationAtPosition")
+            {
+                std::string callsign;
+                double latitude;
+                double longitude;
+                double altitude;
+                message.beginArgumentRead();
+                message.getArgument(callsign);
+                message.getArgument(latitude);
+                message.getArgument(longitude);
+                message.getArgument(altitude);
+                queueDBusCall([ = ]()
+                {
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(callsign);
+                    reply.appendArgument(getEelevationAtPosition(callsign, latitude, longitude, altitude));
+                    ;                   sendDBusMessage(reply);
+                });
+            }
             else
             {
                 // Unknown message. Tell DBus that we cannot handle it
@@ -569,7 +617,6 @@ namespace XSwiftBus
 
     int CTraffic::processDBus()
     {
-        emitSimFrame();
         invokeQueuedDBusCalls();
         return 1;
     }
@@ -697,6 +744,21 @@ namespace XSwiftBus
         }
 
         // Return 1 to indicate we want to keep controlling the camera.
+        return 1;
+    }
+
+    int CTraffic::drawCallback(XPLMDrawingPhase phase, int isBefore, void *refcon)
+    {
+        (void)phase;
+        (void)isBefore;
+        CTraffic *traffic = static_cast<CTraffic *>(refcon);
+
+        // The draw callback is called several times per frame. We need this only once.
+        if (traffic->m_worldRenderType.get() == 0)
+        {
+            traffic->emitSimFrame();
+        }
+
         return 1;
     }
 }

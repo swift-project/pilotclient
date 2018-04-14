@@ -46,23 +46,23 @@ R"(<node>
       <arg name="heading" type="d" direction="in"/>
     </method>
     <method name="setPlaneSurfaces">
-      <arg name="callsign" type="s" direction="in"/>
-      <arg name="gear" type="d" direction="in"/>
-      <arg name="flap" type="d" direction="in"/>
-      <arg name="spoiler" type="d" direction="in"/>
-      <arg name="speedBrake" type="d" direction="in"/>
-      <arg name="slat" type="d" direction="in"/>
-      <arg name="wingSweep" type="d" direction="in"/>
-      <arg name="thrust" type="d" direction="in"/>
-      <arg name="elevator" type="d" direction="in"/>
-      <arg name="rudder" type="d" direction="in"/>
-      <arg name="aileron" type="d" direction="in"/>
-      <arg name="landLight" type="b" direction="in"/>
-      <arg name="beaconLight" type="b" direction="in"/>
-      <arg name="strobeLight" type="b" direction="in"/>
-      <arg name="navLight" type="b" direction="in"/>
-      <arg name="lightPattern" type="i" direction="in"/>
-      <arg name="onGround" type="b" direction="in"/>
+      <arg name="callsign" type="as" direction="in"/>
+      <arg name="gear" type="ad" direction="in"/>
+      <arg name="flap" type="ad" direction="in"/>
+      <arg name="spoiler" type="ad" direction="in"/>
+      <arg name="speedBrake" type="ad" direction="in"/>
+      <arg name="slat" type="ad" direction="in"/>
+      <arg name="wingSweep" type="ad" direction="in"/>
+      <arg name="thrust" type="ad" direction="in"/>
+      <arg name="elevator" type="ad" direction="in"/>
+      <arg name="rudder" type="ad" direction="in"/>
+      <arg name="aileron" type="ad" direction="in"/>
+      <arg name="landLight" type="ab" direction="in"/>
+      <arg name="beaconLight" type="ab" direction="in"/>
+      <arg name="strobeLight" type="ab" direction="in"/>
+      <arg name="navLight" type="ab" direction="in"/>
+      <arg name="lightPattern" type="ai" direction="in"/>
+      <arg name="onGround" type="ab" direction="in"/>
     </method>
     <method name="setPlaneTransponder">
       <arg name="callsign" type="s" direction="in"/>
@@ -71,6 +71,14 @@ R"(<node>
       <arg name="ident" type="b" direction="in"/>
     </method>
     <method name="requestRemoteAircraftData">
+    </method>
+    <method name="getEelevationAtPosition">
+      <arg name="callsign" type="s" direction="in"/>
+      <arg name="latitude" type="d" direction="in"/>
+      <arg name="longitude" type="d" direction="in"/>
+      <arg name="altitude" type="d" direction="in"/>
+      <arg type="s" direction="out"/>
+      <arg type="d" direction="out"/>
     </method>
   </interface>
 </node>)"
