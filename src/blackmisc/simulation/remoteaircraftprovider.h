@@ -147,7 +147,7 @@ namespace BlackMisc
 
             //! Ground elevation of aircraft
             //! \threadsafe
-            virtual bool updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) = 0;
+            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) = 0;
 
             //! Get reverse lookup meesages
             //! \threadsafe
@@ -252,7 +252,7 @@ namespace BlackMisc
             virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
-            virtual bool updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) override;
+            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual CStatusMessageList getAircraftPartsHistory(const Aviation::CCallsign &callsign) const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
@@ -443,7 +443,7 @@ namespace BlackMisc
             bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftGroundElevation
-            bool updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation);
+            int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation);
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
             void updateMarkAllAsNotRendered();

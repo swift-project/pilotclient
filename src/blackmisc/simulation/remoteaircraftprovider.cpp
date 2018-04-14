@@ -337,26 +337,26 @@ namespace BlackMisc
             return c > 0;
         }
 
-        bool CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
-            if (!this->isAircraftInRange(callsign)) { return false; }
+            if (!this->isAircraftInRange(callsign)) { return 0; }
 
             // update aircraft situation
-            CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
-            const int updated = situations.setGroundElevationChecked(elevation);
-            if (updated < 1) { return false; }
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
-
+            int updated = 0;
             {
                 QWriteLocker l(&m_lockSituations);
-                m_situationsByCallsign[callsign] = situations;
+                updated = m_situationsByCallsign[callsign].setGroundElevationChecked(elevation);
+                if (updated < 1) { return 0; }
                 m_situationsLastModified[callsign] = ts;
             }
 
             // aircraft updates
             QWriteLocker l(&m_lockAircraft);
             const int c = m_aircraftInRange.setGroundElevationChecked(callsign, elevation);
-            return c > 0;
+            Q_UNUSED(c); // just for info, expect 1
+
+            return updated; // updated situations
         }
 
         void CRemoteAircraftProvider::updateMarkAllAsNotRendered()
@@ -608,7 +608,7 @@ namespace BlackMisc
             return this->provider()->updateAircraftRendered(callsign, rendered);
         }
 
-        bool CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        int CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
             return this->provider()->updateAircraftGroundElevation(callsign, elevation);

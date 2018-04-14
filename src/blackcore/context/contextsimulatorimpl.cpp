@@ -358,6 +358,8 @@ namespace BlackCore
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this, &CContextSimulator::addingRemoteAircraftFailed);
             Q_ASSERT(c);
+            c = connect(simulator, &ISimulator::receivedRequestedElevation, this, &CContextSimulator::onReceivedRequestedElevation);
+            Q_ASSERT(c);
             c = connect(simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::aircraftRenderingChanged, this, &IContextSimulator::aircraftRenderingChanged);
@@ -555,6 +557,12 @@ namespace BlackCore
         {
             Q_ASSERT(getIContextOwnAircraft());
             emit getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
+        }
+
+        void CContextSimulator::onReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign)
+        {
+            if (!isSimulatorSimulating()) { return; }
+            emit this->receivedRequestedElevation(plane, callsign);
         }
 
         void CContextSimulator::xCtxChangedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)

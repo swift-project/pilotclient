@@ -66,13 +66,6 @@ namespace BlackCore
             friend class BlackCore::CCoreFacade;
             friend class IContextSimulator;
 
-        public:
-            //! Destructor
-            virtual ~CContextSimulator();
-
-            //! Gracefully shut down, e.g. for plugin unloading
-            void gracefulShutdown();
-
         public slots:
             // ----------------------------- context interface -----------------------------
             //! \publicsection
@@ -126,6 +119,15 @@ namespace BlackCore
             // ----------------------------- context interface -----------------------------
 
         public:
+            //! Destructor
+            virtual ~CContextSimulator();
+
+            //! Gracefully shut down, e.g. for plugin unloading
+            void gracefulShutdown();
+
+            //! Simulator object
+            ISimulator *simulator() const;
+
             //! Register dot commands
             static void registerHelp()
             {
@@ -136,8 +138,10 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".ris parts on|off", "aircraft parts"});
             }
 
-            //! Simulator object
-            ISimulator *simulator() const;
+        signals:
+            //! A requested elevation has been received
+            //! \remark only meant to be used locally, not via DBus
+            void receivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
         protected:
             //! Constructor
@@ -191,6 +195,9 @@ namespace BlackCore
 
             //! Simulator has changed cockpit
             void onCockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+
+            //! Received elevation
+            void onReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Failed adding remote aircraft
             void addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);

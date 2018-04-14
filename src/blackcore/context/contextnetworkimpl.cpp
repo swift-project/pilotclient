@@ -699,7 +699,7 @@ namespace BlackCore
             return c;
         }
 
-        bool CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        int CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
             return m_airspace->updateAircraftGroundElevation(callsign, elevation);
         }
