@@ -283,17 +283,26 @@ namespace BlackSimPlugin
             //! Remote aircraft data sent from simulator
             void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData);
 
+            //! Probe data sent from simulator
+            void updatProbeFromSimulator(const BlackMisc::Aviation::CCallsign &callsign, const DataDefinitionRemoteAircraftSimData &remoteAircraftData);
+
             //! Update from SB client area
             void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
 
             //! An AI aircraft was added in the simulator
             bool simulatorReportedObjectAdded(DWORD objectId);
 
+            //! An AI probe was added in the simulator
+            bool simulatorReportedProbeAdded(DWORD objectId);
+
             //! Simulator reported that AI aircraft was removed
             bool simulatorReportedObjectRemoved(DWORD objectID);
 
             //! Set ID of a SimConnect object, so far we only have an request id in the object
             bool setSimConnectObjectId(DWORD requestId, DWORD objectId);
+
+            //! Set ID of a SimConnect object, so far we only have an request id in the object
+            bool setSimConnectProbeId(DWORD requestId, DWORD objectId);
 
             //! Remember current lights
             bool setCurrentLights(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftLights &lights);
@@ -307,6 +316,9 @@ namespace BlackSimPlugin
             //! The simconnect related objects
             const CSimConnectObjects &getSimConnectObjects() const { return m_simConnectObjects; }
 
+            //! The simconnect related probes
+            const CSimConnectObjects &getSimConnectProbes() const { return m_simConnectProbes; }
+
             //! Format conversion
             SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
 
@@ -318,6 +330,9 @@ namespace BlackSimPlugin
 
             //! Request data for a CSimConnectObject (aka remote aircraft)
             bool requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
+
+            //! Request data for the terrain probe
+            bool requestTerrainProbeData(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Request lights for a CSimConnectObject
             bool requestLightsForSimObject(const CSimConnectObject &simObject);
@@ -339,6 +354,9 @@ namespace BlackSimPlugin
 
             //! Get the trace details, otherwise empty string
             QString getSendIdTraceDetails(DWORD sendId) const;
+
+            //! Remove all probes
+            int removeAllProbes();
 
             //! Insert an new SimConnect object
             CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId);
@@ -375,9 +393,10 @@ namespace BlackSimPlugin
             int  m_receiveExceptionCount = 0;       //!< exceptions
             QList<TraceFsxSendId> m_sendIdTraces;   //!< Send id traces for debugging
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
+            CSimConnectObjects m_simConnectProbes;  //!< AI terrain probes
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);    //!< request id, use obtainRequestIdForSimData() to get id
-            SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForProbe() to get id
+            SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForSimData() to get id
             BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
             QTimer m_addPendingSimObjTimer; //!< updating of sim objects awaiting to be added
         };
