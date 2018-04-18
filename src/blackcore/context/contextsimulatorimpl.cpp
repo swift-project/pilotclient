@@ -481,7 +481,7 @@ namespace BlackCore
 
         void CContextSimulator::xCtxAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             const CCallsign callsign = remoteAircraft.getCallsign();
             BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Remote aircraft with empty callsign");
             if (callsign.isEmpty()) { return; }
@@ -503,7 +503,7 @@ namespace BlackCore
 
         void CContextSimulator::xCtxRemovedRemoteAircraft(const CCallsign &callsign)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(callsign);
         }
 
@@ -542,7 +542,7 @@ namespace BlackCore
 
         void CContextSimulator::xCtxTextMessagesReceived(const Network::CTextMessageList &textMessages)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             if (!this->getIContextOwnAircraft()) { return; }
             const CSimulatorMessagesSettings settings = m_messageSettings.getThreadLocal();
             const CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
@@ -561,20 +561,20 @@ namespace BlackCore
 
         void CContextSimulator::onReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             emit this->receivedRequestedElevation(plane, callsign);
         }
 
         void CContextSimulator::xCtxChangedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
         {
             if (CIdentifiable::isMyIdentifier(originator)) { return; }
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             m_simulatorPlugin.second->changeRemoteAircraftModel(aircraft);
         }
 
         void CContextSimulator::xCtxChangedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
         }
 
@@ -604,13 +604,13 @@ namespace BlackCore
 
         void CContextSimulator::addingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, const CStatusMessage &message)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             emit this->addingRemoteModelFailed(remoteAircraft, message);
         }
 
         void CContextSimulator::xCtxUpdateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
 
             // update
@@ -619,7 +619,7 @@ namespace BlackCore
 
         void CContextSimulator::xCtxUpdateSimulatorSelcalFromContext(const CSelcal &selcal, const CIdentifier &originator)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
 
             // update
@@ -634,7 +634,7 @@ namespace BlackCore
 
         void CContextSimulator::relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
         {
-            if (!isSimulatorSimulating()) { return; }
+            if (!this->isSimulatorAvailable()) { return; }
             const CSimulatorMessagesSettings simMsg = m_messageSettings.getThreadLocal();
             if (simMsg.relayThisStatusMessage(message))
             {
