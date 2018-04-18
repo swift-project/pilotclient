@@ -47,7 +47,7 @@ namespace BlackMisc
                 //! @}
 
                 //! Perform the interpolation
-                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation) const;
+                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation, bool interpolateGndFactor) const;
 
                 //! Interpolator for pitch, bank, heading, groundspeed
                 const CInterpolatorPbh &pbh() const { return m_pbh; }

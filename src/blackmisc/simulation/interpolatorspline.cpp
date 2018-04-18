@@ -105,7 +105,8 @@ namespace BlackMisc
             Q_UNUSED(setup);
 
             // recalculate derivatives only if they changed
-            bool recalculate = currentTimeMsSinceEpoc > m_nextSampleAdjustedTime; // new step
+            const bool newStep = currentTimeMsSinceEpoc > m_nextSampleAdjustedTime; // new step
+            bool recalculate = newStep;
             const qint64 lastModified = this->situationsLastModified(m_callsign);
             if (!recalculate && (lastModified > m_situationsLastModifiedUsed) && this->isAnySituationNearGroundRelevant())
             {
@@ -135,6 +136,12 @@ namespace BlackMisc
                 // m_s[0] .. oldest -> m_[2] .. latest
                 if (situationsNewer.isEmpty() || situationsOlder.size() < 2) { return m_interpolant; }
                 m_s = std::array<CAircraftSituation, 3> {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
+
+                // we interpolate from 1 -> 2, 0 for smoother interpolation
+                if (newStep && !m_lastInterpolation.isNull())
+                {
+                    m_s[1] = m_lastInterpolation; // true only for the moment we create a new step
+                }
 
                 const std::array<std::array<double, 3>, 3> normals {{ m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() }};
                 PosArray pa;
@@ -261,7 +268,7 @@ namespace BlackMisc
             return true;
         }
 
-        CAircraftSituation CInterpolatorSpline::Interpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation) const
+        CAircraftSituation CInterpolatorSpline::Interpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation, bool interpolateGndFactor) const
         {
             const double t1 = m_pa.t[1];
             const double t2 = m_pa.t[2];
@@ -269,7 +276,7 @@ namespace BlackMisc
             const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
             const double newZ = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.z[1], m_pa.z[2], m_pa.dz[1], m_pa.dz[2]);
 
-            CAircraftSituation newSituation(situation);
+            CAircraftSituation newSituation(currentSituation);
             const std::array<double, 3> normalVector = {{ newX, newY, newZ }};
             const CCoordinateGeodetic currentPosition(normalVector);
 
@@ -280,17 +287,21 @@ namespace BlackMisc
             newSituation.setAltitude(alt);
             newSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
 
-            const double gnd1 = m_pa.gnd[1];
-            const double gnd2 = m_pa.gnd[2];
-            do
+            if (interpolateGndFactor)
             {
-                if (gfEqualAirborne(gnd1, gnd2)) { newSituation.setOnGround(false); break; }
-                if (gfEqualOnGround(gnd1, gnd2)) { newSituation.setOnGround(true); break; }
-                const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
-                newSituation.setOnGroundFactor(newGnd);
-                newSituation.setOnGroundFromGroundFactorFromInterpolation();
+                const double gnd1 = m_pa.gnd[1];
+                const double gnd2 = m_pa.gnd[2];
+                do
+                {
+                    newSituation.setOnGroundDetails(CAircraftSituation::OnGroundByInterpolation);
+                    if (gfEqualAirborne(gnd1, gnd2)) { newSituation.setOnGround(false); break; }
+                    if (gfEqualOnGround(gnd1, gnd2)) { newSituation.setOnGround(true); break; }
+                    const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
+                    newSituation.setOnGroundFactor(newGnd);
+                    newSituation.setOnGroundFromGroundFactorFromInterpolation();
+                }
+                while (false);
             }
-            while (false);
             return newSituation;
         }
 

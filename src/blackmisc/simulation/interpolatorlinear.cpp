@@ -49,7 +49,7 @@ namespace BlackMisc
             m_pbh(m_simulationTimeFraction, situation1, situation2)
         {}
 
-        CAircraftSituation CInterpolatorLinear::Interpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation) const
+        CAircraftSituation CInterpolatorLinear::Interpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation, bool interpolateGndFactor) const
         {
             const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());
             const std::array<double, 3> newVec(m_newSituation.getPosition().normalVectorDouble());
@@ -75,17 +75,20 @@ namespace BlackMisc
             newSituation.setAltitude(altitude);
             newSituation.setMSecsSinceEpoch(this->getInterpolatedTime());
 
-            const double oldGroundFactor = m_oldSituation.getOnGroundFactor();
-            const double newGroundFactor = m_newSituation.getOnGroundFactor();
-            do
+            if (interpolateGndFactor)
             {
-                if (gfEqualAirborne(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(false); break; }
-                if (gfEqualOnGround(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(true); break; }
-                const double groundFactor = (newGroundFactor - oldGroundFactor) * m_simulationTimeFraction + oldGroundFactor;
-                newSituation.setOnGroundFactor(groundFactor);
-                newSituation.setOnGroundFromGroundFactorFromInterpolation();
+                const double oldGroundFactor = m_oldSituation.getOnGroundFactor();
+                const double newGroundFactor = m_newSituation.getOnGroundFactor();
+                do
+                {
+                    if (gfEqualAirborne(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(false); break; }
+                    if (gfEqualOnGround(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(true); break; }
+                    const double groundFactor = (newGroundFactor - oldGroundFactor) * m_simulationTimeFraction + oldGroundFactor;
+                    newSituation.setOnGroundFactor(groundFactor);
+                    newSituation.setOnGroundFromGroundFactorFromInterpolation();
+                }
+                while (false);
             }
-            while (false);
             return newSituation;
         }
 

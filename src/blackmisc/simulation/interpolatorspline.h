@@ -60,7 +60,7 @@ namespace BlackMisc
                     m_pa(pa), m_altitudeUnit(altitudeUnit), m_pbh(pbh) {}
 
                 //! Perform the interpolation
-                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation) const;
+                Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &currentSituation, bool interpolateGndFactor) const;
 
                 //! Interpolator for pitch, bank, heading, groundspeed
                 const CInterpolatorPbh &pbh() const { return m_pbh; }

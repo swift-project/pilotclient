@@ -148,17 +148,26 @@ namespace BlackMisc
 
             // Pitch bank heading
             // first, so follow up steps could use those values
-            const auto pbh = interpolant.pbh();
+            const CInterpolatorPbh pbh = interpolant.pbh();
             currentSituation.setHeading(pbh.getHeading());
             currentSituation.setPitch(pbh.getPitch());
             currentSituation.setBank(pbh.getBank());
             currentSituation.setGroundSpeed(pbh.getGroundSpeed());
 
             // use derived interpolant function
-            currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation);
+            const bool interpolateGndFlag = pbh.getNewSituation().hasGroundDetailsForGndInterpolation() && pbh.getOldSituation().hasGroundDetailsForGndInterpolation();
+            currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
+            if (!interpolateGndFlag) { currentSituation.guessOnGround(m_model.isVtol(), m_cg); }
 
             // correct itself
-            const CAircraftSituation::AltitudeCorrection altCorrection = currentSituation.correctAltitude(m_cg, true);
+            CAircraftSituation::AltitudeCorrection altCorrection = CAircraftSituation::NoCorrection;
+            if (!interpolateGndFlag && currentSituation.getOnGroundDetails() != CAircraftSituation::OnGroundByGuessing)
+            {
+                // just in case
+                altCorrection = currentSituation.correctAltitude(m_cg, true);
+            }
+
+            // status
             status.setInterpolatedAndCheckSituation(true, currentSituation);
 
             // logging
