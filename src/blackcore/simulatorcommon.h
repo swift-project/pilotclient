@@ -57,6 +57,7 @@ namespace BlackCore
     class BLACKCORE_EXPORT CSimulatorCommon : public ISimulator
     {
         Q_OBJECT
+        Q_INTERFACES(BlackCore::ISimulator)
 
     public:
         //! Log categories

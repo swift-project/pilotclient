@@ -14,14 +14,67 @@
    <string>FSX/P3D plugin settings</string>
   </property>
   <layout class="QVBoxLayout" name="vl_FsxConfigWindow">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
+   </property>
    <item>
-    <widget class="BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent" name="fr_simConnectSettings">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+    <widget class="QTabWidget" name="tw_Settings">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
+     <widget class="QWidget" name="tb_SimConnectConfig">
+      <attribute name="title">
+       <string>SimConnect config</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_SimConnectSettings">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent" name="comp_SimConnectSettings"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Settings">
+      <attribute name="title">
+       <string>Settings</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Settings">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="BlackSimPlugin::FsxCommon::CFsxSettingsComponent" name="comp_Settings"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
@@ -38,6 +91,12 @@
    <class>BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent</class>
    <extends>QFrame</extends>
    <header>simconnectsettingscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackSimPlugin::FsxCommon::CFsxSettingsComponent</class>
+   <extends>QFrame</extends>
+   <header>fsxsettingscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

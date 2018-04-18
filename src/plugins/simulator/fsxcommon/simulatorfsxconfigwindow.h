@@ -13,6 +13,7 @@
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
 
 #include "blackgui/pluginconfigwindow.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 #include <QScopedPointer>
 
 namespace Ui { class CSimulatorFsxConfigWindow; }
@@ -34,11 +35,14 @@ namespace BlackSimPlugin
             //! Dtor.
             virtual ~CSimulatorFsxConfigWindow();
 
+            //! Related simulator, i.e. "P3D" or "FSX"
+            const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
+
         private:
-            QString m_simulator { "FSX" };
+            const BlackMisc::Simulation::CSimulatorInfo m_simulator { "FSX" };
             QScopedPointer<Ui::CSimulatorFsxConfigWindow> ui;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

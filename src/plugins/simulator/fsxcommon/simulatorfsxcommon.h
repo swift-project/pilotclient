@@ -100,6 +100,7 @@ namespace BlackSimPlugin
         class CSimulatorFsxCommon : public BlackSimPlugin::FsCommon::CSimulatorFsCommon
         {
             Q_OBJECT
+            Q_INTERFACES(BlackCore::ISimulator)
 
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
@@ -133,6 +134,12 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
+
+            //! Tracing?
+            bool isTracingSendId() const { return m_traceSendId; }
+
+            //! Set tracing on/off
+            void setTractingSendId(bool trace) { m_traceSendId = trace; }
 
         protected:
             //! SimConnect Callback

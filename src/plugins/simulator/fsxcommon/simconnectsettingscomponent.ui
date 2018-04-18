@@ -45,16 +45,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="lbl_SimConnectInfo">
-        <property name="text">
-         <string>info about version, ...</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_SimConnectIniFiles">
         <property name="text">
@@ -112,264 +102,6 @@ console=1
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QGroupBox" name="gb_SwiftSimConnectCfg">
-        <property name="title">
-         <string>swift SimConnect.cfg</string>
-        </property>
-        <layout class="QFormLayout" name="fl_SwiftSimConnectCfg">
-         <property name="leftMargin">
-          <number>4</number>
-         </property>
-         <property name="topMargin">
-          <number>4</number>
-         </property>
-         <property name="rightMargin">
-          <number>4</number>
-         </property>
-         <property name="bottomMargin">
-          <number>4</number>
-         </property>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lbl_Address">
-           <property name="text">
-            <string>Address</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="le_Address">
-           <property name="text">
-            <string>127.0.0.1</string>
-           </property>
-           <property name="maxLength">
-            <number>128</number>
-           </property>
-           <property name="placeholderText">
-            <string>e.g. &quot;127.0.0.1&quot; or &quot;192.128.3.1&quot;</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lbl_Port">
-           <property name="text">
-            <string>Port</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="le_Port">
-           <property name="text">
-            <string>500</string>
-           </property>
-           <property name="placeholderText">
-            <string>normally &quot;500&quot;</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="lbl_ExistsSimConnectCfg">
-           <property name="toolTip">
-            <string>is 'SimConnect.cfg' available?</string>
-           </property>
-           <property name="text">
-            <string>.cfg file</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QWidget" name="wi_ExistsSimConnectCfg" native="true">
-           <layout class="QHBoxLayout" name="hl_SettingsFsxExistsSimConnectCfg">
-            <property name="spacing">
-             <number>4</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLineEdit" name="le_ExistsSimConnectCfg">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="placeholderText">
-               <string>local &quot;SimConnect.cfg&quot; file?</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pb_ExistsSimConnectCfg">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>check</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="2">
-          <layout class="QHBoxLayout" name="hl_SimConnectCfgButtons">
-           <property name="spacing">
-            <number>3</number>
-           </property>
-           <item>
-            <widget class="QPushButton" name="pb_OpenSwiftSimConnectCfg">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>50</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>open</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pb_DeleteSwiftSimConnectCfg">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>50</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>del.</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pb_SaveSwiftSimConnectCfg">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>50</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>save</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pb_TestConnection">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>50</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>Test connection</string>
-             </property>
-             <property name="text">
-              <string extracomment="Test connection">test</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_UserCfgFile">
-           <property name="text">
-            <string>User's .cfg file</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QWidget" name="wi_UserSimConnectCfg" native="true">
-           <layout class="QHBoxLayout" name="hl_UserCfgFile">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLineEdit" name="le_UserCfgFile">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-              <property name="placeholderText">
-               <string>User's &quot;SimConnect.cfg&quot; file</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pb_OpenUserCfgFile">
-              <property name="text">
-               <string>open</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
       <item row="3" column="0" colspan="2">
        <widget class="QWidget" name="wi_SimConnectIniSaveAs" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout">
@@ -411,11 +143,301 @@ console=1
         </layout>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QPlainTextEdit" name="pte_SimConnectInfo">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="documentTitle">
+         <string>Version info</string>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_SwiftSimConnectCfg">
+     <property name="title">
+      <string>swift SimConnect.cfg</string>
+     </property>
+     <layout class="QFormLayout" name="fl_SwiftSimConnectCfg">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Address">
+        <property name="text">
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_Address">
+        <property name="text">
+         <string>127.0.0.1</string>
+        </property>
+        <property name="maxLength">
+         <number>128</number>
+        </property>
+        <property name="placeholderText">
+         <string>e.g. &quot;127.0.0.1&quot; or &quot;192.128.3.1&quot;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Port">
+        <property name="text">
+         <string>Port</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="le_Port">
+        <property name="text">
+         <string>500</string>
+        </property>
+        <property name="placeholderText">
+         <string>normally &quot;500&quot;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_ExistsSimConnectCfg">
+        <property name="toolTip">
+         <string>is 'SimConnect.cfg' available?</string>
+        </property>
+        <property name="text">
+         <string>.cfg file</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QWidget" name="wi_ExistsSimConnectCfg" native="true">
+        <layout class="QHBoxLayout" name="hl_SettingsFsxExistsSimConnectCfg">
+         <property name="spacing">
+          <number>4</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="le_ExistsSimConnectCfg">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>local &quot;SimConnect.cfg&quot; file?</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_ExistsSimConnectCfg">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>check</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="hl_SimConnectCfgButtons">
+        <property name="spacing">
+         <number>3</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="pb_OpenSwiftSimConnectCfg">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>open</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_DeleteSwiftSimConnectCfg">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>del.</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_SaveSwiftSimConnectCfg">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>save</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_TestConnection">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Test connection</string>
+          </property>
+          <property name="text">
+           <string extracomment="Test connection">test</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_UserCfgFile">
+        <property name="text">
+         <string>User's .cfg file</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QWidget" name="wi_UserSimConnectCfg" native="true">
+        <layout class="QHBoxLayout" name="hl_UserCfgFile">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="le_UserCfgFile">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>User's &quot;SimConnect.cfg&quot; file</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_OpenUserCfgFile">
+           <property name="text">
+            <string>open</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pte_SimConnectInfo</tabstop>
+  <tabstop>pte_SimConnectIniFiles</tabstop>
+  <tabstop>pte_SimConnectIni</tabstop>
+  <tabstop>pb_SaveAsSimConnectIni</tabstop>
+  <tabstop>le_UserCfgFile</tabstop>
+  <tabstop>pb_OpenUserCfgFile</tabstop>
+  <tabstop>le_Address</tabstop>
+  <tabstop>le_Port</tabstop>
+  <tabstop>le_ExistsSimConnectCfg</tabstop>
+  <tabstop>pb_ExistsSimConnectCfg</tabstop>
+  <tabstop>pb_OpenSwiftSimConnectCfg</tabstop>
+  <tabstop>pb_DeleteSwiftSimConnectCfg</tabstop>
+  <tabstop>pb_SaveSwiftSimConnectCfg</tabstop>
+  <tabstop>pb_TestConnection</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

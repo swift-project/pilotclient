@@ -213,13 +213,13 @@ namespace BlackSimPlugin
         {
             if (CBuildConfig::isCompiledWithP3DSupport() && CBuildConfig::buildWordSize() == 64)
             {
-                ui->lbl_SimConnectInfo->setText("Static linking P3Dv4 x64");
+                ui->pte_SimConnectInfo->setPlainText("Static linking P3Dv4 x64");
                 m_simulator = CSimulatorInfo(CSimulatorInfo::P3D);
             }
             else
             {
                 const CWinDllUtils::DLLInfo SimConnectInfo = CSimConnectUtilities::simConnectDllInfo();
-                ui->lbl_SimConnectInfo->setText(SimConnectInfo.summary());
+                ui->pte_SimConnectInfo->setPlainText(SimConnectInfo.summary());
                 m_simulator = CSimulatorInfo(CSimulatorInfo::FSX);
             }
             ui->le_UserCfgFile->setText(CSimConnectUtilities::hasUserSimConnectCfgFile() ? CSimConnectUtilities::getUserSimConnectCfgFilename() : "");

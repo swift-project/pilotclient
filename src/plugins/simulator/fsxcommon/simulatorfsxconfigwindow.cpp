@@ -22,13 +22,15 @@ namespace BlackSimPlugin
             ui(new Ui::CSimulatorFsxConfigWindow)
         {
             ui->setupUi(this);
+            ui->tw_Settings->setCurrentIndex(0);
+            ui->comp_Settings->setSimulator(m_simulator);
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &QWidget::close);
-            this->setWindowTitle(m_simulator + " plugin configuration");
+            this->setWindowTitle(m_simulator.toQString(true) + " plugin configuration");
         }
 
         CSimulatorFsxConfigWindow::~CSimulatorFsxConfigWindow()
         {
             // void
         }
-    }
-}
+    } // ns
+} // ns

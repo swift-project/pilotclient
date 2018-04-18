@@ -279,13 +279,13 @@ namespace BlackSimPlugin
 
             if (m_simConnectProbes.isEmpty()) { return this->physicallyAddAITerrainProbe(pos); }
             if (m_simConnectProbes.countConfirmedAdded() < 1) { return false; } // pending probes
-            CSimConnectObject simObj = m_simConnectProbes.values().front();
+            CSimConnectObject simObject = m_simConnectProbes.values().front();
 
             SIMCONNECT_DATA_INITPOSITION position = this->coordinateToFsxPosition(pos);
             const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
-                               simObj.getObjectId(), 0, 0,
+                               simObject.getObjectId(), 0, 0,
                                sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
-            if (m_traceSendId) { this->traceSendId(simObj.getObjectId(), Q_FUNC_INFO); }
+            if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO); }
 
             if (hr == S_OK)
             {
@@ -393,7 +393,12 @@ namespace BlackSimPlugin
             this->safeKillTimer();
 
             // if called from dispatch function, avoid that SimConnectProc disconnects itself while in SimConnectProc
-            QTimer::singleShot(0, this, &CSimulatorFsxCommon::disconnectFrom);
+            QPointer<CSimulatorFsxCommon> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (myself.isNull()) { return; }
+                myself->disconnectFrom();
+            });
         }
 
         SIMCONNECT_DATA_REQUEST_ID CSimulatorFsxCommon::obtainRequestIdForSimData()
@@ -884,7 +889,7 @@ namespace BlackSimPlugin
                 }
                 else if (m_dispatchErrors > 5)
                 {
-                    // this normally happens during a FSX crash or shutdown
+                    // this normally happens during a FSX crash or shutdown with simconnect
                     CLogMessage(this).error("%1: Multiple dispatch errors, disconnecting") << this->getSimulatorPluginInfo().getIdentifier();
                     this->disconnectFrom();
                 }
