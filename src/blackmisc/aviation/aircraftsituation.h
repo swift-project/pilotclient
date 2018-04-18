@@ -184,6 +184,9 @@ namespace BlackMisc
             //! Set on ground factor 0..1 (on ground), -1 not set
             void setOnGroundFactor(double groundFactor);
 
+            //! Should we guess on ground?
+            bool shouldGuessOnGround() const;
+
             //! Guess on ground flag
             bool guessOnGround(bool vtol = false, const PhysicalQuantities::CLength &cg = PhysicalQuantities::CLength::null());
 
@@ -192,6 +195,9 @@ namespace BlackMisc
 
             //! On ground reliability
             OnGroundDetails getOnGroundDetails() const { return static_cast<CAircraftSituation::OnGroundDetails>(m_onGroundDetails); }
+
+            //! Do the ground details permit ground interpolation?
+            bool hasGroundDetailsForGndInterpolation() const;
 
             //! On ground reliability as string
             const QString &getOnDetailsAsString() const;

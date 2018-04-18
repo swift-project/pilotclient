@@ -274,11 +274,26 @@ namespace BlackMisc
             m_onGroundFactor = gf;
         }
 
+        bool CAircraftSituation::shouldGuessOnGround() const
+        {
+            return (!this->isOnGroundInfoAvailable());
+        }
+
         bool CAircraftSituation::guessOnGround(bool vtol, const PhysicalQuantities::CLength &cg)
         {
-            if (this->getOnGroundDetails() == NotSet) { return false; }
+            if (!this->shouldGuessOnGround()) { return false; }
+
+            // Non VTOL aircraft have to move to be not on ground
+            if (!vtol && !this->isMoving())
+            {
+                this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
+                return true;
+            }
+
+            // by elevation
+            // we can detect "on ground" but not "not on ground" because of overflow
             IsOnGround og = this->isOnGroundByElevation(cg);
-            if (og != OnGroundSituationUnknown)
+            if (og == OnGround)
             {
                 this->setOnGround(og, CAircraftSituation::OnGroundByGuessing);
                 return true;
@@ -304,6 +319,11 @@ namespace BlackMisc
             const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
             const CLength groundDistance = (this->getAltitude() - groundPlusCG);
             return groundDistance;
+        }
+
+        bool CAircraftSituation::hasGroundDetailsForGndInterpolation() const
+        {
+            return this->getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails;
         }
 
         const QString &CAircraftSituation::getOnDetailsAsString() const
@@ -352,9 +372,17 @@ namespace BlackMisc
 
         CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation(const CLength &cg) const
         {
+            Q_ASSERT_X(!cg.isNegativeWithEpsilonConsidered(), Q_FUNC_INFO, "CG must not be negative");
             const CLength groundDistance = this->getGroundDistance(cg);
             if (groundDistance.isNull()) { return OnGroundSituationUnknown; }
-            if (groundDistance.isNegativeWithEpsilonConsidered() || groundDistance.abs() < deltaNearGround()) { return OnGround; }
+            if (groundDistance.isNegativeWithEpsilonConsidered()) { return OnGround; }
+            if (groundDistance.abs() < deltaNearGround()) { return OnGround; }
+            if (!cg.isNull())
+            {
+                // smaller than percentage from CG
+                const CLength cgFactor(cg * 0.1);
+                if (groundDistance.abs() < cgFactor) { return OnGround; }
+            }
             return NotOnGround;
         }
 
@@ -363,7 +391,7 @@ namespace BlackMisc
             return !this->getGroundElevation().isNull();
         }
 
-        bool CAircraftSituation::hasInboundGroundInformation() const
+        bool CAircraftSituation::hasInboundGroundDetails() const
         {
             return this->getOnGroundDetails() == CAircraftSituation::InFromParts || this->getOnGroundDetails() == CAircraftSituation::InFromNetwork;
         }
@@ -453,7 +481,7 @@ namespace BlackMisc
                     if (correctetion) { *correctetion = NoCorrection; }
                     return groundPlusCG;
                 }
-                const bool forceDragToGround = (enableDragToGround && this->getOnGround() == OnGround) && (this->hasInboundGroundInformation() || this->getOnGroundDetails() == OnGroundByGuessing);
+                const bool forceDragToGround = (enableDragToGround && this->getOnGround() == OnGround) && (this->hasInboundGroundDetails() || this->getOnGroundDetails() == OnGroundByGuessing);
                 if (forceDragToGround)
                 {
                     if (correctetion) { *correctetion = DraggedToGround; }
@@ -487,7 +515,7 @@ namespace BlackMisc
         bool CAircraftSituation::canLikelySkipNearGroundInterpolation() const
         {
             // those we can exclude
-            if (this->isOnGround() && this->hasInboundGroundInformation()) { return false; }
+            if (this->isOnGround() && this->hasInboundGroundDetails()) { return false; }
 
             // cases where we can skip
             if (this->isNull()) { return true; }

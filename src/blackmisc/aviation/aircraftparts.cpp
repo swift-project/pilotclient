@@ -71,15 +71,25 @@ namespace BlackMisc
             parts.setGearDown(onGround);
             engines.initEngines(engineNumber, !onGround || situation.isMoving());
 
+            const double pitchDeg = situation.getPitch().value(CAngleUnit::deg());
+            double nearGround1Ft = 750;
+            double nearGround2Ft = 1500;
+            if (pitchDeg > 10)
+            {
+                // likely starting
+                nearGround1Ft = 250;
+                nearGround2Ft = 500;
+            }
+
             if (situation.hasGroundElevation())
             {
                 const double aGroundFt = situation.getHeightAboveGround().value(CLengthUnit::ft());
-                if (aGroundFt < 1000)
+                if (aGroundFt < nearGround1Ft)
                 {
                     parts.setGearDown(true);
                     parts.setFlapsPercent(25);
                 }
-                else if (aGroundFt < 2000)
+                else if (aGroundFt < nearGround2Ft)
                 {
                     parts.setGearDown(true);
                     parts.setFlapsPercent(10);

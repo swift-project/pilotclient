@@ -43,6 +43,23 @@ namespace BlackMisc
             return c;
         }
 
+        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(const CElevationPlane &elevationPlane, bool isVtol, const CLength &cg)
+        {
+            if (elevationPlane.isNull()) { return 0; }
+            int c = 0;
+            for (CAircraftSituation &s : *this)
+            {
+                const bool set = s.setGroundElevationChecked(elevationPlane);
+                if (!set) { continue; }
+                if (s.shouldGuessOnGround())
+                {
+                    s.guessOnGround(isVtol, cg);
+                }
+                c++;
+            }
+            return c;
+        }
+
         int CAircraftSituationList::adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor)
         {
             int c = 0;
@@ -76,7 +93,7 @@ namespace BlackMisc
 
         CAircraftSituationList CAircraftSituationList::findByInboundGroundInformation(bool hasGroundInfo) const
         {
-            return this->findBy(&CAircraftSituation::hasInboundGroundInformation, hasGroundInfo);
+            return this->findBy(&CAircraftSituation::hasInboundGroundDetails, hasGroundInfo);
         }
 
         bool CAircraftSituationList::hasSituationWithoutGroundElevation() const
