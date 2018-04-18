@@ -121,8 +121,20 @@ namespace BlackMisc
             }
 
             // locked members
-            { QWriteLocker l(&m_lockParts); m_partsByCallsign.clear(); m_aircraftWithParts.clear(); m_partsAdded = 0; m_partsLastModified.clear(); }
-            { QWriteLocker l(&m_lockSituations); m_situationsByCallsign.clear();  m_situationsAdded = 0; m_situationsLastModified.clear(); }
+            {
+                QWriteLocker l(&m_lockParts);
+                m_partsByCallsign.clear();
+                m_aircraftWithParts.clear();
+                m_partsAdded = 0;
+                m_partsLastModified.clear();
+            }
+            {
+                QWriteLocker l(&m_lockSituations);
+                m_situationsByCallsign.clear();
+                m_situationsAdded = 0;
+                m_situationsLastModified.clear();
+                m_testOffset.clear();
+            }
             { QWriteLocker l(&m_lockPartsHistory); m_aircraftPartsHistory.clear(); }
             { QWriteLocker l(&m_lockMessages); m_reverseLookupMessages.clear(); }
             { QWriteLocker l(&m_lockAircraft); m_aircraftInRange.clear(); }
@@ -187,7 +199,7 @@ namespace BlackMisc
             }
 
             // unify all inbound ground information
-            if (situation.hasInboundGroundInformation())
+            if (situation.hasInboundGroundDetails())
             {
                 situationList.setOnGroundDetails(situation.getOnGroundDetails());
             }

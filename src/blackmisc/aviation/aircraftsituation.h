@@ -79,7 +79,7 @@ namespace BlackMisc
             //! Reliability of on ground information
             enum OnGroundDetails
             {
-                NotSet,
+                NotSetGroundDetails,
                 // interpolated situation
                 OnGroundByInterpolation,  //!< strongest for remote aircraft
                 OnGroundByElevationAndCG,
@@ -229,8 +229,8 @@ namespace BlackMisc
             //! Is ground elevation value available
             bool hasGroundElevation() const;
 
-            //! Has inbound ground information
-            bool hasInboundGroundInformation() const;
+            //! Has inbound ground details
+            bool hasInboundGroundDetails() const;
 
             //! Elevation of the ground directly beneath at the given situation
             void setGroundElevation(const Aviation::CAltitude &altitude);
@@ -261,7 +261,7 @@ namespace BlackMisc
             const PhysicalQuantities::CLengthUnit &getAltitudeUnit() const { return m_position.geodeticHeight().getUnit(); }
 
             //! Get altitude under consideration of ground elevation and ground flag
-            //! \remark with dragToGround it will also compensate overflows, otherwise ony underflow
+            //! \remark with dragToGround it will also compensate overflows, otherwise only underflow
             CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = PhysicalQuantities::CLength::null(), bool enableDragToGround = true, AltitudeCorrection *correctetion = nullptr) const;
 
             //! Set the corrected altitude from CAircraftSituation::getCorrectedAltitude
@@ -364,7 +364,7 @@ namespace BlackMisc
             bool m_isInterim = false;
             Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
             int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
-            int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSet);
+            int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSetGroundDetails);
             double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
 
             BLACK_METACLASS(

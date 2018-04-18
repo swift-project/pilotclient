@@ -92,7 +92,7 @@ namespace BlackMisc
             }
             else
             {
-                if (!situation.hasInboundGroundInformation())
+                if (!situation.hasInboundGroundDetails())
                 {
                     // the ground flag is not reliable and we have no ground elevation
                     if (situation.getOnGroundDetails() == CAircraftSituation::OnGroundByGuessing)

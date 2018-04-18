@@ -108,7 +108,7 @@ namespace BlackMiscTest
         for (int i = 0; i < number; i++)
         {
             CAircraftSituation s = createTestSituation(cs, i, ts, deltaT, 0);
-            s.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::NotSet);
+            s.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::NotSetGroundDetails);
             situations.push_back(s);
         }
 
@@ -124,7 +124,7 @@ namespace BlackMiscTest
         const qint64 Offset = 33;
         partsOnGround.addMsecsToOffset(Offset);
         CAircraftSituation s1 = situations[1];
-        s1.setOnGroundDetails(CAircraftSituation::NotSet);
+        s1.setOnGroundDetails(CAircraftSituation::NotSetGroundDetails);
         s1.adjustGroundFlag(partsOnGround, true, 0.1, &distanceMs);
         QVERIFY2(s1.getOnGround(), "Supposed to be on ground");
         QVERIFY2(distanceMs == deltaT - Offset, "Offset time wrong");

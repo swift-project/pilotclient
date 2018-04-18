@@ -145,7 +145,7 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) = 0;
 
-            //! Ground elevation of aircraft
+            //! Update the ground elevation
             //! \threadsafe
             virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) = 0;
 
@@ -360,7 +360,7 @@ namespace BlackMisc
             //! \remark latest parts are kept first
             //! \threadsafe
             //! @{
-            void storeAircraftParts(const Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool removeOutdated);
+            void storeAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts, bool removeOutdated);
             void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset);
             //! @}
 

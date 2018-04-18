@@ -932,7 +932,7 @@ namespace BlackCore
         }
 
         // do we already have ground details?
-        if (situation.getOnGroundDetails() == CAircraftSituation::NotSet)
+        if (situation.getOnGroundDetails() == CAircraftSituation::NotSetGroundDetails)
         {
             const CClient client = this->getClientOrDefaultForCallsign(callsign);
             if (client.hasCapability(CClient::FsdWithGroundFlag))

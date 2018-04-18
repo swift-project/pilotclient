@@ -146,8 +146,8 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             return this->latitudeAsString() % QLatin1Char(' ') %
-                   this->longitudeAsString() % QLatin1Char(' ') %
-                   this->geodeticHeightAsString();
+                   QStringLiteral(" | ") % this->longitudeAsString() % QLatin1Char(' ') %
+                   QStringLiteral(" | ") % this->geodeticHeightAsString();
         }
 
         CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -305,12 +305,8 @@ namespace BlackMisc
                 const ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexRelativeBearing:
-                    m_relativeBearing.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                    break;
-                case IndexRelativeDistance:
-                    m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                    break;
+                case IndexRelativeBearing: m_relativeBearing.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+                case IndexRelativeDistance: m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
                 default:
                     const QString m = QString("no property, index ").append(index.toQString());
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));

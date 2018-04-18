@@ -351,7 +351,8 @@ namespace BlackCore
     };
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorinterface")
+Q_DECLARE_INTERFACE(BlackCore::ISimulator, "org.swift-project.blackcore.simulator")
+Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "org.swift-project.blackcore.simulatorfactory")
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::ISimulator::SimulatorStatus)
 
 #endif // guard

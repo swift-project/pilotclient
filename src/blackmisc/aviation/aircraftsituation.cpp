@@ -50,15 +50,15 @@ namespace BlackMisc
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
             return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
-                   QStringLiteral(" ") % m_position.toQString(i18n) %
-                   QStringLiteral(" bank: ") % (m_bank.toQString(i18n)) %
-                   QStringLiteral(" pitch: ") % (m_pitch.toQString(i18n)) %
-                   QStringLiteral(" heading: ") % (m_heading.toQString(i18n)) %
-                   QStringLiteral(" og: ") % this->getOnGroundInfo() %
-                   QStringLiteral(" factor: ") % QString::number(m_onGroundFactor, 'f', 2) %
-                   QStringLiteral(" gs: ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
+                   QStringLiteral(" | ") % m_position.toQString(i18n) %
+                   QStringLiteral(" | bank: ") % (m_bank.toQString(i18n)) %
+                   QStringLiteral(" | pitch: ") % (m_pitch.toQString(i18n)) %
+                   QStringLiteral(" | heading: ") % (m_heading.toQString(i18n)) %
+                   QStringLiteral(" | og: ") % this->getOnGroundInfo() %
+                   QStringLiteral(" | factor: ") % QString::number(m_onGroundFactor, 'f', 2) %
+                   QStringLiteral(" | gs: ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
                    QStringLiteral(" ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
-                   QStringLiteral(" elevation: ") % (m_groundElevationPlane.toQString(i18n));
+                   QStringLiteral(" | elevation: ") % (m_groundElevationPlane.toQString(i18n));
         }
 
         const QString &CAircraftSituation::isOnGroundToString(CAircraftSituation::IsOnGround onGround)
@@ -98,7 +98,7 @@ namespace BlackMisc
             case CAircraftSituation::InFromNetwork: return inNetwork;
             case CAircraftSituation::InFromParts: return inFromParts;
             case CAircraftSituation::InNoGroundInfo: return InNoGroundInfo;
-            case CAircraftSituation::NotSet:
+            case CAircraftSituation::NotSetGroundDetails:
             default: return unknown;
             }
         }
@@ -229,7 +229,7 @@ namespace BlackMisc
             m_bank.setNull();
             m_groundElevationPlane.setNull();
             m_groundSpeed.setNull();
-            m_onGroundDetails = CAircraftSituation::NotSet;
+            m_onGroundDetails = CAircraftSituation::NotSetGroundDetails;
         }
 
         const QString &CAircraftSituation::onGroundAsString() const
@@ -239,8 +239,9 @@ namespace BlackMisc
 
         bool CAircraftSituation::isOnGroundInfoAvailable() const
         {
+            if (this->hasInboundGroundDetails()) { return true; }
             return this->getOnGround() != CAircraftSituation::OnGroundSituationUnknown &&
-                   this->getOnGroundDetails() != CAircraftSituation::NotSet;
+                   this->getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails;
         }
 
         void CAircraftSituation::setOnGround(bool onGround)
@@ -326,7 +327,7 @@ namespace BlackMisc
             this->setOnGroundDetails(OnGroundByInterpolation);
             if (this->getOnGroundFactor() < 0.0)
             {
-                this->setOnGround(NotSet);
+                this->setOnGround(NotSetGroundDetails);
                 return false;
             }
 
