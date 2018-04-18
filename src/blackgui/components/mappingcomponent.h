@@ -56,7 +56,8 @@ namespace BlackGui
 
         public:
             //! Tab widget
-            enum TabWidget {
+            enum TabWidget
+            {
                 TabRenderedAircraft = 0,
                 TabAircraftModels,
                 TabInterpolatorSetup,
@@ -134,6 +135,12 @@ namespace BlackGui
             //! Highlight in simulator
             void onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Selected or connected simulator
+            BlackMisc::Simulation::CSimulatorInfo getConnectedOrSelectedSimulator() const;
+
+            //! Is simulator avialable?
+            bool isSimulatorAvailable() const;
+
             //! Show / hide model details
             void showAircraftModelDetails(bool show);
 
@@ -153,7 +160,7 @@ namespace BlackGui
             void settingsChanged();
 
             //! Connection status has been changed
-            void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onNetworkConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Identifier for data send from this component
             const BlackMisc::CIdentifier &mappingIdentifier() const { return m_identifier; }
@@ -171,7 +178,7 @@ namespace BlackGui
             void onModelSetSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Plugin info has been changed
-            void onPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo);
+            void onSimulatorPluginChanged(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo);
 
             static constexpr int OverlayMessageMs = 5000;
             QScopedPointer<Ui::CMappingComponent> ui;

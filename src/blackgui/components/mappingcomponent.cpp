@@ -38,6 +38,7 @@
 #include <QPushButton>
 #include <QStringListModel>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -46,7 +47,6 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore;
 using namespace BlackCore::Context;
-using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
@@ -82,7 +82,7 @@ namespace BlackGui
             ui->tvp_RenderedAircraft->setAircraftMode(CSimulatedAircraftListModel::RenderedMode);
             ui->tvp_RenderedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
 
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::connectionStatusChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::onNetworkConnectionStatusChanged);
 
             connect(ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::onModelsUpdateRequested);
             connect(ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this, &CMappingComponent::onRowCountChanged);
@@ -132,7 +132,7 @@ namespace BlackGui
             connect(sGui->getIContextSimulator(), &IContextSimulator::aircraftRenderingChanged, this, &CMappingComponent::tokenBucketUpdateAircraft);
             connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled, this, &CMappingComponent::tokenBucketUpdate);
             connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed, this, &CMappingComponent::addingRemoteAircraftFailed);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CMappingComponent::onPluginChanged);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CMappingComponent::onSimulatorPluginChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::onRemoteAircraftModelChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::tokenBucketUpdateAircraft);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::tokenBucketUpdateAircraft);
@@ -145,9 +145,13 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::onChangedSimulatedAircraftInView);
 
             // with external core models might be already available
-            const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
-            this->onModelSetSimulatorChanged(sim);
-            this->onModelSetChanged(sim);
+            QPointer<CMappingComponent> myself(this);
+            QTimer::singleShot(2500, this, [ = ]
+            {
+                const CSimulatorInfo simulator(myself->getConnectedOrSelectedSimulator());
+                myself->onModelSetSimulatorChanged(simulator);
+                myself->onModelSetChanged(simulator);
+            });
         }
 
         CMappingComponent::~CMappingComponent()
@@ -272,8 +276,8 @@ namespace BlackGui
                 const CSimulatorPluginInfo pluginInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo();
                 if (pluginInfo.isValid())
                 {
-                    ui->comp_SimulatorSelector->setValue(pluginInfo.getSimulator());
                     ui->comp_SimulatorSelector->setReadOnly(true);
+                    ui->comp_SimulatorSelector->setValue(pluginInfo.getSimulator());
                 }
                 else
                 {
@@ -293,18 +297,21 @@ namespace BlackGui
 
         void CMappingComponent::onModelSetSimulatorChanged(const CSimulatorInfo &simulator)
         {
-            if (!sGui || !sGui->supportsContexts()) { return; }
-            if (sGui->isShuttingDown()) { return; }
-            if (sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
+            if (this->isSimulatorAvailable()) { return; }
             sGui->getIContextSimulator()->setModelSetLoaderSimulator(simulator);
 
             // completer will be changed in onModelSetChanged
         }
 
-        void CMappingComponent::onPluginChanged(const CSimulatorPluginInfo &pluginInfo)
+        void CMappingComponent::onSimulatorPluginChanged(const CSimulatorPluginInfo &pluginInfo)
         {
             Q_UNUSED(pluginInfo);
-            QTimer::singleShot(0, this, &CMappingComponent::setSimulatorSelector);
+            QPointer<CMappingComponent> myself(this);
+            QTimer::singleShot(25, this, [ = ]
+            {
+                if (myself.isNull()) { return; }
+                myself->setSimulatorSelector();
+            });
         }
 
         void CMappingComponent::onSaveAircraft()
@@ -422,10 +429,22 @@ namespace BlackGui
 
         void CMappingComponent::onMenuHighlightInSimulator(const CSimulatedAircraft &aircraft)
         {
-            if (sGui->getIContextSimulator())
+            if (sGui && sGui->getIContextSimulator())
             {
                 sGui->getIContextSimulator()->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
             }
+        }
+
+        CSimulatorInfo CMappingComponent::getConnectedOrSelectedSimulator() const
+        {
+            if (this->isSimulatorAvailable()) { return sGui->getIContextSimulator()->isSimulatorAvailable(); }
+            return ui->comp_SimulatorSelector->getValue();
+        }
+
+        bool CMappingComponent::isSimulatorAvailable() const
+        {
+            if (!sGui || !sGui->getIContextSimulator()) { return false; }
+            return sGui->getIContextSimulator()->isSimulatorAvailable();
         }
 
         void CMappingComponent::showAircraftModelDetails(bool show)
@@ -517,7 +536,7 @@ namespace BlackGui
             m_updateTimer.setInterval(ms);
         }
 
-        void CMappingComponent::connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        void CMappingComponent::onNetworkConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
             if (INetwork::isDisconnectedStatus(to))

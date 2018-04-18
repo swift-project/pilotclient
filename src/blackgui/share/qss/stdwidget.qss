@@ -167,6 +167,10 @@ BlackGui--Components--CDBusServerAddressSelector::disabled {
   background: rgba(4, 105, 105, 105);
 }
 
+BlackGui--Components--CSimulatorSelector::disabled {
+  background: rgba(4, 105, 105, 105);
+}
+
 BlackGui--Components--CDownloadComponent,
 BlackGui--Components--CDownloadDialog,
 BlackGui--Components--CRawFsdMessagesComponent,

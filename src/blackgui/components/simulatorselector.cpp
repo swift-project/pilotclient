@@ -186,10 +186,11 @@ namespace BlackGui
         void CSimulatorSelector::setReadOnly(bool readOnly)
         {
             CGuiUtility::checkBoxesReadOnly(this, readOnly);
-            ui->cb_FSX->setEnabled(!readOnly);
-            ui->cb_FS9->setEnabled(!readOnly);
-            ui->cb_XPlane->setEnabled(!readOnly);
-            ui->cb_P3D->setEnabled(!readOnly);
+            ui->rb_FSX->setEnabled(!readOnly);
+            ui->rb_FS9->setEnabled(!readOnly);
+            ui->rb_XPlane->setEnabled(!readOnly);
+            ui->rb_P3D->setEnabled(!readOnly);
+            this->setEnabled(!readOnly);
         }
 
         void CSimulatorSelector::radioButtonChanged(bool checked)
