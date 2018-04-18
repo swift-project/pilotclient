@@ -28,7 +28,7 @@ namespace BlackMisc
         //! Constructor
         CSimpleCommandParser(const QStringList &knownCommands);
 
-        //! Known command
+        //! Known command?
         bool isKnownCommand() const { return m_knownCommand; }
 
         //! Parse

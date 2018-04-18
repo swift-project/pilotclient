@@ -307,6 +307,9 @@ namespace BlackCore
             //! Request parts for callsign (from another client)
             virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+            //! Add altitude offset for testing
+            virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) = 0;
+
         public:
             //! Raw FSD message receiver functor
             using RawFsdMessageReceivedSlot = std::function<void(const BlackMisc::Network::CRawFsdMessage &)>;

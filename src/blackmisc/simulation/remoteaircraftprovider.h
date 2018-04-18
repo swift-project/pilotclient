@@ -295,6 +295,14 @@ namespace BlackMisc
             //! Clear all data
             void clear();
 
+            // ------------------- testing ---------------
+
+            //! Has test offset value?
+            bool hasTestAltitudeOffset(const Aviation::CCallsign &callsign) const;
+
+            //! Offset for callsign
+            bool testAddAltitudeOffset(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &offset);
+
         signals:
             //! A new aircraft appeared
             void addedAircraft(const CSimulatedAircraft &remoteAircraft);
@@ -356,6 +364,9 @@ namespace BlackMisc
             void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset);
             //! @}
 
+            //! Add an offset for testing
+            bool testAddAltitudeOffsetToSituation(Aviation::CAircraftSituation &situation) const;
+
         private:
             // hashs, because not sorted by key but keeping order
             CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
@@ -369,6 +380,7 @@ namespace BlackMisc
             QMap<Aviation::CCallsign, CStatusMessageList> m_aircraftPartsHistory;
             QMap<Aviation::CCallsign, qint64> m_situationsLastModified;
             QMap<Aviation::CCallsign, qint64> m_partsLastModified;
+            QMap<Aviation::CCallsign, PhysicalQuantities::CLength> m_testOffset;
 
             bool m_enableReverseLookupMsgs = false;   //!< shall we log. information about the matching process
             bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts

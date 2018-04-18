@@ -134,6 +134,7 @@ namespace BlackCore
             virtual int aircraftPartsAdded() const override;
             virtual qint64 situationsLastModified(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual qint64 partsLastModified(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override;
             //! @}
 
             //! In transition state, e.g. connecting, disconnecting.
@@ -145,7 +146,8 @@ namespace BlackCore
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
-            //! .m .msg   message text
+            //! .m .msg           message text
+            //! .altos .altoffset altitude offset for testing
             //! </pre>
             //! @}
             //! \copydoc IContextNetwork::parseCommandLine
@@ -158,6 +160,7 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".m", "alias: .msg"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".m message <text>", "send text message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message <text>", "send text message"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".altos callsign offsetvalue", "set altitude offset value (testing)"});
             }
 
             //! \publicsection

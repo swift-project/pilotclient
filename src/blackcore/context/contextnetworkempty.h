@@ -258,6 +258,15 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
+            //! \copydoc IContextNetwork::testAddAltitudeOffset
+            virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override
+            {
+                Q_UNUSED(callsign);
+                Q_UNUSED(offset);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {

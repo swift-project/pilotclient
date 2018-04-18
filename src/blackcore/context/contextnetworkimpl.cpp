@@ -234,7 +234,8 @@ namespace BlackCore
         {
             Q_UNUSED(originator;)
             if (commandLine.isEmpty()) { return false; }
-            CSimpleCommandParser parser({ ".msg", ".m" });
+            static const QStringList cmds({ ".msg", ".m", ".altos", ".altoffset" });
+            CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
             if (parser.matchesCommand(".msg", ".m"))
@@ -312,6 +313,33 @@ namespace BlackCore
                 }
                 CTextMessageList tml(tm);
                 this->sendTextMessages(tml);
+                return true;
+            }
+            else if (parser.matchesCommand(".altos", ".altoffet"))
+            {
+                if (!m_airspace) { return false; }
+                if (parser.countParts() < 2) { return false; }
+                const CCallsign cs(parser.part(1));
+                if (!m_airspace->isAircraftInRange(cs))
+                {
+                    CLogMessage(this).validationError("Altitude offset unknown callsign");
+                    return false;
+                }
+
+                CLength os(CLength::null());
+                if (parser.hasPart(2))
+                {
+                    os.parseFromString(parser.part(2));
+                }
+                const bool added = this->testAddAltitudeOffset(cs, os);
+                if (added)
+                {
+                    CLogMessage(this).info("Added altitude offset %1 for %2") << os.valueRoundedWithUnit(2) << cs.asString();
+                }
+                else
+                {
+                    CLogMessage(this).info("Removed altitude offset %1") << cs.asString();
+                }
                 return true;
             }
             return false;
@@ -607,6 +635,12 @@ namespace BlackCore
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->partsLastModified(callsign);
+        }
+
+        bool CContextNetwork::testAddAltitudeOffset(const CCallsign &callsign, const CLength &offset)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_airspace->testAddAltitudeOffset(callsign, offset);
         }
 
         CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const

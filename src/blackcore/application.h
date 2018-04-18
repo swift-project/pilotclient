@@ -15,8 +15,8 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackcore/db/databasereaderconfig.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackcore/application/applicationsettings.h"
 #include "blackcore/webreaderflags.h"
 #include "blackmisc/db/updateinfo.h"
@@ -64,6 +64,7 @@ namespace BlackCore
     class CCoreFacade;
     class CSetupReader;
     class CWebDataServices;
+    class ISimulator;
     namespace Context
     {
         class IContextApplication;
@@ -294,6 +295,11 @@ namespace BlackCore
         //! cmd line arguments as string
         virtual QString cmdLineArgumentsAsString(bool withExecutable = true);
         //! @}
+
+        // ----------------------- simulator ----------------------------------------
+
+        //! The simulator plugin, if available
+        ISimulator *getISimulator() const;
 
         // ----------------------- contexts ----------------------------------------
 

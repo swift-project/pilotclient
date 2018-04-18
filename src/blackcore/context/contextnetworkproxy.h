@@ -122,6 +122,7 @@ namespace BlackCore
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
             virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override;
             //! @}
 
         public:

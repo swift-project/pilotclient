@@ -12,9 +12,9 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 #define BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 
-#include "blackcore/corefacadeconfig.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/application/applicationsettings.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/weathermanager.h"
@@ -51,7 +51,6 @@ namespace BlackCore
 {
     class CCoreFacade;
     class CPluginManagerSimulator;
-    class ISimulator;
 
     namespace Context
     {
@@ -125,7 +124,7 @@ namespace BlackCore
             //! Gracefully shut down, e.g. for plugin unloading
             void gracefulShutdown();
 
-            //! Simulator object
+            //! Access to simulator (i.e. the plugin)
             ISimulator *simulator() const;
 
             //! Register dot commands

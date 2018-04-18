@@ -11,6 +11,7 @@
 #include "blackcore/application.h"
 #include "blackcore/db/networkwatchdog.h"
 #include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacade.h"
@@ -1275,6 +1276,13 @@ namespace BlackCore
         if (!withExecutable && !args.isEmpty()) args.removeFirst();
         if (args.isEmpty()) return "";
         return args.join(' ');
+    }
+
+    ISimulator *CApplication::getISimulator() const
+    {
+        if (!this->getCoreFacade()) { return nullptr; }
+        if (!this->getCoreFacade()->getCContextSimulator()) { return nullptr; }
+        return this->getCoreFacade()->getCContextSimulator()->simulator();
     }
 
     void CApplication::cmdLineHelpMessage()

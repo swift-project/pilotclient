@@ -164,21 +164,26 @@ namespace BlackMisc
 
         void CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation)
         {
-            if (situation.getCallsign().isEmpty()) { return; }
+            const CCallsign cs = situation.getCallsign();
+            if (cs.isEmpty()) { return; }
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+
+            // for testing only
+            CAircraftSituation situationOs(situation);
+            this->testAddAltitudeOffsetToSituation(situationOs);
 
             // list from new to old
             QWriteLocker lock(&m_lockSituations);
             m_situationsAdded++;
-            m_situationsLastModified[situation.getCallsign()] = ts;
-            CAircraftSituationList &situationList = m_situationsByCallsign[situation.getCallsign()];
+            m_situationsLastModified[cs] = ts;
+            CAircraftSituationList &situationList = m_situationsByCallsign[cs];
             if (situationList.isEmpty())
             {
-                situationList.prefillLatestAdjustedFirst(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                situationList.prefillLatestAdjustedFirst(situationOs, IRemoteAircraftProvider::MaxSituationsPerCallsign);
             }
             else
             {
-                situationList.push_frontKeepLatestFirstAdjustOffset(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                situationList.push_frontKeepLatestFirstAdjustOffset(situationOs, IRemoteAircraftProvider::MaxSituationsPerCallsign);
             }
 
             // unify all inbound ground information
@@ -420,6 +425,28 @@ namespace BlackMisc
             this->removeAllAircraft();
         }
 
+        bool CRemoteAircraftProvider::hasTestAltitudeOffset(const CCallsign &callsign) const
+        {
+            if (callsign.isEmpty()) { return false; }
+            QReadLocker l(&m_lockSituations);
+            return m_testOffset.contains(callsign);
+        }
+
+        bool CRemoteAircraftProvider::testAddAltitudeOffsetToSituation(CAircraftSituation &situation) const
+        {
+            if (!this->hasTestAltitudeOffset(situation.getCallsign())) { return false; }
+            const CCallsign cs(situation.getCallsign());
+
+            CLength os;
+            {
+                QReadLocker l(&m_lockSituations);
+                os = m_testOffset.value(cs);
+            }
+            const CAltitude newAlt = situation.getAltitude().withOffset(os);
+            situation.setAltitude(newAlt);
+            return true;
+        }
+
         CStatusMessageList CRemoteAircraftProvider::getAircraftPartsHistory(const CCallsign &callsign) const
         {
             QReadLocker l(&m_lockPartsHistory);
@@ -454,6 +481,20 @@ namespace BlackMisc
         {
             QReadLocker l(&m_lockParts);
             return m_partsLastModified.value(callsign, -1);
+        }
+
+        bool CRemoteAircraftProvider::testAddAltitudeOffset(const CCallsign &callsign, const CLength &offset)
+        {
+            const bool remove = offset.isNull() || offset.isZeroEpsilonConsidered();
+            QWriteLocker l(&m_lockSituations);
+            if (remove)
+            {
+                m_testOffset.remove(callsign);
+                return false;
+            }
+
+            m_testOffset[callsign] = offset;
+            return true;
         }
 
         int CRemoteAircraftProvider::aircraftPartsAdded() const

@@ -33,7 +33,7 @@ namespace BlackCore
         CContextNetworkProxy::CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextNetwork(mode, runtime), m_dBusInterface(nullptr)
         {
             m_dBusInterface = new CGenericDBusInterface(
-                serviceName , IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                 connection, this);
             this->relaySignals(serviceName, connection);
         }
@@ -288,6 +288,11 @@ namespace BlackCore
         void CContextNetworkProxy::testRequestAircraftConfig(const CCallsign &callsign)
         {
             m_dBusInterface->callDBus(QLatin1String("testRequestAircraftConfig"), callsign);
+        }
+
+        bool CContextNetworkProxy::testAddAltitudeOffset(const CCallsign &callsign, const PhysicalQuantities::CLength &offset)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("testAddAltitudeOffset"), callsign, offset);
         }
 
         CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, INetwork::LoginMode loginMode)
