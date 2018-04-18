@@ -14,6 +14,7 @@
 #include "blackmisc/verify.h"
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Json;
 
@@ -356,6 +357,11 @@ namespace BlackMisc
 
         int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
+            return this->updateAircraftGroundElevationExt(callsign, elevation, false, CLength::null(), false);
+        }
+
+        int CRemoteAircraftProvider::updateAircraftGroundElevationExt(const CCallsign &callsign, const CElevationPlane &elevation, bool isVtol, const CLength &cg, bool autoGuessGnd)
+        {
             if (!this->isAircraftInRange(callsign)) { return 0; }
 
             // update aircraft situation
@@ -363,7 +369,10 @@ namespace BlackMisc
             int updated = 0;
             {
                 QWriteLocker l(&m_lockSituations);
-                updated = m_situationsByCallsign[callsign].setGroundElevationChecked(elevation);
+                CAircraftSituationList situations = m_situationsByCallsign[callsign];
+                updated = autoGuessGnd ?
+                          situations.setGroundElevationCheckedAndGuessGround(elevation, isVtol, cg) :
+                          situations.setGroundElevationChecked(elevation);
                 if (updated < 1) { return 0; }
                 m_situationsLastModified[callsign] = ts;
             }

@@ -76,6 +76,7 @@ namespace BlackCore
         virtual QObject *asQObject() override { return this; }
         virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
         virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+        virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) override;
         //! @}
 
         //! Returns the list of users we know about
@@ -168,6 +169,9 @@ namespace BlackCore
         INetwork          *m_network  = nullptr;  //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
         bool m_bookingsRequested = false;         //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
+
+        //! Guess situation if applicable
+        bool guessOnGround(BlackMisc::Aviation::CAircraftSituation &situation) const;
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();

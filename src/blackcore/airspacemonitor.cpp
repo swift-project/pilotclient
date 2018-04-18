@@ -129,6 +129,13 @@ namespace BlackCore
         return r;
     }
 
+    int CAirspaceMonitor::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+    {
+        const bool vtol = this->isVtolAircraft(callsign);
+        const CLength cg = this->getCG(callsign);
+        return this->updateAircraftGroundElevationExt(callsign, elevation, vtol, cg, true);
+    }
+
     const CLogCategoryList &CAirspaceMonitor::getLogCategories()
     {
         static const CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
@@ -947,14 +954,17 @@ namespace BlackCore
             }
         }
 
-        if (situation.getOnGroundDetails() != CAircraftSituation::NotSet)
-        {
-            const bool vtol = this->isVtolAircraft(callsign);
-            const CLength cg = this->getCG(callsign);
-            correctedSituation.guessOnGround(vtol, cg);
-        }
-
+        this->guessOnGround(correctedSituation); // does nothing if situation is not appropriate for guessing
         CRemoteAircraftProvider::storeAircraftSituation(correctedSituation);
+    }
+
+    bool CAirspaceMonitor::guessOnGround(CAircraftSituation &situation) const
+    {
+        if (!situation.shouldGuessOnGround()) { return false; }
+        const CCallsign callsign(situation.getCallsign());
+        const bool vtol = this->isVtolAircraft(callsign);
+        const CLength cg = this->getCG(callsign);
+        return situation.guessOnGround(vtol, cg);
     }
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)

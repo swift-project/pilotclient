@@ -356,6 +356,10 @@ namespace BlackMisc
             //! \threadsafe
             void storeAircraftSituation(const Aviation::CAircraftSituation &situation);
 
+            //! An extended of IRemoteAircraftProvider::updateAircraftGroundElevation version which allows also guessing of ground
+            //! \sa IRemoteAircraftProvider::updateAircraftGroundElevation
+            int updateAircraftGroundElevationExt(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, bool isVtol, const PhysicalQuantities::CLength &cg, bool autoGuessGnd);
+
             //! Store an aircraft part
             //! \remark latest parts are kept first
             //! \threadsafe
