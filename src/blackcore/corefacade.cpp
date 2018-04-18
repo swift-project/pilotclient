@@ -200,28 +200,28 @@ namespace BlackCore
                 // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
                 // ready for model matching is sent delayed when all information are available
                 c = connect(m_contextNetwork, &IContextNetwork::readyForModelMatching,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxAddedRemoteAircraft);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxAddedRemoteAircraft, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::removedAircraft,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxRemovedRemoteAircraft);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxRemovedRemoteAircraft, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::changedRemoteAircraftModel,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedRemoteAircraftModel);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedRemoteAircraftModel, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::changedRemoteAircraftEnabled,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedRemoteAircraftEnabled);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxChangedRemoteAircraftEnabled, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::connectionStatusChanged,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxNetworkConnectionStatusChanged);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxNetworkConnectionStatusChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(this->getCContextNetwork()->airspace(), &CAirspaceMonitor::requestedNewAircraft,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxNetworkRequestedNewAircraft);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxNetworkRequestedNewAircraft, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::renderRestrictionsChanged,
-                            this->getCContextNetwork(), &CContextNetwork::xCtxSimulatorRenderRestrictionsChanged);
+                            this->getCContextNetwork(), &CContextNetwork::xCtxSimulatorRenderRestrictionsChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::simulatorStatusChanged,
-                            this->getCContextNetwork(), &CContextNetwork::xCtxSimulatorStatusChanged);
+                            this->getCContextNetwork(), &CContextNetwork::xCtxSimulatorStatusChanged, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
                 // set provider
