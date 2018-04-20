@@ -749,8 +749,6 @@ namespace BlackSimPlugin
                 const CAircraftParts parts(result);
                 if (result.getPartsStatus().isSupportingParts() || parts.getPartsDetails() == CAircraftParts::GuessedParts)
                 {
-                    if(xplaneAircraft.getPartsAsSent() == parts) { continue; }
-
                     surfaceCallsign.push_back(xplaneAircraft.getCallsign().asString());
                     gear.push_back(parts.isGearDown() ? 1 : 0);
                     flap.push_back(parts.getFlapsPercent() / 100.0);
