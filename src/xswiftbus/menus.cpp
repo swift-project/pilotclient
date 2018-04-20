@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <cassert>
 #include <string>
+#include <algorithm>
 
 namespace XSwiftBus
 {
@@ -53,20 +54,40 @@ namespace XSwiftBus
     {
         assert(! name.empty());
         m_data->items->emplace_back(
-            CMenuItem { m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), voidptr_cast(m_data->items->size() + 1), false), false, false },
-            [callback](bool){ callback(); }
+        CMenuItem { m_data->id, 0, false, false, [callback](bool) { callback(); } }
         );
-        return m_data->items->back().first;
+        auto &menuItem = m_data->items->back();
+        menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), &menuItem, false));
+        return menuItem;
     }
 
     CMenuItem CMenu::checkableItem(const std::string &name, bool checked, std::function<void(bool)> callback)
     {
-        assert(! name.empty());
+        assert(!name.empty());
         m_data->items->emplace_back(
-            CMenuItem { m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), voidptr_cast(m_data->items->size() + 1), false), true, checked },
-            callback
+            CMenuItem{ m_data->id, 0, true, checked, callback }
         );
-        return m_data->items->back().first;
+        auto &menuItem = m_data->items->back();
+        menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), voidptr_cast(m_data->items->size() + 1), false));
+        return menuItem;
+    }
+
+    void CMenu::removeItem(const CMenuItem &item)
+    {
+        auto it = std::find_if(m_data->items->begin(), m_data->items->end(), [ = ](const auto & i)
+        {
+            return i.m_data->index == item.m_data->index;
+        });
+
+        XPLMRemoveMenuItem(m_data->id, it->m_data->index);
+        it = m_data->items->erase(it);
+
+        // Decrement the index of all below menu items
+        while (it != m_data->items->end())
+        {
+            it->m_data->index--;
+            ++it;
+        }
     }
 
     void CMenu::sep()
@@ -77,6 +98,7 @@ namespace XSwiftBus
     CMenu CMenu::subMenu(const std::string &name)
     {
         assert(! name.empty());
+        // auto items = std::make_unique<ItemList>();
         auto items = std::make_unique<ItemList>();
         auto itemsVoidPtr = static_cast<void *>(&*items);
         return { XPLMCreateMenu(name.c_str(), m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), nullptr, false), handler, itemsVoidPtr), false, std::move(items) };
@@ -86,16 +108,13 @@ namespace XSwiftBus
     {
         if (menuRef && itemRef)
         {
-            auto items = static_cast<ItemList *>(menuRef);
-            auto itemIdx = intptr_cast<intptr_t>(itemRef) - 1;
-            assert(itemIdx >= 0);
-
-            (*items)[itemIdx].second((*items)[itemIdx].first.getChecked());
+            CMenuItem *menuItem = static_cast<CMenuItem *>(itemRef);
+            menuItem->m_data->callback(menuItem->getChecked());
         }
     }
 
-    CMenuItem::CMenuItem(XPLMMenuID parent, int item, bool checkable, bool checked)
-        : m_data(std::make_shared<Data>(parent, item, checkable))
+    CMenuItem::CMenuItem(XPLMMenuID parent, int item, bool checkable, bool checked, std::function<void(bool)> callback)
+        : m_data(std::make_shared<Data>(parent, item, checkable, callback))
     {
         if (checkable)
         {
@@ -106,18 +125,18 @@ namespace XSwiftBus
     bool CMenuItem::getChecked() const
     {
         XPLMMenuCheck check = xplm_Menu_NoCheck;
-        XPLMCheckMenuItemState(m_data->parent, m_data->item, &check);
+        XPLMCheckMenuItemState(m_data->parent, m_data->index, &check);
         return check == xplm_Menu_Checked;
     }
 
     void CMenuItem::setChecked(bool checked)
     {
-        XPLMCheckMenuItem(m_data->parent, m_data->item, checked);
+        XPLMCheckMenuItem(m_data->parent, m_data->index, checked);
     }
 
     void CMenuItem::setEnabled(bool enabled)
     {
-        XPLMEnableMenuItem(m_data->parent, m_data->item, enabled);
+        XPLMEnableMenuItem(m_data->parent, m_data->index, enabled);
     }
 
 }

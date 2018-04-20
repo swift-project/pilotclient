@@ -14,7 +14,7 @@
 
 #include <XPLM/XPLMMenus.h>
 #include <functional>
-#include <vector>
+#include <list>
 #include <memory>
 
 namespace XSwiftBus
@@ -43,14 +43,17 @@ namespace XSwiftBus
     private:
         friend class CMenu;
 
-        CMenuItem(XPLMMenuID parent, int item, bool checkable, bool checked);
+        CMenuItem(XPLMMenuID parent, int item, bool checkable, bool checked, std::function<void(bool)> callback);
+
+        void setIndex(int index) { m_data->index = index; }
 
         struct Data
         {
-            Data(XPLMMenuID parent_, int item_, bool checkable_) : parent(parent_), item(item_), checkable(checkable_) {}
+            Data(XPLMMenuID parent_, int index_, bool checkable_, std::function<void(bool)> callback_) : parent(parent_), index(index_), checkable(checkable_), callback(callback_) {}
             XPLMMenuID parent;
-            int item;
+            int index;
             bool checkable;
+            std::function<void(bool)> callback;
         };
         std::shared_ptr<Data> m_data;
     };
@@ -73,6 +76,9 @@ namespace XSwiftBus
         //! Appends a checkbox item to the menu and returns it.
         CMenuItem checkableItem(const std::string &name, bool checked, std::function<void(bool)> callback);
 
+        //! Removes item from the menu
+        void removeItem(const CMenuItem &item);
+
         //! Appends a separator to the menu.
         void sep();
 
@@ -80,9 +86,11 @@ namespace XSwiftBus
         CMenu subMenu(const std::string &name);
 
     private:
-        typedef std::vector<std::pair<CMenuItem, std::function<void(bool)>>> ItemList;
+        // Using std::list, since it does not invalidate pointers.
+        using ItemList = std::list<CMenuItem>;
 
-        CMenu(XPLMMenuID id, bool isMainMenu, std::unique_ptr<ItemList> callbacks);
+        // CMenu(XPLMMenuID id, bool isMainMenu, std::unique_ptr<ItemList> callbacks);
+        CMenu(XPLMMenuID id, bool isMainMenu, std::unique_ptr<ItemList> items);
 
         static void handler(void *menuRef, void *itemRef);
 
@@ -93,7 +101,6 @@ namespace XSwiftBus
             XPLMMenuID id;
             bool isMainMenu;
             std::unique_ptr<ItemList> items;
-            std::vector<CMenu> subMenus;
             ~Data();
             Data(const Data &) = delete;
             Data &operator =(const Data &) = delete;

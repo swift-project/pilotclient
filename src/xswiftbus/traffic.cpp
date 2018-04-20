@@ -233,7 +233,12 @@ namespace XSwiftBus
 
     void CTraffic::removePlane(const std::string &callsign)
     {
-        m_planeViewMenuItems.erase(callsign);
+        auto menuItemIt = m_planeViewMenuItems.find(callsign);
+        if (menuItemIt != m_planeViewMenuItems.end())
+        {
+            m_planeViewSubMenu.removeItem(menuItemIt->second);
+            m_planeViewMenuItems.erase(menuItemIt);
+        }
 
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt == m_planesByCallsign.end()) { return; }
@@ -254,6 +259,13 @@ namespace XSwiftBus
             XPMPDestroyPlane(plane->id);
             delete plane;
         }
+
+        for (const auto &kv : m_planeViewMenuItems)
+        {
+            CMenuItem item = kv.second;
+            m_planeViewSubMenu.removeItem(item);
+        }
+
         m_planesByCallsign.clear();
         m_planesById.clear();
         m_planeViewMenuItems.clear();
