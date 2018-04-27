@@ -711,13 +711,20 @@ namespace BlackCore
         bool CContextNetwork::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enableFastPositonUpdates; }
-            bool c = m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates);
+            const bool c = m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates);
             if (c)
             {
                 CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
                 CLogMessage(this).info("Callsign %1 sets fast positions ") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
                 emit this->changedFastPositionUpdates(aircraft);
             }
+            return c;
+        }
+
+        bool CContextNetwork::updateCG(const Aviation::CCallsign &callsign, const CLength &cg)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1); }
+            const bool c = m_airspace->updateCG(callsign, cg);
             return c;
         }
 

@@ -18,6 +18,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/provider.h"
 #include "blackmisc/blackmiscexport.h"
@@ -105,6 +106,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const = 0;
 
+            //! Get the change object for callsign
+            //! \threadsafe
+            Aviation::CAircraftSituationChange remoteAircraftSituationChange(const Aviation::CCallsign &callsign) const;
+
             //! Is remote aircraft supporting parts?
             //! \threadsafe
             virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const = 0;
@@ -148,6 +153,10 @@ namespace BlackMisc
             //! Update the ground elevation
             //! \threadsafe
             virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) = 0;
+
+            //! Update the CG
+            //! \threadsafe
+            virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) = 0;
 
             //! Get reverse lookup meesages
             //! \threadsafe
@@ -253,6 +262,7 @@ namespace BlackMisc
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
             virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) override;
+            virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual CStatusMessageList getAircraftPartsHistory(const Aviation::CCallsign &callsign) const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
@@ -356,10 +366,6 @@ namespace BlackMisc
             //! \threadsafe
             void storeAircraftSituation(const Aviation::CAircraftSituation &situation);
 
-            //! An extended of IRemoteAircraftProvider::updateAircraftGroundElevation version which allows also guessing of ground
-            //! \sa IRemoteAircraftProvider::updateAircraftGroundElevation
-            int updateAircraftGroundElevationExt(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, bool isVtol, const PhysicalQuantities::CLength &cg, bool autoGuessGnd);
-
             //! Store an aircraft part
             //! \remark latest parts are kept first
             //! \threadsafe
@@ -436,6 +442,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftPartsCount
             int remoteAircraftPartsCount(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const;
+
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationChange
+            Aviation::CAircraftSituationChange remoteAircraftSituationChange(const Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
             Aviation::CCallsignSet remoteAircraftSupportingParts() const;

@@ -12,16 +12,30 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/json.h"
 #include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Json;
+using namespace BlackConfig;
 
 namespace BlackMisc
 {
     namespace Simulation
     {
+        CAircraftSituationChange IRemoteAircraftProvider::remoteAircraftSituationChange(const CCallsign &callsign) const
+        {
+            const CAircraftSituationList situations(this->remoteAircraftSituations(callsign));
+            if (situations.isEmpty()) { return CAircraftSituationChange::null(); }
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                Q_ASSERT_X(situations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Expect latest first");
+            }
+            const CAircraftSituationChange change = CAircraftSituationChange(situations, true, true);
+            return change;
+        }
+
         const CLogCategoryList &CRemoteAircraftProvider::getLogCategories()
         {
             static const CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
@@ -182,21 +196,28 @@ namespace BlackMisc
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
 
             // for testing only
-            CAircraftSituation situationOs(situation);
-            this->testAddAltitudeOffsetToSituation(situationOs);
+            CAircraftSituation situationOffset(situation);
+            this->testAddAltitudeOffsetToSituation(situationOffset);
+
+            // verify
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
+            }
 
             // list from new to old
             QWriteLocker lock(&m_lockSituations);
             m_situationsAdded++;
             m_situationsLastModified[cs] = ts;
             CAircraftSituationList &situationList = m_situationsByCallsign[cs];
-            if (situationList.isEmpty())
+            const int situations = situationList.size();
+            if (situations < 1)
             {
-                situationList.prefillLatestAdjustedFirst(situationOs, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                situationList.prefillLatestAdjustedFirst(situationOffset, IRemoteAircraftProvider::MaxSituationsPerCallsign);
             }
             else
             {
-                situationList.push_frontKeepLatestFirstAdjustOffset(situationOs, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                situationList.push_frontKeepLatestFirstAdjustOffset(situationOffset, IRemoteAircraftProvider::MaxSituationsPerCallsign);
             }
 
             // unify all inbound ground information
@@ -206,8 +227,11 @@ namespace BlackMisc
             }
 
             // check sort order
-            Q_ASSERT_X(situationList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
-            Q_ASSERT_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(situationList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong sort order");
+                BLACK_VERIFY_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+            }
         }
 
         void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool removeOutdated)
@@ -357,22 +381,16 @@ namespace BlackMisc
 
         int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
         {
-            return this->updateAircraftGroundElevationExt(callsign, elevation, false, CLength::null(), false);
-        }
-
-        int CRemoteAircraftProvider::updateAircraftGroundElevationExt(const CCallsign &callsign, const CElevationPlane &elevation, bool isVtol, const CLength &cg, bool autoGuessGnd)
-        {
             if (!this->isAircraftInRange(callsign)) { return 0; }
 
             // update aircraft situation
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+            const CAircraftModel model = this->getAircraftInRangeModelForCallsign(callsign);
             int updated = 0;
             {
                 QWriteLocker l(&m_lockSituations);
-                CAircraftSituationList situations = m_situationsByCallsign[callsign];
-                updated = autoGuessGnd ?
-                          situations.setGroundElevationCheckedAndGuessGround(elevation, isVtol, cg) :
-                          situations.setGroundElevationChecked(elevation);
+                CAircraftSituationList &situations = m_situationsByCallsign[callsign];
+                updated = situations.setGroundElevationCheckedAndGuessGround(elevation, model);
                 if (updated < 1) { return 0; }
                 m_situationsLastModified[callsign] = ts;
             }
@@ -383,6 +401,13 @@ namespace BlackMisc
             Q_UNUSED(c); // just for info, expect 1
 
             return updated; // updated situations
+        }
+
+        bool CRemoteAircraftProvider::updateCG(const CCallsign &callsign, const CLength &cg)
+        {
+            QWriteLocker l(&m_lockAircraft);
+            const int c = m_aircraftInRange.setCG(callsign, cg);
+            return c > 0;
         }
 
         void CRemoteAircraftProvider::updateMarkAllAsNotRendered()
@@ -626,6 +651,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
             return this->provider()->remoteAircraftSituations(callsign);
+        }
+
+        CAircraftSituationChange CRemoteAircraftAware::remoteAircraftSituationChange(const CCallsign &callsign) const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->remoteAircraftSituationChange(callsign);
         }
 
         CAircraftPartsList CRemoteAircraftAware::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeBefore) const
