@@ -14,6 +14,7 @@
 #include "testaviation.h"
 #include "testcompress.h"
 #include "testblackmiscmain.h"
+#include "testaircraftsituation.h"
 #include "testcontainers.h"
 #include "testdbus.h"
 #include "testflightplan.h"
@@ -68,6 +69,10 @@ namespace BlackMiscTest
         {
             CTestAircraftParts apTests;
             status |= test.exec(&apTests, "blackmisc_aircraftParts");
+        }
+        {
+            CTestAircraftSituation sitTests;
+            status |= test.exec(&sitTests, "blackmisc_aircraftSituation");
         }
         {
             CTestGeo geoTests;

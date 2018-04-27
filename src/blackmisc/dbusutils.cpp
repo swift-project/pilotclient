@@ -75,6 +75,7 @@ namespace BlackMisc
         const CAirportIcaoCode airportIcao;
         const CLivery livery;
         const CAirport airport;
+        const CAircraftSituation situation;
         const CSimulatedAircraft aircraft;
         const CSimulatedAircraftList aircraftList;
         const CVariant var;
@@ -89,6 +90,8 @@ namespace BlackMisc
         out << "CAirportIcaoCode" << " size: " << s.size() << " sig: " << s << endl;
         s = CDBusUtils::dBusSignature(livery);
         out << "CLivery" << " size: " << s.size() << " sig: " << s << endl;
+        s = CDBusUtils::dBusSignature(situation);
+        out << "CAircraftSituation" << " size: " << s.size() << " sig: " << s << endl;
         s = CDBusUtils::dBusSignature(country);
         out << "CCountry" << " size: " << s.size() << " sig: " << s << endl;
         s = CDBusUtils::dBusSignature(airport);

@@ -34,6 +34,9 @@ namespace BlackCoreTest
     private slots:
         //! Init tests for context
         void contextInitTest();
+
+        //! Test the DBus signatures
+        void dBusSignatures();
     };
 } //namespace
 

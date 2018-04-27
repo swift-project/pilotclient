@@ -30,7 +30,7 @@ namespace BlackCoreTest
         //! Unit tests
         static int unitMain(int argc, char *argv[]);
     };
-}
+} // ns
 
 //! \endcond
 

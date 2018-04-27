@@ -34,6 +34,13 @@ namespace BlackMisc
             return arg.currentSignature();
         }
 
+        //! Signature size for BlackMisc::CValueObject
+        template<typename ValueObj>
+        static int dBusSignatureSize(const ValueObj &obj)
+        {
+            return dBusSignature<ValueObj>(obj).size();
+        }
+
         //! Type as string
         static QString dbusTypeAsString(QDBusArgument::ElementType type);
 

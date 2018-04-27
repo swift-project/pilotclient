@@ -201,6 +201,25 @@ namespace BlackMiscTest
         QCOMPARE(qRound(altitude2.value(CLengthUnit::m())), 510);
     }
 
+    void CTestAviation::testGuessing()
+    {
+        const CAircraftIcaoCode icao172("C172", "L1P");
+        const CAircraftIcaoCode icaoB737("B737", "L2J");
+        const CAircraftIcaoCode icaoB747("B747", "L4J");
+
+        CSpeed s172, sB737, sB747; s172 = sB737 = sB747 = CSpeed::null();
+        CLength cg172, cgB737, cgB747; cg172 = cgB737 = cgB747 = CLength::null();
+        icao172.guessModelParameters(cg172, s172);
+        icaoB737.guessModelParameters(cgB737, sB737);
+        icaoB747.guessModelParameters(cgB747, sB747);
+
+        QVERIFY(cg172 < cgB737);
+        QVERIFY(cgB737 < cgB747);
+
+        QVERIFY(s172 < sB747);
+        QVERIFY(sB737 < sB747);
+    }
+
 } // namespace
 
 //! \endcond

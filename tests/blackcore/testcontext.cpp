@@ -16,8 +16,13 @@
 
 #include "testcontext.h"
 #include "blackcore/context/contextallproxies.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/dbusutils.h"
 #include <QTest>
 
+using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore::Context;
 
 namespace BlackCoreTest
@@ -37,6 +42,27 @@ namespace BlackCoreTest
         CContextOwnAircraftProxy::unitTestRelaySignals();
         CContextSimulatorProxy::unitTestRelaySignals();
     }
-}
+
+    void CTestContext::dBusSignatures()
+    {
+        const CAircraftModel model;
+        const CAircraftSituation situation;
+        const CSimulatedAircraft aircraft;
+        const CSimulatedAircraftList aircraftList;
+
+        constexpr int MaxSize = 210;
+        int s = CDBusUtils::dBusSignatureSize(model);
+        QVERIFY2(s < MaxSize, "CAircraftModel");
+
+        s = CDBusUtils::dBusSignatureSize(situation);
+        QVERIFY2(s < MaxSize, "CAircraftSituation");
+
+        s = CDBusUtils::dBusSignatureSize(aircraft);
+        QVERIFY2(s < MaxSize, "CSimulatedAircraft");
+
+        s = CDBusUtils::dBusSignatureSize(aircraftList);
+        QVERIFY2(s < MaxSize, "CSimulatedAircraftList");
+    }
+} // ns
 
 //! \endcond

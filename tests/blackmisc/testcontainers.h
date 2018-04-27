@@ -28,6 +28,8 @@ namespace BlackMiscTest
         explicit CTestContainers(QObject *parent = nullptr) : QObject(parent) {}
 
     private slots:
+        void initTestCase();
+
         void collectionBasics();
         void sequenceBasics();
         void joinAndSplit();

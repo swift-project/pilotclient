@@ -50,6 +50,9 @@ namespace BlackMiscTest
 
         //! CAltitude tests
         void altitude();
+
+        //! Test some of the guessing functions
+        void testGuessing();
     };
 } // namespace
 

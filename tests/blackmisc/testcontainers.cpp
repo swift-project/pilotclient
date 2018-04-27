@@ -43,9 +43,16 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest
 {
+    void CTestContainers::initTestCase()
+    {
+        BlackMisc::registerMetadata();
+    }
+
     void CTestContainers::collectionBasics()
     {
         CCollection<int> c1;
@@ -132,7 +139,6 @@ namespace BlackMiscTest
 
     void CTestContainers::findTests()
     {
-        BlackMisc::registerMetadata();
         CCallsignSet callsigns;
         CSequence<CCallsign> found = callsigns.findBy(&CCallsign::asString, "Foo");
         QVERIFY2(found.isEmpty(), "Empty found");
@@ -227,7 +233,7 @@ namespace BlackMiscTest
     {
         CAircraftSituationList situations;
         const qint64 ts = QDateTime::currentMSecsSinceEpoch();
-        const int no = 10;
+        int no = 10;
         for (int i = 0; i < no; ++i)
         {
             CAircraftSituation s;
@@ -266,20 +272,46 @@ namespace BlackMiscTest
                 QVERIFY2(situations.front().getMSecsSinceEpoch() == cTs, "Wrong front element");
             }
         }
+
+        situations.sortLatestFirst();
+        QVERIFY2(situations.isSortedLatestFirst(), "Espect sorted latest first");
+        no = situations.size();
+        for (int i = 0; i < no; ++i)
+        {
+            const CAircraftSituation current = situations[i];
+            const qint64 cTs = current.getMSecsSinceEpoch();
+            const CAircraftSituation expectedBefore = situations.findObjectBeforeOrDefault(cTs);
+            const CAircraftSituation expectedAfter = situations.findObjectAfterOrDefault(cTs);
+            const qint64 beforeTs = expectedBefore.getMSecsSinceEpoch();
+            const qint64 afterTs = expectedAfter.getMSecsSinceEpoch();
+
+            if (i > 0)
+            {
+                const qint64 t1 = situations[i - 1].getMSecsSinceEpoch();
+                QVERIFY2(t1 == afterTs, "Wrong expected after");
+            }
+            if (i < (no - 1))
+            {
+                const qint64 t1 = situations[i + 1].getMSecsSinceEpoch();
+                QVERIFY2(t1 == beforeTs, "Wrong expected before");
+            }
+        }
     }
 
     void CTestContainers::offsetTimestampList()
     {
         qsrand(QDateTime::currentDateTime().toTime_t());
         CAircraftSituationList situations;
+        static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         qint64 ts = 1000000;
-        const int no = 10;
+        int no = 10;
         const int max = 6;
         int dt = 0;
 
         for (int i = 0; i < no; ++i)
         {
             CAircraftSituation s;
+            s.setPosition(geoPos);
             s.setMSecsSinceEpoch(ts);
             s.setCallsign("CS" + QString::number(i));
 
@@ -300,9 +332,31 @@ namespace BlackMiscTest
             situations.push_frontKeepLatestFirstAdjustOffset(s, max);
 
             QVERIFY2(situations.size() <= max, "Wrong size");
-            QVERIFY2(situations.isSortedAdjustedLatestFirst(), "Wrong sort order");
+            QVERIFY2(situations.isSortedAdjustedLatestFirstWithoutNullPositions(), "Wrong sort order");
             QVERIFY2(!situations.hasInvalidTimestamps(), "Missing timestamps");
             QVERIFY2(!situations.containsZeroOrNegativeOffsetTime(), "Missing offset time");
+        }
+
+        no = situations.size();
+        for (int i = 0; i < no; ++i)
+        {
+            const CAircraftSituation current = situations[i];
+            const qint64 cTs = current.getAdjustedMSecsSinceEpoch();
+            const CAircraftSituation expectedBefore = situations.findObjectBeforeAdjustedOrDefault(cTs);
+            const CAircraftSituation expectedAfter = situations.findObjectAfterAdjustedOrDefault(cTs);
+            const qint64 beforeTs = expectedBefore.getAdjustedMSecsSinceEpoch();
+            const qint64 afterTs = expectedAfter.getAdjustedMSecsSinceEpoch();
+
+            if (i > 0)
+            {
+                const qint64 t1 = situations[i - 1].getAdjustedMSecsSinceEpoch();
+                QVERIFY2(t1 == afterTs, "Wrong expected after");
+            }
+            if (i < (no - 1))
+            {
+                const qint64 t1 = situations[i + 1].getAdjustedMSecsSinceEpoch();
+                QVERIFY2(t1 == beforeTs, "Wrong expected before");
+            }
         }
     }
 } //namespace
