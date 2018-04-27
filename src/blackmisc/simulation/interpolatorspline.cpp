@@ -119,14 +119,15 @@ namespace BlackMisc
                 // with the latest updates of T243 the order and the offsets are supposed to be correct
                 // so even mixing fast/slow updates shall work
                 const CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
+                    BLACK_VERIFY_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+                }
+
                 situationsSize = validSituations.size();
                 m_situationsLastModifiedUsed = lastModified;
-
-                if (!CBuildConfig::isReleaseBuild())
-                {
-                    Q_ASSERT_X(validSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
-                    Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
-                }
+                m_situationChange = CAircraftSituationChange(validSituations, true, true);
 
                 // find the first situation earlier than the current time
                 const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
@@ -136,10 +137,18 @@ namespace BlackMisc
                 // m_s[0] .. oldest -> m_[2] .. latest
                 if (situationsNewer.isEmpty() || situationsOlder.size() < 2) { return m_interpolant; }
                 m_s = std::array<CAircraftSituation, 3> {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
+                this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2], setup); // oldest -> latest
 
                 // we interpolate from 1 -> 2, 0 for smoother interpolation
                 if (newStep && !m_lastInterpolation.isNull())
                 {
+                    const bool verified = this->verifyInterpolationSituations(m_s[0], m_lastInterpolation, m_s[2]); // oldest -> latest, only verify order
+                    if (!verified)
+                    {
+                        static const QString vm("m0-2 (oldest latest) %1 %2 (%3) %4");
+                        const QString vmValues = vm.arg(m_s[0].getAdjustedMSecsSinceEpoch()).arg(m_s[1].getAdjustedMSecsSinceEpoch()).arg(m_lastInterpolation.getAdjustedMSecsSinceEpoch()).arg(m_s[2].getAdjustedMSecsSinceEpoch());
+                        Q_UNUSED(vmValues);
+                    }
                     m_s[1] = m_lastInterpolation; // true only for the moment we create a new step
                 }
 
@@ -161,9 +170,10 @@ namespace BlackMisc
                 // - and the elevation remains (almost) constant for a wider area
                 // - during flying the ground elevation not really matters
                 this->updateElevations();
-                const double a0 = m_s[0].getCorrectedAltitude(m_cg).value(); // oldest
-                const double a1 = m_s[1].getCorrectedAltitude(m_cg).value();
-                const double a2 = m_s[2].getCorrectedAltitude(m_cg).value(); // latest
+                const CLength cg(m_s[2].hasCG() ? m_s[2].getCG() : this->getAndFetchModelCG());
+                const double a0 = m_s[0].getCorrectedAltitude(cg).value(); // oldest
+                const double a1 = m_s[1].getCorrectedAltitude(cg).value();
+                const double a2 = m_s[2].getCorrectedAltitude(cg).value(); // latest
                 pa.a = {{ a0, a1, a2 }};
                 pa.gnd = {{ m_s[0].getOnGroundFactor(), m_s[1].getOnGroundFactor(), m_s[2].getOnGroundFactor() }};
                 pa.da = getDerivatives(pa.t, pa.a);
@@ -182,9 +192,6 @@ namespace BlackMisc
                 m_nextSampleTime = m_s[2].getMSecsSinceEpoch(); // latest
                 m_interpolant = Interpolant(pa, m_s[2].getAltitudeUnit(), CInterpolatorPbh(m_s[1], m_s[2]));
                 Q_ASSERT_X(m_prevSampleAdjustedTime < m_nextSampleAdjustedTime, Q_FUNC_INFO, "Wrong time order");
-
-                // VERIFY
-                this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2], setup); // oldest -> latest
             }
 
             // Example:
@@ -290,15 +297,15 @@ namespace BlackMisc
             if (interpolateGndFactor)
             {
                 const double gnd1 = m_pa.gnd[1];
-                const double gnd2 = m_pa.gnd[2];
+                const double gnd2 = m_pa.gnd[2]; // latest
                 do
                 {
                     newSituation.setOnGroundDetails(CAircraftSituation::OnGroundByInterpolation);
-                    if (gfEqualAirborne(gnd1, gnd2)) { newSituation.setOnGround(false); break; }
-                    if (gfEqualOnGround(gnd1, gnd2)) { newSituation.setOnGround(true); break; }
+                    if (CAircraftSituation::isGfEqualAirborne(gnd1, gnd2)) { newSituation.setOnGround(false); break; }
+                    if (CAircraftSituation::isGfEqualOnGround(gnd1, gnd2)) { newSituation.setOnGround(true); break; }
                     const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
                     newSituation.setOnGroundFactor(newGnd);
-                    newSituation.setOnGroundFromGroundFactorFromInterpolation();
+                    newSituation.setOnGroundFromGroundFactorFromInterpolation(groundInterpolationFactor());
                 }
                 while (false);
             }

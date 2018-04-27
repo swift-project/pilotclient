@@ -55,6 +55,15 @@ namespace BlackMisc
         }
 
         template<typename Derived>
+        CLength CInterpolator<Derived>::getAndFetchModelCG()
+        {
+            const CLength cg = this->getCG(m_callsign);
+            m_model.setCG(cg);
+            m_model.setCallsign(m_callsign);
+            return cg;
+        }
+
+        template<typename Derived>
         void CInterpolator<Derived>::deferredInit()
         {
             if (m_model.hasModelString()) { return; } // set in-between
@@ -72,24 +81,24 @@ namespace BlackMisc
             if (!newer.isNull())  { situations.push_back(newer); }
             if (!oldest.isNull()) { situations.push_back(oldest); }
 
-            const bool sort1 = situations.isSortedLatestFirst();
-            BLACK_VERIFY_X(sort1, Q_FUNC_INFO, "Wrong timestamp order");
-            const bool sort2 = situations.isSortedAdjustedLatestFirst();
-            BLACK_VERIFY_X(sort2, Q_FUNC_INFO, "Wrong adjusted timestamp order");
-
-            bool details = true;
-            if (setup.isAircraftPartsEnabled())
+            const bool sorted = situations.isSortedAdjustedLatestFirstWithoutNullPositions();
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                if (situations.containsOnGroundDetails(CAircraftSituation::InFromParts))
-                {
-                    // if a client supports parts, all situations are supposed to be parts based
-                    details = situations.areAllOnGroundDetailsSame(CAircraftSituation::InFromParts);
-                    BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
-                }
+                BLACK_VERIFY_X(sorted, Q_FUNC_INFO, "Wrong adjusted timestamp order");
+            }
+
+            if (setup.isNull() || !setup.isAircraftPartsEnabled()) { return sorted; }
+
+            bool details = false;
+            if (situations.containsOnGroundDetails(CAircraftSituation::InFromParts))
+            {
+                // if a client supports parts, all situations are supposed to be parts based
+                details = situations.areAllOnGroundDetailsSame(CAircraftSituation::InFromParts);
+                BLACK_VERIFY_X(details, Q_FUNC_INFO, "Once gnd.from parts -> always gnd. from parts");
             }
 
             // result
-            return sort1 && sort2 && details;
+            return sorted && details;
         }
 
         template <typename Derived>
@@ -108,14 +117,25 @@ namespace BlackMisc
             Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
             // this code is used by linear and spline interpolator
+            m_interpolatedSituationsCounter++;
             status.reset();
             SituationLog log;
             const bool doLogging = this->hasAttachedLogger() && setup.logInterpolation();
 
             // any data at all?
             const CAircraftSituationList situations = this->remoteAircraftSituations(m_callsign);
-            if (situations.isEmpty()) { return CAircraftSituation(m_callsign); }
-            CAircraftSituation currentSituation = m_lastInterpolation.isNull() ? situations.front() : m_lastInterpolation;
+            const int situationsCount = situations.size();
+            status.setSituationsCount(situationsCount);
+            if (situations.isEmpty())
+            {
+                status.setExtraInfo(this->isAircraftInRange(m_callsign) ?
+                                    QString("No situations, but remote aircraft '%1'").arg(m_callsign.asString()) :
+                                    QString("Unknown remote aircraft: '%1'").arg(m_callsign.asString()));
+                return CAircraftSituation(m_callsign);
+            }
+
+            const CAircraftSituation latest = situations.front();
+            CAircraftSituation currentSituation = m_lastInterpolation.isNull() ? latest : m_lastInterpolation;
             if (currentSituation.getCallsign() != m_callsign)
             {
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
@@ -130,7 +150,8 @@ namespace BlackMisc
             }
 
             // fetch CG once
-            if (m_cg.isNull()) { m_cg = this->getCG(m_callsign); }
+            const CLength cg = latest.hasCG() ? latest.getCG() : this->getAndFetchModelCG();
+            currentSituation.setCG(cg);
 
             // data, split situations by time
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
@@ -157,14 +178,14 @@ namespace BlackMisc
             // use derived interpolant function
             const bool interpolateGndFlag = pbh.getNewSituation().hasGroundDetailsForGndInterpolation() && pbh.getOldSituation().hasGroundDetailsForGndInterpolation();
             currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
-            if (!interpolateGndFlag) { currentSituation.guessOnGround(m_model.isVtol(), m_cg); }
+            if (!interpolateGndFlag) { currentSituation.guessOnGround(CAircraftSituationChange::null(), m_model); }
 
             // correct itself
             CAircraftSituation::AltitudeCorrection altCorrection = CAircraftSituation::NoCorrection;
             if (!interpolateGndFlag && currentSituation.getOnGroundDetails() != CAircraftSituation::OnGroundByGuessing)
             {
                 // just in case
-                altCorrection = currentSituation.correctAltitude(m_cg, true);
+                altCorrection = currentSituation.correctAltitude(cg, true);
             }
 
             // status
@@ -180,9 +201,11 @@ namespace BlackMisc
                 log.groundFactor = currentSituation.getOnGroundFactor();
                 log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
                 log.situationCurrent = currentSituation;
+                log.change = m_situationChange;
                 log.usedSetup = setup;
                 log.elevationInfo = elv.arg(elvStats.first).arg(elvStats.second);
-                log.cgAboveGround = m_cg;
+                log.cgAboveGround = cg;
+                log.sceneryOffset = m_currentSceneryOffset;
                 m_logger->logInterpolation(log);
             }
 
@@ -287,15 +310,7 @@ namespace BlackMisc
             if (!partsStatus.isSupportingParts())
             {
                 // check if model has been thru model matching
-                if (m_model.hasModelString())
-                {
-                    parts.guessParts(this->getLastInterpolatedSituation(), m_model.isVtol(), m_model.getEngineCount());
-                }
-                else
-                {
-                    // default guess
-                    parts.guessParts(this->getLastInterpolatedSituation());
-                }
+                parts.guessParts(this->getLastInterpolatedSituation(), m_situationChange, m_model);
             }
             this->logParts(currentTimeMsSinceEpoch, parts, 0, false, log);
             return parts;
@@ -355,6 +370,17 @@ namespace BlackMisc
                     m_model = model;
                 }
             }
+            if (m_model.getCG().isNull())
+            {
+                const CLength cg(this->getCG(m_callsign));
+                if (!cg.isNull()) { m_model.setCG(cg); }
+            }
+            m_model.setCallsign(m_callsign);
+        }
+
+        void CInterpolationStatus::setExtraInfo(const QString &info)
+        {
+            m_extraInfo = info;
         }
 
         void CInterpolationStatus::setInterpolatedAndCheckSituation(bool succeeded, const CAircraftSituation &situation)
@@ -365,7 +391,7 @@ namespace BlackMisc
 
         void CInterpolationStatus::checkIfValidSituation(const CAircraftSituation &situation)
         {
-            m_isValidSituation = !situation.isGeodeticHeightNull() && !situation.isPositionNull();
+            m_isValidSituation = !situation.isPositionOrAltitudeNull();
         }
 
         bool CInterpolationStatus::hasValidInterpolatedSituation() const
@@ -375,14 +401,20 @@ namespace BlackMisc
 
         void CInterpolationStatus::reset()
         {
+            m_extraInfo.clear();
             m_isValidSituation = false;
             m_isInterpolated = false;
+            m_situations = -1;
         }
 
         QString CInterpolationStatus::toQString() const
         {
             return QStringLiteral("Interpolated: ") % boolToYesNo(m_isInterpolated) %
-                   QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation);
+                   QStringLiteral(" | situations: ") % QString::number(m_situations) %
+                   QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation) %
+                   (
+                       m_extraInfo.isEmpty() ? QStringLiteral("") : QStringLiteral(" info: ") % m_extraInfo
+                   );
         }
 
         bool CPartsStatus::allTrue() const

@@ -81,11 +81,11 @@ namespace BlackMisc
                 const double newGroundFactor = m_newSituation.getOnGroundFactor();
                 do
                 {
-                    if (gfEqualAirborne(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(false); break; }
-                    if (gfEqualOnGround(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(true); break; }
+                    if (CAircraftSituation::isGfEqualAirborne(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(false); break; }
+                    if (CAircraftSituation::isGfEqualOnGround(oldGroundFactor, newGroundFactor)) { newSituation.setOnGround(true); break; }
                     const double groundFactor = (newGroundFactor - oldGroundFactor) * m_simulationTimeFraction + oldGroundFactor;
                     newSituation.setOnGroundFactor(groundFactor);
-                    newSituation.setOnGroundFromGroundFactorFromInterpolation();
+                    newSituation.setOnGroundFromGroundFactorFromInterpolation(groundInterpolationFactor());
                 }
                 while (false);
             }
@@ -103,13 +103,17 @@ namespace BlackMisc
             // with the latest updates of T243 the order and the offsets are supposed to be correct
             // so even mixing fast/slow updates shall work
             const CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign); // if needed, we could also copy here
-            m_situationsLastModifiedUsed = this->situationsLastModified(m_callsign);
-
-            // checks
             if (!CBuildConfig::isReleaseBuild())
             {
-                BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+                BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
                 Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+            }
+
+            const qint64 tsLastModified = this->situationsLastModified(m_callsign);
+            if (m_situationsLastModifiedUsed < tsLastModified || m_situationChange.isNull())
+            {
+                m_situationsLastModifiedUsed = tsLastModified;
+                m_situationChange = CAircraftSituationChange(validSituations, true, true);
             }
 
             // find the first situation earlier than the current time

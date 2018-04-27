@@ -17,7 +17,7 @@
 #include "blackmisc/simulation/interpolationsetupprovider.h"
 #include "blackmisc/simulation/simulationenvironmentprovider.h"
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/callsign.h"
@@ -99,47 +99,25 @@ namespace BlackMisc
                           ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *p3,
                           CInterpolationLogger *logger);
 
-            const Aviation::CCallsign    m_callsign; //!< corresponding callsign
-            PhysicalQuantities::CLength  m_cg { 0, nullptr } ; //!< fetched once, stays constant
-            Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() }; //!< latest interpolation
+            //! Center of gravity
+            const PhysicalQuantities::CLength &getModelCG() const { return m_model.getCG(); }
+
+            //! Center of gravity, fetched from provider in case needed
+            PhysicalQuantities::CLength getAndFetchModelCG();
+
+            const Aviation::CCallsign  m_callsign; //!< corresponding callsign
             CAircraftModel m_model; //!< corresponding model
+            Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() }; //!< latest interpolation
+            Aviation::CAircraftSituationChange m_situationChange; //!< situations change
             qint64 m_situationsLastModifiedUsed { -1 }; //!< based on situations last updated
-
-            //! Equal double values?
-            static bool doubleEpsilonEqual(double d1, double d2)
-            {
-                return qAbs(d1 - d2) < std::numeric_limits<double>::epsilon();
-            }
-
-            //! Both on ground
-            static bool gfEqualOnGround(double oldGroundFactor, double newGroundFactor)
-            {
-                return doubleEpsilonEqual(1.0, oldGroundFactor) && doubleEpsilonEqual(1.0, newGroundFactor);
-            }
-
-            //! Both not on ground
-            static bool gfEqualAirborne(double oldGroundFactor, double newGroundFactor)
-            {
-                return doubleEpsilonEqual(0.0, oldGroundFactor) && doubleEpsilonEqual(0.0, newGroundFactor);
-            }
-
-            //! Plane is starting
-            static bool gfStarting(double oldGroundFactor, double newGroundFactor)
-            {
-                return doubleEpsilonEqual(0.0, oldGroundFactor) && doubleEpsilonEqual(1.0, newGroundFactor);
-            }
-
-            //! Plane is landing
-            static bool gfLanding(double oldGroundFactor, double newGroundFactor)
-            {
-                return doubleEpsilonEqual(1.0, oldGroundFactor) && doubleEpsilonEqual(0.0, newGroundFactor);
-            }
+            int m_interpolatedSituationsCounter = 0; //!< counter for each interpolated situations: statistics, every n-th interpolation ....
 
             //! Verify gnd flag, times, ... true means "OK"
-            bool verifyInterpolationSituations(const Aviation::CAircraftSituation &oldest, const Aviation::CAircraftSituation &newer, const Aviation::CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup);
+            bool verifyInterpolationSituations(const Aviation::CAircraftSituation &oldest, const Aviation::CAircraftSituation &newer, const Aviation::CAircraftSituation &latest,
+                                               const CInterpolationAndRenderingSetupPerCallsign &setup = CInterpolationAndRenderingSetupPerCallsign::null());
 
         private:
-            CInterpolationLogger *m_logger = nullptr;
+            CInterpolationLogger *m_logger = nullptr; //!< optional interpolation logger
             QTimer m_initTimer; //!< timer to init model, will be deleted when interpolator is deleted and cancel the call
 
             //! Log parts
@@ -192,6 +170,12 @@ namespace BlackMisc
             //! Set succeeded
             void setInterpolated(bool interpolated) { m_isInterpolated = interpolated; }
 
+            //! Set situations count
+            void setSituationsCount(int count) { m_situations = count; }
+
+            //! Extra info
+            void setExtraInfo(const QString &info);
+
             //! Set succeeded
             void setInterpolatedAndCheckSituation(bool succeeded, const Aviation::CAircraftSituation &situation);
 
@@ -213,6 +197,8 @@ namespace BlackMisc
         private:
             bool m_isInterpolated = false;   //!< position is interpolated (means enough values, etc.)
             bool m_isValidSituation = false; //!< is valid situation
+            int  m_situations = -1;          //!< number of situations used for interpolation
+            QString m_extraInfo; //!< optional details
         };
 
         //! Status regarding parts
