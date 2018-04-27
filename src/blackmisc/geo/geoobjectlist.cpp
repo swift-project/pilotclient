@@ -70,6 +70,24 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER>
+        bool IGeoObjectList<OBJ, CONTAINER>::containsNullPosition() const
+        {
+            return this->container().containsBy([&](const ICoordinateGeodetic & geoObj)
+            {
+                return geoObj.isNull();
+            });
+        }
+
+        template<class OBJ, class CONTAINER>
+        bool IGeoObjectList<OBJ, CONTAINER>::containsNullPositionOrHeight() const
+        {
+            return this->container().containsBy([&](const ICoordinateGeodetic & geoObj)
+            {
+                return geoObj.isNull() || geoObj.isGeodeticHeightNull();
+            });
+        }
+
+        template<class OBJ, class CONTAINER>
         typename IGeoObjectList<OBJ, CONTAINER>::MinMaxAverageHeight IGeoObjectList<OBJ, CONTAINER>::findMinMaxAverageHeight() const
         {
             MinMaxAverageHeight stats{ CAltitude::null(), CAltitude::null(), CAltitude::null(), 0 };

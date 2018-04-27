@@ -23,10 +23,12 @@
 #include "blackmisc/variant.h"
 
 #include <QMetaType>
+#include <QList>
 
 namespace BlackMisc
 {
     namespace Geo { class CElevationPlane; }
+    namespace Simulation { class CAircraftModel; }
     namespace Aviation
     {
         class CAircraftParts;
@@ -54,8 +56,9 @@ namespace BlackMisc
             //! Set ground elevation from elevation plane
             int setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, qint64 newerThanAdjustedMs = -1);
 
-            //! Set ground elevation from elevation plane
-            int setGroundElevationCheckedAndGuessGround(const Geo::CElevationPlane &elevationPlane, bool isVtol, const PhysicalQuantities::CLength &cg);
+            //! Set ground elevation from elevation plane and guess ground
+            //! \note requires a sorted list latest first
+            int setGroundElevationCheckedAndGuessGround(const Geo::CElevationPlane &elevationPlane, const Simulation::CAircraftModel &model);
 
             //! Adjust flag from parts by using CAircraftSituation::adjustGroundFlag
             int adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor = 0.1);
@@ -78,8 +81,70 @@ namespace BlackMisc
             //! Are all on ground details the same
             bool areAllOnGroundDetailsSame(CAircraftSituation::OnGroundDetails details) const;
 
+            //! Are all situations on ground?
+            bool isConstOnGround() const;
+
+            //! Are all situations not on ground?
+            bool isConstNotOnGround() const;
+
+            //! Constantly descending?
+            bool isConstDescending(bool alreadySortedLatestFirst = false) const;
+
+            //! Constantly ascending?
+            bool isConstAscending(bool alreadySortedLatestFirst = false) const;
+
+            //! Constantly accelerating?
+            bool isConstAccelerating(bool alreadySortedLatestFirst = false) const;
+
+            //! Constantly decelarating?
+            bool isConstDecelarating(bool alreadySortedLatestFirst = false) const;
+
+            //! Is the ground flag changing for the recent situations
+            bool isGndFlagChanging(bool alreadySortedLatestFirst = false) const;
+
+            //! Is just taking off?
+            bool isJustTakingOff(bool alreadySortedLatestFirst = false) const;
+
+            //! Is just touch down?
+            bool isJustTouchingDown(bool alreadySortedLatestFirst = false) const;
+
+            //! Is rotating up?
+            bool isRotatingUp(bool alreadySortedLatestFirst = false) const;
+
+            //! Contains any push back
+            //! \remark only valid for non VTOL aircraft
+            bool containsPushBack() const;
+
+            //! Count the number of situations with CAircraftSituation::IsOnGround
+            int countOnGround(CAircraftSituation::IsOnGround og) const;
+
+            //! Set on ground
+            int setOnGround(CAircraftSituation::IsOnGround og);
+
             //! Set on ground details for all situations
             int setOnGroundDetails(CAircraftSituation::OnGroundDetails details);
+
+            //! Latest first and no null positions?
+            bool isSortedAdjustedLatestFirstWithoutNullPositions() const;
+
+            //! Remove the first situation
+            //! \remark normally used when the first situation represents the latest situation
+            CAircraftSituationList withoutFrontSituation() const;
+
+            //! All pitch values
+            QList<double> pitchValues(const PhysicalQuantities::CAngleUnit &unit) const;
+
+            //! All ground speed values
+            QList<double> groundSpeedValues(const PhysicalQuantities::CSpeedUnit &unit) const;
+
+            //! All elevation values
+            QList<double> elevationValues(const PhysicalQuantities::CLengthUnit &unit) const;
+
+            //! All corrected altitude values
+            QList<double> altitudeValues(const PhysicalQuantities::CLengthUnit &unit) const;
+
+            //! All corrected altitude values
+            QList<double> correctedAltitudeValues(const PhysicalQuantities::CLengthUnit &unit, const PhysicalQuantities::CLength &cg) const;
         };
     } // namespace
 } // namespace

@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/pq/length.h"
@@ -16,11 +18,15 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
+
 #include "QStringBuilder"
 #include <QtGlobal>
 
-using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
+using namespace BlackConfig;
 
 namespace BlackMisc
 {
@@ -51,11 +57,16 @@ namespace BlackMisc
         {
             return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
                    QStringLiteral(" | ") % m_position.toQString(i18n) %
-                   QStringLiteral(" | bank: ") % (m_bank.toQString(i18n)) %
-                   QStringLiteral(" | pitch: ") % (m_pitch.toQString(i18n)) %
-                   QStringLiteral(" | heading: ") % (m_heading.toQString(i18n)) %
-                   QStringLiteral(" | og: ") % this->getOnGroundInfo() %
-                   QStringLiteral(" | factor: ") % QString::number(m_onGroundFactor, 'f', 2) %
+                   QStringLiteral(" | alt: ") % this->getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
+                   QStringLiteral(" ") % this->getCorrectedAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 1) %
+                   QStringLiteral("[cor] | og: ") % this->getOnGroundInfo() %
+                   (m_onGroundGuessingDetails.isEmpty() ? QStringLiteral("") : QStringLiteral(" ") % m_onGroundGuessingDetails) %
+                   QStringLiteral(" | cg: ") %
+                   (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % QStringLiteral(" ") % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
+                   QStringLiteral(" | factor [0..1]: ") % QString::number(m_onGroundFactor, 'f', 2) %
+                   QStringLiteral(" | bank: ") % m_bank.toQString(i18n) %
+                   QStringLiteral(" | pitch: ") % m_pitch.toQString(i18n) %
+                   QStringLiteral(" | heading: ") % m_heading.toQString(i18n) %
                    QStringLiteral(" | gs: ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
                    QStringLiteral(" ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
                    QStringLiteral(" | elevation: ") % (m_groundElevationPlane.toQString(i18n));
@@ -244,21 +255,30 @@ namespace BlackMisc
                    this->getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails;
         }
 
-        void CAircraftSituation::setOnGround(bool onGround)
+        bool CAircraftSituation::setOnGround(bool onGround)
         {
-            this->setOnGround(onGround ? OnGround : NotOnGround);
+            return this->setOnGround(onGround ? OnGround : NotOnGround);
         }
 
-        void CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround)
+        bool CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround)
         {
-            m_onGround = static_cast<int>(onGround);
+            if (this->getOnGround() == onGround) { return false; }
+            const int og = static_cast<int>(onGround);
+            m_onGround = og;
             m_onGroundFactor = (onGround == OnGround) ?  1.0 : 0.0;
+            return true;
         }
 
-        void CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details)
+        bool CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details)
         {
-            this->setOnGround(onGround);
+            const bool set = this->setOnGround(onGround);
             this->setOnGroundDetails(details);
+            if (details != OnGroundByGuessing)
+            {
+                m_onGroundGuessingDetails.clear();
+            }
+
+            return set;
         }
 
         void CAircraftSituation::setOnGroundFactor(double groundFactor)
@@ -276,40 +296,111 @@ namespace BlackMisc
 
         bool CAircraftSituation::shouldGuessOnGround() const
         {
-            return (!this->isOnGroundInfoAvailable());
+            return !this->hasInboundGroundDetails();
         }
 
-        bool CAircraftSituation::guessOnGround(bool vtol, const PhysicalQuantities::CLength &cg)
+
+        bool CAircraftSituation::guessOnGround(const CAircraftSituationChange &change, const CAircraftModel &model)
         {
+            Q_UNUSED(change);
             if (!this->shouldGuessOnGround()) { return false; }
 
+            // for debugging purposed
+            QString *details = CBuildConfig::isLocalDeveloperDebugBuild() ? &m_onGroundGuessingDetails : nullptr;
+
             // Non VTOL aircraft have to move to be not on ground
+            const bool vtol = model.isVtol();
             if (!vtol && !this->isMoving())
             {
                 this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
+                if (details) { *details = QStringLiteral("No VTOL, not moving => on ground"); }
                 return true;
             }
 
+            // not on ground is default
+            this->setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
+
+            // guess some values we use for guessing
+            CLength cg = m_cg.isNull() ? model.getCG() : m_cg;
+            CSpeed guessedLiftOffSpeed;
+            CSpeed sureLiftOffSpeed = CSpeed(130, CSpeedUnit::kts());
+            model.getAircraftIcaoCode().guessModelParameters(cg, guessedLiftOffSpeed);
+            if (!guessedLiftOffSpeed.isNull())
+            {
+                // does the value make any sense?
+                const bool validGuessedSpeed = guessedLiftOffSpeed.value(CSpeedUnit::km_h()) > 5.0;
+                BLACK_VERIFY_X(validGuessedSpeed, Q_FUNC_INFO, "Wrong guessed value for lift off");
+                if (!validGuessedSpeed) { guessedLiftOffSpeed = CSpeed(80, CSpeedUnit::kts()); } // fix
+                sureLiftOffSpeed = guessedLiftOffSpeed * 1.25;
+            }
+
+            // "extreme" values for which we are surely not on ground
+            if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 20)  { if (details) { *details = QStringLiteral("max.pitch"); }; return true; } // some tail wheel aircraft already have 11° pitch on ground
+            if (qAbs(this->getBank().value(CAngleUnit::deg()))  > 10)  { if (details) { *details = QStringLiteral("max.bank"); }; return true; }
+            if (this->getGroundSpeed() > sureLiftOffSpeed) { if (details) { *details = QStringLiteral("max.gs. > ") % sureLiftOffSpeed.valueRoundedWithUnit(1); }; return true; }
+
+
+            // use the most accurate or reliable guesses here first
+            // ------------------------------------------------------
+
             // by elevation
-            // we can detect "on ground" but not "not on ground" because of overflow
+            // we can detect "on ground" (underflow, near ground), but not "not on ground" because of overflow
+
+            // we can detect on ground for underflow, but not for overflow (so we can not rely on NotOnGround)
             IsOnGround og = this->isOnGroundByElevation(cg);
             if (og == OnGround)
             {
+                if (details) { *details = QStringLiteral("elevation on ground"); }
                 this->setOnGround(og, CAircraftSituation::OnGroundByGuessing);
                 return true;
             }
 
-            // we guess on speed, pitch and bank by excluding situations
-            this->setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
-            if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 10)  { return true; }
-            if (qAbs(this->getBank().value(CAngleUnit::deg())) > 10)   { return true; }
-            if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 50) { return true; }
+            if (!change.isNull())
+            {
+                if (!vtol && change.wasConstOnGround())
+                {
+                    if (change.isRotatingUp())
+                    {
+                        // not OG
+                        if (details) { *details = QStringLiteral("rotating up detected"); }
+                        return true;
+                    }
+
+                    // here we stick to ground until we detect rotate up
+                    this->setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+                    if (details) { *details = QStringLiteral("waiting for rotating up"); }
+                    return true;
+                }
+
+                if (change.isConstAscending())
+                {
+                    // not OG
+                    if (details) { *details = QStringLiteral("const ascending"); }
+                    return true;
+                }
+            }
 
             // on VTOL we stop here
-            if (vtol) { return false; }
+            if (vtol)
+            {
+                // no idea
+                this->setOnGround(OnGroundSituationUnknown, NotSetGroundDetails);
+                return false;
+            }
+
+            // guessed speed null -> vtol
+            if (!guessedLiftOffSpeed.isNull())
+            {
+                // does the value make any sense?
+                if (this->getGroundSpeed() < guessedLiftOffSpeed)
+                {
+                    this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
+                    if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedLiftOffSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); }; return true;
+                }
+            }
 
             // not sure, but this is a guess
-            this->setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+            if (details) { *details = QStringLiteral("Fall through"); }
             return true;
         }
 
@@ -368,6 +459,11 @@ namespace BlackMisc
         QString CAircraftSituation::getOnGroundInfo() const
         {
             return this->onGroundAsString() % QLatin1Char(' ') % this->getOnDetailsAsString();
+        }
+
+        CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation() const
+        {
+            return this->isOnGroundByElevation(m_cg);
         }
 
         CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation(const CLength &cg) const
@@ -444,12 +540,17 @@ namespace BlackMisc
             return this->getAltitude() - gh;
         }
 
-        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &centerOfGravity, bool enableDragToGround, AltitudeCorrection *correctetion) const
+        CAltitude CAircraftSituation::getCorrectedAltitude(bool enableDragToGround, CAircraftSituation::AltitudeCorrection *correction) const
         {
-            if (correctetion) { *correctetion = UnknownCorrection; }
+            return this->getCorrectedAltitude(m_cg, enableDragToGround, correction);
+        }
+
+        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &centerOfGravity, bool enableDragToGround, AltitudeCorrection *correction) const
+        {
+            if (correction) { *correction = UnknownCorrection; }
             if (!this->hasGroundElevation())
             {
-                if (correctetion) { *correctetion = NoElevation; }
+                if (correction) { *correction = NoElevation; }
                 return this->getAltitude();
             }
 
@@ -457,7 +558,7 @@ namespace BlackMisc
             if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
             {
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "Unsupported");
-                if (correctetion) { *correctetion = AGL; }
+                if (correction) { *correction = AGL; }
                 return this->getAltitude();
             }
             else
@@ -465,38 +566,44 @@ namespace BlackMisc
                 const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
                 if (groundPlusCG.isNull())
                 {
-                    if (correctetion) { *correctetion = NoElevation; }
+                    if (correction) { *correction = NoElevation; }
                     return this->getAltitude();
                 }
                 const CLength groundDistance = this->getAltitude() - groundPlusCG;
                 const bool underflow = groundDistance.isNegativeWithEpsilonConsidered();
                 if (underflow)
                 {
-                    if (correctetion) { *correctetion = Underflow; }
+                    if (correction) { *correction = Underflow; }
                     return groundPlusCG;
                 }
                 const bool nearGround =  groundDistance.abs() < deltaNearGround();
                 if (nearGround)
                 {
-                    if (correctetion) { *correctetion = NoCorrection; }
+                    if (correction) { *correction = NoCorrection; }
                     return groundPlusCG;
                 }
                 const bool forceDragToGround = (enableDragToGround && this->getOnGround() == OnGround) && (this->hasInboundGroundDetails() || this->getOnGroundDetails() == OnGroundByGuessing);
                 if (forceDragToGround)
                 {
-                    if (correctetion) { *correctetion = DraggedToGround; }
+                    if (correction) { *correction = DraggedToGround; }
                     return groundPlusCG;
                 }
 
-                if (correctetion) { *correctetion = NoCorrection; }
+                if (correction) { *correction = NoCorrection; }
                 return this->getAltitude();
             }
+        }
+
+        CAircraftSituation::AltitudeCorrection CAircraftSituation::correctAltitude(bool enableDragToGround)
+        {
+            return this->correctAltitude(m_cg, enableDragToGround);
         }
 
         CAircraftSituation::AltitudeCorrection CAircraftSituation::correctAltitude(const CLength &centerOfGravity, bool enableDragToGround)
         {
             CAircraftSituation::AltitudeCorrection altCor = CAircraftSituation::UnknownCorrection;
             this->setAltitude(this->getCorrectedAltitude(centerOfGravity, enableDragToGround, &altCor));
+            this->setCG(centerOfGravity);
             return altCor;
         }
 
@@ -509,7 +616,7 @@ namespace BlackMisc
         bool CAircraftSituation::isMoving() const
         {
             const double gsKmh = this->getGroundSpeed().value(CSpeedUnit::km_h());
-            return gsKmh >= 1.0;
+            return gsKmh >= 2.5;
         }
 
         bool CAircraftSituation::canLikelySkipNearGroundInterpolation() const

@@ -66,8 +66,14 @@ namespace BlackMisc
             //! Elements with geodetic height (only MSL)
             CONTAINER findWithGeodeticMSLHeight() const;
 
-            //! Any object in range
+            //! Any object in range?
             bool containsObjectInRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
+
+            //! Any NULL position?
+            bool containsNullPosition() const;
+
+            //! Any NULL position or NULL height
+            bool containsNullPositionOrHeight() const;
 
             //! Find min/max/average height
             MinMaxAverageHeight findMinMaxAverageHeight() const;

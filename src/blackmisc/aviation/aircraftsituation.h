@@ -38,10 +38,12 @@
 namespace BlackMisc
 {
     namespace Geo { class CElevationPlane; }
+    namespace Simulation { class CAircraftModel; }
     namespace Aviation
     {
         class CAircraftParts;
         class CAircraftPartsList;
+        class CAircraftSituationChange;
 
         //! Value object encapsulating information of an aircraft's situation
         class BLACKMISC_EXPORT CAircraftSituation :
@@ -127,6 +129,9 @@ namespace BlackMisc
                                const PhysicalQuantities::CSpeed &gs = {},
                                const Geo::CElevationPlane &groundElevation = {});
 
+            //! \copydoc Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
             //! \copydoc Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
 
@@ -141,6 +146,9 @@ namespace BlackMisc
 
             //! Position null?
             bool isPositionNull() const { return m_position.isNull(); }
+
+            //! Position or altitude null?
+            bool isPositionOrAltitudeNull() const { return this->isPositionNull() || this->getAltitude().isNull(); }
 
             //! Null situation
             virtual bool isNull() const override;
@@ -170,13 +178,13 @@ namespace BlackMisc
             bool isOnGroundInfoAvailable() const;
 
             //! Set on ground
-            void setOnGround(bool onGround);
+            bool setOnGround(bool onGround);
 
             //! Set on ground
-            void setOnGround(CAircraftSituation::IsOnGround onGround);
+            bool setOnGround(CAircraftSituation::IsOnGround onGround);
 
             //! Set on ground
-            void setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details);
+            bool setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundDetails details);
 
             //! On ground factor 0..1 (on ground), -1 not set
             double getOnGroundFactor() const { return m_onGroundFactor; }
@@ -188,7 +196,7 @@ namespace BlackMisc
             bool shouldGuessOnGround() const;
 
             //! Guess on ground flag
-            bool guessOnGround(bool vtol = false, const PhysicalQuantities::CLength &cg = PhysicalQuantities::CLength::null());
+            bool guessOnGround(const CAircraftSituationChange &change, const Simulation::CAircraftModel &model);
 
             //! Distance to ground, null if impossible to calculate
             PhysicalQuantities::CLength getGroundDistance(const PhysicalQuantities::CLength &centerOfGravity) const;
@@ -230,7 +238,10 @@ namespace BlackMisc
             const Geo::CElevationPlane &getGroundElevationPlane() const { return m_groundElevationPlane; }
 
             //! Is on ground by elevation data, requires elevation and CG
+            //! @{
+            IsOnGround isOnGroundByElevation() const;
             IsOnGround isOnGroundByElevation(const PhysicalQuantities::CLength &cg) const;
+            //! @}
 
             //! Is ground elevation value available
             bool hasGroundElevation() const;
@@ -268,10 +279,16 @@ namespace BlackMisc
 
             //! Get altitude under consideration of ground elevation and ground flag
             //! \remark with dragToGround it will also compensate overflows, otherwise only underflow
-            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity = PhysicalQuantities::CLength::null(), bool enableDragToGround = true, AltitudeCorrection *correctetion = nullptr) const;
+            //! @{
+            CAltitude getCorrectedAltitude(bool enableDragToGround = true, AltitudeCorrection *correction = nullptr) const;
+            CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &centerOfGravity, bool enableDragToGround = true, AltitudeCorrection *correction = nullptr) const;
+            //! @}
 
             //! Set the corrected altitude from CAircraftSituation::getCorrectedAltitude
+            //! @{
+            AltitudeCorrection correctAltitude(bool enableDragToGround = true);
             AltitudeCorrection correctAltitude(const PhysicalQuantities::CLength &centerOfGravity = PhysicalQuantities::CLength::null(), bool enableDragToGround = true);
+            //! @}
 
             //! Set altitude
             void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
@@ -318,6 +335,15 @@ namespace BlackMisc
             //! Corresponding callsign
             void setCallsign(const CCallsign &callsign);
 
+            //! Get CG if any
+            const PhysicalQuantities::CLength &getCG() const { return m_cg; }
+
+            //! Set CG
+            void setCG(const PhysicalQuantities::CLength &cg) { m_cg = cg; }
+
+            //! Has CG set?
+            bool hasCG() const { return !m_cg.isNull(); }
+
             //! Set flag indicating this is an interim position update
             void setInterimFlag(bool flag) { m_isInterim = flag; }
 
@@ -338,9 +364,6 @@ namespace BlackMisc
             //! Get flag indicating this is an interim position update
             bool isInterim() const { return m_isInterim; }
 
-            //! \copydoc Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
-
             //! Enum to string
             static const QString &isOnGroundToString(IsOnGround onGround);
 
@@ -359,6 +382,32 @@ namespace BlackMisc
             //! A default CG if not other value is available
             static const PhysicalQuantities::CLength &defaultCG();
 
+            //! Both on ground
+            static bool isGfEqualOnGround(double oldGroundFactor, double newGroundFactor)
+            {
+                return isDoubleEpsilonEqual(1.0, oldGroundFactor) && isDoubleEpsilonEqual(1.0, newGroundFactor);
+            }
+
+            //! Ground flag comparisons @{
+            //! Both not on ground
+            static bool isGfEqualAirborne(double oldGroundFactor, double newGroundFactor)
+            {
+                return isDoubleEpsilonEqual(0.0, oldGroundFactor) && isDoubleEpsilonEqual(0.0, newGroundFactor);
+            }
+
+            //! Plane is starting
+            static bool isGfStarting(double oldGroundFactor, double newGroundFactor)
+            {
+                return isDoubleEpsilonEqual(0.0, oldGroundFactor) && isDoubleEpsilonEqual(1.0, newGroundFactor);
+            }
+
+            //! Plane is landing
+            static bool isGfLanding(double oldGroundFactor, double newGroundFactor)
+            {
+                return isDoubleEpsilonEqual(1.0, oldGroundFactor) && isDoubleEpsilonEqual(0.0, newGroundFactor);
+            }
+            //! @}
+
         private:
             CCallsign m_correspondingCallsign;
             Geo::CCoordinateGeodetic m_position; //!< NULL position as default
@@ -367,11 +416,19 @@ namespace BlackMisc
             PhysicalQuantities::CAngle m_pitch { 0, nullptr };
             PhysicalQuantities::CAngle m_bank  { 0, nullptr };
             PhysicalQuantities::CSpeed m_groundSpeed { 0, nullptr };
-            bool m_isInterim = false;
+            PhysicalQuantities::CLength m_cg { 0, nullptr };
             Geo::CElevationPlane m_groundElevationPlane; //!< NULL elevation as default
+            bool m_isInterim = false;
             int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSetGroundDetails);
             double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
+            QString m_onGroundGuessingDetails; //!< only for debugging, not transferred via DBus etc.
+
+            //! Equal double values?
+            static bool isDoubleEpsilonEqual(double d1, double d2)
+            {
+                return qAbs(d1 - d2) <= std::numeric_limits<double>::epsilon();
+            }
 
             BLACK_METACLASS(
                 CAircraftSituation,
@@ -382,6 +439,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(pitch),
                 BLACK_METAMEMBER(bank),
                 BLACK_METAMEMBER(groundSpeed),
+                BLACK_METAMEMBER(cg),
                 BLACK_METAMEMBER(groundElevationPlane),
                 BLACK_METAMEMBER(onGround),
                 BLACK_METAMEMBER(onGroundDetails),
@@ -397,5 +455,6 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::IsOnGround)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::OnGroundDetails)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::AltitudeCorrection)
 
 #endif // guard

@@ -7,13 +7,19 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/geo/elevationplane.h"
+#include "blackmisc/math/mathutils.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/verify.h"
 #include <tuple>
 
-using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
@@ -43,19 +49,30 @@ namespace BlackMisc
             return c;
         }
 
-        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(const CElevationPlane &elevationPlane, bool isVtol, const CLength &cg)
+        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(const CElevationPlane &elevationPlane, const CAircraftModel &model)
         {
             if (elevationPlane.isNull()) { return 0; }
+            if (this->isEmpty()) { return 0; }
+
+            Q_ASSERT_X(this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
+            const CAircraftSituationChange change(*this, true, true);
             int c = 0;
+            bool first = true;
+            if (this->front().getCallsign().equalsString("AFL2353"))
+            {
+                c = 0;
+            }
+
             for (CAircraftSituation &s : *this)
             {
                 const bool set = s.setGroundElevationChecked(elevationPlane);
-                if (!set) { continue; }
-                if (s.shouldGuessOnGround())
+                if (set)
                 {
-                    s.guessOnGround(isVtol, cg);
+                    // change is only valid for the latest situation
+                    s.guessOnGround(first ? change : CAircraftSituationChange::null(), model);
+                    c++;
                 }
-                c++;
+                first = false;
             }
             return c;
         }
@@ -125,6 +142,179 @@ namespace BlackMisc
             return true;
         }
 
+        bool CAircraftSituationList::isConstOnGround() const
+        {
+            if (this->isEmpty()) { return false; }
+            if (this->containsNullPositionOrHeight()) { return false; }
+            for (const CAircraftSituation &situation : *this)
+            {
+                const CAircraftSituation::IsOnGround og = situation.getOnGround();
+                if (og != CAircraftSituation::OnGround) { return false; }
+            }
+            return true;
+        }
+
+        bool CAircraftSituationList::isConstNotOnGround() const
+        {
+            if (this->isEmpty()) { return false; }
+            if (this->containsNullPositionOrHeight()) { return false; }
+            for (const CAircraftSituation &situation : *this)
+            {
+                const CAircraftSituation::IsOnGround og = situation.getOnGround();
+                if (og != CAircraftSituation::NotOnGround) { return false; }
+            }
+            return true;
+        }
+
+        bool CAircraftSituationList::isConstDescending(bool alreadySortedLatestFirst) const
+        {
+            if (this->size() < 2) { return false; }
+            if (this->containsNullPositionOrHeight()) { return false; }
+
+            const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
+            CAircraftSituation newerSituation = CAircraftSituation::null();
+            for (const CAircraftSituation &situation : sorted)
+            {
+                if (!newerSituation.isNull())
+                {
+                    Q_ASSERT_X(situation.getAltitude().getReferenceDatum() == newerSituation.getAltitude().getReferenceDatum(), Q_FUNC_INFO, "Wrong reference");
+                    const CLength delta = newerSituation.getAltitude() - situation.getAltitude();
+                    if (!delta.isNegativeWithEpsilonConsidered()) { return false; }
+                }
+                newerSituation = situation;
+            }
+            return true;
+        }
+
+        bool CAircraftSituationList::isConstAscending(bool alreadySortedLatestFirst) const
+        {
+            if (this->size() < 2) { return false; }
+            if (this->containsNullPositionOrHeight()) { return false; }
+
+            const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
+            CAircraftSituation newerSituation = CAircraftSituation::null();
+            for (const CAircraftSituation &situation : sorted)
+            {
+                if (!newerSituation.isNull())
+                {
+                    Q_ASSERT_X(situation.getAltitude().getReferenceDatum() == newerSituation.getAltitude().getReferenceDatum(), Q_FUNC_INFO, "Wrong reference");
+                    const CLength delta = newerSituation.getAltitude() - situation.getAltitude();
+                    if (!delta.isPositiveWithEpsilonConsidered()) { return false; }
+                }
+                newerSituation = situation;
+            }
+            return true;
+        }
+
+        bool CAircraftSituationList::isConstAccelerating(bool alreadySortedLatestFirst) const
+        {
+            if (this->size() < 2) { return false; }
+            if (this->containsNullPositionOrHeight()) { return false; }
+
+            const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
+            CSpeed newerGs = CSpeed::null();
+            for (const CAircraftSituation &situation : sorted)
+            {
+                if (!newerGs.isNull())
+                {
+                    const CSpeed deltaSpeed = newerGs - situation.getGroundSpeed();
+                    if (!deltaSpeed.isPositiveWithEpsilonConsidered()) { return false; }
+                }
+                newerGs = situation.getGroundSpeed();
+            }
+            return true;
+        }
+
+        bool CAircraftSituationList::isConstDecelarating(bool alreadySortedLatestFirst) const
+        {
+            if (this->size() < 2) { return false; }
+            if (this->containsNullPositionOrHeight()) { return false; }
+
+            const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
+            CSpeed newerGs = CSpeed::null();
+            for (const CAircraftSituation &situation : sorted)
+            {
+                if (!newerGs.isNull())
+                {
+                    const CSpeed deltaSpeed = newerGs - situation.getGroundSpeed();
+                    if (!deltaSpeed.isNegativeWithEpsilonConsidered()) { return false; }
+                }
+                newerGs = situation.getGroundSpeed();
+            }
+            return true;
+        }
+
+        bool CAircraftSituationList::isGndFlagChanging(bool alreadySortedLatestFirst) const
+        {
+            if (this->size() < 2) { return false; }
+
+            const CAircraftSituationList sorted(this->getLatestAdjustedTwoObjects(alreadySortedLatestFirst));
+            const CAircraftSituation s1 = sorted.front();
+            const CAircraftSituation s2 = sorted.back();
+            return (s1.getOnGround() == CAircraftSituation::OnGround && s2.getOnGround() == CAircraftSituation::NotOnGround) ||
+                   (s2.getOnGround() == CAircraftSituation::OnGround && s1.getOnGround() == CAircraftSituation::NotOnGround);
+        }
+
+        bool CAircraftSituationList::isJustTakingOff(bool alreadySortedLatestFirst) const
+        {
+            if (this->size() < 2) { return false; }
+
+            const CAircraftSituationList sorted(this->getLatestAdjustedTwoObjects(alreadySortedLatestFirst));
+            const CAircraftSituation latest = sorted.front();
+            const CAircraftSituation oldest = sorted.back();
+            return (latest.getOnGround() == CAircraftSituation::NotOnGround && oldest.getOnGround() == CAircraftSituation::OnGround);
+        }
+
+        bool CAircraftSituationList::isJustTouchingDown(bool alreadySortedLatestFirst) const
+        {
+            if (this->size() < 2) { return false; }
+
+            const CAircraftSituationList sorted(this->getLatestAdjustedTwoObjects(alreadySortedLatestFirst));
+            const CAircraftSituation latest = sorted.front();
+            const CAircraftSituation oldest = sorted.back();
+            return (latest.getOnGround() == CAircraftSituation::OnGround && oldest.getOnGround() == CAircraftSituation::NotOnGround);
+        }
+
+        bool CAircraftSituationList::isRotatingUp(bool alreadySortedLatestFirst) const
+        {
+            if (this->size() < 2) { return false; }
+            const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
+            const QList<double> pitches = sorted.pitchValues(CAngleUnit::deg());
+            const QPair<double, double> stdDevAndMean = CMathUtils::standardDeviationAndMean(pitches);
+            const double minRotate = stdDevAndMean.first + stdDevAndMean.second; // outside std deviation range
+            const bool rotate = pitches.front() > minRotate;
+            return rotate;
+        }
+
+        bool CAircraftSituationList::containsPushBack() const
+        {
+            for (const CAircraftSituation &situation : *this)
+            {
+                if (situation.getGroundSpeed().isNegativeWithEpsilonConsidered()) { return true; }
+            }
+            return false;
+        }
+
+        int CAircraftSituationList::countOnGround(CAircraftSituation::IsOnGround og) const
+        {
+            int c = 0;
+            for (const CAircraftSituation &situation : *this)
+            {
+                if (situation.getOnGround() == og) { c++; }
+            }
+            return c;
+        }
+
+        int CAircraftSituationList::setOnGround(CAircraftSituation::IsOnGround og)
+        {
+            int c = 0;
+            for (CAircraftSituation &situation : *this)
+            {
+                if (situation.setOnGround(og)) { c++; }
+            }
+            return c;
+        }
+
         int CAircraftSituationList::setOnGroundDetails(CAircraftSituation::OnGroundDetails details)
         {
             int c = 0;
@@ -133,6 +323,75 @@ namespace BlackMisc
                 if (situation.setOnGroundDetails(details)) { c++; }
             }
             return c;
+        }
+
+        bool CAircraftSituationList::isSortedAdjustedLatestFirstWithoutNullPositions() const
+        {
+            return this->isSortedAdjustedLatestFirst() && !this->containsNullPosition();
+        }
+
+        CAircraftSituationList CAircraftSituationList::withoutFrontSituation() const
+        {
+            if (this->empty()) { return CAircraftSituationList(); }
+            CAircraftSituationList copy(*this);
+            copy.pop_front();
+            return copy;
+        }
+
+        QList<double> CAircraftSituationList::pitchValues(const CAngleUnit &unit) const
+        {
+            QList<double> values;
+            for (const CAircraftSituation &s : *this)
+            {
+                values.push_back(s.getPitch().value(unit));
+            }
+            return values;
+        }
+
+        QList<double> CAircraftSituationList::groundSpeedValues(const CSpeedUnit &unit) const
+        {
+            QList<double> values;
+            for (const CAircraftSituation &s : *this)
+            {
+                if (s.getGroundSpeed().isNull()) { continue; }
+                values.push_back(s.getGroundSpeed().value(unit));
+            }
+            return values;
+        }
+
+        QList<double> CAircraftSituationList::elevationValues(const CLengthUnit &unit) const
+        {
+            QList<double> values;
+            for (const CAircraftSituation &s : *this)
+            {
+                if (s.getGroundElevation().isNull()) { continue; }
+                values.push_back(s.getGroundElevation().value(unit));
+            }
+            return values;
+        }
+
+        QList<double> CAircraftSituationList::altitudeValues(const CLengthUnit &unit) const
+        {
+            QList<double> values;
+            for (const CAircraftSituation &s : *this)
+            {
+                const CAltitude alt(s.getAltitude());
+                if (alt.isNull()) { continue; }
+                values.push_back(alt.value(unit));
+            }
+            return values;
+        }
+
+        QList<double> CAircraftSituationList::correctedAltitudeValues(const CLengthUnit &unit, const CLength &cg) const
+        {
+            QList<double> values;
+            for (const CAircraftSituation &s : *this)
+            {
+                const CAltitude alt(s.getCorrectedAltitude(cg));
+                if (alt.isNull()) { continue; }
+                values.push_back(alt.value(unit));
+            }
+            return values;
         }
     } // namespace
 } // namespace
