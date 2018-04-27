@@ -198,6 +198,9 @@ namespace BlackCore
         //! Kill timer if id is valid
         void safeKillTimer();
 
+        //! Info about invalid situation
+        QString getInvalidSituationLogMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CInterpolationStatus &status, const QString &details = {}) const;
+
         bool   m_pausedSimFreezesInterpolation = false;                    //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool   m_autoCalcAirportDistance = true;                           //!< automatically calculate airport distance and bearing
         int    m_timerId = -1;                                             //!< dispatch timer id

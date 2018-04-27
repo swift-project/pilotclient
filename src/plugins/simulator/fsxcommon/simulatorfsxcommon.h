@@ -97,7 +97,7 @@ namespace BlackSimPlugin
         };
 
         //! FSX Simulator Implementation
-        class CSimulatorFsxCommon : public BlackSimPlugin::FsCommon::CSimulatorFsCommon
+        class CSimulatorFsxCommon : public FsCommon::CSimulatorFsCommon
         {
             Q_OBJECT
             Q_INTERFACES(BlackCore::ISimulator)

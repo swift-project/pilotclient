@@ -723,8 +723,10 @@ namespace BlackSimPlugin
             if (!toBeAddedAircraft.isEmpty())
             {
                 const CSimulatedAircraft nextPendingAircraft(m_addPendingAircraft.front());
+                const QPointer <CSimulatorFsxCommon> myself(this);
                 QTimer::singleShot(100, this, [ = ]
                 {
+                    if (myself.isNull()) { return; }
                     this->physicallyAddRemoteAircraftImpl(nextPendingAircraft, mode);
                 });
             }
@@ -742,7 +744,7 @@ namespace BlackSimPlugin
             const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectID);
             if (!simObject.hasValidRequestAndObjectId()) { return false; } // object id from somewhere else
             const CCallsign callsign(simObject.getCallsign());
-            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
+            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign for removed object");
 
             if (simObject.isPendingRemoved())
             {

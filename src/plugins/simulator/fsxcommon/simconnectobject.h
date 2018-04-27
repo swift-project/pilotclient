@@ -121,8 +121,11 @@ namespace BlackSimPlugin
             //! Set Simconnect object id
             void setObjectId(DWORD id);
 
-            //! Set Simconnect object id
+            //! Get Simconnect object id
             DWORD getObjectId() const { return m_objectId; }
+
+            //! Get Simconnect object id
+            QString getObjectIdAsString() const { return QString::number(this->getObjectId()); }
 
             //! Valid request id?
             bool hasValidRequestId() const { return m_validRequestId; }

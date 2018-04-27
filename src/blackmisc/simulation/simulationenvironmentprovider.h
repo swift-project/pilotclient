@@ -15,6 +15,7 @@
 #include "simulatorplugininfo.h"
 #include "aircraftmodel.h"
 #include "blackmisc/provider.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/geo/coordinategeodeticlist.h"
 #include "blackmisc/geo/elevationplane.h"
 

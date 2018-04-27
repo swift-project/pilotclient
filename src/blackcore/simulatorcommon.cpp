@@ -41,7 +41,6 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
-using namespace BlackCore;
 using namespace BlackCore::Db;
 
 namespace BlackCore
@@ -317,8 +316,10 @@ namespace BlackCore
         this->stopHighlighting();
         this->logicallyRemoveRemoteAircraft(callsign);
         if (!this->isAircraftInRange(callsign)) { return false; }
+        const QPointer<CSimulatorCommon> myself(this);
         QTimer::singleShot(2500, this, [ = ]
         {
+            if (myself.isNull()) { return; }
             if (this->isShuttingDown()) { return; }
             if (!this->isAircraftInRange(callsign)) { return; }
             const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
@@ -583,6 +584,16 @@ namespace BlackCore
         m_timerId = -1;
     }
 
+    QString CSimulatorCommon::getInvalidSituationLogMessage(const CCallsign &callsign, const CInterpolationStatus &status, const QString &details) const
+    {
+        static const QString msg("Cs: '%1' Interpolation: '%2'");
+        const QString m = msg.arg(callsign.asString(), status.toQString());
+        if (details.isEmpty()) { return m; }
+
+        static const QString addDetails(" details: '%1'");
+        return m + addDetails.arg(details);
+    }
+
     void CSimulatorCommon::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
         if (!snapshot.isValidSnapshot()) { return;}
@@ -729,7 +740,7 @@ namespace BlackCore
         const PartsLog p = m_interpolationLogger.getLastPartsLog(cs);
 
         QString dm;
-        static const QString sep("\n");
+        static const QString sep("\n------\n");
         if (s.tsCurrent > 0)
         {
             dm = QStringLiteral("Setup: ") % s.usedSetup.toQString(true) %
@@ -744,8 +755,10 @@ namespace BlackCore
         }
 
         const int t = 4500 + (qrand() % 1000); // makes sure not always using the same time difference
+        const QPointer<CSimulatorCommon> myself(this);
         QTimer::singleShot(t, this, [ = ]
         {
+            if (myself.isNull()) { return; }
             this->displayLoggedSituationInSimulator(cs, stopLogging, times - 1);
         });
     }

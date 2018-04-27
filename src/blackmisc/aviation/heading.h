@@ -99,5 +99,6 @@ namespace BlackMisc
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading::ReferenceNorth)
 
 #endif // guard

@@ -31,7 +31,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        //! Current situation in the sky analyzed.
+        //! Current situation in the skies analyzed.
         class BLACKMISC_EXPORT CAirspaceAircraftSnapshot : public CValueObject<CAirspaceAircraftSnapshot>
         {
         public:

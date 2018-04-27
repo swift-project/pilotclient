@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         /*!
          * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
          */
@@ -36,8 +35,8 @@ namespace BlackMisc
             CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };
 
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)
 

@@ -357,7 +357,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         QString CPhysicalQuantity<MU, PQ>::convertToQString(bool i18n) const
         {
-            if (this->isNull()) { return i18n ? QCoreApplication::translate("CPhysicalQuantity", "undefined") : "undefined"; }
+            if (this->isNull()) { return QStringLiteral("null"); }
             return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
         }
 

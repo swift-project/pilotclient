@@ -721,12 +721,11 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).warning("Invalid situation for callsign: '%1' info: '%2'")
-                            << callsign
-                            << interpolatorStatus.toQString();
+                    CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, interpolatorStatus));
                 }
 
                 this->updateRemoteAircraftParts(xplaneAircraft, parts, partsStatus);
+
             } // all callsigns
 
             const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;
