@@ -408,24 +408,26 @@ namespace BlackMisc
             const CAircraftSituation situationOldInterpolation = this->oldestInterpolationSituation();
             const CAircraftSituation situationNewInterpolation = this->newestInterpolationSituation();
 
-            return QStringLiteral("CS: ") % callsign.asString() % separator %
-                   QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
-                   QStringLiteral(" | type: ") % this->interpolationType() %
-                   QStringLiteral(" | gnd.fa.: ") % QString::number(groundFactor) %
-                   QStringLiteral(" | CG: ") % cgAboveGround.valueRoundedWithUnit(CLengthUnit::m(), 1) %
-                   QStringLiteral(" | alt.cor.: ") % altCorrection %
-                   QStringLiteral(" | #nw.sit.: ") % QString::number(noNetworkSituations) %
-                   (
+            return (
                        withSetup ?
-                       separator % QStringLiteral("setup: ") % usedSetup.toQString(true) :
+                       QStringLiteral("setup: ") % usedSetup.toQString(true) % separator :
                        QStringLiteral("")
                    ) %
                    (
                        withElevation ?
-                       separator %
-                       QStringLiteral("Elev info.: ") % elevationInfo :
+                       QStringLiteral("Elev info.: ") % elevationInfo % separator :
                        QStringLiteral("")
                    ) %
+                   QStringLiteral("change: ") % change.toQString(true) %
+                   separator %
+                   QStringLiteral("Interpolation CS: ") % callsign.asString() % separator %
+                   QStringLiteral("ts: ") % CInterpolationLogger::msSinceEpochToTimeAndTimestamp(tsCurrent) %
+                   QStringLiteral(" | type: ") % this->interpolationType() %
+                   QStringLiteral(" | gnd.fa.: ") % QString::number(groundFactor) %
+                   QStringLiteral(" | CG: ") % cgAboveGround.valueRoundedWithUnit(CLengthUnit::m(), 1) %
+                   QStringLiteral(" ") % cgAboveGround.valueRoundedWithUnit(CLengthUnit::ft(), 1) %
+                   QStringLiteral(" | alt.cor.: ") % altCorrection %
+                   QStringLiteral(" | #nw.sit.: ") % QString::number(noNetworkSituations) %
                    (
                        withDeltaTimes ?
                        separator %
@@ -442,7 +444,7 @@ namespace BlackMisc
                    (
                        withCurrentSituation ?
                        separator %
-                       QStringLiteral("sit.: ") % situationCurrent.toQString(true) :
+                       QStringLiteral("cur.sit.(interpolated): ") % situationCurrent.toQString(true) :
                        QStringLiteral("")
                    ) %
                    (

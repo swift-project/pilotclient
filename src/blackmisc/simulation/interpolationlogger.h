@@ -14,9 +14,9 @@
 
 #include "interpolationrenderingsetup.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/logcategorylist.h"
 #include <QObject>
 #include <QStringList>
@@ -45,6 +45,7 @@ namespace BlackMisc
             Aviation::CAircraftParts parts; //!< corresponding parts used in interpolator
             Aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (oldest at end)
             Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
+            Aviation::CAircraftSituationChange change;     //!< change
             PhysicalQuantities::CLength cgAboveGround;     //!< center of gravity
             CInterpolationAndRenderingSetupPerCallsign usedSetup; //!< used setup
 
