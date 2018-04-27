@@ -322,5 +322,11 @@ namespace BlackMisc
             }
             CInterpolationAndRenderingSetupBase::setPropertyByIndex(index, variant);
         }
+
+        const CInterpolationAndRenderingSetupPerCallsign &CInterpolationAndRenderingSetupPerCallsign::null()
+        {
+            static const CInterpolationAndRenderingSetupPerCallsign null;
+            return null;
+        }
     } // ns
 } // ns

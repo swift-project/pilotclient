@@ -18,7 +18,8 @@ namespace BlackMisc
         CInterpolationAndRenderingSetupPerCallsign IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
         {
             QReadLocker l(&m_lockSetup);
-            return m_setups.contains(callsign) ? m_setups.value(callsign) : CInterpolationAndRenderingSetupPerCallsign(callsign, m_globalSetup);
+            if (!m_setups.contains(callsign)) { return CInterpolationAndRenderingSetupPerCallsign(callsign, m_globalSetup); }
+            return m_setups.value(callsign);
         }
 
         CInterpolationSetupList IInterpolationSetupProvider::getInterpolationSetupsPerCallsign() const

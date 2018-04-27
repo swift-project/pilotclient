@@ -219,11 +219,17 @@ namespace BlackMisc
             //! Set callsign
             void setCallsign(const Aviation::CCallsign &callsign) { m_callsign = callsign; }
 
+            //! NULL?
+            bool isNull() const { return m_callsign.isEmpty(); }
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            //! NULL object
+            static const CInterpolationAndRenderingSetupPerCallsign &null();
 
         private:
             Aviation::CCallsign m_callsign;
