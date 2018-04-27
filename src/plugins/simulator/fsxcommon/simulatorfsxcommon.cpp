@@ -924,7 +924,7 @@ namespace BlackSimPlugin
             m_addPendingSimObjTimer.start(AddPendingAircraftIntervalMs); // restart
 
             const bool hasPendingAdded = m_simConnectObjects.containsPendingAdded();
-            const bool canAdd = m_simSimulating && m_simConnected && !hasPendingAdded;
+            bool canAdd = m_simSimulating && m_simConnected && !hasPendingAdded;
 
             Q_ASSERT_X(!hasPendingAdded || m_simConnectObjects.countPendingAdded() < 2, Q_FUNC_INFO, "There must be only 0..1 pending objects");
             if (this->showDebugLogMessage())
@@ -954,6 +954,25 @@ namespace BlackSimPlugin
                 return false;
             }
 
+            // situation check
+            CAircraftSituation situation(newRemoteAircraft.getSituation());
+            if (canAdd && situation.isPositionOrAltitudeNull())
+            {
+                // invalid position
+                const CAircraftSituationList situations(this->remoteAircraftSituations(callsign));
+                if (situations.isEmpty())
+                {
+                    CLogMessage(this).warning("No valid situations for '%1', will be added as pending") << callsign.asString();
+                    canAdd = false;
+                }
+                else
+                {
+                    CLogMessage(this).warning("Invalid aircraft situation for new aircraft '%1', use situation") << callsign.asString();
+                    situation = situations.findClosestTimeDistanceAdjusted(QDateTime::currentMSecsSinceEpoch());
+                    Q_ASSERT_X(!situation.isPositionOrAltitudeNull(), Q_FUNC_INFO, "Invalid situation for new aircraft");
+                }
+            }
+
             // check if we can add, do not add if simulator is stopped or other objects pending
             if (!canAdd)
             {
@@ -964,11 +983,21 @@ namespace BlackSimPlugin
             this->removeFromAddPendingAndAddAgainAircraft(callsign);
 
             // create AI
-            bool adding = false;
-            const CSimulatedAircraft addedAircraft(newRemoteAircraft);
+            if (!this->isAircraftInRange(callsign))
+            {
+                CLogMessage(this).info("Skipping adding of '%1' since it is no longer in range") << callsign.asString();
+                return false;
+            }
+
+            // setup
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
+            const bool sendGround = setup.sendGndFlagToSimulator();
+
+            // FSX/P3D adding
+            bool adding = false; // will be added flag
             const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
-            const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(addedAircraft.getSituation());
-            const QString modelString(addedAircraft.getModelString());
+            const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::aircraftSituationToFsxPosition(newRemoteAircraft.getSituation(), sendGround);
+            const QString modelString(newRemoteAircraft.getModelString());
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' model: '%2' request: %3, init pos: %4").arg(callsign.toQString(), modelString).arg(requestId).arg(fsxPositionToString(initialPosition))); }
 
             const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(callsign.toQString().left(12)), initialPosition, requestId);
@@ -976,13 +1005,13 @@ namespace BlackSimPlugin
             {
                 const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << modelString;
                 CLogMessage::preformatted(msg);
-                emit this->physicallyAddingRemoteModelFailed(addedAircraft, msg);
+                emit this->physicallyAddingRemoteModelFailed(newRemoteAircraft, msg);
             }
             else
             {
                 // we will request a new aircraft by request ID, later we will receive its object id
                 // so far this object id is -1
-                const CSimConnectObject simObject = this->insertNewSimConnectObject(addedAircraft, requestId);
+                const CSimConnectObject simObject = this->insertNewSimConnectObject(newRemoteAircraft, requestId);
                 if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
                 adding = true;
             }
@@ -1039,9 +1068,6 @@ namespace BlackSimPlugin
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
             if (simObject.isPendingRemoved()) { return true; }
 
-            // avoid further data from simulator
-            this->stopRequestingDataForSimObject(simObject);
-
             const bool pendingAdded = simObject.isPendingAdded();
             const bool stillWaitingForLights = !simObject.hasCurrentLightsInSimulator();
             if (pendingAdded || stillWaitingForLights)
@@ -1058,6 +1084,8 @@ namespace BlackSimPlugin
                 return false; // not yet deleted
             }
 
+            // avoid further data from simulator
+            this->stopRequestingDataForSimObject(simObject);
             simObject.setPendingRemoved(true);
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Cs: '%1' request/object id: %2/%3").arg(callsign.toQString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
 
@@ -1222,7 +1250,6 @@ namespace BlackSimPlugin
 
             // interpolate and send to simulator
             m_interpolationRequest++;
-            const CCallsignSet aircraftWithParts = this->remoteAircraftSupportingParts(); // optimization, fetch all parts supporting aircraft in one step (one lock)
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
@@ -1250,15 +1277,10 @@ namespace BlackSimPlugin
                 CInterpolationStatus interpolatorStatus;
                 const CAircraftSituation interpolatedSituation = simObject.getInterpolatedSituation(currentTimestamp, setup, interpolatorStatus);
 
-                // Interpolated parts
-                CPartsStatus partsStatus;
-                const CAircraftParts parts = simObject.getInterpolatedOrGuessedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts);
-
                 if (interpolatorStatus.hasValidSituation())
                 {
                     // update situation
-                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(interpolatedSituation);
-                    if (!sendGround) { position.OnGround = 0.0; }
+                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(interpolatedSituation, sendGround);
                     if (!simObject.isSameAsSent(position))
                     {
                         m_simConnectObjects[simObject.getCallsign()].setPositionAsSent(position);
@@ -1277,11 +1299,13 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).warning("Invalid situation for SimObject '%1' callsign: '%2' info: '%3'")
-                            << simObject.getObjectId() << callsign
-                            << interpolatorStatus.toQString();
+                    static const QString so("SimObject id: %1");
+                    CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, interpolatorStatus, so.arg(simObject.getObjectId())));
                 }
 
+                // Interpolated parts
+                CPartsStatus partsStatus;
+                const CAircraftParts parts = simObject.getInterpolatedOrGuessedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts);
                 this->updateRemoteAircraftParts(simObject, parts, partsStatus);
 
             } // all callsigns
@@ -1403,9 +1427,9 @@ namespace BlackSimPlugin
             });
         }
 
-        SIMCONNECT_DATA_INITPOSITION CSimulatorFsxCommon::aircraftSituationToFsxPosition(const CAircraftSituation &situation)
+        SIMCONNECT_DATA_INITPOSITION CSimulatorFsxCommon::aircraftSituationToFsxPosition(const CAircraftSituation &situation, bool sendGnd)
         {
-            Q_ASSERT_X(!situation.isGeodeticHeightNull(), Q_FUNC_INFO, "Missing height");
+            Q_ASSERT_X(!situation.isGeodeticHeightNull(), Q_FUNC_INFO, "Missing height (altitude)");
             Q_ASSERT_X(!situation.isPositionNull(), Q_FUNC_INFO,  "Missing position");
 
             SIMCONNECT_DATA_INITPOSITION position = CSimulatorFsxCommon::coordinateToFsxPosition(situation);
@@ -1417,7 +1441,7 @@ namespace BlackSimPlugin
             position.Bank  = -situation.getBank().value(CAngleUnit::deg());
             position.OnGround = 0U;
 
-            if (situation.isOnGroundInfoAvailable())
+            if (sendGnd && situation.isOnGroundInfoAvailable())
             {
                 const bool onGround = (situation.getOnGround() == CAircraftSituation::OnGround);
                 position.OnGround = onGround ? 1U : 0U;

@@ -327,7 +327,8 @@ namespace BlackSimPlugin
             const CSimConnectObjects &getSimConnectProbes() const { return m_simConnectProbes; }
 
             //! Format conversion
-            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
+            //! \note must be valid situation
+            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, bool sendGnd = true);
 
             //! Format conversion
             SIMCONNECT_DATA_INITPOSITION coordinateToFsxPosition(const BlackMisc::Geo::ICoordinateGeodetic &coordinate);
