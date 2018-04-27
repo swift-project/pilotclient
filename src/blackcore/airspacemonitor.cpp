@@ -129,13 +129,6 @@ namespace BlackCore
         return r;
     }
 
-    int CAirspaceMonitor::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
-    {
-        const bool vtol = this->isVtolAircraft(callsign);
-        const CLength cg = this->getCG(callsign);
-        return this->updateAircraftGroundElevationExt(callsign, elevation, vtol, cg, true);
-    }
-
     const CLogCategoryList &CAirspaceMonitor::getLogCategories()
     {
         static const CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
@@ -878,16 +871,14 @@ namespace BlackCore
         Q_UNUSED(oldStatus);
         switch (newStatus)
         {
-        case INetwork::Connected:
-            break;
+        case INetwork::Connected: break;
         case INetwork::Disconnected:
         case INetwork::DisconnectedError:
         case INetwork::DisconnectedLost:
         case INetwork::DisconnectedFailed:
             this->clear();
             break;
-        default:
-            break;
+        default: break;
         }
     }
 
@@ -954,17 +945,26 @@ namespace BlackCore
             }
         }
 
-        this->guessOnGround(correctedSituation); // does nothing if situation is not appropriate for guessing
+        this->guessOnGroundAndUpdateModelCG(correctedSituation); // does nothing if situation is not appropriate for guessing
         CRemoteAircraftProvider::storeAircraftSituation(correctedSituation);
     }
 
-    bool CAirspaceMonitor::guessOnGround(CAircraftSituation &situation) const
+    bool CAirspaceMonitor::guessOnGroundAndUpdateModelCG(CAircraftSituation &situation)
     {
-        if (!situation.shouldGuessOnGround()) { return false; }
         const CCallsign callsign(situation.getCallsign());
-        const bool vtol = this->isVtolAircraft(callsign);
-        const CLength cg = this->getCG(callsign);
-        return situation.guessOnGround(vtol, cg);
+        CAircraftModel aircraftModel = this->getAircraftInRangeModelForCallsign(callsign);
+        const CLength cg = this->getCG(callsign); // always x-check against simulator to override guessed values and reflect changed CGs
+        if (!cg.isNull() && aircraftModel.getCG() != cg)
+        {
+            aircraftModel.setCG(cg);
+            this->updateCG(callsign, cg); // model's CG in remote provider
+        }
+
+        if (!cg.isNull()) { situation.setCG(cg); }
+        const CAircraftSituationChange change = this->remoteAircraftSituationChange(callsign);
+
+        if (!situation.shouldGuessOnGround()) { return false; }
+        return situation.guessOnGround(change, aircraftModel);
     }
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)
