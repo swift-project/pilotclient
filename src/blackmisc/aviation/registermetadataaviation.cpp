@@ -27,6 +27,8 @@ namespace BlackMisc
             CAircraftSituation::registerMetadata();
             qRegisterMetaType<CAircraftSituation::IsOnGround>();
             qRegisterMetaType<CAircraftSituation::OnGroundDetails>();
+            qRegisterMetaType<CAircraftSituation::AltitudeCorrection>();
+            CAircraftSituationChange::registerMetadata();
             CAircraftSituationList::registerMetadata();
             CAirlineIcaoCode::registerMetadata();
             CAirlineIcaoCodeList::registerMetadata();
@@ -34,15 +36,19 @@ namespace BlackMisc
             CAirport::registerMetadata();
             CAirportList::registerMetadata();
             CAltitude::registerMetadata();
+            qRegisterMetaType<CAltitude::ReferenceDatum>();
+            qRegisterMetaType<CAltitude::AltitudeType>();
             CAtcStation::registerMetadata();
             CAtcStationList::registerMetadata();
             CCallsign::registerMetadata();
+            qRegisterMetaType<CCallsign::TypeHint>();
             CCallsignSet::registerMetadata();
             CComSystem::registerMetadata();
             CFlightPlan::registerMetadata();
             CFlightPlanList::registerMetadata();
             CFlightPlanRemarks::registerMetadata();
             CHeading::registerMetadata();
+            qRegisterMetaType<CHeading::ReferenceNorth>();
             CInformationMessage::registerMetadata();
             CLivery::registerMetadata();
             CLiveryList::registerMetadata();

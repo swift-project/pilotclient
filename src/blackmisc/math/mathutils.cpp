@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/verify.h"
 
 #include <QThreadStorage>
 #include <QTime>
@@ -110,6 +111,13 @@ namespace BlackMisc
             return r % ((high + 1) - low) + low;
         }
 
+        double CMathUtils::randomDouble(double max)
+        {
+            static const int MAX(INT_MAX);
+            const double r = randomInteger(0, MAX);
+            return (r / MAX) * max;
+        }
+
         int CMathUtils::roundToMultipleOf(int value, int divisor)
         {
             Q_ASSERT(divisor != 0);
@@ -135,6 +143,56 @@ namespace BlackMisc
             if (width < 0) { return fInt; }
             if (fInt.length() >= width) { return fInt.left(width); }
             return fInt.leftJustified(width, '0');
+        }
+
+        double CMathUtils::sum(const QList<double> &values)
+        {
+            double sum = 0;
+            for (double v : values) { sum += v; }
+            return sum;
+        }
+
+        QList<double> CMathUtils::squaredDifferences(const QList<double> &values)
+        {
+            const double meanValue = mean(values);
+            return squaredDifferences(values, meanValue);
+        }
+
+        QList<double> CMathUtils::squaredDifferences(const QList<double> &values, double meanValue)
+        {
+            QList<double> squaresDifferences;
+            for (double v : values)
+            {
+                const double vd = v - meanValue;
+                squaresDifferences.push_back(vd * vd);
+            }
+            return squaresDifferences;
+        }
+
+        double CMathUtils::mean(const QList<double> &values)
+        {
+            BLACK_VERIFY_X(!values.isEmpty(), Q_FUNC_INFO, "Need values");
+            return sum(values) / values.size();
+        }
+
+        double CMathUtils::variance(const QList<double> &values)
+        {
+            const double variance = mean(squaredDifferences(values));
+            return variance;
+        }
+
+        double CMathUtils::standardDeviation(const QList<double> &values)
+        {
+            const double sd = sqrt(variance(values));
+            return sd;
+        }
+
+        QPair<double, double> CMathUtils::standardDeviationAndMean(const QList<double> &values)
+        {
+            const double meanValue = mean(values);
+            const double varianceValue = mean(squaredDifferences(values, meanValue));
+            const double sd = sqrt(varianceValue);
+            return QPair<double, double>(sd, meanValue);
         }
     } // namespace
 } // namespace

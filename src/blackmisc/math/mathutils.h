@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 
 #include <QtCore/qmath.h>
+#include <QPair>
 #include <cmath>
 
 namespace BlackMisc
@@ -25,7 +26,6 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CMathUtils
         {
         public:
-
             //! No objects, just static
             CMathUtils() = delete;
 
@@ -108,12 +108,37 @@ namespace BlackMisc
             //! Random number between low and high
             static int randomInteger(int low, int high);
 
+            //! Random double 0-max
+            static double randomDouble(double max = 1);
+
             //! Round numToRound to the nearest multiple of divisor
             static int roundToMultipleOf(int value, int divisor);
 
             //! Fractional part as integer string, e.g. 3.12 -> 12 / 3.012 -> 012
             //! \remark because of leading 0 returned as string
             static QString fractionalPartAsString(double value, int width = -1);
+
+            //! Calculate the sum
+            static double sum(const QList<double> &values);
+
+            //! Calculate the mean
+            static double mean(const QList<double> &values);
+
+            //! Calculate the standard deviation
+            static double standardDeviation(const QList<double> &values);
+
+            //! Standard deviation (first) and mean (second)
+            static QPair<double, double> standardDeviationAndMean(const QList<double> &values);
+
+        private:
+            //! Calculate the variance
+            static double variance(const QList<double> &values);
+
+            //! The squared differences to mean
+            static QList<double> squaredDifferences(const QList<double> &values);
+
+            //! The squared differences to mean
+            static QList<double> squaredDifferences(const QList<double> &values, double meanValue);
         };
     } // namespace
 } // namespace
