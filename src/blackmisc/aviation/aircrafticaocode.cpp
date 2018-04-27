@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/simulation/matchingutils.h"
+#include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
@@ -28,6 +29,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
@@ -194,6 +196,45 @@ namespace BlackMisc
             }
             // 0..85
             return score;
+        }
+
+        void CAircraftIcaoCode::guessModelParameters(CLength &guessedCG, CSpeed &guessedLiftOffGs) const
+        {
+            // init to defaults
+            CLength guessedCG_ = CLength(1.5, CLengthUnit::m());
+            CSpeed guessedLiftOffGs_ = this->isVtol() ? CSpeed::null() : CSpeed(70, CSpeedUnit::km_h());
+
+            const int engines = this->getEnginesCount();
+            const QChar engineType = this->getEngineType()[0].toUpper();
+            do
+            {
+                if (engines == 1)
+                {
+                    if (engineType == 'T') { guessedCG_ = CLength(2.0, CLengthUnit::m()); break; }
+                }
+                else if (engines == 2)
+                {
+                    guessedCG_ = CLength(2.0, CLengthUnit::m());
+                    guessedLiftOffGs_ = CSpeed(80, CSpeedUnit::kts());
+                    if (engineType == 'T') { guessedCG_ = CLength(2.0, CLengthUnit::m()); break; }
+                    if (engineType == 'J') { guessedCG_ = CLength(2.5, CLengthUnit::m()); break; }
+                }
+                else if (engines > 2)
+                {
+                    guessedCG_ = CLength(4.0, CLengthUnit::m());
+                    guessedLiftOffGs_ = CSpeed(70, CSpeedUnit::kts());
+                    if (engineType == 'J')
+                    {
+                        guessedCG_ = CLength(6.0, CLengthUnit::m());
+                        guessedLiftOffGs_ = CSpeed(100, CSpeedUnit::kts());
+                        break;
+                    }
+                }
+            }
+            while (false);
+
+            if (!guessedCG_.isNull()) { guessedCG = guessedCG_; }
+            if (!guessedLiftOffGs_.isNull()) { guessedLiftOffGs = guessedLiftOffGs_; }
         }
 
         bool CAircraftIcaoCode::isNull() const

@@ -7,16 +7,21 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "aircraftparts.h"
 #include "aircraftlights.h"
 #include "aircraftsituation.h"
+#include "aircraftsituationchange.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include "QStringBuilder"
 #include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
+using namespace BlackConfig;
 
 namespace BlackMisc
 {
@@ -33,6 +38,7 @@ namespace BlackMisc
         {
             return QStringLiteral("ts: ") % this->getFormattedTimestampAndOffset(true) %
                    QStringLiteral(" details: ") % this->getPartsDetailsAsString() %
+                   (m_guessingDetails.isEmpty() ? QStringLiteral("") : QStringLiteral(" - ") % m_guessingDetails) %
                    QStringLiteral(" | on ground: ") % BlackMisc::boolToYesNo(m_isOnGround) %
                    QStringLiteral(" | lights: ") % m_lights.toQString(i18n) %
                    QStringLiteral(" | gear down: ") % BlackMisc::boolToYesNo(m_gearDown) %
@@ -60,68 +66,115 @@ namespace BlackMisc
             return null;
         }
 
-        CAircraftParts CAircraftParts::guessedParts(const CAircraftSituation &situation, bool vtol, int engineNumber)
+        CAircraftParts CAircraftParts::guessedParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
         {
             CAircraftParts parts;
             CAircraftEngineList engines;
             parts.setLights(CAircraftLights::guessedLights(situation));
 
-            // set some reasonable defaults
-            const bool onGround = situation.isOnGround();
-            parts.setGearDown(onGround);
-            engines.initEngines(engineNumber, !onGround || situation.isMoving());
+            QString *details = CBuildConfig::isLocalDeveloperDebugBuild() ? &parts.m_guessingDetails : nullptr;
+
+            const bool vtol = model.isVtol();
+            CSpeed guessedLiftOffGs = CSpeed::null();
+            CLength guessedCG = model.getCG();
+            model.getAircraftIcaoCode().guessModelParameters(guessedCG, guessedLiftOffGs);
+            // const QChar engineType = model.getAircraftIcaoCode().getEngineTypeChar();
+
+            // set some reasonable values
+            const bool isOnGround = situation.isOnGround();
+            const int engineCount = model.getEngineCount();
+            engines.initEngines(engineCount, !isOnGround || situation.isMoving());
+            parts.setGearDown(isOnGround);
+            parts.setSpoilersOut(false);
+            parts.setEngines(engines);
+            parts.setPartsDetails(GuessedParts);
+
+            if (isOnGround)
+            {
+                if (!change.isNull())
+                {
+                    if (change.isConstDecelarating())
+                    {
+                        parts.setSpoilersOut(true);
+                        parts.setFlapsPercent(10);
+                        return parts;
+                    }
+                }
+
+                const CSpeed slowSpeed = guessedLiftOffGs * 0.30;
+                if (situation.getGroundSpeed() < slowSpeed)
+                {
+                    if (details) { *details += QStringLiteral("slow speed <") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
+                    parts.setFlapsPercent(0);
+                    return parts;
+                }
+                else
+                {
+                    if (details) { *details += QStringLiteral("faster speed >") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
+                    parts.setFlapsPercent(0);
+                    return parts;
+                }
+            }
 
             const double pitchDeg = situation.getPitch().value(CAngleUnit::deg());
-            double nearGround1Ft = 750;
-            double nearGround2Ft = 1500;
-            if (pitchDeg > 10)
+            const bool isLikelyTakeOffOrClimbing = change.isNull() ?  pitchDeg > 20 : (change.isRotatingUp() || change.isConstAscending());
+            const bool isLikelyLanding = change.isNull() ? false : change.isConstDescending();
+
+            double nearGround1Ft = 300;
+            double nearGround2Ft = 1000;
+            if (isLikelyTakeOffOrClimbing)
             {
                 // likely starting
-                nearGround1Ft = 250;
                 nearGround2Ft = 500;
             }
 
             if (situation.hasGroundElevation())
             {
                 const double aGroundFt = situation.getHeightAboveGround().value(CLengthUnit::ft());
+                static const QString detailsInfo("above ground: %1ft near grounds: %2ft %3ft likely takeoff: %4 likely landing: %5");
+                if (details) { *details = detailsInfo.arg(aGroundFt).arg(nearGround1Ft).arg(nearGround2Ft).arg(boolToYesNo(isLikelyTakeOffOrClimbing), boolToYesNo(isLikelyLanding));  }
                 if (aGroundFt < nearGround1Ft)
                 {
+                    if (details) { details->prepend(QStringLiteral("near ground: ")); }
                     parts.setGearDown(true);
                     parts.setFlapsPercent(25);
                 }
                 else if (aGroundFt < nearGround2Ft)
                 {
-                    parts.setGearDown(true);
+                    if (details) { details->prepend(QStringLiteral("2nd layer: ")); }
+                    const bool gearDown = !isLikelyTakeOffOrClimbing && (situation.getGroundSpeed() < guessedLiftOffGs || isLikelyLanding);
+                    parts.setGearDown(gearDown);
                     parts.setFlapsPercent(10);
                 }
                 else
                 {
+                    if (details) { details->prepend(QStringLiteral("airborne: ")); }
                     parts.setGearDown(false);
                     parts.setFlapsPercent(0);
                 }
             }
             else
             {
-                if (!situation.hasInboundGroundDetails())
+                if (situation.getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails)
                 {
                     // the ground flag is not reliable and we have no ground elevation
                     if (situation.getOnGroundDetails() == CAircraftSituation::OnGroundByGuessing)
                     {
                         // should be OK
+                        if (details) { *details = QStringLiteral("on ground, no elv.");  }
                     }
                     else
                     {
                         if (!vtol)
                         {
-                            const bool gearDown = situation.getGroundSpeed().value(CSpeedUnit::kts()) < 60;
+                            const bool gearDown = situation.getGroundSpeed() < guessedLiftOffGs;
                             parts.setGearDown(gearDown);
+                            if (details) { *details = QStringLiteral("not on ground elv., gs < ") + guessedLiftOffGs.valueRoundedWithUnit(1);  }
                         }
                     }
                 }
             }
 
-            parts.setEngines(engines);
-            parts.setPartsDetails(GuessedParts);
             return parts;
         }
 
@@ -235,9 +288,9 @@ namespace BlackMisc
             m_engines = engines;
         }
 
-        void CAircraftParts::guessParts(const CAircraftSituation &situation, bool vtol, int engineNumber)
+        void CAircraftParts::guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
         {
-            *this = guessedParts(situation, vtol, engineNumber);
+            *this = guessedParts(situation, change, model);
         }
     } // namespace
 } // namespace

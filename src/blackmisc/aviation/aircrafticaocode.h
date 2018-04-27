@@ -13,6 +13,7 @@
 #define BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 
 #include "blackmisc/db/datastore.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
@@ -290,6 +291,9 @@ namespace BlackMisc
             //! Considers rank, manufacturer and family 0..100
             //! \remark normally used with a selected set of ICAO codes or combined types
             int calculateScore(const CAircraftIcaoCode &otherCode, CStatusMessageList *log = nullptr) const;
+
+            //! Guess aircraft model parameters
+            void guessModelParameters(PhysicalQuantities::CLength &guessedCG, PhysicalQuantities::CSpeed &guessedLiftOffGs) const;
 
             //! Null ICAO?
             bool isNull() const;

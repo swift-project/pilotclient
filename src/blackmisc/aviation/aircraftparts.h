@@ -12,7 +12,6 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTPARTS_H
 #define BLACKMISC_AVIATION_AIRCRAFTPARTS_H
 
-#include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/blackmiscexport.h"
@@ -27,9 +26,11 @@
 
 namespace BlackMisc
 {
+    namespace Simulation { class CAircraftModel; }
     namespace Aviation
     {
         class CAircraftSituation;
+        class CAircraftSituationChange;
 
         //! Value object encapsulating information of aircraft's parts
         class BLACKMISC_EXPORT CAircraftParts :
@@ -151,7 +152,7 @@ namespace BlackMisc
             void setPartsDetails(PartsDetails details) { m_partsDetails = static_cast<int>(details); }
 
             //! Guess the parts
-            void guessParts(const CAircraftSituation &situation, bool vtol = false, int engineNumber = 2);
+            void guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const Simulation::CAircraftModel &model);
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -166,7 +167,7 @@ namespace BlackMisc
             static const CAircraftParts &null();
 
             //! Guessed parts
-            static CAircraftParts guessedParts(const CAircraftSituation &situation, bool vtol = false, int engineNumber = 2);
+            static CAircraftParts guessedParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const Simulation::CAircraftModel &model);
 
             //! Convert to QString
             static const QString &partsDetailsToString(PartsDetails details);
@@ -179,6 +180,7 @@ namespace BlackMisc
             bool m_gearDown    = false;
             bool m_spoilersOut = false;
             bool m_isOnGround  = false;
+            QString m_guessingDetails; //!< just for debugging, not via DBus ...
 
             BLACK_METACLASS(
                 CAircraftParts,
