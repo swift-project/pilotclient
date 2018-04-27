@@ -26,11 +26,14 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER> class ITimestampObjectList
     {
     public:
-        //! List of objects before dateTime
+        //! List of objects before dateTime (older)
         CONTAINER findBefore(const QDateTime &dateTime) const;
 
-        //! List of objects before msSinceEpoch
+        //! List of objects before msSinceEpoch (older)
         CONTAINER findBefore(qint64 msSinceEpoch) const;
+
+        //! Object before timestamp or default (older)
+        OBJ findObjectBeforeOrDefault(qint64 msSinceEpoch) const;
 
         //! Get objects before msSinceEpoch and remove those
         CONTAINER findBeforeAndRemove(qint64 msSinceEpoch);
@@ -38,11 +41,14 @@ namespace BlackMisc
         //! List of objects before now - offset
         CONTAINER findBeforeNowMinusOffset(qint64 msOffset) const;
 
-        //! List of objects after dateTime
+        //! List of objects after dateTime (newer)
         CONTAINER findAfter(const QDateTime &dateTime) const;
 
-        //! List of objects after msSinceEpoch
+        //! List of objects after msSinceEpoch (newer)
         CONTAINER findAfter(qint64 msSinceEpoch) const;
+
+        //! List of objects after msSinceEpoch (newer)
+        OBJ findObjectAfterOrDefault(qint64 msSinceEpoch) const;
 
         //! Objects without valid timestamp
         CONTAINER findInvalidTimestamps() const;
@@ -74,10 +80,10 @@ namespace BlackMisc
         //! Oldest timestamp
         qint64 oldestTimestampMsecsSinceEpoch() const;
 
-        //! Latest value
+        //! Latest object
         OBJ latestObject() const;
 
-        //! Latest value
+        //! Latest object
         OBJ oldestObject() const;
 
         //! Remove objects with timestamp before dateTime
@@ -128,6 +134,12 @@ namespace BlackMisc
         //! Sort by adjusted timestamp
         void sortAdjustedLatestFirst();
 
+        //! As sorted copy
+        CONTAINER getSortedAdjustedLatestFirst() const;
+
+        //! Get the latest 2 values
+        CONTAINER getLatestAdjustedTwoObjects(bool alreadySortedLatestFirst = false) const;
+
         //! Sort by adjusted timestamp
         void sortAdjustedOldestFirst();
 
@@ -158,8 +170,38 @@ namespace BlackMisc
         //! \remark all object must have a valid timestamp
         bool isSortedAdjustedLatestFirst() const;
 
+        //! List of objects after msSinceEpoch (newer)
+        CONTAINER findAfterAdjusted(qint64 msSinceEpoch) const;
+
+        //! List of objects after msSinceEpoch (newer)
+        OBJ findObjectAfterAdjustedOrDefault(qint64 msSinceEpoch) const;
+
+        //! List of objects before msSinceEpoch (older)
+        CONTAINER findBeforeAdjusted(qint64 msSinceEpoch) const;
+
+        //! Object before timestamp (older)
+        OBJ findObjectBeforeAdjustedOrDefault(qint64 msSinceEpoch) const;
+
         //! Closest adjusted time difference
         OBJ findClosestTimeDistanceAdjusted(qint64 msSinceEpoch) const;
+
+        //! Latest adjusted object
+        OBJ latestAdjustedObject() const;
+
+        //! Oldest adjusted object
+        OBJ oldestAdjustedObject() const;
+
+        //! Latest adjusted timestamp
+        QDateTime latestAdjustedTimestamp() const;
+
+        //! Oldest adjusted timestamp
+        QDateTime oldestAdjustedTimestamp() const;
+
+        //! Latest adjusted timestamp
+        qint64 latestAdjustedTimestampMsecsSinceEpoch() const;
+
+        //! Oldest adjusted timestamp
+        qint64 oldestAdjustedTimestampMsecsSinceEpoch() const;
 
     protected:
         //! Constructor

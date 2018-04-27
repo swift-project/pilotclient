@@ -154,7 +154,7 @@ namespace BlackMisc
         enum ColumnIndex
         {
             IndexOffsetMs = CPropertyIndex::GlobalIndexITimestampBased + ITimestampBased::IndexMSecsSinceEpoch + 1,
-            IndexAdjustedMisWithOffset,
+            IndexAdjustedMsWithOffset,
             IndexOffsetWithUnit // keep this as last item
         };
 

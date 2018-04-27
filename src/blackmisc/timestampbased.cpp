@@ -335,7 +335,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexOffsetMs: { return QVariant::fromValue(m_timeOffsetMs); }
-            case IndexAdjustedMisWithOffset: { return QVariant::fromValue(this->getAdjustedMSecsSinceEpoch()); }
+            case IndexAdjustedMsWithOffset: { return QVariant::fromValue(this->getAdjustedMSecsSinceEpoch()); }
             case IndexOffsetWithUnit: { return QVariant::fromValue(this->getTimeOffsetWithUnit()); }
             default: break;
             }

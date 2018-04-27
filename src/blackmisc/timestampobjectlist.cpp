@@ -28,12 +28,16 @@
 #include "blackmisc/predicates.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/countrylist.h"
+#include "blackmisc/verify.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QDateTime>
 #include <algorithm>
 #include <limits>
 #include <iterator>
 #include <type_traits>
+
+using namespace BlackConfig;
 
 namespace BlackMisc
 {
@@ -64,6 +68,14 @@ namespace BlackMisc
         });
     }
 
+    template<class OBJ, class CONTAINER>
+    OBJ ITimestampObjectList<OBJ, CONTAINER>::findObjectBeforeOrDefault(qint64 msSinceEpoch) const
+    {
+        const CONTAINER before = this->findBefore(msSinceEpoch);
+        if (before.isEmpty()) { return OBJ(); }
+        return before.latestObject();
+    }
+
     template <class OBJ, class CONTAINER>
     CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findBeforeAndRemove(qint64 msSinceEpoch)
     {
@@ -91,6 +103,14 @@ namespace BlackMisc
         {
             return obj.isNewerThan(msSinceEpoc);
         });
+    }
+
+    template<class OBJ, class CONTAINER>
+    OBJ ITimestampObjectList<OBJ, CONTAINER>::findObjectAfterOrDefault(qint64 msSinceEpoch) const
+    {
+        const CONTAINER after = this->findAfter(msSinceEpoch);
+        if (after.isEmpty()) { return OBJ(); }
+        return after.oldestObject();
     }
 
     template <class OBJ, class CONTAINER>
@@ -179,7 +199,7 @@ namespace BlackMisc
     OBJ ITimestampObjectList<OBJ, CONTAINER>::latestObject() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        const auto latest = std::max_element(container().begin(), container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+        const auto latest = std::max_element(this->container().begin(), this->container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
         return *latest;
     }
 
@@ -187,7 +207,7 @@ namespace BlackMisc
     OBJ ITimestampObjectList<OBJ, CONTAINER>::oldestObject() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        const auto oldest = std::min_element(container().begin(), container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+        const auto oldest = std::min_element(this->container().begin(), this->container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
         return *oldest;
     }
 
@@ -238,11 +258,9 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     void ITimestampObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(const OBJ &value, int maxElements)
     {
+        Q_ASSERT_X(maxElements < 0 || maxElements > 1, Q_FUNC_INFO, "Max.value wrong range");
         CONTAINER &c = this->container();
-        if (maxElements > 0 && c.size() >= maxElements)
-        {
-            c.truncate(maxElements - 1);
-        }
+        if (maxElements > 0) { c.truncate(maxElements - 1); }
         const bool needSort = !c.isEmpty() && value.isOlderThan(c.front());
         c.push_front(value);
         if (needSort)
@@ -297,6 +315,23 @@ namespace BlackMisc
     }
 
     template<class OBJ, class CONTAINER>
+    CONTAINER ITimestampWithOffsetObjectList<OBJ, CONTAINER>::getSortedAdjustedLatestFirst() const
+    {
+        CONTAINER copy(this->container());
+        copy.sortAdjustedLatestFirst();
+        return copy;
+    }
+
+    template<class OBJ, class CONTAINER>
+    CONTAINER ITimestampWithOffsetObjectList<OBJ, CONTAINER>::getLatestAdjustedTwoObjects(bool alreadySortedLatestFirst) const
+    {
+        if (this->container().size() < 2) { return CONTAINER(); }
+        CONTAINER copy(alreadySortedLatestFirst ? this->container() : this->container().getSortedAdjustedLatestFirst());
+        copy.truncate(2);
+        return copy;
+    }
+
+    template<class OBJ, class CONTAINER>
     void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::sortAdjustedOldestFirst()
     {
         this->container().sort(Predicates::MemberLess(&OBJ::getAdjustedMSecsSinceEpoch));
@@ -342,10 +377,7 @@ namespace BlackMisc
     {
         Q_ASSERT_X(maxElements < 0 || maxElements > 1, Q_FUNC_INFO, "Max.value wrong range");
         CONTAINER &c = this->container();
-        if (maxElements > 0 && c.size() >= maxElements)
-        {
-            c.truncate(maxElements - 1);
-        }
+        if (maxElements > 0) { c.truncate(maxElements - 1); }
         const bool needSort = !c.isEmpty() && value.isOlderThanAdjusted(c.front());
         c.push_front(value);
         if (needSort)
@@ -361,27 +393,37 @@ namespace BlackMisc
 
         // now sorted by timestamp
         // this reflects normally the incoming order
-        CONTAINER &c = this->container();
-        if (c.size() < 2) { return; }
-        const ITimestampWithOffsetBased &front = c.front();
-        ITimestampWithOffsetBased &second = c[1];
-        if (!front.isOlderThanAdjusted(second)) { return; }
-        const qint64 maxOs = front.getAdjustedMSecsSinceEpoch() - second.getMSecsSinceEpoch();
-        const qint64 avgOs = (maxOs + qMax(front.getTimeOffsetMs(), maxOs)) / 2;
-        second.setTimeOffsetMs(avgOs);
-
         // ts
         //  8: os 2 adj 10
         //  6: os 2 adj  8
         //  5: os 5 adj 10 => max os 3
         //  0: os 5 adj  5
+        CONTAINER &c = this->container();
+        if (c.size() < 2) { return; }
+        const ITimestampWithOffsetBased &front = c.front();
+        ITimestampWithOffsetBased &second = c[1];
+        if (front.isNewerThanAdjusted(second)) { return; }
+        const qint64 diffOs = front.getAdjustedMSecsSinceEpoch() - second.getMSecsSinceEpoch() - 1;
+        const qint64 avgOs = (diffOs + qMin(front.getTimeOffsetMs(), diffOs)) / 2;
+        second.setTimeOffsetMs(avgOs);
+
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            Q_ASSERT_X(front.isNewerThanAdjusted(second), Q_FUNC_INFO, "Front/second timestamp");
+            Q_ASSERT_X(this->isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "Wrong sort order");
+        }
     }
 
     template<class OBJ, class CONTAINER>
     void ITimestampWithOffsetObjectList<OBJ, CONTAINER>::prefillLatestAdjustedFirst(const OBJ &value, int elements, qint64 deltaTimeMs)
     {
         this->container().clear();
-        const qint64 os = -1 * qAbs(deltaTimeMs < 0 ? value.getTimeOffsetMs() : deltaTimeMs);
+        const qint64 osTime = value.getTimeOffsetMs();
+        const qint64 os = -1 * qAbs(deltaTimeMs < 0 ? osTime : deltaTimeMs);
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            BLACK_VERIFY_X(os < 0, Q_FUNC_INFO, "Need negative offset time to prefill time");
+        }
         this->container().push_front(value);
         for (int i = 1; i < elements; i++)
         {
@@ -394,6 +436,7 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::isSortedAdjustedLatestLast() const
     {
+        if (this->container().isEmpty()) { return false; }
         if (this->container().size() < 2) { return true; }
         qint64 max = -1;
         for (const ITimestampWithOffsetBased &obj : this->container())
@@ -408,6 +451,7 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER>
     bool ITimestampWithOffsetObjectList<OBJ, CONTAINER>::isSortedAdjustedLatestFirst() const
     {
+        if (this->container().isEmpty()) { return false; }
         if (this->container().size() < 2) { return true; }
         qint64 min = std::numeric_limits <qint64>::max();
         for (const ITimestampWithOffsetBased &obj : this->container())
@@ -420,6 +464,40 @@ namespace BlackMisc
     }
 
     template<class OBJ, class CONTAINER>
+    CONTAINER ITimestampWithOffsetObjectList<OBJ, CONTAINER>::findAfterAdjusted(qint64 msSinceEpoch) const
+    {
+        return this->container().findBy([&](const ITimestampWithOffsetBased & obj)
+        {
+            return obj.isNewerThanAdjusted(msSinceEpoch);
+        });
+    }
+
+    template<class OBJ, class CONTAINER>
+    OBJ ITimestampWithOffsetObjectList<OBJ, CONTAINER>::findObjectAfterAdjustedOrDefault(qint64 msSinceEpoch) const
+    {
+        const CONTAINER after = this->findAfterAdjusted(msSinceEpoch);
+        if (after.isEmpty()) { return OBJ(); }
+        return after.oldestAdjustedObject();
+    }
+
+    template<class OBJ, class CONTAINER>
+    CONTAINER ITimestampWithOffsetObjectList<OBJ, CONTAINER>::findBeforeAdjusted(qint64 msSinceEpoch) const
+    {
+        return this->container().findBy([&](const ITimestampWithOffsetBased & obj)
+        {
+            return obj.isOlderThanAdjusted(msSinceEpoch);
+        });
+    }
+
+    template<class OBJ, class CONTAINER>
+    OBJ ITimestampWithOffsetObjectList<OBJ, CONTAINER>::findObjectBeforeAdjustedOrDefault(qint64 msSinceEpoch) const
+    {
+        const CONTAINER before = this->findBeforeAdjusted(msSinceEpoch);
+        if (before.isEmpty()) { return OBJ(); }
+        return before.latestAdjustedObject();
+    }
+
+    template<class OBJ, class CONTAINER>
     OBJ ITimestampWithOffsetObjectList<OBJ, CONTAINER>::findClosestTimeDistanceAdjusted(qint64 msSinceEpoch) const
     {
         if (this->container().isEmpty()) { return OBJ(); }
@@ -428,6 +506,50 @@ namespace BlackMisc
             return qAbs(a.getAdjustedTimeDifferenceMs(msSinceEpoch)) < qAbs(b.getAdjustedTimeDifferenceMs(msSinceEpoch));
         });
         return *closest;
+    }
+
+    template <class OBJ, class CONTAINER>
+    OBJ ITimestampWithOffsetObjectList<OBJ, CONTAINER>::latestAdjustedObject() const
+    {
+        if (this->container().isEmpty()) { return OBJ(); }
+        const auto latest = std::max_element(this->container().begin(), this->container().end(), [](const OBJ & a, const OBJ & b) { return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch(); });
+        return *latest;
+    }
+
+    template <class OBJ, class CONTAINER>
+    OBJ ITimestampWithOffsetObjectList<OBJ, CONTAINER>::oldestAdjustedObject() const
+    {
+        if (this->container().isEmpty()) { return OBJ(); }
+        const auto oldest = std::min_element(this->container().begin(), this->container().end(), [](const OBJ & a, const OBJ & b) { return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch(); });
+        return *oldest;
+    }
+
+    template <class OBJ, class CONTAINER>
+    QDateTime ITimestampWithOffsetObjectList<OBJ, CONTAINER>::latestAdjustedTimestamp() const
+    {
+        if (this->container().isEmpty()) { return QDateTime(); }
+        return this->latestAdjustedObject().getUtcTimestamp();
+    }
+
+    template <class OBJ, class CONTAINER>
+    qint64 ITimestampWithOffsetObjectList<OBJ, CONTAINER>::latestAdjustedTimestampMsecsSinceEpoch() const
+    {
+        const QDateTime dt(this->latestTimestamp());
+        return dt.isValid() ? dt.toMSecsSinceEpoch() : -1;
+    }
+
+    template <class OBJ, class CONTAINER>
+    QDateTime ITimestampWithOffsetObjectList<OBJ, CONTAINER>::oldestAdjustedTimestamp() const
+    {
+        if (this->container().isEmpty()) { return QDateTime(); }
+        return this->oldestAdjustedObject().getUtcTimestamp();
+    }
+
+    template <class OBJ, class CONTAINER>
+    qint64 ITimestampWithOffsetObjectList<OBJ, CONTAINER>::oldestAdjustedTimestampMsecsSinceEpoch() const
+    {
+        const QDateTime dt(oldestAdjustedTimestamp());
+        return dt.isValid() ? dt.toMSecsSinceEpoch() : -1;
     }
 
     // see here for the reason of thess forward instantiations
