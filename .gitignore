@@ -79,6 +79,10 @@ ipch
 *.exp
 *.idb
 *.sdf
+*.vcxproj
+*.vcxproj.filters
+*/.vs/*
+.vs/*
 
 # Qt Creator
 *.autosave
@@ -93,6 +97,10 @@ desktop.ini
 # Editors temporary files 
 *~
 
+# qmake
+.qmake.stash
+.qmake.cache
+
 # Qt Creator
 /client.pro.user.2.7pre1
 /client.pro.user.3.0-pre1
@@ -101,4 +109,8 @@ desktop.ini
 /client.pro.user.16
 /client.pro.user.3.3-pre1
 /client.pro.user.18
-/.vs
+
+# Qt Creator Qt plugin
+plugins.sln
+weatherdata.sln
+simulator.sln
