@@ -78,6 +78,9 @@ namespace BlackMisc
             //! Mark given callsign as rendered
             int setRendered(const Aviation::CCallsign &callsign, bool rendered, bool onlyFirst = true);
 
+            //! Set center of gravity
+            int setCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, bool onlyFirst = true);
+
             //! Mark given callsign as enabled
             int setEnabled(const Aviation::CCallsign &callsign, bool enabled, bool onlyFirst);
 

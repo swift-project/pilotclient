@@ -461,6 +461,11 @@ namespace BlackMisc
             m_models[NetworkModel] = model;
         }
 
+        void CSimulatedAircraft::setCG(const CLength &cg)
+        {
+            m_models.setCG(cg);
+        }
+
         void CSimulatedAircraft::setModelString(const QString &modelString)
         {
             Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");

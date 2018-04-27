@@ -108,6 +108,19 @@ namespace BlackMisc
             return c;
         }
 
+        int CSimulatedAircraftList::setCG(const CCallsign &callsign, const CLength &cg, bool onlyFirst)
+        {
+            int c = 0;
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                aircraft.setCG(cg);
+                c++;
+                if (onlyFirst) break;
+            }
+            return c;
+        }
+
         int CSimulatedAircraftList::setFastPositionUpdates(const CCallsign &callsign, bool fastPositions, bool onlyFirst)
         {
             int c = 0;

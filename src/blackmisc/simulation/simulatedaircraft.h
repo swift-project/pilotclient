@@ -386,6 +386,9 @@ namespace BlackMisc
             //! Set network model
             void setNetworkModel(const CAircraftModel &model);
 
+            //! Set the center of gravity
+            void setCG(const PhysicalQuantities::CLength &cg);
+
             //! Set callsign
             void setCallsign(const Aviation::CCallsign &callsign);
 
