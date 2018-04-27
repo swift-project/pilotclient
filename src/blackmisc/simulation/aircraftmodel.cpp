@@ -62,6 +62,7 @@ namespace BlackMisc
                 (this->hasModelString() ? inApostrophes(m_modelString, true) % QStringLiteral(" ") : QStringLiteral("")) %
                 QStringLiteral(" type: '") % this->getModelTypeAsString() %
                 QStringLiteral("' ICAO: '") % this->getAircraftIcaoCode().toQString(i18n) %
+                QStringLiteral(" CG: ") % this->getCG().valueRoundedWithUnit(1) %
                 QStringLiteral("' {") % m_livery.toQString(i18n) %
                 QStringLiteral("} file: '") % m_fileName % QStringLiteral("'");
             return s;
@@ -190,6 +191,7 @@ namespace BlackMisc
             case IndexDescription: return CVariant(m_description);
             case IndexName: return CVariant(m_name);
             case IndexFileName: return CVariant(m_fileName);
+            case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
             case IndexFileTimestamp: return CVariant::fromValue(this->getFileTimestamp());
             case IndexFileTimestampFormattedYmdhms: return CVariant::fromValue(this->getFormattedFileTimestampYmdhms());
             case IndexIconPath: return CVariant(m_iconPath);
@@ -218,6 +220,7 @@ namespace BlackMisc
             case IndexSimulatorInfo: m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexName: m_name = variant.toQString(); break;
             case IndexIconPath: m_iconPath = variant.toQString(); break;
+            case IndexCG: m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexModelType: m_modelType = variant.value<ModelType>(); break;
             case IndexFileName: m_fileName = variant.toQString(); break;
             case IndexCallsign:
@@ -265,6 +268,7 @@ namespace BlackMisc
             case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexFileName: return m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
             case IndexIconPath: return m_iconPath.compare(compareValue.getIconPath(), Qt::CaseInsensitive);
+            case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
             case IndexModelType: return Compare::compare(m_modelType, compareValue.getModelType());
             case IndexSimulatorInfoAsString:
             case IndexSimulatorInfo: return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSimulator());

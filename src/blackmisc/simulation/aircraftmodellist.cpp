@@ -27,6 +27,7 @@
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -467,6 +468,18 @@ namespace BlackMisc
             {
                 if (model.getModelMode() == mode) { continue; }
                 model.setModelMode(mode);
+                c++;
+            }
+            return c;
+        }
+
+        int CAircraftModelList::setCG(const CLength &cg)
+        {
+            int c = 0;
+            for (CAircraftModel &model : (*this))
+            {
+                if (model.getCG() == cg) { continue; }
+                model.setCG(cg);
                 c++;
             }
             return c;

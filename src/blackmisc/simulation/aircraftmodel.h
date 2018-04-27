@@ -16,6 +16,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/livery.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/db/datastore.h"
 #include "blackmisc/dictionary.h"
@@ -93,6 +94,7 @@ namespace BlackMisc
                 IndexSimulatorInfoAsString,
                 IndexAircraftIcaoCode,
                 IndexLivery,
+                IndexCG,
                 IndexDistributor,
                 IndexFileName,
                 IndexFileTimestamp,
@@ -259,6 +261,12 @@ namespace BlackMisc
 
             //! Name
             void setName(const QString &name) { m_name = name.trimmed(); }
+
+            //! Get center of gravity
+            const PhysicalQuantities::CLength &getCG() const { return m_cg; }
+
+            //! Get center of gravity
+            void setCG(const PhysicalQuantities::CLength &cg) { m_cg = cg; }
 
             //! Model type
             ModelType getModelType() const { return m_modelType; }
@@ -433,6 +441,7 @@ namespace BlackMisc
             Aviation::CLivery m_livery;                 //!< livery information
             CSimulatorInfo m_simulator;                 //!< model for given simulator
             CDistributor   m_distributor;               //!< who designed or distributed the model
+            PhysicalQuantities::CLength m_cg = PhysicalQuantities::CLength::null(); //!< center of gravity
             QString        m_modelString;               //!< Simulator model key, unique
             QString        m_name;                      //!< Model name
             QString        m_description;               //!< descriptive text
@@ -452,6 +461,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(livery),
                 BLACK_METAMEMBER(simulator),
                 BLACK_METAMEMBER(distributor),
+                BLACK_METAMEMBER(cg),
                 BLACK_METAMEMBER(modelString, 0, CaseInsensitiveComparison),
                 BLACK_METAMEMBER(name),
                 BLACK_METAMEMBER(description, 0, DisabledForComparison),

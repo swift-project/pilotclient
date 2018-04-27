@@ -215,6 +215,9 @@ namespace BlackMisc
             //! Set mode for all elements
             int setModelMode(Simulation::CAircraftModel::ModelMode mode);
 
+            //! Set center of gravity
+            int setCG(const PhysicalQuantities::CLength &cg);
+
             //! Keep only those models with given model strings
             //! \return number of elements removed
             int keepModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity);
