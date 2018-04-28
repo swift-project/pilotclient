@@ -380,7 +380,7 @@ void SwiftGuiStd::onStyleSheetsChanged()
 
 void SwiftGuiStd::onCurrentMainWidgetChanged(int currentIndex)
 {
-    emit currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
+    emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
     Q_UNUSED(currentIndex);
 }
 
