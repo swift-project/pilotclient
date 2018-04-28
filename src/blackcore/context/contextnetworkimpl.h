@@ -231,15 +231,18 @@ namespace BlackCore
             QTimer                     *m_networkDataUpdateTimer = nullptr;       //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
             // Digest signals, only sending after some time
-            BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };
-            BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 4 };
-            BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 750, 4 };
+            BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 1000, 2 };
+            BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 1000, 4 };
+            BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 1000, 4 };
 
             //! Own aircraft from \sa CContextOwnAircraft
             const BlackMisc::Simulation::CSimulatedAircraft ownAircraft() const;
 
             //! Update METAR collection
             void updateMetars(const BlackMisc::Weather::CMetarList &metars);
+
+            //! An ATIS has been received
+            void onAtisReceived(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Check if a supervisor message was received
             void checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);

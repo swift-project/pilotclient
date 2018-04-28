@@ -88,6 +88,7 @@ namespace BlackCore
             connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft); // DBus
             connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::readyForModelMatching);
             connect(m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft);
+            connect(m_airspace, &CAirspaceMonitor::atisReceived, this, &CContextNetwork::onAtisReceived);
         }
 
         CContextNetwork *CContextNetwork::registerWithDBus(BlackMisc::CDBusServer *server)
@@ -487,6 +488,12 @@ namespace BlackCore
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CLogMessage(this).info("%1 METARs updated") << metars.size();
+        }
+
+        void CContextNetwork::onAtisReceived(const CCallsign &callsign)
+        {
+            Q_UNUSED(callsign);
+            m_dsAtcStationsOnlineChanged.inputSignal(); // the ATIS data are stored in the station object
         }
 
         void CContextNetwork::checkForSupervisiorTextMessage(const CTextMessageList &messages)

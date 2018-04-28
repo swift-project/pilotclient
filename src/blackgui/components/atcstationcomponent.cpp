@@ -38,8 +38,8 @@
 #include <QTimer>
 #include <QTreeView>
 #include <QCompleter>
+#include <QPointer>
 
-using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 using namespace BlackGui::Settings;
@@ -292,7 +292,12 @@ namespace BlackGui
             if (this->isParentDockWidgetFloating()) { return; }
 
             // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
-            QTimer::singleShot(1000, this, &CAtcStationComponent::update);
+            const QPointer<CAtcStationComponent> myself(this);
+            QTimer::singleShot(1000, this, [ = ]
+            {
+                if (myself.isNull()) { return; }
+                this->update();
+            });
             Q_UNUSED(index);
         }
 

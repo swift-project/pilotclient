@@ -61,6 +61,12 @@ namespace BlackGui
             //! Number of online stations
             int countOnlineStations() const;
 
+            //! Update stations
+            void update();
+
+            //! Get METAR for given ICAO airport code
+            void getMetar(const QString &airportIcaoCode);
+
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
@@ -68,17 +74,10 @@ namespace BlackGui
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
-        public slots:
-            //! Update stations
-            void update();
-
-            //! Get METAR for given ICAO airport code
-            void getMetar(const QString &airportIcaoCode);
-
+        private:
             //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
-        private:
             //! Get all METARs
             void getMetarAsEntered();
 

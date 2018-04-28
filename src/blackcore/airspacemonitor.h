@@ -143,6 +143,9 @@ namespace BlackCore
         //! Read for model matching
         void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
+        //! An ATIS has been received
+        void atisReceived(const BlackMisc::Aviation::CCallsign &callsign);
+
     private:
         //! Used to temporary store FsInn data
         struct FsInnPacket
