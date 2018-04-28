@@ -63,6 +63,9 @@ namespace BlackMisc
             //! \param range      within range of other position
             CONTAINER findWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
 
+            //! Find first in range
+            OBJ findFirstWithinRangeOrDefault(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const;
+
             //! Elements with geodetic height (only MSL)
             CONTAINER findWithGeodeticMSLHeight() const;
 

@@ -54,6 +54,15 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER>
+        OBJ IGeoObjectList<OBJ, CONTAINER>::findFirstWithinRangeOrDefault(const ICoordinateGeodetic &coordinate, const CLength &range) const
+        {
+            return this->container().findFirstByOrDefault([&](const OBJ & geoObj)
+            {
+                return calculateGreatCircleDistance(geoObj, coordinate) <= range;
+            });
+        }
+
+        template<class OBJ, class CONTAINER>
         CONTAINER IGeoObjectList<OBJ, CONTAINER>::findWithGeodeticMSLHeight() const
         {
             return this->container().findBy(&OBJ::hasMSLGeodeticHeight, true);

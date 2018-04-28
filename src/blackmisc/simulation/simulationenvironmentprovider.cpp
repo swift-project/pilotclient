@@ -91,9 +91,13 @@ namespace BlackMisc
             return delta;
         }
 
-        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const PhysicalQuantities::CLength &range) const
+        CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const CLength &range) const
         {
-            const CCoordinateGeodetic coordinate = this->getElevationCoordinates().findClosestWithinRange(reference, minRange(range));
+            // for single point we use a slightly optimized version
+            const bool singlePoint = (range <= CElevationPlane::singlePointRadius());
+            const CCoordinateGeodetic coordinate = singlePoint ?
+                                                   this->getElevationCoordinates().findFirstWithinRangeOrDefault(reference, CElevationPlane::singlePointRadius()) :
+                                                   this->getElevationCoordinates().findClosestWithinRange(reference, range);
             const bool found = !coordinate.isNull();
             {
                 QWriteLocker l{&m_lockElvCoordinates };
