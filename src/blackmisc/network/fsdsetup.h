@@ -56,6 +56,12 @@ namespace BlackMisc
             };
             Q_DECLARE_FLAGS(SendReceiveDetails, SendReceiveDetailsFlag)
 
+            //! Offset times basically telling when to expect the next value from network plus some reserve
+            //! @{
+            static qint64 constexpr c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates
+            static qint64 constexpr c_interimPositionTimeOffsetMsec = 2000; //!< offset time for received interim position updates
+            //! @}
+
             //! Default constructor.
             CFsdSetup() {}
 

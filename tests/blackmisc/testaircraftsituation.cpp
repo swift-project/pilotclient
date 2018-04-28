@@ -15,18 +15,18 @@
  */
 
 #include "testaircraftsituation.h"
+#include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
 #include "blackmisc/math/mathutils.h"
-#include "blackcore/vatsim/networkvatlib.h"
 
 #include <QTest>
 #include <QDateTime>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
-using namespace BlackCore::Vatsim;
 
 namespace BlackMiscTest
 {

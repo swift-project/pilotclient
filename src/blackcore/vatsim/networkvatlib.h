@@ -132,12 +132,6 @@ namespace BlackCore
             //! Command line options this library can handle
             static const QList<QCommandLineOption> &getCmdLineOptions();
 
-            //! Offset times basically telling when to expect the next value from network plus some reserve
-            //! @{
-            static qint64 constexpr c_positionTimeOffsetMsec = 6000;        //!< offset time for received position updates
-            static qint64 constexpr c_interimPositionTimeOffsetMsec = 2000; //!< offset time for received interim position updates
-            //! @}
-
         private:
             static int constexpr c_processingIntervalMsec = 100;            //!< interval for the processing timer
             static int constexpr c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)

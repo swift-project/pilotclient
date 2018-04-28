@@ -25,7 +25,7 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/network/network.h"
+#include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/pq/angle.h"
@@ -977,7 +977,7 @@ namespace BlackCore
                 CSpeed::null() // There is no speed information in a interim packet
             );
             situation.setCurrentUtcTime();
-            situation.setTimeOffsetMs(c_interimPositionTimeOffsetMsec);
+            situation.setTimeOffsetMs(CFsdSetup::c_interimPositionTimeOffsetMsec);
             situation.setInterimFlag(true);
             self->receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
 
@@ -1192,15 +1192,15 @@ namespace BlackCore
             if (!m_lastPositionUpdate.contains(callsign))
             {
                 m_lastPositionUpdate.insert(callsign, markerTs);
-                return c_positionTimeOffsetMsec;
+                return CFsdSetup::c_positionTimeOffsetMsec;
             }
             const qint64 oldTs = m_lastPositionUpdate.value(callsign);
             m_lastPositionUpdate[callsign] = markerTs;
 
             const qint64 diff = oldTs - markerTs;
-            const qint64 offsetTime = (oldTs > 0 && diff > 0 && diff < c_interimPositionTimeOffsetMsec) ?
-                                      c_interimPositionTimeOffsetMsec :
-                                      c_positionTimeOffsetMsec;
+            const qint64 offsetTime = (oldTs > 0 && diff > 0 && diff < CFsdSetup::c_interimPositionTimeOffsetMsec) ?
+                                      CFsdSetup::c_interimPositionTimeOffsetMsec :
+                                      CFsdSetup::c_positionTimeOffsetMsec;
             m_lastOffsetTime[callsign] = offsetTime;
             return offsetTime;
         }
@@ -1209,7 +1209,7 @@ namespace BlackCore
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
-            if (!m_lastOffsetTime.contains(callsign)) { return c_positionTimeOffsetMsec; }
+            if (!m_lastOffsetTime.contains(callsign)) { return CFsdSetup::c_positionTimeOffsetMsec; }
             return m_lastOffsetTime.value(callsign);
         }
 
