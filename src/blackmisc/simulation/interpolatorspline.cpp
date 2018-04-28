@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/simulation/interpolatorspline.h"
+#include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
@@ -16,6 +17,7 @@ using namespace BlackConfig;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 
@@ -96,6 +98,53 @@ namespace BlackMisc
             }
         }
 
+        bool CInterpolatorSpline::fillSituationsArray(const CAircraftSituationList &validSituations)
+        {
+            // m_s[0] .. oldest -> m_[2] .. latest
+            // general idea, we interpolate from current situation -> latest situation
+
+            if (m_lastInterpolation.isNull())
+            {
+                if (!validSituations.isEmpty())
+                {
+                    m_s[0] = m_s[1] = m_s[2] = validSituations.front();
+                    m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec * 2);
+                    m_s[1].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec);
+                    return true;
+                }
+                m_s[0] = m_s[1] = m_s[2] = CAircraftSituation::null();
+                return false;
+            }
+            else
+            {
+                m_s[0] = m_s[1] = m_s[2] = m_lastInterpolation; // current
+                m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec); //  oldest
+                m_s[2].addMsecs(CFsdSetup::c_positionTimeOffsetMsec);  // latest
+                if (validSituations.isEmpty()) { return true; }
+            }
+
+            const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
+            const CAircraftSituation latest = validSituations.front();
+            if (latest.isNewerThanAdjusted(m_s[1])) { m_s[2] = latest; }
+            const CAircraftSituation older = validSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
+            if (!older.isNull()) { m_s[0] = older; }
+
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
+                BLACK_VERIFY_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+
+                const bool verified = this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
+                if (!verified)
+                {
+                    static const QString vm("m0-2 (oldest latest) %1 %2 %3");
+                    const QString vmValues = vm.arg(m_s[0].getAdjustedMSecsSinceEpoch()).arg(m_s[1].getAdjustedMSecsSinceEpoch()).arg(m_s[2].getAdjustedMSecsSinceEpoch());
+                    Q_UNUSED(vmValues);
+                }
+            }
+            return true;
+        }
+
         CInterpolatorSpline::Interpolant CInterpolatorSpline::getInterpolant(
             qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetupPerCallsign &setup,
@@ -105,53 +154,21 @@ namespace BlackMisc
             Q_UNUSED(setup);
 
             // recalculate derivatives only if they changed
-            const bool newStep = currentTimeMsSinceEpoc > m_nextSampleAdjustedTime; // new step
-            bool recalculate = newStep;
             const qint64 lastModified = this->situationsLastModified(m_callsign);
-            if (!recalculate && (lastModified > m_situationsLastModifiedUsed) && this->isAnySituationNearGroundRelevant())
-            {
-                recalculate = this->areAnyElevationsMissing();
-            }
-
+            const bool recalculate = lastModified > m_situationsLastModifiedUsed;
             int situationsSize = -1;
             if (recalculate)
             {
                 // with the latest updates of T243 the order and the offsets are supposed to be correct
                 // so even mixing fast/slow updates shall work
                 const CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
-                if (CBuildConfig::isLocalDeveloperDebugBuild())
-                {
-                    BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
-                    BLACK_VERIFY_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
-                }
-
-                situationsSize = validSituations.size();
                 m_situationsLastModifiedUsed = lastModified;
-                m_situationChange = CAircraftSituationChange(validSituations, true, true);
-
-                // find the first situation earlier than the current time
-                const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
-                const auto situationsNewer = makeRange(validSituations.begin(), pivot);
-                const auto situationsOlder = makeRange(pivot, validSituations.end());
-
-                // m_s[0] .. oldest -> m_[2] .. latest
-                if (situationsNewer.isEmpty() || situationsOlder.size() < 2) { return m_interpolant; }
-                m_s = std::array<CAircraftSituation, 3> {{ *(situationsOlder.begin() + 1), *situationsOlder.begin(), *(situationsNewer.end() - 1) }};
-                this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2], setup); // oldest -> latest
-
-                // we interpolate from 1 -> 2, 0 for smoother interpolation
-                if (newStep && !m_lastInterpolation.isNull())
+                const bool fillStatus = this->fillSituationsArray(validSituations);
+                if (!fillStatus)
                 {
-                    const bool verified = this->verifyInterpolationSituations(m_s[0], m_lastInterpolation, m_s[2]); // oldest -> latest, only verify order
-                    if (!verified)
-                    {
-                        static const QString vm("m0-2 (oldest latest) %1 %2 (%3) %4");
-                        const QString vmValues = vm.arg(m_s[0].getAdjustedMSecsSinceEpoch()).arg(m_s[1].getAdjustedMSecsSinceEpoch()).arg(m_lastInterpolation.getAdjustedMSecsSinceEpoch()).arg(m_s[2].getAdjustedMSecsSinceEpoch());
-                        Q_UNUSED(vmValues);
-                    }
-                    m_s[1] = m_lastInterpolation; // true only for the moment we create a new step
+                    return  m_interpolant;
                 }
-
+                m_situationChange = CAircraftSituationChange(validSituations, true, true);
                 const std::array<std::array<double, 3>, 3> normals {{ m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() }};
                 PosArray pa;
                 pa.x = {{ normals[0][0], normals[1][0], normals[2][0] }}; // oldest -> latest
@@ -179,12 +196,6 @@ namespace BlackMisc
                 pa.da = getDerivatives(pa.t, pa.a);
                 pa.dgnd = getDerivatives(pa.t, pa.gnd);
                 Q_ASSERT_X(this->areAltitudeUnitsSame(), Q_FUNC_INFO, "Altitude unit mismatch");
-
-                // m_prevSampleAdjustedTime = situationsOlder.begin()->getAdjustedMSecsSinceEpoch(); // m_s[1]
-                // m_nextSampleAdjustedTime = (situationsNewer.end() - 1)->getAdjustedMSecsSinceEpoch(); // m_s[2]
-                // m_prevSampleTime = situationsOlder.begin()->getMSecsSinceEpoch(); // m_s[1]
-                // m_nextSampleTime = (situationsNewer.end() - 1)->getMSecsSinceEpoch(); // m_s[2]
-                // m_interpolant = Interpolant(pa, situationsOlder.begin()->getAltitude().getUnit(), { *situationsOlder.begin(), *(situationsNewer.end() - 1) });
 
                 m_prevSampleAdjustedTime = m_s[1].getAdjustedMSecsSinceEpoch();
                 m_nextSampleAdjustedTime = m_s[2].getAdjustedMSecsSinceEpoch(); // latest

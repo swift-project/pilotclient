@@ -102,6 +102,9 @@ namespace BlackMisc
             //! Are the altitude units all the same
             bool areAltitudeUnitsSame(const PhysicalQuantities::CLengthUnit &compare = PhysicalQuantities::CLengthUnit::nullUnit()) const;
 
+            //! Fill the situations array
+            bool fillSituationsArray(const BlackMisc::Aviation::CAircraftSituationList &validSituations);
+
             qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset
             qint64 m_nextSampleAdjustedTime = 0; //!< previous sample time + offset
             qint64 m_prevSampleTime = 0; //!< previous sample "real time"
