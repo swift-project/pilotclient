@@ -290,6 +290,13 @@ namespace BlackMisc
             return m_combinedType.right(1);
         }
 
+        QChar CAircraftIcaoCode::getEngineTypeChar() const
+        {
+            const QString et = this->getEngineType();
+            if (et.length() == 1) { return et[0]; }
+            return QChar();
+        }
+
         int CAircraftIcaoCode::getEnginesCount() const
         {
             if (m_combinedType.length() < 2) { return -1; }

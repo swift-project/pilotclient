@@ -132,6 +132,9 @@ namespace BlackMisc
             //! Get engine type, e.g. "J"
             QString getEngineType() const;
 
+            //! Get engine type, e.g. "J"
+            QChar getEngineTypeChar() const;
+
             //! Engine count if any, -1 if no value is set
             int getEnginesCount() const;
 
