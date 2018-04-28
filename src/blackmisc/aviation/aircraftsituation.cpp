@@ -310,11 +310,21 @@ namespace BlackMisc
 
             // Non VTOL aircraft have to move to be not on ground
             const bool vtol = model.isVtol();
-            if (!vtol && !this->isMoving())
+            if (!vtol)
             {
-                this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
-                if (details) { *details = QStringLiteral("No VTOL, not moving => on ground"); }
-                return true;
+                if (this->getGroundSpeed().isNegativeWithEpsilonConsidered())
+                {
+                    this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
+                    if (details) { *details = QStringLiteral("No VTOL, push back"); }
+                    return true;
+                }
+
+                if (!this->isMoving())
+                {
+                    this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
+                    if (details) { *details = QStringLiteral("No VTOL, not moving => on ground"); }
+                    return true;
+                }
             }
 
             // not on ground is default
