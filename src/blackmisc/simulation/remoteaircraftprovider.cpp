@@ -480,10 +480,17 @@ namespace BlackMisc
 
         bool CRemoteAircraftProvider::testAddAltitudeOffsetToSituation(CAircraftSituation &situation) const
         {
-            if (!this->hasTestAltitudeOffset(situation.getCallsign())) { return false; }
-            const CCallsign cs(situation.getCallsign());
+            // for global offset testing set "true"
+            constexpr bool globalOffsetTest = false;
 
+            const CCallsign cs(situation.getCallsign());
+            if (!globalOffsetTest && !this->hasTestAltitudeOffset(cs)) { return false; }
             CLength os;
+            if (globalOffsetTest)
+            {
+                os = CLength(100, CLengthUnit::ft());
+            }
+            else
             {
                 QReadLocker l(&m_lockSituations);
                 os = m_testOffset.value(cs);

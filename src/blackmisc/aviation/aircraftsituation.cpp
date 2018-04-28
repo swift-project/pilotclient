@@ -617,6 +617,14 @@ namespace BlackMisc
             return altCor;
         }
 
+        CAltitude CAircraftSituation::addAltitudeOffset(const CLength &offset)
+        {
+            if (offset.isNull()) { return this->getAltitude(); }
+            const CAltitude alt = this->getAltitude().withOffset(offset);
+            this->setAltitude(alt);
+            return alt;
+        }
+
         void CAircraftSituation::setPressureAltitude(const CAltitude &altitude)
         {
             Q_ASSERT(altitude.getAltitudeType() == CAltitude::PressureAltitude);
