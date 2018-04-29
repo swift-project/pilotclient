@@ -105,6 +105,10 @@ namespace BlackMisc
             //! Center of gravity, fetched from provider in case needed
             PhysicalQuantities::CLength getAndFetchModelCG();
 
+            //! Decides threshold when situation is considered on ground
+            //! \sa BlackMisc::Aviation::CAircraftSituation::setOnGroundFromGroundFactorFromInterpolation
+            static double groundInterpolationFactor();
+
             const Aviation::CCallsign  m_callsign; //!< corresponding callsign
             CAircraftModel m_model; //!< corresponding model
             Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() }; //!< latest interpolation

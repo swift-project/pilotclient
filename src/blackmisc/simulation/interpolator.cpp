@@ -64,6 +64,14 @@ namespace BlackMisc
         }
 
         template<typename Derived>
+        double CInterpolator<Derived>::groundInterpolationFactor()
+        {
+            // done here so we can change value without "larfer" recompilations
+            static constexpr double f = 0.95;
+            return f;
+        }
+
+        template<typename Derived>
         void CInterpolator<Derived>::deferredInit()
         {
             if (m_model.hasModelString()) { return; } // set in-between
