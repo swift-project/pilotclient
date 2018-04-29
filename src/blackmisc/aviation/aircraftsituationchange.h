@@ -123,6 +123,13 @@ namespace BlackMisc
             //! Pitch values
             QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle> getPitchStdDevAndMean() const { return QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle>(m_pitchStdDev, m_pitchMean); }
 
+            //! Scnenery deviation (if it can be calculated, otherwise PhysicalQuantities::CLength::null)
+            //! This is without CG, so substract CG to get deviation
+            const PhysicalQuantities::CLength &guessedSceneryDeviation() const { return m_guessedSceneryDeviation; }
+
+            //! Get scenery deviation under consideration of CG
+            PhysicalQuantities::CLength getGuessedSceneryDeviation(const PhysicalQuantities::CLength &cg) const;
+
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -139,6 +146,9 @@ namespace BlackMisc
             static const CAircraftSituationChange &null();
 
         private:
+            //! Guess scenery deviation
+            void guessSceneryDeviation();
+
             int m_situationsCount = -1;
             CCallsign m_correspondingCallsign;
             // latest -> m_timestampMSecsSinceEpoch
@@ -167,6 +177,7 @@ namespace BlackMisc
             PhysicalQuantities::CAngle m_pitchMean = PhysicalQuantities::CAngle::null();
             PhysicalQuantities::CLength m_altAglStdDev = PhysicalQuantities::CLength::null();
             PhysicalQuantities::CLength m_altAglMean = PhysicalQuantities::CLength::null();
+            PhysicalQuantities::CLength m_guessedSceneryDeviation = PhysicalQuantities::CLength::null();
 
             BLACK_METACLASS(
                 CAircraftSituationChange,
@@ -190,6 +201,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(altAglMean),
                 BLACK_METAMEMBER(pitchStdDev),
                 BLACK_METAMEMBER(pitchMean),
+                BLACK_METAMEMBER(guessedSceneryDeviation),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(oldestTimestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(oldestAdjustedTimestampMSecsSinceEpoch),

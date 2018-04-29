@@ -85,6 +85,13 @@ namespace BlackMisc
             }
         }
 
+        CLength CAircraftSituationChange::getGuessedSceneryDeviation(const CLength &cg) const
+        {
+            if (cg.isNull()) { return this->guessedSceneryDeviation(); }
+            if (this->guessedSceneryDeviation().isNull()) { return CLength::null(); }
+            return this->guessedSceneryDeviation() - cg;
+        }
+
         QString CAircraftSituationChange::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -101,6 +108,7 @@ namespace BlackMisc
                    QStringLiteral(" | accelerating.: ") % boolToYesNo(this->isConstAccelerating()) % QStringLiteral(" decelarating: ") % boolToYesNo(this->isConstDecelarating()) %
                    QStringLiteral(" | rotate up: ") % boolToYesNo(this->isRotatingUp()) %
                    QStringLiteral(" | push back: ") % boolToYesNo(this->containsPushBack()) %
+                   QStringLiteral(" | scenery delta: ") % m_guessedSceneryDeviation.valueRoundedWithUnit(1) %
                    QStringLiteral(" | alt.delta: ") % m_altAglMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_altAglStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" | std.dev: pitch ") %  m_pitchMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_pitchStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" gs ") % m_gsMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_gsStdDev.valueRoundedWithUnit(1) %
@@ -156,6 +164,22 @@ namespace BlackMisc
         {
             if (situations.isEmpty()) { return false; }
 
+            const QList<double> gsValues = situations.groundSpeedValues(CSpeedUnit::kts());
+            if (gsValues.size() == situations.size())
+            {
+                const QPair<double, double> gsKts = CMathUtils::standardDeviationAndMean(gsValues);
+                m_gsStdDev = CSpeed(gsKts.first, CSpeedUnit::kts());
+                m_gsMean = CSpeed(gsKts.second, CSpeedUnit::kts());
+            }
+
+            const QList<double> pitchValues = situations.pitchValues(CAngleUnit::deg());
+            if (gsValues.size() == situations.size())
+            {
+                const QPair<double, double> pitchDeg = CMathUtils::standardDeviationAndMean(pitchValues);
+                m_pitchStdDev = CAngle(pitchDeg.first, CAngleUnit::deg());
+                m_pitchMean = CAngle(pitchDeg.second, CAngleUnit::deg());
+            }
+
             const QList<double> altValues = situations.altitudeValues(CLengthUnit::ft());
             if (altValues.size() == situations.size())
             {
@@ -182,23 +206,9 @@ namespace BlackMisc
                     const QPair<double, double> deltaFt = CMathUtils::standardDeviationAndMean(altElvDeltas);
                     m_altAglStdDev = CLength(deltaFt.first, CLengthUnit::ft());
                     m_altAglMean = CLength(deltaFt.second, CLengthUnit::ft());
+
+                    this->guessSceneryDeviation();
                 }
-            }
-
-            const QList<double> gsValues = situations.groundSpeedValues(CSpeedUnit::kts());
-            if (gsValues.size() == situations.size())
-            {
-                const QPair<double, double> gsKts = CMathUtils::standardDeviationAndMean(gsValues);
-                m_gsStdDev = CSpeed(gsKts.first, CSpeedUnit::kts());
-                m_gsMean = CSpeed(gsKts.second, CSpeedUnit::kts());
-            }
-
-            const QList<double> pitchValues = situations.pitchValues(CAngleUnit::deg());
-            if (gsValues.size() == situations.size())
-            {
-                const QPair<double, double> pitchDeg = CMathUtils::standardDeviationAndMean(pitchValues);
-                m_pitchStdDev = CAngle(pitchDeg.first, CAngleUnit::deg());
-                m_pitchMean = CAngle(pitchDeg.second, CAngleUnit::deg());
             }
             return true;
         }
@@ -207,6 +217,27 @@ namespace BlackMisc
         {
             static const CAircraftSituationChange null;
             return null;
+        }
+
+        void CAircraftSituationChange::guessSceneryDeviation()
+        {
+            m_guessedSceneryDeviation = CLength::null();
+            if (m_altAglStdDev.isNull()) { return; }
+            if (m_altAglMean.isNull()) { return; }
+
+            // only for a small deviation we can calculate scenery differemce
+            static const CLength maxDeviation(2, CLengthUnit::ft());
+
+            // Only on ground
+            if (this->wasConstOnGround())
+            {
+                if (m_altAglStdDev > maxDeviation) { return; }
+                m_guessedSceneryDeviation = m_altAglMean;
+            }
+            else if (this->wasConstOnGround())
+            {
+
+            }
         }
     } // namespace
 } // namespace
