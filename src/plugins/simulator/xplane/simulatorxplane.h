@@ -25,6 +25,7 @@
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/xswiftbussettings.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
@@ -180,6 +181,9 @@ namespace BlackSimPlugin
             void requestRemoteAircraftDataFromXPlane();
             void updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
             void updateAirportsInRange();
+            void remoteAircraftAdded(const QString &callsign);
+            void remoteAircraftAddingFailed(const QString &callsign);
+            void remoteAircraftAddingTimeout();
 
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
 
@@ -196,8 +200,10 @@ namespace BlackSimPlugin
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
 
             // Driver Interpolation
+            BlackMisc::Simulation::CSimulatedAircraftList m_pendingAddedAircrafts;
             CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
             int m_interpolationRequest = 0; //!< current interpolation request
+            QTimer m_pendingAddedTimer;
 
             XPlaneData m_xplaneData;
 

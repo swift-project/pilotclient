@@ -70,6 +70,12 @@ namespace BlackSimPlugin
             //! \remark from simulator to driver for elevation and CG
             void remoteAircraftData(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
 
+            //! Remote aircraft successfully added
+            void remoteAircraftAdded(const QString &callsign);
+
+            //! Remote aircraft adding failed
+            void remoteAircraftAddingFailed(const QString &callsign);
+
         public slots:
             //! \copydoc XSwiftBus::CTraffic::initialize
             bool initialize();

@@ -125,6 +125,8 @@ namespace XSwiftBus
 
         void emitSimFrame();
         void emitRemoteAircraftData(const std::string &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
+        void emitPlaneAdded(const std::string &callsign);
+        void emitPlaneAddingFailed(const std::string &callsign);
         void orbitRemotePlane(const std::string &callsign);
 
         static int preferences(const char *section, const char *name, int def);
@@ -168,6 +170,16 @@ namespace XSwiftBus
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)
         {
             return static_cast<CTraffic *>(self)->getPlaneData(id, dataType, io_data);
+        }
+
+        static void planeLoaded(void *id, bool succeeded, void *self)
+        {
+            auto *traffic = static_cast<CTraffic *>(self);
+            auto planeIt = traffic->m_planesById.find(id);
+            if (planeIt == traffic->m_planesById.end()) { return; }
+
+            if (succeeded) { traffic->emitPlaneAdded(planeIt->second->callsign); }
+            else { traffic->emitPlaneAddingFailed(planeIt->second->callsign); }
         }
     };
 }

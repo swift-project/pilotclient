@@ -76,8 +76,7 @@ namespace XSwiftBus
     {
         if (! s_legacyDataOK) { return false; }
 
-        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep;
-        auto err = XPMPMultiplayerInit(preferences, preferences, dir.c_str());
+        auto err = XPMPMultiplayerInit(preferences, preferences);
         if (*err) { cleanup(); return false; }
         m_initialized = true;
 
@@ -122,6 +121,22 @@ namespace XSwiftBus
         signalRemoteAircraftData.appendArgument(elevation);
         signalRemoteAircraftData.appendArgument(modelVerticalOffset);
         sendDBusMessage(signalRemoteAircraftData);
+    }
+
+    void CTraffic::emitPlaneAdded(const std::string &callsign)
+    {
+        CDBusMessage signalPlaneAdded = CDBusMessage::createSignal(XSWIFTBUS_TRAFFIC_OBJECTPATH, XSWIFTBUS_TRAFFIC_INTERFACENAME, "remoteAircraftAdded");
+        signalPlaneAdded.beginArgumentWrite();
+        signalPlaneAdded.appendArgument(callsign);
+        sendDBusMessage(signalPlaneAdded);
+    }
+
+    void CTraffic::emitPlaneAddingFailed(const std::string &callsign)
+    {
+        CDBusMessage signalPlaneAddingFailed = CDBusMessage::createSignal(XSWIFTBUS_TRAFFIC_OBJECTPATH, XSWIFTBUS_TRAFFIC_INTERFACENAME, "remoteAircraftAddingFailed");
+        signalPlaneAddingFailed.beginArgumentWrite();
+        signalPlaneAddingFailed.appendArgument(callsign);
+        sendDBusMessage(signalPlaneAddingFailed);
     }
 
     void CTraffic::orbitRemotePlane(const std::string &callsign)
@@ -216,7 +231,7 @@ namespace XSwiftBus
         }
         else
         {
-            id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, static_cast<void *>(this));
+            id = XPMPCreatePlaneWithModelName(modelName.c_str(), aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, planeLoaded, static_cast<void *>(this));
         }
 
         if (id)
