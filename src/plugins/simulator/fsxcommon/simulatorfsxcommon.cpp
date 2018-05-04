@@ -1404,8 +1404,10 @@ namespace BlackSimPlugin
             // missing lights info from simulator so far
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("Missing light state in simulator for '%1', model '%2'").arg(callsign.asString(), simObj.getAircraftModelString())); }
 
+            const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(DeferResendingLights, this, [ = ]
             {
+                if (myself.isNull()) { return; }
                 if (!m_simConnectObjects.contains(callsign)) { return; }
                 const CSimConnectObject currentSimObject = m_simConnectObjects[callsign];
                 if (!currentSimObject.hasValidRequestAndObjectId()) { return; } // stale
