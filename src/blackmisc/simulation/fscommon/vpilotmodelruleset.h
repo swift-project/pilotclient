@@ -31,9 +31,10 @@ namespace BlackMisc
         namespace FsCommon
         {
             //! Value object reading a set of vPilot rules
+            //! \deprecated vPilot handling will be most likely removed in the future
             class BLACKMISC_EXPORT CVPilotModelRuleSet :
                 public CCollection<CVPilotModelRule>,
-                public BlackMisc::Mixin::MetaType<CVPilotModelRuleSet>
+                public Mixin::MetaType<CVPilotModelRuleSet>
             {
             public:
                 BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CVPilotModelRuleSet)
@@ -67,7 +68,7 @@ namespace BlackMisc
 
                 //! To aircraft models
                 //! \note slow operation, can take a while
-                BlackMisc::Simulation::CAircraftModelList toAircraftModels() const;
+                Simulation::CAircraftModelList toAircraftModels() const;
 
             private:
                 //! Convert values to upper case

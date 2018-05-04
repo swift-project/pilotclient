@@ -29,6 +29,7 @@ namespace BlackMisc
             CDistributor::registerMetadata();
             CDistributorList::registerMetadata();
             CDistributorListPreferences::registerMetadata();
+            qDBusRegisterMetaType<CInterpolationAndRenderingSetupBase::InterpolatorMode>();
             CInterpolationAndRenderingSetupPerCallsign::registerMetadata();
             CInterpolationAndRenderingSetupGlobal::registerMetadata();
             CInterpolationSetupList::registerMetadata();

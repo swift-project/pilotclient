@@ -293,7 +293,7 @@ namespace BlackMisc
             //! Set altitude
             void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
 
-            //! Add offset
+            //! Add offset to altitude
             CAltitude addAltitudeOffset(const PhysicalQuantities::CLength &offset);
 
             //! Get pressure altitude

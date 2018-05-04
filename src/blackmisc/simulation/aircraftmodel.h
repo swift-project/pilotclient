@@ -268,6 +268,9 @@ namespace BlackMisc
             //! Get center of gravity
             void setCG(const PhysicalQuantities::CLength &cg) { m_cg = cg; }
 
+            //! CG value available?
+            bool hasCG() const { return !m_cg.isNull(); }
+
             //! Model type
             ModelType getModelType() const { return m_modelType; }
 

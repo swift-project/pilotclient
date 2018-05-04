@@ -198,11 +198,14 @@ namespace BlackMisc
             return score;
         }
 
-        void CAircraftIcaoCode::guessModelParameters(CLength &guessedCG, CSpeed &guessedLiftOffGs) const
+        void CAircraftIcaoCode::guessModelParameters(CLength &guessedCGOut, CSpeed &guessedVRotateOut) const
         {
+            // we do not override values
+            if (!guessedCGOut.isNull() && !guessedVRotateOut.isNull()) { return; }
+
             // init to defaults
-            CLength guessedCG_ = CLength(1.5, CLengthUnit::m());
-            CSpeed guessedLiftOffGs_ = this->isVtol() ? CSpeed::null() : CSpeed(70, CSpeedUnit::km_h());
+            CLength guessedCG = CLength(1.5, CLengthUnit::m());
+            CSpeed guessedVRotate = this->isVtol() ? CSpeed::null() : CSpeed(70, CSpeedUnit::km_h());
 
             const int engines = this->getEnginesCount();
             const QChar engineType = this->getEngineType()[0].toUpper();
@@ -210,31 +213,38 @@ namespace BlackMisc
             {
                 if (engines == 1)
                 {
-                    if (engineType == 'T') { guessedCG_ = CLength(2.0, CLengthUnit::m()); break; }
+                    if (engineType == 'T') { guessedCG = CLength(2.0, CLengthUnit::m()); break; }
                 }
                 else if (engines == 2)
                 {
-                    guessedCG_ = CLength(2.0, CLengthUnit::m());
-                    guessedLiftOffGs_ = CSpeed(80, CSpeedUnit::kts());
-                    if (engineType == 'T') { guessedCG_ = CLength(2.0, CLengthUnit::m()); break; }
-                    if (engineType == 'J') { guessedCG_ = CLength(2.5, CLengthUnit::m()); break; }
+                    guessedCG = CLength(2.0, CLengthUnit::m());
+                    guessedVRotate = CSpeed(100, CSpeedUnit::kts());
+                    if (engineType == 'T') { guessedCG = CLength(2.0, CLengthUnit::m()); break; }
+                    if (engineType == 'J')
+                    {
+                        // a B737 has VR 105-160kts
+                        guessedVRotate = CSpeed(120, CSpeedUnit::kts());
+                        guessedCG = CLength(2.5, CLengthUnit::m());
+                        break;
+                    }
                 }
                 else if (engines > 2)
                 {
-                    guessedCG_ = CLength(4.0, CLengthUnit::m());
-                    guessedLiftOffGs_ = CSpeed(70, CSpeedUnit::kts());
+                    guessedCG = CLength(4.0, CLengthUnit::m());
+                    guessedVRotate = CSpeed(70, CSpeedUnit::kts());
                     if (engineType == 'J')
                     {
-                        guessedCG_ = CLength(6.0, CLengthUnit::m());
-                        guessedLiftOffGs_ = CSpeed(100, CSpeedUnit::kts());
+                        // A typical B747 has VR around 160kts
+                        guessedCG = CLength(6.0, CLengthUnit::m());
+                        guessedVRotate = CSpeed(140, CSpeedUnit::kts());
                         break;
                     }
                 }
             }
             while (false);
 
-            if (!guessedCG_.isNull()) { guessedCG = guessedCG_; }
-            if (!guessedLiftOffGs_.isNull()) { guessedLiftOffGs = guessedLiftOffGs_; }
+            if (guessedCGOut.isNull()) { guessedCGOut = guessedCG; }
+            if (guessedVRotateOut.isNull()) { guessedVRotateOut = guessedVRotate; }
         }
 
         bool CAircraftIcaoCode::isNull() const

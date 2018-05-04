@@ -31,8 +31,9 @@ namespace BlackMisc
         namespace FsCommon
         {
             //! Value object encapsulating information of software distributor.
+            //! \deprecated vPilot handling will be most likely removed in the future
             class BLACKMISC_EXPORT CVPilotModelRule :
-                public BlackMisc::CValueObject<CVPilotModelRule>,
+                public CValueObject<CVPilotModelRule>,
                 public ITimestampBased
             {
             public:

@@ -24,6 +24,7 @@
 
 #include <QMetaType>
 #include <QList>
+#include <QPair>
 
 namespace BlackMisc
 {
@@ -72,7 +73,7 @@ namespace BlackMisc
             //! Any situation without ground info
             bool hasSituationWithoutGroundElevation() const;
 
-            //! Any situation outside range
+            //! Any situation outside range?
             bool hasGroundElevationOutsideRange(const PhysicalQuantities::CLength &range) const;
 
             //! Contains on ground details
@@ -118,11 +119,20 @@ namespace BlackMisc
             //! Count the number of situations with CAircraftSituation::IsOnGround
             int countOnGround(CAircraftSituation::IsOnGround og) const;
 
+            //! Count the number of situations with CAircraftSituation::IsOnGround and elevation
+            int countOnGroundWithElevation(CAircraftSituation::IsOnGround og) const;
+
+            //! Situations with CAircraftSituation::IsOnGround and elevation
+            CAircraftSituationList findOnGroundWithElevation(CAircraftSituation::IsOnGround og) const;
+
             //! Set on ground
             int setOnGround(CAircraftSituation::IsOnGround og);
 
             //! Set on ground details for all situations
             int setOnGroundDetails(CAircraftSituation::OnGroundDetails details);
+
+            //! Add an offset to each altitude
+            void addAltitudeOffset(const PhysicalQuantities::CLength &offset);
 
             //! Latest first and no null positions?
             bool isSortedAdjustedLatestFirstWithoutNullPositions() const;
@@ -145,6 +155,22 @@ namespace BlackMisc
 
             //! All corrected altitude values
             QList<double> correctedAltitudeValues(const PhysicalQuantities::CLengthUnit &unit, const PhysicalQuantities::CLength &cg) const;
+
+            //! Pitch angles standard deviation and mean
+            QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle> pitchStandardDeviationAndMean() const;
+
+            //! Ground speed standard deviation and mean
+            QPair<PhysicalQuantities::CSpeed, PhysicalQuantities::CSpeed> groundSpeedStandardDeviationAndMean() const;
+
+            //! Elevation standard deviation and mean
+            QPair<CAltitude, CAltitude> elevationStandardDeviationAndMean() const;
+
+            //! Elevation standard deviation and mean
+            QPair<CAltitude, CAltitude> altitudeStandardDeviationAndMean() const;
+
+            //! Elevation standard deviation and mean
+            //! \note distance is without CG, so on ground it can also be used to calculate
+            QPair<CAltitude, CAltitude> altitudeAglStandardDeviationAndMean() const;
         };
     } // namespace
 } // namespace

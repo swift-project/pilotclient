@@ -22,6 +22,12 @@ namespace BlackMisc
     {
         CCallsignSet::CCallsignSet() { }
 
+        CCallsignSet::CCallsignSet(const CCallsign &callsign)
+        {
+            if (callsign.isEmpty()) { return; }
+            this->push_back(callsign);
+        }
+
         CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) :
             CCollection<CCallsign>(other)
         { }

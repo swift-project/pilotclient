@@ -296,7 +296,8 @@ namespace BlackMisc
             int calculateScore(const CAircraftIcaoCode &otherCode, CStatusMessageList *log = nullptr) const;
 
             //! Guess aircraft model parameters
-            void guessModelParameters(PhysicalQuantities::CLength &guessedCG, PhysicalQuantities::CSpeed &guessedLiftOffGs) const;
+            //! \remark values will not be overridden, pass null values to obtain guessed values
+            void guessModelParameters(PhysicalQuantities::CLength &guessedCGOut, PhysicalQuantities::CSpeed &guessedVRotateOut) const;
 
             //! Null ICAO?
             bool isNull() const;
