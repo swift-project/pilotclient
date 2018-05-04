@@ -21,6 +21,7 @@
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/network/client.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
@@ -35,6 +36,7 @@
 #include <QtGlobal>
 #include <QDesktopServices>
 #include <QDateTime>
+#include <QMessageBox>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -78,7 +80,7 @@ namespace BlackGui
             connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::requestPartsFromNetwork);
 
             connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
-            contextFlagsToGui();
+            this->contextFlagsToGui();
         }
 
         CInternalsComponent::~CInternalsComponent() { }
@@ -92,6 +94,8 @@ namespace BlackGui
 
         void CInternalsComponent::sendAircraftParts()
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
+
             Q_ASSERT(sGui->getIContextNetwork());
             if (!sGui->getIContextNetwork()->isConnected())
             {
@@ -105,12 +109,30 @@ namespace BlackGui
                 return;
             }
 
+            CClient client = sGui->getIContextNetwork()->getClientsForCallsigns(callsign).frontOrDefault();
+            if (client.getCallsign().isEmpty() || client.getCallsign() != callsign)
+            {
+                CLogMessage(this).validationError("No valid client for '%1'") << callsign.asString();
+                return;
+            }
+
+            if (!client.hasAircraftPartsCapability())
+            {
+                static const QString question("'%1' does not support parts, enable parts for it?");
+                const QMessageBox::StandardButton reply = QMessageBox::question(this, "No parts supported", question.arg(callsign.asString()), QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::Yes) { return; }
+                client.addCapability(CClient::FsdWithAircraftConfig);
+                const bool enabled = sGui->getIContextNetwork()->setOtherClient(client);
+                Q_UNUSED(enabled);
+            }
+
             const bool json = (QObject::sender() == ui->pb_SendAircraftPartsJson);
             const CAircraftParts parts = json ? ui->editor_AircraftParts->getAircraftPartsFromJson() : ui->editor_AircraftParts->getAircraftPartsFromGui();
             ui->editor_AircraftParts->setAircraftParts(parts); // display in UI as GUI and JSON
 
             ui->tb_History->setToolTip("");
-            sGui->getIContextNetwork()->testAddAircraftParts(callsign, parts, ui->cb_AircraftPartsIncremental->isChecked());
+            const bool incremental = ui->cb_AircraftPartsIncremental->isChecked();
+            sGui->getIContextNetwork()->testAddAircraftParts(callsign, parts, incremental);
             CLogMessage(this).info("Added parts for %1") << callsign.toQString();
         }
 
