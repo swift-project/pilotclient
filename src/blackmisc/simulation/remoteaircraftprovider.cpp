@@ -271,7 +271,7 @@ namespace BlackMisc
         void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset)
         {
             const CSimulatedAircraft remoteAircraft(this->getAircraftInRangeForCallsign(callsign));
-            const bool isFull = jsonObject.value("is_full_data").toBool();
+            const bool isFull = jsonObject.value(CAircraftParts::attributeNameIsFullJson()).toBool();
 
             // If we are not yet synchronized, we throw away any incremental packet
             if (!remoteAircraft.hasValidCallsign()) { return; }

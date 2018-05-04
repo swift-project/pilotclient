@@ -50,8 +50,16 @@ namespace BlackMisc
         QJsonObject CAircraftParts::toIncrementalJson() const
         {
             QJsonObject json = this->toJson();
-            json.remove("is_full_data");
-            json.insert("is_full_data", QJsonValue(false));
+            json.remove(attributeNameIsFullJson());
+            json.insert(attributeNameIsFullJson(), QJsonValue(false));
+            return json;
+        }
+
+        QJsonObject CAircraftParts::toFullJson() const
+        {
+            QJsonObject json = this->toJson();
+            json.remove(attributeNameIsFullJson());
+            json.insert(attributeNameIsFullJson(), QJsonValue(true));
             return json;
         }
 
@@ -75,10 +83,9 @@ namespace BlackMisc
             QString *details = CBuildConfig::isLocalDeveloperDebugBuild() ? &parts.m_guessingDetails : nullptr;
 
             const bool vtol = model.isVtol();
-            CSpeed guessedLiftOffGs = CSpeed::null();
+            CSpeed guessedVRotate = CSpeed::null();
             CLength guessedCG = model.getCG();
-            model.getAircraftIcaoCode().guessModelParameters(guessedCG, guessedLiftOffGs);
-            // const QChar engineType = model.getAircraftIcaoCode().getEngineTypeChar();
+            model.getAircraftIcaoCode().guessModelParameters(guessedCG, guessedVRotate);
 
             // set some reasonable values
             const bool isOnGround = situation.isOnGround();
@@ -101,7 +108,7 @@ namespace BlackMisc
                     }
                 }
 
-                const CSpeed slowSpeed = guessedLiftOffGs * 0.30;
+                const CSpeed slowSpeed = guessedVRotate * 0.30;
                 if (situation.getGroundSpeed() < slowSpeed)
                 {
                     if (details) { *details += QStringLiteral("slow speed <") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
@@ -142,7 +149,7 @@ namespace BlackMisc
                 else if (aGroundFt < nearGround2Ft)
                 {
                     if (details) { details->prepend(QStringLiteral("2nd layer: ")); }
-                    const bool gearDown = !isLikelyTakeOffOrClimbing && (situation.getGroundSpeed() < guessedLiftOffGs || isLikelyLanding);
+                    const bool gearDown = !isLikelyTakeOffOrClimbing && (situation.getGroundSpeed() < guessedVRotate || isLikelyLanding);
                     parts.setGearDown(gearDown);
                     parts.setFlapsPercent(10);
                 }
@@ -167,9 +174,9 @@ namespace BlackMisc
                     {
                         if (!vtol)
                         {
-                            const bool gearDown = situation.getGroundSpeed() < guessedLiftOffGs;
+                            const bool gearDown = situation.getGroundSpeed() < guessedVRotate;
                             parts.setGearDown(gearDown);
-                            if (details) { *details = QStringLiteral("not on ground elv., gs < ") + guessedLiftOffGs.valueRoundedWithUnit(1);  }
+                            if (details) { *details = QStringLiteral("not on ground elv., gs < ") + guessedVRotate.valueRoundedWithUnit(1);  }
                         }
                     }
                 }
@@ -192,6 +199,12 @@ namespace BlackMisc
             default: break;
             }
             return notset;
+        }
+
+        const QString &CAircraftParts::attributeNameIsFullJson()
+        {
+            static const QString a("is_full_data");
+            return a;
         }
 
         CVariant CAircraftParts::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

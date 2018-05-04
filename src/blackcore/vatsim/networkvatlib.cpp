@@ -679,7 +679,7 @@ namespace BlackCore
         void CNetworkVatlib::replyToConfigQuery(const CCallsign &callsign)
         {
             QJsonObject config = this->getOwnAircraftParts().toJson();
-            config.insert("is_full_data", true);
+            config.insert(CAircraftParts::attributeNameIsFullJson(), true);
             QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
             data = convertToUnicodeEscaped(data);
             Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));

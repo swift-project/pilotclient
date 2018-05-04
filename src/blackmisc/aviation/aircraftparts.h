@@ -158,7 +158,12 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! Incremental JSON object
+            //! \remark same as toJson, but sets \c is_full_data to \c false
             QJsonObject toIncrementalJson() const;
+
+            //! Full JSON Object
+            //! \remark same as toJson, but sets \c is_full_data to \c true
+            QJsonObject toFullJson() const;
 
             //! NULL parts object?
             bool isNull() const;
@@ -171,6 +176,9 @@ namespace BlackMisc
 
             //! Convert to QString
             static const QString &partsDetailsToString(PartsDetails details);
+
+            //! Attribute name
+            static const QString &attributeNameIsFullJson();
 
         private:
             CAircraftLights m_lights;
