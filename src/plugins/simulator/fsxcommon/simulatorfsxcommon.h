@@ -104,12 +104,12 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-            CSimulatorFsxCommon(
-                const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                QObject *parent = nullptr);
+            CSimulatorFsxCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                                BlackMisc::Network::IClientProvider *clientProvider,
+                                QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CSimulatorFsxCommon();

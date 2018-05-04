@@ -27,8 +27,9 @@ namespace BlackSimPlugin
                                      IOwnAircraftProvider *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider,
                                      IWeatherGridProvider *weatherGridProvider,
+                                     IClientProvider *clientProvider,
                                      QObject *parent) :
-            CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent)
+            CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
             this->setDefaultModel(
             {

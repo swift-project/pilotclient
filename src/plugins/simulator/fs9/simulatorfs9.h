@@ -39,14 +39,14 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-            CSimulatorFs9(
-                const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                const QSharedPointer<CFs9Host> &fs9Host,
-                const QSharedPointer<CLobbyClient> &lobbyClient,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                QObject *parent = nullptr);
+            CSimulatorFs9(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                          const QSharedPointer<CFs9Host> &fs9Host,
+                          const QSharedPointer<CLobbyClient> &lobbyClient,
+                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                          BlackMisc::Network::IClientProvider *clientProvider,
+                          QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CSimulatorFs9() = default;
@@ -64,7 +64,6 @@ namespace BlackSimPlugin
             virtual bool updateOwnSimulatorSelcal(const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::CIdentifier &originator) override;
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
-            virtual bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode, const BlackMisc::Aviation::CCallsign &callsign) override;
             //! \@}
 
         protected:
@@ -149,7 +148,9 @@ namespace BlackSimPlugin
                 const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider) override;
+                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                BlackMisc::Network::IClientProvider *clientProvider
+            ) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;

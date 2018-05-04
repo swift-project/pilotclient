@@ -11,6 +11,7 @@
 #include "simulatorfsx.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
 
@@ -21,10 +22,11 @@ namespace BlackSimPlugin
         BlackCore::ISimulator *CSimulatorFsxFactory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
-                IWeatherGridProvider *weatherGridProvider)
+                IWeatherGridProvider *weatherGridProvider,
+                IClientProvider *clientProvider)
         {
             Q_ASSERT(ownAircraftProvider);
-            return new CSimulatorFsx(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, this);
+            return new CSimulatorFsx(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
         }
 
         BlackCore::ISimulatorListener *CSimulatorFsxFactory::createListener(const CSimulatorPluginInfo &info)

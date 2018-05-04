@@ -20,6 +20,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
 namespace BlackSimPlugin
@@ -30,9 +31,10 @@ namespace BlackSimPlugin
             const CSimulatorPluginInfo &info,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
-            Weather::IWeatherGridProvider *weatherGridProvider,
+            IWeatherGridProvider *weatherGridProvider,
+            IClientProvider *clientProvider,
             QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, parent),
+            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent),
             m_fsuipc(std::make_unique<CFsuipc>(this))
         {
             CSimulatorFsCommon::registerHelp();

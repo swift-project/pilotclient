@@ -28,6 +28,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Weather;
@@ -99,15 +100,15 @@ namespace BlackSimPlugin
             return situation;
         }
 
-        CSimulatorFs9::CSimulatorFs9(
-            const CSimulatorPluginInfo &info,
-            const QSharedPointer<CFs9Host> &fs9Host,
-            const QSharedPointer<CLobbyClient> &lobbyClient,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider,
-            QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent),
+        CSimulatorFs9::CSimulatorFs9(const CSimulatorPluginInfo &info,
+                                     const QSharedPointer<CFs9Host> &fs9Host,
+                                     const QSharedPointer<CLobbyClient> &lobbyClient,
+                                     IOwnAircraftProvider *ownAircraftProvider,
+                                     IRemoteAircraftProvider *remoteAircraftProvider,
+                                     IWeatherGridProvider *weatherGridProvider,
+                                     IClientProvider *clientProvider,
+                                     QObject *parent) :
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent),
             m_fs9Host(fs9Host),
             m_lobbyClient(lobbyClient)
         {
@@ -231,34 +232,12 @@ namespace BlackSimPlugin
             const CTransponder newTransponder = ownAircraft.getTransponder();
 
             bool changed = false;
-            if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive())
-            {
-                changed = true;
-
-            }
-            if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby())
-            {
-                changed = true;
-            }
-
-            if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive())
-            {
-                changed = true;
-            }
-            if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby())
-            {
-                changed = true;
-            }
-
-            if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode())
-            {
-                changed = true;
-            }
-
-            if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode())
-            {
-                changed = true;
-            }
+            if (newCom1.getFrequencyActive() != m_simCom1.getFrequencyActive()) { changed = true; }
+            if (newCom1.getFrequencyStandby() != m_simCom1.getFrequencyStandby()) { changed = true; }
+            if (newCom2.getFrequencyActive() != m_simCom2.getFrequencyActive()) { changed = true; }
+            if (newCom2.getFrequencyStandby() != m_simCom2.getFrequencyStandby()) { changed = true; }
+            if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode()) { changed = true; }
+            if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode()) { changed = true; }
 
             //! \todo KB 8/2017 set FS9 cockpit values
 
@@ -483,19 +462,18 @@ namespace BlackSimPlugin
         CSimulatorFs9Factory::~CSimulatorFs9Factory()
         { }
 
-        BlackCore::ISimulator *CSimulatorFs9Factory::create(
-            const CSimulatorPluginInfo &info,
-            IOwnAircraftProvider *ownAircraftProvider,
-            IRemoteAircraftProvider *remoteAircraftProvider,
-            IWeatherGridProvider *weatherGridProvider)
+        BlackCore::ISimulator *CSimulatorFs9Factory::create(const CSimulatorPluginInfo &info,
+                IOwnAircraftProvider *ownAircraftProvider,
+                IRemoteAircraftProvider *remoteAircraftProvider,
+                IWeatherGridProvider *weatherGridProvider,
+                IClientProvider *clientProvider)
         {
-            return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, this);
+            return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
         }
 
         BlackCore::ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info)
         {
             return new CSimulatorFs9Listener(info, m_fs9Host, m_lobbyClient);
         }
-
     } // namespace
 } // namespace

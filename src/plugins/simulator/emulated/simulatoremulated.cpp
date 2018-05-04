@@ -34,8 +34,9 @@ namespace BlackSimPlugin
                                                IOwnAircraftProvider *ownAircraftProvider,
                                                IRemoteAircraftProvider *remoteAircraftProvider,
                                                IWeatherGridProvider *weatherGridProvider,
+                                               IClientProvider *clientProvider,
                                                QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent)
+            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
             Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
 

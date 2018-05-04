@@ -239,11 +239,12 @@ namespace BlackCore
         void receivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
     protected:
-        //! Default constructor
+        //! Constructor with all the providers
         ISimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &pluginInfo,
                    BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                    BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                    BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                   BlackMisc::Network::IClientProvider *clientProvider,
                    QObject *parent = nullptr);
 
         //! Are we connected to the simulator?
@@ -344,7 +345,8 @@ namespace BlackCore
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider) = 0;
+            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+            BlackMisc::Network::IClientProvider *clientProvider) = 0;
 
         //! Simulator listener instance
         virtual ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) = 0;

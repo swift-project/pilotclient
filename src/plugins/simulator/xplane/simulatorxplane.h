@@ -112,6 +112,7 @@ namespace BlackSimPlugin
                              BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                              BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                              BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                             BlackMisc::Network::IClientProvider *clientProvider,
                              QObject *parent = nullptr);
 
             //! \name ISimulator implementations
@@ -257,7 +258,8 @@ namespace BlackSimPlugin
             virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                                   BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                                                   BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                                  BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider) override;
+                                                  BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                                                  BlackMisc::Network::IClientProvider *clientProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }

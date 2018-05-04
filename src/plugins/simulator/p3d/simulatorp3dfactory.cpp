@@ -13,6 +13,7 @@
 
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
+using namespace BlackMisc::Network;
 
 namespace BlackSimPlugin
 {
@@ -21,10 +22,11 @@ namespace BlackSimPlugin
         BlackCore::ISimulator *CSimulatorP3DFactory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
-                IWeatherGridProvider *weatherGridProvider)
+                IWeatherGridProvider *weatherGridProvider,
+                IClientProvider *clientProvider)
         {
             Q_ASSERT(ownAircraftProvider);
-            return new CSimulatorP3D(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, this);
+            return new CSimulatorP3D(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, this);
         }
 
         BlackCore::ISimulatorListener *CSimulatorP3DFactory::createListener(const CSimulatorPluginInfo &info)

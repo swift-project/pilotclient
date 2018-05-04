@@ -25,12 +25,12 @@ namespace BlackSimPlugin
 
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
-            CSimulatorP3D(
-                const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
-                QObject *parent = nullptr);
+            CSimulatorP3D(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
+                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                          BlackMisc::Network::IClientProvider *clientProvider,
+                          QObject *parent = nullptr);
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
