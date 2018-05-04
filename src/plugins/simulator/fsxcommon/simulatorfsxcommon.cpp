@@ -1144,7 +1144,9 @@ namespace BlackSimPlugin
                 return hr;
             }
 
-            // Mapped events, see event ids here: http://msdn.microsoft.com/en-us/library/cc526980.aspx
+            // Mapped events, see event ids here:
+            // http://msdn.microsoft.com/en-us/library/cc526980.aspx
+            // http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/event_ids.html
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPauseToggle, "PAUSE_TOGGLE");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, SystemEventSlewToggle, "SLEW_TOGGLE");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeLat, "FREEZE_LATITUDE_LONGITUDE_SET");
