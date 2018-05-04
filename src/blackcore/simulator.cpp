@@ -88,13 +88,17 @@ namespace BlackCore
         return (status.testFlag(Connected) || status.testFlag(Simulating) || status.testFlag(Paused));
     }
 
-    ISimulator::ISimulator(
-        const CSimulatorPluginInfo &pluginInfo, IOwnAircraftProvider *ownAircraftProvider,
-        IRemoteAircraftProvider *remoteAircraftProvider, IWeatherGridProvider *weatherGridProvider, QObject *parent) :
+    ISimulator::ISimulator(const CSimulatorPluginInfo &pluginInfo,
+                           IOwnAircraftProvider *ownAircraftProvider,
+                           IRemoteAircraftProvider *remoteAircraftProvider,
+                           IWeatherGridProvider *weatherGridProvider,
+                           IClientProvider *clientProvider,
+                           QObject *parent) :
         QObject(parent),
         COwnAircraftAware(ownAircraftProvider),
         CRemoteAircraftAware(remoteAircraftProvider),
         CWeatherGridAware(weatherGridProvider),
+        CClientAware(clientProvider),
         ISimulationEnvironmentProvider(pluginInfo),
         IInterpolationSetupProvider(),
         CIdentifiable(this)

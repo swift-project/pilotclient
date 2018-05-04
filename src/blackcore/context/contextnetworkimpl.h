@@ -32,6 +32,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/clientprovider.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/textmessagelist.h"
@@ -73,10 +74,12 @@ namespace BlackCore
         //! Network context implementation
         class BLACKCORE_EXPORT CContextNetwork :
             public IContextNetwork,
-            public BlackMisc::Simulation::IRemoteAircraftProvider
+            public BlackMisc::Simulation::IRemoteAircraftProvider,
+            public BlackMisc::Network::IClientProvider
         {
             Q_OBJECT
             Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
+            Q_INTERFACES(BlackMisc::Network::IClientProvider)
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
 
             friend class IContextNetwork;
@@ -105,6 +108,18 @@ namespace BlackCore
             virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+            //! @}
+
+            //! \ingroup clientprovider
+            //! @{
+            virtual void setClients(const BlackMisc::Network::CClientList &clients) override;
+            virtual void clearClients() override;
+            virtual BlackMisc::Network::CClient getClientOrDefaultForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool hasClientInfo(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool addNewClient(const BlackMisc::Network::CClient &client) override;
+            virtual int updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
+            virtual int removeClient(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual bool autoAdjustCientGndCapability(const BlackMisc::Aviation::CAircraftSituation &situation) override;
             //! @}
 
         public slots:
@@ -136,6 +151,13 @@ namespace BlackCore
             virtual qint64 situationsLastModified(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual qint64 partsLastModified(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool testAddAltitudeOffset(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &offset = BlackMisc::PhysicalQuantities::CLength::null()) override;
+            //! @}
+
+            //! \ingroup clientprovider
+            //! @{
+            virtual BlackMisc::Network::CClientList getClients() const override;
+            virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
+            virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override;
             //! @}
 
             //! In transition state, e.g. connecting, disconnecting.
@@ -183,8 +205,6 @@ namespace BlackCore
             virtual BlackMisc::Network::CUserList getUsers() const override;
             virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
             virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual BlackMisc::Network::CClientList getOtherClients() const override;
-            virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
             virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
             virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
             virtual void requestDataUpdates()override;

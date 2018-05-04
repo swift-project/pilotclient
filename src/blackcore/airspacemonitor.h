@@ -56,8 +56,8 @@ namespace BlackCore
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public BlackMisc::Simulation::CRemoteAircraftProvider,     // those data will be provided from the class CAirspaceMonitor
         public BlackMisc::Simulation::COwnAircraftAware,           // used to obtain in memory information about own aircraft
-        public BlackMisc::Simulation::CSimulationEnvironmentAware, // elevation info etc.
-        public BlackMisc::Network::IClientProvider                 // those data will be provided from the class CAirspaceMonitor
+        public BlackMisc::Simulation::CSimulationEnvironmentAware, // elevation info etc. from simulator
+        public BlackMisc::Network::CClientProvider                 // those data will be provided from the class CAirspaceMonitor
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Network::IClientProvider)

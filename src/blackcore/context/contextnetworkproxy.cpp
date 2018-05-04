@@ -160,9 +160,9 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Network::CUser>(QLatin1String("getUserForCallsign"), callsign);
         }
 
-        CClientList CContextNetworkProxy::getOtherClients() const
+        CClientList CContextNetworkProxy::getClients() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getOtherClients"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getClients"));
         }
 
         CServerList CContextNetworkProxy::getVatsimFsdServers() const
@@ -175,9 +175,14 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1String("getVatsimVoiceServers"));
         }
 
-        CClientList CContextNetworkProxy::getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
+        CClientList CContextNetworkProxy::getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getOtherClientsForCallsigns"), callsigns);
+            return m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1String("getClientsForCallsigns"), callsigns);
+        }
+
+        bool CContextNetworkProxy::setOtherClient(const CClient &client)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setOtherClientForCallsign"), client);
         }
 
         CVoiceRoomList CContextNetworkProxy::getSelectedVoiceRooms() const

@@ -119,6 +119,7 @@ namespace BlackCore
                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                         BlackMisc::Network::IClientProvider *clientProvider,
                          QObject *parent);
 
         //! \name Interface implementations, called from context

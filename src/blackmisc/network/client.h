@@ -52,12 +52,12 @@ namespace BlackMisc
             enum Capability
             {
                 None = 0,
-                FsdWithInterimPositions = 1 << 0,
+                FsdWithInterimPositions = 1 << 0, //!< fast position updates
                 FsdWithIcaoCodes        = 1 << 1, //!< basically means it is a pilot client handling ICAO code packages
                 FsdAtisCanBeReceived    = 1 << 2, //!< ATIS
                 FsdWithAircraftConfig   = 1 << 3, //!< Aircraft parts
                 FsdWithGroundFlag       = 1 << 4, //!< supports gnd. flag (in position)
-                FsdModelString          = 1 << 5
+                FsdModelString          = 1 << 5  //!< model string can be queried
             };
             Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -171,5 +171,6 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CClient)
+Q_DECLARE_METATYPE(BlackMisc::Network::CClient::Capability)
 
 #endif // guard

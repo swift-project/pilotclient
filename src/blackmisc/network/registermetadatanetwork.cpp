@@ -18,6 +18,7 @@ namespace BlackMisc
         {
             CAuthenticatedUser::registerMetadata();
             CClient::registerMetadata();
+            qDBusRegisterMetaType<CClient::Capability>();
             CClientList::registerMetadata();
             CEcosystem::registerMetadata();
             CEcosystemList::registerMetadata();

@@ -98,10 +98,11 @@ namespace BlackCore
             virtual BlackMisc::Network::CUserList getUsers() const override;
             virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
             virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual BlackMisc::Network::CClientList getOtherClients() const override;
+            virtual BlackMisc::Network::CClientList getClients() const override;
             virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
             virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
-            virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
+            virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
+            virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override;
             virtual void requestDataUpdates()override;
             virtual void requestAtisUpdates() override;
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) override;

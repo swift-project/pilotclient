@@ -193,19 +193,27 @@ namespace BlackCore
                 return BlackMisc::Network::CUser();
             }
 
-            //! \copydoc IContextNetwork::getOtherClients
-            virtual BlackMisc::Network::CClientList getOtherClients() const override
+            //! \copydoc IContextNetwork::getClients
+            virtual BlackMisc::Network::CClientList getClients() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Network::CClientList();
             }
 
-            //! \copydoc IContextNetwork::getOtherClientsForCallsigns
-            virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
+            //! \copydoc IContextNetwork::getClientsForCallsigns
+            virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override
             {
                 Q_UNUSED(callsigns);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Network::CClientList();
+            }
+
+            //! \copydoc IContextNetwork::setOtherClient
+            virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override
+            {
+                Q_UNUSED(client);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
             }
 
             //! \copydoc IContextNetwork::requestDataUpdates

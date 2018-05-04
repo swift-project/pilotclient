@@ -205,10 +205,13 @@ namespace BlackCore
             virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
             //! Information about other clients
-            virtual BlackMisc::Network::CClientList getOtherClients() const = 0;
+            virtual BlackMisc::Network::CClientList getClients() const = 0;
 
             //! Clients for given callsign, e.g. to test/fetch direct aircraft model
-            virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const = 0;
+            virtual BlackMisc::Network::CClientList getClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const = 0;
+
+            //! Set client for given callsign
+            virtual bool setOtherClient(const BlackMisc::Network::CClient &client) = 0;
 
             //! Known voice servers, available when data file was first read
             virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const = 0;

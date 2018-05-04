@@ -50,7 +50,6 @@ namespace BlackMisc
             Capabilities cap = this->getCapabilities();
             cap &= ~capability;
             this->setCapabilities(cap);
-
         }
 
         void CClient::setCapabilities(const Capabilities &capabilities)
@@ -60,8 +59,8 @@ namespace BlackMisc
 
         QString CClient::getCapabilitiesAsString() const
         {
-            const Capabilities cap = this->getCapabilities();
             QStringList sl;
+            const Capabilities cap = this->getCapabilities();
             if (cap.testFlag(FsdAtisCanBeReceived)) sl << "ATIS";
             if (cap.testFlag(FsdWithInterimPositions)) sl << "interim pos.";
             if (cap.testFlag(FsdWithIcaoCodes)) sl << "ICAO";

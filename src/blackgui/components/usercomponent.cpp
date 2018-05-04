@@ -76,7 +76,7 @@ namespace BlackGui
                 }
 
                 // load data
-                ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getOtherClients());
+                ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getClients());
                 ui->tvp_AllUsers->updateContainer(sGui->getIContextNetwork()->getUsers());
             }
         }

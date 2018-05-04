@@ -37,6 +37,7 @@ using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
@@ -49,8 +50,9 @@ namespace BlackCore
                                        IOwnAircraftProvider *ownAircraftProvider,
                                        IRemoteAircraftProvider *remoteAircraftProvider,
                                        IWeatherGridProvider *weatherGridProvider,
+                                       IClientProvider *clientProvider,
                                        QObject *parent)
-        : ISimulator(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent)
+        : ISimulator(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
     {
         this->setObjectName("Simulator: " + info.getIdentifier());
         CSimulatorCommon::registerHelp();

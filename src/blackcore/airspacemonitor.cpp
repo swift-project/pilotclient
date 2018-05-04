@@ -312,7 +312,7 @@ namespace BlackCore
     void CAirspaceMonitor::testAddAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool incremental)
     {
         this->onAircraftConfigReceived(callsign,
-                                       incremental ? parts.toIncrementalJson() : parts.toJson(),
+                                       incremental ? parts.toIncrementalJson() : parts.toFullJson(),
                                        5000);
     }
 
@@ -911,8 +911,7 @@ namespace BlackCore
         CClient client = this->getClientOrDefaultForCallsign(callsign);
         if (client.hasCapability(CClient::FsdWithAircraftConfig)) { return; }
         client.addCapability(CClient::FsdWithAircraftConfig);
-        const int caps = client.getCapabilities();
-        this->updateOrAddClient(callsign, CPropertyIndexVariantMap(CClient::IndexCapabilities, CVariant::from(caps)));
+        this->setOtherClient(client);
     }
 
     void CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation)

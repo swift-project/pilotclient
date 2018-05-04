@@ -28,43 +28,67 @@ namespace BlackMisc
         public:
             //! Get other clients
             //! \threadsafe
-            CClientList getClients() const;
+            virtual CClientList getClients() const = 0;
 
             //! Set other clients
             //! \threadsafe
-            void setClients(const CClientList &clients);
+            virtual void setClients(const CClientList &clients) = 0;
 
             //! Set other clients
             //! \threadsafe
-            void clearClients();
+            virtual void clearClients() = 0;
 
             //! Returns a list of other clients corresponding to the given callsigns
             //! \threadsafe
-            BlackMisc::Network::CClientList getClientsForCallsigns(const Aviation::CCallsignSet &callsigns) const;
+            virtual CClientList getClientsForCallsigns(const Aviation::CCallsignSet &callsigns) const = 0;
 
             //! Other client for the given callsigns
             //! \threadsafe
-            BlackMisc::Network::CClient getClientOrDefaultForCallsign(const Aviation::CCallsign &callsign) const;
+            virtual CClient getClientOrDefaultForCallsign(const Aviation::CCallsign &callsign) const = 0;
 
             //! Client info for given callsign?
             //! \threadsafe
-            bool hasClientInfo(const Aviation::CCallsign &callsign) const;
+            virtual bool hasClientInfo(const Aviation::CCallsign &callsign) const = 0;
 
             //! Add a new client, if existing nothing will be added
             //! \threadsafe
-            bool addNewClient(const CClient &client);
+            virtual bool addNewClient(const CClient &client) = 0;
+
+            //! Set client for its callsign
+            //! \threadsafe
+            virtual bool setOtherClient(const BlackMisc::Network::CClient &client) = 0;
 
             //! Update or add a client
             //! \threadsafe
-            int updateOrAddClient(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
+            virtual int updateOrAddClient(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true) = 0;
 
             //! Remove client
             //! \threadsafe
-            int removeClient(const Aviation::CCallsign &callsign);
+            virtual int removeClient(const Aviation::CCallsign &callsign) = 0;
 
             //! Adjust gnd.flag capability from situation
             //! \threadsafe
-            bool autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation);
+            virtual bool autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation) = 0;
+        };
+
+        //! Direct in memory access to client (network client) data
+        class BLACKMISC_EXPORT CClientProvider : public IClientProvider
+        {
+        public:
+            //! \ingroup clientprovider
+            //! @{
+            virtual CClientList getClients() const override;
+            virtual void setClients(const CClientList &clients) override;
+            virtual void clearClients() override;
+            virtual CClientList getClientsForCallsigns(const Aviation::CCallsignSet &callsigns) const override;
+            virtual CClient getClientOrDefaultForCallsign(const Aviation::CCallsign &callsign) const override;
+            virtual bool hasClientInfo(const Aviation::CCallsign &callsign) const override;
+            virtual bool addNewClient(const CClient &client) override;
+            virtual bool setOtherClient(const BlackMisc::Network::CClient &client) override;
+            virtual int updateOrAddClient(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
+            virtual int removeClient(const Aviation::CCallsign &callsign) override;
+            virtual bool autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation) override;
+            //! @}
 
         private:
             CClientList m_clients;
@@ -75,35 +99,35 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CClientAware : public IProviderAware<IClientProvider>
         {
         public:
-            //! \copydoc IClientProvider::getClients
+            //! \copydoc CClientProvider::getClients
             CClientList getClients() const;
 
-            //! \copydoc IClientProvider::setClients
+            //! \copydoc CClientProvider::setClients
             void setClients(const CClientList &clients);
 
-            //! \copydoc IClientProvider::clearClients
+            //! \copydoc CClientProvider::clearClients
             void clearClients();
 
-            //! \copydoc IClientProvider::getClientsForCallsigns
+            //! \copydoc CClientProvider::getClientsForCallsigns
             BlackMisc::Network::CClientList getClientsForCallsigns(const Aviation::CCallsignSet &callsigns) const;
 
-            //! \copydoc IClientProvider::getClientOrDefaultForCallsign
+            //! \copydoc CClientProvider::getClientOrDefaultForCallsign
             BlackMisc::Network::CClient getClientOrDefaultForCallsign(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IClientProvider::hasClientInfo
+            //! \copydoc CClientProvider::hasClientInfo
             bool hasClientInfo(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IClientProvider::addNewClient
+            //! \copydoc CClientProvider::addNewClient
             bool addNewClient(const CClient &client);
 
-            //! \copydoc IClientProvider::updateOrAddClient
+            //! \copydoc CClientProvider::updateOrAddClient
             int updateOrAddClient(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues);
 
-            //! \copydoc IClientProvider::removeClient
+            //! \copydoc CClientProvider::removeClient
             int removeClient(const Aviation::CCallsign &callsign);
 
             //! Provider
-            void setClientProvider(IClientProvider *provider) { this->setProvider(provider); }
+            void setClientProvider(CClientProvider *provider) { this->setProvider(provider); }
 
         protected:
             //! Default constructor
@@ -114,7 +138,7 @@ namespace BlackMisc
         };
 
         //! Client provider dummy for testing
-        class BLACKMISC_EXPORT CClientProviderDummy: public IClientProvider
+        class BLACKMISC_EXPORT CClientProviderDummy: public CClientProvider
         {
         public:
             //! Dummy instance

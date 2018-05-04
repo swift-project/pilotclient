@@ -389,16 +389,32 @@ namespace BlackCore
             return users[0];
         }
 
-        CClientList CContextNetwork::getOtherClients() const
+        CClientList CContextNetwork::getClients() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->getClients();
         }
 
-        CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignSet &callsigns) const
+        CClientList CContextNetwork::getClientsForCallsigns(const CCallsignSet &callsigns) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return m_airspace->getClientsForCallsigns(callsigns);
+        }
+
+        bool CContextNetwork::setOtherClient(const CClient &client)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_airspace->setOtherClient(client);
+        }
+
+        int CContextNetwork::removeClient(const Aviation::CCallsign &callsign)
+        {
+            return m_airspace->removeClient(callsign);
+        }
+
+        bool CContextNetwork::autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation)
+        {
+            return m_airspace->autoAdjustCientGndCapability(situation);
         }
 
         CServerList CContextNetwork::getVatsimFsdServers() const
@@ -760,6 +776,36 @@ namespace BlackCore
         CAirspaceAircraftSnapshot CContextNetwork::getLatestAirspaceAircraftSnapshot() const
         {
             return m_airspace->getLatestAirspaceAircraftSnapshot();
+        }
+
+        void CContextNetwork::setClients(const CClientList &clients)
+        {
+            m_airspace->setClients(clients);
+        }
+
+        void CContextNetwork::clearClients()
+        {
+            m_airspace->clearClients();
+        }
+
+        CClient CContextNetwork::getClientOrDefaultForCallsign(const Aviation::CCallsign &callsign) const
+        {
+            return m_airspace->getClientOrDefaultForCallsign(callsign);
+        }
+
+        bool CContextNetwork::hasClientInfo(const Aviation::CCallsign &callsign) const
+        {
+            return m_airspace->hasClientInfo(callsign);
+        }
+
+        bool CContextNetwork::addNewClient(const CClient &client)
+        {
+            return m_airspace->addNewClient(client);
+        }
+
+        int CContextNetwork::updateOrAddClient(const Aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
+        {
+            return m_airspace->updateOrAddClient(callsign, vm, skipEqualValues);
         }
 
         void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
