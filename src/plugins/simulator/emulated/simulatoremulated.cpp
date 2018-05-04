@@ -303,14 +303,6 @@ namespace BlackSimPlugin
             return c > 0;
         }
 
-        bool CSimulatorEmulated::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
-        {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, CInterpolatorMulti::modeToString(mode), callsign.toQString());
-            if (!m_interpolators.contains(callsign)) { return false; }
-            CInterpolatorMulti *im = m_interpolators[callsign];
-            return im->setMode(mode);
-        }
-
         int CSimulatorEmulated::physicallyRemoveAllRemoteAircraft()
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);

@@ -127,7 +127,6 @@ namespace BlackSimPlugin
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
-            virtual bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode, const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void clearAllRemoteAircraftData() override;
             virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
             //! @}

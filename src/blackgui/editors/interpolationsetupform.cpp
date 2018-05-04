@@ -28,6 +28,8 @@ namespace BlackGui
             {
                 connect(cb, &QCheckBox::stateChanged, this, &CInterpolationSetupForm::onCheckboxChanged);
             }
+
+            connect(ui->co_InterpolatorMode, &QComboBox::currentTextChanged, this, &CInterpolationSetupForm::onInterpolatorModeChanged);
         }
 
         CInterpolationSetupForm::~CInterpolationSetupForm()
@@ -41,6 +43,10 @@ namespace BlackGui
             ui->cb_ForceFullInterpolation->setChecked(setup.isForcingFullInterpolation());
             ui->cb_EnableGndFlag->setChecked(setup.isGndFlagEnabled());
             ui->cb_SendGndFlagToSim->setChecked(setup.sendGndFlagToSimulator());
+
+            const QString im = setup.getInterpolatorModeAsString();
+            if (im.contains("linear", Qt::CaseInsensitive)) { ui->co_InterpolatorMode->setCurrentIndex(1); }
+            else { ui->co_InterpolatorMode->setCurrentIndex(0); }
         }
 
         CInterpolationAndRenderingSetupPerCallsign CInterpolationSetupForm::getValue() const
@@ -52,6 +58,7 @@ namespace BlackGui
             setup.setLogInterpolation(ui->cb_LogInterpolation->isChecked());
             setup.setSendGndFlagToSimulator(ui->cb_SendGndFlagToSim->isChecked());
             setup.setSimulatorDebuggingMessages(ui->cb_DebugDriver->isChecked());
+            setup.setInterpolatorMode(ui->co_InterpolatorMode->currentText());
             return setup;
         }
 
@@ -63,6 +70,7 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ForceFullInterpolation, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_EnableGndFlag, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_SendGndFlagToSim, readonly);
+            ui->co_InterpolatorMode->setEnabled(!readonly);
         }
 
         CStatusMessageList CInterpolationSetupForm::validate(bool nested) const
@@ -74,6 +82,12 @@ namespace BlackGui
         void CInterpolationSetupForm::onCheckboxChanged(int state)
         {
             Q_UNUSED(state);
+            emit this->valueChanged();
+        }
+
+        void CInterpolationSetupForm::onInterpolatorModeChanged(const QString &mode)
+        {
+            Q_UNUSED(mode);
             emit this->valueChanged();
         }
     } // ns

@@ -26,10 +26,10 @@ namespace BlackMisc
                 const CInterpolationAndRenderingSetupPerCallsign &setup,
                 CInterpolationStatus &status)
         {
-            switch (m_mode)
+            switch (setup.getInterpolatorMode())
             {
-            case ModeLinear: return m_linear.getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
-            case ModeSpline: return m_spline.getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
+            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
+            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
             default: break;
             }
             return {};
@@ -39,11 +39,11 @@ namespace BlackMisc
             qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
             CPartsStatus &partsStatus, bool log) const
         {
-            switch (m_mode)
+            switch (setup.getInterpolatorMode())
             {
             // currently calls the same interpolation for parts
-            case ModeLinear: return m_linear.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-            case ModeSpline: return m_spline.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
             default: break;
             }
             return {};
@@ -53,22 +53,22 @@ namespace BlackMisc
             qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
             CPartsStatus &partsStatus, bool log) const
         {
-            switch (m_mode)
+            switch (setup.getInterpolatorMode())
             {
             // currently calls the same interpolation for parts
-            case ModeLinear: return m_linear.getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-            case ModeSpline: return m_spline.getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
             default: break;
             }
             return {};
         }
 
-        const CAircraftSituation &CInterpolatorMulti::getLastInterpolatedSituation() const
+        const CAircraftSituation &CInterpolatorMulti::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
-            switch (m_mode)
+            switch (mode)
             {
-            case ModeLinear: return m_linear.getLastInterpolatedSituation();
-            case ModeSpline: return m_spline.getLastInterpolatedSituation();
+            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getLastInterpolatedSituation();
+            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getLastInterpolatedSituation();
             default: break;
             }
             return CAircraftSituation::null();
@@ -86,61 +86,15 @@ namespace BlackMisc
             m_spline.initCorrespondingModel(model);
         }
 
-        bool CInterpolatorMulti::setMode(Mode mode)
+        QString CInterpolatorMulti::getInterpolatorInfo(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
-            if (m_mode == mode) { return false; }
-            m_mode = mode;
-            return true;
-        }
-
-        bool CInterpolatorMulti::setMode(const QString &mode)
-        {
-            Mode m = modeFromString(mode);
-            if (m == ModeUnknown) { return false; }
-            return setMode(m);
-        }
-
-        void CInterpolatorMulti::toggleMode()
-        {
-            switch (m_mode)
+            switch (mode)
             {
-            case ModeSpline: m_mode = ModeLinear; break;
-            case ModeLinear: m_mode = ModeSpline; break;
-            default: m_mode = ModeSpline; break;
-            }
-        }
-
-        QString CInterpolatorMulti::getInterpolatorInfo() const
-        {
-            switch (m_mode)
-            {
-            case ModeSpline: return m_spline.getInterpolatorInfo();
-            case ModeLinear: return m_linear.getInterpolatorInfo();
+            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolatorInfo();
+            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolatorInfo();
             default: break;
             }
             return ("Illegal mode");
-        }
-
-        CInterpolatorMulti::Mode CInterpolatorMulti::modeFromString(const QString &mode)
-        {
-            if (mode.contains("spli"), Qt::CaseInsensitive) { return ModeSpline; }
-            if (mode.contains("lin"), Qt::CaseInsensitive) { return ModeLinear; }
-            return ModeUnknown;
-        }
-
-        const QString &CInterpolatorMulti::modeToString(CInterpolatorMulti::Mode mode)
-        {
-            static const QString l("linear");
-            static const QString s("spline");
-            static const QString u("unknown");
-
-            switch (mode)
-            {
-            case ModeLinear: return l;
-            case ModeSpline: return s;
-            case ModeUnknown:
-            default: return u;
-            }
         }
 
         CInterpolatorMultiWrapper::CInterpolatorMultiWrapper()

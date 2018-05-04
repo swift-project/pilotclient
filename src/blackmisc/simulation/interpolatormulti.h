@@ -44,7 +44,7 @@ namespace BlackMisc
                 CPartsStatus &partsStatus, bool log) const;
 
             //! \copydoc CInterpolator::getLastInterpolatedSituation
-            const Aviation::CAircraftSituation &getLastInterpolatedSituation() const;
+            const Aviation::CAircraftSituation &getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
             //! \copydoc CInterpolator::attachLogger
             void attachLogger(CInterpolationLogger *logger);
@@ -52,37 +52,10 @@ namespace BlackMisc
             //! \copydoc CInterpolator::initCorrespondingModel
             void initCorrespondingModel(const CAircraftModel &model);
 
-            //! Supported interpolation modes.
-            enum Mode
-            {
-                ModeSpline, //!< spline interpolation mode
-                ModeLinear, //!< linear interpolation mode
-                ModeUnknown
-            };
-
-            //! Set interpolation mode. Return true if mode was changed. Mode will not be changed in release build.
-            bool setMode(Mode mode);
-
-            //! Set interpolation mode. Return true if mode was changed. Mode will not be changed in release build.
-            bool setMode(const QString &mode);
-
-            //! Get active interpolation mode.
-            Mode getMode() const { return m_mode; }
-
-            //! Toogle interpolator Mode
-            void toggleMode();
-
             //! Info string
-            QString getInterpolatorInfo() const;
-
-            //! Mode from string
-            static Mode modeFromString(const QString &mode);
-
-            //! Mode to string
-            static const QString &modeToString(Mode mode);
+            QString getInterpolatorInfo(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         private:
-            Mode m_mode = ModeSpline;
             CInterpolatorSpline m_spline;
             CInterpolatorLinear m_linear;
         };

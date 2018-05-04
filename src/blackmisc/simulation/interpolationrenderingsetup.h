@@ -36,7 +36,15 @@ namespace BlackMisc
                 IndexForceFullInterpolation,
                 IndexSendGndFlagToSimulator,
                 IndexEnableGndFlag,
-                IndexEnabledAircraftParts
+                IndexEnabledAircraftParts,
+                IndexInterpolatorMode
+            };
+
+            //! Interpolator type
+            enum InterpolatorMode
+            {
+                Spline,
+                Linear
             };
 
             //! Debugging messages for simulation
@@ -81,6 +89,18 @@ namespace BlackMisc
             //! Consolidate with a network client
             void consolidateWithClient(const Network::CClient &client);
 
+            //! Interpolator mode
+            InterpolatorMode getInterpolatorMode() const { return static_cast<InterpolatorMode>(m_interpolatorMode);  }
+
+            //! Interpolator mode
+            const QString &getInterpolatorModeAsString() const { return modeToString(this->getInterpolatorMode()); }
+
+            //! Set interpolator mode
+            bool setInterpolatorMode(InterpolatorMode mode);
+
+            //! Set interpolator mode
+            bool setInterpolatorMode(const QString &mode);
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -89,6 +109,9 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            //! Interpolator mode as string
+            static const QString &modeToString(InterpolatorMode mode);
 
         protected:
             //! Constructor
@@ -103,6 +126,7 @@ namespace BlackMisc
             bool m_enabledAircraftParts   = true;  //!< Enable aircraft parts
             bool m_enabledGndFlag         = true;  //!< Enable gnd.flag
             bool m_sendGndToSim           = true;  //!< Send the gnd.flag to simulator
+            int  m_interpolatorMode       = static_cast<int>(Spline); //!< interpolator mode (spline, ...)
         };
 
         //! Value object for interpolator and rendering
@@ -184,6 +208,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
                 BLACK_METAMEMBER(enabledGndFlag),
+                BLACK_METAMEMBER(interpolatorMode),
                 BLACK_METAMEMBER(maxRenderedAircraft),
                 BLACK_METAMEMBER(maxRenderedDistance)
             );
@@ -241,7 +266,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(forceFullInterpolation),
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
-                BLACK_METAMEMBER(enabledGndFlag)
+                BLACK_METAMEMBER(enabledGndFlag),
+                BLACK_METAMEMBER(interpolatorMode)
             );
         };
     } // namespace
@@ -249,5 +275,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode)
 
 #endif // guard

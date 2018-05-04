@@ -106,22 +106,10 @@ namespace BlackSimPlugin
             return this->hasValidRequestId() && this->hasValidObjectId();
         }
 
-        void CSimConnectObject::toggleInterpolatorMode()
+        QString CSimConnectObject::getInterpolatorInfo(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
             Q_ASSERT(m_interpolator);
-            m_interpolator->toggleMode();
-        }
-
-        bool CSimConnectObject::setInterpolatorMode(CInterpolatorMulti::Mode mode)
-        {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->setMode(mode);
-        }
-
-        QString CSimConnectObject::getInterpolatorInfo() const
-        {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatorInfo();
+            return m_interpolator->getInterpolatorInfo(mode);
         }
 
         void CSimConnectObject::attachInterpolatorLogger(CInterpolationLogger *logger)
@@ -157,10 +145,10 @@ namespace BlackSimPlugin
             return m_interpolator->getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
         }
 
-        const CAircraftSituation &CSimConnectObject::getLastInterpolatedSituation() const
+        const CAircraftSituation &CSimConnectObject::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
             if (!m_interpolator) { return CAircraftSituation::null(); }
-            return m_interpolator->getLastInterpolatedSituation();
+            return m_interpolator->getLastInterpolatedSituation(mode);
         }
 
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts)
@@ -323,30 +311,6 @@ namespace BlackSimPlugin
                 if (simObject.getType() == type) { return true; }
             }
             return false;
-        }
-
-        void CSimConnectObjects::toggleInterpolatorModes()
-        {
-            for (const CCallsign &cs : this->keys())
-            {
-                (*this)[cs].toggleInterpolatorMode();
-            }
-        }
-
-        void CSimConnectObjects::toggleInterpolatorMode(const CCallsign &callsign)
-        {
-            if (!this->contains(callsign)) { return; }
-            (*this)[callsign].toggleInterpolatorMode();
-        }
-
-        int CSimConnectObjects::setInterpolatorModes(CInterpolatorMulti::Mode mode)
-        {
-            int c = 0;
-            for (const CCallsign &cs : this->keys())
-            {
-                if ((*this)[cs].setInterpolatorMode(mode)) c++;
-            }
-            return c;
         }
     } // namespace
 } // namespace

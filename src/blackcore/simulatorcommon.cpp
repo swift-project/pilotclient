@@ -477,10 +477,23 @@ namespace BlackCore
 
         if (part1.startsWith("spline") || part1.startsWith("linear"))
         {
-            const CCallsign cs(parser.hasPart(2) ? parser.part(2) : "");
-            const bool changed = this->setInterpolatorMode(CInterpolatorMulti::modeFromString(part1), cs);
-            CLogMessage(this).info(changed ? "Changed interpolation mode" : "Unchanged interpolation mode");
-            return true;
+            if (parser.hasPart(2))
+            {
+                const CCallsign cs(parser.part(2));
+                CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(cs);
+                const bool changed = setup.setInterpolatorMode(part1);
+                if (changed) { this->setInterpolationSetupPerCallsign(setup, cs); }
+                CLogMessage(this).info(changed ? "Changed interpolation mode for '%1'" : "Unchanged interpolation mode for '%1'") << cs.asString();
+                return true;
+            }
+            else
+            {
+                CInterpolationAndRenderingSetupGlobal setup = this->getInterpolationSetupGlobal();
+                const bool changed = setup.setInterpolatorMode(part1);
+                if (changed) { this->setInterpolationAndRenderingSetup(setup); }
+                CLogMessage(this).info(changed ? "Changed interpolation mode globally" : "Unchanged interpolation mode");
+                return true;
+            }
         } // spline/linear
 
         if (part1.startsWith("pos"))

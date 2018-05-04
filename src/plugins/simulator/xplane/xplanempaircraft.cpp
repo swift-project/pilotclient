@@ -36,22 +36,10 @@ namespace BlackSimPlugin
             return m_situationAsSent == position;
         }
 
-        void CXPlaneMPAircraft::toggleInterpolatorMode()
+        QString CXPlaneMPAircraft::getInterpolatorInfo(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
             Q_ASSERT(m_interpolator);
-            m_interpolator->toggleMode();
-        }
-
-        bool CXPlaneMPAircraft::setInterpolatorMode(CInterpolatorMulti::Mode mode)
-        {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->setMode(mode);
-        }
-
-        QString CXPlaneMPAircraft::getInterpolatorInfo() const
-        {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatorInfo();
+            return m_interpolator->getInterpolatorInfo(mode);
         }
 
         void CXPlaneMPAircraft::attachInterpolatorLogger(CInterpolationLogger *logger)
@@ -90,16 +78,6 @@ namespace BlackSimPlugin
         CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const
         {
             return CCallsignSet(this->keys());
-        }
-
-        int CXPlaneMPAircraftObjects::setInterpolatorModes(CInterpolatorMulti::Mode mode)
-        {
-            int c = 0;
-            for (const CCallsign &cs : this->keys())
-            {
-                if ((*this)[cs].setInterpolatorMode(mode)) c++;
-            }
-            return c;
         }
     } // namespace
 } // namespace

@@ -242,21 +242,6 @@ namespace BlackSimPlugin
             return CCallsignSet(m_simConnectObjects.keys());
         }
 
-        bool CSimulatorFsxCommon::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
-        {
-            if (mode == CInterpolatorMulti::ModeUnknown) { return false; }
-            if (callsign.isEmpty())
-            {
-                const int c = m_simConnectObjects.setInterpolatorModes(mode);
-                return c > 0;
-            }
-            else
-            {
-                if (!m_simConnectObjects.contains(callsign)) { return false; }
-                return m_simConnectObjects[callsign].setInterpolatorMode(mode);
-            }
-        }
-
         CStatusMessageList CSimulatorFsxCommon::debugVerifyStateAfterAllAircraftRemoved() const
         {
             CStatusMessageList msgs;
@@ -539,7 +524,8 @@ namespace BlackSimPlugin
 
             // CElevationPlane: deg, deg, feet
             // we only remember near ground
-            if (simObject.getLastInterpolatedSituation().canLikelySkipNearGroundInterpolation()) { return; }
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(simObject.getCallsign());
+            if (simObject.getLastInterpolatedSituation(setup.getInterpolatorMode()).canLikelySkipNearGroundInterpolation()) { return; }
 
             CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt);
             elevation.setSinglePointRadius();
@@ -763,10 +749,11 @@ namespace BlackSimPlugin
                 CStatusMessage msg;
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
+                    const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
                     m_addPendingAircraft.replaceOrAddByCallsign(simObject.getAircraft());
                     msg = CLogMessage(this).warning("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble or other reason. Interpolator: '%4'")
                           << callsign.toQString() << simObject.getAircraftModelString()
-                          << objectID << simObject.getInterpolatorInfo();
+                          << objectID << simObject.getInterpolatorInfo(setup.getInterpolatorMode());
                 }
                 else
                 {

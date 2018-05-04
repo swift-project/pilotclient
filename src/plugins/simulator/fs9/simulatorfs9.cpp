@@ -279,16 +279,6 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
-        bool CSimulatorFs9::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
-        {
-            const auto it = m_hashFs9Clients.find(callsign);
-            if (it == m_hashFs9Clients.end()) { return false; }
-            QTimer::singleShot(0, it->data(), [client = *it, mode] { client->getInterpolator()->setMode(mode); });
-            // Always return true if we were setting the mode, since we cannot easily access the return value from
-            // CInterpolatorMulti::setMode in a thread safe manner.
-            return true;
-        }
-
         bool CSimulatorFs9::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
             return m_hashFs9Clients.contains(callsign);

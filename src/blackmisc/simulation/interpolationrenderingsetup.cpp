@@ -41,7 +41,34 @@ namespace BlackMisc
         void CInterpolationAndRenderingSetupBase::consolidateWithClient(const CClient &client)
         {
             m_enabledAircraftParts &= client.hasAircraftPartsCapability();
-            // m_enabledGndFlag &= client.hasGndFlagCapability();
+        }
+
+        bool CInterpolationAndRenderingSetupBase::setInterpolatorMode(CInterpolationAndRenderingSetupBase::InterpolatorMode mode)
+        {
+            const int m = static_cast<int>(mode);
+            if (m_interpolatorMode == m) { return false; }
+            m_interpolatorMode = m;
+            return true;
+        }
+
+        bool CInterpolationAndRenderingSetupBase::setInterpolatorMode(const QString &mode)
+        {
+            if (mode.contains("spline", Qt::CaseInsensitive)) { return this->setInterpolatorMode(Spline); }
+            if (mode.contains("linear", Qt::CaseInsensitive)) { return this->setInterpolatorMode(Linear); }
+            return false;
+        }
+
+        const QString &CInterpolationAndRenderingSetupBase::modeToString(InterpolatorMode mode)
+        {
+            static const QString l("linear");
+            static const QString s("spline");
+
+            switch (mode)
+            {
+            case Linear: return l;
+            case Spline: return s;
+            default: return s;
+            }
         }
 
         bool CInterpolationAndRenderingSetupBase::setEnabledAircraftParts(bool enabled)
@@ -94,7 +121,8 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             return
-                QStringLiteral("Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
+                QStringLiteral("Interpolator: ") % this->getInterpolatorModeAsString() %
+                QStringLiteral(" | Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
                 QStringLiteral(" | log interpolation: ") % boolToYesNo(m_logInterpolation) %
                 QStringLiteral(" | force full interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
                 QStringLiteral(" | enable parts: ") % boolToYesNo(m_enabledAircraftParts) %

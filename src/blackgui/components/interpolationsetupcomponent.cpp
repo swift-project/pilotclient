@@ -14,6 +14,7 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/interpolationsetuplist.h"
 #include "blackmisc/statusmessage.h"
+#include <QPointer>
 
 using namespace BlackGui::Views;
 using namespace BlackMisc;
@@ -41,7 +42,13 @@ namespace BlackGui
             connect(ui->rb_Global, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
 
             ui->rb_Global->setChecked(true);
-            QTimer::singleShot(250, this, &CInterpolationSetupComponent::onModeChanged);
+
+            QPointer<CInterpolationSetupComponent> myself(this);
+            QTimer::singleShot(250, this, [ = ]
+            {
+                if (myself.isNull()) { return; }
+                this->onModeChanged();
+            });
         }
 
         CInterpolationSetupComponent::~CInterpolationSetupComponent()
@@ -118,7 +125,13 @@ namespace BlackGui
             if (removed < 1) { return; } // nothing done
             const bool set = this->setSetupsToContext(setups);
             if (!set) { return; }
-            QTimer::singleShot(100, this, &CInterpolationSetupComponent::displaySetupsPerCallsign);
+
+            QPointer<CInterpolationSetupComponent> myself(this);
+            QTimer::singleShot(100, this, [ = ]
+            {
+                if (myself.isNull()) { return; }
+                this->displaySetupsPerCallsign();
+            });
         }
 
         void CInterpolationSetupComponent::setUiValuesFromGlobal()
@@ -137,7 +150,7 @@ namespace BlackGui
 
         bool CInterpolationSetupComponent::checkPrerequisites()
         {
-            if (!sGui || !sGui->getIContextSimulator())
+            if (!sGui || !sGui->getIContextSimulator() || sGui->isShuttingDown())
             {
                 const CStatusMessage m = CStatusMessage(this).validationError("No context");
                 this->showOverlayMessage(m);
@@ -154,7 +167,7 @@ namespace BlackGui
 
         bool CInterpolationSetupComponent::setSetupsToContext(const CInterpolationSetupList &setups)
         {
-            if (!sGui || !sGui->getIContextSimulator()) { return false; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return false; }
             if (setups == m_lastSetSetups) { return false; }
             sGui->getIContextSimulator()->setInterpolationAndRenderingSetupsPerCallsign(setups);
             m_lastSetSetups = setups;

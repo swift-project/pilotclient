@@ -58,6 +58,9 @@ namespace BlackGui
 
             //! Checkbox has been changed
             void onCheckboxChanged(int state);
+
+            //! Interpolator mode
+            void onInterpolatorModeChanged(const QString &mode);
         };
     } // ns
 } // ns

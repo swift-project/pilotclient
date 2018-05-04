@@ -163,11 +163,8 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::CInterpolatorMulti::toggleMode
             void toggleInterpolatorMode();
 
-            //! \copydoc BlackMisc::Simulation::CInterpolatorMulti::setMode
-            bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode);
-
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
-            QString getInterpolatorInfo() const;
+            QString getInterpolatorInfo(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::attachLogger
             void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger);
@@ -191,7 +188,7 @@ namespace BlackSimPlugin
                 BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;
 
             //! Last interpolated situation
-            const BlackMisc::Aviation::CAircraftSituation &getLastInterpolatedSituation() const;
+            const BlackMisc::Aviation::CAircraftSituation &getLastInterpolatedSituation(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
             //! Interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
@@ -274,15 +271,6 @@ namespace BlackSimPlugin
 
             //! Contains object of type
             bool containsType(CSimConnectObject::SimObjectType type) const;
-
-            //! Toggle interpolator modes
-            void toggleInterpolatorModes();
-
-            //! Toggle interpolator modes
-            void toggleInterpolatorMode(const BlackMisc::Aviation::CCallsign &callsign);
-
-            //! Set interpolator modes
-            int setInterpolatorModes(BlackMisc::Simulation::CInterpolatorMulti::Mode mode);
         };
     } // namespace
 } // namespace

@@ -369,23 +369,6 @@ namespace BlackSimPlugin
             return false;
         }
 
-        bool CSimulatorXPlane::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
-        {
-            if (!isConnected()) { return false; }
-
-            if (mode == CInterpolatorMulti::ModeUnknown) { return false; }
-            if (callsign.isEmpty())
-            {
-                const int c = m_xplaneAircraftObjects.setInterpolatorModes(mode);
-                return c > 0;
-            }
-            else
-            {
-                if (!m_xplaneAircraftObjects.contains(callsign)) { return false; }
-                return m_xplaneAircraftObjects[callsign].setInterpolatorMode(mode);
-            }
-        }
-
         QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
         {
             if (str == CDBusServer::sessionBusAddress()) { return QDBusConnection::sessionBus(); }

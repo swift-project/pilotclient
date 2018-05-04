@@ -70,14 +70,8 @@ namespace BlackSimPlugin
             //! Engine count
             int getEngineCount() const { return m_aircraft.getEnginesCount(); }
 
-            //! \copydoc BlackMisc::Simulation::CInterpolatorMulti::toggleMode
-            void toggleInterpolatorMode();
-
-            //! \copydoc BlackMisc::Simulation::CInterpolatorMulti::setMode
-            bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode);
-
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
-            QString getInterpolatorInfo() const;
+            QString getInterpolatorInfo(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::attachLogger
             void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger);
@@ -128,9 +122,6 @@ namespace BlackSimPlugin
 
             //! Toggle interpolator modes
             void toggleInterpolatorMode(const BlackMisc::Aviation::CCallsign &callsign);
-
-            //! Set interpolator modes
-            int setInterpolatorModes(BlackMisc::Simulation::CInterpolatorMulti::Mode mode);
         };
     } // namespace
 } // namespace
