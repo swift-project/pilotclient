@@ -30,12 +30,12 @@ namespace BlackMisc
         //! Log entry for situation interpolation
         struct BLACKMISC_EXPORT SituationLog
         {
-            QChar interpolator;          //!< what interpolator is used
-            qint64 tsCurrent = -1;       //!< current timestamp
-            qint64 tsInterpolated = -1;  //!< timestamp interpolated
-            double groundFactor = -1;    //!< current ground factor
-            double vtolAircraft = false; //!< VTOL aircraft
-            double simTimeFraction = -1; //!< time fraction, expected 0..1
+            QChar interpolator;             //!< what interpolator is used
+            qint64 tsCurrent = -1;          //!< current timestamp
+            qint64 tsInterpolated = -1;     //!< timestamp interpolated
+            double groundFactor = -1;       //!< current ground factor
+            double vtolAircraft = false;    //!< VTOL aircraft
+            double simTimeFraction = -1;    //!< time fraction, expected 0..1
             double deltaSampleTimesMs = -1; //!< delta time between samples (i.e. 2 situations)
             bool useParts = false;          //!< supporting aircraft parts
             int noNetworkSituations = 0;    //!< available network situations
@@ -46,7 +46,8 @@ namespace BlackMisc
             Aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (oldest at end)
             Aviation::CAircraftSituation situationCurrent; //!< interpolated situation
             Aviation::CAircraftSituationChange change;     //!< change
-            PhysicalQuantities::CLength cgAboveGround;     //!< center of gravity
+            PhysicalQuantities::CLength cgAboveGround = PhysicalQuantities::CLength::null(); //!< center of gravity (CG)
+            PhysicalQuantities::CLength sceneryOffset = PhysicalQuantities::CLength::null(); //!< scenery offset
             CInterpolationAndRenderingSetupPerCallsign usedSetup; //!< used setup
 
             //! Delta time between interpolation and current time
