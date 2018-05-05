@@ -1,0 +1,49 @@
+/* Copyright (C) 2018
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKMISC_SIMULATION_INTERPOLANT_H
+#define BLACKMISC_SIMULATION_INTERPOLANT_H
+
+#include "interpolatorpbh.h"
+
+namespace BlackMisc
+{
+    namespace Simulation
+    {
+        class IInterpolant
+        {
+        public:
+            //! "Real time" representing the interpolated situation
+            qint64 getInterpolatedTime() const { return m_interpolatedTime; }
+
+            //! Interpolator for pitch, bank, heading, groundspeed
+            const CInterpolatorPbh &pbh() const { return m_pbh; }
+
+            //! Situations available
+            int getSituationsAvailable() const { return m_situationsAvailable; }
+
+        protected:
+            //! Default ctor
+            IInterpolant() {}
+
+            //! Constructor
+            IInterpolant(int situationsAvailable, const CInterpolatorPbh &pbh) : m_situationsAvailable(situationsAvailable), m_pbh(pbh) {}
+
+            //! Constructor
+            IInterpolant(qint64 interpolatedTime, int situationsAvailable) : m_interpolatedTime(interpolatedTime), m_situationsAvailable(situationsAvailable) {}
+
+            qint64 m_interpolatedTime = -1; //!< "Real time "of interpolated situation
+            int m_situationsAvailable = 0; //!< used situations
+            CInterpolatorPbh m_pbh; //!< the used PBH interpolator
+        };
+    } // namespace
+} // namespace
+#endif // guard
