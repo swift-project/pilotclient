@@ -107,15 +107,29 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setInterpolatorMode"), callsign, spline);
         }
 
-        void CXSwiftBusTrafficProxy::requestRemoteAircraftData()
+        void CXSwiftBusTrafficProxy::getRemoteAircraftsData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter)
         {
-            m_dbusInterface->callDBus(QLatin1String("requestRemoteAircraftData"));
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
+            {
+                QDBusPendingReply<QStringList, QList<double>, QList<double>, QList<double>, QList<double>> reply = *watcher;
+                if (!reply.isError())
+                {
+                    QStringList callsigns = reply.argumentAt<0>();
+                    QList<double> latitudesDeg = reply.argumentAt<1>();
+                    QList<double> longitudesDeg = reply.argumentAt<2>();
+                    QList<double> elevationsM = reply.argumentAt<3>();
+                    QList<double> verticalOffsets = reply.argumentAt<4>();
+                    setter(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                }
+                watcher->deleteLater();
+            };
+            m_dbusInterface->callDBusAsync(QLatin1String("getRemoteAircraftsData"), callback, callsigns);
         }
 
         void CXSwiftBusTrafficProxy::getEelevationAtPosition(const CCallsign &callsign, double latitude, double longitude, double altitude,
-                                                             const ElevationCallback &setter)
+                const ElevationCallback &setter)
         {
-            std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher * watcher)
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
                 QDBusPendingReply<QString, double> reply = *watcher;
                 if (!reply.isError())

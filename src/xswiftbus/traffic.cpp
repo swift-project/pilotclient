@@ -111,18 +111,6 @@ namespace XSwiftBus
         m_emitSimFrame = !m_emitSimFrame;
     }
 
-    void CTraffic::emitRemoteAircraftData(const std::string &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset)
-    {
-        CDBusMessage signalRemoteAircraftData = CDBusMessage::createSignal(XSWIFTBUS_TRAFFIC_OBJECTPATH, XSWIFTBUS_TRAFFIC_INTERFACENAME, "remoteAircraftData");
-        signalRemoteAircraftData.beginArgumentWrite();
-        signalRemoteAircraftData.appendArgument(callsign);
-        signalRemoteAircraftData.appendArgument(latitude);
-        signalRemoteAircraftData.appendArgument(longitude);
-        signalRemoteAircraftData.appendArgument(elevation);
-        signalRemoteAircraftData.appendArgument(modelVerticalOffset);
-        sendDBusMessage(signalRemoteAircraftData);
-    }
-
     void CTraffic::emitPlaneAdded(const std::string &callsign)
     {
         CDBusMessage signalPlaneAdded = CDBusMessage::createSignal(XSWIFTBUS_TRAFFIC_OBJECTPATH, XSWIFTBUS_TRAFFIC_INTERFACENAME, "remoteAircraftAdded");
@@ -353,22 +341,38 @@ namespace XSwiftBus
         else { plane->xpdr.mode = xpmpTransponderMode_Standby; }
     }
 
-    void CTraffic::requestRemoteAircraftData()
+    void CTraffic::getRemoteAircraftsData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
+                                          std::vector<double> &elevationsM, std::vector<double> &verticalOffsets)
     {
-        if (m_planesByCallsign.empty()) { return; }
-        for (const auto &kv : m_planesByCallsign)
+        if (callsigns.empty() || m_planesByCallsign.empty()) { return; }
+
+        const auto requestedCallsigns = callsigns;
+        callsigns.clear();
+        latitudesDeg.clear();
+        longitudesDeg.clear();
+        elevationsM.clear();
+        verticalOffsets.clear();
+
+        for (const auto &requestedCallsign : requestedCallsigns)
         {
-            Plane *plane = kv.second;
+            auto planeIt = m_planesByCallsign.find(requestedCallsign);
+            if (planeIt == m_planesByCallsign.end()) { continue; }
+
+            Plane *plane = planeIt->second;
             assert(plane);
+
             double lat = plane->position.lat;
             double lon = plane->position.lon;
-            double elevation = plane->position.elevation;
-            double groundElevation = plane->terrainProbe.getElevation(lat, lon, elevation);
+            double groundElevation = plane->terrainProbe.getElevation(lat, lon, plane->position.elevation);
             if (std::isnan(groundElevation)) { groundElevation = 0.0; }
             double fudgeFactor = 3.0;
             XPMPGetVerticalOffset(plane->id, &fudgeFactor);
-            // actualVertOffsetInfo(plane->modelName.c_str(), nullptr, &fudgeFactor);
-            emitRemoteAircraftData(plane->callsign, lat, lon, groundElevation, fudgeFactor);
+
+            callsigns.push_back(requestedCallsign);
+            latitudesDeg.push_back(lat);
+            longitudesDeg.push_back(lon);
+            elevationsM.push_back(groundElevation);
+            verticalOffsets.push_back(fudgeFactor);
         }
     }
 
@@ -605,12 +609,27 @@ namespace XSwiftBus
                     setPlaneTransponder(callsign, code, modeC, ident);
                 });
             }
-            else if (message.getMethodName() == "requestRemoteAircraftData")
+            else if (message.getMethodName() == "getRemoteAircraftsData")
             {
-                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::vector<std::string> requestedcallsigns;
+                message.beginArgumentRead();
+                message.getArgument(requestedcallsigns);
                 queueDBusCall([ = ]()
                 {
-                    requestRemoteAircraftData();
+                    std::vector<std::string> callsigns = requestedcallsigns;
+                    std::vector<double> latitudesDeg;
+                    std::vector<double> longitudesDeg;
+                    std::vector<double> elevationsM;
+                    std::vector<double> verticalOffsets;
+                    getRemoteAircraftsData(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                    CDBusMessage reply = CDBusMessage::createReply(sender, serial);
+                    reply.beginArgumentWrite();
+                    reply.appendArgument(callsigns);
+                    reply.appendArgument(latitudesDeg);
+                    reply.appendArgument(longitudesDeg);
+                    reply.appendArgument(elevationsM);
+                    reply.appendArgument(verticalOffsets);
+                    sendDBusMessage(reply);
                 });
             }
             else if (message.getMethodName() == "getEelevationAtPosition")

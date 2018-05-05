@@ -39,7 +39,14 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
+            //! List of doubles
+            using QDoubleList = QList<double>;
+
+            //! Elevation callback
             using ElevationCallback = std::function<void (const BlackMisc::Geo::CElevationPlane &, const BlackMisc::Aviation::CCallsign &)>;
+
+            //! Remote aircrafts data callback
+            using RemoteAircraftDataCallback = std::function<void (const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &, const QDoubleList &)>;
 
             //! Service name
             static const QString &InterfaceName()
@@ -65,10 +72,6 @@ namespace BlackSimPlugin
             //! Simulator frame
             //! \remark from simulator to driver
             void simFrame();
-
-            //! Remote aircraft data
-            //! \remark from simulator to driver for elevation and CG
-            void remoteAircraftData(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
 
             //! Remote aircraft successfully added
             void remoteAircraftAdded(const QString &callsign);
@@ -126,8 +129,8 @@ namespace BlackSimPlugin
             //! \deprecated XSwiftBus::CTraffic::setInterpolatorMode
             void setInterpolatorMode(const QString &callsign, bool spline);
 
-            //! \copydoc XSwiftBus::CTraffic::requestRemoteAircraftData
-            void requestRemoteAircraftData();
+            //! \copydoc XSwiftBus::CTraffic::getRemoteAircraftsData
+            void getRemoteAircraftsData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter);
 
             //! \copydoc XSwiftBus::CTraffic::getEelevationAtPosition
             void getEelevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitude, double longitude, double altitude,

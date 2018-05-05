@@ -261,7 +261,6 @@ namespace BlackSimPlugin
                 connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
                 m_serviceProxy->updateAirportsInRange();
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
-                connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftData, this, &CSimulatorXPlane::updateRemoteAircraftFromSimulator);
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorXPlane::remoteAircraftAdded);
                 connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorXPlane::remoteAircraftAddingFailed);
                 if (m_watcher) { m_watcher->setConnection(m_conn); }
@@ -805,19 +804,31 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()
         {
             if (!isConnected()) { return; }
-            m_trafficProxy->requestRemoteAircraftData();
+            m_trafficProxy->getRemoteAircraftsData(m_xplaneAircraftObjects.getAllCallsignStrings(), [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsM, const QDoubleList & verticalOffsets)
+            {
+                updateRemoteAircraftsFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+            });
         }
 
-        void CSimulatorXPlane::updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters)
+        void CSimulatorXPlane::updateRemoteAircraftsFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
+                const QDoubleList &elevationsM, const QDoubleList &verticalOffsets)
         {
-            // we skip if we are not near ground
-            const CCallsign cs(callsign);
-            if (!m_xplaneAircraftObjects.contains(cs)) { return; }
-            if (m_xplaneAircraftObjects[cs].getSituationAsSent().canLikelySkipNearGroundInterpolation()) { return; }
+            for (int i = 0; i < callsigns.size(); i++)
+            {
+                const CCallsign cs(callsigns[i]);
+                if (!m_xplaneAircraftObjects.contains(cs)) { continue; }
 
-            CElevationPlane elevation(CLatitude(latitudeDeg, CAngleUnit::deg()), CLongitude(longitudeDeg, CAngleUnit::deg()), CAltitude(elevationMeters, CLengthUnit::m()));
-            elevation.setSinglePointRadius();
-            this->rememberElevationAndCG(callsign, elevation, CLength(modelVerticalOffsetMeters, CLengthUnit::m()));
+                // we skip if we are not near ground
+                if (m_xplaneAircraftObjects[cs].getSituationAsSent().canLikelySkipNearGroundInterpolation()) { continue; }
+
+                CAltitude elevationAlt(elevationsM[i], CLengthUnit::m());
+                elevationAlt.switchUnit(CLengthUnit::ft());
+                CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt);
+                elevation.setSinglePointRadius();
+                CLength cg(verticalOffsets[i], CLengthUnit::m());
+                cg.switchUnit(CLengthUnit::ft());
+                this->rememberElevationAndCG(callsigns[i], elevation, cg);
+            }
         }
 
         void CSimulatorXPlane::updateAirportsInRange()

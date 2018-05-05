@@ -107,8 +107,9 @@ namespace XSwiftBus
         //! Set the transponder of a traffic aircraft
         void setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident);
 
-        //! Request traffic plane data. A signal remoteAircraftData will be emitted for each known plane
-        void requestRemoteAircraftData();
+        //! Get remote aircrafts data (lat, lon, elevation and CG)
+        void getRemoteAircraftsData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
+									std::vector<double> &elevationsM, std::vector<double> &verticalOffsets);
 
         //! Get the ground elevation at an arbitrary position
         double getEelevationAtPosition(const std::string &callsign, double latitude, double longitude, double altitude);
@@ -124,7 +125,6 @@ namespace XSwiftBus
         CTerrainProbe m_terrainProbe;
 
         void emitSimFrame();
-        void emitRemoteAircraftData(const std::string &callsign, double latitude, double longitude, double elevation, double modelVerticalOffset);
         void emitPlaneAdded(const std::string &callsign);
         void emitPlaneAddingFailed(const std::string &callsign);
         void orbitRemotePlane(const std::string &callsign);

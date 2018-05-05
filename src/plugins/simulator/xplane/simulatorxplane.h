@@ -164,6 +164,8 @@ namespace BlackSimPlugin
             //! @}
 
         private:
+            using QDoubleList = QList<double>;
+
             void serviceUnregistered();
             void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
             void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
@@ -179,7 +181,8 @@ namespace BlackSimPlugin
             void updateRemoteAircraft();
 
             void requestRemoteAircraftDataFromXPlane();
-            void updateRemoteAircraftFromSimulator(const QString &callsign, double latitudeDeg, double longitudeDeg, double elevationMeters, double modelVerticalOffsetMeters);
+            void updateRemoteAircraftsFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
+                                                    const QDoubleList &elevationsM, const QDoubleList &verticalOffsets);
             void updateAirportsInRange();
             void remoteAircraftAdded(const QString &callsign);
             void remoteAircraftAddingFailed(const QString &callsign);

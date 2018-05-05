@@ -58,5 +58,10 @@ namespace BlackSimPlugin
         {
             return CCallsignSet(this->keys());
         }
+
+        QStringList CXPlaneMPAircraftObjects::getAllCallsignStrings(bool sorted) const
+        {
+            return this->getAllCallsigns().getCallsignStrings(sorted);
+        }
     } // namespace
 } // namespace
