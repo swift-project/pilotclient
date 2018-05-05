@@ -330,29 +330,26 @@ namespace BlackMisc
             // not on ground is default
             this->setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
 
-            // guess some values we use for guessing
             CLength cg = m_cg.isNull() ? model.getCG() : m_cg;
-            CSpeed guessedLiftOffSpeed;
-            CSpeed sureLiftOffSpeed = CSpeed(130, CSpeedUnit::kts());
-            model.getAircraftIcaoCode().guessModelParameters(cg, guessedLiftOffSpeed);
-            if (!guessedLiftOffSpeed.isNull())
+            CSpeed guessedRotateSpeed = CSpeed::null();
+            CSpeed sureRotateSpeed = CSpeed(130, CSpeedUnit::kts());
+            model.getAircraftIcaoCode().guessModelParameters(cg, guessedRotateSpeed);
+            if (!guessedRotateSpeed.isNull())
             {
                 // does the value make any sense?
-                const bool validGuessedSpeed = guessedLiftOffSpeed.value(CSpeedUnit::km_h()) > 5.0;
+                const bool validGuessedSpeed = (guessedRotateSpeed.value(CSpeedUnit::km_h()) > 5.0);
                 BLACK_VERIFY_X(validGuessedSpeed, Q_FUNC_INFO, "Wrong guessed value for lift off");
-                if (!validGuessedSpeed) { guessedLiftOffSpeed = CSpeed(80, CSpeedUnit::kts()); } // fix
-                sureLiftOffSpeed = guessedLiftOffSpeed * 1.25;
+                if (!validGuessedSpeed) { guessedRotateSpeed = CSpeed(80, CSpeedUnit::kts()); } // fix
+                sureRotateSpeed = guessedRotateSpeed * 1.25;
             }
 
             // "extreme" values for which we are surely not on ground
             if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 20)  { if (details) { *details = QStringLiteral("max.pitch"); }; return true; } // some tail wheel aircraft already have 11° pitch on ground
             if (qAbs(this->getBank().value(CAngleUnit::deg()))  > 10)  { if (details) { *details = QStringLiteral("max.bank"); }; return true; }
-            if (this->getGroundSpeed() > sureLiftOffSpeed) { if (details) { *details = QStringLiteral("max.gs. > ") % sureLiftOffSpeed.valueRoundedWithUnit(1); }; return true; }
-
+            if (this->getGroundSpeed() > sureRotateSpeed) { if (details) { *details = QStringLiteral("gs. > vr ") % sureRotateSpeed.valueRoundedWithUnit(1); }; return true; }
 
             // use the most accurate or reliable guesses here first
             // ------------------------------------------------------
-
             // by elevation
             // we can detect "on ground" (underflow, near ground), but not "not on ground" because of overflow
 
@@ -399,13 +396,14 @@ namespace BlackMisc
             }
 
             // guessed speed null -> vtol
-            if (!guessedLiftOffSpeed.isNull())
+            if (!guessedRotateSpeed.isNull())
             {
                 // does the value make any sense?
-                if (this->getGroundSpeed() < guessedLiftOffSpeed)
+                if (this->getGroundSpeed() < guessedRotateSpeed)
                 {
                     this->setOnGround(OnGround, CAircraftSituation::OnGroundByGuessing);
-                    if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedLiftOffSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); }; return true;
+                    if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedRotateSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); };
+                    return true;
                 }
             }
 
