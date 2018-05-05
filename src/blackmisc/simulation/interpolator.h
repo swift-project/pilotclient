@@ -134,36 +134,6 @@ namespace BlackMisc
             const Derived *derived() const { return static_cast<const Derived *>(this); }
         };
 
-        //! Simple interpolator for pitch, bank, heading, groundspeed
-        class BLACKMISC_EXPORT CInterpolatorPbh
-        {
-        public:
-            //! Constructor
-            //! @{
-            CInterpolatorPbh() {}
-            CInterpolatorPbh(const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) : m_oldSituation(older), m_newSituation(newer) {}
-            CInterpolatorPbh(double time, const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) : m_simulationTimeFraction(time), m_oldSituation(older), m_newSituation(newer) {}
-            //! @}
-
-            //! Getter
-            //! @{
-            Aviation::CHeading getHeading() const;
-            PhysicalQuantities::CAngle getPitch() const;
-            PhysicalQuantities::CAngle getBank() const;
-            PhysicalQuantities::CSpeed getGroundSpeed() const;
-            const Aviation::CAircraftSituation &getOldSituation() const { return m_oldSituation; }
-            const Aviation::CAircraftSituation &getNewSituation() const { return m_newSituation; }
-            //! @}
-
-            //! Change time fraction
-            void setTimeFraction(double tf) { m_simulationTimeFraction = tf; }
-
-        private:
-            double m_simulationTimeFraction = 0.0;
-            Aviation::CAircraftSituation m_oldSituation;
-            Aviation::CAircraftSituation m_newSituation;
-        };
-
         //! Status of interpolation
         struct BLACKMISC_EXPORT CInterpolationStatus
         {
