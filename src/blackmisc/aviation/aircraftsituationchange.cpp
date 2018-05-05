@@ -92,6 +92,11 @@ namespace BlackMisc
             return this->guessedSceneryDeviation() - cg;
         }
 
+        bool CAircraftSituationChange::hasSceneryDeviation() const
+        {
+            return !m_guessedSceneryDeviation.isNull();
+        }
+
         QString CAircraftSituationChange::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -102,15 +107,15 @@ namespace BlackMisc
                    QStringLiteral(" | situations:") % QString::number(m_situationsCount) %
                    QStringLiteral(" | ts adj.: ") % QString::number(m_oldestAdjustedTimestampMSecsSinceEpoch) % QStringLiteral("-") % QString::number(m_latestAdjustedTimestampMSecsSinceEpoch) %
                    QStringLiteral(" | just takeoff: ") % boolToYesNo(this->isJustTakingOff()) % QStringLiteral(" just touchdown: ") % boolToYesNo(this->isJustTouchingDown()) %
-                   QStringLiteral(" | all gnd: ") % boolToYesNo(this->isConstOnGround()) % QStringLiteral("/ ") % boolToYesNo(this->wasConstOnGround()) %
-                   QStringLiteral(" | all not gnd: ") % boolToYesNo(this->isConstNotOnGround()) % QStringLiteral("/ ") % boolToYesNo(this->wasConstNotOnGround()) %
+                   QStringLiteral(" | all gnd: ") % boolToYesNo(this->isConstOnGround()) % QStringLiteral("/") % boolToYesNo(this->wasConstOnGround()) %
+                   QStringLiteral(" | all not gnd: ") % boolToYesNo(this->isConstNotOnGround()) % QStringLiteral("/") % boolToYesNo(this->wasConstNotOnGround()) %
                    QStringLiteral(" | ascending: ") % boolToYesNo(this->isConstAscending()) % QStringLiteral(" descending: ") % boolToYesNo(this->isConstDescending()) %
                    QStringLiteral(" | accelerating.: ") % boolToYesNo(this->isConstAccelerating()) % QStringLiteral(" decelarating: ") % boolToYesNo(this->isConstDecelarating()) %
                    QStringLiteral(" | rotate up: ") % boolToYesNo(this->isRotatingUp()) %
                    QStringLiteral(" | push back: ") % boolToYesNo(this->containsPushBack()) %
-                   QStringLiteral(" | scenery delta: ") % m_guessedSceneryDeviation.valueRoundedWithUnit(1) %
-                   QStringLiteral(" | alt.delta: ") % m_altAglMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_altAglStdDev.valueRoundedWithUnit(1) %
-                   QStringLiteral(" | std.dev: pitch ") %  m_pitchMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_pitchStdDev.valueRoundedWithUnit(1) %
+                   QStringLiteral(" | scenery delta: ") % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % QStringLiteral(" [") % this->getGuessedSceneryDeviationAsString() %
+                   QStringLiteral("] | AGL delta: ") % m_altAglMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_altAglStdDev.valueRoundedWithUnit(1) %
+                   QStringLiteral(" | std.dev/mean: pitch ") %  m_pitchMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_pitchStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" gs ") % m_gsMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_gsStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" alt. ") % m_altMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_altStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" elv. ") % m_elvMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_elvStdDev.valueRoundedWithUnit(1);
@@ -164,21 +169,13 @@ namespace BlackMisc
         {
             if (situations.isEmpty()) { return false; }
 
-            const QList<double> gsValues = situations.groundSpeedValues(CSpeedUnit::kts());
-            if (gsValues.size() == situations.size())
-            {
-                const QPair<double, double> gsKts = CMathUtils::standardDeviationAndMean(gsValues);
-                m_gsStdDev = CSpeed(gsKts.first, CSpeedUnit::kts());
-                m_gsMean = CSpeed(gsKts.second, CSpeedUnit::kts());
-            }
+            const QPair<CSpeed, CSpeed> gsStdDevMean = situations.groundSpeedStandardDeviationAndMean();
+            m_gsStdDev = gsStdDevMean.first;
+            m_gsMean = gsStdDevMean.second;
 
-            const QList<double> pitchValues = situations.pitchValues(CAngleUnit::deg());
-            if (gsValues.size() == situations.size())
-            {
-                const QPair<double, double> pitchDeg = CMathUtils::standardDeviationAndMean(pitchValues);
-                m_pitchStdDev = CAngle(pitchDeg.first, CAngleUnit::deg());
-                m_pitchMean = CAngle(pitchDeg.second, CAngleUnit::deg());
-            }
+            const QPair<CAngle, CAngle> pitchStdDevMean = situations.pitchStandardDeviationAndMean();
+            m_pitchStdDev = pitchStdDevMean.first;
+            m_pitchMean = pitchStdDevMean.second;
 
             const QList<double> altValues = situations.altitudeValues(CLengthUnit::ft());
             if (altValues.size() == situations.size())
@@ -207,7 +204,7 @@ namespace BlackMisc
                     m_altAglStdDev = CLength(deltaFt.first, CLengthUnit::ft());
                     m_altAglMean = CLength(deltaFt.second, CLengthUnit::ft());
 
-                    this->guessSceneryDeviation();
+                    this->guessSceneryDeviation(situations);
                 }
             }
             return true;
@@ -219,7 +216,25 @@ namespace BlackMisc
             return null;
         }
 
-        void CAircraftSituationChange::guessSceneryDeviation()
+        const QString &CAircraftSituationChange::guessedSceneryDeviationToString(GuessedSceneryDeviation hint)
+        {
+            static const QString noInfo("no info");
+            static const QString completeOg("complete og");
+            static const QString wasOg("was og");
+            static const QString someOg("some og");
+
+            switch (hint)
+            {
+            case AllOnGround: return completeOg;
+            case WasOnGround: return wasOg;
+            case SomeSituationsOnGround: return someOg;
+            case NoDeviationInfo:
+            default: break;
+            }
+            return noInfo;
+        }
+
+        void CAircraftSituationChange::guessSceneryDeviation(const CAircraftSituationList &situations)
         {
             m_guessedSceneryDeviation = CLength::null();
             if (m_altAglStdDev.isNull()) { return; }
@@ -228,15 +243,23 @@ namespace BlackMisc
             // only for a small deviation we can calculate scenery differemce
             static const CLength maxDeviation(2, CLengthUnit::ft());
 
-            // Only on ground
+            // On ground or was on ground
             if (this->wasConstOnGround())
             {
                 if (m_altAglStdDev > maxDeviation) { return; }
                 m_guessedSceneryDeviation = m_altAglMean;
+                this->setSceneryDeviationHint(this->isConstOnGround() ? AllOnGround : WasOnGround);
             }
-            else if (this->wasConstOnGround())
+            else
             {
-
+                const CAircraftSituationList situationsOg = situations.findOnGroundWithElevation(CAircraftSituation::OnGround);
+                if (situationsOg.size() >= 2)
+                {
+                    const QPair<CAltitude, CAltitude> altAgl = situationsOg.altitudeAglStandardDeviationAndMean();
+                    if (altAgl.first > maxDeviation) { return; } // deviation
+                    m_guessedSceneryDeviation = altAgl.second; // AGL mean;
+                    this->setSceneryDeviationHint(SomeSituationsOnGround);
+                }
             }
         }
     } // namespace

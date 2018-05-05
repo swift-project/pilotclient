@@ -53,6 +53,15 @@ namespace BlackMisc
                 IndexContainsPushBack
             };
 
+            //! Hint about the guessed scenery deviation
+            enum GuessedSceneryDeviation
+            {
+                NoDeviationInfo,
+                AllOnGround, //!< based on all situations on ground
+                WasOnGround, //!< was on ground except last situation
+                SomeSituationsOnGround //!< some situations on ground
+            };
+
             //! Default constructor.
             CAircraftSituationChange();
 
@@ -111,16 +120,16 @@ namespace BlackMisc
             //! \note distance is without CG, so on ground it can also be used to calculate
             QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength> getAltAglStdDevAndMean() const { return QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength>(m_altAglStdDev, m_altAglMean); }
 
-            //! Altitude values
+            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::altitudeStandardDeviationAndMean
             QPair<CAltitude, CAltitude> getAltitudeStdDevAndMean() const { return QPair<CAltitude, CAltitude>(m_altStdDev, m_altMean); }
 
-            //! Elevation values
+            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::elevationStandardDeviationAndMean
             QPair<CAltitude, CAltitude> getElevationStdDevAndMean() const { return QPair<CAltitude, CAltitude>(m_elvStdDev, m_elvMean); }
 
-            //! Ground speed values
+            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::groundSpeedStandardDeviationAndMean
             QPair<PhysicalQuantities::CSpeed, PhysicalQuantities::CSpeed> getGroundSpeedStdDevAndMean() const { return QPair<PhysicalQuantities::CSpeed, PhysicalQuantities::CSpeed>(m_gsStdDev, m_gsMean); }
 
-            //! Pitch values
+            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::pitchStandardDeviationAndMean
             QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle> getPitchStdDevAndMean() const { return QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle>(m_pitchStdDev, m_pitchMean); }
 
             //! Scnenery deviation (if it can be calculated, otherwise PhysicalQuantities::CLength::null)
@@ -129,6 +138,15 @@ namespace BlackMisc
 
             //! Get scenery deviation under consideration of CG
             PhysicalQuantities::CLength getGuessedSceneryDeviation(const PhysicalQuantities::CLength &cg) const;
+
+            //! Scenery deviation hint
+            GuessedSceneryDeviation getSceneryDeviationHint() const { return static_cast<GuessedSceneryDeviation>(m_guessedSceneryDeviationHint); }
+
+            //! Scenery deviation hint hint as string
+            const QString &getGuessedSceneryDeviationAsString() const { return guessedSceneryDeviationToString(this->getSceneryDeviationHint()); }
+
+            //! Scenery deviation available?
+            bool hasSceneryDeviation() const;
 
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -145,9 +163,15 @@ namespace BlackMisc
             //! NULL object
             static const CAircraftSituationChange &null();
 
+            //! The enum as string
+            static const QString &guessedSceneryDeviationToString(GuessedSceneryDeviation hint);
+
         private:
+            //! Scenery deviation hint
+            void setSceneryDeviationHint(GuessedSceneryDeviation hint) { m_guessedSceneryDeviationHint = static_cast<int>(hint); }
+
             //! Guess scenery deviation
-            void guessSceneryDeviation();
+            void guessSceneryDeviation(const CAircraftSituationList &situations);
 
             int m_situationsCount = -1;
             CCallsign m_correspondingCallsign;
@@ -167,6 +191,7 @@ namespace BlackMisc
             bool m_constAccelerating = false;
             bool m_constDecelerating = false;
             bool m_containsPushBack = false;
+            int m_guessedSceneryDeviationHint = static_cast<int>(NoDeviationInfo);
             CAltitude m_altStdDev = CAltitude::null();
             CAltitude m_altMean = CAltitude::null();
             CAltitude m_elvStdDev = CAltitude::null();
@@ -202,6 +227,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(pitchStdDev),
                 BLACK_METAMEMBER(pitchMean),
                 BLACK_METAMEMBER(guessedSceneryDeviation),
+                BLACK_METAMEMBER(guessedSceneryDeviationHint),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(oldestTimestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(oldestAdjustedTimestampMSecsSinceEpoch),
@@ -212,5 +238,6 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationChange)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationChange::GuessedSceneryDeviation)
 
 #endif // guard
