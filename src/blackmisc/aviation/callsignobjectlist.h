@@ -104,6 +104,9 @@ namespace BlackMisc
             //! Sort by callsign
             void sortByCallsign();
 
+            //! Copy of list sorted by callsign
+            CONTAINER sortedByCallsign() const;
+
         protected:
             //! Constructor
             ICallsignObjectList();

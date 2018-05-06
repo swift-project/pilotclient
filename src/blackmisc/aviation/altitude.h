@@ -105,6 +105,9 @@ namespace BlackMisc
             //! \remark epsilon 0 (zero) values ignored
             CAltitude withOffset(const CLength &offset) const;
 
+            //! Add offset value
+            void addOffset(const CLength &offset);
+
             //! AGL Above ground level?
             bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }
 

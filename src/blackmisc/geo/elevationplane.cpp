@@ -38,6 +38,13 @@ namespace BlackMisc
             CCoordinateGeodetic(coordinate), m_radius(radius)
         { }
 
+        void CElevationPlane::addAltitudeOffset(const CLength &offset)
+        {
+            if (offset.isNull() || offset.isZeroEpsilonConsidered()) { return; }
+            const CAltitude newAlt = this->getAltitude().withOffset(offset);
+            this->setGeodeticHeight(newAlt);
+        }
+
         const CAltitude &CElevationPlane::getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const
         {
             return (isWithinRange(coordinate)) ? geodeticHeight() : CAltitude::null();

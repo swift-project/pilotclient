@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Radius
             void setRadius(const PhysicalQuantities::CLength &radius) { m_radius = radius; }
 
+            //! Add offset to altitude
+            void addAltitudeOffset(const PhysicalQuantities::CLength &offset);
+
             //! Altitude when within radius, else null
             const Aviation::CAltitude &getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const;
 

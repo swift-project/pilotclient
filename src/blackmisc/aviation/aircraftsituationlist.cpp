@@ -349,13 +349,16 @@ namespace BlackMisc
             return c;
         }
 
-        void CAircraftSituationList::addAltitudeOffset(const CLength &offset)
+        int CAircraftSituationList::addAltitudeOffset(const CLength &offset)
         {
-            if (offset.isNull() || this->isEmpty()) { return; }
+            if (offset.isNull() || this->isEmpty()) { return 0; }
+            int c = 0;
             for (CAircraftSituation &s : *this)
             {
                 s.addAltitudeOffset(offset);
+                c++;
             }
+            return c;
         }
 
         bool CAircraftSituationList::isSortedAdjustedLatestFirstWithoutNullPositions() const

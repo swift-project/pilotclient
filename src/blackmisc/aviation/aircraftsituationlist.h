@@ -132,7 +132,7 @@ namespace BlackMisc
             int setOnGroundDetails(CAircraftSituation::OnGroundDetails details);
 
             //! Add an offset to each altitude
-            void addAltitudeOffset(const PhysicalQuantities::CLength &offset);
+            int addAltitudeOffset(const PhysicalQuantities::CLength &offset);
 
             //! Latest first and no null positions?
             bool isSortedAdjustedLatestFirstWithoutNullPositions() const;

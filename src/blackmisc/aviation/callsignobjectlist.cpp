@@ -215,6 +215,14 @@ namespace BlackMisc
             container().sortBy(&OBJ::getCallsign);
         }
 
+        template<class OBJ, class CONTAINER>
+        CONTAINER ICallsignObjectList<OBJ, CONTAINER>::sortedByCallsign() const
+        {
+            CONTAINER copy(this->container());
+            copy.sortByCallsign();
+            return copy;
+        }
+
         template <class OBJ, class CONTAINER>
         int ICallsignObjectList<OBJ, CONTAINER>::incrementalUpdateOrAdd(const OBJ &objectBeforeChanges, const CPropertyIndexVariantMap &changedValues)
         {

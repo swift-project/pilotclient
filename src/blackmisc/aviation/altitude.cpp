@@ -30,30 +30,32 @@ namespace BlackMisc
 
         CAltitude CAltitude::withOffset(const CLength &offset) const
         {
+            if (this->isNull()) { return CAltitude(offset, CAltitude::MeanSeaLevel); }
             CAltitude copy(*this);
-            if (!offset.isNull() && !offset.isZeroEpsilonConsidered()) { copy += offset; }
+            if (!offset.isNull() && !offset.isZeroEpsilonConsidered())
+            {
+                copy += offset;
+            }
             return copy;
+        }
+
+        void CAltitude::addOffset(const CLength &offset)
+        {
+            *this = this->withOffset(offset);
         }
 
         QString CAltitude::convertToQString(bool i18n) const
         {
             if (this->m_datum == FlightLevel)
             {
+                static const QString fls("FL%1");
                 const int fl = qRound(this->CLength::value(CLengthUnit::ft()) / 100.0);
-                return QString("FL%1").arg(fl);
+                return fls.arg(fl);
             }
             else
             {
-                QString s;
-                if (this->getUnit() == CLengthUnit::m())
-                {
-                    s = this->CLength::valueRoundedWithUnit(1, i18n);
-                }
-                else
-                {
-                    s = this->CLength::valueRoundedWithUnit(CLengthUnit::ft(), 0, i18n);
-                }
-                return s.append(this->isMeanSeaLevel() ? QStringLiteral(" MSL") : QStringLiteral(" AGL"));
+                return this->CLength::valueRoundedWithUnit(1, i18n) %
+                       (this->isMeanSeaLevel() ? QStringLiteral(" MSL") : QStringLiteral(" AGL"));
             }
         }
 
