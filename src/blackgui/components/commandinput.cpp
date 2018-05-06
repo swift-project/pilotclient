@@ -32,7 +32,13 @@ namespace BlackGui
                 this->setPlaceholderText(".dot commands");
             }
 
-            QTimer::singleShot(5000, &m_dsCommandTooltip, &CDigestSignal::inputSignal);
+            const QPointer<CCommandInput> myself(this);
+            QTimer::singleShot(5000, this, [ = ]
+            {
+                if (!myself) { return; }
+                m_dsCommandTooltip.inputSignal();
+            });
+
             if (sGui && sGui->supportsContexts())
             {
                 if (sGui->getIContextSimulator())

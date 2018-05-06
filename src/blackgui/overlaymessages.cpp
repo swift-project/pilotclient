@@ -35,6 +35,7 @@
 #include <QToolButton>
 #include <Qt>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -453,7 +454,13 @@ namespace BlackGui
         {
             std::function<void()> f = m_pendingMessageCalls.front();
             m_pendingMessageCalls.removeFirst();
-            QTimer::singleShot(500, this, f);
+            const QPointer<COverlayMessages> myself(this);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (!myself) { return; }
+                if (!sGui || sGui->isShuttingDown()) { return; }
+                f();
+            });
         }
     }
 

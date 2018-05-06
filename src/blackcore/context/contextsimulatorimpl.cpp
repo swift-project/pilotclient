@@ -38,6 +38,7 @@
 #include <QThread>
 #include <Qt>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -68,12 +69,18 @@ namespace BlackCore
             this->restoreSimulatorPlugins();
 
             connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
-            // seems to be redundant, as changed sim will cause changed cache
-            // connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDigestSignal::modelSetChanged);
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
+            // seems to be redundant, as changed simulator will cause changed cache
+            // connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDigestSignal::modelSetChanged);
+
             // deferred init of last model set, if no other data are set in meantime
-            QTimer::singleShot(1250, this, &CContextSimulator::initByLastUsedModelSet);
+            const QPointer<CContextSimulator> myself(this);
+            QTimer::singleShot(1250, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->initByLastUsedModelSet();
+            });
         }
 
         CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)

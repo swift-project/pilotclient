@@ -9,6 +9,7 @@
 
 #include "digestsignal.h"
 #include "threadutils.h"
+#include <QPointer>
 
 namespace BlackMisc
 {
@@ -17,7 +18,12 @@ namespace BlackMisc
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
             // call in correct thread
-            QTimer::singleShot(0, this, &CDigestSignal::inputSignal);
+            const QPointer<CDigestSignal> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->inputSignal();
+            });
             return;
         }
 
@@ -33,7 +39,7 @@ namespace BlackMisc
     {
         m_timer.stop();
         m_inputsCount = 0;
-        emit digestSignal();
+        emit this->digestSignal();
     }
 
     void CDigestSignal::init(int maxDelayMs)
@@ -42,5 +48,4 @@ namespace BlackMisc
         m_timer.setSingleShot(true);
         m_timer.setInterval(maxDelayMs);
     }
-
 } // namespace
