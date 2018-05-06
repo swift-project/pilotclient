@@ -33,6 +33,7 @@ passedByValue:src/xswiftbus/command.h
 
 // Unique pointers should be passed by value
 passedByValue:src/xswiftbus/menus.h
+passedByValue:src/xswiftbus/menus.cpp
 
 // Suddenly appearing (KB 2018-03) issue here
 // src/blackmisc/iterator.h 53 -> 'operator=' should return reference to 'this' instance.
