@@ -64,7 +64,7 @@ namespace BlackMiscTest
         const qint64 offset = 5000;
         for (int i = IRemoteAircraftProvider::MaxSituationsPerCallsign - 1; i >= 0; i--)
         {
-            CAircraftSituation s(getTestSituation(cs, i, ts, deltaT, offset));
+            const CAircraftSituation s(getTestSituation(cs, i, ts, deltaT, offset));
 
             // check height above ground
             CLength hag = (s.getAltitude() - s.getGroundElevation());
@@ -75,7 +75,7 @@ namespace BlackMiscTest
         constexpr int partsCount = 10;
         for (int i = partsCount - 1; i >= 0; i--)
         {
-            CAircraftParts p(getTestParts(i, ts, deltaT));
+            const CAircraftParts p(getTestParts(i, ts, deltaT));
             provider.insertNewAircraftParts(cs, p, false);
         }
 
@@ -83,7 +83,6 @@ namespace BlackMiscTest
         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
 
         // interpolation functional check
-        CInterpolationStatus status;
         const CInterpolationAndRenderingSetupPerCallsign setup;
         double latOld = 360.0;
         double lngOld = 360.0;
@@ -92,10 +91,10 @@ namespace BlackMiscTest
             // This will use time range
             // from:  ts - 2 * deltaT + offset
             // to:    ts              + offset
-            CAircraftSituation currentSituation(
-                interpolator.getInterpolatedSituation(currentTime, setup, status)
-            );
-            QVERIFY2(status.isInterpolated(), "Value was not interpolated");
+
+            const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup);
+            const CAircraftSituation currentSituation(result);
+            QVERIFY2(result.getInterpolationStatus().isInterpolated(), "Value was not interpolated");
             const double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
             const double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
             QVERIFY2(latDeg < latOld && lngDeg < lngOld, QString("Values shall decrease: %1/%2 %3/%4").arg(latDeg).arg(latOld).arg(lngDeg).arg(lngOld).toLatin1());
@@ -122,10 +121,9 @@ namespace BlackMiscTest
                 // This will use range
                 // from:  ts - 2* deltaT + offset
                 // to:    ts             + offset
-                CAircraftSituation currentSituation(
-                    interpolator.getInterpolatedSituation(currentTime, setup, status)
-                );
-                QVERIFY2(status.isInterpolated(), "Not interpolated");
+                const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup);
+                const CAircraftSituation currentSituation(result);
+                QVERIFY2(result.getInterpolationStatus().isInterpolated(), "Not interpolated");
                 QVERIFY2(!currentSituation.getCallsign().isEmpty(), "Empty callsign");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");
                 const double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
@@ -143,11 +141,9 @@ namespace BlackMiscTest
         timer.start();
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
-            CPartsStatus partsStatus;
-            const CAircraftParts pl(interpolator.getInterpolatedParts(ts, setup, partsStatus));
-            Q_UNUSED(pl);
+            const CInterpolationResult result = interpolator.getInterpolation(currentTime, setup);
             fetchedParts++;
-            QVERIFY2(partsStatus.isSupportingParts(), "Parts not supported");
+            QVERIFY2(result.getPartsStatus().isSupportingParts(), "Parts not supported");
         }
         timeMs = timer.elapsed();
         qDebug() << timeMs << "ms" << "for" << fetchedParts << "fetched parts";

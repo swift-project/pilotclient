@@ -28,20 +28,8 @@ namespace BlackMisc
                                ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
                                CInterpolationLogger *logger = nullptr);
 
-            //! \copydoc CInterpolator::getInterpolatedSituation
-            Aviation::CAircraftSituation getInterpolatedSituation(
-                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
-                CInterpolationStatus &status);
-
-            //! \copydoc CInterpolator::getInterpolatedParts
-            Aviation::CAircraftParts getInterpolatedParts(
-                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
-                CPartsStatus &partsStatus, bool log = false) const;
-
-            //! \copydoc CInterpolator::getInterpolatedOrGuessedParts
-            Aviation::CAircraftParts getInterpolatedOrGuessedParts(
-                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
-                CPartsStatus &partsStatus, bool log) const;
+            //! \copydoc CInterpolator::getInterpolation
+            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup);
 
             //! \copydoc CInterpolator::getLastInterpolatedSituation
             const Aviation::CAircraftSituation &getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;

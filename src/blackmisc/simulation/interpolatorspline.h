@@ -30,9 +30,9 @@ namespace BlackMisc
         public:
             //! Constructor
             CInterpolatorSpline(const Aviation::CCallsign &callsign,
-                                ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                                ISimulationEnvironmentProvider *envProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *aircraftProvider,
                                 CInterpolationLogger *logger = nullptr) :
-                CInterpolator(callsign, p1, p2, p3, logger) {}
+                CInterpolator(callsign, envProvider, setupProvider, aircraftProvider, logger) {}
 
             //! Position arrays for interpolation
             struct BLACKMISC_EXPORT PosArray
@@ -80,8 +80,7 @@ namespace BlackMisc
             };
 
             //! Strategy used by CInterpolator::getInterpolatedSituation
-            CInterpolant getInterpolant(qint64 currentTimeMsSinceEpoc,
-                                       const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status, SituationLog &log);
+            CInterpolant getInterpolant(SituationLog &log);
 
         private:
             //! Update the elevations used in CInterpolatorSpline::m_s
@@ -97,7 +96,7 @@ namespace BlackMisc
             bool areAltitudeUnitsSame(const PhysicalQuantities::CLengthUnit &compare = PhysicalQuantities::CLengthUnit::nullUnit()) const;
 
             //! Fill the situations array
-            bool fillSituationsArray(const BlackMisc::Aviation::CAircraftSituationList &validSituations);
+            bool fillSituationsArray();
 
             qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset
             qint64 m_nextSampleAdjustedTime = 0; //!< previous sample time + offset

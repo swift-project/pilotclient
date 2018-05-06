@@ -42,37 +42,16 @@ namespace BlackSimPlugin
             return m_interpolator->getInterpolatorInfo(mode);
         }
 
-        void CXPlaneMPAircraft::attachInterpolatorLogger(CInterpolationLogger *logger)
+        void CXPlaneMPAircraft::attachInterpolatorLogger(CInterpolationLogger *logger) const
         {
             Q_ASSERT(m_interpolator);
             return m_interpolator->attachLogger(logger);
         }
 
-        CAircraftSituation CXPlaneMPAircraft::getInterpolatedSituation(
-            qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CInterpolationStatus &status) const
+        CInterpolationResult CXPlaneMPAircraft::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup) const
         {
             Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
-        }
-
-        CAircraftParts CXPlaneMPAircraft::getInterpolatedParts(
-            qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CPartsStatus &partsStatus, bool log) const
-        {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-        }
-
-        CAircraftParts CXPlaneMPAircraft::getInterpolatedOrGuessedParts(
-            qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CPartsStatus &partsStatus, bool log) const
-        {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup);
         }
 
         CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const

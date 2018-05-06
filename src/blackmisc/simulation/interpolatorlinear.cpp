@@ -97,37 +97,20 @@ namespace BlackMisc
             return newSituation;
         }
 
-        CInterpolatorLinear::CInterpolant CInterpolatorLinear::getInterpolant(
-            qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CInterpolationStatus &status, SituationLog &log)
+        CInterpolatorLinear::CInterpolant CInterpolatorLinear::getInterpolant(SituationLog &log)
         {
-            Q_UNUSED(setup);
-            status.reset();
-
-            const qint64 tsLastModified = this->situationsLastModified(m_callsign);
-
             // set default situations
             CAircraftSituation oldSituation = m_interpolant.getOldSituation();
             CAircraftSituation newSituation = m_interpolant.getNewSituation();
 
-            if (m_situationsLastModifiedUsed < tsLastModified || m_situationChange.isNull())
+            if (m_situationsLastModifiedUsed < m_situationsLastModified)
             {
-                m_situationsLastModifiedUsed = tsLastModified;
-
-                // with the latest updates of T243 the order and the offsets are supposed to be correct
-                // so even mixing fast/slow updates shall work
-                const CAircraftSituationList validSituations = this->remoteAircraftSituationsAndChange(true);
-                if (!CBuildConfig::isReleaseBuild())
-                {
-                    BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
-                    Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
-                }
+                m_situationsLastModifiedUsed = m_situationsLastModified;
 
                 // find the first situation earlier than the current time
-                const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
-                const auto situationsNewer = makeRange(validSituations.begin(), pivot);
-                const auto situationsOlder = makeRange(pivot, validSituations.end());
+                const auto pivot = std::partition_point(m_currentSituations.begin(), m_currentSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
+                const auto situationsNewer = makeRange(m_currentSituations.begin(), pivot);
+                const auto situationsOlder = makeRange(pivot, m_currentSituations.end());
 
                 // latest first, now 00:20 split time
                 // time     pos
@@ -146,7 +129,7 @@ namespace BlackMisc
                     if (situationsOlder.isEmpty())
                     {
                         const CAircraftSituation currentSituation(*(situationsNewer.end() - 1)); // oldest newest
-                        status.setInterpolatedAndCheckSituation(false, currentSituation);
+                        m_currentInterpolationStatus.setInterpolatedAndCheckSituation(false, currentSituation);
                         m_interpolant = { currentSituation };
                         return m_interpolant;
                     }
@@ -155,7 +138,7 @@ namespace BlackMisc
                     if (situationsOlder.size() < 2)
                     {
                         const CAircraftSituation currentSituation(situationsOlder.front()); // latest oldest
-                        status.setInterpolatedAndCheckSituation(false, currentSituation);
+                        m_currentInterpolationStatus.setInterpolatedAndCheckSituation(false, currentSituation);
                         m_interpolant = { currentSituation };
                         return m_interpolant;
                     }
@@ -195,18 +178,18 @@ namespace BlackMisc
             // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
             // 1) values > 1 mean extrapolation
             // 2) values > 2 mean no new situations coming in
-            const double distanceToSplitTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
+            const double distanceToSplitTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - m_currentTimeMsSinceEpoch;
             const double simulationTimeFraction = qMax(1.0 - (distanceToSplitTimeMs / sampleDeltaTimeMs), 0.0);
             const double deltaTimeFractionMs = sampleDeltaTimeMs * simulationTimeFraction;
             const qint64 interpolatedTime = oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs;
 
             currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
             currentSituation.setMSecsSinceEpoch(interpolatedTime);
-            status.setInterpolatedAndCheckSituation(true, currentSituation);
+            m_currentInterpolationStatus.setInterpolatedAndCheckSituation(true, currentSituation);
 
-            if (this->hasAttachedLogger() && setup.logInterpolation())
+            if (this->doLogging())
             {
-                log.tsCurrent = currentTimeMsSinceEpoc;
+                log.tsCurrent = m_currentTimeMsSinceEpoch;
                 log.deltaSampleTimesMs = sampleDeltaTimeMs;
                 log.simTimeFraction = simulationTimeFraction;
                 log.deltaSampleTimesMs = sampleDeltaTimeMs;

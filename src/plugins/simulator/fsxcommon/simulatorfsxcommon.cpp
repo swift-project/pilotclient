@@ -1260,17 +1260,14 @@ namespace BlackSimPlugin
 
                 // setup
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
-                const bool logInterpolationAndParts = setup.logInterpolation();
                 const bool sendGround = setup.sendGndFlagToSimulator();
 
                 // Interpolated situation
-                CInterpolationStatus interpolatorStatus;
-                const CAircraftSituation interpolatedSituation = simObject.getInterpolatedSituation(currentTimestamp, setup, interpolatorStatus);
-
-                if (interpolatorStatus.hasValidSituation())
+                const CInterpolationResult result = simObject.getInterpolation(currentTimestamp, setup);
+                if (result.getInterpolationStatus().hasValidSituation())
                 {
                     // update situation
-                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(interpolatedSituation, sendGround);
+                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
                     if (!simObject.isSameAsSent(position))
                     {
                         m_simConnectObjects[simObject.getCallsign()].setPositionAsSent(position);
@@ -1290,13 +1287,11 @@ namespace BlackSimPlugin
                 else
                 {
                     static const QString so("SimObject id: %1");
-                    CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, interpolatorStatus, so.arg(simObject.getObjectId())));
+                    CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus(), so.arg(simObject.getObjectId())));
                 }
 
                 // Interpolated parts
-                CPartsStatus partsStatus;
-                const CAircraftParts parts = simObject.getInterpolatedOrGuessedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts);
-                this->updateRemoteAircraftParts(simObject, parts, partsStatus);
+                this->updateRemoteAircraftParts(simObject, result);
 
             } // all callsigns
 
@@ -1306,10 +1301,12 @@ namespace BlackSimPlugin
             m_statsUpdateAircraftTimeAvgMs = m_statsUpdateAircraftTimeTotalMs / m_statsUpdateAircraftCountMs;
         }
 
-        bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject, const CAircraftParts &parts, const CPartsStatus &partsStatus)
+        bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject, const CInterpolationResult &result)
         {
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
-            if (parts.getPartsDetails() != CAircraftParts::GuessedParts && !partsStatus.isSupportingParts()) { return false; }
+
+            const CAircraftParts parts = result;
+            if (parts.getPartsDetails() != CAircraftParts::GuessedParts && !result.getPartsStatus().isSupportingParts()) { return false; }
 
             DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // no init, all values will be set
             return this->sendRemoteAircraftPartsToSimulator(simObject, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());

@@ -178,8 +178,7 @@ namespace BlackSimPlugin
             void updateRemoteAircraft();
 
             //! Update remote aircraft parts (send to XSwiftBus)
-            bool updateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft,
-                                           const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Simulation::CPartsStatus &partsStatus);
+            bool updateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft, const BlackMisc::Simulation::CInterpolationResult &result);
 
             //! Send parts to simulator
             bool sendRemoteAircraftPartsToSimulator(const CXPlaneMPAircraft &xplaneAircraft, const BlackMisc::Aviation::CAircraftParts &parts);

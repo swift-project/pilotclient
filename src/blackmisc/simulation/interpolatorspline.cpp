@@ -98,16 +98,16 @@ namespace BlackMisc
             }
         }
 
-        bool CInterpolatorSpline::fillSituationsArray(const CAircraftSituationList &validSituations)
+        bool CInterpolatorSpline::fillSituationsArray()
         {
             // m_s[0] .. oldest -> m_[2] .. latest
             // general idea, we interpolate from current situation -> latest situation
 
             if (m_lastInterpolation.isNull())
             {
-                if (!validSituations.isEmpty())
+                if (!m_currentSituations.isEmpty())
                 {
-                    m_s[0] = m_s[1] = m_s[2] = validSituations.front();
+                    m_s[0] = m_s[1] = m_s[2] = m_currentSituations.front();
                     m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec * 2);
                     m_s[1].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec);
                     return true;
@@ -120,20 +120,17 @@ namespace BlackMisc
                 m_s[0] = m_s[1] = m_s[2] = m_lastInterpolation; // current
                 m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec); //  oldest
                 m_s[2].addMsecs(CFsdSetup::c_positionTimeOffsetMsec);  // latest
-                if (validSituations.isEmpty()) { return true; }
+                if (m_currentSituations.isEmpty()) { return true; }
             }
 
             const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
-            const CAircraftSituation latest = validSituations.front();
+            const CAircraftSituation latest = m_currentSituations.front();
             if (latest.isNewerThanAdjusted(m_s[1])) { m_s[2] = latest; }
-            const CAircraftSituation older = validSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
+            const CAircraftSituation older = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
             if (!older.isNull()) { m_s[0] = older; }
 
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
-                BLACK_VERIFY_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
-
                 const bool verified = this->verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
                 if (!verified)
                 {
@@ -145,25 +142,16 @@ namespace BlackMisc
             return true;
         }
 
-        CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(
-            qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CInterpolationStatus &status,
-            SituationLog &log)
+        CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(SituationLog &log)
         {
-            Q_UNUSED(setup);
-
             // recalculate derivatives only if they changed
-            const qint64 lastModified = this->situationsLastModified(m_callsign);
-            const bool recalculate = lastModified > m_situationsLastModifiedUsed;
-            int situationsSize = -1;
+            const bool recalculate = m_situationsLastModified > m_situationsLastModifiedUsed;
             if (recalculate)
             {
                 // with the latest updates of T243 the order and the offsets are supposed to be correct
                 // so even mixing fast/slow updates shall work
-                m_situationsLastModifiedUsed = lastModified;
-                const CAircraftSituationList validSituations = this->remoteAircraftSituationsAndChange(true);
-                const bool fillStatus = this->fillSituationsArray(validSituations);
+                m_situationsLastModifiedUsed = m_situationsLastModified;
+                const bool fillStatus = this->fillSituationsArray();
                 if (!fillStatus)
                 {
                     return  m_interpolant;
@@ -186,7 +174,7 @@ namespace BlackMisc
                 // - and the elevation remains (almost) constant for a wider area
                 // - during flying the ground elevation not really matters
                 this->updateElevations();
-                const CLength cg(m_s[2].hasCG() ? m_s[2].getCG() : this->getAndFetchModelCG());
+                const CLength cg(this->getModelCG());
                 const double a0 = m_s[0].getCorrectedAltitude(cg).value(); // oldest
                 const double a1 = m_s[1].getCorrectedAltitude(cg).value();
                 const double a2 = m_s[2].getCorrectedAltitude(cg).value(); // latest
@@ -214,7 +202,7 @@ namespace BlackMisc
             // cur.time 6: dt1=6-5=1, dt2=7-5 => fraction 1/2
             // cur.time 9: dt1=9-7=2, dt2=10-7=3 => fraction 2/3
             // we use different offset times for fast pos. updates
-            const double dt1 = static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleAdjustedTime);
+            const double dt1 = static_cast<double>(m_currentTimeMsSinceEpoch - m_prevSampleAdjustedTime);
             const double dt2 = static_cast<double>(m_nextSampleAdjustedTime - m_prevSampleAdjustedTime);
             const double timeFraction = dt1 / dt2;
 
@@ -224,19 +212,19 @@ namespace BlackMisc
             const qint64 interpolatedTime = m_prevSampleTime + timeFraction * dt2;
 
             // time fraction is expected between 0-1
-            status.setInterpolated(true);
-            m_interpolant.setTimes(currentTimeMsSinceEpoc, timeFraction, interpolatedTime);
+            m_currentInterpolationStatus.setInterpolated(true);
+            m_interpolant.setTimes(m_currentTimeMsSinceEpoch, timeFraction, interpolatedTime);
 
-            if (this->hasAttachedLogger() && setup.logInterpolation())
+            if (this->doLogging())
             {
-                if (situationsSize < 0) { situationsSize = this->remoteAircraftSituationsCount(m_callsign); }
+                log.interpolationSituations.clear();
                 log.interpolationSituations.push_back(m_s[0]);
                 log.interpolationSituations.push_back(m_s[1]);
                 log.interpolationSituations.push_back(m_s[2]); // latest at end
+                log.noNetworkSituations = m_currentSituations.size();
                 log.interpolator = 's';
                 log.deltaSampleTimesMs = dt2;
                 log.simTimeFraction = timeFraction;
-                log.noNetworkSituations = situationsSize;
                 log.tsInterpolated = interpolatedTime; // without offsets
             }
 

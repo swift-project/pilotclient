@@ -37,16 +37,16 @@ namespace BlackMisc
         template <typename Derived>
         CInterpolator<Derived>::CInterpolator(const CCallsign &callsign,
                                               ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider,
-                                              IRemoteAircraftProvider *remoteAircraftProvider,
+                                              IRemoteAircraftProvider *remoteProvider,
                                               CInterpolationLogger *logger) : m_callsign(callsign)
         {
             // normally when created m_cg is still null since there is no CG in the provider yet
 
             if (simEnvProvider) { this->setSimulationEnvironmentProvider(simEnvProvider); }
             if (setupProvider)  { this->setInterpolationSetupProvider(setupProvider); }
-            if (remoteAircraftProvider)
+            if (remoteProvider)
             {
-                this->setRemoteAircraftProvider(remoteAircraftProvider);
+                this->setRemoteAircraftProvider(remoteProvider);
                 QObject::connect(&m_initTimer, &QTimer::timeout, [ = ] { this->deferredInit(); });
                 m_initTimer.setSingleShot(true);
                 m_initTimer.start(2500);
@@ -75,13 +75,13 @@ namespace BlackMisc
         CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(bool useSceneryOffset)
         {
             CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
-            m_situationChange = CAircraftSituationChange(validSituations, true, true);
-            if (useSceneryOffset && m_situationChange.hasSceneryDeviation() && m_model.hasCG())
+            m_currentSituationChange = CAircraftSituationChange(validSituations, true, true);
+            if (useSceneryOffset && m_currentSituationChange.hasSceneryDeviation() && m_model.hasCG())
             {
-                const CLength os = m_situationChange.getGuessedSceneryDeviation(m_model.getCG());
+                const CLength os = m_currentSituationChange.getGuessedSceneryDeviation(m_model.getCG());
                 validSituations.addAltitudeOffset(os);
-                m_situationChange = CAircraftSituationChange(validSituations, true, true); // recalculate
-                m_lastSceneryOffset = os;
+                m_currentSituationChange = CAircraftSituationChange(validSituations, true, true); // recalculate
+                m_currentSceneryOffset = os;
             }
             return validSituations;
         }
@@ -131,33 +131,36 @@ namespace BlackMisc
             return cats;
         }
 
-        template <typename Derived>
-        CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(
-            qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CInterpolationStatus &status)
+        template<typename Derived>
+        CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup)
         {
-            Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
-
-            // this code is used by linear and spline interpolator
-            m_interpolatedSituationsCounter++;
-            status.reset();
-            SituationLog log;
-            const bool doLogging = this->hasAttachedLogger() && setup.logInterpolation();
-
-            // any data at all?
-            const CAircraftSituationList situations = this->remoteAircraftSituations(m_callsign);
-            const int situationsCount = situations.size();
-            status.setSituationsCount(situationsCount);
-            if (situations.isEmpty())
+            CInterpolationResult result;
+            do
             {
-                status.setExtraInfo(this->isAircraftInRange(m_callsign) ?
-                                    QString("No situations, but remote aircraft '%1'").arg(m_callsign.asString()) :
-                                    QString("Unknown remote aircraft: '%1'").arg(m_callsign.asString()));
-                return CAircraftSituation(m_callsign);
+                if (!this->initIniterpolationStepData(currentTimeSinceEpoc, setup)) { break; }
+
+                // make sure we can also interpolate parts only (needed in unit tests for instance)
+                const CAircraftSituation interpolatedSituation = this->getInterpolatedSituation();
+                const CAircraftParts interpolatedParts = this->getInterpolatedOrGuessedParts();
+
+                result.setValues(interpolatedSituation, interpolatedParts);
+            }
+            while (false);
+
+            result.setStatus(m_currentInterpolationStatus, m_currentPartsStatus);
+            return result;
+        }
+
+        template <typename Derived>
+        CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation()
+        {
+            if (m_currentSituations.isEmpty())
+            {
+                m_lastInterpolation = CAircraftSituation::null();
+                return CAircraftSituation::null();
             }
 
-            const CAircraftSituation latest = situations.front();
+            const CAircraftSituation latest = m_currentSituations.front();
             CAircraftSituation currentSituation = m_lastInterpolation.isNull() ? latest : m_lastInterpolation;
             if (currentSituation.getCallsign() != m_callsign)
             {
@@ -173,20 +176,18 @@ namespace BlackMisc
             }
 
             // fetch CG once
-            const CLength cg = latest.hasCG() ? latest.getCG() : this->getAndFetchModelCG();
+            const CLength cg(this->getModelCG());
             currentSituation.setCG(cg);
-
-            // data, split situations by time
-            if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
 
             // interpolant function from derived class
             // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
-            const auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, status, log);
+            SituationLog log;
+            const auto interpolant = derived()->getInterpolant(log);
 
             // succeeded so far?
-            if (!status.isInterpolated())
+            if (!m_currentInterpolationStatus.isInterpolated())
             {
-                status.checkIfValidSituation(currentSituation);
+                m_currentInterpolationStatus.checkIfValidSituation(currentSituation);
                 return currentSituation;
             }
 
@@ -212,20 +213,20 @@ namespace BlackMisc
             }
 
             // status
-            status.setInterpolatedAndCheckSituation(true, currentSituation);
+            m_currentInterpolationStatus.setInterpolatedAndCheckSituation(true, currentSituation);
 
             // logging
-            if (doLogging)
+            if (this->doLogging())
             {
                 static const QString elv("found %1 missed %2");
                 const QPair<int, int> elvStats = this->getElevationsFoundMissed();
-                log.tsCurrent = currentTimeMsSinceEpoc;
+                log.tsCurrent = m_currentTimeMsSinceEpoch;
                 log.callsign = m_callsign;
                 log.groundFactor = currentSituation.getOnGroundFactor();
                 log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
                 log.situationCurrent = currentSituation;
-                log.change = m_situationChange;
-                log.usedSetup = setup;
+                log.change = m_currentSituationChange;
+                log.usedSetup = m_currentSetup;
                 log.elevationInfo = elv.arg(elvStats.first).arg(elvStats.second);
                 log.cgAboveGround = cg;
                 log.sceneryOffset = m_currentSceneryOffset;
@@ -238,14 +239,9 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(
-            qint64 currentTimeMsSinceEpoch,
-            const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log) const
+        CAircraftParts CInterpolator<Derived>::getInterpolatedParts()
         {
             // (!) this code is used by linear and spline interpolator
-            Q_UNUSED(setup);
-            partsStatus.reset();
-            if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
 
             // Parts are supposed to be in correct order, latest first
             const CAircraftPartsList validParts = this->remoteAircraftParts(m_callsign);
@@ -254,16 +250,16 @@ namespace BlackMisc
             if (validParts.isEmpty())
             {
                 static const CAircraftParts emptyParts;
-                this->logParts(currentTimeMsSinceEpoch, emptyParts, validParts.size(), true, log);
+                this->logParts(emptyParts, validParts.size(), true);
                 return emptyParts;
             }
 
-            partsStatus.setSupportsParts(true);
+            m_currentPartsStatus.setSupportsParts(true);
             CAircraftParts currentParts;
             do
             {
                 // find the first parts earlier than the current time
-                const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [ = ](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoch; });
+                const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [ = ](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
                 const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
                 const auto partsOlder = makeRange(pivot, validParts.end());
 
@@ -273,32 +269,38 @@ namespace BlackMisc
             }
             while (false);
 
-            this->logParts(currentTimeMsSinceEpoch, currentParts, validParts.size(), false, log);
+            this->logParts(currentParts, validParts.size(), false);
             return currentParts;
         }
 
         template<typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts(qint64 currentTimeMsSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, CPartsStatus &partsStatus, bool log) const
+        CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts()
         {
             CAircraftParts parts;
-            if (setup.isAircraftPartsEnabled()) { parts = this->getInterpolatedParts(currentTimeMsSinceEpoch, setup, partsStatus, log); }
-            if (!partsStatus.isSupportingParts())
+            if (m_currentSetup.isAircraftPartsEnabled()) { parts = this->getInterpolatedParts(); }
+            if (!m_currentPartsStatus.isSupportingParts())
             {
                 // check if model has been thru model matching
-                parts.guessParts(this->getLastInterpolatedSituation(), m_situationChange, m_model);
+                parts.guessParts(m_lastInterpolation, m_currentSituationChange, m_model);
             }
-            this->logParts(currentTimeMsSinceEpoch, parts, 0, false, log);
+            this->logParts(parts, 0, false);
             return parts;
         }
 
         template<typename Derived>
-        void CInterpolator<Derived>::logParts(qint64 timestamp, const CAircraftParts &parts, int partsNo, bool empty, bool log) const
+        bool CInterpolator<Derived>::doLogging() const
         {
-            if (!log || !m_logger) { return; }
+            return this->hasAttachedLogger() &&  m_currentSetup.logInterpolation();
+        }
+
+        template<typename Derived>
+        void CInterpolator<Derived>::logParts(const CAircraftParts &parts, int partsNo, bool empty) const
+        {
+            if (!this->doLogging()) { return; }
             PartsLog logInfo;
             logInfo.callsign = m_callsign;
             logInfo.noNetworkParts = partsNo;
-            logInfo.tsCurrent = timestamp;
+            logInfo.tsCurrent = m_currentTimeMsSinceEpoch;
             logInfo.parts = parts;
             logInfo.empty = empty;
             m_logger->logParts(logInfo);
@@ -328,6 +330,57 @@ namespace BlackMisc
         {
             this->resetLastInterpolation();
             m_model = CAircraftModel();
+            m_currentSceneryOffset = CLength::null();
+            m_currentSituationChange = CAircraftSituationChange::null();
+            m_currentSituations.clear();
+            m_currentTimeMsSinceEpoch = -1;
+            m_situationsLastModified = -1;
+            m_situationsLastModifiedUsed = -1;
+            m_currentInterpolationStatus.reset();
+            m_currentPartsStatus.reset();
+            m_interpolatedSituationsCounter = 0;
+        }
+
+        template<typename Derived>
+        bool CInterpolator<Derived>::initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup)
+        {
+            Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
+
+            const bool slowUpdates = ((m_interpolatedSituationsCounter % 25) == 0);
+            m_currentTimeMsSinceEpoch = currentTimeSinceEpoc;
+            m_situationsLastModified = this->situationsLastModified(m_callsign);
+            m_currentSetup = setup;
+            m_currentSituations = this->remoteAircraftSituationsAndChange(true);
+            m_currentInterpolationStatus.reset();
+            m_currentPartsStatus.reset();
+
+            if (!m_model.hasCG() || slowUpdates)
+            {
+                this->getAndFetchModelCG(); // update CG
+            }
+
+            m_currentInterpolationStatus.setSituationsCount(m_currentSituations.size());
+            if (m_currentSituations.isEmpty())
+            {
+                m_lastInterpolation = CAircraftSituation::null(); // no interpolation possible for that step
+                m_currentInterpolationStatus.setExtraInfo(this->isAircraftInRange(m_callsign) ?
+                        QString("No situations, but remote aircraft '%1'").arg(m_callsign.asString()) :
+                        QString("Unknown remote aircraft: '%1'").arg(m_callsign.asString()));
+            }
+            else
+            {
+                m_interpolatedSituationsCounter++;
+
+                // with the latest updates of T243 the order and the offsets are supposed to be correct
+                // so even mixing fast/slow updates shall work
+                if (!CBuildConfig::isReleaseBuild())
+                {
+                    Q_ASSERT_X(m_currentSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
+                    Q_ASSERT_X(m_currentSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+                }
+            }
+
+            return true;
         }
 
         template<typename Derived>
@@ -345,12 +398,32 @@ namespace BlackMisc
                     m_model = model;
                 }
             }
-            if (m_model.getCG().isNull())
-            {
-                const CLength cg(this->getCG(m_callsign));
-                if (!cg.isNull()) { m_model.setCG(cg); }
-            }
-            m_model.setCallsign(m_callsign);
+            this->getAndFetchModelCG();
+        }
+
+        CInterpolationResult::CInterpolationResult()
+        {
+            this->reset();
+        }
+
+        void CInterpolationResult::setValues(const CAircraftSituation &situation, const CAircraftParts &parts)
+        {
+            m_interpolatedSituation = situation;
+            m_interpolatedParts = parts;
+        }
+
+        void CInterpolationResult::setStatus(const CInterpolationStatus &interpolation, const CPartsStatus &parts)
+        {
+            m_interpolationStatus = interpolation;
+            m_partsStatus = parts;
+        }
+
+        void CInterpolationResult::reset()
+        {
+            m_interpolatedSituation = CAircraftSituation::null();
+            m_interpolatedParts = CAircraftParts::null();
+            m_interpolationStatus.reset();
+            m_partsStatus.reset();
         }
 
         void CInterpolationStatus::setExtraInfo(const QString &info)

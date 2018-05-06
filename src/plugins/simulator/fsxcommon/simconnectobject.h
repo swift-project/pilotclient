@@ -160,34 +160,16 @@ namespace BlackSimPlugin
             //! Was the object really added to simulator
             bool hasValidRequestAndObjectId() const;
 
-            //! \copydoc BlackMisc::Simulation::CInterpolatorMulti::toggleMode
-            void toggleInterpolatorMode();
-
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
             QString getInterpolatorInfo(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::attachLogger
-            void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger);
+            void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger) const;
 
-            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedSituation
-            BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-                qint64 currentTimeSinceEpoc,
-                const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
-                BlackMisc::Simulation::CInterpolationStatus &status) const;
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
+            BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup) const;
 
-            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedParts
-            BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                qint64 currentTimeSinceEpoc,
-                const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
-                BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;
-
-            //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatedOrGuessedParts
-            BlackMisc::Aviation::CAircraftParts getInterpolatedOrGuessedParts(
-                qint64 currentTimeSinceEpoc,
-                const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
-                BlackMisc::Simulation::CPartsStatus &partsStatus, bool log) const;
-
-            //! Last interpolated situation
+            //! \copydoc BlackMisc::Simulation::CInterpolator::getLastInterpolatedSituation
             const BlackMisc::Aviation::CAircraftSituation &getLastInterpolatedSituation(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
             //! Interpolator

@@ -678,18 +678,13 @@ namespace BlackSimPlugin
 
                 // setup
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
-                const bool logInterpolationAndParts = setup.logInterpolation();
 
-                // interpolated situation
-                CInterpolationStatus interpolatorStatus;
-                const CAircraftSituation interpolatedSituation = xplaneAircraft.getInterpolatedSituation(currentTimestamp, setup, interpolatorStatus);
-
-                // perts
-                CPartsStatus partsStatus;
-                const CAircraftParts parts = xplaneAircraft.getInterpolatedOrGuessedParts(currentTimestamp, setup, partsStatus, logInterpolationAndParts);
-
-                if (interpolatorStatus.hasValidSituation())
+                // interpolated situation/parts
+                const CInterpolationResult result = xplaneAircraft.getInterpolation(currentTimestamp, setup);
+                if (result.getInterpolationStatus().hasValidSituation())
                 {
+                    const CAircraftSituation interpolatedSituation(result);
+
                     // update situation
                     if (!xplaneAircraft.isSameAsSent(interpolatedSituation))
                     {
@@ -705,10 +700,10 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, interpolatorStatus));
+                    CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus()));
                 }
 
-                this->updateRemoteAircraftParts(xplaneAircraft, parts, partsStatus);
+                this->updateRemoteAircraftParts(xplaneAircraft, result);
 
             } // all callsigns
 
@@ -718,10 +713,10 @@ namespace BlackSimPlugin
             m_statsUpdateAircraftTimeAvgMs = m_statsUpdateAircraftTimeTotalMs / m_statsUpdateAircraftCountMs;
         }
 
-        bool CSimulatorXPlane::updateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft, const CAircraftParts &parts, const CPartsStatus &partsStatus)
+        bool CSimulatorXPlane::updateRemoteAircraftParts(const CXPlaneMPAircraft &xplaneAircraft, const CInterpolationResult &result)
         {
-            if (!partsStatus.isSupportingParts()) { return false; }
-            return this->sendRemoteAircraftPartsToSimulator(xplaneAircraft, parts);
+            if (!result.getPartsStatus().isSupportingParts()) { return false; }
+            return this->sendRemoteAircraftPartsToSimulator(xplaneAircraft, result);
         }
 
         bool CSimulatorXPlane::sendRemoteAircraftPartsToSimulator(const CXPlaneMPAircraft &xplaneAircraft, const CAircraftParts &parts)

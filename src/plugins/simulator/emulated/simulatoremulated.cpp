@@ -413,13 +413,11 @@ namespace BlackSimPlugin
                 const CCallsign cs = aircraft.getCallsign();
                 if (!m_interpolators.contains(cs)) { continue; }
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(cs); // threadsafe copy
-                const bool log = setup.logInterpolation();
                 CInterpolatorMulti *im = m_interpolators[cs];
-                CInterpolationStatus statusInterpolation;
-                CPartsStatus statusParts;
                 Q_ASSERT_X(im, Q_FUNC_INFO, "interpolator missing");
-                const CAircraftSituation s = im->getInterpolatedSituation(now, setup, statusInterpolation);
-                const CAircraftParts p = im->getInterpolatedOrGuessedParts(now, setup, statusParts, log);
+                CInterpolationResult result = im->getInterpolation(now, setup);
+                const CAircraftSituation s = result;
+                const CAircraftParts p = result;
                 m_countInterpolatedParts++;
                 m_countInterpolatedSituations++;
                 Q_UNUSED(s);

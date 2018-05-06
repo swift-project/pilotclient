@@ -22,45 +22,16 @@ namespace BlackMisc
             m_linear(callsign, p1, p2, p3, logger)
         {}
 
-        CAircraftSituation CInterpolatorMulti::getInterpolatedSituation(qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetupPerCallsign &setup,
-                CInterpolationStatus &status)
+        CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup)
         {
             switch (setup.getInterpolatorMode())
             {
-            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
-            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
+            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolation(currentTimeSinceEpoc, setup);
+            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolation(currentTimeSinceEpoc, setup);
             default: break;
             }
-            return {};
-        }
 
-        CAircraftParts CInterpolatorMulti::getInterpolatedParts(
-            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CPartsStatus &partsStatus, bool log) const
-        {
-            switch (setup.getInterpolatorMode())
-            {
-            // currently calls the same interpolation for parts
-            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-            default: break;
-            }
-            return {};
-        }
-
-        CAircraftParts CInterpolatorMulti::getInterpolatedOrGuessedParts(
-            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CPartsStatus &partsStatus, bool log) const
-        {
-            switch (setup.getInterpolatorMode())
-            {
-            // currently calls the same interpolation for parts
-            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-            default: break;
-            }
-            return {};
+            return CInterpolationResult();
         }
 
         const CAircraftSituation &CInterpolatorMulti::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const

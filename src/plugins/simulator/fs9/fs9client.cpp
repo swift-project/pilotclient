@@ -172,14 +172,13 @@ namespace BlackSimPlugin
             Q_UNUSED(event);
 
             if (m_clientStatus == Disconnected) { return; }
-            CInterpolationStatus status;
-            CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupPerCallsignOrDefault(m_callsign);
-            const CAircraftSituation situation = m_interpolator.getInterpolatedSituation(-1, setup, status);
+            const CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupConsolidated(m_callsign);
+            const CInterpolationResult result = m_interpolator.getInterpolation(QDateTime::currentMSecsSinceEpoch(), setup);
 
             // Test only for successful position. FS9 requires constant positions
-            if (!status.hasValidSituation()) { return; }
+            if (!result.getInterpolationStatus().hasValidSituation()) { return; }
 
-            sendMultiplayerPosition(situation);
+            sendMultiplayerPosition(result);
             sendMultiplayerParamaters();
         }
 

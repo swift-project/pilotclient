@@ -336,7 +336,9 @@ namespace BlackCore
         //! \param ownAircraftProvider       in memory access to own aircraft data
         //! \param remoteAircraftProvider    in memory access to rendered aircraft data such as situation history and aircraft itself
         //! \param weatherGridProvider       in memory access to weather grid data
+        //! \param clientProvider            in memory access to client data
         //! \return driver instance
+        //!
         virtual ISimulator *create(
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,

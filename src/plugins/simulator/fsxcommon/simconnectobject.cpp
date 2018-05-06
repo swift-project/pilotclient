@@ -112,37 +112,16 @@ namespace BlackSimPlugin
             return m_interpolator->getInterpolatorInfo(mode);
         }
 
-        void CSimConnectObject::attachInterpolatorLogger(CInterpolationLogger *logger)
+        void CSimConnectObject::attachInterpolatorLogger(CInterpolationLogger *logger) const
         {
             Q_ASSERT(m_interpolator);
             return m_interpolator->attachLogger(logger);
         }
 
-        CAircraftSituation CSimConnectObject::getInterpolatedSituation(
-            qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CInterpolationStatus &status) const
+        CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup) const
         {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatedSituation(currentTimeSinceEpoc, setup, status);
-        }
-
-        CAircraftParts CSimConnectObject::getInterpolatedParts(
-            qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CPartsStatus &partsStatus, bool log) const
-        {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatedParts(currentTimeSinceEpoc, setup, partsStatus, log);
-        }
-
-        CAircraftParts CSimConnectObject::getInterpolatedOrGuessedParts(
-            qint64 currentTimeSinceEpoc,
-            const CInterpolationAndRenderingSetupPerCallsign &setup,
-            CPartsStatus &partsStatus, bool log) const
-        {
-            Q_ASSERT(m_interpolator);
-            return m_interpolator->getInterpolatedOrGuessedParts(currentTimeSinceEpoc, setup, partsStatus, log);
+            if (!m_interpolator) { CInterpolationResult result; result.reset(); return result; }
+            return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup);
         }
 
         const CAircraftSituation &CSimConnectObject::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const

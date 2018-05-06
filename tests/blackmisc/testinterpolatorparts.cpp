@@ -51,7 +51,6 @@ namespace BlackMiscTest
         QVERIFY2(parts.size() == number, "Wrong parts size of list");
 
         // interpolation functional check
-        CPartsStatus status;
         const CInterpolationAndRenderingSetupPerCallsign setup;
         const qint64 oldestTs = parts.oldestTimestampMsecsSinceEpoch();
 
@@ -59,13 +58,15 @@ namespace BlackMiscTest
         // all on ground flags true
         provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
         QVERIFY2(provider.remoteAircraftPartsCount(cs) == parts.size(), "Wrong parts size");
-        CAircraftParts p = interpolator.getInterpolatedParts(farFuture, setup, status);
+        CInterpolationResult result = interpolator.getInterpolation(farFuture, setup);
+        CAircraftParts p = result;
         qint64 pTs = p.getAdjustedMSecsSinceEpoch();
-        QVERIFY2(status.isSupportingParts(), "Should support parts");
+        QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
         QVERIFY2(pTs == ts, "Expect latest ts");
-        p = interpolator.getInterpolatedParts(farPast, setup, status);
+        result = interpolator.getInterpolation(farPast, setup);
+        p = result;
         pTs = p.getAdjustedMSecsSinceEpoch();
-        QVERIFY2(status.isSupportingParts(), "Should support parts");
+        QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
         QVERIFY2(pTs == oldestTs, "Expect oldest ts");
 
         // Testing for a time >> last time
@@ -75,9 +76,10 @@ namespace BlackMiscTest
 
         parts.setOnGround(false);
         provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
-        p = interpolator.getInterpolatedParts(farFuture, setup, status);
+        result = interpolator.getInterpolation(farFuture, setup);
+        p = result;
         pTs = p.getAdjustedMSecsSinceEpoch();
-        QVERIFY2(status.isSupportingParts(), "Should support parts");
+        QVERIFY2(result.getPartsStatus().isSupportingParts(), "Should support parts");
         QVERIFY2(p.getAdjustedMSecsSinceEpoch() == pTs, "Expect latest ts");
     }
 
