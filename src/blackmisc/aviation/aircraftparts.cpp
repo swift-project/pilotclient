@@ -127,18 +127,13 @@ namespace BlackMisc
             const bool isLikelyTakeOffOrClimbing = change.isNull() ?  pitchDeg > 20 : (change.isRotatingUp() || change.isConstAscending());
             const bool isLikelyLanding = change.isNull() ? false : change.isConstDescending();
 
-            double nearGround1Ft = 300;
-            double nearGround2Ft = 1000;
-            if (isLikelyTakeOffOrClimbing)
-            {
-                // likely starting
-                nearGround2Ft = 500;
-            }
-
             if (situation.hasGroundElevation())
             {
+                const double nearGround1Ft = 300;
+                const double nearGround2Ft = isLikelyTakeOffOrClimbing ? 500 : 1000;
                 const double aGroundFt = situation.getHeightAboveGround().value(CLengthUnit::ft());
                 static const QString detailsInfo("above ground: %1ft near grounds: %2ft %3ft likely takeoff: %4 likely landing: %5");
+
                 if (details) { *details = detailsInfo.arg(aGroundFt).arg(nearGround1Ft).arg(nearGround2Ft).arg(boolToYesNo(isLikelyTakeOffOrClimbing), boolToYesNo(isLikelyLanding));  }
                 if (aGroundFt < nearGround1Ft)
                 {
