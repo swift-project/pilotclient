@@ -72,6 +72,21 @@ namespace BlackMisc
         }
 
         template<typename Derived>
+        CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(bool useSceneryOffset)
+        {
+            CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
+            m_situationChange = CAircraftSituationChange(validSituations, true, true);
+            if (useSceneryOffset && m_situationChange.hasSceneryDeviation() && m_model.hasCG())
+            {
+                const CLength os = m_situationChange.getGuessedSceneryDeviation(m_model.getCG());
+                validSituations.addAltitudeOffset(os);
+                m_situationChange = CAircraftSituationChange(validSituations, true, true); // recalculate
+                m_lastSceneryOffset = os;
+            }
+            return validSituations;
+        }
+
+        template<typename Derived>
         void CInterpolator<Derived>::deferredInit()
         {
             if (m_model.hasModelString()) { return; } // set in-between

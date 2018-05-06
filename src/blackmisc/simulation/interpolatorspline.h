@@ -12,8 +12,9 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATORSPLINE_H
 #define BLACKMISC_SIMULATION_INTERPOLATORSPLINE_H
 
-#include "blackmisc/simulation/interpolator.h"
-#include "blackmisc/simulation/interpolationlogger.h"
+#include "interpolator.h"
+#include "interpolationlogger.h"
+#include "interpolant.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QString>
@@ -44,26 +45,24 @@ namespace BlackMisc
 
                 //! 3 coordinates for spline interpolation @{
                 std::array<double, 3> x, y, z, a, gnd, t, dx, dy, dz, da, dgnd;
+
+                //! Array size
+                int size() const { return x.size(); }
                 //! @}
             };
 
             //! Cubic function that performs the actual interpolation
-            class BLACKMISC_EXPORT Interpolant
+            class BLACKMISC_EXPORT CInterpolant : public IInterpolant
             {
             public:
                 //! Default
-                Interpolant() : m_pa(PosArray::zeroPosArray()) {}
+                CInterpolant() : m_pa(PosArray::zeroPosArray()) {}
 
                 //! Constructor
-                Interpolant(
-                    const PosArray &pa, const PhysicalQuantities::CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) :
-                    m_pa(pa), m_altitudeUnit(altitudeUnit), m_pbh(pbh) {}
+                CInterpolant(const PosArray &pa, const PhysicalQuantities::CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh);
 
                 //! Perform the interpolation
                 Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &currentSituation, bool interpolateGndFactor) const;
-
-                //! Interpolator for pitch, bank, heading, groundspeed
-                const CInterpolatorPbh &pbh() const { return m_pbh; }
 
                 //! Old situation
                 const Aviation::CAircraftSituation &getOldSituation() const { return pbh().getOldSituation(); }
@@ -71,22 +70,17 @@ namespace BlackMisc
                 //! New situation
                 const Aviation::CAircraftSituation &getNewSituation() const { return pbh().getNewSituation(); }
 
-                //! "Real time" representing the interpolated situation
-                qint64 getInterpolatedTime() const { return m_interpolatedTime; }
-
                 //! Set the time values
                 void setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs);
 
             private:
                 PosArray m_pa; //! current positions array, latest values last
                 PhysicalQuantities::CLengthUnit m_altitudeUnit;
-                CInterpolatorPbh m_pbh;
                 qint64 m_currentTimeMsSinceEpoc { -1 };
-                qint64 m_interpolatedTime { -1 }; //!< represented "real time" at interpolated situation
             };
 
             //! Strategy used by CInterpolator::getInterpolatedSituation
-            Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc,
+            CInterpolant getInterpolant(qint64 currentTimeMsSinceEpoc,
                                        const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status, SituationLog &log);
 
         private:
@@ -110,7 +104,7 @@ namespace BlackMisc
             qint64 m_prevSampleTime = 0; //!< previous sample "real time"
             qint64 m_nextSampleTime = 0; //!< next sample "real time"
             std::array<Aviation::CAircraftSituation, 3> m_s; //!< used situations
-            Interpolant m_interpolant;
+            CInterpolant m_interpolant;
         };
     } // ns
 } // ns

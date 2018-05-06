@@ -145,7 +145,7 @@ namespace BlackMisc
             return true;
         }
 
-        CInterpolatorSpline::Interpolant CInterpolatorSpline::getInterpolant(
+        CInterpolatorSpline::CInterpolant CInterpolatorSpline::getInterpolant(
             qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetupPerCallsign &setup,
             CInterpolationStatus &status,
@@ -161,14 +161,13 @@ namespace BlackMisc
             {
                 // with the latest updates of T243 the order and the offsets are supposed to be correct
                 // so even mixing fast/slow updates shall work
-                const CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
                 m_situationsLastModifiedUsed = lastModified;
+                const CAircraftSituationList validSituations = this->remoteAircraftSituationsAndChange(true);
                 const bool fillStatus = this->fillSituationsArray(validSituations);
                 if (!fillStatus)
                 {
                     return  m_interpolant;
                 }
-                m_situationChange = CAircraftSituationChange(validSituations, true, true);
                 const std::array<std::array<double, 3>, 3> normals {{ m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() }};
                 PosArray pa;
                 pa.x = {{ normals[0][0], normals[1][0], normals[2][0] }}; // oldest -> latest
@@ -201,7 +200,7 @@ namespace BlackMisc
                 m_nextSampleAdjustedTime = m_s[2].getAdjustedMSecsSinceEpoch(); // latest
                 m_prevSampleTime = m_s[1].getMSecsSinceEpoch();
                 m_nextSampleTime = m_s[2].getMSecsSinceEpoch(); // latest
-                m_interpolant = Interpolant(pa, m_s[2].getAltitudeUnit(), CInterpolatorPbh(m_s[1], m_s[2]));
+                m_interpolant = CInterpolant(pa, m_s[2].getAltitudeUnit(), CInterpolatorPbh(m_s[1], m_s[2]));
                 Q_ASSERT_X(m_prevSampleAdjustedTime < m_nextSampleAdjustedTime, Q_FUNC_INFO, "Wrong time order");
             }
 
@@ -286,7 +285,14 @@ namespace BlackMisc
             return true;
         }
 
-        CAircraftSituation CInterpolatorSpline::Interpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation, bool interpolateGndFactor) const
+        CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) :
+            m_pa(pa), m_altitudeUnit(altitudeUnit)
+        {
+            m_pbh = pbh;
+            m_situationsAvailable = pa.size();
+        }
+
+        CAircraftSituation CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &currentSituation, bool interpolateGndFactor) const
         {
             const double t1 = m_pa.t[1];
             const double t2 = m_pa.t[2];
@@ -323,7 +329,7 @@ namespace BlackMisc
             return newSituation;
         }
 
-        void CInterpolatorSpline::Interpolant::setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs)
+        void CInterpolatorSpline::CInterpolant::setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs)
         {
             m_currentTimeMsSinceEpoc = currentTimeMs;
             m_interpolatedTime = interpolatedTimeMs;

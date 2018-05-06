@@ -41,9 +41,9 @@ namespace BlackMisc
         //! Interpolator, calculation inbetween positions
         template <typename Derived>
         class CInterpolator :
-            public CSimulationEnvironmentAware,
-            public CInterpolationSetupAware,
-            public CRemoteAircraftAware
+            protected CSimulationEnvironmentAware,
+            protected CInterpolationSetupAware,
+            protected CRemoteAircraftAware
         {
         public:
             //! Log categories
@@ -109,12 +109,16 @@ namespace BlackMisc
             //! \sa BlackMisc::Aviation::CAircraftSituation::setOnGroundFromGroundFactorFromInterpolation
             static double groundInterpolationFactor();
 
-            const Aviation::CCallsign  m_callsign; //!< corresponding callsign
             CAircraftModel m_model; //!< corresponding model
+            const Aviation::CCallsign  m_callsign; //!< corresponding callsign
             Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() }; //!< latest interpolation
             Aviation::CAircraftSituationChange m_situationChange; //!< situations change
+            PhysicalQuantities::CLength m_lastSceneryOffset = PhysicalQuantities::CLength::null();
             qint64 m_situationsLastModifiedUsed { -1 }; //!< based on situations last updated
             int m_interpolatedSituationsCounter = 0; //!< counter for each interpolated situations: statistics, every n-th interpolation ....
+
+            //! Get situations and calculate change, also correct altitudes if applicable
+            Aviation::CAircraftSituationList remoteAircraftSituationsAndChange(bool useSceneryOffset);
 
             //! Verify gnd flag, times, ... true means "OK"
             bool verifyInterpolationSituations(const Aviation::CAircraftSituation &oldest, const Aviation::CAircraftSituation &newer, const Aviation::CAircraftSituation &latest,

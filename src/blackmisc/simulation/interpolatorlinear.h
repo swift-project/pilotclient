@@ -13,7 +13,8 @@
 #define BLACKMISC_SIMULATION_INTERPOLATORLINEAR_H
 
 #include "interpolator.h"
-#include "blackmisc/simulation/interpolationlogger.h"
+#include "interpolationlogger.h"
+#include "interpolant.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QString>
@@ -37,20 +38,19 @@ namespace BlackMisc
                 CInterpolator(callsign, simEnvProvider, setupProvider, remoteAircraftProvider, logger) {}
 
             //! Linear function that performs the actual interpolation
-            class Interpolant
+            class BLACKMISC_EXPORT CInterpolant : public IInterpolant
             {
             public:
                 //! Constructor
                 //! @{
-                Interpolant(const Aviation::CAircraftSituation &situation);
-                Interpolant(const Aviation::CAircraftSituation &situation1, const Aviation::CAircraftSituation &situation2, double timeFraction, qint64 interpolatedTime);
+                CInterpolant() {}
+                CInterpolant(const Aviation::CAircraftSituation &situation);
+                CInterpolant(const Aviation::CAircraftSituation &situation, const CInterpolatorPbh &pbh);
+                CInterpolant(const Aviation::CAircraftSituation &situation1, const Aviation::CAircraftSituation &situation2, double timeFraction, qint64 interpolatedTime);
                 //! @}
 
                 //! Perform the interpolation
                 Aviation::CAircraftSituation interpolatePositionAndAltitude(const Aviation::CAircraftSituation &situation, bool interpolateGndFactor) const;
-
-                //! Interpolator for pitch, bank, heading, groundspeed
-                const CInterpolatorPbh &pbh() const { return m_pbh; }
 
                 //! Old situation
                 const Aviation::CAircraftSituation &getOldSituation() const { return m_oldSituation; }
@@ -58,20 +58,17 @@ namespace BlackMisc
                 //! New situation
                 const Aviation::CAircraftSituation &getNewSituation() const { return m_newSituation; }
 
-                //! "Real time" representing the interpolated situation
-                qint64 getInterpolatedTime() const { return m_interpolatedTime; }
-
             private:
-                int m_situationsAvailable = 0;
                 Aviation::CAircraftSituation m_oldSituation;
                 Aviation::CAircraftSituation m_newSituation;
                 double m_simulationTimeFraction = 0.0; //!< 0..1
-                qint64 m_interpolatedTime = 0; //!< "Real time "of interpolated situation
-                const CInterpolatorPbh m_pbh;  //!< pitch, bank, ground speed and heading
             };
 
             //! Get the interpolant for the given time point
-            Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status, SituationLog &log);
+            CInterpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, CInterpolationStatus &status, SituationLog &log);
+
+        private:
+            CInterpolant m_interpolant; //!< current interpolant
         };
     } // ns
 } // ns

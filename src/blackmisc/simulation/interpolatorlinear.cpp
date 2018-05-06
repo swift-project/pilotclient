@@ -36,20 +36,25 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CInterpolatorLinear::Interpolant::Interpolant(const CAircraftSituation &situation) :
-            m_situationsAvailable(1), m_oldSituation(situation),
-            m_pbh(0, situation, situation)
-        {}
+        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &situation) :
+            IInterpolant(1, CInterpolatorPbh(0, situation, situation)),
+            m_oldSituation(situation)
+        { }
 
-        CInterpolatorLinear::Interpolant::Interpolant(const CAircraftSituation &situation1, const CAircraftSituation &situation2, double timeFraction, qint64 interpolatedTime) :
-            m_situationsAvailable(2),
+        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &situation, const CInterpolatorPbh &pbh) :
+            IInterpolant(1, pbh),
+            m_oldSituation(situation)
+        { }
+
+        CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &situation1, const CAircraftSituation &situation2, double timeFraction, qint64 interpolatedTime) :
+            IInterpolant(interpolatedTime, 2),
             m_oldSituation(situation1), m_newSituation(situation2),
-            m_simulationTimeFraction(timeFraction),
-            m_interpolatedTime(interpolatedTime),
-            m_pbh(m_simulationTimeFraction, situation1, situation2)
-        {}
+            m_simulationTimeFraction(timeFraction)
+        {
+            m_pbh = CInterpolatorPbh(m_simulationTimeFraction, situation1, situation2);
+        }
 
-        CAircraftSituation CInterpolatorLinear::Interpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation, bool interpolateGndFactor) const
+        CAircraftSituation CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude(const CAircraftSituation &situation, bool interpolateGndFactor) const
         {
             const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());
             const std::array<double, 3> newVec(m_newSituation.getPosition().normalVectorDouble());
@@ -92,7 +97,7 @@ namespace BlackMisc
             return newSituation;
         }
 
-        CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(
+        CInterpolatorLinear::CInterpolant CInterpolatorLinear::getInterpolant(
             qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetupPerCallsign &setup,
             CInterpolationStatus &status, SituationLog &log)
@@ -100,82 +105,84 @@ namespace BlackMisc
             Q_UNUSED(setup);
             status.reset();
 
-            // with the latest updates of T243 the order and the offsets are supposed to be correct
-            // so even mixing fast/slow updates shall work
-            const CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign); // if needed, we could also copy here
-            if (!CBuildConfig::isReleaseBuild())
-            {
-                BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
-                Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
-            }
-
             const qint64 tsLastModified = this->situationsLastModified(m_callsign);
+
+            // set default situations
+            CAircraftSituation oldSituation = m_interpolant.getOldSituation();
+            CAircraftSituation newSituation = m_interpolant.getNewSituation();
+
             if (m_situationsLastModifiedUsed < tsLastModified || m_situationChange.isNull())
             {
                 m_situationsLastModifiedUsed = tsLastModified;
-                m_situationChange = CAircraftSituationChange(validSituations, true, true);
-            }
 
-            // find the first situation earlier than the current time
-            const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
-            const auto situationsNewer = makeRange(validSituations.begin(), pivot);
-            const auto situationsOlder = makeRange(pivot, validSituations.end());
-
-            // interpolation situations
-            CAircraftSituation oldSituation;
-            CAircraftSituation newSituation;
-
-            // latest first, now 00:20 split time
-            // time     pos
-            // 00:25    10    newer
-            // 00:20    11    newer
-            // <----- split
-            // 00:15    12    older
-            // 00:10    13    older
-            // 00:05    14    older
-
-            // The first condition covers a situation, when there are no before / after situations.
-            // We just place at the last position until we get before / after situations
-            if (situationsOlder.isEmpty() || situationsNewer.isEmpty())
-            {
-                // no before situations
-                if (situationsOlder.isEmpty())
+                // with the latest updates of T243 the order and the offsets are supposed to be correct
+                // so even mixing fast/slow updates shall work
+                const CAircraftSituationList validSituations = this->remoteAircraftSituationsAndChange(true);
+                if (!CBuildConfig::isReleaseBuild())
                 {
-                    const CAircraftSituation currentSituation(*(situationsNewer.end() - 1)); // oldest newest
-                    status.setInterpolatedAndCheckSituation(false, currentSituation);
-                    return currentSituation;
+                    BLACK_VERIFY_X(validSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
+                    Q_ASSERT_X(validSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
                 }
 
-                // only one before situation
-                if (situationsOlder.size() < 2)
+                // find the first situation earlier than the current time
+                const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
+                const auto situationsNewer = makeRange(validSituations.begin(), pivot);
+                const auto situationsOlder = makeRange(pivot, validSituations.end());
+
+                // latest first, now 00:20 split time
+                // time     pos
+                // 00:25    10    newer
+                // 00:20    11    newer
+                // <----- split
+                // 00:15    12    older
+                // 00:10    13    older
+                // 00:05    14    older
+
+                // The first condition covers a situation, when there are no before / after situations.
+                // We just place at the last position until we get before / after situations
+                if (situationsOlder.isEmpty() || situationsNewer.isEmpty())
                 {
-                    const CAircraftSituation currentSituation(situationsOlder.front()); // latest oldest
-                    status.setInterpolatedAndCheckSituation(false, currentSituation);
-                    return currentSituation;
+                    // no before situations
+                    if (situationsOlder.isEmpty())
+                    {
+                        const CAircraftSituation currentSituation(*(situationsNewer.end() - 1)); // oldest newest
+                        status.setInterpolatedAndCheckSituation(false, currentSituation);
+                        m_interpolant = { currentSituation };
+                        return m_interpolant;
+                    }
+
+                    // only one before situation
+                    if (situationsOlder.size() < 2)
+                    {
+                        const CAircraftSituation currentSituation(situationsOlder.front()); // latest oldest
+                        status.setInterpolatedAndCheckSituation(false, currentSituation);
+                        m_interpolant = { currentSituation };
+                        return m_interpolant;
+                    }
+
+                    // extrapolate from two before situations
+                    oldSituation = *(situationsOlder.begin() + 1); // before newest
+                    newSituation = situationsOlder.front(); // newest
+                }
+                else
+                {
+                    oldSituation = situationsOlder.front(); // first oldest (aka newest oldest)
+                    newSituation = *(situationsNewer.end() - 1); // latest newest (aka oldest of newer block)
+                    Q_ASSERT(oldSituation.getAdjustedMSecsSinceEpoch() < newSituation.getAdjustedMSecsSinceEpoch());
                 }
 
-                // extrapolate from two before situations
-                oldSituation = *(situationsOlder.begin() + 1); // before newest
-                newSituation = situationsOlder.front(); // newest
-            }
-            else
-            {
-                oldSituation = situationsOlder.front(); // first oldest (aka newest oldest)
-                newSituation = *(situationsNewer.end() - 1); // latest newest (aka oldest of newer block)
-                Q_ASSERT(oldSituation.getAdjustedMSecsSinceEpoch() < newSituation.getAdjustedMSecsSinceEpoch());
-            }
-
-            // adjust ground if required
-            if (!oldSituation.canLikelySkipNearGroundInterpolation() && !oldSituation.hasGroundElevation())
-            {
-                const CElevationPlane planeOld = this->findClosestElevationWithinRange(oldSituation, CElevationPlane::singlePointRadius());
-                oldSituation.setGroundElevationChecked(planeOld);
-            }
-            if (!newSituation.canLikelySkipNearGroundInterpolation() && !newSituation.hasGroundElevation())
-            {
-                const CElevationPlane planeNew = this->findClosestElevationWithinRange(newSituation, CElevationPlane::singlePointRadius());
-                newSituation.setGroundElevationChecked(planeNew);
-            }
+                // adjust ground if required
+                if (!oldSituation.canLikelySkipNearGroundInterpolation() && !oldSituation.hasGroundElevation())
+                {
+                    const CElevationPlane planeOld = this->findClosestElevationWithinRange(oldSituation, CElevationPlane::singlePointRadius());
+                    oldSituation.setGroundElevationChecked(planeOld);
+                }
+                if (!newSituation.canLikelySkipNearGroundInterpolation() && !newSituation.hasGroundElevation())
+                {
+                    const CElevationPlane planeNew = this->findClosestElevationWithinRange(newSituation, CElevationPlane::singlePointRadius());
+                    newSituation.setGroundElevationChecked(planeNew);
+                }
+            } // modified situations
 
             CAircraftSituation currentSituation(oldSituation); // also sets ground elevation if available
 
@@ -209,7 +216,8 @@ namespace BlackMisc
                 log.interpolationSituations.push_back(oldSituation); // oldest at back
             }
 
-            return { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };
+            m_interpolant = { oldSituation, newSituation, simulationTimeFraction, interpolatedTime };
+            return m_interpolant;
         }
     } // namespace
 } // namespace
