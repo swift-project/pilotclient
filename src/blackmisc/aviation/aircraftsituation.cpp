@@ -535,7 +535,7 @@ namespace BlackMisc
             return false;
         }
 
-        const CLength &CAircraftSituation::getGroundElevationDistance() const
+        const CLength &CAircraftSituation::getGroundElevationRadius() const
         {
             if (!this->hasGroundElevation()) { return CLength::null(); }
             return m_groundElevationPlane.getRadius();

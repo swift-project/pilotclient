@@ -260,7 +260,7 @@ namespace BlackMisc
             bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane);
 
             //! Distance of ground elevation
-            const PhysicalQuantities::CLength &getGroundElevationDistance() const;
+            const PhysicalQuantities::CLength &getGroundElevationRadius() const;
 
             //! Height above ground.
             PhysicalQuantities::CLength getHeightAboveGround() const;

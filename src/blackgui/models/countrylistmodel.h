@@ -14,7 +14,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeldbobjects.h"
-
 #include <QString>
 
 class QObject;

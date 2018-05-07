@@ -191,7 +191,7 @@ namespace BlackMisc
 
         private:
             ReferenceDatum m_datum; //!< MSL or AGL?
-            AltitudeType m_altitudeType = TrueAltitude;
+            AltitudeType m_altitudeType = TrueAltitude; //!< type
 
             BLACK_METACLASS(
                 CAltitude,

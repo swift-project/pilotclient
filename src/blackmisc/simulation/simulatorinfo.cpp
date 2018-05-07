@@ -203,18 +203,9 @@ namespace BlackMisc
             if (i.isEmpty()) { return None; }
 
             Simulator s = None;
-            if (i.contains("fsx") || i.contains("fs10"))
-            {
-                s |= FSX;
-            }
-            if (i.contains("fs9") || i.contains("2004"))
-            {
-                s |= FS9;
-            }
-            if (i.contains("plane")  || i.contains("xp"))
-            {
-                s |= XPLANE;
-            }
+            if (i.contains("fsx") || i.contains("fs10")) { s |= FSX; }
+            if (i.contains("fs9") || i.contains("2004")) { s |= FS9; }
+            if (i.contains("plane")  || i.contains("xp")) { s |= XPLANE; }
             if (i.contains("3d")  || i.contains("prepar") || i.contains("martin") || i.contains("lm") || i.contains("lock"))
             {
                 s |= P3D;
