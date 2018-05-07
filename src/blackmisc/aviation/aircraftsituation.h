@@ -253,7 +253,7 @@ namespace BlackMisc
             void setGroundElevation(const Aviation::CAltitude &altitude);
 
             //! Elevation of the ground directly beneath
-            void setGroundElevation(const Geo::CElevationPlane &elevationPlane) { m_groundElevationPlane = elevationPlane; }
+            void setGroundElevation(const Geo::CElevationPlane &elevationPlane);
 
             //! Set elevation of the ground directly beneath, but checked
             //! \remark override if better
@@ -277,6 +277,9 @@ namespace BlackMisc
             //! Get altitude unit
             const PhysicalQuantities::CLengthUnit &getAltitudeUnit() const { return m_position.geodeticHeight().getUnit(); }
 
+            //! Get altitude unit
+            const PhysicalQuantities::CLengthUnit &getAltitudeOrDefaultUnit() const;
+
             //! Get altitude under consideration of ground elevation and ground flag
             //! \remark with dragToGround it will also compensate overflows, otherwise only underflow
             //! @{
@@ -291,7 +294,7 @@ namespace BlackMisc
             //! @}
 
             //! Set altitude
-            void setAltitude(const CAltitude &altitude) { m_position.setGeodeticHeight(altitude); }
+            void setAltitude(const CAltitude &altitude);
 
             //! Add offset to altitude
             CAltitude addAltitudeOffset(const PhysicalQuantities::CLength &offset);
@@ -342,7 +345,7 @@ namespace BlackMisc
             const PhysicalQuantities::CLength &getCG() const { return m_cg; }
 
             //! Set CG
-            void setCG(const PhysicalQuantities::CLength &cg) { m_cg = cg; }
+            void setCG(const PhysicalQuantities::CLength &cg);
 
             //! Has CG set?
             bool hasCG() const { return !m_cg.isNull(); }

@@ -16,6 +16,7 @@
 
 #include <Qt>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -34,7 +35,7 @@ namespace BlackMisc
             CAltitude copy(*this);
             if (!offset.isNull() && !offset.isZeroEpsilonConsidered())
             {
-                copy += offset;
+                copy += offset.switchedUnit(this->getUnit());
             }
             return copy;
         }
@@ -42,6 +43,21 @@ namespace BlackMisc
         void CAltitude::addOffset(const CLength &offset)
         {
             *this = this->withOffset(offset);
+        }
+
+        CAltitude &CAltitude::switchUnit(const CLengthUnit &newUnit)
+        {
+            if (newUnit.isNull() || this->getUnit().isNull() || this->getUnit() == newUnit) { return *this; }
+            CLength::switchUnit(newUnit);
+            return *this;
+        }
+
+        CAltitude CAltitude::switchedUnit(const CLengthUnit &newUnit) const
+        {
+            if (newUnit.isNull() || this->getUnit().isNull() || this->getUnit() == newUnit) { return *this; }
+            CAltitude copy(*this);
+            copy.switchUnit(newUnit);
+            return copy;
         }
 
         QString CAltitude::convertToQString(bool i18n) const
@@ -322,6 +338,11 @@ namespace BlackMisc
         {
             static const CAltitude null(0, CAltitude::MeanSeaLevel, CLengthUnit::nullUnit());
             return null;
+        }
+
+        const CLengthUnit &CAltitude::defaultUnit()
+        {
+            return CLengthUnit::ft();
         }
 
         const CPressure &CAltitude::standardISASeaLevelPressure()

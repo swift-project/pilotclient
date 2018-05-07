@@ -74,7 +74,7 @@ namespace BlackMisc
 
             //! Simply set unit, do no calclulate conversion
             //! \sa switchUnit
-            void setUnit(MU unit) { m_unit = unit; }
+            void setUnit(const MU &unit) { m_unit = unit; }
 
             //! Set unit by string
             void setUnitBySymbol(const QString &unitName);
@@ -83,7 +83,10 @@ namespace BlackMisc
             QString getUnitSymbol() const;
 
             //! Change unit, and convert value to maintain the same quantity
-            PQ &switchUnit(MU newUnit);
+            PQ &switchUnit(const MU &newUnit);
+
+            //! Return copy with switched unit
+            PQ switchedUnit(const MU &newUnit) const;
 
             //! Is quantity null?
             bool isNull() const;
@@ -119,7 +122,7 @@ namespace BlackMisc
 
             //! Value to QString with the given unit, e.g. "5.00m"
             //! \note default digits is CMeasurementUnit::getDisplayDigits
-            QString valueRoundedWithUnit(MU unit, int digits = -1, bool i18n = false) const;
+            QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
             //! Value to QString with the current unit, e.g. "5.00m"
             //! \note default digits is CMeasurementUnit::getDisplayDigits
@@ -219,23 +222,23 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
             void convertFromJson(const QJsonObject &json);
 
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
             //! Parse to string, with specified separator
             void parseFromString(const QString &value, CPqString::SeparatorMode mode);
 
             //! Parse value from string
             void parseFromString(const QString &value);
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
-
             //! Compare
             int comparePropertyByIndex(const CPropertyIndex &index, const PQ &pq) const;
-
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
 
             //! Maximum of 2 quantities
             static const PQ &maxValue(const PQ &pq1, const PQ &pq2);
@@ -281,8 +284,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CTimeUnit, CTime>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
         //! \endcond
-
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

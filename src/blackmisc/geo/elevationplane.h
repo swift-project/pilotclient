@@ -51,11 +51,17 @@ namespace BlackMisc
             //! Add offset to altitude
             void addAltitudeOffset(const PhysicalQuantities::CLength &offset);
 
+            //! Switch altitude unit
+            void switchAltitudeUnit(const PhysicalQuantities::CLengthUnit &unit);
+
             //! Altitude when within radius, else null
             const Aviation::CAltitude &getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const;
 
             //! Altitude (synonym for geodetic height)
             const Aviation::CAltitude &getAltitude() const { return this->geodeticHeight(); }
+
+            //! Altitude (synonym for geodetic height) unit
+            const PhysicalQuantities::CLengthUnit &getAltitudeUnit() const { return this->geodeticHeight().getUnit(); }
 
             //! Altitude (synonym for geodetic height)
             Aviation::CAltitude getAltitudeInUnit(const PhysicalQuantities::CLengthUnit &unit) const;

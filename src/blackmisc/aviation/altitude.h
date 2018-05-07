@@ -108,6 +108,12 @@ namespace BlackMisc
             //! Add offset value
             void addOffset(const CLength &offset);
 
+            //! Value in switched unit
+            CAltitude &switchUnit(const PhysicalQuantities::CLengthUnit &newUnit);
+
+            //! Value in switched unit
+            CAltitude switchedUnit(const PhysicalQuantities::CLengthUnit &newUnit) const;
+
             //! AGL Above ground level?
             bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }
 
@@ -175,6 +181,10 @@ namespace BlackMisc
 
             //! Null altitude (MSL)
             static const CAltitude &null();
+
+            //! Default unit for calculations
+            //! \remark using this is optional and will simplify debugging and calculations
+            static const PhysicalQuantities::CLengthUnit &defaultUnit();
 
             //! Standard pressure 1013.25mbar/hPa
             static const PhysicalQuantities::CPressure &standardISASeaLevelPressure();

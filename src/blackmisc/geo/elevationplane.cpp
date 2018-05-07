@@ -45,6 +45,13 @@ namespace BlackMisc
             this->setGeodeticHeight(newAlt);
         }
 
+        void CElevationPlane::switchAltitudeUnit(const CLengthUnit &unit)
+        {
+            if (unit.isNull() || this->getAltitudeUnit().isNull()) { return; }
+            if (this->getAltitudeUnit() == unit) { return; }
+            this->setGeodeticHeight(this->getAltitude().switchedUnit(unit));
+        }
+
         const CAltitude &CElevationPlane::getAltitudeIfWithinRadius(const ICoordinateGeodetic &coordinate) const
         {
             return (isWithinRange(coordinate)) ? geodeticHeight() : CAltitude::null();

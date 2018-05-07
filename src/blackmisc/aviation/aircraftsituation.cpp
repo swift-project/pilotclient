@@ -510,8 +510,14 @@ namespace BlackMisc
             {
                 m_groundElevationPlane = CElevationPlane(*this);
                 m_groundElevationPlane.setSinglePointRadius();
-                m_groundElevationPlane.setGeodeticHeight(altitude);
+                m_groundElevationPlane.setGeodeticHeight(altitude.switchedUnit(this->getAltitudeUnit()));
             }
+        }
+
+        void CAircraftSituation::setGroundElevation(const CElevationPlane &elevationPlane)
+        {
+            m_groundElevationPlane = elevationPlane;
+            m_groundElevationPlane.switchUnit(this->getAltitudeOrDefaultUnit()); // we use ft as internal unit, no "must" but simplification
         }
 
         bool CAircraftSituation::setGroundElevationChecked(const CElevationPlane &elevationPlane)
@@ -522,7 +528,7 @@ namespace BlackMisc
             if (m_groundElevationPlane.isNull() || distance < m_groundElevationPlane.getRadius())
             {
                 // better values
-                m_groundElevationPlane = elevationPlane;
+                this->setGroundElevation(elevationPlane);
                 m_groundElevationPlane.setRadius(distance);
                 return true;
             }
@@ -548,6 +554,12 @@ namespace BlackMisc
             return this->getAltitude() - gh;
         }
 
+        const CLengthUnit &CAircraftSituation::getAltitudeOrDefaultUnit() const
+        {
+            if (this->getAltitude().isNull()) { return CAltitude::defaultUnit(); }
+            return m_position.geodeticHeight().getUnit();
+        }
+
         CAltitude CAircraftSituation::getCorrectedAltitude(bool enableDragToGround, CAircraftSituation::AltitudeCorrection *correction) const
         {
             return this->getCorrectedAltitude(m_cg, enableDragToGround, correction);
@@ -571,7 +583,7 @@ namespace BlackMisc
             }
             else
             {
-                const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
+                const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity).switchedUnit(this->getAltitudeOrDefaultUnit());
                 if (groundPlusCG.isNull())
                 {
                     if (correction) { *correction = NoElevation; }
@@ -613,6 +625,11 @@ namespace BlackMisc
             this->setAltitude(this->getCorrectedAltitude(centerOfGravity, enableDragToGround, &altCor));
             this->setCG(centerOfGravity);
             return altCor;
+        }
+
+        void CAircraftSituation::setAltitude(const CAltitude &altitude)
+        {
+            m_position.setGeodeticHeight(altitude.switchedUnit(CAltitude::defaultUnit()));
         }
 
         CAltitude CAircraftSituation::addAltitudeOffset(const CLength &offset)
@@ -673,6 +690,11 @@ namespace BlackMisc
         {
             m_correspondingCallsign = callsign;
             m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
+        }
+
+        void CAircraftSituation::setCG(const CLength &cg)
+        {
+            m_cg = cg.switchedUnit(this->getAltitudeOrDefaultUnit());
         }
 
         bool CAircraftSituation::adjustGroundFlag(const CAircraftParts &parts, bool alwaysSetDetails, double timeDeviationFactor, qint64 *differenceMs)

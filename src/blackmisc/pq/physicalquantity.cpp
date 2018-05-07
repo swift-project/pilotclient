@@ -247,14 +247,21 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        PQ &CPhysicalQuantity<MU, PQ>::switchUnit(MU newUnit)
+        PQ &CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
         {
-            if (m_unit != newUnit)
-            {
-                m_value = newUnit.convertFrom(m_value, m_unit);
-                m_unit = newUnit;
-            }
+            if (m_unit == newUnit || this->isNull()) { return *derived(); }
+            m_value = newUnit.convertFrom(m_value, m_unit);
+            m_unit = newUnit;
             return *derived();
+        }
+
+        template <class MU, class PQ>
+        PQ CPhysicalQuantity<MU, PQ>::switchedUnit(const MU &newUnit) const
+        {
+            if (m_unit == newUnit || this->isNull()) { return *derived(); }
+            PQ copy(*derived());
+            copy.switchUnit(newUnit);
+            return copy;
         }
 
         template <class MU, class PQ>
@@ -293,7 +300,7 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(MU unit, int digits, bool i18n) const
+        QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool i18n) const
         {
             Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             if (this->isNull()) { return this->convertToQString(i18n); }
