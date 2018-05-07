@@ -291,7 +291,7 @@ namespace BlackMisc
             }
 
             //! Does a string end with name or symbol? E.g. 3meter, 3m, 3deg
-            bool endsStringWithNameOrSymbol(const QString &candidate, Qt::CaseSensitivity cs = Qt::CaseSensitive)
+            bool endsStringWithNameOrSymbol(const QString &candidate, Qt::CaseSensitivity cs = Qt::CaseSensitive) const
             {
                 const QString c = candidate.trimmed();
                 return c.endsWith(this->getName(false), cs) || c.endsWith(this->getName(true)) ||
