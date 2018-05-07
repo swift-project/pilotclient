@@ -174,21 +174,21 @@ namespace BlackMisc
                 // - and the elevation remains (almost) constant for a wider area
                 // - during flying the ground elevation not really matters
                 this->updateElevations();
-                const CLength cg(this->getModelCG());
-                const double a0 = m_s[0].getCorrectedAltitude(cg).value(); // oldest
-                const double a1 = m_s[1].getCorrectedAltitude(cg).value();
-                const double a2 = m_s[2].getCorrectedAltitude(cg).value(); // latest
+                static const CLengthUnit altUnit = CAltitude::defaultUnit();
+                const CLength cg(this->getModelCG().switchedUnit(altUnit));
+                const double a0 = m_s[0].getCorrectedAltitude(cg).value(altUnit); // oldest
+                const double a1 = m_s[1].getCorrectedAltitude(cg).value(altUnit);
+                const double a2 = m_s[2].getCorrectedAltitude(cg).value(altUnit); // latest
                 pa.a = {{ a0, a1, a2 }};
                 pa.gnd = {{ m_s[0].getOnGroundFactor(), m_s[1].getOnGroundFactor(), m_s[2].getOnGroundFactor() }};
                 pa.da = getDerivatives(pa.t, pa.a);
                 pa.dgnd = getDerivatives(pa.t, pa.gnd);
-                Q_ASSERT_X(this->areAltitudeUnitsSame(), Q_FUNC_INFO, "Altitude unit mismatch");
 
                 m_prevSampleAdjustedTime = m_s[1].getAdjustedMSecsSinceEpoch();
                 m_nextSampleAdjustedTime = m_s[2].getAdjustedMSecsSinceEpoch(); // latest
                 m_prevSampleTime = m_s[1].getMSecsSinceEpoch();
                 m_nextSampleTime = m_s[2].getMSecsSinceEpoch(); // latest
-                m_interpolant = CInterpolant(pa, m_s[2].getAltitudeUnit(), CInterpolatorPbh(m_s[1], m_s[2]));
+                m_interpolant = CInterpolant(pa, altUnit, CInterpolatorPbh(m_s[1], m_s[2]));
                 Q_ASSERT_X(m_prevSampleAdjustedTime < m_nextSampleAdjustedTime, Q_FUNC_INFO, "Wrong time order");
             }
 
@@ -260,17 +260,6 @@ namespace BlackMisc
                 if (!m_s[i].canLikelySkipNearGroundInterpolation()) { return true; }
             }
             return false;
-        }
-
-        bool CInterpolatorSpline::areAltitudeUnitsSame(const CLengthUnit &compare) const
-        {
-            if (m_s.size() < 1) { return true; }
-            const CLengthUnit c = compare.isNull() ? m_s[0].getAltitudeUnit() : compare;
-            for (unsigned int i = 0; i < m_s.size(); i++)
-            {
-                if (m_s[i].getAltitudeUnit() != c) { return false; }
-            }
-            return true;
         }
 
         CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorPbh &pbh) :

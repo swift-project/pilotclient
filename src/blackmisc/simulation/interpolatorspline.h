@@ -92,9 +92,6 @@ namespace BlackMisc
             //! Ground relevant
             bool isAnySituationNearGroundRelevant() const;
 
-            //! Are the altitude units all the same
-            bool areAltitudeUnitsSame(const PhysicalQuantities::CLengthUnit &compare = PhysicalQuantities::CLengthUnit::nullUnit()) const;
-
             //! Fill the situations array
             bool fillSituationsArray();
 
