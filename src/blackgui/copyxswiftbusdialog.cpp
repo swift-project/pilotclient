@@ -11,6 +11,8 @@
 
 #include <QMessageBox>
 #include "copyxswiftbusdialog.h"
+#include "guiapplication.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/directoryutils.h"
 #include "blackconfig/buildconfig.h"
@@ -18,6 +20,7 @@
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::XPlane;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -25,6 +28,16 @@ namespace BlackGui
     {
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return -1; }
         if (!CXPlaneUtil::hasNewerXSwiftBusBuild(xplaneRootDir)) { return 0; }
+        if (sGui && sGui->isShuttingDown()) { return 0; }
+        if (sGui && sGui->getIContextSimulator())
+        {
+            if (sGui->getIContextSimulator()->isSimulatorAvailable())
+            {
+                // do not show if already connected with another simulator
+                if (!sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo().xplane()) { return 0; }
+            }
+        }
+
         const QMessageBox::StandardButton reply =
             QMessageBox::question(parent, "Copy XSwiftBus",
                                   QString("Copy XSwiftBus from build directory '%1' to plugin directory '%2'?").arg(CDirectoryUtils::getXSwiftBusBuildDirectory(), CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir)),
