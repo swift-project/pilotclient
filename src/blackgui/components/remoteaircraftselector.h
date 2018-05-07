@@ -13,8 +13,9 @@
 #define BLACKGUI_REMOTEAIRCRAFTSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/digestsignal.h"
 
 #include <QFrame>
 #include <QObject>
@@ -55,25 +56,24 @@ namespace BlackGui
             //! \copydoc QWidget::showEvent
             virtual void showEvent(QShowEvent *event) override;
 
-        private slots:
-            //! Change content of combobox
-            void ps_onAddedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        private:
+            //! Added aircraft, change content of combobox
+            void onAddedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-            //! IContextNetwork::removedAircraft
-            void ps_onRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+            //! Removed aircraft, change content of combobox
+            void onRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Combo box has been changed
-            void ps_comboBoxChanged(const QString &text);
-
-        private:
-            QScopedPointer<Ui::CRemoteAircraftSelector> ui;
-
-            QString m_currentText;
-            bool m_showPartsEnabled = false;
-            BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
+            void comboBoxChanged(const QString &text);
 
             //! Set combobox items
             void fillComboBox();
+
+            QScopedPointer<Ui::CRemoteAircraftSelector> ui;
+            QString m_currentText;
+            bool m_showPartsEnabled = false;
+            BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
+            BlackMisc::CDigestSignal m_dsFillComboBox { this, &CRemoteAircraftSelector::fillComboBox, 3000, 5 };
         };
     } // namespace
 } // namespace
