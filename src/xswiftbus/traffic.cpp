@@ -212,6 +212,9 @@ namespace XSwiftBus
 
     void CTraffic::addPlane(const std::string &callsign, const std::string &modelName, const std::string &aircraftIcao, const std::string &airlineIcao, const std::string &livery)
     {
+        auto planeIt = m_planesByCallsign.find(callsign);
+        if (planeIt != m_planesByCallsign.end()) { return; }
+
         XPMPPlaneID id = nullptr;
         if (modelName.empty())
         {
