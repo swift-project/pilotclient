@@ -40,7 +40,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         //! Specialized class for distance units (meter, foot, nautical miles).
         class BLACKMISC_EXPORT CLengthUnit final :
             public CMeasurementUnit,
@@ -73,58 +72,66 @@ namespace BlackMisc
             static CLengthUnit defaultUnit() { return m(); }
 
             //! Null unit
-            static CLengthUnit nullUnit()
+            static const CLengthUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CLengthUnit nu(nu_);
                 return nu;
             }
 
             //! Meter m
-            static CLengthUnit m()
+            static const CLengthUnit &m()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data m(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter")), constQLatin1("m"), IdentityConverter());
+                static const CMeasurementUnit::Data m_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter")), constQLatin1("m"), IdentityConverter());
+                static const CLengthUnit m(m_);
                 return m;
             }
 
             //! Nautical miles NM
-            static CLengthUnit NM()
+            static const CLengthUnit &NM()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data NM(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile")), constQLatin1("NM"), LinearConverter<NauticalMilesToMeters>(), 3);
+                static const CMeasurementUnit::Data NM_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile")), constQLatin1("NM"), LinearConverter<NauticalMilesToMeters>(), 3);
+                static const CLengthUnit NM(NM_);
                 return NM;
             }
 
             //! Foot ft
-            static CLengthUnit ft()
+            static const CLengthUnit &ft()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data ft(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot")), constQLatin1("ft"), LinearConverter<FeetToMeters>(), 1);
+                static const CMeasurementUnit::Data ft_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot")), constQLatin1("ft"), LinearConverter<FeetToMeters>(), 1);
+                static const CLengthUnit ft(ft_);
                 return ft;
             }
 
             //! Kilometer km
-            static CLengthUnit km()
+            static const CLengthUnit &km()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data km(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer")), constQLatin1("km"), LinearConverter<Kilo<MetersToMeters> >(), 3);
+                static const CMeasurementUnit::Data km_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer")), constQLatin1("km"), LinearConverter<Kilo<MetersToMeters> >(), 3);
+                static const CLengthUnit km(km_);
                 return km;
             }
 
             //! Centimeter cm
-            static CLengthUnit cm()
+            static const CLengthUnit &cm()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data cm(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter")), constQLatin1("cm"), LinearConverter<Centi<MetersToMeters> >(), 1);
+                static const CMeasurementUnit::Data cm_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter")), constQLatin1("cm"), LinearConverter<Centi<MetersToMeters> >(), 1);
+                static const CLengthUnit cm(cm_);
                 return cm;
             }
 
             //! International mile
-            static CLengthUnit mi()
+            static const CLengthUnit &mi()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data mi(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "mile")), constQLatin1("mi"), LinearConverter<MilesToMeters>(), 3);
+                static const CMeasurementUnit::Data mi_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "mile")), constQLatin1("mi"), LinearConverter<MilesToMeters>(), 3);
+                static const CLengthUnit mi(mi_);
                 return mi;
             }
 
             //! Statute mile
-            static CLengthUnit SM()
+            static const CLengthUnit &SM()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data sm(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "statute mile")), constQLatin1("SM"), LinearConverter<StatuteMilesToMeters>(), 3);
+                static const CMeasurementUnit::Data sm_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "statute mile")), constQLatin1("SM"), LinearConverter<StatuteMilesToMeters>(), 3);
+                static const CLengthUnit sm(sm_);
                 return sm;
             }
 
@@ -180,12 +187,13 @@ namespace BlackMisc
             CAngleUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
-            static CAngleUnit defaultUnit() { return deg(); }
+            static const CAngleUnit &defaultUnit() { return deg(); }
 
             //! Null unit
-            static CAngleUnit nullUnit()
+            static const CAngleUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CAngleUnit nu(nu_);
                 return nu;
             }
 
@@ -193,32 +201,36 @@ namespace BlackMisc
             virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const override;
 
             //! Radians
-            static CAngleUnit rad()
+            static const CAngleUnit &rad()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data rad(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "radian")), constQLatin1("rad"), LinearConverter<RadiansToDegrees>());
+                static constexpr CMeasurementUnit::Data rad_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "radian")), constQLatin1("rad"), LinearConverter<RadiansToDegrees>());
+                static const CAngleUnit rad(rad_);
                 return rad;
             }
 
             //! Degrees
-            static CAngleUnit deg()
+            static const CAngleUnit &deg()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data deg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "deg")), IdentityConverter());
+                static const CMeasurementUnit::Data deg_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "deg")), IdentityConverter());
+                static const CAngleUnit deg(deg_);
                 return deg;
             }
 
             //! Sexagesimal degree (degrees, minutes, seconds, decimal seconds)
-            static CAngleUnit sexagesimalDeg()
+            static const CAngleUnit &sexagesimalDeg()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data deg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second")), constQLatin1("DMS"), SubdivisionConverter2<DegreesToDegrees, InEachHundred<60> >(), 4);
+                static const CMeasurementUnit::Data deg_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second")), constQLatin1("DMS"), SubdivisionConverter2<DegreesToDegrees, InEachHundred<60> >(), 4);
+                static const CAngleUnit deg(deg_);
                 return deg;
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
             }
 
             //! Sexagesimal degree (degrees, minutes, decimal minutes)
-            static CAngleUnit sexagesimalDegMin()
+            static const CAngleUnit &sexagesimalDegMin()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data deg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute")), constQLatin1("MinDec"), SubdivisionConverter<DegreesToDegrees, InEachHundred<60> >(), 4);
+                static const CMeasurementUnit::Data deg_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute")), constQLatin1("MinDec"), SubdivisionConverter<DegreesToDegrees, InEachHundred<60> >(), 4);
+                static const CAngleUnit deg(deg_);
                 return deg;
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2");
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2");
@@ -272,40 +284,45 @@ namespace BlackMisc
             CFrequencyUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
-            static CFrequencyUnit defaultUnit() { return Hz(); }
+            static const CFrequencyUnit &defaultUnit() { return Hz(); }
 
             //! Null unit
-            static CFrequencyUnit nullUnit()
+            static const CFrequencyUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CFrequencyUnit nu(nu_);
                 return nu;
             }
 
             //! Hertz
-            static CFrequencyUnit Hz()
+            static const CFrequencyUnit &Hz()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data Hz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hertz")), constQLatin1("Hz"), IdentityConverter());
+                static const CMeasurementUnit::Data Hz_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hertz")), constQLatin1("Hz"), IdentityConverter());
+                static const CFrequencyUnit Hz(Hz_);
                 return Hz;
             }
 
             //! Kilohertz
-            static CFrequencyUnit kHz()
+            static const CFrequencyUnit &kHz()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data kHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilohertz")), constQLatin1("kHz"), LinearConverter<Kilo<HertzToHertz> >(), 1);
+                static const CMeasurementUnit::Data kHz_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilohertz")), constQLatin1("kHz"), LinearConverter<Kilo<HertzToHertz> >(), 1);
+                static const CFrequencyUnit kHz(kHz_);
                 return kHz;
             }
 
             //! Megahertz
-            static CFrequencyUnit MHz()
+            static const CFrequencyUnit &MHz()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data MHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "megahertz")), constQLatin1("MHz"), LinearConverter<Mega<HertzToHertz> >(), 2);
+                static const CMeasurementUnit::Data MHz_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "megahertz")), constQLatin1("MHz"), LinearConverter<Mega<HertzToHertz> >(), 2);
+                static const CFrequencyUnit MHz(MHz_);
                 return MHz;
             }
 
             //! Gigahertz
-            static CFrequencyUnit GHz()
+            static const CFrequencyUnit &GHz()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data GHz(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "gigahertz")), constQLatin1("GHz"), LinearConverter<Giga<HertzToHertz> >(), 2);
+                static const CMeasurementUnit::Data GHz_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "gigahertz")), constQLatin1("GHz"), LinearConverter<Giga<HertzToHertz> >(), 2);
+                static const CFrequencyUnit GHz(GHz_);
                 return GHz;
             }
 
@@ -358,47 +375,53 @@ namespace BlackMisc
             CMassUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
-            static CMassUnit defaultUnit() { return kg(); }
+            static const CMassUnit &defaultUnit() { return kg(); }
 
             //! Null unit
-            static CMassUnit nullUnit()
+            static const CMassUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CMassUnit nu(nu_);
                 return nu;
             }
 
             //! Kilogram, SI base unit
-            static CMassUnit kg()
+            static const CMassUnit &kg()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data kg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilogram")), constQLatin1("kg"), IdentityConverter(), 1);
+                static const CMeasurementUnit::Data kg_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilogram")), constQLatin1("kg"), IdentityConverter(), 1);
+                static const CMassUnit kg(kg_);
                 return kg;
             }
 
             //! Gram, SI unit
-            static CMassUnit g()
+            static const CMassUnit &g()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data g(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "gram")), constQLatin1("g"), LinearConverter<GramsToKilograms>(), 0);
+                static const CMeasurementUnit::Data g_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "gram")), constQLatin1("g"), LinearConverter<GramsToKilograms>(), 0);
+                static const CMassUnit g(g_);
                 return g;
             }
 
             //! Tonne, aka metric ton (1000kg)
-            static CMassUnit tonne()
+            static const CMassUnit &tonne()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data t(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne")), constQLatin1("t"), LinearConverter<Mega<GramsToKilograms> >(), 3);
+                static const CMeasurementUnit::Data t_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne")), constQLatin1("t"), LinearConverter<Mega<GramsToKilograms> >(), 3);
+                static const CMassUnit t(t_);
                 return t;
             }
 
             //! Short ton (2000lb) used in the United States
-            static CMassUnit shortTon()
+            static const CMassUnit &shortTon()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data ton(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "short ton")), constQLatin1("ton"), LinearConverter<Two<Kilo<PoundsToKilograms> > >(), 3);
+                static const CMeasurementUnit::Data ton_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "short ton")), constQLatin1("ton"), LinearConverter<Two<Kilo<PoundsToKilograms> > >(), 3);
+                static const CMassUnit ton(ton_);
                 return ton;
             }
 
             //! Pound, aka mass pound
-            static CMassUnit lb()
+            static const CMassUnit &lb()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data lbs(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound")), constQLatin1("lb"), LinearConverter<PoundsToKilograms>(), 1);
+                static const CMeasurementUnit::Data lbs_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound")), constQLatin1("lb"), LinearConverter<PoundsToKilograms>(), 1);
+                static const CMassUnit lbs(lbs_);
                 return lbs;
             }
 
@@ -454,61 +477,69 @@ namespace BlackMisc
             CPressureUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
-            static CPressureUnit defaultUnit() { return hPa(); }
+            static const CPressureUnit &defaultUnit() { return hPa(); }
 
             //! Null unit
-            static CPressureUnit nullUnit()
+            static const CPressureUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CPressureUnit nu(nu_);
                 return nu;
             }
 
             //! Pascal
-            static CPressureUnit Pa()
+            static const CPressureUnit &Pa()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data Pa(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "pascal")), constQLatin1("Pa"), LinearConverter<PascalsToHectopascals>());
+                static const CMeasurementUnit::Data Pa_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "pascal")), constQLatin1("Pa"), LinearConverter<PascalsToHectopascals>());
+                static const CPressureUnit Pa(Pa_);
                 return Pa;
             }
 
             //! Hectopascal
-            static CPressureUnit hPa()
+            static const CPressureUnit &hPa()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data hPa(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hectopascal")), constQLatin1("hPa"), IdentityConverter());
+                static const CMeasurementUnit::Data hPa_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hectopascal")), constQLatin1("hPa"), IdentityConverter());
+                static const CPressureUnit hPa(hPa_);
                 return hPa;
             }
 
             //! Pounds per square inch
-            static CPressureUnit psi()
+            static const CPressureUnit &psi()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data psi(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound per square inch")), constQLatin1("psi"), LinearConverter<PsiToHectopascals>(), 2);
+                static const CMeasurementUnit::Data psi_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound per square inch")), constQLatin1("psi"), LinearConverter<PsiToHectopascals>(), 2);
+                static const CPressureUnit psi(psi_);
                 return psi;
             }
 
             //! Bar
-            static CPressureUnit bar()
+            static const CPressureUnit &bar()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data bar(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar")), constQLatin1("bar"), LinearConverter<Kilo<One> >(), 1);
+                static const CMeasurementUnit::Data bar_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar")), constQLatin1("bar"), LinearConverter<Kilo<One> >(), 1);
+                static const CPressureUnit bar(bar_);
                 return bar;
             }
 
             //! Millibar, actually the same as hPa
-            static CPressureUnit mbar()
+            static const CPressureUnit &mbar()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data mbar(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "millibar")), constQLatin1("mbar"), IdentityConverter(), 1);
+                static const CMeasurementUnit::Data mbar_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "millibar")), constQLatin1("mbar"), IdentityConverter(), 1);
+                static const CPressureUnit mbar(mbar_);
                 return mbar;
             }
 
             //! Inch of mercury at 0°C
-            static CPressureUnit inHg()
+            static const CPressureUnit &inHg()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data inhg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury")), constQLatin1("inHg"), LinearConverter<InchesToHectopascals>());
-                return inhg;
+                static const CMeasurementUnit::Data inHg_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury")), constQLatin1("inHg"), LinearConverter<InchesToHectopascals>());
+                static const CPressureUnit inHg(inHg_);
+                return inHg;
             }
 
             //! Millimeter of mercury
-            static CPressureUnit mmHg()
+            static const CPressureUnit &mmHg()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data mmhg(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "millimeter of mercury")), constQLatin1("mmHg"), LinearConverter<MillimetersToHectopascals>());
+                static const CMeasurementUnit::Data mmhg_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "millimeter of mercury")), constQLatin1("mmHg"), LinearConverter<MillimetersToHectopascals>());
+                static const CPressureUnit mmhg(mmhg_);
                 return mmhg;
             }
 
@@ -571,33 +602,37 @@ namespace BlackMisc
             CTemperatureUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
-            static CTemperatureUnit defaultUnit() { return C(); }
+            static const CTemperatureUnit &defaultUnit() { return C(); }
 
             //! Null unit
-            static CTemperatureUnit nullUnit()
+            static const CTemperatureUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CTemperatureUnit nu(nu_);
                 return nu;
             }
 
             //! Kelvin
-            static CTemperatureUnit K()
+            static const CTemperatureUnit &K()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data K(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "Kelvin")), constQLatin1("K"), AffineConverter<KelvinToCentigrade>());
+                static const CMeasurementUnit::Data K_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "Kelvin")), constQLatin1("K"), AffineConverter<KelvinToCentigrade>());
+                static const CTemperatureUnit K(K_);
                 return K;
             }
 
             //! Centigrade C
-            static CTemperatureUnit C()
+            static const CTemperatureUnit &C()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data C(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "centigrade")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "C")), IdentityConverter());
+                static const CMeasurementUnit::Data C_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "centigrade")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "C")), IdentityConverter());
+                static const CTemperatureUnit C(C_);
                 return C;
             }
 
             //! Fahrenheit F
-            static CTemperatureUnit F()
+            static const CTemperatureUnit &F()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data F(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "Fahrenheit")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "F")), AffineConverter<FahrenheitToCentigrade>());
+                static const CMeasurementUnit::Data F_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "Fahrenheit")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "F")), AffineConverter<FahrenheitToCentigrade>());
+                static const CTemperatureUnit F(F_);
                 return F;
             }
 
@@ -651,54 +686,61 @@ namespace BlackMisc
             CSpeedUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
-            static CSpeedUnit defaultUnit() { return m_s(); }
+            static const CSpeedUnit &defaultUnit() { return m_s(); }
 
             //! Null unit
-            static CSpeedUnit nullUnit()
+            static const CSpeedUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CSpeedUnit nu(nu_);
                 return nu;
             }
 
             //! Meter/second m/s
-            static CSpeedUnit m_s()
+            static const CSpeedUnit &m_s()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data ms(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second")), constQLatin1("m/s"), IdentityConverter());
+                static const CMeasurementUnit::Data ms_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second")), constQLatin1("m/s"), IdentityConverter());
+                static const CSpeedUnit ms(ms_);
                 return ms;
             }
 
             //! Knots
-            static CSpeedUnit kts()
+            static const CSpeedUnit &kts()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data kts(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "knot")), constQLatin1("kts"), LinearConverter<KnotsToMps>(), 1);
+                static const CMeasurementUnit::Data kts_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "knot")), constQLatin1("kts"), LinearConverter<KnotsToMps>(), 1);
+                static const CSpeedUnit kts(kts_);
                 return kts;
             }
 
             //! Nautical miles per hour NM/h (same as kts)
-            static CSpeedUnit NM_h()
+            static const CSpeedUnit &NM_h()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data NMh(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile per hour")), constQLatin1("NM/h"), LinearConverter<KnotsToMps>(), 1);
+                static const CMeasurementUnit::Data NMh_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile per hour")), constQLatin1("NM/h"), LinearConverter<KnotsToMps>(), 1);
+                static const CSpeedUnit NMh(NMh_);
                 return NMh;
             }
 
             //! Feet/second ft/s
-            static CSpeedUnit ft_s()
+            static const CSpeedUnit &ft_s()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data fts(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second")), constQLatin1("ft/s"), LinearConverter<FtPerSecToMps>(), 0);
+                static const CMeasurementUnit::Data fts_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second")), constQLatin1("ft/s"), LinearConverter<FtPerSecToMps>(), 0);
+                static const CSpeedUnit fts(fts_);
                 return fts;
             }
 
             //! Feet/min ft/min
-            static CSpeedUnit ft_min()
+            static const CSpeedUnit &ft_min()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data ftmin(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per minute")), constQLatin1("ft/min"), LinearConverter<FtPerMinToMps>(), 0);
+                static const CMeasurementUnit::Data ftmin_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per minute")), constQLatin1("ft/min"), LinearConverter<FtPerMinToMps>(), 0);
+                static const CSpeedUnit ftmin(ftmin_);
                 return ftmin;
             }
 
             //! Kilometer/hour km/h
-            static CSpeedUnit km_h()
+            static const CSpeedUnit &km_h()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data kmh(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer per hour")), constQLatin1("km/h"), LinearConverter<KphToMps>(), 1);
+                static const CMeasurementUnit::Data kmh_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer per hour")), constQLatin1("km/h"), LinearConverter<KphToMps>(), 1);
+                static const CSpeedUnit kmh(kmh_);
                 return kmh;
             }
 
@@ -755,12 +797,13 @@ namespace BlackMisc
             CTimeUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
-            static CTimeUnit defaultUnit() { return s(); }
+            static const CTimeUnit &defaultUnit() { return s(); }
 
             //! Null unit
-            static CTimeUnit nullUnit()
+            static const CTimeUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CTimeUnit nu(nu_);
                 return nu;
             }
 
@@ -768,62 +811,70 @@ namespace BlackMisc
             virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const override;
 
             //! Second s
-            static CTimeUnit s()
+            static const CTimeUnit &s()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data s(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "second")), constQLatin1("s"), IdentityConverter(), 1);
+                static const CMeasurementUnit::Data s_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "second")), constQLatin1("s"), IdentityConverter(), 1);
+                static const CTimeUnit s(s_);
                 return s;
             }
 
             //! Millisecond ms
-            static CTimeUnit ms()
+            static const CTimeUnit &ms()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data ms(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond")), constQLatin1("ms"), LinearConverter<Milli<SecondsToSeconds> >(), 0);
+                static const CMeasurementUnit::Data ms_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond")), constQLatin1("ms"), LinearConverter<Milli<SecondsToSeconds> >(), 0);
+                static const CTimeUnit ms(ms_);
                 return ms;
             }
 
             //! Hour
-            static CTimeUnit h()
+            static const CTimeUnit &h()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data h(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour")), constQLatin1("h"), LinearConverter<HoursToSeconds>(), 1);
+                static const CMeasurementUnit::Data h_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour")), constQLatin1("h"), LinearConverter<HoursToSeconds>(), 1);
+                static const CTimeUnit h(h_);
                 return h;
             }
 
             //! Minute
-            static CTimeUnit min()
+            static const CTimeUnit &min()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data minute(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute")), constQLatin1("min"), LinearConverter<MinutesToSeconds>(), 2);
+                static const CMeasurementUnit::Data minute_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute")), constQLatin1("min"), LinearConverter<MinutesToSeconds>(), 2);
+                static const CTimeUnit minute(minute_);
                 return minute;
             }
 
             //! Day
-            static CTimeUnit d()
+            static const CTimeUnit &d()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data day(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "day")), constQLatin1("d"), LinearConverter<DaysToSeconds>(), 1);
+                static const CMeasurementUnit::Data day_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "day")), constQLatin1("d"), LinearConverter<DaysToSeconds>(), 1);
+                static const CTimeUnit day(day_);
                 return day;
             }
 
             //! Hours, minutes, seconds
-            static CTimeUnit hms()
+            static const CTimeUnit &hms()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data hms(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second")), constQLatin1("hms"), SubdivisionConverter2<HoursToSeconds, InEachHundred<60> >(), 4);
+                static const CMeasurementUnit::Data hms_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second")), constQLatin1("hms"), SubdivisionConverter2<HoursToSeconds, InEachHundred<60> >(), 4);
+                static const CTimeUnit hms(hms_);
                 return hms;
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m%L3s");
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1h%L2m%L3s");
             }
 
             //! Hours, minutes
-            static CTimeUnit hrmin()
+            static const CTimeUnit &hrmin()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data hrmin(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute")), constQLatin1("hm"), SubdivisionConverter<HoursToSeconds, InEachHundred<60> >(), 3);
+                static const CMeasurementUnit::Data hrmin_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute")), constQLatin1("hm"), SubdivisionConverter<HoursToSeconds, InEachHundred<60> >(), 3);
+                static const CTimeUnit hrmin(hrmin_);
                 return hrmin;
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m");
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1h%L2m");
             }
 
             //! Minutes, seconds
-            static CTimeUnit minsec()
+            static const CTimeUnit &minsec()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data minsec(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second")), constQLatin1("minsec"), SubdivisionConverter<MinutesToSeconds, InEachHundred<60> >(), 2);
+                static const CMeasurementUnit::Data minsec_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second")), constQLatin1("minsec"), SubdivisionConverter<MinutesToSeconds, InEachHundred<60> >(), 2);
+                static const CTimeUnit minsec(minsec_);
                 return minsec;
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1m%L2s");
                 (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1m%L2s");
@@ -880,26 +931,29 @@ namespace BlackMisc
             CAccelerationUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
-            static CAccelerationUnit defaultUnit() { return m_s2(); }
+            static const CAccelerationUnit &defaultUnit() { return m_s2(); }
 
             //! Null unit
-            static CAccelerationUnit nullUnit()
+            static const CAccelerationUnit &nullUnit()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data nu(constQLatin1("null"), constQLatin1("null"));
+                static const CMeasurementUnit::Data nu_(constQLatin1("null"), constQLatin1("null"));
+                static const CAccelerationUnit nu(nu_);
                 return nu;
             }
 
             //! Meter/second^2 (m/s^2)
-            static CAccelerationUnit m_s2()
+            static const CAccelerationUnit &m_s2()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data ms2(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second per second")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2")), IdentityConverter(), 1);
+                static const CMeasurementUnit::Data ms2_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second per second")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2")), IdentityConverter(), 1);
+                static const CAccelerationUnit ms2(ms2_);
                 return ms2;
             }
 
             //! Feet/second^2
-            static CAccelerationUnit ft_s2()
+            static const CAccelerationUnit &ft_s2()
             {
-                static Q_CONSTEXPR CMeasurementUnit::Data fts2(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second per second")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "ft/s^2")), LinearConverter<FeetToMeters>(), 0);
+                static const CMeasurementUnit::Data fts2_(constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second per second")), constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "ft/s^2")), LinearConverter<FeetToMeters>(), 0);
+                static const CAccelerationUnit fts2(fts2_);
                 return fts2;
             }
 
