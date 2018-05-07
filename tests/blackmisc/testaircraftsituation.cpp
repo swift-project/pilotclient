@@ -121,6 +121,69 @@ namespace BlackMiscTest
         QVERIFY(!situations.isSortedAdjustedLatestFirst());
     }
 
+    void CTestAircraftSituation::altitudeCorrection()
+    {
+        CAircraftSituation::AltitudeCorrection correction = CAircraftSituation::NoCorrection;
+        const CAircraftSituationList situations = testSituations();
+        CAircraftSituation situation = situations.front();
+        CAltitude alt(100, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+
+        situation.setAltitude(alt);
+        CAltitude corAlt = situation.getCorrectedAltitude(true, &correction);
+
+        // no elevation, expect same values
+        QVERIFY2(corAlt == alt, "Expect same altitude");
+
+        CElevationPlane ep(situation, CElevationPlane::singlePointRadius());
+        situation.setGroundElevation(ep);
+
+        // now we have same alt and elevation values
+        // no elevation, expect same values
+        corAlt = situation.getCorrectedAltitude(true, &correction);
+        QVERIFY2(corAlt == alt, "Still expect same altitude");
+
+        // now we use CG underflow detection
+        const CLength cg(3, CLengthUnit::m());
+        situation.setCG(cg);
+        corAlt = situation.getCorrectedAltitude(true, &correction);
+        QVERIFY2(correction == CAircraftSituation::Underflow, "Expect underflow correction");
+        QVERIFY2(corAlt > alt, "Expect corrected altitude");
+        QVERIFY2((corAlt - cg) == alt, "Expect correction by CG");
+
+        // Unit of CG must be irrelevant
+        CLength cg2(cg);
+        cg2.switchUnit(CLengthUnit::m());
+        situation.setCG(cg2);
+        CAltitude corAlt2 = situation.getCorrectedAltitude(true, &correction);
+        QVERIFY2(correction == CAircraftSituation::Underflow, "Expect underflow correction");
+        QVERIFY2(corAlt2 == corAlt, "Expect same value for corrected altitude");
+
+        // now we test a negative altitude
+        alt = CAltitude(-1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+        ep.setGeodeticHeight(alt);
+        situation.setAltitude(alt);
+        situation.setGroundElevation(ep);
+        corAlt = situation.getCorrectedAltitude(true, &correction);
+        QVERIFY2(correction == CAircraftSituation::Underflow, "Expect underflow correction");
+        QVERIFY2(corAlt > alt, "Expect corrected altitude");
+        QVERIFY2((corAlt - cg) == alt, "Expect correction by CG");
+
+        // overflow detection
+        alt = CAltitude(1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+        situation.setAltitude(alt);
+        ep.setGeodeticHeight(alt);
+        ep.addAltitudeOffset(CLength(-100, CLengthUnit::ft()));
+        situation.setGroundElevation(ep);
+        corAlt = situation.getCorrectedAltitude(true, &correction);
+        QVERIFY2(corAlt == alt, "Expect same altitude, no overflow since not on gnd.");
+
+        situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::InFromNetwork);
+        corAlt = situation.getCorrectedAltitude(true, &correction);
+        QVERIFY2(correction == CAircraftSituation::DraggedToGround, "Expect dragged to gnd.");
+        QVERIFY2(corAlt < alt, "Expect corrected altitude dragged to gnd.");
+        QVERIFY2(corAlt == (ep.getAltitude() + cg), "Expect correction by CG");
+    }
+
     CAircraftSituationList CTestAircraftSituation::testSituations()
     {
         // "Kugaaruk Airport","Pelly Bay","Canada","YBB","CYBB",68.534401,-89.808098,56,-7,"A","America/Edmonton","airport","OurAirports"
