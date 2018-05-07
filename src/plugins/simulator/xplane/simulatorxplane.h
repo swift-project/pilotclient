@@ -205,7 +205,6 @@ namespace BlackSimPlugin
             // Driver Interpolation
             BlackMisc::Simulation::CSimulatedAircraftList m_pendingAddedAircrafts;
             CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
-            int m_interpolationRequest = 0; //!< current interpolation request
             QTimer m_pendingAddedTimer;
 
             XPlaneData m_xplaneData;

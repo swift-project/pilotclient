@@ -691,11 +691,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
             const int remoteAircraftNo = this->getAircraftInRangeCount();
-            if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
-
-            // interpolate and send to simulator
-            m_interpolationRequest++;
-            const CCallsignSet aircraftWithParts = this->remoteAircraftSupportingParts(); // optimization, fetch all parts supporting aircraft in one step (one lock)
+            if (remoteAircraftNo < 1) { return; }
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
