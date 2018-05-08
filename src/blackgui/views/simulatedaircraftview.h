@@ -66,11 +66,23 @@ namespace BlackGui
             virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
         private:
+            //! Request text message for selected aircraft
             void requestTextMessage();
-            void toogleEnabledAircraft();
-            void fastPositionUpdates();
+
+            //! Toogle aircraft state for selected aircraft
+            void toggleEnabledAircraft();
+
+            //! Toggle fast position updates for selected aircraft
+            void toggleFastPositionUpdates();
+
+            //! Highlight aircraft in simulator
             void highlightInSimulator();
+
+            //! Show position log for selected aircraft
             void showPositionLogInSimulator();
+
+            //! Enable all disabled aircraft
+            void enableAllDisabledAircraft();
 
             bool m_withMenuHighlight = true;
             bool m_withMenuEnable = true;
