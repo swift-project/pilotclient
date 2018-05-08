@@ -347,15 +347,8 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="lbl_PartsNetwork">
-            <property name="text">
-             <string>Network:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QWidget" name="wi_PartsNetwork" native="true">
+          <item row="1" column="0" colspan="2">
+           <widget class="QWidget" name="wi_Parts" native="true">
             <layout class="QHBoxLayout" name="hl_PartsNetwork">
              <property name="leftMargin">
               <number>0</number>
@@ -369,7 +362,27 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item alignment="Qt::AlignRight">
+             <item>
+              <spacer name="hs_Parts">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pb_DisplayLog">
+               <property name="text">
+                <string>display log.</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pb_RequestFromNetwork">
                <property name="toolTip">
                 <string>Request from network</string>

@@ -68,6 +68,9 @@ namespace BlackGui
             //! Selector has been changed
             void selectorChanged();
 
+            //! Log in simulator
+            void displayLogInSimulator();
+
             //! Set the context flags
             void contextFlagsToGui();
 

@@ -44,6 +44,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -78,6 +79,7 @@ namespace BlackGui
             connect(ui->pb_LatestInterpolationLog, &QPushButton::pressed, this, &CInternalsComponent::showLogFiles);
             connect(ui->pb_LatestPartsLog, &QPushButton::pressed, this, &CInternalsComponent::showLogFiles);
             connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::requestPartsFromNetwork);
+            connect(ui->pb_DisplayLog, &QPushButton::pressed, this, &CInternalsComponent::displayLogInSimulator);
 
             connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::selectorChanged);
             this->contextFlagsToGui();
@@ -249,8 +251,10 @@ namespace BlackGui
             CLogMessage(this).info("Request aircraft config for '%1'") << callsign.asString();
 
             // simple approach to update UI when parts are received
-            QTimer::singleShot(3000, this, [this]
+            const QPointer<CInternalsComponent> myself(this);
+            QTimer::singleShot(3000, this, [ = ]
             {
+                if (!myself) { return; }
                 ui->pb_CurrentParts->click();
                 ui->pb_RequestFromNetwork->setEnabled(true);
             });
@@ -259,6 +263,22 @@ namespace BlackGui
         void CInternalsComponent::selectorChanged()
         {
             this->setCurrentParts();
+        }
+
+        void CInternalsComponent::displayLogInSimulator()
+        {
+            if (!sGui || sGui->isShuttingDown())  { return; }
+            if (!sGui->getIContextSimulator())  { return; }
+            const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
+            if (callsign.isEmpty())
+            {
+                CLogMessage(this).validationError("No valid callsign selected");
+                return;
+            }
+
+            const CIdentifier i(this->objectName());
+            const QString dotCmd(".drv pos " + callsign.asString());
+            sGui->getIContextSimulator()->parseCommandLine(dotCmd, i);
         }
 
         void CInternalsComponent::contextFlagsToGui()
