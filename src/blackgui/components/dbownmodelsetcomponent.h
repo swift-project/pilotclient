@@ -160,14 +160,14 @@ namespace BlackGui
 
             // -------------------------- custom menus -----------------------------------
 
-            //! The menu for loading and handling own models for mapping tasks
-            //! \note This is specific for that very component
-            class CLoadModelsMenu : public BlackGui::Menus::IMenuDelegate
+            //! The menu for loading models from cache or create a new model set
+            //! \note This is specific for that very model set component
+            class CLoadModelSetMenu : public Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                CLoadModelsMenu(CDbOwnModelSetComponent *ownModelSetComponent, bool separator = true) :
-                    BlackGui::Menus::IMenuDelegate(ownModelSetComponent, separator)
+                CLoadModelSetMenu(CDbOwnModelSetComponent *ownModelSetComponent, bool separator = true) :
+                    Menus::IMenuDelegate(ownModelSetComponent, separator)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu

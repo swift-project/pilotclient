@@ -60,10 +60,10 @@ namespace BlackGui
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuMaterializeFilter);
             ui->tvp_OwnModelSet->addFilterDialog();
-            ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
+            ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelSetMenu(this));
             ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnModelSet, this, true));
             ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithSimulatorModels(ui->tvp_OwnModelSet, this, false));
-            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuOrderable);
+            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuLoadAndSave);
             ui->tvp_OwnModelSet->setSorting(CAircraftModel::IndexOrderString);
             ui->tvp_OwnModelSet->initAsOrderable();
             ui->tvp_OwnModelSet->setSimulatorForLoading(ui->comp_SimulatorSelector->getValue());
@@ -364,7 +364,7 @@ namespace BlackGui
             }
         }
 
-        void CDbOwnModelSetComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
+        void CDbOwnModelSetComponent::CLoadModelSetMenu::customMenu(CMenuActions &menuActions)
         {
             // for the moment I use all sims, I could restrict to CSimulatorInfo::getLocallyInstalledSimulators();
             const CSimulatorInfo sims =  CSimulatorInfo::allSimulators();
