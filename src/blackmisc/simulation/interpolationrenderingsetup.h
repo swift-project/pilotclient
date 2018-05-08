@@ -37,7 +37,9 @@ namespace BlackMisc
                 IndexSendGndFlagToSimulator,
                 IndexEnableGndFlag,
                 IndexEnabledAircraftParts,
-                IndexInterpolatorMode
+                IndexInterpolatorMode,
+                IndexInterpolatorModeAsString,
+                IndexFixSceneryOffset
             };
 
             //! Interpolator type
@@ -59,7 +61,7 @@ namespace BlackMisc
             //! Log.interpolation
             void setLogInterpolation(bool log) { m_logInterpolation = log; }
 
-            //! Full interpolation
+            //! Full interpolation (skip optimizations like checking if aircraft moves etc.)
             bool isForcingFullInterpolation() const { return m_forceFullInterpolation; }
 
             //! Force full interpolation
@@ -71,20 +73,26 @@ namespace BlackMisc
             //! Mask enabled aircraft parts
             bool maskEnabledAircraftParts(bool mask);
 
-            //! Aircraft parts enabled
+            //! Aircraft parts enabled (still requires the other aircraft to send parts)
             bool isAircraftPartsEnabled() const { return m_enabledAircraftParts; }
 
-            //! Set gnd flag enabled
+            //! Set gnd.flag enabled (aircraft supports gnd.flag)
             bool setEnabledGndFLag(bool enabled);
 
-            //! Aircraft parts enabled
+            //! Is gnd.flag enabled (aircraft supports gnd.flag)
             bool isGndFlagEnabled() const { return m_enabledGndFlag; }
 
             //! Send GND flag to simulator
-            bool sendGndFlagToSimulator() const { return m_sendGndToSim; }
+            bool isSendingGndFlagToSimulator() const { return m_sendGndToSim; }
 
-            //! Set sending
-            bool setSendGndFlagToSimulator(bool sendFLag);
+            //! Set sending GND flag to simulator
+            bool setSendingGndFlagToSimulator(bool sendFLag);
+
+            //! Fix scenery offset if it has been detected
+            bool isFixingSceneryOffset() const { return m_fixSceneryOffset; }
+
+            //! Enable fix scenery offset if it has been detected
+            void setFixingSceneryOffset(bool fix) { m_fixSceneryOffset = fix; }
 
             //! Consolidate with a network client
             void consolidateWithClient(const Network::CClient &client);
@@ -126,6 +134,7 @@ namespace BlackMisc
             bool m_enabledAircraftParts   = true;  //!< Enable aircraft parts
             bool m_enabledGndFlag         = true;  //!< Enable gnd.flag
             bool m_sendGndToSim           = true;  //!< Send the gnd.flag to simulator
+            bool m_fixSceneryOffset       = true;  //!< Fix. scenery offset
             int  m_interpolatorMode       = static_cast<int>(Spline); //!< interpolator mode (spline, ...)
         };
 
@@ -138,7 +147,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexMaxRenderedAircraft = CInterpolationAndRenderingSetupBase::IndexEnabledAircraftParts + 1,
+                IndexMaxRenderedAircraft = CInterpolationAndRenderingSetupBase::IndexFixSceneryOffset + 1,
                 IndexMaxRenderedDistance
             };
 
@@ -208,6 +217,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
                 BLACK_METAMEMBER(enabledGndFlag),
+                BLACK_METAMEMBER(fixSceneryOffset),
                 BLACK_METAMEMBER(interpolatorMode),
                 BLACK_METAMEMBER(maxRenderedAircraft),
                 BLACK_METAMEMBER(maxRenderedDistance)
@@ -267,6 +277,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
                 BLACK_METAMEMBER(enabledGndFlag),
+                BLACK_METAMEMBER(fixSceneryOffset),
                 BLACK_METAMEMBER(interpolatorMode)
             );
         };

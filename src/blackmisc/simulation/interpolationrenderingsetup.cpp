@@ -31,7 +31,7 @@ namespace BlackMisc
             return true;
         }
 
-        bool CInterpolationAndRenderingSetupBase::setSendGndFlagToSimulator(bool sendFLag)
+        bool CInterpolationAndRenderingSetupBase::setSendingGndFlagToSimulator(bool sendFLag)
         {
             if (sendFLag == m_sendGndToSim) { return false; }
             m_sendGndToSim = sendFLag;
@@ -95,6 +95,9 @@ namespace BlackMisc
             case IndexEnabledAircraftParts: return CVariant::fromValue(m_enabledAircraftParts);
             case IndexEnableGndFlag: return CVariant::fromValue(m_enabledGndFlag);
             case IndexSendGndFlagToSimulator: return CVariant::fromValue(m_sendGndToSim);
+            case IndexInterpolatorMode: return CVariant::fromValue(m_interpolatorMode);
+            case IndexInterpolatorModeAsString: return CVariant::fromValue(this->getInterpolatorModeAsString());
+            case IndexFixSceneryOffset: return CVariant::fromValue(m_fixSceneryOffset);
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
@@ -112,6 +115,9 @@ namespace BlackMisc
             case IndexEnabledAircraftParts: m_enabledAircraftParts = variant.toBool(); return;
             case IndexEnableGndFlag: m_enabledGndFlag = variant.toBool(); return;
             case IndexSendGndFlagToSimulator: m_sendGndToSim = variant.toBool(); return;
+            case IndexInterpolatorMode: m_interpolatorMode = variant.toInt(); return;
+            case IndexInterpolatorModeAsString: this->setInterpolatorMode(variant.toQString()); return;
+            case IndexFixSceneryOffset: m_fixSceneryOffset = variant.toBool(); return;
             default: break;
             }
             BLACK_VERIFY_X(false, Q_FUNC_INFO, "Cannot handle index");
@@ -127,12 +133,13 @@ namespace BlackMisc
                 QStringLiteral(" | force full interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
                 QStringLiteral(" | enable parts: ") % boolToYesNo(m_enabledAircraftParts) %
                 QStringLiteral(" | enable gnd: ") % boolToYesNo(m_enabledGndFlag) %
-                QStringLiteral(" | send gnd: ") % boolToYesNo(m_sendGndToSim);
+                QStringLiteral(" | send gnd: ") % boolToYesNo(m_sendGndToSim) %
+                QStringLiteral(" | fix.scenery offset: ") % boolToYesNo(m_fixSceneryOffset);
         }
 
         bool CInterpolationAndRenderingSetupBase::canHandleIndex(int index)
         {
-            return index >= CInterpolationAndRenderingSetupBase::IndexLogInterpolation && index <= CInterpolationAndRenderingSetupBase::IndexEnabledAircraftParts;
+            return index >= CInterpolationAndRenderingSetupBase::IndexLogInterpolation && index <= CInterpolationAndRenderingSetupBase::IndexFixSceneryOffset;
         }
 
         CInterpolationAndRenderingSetupGlobal::CInterpolationAndRenderingSetupGlobal()
@@ -251,7 +258,7 @@ namespace BlackMisc
             m_forceFullInterpolation = baseValues.isForcingFullInterpolation();
             m_enabledAircraftParts   = baseValues.isAircraftPartsEnabled();
             m_enabledGndFlag         = baseValues.isGndFlagEnabled();
-            m_sendGndToSim           = baseValues.sendGndFlagToSimulator();
+            m_sendGndToSim           = baseValues.isSendingGndFlagToSimulator();
         }
 
         QString CInterpolationAndRenderingSetupGlobal::convertToQString(bool i18n) const
@@ -314,7 +321,8 @@ namespace BlackMisc
             if (this->isForcingFullInterpolation() != globalSetup.isForcingFullInterpolation()) { diff.push_back(IndexForceFullInterpolation); }
             if (this->isAircraftPartsEnabled() != globalSetup.isAircraftPartsEnabled()) { diff.push_back(IndexEnabledAircraftParts); }
             if (this->isGndFlagEnabled() != globalSetup.isGndFlagEnabled()) { diff.push_back(IndexEnableGndFlag); }
-            if (this->sendGndFlagToSimulator() != globalSetup.sendGndFlagToSimulator()) { diff.push_back(IndexSendGndFlagToSimulator); }
+            if (this->isSendingGndFlagToSimulator() != globalSetup.isSendingGndFlagToSimulator()) { diff.push_back(IndexSendGndFlagToSimulator); }
+            if (this->isFixingSceneryOffset() != globalSetup.isForcingFullInterpolation()) { diff.push_back(IndexFixSceneryOffset); }
             return diff;
         }
 

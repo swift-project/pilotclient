@@ -359,7 +359,7 @@ namespace BlackMisc
             m_currentTimeMsSinceEpoch = currentTimeSinceEpoc;
             m_situationsLastModified = this->situationsLastModified(m_callsign);
             m_currentSetup = setup;
-            m_currentSituations = this->remoteAircraftSituationsAndChange(true);
+            m_currentSituations = this->remoteAircraftSituationsAndChange(setup.isFixingSceneryOffset());
             m_currentInterpolationStatus.reset();
             m_currentPartsStatus.reset();
 

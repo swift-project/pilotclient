@@ -979,7 +979,7 @@ namespace BlackSimPlugin
 
             // setup
             const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
-            const bool sendGround = setup.sendGndFlagToSimulator();
+            const bool sendGround = setup.isSendingGndFlagToSimulator();
 
             // FSX/P3D adding
             bool adding = false; // will be added flag
@@ -1260,7 +1260,7 @@ namespace BlackSimPlugin
 
                 // setup
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
-                const bool sendGround = setup.sendGndFlagToSimulator();
+                const bool sendGround = setup.isSendingGndFlagToSimulator();
 
                 // Interpolated situation
                 const CInterpolationResult result = simObject.getInterpolation(currentTimestamp, setup);

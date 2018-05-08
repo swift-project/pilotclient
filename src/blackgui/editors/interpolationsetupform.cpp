@@ -42,7 +42,8 @@ namespace BlackGui
             ui->cb_EnableParts->setChecked(setup.isAircraftPartsEnabled());
             ui->cb_ForceFullInterpolation->setChecked(setup.isForcingFullInterpolation());
             ui->cb_EnableGndFlag->setChecked(setup.isGndFlagEnabled());
-            ui->cb_SendGndFlagToSim->setChecked(setup.sendGndFlagToSimulator());
+            ui->cb_SendGndFlagToSim->setChecked(setup.isSendingGndFlagToSimulator());
+            ui->cb_FixSceneryOffset->setChecked(setup.isFixingSceneryOffset());
 
             const QString im = setup.getInterpolatorModeAsString();
             if (im.contains("linear", Qt::CaseInsensitive)) { ui->co_InterpolatorMode->setCurrentIndex(1); }
@@ -56,8 +57,9 @@ namespace BlackGui
             setup.setEnabledGndFLag(ui->cb_EnableGndFlag->isChecked());
             setup.setForceFullInterpolation(ui->cb_ForceFullInterpolation->isChecked());
             setup.setLogInterpolation(ui->cb_LogInterpolation->isChecked());
-            setup.setSendGndFlagToSimulator(ui->cb_SendGndFlagToSim->isChecked());
+            setup.setSendingGndFlagToSimulator(ui->cb_SendGndFlagToSim->isChecked());
             setup.setSimulatorDebuggingMessages(ui->cb_DebugDriver->isChecked());
+            setup.setFixingSceneryOffset(ui->cb_FixSceneryOffset->isChecked());
             setup.setInterpolatorMode(ui->co_InterpolatorMode->currentText());
             return setup;
         }
@@ -70,6 +72,7 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ForceFullInterpolation, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_EnableGndFlag, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_SendGndFlagToSim, readonly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_FixSceneryOffset, readonly);
             ui->co_InterpolatorMode->setEnabled(!readonly);
         }
 
