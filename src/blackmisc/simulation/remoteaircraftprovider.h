@@ -375,7 +375,7 @@ namespace BlackMisc
             //! @}
 
             //! Add an offset for testing
-            bool testAddAltitudeOffsetToSituation(Aviation::CAircraftSituation &situation) const;
+            Aviation::CAircraftSituation testAddAltitudeOffsetToSituation(const Aviation::CAircraftSituation &situation) const;
 
         private:
             // hashs, because not sorted by key but keeping order

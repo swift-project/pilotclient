@@ -197,8 +197,7 @@ namespace BlackMisc
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
 
             // for testing only
-            CAircraftSituation situationOffset(situation);
-            this->testAddAltitudeOffsetToSituation(situationOffset);
+            const CAircraftSituation situationOffset(this->testAddAltitudeOffsetToSituation(situation));
 
             // verify
             if (CBuildConfig::isLocalDeveloperDebugBuild())
@@ -479,13 +478,13 @@ namespace BlackMisc
             return m_testOffset.contains(callsign);
         }
 
-        bool CRemoteAircraftProvider::testAddAltitudeOffsetToSituation(CAircraftSituation &situation) const
+        CAircraftSituation CRemoteAircraftProvider::testAddAltitudeOffsetToSituation(const CAircraftSituation &situation) const
         {
             // for global offset testing set "true"
             constexpr bool globalOffsetTest = false;
 
             const CCallsign cs(situation.getCallsign());
-            if (!globalOffsetTest && !this->hasTestAltitudeOffset(cs)) { return false; }
+            if (!globalOffsetTest && !this->hasTestAltitudeOffset(cs)) { return situation; }
             CLength os;
             if (globalOffsetTest)
             {
@@ -496,9 +495,11 @@ namespace BlackMisc
                 QReadLocker l(&m_lockSituations);
                 os = m_testOffset.value(cs);
             }
+            if (os.isNull() || os.isZeroEpsilonConsidered()) { return situation; }
             const CAltitude newAlt = situation.getAltitude().withOffset(os);
-            situation.setAltitude(newAlt);
-            return true;
+            CAircraftSituation newSituation(situation);
+            newSituation.setAltitude(newAlt);
+            return newSituation;
         }
 
         CStatusMessageList CRemoteAircraftProvider::getAircraftPartsHistory(const CCallsign &callsign) const
