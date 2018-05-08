@@ -64,6 +64,9 @@ namespace BlackMiscTest
 
         //! Set descending altitudes
         static BlackMisc::Aviation::CAircraftSituationList testSetRotateUpPitch(const BlackMisc::Aviation::CAircraftSituationList &situations);
+
+        //! CG
+        static const BlackMisc::PhysicalQuantities::CLength &cg();
     };
 } // namespace
 

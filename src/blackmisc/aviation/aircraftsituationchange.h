@@ -59,17 +59,14 @@ namespace BlackMisc
                 NoDeviationInfo,
                 AllOnGround, //!< based on all situations on ground
                 WasOnGround, //!< was on ground except last situation
-                SomeSituationsOnGround //!< some situations on ground
+                SmallAGLDeviationNearGround //!< "Almost const AGL" near Ground
             };
 
             //! Default constructor.
             CAircraftSituationChange();
 
-            //! Ctor with 2 situations
-            CAircraftSituationChange(const CAircraftSituation &s1, const CAircraftSituation &s2);
-
             //! Ctor with n situations
-            CAircraftSituationChange(const CAircraftSituationList &situations, bool alreadySortedLatestFirst = false, bool calcStdDeviations = false);
+            CAircraftSituationChange(const CAircraftSituationList &situations, const PhysicalQuantities::CLength &cg, bool isVtol, bool alreadySortedLatestFirst = false, bool calcStdDeviations = false);
 
             //! Get callsign
             const CCallsign &getCallsign() const { return m_correspondingCallsign; }
@@ -116,9 +113,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::containsPushBack
             bool containsPushBack() const { return m_containsPushBack; }
 
-            //! AGL if it can be calculated, otherwise NULL
+            //! Ground distance (AGL) if it can be calculated, otherwise NULL
             //! \note distance is without CG, so on ground it can also be used to calculate
-            QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength> getAltAglStdDevAndMean() const { return QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength>(m_altAglStdDev, m_altAglMean); }
+            QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength> getGroundDistanceStdDevAndMean() const { return QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength>(m_gndDistStdDev, m_gndDistMean); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::altitudeStandardDeviationAndMean
             QPair<CAltitude, CAltitude> getAltitudeStdDevAndMean() const { return QPair<CAltitude, CAltitude>(m_altStdDev, m_altMean); }
@@ -132,12 +129,15 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::pitchStandardDeviationAndMean
             QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle> getPitchStdDevAndMean() const { return QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle>(m_pitchStdDev, m_pitchMean); }
 
+            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::minMaxGroundDistance
+            QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength> getMinMaxGroundDistance() const { return QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength>(m_minGroundDistance, m_maxGroundDistance); }
+
             //! Scnenery deviation (if it can be calculated, otherwise PhysicalQuantities::CLength::null)
             //! This is without CG, so substract CG to get deviation
             const PhysicalQuantities::CLength &guessedSceneryDeviation() const { return m_guessedSceneryDeviation; }
 
             //! Get scenery deviation under consideration of CG
-            PhysicalQuantities::CLength getGuessedSceneryDeviation(const PhysicalQuantities::CLength &cg) const;
+            PhysicalQuantities::CLength getGuessedSceneryDeviationCG() const { return m_guessedSceneryDeviationCG; }
 
             //! Scenery deviation hint
             GuessedSceneryDeviation getSceneryDeviationHint() const { return static_cast<GuessedSceneryDeviation>(m_guessedSceneryDeviationHint); }
@@ -158,7 +158,7 @@ namespace BlackMisc
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Calculate the standard deviiations
-            bool calculateStdDeviations(const CAircraftSituationList &situations);
+            bool calculateStdDeviations(const CAircraftSituationList &situations, const PhysicalQuantities::CLength &cg);
 
             //! NULL object
             static const CAircraftSituationChange &null();
@@ -170,8 +170,11 @@ namespace BlackMisc
             //! Scenery deviation hint
             void setSceneryDeviationHint(GuessedSceneryDeviation hint) { m_guessedSceneryDeviationHint = static_cast<int>(hint); }
 
+            //! Set scenery deviation
+            void setSceneryDeviation(const PhysicalQuantities::CLength &deviation, const PhysicalQuantities::CLength &cg, GuessedSceneryDeviation hint);
+
             //! Guess scenery deviation
-            void guessSceneryDeviation(const CAircraftSituationList &situations);
+            void guessSceneryDeviation(const PhysicalQuantities::CLength &cg);
 
             int m_situationsCount = -1;
             CCallsign m_correspondingCallsign;
@@ -200,9 +203,12 @@ namespace BlackMisc
             PhysicalQuantities::CSpeed m_gsMean = PhysicalQuantities::CSpeed::null();
             PhysicalQuantities::CAngle m_pitchStdDev = PhysicalQuantities::CAngle::null();
             PhysicalQuantities::CAngle m_pitchMean = PhysicalQuantities::CAngle::null();
-            PhysicalQuantities::CLength m_altAglStdDev = PhysicalQuantities::CLength::null();
-            PhysicalQuantities::CLength m_altAglMean = PhysicalQuantities::CLength::null();
+            PhysicalQuantities::CLength m_gndDistStdDev = PhysicalQuantities::CLength::null();
+            PhysicalQuantities::CLength m_gndDistMean = PhysicalQuantities::CLength::null();
             PhysicalQuantities::CLength m_guessedSceneryDeviation = PhysicalQuantities::CLength::null();
+            PhysicalQuantities::CLength m_guessedSceneryDeviationCG = PhysicalQuantities::CLength::null();
+            PhysicalQuantities::CLength m_maxGroundDistance = PhysicalQuantities::CLength::null();
+            PhysicalQuantities::CLength m_minGroundDistance = PhysicalQuantities::CLength::null();
 
             BLACK_METACLASS(
                 CAircraftSituationChange,
@@ -222,11 +228,12 @@ namespace BlackMisc
                 BLACK_METAMEMBER(elvMean),
                 BLACK_METAMEMBER(gsStdDev),
                 BLACK_METAMEMBER(gsMean),
-                BLACK_METAMEMBER(altAglStdDev),
-                BLACK_METAMEMBER(altAglMean),
+                BLACK_METAMEMBER(gndDistStdDev),
+                BLACK_METAMEMBER(gndDistMean),
                 BLACK_METAMEMBER(pitchStdDev),
                 BLACK_METAMEMBER(pitchMean),
                 BLACK_METAMEMBER(guessedSceneryDeviation),
+                BLACK_METAMEMBER(guessedSceneryDeviationCG),
                 BLACK_METAMEMBER(guessedSceneryDeviationHint),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(oldestTimestampMSecsSinceEpoch),

@@ -57,7 +57,7 @@ namespace BlackMisc
             if (this->isEmpty()) { return 0; }
 
             Q_ASSERT_X(this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
-            const CAircraftSituationChange change(*this, true, true);
+            const CAircraftSituationChange change(*this, model.getCG(), model.isVtol(), true, true);
             int c = 0;
             bool first = true;
             if (this->front().getCallsign().equalsString("AFL2353"))
@@ -431,6 +431,18 @@ namespace BlackMisc
             return values;
         }
 
+        QList<double> CAircraftSituationList::groundDistanceValues(const CLengthUnit &unit, const CLength &cg) const
+        {
+            QList<double> values;
+            for (const CAircraftSituation &s : *this)
+            {
+                const CLength distance(s.getGroundDistance(cg));
+                if (distance.isNull()) { continue; }
+                values.push_back(distance.value(unit));
+            }
+            return values;
+        }
+
         QPair<CSpeed, CSpeed> CAircraftSituationList::groundSpeedStandardDeviationAndMean() const
         {
             const QList<double> gsValues = this->groundSpeedValues(CSpeedUnit::kts());
@@ -449,18 +461,28 @@ namespace BlackMisc
 
         QPair<CAltitude, CAltitude> CAircraftSituationList::elevationStandardDeviationAndMean() const
         {
-            const QList<double> elvValues = this->elevationValues(CLengthUnit::ft());
+            const QList<double> elvValues = this->elevationValues(CAltitude::defaultUnit());
             if (elvValues.size() != this->size()) { return QPair<CAltitude, CAltitude>(CAltitude::null(), CAltitude::null()); }
             const QPair<double, double> elvFt = CMathUtils::standardDeviationAndMean(elvValues);
-            return QPair<CAltitude, CAltitude>(CAltitude(elvFt.first, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CAltitude(elvFt.second, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+            return QPair<CAltitude, CAltitude>(CAltitude(elvFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(elvFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
         }
 
         QPair<CAltitude, CAltitude> CAircraftSituationList::altitudeStandardDeviationAndMean() const
         {
-            const QList<double> altValues = this->altitudeValues(CLengthUnit::ft());
+            const QList<double> altValues = this->altitudeValues(CAltitude::defaultUnit());
             if (altValues.size() != this->size()) { return QPair<CAltitude, CAltitude>(CAltitude::null(), CAltitude::null()); }
             const QPair<double, double> altFt = CMathUtils::standardDeviationAndMean(altValues);
-            return QPair<CAltitude, CAltitude>(CAltitude(altFt.first, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CAltitude(altFt.second, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+            return QPair<CAltitude, CAltitude>(CAltitude(altFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(altFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
+        }
+
+        QPair<CLength, CLength> CAircraftSituationList::minMaxGroundDistance(const CLength &cg) const
+        {
+            const QList<double> gndDistance = this->groundDistanceValues(CAltitude::defaultUnit(), cg);
+            if (gndDistance.size() != this->size()) { return QPair<CLength, CLength>(CLength::null(), CLength::null()); }
+            const auto gndDistMinMax = std::minmax_element(gndDistance.constBegin(), gndDistance.constEnd());
+            const double gndDistMin = *gndDistMinMax.first;
+            const double gndDistMax = *gndDistMinMax.second;
+            return QPair<CLength, CLength>(CLength(gndDistMin, CAltitude::defaultUnit()), CLength(gndDistMax, CAltitude::defaultUnit()));
         }
 
         QPair<CAltitude, CAltitude> CAircraftSituationList::altitudeAglStandardDeviationAndMean() const
@@ -478,7 +500,7 @@ namespace BlackMisc
                 altElvDeltas.push_back(delta);
             }
             const QPair<double, double> deltaFt = CMathUtils::standardDeviationAndMean(altElvDeltas);
-            return QPair<CAltitude, CAltitude>(CAltitude(deltaFt.first, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CAltitude(deltaFt.second, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+            return QPair<CAltitude, CAltitude>(CAltitude(deltaFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(deltaFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
         }
     } // namespace
 } // namespace

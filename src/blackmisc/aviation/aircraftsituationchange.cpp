@@ -33,10 +33,7 @@ namespace BlackMisc
     {
         CAircraftSituationChange::CAircraftSituationChange() {}
 
-        CAircraftSituationChange::CAircraftSituationChange(const CAircraftSituation &s1, const CAircraftSituation &s2) :
-            CAircraftSituationChange::CAircraftSituationChange(CAircraftSituationList({s1, s2})) {}
-
-        CAircraftSituationChange::CAircraftSituationChange(const CAircraftSituationList &situations, bool alreadySortedLatestFirst, bool calcStdDeviations)
+        CAircraftSituationChange::CAircraftSituationChange(const CAircraftSituationList &situations, const PhysicalQuantities::CLength &cg, bool isVtol, bool alreadySortedLatestFirst, bool calcStdDeviations)
         {
             if (situations.size() < 2) { return; }
             const CAircraftSituationList sorted(alreadySortedLatestFirst ? situations : situations.getSortedAdjustedLatestFirst());
@@ -65,7 +62,7 @@ namespace BlackMisc
             m_justTouchdown = sorted.isJustTouchingDown(true);
             m_constAccelerating = sorted.isConstAccelerating(true);
             m_constDecelerating = sorted.isConstDecelarating(true);
-            m_containsPushBack = sorted.containsPushBack();
+            m_containsPushBack = !isVtol && sorted.containsPushBack();
 
             if (sorted.size() >= 3)
             {
@@ -76,20 +73,13 @@ namespace BlackMisc
 
             if (calcStdDeviations)
             {
-                this->calculateStdDeviations(situations);
+                this->calculateStdDeviations(situations, cg);
                 m_rotateUp = sorted.front().getPitch() > (m_pitchMean + m_pitchStdDev);
             }
             else
             {
                 m_rotateUp = sorted.isRotatingUp(true);
             }
-        }
-
-        CLength CAircraftSituationChange::getGuessedSceneryDeviation(const CLength &cg) const
-        {
-            if (cg.isNull()) { return this->guessedSceneryDeviation(); }
-            if (this->guessedSceneryDeviation().isNull()) { return CLength::null(); }
-            return this->guessedSceneryDeviation() - cg;
         }
 
         bool CAircraftSituationChange::hasSceneryDeviation() const
@@ -114,7 +104,7 @@ namespace BlackMisc
                    QStringLiteral(" | rotate up: ") % boolToYesNo(this->isRotatingUp()) %
                    QStringLiteral(" | push back: ") % boolToYesNo(this->containsPushBack()) %
                    QStringLiteral(" | scenery delta: ") % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % QStringLiteral(" [") % this->getGuessedSceneryDeviationAsString() %
-                   QStringLiteral("] | AGL delta: ") % m_altAglMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_altAglStdDev.valueRoundedWithUnit(1) %
+                   QStringLiteral("] | AGL delta: ") % m_gndDistMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_gndDistStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" | std.dev/mean: pitch ") %  m_pitchMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_pitchStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" gs ") % m_gsMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_gsStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" alt. ") % m_altMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_altStdDev.valueRoundedWithUnit(1) %
@@ -165,7 +155,7 @@ namespace BlackMisc
             }
         }
 
-        bool CAircraftSituationChange::calculateStdDeviations(const CAircraftSituationList &situations)
+        bool CAircraftSituationChange::calculateStdDeviations(const CAircraftSituationList &situations, const CLength &cg)
         {
             if (situations.isEmpty()) { return false; }
 
@@ -177,34 +167,39 @@ namespace BlackMisc
             m_pitchStdDev = pitchStdDevMean.first;
             m_pitchMean = pitchStdDevMean.second;
 
-            const QList<double> altValues = situations.altitudeValues(CLengthUnit::ft());
+            const QList<double> altValues = situations.altitudeValues(CAltitude::defaultUnit());
             if (altValues.size() == situations.size())
             {
-                const QPair<double, double> altFt = CMathUtils::standardDeviationAndMean(altValues);
-                m_altStdDev = CAltitude(altFt.first, CAltitude::MeanSeaLevel, CLengthUnit::ft());
-                m_altMean = CAltitude(altFt.second, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+                const QPair<double, double> altDevMean = CMathUtils::standardDeviationAndMean(altValues);
+                m_altStdDev = CAltitude(altDevMean.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit());
+                m_altMean = CAltitude(altDevMean.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit());
             }
 
-            const QList<double> elvValues = situations.elevationValues(CLengthUnit::ft());
+            const QList<double> elvValues = situations.elevationValues(CAltitude::defaultUnit());
             if (elvValues.size() == situations.size())
             {
-                const QPair<double, double> elvFt = CMathUtils::standardDeviationAndMean(elvValues);
-                m_elvStdDev = CAltitude(elvFt.first, CAltitude::MeanSeaLevel, CLengthUnit::ft());
-                m_elvMean = CAltitude(elvFt.second, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+                const QPair<double, double> elvDevMean = CMathUtils::standardDeviationAndMean(elvValues);
+                m_elvStdDev = CAltitude(elvDevMean.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit());
+                m_elvMean = CAltitude(elvDevMean.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit());
 
                 if (altValues.size() == situations.size())
                 {
-                    QList<double> altElvDeltas;
+                    QList<double> gndDistance;
                     for (int i = 0; i < altValues.size(); i++)
                     {
                         const double delta = altValues[i] - elvValues[i];
-                        altElvDeltas.push_back(delta);
+                        gndDistance.push_back(delta);
                     }
-                    const QPair<double, double> deltaFt = CMathUtils::standardDeviationAndMean(altElvDeltas);
-                    m_altAglStdDev = CLength(deltaFt.first, CLengthUnit::ft());
-                    m_altAglMean = CLength(deltaFt.second, CLengthUnit::ft());
+                    const QPair<double, double> gndDistanceDevMean = CMathUtils::standardDeviationAndMean(gndDistance);
+                    m_gndDistStdDev = CLength(gndDistanceDevMean.first, CAltitude::defaultUnit());
+                    m_gndDistMean = CLength(gndDistanceDevMean.second, CAltitude::defaultUnit());
 
-                    this->guessSceneryDeviation(situations);
+                    const auto gndDistMinMax = std::minmax_element(gndDistance.constBegin(), gndDistance.constEnd());
+                    const double gndDistMin = *gndDistMinMax.first;
+                    const double gndDistMax = *gndDistMinMax.second;
+                    m_minGroundDistance = CLength(gndDistMin, CAltitude::defaultUnit());
+                    m_maxGroundDistance = CLength(gndDistMax, CAltitude::defaultUnit());
+                    this->guessSceneryDeviation(cg);
                 }
             }
             return true;
@@ -221,45 +216,53 @@ namespace BlackMisc
             static const QString noInfo("no info");
             static const QString completeOg("complete og");
             static const QString wasOg("was og");
-            static const QString someOg("some og");
+            static const QString smallAGLDev("small AGL dev. near gnd.");
 
             switch (hint)
             {
             case AllOnGround: return completeOg;
             case WasOnGround: return wasOg;
-            case SomeSituationsOnGround: return someOg;
+            case SmallAGLDeviationNearGround: return smallAGLDev;
             case NoDeviationInfo:
             default: break;
             }
             return noInfo;
         }
 
-        void CAircraftSituationChange::guessSceneryDeviation(const CAircraftSituationList &situations)
+        void CAircraftSituationChange::setSceneryDeviation(const CLength &deviation, const CLength &cg, CAircraftSituationChange::GuessedSceneryDeviation hint)
+        {
+            m_guessedSceneryDeviation = deviation;
+            m_guessedSceneryDeviationCG = cg.isNull() ? CLength::null() : deviation - cg;
+            this->setSceneryDeviationHint(hint);
+        }
+
+        void CAircraftSituationChange::guessSceneryDeviation(const CLength &cg)
         {
             m_guessedSceneryDeviation = CLength::null();
-            if (m_altAglStdDev.isNull()) { return; }
-            if (m_altAglMean.isNull()) { return; }
+            this->setSceneryDeviationHint(NoDeviationInfo);
+            if (m_gndDistStdDev.isNull()) { return; }
+            if (m_gndDistMean.isNull()) { return; }
 
             // only for a small deviation we can calculate scenery differemce
             static const CLength maxDeviation(2, CLengthUnit::ft());
 
-            // On ground or was on ground
-            if (this->wasConstOnGround())
+            // Small deviation means "const" AGL
+            if (m_gndDistStdDev <= maxDeviation)
             {
-                if (m_altAglStdDev > maxDeviation) { return; }
-                m_guessedSceneryDeviation = m_altAglMean;
-                this->setSceneryDeviationHint(this->isConstOnGround() ? AllOnGround : WasOnGround);
-            }
-            else
-            {
-                const CAircraftSituationList situationsOg = situations.findOnGroundWithElevation(CAircraftSituation::OnGround);
-                if (situationsOg.size() >= 2)
+                do
                 {
-                    const QPair<CAltitude, CAltitude> altAgl = situationsOg.altitudeAglStandardDeviationAndMean();
-                    if (altAgl.first > maxDeviation) { return; } // deviation
-                    m_guessedSceneryDeviation = altAgl.second; // AGL mean;
-                    this->setSceneryDeviationHint(SomeSituationsOnGround);
+                    if (this->isConstOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, AllOnGround); break; }
+                    if (this->isConstOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, WasOnGround); break; }
+                    if (!m_altStdDev.isNull() && m_altStdDev <= maxDeviation)
+                    {
+                        // small alt.deviation too!
+                        if (!m_maxGroundDistance.isNull() && m_maxGroundDistance < cg)
+                        {
+                            if (this->isConstOnGround()) { this->setSceneryDeviation(m_gndDistMean, cg, SmallAGLDeviationNearGround); break; }
+                        }
+                    }
                 }
+                while (false);
             }
         }
     } // namespace

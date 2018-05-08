@@ -32,7 +32,8 @@ namespace BlackMisc
             {
                 Q_ASSERT_X(situations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Expect latest first");
             }
-            const CAircraftSituationChange change = CAircraftSituationChange(situations, true, true);
+            const CAircraftModel model = this->getAircraftInRangeModelForCallsign(callsign);
+            const CAircraftSituationChange change = CAircraftSituationChange(situations, model.getCG(), model.isVtol(), true, true);
             return change;
         }
 

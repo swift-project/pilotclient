@@ -75,13 +75,22 @@ namespace BlackMisc
         CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(bool useSceneryOffset)
         {
             CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
-            m_currentSituationChange = CAircraftSituationChange(validSituations, true, true);
+            m_currentSituationChange = CAircraftSituationChange(validSituations, m_model.getCG(), m_model.isVtol(), true, true);
             if (useSceneryOffset && m_currentSituationChange.hasSceneryDeviation() && m_model.hasCG())
             {
-                const CLength os = m_currentSituationChange.getGuessedSceneryDeviation(m_model.getCG());
-                validSituations.addAltitudeOffset(os);
-                m_currentSituationChange = CAircraftSituationChange(validSituations, true, true); // recalculate
+                const CLength os = m_currentSituationChange.getGuessedSceneryDeviationCG();
                 m_currentSceneryOffset = os;
+                if (!os.isNull())
+                {
+                    const CLength addValue = os * -1.0; // positive values means too high, negative values too low
+                    int changed = validSituations.addAltitudeOffset(addValue);
+                    m_currentSituationChange = CAircraftSituationChange(validSituations, m_model.getCG(), m_model.isVtol(), true, true); // recalculate
+                    Q_UNUSED(changed);
+                }
+            }
+            else
+            {
+                m_currentSceneryOffset = CLength::null();
             }
             return validSituations;
         }

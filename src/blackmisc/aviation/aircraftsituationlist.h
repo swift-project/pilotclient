@@ -150,11 +150,14 @@ namespace BlackMisc
             //! All elevation values
             QList<double> elevationValues(const PhysicalQuantities::CLengthUnit &unit) const;
 
-            //! All corrected altitude values
+            //! All altitude values
             QList<double> altitudeValues(const PhysicalQuantities::CLengthUnit &unit) const;
 
             //! All corrected altitude values
             QList<double> correctedAltitudeValues(const PhysicalQuantities::CLengthUnit &unit, const PhysicalQuantities::CLength &cg) const;
+
+            //! All ground distance values
+            QList<double> groundDistanceValues(const PhysicalQuantities::CLengthUnit &unit, const PhysicalQuantities::CLength &cg) const;
 
             //! Pitch angles standard deviation and mean
             QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle> pitchStandardDeviationAndMean() const;
@@ -167,6 +170,9 @@ namespace BlackMisc
 
             //! Elevation standard deviation and mean
             QPair<CAltitude, CAltitude> altitudeStandardDeviationAndMean() const;
+
+            //! Min. and max. ground distance
+            QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength> minMaxGroundDistance(const PhysicalQuantities::CLength &cg) const;
 
             //! Elevation standard deviation and mean
             //! \note distance is without CG, so on ground it can also be used to calculate

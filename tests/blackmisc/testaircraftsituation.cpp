@@ -39,7 +39,7 @@ namespace BlackMiscTest
     {
         CAircraftSituationList situations = testSituations();
         situations.setOnGround(CAircraftSituation::OnGround);
-        const CAircraftSituationChange change(situations);
+        const CAircraftSituationChange change(situations, cg(), false);
         QVERIFY2(change.isConstOnGround(), "Expect const on ground");
         QVERIFY(!change.isConstNotOnGround());
         QVERIFY(!change.isJustTakingOff());
@@ -52,7 +52,7 @@ namespace BlackMiscTest
         f.setOnGround(false);
         situations.pop_front();
         situations.push_front(f);
-        const CAircraftSituationChange change2(situations);
+        const CAircraftSituationChange change2(situations, cg(), false);
         QVERIFY2(change2.isJustTakingOff(), "Expect just take off");
         QVERIFY(!change2.isJustTouchingDown());
         QVERIFY(change.wasConstOnGround());
@@ -63,7 +63,7 @@ namespace BlackMiscTest
     {
         CAircraftSituationList situations = testSetDescendingAltitudes(testSituations());
         situations.setOnGround(CAircraftSituation::NotOnGround);
-        const CAircraftSituationChange change(situations);
+        const CAircraftSituationChange change(situations, cg(), false);
         QVERIFY2(change.isConstNotOnGround(), "Expect const not on ground");
         QVERIFY(!change.isConstOnGround());
         QVERIFY(!change.isJustTakingOff());
@@ -76,7 +76,7 @@ namespace BlackMiscTest
         f.setOnGround(true);
         situations.pop_front();
         situations.push_front(f);
-        const CAircraftSituationChange change2(situations);
+        const CAircraftSituationChange change2(situations, cg(), false);
         QVERIFY2(change2.isJustTouchingDown(), "Expect just touchdown");
         QVERIFY(!change2.isJustTakingOff());
         QVERIFY(!change.wasConstOnGround());
@@ -98,7 +98,7 @@ namespace BlackMiscTest
     void CTestAircraftSituation::rotateUp()
     {
         CAircraftSituationList situations = testSetRotateUpPitch(testSituations());
-        const CAircraftSituationChange change(situations);
+        const CAircraftSituationChange change(situations, cg(), false);
         QVERIFY2(!change.isRotatingUp(), "Do not expect rotate up");
 
         CAircraftSituation f = situations.front();
@@ -106,7 +106,7 @@ namespace BlackMiscTest
         f.setPitch(CAngle(7.3, CAngleUnit::deg()));
         situations.push_front(f);
 
-        const CAircraftSituationChange change2(situations);
+        const CAircraftSituationChange change2(situations, cg(), false);
         QVERIFY2(change2.isRotatingUp(), "Expect rotate up");
     }
 
@@ -236,6 +236,12 @@ namespace BlackMiscTest
             newSituations.push_back(s);
         }
         return newSituations;
+    }
+
+    const CLength &CTestAircraftSituation::cg()
+    {
+        static const CLength cg(2.0, CLengthUnit::m());
+        return cg;
     }
 } // namespace
 
