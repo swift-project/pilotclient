@@ -77,27 +77,27 @@ namespace BlackMisc
         CAircraftParts CAircraftParts::guessedParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
         {
             CAircraftParts parts;
-            CAircraftEngineList engines;
+            parts.setPartsDetails(GuessedParts);
             parts.setLights(CAircraftLights::guessedLights(situation));
 
             QString *details = CBuildConfig::isLocalDeveloperDebugBuild() ? &parts.m_guessingDetails : nullptr;
 
+            CAircraftEngineList engines;
             const bool vtol = model.isVtol();
+            const int engineCount = model.getEngineCount();
             CSpeed guessedVRotate = CSpeed::null();
             CLength guessedCG = model.getCG();
             model.getAircraftIcaoCode().guessModelParameters(guessedCG, guessedVRotate);
 
-            // set some reasonable values
-            const bool isOnGround = situation.isOnGround();
-            const int engineCount = model.getEngineCount();
-            engines.initEngines(engineCount, !isOnGround || situation.isMoving());
-            parts.setGearDown(isOnGround);
-            parts.setSpoilersOut(false);
-            parts.setEngines(engines);
-            parts.setPartsDetails(GuessedParts);
-
-            if (isOnGround)
+            if (situation.getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails)
             {
+                // set some reasonable values
+                const bool isOnGround = situation.isOnGround();
+                engines.initEngines(engineCount, !isOnGround || situation.isMoving());
+                parts.setGearDown(isOnGround);
+                parts.setSpoilersOut(false);
+                parts.setEngines(engines);
+
                 if (!change.isNull())
                 {
                     if (change.isConstDecelarating())
@@ -121,6 +121,16 @@ namespace BlackMisc
                     parts.setFlapsPercent(0);
                     return parts;
                 }
+            }
+            else
+            {
+                if (details) { *details = QStringLiteral("no ground info");  }
+
+                // no idea if on ground or not
+                engines.initEngines(engineCount, true);
+                parts.setEngines(engines);
+                parts.setGearDown(true);
+                parts.setSpoilersOut(false);
             }
 
             const double pitchDeg = situation.getPitch().value(CAngleUnit::deg());
@@ -159,7 +169,7 @@ namespace BlackMisc
             {
                 if (situation.getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails)
                 {
-                    // the ground flag is not reliable and we have no ground elevation
+                    // we have no ground elevation but a ground info
                     if (situation.getOnGroundDetails() == CAircraftSituation::OnGroundByGuessing)
                     {
                         // should be OK
