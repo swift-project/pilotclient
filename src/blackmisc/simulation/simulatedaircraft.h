@@ -88,7 +88,8 @@ namespace BlackMisc
                 IndexEnabled,
                 IndexRendered,
                 IndexPartsSynchronized,
-                IndexFastPositionUpdates
+                IndexFastPositionUpdates,
+                IndexSupportsGndFlag
             };
 
             //! Default constructor.
@@ -419,6 +420,13 @@ namespace BlackMisc
             //! Set the synchronisation flag
             void setPartsSynchronized(bool synchronized) { m_partsSynchronized = synchronized; }
 
+            //! Is supporting gnd.flag?
+            bool isSupportingGndFlag() const { return m_supportsGndFlag; }
+
+            //! Indicate gnd.flag is supported
+            //! \remark normally automatically set from BlackMisc::Aviation::CAircraftSituation::hasInboundGroundDetails
+            void setSupportingGndFlag(bool supports) { m_supportsGndFlag = supports; }
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const CPropertyIndex &index) const;
 
@@ -442,11 +450,12 @@ namespace BlackMisc
             Aviation::CTransponder        m_transponder;
             Aviation::CAircraftParts      m_parts;
             Aviation::CSelcal             m_selcal;
-            CAircraftModelList m_models = { { CAircraftModel(), CAircraftModel() } }; //!< Shorter DBus signature: current model, and model received from network
+            CAircraftModelList m_models = {{ CAircraftModel(), CAircraftModel() }}; //!< Shorter DBus signature: current model, and model received from network
             bool m_enabled = true;              //!< to be displayed in simulator
             bool m_rendered = false;            //!< really shown in simulator
             bool m_partsSynchronized = false;   //!< synchronize parts
             bool m_fastPositionUpdates = false; //!< use fast position updates
+            bool m_supportsGndFlag = false;     //!< supports gnd. flag
 
             //! Init, which synchronizes some denormalized values
             void init();

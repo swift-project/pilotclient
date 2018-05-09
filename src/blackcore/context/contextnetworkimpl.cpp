@@ -417,6 +417,11 @@ namespace BlackCore
             return m_airspace->autoAdjustCientGndCapability(situation);
         }
 
+        bool CContextNetwork::addClientGndCapability(const CCallsign &callsign)
+        {
+            return m_airspace->addClientGndCapability(callsign);
+        }
+
         CServerList CContextNetwork::getVatsimFsdServers() const
         {
             Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");

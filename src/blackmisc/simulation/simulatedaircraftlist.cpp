@@ -180,7 +180,7 @@ namespace BlackMisc
             for (CSimulatedAircraft &aircraft : (*this))
             {
                 if (aircraft.getCallsign() != callsign) { continue; }
-                aircraft.setSituation(situation);
+                aircraft.setSituation(situation); // also sets setSupportingGndFlag
                 if (onlyFirst) break;
             }
             return c;

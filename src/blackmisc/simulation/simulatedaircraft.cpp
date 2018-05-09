@@ -97,6 +97,7 @@ namespace BlackMisc
         {
             m_situation = situation;
             m_situation.setCallsign(this->getCallsign());
+            this->setSupportingGndFlag(situation.hasInboundGroundDetails());
         }
 
         const CAircraftIcaoCode &CSimulatedAircraft::getAircraftIcaoCode() const
@@ -311,6 +312,7 @@ namespace BlackMisc
             case IndexRendered: return CVariant::fromValue(this->isRendered());
             case IndexPartsSynchronized: return CVariant::fromValue(this->isPartsSynchronized());
             case IndexFastPositionUpdates: return CVariant::fromValue(this->fastPositionUpdates());
+            case IndexSupportsGndFlag: return CVariant::fromValue(this->isSupportingGndFlag());
             case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexPilot: return m_pilot.propertyByIndex(index.copyFrontRemoved());
             case IndexRelativeDistance: return m_relativeDistance.propertyByIndex(index.copyFrontRemoved());
@@ -350,6 +352,7 @@ namespace BlackMisc
             case IndexRendered: m_rendered = variant.toBool(); break;
             case IndexPartsSynchronized: m_partsSynchronized = variant.toBool(); break;
             case IndexFastPositionUpdates: m_fastPositionUpdates = variant.toBool(); break;
+            case IndexSupportsGndFlag: m_supportsGndFlag = variant.toBool(); break;
             case IndexLivery: Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported"); break;
             case IndexModel:
                 m_models[CurrentModel].setPropertyByIndex(index.copyFrontRemoved(), variant);
@@ -391,6 +394,7 @@ namespace BlackMisc
             case IndexRendered: return Compare::compare(m_rendered, compareValue.isRendered());
             case IndexPartsSynchronized: return Compare::compare(m_partsSynchronized, compareValue.isPartsSynchronized());
             case IndexFastPositionUpdates: return Compare::compare(m_fastPositionUpdates, compareValue.fastPositionUpdates());
+            case IndexSupportsGndFlag: return Compare::compare(m_supportsGndFlag, compareValue.isSupportingGndFlag());
             case IndexCombinedIcaoLiveryString: return this->getCombinedIcaoLiveryString(false).compare(compareValue.getCombinedIcaoLiveryString(false));
             case IndexCombinedIcaoLiveryStringNetworkModel: return this->getCombinedIcaoLiveryString(true).compare(compareValue.getCombinedIcaoLiveryString(true));
             default:

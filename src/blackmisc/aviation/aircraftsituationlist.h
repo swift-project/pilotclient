@@ -70,16 +70,23 @@ namespace BlackMisc
             //! Find if having inbound information
             CAircraftSituationList findByInboundGroundInformation(bool hasGroundInfo) const;
 
-            //! Any situation without ground info
-            bool hasSituationWithoutGroundElevation() const;
+            //! Any situation without ground info?
+            bool containsSituationWithoutGroundElevation() const;
 
             //! Any situation outside range?
-            bool hasGroundElevationOutsideRange(const PhysicalQuantities::CLength &range) const;
+            bool containsGroundElevationOutsideRange(const PhysicalQuantities::CLength &range) const;
 
-            //! Contains on ground details
+            //! Contains on ground details?
             bool containsOnGroundDetails(CAircraftSituation::OnGroundDetails details) const;
 
-            //! Are all on ground details the same
+            //! Contains any push back?
+            //! \remark only valid for non VTOL aircraft
+            bool containsPushBack() const;
+
+            //! Contains any gnd.flag \c true ?
+            bool containsOnGroundFromNetwork() const;
+
+            //! Are all on ground details the same?
             bool areAllOnGroundDetailsSame(CAircraftSituation::OnGroundDetails details) const;
 
             //! Are all situations on ground?
@@ -111,10 +118,6 @@ namespace BlackMisc
 
             //! Is rotating up?
             bool isRotatingUp(bool alreadySortedLatestFirst = false) const;
-
-            //! Contains any push back
-            //! \remark only valid for non VTOL aircraft
-            bool containsPushBack() const;
 
             //! Count the number of situations with CAircraftSituation::IsOnGround
             int countOnGround(CAircraftSituation::IsOnGround og) const;

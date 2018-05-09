@@ -120,6 +120,7 @@ namespace BlackCore
             virtual int updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
             virtual int removeClient(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool autoAdjustCientGndCapability(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+            virtual bool addClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign) override;
             //! @}
 
         public slots:

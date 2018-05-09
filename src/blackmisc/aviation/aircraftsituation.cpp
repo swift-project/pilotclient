@@ -243,6 +243,16 @@ namespace BlackMisc
             m_onGroundDetails = CAircraftSituation::NotSetGroundDetails;
         }
 
+        bool CAircraftSituation::isOnGroundFromParts() const
+        {
+            return this->isOnGround() && this->getOnGroundDetails() == InFromParts;
+        }
+
+        bool CAircraftSituation::isOnGroundFromNetwork() const
+        {
+            return this->isOnGround() && this->getOnGroundDetails() == InFromNetwork;
+        }
+
         const QString &CAircraftSituation::onGroundAsString() const
         {
             return CAircraftSituation::isOnGroundToString(this->getOnGround());

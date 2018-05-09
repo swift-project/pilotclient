@@ -115,12 +115,12 @@ namespace BlackMisc
             return this->findBy(&CAircraftSituation::hasInboundGroundDetails, hasGroundInfo);
         }
 
-        bool CAircraftSituationList::hasSituationWithoutGroundElevation() const
+        bool CAircraftSituationList::containsSituationWithoutGroundElevation() const
         {
             return this->contains(&CAircraftSituation::hasGroundElevation, false);
         }
 
-        bool CAircraftSituationList::hasGroundElevationOutsideRange(const CLength &range) const
+        bool CAircraftSituationList::containsGroundElevationOutsideRange(const CLength &range) const
         {
             for (const CAircraftSituation &situation : *this)
             {
@@ -295,6 +295,11 @@ namespace BlackMisc
                 if (situation.getGroundSpeed().isNegativeWithEpsilonConsidered()) { return true; }
             }
             return false;
+        }
+
+        bool CAircraftSituationList::containsOnGroundFromNetwork() const
+        {
+            return this->contains(&CAircraftSituation::isOnGroundFromNetwork, true);
         }
 
         int CAircraftSituationList::countOnGround(CAircraftSituation::IsOnGround og) const

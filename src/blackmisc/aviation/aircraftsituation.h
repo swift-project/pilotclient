@@ -171,6 +171,12 @@ namespace BlackMisc
             //! Is on ground?
             bool isOnGround() const { return this->getOnGround() == OnGround; }
 
+            //! On ground by parts?
+            bool isOnGroundFromParts() const;
+
+            //! On ground by network flag?
+            bool isOnGroundFromNetwork() const;
+
             //! On ground?
             const QString &onGroundAsString() const;
 

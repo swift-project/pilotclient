@@ -96,12 +96,16 @@ namespace BlackMisc
             if (situation.getCallsign().isEmpty()) { return false; } // no callsign
             if (!situation.isOnGround()) { return false; } // nothing to adjust
             if (situation.getOnGroundDetails() != CAircraftSituation::InFromNetwork) { return false; } // not from network
+            return this->addClientGndCapability(situation.getCallsign());
+        }
 
-            CClient client = this->getClientOrDefaultForCallsign(situation.getCallsign());
+        bool CClientProvider::addClientGndCapability(const CCallsign &callsign)
+        {
+            CClient client = this->getClientOrDefaultForCallsign(callsign);
 
             // need to change?
             if (!client.isValid()) { return false; } // no client
-            if (client.hasGndFlagCapability()) { return false; } // already set
+            if (client.hasGndFlagCapability()) { return true; } // already set, but set
 
             client.addCapability(CClient::FsdWithGroundFlag);
             QWriteLocker l(&m_lockClient);
@@ -143,6 +147,18 @@ namespace BlackMisc
         {
             if (this->provider()) { return this->provider()->removeClient(callsign); }
             return 0;
+        }
+
+        bool CClientAware::autoAdjustCientGndCapability(const CAircraftSituation &situation)
+        {
+            if (this->provider()) { return this->provider()->autoAdjustCientGndCapability(situation); }
+            return false;
+        }
+
+        bool CClientAware::addClientGndCapability(const CCallsign &callsign)
+        {
+            if (this->provider()) { return this->provider()->addClientGndCapability(callsign); }
+            return false;
         }
 
         CClientProviderDummy *CClientProviderDummy::instance()
