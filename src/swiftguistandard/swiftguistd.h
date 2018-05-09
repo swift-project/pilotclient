@@ -33,7 +33,6 @@
 #include <QMainWindow>
 #include <QObject>
 #include <QScopedPointer>
-#include <QSize>
 #include <QString>
 
 class QAction;

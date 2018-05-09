@@ -103,7 +103,7 @@ namespace BlackGui
         if (mw) { return QApplication::desktop()->screenGeometry(mw).size(); }
 
         // main screen
-        return QApplication::desktop()->screenGeometry().size();
+        return QApplication::desktop()->screenGeometry(QApplication::desktop()).size();
     }
 
     bool CGuiUtility::isMainWindowFrameless()
@@ -486,7 +486,8 @@ namespace BlackGui
         const QWidget *mainWidget = CGuiUtility::mainApplicationWidget();
         if (mainWidget)
         {
-            QSize sd = QApplication::desktop()->screenGeometry().size();
+            // const QSize sd = QApplication::desktop()->screenGeometry().size();
+            const QSize sd = QApplication::desktop()->screenGeometry(mainWidget).size();
             desktop = QString("Desktop w%1 w%2").arg(sd.width()).arg(sd.height());
             ratio = QString("ratio: %1").arg(mainWidget->devicePixelRatioF());
         }

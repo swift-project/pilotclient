@@ -34,6 +34,7 @@
 #include <QAction>
 #include <QDateTime>
 #include <QIcon>
+#include <QSize>
 #include <QStackedWidget>
 #include <QStyle>
 #include <QWidget>

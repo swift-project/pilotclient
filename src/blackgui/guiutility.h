@@ -56,7 +56,7 @@ namespace BlackGui
         static qreal mainApplicationWidgetPixelRatio();
 
         //! Desktop size
-        //! might be scaled depending on mainApplicationWidgetPixelRatio
+        //! \remark might be scaled depending on CGuiUtility::mainApplicationWidgetPixelRatio
         static QSize desktopSize();
 
         //! Is main window frameless?
@@ -174,7 +174,7 @@ namespace BlackGui
         static void superviseMainWindowMinSizes(qreal wRatio = 0.85, qreal hRatio = 0.85);
 
     private:
-        //! Constructor, use static methods only
+        //! No constructor, use static functions only
         CGuiUtility() {}
 
         static QWidget *s_mainApplicationWidget;

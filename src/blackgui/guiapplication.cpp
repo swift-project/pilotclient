@@ -285,6 +285,7 @@ namespace BlackGui
         const QSettings settings("swift-project.org", this->getApplicationName());
         const QByteArray g = settings.value("geometry").toByteArray();
         const QByteArray s = settings.value("windowState").toByteArray();
+        if (g.isEmpty() || s.isEmpty()) { return false; }
         window->restoreGeometry(g);
         window->restoreState(s);
         return true;
@@ -301,13 +302,14 @@ namespace BlackGui
         // window size
         if (m_minWidthChars > 0 || m_minHeightChars > 0)
         {
-            const QSizeF s = CGuiUtility::fontMetricsEstimateSize(m_minWidthChars, m_minHeightChars);
+            const QSizeF fontMetricEstSize = CGuiUtility::fontMetricsEstimateSize(m_minWidthChars, m_minHeightChars);
             QWidget *mw = CGuiUtility::mainApplicationWidget();
             if (mw)
             {
+                // setMinimumSizeInCharacters sets m_minHeightChars/m_minWidthChars
                 QSize cs = mw->size();
-                if (m_minWidthChars > 0)  { cs.setWidth(s.width()); }
-                if (m_minHeightChars > 0) { cs.setHeight(s.height()); }
+                if (m_minWidthChars > 0)  { cs.setWidth(fontMetricEstSize.width()); }
+                if (m_minHeightChars > 0) { cs.setHeight(fontMetricEstSize.height()); }
                 mw->resize(cs);
             }
         }
