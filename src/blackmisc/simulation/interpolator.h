@@ -263,7 +263,7 @@ namespace BlackMisc
 
             //! Get situations and calculate change, also correct altitudes if applicable
             //! \remark calculates offset (scenery) and situations change
-            Aviation::CAircraftSituationList remoteAircraftSituationsAndChange(bool useSceneryOffset);
+            Aviation::CAircraftSituationList remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup);
 
             //! Center of gravity, fetched from provider in case needed
             PhysicalQuantities::CLength getAndFetchModelCG();

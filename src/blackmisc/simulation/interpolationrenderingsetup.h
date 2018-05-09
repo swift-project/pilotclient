@@ -33,9 +33,8 @@ namespace BlackMisc
             {
                 IndexLogInterpolation = CPropertyIndex::GlobalIndexCInterpolatioRenderingSetup,
                 IndexSimulatorDebugMessages,
-                IndexForceFullInterpolation,
+                IndexForceVtolInterpolation,
                 IndexSendGndFlagToSimulator,
-                IndexEnableGndFlag,
                 IndexEnabledAircraftParts,
                 IndexInterpolatorMode,
                 IndexInterpolatorModeAsString,
@@ -62,10 +61,10 @@ namespace BlackMisc
             void setLogInterpolation(bool log) { m_logInterpolation = log; }
 
             //! Full interpolation (skip optimizations like checking if aircraft moves etc.)
-            bool isForcingFullInterpolation() const { return m_forceFullInterpolation; }
+            bool isForcingVtolInterpolation() const { return m_forceVtolInterpolation; }
 
             //! Force full interpolation
-            void setForceFullInterpolation(bool force) { m_forceFullInterpolation = force; }
+            void setForceVtolInterpolation(bool force) { m_forceVtolInterpolation = force; }
 
             //! Set enabled aircraft parts
             bool setEnabledAircraftParts(bool enabled);
@@ -75,12 +74,6 @@ namespace BlackMisc
 
             //! Aircraft parts enabled (still requires the other aircraft to send parts)
             bool isAircraftPartsEnabled() const { return m_enabledAircraftParts; }
-
-            //! Set gnd.flag enabled (aircraft supports gnd.flag)
-            bool setEnabledGndFLag(bool enabled);
-
-            //! Is gnd.flag enabled (aircraft supports gnd.flag)
-            bool isGndFlagEnabled() const { return m_enabledGndFlag; }
 
             //! Send GND flag to simulator
             bool isSendingGndFlagToSimulator() const { return m_sendGndToSim; }
@@ -130,9 +123,8 @@ namespace BlackMisc
 
             bool m_logInterpolation       = false; //!< Debug messages in interpolator
             bool m_simulatorDebugMessages = false; //!< Debug messages of simulator (aka plugin)
-            bool m_forceFullInterpolation = false; //!< always do a full interpolation, even if aircraft is not moving
+            bool m_forceVtolInterpolation = false; //!< always do a full interpolation, even if aircraft is not moving
             bool m_enabledAircraftParts   = true;  //!< Enable aircraft parts
-            bool m_enabledGndFlag         = true;  //!< Enable gnd.flag
             bool m_sendGndToSim           = true;  //!< Send the gnd.flag to simulator
             bool m_fixSceneryOffset       = true;  //!< Fix. scenery offset
             int  m_interpolatorMode       = static_cast<int>(Spline); //!< interpolator mode (spline, ...)
@@ -213,10 +205,9 @@ namespace BlackMisc
                 CInterpolationAndRenderingSetupGlobal,
                 BLACK_METAMEMBER(logInterpolation),
                 BLACK_METAMEMBER(simulatorDebugMessages),
-                BLACK_METAMEMBER(forceFullInterpolation),
+                BLACK_METAMEMBER(forceVtolInterpolation),
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
-                BLACK_METAMEMBER(enabledGndFlag),
                 BLACK_METAMEMBER(fixSceneryOffset),
                 BLACK_METAMEMBER(interpolatorMode),
                 BLACK_METAMEMBER(maxRenderedAircraft),
@@ -273,10 +264,9 @@ namespace BlackMisc
                 CInterpolationAndRenderingSetupPerCallsign,
                 BLACK_METAMEMBER(logInterpolation),
                 BLACK_METAMEMBER(simulatorDebugMessages),
-                BLACK_METAMEMBER(forceFullInterpolation),
+                BLACK_METAMEMBER(forceVtolInterpolation),
                 BLACK_METAMEMBER(sendGndToSim),
                 BLACK_METAMEMBER(enabledAircraftParts),
-                BLACK_METAMEMBER(enabledGndFlag),
                 BLACK_METAMEMBER(fixSceneryOffset),
                 BLACK_METAMEMBER(interpolatorMode)
             );

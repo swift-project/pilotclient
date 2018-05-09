@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>236</width>
+    <width>240</width>
     <height>102</height>
    </rect>
   </property>
@@ -42,34 +42,20 @@
      </item>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QCheckBox" name="cb_EnableParts">
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="cb_SendGndFlagToSim">
      <property name="text">
-      <string>enable parts</string>
+      <string>send gnd.to simulator</string>
      </property>
      <property name="checked">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QCheckBox" name="cb_EnableGndFlag">
-     <property name="text">
-      <string>use (network) gnd.flag</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QCheckBox" name="cb_SendGndFlagToSim">
-     <property name="text">
-      <string>send gnd.to simulator</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="1">
-    <widget class="QCheckBox" name="cb_ForceFullInterpolation">
+    <widget class="QCheckBox" name="cb_ForceVtolInterpolation">
      <property name="text">
-      <string>force full interpolation</string>
+      <string>force VTOL interpolation</string>
      </property>
     </widget>
    </item>
@@ -77,6 +63,19 @@
     <widget class="QCheckBox" name="cb_FixSceneryOffset">
      <property name="text">
       <string>fix scenery offset</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="cb_EnableParts">
+     <property name="text">
+      <string>enable parts</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

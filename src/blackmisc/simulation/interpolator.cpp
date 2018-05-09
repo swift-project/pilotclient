@@ -72,11 +72,12 @@ namespace BlackMisc
         }
 
         template<typename Derived>
-        CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(bool useSceneryOffset)
+        CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
         {
+            const bool vtol = setup.isForcingVtolInterpolation() || m_model.isVtol();
             CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
-            m_currentSituationChange = CAircraftSituationChange(validSituations, m_model.getCG(), m_model.isVtol(), true, true);
-            if (useSceneryOffset && m_currentSituationChange.hasSceneryDeviation() && m_model.hasCG())
+            m_currentSituationChange = CAircraftSituationChange(validSituations, m_model.getCG(), vtol, true, true);
+            if (setup.isFixingSceneryOffset() && m_currentSituationChange.hasSceneryDeviation() && m_model.hasCG())
             {
                 const CLength os = m_currentSituationChange.getGuessedSceneryDeviationCG();
                 m_currentSceneryOffset = os;
@@ -84,7 +85,7 @@ namespace BlackMisc
                 {
                     const CLength addValue = os * -1.0; // positive values means too high, negative values too low
                     int changed = validSituations.addAltitudeOffset(addValue);
-                    m_currentSituationChange = CAircraftSituationChange(validSituations, m_model.getCG(), m_model.isVtol(), true, true); // recalculate
+                    m_currentSituationChange = CAircraftSituationChange(validSituations, m_model.getCG(), vtol, true, true); // recalculate
                     Q_UNUSED(changed);
                 }
             }
@@ -359,7 +360,7 @@ namespace BlackMisc
             m_currentTimeMsSinceEpoch = currentTimeSinceEpoc;
             m_situationsLastModified = this->situationsLastModified(m_callsign);
             m_currentSetup = setup;
-            m_currentSituations = this->remoteAircraftSituationsAndChange(setup.isFixingSceneryOffset());
+            m_currentSituations = this->remoteAircraftSituationsAndChange(setup);
             m_currentInterpolationStatus.reset();
             m_currentPartsStatus.reset();
 

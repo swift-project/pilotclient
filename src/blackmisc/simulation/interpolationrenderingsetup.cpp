@@ -24,13 +24,6 @@ namespace BlackMisc
         CInterpolationAndRenderingSetupBase::CInterpolationAndRenderingSetupBase()
         { }
 
-        bool CInterpolationAndRenderingSetupBase::setEnabledGndFLag(bool enabled)
-        {
-            if (enabled == m_enabledGndFlag) { return false; }
-            m_enabledGndFlag = enabled;
-            return true;
-        }
-
         bool CInterpolationAndRenderingSetupBase::setSendingGndFlagToSimulator(bool sendFLag)
         {
             if (sendFLag == m_sendGndToSim) { return false; }
@@ -91,9 +84,8 @@ namespace BlackMisc
             {
             case IndexLogInterpolation: return CVariant::fromValue(m_logInterpolation);
             case IndexSimulatorDebugMessages: return CVariant::fromValue(m_simulatorDebugMessages);
-            case IndexForceFullInterpolation: return CVariant::fromValue(m_forceFullInterpolation);
+            case IndexForceVtolInterpolation: return CVariant::fromValue(m_forceVtolInterpolation);
             case IndexEnabledAircraftParts: return CVariant::fromValue(m_enabledAircraftParts);
-            case IndexEnableGndFlag: return CVariant::fromValue(m_enabledGndFlag);
             case IndexSendGndFlagToSimulator: return CVariant::fromValue(m_sendGndToSim);
             case IndexInterpolatorMode: return CVariant::fromValue(m_interpolatorMode);
             case IndexInterpolatorModeAsString: return CVariant::fromValue(this->getInterpolatorModeAsString());
@@ -111,9 +103,8 @@ namespace BlackMisc
             {
             case IndexLogInterpolation: m_logInterpolation = variant.toBool(); return;
             case IndexSimulatorDebugMessages: m_simulatorDebugMessages = variant.toBool(); return;
-            case IndexForceFullInterpolation: m_forceFullInterpolation = variant.toBool(); return;
+            case IndexForceVtolInterpolation: m_forceVtolInterpolation = variant.toBool(); return;
             case IndexEnabledAircraftParts: m_enabledAircraftParts = variant.toBool(); return;
-            case IndexEnableGndFlag: m_enabledGndFlag = variant.toBool(); return;
             case IndexSendGndFlagToSimulator: m_sendGndToSim = variant.toBool(); return;
             case IndexInterpolatorMode: m_interpolatorMode = variant.toInt(); return;
             case IndexInterpolatorModeAsString: this->setInterpolatorMode(variant.toQString()); return;
@@ -130,9 +121,8 @@ namespace BlackMisc
                 QStringLiteral("Interpolator: ") % this->getInterpolatorModeAsString() %
                 QStringLiteral(" | Dbg.sim.msgs: ") % boolToYesNo(m_simulatorDebugMessages) %
                 QStringLiteral(" | log interpolation: ") % boolToYesNo(m_logInterpolation) %
-                QStringLiteral(" | force full interpolation: ") % boolToYesNo(m_forceFullInterpolation) %
+                QStringLiteral(" | force VTOL interpolation: ") % boolToYesNo(m_forceVtolInterpolation) %
                 QStringLiteral(" | enable parts: ") % boolToYesNo(m_enabledAircraftParts) %
-                QStringLiteral(" | enable gnd: ") % boolToYesNo(m_enabledGndFlag) %
                 QStringLiteral(" | send gnd: ") % boolToYesNo(m_sendGndToSim) %
                 QStringLiteral(" | fix.scenery offset: ") % boolToYesNo(m_fixSceneryOffset);
         }
@@ -255,10 +245,11 @@ namespace BlackMisc
         {
             m_logInterpolation       = baseValues.logInterpolation();
             m_simulatorDebugMessages = baseValues.showSimulatorDebugMessages();
-            m_forceFullInterpolation = baseValues.isForcingFullInterpolation();
+            m_forceVtolInterpolation = baseValues.isForcingVtolInterpolation();
             m_enabledAircraftParts   = baseValues.isAircraftPartsEnabled();
-            m_enabledGndFlag         = baseValues.isGndFlagEnabled();
             m_sendGndToSim           = baseValues.isSendingGndFlagToSimulator();
+            m_fixSceneryOffset       = baseValues.isFixingSceneryOffset();
+            m_interpolatorMode       = baseValues.getInterpolatorMode();
         }
 
         QString CInterpolationAndRenderingSetupGlobal::convertToQString(bool i18n) const
@@ -318,11 +309,10 @@ namespace BlackMisc
             CPropertyIndexList diff;
             if (this->logInterpolation() != globalSetup.logInterpolation()) { diff.push_back(IndexLogInterpolation); }
             if (this->showSimulatorDebugMessages() != globalSetup.showSimulatorDebugMessages()) { diff.push_back(IndexSimulatorDebugMessages); }
-            if (this->isForcingFullInterpolation() != globalSetup.isForcingFullInterpolation()) { diff.push_back(IndexForceFullInterpolation); }
+            if (this->isForcingVtolInterpolation() != globalSetup.isForcingVtolInterpolation()) { diff.push_back(IndexForceVtolInterpolation); }
             if (this->isAircraftPartsEnabled() != globalSetup.isAircraftPartsEnabled()) { diff.push_back(IndexEnabledAircraftParts); }
-            if (this->isGndFlagEnabled() != globalSetup.isGndFlagEnabled()) { diff.push_back(IndexEnableGndFlag); }
             if (this->isSendingGndFlagToSimulator() != globalSetup.isSendingGndFlagToSimulator()) { diff.push_back(IndexSendGndFlagToSimulator); }
-            if (this->isFixingSceneryOffset() != globalSetup.isForcingFullInterpolation()) { diff.push_back(IndexFixSceneryOffset); }
+            if (this->isFixingSceneryOffset() != globalSetup.isForcingVtolInterpolation()) { diff.push_back(IndexFixSceneryOffset); }
             return diff;
         }
 
