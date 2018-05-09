@@ -47,7 +47,7 @@ namespace BlackMisc
                 std::array<double, 3> x, y, z, a, gnd, t, dx, dy, dz, da, dgnd;
 
                 //! Array size
-                int size() const { return x.size(); }
+                int size() const { return static_cast<int>(x.size()); }
                 //! @}
             };
 
