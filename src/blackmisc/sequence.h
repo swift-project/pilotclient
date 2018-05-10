@@ -152,6 +152,9 @@ namespace BlackMisc
         //! Returns number of elements in the sequence.
         size_type size() const { return m_impl.size(); }
 
+        //! Avoid compiler warnings when using with int
+        int sizeInt() const { return static_cast<int>(this->size()); }
+
         //! Returns true if the sequence is empty.
         bool empty() const { return m_impl.isEmpty(); }
 
