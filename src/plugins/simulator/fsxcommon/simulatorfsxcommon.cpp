@@ -309,8 +309,10 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::onSimRunning()
         {
+            const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(DeferSimulatingFlagMs, this, [ = ]
             {
+                if (myself.isNull()) { return; }
                 m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
                 this->onSimRunningDefered(m_simulatingChangedTs);
             });
@@ -567,9 +569,11 @@ namespace BlackSimPlugin
 
             // we know the object has been created. But it can happen it is directly removed afterwards
             const CSimulatedAircraft verifyAircraft(simObject.getAircraft());
+            const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(1000, this, [ = ]
             {
                 // also triggers new add if required
+                if (myself.isNull()) { return; }
                 this->verifyAddedRemoteAircraft(verifyAircraft);
             });
             return true;
@@ -1099,10 +1103,10 @@ namespace BlackSimPlugin
             }
 
             // cleanup function, actually this should not be needed
-            const QPointer<CSimulatorFsxCommon> guard(this);
+            const QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(100, this, [ = ]
             {
-                if (guard.isNull()) { return; }
+                if (myself.isNull()) { return; }
                 CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider();
             });
 

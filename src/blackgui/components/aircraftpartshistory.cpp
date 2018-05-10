@@ -56,6 +56,7 @@ namespace BlackGui
 
         void CAircraftPartsHistory::initGui()
         {
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
             const bool needCallsigns = this->partsHistoryEnabled();
             if (needCallsigns && !m_timerUpdateHistory.isActive())
             {
