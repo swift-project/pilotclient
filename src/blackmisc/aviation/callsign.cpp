@@ -158,16 +158,11 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsignString:
-                return CVariant(this->asString());
-            case IndexCallsignStringAsSet:
-                return CVariant(this->getStringAsSet());
-            case IndexTelephonyDesignator:
-                return CVariant(this->getTelephonyDesignator());
-            case IndexSuffix:
-                return CVariant(this->getSuffix());
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexCallsignString: return CVariant(this->asString());
+            case IndexCallsignStringAsSet: return CVariant(this->getStringAsSet());
+            case IndexTelephonyDesignator: return CVariant(this->getTelephonyDesignator());
+            case IndexSuffix: return CVariant(this->getSuffix());
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -177,17 +172,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsignString:
-                m_callsign = variant.toQString();
-                break;
-            case IndexCallsignStringAsSet:
-                m_callsignAsSet = variant.toQString();
-                break;
-            case IndexTelephonyDesignator:
-                m_telephonyDesignator = variant.toQString();
-                break;
+            case IndexCallsignString: m_callsign = m_callsign = unifyCallsign(variant.toQString()); break;
+            case IndexCallsignStringAsSet: m_callsignAsSet = variant.toQString(); break;
+            case IndexTelephonyDesignator: m_telephonyDesignator = variant.toQString(); break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
+                break;
             }
         }
 
@@ -197,16 +187,11 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCallsignString:
-                return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
-            case IndexCallsignStringAsSet:
-                return m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
-            case IndexTelephonyDesignator:
-                return m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
-            case IndexSuffix:
-                return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
-            default:
-                break;
+            case IndexCallsignString: return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
+            case IndexCallsignStringAsSet: return m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
+            case IndexTelephonyDesignator: return m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
+            case IndexSuffix: return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
+            default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
             return 0;
@@ -216,12 +201,9 @@ namespace BlackMisc
         {
             switch (m_typeHint)
             {
-            case Atc:
-                return isValidAtcCallsign(*this);
-            case Aircraft:
-                return isValidAircraftCallsign(*this);
-            default:
-                return !this->isEmpty();
+            case Atc: return isValidAtcCallsign(*this);
+            case Aircraft: return isValidAircraftCallsign(*this);
+            default: return !this->isEmpty();
             }
         }
 

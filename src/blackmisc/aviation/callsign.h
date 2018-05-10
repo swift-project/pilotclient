@@ -143,19 +143,19 @@ namespace BlackMisc
             static const QStringList &atcAlikeCallsignSuffixes();
 
             //! Suffix to icon
-            static const BlackMisc::CIcon &atcSuffixToIcon(const QString &suffix);
+            static const CIcon &atcSuffixToIcon(const QString &suffix);
 
             //! Representing icon
             static const CIcon &convertToIcon(const CCallsign &callsign);
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const { return convertToIcon(*this); }
+            CIcon toIcon() const { return convertToIcon(*this); }
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Compare for index
             int comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const;

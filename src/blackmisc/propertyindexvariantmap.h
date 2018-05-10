@@ -256,17 +256,13 @@ namespace BlackMisc
             {
                 return myself<Derived>();
             }
-            auto i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexIcon:
-                return CVariant::from(derived()->toIcon());
-            case IndexPixmap:
-                return CVariant::from(derived()->toPixmap());
-            case IndexString:
-                return CVariant(derived()->toQString());
-            default:
-                return basePropertyByIndex(static_cast<const TIndexBaseOfT<Derived> *>(derived()), index);
+            case IndexIcon: return CVariant::from(derived()->toIcon());
+            case IndexPixmap: return CVariant::from(derived()->toPixmap());
+            case IndexString: return CVariant(derived()->toQString());
+            default: return basePropertyByIndex(static_cast<const TIndexBaseOfT<Derived> *>(derived()), index);
             }
         }
         template <class Derived>

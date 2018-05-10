@@ -323,7 +323,7 @@ namespace BlackGui
             template<class ObjectType>
             bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, std::true_type)
             {
-                int c = a.comparePropertyByIndex(index, b);
+                const int c = a.comparePropertyByIndex(index, b);
                 if (c == 0) { return false; }
                 return (order == Qt::AscendingOrder) ? (c < 0) : (c > 0);
             }

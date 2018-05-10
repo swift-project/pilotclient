@@ -83,7 +83,7 @@ namespace BlackGui
             return QModelIndex();
         }
 
-        BlackMisc::CPropertyIndex CListModelBaseNonTemplate::columnToPropertyIndex(int column) const
+        CPropertyIndex CListModelBaseNonTemplate::columnToPropertyIndex(int column) const
         {
             return m_columns.columnToPropertyIndex(column);
         }
@@ -93,7 +93,7 @@ namespace BlackGui
             return m_columns.propertyIndexToColumn(propertyIndex);
         }
 
-        BlackMisc::CPropertyIndex CListModelBaseNonTemplate::modelIndexToPropertyIndex(const QModelIndex &index) const
+        CPropertyIndex CListModelBaseNonTemplate::modelIndexToPropertyIndex(const QModelIndex &index) const
         {
             return this->columnToPropertyIndex(index.column());
         }
@@ -104,7 +104,7 @@ namespace BlackGui
             this->sort(column, order);
         }
 
-        void CListModelBaseNonTemplate::setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex)
+        void CListModelBaseNonTemplate::setSortColumnByPropertyIndex(const CPropertyIndex &propertyIndex)
         {
             m_sortColumn = m_columns.propertyIndexToColumn(propertyIndex);
         }
@@ -278,7 +278,7 @@ namespace BlackGui
             // index, updront checking
             const int row = index.row();
             const int col = index.column();
-            const BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(col);
+            const CPropertyIndex propertyIndex = this->columnToPropertyIndex(col);
             if (static_cast<int>(CPropertyIndex::GlobalIndexLineNumber) == propertyIndex.frontCasted<int>())
             {
                 return QVariant::fromValue(row + 1);
@@ -304,7 +304,7 @@ namespace BlackGui
 
             ObjectType obj = m_container[index.row()];
             ObjectType currentObject(obj);
-            BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
+            CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
             obj.setPropertyByIndex(propertyIndex, value);
 
             if (obj != currentObject)
@@ -393,7 +393,7 @@ namespace BlackGui
             if (m_modelDestroyed) { return nullptr; }
             auto sortColumn = this->getSortColumn();
             auto sortOrder = this->getSortOrder();
-            CWorker *worker = BlackMisc::CWorker::fromTask(this, "ModelSort", [this, container, sortColumn, sortOrder]()
+            CWorker *worker = CWorker::fromTask(this, "ModelSort", [this, container, sortColumn, sortOrder]()
             {
                 return this->sortContainerByColumn(container, sortColumn, sortOrder);
             });
@@ -675,7 +675,7 @@ namespace BlackGui
             }
 
             // this is the only part not really thread safe, but columns do not change so far
-            BlackMisc::CPropertyIndex propertyIndex = m_columns.columnToSortPropertyIndex(column);
+            const CPropertyIndex propertyIndex = m_columns.columnToSortPropertyIndex(column);
             Q_ASSERT(!propertyIndex.isEmpty());
             if (propertyIndex.isEmpty())
             {

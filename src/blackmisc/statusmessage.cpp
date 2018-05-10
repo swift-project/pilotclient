@@ -133,42 +133,28 @@ namespace BlackMisc
         switch (type)
         {
         default:
-        case QtDebugMsg:
-            this->m_severity = SeverityDebug;
-            break;
-        case QtInfoMsg:
-            this->m_severity = SeverityInfo;
-            break;
-        case QtWarningMsg:
-            this->m_severity = SeverityWarning;
-            break;
+        case QtDebugMsg: m_severity = SeverityDebug; break;
+        case QtInfoMsg:  m_severity = SeverityInfo; break;
+        case QtWarningMsg: m_severity = SeverityWarning; break;
         case QtCriticalMsg:
         case QtFatalMsg:
-            this->m_severity = SeverityError;
+            m_severity = SeverityError;
             break;
         }
     }
 
     void CStatusMessage::toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const
     {
-        *o_category = this->m_categories.toQString();
+        *o_category = m_categories.toQString();
         *o_message = this->getMessage();
 
-        switch (this->m_severity)
+        switch (m_severity)
         {
         default:
-        case SeverityDebug:
-            *o_type = QtDebugMsg;
-            break;
-        case SeverityInfo:
-            *o_type = QtInfoMsg;
-            break;
-        case SeverityWarning:
-            *o_type = QtWarningMsg;
-            break;
-        case SeverityError:
-            *o_type = QtCriticalMsg;
-            break;
+        case SeverityDebug: *o_type = QtDebugMsg; break;
+        case SeverityInfo: *o_type = QtInfoMsg; break;
+        case SeverityWarning: *o_type = QtWarningMsg; break;
+        case SeverityError: *o_type = QtCriticalMsg; break;
         }
     }
 
@@ -187,7 +173,7 @@ namespace BlackMisc
 
     QString CStatusMessage::getCategoriesAsString() const
     {
-        return this->m_categories.toQString();
+        return m_categories.toQString();
     }
 
     QString CStatusMessage::getHumanReadablePattern() const
@@ -208,7 +194,7 @@ namespace BlackMisc
 
     QString CStatusMessage::getHumanOrTechnicalCategoriesAsString() const
     {
-        if (this->m_categories.isEmpty()) { return ""; }
+        if (m_categories.isEmpty()) { return ""; }
         QString c(getHumanReadablePattern());
         return c.isEmpty() ? this->getCategoriesAsString() : c;
     }
@@ -238,34 +224,34 @@ namespace BlackMisc
     void CStatusMessage::prependMessage(const QString &msg)
     {
         if (msg.isEmpty()) { return; }
-        this->m_message = msg + this->m_message;
+        m_message = msg + m_message;
     }
 
     void CStatusMessage::appendMessage(const QString &msg)
     {
         if (msg.isEmpty()) { return; }
-        this->m_message += msg;
+        m_message += msg;
     }
 
     void CStatusMessage::markAsHandledBy(const QObject *object) const
     {
         QWriteLocker lock(&m_lock);
-        this->m_handledByObjects.push_back(quintptr(object));
+        m_handledByObjects.push_back(quintptr(object));
     }
 
     bool CStatusMessage::wasHandledBy(const QObject *object) const
     {
         QReadLocker lock(&m_lock);
-        return this->m_handledByObjects.contains(quintptr(object));
+        return m_handledByObjects.contains(quintptr(object));
     }
 
     QString CStatusMessage::convertToQString(bool /** i18n */) const
     {
         return QLatin1String("Category: ") %
-               this->m_categories.toQString() %
+               m_categories.toQString() %
 
                QLatin1String(" Severity: ") %
-               severityToString(this->m_severity) %
+               severityToString(m_severity) %
 
                QLatin1String(" when: ") %
                this->getFormattedUtcTimestampYmdhms() %
@@ -335,30 +321,16 @@ namespace BlackMisc
     {
         switch (severity)
         {
-        case SeverityDebug:
-            {
-                static QString d("debug");
-                return d;
-            }
-        case SeverityInfo:
-            {
-                static QString i("info");
-                return i;
-            }
-        case SeverityWarning:
-            {
-                static QString w("warning");
-                return w;
-            }
-        case SeverityError:
-            {
-                static QString e("error");
-                return e;
-            }
+        case SeverityDebug:   { static const QString d("debug"); return d; }
+        case SeverityInfo:    { static const QString i("info"); return i; }
+        case SeverityWarning: { static const QString w("warning"); return w; }
+        case SeverityError:   { static const QString e("error"); return e; }
         default:
-            static QString x("unknown severity");
-            qFatal("Unknown severity");
-            return x; // just for compiler warning
+            {
+                static const QString x("unknown severity");
+                qFatal("Unknown severity");
+                return x; // just for compiler warning
+            }
         }
     }
 
@@ -367,18 +339,9 @@ namespace BlackMisc
         auto minmax = std::minmax_element(severities.begin(), severities.end());
         auto min = *minmax.first;
         auto max = *minmax.second;
-        if (min == SeverityDebug && max == SeverityError)
-        {
-            return "all severities";
-        }
-        if (min == SeverityDebug)
-        {
-            return "at or below " + severityToString(max);
-        }
-        if (max == SeverityError)
-        {
-            return "at or above " + severityToString(min);
-        }
+        if (min == SeverityDebug && max == SeverityError) { static const QString all("all severities"); return all; }
+        if (min == SeverityDebug) { QStringLiteral("at or below ") % severityToString(max); }
+        if (max == SeverityError) { QStringLiteral("at or above ") % severityToString(min); }
         auto list = severities.toList();
         std::sort(list.begin(), list.end());
         QStringList ret;
@@ -388,7 +351,7 @@ namespace BlackMisc
 
     const QString &CStatusMessage::getSeverityAsString() const
     {
-        return severityToString(this->m_severity);
+        return severityToString(m_severity);
     }
 
     const QStringList &CStatusMessage::allSeverityStrings()
@@ -397,29 +360,21 @@ namespace BlackMisc
         return all;
     }
 
-    CVariant CStatusMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    CVariant CStatusMessage::propertyByIndex(const CPropertyIndex &index) const
     {
         if (index.isMyself()) { return CVariant::from(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexMessage:
-            return CVariant::from(this->getMessage());
-        case IndexSeverity:
-            return CVariant::from(this->m_severity);
-        case IndexSeverityAsString:
-            return CVariant::from(this->getSeverityAsString());
-        case IndexCategoriesAsString:
-            return CVariant::from(this->m_categories.toQString());
-        case IndexCategoriesHumanReadableAsString:
-            return CVariant::from(this->getHumanReadablePattern());
-        case IndexCategoryHumanReadableOrTechnicalAsString:
-            return CVariant::from(this->getHumanOrTechnicalCategoriesAsString());
-        case IndexMessageAsHtml:
-            return CVariant::from(this->toHtml());
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexMessage: return CVariant::from(this->getMessage());
+        case IndexSeverity: return CVariant::from(m_severity);
+        case IndexSeverityAsString: return CVariant::from(this->getSeverityAsString());
+        case IndexCategoriesAsString: return CVariant::from(m_categories.toQString());
+        case IndexCategoriesHumanReadableAsString: return CVariant::from(this->getHumanReadablePattern());
+        case IndexCategoryHumanReadableOrTechnicalAsString: return CVariant::from(this->getHumanOrTechnicalCategoriesAsString());
+        case IndexMessageAsHtml: return CVariant::from(this->toHtml());
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -427,22 +382,16 @@ namespace BlackMisc
     {
         if (index.isMyself()) { (*this) = variant.to<CStatusMessage>(); return; }
         if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessage:
-            this->m_message = variant.value<QString>();
-            this->m_args.clear();
+            m_message = variant.value<QString>();
+            m_args.clear();
             break;
-        case IndexSeverity:
-            this->m_severity = variant.value<StatusSeverity>();
-            break;
-        case IndexCategoriesAsString:
-            this->m_categories = variant.value<CLogCategoryList>();
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexSeverity: m_severity = variant.value<StatusSeverity>(); break;
+        case IndexCategoriesAsString: m_categories = variant.value<CLogCategoryList>();  break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
@@ -450,24 +399,18 @@ namespace BlackMisc
     {
         if (index.isMyself()) { return Compare::compare(this->getSeverity(), compareValue.getSeverity()); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessageAsHtml:
         case IndexMessage:
             return this->getMessage().compare(compareValue.getMessage());
-        case IndexSeverity:
-            return Compare::compare(this->getSeverity(), compareValue.getSeverity());
-        case IndexSeverityAsString:
-            return this->getSeverityAsString().compare(compareValue.getSeverityAsString());
-        case IndexCategoriesAsString:
-            return this->getCategoriesAsString().compare(compareValue.getCategoriesAsString());
-        case IndexCategoriesHumanReadableAsString:
-            return this->getHumanReadablePattern().compare(compareValue.getHumanReadablePattern());
-        case IndexCategoryHumanReadableOrTechnicalAsString:
-            return this->getHumanOrTechnicalCategoriesAsString().compare(compareValue.getHumanOrTechnicalCategoriesAsString());
-        default:
-            break;
+        case IndexSeverity: return Compare::compare(this->getSeverity(), compareValue.getSeverity());
+        case IndexSeverityAsString: return this->getSeverityAsString().compare(compareValue.getSeverityAsString());
+        case IndexCategoriesAsString: return this->getCategoriesAsString().compare(compareValue.getCategoriesAsString());
+        case IndexCategoriesHumanReadableAsString: return this->getHumanReadablePattern().compare(compareValue.getHumanReadablePattern());
+        case IndexCategoryHumanReadableOrTechnicalAsString: return this->getHumanOrTechnicalCategoriesAsString().compare(compareValue.getHumanOrTechnicalCategoriesAsString());
+        default: break;
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Comapre failed");
         return 0;
@@ -475,26 +418,14 @@ namespace BlackMisc
 
     QString CStatusMessage::toHtml() const
     {
-        QString html;
-        if (this->isEmpty()) return html;
+        static const QString ef("</font>");
         switch (this->getSeverity())
         {
-        case SeverityInfo:
-            break;
-        case SeverityWarning:
-            html = "<font color=\"yellow\">";
-            break;
-        case SeverityError:
-            html = "<font color=\"red\">";
-            break;
-        case SeverityDebug:
-            break;
-        default:
-            break;
+        case SeverityWarning: return QStringLiteral("<font color=\"yellow\">") % this->getMessage() % ef;
+        case SeverityError: return QStringLiteral("<font color=\"red\">") % this->getMessage() % ef;
+        case SeverityDebug: break;
+        default: break;
         }
-        html.append(this->getMessage());
-        if (this->getSeverity() == SeverityInfo) { return html; }
-        html.append("</font>");
-        return html;
+        return this->getMessage();
     }
 } // ns

@@ -37,20 +37,20 @@ namespace BlackGui
 
         void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode)
         {
-            this->m_columns.clear();
+            m_columns.clear();
             switch (mode)
             {
             case Detailed:
                 {
-                    this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
+                    m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
                     CColumn col = CColumn("severity", CStatusMessage::IndexIcon);
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
-                    this->m_columns.addColumn(col);
-                    this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-                    this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadableOrTechnicalAsString));
+                    m_columns.addColumn(col);
+                    m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
+                    m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadableOrTechnicalAsString));
 
-                    this->m_sortColumn = CStatusMessage::IndexUtcTimestamp;
-                    this->m_sortOrder = Qt::DescendingOrder;
+                    m_sortColumn = CStatusMessage::IndexUtcTimestamp;
+                    m_sortOrder = Qt::DescendingOrder;
                 }
                 break;
             case Simplified:
@@ -58,11 +58,11 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
                     CColumn col = CColumn("severity", CStatusMessage::IndexIcon);
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
-                    this->m_columns.addColumn(col);
-                    this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
+                    m_columns.addColumn(col);
+                    m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
 
-                    this->m_sortColumn = CStatusMessage::IndexUtcTimestamp;
-                    this->m_sortOrder = Qt::DescendingOrder;
+                    m_sortColumn = CStatusMessage::IndexUtcTimestamp;
+                    m_sortOrder = Qt::DescendingOrder;
                 }
                 break;
             }

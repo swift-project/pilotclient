@@ -24,6 +24,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
 {
@@ -191,22 +192,22 @@ namespace BlackGui
             if (dateTime.isNull()) return "";
             if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QDateTime)
             {
-                QDateTime dt = dateTime.value<QDateTime>();
+                const QDateTime dt = dateTime.value<QDateTime>();
                 return dt.toString(m_formatString);
             }
             else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QDate)
             {
-                QDate d = dateTime.value<QDate>();
+                const QDate d = dateTime.value<QDate>();
                 return d.toString(m_formatString);
             }
             else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QTime)
             {
-                QTime t = dateTime.value<QTime>();
+                const QTime t = dateTime.value<QTime>();
                 return t.toString(m_formatString);
             }
             else if (dateTime.isIntegral())
             {
-                QDateTime t = QDateTime::fromMSecsSinceEpoch(dateTime.value<qint64>());
+                const QDateTime t = QDateTime::fromMSecsSinceEpoch(dateTime.value<qint64>());
                 return t.toString(m_formatString);
             }
             else
@@ -218,33 +219,27 @@ namespace BlackGui
 
         CVariant CAirspaceDistanceFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            if (dataCVariant.canConvert<BlackMisc::PhysicalQuantities::CLength>())
+            if (dataCVariant.canConvert<CLength>())
             {
                 // special treatment for some cases
-                BlackMisc::PhysicalQuantities::CLength l = dataCVariant.value<BlackMisc::PhysicalQuantities::CLength>();
-                if (!l.isNull() && (l.isPositiveWithEpsilonConsidered() || l.isZeroEpsilonConsidered()))
-                {
-                    return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
-                }
-                else
-                {
-                    return "";
-                }
+                const CLength l = dataCVariant.value<CLength>();
+                const bool valid = !l.isNull() && (l.isPositiveWithEpsilonConsidered() || l.isZeroEpsilonConsidered());
+                return valid ? CPhysiqalQuantiyFormatter::displayRole(dataCVariant) : QStringLiteral("");
             }
             else
             {
                 Q_ASSERT_X(false, "CAirspaceDistanceFormatter::formatQVariant", "No CLength class");
-                return "";
+                return QStringLiteral("");
             }
         }
 
         CVariant CComFrequencyFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            if (dataCVariant.canConvert<BlackMisc::PhysicalQuantities::CFrequency>())
+            if (dataCVariant.canConvert<CFrequency>())
             {
                 // speical treatment for some cases
-                BlackMisc::PhysicalQuantities::CFrequency f = dataCVariant.value<BlackMisc::PhysicalQuantities::CFrequency>();
-                if (BlackMisc::Aviation::CComSystem::isValidComFrequency(f))
+                const CFrequency f = dataCVariant.value<CFrequency>();
+                if (CComSystem::isValidComFrequency(f))
                 {
                     return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
                 }
@@ -263,7 +258,7 @@ namespace BlackGui
         CVariant CSpeedKtsFormatter::displayRole(const CVariant &dataCVariant) const
         {
             // special treatment for some cases
-            BlackMisc::PhysicalQuantities::CSpeed s = dataCVariant.value<BlackMisc::PhysicalQuantities::CSpeed>();
+            const CSpeed s = dataCVariant.value<CSpeed>();
             if (!s.isNull() && (s.isPositiveWithEpsilonConsidered() || s.isZeroEpsilonConsidered()))
             {
                 return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
