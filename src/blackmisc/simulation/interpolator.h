@@ -204,6 +204,9 @@ namespace BlackMisc
             //! \remark either by passing a model or using the provider
             void initCorrespondingModel(const CAircraftModel &model = {});
 
+            //! Mark as unit test
+            void markAsUnitTest() { m_unitTest = true; }
+
         protected:
             //! Constructor
             CInterpolator(const Aviation::CCallsign &callsign,
@@ -249,6 +252,7 @@ namespace BlackMisc
             qint64 m_situationsLastModifiedUsed { -1 }; //!< interpolant based on situations last updated
             int m_interpolatedSituationsCounter {  0 }; //!< counter for each interpolated situations: statistics, every n-th interpolation ....
 
+            bool m_unitTest = false; //!< mark as unit test
 
             //! Verify gnd flag, times, ... true means "OK"
             bool verifyInterpolationSituations(const Aviation::CAircraftSituation &oldest, const Aviation::CAircraftSituation &newer, const Aviation::CAircraftSituation &latest,

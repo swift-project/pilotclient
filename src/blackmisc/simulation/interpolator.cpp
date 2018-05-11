@@ -147,9 +147,12 @@ namespace BlackMisc
             CInterpolationResult result;
             do
             {
-                if (!this->initIniterpolationStepData(currentTimeSinceEpoc, setup)) { break; }
+                if (!this->initIniterpolationStepData(currentTimeSinceEpoc, setup))
+                {
+                    // make sure we can also interpolate parts only (needed in unit tests)
+                    if (!m_unitTest)  { break; }
+                }
 
-                // make sure we can also interpolate parts only (needed in unit tests for instance)
                 const CAircraftSituation interpolatedSituation = this->getInterpolatedSituation();
                 const CAircraftParts interpolatedParts = this->getInterpolatedOrGuessedParts();
 
