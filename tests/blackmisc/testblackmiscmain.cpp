@@ -11,15 +11,15 @@
 //! \file
 //! \ingroup testblackmisc
 
-#include "testaviation.h"
-#include "testcompress.h"
-#include "testblackmiscmain.h"
+#include "testaircraftparts.h"
 #include "testaircraftsituation.h"
+#include "testaviation.h"
+#include "testblackmiscmain.h"
+#include "testcompress.h"
 #include "testcontainers.h"
 #include "testdbus.h"
 #include "testflightplan.h"
 #include "testgeo.h"
-#include "testaircraftparts.h"
 #include "testicon.h"
 #include "testidentifier.h"
 #include "testinput.h"
@@ -27,6 +27,7 @@
 #include "testinterpolatorparts.h"
 #include "testlibrarypath.h"
 #include "testmath.h"
+#include "testmisc.h"
 #include "testphysicalquantities.h"
 #include "testprocess.h"
 #include "testpropertyindex.h"
@@ -53,6 +54,10 @@ namespace BlackMiscTest
         {
             CTestCompress compressTest;
             status |= test.exec(&compressTest, "blackmisc_compress");
+        }
+        {
+            CTestMisc miscTest;
+            status |= test.exec(&miscTest, "blackmisc_misc");
         }
         {
             CTestPhysicalQuantities pqBaseTests;

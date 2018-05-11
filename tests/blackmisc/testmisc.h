@@ -1,4 +1,4 @@
-/* Copyright (C) 2017
+/* Copyright (C) 2018
  * swift project community / contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKMISCTEST_TESTPROPERTYINDEX_H
-#define BLACKMISCTEST_TESTPROPERTYINDEX_H
+#ifndef BLACKMISCTEST_TESTMISC_H
+#define BLACKMISCTEST_TESTMISC_H
 
 //! \cond PRIVATE_TESTS
 //! \file
@@ -19,20 +19,17 @@
 namespace BlackMiscTest
 {
     //! Testing property index access
-    class CTestPropertyIndex : public QObject
+    class CTestMisc : public QObject
     {
         Q_OBJECT
 
     public:
         //! Standard test case constructor
-        explicit CTestPropertyIndex(QObject *parent = nullptr);
+        explicit CTestMisc(QObject *parent = nullptr);
 
     private slots:
-        //! Simulated aircraft index checks
-        void propertyIndexCSimulatedAircraft();
-
-        //! Sorting based on property index
-        void propertyIndexSort();
+        //! Status message
+        void statusMessage();
     };
 } // namespace
 
