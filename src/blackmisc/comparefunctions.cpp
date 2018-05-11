@@ -16,32 +16,32 @@ namespace BlackMisc
         int compare(bool a, bool b)
         {
             if ((a && b) || (!a && !b)) return 0;
-            if (a && !b) return 10;
-            return -10;
+            if (a && !b) return 1;
+            return -1;
         }
 
         int compare(int a, int b)
         {
             if (a == b) return 0;
-            return a < b ? -10 : 10;
+            return a < b ? -1 : 1;
         }
 
         int compare(uint a, uint b)
         {
             if (a == b) return 0;
-            return a < b ? -10 : 10;
+            return a < b ? -1 : 1;
         }
 
         int compare(qint64 a, qint64 b)
         {
             if (a == b) return 0;
-            return a < b ? -10 : 10;
+            return a < b ? -1 : 1;
         }
 
         int compare(double a, double b)
         {
             if (a == b) return 0;
-            return a < b ? -10 : 10;
+            return a < b ? -1 : 1;
         }
 
         int compare(const QDateTime &a, const QDateTime &b)
