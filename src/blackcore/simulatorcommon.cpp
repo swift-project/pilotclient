@@ -609,6 +609,23 @@ namespace BlackCore
         return m + addDetails.arg(details);
     }
 
+    bool CSimulatorCommon::clampedLog(const CCallsign &callsign, const CStatusMessage &message)
+    {
+        if (message.isEmpty()) { return false; }
+        constexpr qint64 Timeout = 2000;
+        const qint64 clampTs = m_clampedLogMsg.value(callsign, -1);
+        const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+        if (clampTs > 0 && ((clampTs + Timeout) > ts)) { return false; }
+        CLogMessage::preformatted(message);
+        m_clampedLogMsg[callsign] = ts;
+        return true;
+    }
+
+    void CSimulatorCommon::removedClampedLog(const CCallsign &callsign)
+    {
+        m_clampedLogMsg.remove(callsign);
+    }
+
     void CSimulatorCommon::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
         if (!snapshot.isValidSnapshot()) { return;}
@@ -690,6 +707,7 @@ namespace BlackCore
         // rendering related stuff
         m_addAgainAircraftWhenRemoved.clear();
         m_callsignsToBeRendered.clear();
+        m_clampedLogMsg.clear();
 
         this->resetHighlighting();
         this->resetAircraftStatistics();
@@ -728,6 +746,7 @@ namespace BlackCore
     void CSimulatorCommon::callPhysicallyRemoveRemoteAircraft(const CCallsign &remoteCallsign)
     {
         m_statsPhysicallyRemovedAircraft++;
+        m_clampedLogMsg.clear();
         this->physicallyRemoveRemoteAircraft(remoteCallsign);
     }
 

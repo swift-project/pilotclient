@@ -202,14 +202,28 @@ namespace BlackCore
         //! Info about invalid situation
         QString getInvalidSituationLogMessage(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CInterpolationStatus &status, const QString &details = {}) const;
 
-        bool   m_pausedSimFreezesInterpolation = false;                    //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        bool   m_autoCalcAirportDistance = true;                           //!< automatically calculate airport distance and bearing
-        int    m_timerId = -1;                                             //!< dispatch timer id
-        int    m_statsUpdateAircraftCountMs = 0;                           //!< statistics update count
-        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                       //!< statistics update time
-        qint64 m_statsUpdateAircraftTimeAvgMs = 0;                         //!< statistics update time
-        BlackMisc::Simulation::CSimulatorInternals  m_simulatorInternals;  //!< setup object
-        BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log interpolation
+        //! Can a new log message be generated without generating a "message" overflow
+        //! \remark works per callsign
+        //! \remark use this function when there is a risk that a lot of log. messages will be generated in a short time
+        bool clampedLog(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CStatusMessage &message);
+
+        //! Mark as justed logged
+        //! \remark touch, but also return if it can be logged
+        //! \remark use this function when there is a risk that a lot of log. messages will be generated in a short time
+        void removedClampedLog(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Lookup against DB data
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+        bool   m_pausedSimFreezesInterpolation = false;                     //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        bool   m_autoCalcAirportDistance = true;                            //!< automatically calculate airport distance and bearing
+        int    m_timerId = -1;                                              //!< dispatch timer id
+        int    m_statsUpdateAircraftCountMs = 0;                            //!< statistics update count
+        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                        //!< statistics update time
+        qint64 m_statsUpdateAircraftTimeAvgMs = 0;                          //!< statistics update time
+        BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
+        BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log interpolation
+        QMap<BlackMisc::Aviation::CCallsign, qint64> m_clampedLogMsg;       //!< when logged last so there, can be used so there is no log message overflow
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
@@ -218,9 +232,6 @@ namespace BlackCore
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?
         BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
         BlackMisc::CSetting<BlackMisc::Simulation::Settings::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorCommon::reloadWeatherSettings }; //!< Selected weather scenario
-
-        //! Lookup against DB data
-        static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
     private:
         // remote aircraft provider ("rap") bound

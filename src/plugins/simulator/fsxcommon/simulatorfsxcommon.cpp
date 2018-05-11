@@ -949,6 +949,15 @@ namespace BlackSimPlugin
                     situation = situations.findClosestTimeDistanceAdjusted(QDateTime::currentMSecsSinceEpoch());
                     Q_ASSERT_X(!situation.isPositionOrAltitudeNull(), Q_FUNC_INFO, "Invalid situation for new aircraft");
                 }
+
+                const bool validSituation = situation.isPositionOrAltitudeNull();
+                canAdd = validSituation;
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    BLACK_VERIFY_X(validSituation, Q_FUNC_INFO, "Expect valid situation");
+                    const CStatusMessage sm = CStatusMessage(this).warning("Invalid situation for '%1'") << callsign;
+                    this->clampedLog(callsign, sm);
+                }
             }
 
             // check if we can add, do not add if simulator is stopped or other objects pending
@@ -1267,6 +1276,7 @@ namespace BlackSimPlugin
                         if (hr == S_OK)
                         {
                             if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO); }
+                            this->removedClampedLog(callsign);
                         }
                         else
                         {
@@ -1277,7 +1287,9 @@ namespace BlackSimPlugin
                 else
                 {
                     static const QString so("SimObject id: %1");
-                    CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus(), so.arg(simObject.getObjectId())));
+                    const QString msg = this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus(), so.arg(simObject.getObjectId()));
+                    const CStatusMessage sm(this, CStatusMessage::SeverityWarning, msg);
+                    this->clampedLog(callsign, sm);
                 }
 
                 // Interpolated parts

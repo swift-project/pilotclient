@@ -372,16 +372,20 @@ namespace BlackMisc
                 this->getAndFetchModelCG(); // update CG
             }
 
-            m_currentInterpolationStatus.setSituationsCount(m_currentSituations.size());
+            bool success = false;
+            const int situationsSize = m_currentSituations.sizeInt();
+            m_currentInterpolationStatus.setSituationsCount(situationsSize);
             if (m_currentSituations.isEmpty())
             {
+                const bool inRange = this->isAircraftInRange(m_callsign);
                 m_lastInterpolation = CAircraftSituation::null(); // no interpolation possible for that step
-                m_currentInterpolationStatus.setExtraInfo(this->isAircraftInRange(m_callsign) ?
+                m_currentInterpolationStatus.setExtraInfo(inRange ?
                         QString("No situations, but remote aircraft '%1'").arg(m_callsign.asString()) :
                         QString("Unknown remote aircraft: '%1'").arg(m_callsign.asString()));
             }
             else
             {
+                success = true;
                 m_interpolatedSituationsCounter++;
 
                 // with the latest updates of T243 the order and the offsets are supposed to be correct
@@ -393,7 +397,7 @@ namespace BlackMisc
                 }
             }
 
-            return true;
+            return success;
         }
 
         template<typename Derived>
