@@ -164,10 +164,10 @@ namespace BlackMisc
      * and i is an instance of CPropertyIndex.
      */
     template <typename T, typename = void_t<>>
-    struct THasCompareByPropertyIndex : public std::false_type {};
+    struct THasComparePropertyByIndex : public std::false_type {};
     //! \cond
     template <typename T>
-    struct THasCompareByPropertyIndex<T, void_t<decltype(std::declval<T>().compareByPropertyIndex(std::declval<CPropertyIndex>(), std::declval<T>()))>> : public std::true_type {};
+    struct THasComparePropertyByIndex<T, void_t<decltype(std::declval<T>().comparePropertyByIndex(std::declval<const CPropertyIndex &>(), std::declval<const T &>()))>> : public std::true_type {};
     //! \endcond
 
     /*!

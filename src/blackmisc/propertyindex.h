@@ -241,7 +241,7 @@ namespace BlackMisc
             return [index = *this](const auto & a, const auto & b)
             {
                 using T = std::decay_t<decltype(a)>;
-                return Private::compareByProperty(a, b, index, THasCompareByPropertyIndex<T>(), THasPropertyByIndex<T>());
+                return Private::compareByProperty(a, b, index, THasComparePropertyByIndex<T>(), THasPropertyByIndex<T>());
             };
         }
 
