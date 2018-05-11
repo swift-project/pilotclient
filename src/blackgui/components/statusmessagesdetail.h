@@ -15,6 +15,7 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/digestsignal.h"
 #include "blackmisc/variant.h"
 
 #include <QFrame>
@@ -39,10 +40,10 @@ namespace BlackGui
             virtual ~CStatusMessagesDetail();
 
             //! Add message
-            void appendStatusMessageToList(const BlackMisc::CStatusMessage &message, bool resize = true);
+            void appendStatusMessageToList(const BlackMisc::CStatusMessage &message);
 
             //! Add messages
-            void appendStatusMessagesToList(const BlackMisc::CStatusMessageList &messages, bool resize = true);
+            void appendStatusMessagesToList(const BlackMisc::CStatusMessageList &messages);
 
             //! Show log details
             void showDetails(bool details);
@@ -75,9 +76,11 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CStatusMessagesDetail> ui;
             int m_maxLogMessages = -1;
+            BlackMisc::CStatusMessageList m_pending;
+            BlackMisc::CDigestSignal m_dsDeferredUpdate  { this, &CStatusMessagesDetail::deferredUpdate, 2000, 10 };
 
-            //! Remove oldest messages
-            void removeOldest();
+            //! Do not update each message, but deferred
+            void deferredUpdate();
 
             //! Custom menu for the log component
             class CMessageMenu : public Menus::IMenuDelegate

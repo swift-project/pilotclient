@@ -34,18 +34,18 @@ namespace BlackGui
         CStatusMessagesDetail::~CStatusMessagesDetail()
         { }
 
-        void CStatusMessagesDetail::appendStatusMessageToList(const CStatusMessage &message, bool resize)
+        void CStatusMessagesDetail::appendStatusMessageToList(const CStatusMessage &message)
         {
             if (message.isEmpty()) { return; }
-            ui->tvp_StatusMessages->insert(message, resize);
-            this->removeOldest();
+            m_pending.push_back(message);
+            m_dsDeferredUpdate.inputSignal();
         }
 
-        void CStatusMessagesDetail::appendStatusMessagesToList(const CStatusMessageList &messages, bool resize)
+        void CStatusMessagesDetail::appendStatusMessagesToList(const CStatusMessageList &messages)
         {
             if (messages.isEmpty()) { return; }
-            ui->tvp_StatusMessages->insert(messages, resize);
-            this->removeOldest();
+            m_pending.push_back(messages);
+            m_dsDeferredUpdate.inputSignal();
         }
 
         void CStatusMessagesDetail::showDetails(bool details)
@@ -86,18 +86,30 @@ namespace BlackGui
             ui->filter_LogMessages->useRadioButtonDescriptiveIcons(oneCharacterText);
         }
 
-        void CStatusMessagesDetail::removeOldest()
+        void CStatusMessagesDetail::deferredUpdate()
         {
+            if (m_pending.isEmpty()) { return; }
+            const CStatusMessageList add(m_pending);
+            m_pending.clear();
+
+            CStatusMessageList newMsgs(ui->tvp_StatusMessages->container());
+            newMsgs.push_back(add);
+
             // do not remove every time, but when a threshold is reached
-            if (m_maxLogMessages < 1) { return; }
-            if (m_maxLogMessages < 100 && ui->tvp_StatusMessages->rowCount() > (m_maxLogMessages + 10))
+            if (m_maxLogMessages < 0)
             {
-                ui->tvp_StatusMessages->keepLatest(m_maxLogMessages);
+                // do not restrict
+            }
+            else  if (m_maxLogMessages < 100 && ui->tvp_StatusMessages->rowCount() > (m_maxLogMessages + 10))
+            {
+                newMsgs.keepLatest(m_maxLogMessages);
             }
             else if (ui->tvp_StatusMessages->rowCount() > (m_maxLogMessages * 1.1))
             {
-                ui->tvp_StatusMessages->keepLatest(m_maxLogMessages);
+                newMsgs.keepLatest(m_maxLogMessages);
             }
+
+            ui->tvp_StatusMessages->updateContainerMaybeAsync(newMsgs);
         }
 
         void CStatusMessagesDetail::CMessageMenu::customMenu(CMenuActions &menuActions)
@@ -105,7 +117,7 @@ namespace BlackGui
             CStatusMessagesDetail *messagesDetail = qobject_cast<CStatusMessagesDetail *>(this->parent());
             Q_ASSERT_X(messagesDetail, Q_FUNC_INFO, "Missing parent");
 
-            bool v = messagesDetail->ui->form_StatusMessage->isVisible();
+            const bool v = messagesDetail->ui->form_StatusMessage->isVisible();
             const QString formString(v ? "Hide log details" : "Show log details");
             this->m_action = menuActions.addAction(this->m_action, BlackMisc::CIcons::databaseTable16(), formString,
                                                    CMenuAction::pathLog(), { messagesDetail->ui->form_StatusMessage, &CStatusMessageForm::toggleVisibility});
