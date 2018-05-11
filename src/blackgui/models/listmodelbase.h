@@ -255,6 +255,9 @@ namespace BlackGui
             //! Similar to ContainerType::push_back
             virtual void push_back(const ObjectType &object);
 
+            //! Similar to ContainerType::push_back
+            virtual void push_back(const ContainerType &container);
+
             //! Similar to ContainerType::insert here inserts at first position
             virtual void insert(const ObjectType &object);
 

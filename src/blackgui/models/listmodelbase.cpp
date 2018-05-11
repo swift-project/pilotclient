@@ -509,7 +509,31 @@ namespace BlackGui
             beginInsertRows(QModelIndex(), m_container.size(), m_container.size());
             m_container.push_back(object);
             endInsertRows();
-            this->updateFilteredContainer();
+
+            if (this->hasFilter())
+            {
+                // this will change the whole used model as we cannot predict the filter
+                this->beginResetModel();
+                this->updateFilteredContainer();
+                this->endResetModel();
+            }
+            this->emitModelDataChanged();
+        }
+
+        template<typename ObjectType, typename ContainerType, bool UseCompare>
+        void CListModelBase<ObjectType, ContainerType, UseCompare>::push_back(const ContainerType &container)
+        {
+            beginInsertRows(QModelIndex(), m_container.size(), m_container.size());
+            m_container.push_back(container);
+            endInsertRows();
+
+            if (this->hasFilter())
+            {
+                // this will change the whole used model as we cannot predict the filter
+                this->beginResetModel();
+                this->updateFilteredContainer();
+                this->endResetModel();
+            }
             this->emitModelDataChanged();
         }
 
@@ -522,6 +546,7 @@ namespace BlackGui
 
             if (this->hasFilter())
             {
+                // this will change the whole used model as we cannot predict the filter
                 this->beginResetModel();
                 this->updateFilteredContainer();
                 this->endResetModel();
@@ -539,6 +564,7 @@ namespace BlackGui
 
             if (this->hasFilter())
             {
+                // this will change the whole used model as we cannot predict the filter
                 this->beginResetModel();
                 this->updateFilteredContainer();
                 this->endResetModel();

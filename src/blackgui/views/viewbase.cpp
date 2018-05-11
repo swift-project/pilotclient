@@ -973,6 +973,38 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::push_back(const ObjectType &value, bool resize)
+        {
+            Q_ASSERT(m_model);
+            if (this->rowCount() < 1)
+            {
+                // this allows presizing
+                this->updateContainerMaybeAsync(ContainerType({value}), true, resize);
+            }
+            else
+            {
+                m_model->push_back(value);
+                if (resize) { this->performModeBasedResizeToContent(); }
+            }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::push_back(const ContainerType &container, bool resize)
+        {
+            Q_ASSERT(m_model);
+            if (this->rowCount() < 1)
+            {
+                // this allows presizing
+                this->updateContainerMaybeAsync(container, true, resize);
+            }
+            else
+            {
+                m_model->push_back(container);
+                if (resize) { this->performModeBasedResizeToContent(); }
+            }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
         const ObjectType &CViewBase<ModelClass, ContainerType, ObjectType>::at(const QModelIndex &index) const
         {
             Q_ASSERT(m_model);

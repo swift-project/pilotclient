@@ -580,6 +580,12 @@ namespace BlackGui
             //! Insert
             void insert(const ContainerType &container, bool resize = true);
 
+            //! Push back
+            void push_back(const ObjectType &value, bool resize = true);
+
+            //! Push back
+            void push_back(const ContainerType &container, bool resize = true);
+
             //! Value object at
             const ObjectType &at(const QModelIndex &index) const;
 
