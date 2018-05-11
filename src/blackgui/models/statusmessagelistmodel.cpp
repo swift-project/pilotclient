@@ -55,7 +55,7 @@ namespace BlackGui
                 break;
             case Simplified:
                 {
-                    this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
+                    m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
                     CColumn col = CColumn("severity", CStatusMessage::IndexIcon);
                     col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
                     m_columns.addColumn(col);

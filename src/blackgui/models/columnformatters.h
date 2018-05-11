@@ -275,6 +275,9 @@ namespace BlackGui
             //! Hour minute second
             static const QString &formatHms() { static const QString f = "HH:mm:ss"; return f; }
 
+            //! Hour minute second and milliseconds
+            static const QString &formatHmsz() { static const QString f = "HH:mm:ss.zzz"; return f; }
+
         private:
             QString m_formatString = "yyyy-MM-dd HH:mm"; //!< how the value is displayed
         };
@@ -333,18 +336,21 @@ namespace BlackGui
             {
                 if (physicalQuantity.canConvert<PQ>())
                 {
-                    PQ pq = physicalQuantity.value<PQ>();
-                    if (!m_unit.isNull())
-                    {
-                        pq.switchUnit(m_unit);
-                    }
-                    return pq.valueRoundedWithUnit(m_digits, m_useI18n);
+                    const PQ pq = physicalQuantity.value<PQ>();
+                    return this->displayRole(pq);
                 }
                 else
                 {
                     Q_ASSERT_X(false, "CPhysiqalQuantiyFormatter::displayRole", "No CPhysicalQuantity class");
                     return "";
                 }
+            }
+
+            //! Version if value is already available as PQ
+            BlackMisc::CVariant displayRole(const PQ &pq) const
+            {
+                if (m_unit.isNull()) { return pq.valueRoundedWithUnit(m_digits, m_useI18n); }
+                return pq.valueRoundedWithUnit(m_unit, m_digits, m_useI18n);
             }
 
             //! Set unit

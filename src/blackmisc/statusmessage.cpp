@@ -97,10 +97,12 @@ namespace BlackMisc
 
         QReadLocker readLock(&other.m_lock);
         auto handledBy = other.m_handledByObjects;
+        qint64 ts = other.m_timestampMSecsSinceEpoch;
         readLock.unlock(); // avoid deadlock
 
-        QWriteLocker writeLock(&this->m_lock);
+        QWriteLocker writeLock(&m_lock);
         m_handledByObjects = handledBy;
+        m_timestampMSecsSinceEpoch = ts;
         return *this;
     }
 

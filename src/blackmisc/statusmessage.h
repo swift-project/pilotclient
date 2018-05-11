@@ -53,7 +53,7 @@ namespace BlackMisc
         CMessageBase() {}
 
         //! Construct a message with some specific category.
-        explicit CMessageBase(const CLogCategory &category) : m_categories( { category }) {}
+        explicit CMessageBase(const CLogCategory &category) : m_categories({ category }) {}
 
         //! Construct a message with some specific categories.
         explicit CMessageBase(const CLogCategoryList &categories) : m_categories(categories) {}

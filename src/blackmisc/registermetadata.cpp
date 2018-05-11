@@ -80,6 +80,7 @@ namespace BlackMisc
         CPropertyIndexVariantMap::registerMetadata();
         CRgbColor::registerMetadata();
         CStatusMessage::registerMetadata();
+        qDBusRegisterMetaType<CStatusMessage::StatusSeverity>();
         CStatusMessageList::registerMetadata();
         CValueCachePacket::registerMetadata();
         CVariant::registerMetadata();
