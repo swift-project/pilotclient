@@ -248,7 +248,7 @@ namespace BlackMisc
             CPartsStatus m_currentPartsStatus;                           //!< this step's status
             Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() }; //!< latest interpolation
 
-            qint64 m_situationsLastModified     { -1 }; //!< whehn situations were last modified
+            qint64 m_situationsLastModified     { -1 }; //!< when situations were last modified
             qint64 m_situationsLastModifiedUsed { -1 }; //!< interpolant based on situations last updated
             int m_interpolatedSituationsCounter {  0 }; //!< counter for each interpolated situations: statistics, every n-th interpolation ....
 

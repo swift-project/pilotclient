@@ -154,8 +154,8 @@ namespace BlackCore
             //! \ingroup crosscontextfunction
             //! @{
 
-            //! Remote aircraft added
-            void xCtxAddedRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+            //! Remote aircraft added and ready for model matching
+            void xCtxAddedRemoteAircraftReadyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
             //! Remove remote aircraft
             void xCtxRemovedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);

@@ -136,12 +136,14 @@ namespace BlackGui
 
             //! Data changed
             //! \remark passing back selected objects so they can be reselected
+            //! \remark condsider modelDataChangedDigest for performance reasons
             void modelDataChanged(int count, bool withFilter);
 
             //! Data changed, digest version
             void modelDataChangedDigest(int count, bool withFilter);
 
             //! Model has been changed
+            //! Triggered with each change, for performance consider using changedDigest
             void changed();
 
             //! Model has been changed, digest signal

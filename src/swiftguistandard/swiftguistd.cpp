@@ -265,17 +265,10 @@ void SwiftGuiStd::onConnectionStatusChanged(INetwork::ConnectionStatus from, INe
     // sounds
     switch (to)
     {
-    case INetwork::Connected:
-        this->playNotifcationSound(CNotificationSounds::NotificationLogin);
-        break;
-    case INetwork::Disconnected:
-        this->playNotifcationSound(CNotificationSounds::NotificationLogoff);
-        break;
-    case INetwork::DisconnectedError:
-        this->playNotifcationSound(CNotificationSounds::NotificationError);
-        break;
-    default:
-        break;
+    case INetwork::Connected: this->playNotifcationSound(CNotificationSounds::NotificationLogin); break;
+    case INetwork::Disconnected: this->playNotifcationSound(CNotificationSounds::NotificationLogoff); break;
+    case INetwork::DisconnectedError: this->playNotifcationSound(CNotificationSounds::NotificationError); break;
+    default: break;
     }
 }
 

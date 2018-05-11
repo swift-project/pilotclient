@@ -194,13 +194,13 @@ namespace BlackCore
                 Q_ASSERT_X(this->getCContextNetwork()->airspace(), Q_FUNC_INFO, "No airspace object");
 
                 c = connect(m_contextNetwork, &IContextNetwork::textMessagesReceived,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxTextMessagesReceived);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxTextMessagesReceived, Qt::QueuedConnection);
                 Q_ASSERT(c);
 
                 // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
                 // ready for model matching is sent delayed when all information are available
                 c = connect(m_contextNetwork, &IContextNetwork::readyForModelMatching,
-                            this->getCContextSimulator(), &CContextSimulator::xCtxAddedRemoteAircraft, Qt::QueuedConnection);
+                            this->getCContextSimulator(), &CContextSimulator::xCtxAddedRemoteAircraftReadyForModelMatching, Qt::QueuedConnection);
                 Q_ASSERT(c);
                 c = connect(m_contextNetwork, &IContextNetwork::removedAircraft,
                             this->getCContextSimulator(), &CContextSimulator::xCtxRemovedRemoteAircraft, Qt::QueuedConnection);

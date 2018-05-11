@@ -25,7 +25,7 @@ namespace BlackGui
         CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
             CListModelBase<CStatusMessage, CStatusMessageList, true>("ViewStatusMessageList", parent)
         {
-            setMode(Detailed);
+            this->setMode(Detailed);
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "time");
@@ -67,6 +67,5 @@ namespace BlackGui
                 break;
             }
         }
-
     } // namespace
 } // namespace

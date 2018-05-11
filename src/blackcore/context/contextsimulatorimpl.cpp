@@ -487,7 +487,7 @@ namespace BlackCore
             }
         }
 
-        void CContextSimulator::xCtxAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        void CContextSimulator::xCtxAddedRemoteAircraftReadyForModelMatching(const CSimulatedAircraft &remoteAircraft)
         {
             if (!this->isSimulatorAvailable()) { return; }
             const CCallsign callsign = remoteAircraft.getCallsign();
@@ -501,8 +501,8 @@ namespace BlackCore
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
             const CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
-            this->updateAircraftModel(callsign, aircraftModel, identifier());
-            const CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
+            this->updateAircraftModel(callsign, aircraftModel, this->identifier());
+            const CSimulatedAircraft aircraftAfterModelApplied = this->getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
             CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
             this->addMatchingMessages(callsign, matchingMessages);
@@ -529,7 +529,7 @@ namespace BlackCore
                 for (const CSimulatedAircraft &simulatedAircraft : aircraft)
                 {
                     BLACK_VERIFY_X(!simulatedAircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "Need callsign");
-                    xCtxAddedRemoteAircraft(simulatedAircraft);
+                    this->xCtxAddedRemoteAircraftReadyForModelMatching(simulatedAircraft);
                 }
                 m_initallyAddAircrafts = false;
             }
@@ -780,7 +780,7 @@ namespace BlackCore
             CSimulatedAircraft aircraft = getAircraftInRangeForCallsign(callsign);
             if (aircraft.getCallsign() != callsign) { return false; } // not found
             aircraft.setModel(aircraft.getNetworkModel());
-            xCtxAddedRemoteAircraft(aircraft);
+            xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
             return true;
         }
 

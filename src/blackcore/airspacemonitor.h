@@ -140,7 +140,7 @@ namespace BlackCore
         //! Raw data as received from network
         void requestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &livery);
 
-        //! Read for model matching
+        //! Ready for model matching
         void readyForModelMatching(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
         //! An ATIS has been received

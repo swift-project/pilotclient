@@ -452,9 +452,9 @@ namespace BlackGui
             bool m_forceColumnsToMaxSize              = true;                  //!< force that columns are extended to full viewport width
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
             Menu m_menus                              = MenuDefault;           //!< Default menu settings
-            Menus::IMenuDelegate *m_menu    = nullptr;                         //!< custom menu if any
-            Menus::CFontMenu *m_fontMenu    = nullptr;                         //!< font menu if applicable
-            CLoadIndicator *m_loadIndicator = nullptr;                         //!< load indicator if needed
+            Menus::IMenuDelegate *m_menu              = nullptr;               //!< custom menu if any
+            Menus::CFontMenu *m_fontMenu              = nullptr;               //!< font menu if applicable
+            CLoadIndicator *m_loadIndicator           = nullptr;               //!< load indicator if needed
             QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions
             BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
             BlackMisc::CSetting<Settings::TViewDirectorySettings> m_dirSettings { this }; //!< directory for load/save
