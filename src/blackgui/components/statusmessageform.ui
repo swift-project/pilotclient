@@ -32,24 +32,10 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="2" column="3" colspan="6">
+   <item row="2" column="3" colspan="5">
     <widget class="QLineEdit" name="le_Categories">
      <property name="readOnly">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1" colspan="2">
-    <widget class="QLabel" name="lbl_Categories">
-     <property name="text">
-      <string>Categories:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="6">
-    <widget class="QLabel" name="lbl_Timestamp">
-     <property name="text">
-      <string>Timestamp:</string>
      </property>
     </widget>
    </item>
@@ -60,20 +46,24 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="8">
-    <widget class="QPlainTextEdit" name="te_Message">
-     <property name="readOnly">
-      <bool>true</bool>
+   <item row="0" column="5">
+    <widget class="QLabel" name="lbl_Timestamp">
+     <property name="text">
+      <string>Timestamp:</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="5">
-    <widget class="QLabel" name="lbl_SeverityIcon">
+   <item row="2" column="1" colspan="2">
+    <widget class="QLabel" name="lbl_Categories">
      <property name="text">
-      <string/>
+      <string>Categories:</string>
      </property>
-     <property name="pixmap">
-      <pixmap resource="../../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/question.png</pixmap>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="7">
+    <widget class="QPlainTextEdit" name="te_Message">
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -91,19 +81,16 @@
     </widget>
    </item>
    <item row="0" column="4">
-    <spacer name="hs_1">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+    <widget class="QLabel" name="lbl_SeverityIcon">
+     <property name="text">
+      <string/>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
+     <property name="pixmap">
+      <pixmap resource="../../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/question.png</pixmap>
      </property>
-    </spacer>
+    </widget>
    </item>
-   <item row="0" column="7">
+   <item row="0" column="6">
     <widget class="QLineEdit" name="le_Timestamp">
      <property name="maximumSize">
       <size>
@@ -115,19 +102,6 @@
       <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item row="0" column="8">
-    <spacer name="hs_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
