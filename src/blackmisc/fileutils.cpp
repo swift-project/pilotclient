@@ -300,7 +300,7 @@ namespace BlackMisc
         return result;
     }
 
-    QFileInfo CFileUtils::findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
+    QFileInfo CFileUtils::findLastModified(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
         if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
         const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
@@ -309,6 +309,19 @@ namespace BlackMisc
         auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo & a, const QFileInfo & b)
         {
             return a.lastModified() < b.lastModified();
+        });
+        return *it;
+    }
+
+    QFileInfo CFileUtils::findLastCreated(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
+    {
+        if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
+        const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
+        if (files.isEmpty()) { return {}; }
+
+        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo & a, const QFileInfo & b)
+        {
+            return a.created() < b.created();
         });
         return *it;
     }

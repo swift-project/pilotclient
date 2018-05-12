@@ -74,6 +74,9 @@ namespace BlackMisc
                 //! XSwiftBus legacy directory
                 static QString xswiftbusLegacyDir(const QString &xplaneRootDir = CXPlaneUtil::xplaneRootDir());
 
+                //! Both directories, plugin and
+                static bool hasXSwiftBusBuildAndPluginDir(const QString &xplaneRootDir);
+
                 //! Finds conflicting plugins
                 //! \remark uses CXPlaneUtil::xplanePluginPath as default
                 static QStringList findConflictingPlugins(const QString &pluginDir = {});

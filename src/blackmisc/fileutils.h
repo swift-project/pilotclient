@@ -125,8 +125,11 @@ namespace BlackMisc
         //! Returns list of all files in dir, optionally matching a wildcard and predicate.
         static QFileInfoList enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
 
-        //! Returns path to the newest file in dir, optionally matching a wildcard, or empty string.
-        static QFileInfo findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
+        //! Returns path to the last modifed file in dir, optionally matching a wildcard, or empty string.
+        static QFileInfo findLastModified(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
+
+        //! Returns path to the last created file in dir, optionally matching a wildcard, or empty string.
+        static QFileInfo findLastCreated(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
 
         //! Get all swift executables
         static const QStringList &getSwiftExecutables();

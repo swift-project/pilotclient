@@ -24,8 +24,8 @@ namespace BlackGui
     {
     public:
         //! Display a dialog to copy the latest XSwiftBus files
-        //! \remark only displayed in a local environment
-        static int displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, QWidget *parent = nullptr);
+        //! \remark normally only displayed in a local environment
+        static int displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, bool checkLatestFile = true, QWidget *parent = nullptr);
     };
 } // ns
 #endif

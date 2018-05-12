@@ -12,11 +12,12 @@
 #include "blackgui/guiactionbind.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/foreignwindows.h"
-
+#include "blackgui/copyxswiftbusdialog.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
 
@@ -28,12 +29,14 @@
 #include <QtGlobal>
 #include <QDesktopServices>
 
+using namespace BlackConfig;
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
 
 void SwiftGuiStd::onMenuClicked()
 {
@@ -137,6 +140,17 @@ void SwiftGuiStd::initMenus()
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
     ui->menu_MovingMap->setIcon(CIcons::swiftMap16());
 
+    if (CBuildConfig::isLocalDeveloperDebugBuild() && ui->menu_File)
+    {
+        QAction *a = new QAction(CIcons::swift16(), "Copy XSwiftBus dialog");
+        ui->menu_File->insertAction(ui->menu_File->actions().at(5), a);
+        c = connect(a, &QAction::triggered, this, [ = ]
+        {
+            this->copyXSwiftBusDialog(false);
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
+    }
+
     // for hotkeys
     const QString swift(CGuiActionBindHandler::pathSwiftPilotClient());
     static const CActionBind swiftRoot(swift, CIcons::swift16()); // inserts action for root folder
@@ -144,4 +158,11 @@ void SwiftGuiStd::initMenus()
     m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_InfoAreas, swift + "Info areas"));
     m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_File, swift + "File"));
     m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_Window, swift + "Window"));
+}
+
+void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
+{
+    const QString xPlaneRootDir = ui->comp_MainInfoArea->getSettingsComponent()->getSimulatorSettings(CSimulatorInfo::XPLANE).getSimulatorDirectoryOrDefault();
+    const int c = CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(xPlaneRootDir, checkFileTimestamp, this);
+    if (c > 0) { CLogMessage(this).info("Copied %1 files from build directory") << c; }
 }

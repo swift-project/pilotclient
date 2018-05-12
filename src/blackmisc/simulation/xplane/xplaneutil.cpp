@@ -205,6 +205,13 @@ namespace BlackMisc
                 return {};
             }
 
+            bool CXPlaneUtil::hasXSwiftBusBuildAndPluginDir(const QString &xplaneRootDir)
+            {
+                if (CDirectoryUtils::getXSwiftBusBuildDirectory().isEmpty()) { return false; }
+                const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
+                return (!xswiftBusPluginDir.isEmpty());
+            }
+
             QStringList CXPlaneUtil::findConflictingPlugins(const QString &pluginDir)
             {
                 const QStringList files = findAllXplFiles(pluginDir);
@@ -246,10 +253,10 @@ namespace BlackMisc
                 const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
                 if (xswiftBusPluginDir.isEmpty()) { return false; }
 
-                const QFileInfo fiLatestBuild = CFileUtils::findNewestFile(CDirectoryUtils::getXSwiftBusBuildDirectory(), true, xplFileFilter());
+                const QFileInfo fiLatestBuild = CFileUtils::findLastModified(CDirectoryUtils::getXSwiftBusBuildDirectory(), true, xplFileFilter());
                 if (!fiLatestBuild.lastModified().isValid()) { return false; }
 
-                const QFileInfo fiLatestDeployed = CFileUtils::findNewestFile(xswiftBusPluginDir, true, xplFileFilter());
+                const QFileInfo fiLatestDeployed = CFileUtils::findLastModified(xswiftBusPluginDir, true, xplFileFilter());
                 if (!fiLatestDeployed.lastModified().isValid()) { return true; } // not yet existing
 
                 // newer?

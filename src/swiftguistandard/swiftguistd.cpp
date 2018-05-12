@@ -18,7 +18,6 @@
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/dbloaddatadialog.h"
 #include "blackgui/components/settingscomponent.h"
-#include "blackgui/copyxswiftbusdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
@@ -425,9 +424,7 @@ void SwiftGuiStd::verifyPrerequisites()
         }
     }
 
-    const QString xPlaneRootDir = ui->comp_MainInfoArea->getSettingsComponent()->getSimulatorSettings(CSimulatorInfo::XPLANE).getSimulatorDirectoryOrDefault();
-    const int c = CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(xPlaneRootDir, this);
-    if (c > 0) { CLogMessage(this).info("Copied %1 files from build directory") << c; }
+    this->copyXSwiftBusDialog(true);
 }
 
 void SwiftGuiStd::checkDbDataLoaded()
