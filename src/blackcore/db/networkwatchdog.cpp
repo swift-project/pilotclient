@@ -78,10 +78,11 @@ namespace BlackCore
         {
             static const QString info("Internet accessible: %1 (good: %2 / bad: %3), swift DB accessible: %4 (good: %5 / bad: %6) DB last ping URL: '%7' canConnect: %8ms");
             const QString pUrl(this->getLastPingDbUrl());
+            static const QString cct(QString::number(CanConnectTimeMs));
             return info.
                    arg(boolToYesNo(this->isInternetAccessible())).arg(m_goodCountInternet).arg(m_badCountInternet).
                    arg(boolToYesNo(this->isSwiftDbAccessible())).arg(m_goodCountDb).arg(m_badCountDb).
-                   arg(pUrl).arg(CanConnectTimeMs);
+                   arg(pUrl, cct); // cct has to be string, otherwise the % in the URL will be replaced
         }
 
         void CNetworkWatchdog::setWorkingSharedUrl(const CUrl &workingUrl)
