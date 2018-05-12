@@ -379,11 +379,17 @@ namespace BlackSimPlugin
                 m_monitorWidget->appendSendingCall("ownAircraftModelChanged", model.toQString());
             }, Qt::QueuedConnection));
 
-            m_connectionGuard.append(connect(this, &ISimulator::renderRestrictionsChanged, this, [ = ](bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength & maxRenderedDistance)
+            m_connectionGuard.append(connect(this, &ISimulator::renderRestrictionsChanged, this, [ = ](bool restricted, bool enabled, int maxAircraft, const CLength & maxRenderedDistance)
             {
                 if (!m_monitorWidget) return;
                 static const QString params("restricted: %1 enabled: %2 max aircraft: %3");
                 m_monitorWidget->appendSendingCall("renderRestrictionsChanged", params.arg(boolToYesNo(restricted), boolToYesNo(enabled)).arg(maxAircraft), maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::m(), 1));
+            }, Qt::QueuedConnection));
+
+            m_connectionGuard.append(connect(this, &ISimulator::interpolationAndRenderingSetupChanged, this, [ = ]()
+            {
+                if (!m_monitorWidget) return;
+                m_monitorWidget->appendSendingCall("interpolationAndRenderingSetupChanged");
             }, Qt::QueuedConnection));
 
             m_connectionGuard.append(connect(this, &ISimulator::aircraftRenderingChanged, this, [ = ](const CSimulatedAircraft & aircraft)

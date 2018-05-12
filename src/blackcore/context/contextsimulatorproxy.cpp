@@ -63,6 +63,9 @@ namespace BlackCore
                                    "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, bool, int, BlackMisc::PhysicalQuantities::CLength)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                   "interpolationAndRenderingSetupChanged", this, SIGNAL(interpolationAndRenderingSetupChanged()));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
@@ -176,6 +179,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<CInterpolationSetupList>(QLatin1String("getInterpolationAndRenderingSetupsPerCallsign"));
         }
 
+        CInterpolationAndRenderingSetupPerCallsign CContextSimulatorProxy::getInterpolationAndRenderingSetupPerCallsignOrDefault(const CCallsign &callsign) const
+        {
+            return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetupPerCallsign>(QLatin1String("getInterpolationAndRenderingSetupsPerCallsign"), callsign);
+        }
+
         void CContextSimulatorProxy::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups)
         {
             m_dBusInterface->callDBus(QLatin1String("setInterpolationAndRenderingSetupsPerCallsign"), setups);
@@ -209,6 +217,11 @@ namespace BlackCore
         void CContextSimulatorProxy::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
             m_dBusInterface->callDBus(QLatin1String("highlightAircraft"), aircraftToHighlight, enableHighlight, displayTime);
+        }
+
+        bool CContextSimulatorProxy::followAircraft(const CCallsign &callsign)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("followAircraft"), callsign);
         }
 
         bool CContextSimulatorProxy::resetToModelMatchingAircraft(const CCallsign &callsign)

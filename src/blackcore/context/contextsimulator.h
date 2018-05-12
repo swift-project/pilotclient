@@ -94,6 +94,9 @@ namespace BlackCore
             //! Render restrictions have been changed
             void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
 
+            //! Setup changed
+            void interpolationAndRenderingSetupChanged();
+
             //! Model set ready or changed
             void modelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
@@ -189,6 +192,9 @@ namespace BlackCore
             //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::getInterpolationSetupsPerCallsign
             virtual BlackMisc::Simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const = 0;
 
+            //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault
+            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
             //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
             virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) = 0;
 
@@ -218,6 +224,9 @@ namespace BlackCore
 
             //! Highlight aircraft in simulator
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
+
+            //! Follow aircraft im simulator view
+            virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
             //! Reset model by matching it again
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;

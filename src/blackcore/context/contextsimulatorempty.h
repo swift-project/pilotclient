@@ -175,6 +175,14 @@ namespace BlackCore
                 return BlackMisc::Simulation::CInterpolationSetupList();
             }
 
+            //! \copydoc ISimulator::getInterpolationSetupPerCallsignOrDefault
+            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const BlackMisc::Aviation::CCallsign &callsign) const override
+            {
+                Q_UNUSED(callsign);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign();
+            }
+
             //! \copydoc ISimulator::setInterpolationAndRenderingSetup
             virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override
             {
@@ -211,6 +219,14 @@ namespace BlackCore
                 Q_UNUSED(enableHighlight);
                 Q_UNUSED(displayTime);
                 logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
+            //! \copydoc IContextSimulator::followAircraft
+            virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override
+            {
+                Q_UNUSED(callsign);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
             }
 
             //! \copydoc IContextSimulator::resetToModelMatchingAircraft

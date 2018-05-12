@@ -358,6 +358,7 @@ namespace BlackCore
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
 
+        emit this->interpolationAndRenderingSetupChanged();
         emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
     }
 
@@ -371,6 +372,12 @@ namespace BlackCore
             m_highlightEndTimeMsEpoch = QDateTime::currentMSecsSinceEpoch() + deltaT;
             m_highlightedAircraft.push_back(aircraftToHighlight);
         }
+    }
+
+    bool CSimulatorCommon::followAircraft(const CCallsign &callsign)
+    {
+        Q_UNUSED(callsign);
+        return false;
     }
 
     int CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)
@@ -482,7 +489,11 @@ namespace BlackCore
                 const CCallsign cs(parser.part(2));
                 CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(cs);
                 const bool changed = setup.setInterpolatorMode(part1);
-                if (changed) { this->setInterpolationSetupPerCallsign(setup, cs); }
+                if (changed)
+                {
+                    this->setInterpolationSetupPerCallsign(setup, cs);
+                    emit this->interpolationAndRenderingSetupChanged();
+                }
                 CLogMessage(this).info(changed ? "Changed interpolation mode for '%1'" : "Unchanged interpolation mode for '%1'") << cs.asString();
                 return true;
             }

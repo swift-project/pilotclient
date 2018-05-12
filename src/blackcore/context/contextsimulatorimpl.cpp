@@ -32,6 +32,7 @@
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
+#include "contextsimulatorimpl.h"
 
 #include <QMetaObject>
 #include <QStringList>
@@ -295,6 +296,14 @@ namespace BlackCore
             return m_simulatorPlugin.second->getInterpolationSetupsPerCallsign();
         }
 
+        CInterpolationAndRenderingSetupPerCallsign CContextSimulator::getInterpolationAndRenderingSetupPerCallsignOrDefault(const CCallsign &callsign) const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_simulatorPlugin.first.isUnspecified()) { return CInterpolationAndRenderingSetupPerCallsign(); }
+            Q_ASSERT(m_simulatorPlugin.second);
+            return m_simulatorPlugin.second->getInterpolationSetupPerCallsignOrDefault(callsign);
+        }
+
         void CContextSimulator::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -373,6 +382,8 @@ namespace BlackCore
             c = connect(simulator, &ISimulator::aircraftRenderingChanged, this, &IContextSimulator::aircraftRenderingChanged);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::renderRestrictionsChanged, this, &IContextSimulator::renderRestrictionsChanged);
+            Q_ASSERT(c);
+            c = connect(simulator, &ISimulator::interpolationAndRenderingSetupChanged, this, &IContextSimulator::interpolationAndRenderingSetupChanged);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::airspaceSnapshotHandled, this, &IContextSimulator::airspaceSnapshotHandled);
             Q_ASSERT(c);
@@ -503,10 +514,25 @@ namespace BlackCore
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
             this->updateAircraftModel(callsign, aircraftModel, this->identifier());
             const CSimulatedAircraft aircraftAfterModelApplied = this->getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
+            if (!aircraftAfterModelApplied.hasModelString())
+            {
+                if (!aircraftAfterModelApplied.hasCallsign()) { return; } // removed
+                if (this->isAircraftInRange(aircraftAfterModelApplied.getCallsign())) { return; } // removed, but callsig, we did crosscheck
+
+                // callsign but not string
+                CLogMessage(this).error("Matching error for '%1', no model string") << aircraftAfterModelApplied.getCallsign().asString();
+
+                CSimulatedAircraft brokenAircraft(aircraftAfterModelApplied);
+                brokenAircraft.setEnabled(false);
+                brokenAircraft.setRendered(false);
+                emit this->aircraftRenderingChanged(brokenAircraft);
+                CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Cannot add remote aircraft, no model string: %1").arg(brokenAircraft.toQString()));
+                return;
+            }
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
             CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
             this->addMatchingMessages(callsign, matchingMessages);
-            emit this->modelMatchingCompleted(remoteAircraft);
+            emit this->modelMatchingCompleted(aircraftAfterModelApplied);
         }
 
         void CContextSimulator::xCtxRemovedRemoteAircraft(const CCallsign &callsign)
@@ -773,6 +799,13 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << aircraftToHighlight << enableHighlight << displayTime; }
             Q_ASSERT(m_simulatorPlugin.second);
             m_simulatorPlugin.second->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
+        }
+
+        bool CContextSimulator::followAircraft(const CCallsign &callsign)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            Q_ASSERT(m_simulatorPlugin.second);
+            return m_simulatorPlugin.second->followAircraft(callsign);
         }
 
         bool CContextSimulator::resetToModelMatchingAircraft(const CCallsign &callsign)

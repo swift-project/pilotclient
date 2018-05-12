@@ -164,6 +164,9 @@ namespace BlackCore
         //! Highlight the aircraft for given time (or disable highlight)
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
 
+        //! Follow aircraft
+        virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
         //! Activates or deactivates simulator weather
         virtual void setWeatherActivated(bool activated) = 0;
 
@@ -215,6 +218,9 @@ namespace BlackCore
 
         //! Render restrictions have been changed
         void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
+
+        //! Interpolation or rendering setup changed
+        void interpolationAndRenderingSetupChanged();
 
         //! Aircraft rendering changed
         void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
