@@ -90,6 +90,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="pb_Reload">
+        <property name="text">
+         <string>reload</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

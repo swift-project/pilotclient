@@ -20,6 +20,7 @@ using namespace BlackGui::Views;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -35,19 +36,29 @@ namespace BlackGui
             connect(ui->pb_RenderingSetup, &QPushButton::clicked, this, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget);
             connect(ui->pb_Save, &QPushButton::clicked, this, &CInterpolationSetupComponent::saveSetup);
             connect(ui->pb_Delete, &QPushButton::clicked, this, &CInterpolationSetupComponent::removeSetup);
+            connect(ui->pb_Reload, &QPushButton::clicked, this, &CInterpolationSetupComponent::reloadSetup);
             connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked, this, &CInterpolationSetupComponent::onRowDoubleClicked);
             connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged, this, &CInterpolationSetupComponent::onModelChanged);
-
             connect(ui->rb_Callsign, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
             connect(ui->rb_Global, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
+            if (sGui &&  sGui->getIContextSimulator())
+            {
+                connect(sGui->getIContextSimulator(), &IContextSimulator::interpolationAndRenderingSetupChanged, this, &CInterpolationSetupComponent::onSetupChanged);
+            }
 
             ui->rb_Global->setChecked(true);
 
             QPointer<CInterpolationSetupComponent> myself(this);
-            QTimer::singleShot(250, this, [ = ]
+            QTimer::singleShot(1000, this, [ = ]
             {
                 if (myself.isNull()) { return; }
                 this->onModeChanged();
+            });
+
+            QTimer::singleShot(30 * 1000, this, [ = ]
+            {
+                if (myself.isNull()) { return; }
+                this->onSetupChanged();
             });
         }
 
@@ -91,15 +102,42 @@ namespace BlackGui
             this->setSetupsToContext(setups);
         }
 
+        void CInterpolationSetupComponent::reloadSetup()
+        {
+            const bool overlay = QObject::sender() == ui->pb_Reload;
+            if (!this->checkPrerequisites(overlay)) { return; }
+            if (this->getSetupMode() == CInterpolationSetupComponent::Global)
+            {
+                CInterpolationAndRenderingSetupGlobal gs = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
+                ui->form_InterpolationSetup->setValue(gs);
+            }
+            else
+            {
+                const CCallsign cs = ui->comp_CallsignCompleter->getCallsign(false);
+                if (!cs.isValid()) { return; }
+                const CInterpolationAndRenderingSetupPerCallsign setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupPerCallsignOrDefault(cs);
+                ui->form_InterpolationSetup->setValue(setup);
+            }
+        }
+
         void CInterpolationSetupComponent::saveSetup()
         {
-            if (!this->checkPrerequisites()) { return; }
+            if (!this->checkPrerequisites(true)) { return; }
             CInterpolationAndRenderingSetupPerCallsign setup = ui->form_InterpolationSetup->getValue();
             if (this->getSetupMode() == CInterpolationSetupComponent::Global)
             {
                 CInterpolationAndRenderingSetupGlobal gs = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
                 gs.setBaseValues(setup);
+                gs.setLogInterpolation(false); // that would globally log all values
                 sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(gs);
+                CLogMessage(this).info("Set global setup: '%1'") << gs.toQString(true);
+
+                const QPointer<CInterpolationSetupComponent> myself(this);
+                QTimer::singleShot(250, this, [ = ]
+                {
+                    if (myself.isNull()) { return; }
+                    this->reloadSetup();
+                });
             }
             else
             {
@@ -111,13 +149,19 @@ namespace BlackGui
                 if (replaced < 1) { return; }
                 const bool set = this->setSetupsToContext(setups);
                 if (!set) { return; }
-                QTimer::singleShot(250, this, &CInterpolationSetupComponent::displaySetupsPerCallsign);
+
+                const QPointer<CInterpolationSetupComponent> myself(this);
+                QTimer::singleShot(250, this, [ = ]
+                {
+                    if (myself.isNull()) { return; }
+                    this->displaySetupsPerCallsign();
+                });
             }
         }
 
         void CInterpolationSetupComponent::removeSetup()
         {
-            if (!this->checkPrerequisites()) { return; }
+            if (!this->checkPrerequisites(true)) { return; }
             if (this->getSetupMode() == CInterpolationSetupComponent::Global) { return; }
             const CCallsign cs = ui->comp_CallsignCompleter->getCallsign(false);
             CInterpolationSetupList setups = ui->tvp_InterpolationSetup->container();
@@ -126,7 +170,7 @@ namespace BlackGui
             const bool set = this->setSetupsToContext(setups);
             if (!set) { return; }
 
-            QPointer<CInterpolationSetupComponent> myself(this);
+            const QPointer<CInterpolationSetupComponent> myself(this);
             QTimer::singleShot(100, this, [ = ]
             {
                 if (myself.isNull()) { return; }
@@ -148,18 +192,24 @@ namespace BlackGui
             ui->tvp_InterpolationSetup->updateContainerMaybeAsync(setups);
         }
 
-        bool CInterpolationSetupComponent::checkPrerequisites()
+        bool CInterpolationSetupComponent::checkPrerequisites(bool showOverlay)
         {
             if (!sGui || !sGui->getIContextSimulator() || sGui->isShuttingDown())
             {
-                const CStatusMessage m = CStatusMessage(this).validationError("No context");
-                this->showOverlayMessage(m);
+                if (showOverlay)
+                {
+                    const CStatusMessage m = CStatusMessage(this).validationError("No context");
+                    this->showOverlayMessage(m);
+                }
                 return false;
             }
             if (!sGui->getIContextSimulator()->isSimulatorAvailable())
             {
-                const CStatusMessage m = CStatusMessage(this).validationError("No simulator avialable");
-                this->showOverlayMessage(m);
+                if (showOverlay)
+                {
+                    const CStatusMessage m = CStatusMessage(this).validationError("No simulator avialable");
+                    this->showOverlayMessage(m);
+                }
                 return false;
             }
             return true;
@@ -172,6 +222,11 @@ namespace BlackGui
             sGui->getIContextSimulator()->setInterpolationAndRenderingSetupsPerCallsign(setups);
             m_lastSetSetups = setups;
             return true;
+        }
+
+        void CInterpolationSetupComponent::onSetupChanged()
+        {
+            this->displaySetupsPerCallsign();
         }
     } // ns
 } // ns

@@ -61,6 +61,9 @@ namespace BlackGui
             //! View has been changed
             void onModelChanged();
 
+            //! Reload
+            void reloadSetup();
+
             //! Save a setup
             void saveSetup();
 
@@ -74,10 +77,13 @@ namespace BlackGui
             void displaySetupsPerCallsign();
 
             //! Check prerequisites before saving etc.
-            bool checkPrerequisites();
+            bool checkPrerequisites(bool showOverlay);
 
             //! Send to context
             bool setSetupsToContext(const BlackMisc::Simulation::CInterpolationSetupList &setups);
+
+            //! Setup chaged
+            void onSetupChanged();
 
             BlackMisc::Simulation::CInterpolationSetupList m_lastSetSetups; //!< last setups set to context
         };
