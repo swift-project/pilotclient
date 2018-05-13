@@ -161,9 +161,12 @@ namespace BlackGui
             QStringList stdOutAndError;
             if (CCompressUtils::zip7Uncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, true, &stdOutAndError))
             {
+                // capture values by copy!
                 const CStatusMessage msg = CStatusMessage(this, CLogCategory::validation()).info("Uncompressed xSwiftBus in '%1'") << xSwiftBusDirectory;
-                this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [ & ]
+                this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [ = ]
                 {
+                    QFile downloadFile(downloadFileName);
+                    if (!downloadFile.exists()) { return; } // removed in meantime
                     const bool removed = downloadFile.remove();
                     Q_UNUSED(removed);
                 });
