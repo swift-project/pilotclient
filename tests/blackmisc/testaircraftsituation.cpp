@@ -228,13 +228,20 @@ namespace BlackMiscTest
     CAircraftSituationList CTestAircraftSituation::testSetRotateUpPitch(const CAircraftSituationList &situations)
     {
         CAircraftSituationList newSituations;
+        double average = 0;
         for (const CAircraftSituation &situation : situations)
         {
             CAircraftSituation s(situation);
             const double pitch = CMathUtils::randomDouble(1.5);
+            average += pitch;
             s.setPitch(CAngle(pitch, CAngleUnit::deg()));
             newSituations.push_back(s);
         }
+        average = average / newSituations.size();
+        CAircraftSituation avg = newSituations.front();
+        avg.setPitch(CAngle(average, CAngleUnit::deg()));
+        avg.addMsecs(1000); // make this the latest situation
+        newSituations.push_front(avg); // first value is average pitch, so it will NOT be detected
         return newSituations;
     }
 

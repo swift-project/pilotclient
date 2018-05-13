@@ -134,8 +134,11 @@ namespace BlackMiscTest
                 interpolationNo++;
             }
         }
+
+        // check on time just to learn if interpolation suddenly gets very slow
+        // this is a risky test as in some situations the values can be exceeded
         int timeMs = timer.elapsed();
-        QVERIFY2(timeMs < interpolationNo, "Interpolation > 1ms");
+        QVERIFY2(timeMs < interpolationNo * 1.5, "Interpolation > 1.5ms");
         qDebug() << timeMs << "ms" << "for" << interpolationNo << "interpolations";
 
         int fetchedParts = 0;
