@@ -87,10 +87,10 @@ namespace BlackGui
             {
                 ui->comp_SimulatorSelector->setValue(simulator);
                 ui->le_Simulator->setText(simulator.toQString(true));
-                const QPointer<CDbOwnModelSetComponent> guard(this);
+                const QPointer<CDbOwnModelSetComponent> myself(this);
                 QTimer::singleShot(500, [ = ]()
                 {
-                    if (guard.isNull() || !sApp || sApp->isShuttingDown()) { return; }
+                    if (myself.isNull() || !sApp || sApp->isShuttingDown()) { return; }
                     this->updateViewToCurrentModels();
                 });
             }
@@ -274,7 +274,8 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::viewModelChanged()
         {
-            ui->pb_SaveAsSetForSimulator->setEnabled(true);
+            const bool hasData = ui->tvp_OwnModelSet->rowCount() > 0;
+            ui->pb_SaveAsSetForSimulator->setEnabled(hasData);
         }
 
         void CDbOwnModelSetComponent::setSaveFileName(const CSimulatorInfo &simulator)

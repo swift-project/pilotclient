@@ -429,6 +429,12 @@ namespace BlackGui
             //! Draw drop indicator
             virtual void drawDropIndicator(bool indicator) = 0;
 
+            //! Save JSON for action/menu, no return signatur
+            void saveJsonAction();
+
+            //! Display the filter dialog
+            void displayFilterDialog();
+
             //! Settings have been changed
             void settingsChanged();
 
@@ -463,9 +469,6 @@ namespace BlackGui
             //! Helper method with template free signature serving as callback from threaded worker
             int ps_updateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize);
 
-            //! Display the filter dialog
-            void ps_displayFilterDialog();
-
             //! Remove filter
             virtual void ps_removeFilter() = 0;
 
@@ -493,9 +496,6 @@ namespace BlackGui
             //! Save JSON
             virtual BlackMisc::CStatusMessage ps_saveJson() = 0;
 
-            //! Save JSON for action/menu, no return signatur
-            void ps_saveJsonAction();
-
             //! Trigger reload from backend by signal requestUpdate();
             void ps_triggerReload();
 
@@ -517,16 +517,15 @@ namespace BlackGui
             //! Highlight DB data
             virtual void ps_toggleHighlightDbData() {}
 
-        private slots:
-            //! Remove selected rows
-            void ps_removeSelectedRows();
-
         private:
             //! \name Change selection modes @{
             void setMultiSelection();
             void setExtendedSelection();
             void setSingleSelection();
             //! @}
+
+            //! Remove selected rows
+            void ps_removeSelectedRows();
 
             //! Toggle auto display flag
             void toggleAutoDisplay();

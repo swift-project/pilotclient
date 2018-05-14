@@ -88,16 +88,30 @@ namespace BlackGui
             this->setTextElideMode(Qt::ElideMiddle);
 
             // shortcuts
-            QShortcut *filter = new QShortcut(CShortcut::keyDisplayFilter(), this, SLOT(ps_displayFilterDialog()), nullptr, Qt::WidgetShortcut);
+            QShortcut *filter = new QShortcut(CShortcut::keyDisplayFilter(), this);
+            connect(filter, &QShortcut::activated, this, &CViewBaseNonTemplate::displayFilterDialog);
             filter->setObjectName("Filter shortcut for " + this->objectName());
-            QShortcut *clearSelection = new QShortcut(CShortcut::keyClearSelection(), this, SLOT(clearSelection()), nullptr, Qt::WidgetShortcut);
+            filter->setContext(Qt::WidgetShortcut);
+
+            QShortcut *clearSelection = new QShortcut(CShortcut::keyClearSelection(), this);
+            connect(clearSelection, &QShortcut::activated, this, &CViewBaseNonTemplate::clearSelection);
             clearSelection->setObjectName("Clear selection shortcut for " + this->objectName());
-            QShortcut *saveJson = new QShortcut(CShortcut::keySaveViews(), this, SLOT(ps_saveJsonAction()), nullptr, Qt::WidgetShortcut);
+            clearSelection->setContext(Qt::WidgetShortcut);
+
+            QShortcut *saveJson = new QShortcut(CShortcut::keySaveViews(), this);
+            connect(saveJson, &QShortcut::activated, this, &CViewBaseNonTemplate::saveJsonAction);
             saveJson->setObjectName("Save JSON for " + this->objectName());
-            QShortcut *deleteRow = new QShortcut(CShortcut::keyDelete(), this, SLOT(ps_removeSelectedRows()), nullptr, Qt::WidgetShortcut);
-            deleteRow->setObjectName("Delete selected rows for " + this->objectName());
-            QShortcut *copy = new QShortcut(CShortcut::keyCopy(), this, SLOT(ps_copy()), nullptr, Qt::WidgetShortcut);
-            copy->setObjectName("Copy rows for " + this->objectName());
+            saveJson->setContext(Qt::WidgetShortcut);
+
+            QShortcut *deleteRow = new QShortcut(CShortcut::keyDelete(), this);
+            connect(deleteRow, &QShortcut::activated, this, &CViewBaseNonTemplate::ps_removeSelectedRows);
+            deleteRow->setObjectName("Remove selected rows for " + this->objectName());
+            deleteRow->setContext(Qt::WidgetShortcut);
+
+            QShortcut *copy = new QShortcut(CShortcut::keyCopy(), this);
+            connect(copy, &QShortcut::activated, this, &CViewBaseNonTemplate::ps_copy);
+            copy->setObjectName("Copy selection shortcut for " + this->objectName());
+            copy->setContext(Qt::WidgetShortcut);
         }
 
         CViewBaseNonTemplate::~CViewBaseNonTemplate()
@@ -251,14 +265,14 @@ namespace BlackGui
                     if (m_filterWidget)
                     {
                         const bool dialog = qobject_cast<QDialog *>(m_filterWidget);
-                        if (dialog) ma.addAction(CIcons::filter16(), "Show filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_displayFilterDialog }, CShortcut::keyDisplayFilter());
+                        if (dialog) ma.addAction(CIcons::filter16(), "Show filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::displayFilterDialog }, CShortcut::keyDisplayFilter());
                         ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_removeFilter });
                     }
                     break;
                 }
             case MenuMaterializeFilter: { ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter }); break; }
             case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_loadJsonAction }); break; }
-            case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_saveJsonAction }, CShortcut::keySaveViews()); break; }
+            case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews()); break; }
             case MenuCut:
                 {
                     if (!QApplication::clipboard()) break;
@@ -565,7 +579,7 @@ namespace BlackGui
             return this->performUpdateContainer(variant, sort, resize);
         }
 
-        void CViewBaseNonTemplate::ps_displayFilterDialog()
+        void CViewBaseNonTemplate::displayFilterDialog()
         {
             if (!m_menus.testFlag(MenuFilter)) { return; }
             if (!m_filterWidget) { return; }
@@ -582,7 +596,7 @@ namespace BlackGui
             }
         }
 
-        void CViewBaseNonTemplate::ps_saveJsonAction()
+        void CViewBaseNonTemplate::saveJsonAction()
         {
             if (this->isEmpty()) { return; }
             if (!m_menus.testFlag(MenuSave)) { return; }

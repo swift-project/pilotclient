@@ -134,20 +134,19 @@ namespace BlackGui
             virtual void jsonLoadedAndModelUpdated(const BlackMisc::Simulation::CAircraftModelList &models) override;
             //! @}
 
-        private slots:
-            //! Highlight stashed models
-            void ps_toggleHighlightStashedModels();
-
+        private:
             //! Toggle highlight invalid models
-            void ps_toogleHighlightInvalidModels();
+            void toggleHighlightInvalidModels();
 
             //! Toggle if stashing unselects
-            void ps_stashingClearsSelection();
+            void stashingClearsSelection();
+
+            //! Highlight stashed models
+            void toggleHighlightStashedModels();
 
             //! Stash shortcut pressed
-            void ps_requestStash();
+            void requestedStash();
 
-        private:
             bool m_stashingClearsSelection = true; //!< stashing unselects
             BlackMisc::Simulation::CSimulatorInfo m_loadingRequiresSimulator; //!< simulator required when loading
         };
