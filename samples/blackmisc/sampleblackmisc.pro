@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core dbus network
+QT += core dbus network
 
 TARGET = sampleblackmisc
 TEMPLATE = app

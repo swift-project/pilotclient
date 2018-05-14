@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core widgets dbus network
+QT += core dbus network widgets
 
 TARGET = simulatorfsxconfig
 TEMPLATE = lib

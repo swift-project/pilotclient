@@ -2,7 +2,7 @@ load(common_pre)
 
 REQUIRES += contains(BLACK_CONFIG,P3D)
 
-QT       += core dbus gui network xml widgets
+QT += core dbus widgets
 
 TARGET = simulatorp3d
 TEMPLATE = lib

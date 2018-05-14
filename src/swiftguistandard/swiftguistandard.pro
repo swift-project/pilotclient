@@ -1,8 +1,6 @@
 load(common_pre)
 
-QT       += core dbus gui svg network xml multimedia
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core dbus network widgets
 
 TARGET = swiftguistd
 TEMPLATE = app

@@ -11,7 +11,7 @@
 #include "blackmisc/logmessage.h"
 
 #include <QHash>
-#include <QtWidgets/QMessageBox>
+#include <QMessageBox>
 #include <CoreFoundation/CoreFoundation.h>
 #include <AppKit/NSEvent.h>
 #include <AppKit/NSAlert.h>

@@ -8,7 +8,6 @@
  */
 
 #include "simulatorp3d.h"
-#include "blackcore/application.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"

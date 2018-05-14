@@ -2,7 +2,7 @@ load(common_pre)
 
 requires(equals(WORD_SIZE,64))
 
-QT       += core dbus xml network
+QT += core
 
 TARGET = fsuipc
 TEMPLATE = lib

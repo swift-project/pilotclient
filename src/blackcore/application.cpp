@@ -106,7 +106,7 @@ namespace BlackCore
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
         m_accessManager(new QNetworkAccessManager(this)),
         m_applicationInfo(application),
-        m_cookieManager({}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+        m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -157,8 +157,9 @@ namespace BlackCore
             sApp = this;
             Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
             m_networkWatchDog.reset(new CNetworkWatchdog(this)); // not yet started
-            m_cookieManager.setParent(m_accessManager);
-            m_accessManager->setCookieJar(&m_cookieManager);
+            m_cookieManager = new CCookieManager({}, this);
+            m_cookieManager->setParent(m_accessManager);
+            m_accessManager->setCookieJar(m_cookieManager);
             connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::changedInternetAccessibility, Qt::QueuedConnection);
             connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::onChangedNetworkAccessibility, Qt::QueuedConnection);
             connect(m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, m_networkWatchDog.data(), &CNetworkWatchdog::onChangedNetworkAccessibility, Qt::QueuedConnection);
@@ -709,7 +710,7 @@ namespace BlackCore
 
     void CApplication::deleteAllCookies()
     {
-        m_cookieManager.deleteAllCookies();
+        m_cookieManager->deleteAllCookies();
     }
 
     CNetworkWatchdog *CApplication::getNetworkWatchdog() const

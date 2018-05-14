@@ -15,7 +15,6 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/url.h"
 #include "blackmisc/db/dbflags.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/valueobject.h"

@@ -2,7 +2,7 @@ load(common_pre)
 
 REQUIRES += contains(BLACK_CONFIG,FSX)
 
-QT       += core dbus gui network xml widgets
+QT += core dbus widgets
 
 TARGET = simulatorfsx
 TEMPLATE = lib

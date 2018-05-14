@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += core dbus network xml
+QT       += core dbus network
 
 TARGET = sampleblackmiscsim
 TEMPLATE = app

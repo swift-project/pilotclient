@@ -1,6 +1,7 @@
 load(common_pre)
 
-QT       += network dbus gui widgets multimedia
+QT += core dbus
+macx: QT += widgets
 
 TARGET = blackinput
 TEMPLATE = lib

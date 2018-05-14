@@ -7,7 +7,6 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/db/databaseutils.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
@@ -37,7 +36,6 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Network;
-using namespace BlackCore::Db;
 
 namespace BlackMisc
 {

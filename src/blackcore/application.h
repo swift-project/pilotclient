@@ -13,7 +13,6 @@
 #define BLACKCORE_APPLICATION_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/cookiemanager.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/db/databasereaderconfig.h"
 #include "blackcore/data/globalsetup.h"
@@ -62,6 +61,7 @@ namespace crashpad
 namespace BlackCore
 {
     class CCoreFacade;
+    class CCookieManager;
     class CSetupReader;
     class CWebDataServices;
     class ISimulator;
@@ -616,7 +616,7 @@ namespace BlackCore
         QScopedPointer<CWebDataServices>       m_webDataServices;           //!< web data services
         QScopedPointer<Db::CNetworkWatchdog>   m_networkWatchDog;           //!< checking DB/internet access
         QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;                //!< file logger
-        CCookieManager                         m_cookieManager;             //!< single cookie manager for our access manager
+        QPointer<CCookieManager>               m_cookieManager;             //!< single cookie manager for our access manager
         const QString                          m_applicationName;           //!< application name
         QReadWriteLock                         m_accessManagerLock;         //!< lock to make access manager access threadsafe
         CCoreFacadeConfig                      m_coreFacadeConfig;          //!< Core facade config if any

@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT       += network dbus gui multimedia
+QT       += dbus multimedia
 
 TARGET = blacksound
 TEMPLATE = lib
