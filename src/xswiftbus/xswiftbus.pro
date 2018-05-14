@@ -114,7 +114,7 @@ win32 {
     else {
         dep_target.files *= $$DestRoot/bin/dbus-1-3.dll
         dep_target.files *= $$DestRoot/bin/expat.dll
-        dep_target.files *= $$DestRoot/bin/libevent_core.dll
+        dep_target.files *= $$DestRoot/bin/event_core.dll
     }
     dep_target.CONFIG += no_check_exist
 
