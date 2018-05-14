@@ -122,11 +122,6 @@ namespace BlackSimPlugin
             virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
             virtual bool connectTo() override;
             virtual bool disconnectFrom() override;
-            virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
-            virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-            virtual int physicallyRemoveAllRemoteAircraft() override;
-            virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
-            virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
@@ -136,6 +131,8 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
+            virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
             virtual void unload() override;
             //! @}
 
@@ -158,6 +155,10 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulator::isSimulating
             virtual bool isSimulating() const override { return isConnected(); }
+
+            virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
+            virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual int physicallyRemoveAllRemoteAircraft() override;
 
             //! \name Base class overrides
             //! @{
