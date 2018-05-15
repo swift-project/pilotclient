@@ -392,7 +392,8 @@ namespace BlackMisc
         {
             if (json.isEmpty()) { return QJsonObject();}
             const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
-            return acceptCacheFormat ? Json::swiftDataObjectValue(jsonDoc.object()) : jsonDoc.object();
+            return acceptCacheFormat ? Json::unwrapCache(jsonDoc.object()) : jsonDoc.object();
+            // return acceptCacheFormat ? Json::swiftDataObjectValue(jsonDoc.object()) : jsonDoc.object();
         }
 
         QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format)
@@ -487,7 +488,24 @@ namespace BlackMisc
             const QJsonObject cacheObject = object.value(key).toObject();
             if (cacheObject.contains("type") && cacheObject.contains("value"))
             {
+                const QString type = cacheObject.value("type").toString(); // just to verify in debugger
+                Q_UNUSED(type);
                 return cacheObject.value("value").toObject();
+            }
+            return object;
+        }
+
+        QJsonObject unwrapCache(const QJsonObject &object)
+        {
+            if (object.size() != 1) { return object; } // no cache format
+            const QString key = object.keys().front();
+            const QJsonObject cacheObject = object.value(key).toObject();
+            if (cacheObject.contains("type") && cacheObject.contains("value"))
+            {
+                // return object in form type/value
+                const QString type = cacheObject.value("type").toString(); // just to verify in debugger
+                Q_UNUSED(type);
+                return cacheObject;
             }
             return object;
         }
@@ -497,6 +515,14 @@ namespace BlackMisc
             const QJsonObject obj = jsonObjectFromString(jsonString);
             if (obj.isEmpty()) { return obj; }
             return swiftDataObjectValue(obj);
+        }
+
+
+        QJsonObject unwrapCache(const QString &jsonString)
+        {
+            const QJsonObject obj = jsonObjectFromString(jsonString);
+            if (obj.isEmpty()) { return obj; }
+            return unwrapCache(obj);
         }
 
         bool looksLikeSwiftContainerJson(const QJsonObject &object)

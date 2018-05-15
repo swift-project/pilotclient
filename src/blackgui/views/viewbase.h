@@ -277,6 +277,12 @@ namespace BlackGui
             //! Save file name (optional)
             void setSaveFileName(const QString &saveName) { m_saveFileName = saveName; }
 
+            //! Allow cache file JSON to be loaded
+            bool allowCacheFileFormatJson() const { return m_allowCacheFileJson; }
+
+            //! Enable/disable cache file format to be loaded as JSON
+            void setAllowCacheFileFormatJson(bool allow) { m_allowCacheFileJson = allow; }
+
             //! Force that columns are extended to full viewport width.
             //! Workaround as of https://stackoverflow.com/q/3433664/356726
             void setForceColumnsToMaxSize(bool force) { m_forceColumnsToMaxSize = force; }
@@ -415,7 +421,7 @@ namespace BlackGui
             void init();
 
             //! Default file for load/save operations
-            QString getSettingsFileName(bool load) const;
+            QString getFileDialogFileName(bool load) const;
 
             //! Init menu actions
             Menus::CMenuActions initMenuActions(MenuFlag menu);
@@ -438,7 +444,14 @@ namespace BlackGui
             //! Settings have been changed
             void settingsChanged();
 
-            QString        m_saveFileName;                                     //!< save file name (JSON)
+            //! JSON directory
+            //! \remark Default implementation, can be overridden with specifi implementation
+            virtual void rememberLastJsonDirectory(const QString &selectedFileOrDir);
+
+            //! JSON directory
+            //! \remark Default implementation, can be overridden with specifi implementation
+            virtual QString getRememberedLastJsonDirectory() const;
+
             ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
             SelectionMode  m_originalSelectionMode    = this->selectionMode(); //!< Selection mode set
@@ -456,14 +469,17 @@ namespace BlackGui
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
             bool m_dropIndicator                      = false;                 //!< draw indicator
             bool m_forceColumnsToMaxSize              = true;                  //!< force that columns are extended to full viewport width
+            bool m_allowCacheFileJson                 = true;                  //!< allow Cache format JSON to be loaded
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
             Menu m_menus                              = MenuDefault;           //!< Default menu settings
             Menus::IMenuDelegate *m_menu              = nullptr;               //!< custom menu if any
             Menus::CFontMenu *m_fontMenu              = nullptr;               //!< font menu if applicable
             CLoadIndicator *m_loadIndicator           = nullptr;               //!< load indicator if needed
             QMap<MenuFlag, Menus::CMenuActions> m_menuFlagActions;             //!< initialized actions
-            BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
+            QString        m_saveFileName;                                     //!< save file name (JSON)
+            QString        m_lastJsonDirectory;                                //!< remember last JSON directory
             BlackMisc::CSetting<Settings::TViewDirectorySettings> m_dirSettings { this }; //!< directory for load/save
+            BlackMisc::CSettingReadOnly<Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker

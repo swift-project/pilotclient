@@ -309,6 +309,29 @@ namespace BlackGui
             }
         }
 
+        void CViewBaseNonTemplate::rememberLastJsonDirectory(const QString &selectedFileOrDir)
+        {
+            if (selectedFileOrDir.isEmpty()) { return; }
+            const QFileInfo fi(selectedFileOrDir);
+            if ((fi.isDir() && fi.exists()) || (fi.isFile() && fi.exists()))
+            {
+                // existing dir
+                m_lastJsonDirectory = fi.absolutePath();
+            }
+        }
+
+        QString CViewBaseNonTemplate::getRememberedLastJsonDirectory() const
+        {
+            if (!m_lastJsonDirectory.isEmpty()) { return m_lastJsonDirectory; }
+            QString dirCandidate = m_dirSettings.get();
+            const QFileInfo fi(dirCandidate);
+            if ((fi.isDir() && fi.exists()) || (fi.isFile() && fi.exists()))
+            {
+                return fi.absolutePath();
+            }
+            return QStringLiteral("");
+        }
+
         void CViewBaseNonTemplate::customMenu(CMenuActions &menuActions)
         {
             // delegate?
@@ -530,16 +553,16 @@ namespace BlackGui
             });
         }
 
-        QString CViewBaseNonTemplate::getSettingsFileName(bool load) const
+        QString CViewBaseNonTemplate::getFileDialogFileName(bool load) const
         {
             // some logic to find a useful default name
-            const QString dir = m_dirSettings.get();
             if (load)
             {
-                return CFileUtils::appendFilePaths(dir, CFileUtils::jsonWildcardAppendix());
+                return CFileUtils::appendFilePaths(this->getRememberedLastJsonDirectory(), CFileUtils::jsonWildcardAppendix());
             }
 
             // Save file path
+            const QString dir = m_dirSettings.get();
             QString name(m_saveFileName);
             if (name.isEmpty())
             {
@@ -818,7 +841,7 @@ namespace BlackGui
         void CViewBaseNonTemplate::dragEnterEvent(QDragEnterEvent *event)
         {
             if (!event || !this->acceptDrop(event->mimeData())) { return; }
-            setBackgroundRole(QPalette::Highlight);
+            this->setBackgroundRole(QPalette::Highlight);
             event->acceptProposedAction();
         }
 
@@ -1478,7 +1501,7 @@ namespace BlackGui
             do
             {
                 const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                         tr("Load data file"), getSettingsFileName(true),
+                                         tr("Load data file"), this->getFileDialogFileName(true),
                                          tr("swift (*.json *.txt)"));
                 if (fileName.isEmpty())
                 {
@@ -1497,16 +1520,26 @@ namespace BlackGui
                     m = CStatusMessage(this).warning("No swift JSON '%1'") << fileName;
                     break;
                 }
+
+                this->rememberLastJsonDirectory(fileName);
+
                 try
                 {
-                    CVariant containerVariant;
-                    containerVariant.convertFromJson(Json::jsonObjectFromString(json));
-                    if (!containerVariant.canConvert<ContainerType>())
+                    const bool allowCacheFormat = this->allowCacheFileFormatJson();
+                    const QJsonObject jsonObject = Json::jsonObjectFromString(json, allowCacheFormat);
+                    if (jsonObject.isEmpty())
                     {
                         m = CStatusMessage(this).warning("No valid swift JSON '%1'") << fileName;
                         break;
                     }
 
+                    CVariant containerVariant;
+                    containerVariant.convertFromJson(jsonObject);
+                    if (!containerVariant.canConvert<ContainerType>())
+                    {
+                        m = CStatusMessage(this).warning("No valid swift JSON '%1'") << fileName;
+                        break;
+                    }
                     ContainerType container = containerVariant.value<ContainerType>();
                     const int countBefore = container.size();
                     m = this->modifyLoadedJsonData(container);
@@ -1534,7 +1567,7 @@ namespace BlackGui
         CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson()
         {
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
-                                     tr("Save data file"), getSettingsFileName(false),
+                                     tr("Save data file"), getFileDialogFileName(false),
                                      tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true); }
             const QString json(this->toJsonString()); // save as CVariant JSON

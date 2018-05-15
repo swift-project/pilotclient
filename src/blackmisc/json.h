@@ -275,6 +275,16 @@ namespace BlackMisc
         //! \remark if data object unstrip from that, otherwise leave unchanged
         BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QString &jsonString);
 
+        //! The value of a cache/setting object
+        //! \remark if cache object unstrip from that, otherwise leave unchanged
+        //! \remark format is type/value
+        BLACKMISC_EXPORT QJsonObject unwrapCache(const QJsonObject &object);
+
+        //! The value of a cache/setting object
+        //! \remark if cache object unstrip from that, otherwise leave unchanged
+        //! \remark format is type/value
+        BLACKMISC_EXPORT QJsonObject unwrapCache(const QString &jsonString);
+
         /*!
          * Load JSON file and init by that
          */
