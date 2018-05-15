@@ -36,33 +36,39 @@ R"(<node>
     </method>
     <method name="removeAllPlanes">
     </method>
-    <method name="setPlanePosition">
-      <arg name="callsign" type="s" direction="in"/>
-      <arg name="latitude" type="d" direction="in"/>
-      <arg name="longitude" type="d" direction="in"/>
-      <arg name="altitude" type="d" direction="in"/>
-      <arg name="pitch" type="d" direction="in"/>
-      <arg name="roll" type="d" direction="in"/>
-      <arg name="heading" type="d" direction="in"/>
+    <method name="setPlanesPositions">
+      <arg name="callsigns" type="as" direction="in"/>
+      <arg name="latitudes" type="ad" direction="in"/>
+      <arg name="longitudes" type="ad" direction="in"/>
+      <arg name="altitudes" type="ad" direction="in"/>
+      <arg name="pitches" type="ad" direction="in"/>
+      <arg name="rolls" type="ad" direction="in"/>
+      <arg name="headings" type="ad" direction="in"/>
     </method>
-    <method name="setPlaneSurfaces">
-      <arg name="callsign" type="as" direction="in"/>
-      <arg name="gear" type="ad" direction="in"/>
-      <arg name="flap" type="ad" direction="in"/>
-      <arg name="spoiler" type="ad" direction="in"/>
-      <arg name="speedBrake" type="ad" direction="in"/>
-      <arg name="slat" type="ad" direction="in"/>
-      <arg name="wingSweep" type="ad" direction="in"/>
-      <arg name="thrust" type="ad" direction="in"/>
-      <arg name="elevator" type="ad" direction="in"/>
-      <arg name="rudder" type="ad" direction="in"/>
-      <arg name="aileron" type="ad" direction="in"/>
-      <arg name="landLight" type="ab" direction="in"/>
-      <arg name="beaconLight" type="ab" direction="in"/>
-      <arg name="strobeLight" type="ab" direction="in"/>
-      <arg name="navLight" type="ab" direction="in"/>
-      <arg name="lightPattern" type="ai" direction="in"/>
-      <arg name="onGround" type="ab" direction="in"/>
+    <method name="setPlanesSurfaces">
+      <arg name="callsigns" type="as" direction="in"/>
+      <arg name="gears" type="ad" direction="in"/>
+      <arg name="flaps" type="ad" direction="in"/>
+      <arg name="spoilers" type="ad" direction="in"/>
+      <arg name="speedBrakes" type="ad" direction="in"/>
+      <arg name="slats" type="ad" direction="in"/>
+      <arg name="wingSweeps" type="ad" direction="in"/>
+      <arg name="thrusts" type="ad" direction="in"/>
+      <arg name="elevators" type="ad" direction="in"/>
+      <arg name="rudders" type="ad" direction="in"/>
+      <arg name="ailerons" type="ad" direction="in"/>
+      <arg name="landLights" type="ab" direction="in"/>
+      <arg name="beaconLights" type="ab" direction="in"/>
+      <arg name="strobeLights" type="ab" direction="in"/>
+      <arg name="navLights" type="ab" direction="in"/>
+      <arg name="lightPatterns" type="ai" direction="in"/>
+      <arg name="onGrounds" type="ab" direction="in"/>
+    </method>
+    <method name="setPlaneTransponder">
+      <arg name="callsign" type="s" direction="in"/>
+      <arg name="code" type="i" direction="in"/>
+      <arg name="modeC" type="b" direction="in"/>
+      <arg name="ident" type="b" direction="in"/>
     </method>
     <method name="setPlaneTransponder">
       <arg name="callsign" type="s" direction="in"/>

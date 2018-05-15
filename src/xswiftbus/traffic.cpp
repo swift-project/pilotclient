@@ -277,8 +277,8 @@ namespace XSwiftBus
         m_planeViewMenuItems.clear();
     }
 
-    void CTraffic::setPlanePositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitudes,
-                                     std::vector<double> pitches, std::vector<double> rolles, std::vector<double> headings)
+    void CTraffic::setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitudes,
+                                      std::vector<double> pitches, std::vector<double> rolles, std::vector<double> headings)
     {
         for (size_t i = 0; i < callsigns.size(); i++)
         {
@@ -296,12 +296,13 @@ namespace XSwiftBus
         }
     }
 
-    void CTraffic::setPlaneSurfaces(const std::vector<std::string> &callsign, const std::vector<double> &gear, const std::vector<double> &flap, const std::vector<double> &spoiler,
-                                    const std::vector<double> &speedBrake, const std::vector<double> &slat, const std::vector<double> &wingSweep, const std::vector<double> &thrust,
-                                    const std::vector<double> &elevator, const std::vector<double> &rudder, const std::vector<double> &aileron, const std::vector<bool> &landLight,
-                                    const std::vector<bool> &beaconLight, const std::vector<bool> &strobeLight, const std::vector<bool> &navLight, const std::vector<int> &lightPattern, const std::vector<bool> &onGround)
+    void CTraffic::setPlanesSurfaces(const std::vector<std::string> &callsign, const std::vector<double> &gear, const std::vector<double> &flap, const std::vector<double> &spoilers,
+                                     const std::vector<double> &speedBrakes, const std::vector<double> &slats, const std::vector<double> &wingSweeps, const std::vector<double> &thrusts,
+                                     const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons, const std::vector<bool> &landLights,
+                                     const std::vector<bool> &beaconLights, const std::vector<bool> &strobeLights, const std::vector<bool> &navLights, const std::vector<int> &lightPatterns,
+                                     const std::vector<bool> &onGrounds)
     {
-        (void)onGround;
+        (void)onGrounds;
 
         for (size_t i = 0; i < callsign.size(); i++)
         {
@@ -314,19 +315,19 @@ namespace XSwiftBus
             plane->hasSurfaces = true;
             plane->targetGearPosition = static_cast<float>(gear.at(i));
             plane->surfaces.flapRatio = static_cast<float>(flap.at(i));
-            plane->surfaces.spoilerRatio = static_cast<float>(spoiler.at(i));
-            plane->surfaces.speedBrakeRatio = static_cast<float>(speedBrake.at(i));
-            plane->surfaces.slatRatio = static_cast<float>(slat.at(i));
-            plane->surfaces.wingSweep = static_cast<float>(wingSweep.at(i));
-            plane->surfaces.thrust = static_cast<float>(thrust.at(i));
-            plane->surfaces.yokePitch = static_cast<float>(elevator.at(i));
-            plane->surfaces.yokeHeading = static_cast<float>(rudder.at(i));
-            plane->surfaces.yokeRoll = static_cast<float>(aileron.at(i));
-            plane->surfaces.lights.landLights = landLight.at(i);
-            plane->surfaces.lights.bcnLights = beaconLight.at(i);
-            plane->surfaces.lights.strbLights = strobeLight.at(i);
-            plane->surfaces.lights.navLights = navLight.at(i);
-            plane->surfaces.lights.flashPattern = lightPattern.at(i);
+            plane->surfaces.spoilerRatio = static_cast<float>(spoilers.at(i));
+            plane->surfaces.speedBrakeRatio = static_cast<float>(speedBrakes.at(i));
+            plane->surfaces.slatRatio = static_cast<float>(slats.at(i));
+            plane->surfaces.wingSweep = static_cast<float>(wingSweeps.at(i));
+            plane->surfaces.thrust = static_cast<float>(thrusts.at(i));
+            plane->surfaces.yokePitch = static_cast<float>(elevators.at(i));
+            plane->surfaces.yokeHeading = static_cast<float>(rudders.at(i));
+            plane->surfaces.yokeRoll = static_cast<float>(ailerons.at(i));
+            plane->surfaces.lights.landLights = landLights.at(i);
+            plane->surfaces.lights.bcnLights = beaconLights.at(i);
+            plane->surfaces.lights.strbLights = strobeLights.at(i);
+            plane->surfaces.lights.navLights = navLights.at(i);
+            plane->surfaces.lights.flashPattern = lightPatterns.at(i);
         }
     }
 
@@ -535,7 +536,7 @@ namespace XSwiftBus
                     removeAllPlanes();
                 });
             }
-            else if (message.getMethodName() == "setPlanePositions")
+            else if (message.getMethodName() == "setPlanesPositions")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
                 std::vector<std::string> callsigns;
@@ -543,7 +544,7 @@ namespace XSwiftBus
                 std::vector<double> longitudes;
                 std::vector<double> altitudes;
                 std::vector<double> pitches;
-                std::vector<double> rolles;
+                std::vector<double> rolls;
                 std::vector<double> headings;
                 message.beginArgumentRead();
                 message.getArgument(callsigns);
@@ -551,56 +552,56 @@ namespace XSwiftBus
                 message.getArgument(longitudes);
                 message.getArgument(altitudes);
                 message.getArgument(pitches);
-                message.getArgument(rolles);
+                message.getArgument(rolls);
                 message.getArgument(headings);
                 queueDBusCall([ = ]()
                 {
-                    setPlanePositions(callsigns, latitudes, longitudes, altitudes, pitches, rolles, headings);
+                    setPlanesPositions(callsigns, latitudes, longitudes, altitudes, pitches, rolls, headings);
                 });
             }
-            else if (message.getMethodName() == "setPlaneSurfaces")
+            else if (message.getMethodName() == "setPlanesSurfaces")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                std::vector<std::string> callsign;
-                std::vector<double> gear;
-                std::vector<double> flap;
-                std::vector<double> spoiler;
-                std::vector<double> speedBrake;
-                std::vector<double> slat;
-                std::vector<double> wingSweep;
-                std::vector<double> thrust;
-                std::vector<double> elevator;
-                std::vector<double> rudder;
-                std::vector<double> aileron;
-                std::vector<bool> landLight;
-                std::vector<bool> beaconLight;
-                std::vector<bool> strobeLight;
-                std::vector<bool> navLight;
-                std::vector<int> lightPattern;
-                std::vector<bool> onGround;
+                std::vector<std::string> callsigns;
+                std::vector<double> gears;
+                std::vector<double> flaps;
+                std::vector<double> spoilers;
+                std::vector<double> speedBrakes;
+                std::vector<double> slats;
+                std::vector<double> wingSweeps;
+                std::vector<double> thrusts;
+                std::vector<double> elevators;
+                std::vector<double> rudders;
+                std::vector<double> ailerons;
+                std::vector<bool> landLights;
+                std::vector<bool> beaconLights;
+                std::vector<bool> strobeLights;
+                std::vector<bool> navLights;
+                std::vector<int> lightPatterns;
+                std::vector<bool> onGrounds;
                 message.beginArgumentRead();
-                message.getArgument(callsign);
-                message.getArgument(gear);
-                message.getArgument(flap);
-                message.getArgument(spoiler);
-                message.getArgument(speedBrake);
-                message.getArgument(slat);
-                message.getArgument(wingSweep);
-                message.getArgument(thrust);
-                message.getArgument(elevator);
-                message.getArgument(rudder);
-                message.getArgument(aileron);
-                message.getArgument(landLight);
-                message.getArgument(beaconLight);
-                message.getArgument(strobeLight);
-                message.getArgument(navLight);
-                message.getArgument(lightPattern);
-                message.getArgument(onGround);
+                message.getArgument(callsigns);
+                message.getArgument(gears);
+                message.getArgument(flaps);
+                message.getArgument(spoilers);
+                message.getArgument(speedBrakes);
+                message.getArgument(slats);
+                message.getArgument(wingSweeps);
+                message.getArgument(thrusts);
+                message.getArgument(elevators);
+                message.getArgument(rudders);
+                message.getArgument(ailerons);
+                message.getArgument(landLights);
+                message.getArgument(beaconLights);
+                message.getArgument(strobeLights);
+                message.getArgument(navLights);
+                message.getArgument(lightPatterns);
+                message.getArgument(onGrounds);
                 queueDBusCall([ = ]()
                 {
-                    setPlaneSurfaces(callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator,
-                                     rudder, aileron, landLight, beaconLight, strobeLight, navLight, lightPattern,
-                                     onGround);
+                    setPlanesSurfaces(callsigns, gears, flaps, spoilers, speedBrakes, slats, wingSweeps, thrusts, elevators,
+                                      rudders, ailerons, landLights, beaconLights, strobeLights, navLights, lightPatterns,
+                                      onGrounds);
                 });
             }
             else if (message.getMethodName() == "setPlaneTransponder")

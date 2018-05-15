@@ -95,14 +95,15 @@ namespace XSwiftBus
         void removeAllPlanes();
 
         //! Set the position of multiple traffic aircrafts
-        void setPlanePositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitude,
-                               std::vector<double> pitchs, std::vector<double> rolls, std::vector<double> headings);
+        void setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitudes,
+                               std::vector<double> pitches, std::vector<double> rolls, std::vector<double> headings);
 
         //! Set the flight control surfaces and lights of multiple traffic aircrafts
-        void setPlaneSurfaces(const std::vector<std::string> &callsign, const std::vector<double> &gear, const std::vector<double> &flap, const std::vector<double> &spoiler,
-                              const std::vector<double> &speedBrake, const std::vector<double> &slat, const std::vector<double> &wingSweep, const std::vector<double> &thrust,
-                              const std::vector<double> &elevator, const std::vector<double> &rudder, const std::vector<double> &aileron, const std::vector<bool> &landLight,
-                              const std::vector<bool> &beaconLight, const std::vector<bool> &strobeLight, const std::vector<bool> &navLight, const std::vector<int> &lightPattern, const std::vector<bool> &onGround);
+        void setPlanesSurfaces(const std::vector<std::string> &callsigns, const std::vector<double> &gears, const std::vector<double> &flaps, const std::vector<double> &spoilers,
+                              const std::vector<double> &speedBrakes, const std::vector<double> &slats, const std::vector<double> &wingSweeps, const std::vector<double> &thrusts,
+                              const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons, const std::vector<bool> &landLights,
+                              const std::vector<bool> &beaconLights, const std::vector<bool> &strobeLights, const std::vector<bool> &navLights, const std::vector<int> &lightPatterns,
+                              const std::vector<bool> &onGrounds);
 
         //! Set the transponder of a traffic aircraft
         void setPlaneTransponder(const std::string &callsign, int code, bool modeC, bool ident);
