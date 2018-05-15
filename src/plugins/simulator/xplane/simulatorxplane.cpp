@@ -707,31 +707,8 @@ namespace BlackSimPlugin
             // interpolation for all remote aircraft
             const QList<CXPlaneMPAircraft> xplaneAircraftList(m_xplaneAircraftObjects.values());
 
-            QStringList posCallsigns;
-            QList<double> latitudes;
-            QList<double> longitudes;
-            QList<double> altitudes;
-            QList<double> pitches;
-            QList<double> rolles;
-            QList<double> headings;
-
-            QStringList surfaceCallsign;
-            QList<double> gear;
-            QList<double> flap;
-            QList<double> spoiler;
-            QList<double> speedBrake;
-            QList<double> slat;
-            QList<double> wingSweep;
-            QList<double> thrust;
-            QList<double> elevator;
-            QList<double> rudder;
-            QList<double> aileron;
-            QList<bool> landLight;
-            QList<bool> beaconLight;
-            QList<bool> strobeLight;
-            QList<bool> navLight;
-            QList<int> lightPattern;
-            QList<bool> onGround;
+            PlanesPositions planesPositions;
+            PlanesSurfaces planesSurfaces;
 
             for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircraftList)
             {
@@ -751,13 +728,13 @@ namespace BlackSimPlugin
                     if (!xplaneAircraft.isSameAsSent(interpolatedSituation))
                     {
                         m_xplaneAircraftObjects[xplaneAircraft.getCallsign()].setSituationAsSent(interpolatedSituation);
-                        posCallsigns.push_back(interpolatedSituation.getCallsign().asString());
-                        latitudes.push_back(interpolatedSituation.latitude().value(CAngleUnit::deg()));
-                        longitudes.push_back(interpolatedSituation.longitude().value(CAngleUnit::deg()));
-                        altitudes.push_back(interpolatedSituation.getAltitude().value(CLengthUnit::ft()));
-                        pitches.push_back(interpolatedSituation.getPitch().value(CAngleUnit::deg()));
-                        rolles.push_back(interpolatedSituation.getBank().value(CAngleUnit::deg()));
-                        headings.push_back(interpolatedSituation.getHeading().value(CAngleUnit::deg()));
+                        planesPositions.callsigns.push_back(interpolatedSituation.getCallsign().asString());
+                        planesPositions.latitudes.push_back(interpolatedSituation.latitude().value(CAngleUnit::deg()));
+                        planesPositions.longitudes.push_back(interpolatedSituation.longitude().value(CAngleUnit::deg()));
+                        planesPositions.altitudes.push_back(interpolatedSituation.getAltitude().value(CLengthUnit::ft()));
+                        planesPositions.pitches.push_back(interpolatedSituation.getPitch().value(CAngleUnit::deg()));
+                        planesPositions.rolls.push_back(interpolatedSituation.getBank().value(CAngleUnit::deg()));
+                        planesPositions.headings.push_back(interpolatedSituation.getHeading().value(CAngleUnit::deg()));
                     }
                 }
                 else
@@ -768,35 +745,35 @@ namespace BlackSimPlugin
                 const CAircraftParts parts(result);
                 if (result.getPartsStatus().isSupportingParts() || parts.getPartsDetails() == CAircraftParts::GuessedParts)
                 {
-                    surfaceCallsign.push_back(xplaneAircraft.getCallsign().asString());
-                    gear.push_back(parts.isGearDown() ? 1 : 0);
-                    flap.push_back(parts.getFlapsPercent() / 100.0);
-                    spoiler.push_back(parts.isSpoilersOut() ? 1 : 0);
-                    speedBrake.push_back(parts.isSpoilersOut() ? 1 : 0);
-                    slat.push_back(parts.getFlapsPercent() / 100.0);
-                    wingSweep.push_back(0.0);
-                    thrust.push_back(parts.isAnyEngineOn() ? 0 : 0.75);
-                    elevator.push_back(0.0);
-                    rudder.push_back(0.0);
-                    aileron.push_back(0.0);
-                    landLight.push_back(parts.getLights().isLandingOn());
-                    beaconLight.push_back(parts.getLights().isBeaconOn());
-                    strobeLight.push_back(parts.getLights().isStrobeOn());
-                    navLight.push_back(parts.getLights().isNavOn());
-                    lightPattern.push_back(0);
-                    onGround.push_back(parts.isOnGround());
+                    planesSurfaces.callsigns.push_back(xplaneAircraft.getCallsign().asString());
+                    planesSurfaces.gears.push_back(parts.isGearDown() ? 1 : 0);
+                    planesSurfaces.flaps.push_back(parts.getFlapsPercent() / 100.0);
+                    planesSurfaces.spoilers.push_back(parts.isSpoilersOut() ? 1 : 0);
+                    planesSurfaces.speedBrakes.push_back(parts.isSpoilersOut() ? 1 : 0);
+                    planesSurfaces.slats.push_back(parts.getFlapsPercent() / 100.0);
+                    planesSurfaces.wingSweeps.push_back(0.0);
+                    planesSurfaces.thrusts.push_back(parts.isAnyEngineOn() ? 0 : 0.75);
+                    planesSurfaces.elevators.push_back(0.0);
+                    planesSurfaces.rudders.push_back(0.0);
+                    planesSurfaces.ailerons.push_back(0.0);
+                    planesSurfaces.landLights.push_back(parts.getLights().isLandingOn());
+                    planesSurfaces.beaconLights.push_back(parts.getLights().isBeaconOn());
+                    planesSurfaces.strobeLights.push_back(parts.getLights().isStrobeOn());
+                    planesSurfaces.navLights.push_back(parts.getLights().isNavOn());
+                    planesSurfaces.lightPatterns.push_back(0);
+                    planesSurfaces.onGrounds.push_back(parts.isOnGround());
                 }
 
             } // all callsigns
 
-            if (! posCallsigns.isEmpty())
+            if (! planesPositions.isEmpty())
             {
-                m_trafficProxy->setPlanePositions(posCallsigns, latitudes, longitudes, altitudes, pitches, rolles, headings);
+                m_trafficProxy->setPlanesPositions(planesPositions);
             }
 
-            if (! surfaceCallsign.isEmpty())
+            if (! planesSurfaces.isEmpty())
             {
-                m_trafficProxy->setPlaneSurfaces(surfaceCallsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron, landLight, beaconLight, strobeLight, navLight, lightPattern, onGround);
+                m_trafficProxy->setPlanesSurfaces(planesSurfaces);
             }
 
             const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;

@@ -31,6 +31,49 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
+        //! List of doubles
+        using QDoubleList = QList<double>;
+
+        //! Planes positions
+        struct PlanesPositions
+        {
+            //! Is empty?
+            bool isEmpty() const { return callsigns.isEmpty(); }
+
+            QStringList callsigns;      //!< List of callsigns
+            QList<double> latitudes;    //!< List of latitudes
+            QList<double> longitudes;   //!< List of longitudes
+            QList<double> altitudes;    //!< List of altitudes
+            QList<double> pitches;      //!< List of pitches
+            QList<double> rolls;        //!< List of rolls
+            QList<double> headings;     //!< List of headings
+        };
+
+        //! Planes surfaces
+        struct PlanesSurfaces
+        {
+            //! Is empty?
+            bool isEmpty() const { return callsigns.isEmpty(); }
+
+            QStringList callsigns;      //!< List of callsigns
+            QList<double> gears;        //!< List of gears
+            QList<double> flaps;        //!< List of flaps
+            QList<double> spoilers;     //!< List of spoilers
+            QList<double> speedBrakes;  //!< List of speedBrakes
+            QList<double> slats;        //!< List of slats
+            QList<double> wingSweeps;   //!< List of wingSweeps
+            QList<double> thrusts;      //!< List of thrusts
+            QList<double> elevators;    //!< List of elevators
+            QList<double> rudders;      //!< List of rudders
+            QList<double> ailerons;     //!< List of ailerons
+            QList<bool> landLights;     //!< List of landLights
+            QList<bool> beaconLights;   //!< List of beaconLights
+            QList<bool> strobeLights;   //!< List of strobeLights
+            QList<bool> navLights;      //!< List of navLights
+            QList<int> lightPatterns;   //!< List of lightPatterns
+            QList<bool> onGrounds;      //!< List of onGrounds
+        };
+
         /*!
          * Proxy object connected to a real XSwiftBus::CTraffic object via DBus
          */
@@ -39,9 +82,6 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
-            //! List of doubles
-            using QDoubleList = QList<double>;
-
             //! Elevation callback
             using ElevationCallback = std::function<void (const BlackMisc::Geo::CElevationPlane &, const BlackMisc::Aviation::CCallsign &)>;
 
@@ -113,15 +153,11 @@ namespace BlackSimPlugin
             //! \copydoc XSwiftBus::CTraffic::removeAllPlanes
             void removeAllPlanes();
 
-            //! \copydoc XSwiftBus::CTraffic::setPlanePositions
-            void setPlanePositions(const QStringList &callsigns, const QList<double> &latitudes, const QList<double> &longitudes, const QList<double> &altitudes,
-                                   const QList<double> &pitches, const QList<double> &rolles, const QList<double> &headings);
+            //! \copydoc XSwiftBus::CTraffic::setPlanesPositions
+            void setPlanesPositions(const PlanesPositions &planesPositions);
 
             //! \copydoc XSwiftBus::CTraffic::setPlaneSurfaces
-            void setPlaneSurfaces(const QStringList &callsign, const QList<double> &gear, const QList<double> &flap, const QList<double> &spoiler,
-                                  const QList<double> &speedBrake, const QList<double> &slat, const QList<double> &wingSweep, const QList<double> &thrust,
-                                  const QList<double> &elevator, const QList<double> &rudder, const QList<double> &aileron, const QList<bool> &landLight,
-                                  const QList<bool> &beaconLight, const QList<bool> &strobeLight, const QList<bool> &navLight, const QList<int> &lightPattern, const QList<bool> &onGround);
+            void setPlanesSurfaces(const PlanesSurfaces &planesSurfaces);
 
             //! \copydoc XSwiftBus::CTraffic::setPlaneTransponder
             void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);

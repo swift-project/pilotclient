@@ -82,19 +82,24 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("removeAllPlanes"));
         }
 
-        void CXSwiftBusTrafficProxy::setPlanePositions(const QStringList &callsigns, const QList<double> &latitudes, const QList<double> &longitudes, const QList<double> &altitudes,
-                const QList<double> &pitches, const QList<double> &rolles, const QList<double> &headings)
+        void CXSwiftBusTrafficProxy::setPlanesPositions(const PlanesPositions &planesPositions)
         {
-            m_dbusInterface->callDBus(QLatin1String("setPlanePositions"), callsigns, latitudes, longitudes, altitudes, pitches, rolles, headings);
+            m_dbusInterface->callDBus(QLatin1String("setPlanesPositions"),
+                                      planesPositions.callsigns, planesPositions.latitudes, planesPositions.longitudes,
+                                      planesPositions.altitudes, planesPositions.pitches, planesPositions.rolls,
+                                      planesPositions.headings);
         }
 
-        void CXSwiftBusTrafficProxy::setPlaneSurfaces(const QStringList &callsign, const QList<double> &gear, const QList<double> &flap, const QList<double> &spoiler,
-                const QList<double> &speedBrake, const QList<double> &slat, const QList<double> &wingSweep, const QList<double> &thrust,
-                const QList<double> &elevator, const QList<double> &rudder, const QList<double> &aileron, const QList<bool> &landLight,
-                const QList<bool> &beaconLight, const QList<bool> &strobeLight, const QList<bool> &navLight, const QList<int> &lightPattern, const QList<bool> &onGround)
+        void CXSwiftBusTrafficProxy::setPlanesSurfaces(const PlanesSurfaces &planesSurfaces)
         {
-            m_dbusInterface->callDBus(QLatin1String("setPlaneSurfaces"), callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron,
-                                      landLight, beaconLight, strobeLight, navLight, lightPattern, onGround);
+            m_dbusInterface->callDBus(QLatin1String("setPlanesSurfaces"),
+                                      planesSurfaces.callsigns, planesSurfaces.gears, planesSurfaces.flaps,
+                                      planesSurfaces.spoilers, planesSurfaces.speedBrakes, planesSurfaces.slats,
+                                      planesSurfaces.wingSweeps, planesSurfaces.thrusts, planesSurfaces.elevators,
+                                      planesSurfaces.rudders, planesSurfaces.ailerons,
+                                      planesSurfaces.landLights, planesSurfaces.beaconLights, planesSurfaces.strobeLights,
+                                      planesSurfaces.navLights, planesSurfaces.lightPatterns,
+                                      planesSurfaces.onGrounds);
         }
 
         void CXSwiftBusTrafficProxy::setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident)
