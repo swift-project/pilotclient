@@ -393,6 +393,14 @@ namespace XSwiftBus
         }
     }
 
+    void CTraffic::setFollowedAircraft(const std::string &callsign)
+    {
+        auto planeIt = m_planesByCallsign.find(callsign);
+        if (planeIt == m_planesByCallsign.end()) { return; }
+
+        orbitRemotePlane(callsign);
+    }
+
     const char *introspection_traffic =
         DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 #include "org.swift_project.xswiftbus.traffic.xml"
@@ -653,6 +661,17 @@ namespace XSwiftBus
                     reply.appendArgument(callsign);
                     reply.appendArgument(getEelevationAtPosition(callsign, latitude, longitude, altitude));
                     ;                   sendDBusMessage(reply);
+                });
+            }
+            else if (message.getMethodName() == "setFollowedAircraft")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::string callsign;
+                message.beginArgumentRead();
+                message.getArgument(callsign);
+                queueDBusCall([ = ]()
+                {
+                    setFollowedAircraft(callsign);
                 });
             }
             else

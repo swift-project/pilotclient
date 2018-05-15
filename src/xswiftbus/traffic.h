@@ -114,6 +114,9 @@ namespace XSwiftBus
         //! Get the ground elevation at an arbitrary position
         double getEelevationAtPosition(const std::string &callsign, double latitude, double longitude, double altitude);
 
+        //! Sets the aircraft with callsign to be followed in plane view
+        void setFollowedAircraft(const std::string &callsign);
+
         int processDBus() override;
 
     protected:

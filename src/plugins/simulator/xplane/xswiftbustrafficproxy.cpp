@@ -148,5 +148,10 @@ namespace BlackSimPlugin
             };
             m_dbusInterface->callDBusAsync(QLatin1String("getEelevationAtPosition"), callback, callsign.asString(), latitude, longitude, altitude);
         }
+
+        void CXSwiftBusTrafficProxy::setFollowedAircraft(const QString &callsign)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setFollowedAircraft"), callsign);
+        }
     }
 }

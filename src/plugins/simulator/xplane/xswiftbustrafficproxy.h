@@ -136,6 +136,9 @@ namespace BlackSimPlugin
             void getEelevationAtPosition(const BlackMisc::Aviation::CCallsign &callsign, double latitude, double longitude, double altitude,
                                          const ElevationCallback &setter);
 
+            //! \copydoc XSwiftBus::CTraffic::setFollowedAircraft
+            void setFollowedAircraft(const QString &callsign);
+
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;
         };

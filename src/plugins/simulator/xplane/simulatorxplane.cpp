@@ -599,6 +599,13 @@ namespace BlackSimPlugin
             return true;
         }
 
+        bool CSimulatorXPlane::followAircraft(const CCallsign &callsign)
+        {
+            if (! m_trafficProxy || ! m_trafficProxy->isValid()) { return false; }
+            m_trafficProxy->setFollowedAircraft(callsign.toQString());
+            return true;
+        }
+
         void CSimulatorXPlane::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
             Q_ASSERT(isConnected());
