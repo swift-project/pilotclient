@@ -47,7 +47,7 @@ namespace BlackMisc
             virtual QJsonObject toJson(const void *object) const = 0;
             virtual void convertFromJson(const QJsonObject &json, void *object) const = 0;
             virtual QJsonObject toMemoizedJson(const void *object) const = 0;
-            virtual void convertFromMemoizedJson(const QJsonObject &json, void *object) const = 0;
+            virtual void convertFromMemoizedJson(const QJsonObject &json, void *object, bool allowFallbackToJson) const = 0;
             virtual void unmarshall(const QDBusArgument &arg, void *object) const = 0;
             virtual uint getValueHash(const void *object) const = 0;
             virtual int getMetaTypeId() const = 0;
@@ -101,9 +101,9 @@ namespace BlackMisc
             static QJsonObject toMemoizedJson(const T &object, ...) { return toJson(object, 0); }
 
             template <typename T>
-            static void convertFromMemoizedJson(const QJsonObject &json, T &object, decltype(static_cast<void>(object.convertFromMemoizedJson(json)), 0)) { object.convertFromMemoizedJson(json); }
+            static void convertFromMemoizedJson(const QJsonObject &json, T &object, bool allowFallbackToJson, decltype(static_cast<void>(object.convertFromMemoizedJson(json, allowFallbackToJson)), 0)) { object.convertFromMemoizedJson(json, allowFallbackToJson); }
             template <typename T>
-            static void convertFromMemoizedJson(const QJsonObject &json, T &object, ...) { convertFromJson(json, object, 0); }
+            static void convertFromMemoizedJson(const QJsonObject &json, T &object, bool allowFallbackToJson, ...) { convertFromJson(json, object, 0); Q_UNUSED(allowFallbackToJson) }
 
             template <typename T>
             static uint getValueHash(const T &object, decltype(static_cast<void>(qHash(object)), 0)) { return qHash(object); }
@@ -113,7 +113,7 @@ namespace BlackMisc
             template <typename T>
             static int compareImpl(const T &lhs, const T &rhs, decltype(static_cast<void>(compare(lhs, rhs)), 0)) { return compare(lhs, rhs); }
             template <typename T>
-            static int compareImpl(const T &lhs, const T&, ...) { throw CVariantException(lhs, "compare"); }
+            static int compareImpl(const T &lhs, const T &, ...) { throw CVariantException(lhs, "compare"); }
 
             template <typename T>
             static void setPropertyByIndex(T &object, const CVariant &variant, const CPropertyIndex &index, decltype(static_cast<void>(object.setPropertyByIndex(index, variant)), 0)) { object.setPropertyByIndex(index, variant); }
@@ -136,7 +136,7 @@ namespace BlackMisc
             static bool equalsPropertyByIndex(const T &object, const CVariant &, const CPropertyIndex &, ...) { throw CVariantException(object, "equalsPropertyByIndex"); }
 
             template <typename T>
-            static void toIcon(const T &object, CIcon &o_icon, std::enable_if_t<! std::is_same<T, CVariant>::value, decltype(static_cast<void>(object.toIcon()), 0)>) { assign(o_icon, object.toIcon()); }
+            static void toIcon(const T &object, CIcon &o_icon, std::enable_if_t < ! std::is_same<T, CVariant>::value, decltype(static_cast<void>(object.toIcon()), 0) >) { assign(o_icon, object.toIcon()); }
             template <typename T>
             static void toIcon(const T &object, CIcon &, ...) { throw CVariantException(object, "toIcon"); }
         };
@@ -161,9 +161,9 @@ namespace BlackMisc
             {
                 return CValueObjectMetaInfoHelper::toMemoizedJson(cast(object), 0);
             }
-            virtual void convertFromMemoizedJson(const QJsonObject &json, void *object) const override
+            virtual void convertFromMemoizedJson(const QJsonObject &json, void *object, bool allowFallbackToJson) const override
             {
-                CValueObjectMetaInfoHelper::convertFromMemoizedJson(json, cast(object), 0);
+                CValueObjectMetaInfoHelper::convertFromMemoizedJson(json, cast(object), allowFallbackToJson, 0);
             }
             virtual void unmarshall(const QDBusArgument &arg, void *object) const override
             {

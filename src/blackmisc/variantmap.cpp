@@ -86,7 +86,7 @@ namespace BlackMisc
             CJsonScope scope(key);
             Q_UNUSED(scope);
             CVariant value;
-            value.convertFromMemoizedJson(it.value().toObject());
+            value.convertFromMemoizedJson(it.value().toObject(), true);
             implementationOf(*this).insert(cend(), key, value);
         }
     }
@@ -101,7 +101,7 @@ namespace BlackMisc
             CJsonScope scope(key);
             Q_UNUSED(scope);
             CVariant var;
-            var.convertFromMemoizedJson(value.toObject());
+            var.convertFromMemoizedJson(value.toObject(), true);
             insert(key, var);
         }
     }

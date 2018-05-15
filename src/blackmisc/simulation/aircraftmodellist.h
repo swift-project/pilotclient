@@ -335,7 +335,7 @@ namespace BlackMisc
             QJsonObject toMemoizedJson() const;
 
             //! From compact JSON format
-            void convertFromMemoizedJson(const QJsonObject &json);
+            void convertFromMemoizedJson(const QJsonObject &json, bool fallbackToConvertToJson = false);
 
             //! To database JSON
             QJsonArray toDatabaseJson() const;

@@ -977,7 +977,7 @@ namespace BlackMisc
             return json;
         }
 
-        void CAircraftModelList::convertFromMemoizedJson(const QJsonObject &json)
+        void CAircraftModelList::convertFromMemoizedJson(const QJsonObject &json, bool fallbackToConvertToJson)
         {
             clear();
             QJsonValue value = json.value("containerbase");
@@ -988,9 +988,25 @@ namespace BlackMisc
             const QJsonValue aircraftIcaos = json.value("aircraftIcaos");
             const QJsonValue liveries = json.value("liveries");
             const QJsonValue distributors = json.value("distributors");
-            if (aircraftIcaos.isUndefined()) { throw CJsonException("Missing 'aircraftIcaos'"); }
-            if (liveries.isUndefined()) { throw CJsonException("Missing 'liveries'"); }
-            if (distributors.isUndefined()) { throw CJsonException("Missing 'distributors'"); }
+
+            const bool undefAc = aircraftIcaos.isUndefined();
+            const bool undefLiv = liveries.isUndefined();
+            const bool undefDist = distributors.isUndefined();
+            const bool undefAll = undefAc && undefDist && undefLiv;
+
+            if (fallbackToConvertToJson && undefAll)
+            {
+                this->convertFromJson(json);
+                return;
+            }
+            else
+            {
+                if (undefAc)   { throw CJsonException("Missing 'aircraftIcaos'"); }
+                if (undefLiv)  { throw CJsonException("Missing 'liveries'"); }
+                if (undefDist) { throw CJsonException("Missing 'distributors'"); }
+            }
+
+            // convert
             {
                 CJsonScope scope("aircraftIcaos");
                 Q_UNUSED(scope);

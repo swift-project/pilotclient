@@ -194,7 +194,9 @@ namespace BlackMisc
                 {
                     CJsonScope scope("value");
                     m_v = QVariant(typeId, nullptr);
-                    meta->convertFromJson(value.toObject(), data());
+
+                    // this will call convertFromJson if there is no MemoizedJson
+                    meta->convertFromMemoizedJson(value.toObject(), data(), true);
                 }
                 else if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<QString>(), typeId))
                 {
@@ -253,7 +255,7 @@ namespace BlackMisc
         }
     }
 
-    void CVariant::convertFromMemoizedJson(const QJsonObject &json)
+    void CVariant::convertFromMemoizedJson(const QJsonObject &json, bool allowFallbackToJson)
     {
         QJsonValue typeValue = json.value("type");
         if (typeValue.isUndefined()) { throw CJsonException("Missing 'type'"); }
@@ -271,7 +273,7 @@ namespace BlackMisc
 
                 CJsonScope scope("value");
                 m_v = QVariant(typeId, nullptr);
-                meta->convertFromMemoizedJson(value.toObject(), data());
+                meta->convertFromMemoizedJson(value.toObject(), data(), allowFallbackToJson);
             }
             catch (const Private::CVariantException &ex)
             {
@@ -288,7 +290,7 @@ namespace BlackMisc
     {
         try
         {
-            convertFromMemoizedJson(json);
+            convertFromMemoizedJson(json, false);
         }
         catch (const CJsonException &ex)
         {

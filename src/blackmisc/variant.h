@@ -286,7 +286,7 @@ namespace BlackMisc
         QJsonObject toMemoizedJson() const;
 
         //! From compact JSON format.
-        void convertFromMemoizedJson(const QJsonObject &json);
+        void convertFromMemoizedJson(const QJsonObject &json, bool allowFallbackToJson);
 
         //! Call convertFromMemoizedJson, catch any CJsonException that is thrown and return it as CStatusMessage.
         CStatusMessage convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
