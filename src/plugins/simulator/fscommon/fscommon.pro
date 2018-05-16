@@ -14,6 +14,9 @@ INCLUDEPATH += . $$SourceRoot/src
 SOURCES += *.cpp
 HEADERS += *.h
 
+LIBS *= -lsimulatorplugincommon
+addStaticLibraryDependency(simulatorplugincommon)
+
 contains(BLACK_CONFIG, FSUIPC) {
     equals(WORD_SIZE,32) {
         DEFINES += SWIFT_USING_FSUIPC32

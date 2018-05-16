@@ -31,7 +31,8 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName, const CTime &updateInterval,
+        CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
+                               const CTime &updateInterval,
                                CInterpolationLogger *logger, ISimulator *simulator) :
             CDirectPlayPeer(simulator, callsign),
             m_updateInterval(updateInterval),

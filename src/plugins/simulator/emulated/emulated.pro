@@ -8,15 +8,17 @@ TEMPLATE = lib
 CONFIG += plugin shared
 CONFIG += blackmisc blackcore blackgui
 
-DEPENDPATH += . $$SourceRoot/src
+DEPENDPATH  += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
 SOURCES += *.cpp
 HEADERS += *.h
-FORMS += *.ui
+FORMS   += *.ui
 DISTFILES += simulatoremulated.json
-
 DESTDIR = $$DestRoot/bin/plugins/simulator
+
+LIBS *= -lsimulatorplugincommon
+addStaticLibraryDependency(simulatorplugincommon)
 
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator

@@ -13,20 +13,21 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
 #include "xplanempaircraft.h"
+#include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
+#include "plugins/simulator/plugincommon/simulatorplugincommon.h"
 #include "blackcore/simulator.h"
 #include "blackcore/simulatorcommon.h"
-#include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/settings/simulatorsettings.h"
 #include "blackmisc/simulation/settings/xswiftbussettings.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/weather/weathergrid.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/identifier.h"
@@ -103,7 +104,7 @@ namespace BlackSimPlugin
         };
 
         //! X-Plane ISimulator implementation
-        class CSimulatorXPlane : public BlackCore::CSimulatorCommon
+        class CSimulatorXPlane : public Common::CSimulatorPluginCommon
         {
             Q_OBJECT
 

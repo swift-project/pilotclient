@@ -3,6 +3,7 @@ load(common_pre)
 TEMPLATE = subdirs
 CONFIG += ordered
 
+SUBDIRS += plugincommon
 SUBDIRS += emulated
 SUBDIRS += emulatedconfig
 

@@ -12,7 +12,7 @@
 #ifndef BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 #define BLACKSIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 
-#include "blackcore/simulatorcommon.h"
+#include "../plugincommon/simulatorplugincommon.h"
 #include "blackmisc/simulation/interpolatormulti.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolationlogger.h"
@@ -31,7 +31,7 @@ namespace BlackSimPlugin
     namespace Emulated
     {
         //! swift simulator implementation
-        class CSimulatorEmulated : public BlackCore::CSimulatorCommon
+        class CSimulatorEmulated : public Common::CSimulatorPluginCommon
         {
             Q_OBJECT
             friend class CSimulatorEmulatedMonitorDialog; //!< the monitor widget represents the simulator and needs access to internals (i.e. private/protected)

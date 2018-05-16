@@ -1,20 +1,21 @@
 load(common_pre)
 
-QT       += core dbus gui network xml
+QT       += core dbus gui network xml widgets
 
 TARGET = simulatorfs9
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackmisc blackcore
+CONFIG += blackmisc blackcore blackgui
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 
-LIBS += -lsimulatorfscommon -lfsuipc -luuid
-LIBS += -ldxguid -lole32
+addStaticLibraryDependency(simulatorplugincommon)
 addStaticLibraryDependency(simulatorfscommon)
 addStaticLibraryDependency(fsuipc)
+LIBS += -lsimulatorfscommon -lfsuipc -luuid -lsimulatorplugincommon
+LIBS += -ldxguid -lole32
 
 SOURCES += *.cpp
 HEADERS += *.h

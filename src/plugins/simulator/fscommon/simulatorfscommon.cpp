@@ -22,6 +22,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
+using namespace BlackSimPlugin::Common;
 
 namespace BlackSimPlugin
 {
@@ -34,7 +35,7 @@ namespace BlackSimPlugin
             IWeatherGridProvider *weatherGridProvider,
             IClientProvider *clientProvider,
             QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent),
+            CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, clientProvider, parent),
             m_fsuipc(std::make_unique<CFsuipc>(this))
         {
             CSimulatorFsCommon::registerHelp();
@@ -67,7 +68,7 @@ namespace BlackSimPlugin
                 CLogMessage(this, CLogCategory::cmdLine()).info("FSUIPC is '%1'") << boolToOnOff(s);
                 return s;
             }
-            return false;
+            return CSimulatorPluginCommon::parseDetails(parser);
         }
 
         void CSimulatorFsCommon::registerHelp()
@@ -121,10 +122,7 @@ namespace BlackSimPlugin
 
         CAirportList CSimulatorFsCommon::getAirportsInRange() const
         {
-            if (!m_airportsInRangeFromSimulator.isEmpty())
-            {
-                return m_airportsInRangeFromSimulator;
-            }
+            if (!m_airportsInRangeFromSimulator.isEmpty()) { return m_airportsInRangeFromSimulator; }
             return CSimulatorCommon::getAirportsInRange();
         }
 

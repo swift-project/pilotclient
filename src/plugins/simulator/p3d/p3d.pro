@@ -2,13 +2,13 @@ load(common_pre)
 
 REQUIRES += contains(BLACK_CONFIG,P3D)
 
-QT       += core dbus gui network xml
+QT       += core dbus gui network xml widgets
 
 TARGET = simulatorp3d
 TEMPLATE = lib
 
 CONFIG += plugin shared
-CONFIG += blackconfig blackmisc blackcore
+CONFIG += blackconfig blackmisc blackcore blackgui
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
@@ -23,7 +23,8 @@ equals(WORD_SIZE,32) {
     INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
 }
 
-LIBS += -lsimulatorfscommon -lsimulatorfsxcommon -lfsuipc
+LIBS += -lsimulatorfscommon -lsimulatorfsxcommon -lfsuipc -lsimulatorplugincommon
+
 equals(WORD_SIZE,64) {
     LIBS *= -L$$EXTERNALS_LIB_DIR/P3D-v4.1
     LIBS *= -lAdvapi32
@@ -38,6 +39,7 @@ LIBS += -ldxguid -lole32
 addStaticLibraryDependency(simulatorfscommon)
 addStaticLibraryDependency(simulatorfsxcommon)
 addStaticLibraryDependency(fsuipc)
+addStaticLibraryDependency(simulatorplugincommon)
 
 # Ignore linker warning about missing pdb files from Simconnect
 msvc: QMAKE_LFLAGS *= /ignore:4099

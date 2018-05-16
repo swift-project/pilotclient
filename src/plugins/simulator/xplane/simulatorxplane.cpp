@@ -8,33 +8,11 @@
  */
 
 #include "simulatorxplane.h"
+#include "qcompilerdetection.h"
+#include "xswiftbusserviceproxy.h"
+#include "xswiftbustrafficproxy.h"
+#include "xswiftbusweatherproxy.h"
 #include "blackcore/aircraftmatcher.h"
-#include "blackmisc/aviation/aircraftengine.h"
-#include "blackmisc/aviation/aircraftenginelist.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircraftparts.h"
-#include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/heading.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
-#include "blackmisc/iterator.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/pq/angle.h"
-#include "blackmisc/pq/frequency.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/pressure.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/pq/temperature.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -47,10 +25,32 @@
 #include "blackmisc/weather/visibilitylayerlist.h"
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
-#include "qcompilerdetection.h"
-#include "xswiftbusserviceproxy.h"
-#include "xswiftbustrafficproxy.h"
-#include "xswiftbusweatherproxy.h"
+#include "blackmisc/aviation/aircraftengine.h"
+#include "blackmisc/aviation/aircraftenginelist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbusserver.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/logmessage.h"
 
 #include <QColor>
 #include <QDBusServiceWatcher>
@@ -86,7 +86,7 @@ namespace BlackSimPlugin
                                            IWeatherGridProvider *weatherGridProvider,
                                            IClientProvider *clientProvider,
                                            QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+            CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -112,7 +112,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::unload()
         {
-            CSimulatorCommon::unload();
+            CSimulatorPluginCommon::unload();
             delete m_watcher;
             m_watcher = nullptr;
         }

@@ -12,7 +12,7 @@
 #ifndef BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 #define BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 
-#include "blackcore/simulatorcommon.h"
+#include "../plugincommon/simulatorplugincommon.h"
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "fsuipc.h"
@@ -25,7 +25,7 @@ namespace BlackSimPlugin
     namespace FsCommon
     {
         //! Common base class for MS flight simulators
-        class CSimulatorFsCommon : public BlackCore::CSimulatorCommon
+        class CSimulatorFsCommon : public Common::CSimulatorPluginCommon
         {
         public:
             //! Destructor

@@ -36,7 +36,7 @@ namespace BlackSimPlugin
                                                IWeatherGridProvider *weatherGridProvider,
                                                IClientProvider *clientProvider,
                                                QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
+            CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
             Q_ASSERT_X(sApp && sApp->getIContextSimulator(), Q_FUNC_INFO, "Need context");
 
@@ -47,6 +47,7 @@ namespace BlackSimPlugin
             m_monitorWidget.reset(new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget()));
 
             connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
+            connect(sGui, &CGuiApplication::aboutToShutdown, this, &CSimulatorEmulated::closeMonitor);
             connect(&m_interpolatorFetchTimer, &QTimer::timeout, this, &CSimulatorEmulated::fetchFromInterpolator);
 
             // connect own signals for monitoring
@@ -180,7 +181,7 @@ namespace BlackSimPlugin
         bool CSimulatorEmulated::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
             if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, commandLine, originator.toQString());
-            return CSimulatorCommon::parseCommandLine(commandLine, originator);
+            return CSimulatorPluginCommon::parseCommandLine(commandLine, originator);
         }
 
         void CSimulatorEmulated::registerHelp()
@@ -316,7 +317,7 @@ namespace BlackSimPlugin
                 if (parser.matchesPart(1, "show")) { m_monitorWidget->show(); return true; }
                 if (parser.matchesPart(1, "hide")) { m_monitorWidget->hide(); return true; }
             }
-            return false;
+            return CSimulatorPluginCommon::parseDetails(parser);
         }
 
         void CSimulatorEmulated::setObjectName(const CSimulatorInfo &info)
