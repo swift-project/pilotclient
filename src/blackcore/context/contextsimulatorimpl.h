@@ -39,6 +39,7 @@
 #include <QObject>
 #include <QPair>
 #include <QString>
+#include <QPointer>
 
 namespace BlackMisc
 {
@@ -233,7 +234,7 @@ namespace BlackCore
             //! Load the last know model set
             void initByLastUsedModelSet();
 
-            QPair<BlackMisc::Simulation::CSimulatorPluginInfo, ISimulator *> m_simulatorPlugin; //!< Currently loaded simulator plugin
+            QPair<BlackMisc::Simulation::CSimulatorPluginInfo, QPointer<ISimulator>> m_simulatorPlugin; //!< Currently loaded simulator plugin
             CPluginManagerSimulator *m_plugins = nullptr;
             BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
             CWeatherManager m_weatherManager { this };
