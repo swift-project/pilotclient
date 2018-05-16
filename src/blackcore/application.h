@@ -500,6 +500,9 @@ namespace BlackCore
         //! DB accessibility changed
         void changedSwiftDbAccessibility(bool accessible, const BlackMisc::Network::CUrl &testedUrl);
 
+        //! About to shutdown
+        void aboutToShutdown();
+
     protected:
         //! Setup read/synchronized
         void setupHandlingIsCompleted(bool available);

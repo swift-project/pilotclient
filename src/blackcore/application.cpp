@@ -963,6 +963,9 @@ namespace BlackCore
         if (m_shutdownInProgress) { return; }
         m_shutdownInProgress = true;
 
+        // info that we will shutdown
+        emit this->aboutToShutdown();
+
         // before marked as shutdown, otherwise URL
         if (m_networkWatchDog)
         {
