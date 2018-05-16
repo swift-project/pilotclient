@@ -58,6 +58,11 @@ namespace XSwiftBus
 
     bool s_legacyDataOK = true;
 
+    void CTraffic::setPlaneViewMenu(const CMenu &planeViewSubMenu)
+    {
+        m_planeViewSubMenu = planeViewSubMenu;
+    }
+
     void CTraffic::initLegacyData()
     {
         initXPlanePath();
@@ -127,7 +132,7 @@ namespace XSwiftBus
         sendDBusMessage(signalPlaneAddingFailed);
     }
 
-    void CTraffic::orbitRemotePlane(const std::string &callsign)
+    void CTraffic::switchToPlaneView(const std::string &callsign)
     {
         m_planeViewCallsign = callsign;
 
@@ -232,7 +237,7 @@ namespace XSwiftBus
             m_planesById[id] = plane;
 
             // Create view menu item
-            CMenuItem planeViewMenuItem = m_planeViewSubMenu.item(callsign, [this, callsign] { orbitRemotePlane(callsign); });
+            CMenuItem planeViewMenuItem = m_planeViewSubMenu.item(callsign, [this, callsign] { switchToPlaneView(callsign); });
             m_planeViewMenuItems[callsign] = planeViewMenuItem;
         }
     }
@@ -399,7 +404,7 @@ namespace XSwiftBus
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt == m_planesByCallsign.end()) { return; }
 
-        orbitRemotePlane(callsign);
+        switchToPlaneView(callsign);
     }
 
     const char *introspection_traffic =

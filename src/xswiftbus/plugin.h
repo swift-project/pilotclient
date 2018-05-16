@@ -20,7 +20,10 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+
 #include "dbusconnection.h"
+#include "datarefs.h"
+#include "XPLM/XPLMCamera.h"
 #include "menus.h"
 #include <memory>
 #include <thread>
@@ -58,13 +61,20 @@ namespace XSwiftBus
         CMenuItem m_startServerMenuItem;
         CMenuItem m_toggleMessageWindowMenuItem;
         CMenu m_planeViewSubMenu;
+        CMenuItem planeViewOwnAircraftMenuItem;
+
+        DataRef<xplane::data::sim::flightmodel::position::local_x> m_ownAircraftPositionX;
+        DataRef<xplane::data::sim::flightmodel::position::local_y> m_ownAircraftPositionY;
+        DataRef<xplane::data::sim::flightmodel::position::local_z> m_ownAircraftPositionZ;
 
         std::thread m_dbusThread;
         bool m_shouldStop = false;
 
         void startServer(CDBusConnection::BusType bus);
+        void switchToOwnAircraftView();
 
         static float flightLoopCallback(float, float, int, void *refcon);
+        static int orbitOwnAircraftFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
     };
 }
 

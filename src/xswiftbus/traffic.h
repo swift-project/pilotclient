@@ -56,7 +56,7 @@ namespace XSwiftBus
         }
 
         //! Set plane view submenu
-        void setPlaneViewMenu(const CMenu &planeViewSubMenu) { m_planeViewSubMenu = planeViewSubMenu; }
+        void setPlaneViewMenu(const CMenu &planeViewSubMenu);
 
         //! Called by XPluginStart
         static void initLegacyData();
@@ -131,7 +131,7 @@ namespace XSwiftBus
         void emitSimFrame();
         void emitPlaneAdded(const std::string &callsign);
         void emitPlaneAddingFailed(const std::string &callsign);
-        void orbitRemotePlane(const std::string &callsign);
+        void switchToPlaneView(const std::string &callsign);
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
