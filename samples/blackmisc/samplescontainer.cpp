@@ -93,5 +93,4 @@ namespace BlackSample
 
         return 0;
     }
-
 } // namespace

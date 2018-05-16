@@ -162,13 +162,13 @@ namespace BlackMisc
     {
         // Remark: Names "type" and "value" are also used for drag and drop
         // Changing the names here requires the change for drag and drop too
-        QJsonValue typeValue = json.value("type");
+        const QJsonValue typeValue = json.value("type");
         if (typeValue.isUndefined()) { throw CJsonException("Missing 'type'"); }
-        QString typeName = typeValue.toString();
+        const QString typeName = typeValue.toString();
         if (typeName.isEmpty()) { m_v.clear(); return; }
-        int typeId = QMetaType::type(qPrintable(typeName));
+        const int typeId = QMetaType::type(qPrintable(typeName));
 
-        QJsonValue value = json.value("value");
+        const QJsonValue value = json.value("value");
         if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
         switch (typeId)
         {

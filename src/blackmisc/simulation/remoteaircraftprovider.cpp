@@ -342,9 +342,9 @@ namespace BlackMisc
             }
         }
 
-        bool CRemoteAircraftProvider::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering)
+        bool CRemoteAircraftProvider::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
-            const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRedering));
+            const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRendering));
             const int c = this->updateAircraftInRange(callsign, vm);
             return c > 0;
         }

@@ -168,11 +168,8 @@ namespace BlackGui
 
     CVariant CGuiUtility::fromSwiftDragAndDropData(const QMimeData *mime)
     {
-        if (hasSwiftVariantMimeType(mime))
-        {
-            return fromSwiftDragAndDropData(mime->data(swiftJsonDragAndDropMimeType()));
-        }
-        return CVariant();
+        if (!hasSwiftVariantMimeType(mime)) { return CVariant(); }
+        return CGuiUtility::fromSwiftDragAndDropData(mime->data(swiftJsonDragAndDropMimeType()));
     }
 
     CVariant CGuiUtility::fromSwiftDragAndDropData(const QByteArray &utf8Data)

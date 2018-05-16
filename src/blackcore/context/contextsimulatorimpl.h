@@ -133,10 +133,10 @@ namespace BlackCore
             static void registerHelp()
             {
                 if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CContextSimulator")) { return; }
-                BlackMisc::CSimpleCommandParser::registerCommand({".ris", "rendering/interpolation setup"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".ris show", "display rendering/interpolation setup on console"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".ris debug on|off", "rendering/interpolation debug messages"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".ris parts on|off", "aircraft parts"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".ris", "rendering/interpolation setup (global setup)"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".ris show", "display rendering/interpolation setup on console (global setup)"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".ris debug on|off", "rendering/interpolation debug messages (global setup)"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".ris parts on|off", "aircraft parts (global setup)"});
             }
 
         signals:

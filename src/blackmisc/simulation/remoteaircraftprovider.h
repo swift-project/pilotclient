@@ -256,7 +256,7 @@ namespace BlackMisc
             virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
             virtual int getRemoteAircraftSupportingPartsCount() const override;
             virtual Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
-            virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRedering) override;
+            virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) override;
             virtual bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
             virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;

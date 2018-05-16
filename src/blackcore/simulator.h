@@ -88,7 +88,7 @@ namespace BlackCore
         //! Is time synchronization on?
         virtual bool isTimeSynchronized() const = 0;
 
-        //! Get the setup (simulator environemnt)
+        //! Get the setup (simulator environment)
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const = 0;
 
         //! Connect to simulator

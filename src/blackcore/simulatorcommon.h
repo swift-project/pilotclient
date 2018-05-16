@@ -223,7 +223,7 @@ namespace BlackCore
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;                        //!< statistics update time
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;                          //!< statistics update time
         BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
-        BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log interpolation
+        BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log.interpolation
         QMap<BlackMisc::Aviation::CCallsign, qint64> m_clampedLogMsg;       //!< when logged last so there, can be used so there is no log message overflow
 
         // some optional functionality which can be used by the simulators as needed

@@ -23,5 +23,5 @@ namespace BlackSimPlugin
         {
             return new CSimulatorEmulatedConfigWidget(parent);
         }
-    }
-}
+    } // ns
+} // ns
