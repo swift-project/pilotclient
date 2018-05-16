@@ -648,9 +648,13 @@ namespace BlackCore
             multiPart->moveToThread(m_accessManager->thread());
         }
 
-        return httpRequestImpl(request, logId, callback, NoRedirects, [ this, multiPart ](QNetworkAccessManager & qam, const QNetworkRequest & request)
+        QPointer<CApplication> myself(this);
+        return httpRequestImpl(request, logId, callback, NoRedirects, [ = ](QNetworkAccessManager & qam, const QNetworkRequest & request)
         {
-            QNetworkReply *nr = qam.post(request, multiPart);
+            QNetworkReply *nr = nullptr;
+            if (!myself) { return nr; }
+            if (!multiPart) { return nr; }
+            nr = qam.post(request, multiPart);
             multiPart->setParent(nr);
             return nr;
         });

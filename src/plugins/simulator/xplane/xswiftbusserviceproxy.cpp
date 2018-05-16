@@ -11,6 +11,7 @@
 #include "simulatorxplane.h"
 
 #include <QLatin1String>
+#include <QPointer>
 
 class QDBusConnection;
 
@@ -28,8 +29,10 @@ namespace BlackSimPlugin
 
         void CXSwiftBusServiceProxy::getOwnAircraftSituationData(XPlaneData *o_xplaneData)
         {
-            std::function<void(QDBusPendingCallWatcher *)> callback = [this, o_xplaneData](QDBusPendingCallWatcher * watcher)
+            QPointer<CXSwiftBusServiceProxy> myself(this);
+            std::function<void(QDBusPendingCallWatcher *)> callback = [ = ](QDBusPendingCallWatcher * watcher)
             {
+                if (!myself) { return; }
                 QDBusPendingReply<double, double, double, double, double, double, double, double> reply = *watcher;
                 if (!reply.isError())
                 {

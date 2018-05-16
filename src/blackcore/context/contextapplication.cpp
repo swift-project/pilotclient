@@ -51,29 +51,37 @@ namespace BlackCore
             CContext(mode, runtime)
         {
             if (mode == CCoreFacadeConfig::NotUsed) { return; }
-            connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, [this](const CStatusMessage & message)
+            QPointer<IContextApplication> myself(this);
+
+            connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, [ = ](const CStatusMessage & message)
             {
+                if (!myself) { return; }
                 this->logMessage(message, {});
             });
-            connect(CLogHandler::instance(), &CLogHandler::subscriptionAdded, this, [this](const CLogPattern & pattern)
+            connect(CLogHandler::instance(), &CLogHandler::subscriptionAdded, this, [ = ](const CLogPattern & pattern)
             {
+                if (!myself) { return; }
                 this->addLogSubscription({}, pattern);
             });
-            connect(CLogHandler::instance(), &CLogHandler::subscriptionRemoved, this, [this](const CLogPattern & pattern)
+            connect(CLogHandler::instance(), &CLogHandler::subscriptionRemoved, this, [ = ](const CLogPattern & pattern)
             {
+                if (!myself) { return; }
                 this->removeLogSubscription({}, pattern);
             });
-            connect(this, &IContextApplication::logSubscriptionAdded, this, [this](const CIdentifier & subscriber, const CLogPattern & pattern)
+            connect(this, &IContextApplication::logSubscriptionAdded, this, [ = ](const CIdentifier & subscriber, const CLogPattern & pattern)
             {
-                this->m_logSubscriptions[subscriber].push_back(pattern);
+                if (!myself) { return; }
+                m_logSubscriptions[subscriber].push_back(pattern);
             });
-            connect(this, &IContextApplication::logSubscriptionRemoved, this, [this](const CIdentifier & subscriber, const CLogPattern & pattern)
+            connect(this, &IContextApplication::logSubscriptionRemoved, this, [ = ](const CIdentifier & subscriber, const CLogPattern & pattern)
             {
-                this->m_logSubscriptions[subscriber].removeAll(pattern);
+                if (!myself) { return; }
+                m_logSubscriptions[subscriber].removeAll(pattern);
             });
 
-            connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, [this](const CValueCachePacket & settings)
+            connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, [ = ](const CValueCachePacket & settings)
             {
+                if (!myself) { return; }
                 this->changeSettings(settings, {});
             });
 
@@ -83,14 +91,15 @@ namespace BlackCore
                 CSettingsCache::instance()->changeValuesFromRemote(settings, origin);
             });
 
-            bool s = connect(CInputManager::instance(), &CInputManager::hotkeyActionRegistered, [this](const QStringList & actions)
+            bool s = connect(CInputManager::instance(), &CInputManager::hotkeyActionRegistered, [ = ](const QStringList & actions)
             {
+                if (!myself) { return; }
                 this->registerHotkeyActions(actions, {});
             });
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey action failed");
             Q_UNUSED(s);
 
-            s = connect(this, &IContextApplication::hotkeyActionsRegistered, [this](const QStringList & actions, const CIdentifier & origin)
+            s = connect(this, &IContextApplication::hotkeyActionsRegistered, [ = ](const QStringList & actions, const CIdentifier & origin)
             {
                 if (origin.hasApplicationProcessId()) { return; }
                 CInputManager::instance()->registerRemoteActions(actions);
@@ -98,15 +107,17 @@ namespace BlackCore
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey actions failed");
             Q_UNUSED(s);
 
-            s = connect(CInputManager::instance(), &CInputManager::remoteActionFromLocal, [this](const QString & action, bool argument)
+            s = connect(CInputManager::instance(), &CInputManager::remoteActionFromLocal, [ = ](const QString & action, bool argument)
             {
+                if (!myself) { return; }
                 this->callHotkeyAction(action, argument, {});
             });
             Q_ASSERT_X(s, Q_FUNC_INFO, "Connect remote action failed");
             Q_UNUSED(s);
 
-            s = connect(this, &IContextApplication::remoteHotkeyAction, [this](const QString & action, bool argument, const CIdentifier & origin)
+            s = connect(this, &IContextApplication::remoteHotkeyAction, [ = ](const QString & action, bool argument, const CIdentifier & origin)
             {
+                if (!myself) { return; }
                 if (origin.isFromLocalMachine()) { return; }
                 CInputManager::instance()->callFunctionsBy(action, argument);
                 CLogMessage(this, CLogCategory::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
