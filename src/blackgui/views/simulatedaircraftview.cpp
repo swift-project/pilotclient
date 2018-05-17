@@ -34,35 +34,55 @@ namespace BlackGui
         CSimulatedAircraftView::CSimulatedAircraftView(QWidget *parent) : CViewWithCallsignObjects(parent)
         {
             this->standardInit(new CSimulatedAircraftListModel(this));
-            this->m_menus |= MenuRefresh;
+            m_menus |= MenuRefresh;
         }
 
         void CSimulatedAircraftView::setAircraftMode(CSimulatedAircraftListModel::AircraftMode mode)
         {
-            Q_ASSERT(this->m_model);
-            this->m_model->setAircraftMode(mode);
+            Q_ASSERT(m_model);
+            m_model->setAircraftMode(mode);
             this->setSortIndicator();
         }
 
-        void CSimulatedAircraftView::configureMenu(bool menuHighlight, bool menuEnable, bool menufastPositionUpdates)
+        void CSimulatedAircraftView::configureMenu(bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag)
         {
-            this->m_withMenuEnable = menuEnable;
-            this->m_withMenuFastPosition = menufastPositionUpdates;
-            this->m_withMenuHighlight = menuHighlight;
+            m_withMenuEnableAircraft = menuEnableAircraft;
+            m_withMenuFastPosition = menuFastPositionUpdates;
+            m_withMenuHighlightAndFollow = menuHighlightAndFollow;
+            m_withMenuEnableGndFlag = menuGndFlag;
         }
 
         void CSimulatedAircraftView::customMenu(CMenuActions &menuActions)
         {
+            if (m_withMenuEnableAircraft)
+            {
+                menuActions.addAction(CIcons::appAircraft16(), "Enable all aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::enableAllDisabledAircraft });
+                menuActions.addAction(CIcons::appAircraft16(), "Re-enable unrendered aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::reEnableAllUnrenderedAircraft });
+            }
+
             if (this->hasSelection())
             {
                 CSimulatedAircraft aircraft(selectedObject());
                 Q_ASSERT(!aircraft.getCallsign().isEmpty());
                 menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CSimulatedAircraftView::requestTextMessage });
-                menuActions.addAction(CIcons::appAircraft16(), "Enable all aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::enableAllDisabledAircraft });
-                if (m_withMenuEnable)       { menuActions.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::toggleEnabledAircraft }); }
-                if (m_withMenuHighlight)    { menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::highlightInSimulator }); }
-                if (m_withMenuFastPosition) { menuActions.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates",  CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::toggleFastPositionUpdates }); }
-                const bool any = m_withMenuEnable || m_withMenuFastPosition || m_withMenuHighlight;
+                if (m_withMenuEnableAircraft)
+                {
+                    menuActions.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::toggleEnabledAircraft });
+                }
+                if (m_withMenuHighlightAndFollow)
+                {
+                    menuActions.addAction(CIcons::appAircraft16(), "Follow in simulator", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::reqFollowInSimulator });
+                    menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::reqHighlightInSimulator });
+                }
+                if (m_withMenuEnableGndFlag)
+                {
+                    menuActions.addAction(CIcons::geoPosition16(), aircraft.isSupportingGndFlag() ? "Disable gnd.flag" : "Enabled gnd.flag", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::toggleSupportingGndFlag });
+                }
+                if (m_withMenuFastPosition)
+                {
+                    menuActions.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates",  CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::toggleFastPositionUpdates });
+                }
+                const bool any = m_withMenuEnableAircraft || m_withMenuFastPosition || m_withMenuHighlightAndFollow || m_withMenuEnableGndFlag;
                 if (any && (sApp && sApp->isDeveloperFlagSet()))
                 {
                     menuActions.addAction(CIcons::appSimulator16(), "Show position log.", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::showPositionLogInSimulator });
@@ -94,11 +114,26 @@ namespace BlackGui
             emit this->requestFastPositionUpdates(aircraft);
         }
 
-        void CSimulatedAircraftView::highlightInSimulator()
+        void CSimulatedAircraftView::toggleSupportingGndFlag()
+        {
+            CSimulatedAircraft aircraft(selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+            aircraft.setSupportingGndFlag(!aircraft.isSupportingGndFlag());
+            emit this->requestSupportingGndFlag(aircraft);
+        }
+
+        void CSimulatedAircraftView::reqHighlightInSimulator()
         {
             const CSimulatedAircraft aircraft(selectedObject());
             if (aircraft.getCallsign().isEmpty()) { return; }
             emit this->requestHighlightInSimulator(aircraft);
+        }
+
+        void CSimulatedAircraftView::reqFollowInSimulator()
+        {
+            const CSimulatedAircraft aircraft(selectedObject());
+            if (aircraft.getCallsign().isEmpty()) { return; }
+            emit this->requestFollowInSimulator(aircraft);
         }
 
         void CSimulatedAircraftView::showPositionLogInSimulator()
@@ -117,6 +152,26 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown())  { return; }
             const CSimulatedAircraftList aircraft = this->container().findByEnabled(false);
+            if (aircraft.isEmpty())  { return; }
+
+            const QPointer<CSimulatedAircraftView> myself(this);
+            for (const CSimulatedAircraft &sa : aircraft)
+            {
+                QTimer::singleShot(10, this, [ = ]
+                {
+                    if (!myself) { return; }
+                    if (!sGui || sGui->isShuttingDown()) { return; }
+                    CSimulatedAircraft enabledAircraft(sa);
+                    enabledAircraft.setEnabled(true);
+                    emit this->requestEnableAircraft(enabledAircraft);
+                });
+            }
+        }
+
+        void CSimulatedAircraftView::reEnableAllUnrenderedAircraft()
+        {
+            if (!sGui || sGui->isShuttingDown())  { return; }
+            const CSimulatedAircraftList aircraft = this->container().findByRendered(false);
             if (aircraft.isEmpty())  { return; }
 
             const QPointer<CSimulatedAircraftView> myself(this);

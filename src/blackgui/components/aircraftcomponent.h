@@ -59,33 +59,31 @@ namespace BlackGui
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
+            //! Update aircraft/airport view
+            void update();
+
         signals:
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
-        public slots:
-            //! Update aircraft/airport view
-            void update();
-
-        private slots:
+        private:
             //! Info area tab bar has changed
-            void ps_infoAreaTabBarChanged(int index);
+            void onInfoAreaTabBarChanged(int index);
 
             //! Number of elements changed
-            void ps_onRowCountChanged(int count, bool withFilter);
+            void onRowCountChanged(int count, bool withFilter);
 
             //! Connection status has been changed
-            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+            void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Highlight in simulator
-            void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Settings have been changed
-            void ps_settingsChanged();
+            void onSettingsChanged();
 
-        private:
             QScopedPointer<Ui::CAircraftComponent> ui;
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::ps_settingsChanged }; //!< settings changed
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::onSettingsChanged }; //!< settings changed
             QTimer m_updateTimer;
         };
     } // ns

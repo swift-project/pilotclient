@@ -23,6 +23,7 @@
 #include <QString>
 #include <QTabBar>
 #include <QTimer>
+#include <QPointer>
 
 using namespace BlackGui;
 using namespace BlackGui::Views;
@@ -48,16 +49,16 @@ namespace BlackGui
             ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
 
             ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
-            ui->tvp_AircraftInRange->configureMenu(true, false, false);
+            ui->tvp_AircraftInRange->configureMenu(true, false, false, false);
 
-            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::ps_onRowCountChanged);
+            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
-            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
-            connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::ps_onRowCountChanged);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::ps_connectionStatusChanged);
+            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::onMenuHighlightInSimulator);
+            connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::onConnectionStatusChanged);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
 
-            this->ps_settingsChanged();
+            this->onSettingsChanged();
             m_updateTimer.start();
         }
 
@@ -79,7 +80,7 @@ namespace BlackGui
         bool CAircraftComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
             CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-            bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAircraftComponent::ps_infoAreaTabBarChanged);
+            const bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAircraftComponent::onInfoAreaTabBarChanged);
             Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
             Q_ASSERT_X(parentDockableWidget, Q_FUNC_INFO, "missing parent");
             return c && parentDockableWidget;
@@ -87,7 +88,7 @@ namespace BlackGui
 
         void CAircraftComponent::update()
         {
-            if (sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown()) { return; }
 
             Q_ASSERT(ui->tvp_AircraftInRange);
             Q_ASSERT(sGui->getIContextNetwork());
@@ -112,7 +113,7 @@ namespace BlackGui
             }
         }
 
-        void CAircraftComponent::ps_infoAreaTabBarChanged(int index)
+        void CAircraftComponent::onInfoAreaTabBarChanged(int index)
         {
             // ignore in those cases
             if (!this->isVisibleWidget()) return;
@@ -120,11 +121,16 @@ namespace BlackGui
             if (!sGui->getIContextNetwork()->isConnected()) return;
 
             // here I know I am the selected widget, update, but keep GUI responsive (hence I use a timer)
-            QTimer::singleShot(1000, this, &CAircraftComponent::update);
+            QPointer<CAircraftComponent> myself(this);
+            QTimer::singleShot(1000, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->update();
+            });
             Q_UNUSED(index);
         }
 
-        void CAircraftComponent::ps_onRowCountChanged(int count, bool withFilter)
+        void CAircraftComponent::onRowCountChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -138,7 +144,7 @@ namespace BlackGui
             this->tabBar()->setTabText(ap, aps);
         }
 
-        void CAircraftComponent::ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        void CAircraftComponent::onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
         {
             Q_UNUSED(from);
             if (INetwork::isDisconnectedStatus(to))
@@ -151,7 +157,7 @@ namespace BlackGui
             }
         }
 
-        void CAircraftComponent::ps_onMenuHighlightInSimulator(const CSimulatedAircraft &aircraft)
+        void CAircraftComponent::onMenuHighlightInSimulator(const CSimulatedAircraft &aircraft)
         {
             if (sGui->getIContextSimulator())
             {
@@ -159,11 +165,11 @@ namespace BlackGui
             }
         }
 
-        void CAircraftComponent::ps_settingsChanged()
+        void CAircraftComponent::onSettingsChanged()
         {
-            const CViewUpdateSettings settings = this->m_settings.get();
+            const CViewUpdateSettings settings = m_settings.get();
             const int ms = settings.getAircraftUpdateTime().toMs();
-            this->m_updateTimer.setInterval(ms);
+            m_updateTimer.setInterval(ms);
         }
     } // namespace
 } // namespace

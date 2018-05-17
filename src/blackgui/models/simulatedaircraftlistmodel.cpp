@@ -23,10 +23,11 @@
 #include <QtDebug>
 #include <QtGlobal>
 
-using namespace BlackMisc::Simulation;
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
-using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 
 namespace BlackGui
 {
@@ -90,6 +91,7 @@ namespace BlackGui
                     m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", { CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString }));
                     m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
                     m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
+                    m_columns.addColumn(CColumn("CG", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexCG }, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
                     m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, new CSpeedKtsFormatter()));
                     m_columns.addColumn(CColumn("p.", "parts", CSimulatedAircraft::IndexPartsSynchronized, new CBoolIconFormatter("parts", "no parts"), true));
                     m_columns.addColumn(CColumn("fp.", "fast position updates", CSimulatedAircraft::IndexFastPositionUpdates, new CBoolIconFormatter("enabled", "disabled"), true));

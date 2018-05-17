@@ -34,7 +34,7 @@ namespace BlackGui
     {
         //! Aircraft view
         class BLACKGUI_EXPORT CSimulatedAircraftView :
-                public CViewWithCallsignObjects<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
+            public CViewWithCallsignObjects<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
         {
             Q_OBJECT
 
@@ -46,7 +46,7 @@ namespace BlackGui
             void setAircraftMode(Models::CSimulatedAircraftListModel::AircraftMode mode);
 
             //! configure the menu
-            void configureMenu(bool menuHighlight, bool menuEnable, bool menufastPositionUpdates);
+            void configureMenu(bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag);
 
         signals:
             //! Request a text message
@@ -58,8 +58,14 @@ namespace BlackGui
             //! Request to enable / disable aircraft, \sa CSimulatedAircraft::isEnabled
             void requestEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Request to enable / disable gnd.flag, \sa CSimulatedAircraft::isSupportingGndFlag
+            void requestSupportingGndFlag(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
             //! Highlight given aircraft in simulator
             void requestHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Highlight given aircraft in simulator
+            void requestFollowInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         protected:
             //! \copydoc CViewBase::customMenu
@@ -75,8 +81,17 @@ namespace BlackGui
             //! Toggle fast position updates for selected aircraft
             void toggleFastPositionUpdates();
 
+            //! Enable gnd. flag (enable gnd flag capability for given aircraft)
+            void toggleSupportingGndFlag();
+
             //! Highlight aircraft in simulator
-            void highlightInSimulator();
+            void reqHighlightInSimulator();
+
+            //! Follow in simulator
+            void reqFollowInSimulator();
+
+            //! Enable gnd. flag capability for server
+            void reqEnableGndFlagForServer();
 
             //! Show position log for selected aircraft
             void showPositionLogInSimulator();
@@ -84,8 +99,12 @@ namespace BlackGui
             //! Enable all disabled aircraft
             void enableAllDisabledAircraft();
 
-            bool m_withMenuHighlight = true;
-            bool m_withMenuEnable = true;
+            //! Enable all unrendered aircraft
+            void reEnableAllUnrenderedAircraft();
+
+            bool m_withMenuHighlightAndFollow = true;
+            bool m_withMenuEnableAircraft = true;
+            bool m_withMenuEnableGndFlag = true;
             bool m_withMenuFastPosition = true;
         };
     } // ns

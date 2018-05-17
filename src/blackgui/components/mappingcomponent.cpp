@@ -92,9 +92,12 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::onAircraftSelectedInView);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestUpdate, this, &CMappingComponent::tokenBucketUpdate);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
+
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestEnableAircraft, this, &CMappingComponent::onMenuToggleEnableAircraft);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestFastPositionUpdates, this, &CMappingComponent::onMenuChangeFastPositionUpdates);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CMappingComponent::onMenuHighlightInSimulator);
+            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestFollowInSimulator, this, &CMappingComponent::onMenuFollowAircraftInSimulator);
+            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestSupportingGndFlag, this, &CMappingComponent::onMenuSupportGndFLag);
 
             connect(ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::onSaveAircraft);
             connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::onResetAircraft);
@@ -136,6 +139,7 @@ namespace BlackGui
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::onRemoteAircraftModelChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::tokenBucketUpdateAircraft);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::tokenBucketUpdateAircraft);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedGndFlagCapability, this, &CMappingComponent::tokenBucketUpdateAircraft);
             connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CMappingComponent::tokenBucketUpdate);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::onConnectionStatusChanged);
 
@@ -422,9 +426,25 @@ namespace BlackGui
 
         void CMappingComponent::onMenuChangeFastPositionUpdates(const CSimulatedAircraft &aircraft)
         {
-            if (sGui->getIContextNetwork())
+            if (sGui && sGui->getIContextNetwork())
             {
                 sGui->getIContextNetwork()->updateFastPositionEnabled(aircraft.getCallsign(), aircraft.fastPositionUpdates());
+            }
+        }
+
+        void CMappingComponent::onMenuFollowAircraftInSimulator(const CSimulatedAircraft &aircraft)
+        {
+            if (sGui && sGui->getIContextSimulator())
+            {
+                sGui->getIContextSimulator()->followAircraft(aircraft.getCallsign());
+            }
+        }
+
+        void CMappingComponent::onMenuSupportGndFLag(const CSimulatedAircraft &aircraft)
+        {
+            if (sGui && sGui->getIContextNetwork())
+            {
+                sGui->getIContextNetwork()->updateAircraftSupportingGndFLag(aircraft.getCallsign(), aircraft.isSupportingGndFlag());
             }
         }
 

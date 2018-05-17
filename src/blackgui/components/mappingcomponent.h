@@ -126,6 +126,12 @@ namespace BlackGui
             //! Fast position updates onf/off
             void onMenuChangeFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Follow aircrft in simulator
+            void onMenuFollowAircraftInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Support gnd.flag
+            void onMenuSupportGndFLag(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
             //! Enable / disable aircraft
             void onMenuToggleEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
