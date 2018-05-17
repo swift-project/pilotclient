@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/airspaceanalyzer.h"
+#include "airspacemonitor.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/transponder.h"
@@ -30,10 +31,10 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
 {
-    CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, IRemoteAircraftProvider *remoteAircraftProvider, INetwork *network, QObject *parent) :
-        CContinuousWorker(parent, "CAirspaceAnalyzer"),
+    CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, INetwork *network, CAirspaceMonitor *airspaceMonitorParent) :
+        CContinuousWorker(airspaceMonitorParent, "CAirspaceAnalyzer"),
         COwnAircraftAware(ownAircraftProvider),
-        CRemoteAircraftAware(remoteAircraftProvider)
+        CRemoteAircraftAware(airspaceMonitorParent)
     {
         Q_ASSERT_X(network, Q_FUNC_INFO, "Network object required to connect");
 
@@ -44,20 +45,22 @@ namespace BlackCore
         bool c = connect(&m_updateTimer, &QTimer::timeout, this, &CAirspaceAnalyzer::onTimeout);
         Q_ASSERT(c);
 
-        // disconnect
+        // network connected
         c = connect(network, &INetwork::pilotDisconnected, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign);
         Q_ASSERT(c);
         c = connect(network, &INetwork::atcDisconnected, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign);
         Q_ASSERT(c);
+        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged);
+        Q_ASSERT(c);
 
-        // update
-        c = connect(network, &INetwork::aircraftPositionUpdate, this, &CAirspaceAnalyzer::watchdogTouchAircraftCallsign);
+        // network situations
+        c = connect(network, &INetwork::aircraftPositionUpdate, this, &CAirspaceAnalyzer::onNetworkPositionUpdate);
         Q_ASSERT(c);
         c = connect(network, &INetwork::atcPositionUpdate, this, &CAirspaceAnalyzer::watchdogTouchAtcCallsign);
         Q_ASSERT(c);
 
-        // network
-        c = connect(network, &INetwork::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged);
+        // Monitor
+        c = connect(airspaceMonitorParent, &CAirspaceMonitor::addedAircraftSituation, this, &CAirspaceAnalyzer::watchdogTouchAircraftCallsign);
         Q_ASSERT(c);
         Q_UNUSED(c);
 
@@ -83,10 +86,15 @@ namespace BlackCore
     CAirspaceAnalyzer::~CAirspaceAnalyzer()
     { }
 
-    void CAirspaceAnalyzer::watchdogTouchAircraftCallsign(const CAircraftSituation &situation, const CTransponder &transponder)
+    void CAirspaceAnalyzer::onNetworkPositionUpdate(const CAircraftSituation &situation, const CTransponder &transponder)
+    {
+        Q_UNUSED(transponder);
+        this->watchdogTouchAircraftCallsign(situation);
+    }
+
+    void CAirspaceAnalyzer::watchdogTouchAircraftCallsign(const CAircraftSituation &situation)
     {
         Q_ASSERT_X(!situation.getCallsign().isEmpty(), Q_FUNC_INFO, "No callsign in situaton");
-        Q_UNUSED(transponder);
         m_aircraftCallsignTimestamps[situation.getCallsign()] = QDateTime::currentMSecsSinceEpoch();
     }
 
@@ -140,34 +148,37 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::watchdogCheckTimeouts()
     {
-        qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
-
-        qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
-        qint64 callThresholdMs = static_cast<int>(m_updateTimer.interval() * 1.5);
+        const qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
+        const qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
+        const qint64 callThresholdMs = static_cast<qint64>(m_updateTimer.interval() * 1.5);
         m_lastWatchdogCallMsSinceEpoch = currentTimeMsEpoch;
 
         // this is a trick to not remove everything while debugging
         if (callDiffMs > callThresholdMs) { return; }
 
-        qint64 aircraftTimeoutMs = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
-        qint64 atcTimeoutMs = m_timeoutAtc.valueInteger(CTimeUnit::ms());
-        qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
-        qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs;
+        const qint64 aircraftTimeoutMs = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
+        const qint64 atcTimeoutMs = m_timeoutAtc.valueInteger(CTimeUnit::ms());
+        const qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
+        const qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs;
 
-        for (const CCallsign &callsign : m_aircraftCallsignTimestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
+        const QList<CCallsign> callsignsAircraft = m_aircraftCallsignTimestamps.keys();
+        for (const CCallsign &callsign : callsignsAircraft) // clazy:exclude=container-anti-pattern,range-loop
         {
-            if (m_aircraftCallsignTimestamps.value(callsign) > timeoutAircraftEpochMs) { continue; }
-            CLogMessage(this).debug() << "Aircraft " << callsign.toQString() << "timed out!";
+            const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
+            if (tsv > timeoutAircraftEpochMs) { continue; }
+            CLogMessage(this).debug() << "Aircraft " << callsign.toQString() << "timed out! " << (currentTimeMsEpoch - tsv) << "ms";
             m_aircraftCallsignTimestamps.remove(callsign);
-            emit timeoutAircraft(callsign);
+            emit this->timeoutAircraft(callsign);
         }
 
-        for (const CCallsign &callsign : m_atcCallsignTimestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
+        const QList<CCallsign> callsignsAtc = m_atcCallsignTimestamps.keys();
+        for (const CCallsign &callsign : callsignsAtc) // clazy:exclude=container-anti-pattern,range-loop
         {
+            const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
             if (m_atcCallsignTimestamps.value(callsign) > timeoutAtcEpochMs) { continue; }
-            CLogMessage(this).debug() << "ATC " << callsign.toQString() << "timed out!";
+            CLogMessage(this).debug() << "ATC " << callsign.toQString() << "timed out! " << (currentTimeMsEpoch - tsv) << "ms";
             m_atcCallsignTimestamps.remove(callsign);
-            emit timeoutAtc(callsign);
+            emit this->timeoutAtc(callsign);
         }
     }
 

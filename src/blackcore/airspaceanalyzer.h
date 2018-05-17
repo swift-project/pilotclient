@@ -14,14 +14,14 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/worker.h"
 
 #include <QHash>
@@ -42,6 +42,8 @@ namespace BlackMisc
 
 namespace BlackCore
 {
+    class CAirspaceMonitor;
+
     //! Class monitoring and analyzing (closest aircraft, outdated aircraft / watchdog) airspace
     //! in background.
     //!
@@ -62,8 +64,8 @@ namespace BlackCore
 
         //! Constructor
         CAirspaceAnalyzer(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
-                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                          INetwork *network, QObject *parent);
+                          INetwork *network,
+                          CAirspaceMonitor *airspaceMonitorParent);
 
         //! Get the latest snapshot
         //! \threadsafe
@@ -97,7 +99,7 @@ namespace BlackCore
         void watchdogRemoveAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Reset timestamp for callsign
-        void watchdogTouchAircraftCallsign(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+        void watchdogTouchAircraftCallsign(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Reset timestamp for callsign
         void watchdogTouchAtcCallsign(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency,
@@ -105,6 +107,9 @@ namespace BlackCore
 
         //! Connection status of network changed
         void onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
+
+        //! Network position update
+        void onNetworkPositionUpdate(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 
         //! Run a check
         void onTimeout();

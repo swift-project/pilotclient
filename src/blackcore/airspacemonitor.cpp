@@ -67,7 +67,7 @@ namespace BlackCore
         : CRemoteAircraftProvider(parent),
           COwnAircraftAware(ownAircraftProvider),
           m_network(network),
-          m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
+          m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, network, this))
     {
         this->setObjectName("CAirspaceMonitor");
         this->enableReverseLookupMessages(sApp->isDeveloperFlagSet());
