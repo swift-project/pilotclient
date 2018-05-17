@@ -422,6 +422,11 @@ namespace BlackCore
             return m_airspace->addClientGndCapability(callsign);
         }
 
+        bool CContextNetwork::setClientGndCapability(const Aviation::CCallsign &callsign, bool supportGndFlag)
+        {
+            return m_airspace->setClientGndCapability(callsign, supportGndFlag);
+        }
+
         CServerList CContextNetwork::getVatsimFsdServers() const
         {
             Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
@@ -700,7 +705,7 @@ namespace BlackCore
         {
             Q_ASSERT(m_airspace);
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRendering; }
-            bool c = m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
+            const bool c = m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
             if (c)
             {
                 CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -742,9 +747,22 @@ namespace BlackCore
             const bool c = m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates);
             if (c)
             {
-                CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
+                const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
                 CLogMessage(this).info("Callsign %1 sets fast positions ") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
                 emit this->changedFastPositionUpdates(aircraft);
+            }
+            return c;
+        }
+
+        bool CContextNetwork::updateAircraftSupportingGndFLag(const CCallsign &callsign, bool supportGndFlag)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << supportGndFlag; }
+            const bool c = m_airspace->setClientGndCapability(callsign, supportGndFlag);
+            if (c)
+            {
+                const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
+                CLogMessage(this).info("Callsign %1 set gnd.capability ") << aircraft.getCallsign() << BlackMisc::boolToOnOff(aircraft.fastPositionUpdates());
+                emit this->changedGndFlagCapability(aircraft);
             }
             return c;
         }

@@ -101,13 +101,24 @@ namespace BlackMisc
 
         bool CClientProvider::addClientGndCapability(const CCallsign &callsign)
         {
+            return this->setClientGndCapability(callsign, true);
+        }
+
+        bool CClientProvider::setClientGndCapability(const CCallsign &callsign, bool supportGndFlag)
+        {
             CClient client = this->getClientOrDefaultForCallsign(callsign);
 
             // need to change?
             if (!client.isValid()) { return false; } // no client
-            if (client.hasGndFlagCapability()) { return true; } // already set, but set
-
-            client.addCapability(CClient::FsdWithGroundFlag);
+            if (client.hasGndFlagCapability() == supportGndFlag) { return true; } // already set, but set
+            if (supportGndFlag)
+            {
+                client.addCapability(CClient::FsdWithGroundFlag);
+            }
+            else
+            {
+                client.removeCapability(CClient::FsdWithGroundFlag);
+            }
             QWriteLocker l(&m_lockClient);
             m_clients.replaceOrAddObjectByCallsign(client);
             return true;

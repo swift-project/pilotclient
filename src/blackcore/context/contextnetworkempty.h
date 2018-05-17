@@ -299,10 +299,19 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) override
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override
             {
                 Q_UNUSED(callsign);
-                Q_UNUSED(enabledForRedering);
+                Q_UNUSED(enabledForRendering);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
+            //! \copydoc IContextNetwork::updateAircraftSupportingGndFLag
+            virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override
+            {
+                Q_UNUSED(callsign);
+                Q_UNUSED(supportGndFlag);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }

@@ -88,6 +88,9 @@ namespace BlackCore
                                    "changedFastPositionUpdates", this, SIGNAL(changedFastPositionUpdates(BlackMisc::Simulation::CSimulatedAircraft)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                                   "changedGndFlagCapability", this, SIGNAL(changedGndFlagCapability(BlackMisc::Simulation::CSimulatedAircraft)));
+            Q_ASSERT(s);
+            s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                    "addedAircraft", this, SIGNAL(addedAircraft(BlackMisc::Simulation::CSimulatedAircraft)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
@@ -223,6 +226,11 @@ namespace BlackCore
         bool CContextNetworkProxy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionSending)
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateFastPositionEnabled"), callsign, enableFastPositionSending);
+        }
+
+        bool CContextNetworkProxy::updateAircraftSupportingGndFLag(const CCallsign &callsign, bool supportGndFlag)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftSupportingGndFLag"), callsign, supportGndFlag);
         }
 
         void CContextNetworkProxy::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)

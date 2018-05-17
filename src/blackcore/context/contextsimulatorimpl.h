@@ -14,6 +14,7 @@
 
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/application/applicationsettings.h"
+#include "blackcore/simulator.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
@@ -129,6 +130,9 @@ namespace BlackCore
 
             //! Access to simulator (i.e. the plugin)
             ISimulator *simulator() const;
+
+            //! Simulator available?
+            bool hasSimulator() const { return this->simulator(); }
 
             //! Register dot commands
             static void registerHelp()

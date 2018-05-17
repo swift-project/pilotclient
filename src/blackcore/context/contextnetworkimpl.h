@@ -121,6 +121,7 @@ namespace BlackCore
             virtual int removeClient(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual bool autoAdjustCientGndCapability(const BlackMisc::Aviation::CAircraftSituation &situation) override;
             virtual bool addClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign) override;
+            virtual bool setClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
             //! @}
 
         public slots:
@@ -131,6 +132,7 @@ namespace BlackCore
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+            virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
             virtual bool updateCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg) override;
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;

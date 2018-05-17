@@ -73,6 +73,10 @@ namespace BlackMisc
             //! Add gnd.flag capability
             //! \threadsafe
             virtual bool addClientGndCapability(const Aviation::CCallsign &callsign) = 0;
+
+            //! Set gnd.flag capability
+            //! \threadsafe
+            virtual bool setClientGndCapability(const Aviation::CCallsign &callsign, bool supportGndFlag) = 0;
         };
 
         //! Direct in memory access to client (network client) data
@@ -93,6 +97,7 @@ namespace BlackMisc
             virtual int removeClient(const Aviation::CCallsign &callsign) override;
             virtual bool autoAdjustCientGndCapability(const Aviation::CAircraftSituation &situation) override;
             virtual bool addClientGndCapability(const Aviation::CCallsign &callsign) override;
+            virtual bool setClientGndCapability(const Aviation::CCallsign &callsign, bool supportGndFlag) override;
             //! @}
 
         private:

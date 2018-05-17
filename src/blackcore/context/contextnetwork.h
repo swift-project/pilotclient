@@ -140,6 +140,9 @@ namespace BlackCore
             //! Aircraft enabled / disabled
             void changedFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Changed gnd. flag capability
+            void changedGndFlagCapability(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
             //! Connection status changed for online station
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
@@ -261,7 +264,10 @@ namespace BlackCore
             virtual void requestAtisUpdates() = 0;
 
             //! Enable/disable rendering
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) = 0;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) = 0;
+
+            //! Enable/disable support of gnd. flag
+            virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) = 0;
 
             //! Change model
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
