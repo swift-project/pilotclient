@@ -89,9 +89,9 @@ namespace BlackGui
             }
             else
             {
-                this->displaySetupsPerCallsign();
                 enableCallsign = true;
             }
+            this->displaySetupsPerCallsign();
             ui->comp_CallsignCompleter->setReadOnly(!enableCallsign);
             ui->pb_Delete->setEnabled(enableCallsign);
         }
