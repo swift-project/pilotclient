@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CInterpolationLogDisplay</class>
+ <widget class="QFrame" name="CInterpolationLogDisplay">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Interpolation log. display</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QFrame" name="fr_Top">
+     <layout class="QHBoxLayout" name="hl_Top" stretch="2,4,1,1">
+      <item>
+       <widget class="BlackGui::Components::CCallsignCompleter" name="comp_CallsignCompleter"/>
+      </item>
+      <item>
+       <widget class="QSlider" name="hs_UpdateTime">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>10</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_UpdateTime">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_StartStop">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="te_Log">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CCallsignCompleter</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/callsigncompleter.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
