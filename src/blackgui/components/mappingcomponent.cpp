@@ -399,8 +399,9 @@ namespace BlackGui
         void CMappingComponent::onModelsUpdateRequested()
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
-            const CAircraftModelList ml(sGui->getIContextSimulator()->getModelSet());
-            ui->tvp_AircraftModels->updateContainerMaybeAsync(ml);
+            const CAircraftModelList modelSet(sGui->getIContextSimulator()->getModelSet());
+            ui->tvp_AircraftModels->updateContainerMaybeAsync(modelSet);
+            ui->tw_SpecializedViews->setCurrentIndex(TabAircraftModels);
         }
 
         void CMappingComponent::onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
