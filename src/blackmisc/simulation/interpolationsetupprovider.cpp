@@ -57,6 +57,24 @@ namespace BlackMisc
             return callsigns;
         }
 
+        bool IInterpolationSetupProvider::setInterpolationMode(const QString &modeAsString, const CCallsign &callsign)
+        {
+            CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
+            if (!setup.setInterpolatorMode(modeAsString)) { return false; }
+
+            // changed value
+            return this->setInterpolationSetupPerCallsign(setup, callsign, true);
+        }
+
+        bool IInterpolationSetupProvider::setLogInterpolation(bool log, const CCallsign &callsign)
+        {
+            CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
+            if (!setup.setLogInterpolation(log)) { return false; }
+
+            // changed value
+            return this->setInterpolationSetupPerCallsign(setup, callsign, true);
+        }
+
         bool IInterpolationSetupProvider::setInterpolationSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
         {
             {

@@ -487,11 +487,9 @@ namespace BlackCore
             if (parser.hasPart(2))
             {
                 const CCallsign cs(parser.part(2));
-                CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(cs);
-                const bool changed = setup.setInterpolatorMode(part1);
+                const bool changed = this->setInterpolationMode(part1, cs);
                 if (changed)
                 {
-                    this->setInterpolationSetupPerCallsign(setup, cs);
                     emit this->interpolationAndRenderingSetupChanged();
                 }
                 CLogMessage(this).info(changed ? "Changed interpolation mode for '%1'" : "Unchanged interpolation mode for '%1'") << cs.asString();
@@ -761,6 +759,23 @@ namespace BlackCore
         this->physicallyRemoveRemoteAircraft(remoteCallsign);
     }
 
+    QString CSimulatorCommon::latestLoggedDataFormatted(const CCallsign &cs) const
+    {
+        const SituationLog s = m_interpolationLogger.getLastSituationLog(cs);
+        const PartsLog p = m_interpolationLogger.getLastPartsLog(cs);
+
+        static const QString sep("\n------\n");
+        QString dm;
+        if (s.tsCurrent > 0)
+        {
+            dm = QStringLiteral("Setup: ") % s.usedSetup.toQString(true) %
+                 QStringLiteral("\n\n") %
+                 QStringLiteral("Situation: ") % s.toQString(false, true, true, true, true, sep);
+        }
+        if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QStringLiteral("") : QStringLiteral("\n\n")) % QStringLiteral("Parts: ") % p.toQString(sep); }
+        return dm;
+    }
+
     void CSimulatorCommon::displayLoggedSituationInSimulator(const CCallsign &cs, bool stopLogging, int times)
     {
         if (cs.isEmpty()) { return; }
@@ -781,18 +796,7 @@ namespace BlackCore
             return;
         }
 
-        const SituationLog s = m_interpolationLogger.getLastSituationLog(cs);
-        const PartsLog p = m_interpolationLogger.getLastPartsLog(cs);
-
-        QString dm;
-        static const QString sep("\n------\n");
-        if (s.tsCurrent > 0)
-        {
-            dm = QStringLiteral("Setup: ") % s.usedSetup.toQString(true) %
-                 QStringLiteral("\n\n") %
-                 QStringLiteral("Situation: ") % s.toQString(false, true, true, true, true, sep);
-        }
-        if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? QStringLiteral("") : QStringLiteral("\n\n")) % QStringLiteral("Parts: ") % p.toQString(sep); }
+        const QString dm = this->latestLoggedDataFormatted(cs);
         if (!dm.isEmpty())
         {
             this->displayStatusMessage(CStatusMessage(this).info(dm));

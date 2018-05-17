@@ -50,6 +50,14 @@ namespace BlackMisc
             //! \threadsafe
             Aviation::CCallsignSet getLogCallsigns() const;
 
+            //! Set mode as string
+            //! \threadsafe
+            bool setInterpolationMode(const QString &modeAsString, const Aviation::CCallsign &callsign);
+
+            //! Enable/disable logging
+            //! \threadsafe
+            bool setLogInterpolation(bool log, const Aviation::CCallsign &callsign);
+
         protected:
             //! Set the global setup
             //! \threadsafe

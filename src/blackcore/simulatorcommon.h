@@ -114,6 +114,12 @@ namespace BlackCore
         //!  Counter removed aircraft
         int getStatisticsPhysicallyRemovedAircraft() const { return m_statsPhysicallyRemovedAircraft; }
 
+        //! Access to logger
+        const BlackMisc::Simulation::CInterpolationLogger &interpolationLogger() const { return m_interpolationLogger; }
+
+        //! The latest logged data formatted
+        QString latestLoggedDataFormatted(const BlackMisc::Aviation::CCallsign &cs) const;
+
     protected:
         //! Constructor
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,

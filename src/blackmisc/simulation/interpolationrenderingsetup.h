@@ -58,7 +58,7 @@ namespace BlackMisc
             bool logInterpolation() const { return m_logInterpolation; }
 
             //! Log.interpolation
-            void setLogInterpolation(bool log) { m_logInterpolation = log; }
+            bool setLogInterpolation(bool log);
 
             //! Full interpolation (skip optimizations like checking if aircraft moves etc.)
             bool isForcingVtolInterpolation() const { return m_forceVtolInterpolation; }

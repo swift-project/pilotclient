@@ -64,6 +64,13 @@ namespace BlackMisc
             }
         }
 
+        bool CInterpolationAndRenderingSetupBase::setLogInterpolation(bool log)
+        {
+            if (m_logInterpolation == log) { return false; }
+            m_logInterpolation = log;
+            return true;
+        }
+
         bool CInterpolationAndRenderingSetupBase::setEnabledAircraftParts(bool enabled)
         {
             if (m_enabledAircraftParts == enabled) { return false; }
