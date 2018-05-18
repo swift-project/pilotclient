@@ -550,7 +550,7 @@ namespace BlackGui
         addMenuForStyleSheets(menu);
         QAction *a = nullptr;
         bool c = false;
-        if (this->getApplicationInfo().application() != CApplicationInfo::Laucher)
+        if (this->getApplicationInfo().getApplication() != CApplicationInfo::Laucher)
         {
             menu.addSeparator();
             a = menu.addAction(CIcons::swiftLauncher24(), "Start swift launcher");

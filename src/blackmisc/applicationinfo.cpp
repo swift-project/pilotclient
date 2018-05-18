@@ -9,8 +9,11 @@
 
 //! \file
 
-#include "blackconfig/buildconfig.h"
 #include "blackmisc/applicationinfo.h"
+#include "blackmisc/iconlist.h"
+#include "blackmisc/comparefunctions.h"
+#include "blackconfig/buildconfig.h"
+#include <QStringBuilder>
 
 using namespace BlackConfig;
 
@@ -33,26 +36,128 @@ namespace BlackMisc
         }
     }
 
+    const QString &CApplicationInfo::getApplicationAsString() const
+    {
+        static const QString unknown("unknown");
+        static const QString launcher("launcher");
+        static const QString core("core");
+        static const QString gui("gui");
+        static const QString mapping("mapping tool");
+        static const QString unitTest("unit test");
+        static const QString sample("sample");
+
+        switch (getApplication())
+        {
+        case Laucher: return launcher;
+        case PilotClientCore: return core;
+        case PilotClientGui: return gui;
+        case MappingTool: return mapping;
+        case UnitTest: return unitTest;
+        case Sample: return sample;
+        default: break;
+        }
+        return unknown;
+    }
+
     bool CApplicationInfo::isSampleOrUnitTest() const
     {
-        const Application a = this->application();
+        const Application a = this->getApplication();
         return a == CApplicationInfo::Sample || a == CApplicationInfo::UnitTest;
     }
 
     bool CApplicationInfo::isUnitTest() const
     {
-        const Application a = this->application();
+        const Application a = this->getApplication();
         return a == CApplicationInfo::UnitTest;
     }
 
     bool CApplicationInfo::isNull() const
     {
-        return this->application() == Unknown && m_exePath.isNull();
+        return this->getApplication() == Unknown && m_exePath.isNull();
+    }
+
+    QString CApplicationInfo::asOtherSwiftVersionString(const QString separator) const
+    {
+        return QStringLiteral("Version; ")  % this->getVersionString() % QStringLiteral(" os: ") % this->getPlatform() % separator %
+               QStringLiteral("exe.path: ") % this->getExecutablePath() % separator %
+               QStringLiteral("app.data: ") % this->getApplicationDataDirectory();
     }
 
     QString CApplicationInfo::convertToQString(bool i18n) const
     {
-        return QString("{ %1, %2, %3, %4 }").arg(QString::number(m_app), m_exePath, m_version, m_process.convertToQString(i18n));
+        return QString("{ %1, %2, %3, %4 }").arg(this->getApplicationAsString(), m_exePath, m_version, m_process.convertToQString(i18n));
+    }
+
+    CIcon CApplicationInfo::toIcon() const
+    {
+        switch (getApplication())
+        {
+        case Laucher: return CIconList::allIcons().findByIndex(CIcons::SwiftLauncher16);
+        case PilotClientCore: return CIconList::allIcons().findByIndex(CIcons::SwiftCore16);
+        case PilotClientGui: return CIconList::allIcons().findByIndex(CIcons::Swift16);
+        case MappingTool: return CIconList::allIcons().findByIndex(CIcons::SwiftDatabase16);
+        default: break;
+        }
+        return CIconList::allIcons().findByIndex(CIcons::StandardIconUnknown16);
+    }
+
+    CVariant CApplicationInfo::propertyByIndex(const CPropertyIndex &index) const
+    {
+        if (index.isMyself()) { return CVariant::from(*this); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexApplication: return CVariant::fromValue(m_app);
+        case IndexApplicationAsString: return CVariant::fromValue(this->getApplicationAsString());
+        case IndexApplicationDataPath: return CVariant::fromValue(this->getApplicationDataDirectory());
+        case IndexCompileInfo: return CVariant::fromValue(this->getCompileInfo());
+        case IndexExecutablePath: return CVariant::fromValue(this->getExecutablePath());
+        case IndexPlatformInfo: return CVariant::fromValue(this->getPlatform());
+        case IndexProcessInfo: return m_process.propertyByIndex(index.copyFrontRemoved());
+        case IndexVersionString: return CVariant::fromValue(this->getVersionString());
+        case IndexWordSize: return CVariant::fromValue(this->getWordSize());
+        default: break;
+        }
+        return CValueObject::propertyByIndex(index);
+    }
+
+    void CApplicationInfo::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+    {
+        if (index.isMyself()) { (*this) = variant.to<CApplicationInfo>(); return; }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexApplication: this->setApplication(static_cast<Application>(variant.toInt())); break;
+        case IndexApplicationAsString: break;
+        case IndexApplicationDataPath: this->setApplicationDataDirectory(variant.toQString()); break;
+        case IndexCompileInfo: this->setCompileInfo(variant.toQString()); break;
+        case IndexExecutablePath: this->setExecutablePath(variant.toQString()); break;
+        case IndexPlatformInfo: this->setPlatformInfo(variant.toQString()); break;
+        case IndexProcessInfo: m_process.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexVersionString: this->setVersionString(variant.toQString()); break;
+        case IndexWordSize: return this->setWordSize(variant.toInt()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
+        }
+    }
+
+    int CApplicationInfo::comparePropertyByIndex(const CPropertyIndex &index, const CApplicationInfo &compareValue) const
+    {
+        if (index.isMyself()) { return this->getExecutablePath().compare(compareValue.getExecutablePath()); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexApplicationDataPath: this->getApplicationDataDirectory().compare(compareValue.getApplicationDataDirectory());
+        case IndexCompileInfo: this->getCompileInfo().compare(compareValue.getCompileInfo());
+        case IndexExecutablePath: this->getExecutablePath().compare(compareValue.getExecutablePath());
+        case IndexPlatformInfo: return this->getPlatform().compare(compareValue.getPlatform());
+        case IndexProcessInfo: return this->getProcessInfo().processName().compare(compareValue.getProcessInfo().processName());
+        case IndexVersionString: return this->getVersionString().compare(compareValue.getVersionString());
+        case IndexWordSize: return Compare::compare(this->getWordSize(), compareValue.getWordSize());
+        case IndexApplication:
+        case IndexApplicationAsString:
+        default:
+            return this->getApplicationAsString().compare(compareValue.getApplicationAsString());
+        }
     }
 
     const QString &CApplicationInfo::swiftPilotClientGui()
@@ -91,6 +196,12 @@ namespace BlackMisc
         return fn;
     }
 
+    const CApplicationInfo &CApplicationInfo::null()
+    {
+        static const CApplicationInfo n;
+        return n;
+    }
+
     CApplicationInfo::Application CApplicationInfo::guessApplication()
     {
         const QString a(QCoreApplication::instance()->applicationName().toLower());
@@ -102,4 +213,4 @@ namespace BlackMisc
         if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
         return CApplicationInfo::Unknown;
     }
-}
+} // ns

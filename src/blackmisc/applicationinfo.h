@@ -39,6 +39,20 @@ namespace BlackMisc
             Sample
         };
 
+        //! Properties by index
+        enum ColumnIndex
+        {
+            IndexApplication = CPropertyIndex::GlobalIndexCApplicationInfo,
+            IndexApplicationAsString,
+            IndexApplicationDataPath,
+            IndexCompileInfo,
+            IndexExecutablePath,
+            IndexPlatformInfo,
+            IndexProcessInfo,
+            IndexVersionString,
+            IndexWordSize,
+        };
+
         //! Default constructor.
         CApplicationInfo();
 
@@ -49,13 +63,24 @@ namespace BlackMisc
         void setApplication(Application app) { m_app = static_cast<int>(app); }
 
         //! Get application.
-        Application application() const { return static_cast<Application>(m_app); }
+        Application getApplication() const { return static_cast<Application>(m_app); }
+
+        //! get application as string
+        const QString &getApplicationAsString() const;
 
         //! Set executable path.
         void setExecutablePath(const QString &exePath) { m_exePath = exePath; }
 
         //! Get executable path.
         const QString &getExecutablePath() const { return m_exePath; }
+
+        //! Set application data dir
+        //! \remark rootdir of settings, cache and logs
+        void setApplicationDataDirectory(const QString &appDataDir) { m_applicationDataDir = appDataDir; }
+
+        //! Set application data dir
+        //! \remark rootdir of settings, cache and logs
+        const QString &getApplicationDataDirectory() const { return m_applicationDataDir; }
 
         //! Set version string.
         void setVersionString(const QString &version) { m_version = version; }
@@ -96,8 +121,23 @@ namespace BlackMisc
         //! Null object
         bool isNull() const;
 
+        //! Formatted info
+        QString asOtherSwiftVersionString(const QString separator = " | ") const;
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
+
+        //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+        CIcon toIcon() const;
+
+        //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+        CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+        //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+        void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+        //! Compare by index
+        int comparePropertyByIndex(const CPropertyIndex &index, const CApplicationInfo &compareValue) const;
 
         //! Name of pilot client GUI
         static const QString &swiftPilotClientGui();
@@ -117,15 +157,20 @@ namespace BlackMisc
         //! File name of the application info file
         static const QString &fileName();
 
+        //! NULL info
+        static const CApplicationInfo &null();
+
     private:
         int m_app = static_cast<int>(Unknown);
         int m_wordSize;
         QString m_exePath;
+        QString m_applicationDataDir;
         QString m_version;
         QString m_compileInfo;
         QString m_platform;
         CProcessInfo m_process;
 
+        //! Guess Application
         static Application guessApplication();
 
         BLACK_METACLASS(
@@ -133,6 +178,7 @@ namespace BlackMisc
             BLACK_METAMEMBER(app),
             BLACK_METAMEMBER(wordSize),
             BLACK_METAMEMBER(exePath),
+            BLACK_METAMEMBER(applicationDataDir),
             BLACK_METAMEMBER(version),
             BLACK_METAMEMBER(compileInfo),
             BLACK_METAMEMBER(platform),

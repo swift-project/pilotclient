@@ -133,7 +133,7 @@ namespace BlackCore
             if (withMetadata) { CApplication::registerMetadata(); }
 
             // unit test
-            if (this->getApplicationInfo().application() == CApplicationInfo::UnitTest)
+            if (this->getApplicationInfo().getApplication() == CApplicationInfo::UnitTest)
             {
                 const QString tempPath(this->getTemporaryDirectory());
                 BlackMisc::setMockCacheRootDirectory(tempPath);
@@ -251,7 +251,7 @@ namespace BlackCore
 
     bool CApplication::isAlreadyRunning() const
     {
-        return getRunningApplications().containsBy([this](const CApplicationInfo & info) { return info.application() == getSwiftApplication(); });
+        return getRunningApplications().containsBy([this](const CApplicationInfo & info) { return info.getApplication() == getSwiftApplication(); });
     }
 
     bool CApplication::isShuttingDown() const

@@ -42,8 +42,14 @@ namespace BlackMisc
 
         //! Running application names
         QStringList processNames() const;
+
+        //! Fill from cache data directories
+        int otherSwiftVersionsFromDataDirectories();
+
+        //! Filled from cache data directories
+        static CApplicationInfoList fromOtherSwiftVersionsFromDataDirectories();
     };
-}
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::CApplicationInfoList)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CApplicationInfo>)

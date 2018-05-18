@@ -143,7 +143,7 @@ namespace BlackCore
         void setSingleApplication(bool singleApplication);
 
         //! swift application running
-        BlackMisc::CApplicationInfo::Application getSwiftApplication() const { return m_applicationInfo.application(); }
+        BlackMisc::CApplicationInfo::Application getSwiftApplication() const { return m_applicationInfo.getApplication(); }
 
         //! Executable names for the given applications
         QString getExecutableForApplication(BlackMisc::CApplicationInfo::Application application) const;

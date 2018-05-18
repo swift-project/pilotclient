@@ -8,10 +8,14 @@
 */
 
 #include "blackmisc/applicationinfolist.h"
+#include "directoryutils.h"
+#include "blackconfig/buildconfig.h"
+
+using namespace BlackConfig;
 
 namespace BlackMisc
 {
-    CApplicationInfoList::CApplicationInfoList() = default;
+    CApplicationInfoList::CApplicationInfoList() {}
 
     CApplicationInfoList::CApplicationInfoList(const CSequence<CApplicationInfo> &other) :
         CSequence<CApplicationInfo>(other)
@@ -19,12 +23,12 @@ namespace BlackMisc
 
     bool CApplicationInfoList::containsApplication(CApplicationInfo::Application application) const
     {
-        return this->contains(&CApplicationInfo::application, application);
+        return this->contains(&CApplicationInfo::getApplication, application);
     }
 
     int CApplicationInfoList::removeApplication(CApplicationInfo::Application application)
     {
-        return this->removeIf(&CApplicationInfo::application, application);
+        return this->removeIf(&CApplicationInfo::getApplication, application);
     }
 
     QStringList CApplicationInfoList::processNames() const
@@ -37,4 +41,27 @@ namespace BlackMisc
         }
         return names;
     }
-}
+
+    int CApplicationInfoList::otherSwiftVersionsFromDataDirectories()
+    {
+        this->clear();
+        const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion();
+        for (const QString &directory : otherVersions.keys())
+        {
+            CApplicationInfo info(otherVersions.value(directory));
+            this->push_back(info);
+        }
+        return this->size();
+    }
+
+    CApplicationInfoList CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories()
+    {
+        static CApplicationInfoList info = []
+        {
+            CApplicationInfoList il;
+            il.otherSwiftVersionsFromDataDirectories();
+            return il;
+        }();
+        return info;
+    }
+} // ns

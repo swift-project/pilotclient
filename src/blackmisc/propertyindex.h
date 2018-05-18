@@ -87,6 +87,7 @@ namespace BlackMisc
             GlobalIndexCRgbColor                        =   800,
             GlobalIndexCCountry                         =   900,
             GlobalIndexCPlatform                        =  1000,
+            GlobalIndexCApplicationInfo                 =  1100,
             GlobalIndexCCallsign                        =  2000,
             GlobalIndexCAircraftSituation               =  2100,
             GlobalIndexCAircraftSituationChange         =  2200,
