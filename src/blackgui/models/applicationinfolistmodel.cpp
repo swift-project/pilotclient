@@ -1,0 +1,46 @@
+/* Copyright (C) 2018
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#include "blackgui/models/applicationinfolistmodel.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+
+#include <QModelIndex>
+#include <QStandardItem>
+#include <QStandardItemModel>
+#include <QString>
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
+
+using namespace BlackMisc;
+
+namespace BlackGui
+{
+    namespace Models
+    {
+        CApplicationInfoListModel::CApplicationInfoListModel(QObject *parent) :
+            CListModelBase("ModelApplicationInfoListModel", parent)
+        {
+            m_columns.addColumn(CColumn::standardString("version", CApplicationInfo::IndexVersionString));
+            m_columns.addColumn(CColumn::standardString("OS", CApplicationInfo::IndexPlatformInfo));
+            m_columns.addColumn(CColumn::standardString("exe.path", CApplicationInfo::IndexExecutablePath));
+            m_columns.addColumn(CColumn::standardString("data.path", CApplicationInfo::IndexApplicationDataPath));
+
+            // default sort order
+            this->setSortColumnByPropertyIndex(CApplicationInfo::IndexVersionString);
+            m_sortOrder = Qt::DescendingOrder;
+        }
+
+        void CApplicationInfoListModel::otherSwiftVersionsFromDataDirectories()
+        {
+            this->update(CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories());
+        }
+    }  // namespace
+} // namespace

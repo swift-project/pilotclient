@@ -29,6 +29,7 @@
 #include "blackmisc/weather/temperaturelayerlist.h"
 #include "blackmisc/weather/windlayerlist.h"
 #include "blackmisc/input/actionhotkeylist.h"
+#include "blackmisc/applicationinfolist.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/statusmessagelist.h"

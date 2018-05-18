@@ -16,6 +16,7 @@
 #include "blackgui/models/airlineicaolistmodel.h"
 #include "blackgui/models/airportlistmodel.h"
 #include "blackgui/models/airportlistmodel.h"
+#include "blackgui/models/applicationinfolistmodel.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/clientlistmodel.h"
 #include "blackgui/models/cloudlayerlistmodel.h"
