@@ -7,8 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/models/serverlistmodel.h"
-#include "blackgui/views/serverview.h"
+#include "serverview.h"
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;

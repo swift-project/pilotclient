@@ -339,6 +339,6 @@ namespace BlackMisc
         if (in.isEmpty()) { return ignoreEmpty ? e : ea; }
         return QStringLiteral("\"") % in % QStringLiteral("\"");
     }
-}
+} // ns
 
 //! \endcond

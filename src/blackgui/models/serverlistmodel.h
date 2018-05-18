@@ -18,7 +18,6 @@
 
 class QObject;
 
-namespace BlackMisc { namespace Network { class CServer; } }
 namespace BlackGui
 {
     namespace Models

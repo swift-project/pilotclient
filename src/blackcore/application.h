@@ -111,9 +111,6 @@ namespace BlackCore
         //! Destructor
         virtual ~CApplication();
 
-        //! Application information
-        const BlackMisc::CApplicationInfo &getApplicationInfo() const;
-
         //! Information about all running apps (including this one only if exec() has already been called)
         static BlackMisc::CApplicationInfoList getRunningApplications();
 
@@ -130,6 +127,9 @@ namespace BlackCore
         //! \threadsafe
         bool isShuttingDown() const;
 
+        //! swift application running
+        const BlackMisc::CApplicationInfo &getApplicationInfo() const { return m_applicationInfo; }
+
         //! Application name and version
         const QString &getApplicationName() const { return m_applicationName; }
 
@@ -141,9 +141,6 @@ namespace BlackCore
 
         //! Force single application (only one instance)
         void setSingleApplication(bool singleApplication);
-
-        //! swift application running
-        BlackMisc::CApplicationInfo::Application getSwiftApplication() const { return m_applicationInfo.getApplication(); }
 
         //! Executable names for the given applications
         QString getExecutableForApplication(BlackMisc::CApplicationInfo::Application application) const;

@@ -540,8 +540,8 @@ namespace BlackGui
             void setSingleSelection();
             //! @}
 
-            //! Remove selected rows
-            void ps_removeSelectedRows();
+            //! Remove selected rows if enabled
+            void removeSelectedRowsChecked();
 
             //! Toggle auto display flag
             void toggleAutoDisplay();

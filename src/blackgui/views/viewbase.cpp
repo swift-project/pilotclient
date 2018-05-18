@@ -104,7 +104,7 @@ namespace BlackGui
             saveJson->setContext(Qt::WidgetShortcut);
 
             QShortcut *deleteRow = new QShortcut(CShortcut::keyDelete(), this);
-            connect(deleteRow, &QShortcut::activated, this, &CViewBaseNonTemplate::ps_removeSelectedRows);
+            connect(deleteRow, &QShortcut::activated, this, &CViewBaseNonTemplate::removeSelectedRowsChecked);
             deleteRow->setObjectName("Remove selected rows for " + this->objectName());
             deleteRow->setContext(Qt::WidgetShortcut);
 
@@ -258,7 +258,7 @@ namespace BlackGui
                     a->setChecked(this->displayAutomatically());
                     break;
                 }
-            case MenuRemoveSelectedRows: { ma.addAction(CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_removeSelectedRows }, CShortcut::keyDelete()); break; }
+            case MenuRemoveSelectedRows: { ma.addAction(CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::removeSelectedRowsChecked }, CShortcut::keyDelete()); break; }
             case MenuClear: { ma.addAction(CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::clear }); break; }
             case MenuFilter:
                 {
@@ -827,7 +827,7 @@ namespace BlackGui
             }
         }
 
-        void CViewBaseNonTemplate::ps_removeSelectedRows()
+        void CViewBaseNonTemplate::removeSelectedRowsChecked()
         {
             if (!m_enableDeleteSelectedRows) { return; }
             this->removeSelectedRows();

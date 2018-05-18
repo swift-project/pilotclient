@@ -68,18 +68,10 @@ namespace BlackGui
             this->setSortIndicator();
             switch (mode)
             {
-            case CAircraftModelListModel::StashModel:
-                m_menus = MenuDefaultNoClear;
-                break;
-            case CAircraftModelListModel::Database:
-                m_menus = MenuDefaultDbViews;
-                break;
-            case CAircraftModelListModel::VPilotRuleModel:
-                m_menus = MenuDefaultNoClear | MenuStashing;
-                break;
-            case CAircraftModelListModel::OwnAircraftModelMappingTool:
-                m_menus = MenuDefaultNoClear | MenuStashing | MenuLoadAndSave;
-                break;
+            case CAircraftModelListModel::StashModel: m_menus = MenuDefaultNoClear; break;
+            case CAircraftModelListModel::Database: m_menus = MenuDefaultDbViews; break;
+            case CAircraftModelListModel::VPilotRuleModel: m_menus = MenuDefaultNoClear | MenuStashing; break;
+            case CAircraftModelListModel::OwnAircraftModelMappingTool: m_menus = MenuDefaultNoClear | MenuStashing | MenuLoadAndSave; break;
             case CAircraftModelListModel::OwnAircraftModelClient:
             default:
                 m_menus = MenuDefaultNoClear | MenuBackend;

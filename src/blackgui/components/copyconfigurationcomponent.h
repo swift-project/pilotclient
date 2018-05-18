@@ -119,8 +119,8 @@ namespace BlackGui
             //! Set widths
             void setWidths();
 
-            QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
+            QStringList m_otherVersionDirs;
             QString m_initializedSourceDir;
             QString m_initializedDestinationDir;
             bool m_logCopiedFiles = true;
@@ -128,8 +128,8 @@ namespace BlackGui
             bool m_withBootstrapFile = false;
 
             // caches will be explicitly initialized in initCaches
-            BlackMisc::Simulation::Data::CModelCaches m_modelCaches{ false, this };
-            BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches{ false, this };
+            BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this };
+            BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches { false, this };
 
             // caches will be initialized so they can be overriden
             // those caches do not harm if they exists default initialized

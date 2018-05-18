@@ -11,6 +11,7 @@
 
 #include "directoryutils.h"
 #include "fileutils.h"
+#include "stringutils.h"
 #include "range.h"
 #include "blackconfig/buildconfig.h"
 #include <QCoreApplication>
@@ -119,7 +120,7 @@ namespace BlackMisc
         static const QFileInfoList fileInfoList([]
         {
             const QDir swiftAppData(CDirectoryUtils::applicationDataDirectory()); // contains 1..n subdirs
-            if (!swiftAppData.isReadable()) return QFileInfoList();
+            if (!swiftAppData.isReadable()) { return QFileInfoList(); }
             return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
         }());
         return fileInfoList;
@@ -143,27 +144,40 @@ namespace BlackMisc
         return dirs;
     }
 
-    QMap<QString, CApplicationInfo> CDirectoryUtils::applicationDataDirectoryMap(bool withoutCurrent)
+    const QMap<QString, CApplicationInfo> &CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion()
     {
-        static const CApplicationInfo nullInfo;
-        QMap<QString, CApplicationInfo> dirs;
-
-        for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
+        static const QMap<QString, CApplicationInfo> dirs = [ = ]
         {
-            if (withoutCurrent && info.filePath().contains(normalizedApplicationDirectory(), Qt::CaseInsensitive)) continue;
-            const QString appInfoFile = CFileUtils::appendFilePaths(info.filePath(), CApplicationInfo::fileName());
-            const QString appInfoJson = CFileUtils::readFileToString(appInfoFile);
-            if (appInfoJson.isEmpty())
+            QMap<QString, CApplicationInfo> directories;
+            for (const QFileInfo &info : CDirectoryUtils::applicationDataDirectories())
             {
-                dirs.insert(info.filePath(), nullInfo);
+                if (caseInsensitiveStringCompare(info.filePath(), CDirectoryUtils::normalizedApplicationDataDirectory())) { continue; }
+
+                // the application info will be written by each swift application started
+                // so the application type will always contain that application
+                const QString appInfoFile = CFileUtils::appendFilePaths(info.filePath(), CApplicationInfo::fileName());
+                const QString appInfoJson = CFileUtils::readFileToString(appInfoFile);
+                CApplicationInfo appInfo;
+                if (appInfoJson.isEmpty())
+                {
+                    const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
+                    appInfo.setExecutablePath(exeDir);
+                }
+                else
+                {
+                    appInfo = CApplicationInfo::fromJson(appInfoJson);
+                }
+                appInfo.setApplicationDataDirectory(info.filePath());
+                directories.insert(info.filePath(), appInfo);
             }
-            else
-            {
-                const CApplicationInfo appInfo = CApplicationInfo::fromJson(appInfoJson);
-                dirs.insert(info.filePath(), appInfo);
-            }
-        }
+            return directories;
+        }();
         return dirs;
+    }
+
+    bool CDirectoryUtils::hasOtherSwiftDataDirectories()
+    {
+        return CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion().size() > 0;
     }
 
     const QString &CDirectoryUtils::normalizedApplicationDataDirectory()

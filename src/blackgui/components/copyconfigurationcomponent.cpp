@@ -24,6 +24,7 @@
 #include <QFileSystemModel>
 #include <QDir>
 #include <QDesktopServices>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -246,7 +247,6 @@ namespace BlackGui
             destinationModel->setNameFilters(this->getSourceFileFilter());
             destinationModel->setNameFilterDisables(m_nameFilterDisables);
 
-
             // source
             const QString sourceDir = this->getOtherVersionsSelectedDirectory();
             if (!sourceModel || m_initializedSourceDir != sourceDir)
@@ -399,8 +399,8 @@ namespace BlackGui
         void CCopyConfigurationComponent::initMultiSimulatorCache(IMultiSimulatorModelCaches *cache, const QString &fileName)
         {
             const CSimulatorInfo info = cache->getSimulatorForFilename(fileName);
-            if (info.isNoSimulator()) return;
-            if (cache->isSaved(info)) return; // already a file and hence in .rev
+            if (info.isNoSimulator()) { return; }
+            if (cache->isSaved(info)) { return; } // already a file and hence in .rev
             const QFileInfo fi(fileName);
             const CStatusMessage msg = cache->setCacheTimestamp(fi.lastModified(), info); // create cache file and timestamp in .rev
             if (msg.isFailure())
@@ -412,13 +412,14 @@ namespace BlackGui
         void CCopyConfigurationComponent::initOtherSwiftVersions()
         {
             ui->cb_OtherVersions->clear();
-            const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMap(true);
+            const QMap<QString, CApplicationInfo> otherVersions = CDirectoryUtils::applicationDataDirectoryMapWithoutCurrentVersion();
             for (const QString &directory : otherVersions.keys())
             {
                 const CApplicationInfo info(otherVersions.value(directory));
                 if (info.isNull())
                 {
-                    ui->cb_OtherVersions->addItem(CDirectoryUtils::decodeNormalizedDirectory(directory));
+                    const QString infoString = CDirectoryUtils::decodeNormalizedDirectory(directory);
+                    ui->cb_OtherVersions->addItem(infoString);
                 }
                 else
                 {

@@ -192,7 +192,8 @@ namespace BlackMisc
                 auto *meta = Private::getValueObjectMetaInfo(typeId);
                 if (meta)
                 {
-                    CJsonScope scope("value");
+                    CJsonScope scope("value"); // tracker
+                    Q_UNUSED(scope);
                     m_v = QVariant(typeId, nullptr);
 
                     // this will call convertFromJson if there is no MemoizedJson

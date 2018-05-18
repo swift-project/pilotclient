@@ -111,6 +111,7 @@ namespace BlackCore
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
 
+        m_applicationInfo.setApplicationDataDirectory(CDirectoryUtils::normalizedApplicationDataDirectory());
         QCoreApplication::setApplicationName(m_applicationName);
         QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
         this->setObjectName(m_applicationName);
@@ -138,7 +139,7 @@ namespace BlackCore
                 const QString tempPath(this->getTemporaryDirectory());
                 BlackMisc::setMockCacheRootDirectory(tempPath);
             }
-            m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getSwiftApplication());
+            m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getApplicationInfo().getApplication());
             this->initParser();
             this->initLogging();
             this->tagApplicationDataDirectory();
@@ -229,12 +230,6 @@ namespace BlackCore
         this->gracefulShutdown();
     }
 
-    const CApplicationInfo &CApplication::getApplicationInfo() const
-    {
-        static const CApplicationInfo a(CApplication::getSwiftApplication());
-        return a;
-    }
-
     CApplicationInfoList CApplication::getRunningApplications()
     {
         CApplicationInfoList apps;
@@ -251,7 +246,7 @@ namespace BlackCore
 
     bool CApplication::isAlreadyRunning() const
     {
-        return getRunningApplications().containsBy([this](const CApplicationInfo & info) { return info.getApplication() == getSwiftApplication(); });
+        return getRunningApplications().containsBy([this](const CApplicationInfo & info) { return info.getApplication() == getApplicationInfo().getApplication(); });
     }
 
     bool CApplication::isShuttingDown() const

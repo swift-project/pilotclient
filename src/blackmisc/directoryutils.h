@@ -46,6 +46,7 @@ namespace BlackMisc
         static QString executableFilePath(const QString &executable);
 
         //! swift application data directory, contains 0..n swift installation directories
+        //! \remark use CDirectoryUtils::normalizedApplicationDataDirectory for one specific version
         static const QString &applicationDataDirectory();
 
         //! swift application data sub directories
@@ -58,13 +59,17 @@ namespace BlackMisc
         static QStringList applicationDataDirectoryList(bool withoutCurrent = false, bool decodedDirName = false);
 
         //! swift application data sub directories with info if available
-        static QMap<QString, CApplicationInfo> applicationDataDirectoryMap(bool withoutCurrent = false);
+        static const QMap<QString, CApplicationInfo> &applicationDataDirectoryMapWithoutCurrentVersion();
+
+        //! Other swift data directories
+        static bool hasOtherSwiftDataDirectories();
 
         //! Is MacOS application bundle?
         //! \remark: Means the currently running executable is a MacOS bundle, but not all our executables are bundles on MacOS
         static bool isMacOSAppBundle();
 
         //! swift application data directory for one specific installation (a version)
+        //! \remark use CDirectoryUtils::applicationDataDirectory for one all swift versions
         static const QString &normalizedApplicationDataDirectory();
 
         //! Where resource files (static DB files, ...) etc are located
