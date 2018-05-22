@@ -181,6 +181,9 @@ namespace BlackMisc
     //! Get a simplified upper case name for searching by removing all characters except A-Z
     BLACKMISC_EXPORT QString simplifyNameForSearch(const QString &name);
 
+    //! Add a question mark at the end if not existing
+    BLACKMISC_EXPORT QString withQUestionMark(const QString &question);
+
     //! Parse multiple date time formats
     //! \remark potentially slow, so only to be used when format is unknown
     BLACKMISC_EXPORT QDateTime parseMultipleDateTimeFormats(const QString &dateTimeString);
