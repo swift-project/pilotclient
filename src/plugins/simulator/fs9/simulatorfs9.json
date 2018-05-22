@@ -2,5 +2,5 @@
     "identifier" : "org.swift-project.plugins.simulator.fs9",
     "name" : "Flight Simulator 2004",
     "simulator" : "fs9",
-    "description" : "Microsoft Flight Simulator 2004"
+    "description" : "Microsoft Flight Simulator 2004 (EXPERIMENTAL!)"
 }
