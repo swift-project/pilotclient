@@ -8,8 +8,12 @@
  */
 
 #include "configurationwizard.h"
-#include "blackgui/guiapplication.h"
 #include "ui_configurationwizard.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/directoryutils.h"
+#include <QPointer>
+
+using namespace BlackMisc;
 
 namespace BlackGui
 {
@@ -20,6 +24,7 @@ namespace BlackGui
             ui(new Ui::CConfigurationWizard)
         {
             ui->setupUi(this);
+            ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
             ui->wp_CopyCaches->setConfigComponent(ui->comp_CopyCaches);
             ui->wp_CopySettings->setConfigComponent(ui->comp_CopySettings);
             ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
@@ -30,7 +35,7 @@ namespace BlackGui
             this->setButtonText(CustomButton1, "skip");
 
             // no other versions, skip copy pages
-            if (!ui->comp_CopySettings->hasOtherVersionData())
+            if (!CDirectoryUtils::hasOtherSwiftDataDirectories())
             {
                 this->setStartId(ConfigSimulator);
             }
@@ -46,8 +51,11 @@ namespace BlackGui
             connect(this, &QWizard::accepted, this, &CConfigurationWizard::ended);
 
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
+            const QPointer<CConfigurationWizard> myself(this);
             connect(this, &QWizard::helpRequested, sGui, [ = ]
             {
+                if (!myself) { return; }
+                if (!sGui || sGui->isShuttingDown()) { return; }
                 sGui->showHelp(this);
             });
         }

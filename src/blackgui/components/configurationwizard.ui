@@ -28,6 +28,31 @@
   <property name="options">
    <set>QWizard::HaveCustomButton1</set>
   </property>
+  <widget class="BlackGui::Components::CCopyModelsFromOtherSwiftVersionsWizardPage" name="wp_CopyModels">
+   <property name="title">
+    <string>Copy models</string>
+   </property>
+   <property name="subTitle">
+    <string>Copy model data from other swift versions. Here you can copy your model set or model cache from another swift version.</string>
+   </property>
+   <layout class="QVBoxLayout" name="vl_CopyModels">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CCopyModelsFromOtherSwiftVersionsComponent" name="comp_CopyModels"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="BlackGui::Components::CCopyConfigurationWizardPage" name="wp_CopySettings">
    <property name="title">
     <string>Copy configuration from another installation</string>
@@ -337,6 +362,18 @@
    <class>BlackGui::Components::CFirstModelSetWizardPage</class>
    <extends>QWizardPage</extends>
    <header>blackgui/components/firstmodelsetcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCopyModelsFromOtherSwiftVersionsWizardPage</class>
+   <extends>QWizardPage</extends>
+   <header>blackgui/components/copymodelsfromotherswiftversionscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCopyModelsFromOtherSwiftVersionsComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/copymodelsfromotherswiftversionscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

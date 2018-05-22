@@ -32,6 +32,7 @@ namespace BlackGui
             //! Page ids
             enum Pages
             {
+                CopyModels,
                 CopySettings,
                 CopyCaches,
                 ConfigSimulator,
