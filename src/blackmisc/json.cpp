@@ -58,7 +58,7 @@ const QJsonValue &operator >>(const QJsonValue &json, QString &value)
 
 const QJsonValue &operator >>(const QJsonValue &json, QStringList &value)
 {
-    for (auto && element : json.toArray()) { value << element.toString(); }
+    for (auto &&element : json.toArray()) { value << element.toString(); }
     return json;
 }
 
@@ -132,7 +132,7 @@ QJsonValueRef operator >>(QJsonValueRef json, QString &value)
 
 QJsonValueRef operator >>(QJsonValueRef json, QStringList &value)
 {
-    for (auto && element : json.toArray()) { value << element.toString(); }
+    for (auto &&element : json.toArray()) { value << element.toString(); }
     return json;
 }
 
@@ -473,16 +473,31 @@ namespace BlackMisc
             return looksLikeJson(json);
         }
 
-        bool looksLikeSwiftDataObject(const QJsonObject &object)
+        bool looksLikeSwiftDataObjectJson(const QJsonObject &object)
         {
+            // key
+            // - type
+            // - value
             if (object.size() != 1) { return false; }
-            const QString key = object.keys().front();
+            const QStringList keys = object.keys();
+            if (keys.size() != 1) { return false; }
+            const QString key = keys.front();
             const QJsonObject cacheObject = object.value(key).toObject();
             return (cacheObject.contains("type") && cacheObject.contains("value"));
         }
 
+        QJsonObject swiftDataObjectValue(const QString &jsonString)
+        {
+            const QJsonObject obj = jsonObjectFromString(jsonString);
+            if (obj.isEmpty()) { return obj; }
+            return swiftDataObjectValue(obj);
+        }
+
         QJsonObject swiftDataObjectValue(const QJsonObject &object)
         {
+            // key
+            // - type
+            // - value
             if (object.size() != 1) { return object; } // no cache format
             const QString key = object.keys().front();
             const QJsonObject cacheObject = object.value(key).toObject();
@@ -510,13 +525,6 @@ namespace BlackMisc
             return object;
         }
 
-        QJsonObject swiftDataObjectValue(const QString &jsonString)
-        {
-            const QJsonObject obj = jsonObjectFromString(jsonString);
-            if (obj.isEmpty()) { return obj; }
-            return swiftDataObjectValue(obj);
-        }
-
 
         QJsonObject unwrapCache(const QString &jsonString)
         {
@@ -529,6 +537,16 @@ namespace BlackMisc
         {
             // CContainerbase::convertFromJson
             return object.contains("containerbase");
+        }
+
+        bool looksLikeSwiftTypeValuePairJson(const QJsonObject &object)
+        {
+            return (object.contains("type") && object.contains("value"));
+        }
+
+        bool looksLikeSwiftDbJson(const QJsonObject &object)
+        {
+            return (object.contains("data"));
         }
     } // ns
 } // ns

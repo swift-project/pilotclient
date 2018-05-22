@@ -261,26 +261,34 @@ namespace BlackMisc
         //! \remark Quick check if the string could be a valid swift JSON string
         BLACKMISC_EXPORT bool looksLikeSwiftJson(const QString &json);
 
-        //! Looks like a valid swift container JSON object
+        //! Looks like a valid swift container JSON object?
         BLACKMISC_EXPORT bool looksLikeSwiftContainerJson(const QJsonObject &object);
 
-        //! Looks like a cache/setting object
-        BLACKMISC_EXPORT bool looksLikeSwiftDataObject(const QJsonObject &object);
+        //! Looks like a cache/setting object?
+        BLACKMISC_EXPORT bool looksLikeSwiftDataObjectJson(const QJsonObject &object);
 
-        //! The value of a cache/setting object
+        //! Looks like a swift type/value pair?
+        BLACKMISC_EXPORT bool looksLikeSwiftTypeValuePairJson(const QJsonObject &object);
+
+        //! Looks like a swift DB format?
+        BLACKMISC_EXPORT bool looksLikeSwiftDbJson(const QJsonObject &object);
+
+        //! The value part of a cache/setting object
         //! \remark if data object unstrip from that, otherwise leave unchanged
+        //! \remark this is the value ONLY!
         BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QJsonObject &object);
 
         //! The value of a cache/setting object
         //! \remark if data object unstrip from that, otherwise leave unchanged
+        //! \remark this is the value ONLY!
         BLACKMISC_EXPORT QJsonObject swiftDataObjectValue(const QString &jsonString);
 
-        //! The value of a cache/setting object
+        //! The type/value of a cache/setting object
         //! \remark if cache object unstrip from that, otherwise leave unchanged
         //! \remark format is type/value
         BLACKMISC_EXPORT QJsonObject unwrapCache(const QJsonObject &object);
 
-        //! The value of a cache/setting object
+        //! The type/value object of a cache/setting object
         //! \remark if cache object unstrip from that, otherwise leave unchanged
         //! \remark format is type/value
         BLACKMISC_EXPORT QJsonObject unwrapCache(const QString &jsonString);

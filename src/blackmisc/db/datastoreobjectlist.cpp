@@ -7,19 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/db/datastoreobjectlist.h"
-#include "blackmisc/predicates.h"
-#include "blackmisc/countrylist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/aviation/airport.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/db/dbinfolist.h"
 #include "blackmisc/db/artifactlist.h"
 #include "blackmisc/db/distributionlist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/predicates.h"
+#include "blackmisc/countrylist.h"
+#include "blackmisc/json.h"
+#include "blackmisc/variantprivate.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -205,15 +207,16 @@ namespace BlackMisc
                 return c;
             }
 
-            if (Json::looksLikeSwiftDataObject(jsonObject))
+            // cache or settings format?
+            if (Json::looksLikeSwiftDataObjectJson(jsonObject))
             {
                 const QJsonObject cacheObj = Json::swiftDataObjectValue(jsonObject);
-                // swift own format
                 CONTAINER container;
-                container.convertFromJson(cacheObj);
+                Private::CValueObjectMetaInfoHelper::convertFromMemoizedJson(cacheObj, container, true, 0); // handles both, memoized or "normal" convertFromJson
                 return container;
             }
 
+            // plain vanilla container, does not match memoized objects
             if (Json::looksLikeSwiftContainerJson(jsonObject))
             {
                 CONTAINER container;
@@ -221,14 +224,37 @@ namespace BlackMisc
                 return container;
             }
 
+            // still as type/value pair
+            if (Json::looksLikeSwiftTypeValuePairJson(jsonObject))
+            {
+                const QJsonObject valueObject = jsonObject.value("value").toObject();
+                CONTAINER container;
+                Private::CValueObjectMetaInfoHelper::convertFromMemoizedJson(valueObject, container, true, 0); // handles both, memoized or "normal" convertFromJson
+                return container;
+            }
+
+            // DB format, as array
             if (jsonObject.contains("data"))
             {
-                // DB format
                 return IDatastoreObjectList::fromDatabaseJson(jsonObject.value("data").toArray());
             }
 
             // no idea what this is
             throw CJsonException("Unsupported JSON format");
+        }
+
+        template<class OBJ, class CONTAINER, typename KEYTYPE>
+        CONTAINER IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::fromMultipleJsonFormats(const QString &jsonString)
+        {
+            // also accept cache format
+            if (jsonString.isEmpty())
+            {
+                const CONTAINER c;
+                return c;
+            }
+
+            const QJsonObject jo = Json::jsonObjectFromString(jsonString, false);
+            return IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::fromMultipleJsonFormats(jo);
         }
 
         template<class OBJ, class CONTAINER, typename KEYTYPE>

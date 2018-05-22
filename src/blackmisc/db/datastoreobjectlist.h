@@ -70,6 +70,10 @@ namespace BlackMisc
             //! \remark supports native swift C++ format, DB format, and cache format
             static CONTAINER fromMultipleJsonFormats(const QJsonObject &jsonObject);
 
+            //! From multiple JSON formats
+            //! \remark supports native swift C++ format, DB format, and cache format
+            static CONTAINER fromMultipleJsonFormats(const QString &jsonString);
+
             //! From DB JSON with default prefixes
             //! \remark Specialized classes might have their own fromDatabaseJson implementation
             static CONTAINER fromDatabaseJson(const QJsonArray &array);
