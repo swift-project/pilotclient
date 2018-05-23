@@ -31,6 +31,7 @@ namespace BlackGui
             ui->wp_XSwiftBus->setConfigComponent(ui->comp_XSwiftBus);
             ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
             ui->wp_Hotkeys->setConfigComponent(ui->comp_Hotkeys);
+            ui->wp_Legal->setConfigComponent(ui->comp_LegalInformation);
             ui->comp_Hotkeys->registerDummyPttEntry();
             this->setButtonText(CustomButton1, "skip");
 
@@ -41,7 +42,7 @@ namespace BlackGui
             }
 
             const QList<int> ids = this->pageIds();
-            auto mm = std::minmax_element(ids.begin(), ids.end());
+            const auto mm = std::minmax_element(ids.begin(), ids.end());
             m_maxId = *mm.second;
             m_minId = *mm.first;
 
@@ -77,10 +78,10 @@ namespace BlackGui
         bool CConfigurationWizard::event(QEvent *event)
         {
             if (event->type() != QEvent::EnterWhatsThisMode) { return QDialog::event(event); }
-            const QPointer<CConfigurationWizard> guard(this);
+            const QPointer<CConfigurationWizard> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {
-                if (guard.isNull() || !sGui || sGui->isShuttingDown()) { return; }
+                if (myself.isNull() || !sGui || sGui->isShuttingDown()) { return; }
                 sGui->showHelp(this);
             });
             return true;
@@ -115,12 +116,12 @@ namespace BlackGui
         {
             if (which == static_cast<int>(CustomButton1))
             {
-                this->m_skipped = true;
+                m_skipped = true;
                 this->next();
             }
             else
             {
-                this->m_skipped = false;
+                m_skipped = false;
             }
         }
 

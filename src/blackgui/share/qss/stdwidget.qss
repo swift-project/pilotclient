@@ -176,14 +176,10 @@ BlackGui--Components--CDownloadDialog,
 BlackGui--Components--CRawFsdMessagesComponent,
 BlackGui--Components--CRawFsdMessagesDialog,
 BlackGui--Components--CDbOwnModelsDialog,
-BlackGui--Components--CDbOwnModelSetDialog
-{
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
-BlackGui--Components--CFirstModelSetComponent
-BlackGui--Components--CDbDistributorComponent
+BlackGui--Components--CDbOwnModelSetDialog,
+BlackGui--Components--CFirstModelSetComponent,
+BlackGui--Components--CDbDistributorComponent,
+BlackGui--Components--CLegalInfoComponent
 {
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);

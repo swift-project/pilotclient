@@ -28,6 +28,31 @@
   <property name="options">
    <set>QWizard::HaveCustomButton1</set>
   </property>
+  <widget class="BlackGui::Components::CLegalInfoWizardPage" name="wp_Legal">
+   <property name="title">
+    <string>Legal</string>
+   </property>
+   <property name="subTitle">
+    <string>Please confirm you know and understand our license and privacy policy</string>
+   </property>
+   <layout class="QVBoxLayout" name="vl_Legal">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CLegalInfoComponent" name="comp_LegalInformation"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="BlackGui::Components::CCopyModelsFromOtherSwiftVersionsWizardPage" name="wp_CopyModels">
    <property name="title">
     <string>Copy models</string>
@@ -374,6 +399,18 @@
    <class>BlackGui::Components::CCopyModelsFromOtherSwiftVersionsComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/copymodelsfromotherswiftversionscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLegalInfoComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/legalinfocomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLegalInfoWizardPage</class>
+   <extends>QWizardPage</extends>
+   <header>blackgui/components/legalinfocomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

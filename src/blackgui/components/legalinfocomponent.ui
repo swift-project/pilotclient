@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CLegalInfoComponent</class>
+ <widget class="QFrame" name="CLegalInfoComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML"/>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cb_Agree">
+     <property name="text">
+      <string>I agree with the swift license and privacy policy</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CAboutHtmlComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/abouthtmlcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
