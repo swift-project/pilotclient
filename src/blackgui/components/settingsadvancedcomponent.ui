@@ -15,13 +15,13 @@
   </property>
   <layout class="QGridLayout" name="gl_SettingsAdvanced">
    <item row="0" column="0">
-    <widget class="QCheckBox" name="m_crashDumpsUpload">
+    <widget class="QCheckBox" name="cb_crashDumpsUpload">
      <property name="text">
       <string>Upload crash dumps</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <spacer name="vs_SettingsAdvanced">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -33,6 +33,16 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_CrashDumpInfo">
+     <property name="text">
+      <string>Info: By enabling &quot;crash dumps&quot; you will allow us to send information about your system, IP address and swift installation to our crash dump server. We will use these information to improve swift and then delete them. We appreciate if you help us by sending these information.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

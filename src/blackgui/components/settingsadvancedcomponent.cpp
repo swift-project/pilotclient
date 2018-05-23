@@ -21,20 +21,19 @@ namespace BlackGui
             ui(new Ui::CSettingsAdvancedComponent)
         {
             ui->setupUi(this);
-            ui->m_crashDumpsUpload->setChecked(m_crashDumpUploadEnabled.getThreadLocal());
-            connect(ui->m_crashDumpsUpload, &QCheckBox::stateChanged, this, &CSettingsAdvancedComponent::crashDumpUploadEnabledChanged);
+            ui->cb_crashDumpsUpload->setChecked(m_crashDumpUploadEnabled.getThreadLocal());
+            connect(ui->cb_crashDumpsUpload, &QCheckBox::stateChanged, this, &CSettingsAdvancedComponent::crashDumpUploadEnabledChanged);
         }
 
         CSettingsAdvancedComponent::~CSettingsAdvancedComponent()
-        {
-        }
+        { }
 
         void CSettingsAdvancedComponent::crashDumpUploadEnabledChanged(int state)
         {
-            auto text = ui->m_crashDumpsUpload->text();
+            auto text = ui->cb_crashDumpsUpload->text();
             if (!text.endsWith("(restart needed)"))
             {
-                ui->m_crashDumpsUpload->setText(ui->m_crashDumpsUpload->text() + " (restart needed)");
+                ui->cb_crashDumpsUpload->setText(ui->cb_crashDumpsUpload->text() + " (restart needed)");
             }
             m_crashDumpUploadEnabled.set(state == Qt::Checked);
         }
