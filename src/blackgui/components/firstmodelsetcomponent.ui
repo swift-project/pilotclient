@@ -20,7 +20,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="lbl_Explaination">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-weight:600; color:#ff0000;&quot;&gt;WORK IN PROGRESS, not finished &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The model set defines which aircraft you will use in the simulator. From all models you have installed on your disk you can select a subset actually being used.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-weight:600; color:#ff0000;&quot;&gt;WORK IN PROGRESS (experimental) &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The model set defines which aircraft you will use in the simulator. From all models you have installed on your disk you can select a subset actually being used.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>
@@ -56,7 +56,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_ModelDirectories">
         <property name="text">
-         <string>Model directories:</string>
+         <string>Model dir.:</string>
         </property>
        </widget>
       </item>
@@ -79,21 +79,21 @@
         <item row="1" column="0">
          <widget class="QPushButton" name="pb_ModelSet">
           <property name="text">
-           <string>show set</string>
+           <string>set</string>
           </property>
          </widget>
         </item>
         <item row="0" column="0">
          <widget class="QPushButton" name="pb_Models">
           <property name="text">
-           <string> show models </string>
+           <string>models</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="pb_ModelsTriggerReload">
           <property name="text">
-           <string> trigger reload </string>
+           <string>reload</string>
           </property>
          </widget>
         </item>

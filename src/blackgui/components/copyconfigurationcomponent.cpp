@@ -51,6 +51,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->initOtherSwiftVersions();
             this->setWidths();
+            m_hasOtherSwiftVersions = CDirectoryUtils::hasOtherSwiftDataDirectories();
 
             ui->cb_ShowAll->setChecked(m_nameFilterDisables);
             connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
@@ -249,7 +250,12 @@ namespace BlackGui
 
             // source
             const QString sourceDir = this->getOtherVersionsSelectedDirectory();
-            if (!sourceModel || m_initializedSourceDir != sourceDir)
+            if (!m_hasOtherSwiftVersions)
+            {
+                // no ther versions
+                return;
+            }
+            else if (!sourceModel || m_initializedSourceDir != sourceDir)
             {
                 m_initializedSourceDir = sourceDir;
                 if (!sourceModel)
@@ -353,6 +359,7 @@ namespace BlackGui
 
         QStringList CCopyConfigurationComponent::getSelectedFiles() const
         {
+            if (!m_hasOtherSwiftVersions) { return QStringList(); }
             const QModelIndexList indexes = ui->tv_Source->selectionModel()->selectedIndexes();
             if (indexes.isEmpty()) { return QStringList(); }
             const QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());

@@ -126,6 +126,7 @@ namespace BlackGui
             bool m_logCopiedFiles = true;
             bool m_nameFilterDisables = false; //!< name filter disables or hides
             bool m_withBootstrapFile = false;
+            bool m_hasOtherSwiftVersions = false;
 
             // caches will be explicitly initialized in initCaches
             BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this };

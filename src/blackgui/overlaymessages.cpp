@@ -152,9 +152,11 @@ namespace BlackGui
         if (this->hasPendingConfirmation())
         {
             // defer message
+            QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([ = ]()
             {
-                this->showOverlayMessages(messages, timeOutMs);
+                if (!myself) { return; }
+                myself->showOverlayMessages(messages, timeOutMs);
             });
             return;
         }
@@ -185,9 +187,11 @@ namespace BlackGui
         if (this->hasPendingConfirmation())
         {
             // defer message
+            QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([ = ]()
             {
-                this->showOverlayMessage(message, timeOutMs);
+                if (!myself) { return; }
+                myself->showOverlayMessage(message, timeOutMs);
             });
             return;
         }
@@ -214,9 +218,11 @@ namespace BlackGui
         if (this->hasPendingConfirmation())
         {
             // defer message
+            QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([ = ]()
             {
-                this->showOverlayTextMessage(textMessage, timeOutMs);
+                if (!myself) { return; }
+                myself->showOverlayTextMessage(textMessage, timeOutMs);
             });
             return;
         }
@@ -242,9 +248,11 @@ namespace BlackGui
         if (this->hasPendingConfirmation())
         {
             // defer message
+            QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([ = ]()
             {
-                this->showOverlayImage(image, timeOutMs);
+                if (!myself) { return; }
+                myself->showOverlayImage(image, timeOutMs);
             });
             return;
         }
@@ -358,8 +366,10 @@ namespace BlackGui
         if (this->hasPendingConfirmation())
         {
             // defer message
+            QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([ = ]()
             {
+                if (!myself) { return; }
                 this->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
             });
             return;
