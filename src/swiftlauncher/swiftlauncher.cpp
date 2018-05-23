@@ -30,6 +30,7 @@
 #include <QStringBuilder>
 #include <QDesktopServices>
 #include <QShortcut>
+#include <QPointer>
 #include <qcompilerdetection.h>
 
 using namespace BlackConfig;
@@ -82,7 +83,12 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     // auto launch wizard
     if (sGui->isInstallerOptionSet())
     {
-        QTimer::singleShot(2500, this, &CSwiftLauncher::startWizard);
+        const QPointer<CSwiftLauncher> myself(this);
+        QTimer::singleShot(2500, this, [ = ]
+        {
+            if (!myself) { return; }
+            myself->startWizard();
+        });
     }
 }
 
@@ -149,7 +155,6 @@ void CSwiftLauncher::updateInfoAvailable()
 {
     this->setHeaderInfo(ui->comp_UpdateInfo->getLatestAvailablePilotClientArtifactForSelection());
     this->loadLatestNews();
-    this->loadAbout();
 }
 
 void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
@@ -195,20 +200,6 @@ void CSwiftLauncher::loadLatestNews()
         return;
     }
     sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::displayLatestNews});
-}
-
-void CSwiftLauncher::loadAbout()
-{
-    // workaround:
-    // 1) Only reading as HTML gives proper formatting
-    // 2) Reading the file resource fails (likely because of the style sheet)
-    static const QString html = CFileUtils::readFileToString(CDirectoryUtils::aboutFilePath());
-    static const QString legalDir = sGui->getGlobalSetup().getLegalDirectoryUrl().getFullUrl();
-
-    // make links absolute
-    static const QString htmlFixed = QString(html).
-                                     replace(QLatin1String("href=\"./"), "href=\"" + legalDir);
-    ui->tbr_About->setHtml(htmlFixed);
 }
 
 void CSwiftLauncher::initLogDisplay()

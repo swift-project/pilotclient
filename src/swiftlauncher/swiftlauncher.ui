@@ -88,7 +88,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>2</number>
+             <number>4</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -99,7 +99,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>305</height>
+               <height>319</height>
               </rect>
              </property>
              <attribute name="label">
@@ -130,7 +130,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>305</height>
+               <height>319</height>
               </rect>
              </property>
              <attribute name="label">
@@ -195,7 +195,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>305</height>
+               <height>319</height>
               </rect>
              </property>
              <attribute name="label">
@@ -361,7 +361,7 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>305</height>
+               <height>319</height>
               </rect>
              </property>
              <attribute name="label">
@@ -442,8 +442,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>380</width>
-                      <height>151</height>
+                      <width>376</width>
+                      <height>156</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -494,32 +494,27 @@
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>305</height>
+               <height>319</height>
               </rect>
              </property>
              <attribute name="label">
               <string>&amp;About (credits and license)</string>
              </attribute>
              <layout class="QVBoxLayout" name="vl_Credits">
+              <property name="leftMargin">
+               <number>3</number>
+              </property>
+              <property name="topMargin">
+               <number>3</number>
+              </property>
+              <property name="rightMargin">
+               <number>3</number>
+              </property>
+              <property name="bottomMargin">
+               <number>3</number>
+              </property>
               <item>
-               <widget class="QTextBrowser" name="tbr_About">
-                <property name="documentTitle">
-                 <string>About swift</string>
-                </property>
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="html">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;About swift&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Credits will go here&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="openExternalLinks">
-                 <bool>true</bool>
-                </property>
-               </widget>
+               <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML"/>
               </item>
              </layout>
             </widget>
@@ -548,7 +543,7 @@ p, li { white-space: pre-wrap; }
                <x>0</x>
                <y>0</y>
                <width>392</width>
-               <height>113</height>
+               <height>116</height>
               </rect>
              </property>
              <attribute name="label">
@@ -777,6 +772,12 @@ p, li { white-space: pre-wrap; }
    <header>blackgui/components/dbusserveraddressselector.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CAboutHtmlComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/abouthtmlcomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>tbr_LatestNews</tabstop>
@@ -786,7 +787,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>rb_SwiftCoreAudioOnGui</tabstop>
   <tabstop>rb_SwiftCoreAudioOnCore</tabstop>
   <tabstop>sa_DataUpdates</tabstop>
-  <tabstop>tbr_About</tabstop>
   <tabstop>tb_SwiftGui</tabstop>
   <tabstop>tb_SwiftCore</tabstop>
   <tabstop>tb_SwiftMappingTool</tabstop>

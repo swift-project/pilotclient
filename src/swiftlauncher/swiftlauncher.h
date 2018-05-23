@@ -118,9 +118,6 @@ private:
     //! \sa CSwiftLauncher::displayLatestNews
     void loadLatestNews();
 
-    //! Load credits and legal info
-    void loadAbout();
-
     //! Start the core
     void startSwiftCore();
 
