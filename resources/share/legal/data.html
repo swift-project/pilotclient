@@ -7,7 +7,9 @@
 </head>
 <body>
 	<h1>Stored data</h1>
-	<table>
+	<table id="dataEN">
+		<col width="60%">
+		<col width="40%">
 		<tr>
 			<th colspan="2">Which private data do we store at "swift" and why?</th>
 		</tr>
@@ -18,18 +20,17 @@
 		<tr>
 			<td>
 			User accounts: The user accounts contain the real name (z.B. Joe Doe),
-			email, the Id number of the associated network (e.g. VATSIM), country of the user, 
-			user name (user account).
-			
+			email, the id number of the associated network (e.g. VATSIM), country of the user, 
+			user name (user account).<br>
 			With each login we log date and time, origin of login (e.g. via browser, the swift client),
-			furthermore creation time of the user account.
-			
-			Hint: User account in swift are normally subject of self administation, so the user can 
-			change the profile.
+			furthermore creation time of the user account.<br>
+			Hint: User accounts in swift are normally subject of self administation, so the user can 
+			change the profile and his email/name data and prefrerences.
 			</td>
 			<td>
 			The Email address is required for notifcation such as forgotten password.
-			The unique id is used for SSO (single sign on) with third party authentication systems (e.g. VATSIM)
+			The unique id is used for SSO (single sign on) with third party authentication systems (e.g. VATSIM).
+			Information about the location (country) are used for better user experience.
 			</td>
 		</tr>
 		<tr>
@@ -40,6 +41,16 @@
 			</td>
 			<td>
 			We store the change history in case we need to crosscheck and verify information.
+			</td>
+		</tr>
+		<tr>
+			<td>
+			In the swift clients you can enable to send crash reports, which will also send technical
+			information such as your IP and hardware info.
+			<a href="https://dev.swift-project.org/w/help/swiftgeneral/crashreports/">Further details are here.</a>
+			</td>
+			<td>
+			Helps us to improve the quality of swift.
 			</td>
 		</tr>
 		<tr>
@@ -116,7 +127,9 @@
 
 
 	<h1>Datenspeicherung</h1>
-	<table>
+	<table id="dataDE">
+		<col width="60%">
+		<col width="40%">
 		<tr>
 			<th colspan="2">Welche personenbezogenen Daten werden bei "swift" gespeichert und warum?</th>
 		</tr>
@@ -128,16 +141,15 @@
 			<td>
 			Benutzerkonten: Die Benutzerkonten umfassen den Realname (z.B. Joachim Mustermann),
 			email, die Id-Nummer des assoziierten Netzwerks (z.B. VATSIM), das Land des Benutzers, 
-			Nutzername (user account).
-			
+			Nutzername (user account).<br>
 			Bei jeder Anmeldung wird der Zeitpunkt gespeichert, weiterhin wie die Anmeldung erfolgte
-			(über den Web-Browser, über den swift client) und wann das Benutzerkonto erstellt wurde.
-			
-			Hinweis: Jeder Benutzer kann nach dem Login seine Stammdaten sehen und selbst ändern.
+			(über den Web-Browser, über den swift client) und wann das Benutzerkonto erstellt wurde.<br>
+			Hinweis: Jeder Benutzer kann nach dem Login seine Stammdaten sehen und selbst ändern.<br>
 			</td>
 			<td>
 			Die email wird für Benachrichtungen benötigt, z.B. wenn das Passwort vergessen wurde.
-			Die Id (z.B. VATSIM Benutzer Id) wird für den Single-Sign-On (SSO) benötigt. 
+			Die Id (z.B. VATSIM Benutzer Id) wird für den Single-Sign-On (SSO) benötigt.
+			Länderinformation werden zur bessern Benutzbarkeit unseres Angebotes genutzt.
 			</td>
 		</tr>
 		<tr>
@@ -149,6 +161,16 @@
 			<td>
 			Die Historie dient der Nachvollziehbarkeit der Änderungen, ggf.der Nachfrage und Korrektur
 			bei fehlerhaften/fragwürdigen Informationen.
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Im swift client kann man crash reports erlauben, bei diesen werden technische Informationen
+			wie Ihre IP Adresse oder Hardware Informationen gesendet.
+			<a href="https://dev.swift-project.org/w/help/swiftgeneral/crashreports/">Weitere Informationen.</a>
+			</td>
+			<td>
+			Hilft uns swift zu verbessern.
 			</td>
 		</tr>
 		<tr>

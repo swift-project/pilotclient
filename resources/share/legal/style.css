@@ -22,9 +22,7 @@ h2 {
   font-size: 1.10em;
 }
 
-iframe {
-	border: 0;
-}
+iframe { border: 0; }
 
 pre {
 	border-radius: 10px;
@@ -33,6 +31,14 @@ pre {
 	padding: 15px;
 	font: 100% Courier;
 	
+}
+
+table {
+	padding: 0.5em;
+}
+
+td {
+	padding: 0.5em;
 }
 
 th {
