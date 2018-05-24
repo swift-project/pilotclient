@@ -93,8 +93,11 @@ namespace BlackGui
         //! CMD line arguments
         void addWindowModeOption();
 
-        //! CMD line arguments
+        //! CMD line arguments (reset size store)
         void addWindowResetSizeOption();
+
+        //! CMD line arguments (scale size on DPI screens)
+        void addWindowScaleSizeOption();
 
         //! Window state
         Qt::WindowState getWindowState() const;
@@ -234,6 +237,9 @@ namespace BlackGui
         //! Uses the high DPI support?
         static bool isUsingHighDpiScreenSupport();
 
+        //! Parse scale factor if any
+        static qreal parseScaleFactor(int argc, char *argv[]);
+
     signals:
         //! Style sheet changed
         void styleSheetsChanged();
@@ -276,8 +282,9 @@ namespace BlackGui
         int m_minWidthChars  = -1; //!< min. width characters (based on current font metrics)
         int m_minHeightChars = -1; //!< min. height characters (based on current font metrics)
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
-        QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
-        QCommandLineOption m_cmdWindowSizeReset { "empty" };      //!< window size resizing
+        QCommandLineOption m_cmdWindowMode      { "empty" };      //!< window mode (flags: frameless ...)
+        QCommandLineOption m_cmdWindowSizeReset { "empty" };      //!< window size reset
+        QCommandLineOption m_cmdWindowScaleSize { "empty" };      //!< window scale size
         CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
         bool m_saveMainWidgetState = true;                        //!< save/restore main widget's state

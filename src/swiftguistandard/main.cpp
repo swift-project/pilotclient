@@ -23,7 +23,7 @@ using namespace BlackCore;
 int main(int argc, char *argv[])
 {
     //! [SwiftApplicationDemo]
-    CGuiApplication::highDpiScreenSupport();
+    CGuiApplication::highDpiScreenSupport(CGuiApplication::parseScaleFactor(argc, argv));
     QApplication qa(argc, argv);
     Q_UNUSED(qa); // application init needed
     CSwiftGuiStdApplication a; // application with contexts

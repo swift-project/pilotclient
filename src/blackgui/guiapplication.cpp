@@ -85,6 +85,7 @@ namespace BlackGui
     {
         this->addWindowModeOption();
         this->addWindowResetSizeOption();
+        this->addWindowScaleSizeOption();
 
         // notify when app goes down
         connect(qGuiApp, &QGuiApplication::lastWindowClosed, this, &CGuiApplication::gracefulShutdown);
@@ -117,9 +118,7 @@ namespace BlackGui
 
     void CGuiApplication::addWindowModeOption()
     {
-        m_cmdWindowMode = QCommandLineOption(QStringList() << "w" << "window",
-                                             QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."),
-                                             "windowtype");
+        m_cmdWindowMode = QCommandLineOption({"w", "window"}, QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."), "windowtype");
         this->addParserOption(m_cmdWindowMode);
     }
 
@@ -127,6 +126,14 @@ namespace BlackGui
     {
         m_cmdWindowSizeReset = QCommandLineOption({{"r", "resetsize"}, QCoreApplication::translate("main", "Reset window size (ignore saved values).")});
         this->addParserOption(m_cmdWindowSizeReset);
+    }
+
+    void CGuiApplication::addWindowScaleSizeOption()
+    {
+        // just added here to display it in help
+        // parseScaleFactor() is used since it is needed upfront (before application is created)
+        m_cmdWindowScaleSize = QCommandLineOption("scale", QCoreApplication::translate("main", "Scale: number."), "scalevalue");
+        this->addParserOption(m_cmdWindowScaleSize);
     }
 
     void CGuiApplication::addWindowStateOption()
@@ -259,7 +266,7 @@ namespace BlackGui
         else
         {
             QApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // DPI support
-            QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); //HiDPI pixmaps
+            QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); // HiDPI pixmaps
             const QString sf = QString::number(scaleFactor, 'f', 2);
             qputenv("QT_SCALE_FACTOR", sf.toLatin1());
         }
@@ -369,6 +376,22 @@ namespace BlackGui
         }
         html += "</table>\n";
         return html;
+    }
+
+    qreal CGuiApplication::parseScaleFactor(int argc, char *argv[])
+    {
+        for (int i = 1; i < argc; ++i)
+        {
+            if (qstrcmp(argv[i], "--scale") == 0 || qstrcmp(argv[i], "-scale") == 0)
+            {
+                if (i + 1 >= argc) { return -1.0; } // no value
+                const QString factor(argv[i + 1]);
+                bool ok;
+                qreal f = factor.toFloat(&ok);
+                return ok ? f : -1.0;
+            }
+        }
+        return -1.0;
     }
 
     bool CGuiApplication::cmdLineErrorMessage(const QString &errorMessage, bool retry) const
