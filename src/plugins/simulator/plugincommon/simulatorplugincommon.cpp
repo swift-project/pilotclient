@@ -48,7 +48,7 @@ namespace BlackSimPlugin
             if (!m_interpolationDisplay)
             {
                 QWidget *parentWidget = sGui ? sGui->mainApplicationWidget() : nullptr;
-                CInterpolationLogDisplayDialog *dialog = new CInterpolationLogDisplayDialog(this, parentWidget);
+                CInterpolationLogDisplayDialog *dialog = new CInterpolationLogDisplayDialog(this, nullptr, parentWidget);
                 m_interpolationDisplay = dialog;
             }
             m_interpolationDisplay->show();

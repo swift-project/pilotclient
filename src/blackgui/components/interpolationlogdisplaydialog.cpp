@@ -17,13 +17,22 @@ namespace BlackGui
 {
     namespace Components
     {
-        CInterpolationLogDisplayDialog::CInterpolationLogDisplayDialog(CSimulatorCommon *simulatorCommon, QWidget *parent) :
+        CInterpolationLogDisplayDialog::CInterpolationLogDisplayDialog(CSimulatorCommon *simulatorCommon, CAirspaceMonitor *airspaceMonitor, QWidget *parent) :
             QDialog(parent),
             ui(new Ui::CInterpolationLogDisplayDialog)
         {
             ui->setupUi(this);
             this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
             this->setSimulator(simulatorCommon);
+
+            if (airspaceMonitor)
+            {
+                this->setAirspaceMonitor(airspaceMonitor);
+            }
+            else
+            {
+                ui->comp_InterpolationLogDisplay->linkWithAirspaceMonitor();
+            }
         }
 
         CInterpolationLogDisplayDialog::~CInterpolationLogDisplayDialog()
@@ -32,6 +41,11 @@ namespace BlackGui
         void CInterpolationLogDisplayDialog::setSimulator(CSimulatorCommon *simulatorCommon)
         {
             ui->comp_InterpolationLogDisplay->setSimulator(simulatorCommon);
+        }
+
+        void CInterpolationLogDisplayDialog::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
+        {
+            ui->comp_InterpolationLogDisplay->setAirspaceMonitor(airspaceMonitor);
         }
     } // ns
 } // ns

@@ -124,6 +124,23 @@ namespace BlackCore
             virtual bool setClientGndCapability(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
             //! @}
 
+            //! \copydoc IContextNetwork::connectRawFsdMessageSignal
+            virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
+
+            //! Gracefully shut down, e.g. for thread safety
+            void gracefulShutdown();
+
+            //! \protected
+            //! \remarks normally only for core facade internal usage
+            //! \remarks public so values can be logged/monitored
+            //! @{
+            //! Network library
+            INetwork *network() const { return m_network; }
+
+            //! Airspace
+            CAirspaceMonitor *airspace() const { return m_airspace; }
+            //! @}
+
         public slots:
             // from context and provider interface
             //! \ingroup remoteaircraftprovider
@@ -222,27 +239,12 @@ namespace BlackCore
             //! @}
             // --------------------- IContextNetwork implementations ---------------------
 
-            //! Gracefully shut down, e.g. for thread safety
-            void gracefulShutdown();
-
-        public:
-            //! \copydoc IContextNetwork::connectRawFsdMessageSignal
-            virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
-
         protected:
             //! Constructor, with link to runtime
             CContextNetwork(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
             //! Register myself in DBus
             CContextNetwork *registerWithDBus(BlackMisc::CDBusServer *server);
-
-            //! Network library
-            //! \remarks normally only for core facade internal usage
-            INetwork *network() const { return m_network; }
-
-            //! Airspace
-            //! \remarks normally only for core facade internal usage
-            CAirspaceMonitor *airspace() const { return m_airspace; }
 
             //! Set the provider
             void setSimulationEnvironmentProvider(BlackMisc::Simulation::ISimulationEnvironmentProvider *provider);

@@ -20,6 +20,7 @@
 #include <QScopedPointer>
 #include <QPointer>
 
+namespace BlackCore { class CAirspaceMonitor; }
 namespace Ui { class CInterpolationLogDisplay; }
 namespace BlackGui
 {
@@ -33,6 +34,13 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Tabs
+            enum Tab
+            {
+                TabFlow,
+                TabTextLog
+            };
+
             //! Constructor
             explicit CInterpolationLogDisplay(QWidget *parent = nullptr);
 
@@ -41,6 +49,12 @@ namespace BlackGui
 
             //! Set simulator
             void setSimulator(BlackCore::CSimulatorCommon *simulatorCommon);
+
+            //! Set corresponding airspace monitor
+            void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
+
+            //! If possible link with airspace monitor
+            void linkWithAirspaceMonitor();
 
         private:
             //! Update log.
@@ -61,10 +75,31 @@ namespace BlackGui
             //! Stop displaying
             void stop();
 
+            //! Log the current callsign
+            bool logCallsign(const BlackMisc::Aviation::CCallsign &cs) const;
+
+            //! \copydoc BlackCore::CAirspaceMonitor::addedAircraftSituation
+            void onSituationAdded(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+            //! \copydoc BlackCore::CAirspaceMonitor::addedAircraftSituation
+            void onPartsAdded(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
+
+            //! \copydoc BlackCore::CSimulatorCommon::receivedRequestedElevation
+            void onElevationReceived(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! \copydoc BlackCore::CSimulatorCommon::requestedElevation
+            void onElevationRequested(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! Clear
+            void clear();
+
             QScopedPointer<Ui::CInterpolationLogDisplay> ui;
             QTimer m_updateTimer;
-            QPointer<BlackCore::CSimulatorCommon> m_simulatorCommon = nullptr; //!< related simulator
+            QPointer<BlackCore::CSimulatorCommon> m_simulatorCommon; //!< related simulator
+            QPointer<BlackCore::CAirspaceMonitor> m_airspaceMonitor; //!< related airspace monitor
             BlackMisc::Aviation::CCallsign m_callsign; //!< current callsign
+            int m_elvRequested = 0;
+            int m_elvReceived = 0;
 
             static const QString &startText();
             static const QString &stopText();

@@ -16,8 +16,12 @@
 #include <QScopedPointer>
 #include <QDialog>
 
+namespace BlackCore
+{
+    class CSimulatorCommon;
+    class CAirspaceMonitor;
+}
 namespace Ui { class CInterpolationLogDisplayDialog; }
-namespace BlackCore { class CSimulatorCommon; }
 namespace BlackGui
 {
     namespace Components
@@ -31,13 +35,18 @@ namespace BlackGui
 
         public:
             //! Constructor
-            explicit CInterpolationLogDisplayDialog(BlackCore::CSimulatorCommon *simulatorCommon, QWidget *parent = nullptr);
+            explicit CInterpolationLogDisplayDialog(
+                BlackCore::CSimulatorCommon *simulatorCommon, BlackCore::CAirspaceMonitor *airspaceMonitor,
+                QWidget *parent = nullptr);
 
             //! Destructor
             virtual ~CInterpolationLogDisplayDialog();
 
             //! Set simulator
             void setSimulator(BlackCore::CSimulatorCommon *simulatorCommon);
+
+            //! Set airspace monitor
+            void setAirspaceMonitor(BlackCore::CAirspaceMonitor *airspaceMonitor);
 
         private:
             QScopedPointer<Ui::CInterpolationLogDisplayDialog> ui;
