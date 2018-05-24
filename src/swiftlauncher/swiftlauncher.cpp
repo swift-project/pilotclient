@@ -357,6 +357,9 @@ QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs
 void CSwiftLauncher::startButtonPressed()
 {
     const QObject *sender = QObject::sender();
+    const qreal scaleFactor = ui->comp_Scale->getScaleFactor();
+    CGuiApplication::highDpiScreenSupport(scaleFactor);
+
     if (sender == ui->tb_SwiftGui)
     {
         if (this->setSwiftGuiExecutable())
