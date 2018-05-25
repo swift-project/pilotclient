@@ -9,12 +9,11 @@
 
 //! \file
 
-#ifndef BLACKGUI_CLIENTLISTMODEL_H
-#define BLACKGUI_CLIENTLISTMODEL_H
+#ifndef BLACKGUI_MODELS_CLIENTLISTMODEL_H
+#define BLACKGUI_MODELS_CLIENTLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/network/client.h"
 #include "blackmisc/network/clientlist.h"
 
 #include <QVariant>

@@ -168,13 +168,13 @@ namespace BlackMisc
         CVariant &operator =(const CVariant &other) = default;
 
         //! Move assignment operatior.
-        CVariant &operator =(CVariant && other) noexcept = default;
+        CVariant &operator =(CVariant &&other) noexcept = default;
 
         //! Change the internal QVariant
         CVariant &operator =(const QVariant &var) { m_v = var; return *this; }
 
         //! Change the internal QVariant
-        CVariant &operator =(QVariant && var) noexcept { m_v = std::move(var); return *this; }
+        CVariant &operator =(QVariant &&var) noexcept { m_v = std::move(var); return *this; }
 
         //! Swap this variant with another.
         void swap(CVariant &other) noexcept { m_v.swap(other.m_v); }

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef DBLOADDATADIALOG_H
-#define DBLOADDATADIALOG_H
+#ifndef BLACKGUI_COMPONENTS_DBLOADDATADIALOG_H
+#define BLACKGUI_COMPONENTS_DBLOADDATADIALOG_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/entityflags.h"
@@ -43,14 +43,6 @@ namespace BlackGui
             bool newerOrEmptyEntitiesDetected(BlackMisc::Network::CEntityFlags::Entity loadEntities);
 
         private:
-            QScopedPointer<Ui::CDbLoadDataDialog> ui;
-            BlackMisc::Network::CEntityFlags::Entity m_pendingEntities = BlackMisc::Network::CEntityFlags::NoEntity;
-            BlackMisc::Simulation::Data::CModelSetCaches m_sets { true, this }; //!< caches
-            BlackMisc::Simulation::Data::CModelCaches m_models  { true, this }; //!< models
-            int m_pendingEntitiesCount = -1;
-            bool m_consolidating = false; //! currently consolidating
-            bool m_autoConsolidate = false;
-
             //! The string list model
             QStringListModel *entitiesModel() const;
 
@@ -68,6 +60,14 @@ namespace BlackGui
 
             //! Consolidate
             void consolidate();
+
+            QScopedPointer<Ui::CDbLoadDataDialog> ui;
+            BlackMisc::Network::CEntityFlags::Entity m_pendingEntities = BlackMisc::Network::CEntityFlags::NoEntity;
+            BlackMisc::Simulation::Data::CModelSetCaches m_sets { true, this }; //!< caches
+            BlackMisc::Simulation::Data::CModelCaches m_models  { true, this }; //!< models
+            int m_pendingEntitiesCount = -1;
+            bool m_consolidating = false; //! currently consolidating
+            bool m_autoConsolidate = false;
         };
     } // ns
 } // ns

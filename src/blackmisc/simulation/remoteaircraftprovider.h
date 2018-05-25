@@ -387,7 +387,7 @@ namespace BlackMisc
 
             CSimulatedAircraftList m_aircraftInRange; //!< aircraft, thread safe access required
             QMap<Aviation::CCallsign, CStatusMessageList> m_reverseLookupMessages;
-            QMap<Aviation::CCallsign, CStatusMessageList> m_aircraftPartsHistory;
+            QMap<Aviation::CCallsign, CStatusMessageList> m_aircraftPartsHistory; //!< JSON aircraft parts history
             QMap<Aviation::CCallsign, qint64> m_situationsLastModified;
             QMap<Aviation::CCallsign, qint64> m_partsLastModified;
             QMap<Aviation::CCallsign, PhysicalQuantities::CLength> m_testOffset;

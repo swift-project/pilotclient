@@ -13,17 +13,17 @@
 #define BLACKGUI_VIEWBASE_H
 
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/menus/menuaction.h"
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/models/selectionmodel.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/settings/viewdirectorysettings.h"
-#include "blackgui/blackguiexport.h"
+#include "blackgui/menus/menuaction.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/variant.h"
+#include "blackgui/blackguiexport.h"
 
 #include <QAbstractItemView>
 #include <QFlags>

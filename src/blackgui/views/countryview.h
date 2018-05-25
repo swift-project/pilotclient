@@ -12,19 +12,18 @@
 #ifndef BLACKGUI_VIEWS_COUNTRYVIEW_H
 #define BLACKGUI_VIEWS_COUNTRYVIEW_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackgui/models/countrylistmodel.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/models/countrylistmodel.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/countrylist.h"
 
 class QWidget;
 
-namespace BlackMisc { class CCountry; }
 namespace BlackGui
 {
     namespace Views
     {
-        //! Distributors
+        //! Countries
         class BLACKGUI_EXPORT CCountryView : public CViewBase<Models::CCountryListModel, BlackMisc::CCountryList, BlackMisc::CCountry>
         {
         public:

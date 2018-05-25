@@ -242,11 +242,11 @@ namespace BlackMisc
             qint64 m_currentTimeMsSinceEpoch = -1;                       //!< current time
             Aviation::CAircraftSituationList m_currentSituations;        //!< current situations
             Aviation::CAircraftSituationChange m_currentSituationChange; //!< situations change
-            PhysicalQuantities::CLength m_currentSceneryOffset = PhysicalQuantities::CLength::null(); //!< calculated scenery offset if any
             CInterpolationAndRenderingSetupPerCallsign m_currentSetup;   //!< used setup
             CInterpolationStatus m_currentInterpolationStatus;           //!< this step's status
             CPartsStatus m_currentPartsStatus;                           //!< this step's status
-            Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() }; //!< latest interpolation
+            Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() };  //!< latest interpolation
+            PhysicalQuantities::CLength m_currentSceneryOffset { PhysicalQuantities::CLength::null() }; //!< calculated scenery offset if any
 
             qint64 m_situationsLastModified     { -1 }; //!< when situations were last modified
             qint64 m_situationsLastModifiedUsed { -1 }; //!< interpolant based on situations last updated

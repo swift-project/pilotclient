@@ -135,24 +135,17 @@ namespace BlackCore
         if (m_highlightedAircraft.isEmpty() || m_highlightEndTimeMsEpoch < 1) { return; }
         m_blinkCycle = !m_blinkCycle;
 
-        if (QDateTime::currentMSecsSinceEpoch() < m_highlightEndTimeMsEpoch)
-        {
-            // blink mode, toggle aircraft
-            for (const CSimulatedAircraft &aircraft : as_const(m_highlightedAircraft))
-            {
-                if (m_blinkCycle)
-                {
-                    this->callPhysicallyRemoveRemoteAircraft(aircraft.getCallsign());
-                }
-                else
-                {
-                    this->callPhysicallyAddRemoteAircraft(aircraft); // blink
-                }
-            }
-        }
-        else
+        if (QDateTime::currentMSecsSinceEpoch() > m_highlightEndTimeMsEpoch)
         {
             this->stopHighlighting();
+            return;
+        }
+
+        // blink mode, toggle aircraft
+        for (const CSimulatedAircraft &aircraft : as_const(m_highlightedAircraft))
+        {
+            if (m_blinkCycle) { this->callPhysicallyRemoveRemoteAircraft(aircraft.getCallsign()); }
+            else { this->callPhysicallyAddRemoteAircraft(aircraft);  }
         }
     }
 
