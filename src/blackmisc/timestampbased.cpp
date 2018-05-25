@@ -242,7 +242,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexUtcTimestamp: this->setUtcTimestamp(variant.toDateTime()); return;
-            case IndexMSecsSinceEpoch: this->setMSecsSinceEpoch(variant.toInt()); return;
+            case IndexMSecsSinceEpoch: this->setMSecsSinceEpoch(variant.toQInt64()); return;
             case IndexUtcTimestampFormattedYmdhms:
             case IndexUtcTimestampFormattedYmdhmsz:
             case IndexUtcTimestampFormattedHm:

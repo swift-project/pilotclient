@@ -69,6 +69,12 @@ namespace BlackMisc
         return isIntegral() || type() == QMetaType::Float || type() == QMetaType::Double;
     }
 
+    qint64 CVariant::toQInt64(bool *ok) const
+    {
+        if (this->type() == QMetaType::LongLong) { return this->toLongLong(ok); }
+        return this->toInt(ok);
+    }
+
     int CVariant::compareImpl(const CVariant &a, const CVariant &b)
     {
         if (a.userType() < b.userType()) { return -1; }

@@ -406,7 +406,28 @@ namespace BlackGui
 
         CVariant CIntegerFormatter::displayRole(const CVariant &expectedInteger) const
         {
-            return QString::number(expectedInteger.toInt());
+            bool ok = false;
+            switch (expectedInteger.type())
+            {
+            case QMetaType::LongLong:
+                {
+                    const qlonglong ll = expectedInteger.toLongLong(&ok);
+                    if (ok) { return QString::number(ll); }
+                    break;
+                }
+            case QMetaType::ULongLong:
+                {
+                    const qulonglong ll = expectedInteger.toULongLong(&ok);
+                    if (ok) { return QString::number(ll); }
+                    break;
+                }
+            default:
+                break;
+            }
+
+            const int i = expectedInteger.toInt(&ok);
+            if (ok) { return QString::number(i); }
+            return CVariant();
         }
     } // namespace
 } // namespace

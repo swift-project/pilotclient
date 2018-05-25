@@ -83,6 +83,7 @@ namespace BlackMisc
             static bool baseIsA(const void *, int) { return false; }
         };
 
+        // *INDENT-OFF*
         /*!
          * When a derived class and a base class both inherit from Mixin::MetaType,
          * the derived class uses this macro to disambiguate the inherited members.
@@ -92,6 +93,7 @@ namespace BlackMisc
             using ::BlackMisc::Mixin::MetaType<DERIVED>::getMetaTypeId;         \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::getClassName;          \
             using ::BlackMisc::Mixin::MetaType<DERIVED>::isA;
+        // *INDENT-ON*
 
     } // Mixin
 
@@ -244,13 +246,25 @@ namespace BlackMisc
         bool toBool() const { return m_v.toBool(); }
 
         //! Convert this variant to an integer.
-        int toInt() const { return m_v.toInt(); }
+        int toInt(bool *ok = nullptr) const { return m_v.toInt(ok); }
+
+        //! Convert this variant to a longlong integer.
+        qlonglong toLongLong(bool *ok = nullptr) const { return m_v.toLongLong(ok); }
+
+        //! Convert this variant to a unsigned longlong integer.
+        qulonglong toULongLong(bool *ok = nullptr) const { return m_v.toULongLong(ok); }
+
+        //! COnvert to qint64, which is used for all timestamps
+        qint64 toQInt64(bool *ok = nullptr) const;
 
         //! Convert this variant to double.
-        double toDouble() const { return m_v.toDouble(); }
+        double toDouble(bool *ok = nullptr) const { return m_v.toDouble(ok); }
 
         //! Convert this variant to QDateTime.
         QDateTime toDateTime() const { return m_v.toDateTime(); }
+
+        //! Convert this variant to QUrl.
+        QUrl toUrl() const { return m_v.toUrl(); }
 
         //! Set the variant to null.
         void clear() { m_v.clear(); }
