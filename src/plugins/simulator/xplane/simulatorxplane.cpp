@@ -135,6 +135,7 @@ namespace BlackSimPlugin
                                                     pos.longitude().value(CAngleUnit::deg()),
                                                     pos.geodeticHeight().value(CLengthUnit::m()),
                                                     callback);
+            emit this->requestedElevation(callsign);
             return true;
         }
 

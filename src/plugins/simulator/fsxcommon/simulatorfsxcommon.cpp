@@ -276,6 +276,7 @@ namespace BlackSimPlugin
             if (hr == S_OK)
             {
                 this->requestTerrainProbeData(callsign);
+                emit this->requestedElevation(callsign);
             }
             else
             {

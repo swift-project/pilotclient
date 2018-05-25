@@ -106,6 +106,7 @@ namespace BlackSimPlugin
             if (hr == S_OK)
             {
                 ok = true;
+                emit this->requestedElevation(callsign);
                 m_pendingProbeRequests.insert(requestId, callsign);
             }
             else

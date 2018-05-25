@@ -237,6 +237,9 @@ namespace BlackCore
         //! Request a console message (whatever the console maybe)
         void requestUiConsoleMessage(const QString &driverMessage, bool clear);
 
+        //! Requested elevation, call pending
+        void requestedElevation(const BlackMisc::Aviation::CCallsign &callsign);
+
         //! A requested elevation has been received
         void receivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
