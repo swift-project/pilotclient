@@ -168,6 +168,7 @@ namespace BlackMisc
             case IndexHeading: return m_heading.propertyByIndex(index.copyFrontRemoved());
             case IndexPitch: return m_pitch.propertyByIndex(index.copyFrontRemoved());
             case IndexBank: return m_bank.propertyByIndex(index.copyFrontRemoved());
+            case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundSpeed: return m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundElevationPlane: return m_groundElevationPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
@@ -190,6 +191,7 @@ namespace BlackMisc
             case IndexPosition: m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexPitch: m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexBank: m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexCG: m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexGroundSpeed: m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexGroundElevationPlane: m_groundElevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -210,6 +212,7 @@ namespace BlackMisc
             case IndexAltitude: return this->getAltitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
             case IndexPitch: return m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
             case IndexBank: return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
+            case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
             case IndexGroundSpeed: return m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
             case IndexGroundElevationPlane: return m_groundElevationPlane.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundElevationPlane());
             case IndexCallsign: return m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());

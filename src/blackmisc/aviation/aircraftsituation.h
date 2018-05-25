@@ -67,7 +67,8 @@ namespace BlackMisc
                 IndexPitch,
                 IndexGroundSpeed,
                 IndexGroundElevationPlane,
-                IndexCallsign
+                IndexCallsign,
+                IndexCG
             };
 
             //! Is on ground?
