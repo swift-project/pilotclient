@@ -44,26 +44,17 @@ namespace BlackGui
 
         QVariant CListModelBaseNonTemplate::headerData(int section, Qt::Orientation orientation, int role) const
         {
-            if (orientation != Qt::Horizontal)
-            {
-                return QVariant();
-            }
-            bool handled = (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == Qt::InitialSortOrderRole);
-            if (!handled)
-            {
-                return QVariant();
-            }
-            if (section < 0 || section >= m_columns.size())
-            {
-                return QVariant();
-            }
+            if (orientation != Qt::Horizontal) { return QVariant(); }
+            const bool handled = (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == Qt::InitialSortOrderRole);
+            if (!handled) { return QVariant(); }
+            if (section < 0 || section >= m_columns.size()) { return QVariant(); }
 
             if (role == Qt::DisplayRole)
             {
                 QString header = m_columns.at(section).getColumnName(false);
                 return QVariant(header);
             }
-            else if (role == Qt::ToolTipRole)
+            if (role == Qt::ToolTipRole)
             {
                 QString header = m_columns.at(section).getColumnToolTip(false);
                 return header.isEmpty() ? QVariant() : QVariant(header);
@@ -375,8 +366,8 @@ namespace BlackGui
             if (index.row() >= m_container.size()) { return; }
             m_container[index.row()] = object;
 
-            QModelIndex i1 = index.sibling(index.row(), 0);
-            QModelIndex i2 = index.sibling(index.row(), this->columnCount(index) - 1);
+            const QModelIndex i1 = index.sibling(index.row(), 0);
+            const QModelIndex i2 = index.sibling(index.row(), this->columnCount(index) - 1);
             emit this->dataChanged(i1, i2); // which range has been changed
         }
 
@@ -777,6 +768,8 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, true>;
+        template class CListModelBase<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>;
+        template class CListModelBase<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList, true>;
         template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList, true>;
         template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList, true>;
         template class CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList, false>;

@@ -12,11 +12,11 @@
 #ifndef BLACKGUI_LISTMODELBASE_H
 #define BLACKGUI_LISTMODELBASE_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackgui/dropbase.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/models/selectionmodel.h"
+#include "blackgui/dropbase.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/variant.h"
 
