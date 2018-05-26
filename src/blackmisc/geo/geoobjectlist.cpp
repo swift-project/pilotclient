@@ -100,7 +100,8 @@ namespace BlackMisc
         typename IGeoObjectList<OBJ, CONTAINER>::MinMaxAverageHeight IGeoObjectList<OBJ, CONTAINER>::findMinMaxAverageHeight() const
         {
             MinMaxAverageHeight stats{ CAltitude::null(), CAltitude::null(), CAltitude::null(), 0 };
-            int c = 0;
+            if (this->container().isEmpty()) { return stats; } // avoid div by zero
+            int count = 0;
             double avgFt = 0;
             for (const OBJ &obj : this->container())
             {
@@ -108,17 +109,18 @@ namespace BlackMisc
                 const CAltitude alt = obj.geodeticHeight();
                 if (std::get<0>(stats).isNull() || std::get<0>(stats) > alt)
                 {
-                    std::get<0>(stats) = alt;
+                    std::get<0>(stats) = alt; // min.
                 }
                 if (std::get<1>(stats).isNull() || std::get<1>(stats) < alt)
                 {
-                    std::get<1>(stats) = alt;
+                    std::get<1>(stats) = alt; //max.
                 }
-                avgFt += alt.value(CLengthUnit::ft());
+                avgFt += alt.value(CLengthUnit::ft()); // add up
+                count++;
             }
 
-            std::get<2>(stats) = CAltitude(avgFt / c, CAltitude::MeanSeaLevel, CLengthUnit::ft());
-            std::get<3>(stats) = c;
+            if (count > 0) { std::get<2>(stats) = CAltitude(avgFt / count, CAltitude::MeanSeaLevel, CLengthUnit::ft()); }
+            std::get<3>(stats) = count;
             return stats;
         }
 
