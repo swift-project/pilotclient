@@ -334,7 +334,7 @@ namespace BlackGui
         void CDbOwnModelSetComponent::showAirlineAircraftMatrix() const
         {
             const CAircraftModelList set(this->getModelSetFromView());
-            const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(set, sGui->getTemporaryDirectory());
+            const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(set, CGuiApplication::getTemporaryDirectory());
             if (file.isEmpty()) { return; }
             QDesktopServices::openUrl(QUrl::fromLocalFile(file));
         }

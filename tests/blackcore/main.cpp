@@ -32,12 +32,11 @@ int main(int argc, char *argv[])
     a.addVatlibOptions();
     const bool setup = a.parseAndSynchronizeSetup();
     if (!setup) { qWarning() << "No setup loaded"; }
-    if (!a.start())
+    int r = EXIT_FAILURE;
+    if (a.start())
     {
-        a.gracefulShutdown();
-        return EXIT_FAILURE;
+        r = CBlackCoreTestMain::unitMain(argc, argv);
     }
-    const int r = CBlackCoreTestMain::unitMain(argc, argv);
     a.gracefulShutdown();
     return r;
 }

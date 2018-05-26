@@ -359,8 +359,10 @@ namespace BlackCore
             // crashpad dump
             if (this->isSet(m_cmdTestCrashpad))
             {
+                QPointer<CApplication> myself(this);
                 QTimer::singleShot(10 * 1000, [ = ]
                 {
+                    if (!myself) { return; }
 #ifdef BLACK_USE_CRASHPAD
                     CRASHPAD_SIMULATE_CRASH();
 #else
@@ -547,7 +549,7 @@ namespace BlackCore
                CSettingsCache::instance()->saveToStore(keys);
     }
 
-    QString CApplication::getTemporaryDirectory() const
+    QString CApplication::getTemporaryDirectory()
     {
         static const QTemporaryDir tempDir;
         if (tempDir.isValid()) { return tempDir.path(); }

@@ -184,11 +184,11 @@ namespace BlackCore
         //! Comprehensive info
         QString getInfoString(const QString &separator) const;
 
-        //! Directory for temporary files
-        QString getTemporaryDirectory() const;
-
         //! Stop and restart application
         void restartApplication(const QStringList &newArguments = {}, const QStringList &removeArguments = {});
+
+        //! Directory for temporary files
+        static QString getTemporaryDirectory();
 
         //! Register as running
         //! \note Normally done automatically when CApplication::exec is called
