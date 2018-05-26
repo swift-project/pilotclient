@@ -114,6 +114,12 @@ namespace BlackCore
         //!  Counter removed aircraft
         int getStatisticsPhysicallyRemovedAircraft() const { return m_statsPhysicallyRemovedAircraft; }
 
+        //! Average update time in ms
+        qint64 getStatisticsAverageUpdateTimeMs() const { return m_statsUpdateAircraftTimeAvgMs; }
+
+        //! Total update time in ms
+        qint64 getStatisticsTotalUpdateTimeMs() const { return m_statsUpdateAircraftTimeTotalMs; }
+
         //! Access to logger
         const BlackMisc::Simulation::CInterpolationLogger &interpolationLogger() const { return m_interpolationLogger; }
 
