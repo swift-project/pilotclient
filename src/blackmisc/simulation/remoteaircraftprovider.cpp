@@ -232,6 +232,8 @@ namespace BlackMisc
                 BLACK_VERIFY_X(situationList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong sort order");
                 BLACK_VERIFY_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
             }
+
+            emit this->addedAircraftSituation(situation);
         }
 
         void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool removeOutdated)
@@ -266,6 +268,22 @@ namespace BlackMisc
                 const int c = situationList.adjustGroundFlag(parts);
                 if (c > 0) { m_situationsLastModified[callsign] = ts; }
             }
+
+            // update aircraft
+            {
+                QWriteLocker l(&m_lockAircraft);
+                const int c = m_aircraftInRange.setAircraftPartsSynchronized(callsign, parts);
+                Q_UNUSED(c);
+            }
+
+            // update parts
+            {
+                // aircraft supporting parts
+                QWriteLocker l(&m_lockParts);
+                m_aircraftWithParts.insert(callsign); // mark as callsign which supports parts
+            }
+
+            emit this->addedAircraftParts(callsign, parts);
         }
 
         void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset)
@@ -306,21 +324,6 @@ namespace BlackMisc
 
             // store part history (parts always absolute)
             this->storeAircraftParts(callsign, parts, false);
-
-            // update aircraft
-            {
-                QWriteLocker l(&m_lockAircraft);
-                const int c = m_aircraftInRange.setAircraftPartsSynchronized(callsign, parts);
-                Q_UNUSED(c);
-            }
-
-            // update parts
-            {
-                // aircraft supporting parts
-                QWriteLocker l(&m_lockParts);
-                m_aircraftWithParts.insert(callsign); // mark as callsign which supports parts
-            }
-            emit this->addedAircraftParts(callsign, parts);
 
             // history
             if (this->isAircraftPartsHistoryEnabled())
