@@ -28,6 +28,7 @@
 #include <QStackedWidget>
 #include <QtGlobal>
 #include <QDesktopServices>
+#include <QMessageBox>
 
 using namespace BlackConfig;
 using namespace BlackGui;
@@ -163,6 +164,14 @@ void SwiftGuiStd::initMenus()
 void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
 {
     const QString xPlaneRootDir = ui->comp_MainInfoArea->getSettingsComponent()->getSimulatorSettings(CSimulatorInfo::XPLANE).getSimulatorDirectoryOrDefault();
+    const QDir xpDir(xPlaneRootDir);
+    if (!xpDir.exists())
+    {
+        if (checkFileTimestamp) { return; }
+        QMessageBox::warning(this, tr("Copy XSwiftBus"), tr("XPlane directory does not exists!"), QMessageBox::Close);
+        return;
+    }
+
     const int c = CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(xPlaneRootDir, checkFileTimestamp, this);
     if (c > 0) { CLogMessage(this).info("Copied %1 files from build directory") << c; }
 }
