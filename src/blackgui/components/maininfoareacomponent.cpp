@@ -14,6 +14,7 @@
 #include "ui_maininfoareacomponent.h"
 
 #include <QIcon>
+#include <QGuiApplication>
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -106,6 +107,20 @@ namespace BlackGui
         {
             ui->comp_Log->displayConsole();
             this->selectArea(InfoAreaLog);
+        }
+
+        void CMainInfoAreaComponent::selectArea(CMainInfoAreaComponent::InfoArea infoArea)
+        {
+            CInfoArea::selectArea(static_cast<int>(infoArea));
+            if (infoArea == InfoAreaSettings)
+            {
+                // pressing shift will go to overview
+                const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
+                if (km.testFlag(Qt::ShiftModifier))
+                {
+                    ui->comp_Settings->setSettingsOverviewTab();
+                }
+            }
         }
 
         void CMainInfoAreaComponent::selectLog()

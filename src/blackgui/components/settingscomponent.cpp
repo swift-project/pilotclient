@@ -54,16 +54,16 @@ namespace BlackGui
             ui->comp_DataLoadOverview->showVisibleLoadAllButtons(false, false);
 
             connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this, &CSettingsComponent::changedWindowsOpacity);
-            connect(ui->pb_Advanced, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_Audio, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_Gui, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_Hotkeys, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_Network, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_Servers, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_Simulator, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_SimulatorBasics, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_DataLoadAndCaches, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
-            connect(ui->pb_SimulatorMessages, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
+            connect(ui->pb_Advanced, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_Audio, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_Gui, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_Hotkeys, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_Network, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_Servers, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_Simulator, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_SimulatorBasics, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_DataLoadAndCaches, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
+            connect(ui->pb_SimulatorMessages, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
 
             this->initActions();
         }
@@ -77,49 +77,50 @@ namespace BlackGui
             a = new QAction(this);
             a->setObjectName("overview");
             a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_O));
-            connect(a, &QAction::triggered, this, &CSettingsComponent::ps_actionTriggered);
+            connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
+            ui->lbl_Hint->setText("Hint: See tooltips for shortcuts, \"ALT+S, O\" for overview.");
 
             a = new QAction(this);
             a->setObjectName("audio");
             a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_A));
             ui->pb_Audio->setToolTip(a->shortcut().toString());
-            connect(a, &QAction::triggered, this, &CSettingsComponent::ps_actionTriggered);
+            connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("data");
             a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_D));
             ui->pb_DataLoadAndCaches->setToolTip(a->shortcut().toString());
-            connect(a, &QAction::triggered, this, &CSettingsComponent::ps_actionTriggered);
+            connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("gui");
             a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_G));
             ui->pb_Gui->setToolTip(a->shortcut().toString());
-            connect(a, &QAction::triggered, this, &CSettingsComponent::ps_actionTriggered);
+            connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("hotkeys");
             a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_H));
             ui->pb_Hotkeys->setToolTip(a->shortcut().toString());
-            connect(a, &QAction::triggered, this, &CSettingsComponent::ps_actionTriggered);
+            connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("network");
             a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_N));
             ui->pb_Network->setToolTip(a->shortcut().toString());
-            connect(a, &QAction::triggered, this, &CSettingsComponent::ps_actionTriggered);
+            connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
 
             a = new QAction(this);
             a->setObjectName("simulator");
             a->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S, Qt::Key_S));
             ui->pb_Simulator->setToolTip(a->shortcut().toString());
-            connect(a, &QAction::triggered, this, &CSettingsComponent::ps_actionTriggered);
+            connect(a, &QAction::triggered, this, &CSettingsComponent::onActionTriggered);
             this->addAction(a);
         }
 
@@ -138,12 +139,17 @@ namespace BlackGui
             this->setCurrentIndex(static_cast<int>(tab));
         }
 
+        void CSettingsComponent::setSettingsOverviewTab()
+        {
+            this->setSettingsTab(SettingTabOverview);
+        }
+
         void CSettingsComponent::setGuiOpacity(double value)
         {
             ui->comp_SettingsGuiGeneral->setGuiOpacity(value);
         }
 
-        void CSettingsComponent::ps_overviewButtonClicked()
+        void CSettingsComponent::onOverviewButtonClicked()
         {
             const QObject *sender = QObject::sender();
             if (sender == ui->pb_Advanced) { this->setCurrentIndex(SettingTabAdvanced); return; }
@@ -159,7 +165,7 @@ namespace BlackGui
             this->setCurrentIndex(SettingTabOverview);
         }
 
-        void CSettingsComponent::ps_actionTriggered()
+        void CSettingsComponent::onActionTriggered()
         {
             const QString a = QObject::sender()->objectName().toLower().trimmed();
             if (a.isEmpty()) { return; }

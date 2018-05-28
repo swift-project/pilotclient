@@ -321,13 +321,7 @@ namespace BlackGui
 
     void CDockWidget::keyPressEvent(QKeyEvent *event)
     {
-        if (event->key() == Qt::Key_Escape)
-        {
-            if (this->isFloating())
-            {
-                this->toggleFloating();
-            }
-        }
+        if (event->key() == Qt::Key_Escape && this->isFloating()) { this->toggleFloating(); }
         QDockWidget::keyPressEvent(event);
     }
 

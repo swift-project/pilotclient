@@ -116,15 +116,15 @@ namespace BlackGui
             }
             else if (senderButton == ui->pb_CockpitIdent && sGui->getIContextOwnAircraft())
             {
-                emit identPressed();
+                emit this->identPressed();
             }
             else if (senderButton == ui->pb_Opacity050)
             {
-                emit changedOpacity(50);
+                emit this->changedOpacity(50);
             }
             else if (senderButton == ui->pb_Opacity100)
             {
-                emit changedOpacity(100);
+                emit this->changedOpacity(100);
             }
             else if (senderButton == ui->pb_SoundMaxVolume && sGui->getIContextAudio())
             {

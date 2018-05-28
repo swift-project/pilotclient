@@ -120,10 +120,10 @@ namespace BlackGui
 
             const bool v = messagesDetail->ui->form_StatusMessage->isVisible();
             const QString formString(v ? "Hide log details" : "Show log details");
-            this->m_action = menuActions.addAction(this->m_action, BlackMisc::CIcons::databaseTable16(), formString,
+            m_action = menuActions.addAction(m_action, BlackMisc::CIcons::databaseTable16(), formString,
                                                    CMenuAction::pathLog(), { messagesDetail->ui->form_StatusMessage, &CStatusMessageForm::toggleVisibility});
-            this->m_action->setCheckable(true);
-            this->m_action->setChecked(v);
+            m_action->setCheckable(true);
+            m_action->setChecked(v);
         }
     } // ns
 } // ns

@@ -61,6 +61,15 @@ namespace BlackGui
             //! Settings for given simulator
             BlackMisc::Simulation::Settings::CSpecializedSimulatorSettings getSimulatorSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
+            //! Set the tab
+            void setSettingsTab(SettingTab tab);
+
+            //! Set the overview tab
+            void setSettingsOverviewTab();
+
+            //! GUI Opacity 0-100%
+            void setGuiOpacity(double value);
+
         signals:
             //! Change the windows opacity 0..100
             void changedWindowsOpacity(int opacity);
@@ -74,21 +83,13 @@ namespace BlackGui
             //! Update interval changed (users)
             void changedUsersUpdateInterval(int seconds);
 
-        public slots:
-            //! Set the tab
-            void setSettingsTab(SettingTab tab);
-
-            //! GUI Opacity 0-100%
-            void setGuiOpacity(double value);
-
-        private slots:
+        private:
             //! An overview button was clicked
-            void ps_overviewButtonClicked();
+            void onOverviewButtonClicked();
 
             //! Action triggered
-            void ps_actionTriggered();
+            void onActionTriggered();
 
-        private:
             //! Init actions
             void initActions();
 

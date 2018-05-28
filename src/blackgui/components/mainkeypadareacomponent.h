@@ -34,8 +34,7 @@ namespace BlackGui
     {
         //! Main keypad area as used with main info area
         //! \sa CMainInfoAreaComponent
-        class BLACKGUI_EXPORT CMainKeypadAreaComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CMainKeypadAreaComponent : public QFrame
         {
             Q_OBJECT
 

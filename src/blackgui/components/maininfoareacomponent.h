@@ -118,7 +118,7 @@ namespace BlackGui
             void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }
 
             //! Select area
-            void selectArea(InfoArea infoArea) { CInfoArea::selectArea(static_cast<int>(infoArea)); }
+            void selectArea(InfoArea infoArea);
 
             //! Select log
             void selectLog();

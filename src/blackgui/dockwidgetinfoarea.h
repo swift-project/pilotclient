@@ -44,7 +44,7 @@ namespace BlackGui
         //! The parent info area
         CInfoArea *getParentInfoArea();
 
-        //! Is this the selected widget, means it is not floating, and the one selected
+        //! Is this the selected widget, means it is not floating, and it is the one selected
         bool isSelectedDockWidget() const;
 
         //! Visible widget
@@ -69,7 +69,6 @@ namespace BlackGui
         //! The parent info areas
         const QList<const CInfoArea *> findParentInfoAreas() const;
     };
-
 } // namespace
 
 #endif // guard

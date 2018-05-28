@@ -259,12 +259,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="minimumSize">
-         <size>
-          <width>62</width>
-          <height>22</height>
-         </size>
-        </property>
         <property name="text">
          <string>100%</string>
         </property>
@@ -307,6 +301,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="toolTip">
+         <string>Use &quot;SHIFT&quot; for overview</string>
+        </property>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
         </property>
@@ -325,12 +322,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>62</width>
-          <height>22</height>
-         </size>
         </property>
         <property name="text">
          <string>50%</string>
@@ -423,7 +414,22 @@
   <tabstop>pb_MainAircrafts</tabstop>
   <tabstop>pb_MainAtc</tabstop>
   <tabstop>pb_MainUsers</tabstop>
+  <tabstop>pb_MainCockpit</tabstop>
   <tabstop>pb_MainSimulator</tabstop>
+  <tabstop>pb_MainMappings</tabstop>
+  <tabstop>pb_MainInterpolation</tabstop>
+  <tabstop>pb_MainTextMessages</tabstop>
+  <tabstop>pb_MainFlightplan</tabstop>
+  <tabstop>pb_MainLog</tabstop>
+  <tabstop>pb_MainSettings</tabstop>
+  <tabstop>pb_MainWeather</tabstop>
+  <tabstop>pb_Empty</tabstop>
+  <tabstop>pb_SoundMaxVolume</tabstop>
+  <tabstop>pb_Opacity100</tabstop>
+  <tabstop>pb_CockpitIdent</tabstop>
+  <tabstop>pb_Audio</tabstop>
+  <tabstop>pb_SoundMute</tabstop>
+  <tabstop>pb_Opacity050</tabstop>
  </tabstops>
  <resources/>
  <connections/>
