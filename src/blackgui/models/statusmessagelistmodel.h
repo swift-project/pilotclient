@@ -13,8 +13,7 @@
 #define BLACKGUI_STATUSMESSAGELISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/models/listmodelbase.h"
-#include "blackmisc/statusmessage.h"
+#include "blackgui/models/listmodeltimestampobjects.h"
 #include "blackmisc/statusmessagelist.h"
 
 class QObject;
@@ -24,9 +23,10 @@ namespace BlackGui
     namespace Models
     {
         /*!
-         * Server list model
+         * Status message list model
          */
-        class BLACKGUI_EXPORT CStatusMessageListModel : public CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>
+        class BLACKGUI_EXPORT CStatusMessageListModel :
+            public CListModelTimestampObjects<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>
         {
         public:
             //! Mode

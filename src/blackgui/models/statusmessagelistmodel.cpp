@@ -23,7 +23,7 @@ namespace BlackGui
     namespace Models
     {
         CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
-            CListModelBase<CStatusMessage, CStatusMessageList, true>("ViewStatusMessageList", parent)
+            CListModelTimestampObjects<CStatusMessage, CStatusMessageList, true>("ViewStatusMessageList", parent)
         {
             this->setMode(Detailed);
 

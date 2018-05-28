@@ -76,7 +76,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CStatusMessagesDetail> ui;
             int m_maxLogMessages = -1;
-            BlackMisc::CStatusMessageList m_pending;
+            BlackMisc::CStatusMessageList m_pending; //!< pending messages which will be added with next CStatusMessagesDetail::deferredUpdate
             BlackMisc::CDigestSignal m_dsDeferredUpdate  { this, &CStatusMessagesDetail::deferredUpdate, 2000, 10 };
 
             //! Do not update each message, but deferred

@@ -26,6 +26,7 @@ namespace BlackGui
             connect(ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, ui->form_StatusMessage, &CStatusMessageForm::setVariant);
             connect(ui->tvp_StatusMessages, &CStatusMessageView::modelDataChangedDigest, this, &CStatusMessagesDetail::modelDataChangedDigest);
             ui->tvp_StatusMessages->setAutoResizeFrequency(3);
+            ui->tvp_StatusMessages->setSorting(CStatusMessage::IndexUtcTimestamp, Qt::DescendingOrder);
             ui->tvp_StatusMessages->setCustomMenu(new CMessageMenu(this));
             ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
             this->showFilterBar(); // default
@@ -37,14 +38,14 @@ namespace BlackGui
         void CStatusMessagesDetail::appendStatusMessageToList(const CStatusMessage &message)
         {
             if (message.isEmpty()) { return; }
-            m_pending.push_back(message);
+            m_pending.push_front(message); // in many cases we want to havethe latest "on top"
             m_dsDeferredUpdate.inputSignal();
         }
 
         void CStatusMessagesDetail::appendStatusMessagesToList(const CStatusMessageList &messages)
         {
             if (messages.isEmpty()) { return; }
-            m_pending.push_back(messages);
+            m_pending.push_front(messages);
             m_dsDeferredUpdate.inputSignal();
         }
 
@@ -93,9 +94,9 @@ namespace BlackGui
             m_pending.clear();
 
             CStatusMessageList newMsgs(ui->tvp_StatusMessages->container());
-            newMsgs.push_back(add);
+            newMsgs.push_front(add); // default in many cases, latest first
 
-            // do not remove every time, but when a threshold is reached
+            // cleanup outdated: do not remove every time, but when a threshold is reached
             if (m_maxLogMessages < 0)
             {
                 // do not restrict

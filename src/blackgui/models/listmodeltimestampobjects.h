@@ -25,20 +25,32 @@ namespace BlackGui
 {
     namespace Models
     {
-        //! List model for timestamp based objects
+        //! List model for timestamp based objects with offset
         template <typename ObjectType, typename ContainerType, bool UseCompare = false> class CListModelTimestampObjects :
             public CListModelBase<ObjectType, ContainerType, UseCompare>
         {
+        protected:
+            //! Constructor
+            CListModelTimestampObjects(const QString &translationContext, QObject *parent = nullptr);
+
+            //! Standard timestamp columns
+            void addTimestampColumns();
+        };
+
+        //! List model for timestamp based objects with offset
+        template <typename ObjectType, typename ContainerType, bool UseCompare = false> class CListModelTimestampWithOffsetObjects :
+            public CListModelTimestampObjects<ObjectType, ContainerType, UseCompare>
+        {
         public:
             //! Destructor
-            virtual ~CListModelTimestampObjects() {}
+            virtual ~CListModelTimestampWithOffsetObjects() {}
 
             //! Insert as first element by keeping maxElements and the latest first
             void push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max);
 
         protected:
             //! Constructor
-            CListModelTimestampObjects(const QString &translationContext, QObject *parent = nullptr);
+            CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent = nullptr);
 
             //! Standard timestamp offset columns
             void addTimestampOffsetColumns();
