@@ -23,14 +23,12 @@
 class QWidget;
 
 namespace Ui { class CSettingsAdvancedComponent; }
-
 namespace BlackGui
 {
     namespace Components
     {
         //! Configure general settings
-        class BLACKGUI_EXPORT CSettingsAdvancedComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CSettingsAdvancedComponent : public QFrame
         {
             Q_OBJECT
 
@@ -39,7 +37,7 @@ namespace BlackGui
             CSettingsAdvancedComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsAdvancedComponent();
+            virtual ~CSettingsAdvancedComponent();
 
         private:
             void crashDumpUploadEnabledChanged(int state);
@@ -47,7 +45,6 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsAdvancedComponent> ui;
             BlackMisc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
         };
-
     } // ns
 } // ns
 

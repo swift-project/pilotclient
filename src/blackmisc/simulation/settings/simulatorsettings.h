@@ -289,10 +289,10 @@ namespace BlackMisc
                 static const QString &defaultSimulatorDirectory(const CSimulatorInfo &simulator);
 
             private:
-                CSetting<Settings::TSimulatorFsx> m_simSettingsFsx {this}; //!< FSX cache
-                CSetting<Settings::TSimulatorFs9> m_simSettingsFs9 {this}; //!< FS9 cache
-                CSetting<Settings::TSimulatorP3D> m_simSettingsP3D {this}; //!< P3D cache
-                CSetting<Settings::TSimulatorXP>  m_simSettingsXP  {this}; //!< XP cache
+                CSetting<Settings::TSimulatorFsx> m_simSettingsFsx {this}; //!< FSX settings
+                CSetting<Settings::TSimulatorFs9> m_simSettingsFs9 {this}; //!< FS9 settings
+                CSetting<Settings::TSimulatorP3D> m_simSettingsP3D {this}; //!< P3D settings
+                CSetting<Settings::TSimulatorXP>  m_simSettingsXP  {this}; //!< XP settings
             };
 
             //! Settings regarding message handling.
