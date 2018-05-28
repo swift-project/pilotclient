@@ -37,6 +37,10 @@ namespace BlackMisc
             //! \threadsafe
             bool isCurrentEcosystem(const CEcosystem &system) const;
 
+            //! Current ecosystem VATSIM?
+            //! \threadsafe
+            bool isCurrentEcosystemVATSIM() const;
+
             //! Last known ecosystem?
             //! \threadsafe
             bool isLastEcosystem(const CEcosystem &system) const;
@@ -72,8 +76,18 @@ namespace BlackMisc
             //! \copydoc IEcosystemProvider::isCurrentEcosystem
             bool isCurrentEcosystem(const CEcosystem &system) const;
 
+            //! \copydoc IEcosystemProvider::isCurrentEcosystemVATSIM
+            bool isCurrentEcosystemVATSIM() const;
+
+            //! Connected with other system than VATSIM?
+            //! \remark use this function to skip VATSIM specific provider tasks etc.
+            bool isNotVATSIMEcosystem() const;
+
             //! \copydoc IEcosystemProvider::isLastEcosystem
             bool isLastEcosystem(const CEcosystem &system) const;
+
+            //! Cast as provider if possible
+            static IEcosystemProvider *providerIfPossible(QObject *object);
 
         protected:
             //! Constructor

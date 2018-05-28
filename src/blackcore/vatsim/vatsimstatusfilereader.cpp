@@ -72,10 +72,10 @@ namespace BlackCore
             CFailoverUrlList urls(sApp->getGlobalSetup().getVatsimStatusFileUrls());
             const CUrl url(urls.obtainNextWorkingUrl(true)); // random working URL
             if (url.isEmpty()) { return; }
-            this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::ps_parseVatsimFile});
+            this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::parseVatsimFile});
         }
 
-        void CVatsimStatusFileReader::ps_parseVatsimFile(QNetworkReply *nwReplyPtr)
+        void CVatsimStatusFileReader::parseVatsimFile(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread

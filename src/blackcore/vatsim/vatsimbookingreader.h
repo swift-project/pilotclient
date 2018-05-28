@@ -14,6 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackcore/threadedreader.h"
 
@@ -26,7 +27,9 @@ namespace BlackCore
     namespace Vatsim
     {
         //! Read bookings from VATSIM
-        class BLACKCORE_EXPORT CVatsimBookingReader : public BlackCore::CThreadedReader
+        class BLACKCORE_EXPORT CVatsimBookingReader :
+            public BlackCore::CThreadedReader,
+            public BlackMisc::Network::CEcosystemAware
         {
             Q_OBJECT
 
@@ -53,15 +56,14 @@ namespace BlackCore
             virtual void doWorkImpl() override;
             //! @}
 
-        private slots:
+        private:
             //! Bookings have been read
             //! \threadsafe
-            void ps_parseBookings(QNetworkReply *nwReply);
+            void parseBookings(QNetworkReply *nwReply);
 
             //! Do reading
-            void ps_read();
+            void read();
 
-        private:
             //! Settings changed
             void settingsChanged();
 

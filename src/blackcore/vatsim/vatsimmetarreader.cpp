@@ -39,7 +39,8 @@ namespace BlackCore
     namespace Vatsim
     {
         CVatsimMetarReader::CVatsimMetarReader(QObject *owner) :
-            CThreadedReader(owner, "CVatsimMetarReader")
+            CThreadedReader(owner, "CVatsimMetarReader"),
+            CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
         {
             reloadSettings();
         }
@@ -77,6 +78,7 @@ namespace BlackCore
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
             if (!this->isInternetAccessible("No network/internet access, cannot read METARs")) { return; }
+            if (this->isNotVATSIMEcosystem()) { return; }
 
             CFailoverUrlList urls(sApp->getVatsimMetarUrls());
             const CUrl url(urls.obtainNextWorkingUrl(true));
@@ -93,6 +95,8 @@ namespace BlackCore
 
             // Worker thread, make sure to write thread safe!
             this->threadAssertCheck();
+            if (this->isNotVATSIMEcosystem()) { return; }
+
             if (!this->doWorkCheck())
             {
                 CLogMessage(this).info("Terminated METAR decoding process"); // for users

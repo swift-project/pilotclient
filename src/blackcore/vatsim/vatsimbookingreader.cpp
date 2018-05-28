@@ -32,6 +32,7 @@
 #include <QTimer>
 #include <QUrl>
 #include <Qt>
+#include <QPointer>
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -43,41 +44,47 @@ namespace BlackCore
     namespace Vatsim
     {
         CVatsimBookingReader::CVatsimBookingReader(QObject *owner) :
-            CThreadedReader(owner, "CVatsimBookingReader")
+            CThreadedReader(owner, "CVatsimBookingReader"),
+            CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
         {
             settingsChanged();
         }
 
         void CVatsimBookingReader::readInBackgroundThread()
         {
-            bool s = QMetaObject::invokeMethod(this, "ps_read");
-            Q_ASSERT(s);
-            Q_UNUSED(s);
+            QPointer<CVatsimBookingReader> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->read();
+            });
         }
 
         void CVatsimBookingReader::doWorkImpl()
         {
-            ps_read();
+            this->read();
         }
 
-        void CVatsimBookingReader::ps_read()
+        void CVatsimBookingReader::read()
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
             if (!this->isInternetAccessible("No network/internet access, cannot read VATSIM bookings")) { return; }
+            if (this->isNotVATSIMEcosystem()) { return; }
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
             const QUrl url(sApp->getGlobalSetup().getVatsimBookingsUrl());
             if (url.isEmpty()) { return; }
-            this->getFromNetworkAndLog(url, { this, &CVatsimBookingReader::ps_parseBookings});
+            this->getFromNetworkAndLog(url, { this, &CVatsimBookingReader::parseBookings});
         }
 
-        void CVatsimBookingReader::ps_parseBookings(QNetworkReply *nwReplyPtr)
+        void CVatsimBookingReader::parseBookings(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             this->threadAssertCheck();
+            if (this->isNotVATSIMEcosystem()) { return; }
 
             // Worker thread, make sure to write no members here od do it threadsafe
             if (!this->doWorkCheck())
@@ -119,8 +126,8 @@ namespace BlackCore
                         }
                     }
 
-                    QDomNode atc = doc.elementsByTagName("atcs").at(0);
-                    QDomNodeList bookingNodes = atc.toElement().elementsByTagName("booking");
+                    const QDomNode atc = doc.elementsByTagName("atcs").at(0);
+                    const QDomNodeList bookingNodes = atc.toElement().elementsByTagName("booking");
                     int size = bookingNodes.size();
                     CAtcStationList bookedStations;
                     for (int i = 0; i < size; i++)
@@ -132,8 +139,8 @@ namespace BlackCore
                         }
 
                         // pase nodes
-                        QDomNode bookingNode = bookingNodes.at(i);
-                        QDomNodeList bookingNodeValues = bookingNode.childNodes();
+                        const QDomNode bookingNode = bookingNodes.at(i);
+                        const QDomNodeList bookingNodeValues = bookingNode.childNodes();
                         CAtcStation bookedStation;
                         CUser user;
                         for (int v = 0; v < bookingNodeValues.size(); v++)

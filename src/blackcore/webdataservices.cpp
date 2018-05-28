@@ -1454,7 +1454,9 @@ namespace BlackCore
 
     void CWebDataServices::onConnectedNetworkServerChanged(const CServer &server)
     {
-        Q_UNUSED(server);
+        const CEcosystem es(server.getEcosystem());
+        this->setCurrentEcosystem(es);
+        CLogMessage(this).info("Changed data service ecosystem to '%1'") << es.toQString(true);
     }
 
     bool CWebDataServices::writeDbDataToDisk(const QString &dir) const

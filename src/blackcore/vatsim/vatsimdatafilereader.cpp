@@ -43,6 +43,7 @@
 #include <QWriteLocker>
 #include <Qt>
 #include <QtGlobal>
+#include <QPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -57,7 +58,8 @@ namespace BlackCore
     namespace Vatsim
     {
         CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) :
-            CThreadedReader(owner, "CVatsimDataFileReader")
+            CThreadedReader(owner, "CVatsimDataFileReader"),
+            CEcosystemAware(CEcosystemAware::providerIfPossible(owner))
         {
             this->reloadSettings();
         }
@@ -168,21 +170,25 @@ namespace BlackCore
 
         void CVatsimDataFileReader::readInBackgroundThread()
         {
-            const bool s = QMetaObject::invokeMethod(this, "ps_read");
-            Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
-            Q_UNUSED(s);
+            QPointer<CVatsimDataFileReader> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->read();
+            });
         }
 
         void CVatsimDataFileReader::doWorkImpl()
         {
-            this->ps_read();
+            this->read();
         }
 
-        void CVatsimDataFileReader::ps_read()
+        void CVatsimDataFileReader::read()
         {
             this->threadAssertCheck();
             if (!this->doWorkCheck()) { return; }
             if (!this->isInternetAccessible("No network/internet access, cannot read VATSIM data file")) { return; }
+            if (this->isNotVATSIMEcosystem()) { return; }
 
             // round robin for load balancing
             // remark: Don't use QThread to run network operations in the background
@@ -191,15 +197,16 @@ namespace BlackCore
             CFailoverUrlList urls(sApp->getVatsimDataFileUrls());
             const QUrl url(urls.obtainNextWorkingUrl(true));
             if (url.isEmpty()) { return; }
-            this->getFromNetworkAndLog(url, { this, &CVatsimDataFileReader::ps_parseVatsimFile});
+            this->getFromNetworkAndLog(url, { this, &CVatsimDataFileReader::parseVatsimFile});
         }
 
-        void CVatsimDataFileReader::ps_parseVatsimFile(QNetworkReply *nwReplyPtr)
+        void CVatsimDataFileReader::parseVatsimFile(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             this->threadAssertCheck();
+            if (this->isNotVATSIMEcosystem()) { return; }
 
             // Worker thread, make sure to write only synced here!
             if (!this->doWorkCheck())

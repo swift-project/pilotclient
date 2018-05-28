@@ -13,12 +13,13 @@
 #define BLACKCORE_VATSIM_VATSIMMETARREADER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackcore/threadedreader.h"
 #include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metardecoder.h"
 #include "blackmisc/weather/metarlist.h"
+#include "blackmisc/network/ecosystemprovider.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackcore/threadedreader.h"
 
 #include <QObject>
 
@@ -29,7 +30,9 @@ namespace BlackCore
     namespace Vatsim
     {
         //! Read bookings from VATSIM
-        class BLACKCORE_EXPORT CVatsimMetarReader : public BlackCore::CThreadedReader
+        class BLACKCORE_EXPORT CVatsimMetarReader :
+            public BlackCore::CThreadedReader,
+            public BlackMisc::Network::CEcosystemAware
         {
             Q_OBJECT
 

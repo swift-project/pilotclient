@@ -20,6 +20,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
@@ -41,7 +42,9 @@ namespace BlackCore
     {
         //! Read vatsim data file
         //! \sa http://info.vroute.net/vatsim-data.txt
-        class BLACKCORE_EXPORT CVatsimDataFileReader : public CThreadedReader
+        class BLACKCORE_EXPORT CVatsimDataFileReader :
+            public CThreadedReader,
+            public BlackMisc::Network::CEcosystemAware
         {
             Q_OBJECT
 
@@ -133,13 +136,6 @@ namespace BlackCore
             virtual void doWorkImpl() override;
             //! @}
 
-        private slots:
-            //! Data have been read, parse VATSIM file
-            void ps_parseVatsimFile(QNetworkReply *nwReply);
-
-            //! Read / re-read data file
-            void ps_read();
-
         private:
             //! Section in file
             enum Section
@@ -156,6 +152,12 @@ namespace BlackCore
             BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile> m_settings { this, &CVatsimDataFileReader::reloadSettings };
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlanRemarks> m_flightPlanRemarks; //!< cache for flight plan remarks
+
+            //! Data have been read, parse VATSIM file
+            void parseVatsimFile(QNetworkReply *nwReply);
+
+            //! Read / re-read data file
+            void read();
 
             //! Reload the reader settings
             void reloadSettings();

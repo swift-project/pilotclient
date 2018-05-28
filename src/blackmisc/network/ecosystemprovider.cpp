@@ -31,6 +31,11 @@ namespace BlackMisc
             return this->getCurrentEcosystem() == system;
         }
 
+        bool IEcosystemProvider::isCurrentEcosystemVATSIM() const
+        {
+            return this->isCurrentEcosystem(CEcosystem::vatsim());
+        }
+
         bool IEcosystemProvider::isLastEcosystem(const CEcosystem &system) const
         {
             return this->getLastEcosystem() == system;
@@ -70,10 +75,29 @@ namespace BlackMisc
             return this->provider()->isCurrentEcosystem(system);
         }
 
+        bool CEcosystemAware::isCurrentEcosystemVATSIM() const
+        {
+            return this->isCurrentEcosystem(CEcosystem::vatsim());
+        }
+
+        bool CEcosystemAware::isNotVATSIMEcosystem() const
+        {
+            if (!this->hasProvider()) { return false; }
+            if (this->isCurrentEcosystemVATSIM()) { return false; }
+            if (this->isCurrentEcosystem(CEcosystem::swiftTest())) { return false; } // our test server is supposed to be I VATSIM system
+            return !this->getCurrentEcosystem().isUnspecified(); // other know system which is specified
+        }
+
         bool CEcosystemAware::isLastEcosystem(const CEcosystem &system) const
         {
             if (!this->hasProvider()) { return this->getLastEcosystem() == system; }
             return this->provider()->isLastEcosystem(system);
+        }
+
+        IEcosystemProvider *CEcosystemAware::providerIfPossible(QObject *object)
+        {
+            IEcosystemProvider *p = qobject_cast<IEcosystemProvider *>(object);
+            return p;
         }
     } // namespace
 } // namespace

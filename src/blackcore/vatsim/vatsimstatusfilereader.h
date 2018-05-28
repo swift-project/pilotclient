@@ -57,13 +57,13 @@ namespace BlackCore
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
         private slots:
-            //! Data have been read, parse VATSIM file
-            void ps_parseVatsimFile(QNetworkReply *nwReply);
-
             //! Read / re-read data file
             void ps_read();
 
         private:
+            //! Data have been read, parse VATSIM file
+            void parseVatsimFile(QNetworkReply *nwReply);
+
             BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
         };
     } // ns

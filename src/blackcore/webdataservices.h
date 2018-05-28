@@ -22,10 +22,11 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/countrylist.h"
-#include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/restricted.h"
 #include "blackmisc/simulation/aircraftmodel.h"
@@ -78,9 +79,12 @@ namespace BlackCore
     /*!
      * Encapsulates reading data from web sources
      */
-    class BLACKCORE_EXPORT CWebDataServices : public QObject
+    class BLACKCORE_EXPORT CWebDataServices :
+        public QObject,
+        public BlackMisc::Network::IEcosystemProvider
     {
         Q_OBJECT
+        Q_INTERFACES(BlackMisc::Network::IEcosystemProvider)
 
     public:
         //! Log categories
@@ -581,6 +585,7 @@ namespace BlackCore
         void onCoreFacadeStarted();
 
         //! \copydoc BlackCore::Context::IContextNetwork::connectedServerChanged
+        //! \remark sets the ecosystem
         void onConnectedNetworkServerChanged(const BlackMisc::Network::CServer &server);
 
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
