@@ -351,9 +351,7 @@ namespace BlackCore
             if (this->isSet(m_cmdClearCache))
             {
                 const QStringList files(CApplication::clearCaches());
-                msgs.push_back(
-                    CLogMessage(this).debug() << "Cleared cache, " << files.size() << " files"
-                );
+                msgs.push_back(CLogMessage(this).debug() << "Cleared cache, " << files.size() << " files");
             }
 
             // crashpad dump
@@ -383,20 +381,12 @@ namespace BlackCore
             msgs.push_back(this->startHookIn());
             if (msgs.isFailure()) { break; }
 
-            // trigger loading and saving of settings in appropriate scenarios
-            if (m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
-            {
-                // facade running here locally
-                msgs.push_back(CSettingsCache::instance()->loadFromStore());
-                if (msgs.isFailure()) { break; }
+            // Settings if not already initialized
+            msgs.push_back(this->initLocalSettings());
+            if (msgs.isFailure()) { break; }
 
-                // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()` means
-                // "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is sent to swiftcore and saved by swiftcore.
-                CSettingsCache::instance()->enableLocalSave();
-
-                // From this moment on, we have settings, so enable crash handler.
-                msgs.push_back(this->initCrashHandler());
-            }
+            // we have settings, so enable crash handler.
+            msgs.push_back(this->initCrashHandler());
         }
         while (false);
 
@@ -522,6 +512,25 @@ namespace BlackCore
             return this->getGlobalSetup().isDevelopment();
         }
         return false;
+    }
+
+    CStatusMessage CApplication::initLocalSettings()
+    {
+        if (m_localSettingsLoaded) { return CStatusMessage(); }
+        m_localSettingsLoaded = true;
+
+        // trigger loading and saving of settings in appropriate scenarios
+        if (m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
+        {
+            // facade running here locally
+            const CStatusMessage msg = CSettingsCache::instance()->loadFromStore();
+            if (msg.isFailure()) { return msg; }
+
+            // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()` means
+            // "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is sent to swiftcore and saved by swiftcore.
+            CSettingsCache::instance()->enableLocalSave();
+        }
+        return CStatusMessage();
     }
 
     bool CApplication::hasUnsavedSettings() const
@@ -811,7 +820,10 @@ namespace BlackCore
 
         m_useContexts = true;
         m_coreFacadeConfig = coreConfig;
+        const CStatusMessage msg = this->initLocalSettings();
+        if (msg.isFailure()) { return msg; }
 
+        // now we can use settings
         // if not yet initialized, init web data services
         if (!m_useWebData)
         {

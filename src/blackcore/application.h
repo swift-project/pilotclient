@@ -592,6 +592,9 @@ namespace BlackCore
         //! Dev.environment, return value will be used for m_devEnv
         bool initIsRunningInDeveloperEnvironment() const;
 
+        //! Init the local settings
+        BlackMisc::CStatusMessage initLocalSettings();
+
         //! Async. start when setup is loaded
         BlackMisc::CStatusMessageList asyncWebAndContextStart();
 
@@ -624,6 +627,7 @@ namespace BlackCore
         bool m_signalStartup = true;           //!< signal startup automatically
         bool m_devFlag = false;                //!< dev. environment
         bool m_saveSettingsOnShutdown = true;  //!< saving all settings on shutdown
+        bool m_localSettingsLoaded = false;    //!< local settings loaded?
 
         // -------------- crashpad -----------------
         BlackMisc::CStatusMessageList initCrashHandler();
