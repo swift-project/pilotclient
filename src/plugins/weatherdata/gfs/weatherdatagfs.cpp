@@ -270,7 +270,7 @@ namespace BlackWxPlugin
 
                 CAltitude surfaceAltitude(0, CAltitude::AboveGround, CLengthUnit::defaultUnit());
                 CTemperatureLayer surfaceTemperature(surfaceAltitude, CTemperature(gfsGridPoint.surfaceTemperature, CTemperatureUnit::K()), {}, {});
-                temperatureLayers.insert(surfaceTemperature);
+                temperatureLayers.push_back(surfaceTemperature);
 
                 CWindLayerList windLayers;
                 for (auto isobaricLayerIt = gfsGridPoint.isobaricLayers.begin(); isobaricLayerIt != gfsGridPoint.isobaricLayers.end(); ++isobaricLayerIt)
@@ -282,7 +282,7 @@ namespace BlackWxPlugin
                     auto dewPoint = calculateDewPoint(temperature, isobaricLayer.relativeHumidity);
 
                     CTemperatureLayer temperatureLayer(level, temperature, dewPoint, isobaricLayer.relativeHumidity);
-                    temperatureLayers.insert(temperatureLayer);
+                    temperatureLayers.push_back(temperatureLayer);
 
                     double windDirection = -1 * CMathUtils::rad2deg(std::atan2(-isobaricLayer.windU, isobaricLayer.windV));
                     windDirection += 180.0;
@@ -290,7 +290,7 @@ namespace BlackWxPlugin
                     if (windDirection >= 360.0) { windDirection -= 360.0; }
                     double windSpeed = std::hypot(isobaricLayer.windU, isobaricLayer.windV);
                     CWindLayer windLayer(level, CAngle(windDirection, CAngleUnit::deg()), CSpeed(windSpeed, CSpeedUnit::m_s()), {});
-                    windLayers.insert(windLayer);
+                    windLayers.push_back(windLayer);
                 }
 
                 CCloudLayerList cloudLayers;
@@ -307,7 +307,7 @@ namespace BlackWxPlugin
                     // Multiply with 3600 to convert to mm/h
                     cloudLayer.setPrecipitationRate(gfsGridPoint.surfacePrecipitationRate * 3600.0);
                     cloudLayer.setClouds(CCloudLayer::CloudsUnknown);
-                    cloudLayers.insert(cloudLayer);
+                    cloudLayers.push_back(cloudLayer);
                 }
 
                 auto surfacePressure = PhysicalQuantities::CPressure { gfsGridPoint.surfacePressure, PhysicalQuantities::CPressureUnit::Pa() };
@@ -315,8 +315,8 @@ namespace BlackWxPlugin
                 CLatitude latitude(gfsGridPoint.latitude, CAngleUnit::deg());
                 CLongitude longitude(gfsGridPoint.longitude, CAngleUnit::deg());
                 auto position = CCoordinateGeodetic { latitude, longitude, {0} };
-                BlackMisc::Weather::CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, surfacePressure);
-                m_weatherGrid.insert(gridPoint);
+                CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, surfacePressure);
+                m_weatherGrid.push_back(gridPoint);
             }
         }
 

@@ -190,7 +190,7 @@ namespace BlackCore
         //! \fixme KB 2017-11 maybe this code can be encapsulated somewhere
         CApplicationInfoList apps = CApplication::getRunningApplications();
         const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
-        if (!apps.contains(myself)) { apps.insert(myself); }
+        if (!apps.contains(myself)) { apps.push_back(myself); }
         const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
         if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
         return ok;

@@ -181,6 +181,9 @@ namespace BlackMisc
         //! Insert as first element.
         void push_front(const T &value) { insert(begin(), value); }
 
+        //! Inserts all elements from another sequence at the beginning of this sequence.
+        void push_front(const CSequence &other) { std::copy(other.begin(), other.end(), std::front_inserter(*this)); }
+
         //! Insert as first element by keep maxElements
         void push_frontMaxElements(const T &value, int maxElements)
         {

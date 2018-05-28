@@ -768,7 +768,7 @@ namespace BlackMisc
             for (const CAircraftModel &model : *this)
             {
                 if (model.getAirlineIcaoCode() != airlineCode) { continue; }
-                icaos.insert(model.getAircraftIcaoCode());
+                icaos.push_back(model.getAircraftIcaoCode());
             }
             return icaos;
         }
@@ -1030,7 +1030,7 @@ namespace BlackMisc
                 Q_UNUSED(scope);
                 CAircraftModel value;
                 value.convertFromMemoizedJson(i->toObject(), helper);
-                insert(value);
+                this->push_back(value);
             }
         }
 
