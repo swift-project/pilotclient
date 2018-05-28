@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Models
     {
         CAircraftPartsListModel::CAircraftPartsListModel(QObject *parent) :
-            CListModelTimestampObjects<CAircraftParts, CAircraftPartsList, true>("ViewAircraftPartsList", parent)
+            CListModelTimestampWithOffsetObjects<CAircraftParts, CAircraftPartsList, true>("ViewAircraftPartsList", parent)
         {
             this->addTimestampOffsetColumns();
 

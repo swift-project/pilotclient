@@ -22,20 +22,20 @@ namespace BlackGui
     namespace Views
     {
         template<class ModelClass, class ContainerType, class ObjectType>
-        void CViewWithTimestampObjects<ModelClass, ContainerType, ObjectType>::push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max)
+        void CViewWithTimestampWithOffsetObjects<ModelClass, ContainerType, ObjectType>::push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max)
         {
             this->derivedModel()->push_frontKeepLatestAdjustedFirst(object, max);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        CViewWithTimestampObjects<ModelClass, ContainerType, ObjectType>::CViewWithTimestampObjects(QWidget *parent) :
+        CViewWithTimestampWithOffsetObjects<ModelClass, ContainerType, ObjectType>::CViewWithTimestampWithOffsetObjects(QWidget *parent) :
             CViewBase<ModelClass, ContainerType, ObjectType>(parent)
         {
             // void
         }
 
-        template class CViewWithTimestampObjects<BlackGui::Models::CAircraftPartsListModel, BlackMisc::Aviation::CAircraftPartsList, BlackMisc::Aviation::CAircraftParts>;
-        template class CViewWithTimestampObjects<BlackGui::Models::CAircraftSituationListModel, BlackMisc::Aviation::CAircraftSituationList, BlackMisc::Aviation::CAircraftSituation>;
+        template class CViewWithTimestampWithOffsetObjects<BlackGui::Models::CAircraftPartsListModel, BlackMisc::Aviation::CAircraftPartsList, BlackMisc::Aviation::CAircraftParts>;
+        template class CViewWithTimestampWithOffsetObjects<BlackGui::Models::CAircraftSituationListModel, BlackMisc::Aviation::CAircraftSituationList, BlackMisc::Aviation::CAircraftSituation>;
 
     } // namespace
 } // namespace

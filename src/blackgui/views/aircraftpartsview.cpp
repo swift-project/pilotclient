@@ -16,7 +16,7 @@ namespace BlackGui
     namespace Views
     {
         CAircraftPartsView::CAircraftPartsView(QWidget *parent) :
-            CViewWithTimestampObjects(parent)
+            CViewWithTimestampWithOffsetObjects(parent)
         {
             this->standardInit(new CAircraftPartsListModel(this));
             this->setMenu(MenuDefault);

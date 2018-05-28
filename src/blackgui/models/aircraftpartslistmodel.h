@@ -26,7 +26,7 @@ namespace BlackGui
     namespace Models
     {
         //! Client list model
-        class BLACKGUI_EXPORT CAircraftPartsListModel : public CListModelTimestampObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>
+        class BLACKGUI_EXPORT CAircraftPartsListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>
         {
         public:
             //! Constructor

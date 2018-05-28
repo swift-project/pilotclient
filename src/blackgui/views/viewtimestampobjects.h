@@ -22,8 +22,8 @@ namespace BlackGui
     namespace Menus { class CMenuActions; }
     namespace Views
     {
-        //! Base class for views with DB objects
-        template <class ModelClass, class ContainerType, class ObjectType> class CViewWithTimestampObjects :
+        //! Base class for views timestamp offset objects
+        template <class ModelClass, class ContainerType, class ObjectType> class CViewWithTimestampWithOffsetObjects :
             public CViewBase<ModelClass, ContainerType, ObjectType>
         {
         public:
@@ -32,7 +32,7 @@ namespace BlackGui
 
         protected:
             //! Constructor
-            explicit CViewWithTimestampObjects(QWidget *parent = nullptr);
+            explicit CViewWithTimestampWithOffsetObjects(QWidget *parent = nullptr);
         };
     } // namespace
 } // namespace

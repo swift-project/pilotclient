@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Views
     {
         //! Aircraft situations view
-        class BLACKGUI_EXPORT CAircraftSituationView : public CViewWithTimestampObjects<Models::CAircraftSituationListModel, BlackMisc::Aviation::CAircraftSituationList, BlackMisc::Aviation::CAircraftSituation>
+        class BLACKGUI_EXPORT CAircraftSituationView : public CViewWithTimestampWithOffsetObjects<Models::CAircraftSituationListModel, BlackMisc::Aviation::CAircraftSituationList, BlackMisc::Aviation::CAircraftSituation>
         {
         public:
             //! Constructor
