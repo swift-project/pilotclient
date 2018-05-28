@@ -20,6 +20,7 @@
 #include "blackmisc/network/rawfsdmessage.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/clientprovider.h"
+#include "blackmisc/network/ecosystemprovider.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/aviation/informationmessage.h"
@@ -59,11 +60,13 @@ namespace BlackCore
      */
     class BLACKCORE_EXPORT INetwork :
         public QObject,
-        public BlackMisc::Network::CClientAware, // network vatlib consumes own aircraft data and sets ICAO/callsign data
-        public BlackMisc::Simulation::COwnAircraftAware, // network vatlib consumes own aircraft data and sets ICAO/callsign data
+        public BlackMisc::Network::IEcosystemProvider,            // provide info about used ecosystem
+        public BlackMisc::Network::CClientAware,                  // network can set client information
+        public BlackMisc::Simulation::COwnAircraftAware,          // network vatlib consumes own aircraft data and sets ICAO/callsign data
         public BlackMisc::Simulation::CSimulationEnvironmentAware // allows to consume ground elevations
     {
         Q_OBJECT
+        Q_INTERFACES(BlackMisc::Network::IEcosystemProvider)
 
     protected:
         //! Constructor

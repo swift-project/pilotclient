@@ -277,6 +277,7 @@ namespace BlackCore
                 if (m_status == vatStatusConnected)
                 {
                     m_server.setConnectedSinceNow();
+                    this->setCurrentEcosystem(m_server.getEcosystem());
                 }
                 else
                 {
@@ -287,6 +288,8 @@ namespace BlackCore
                 {
                     this->stopPositionTimers();
                     this->clearState();
+                    this->setLastEcosystem(m_server.getEcosystem());
+                    this->setCurrentEcosystem(CEcosystem::NoSystem);
                 }
 
                 emit this->connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
