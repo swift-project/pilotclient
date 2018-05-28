@@ -6,22 +6,48 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>542</width>
+    <height>252</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>swift legal information</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML"/>
+    <widget class="BlackGui::Components::CAboutHtmlComponent" name="comp_AboutHTML">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="cb_Agree">
-     <property name="text">
-      <string>I agree with the swift license and privacy policy</string>
+    <widget class="QFrame" name="fr_Agree">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QCheckBox" name="cb_Agree">
+        <property name="text">
+         <string>I agree with the swift license and privacy policy</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_CrashDumps">
+        <property name="text">
+         <string>Allow sending crash dumps, by sending we can see what went wrong</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

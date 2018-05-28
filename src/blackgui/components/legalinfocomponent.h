@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_LEGALINFOCOMPONENT_H
 
 #include "blackgui/overlaymessagesframe.h"
+#include "blackcore/application/applicationsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QWizardPage>
@@ -43,7 +44,11 @@ namespace BlackGui
             bool validateAgreement();
 
         private:
+            //! Allow crash dumps
+            void onAllowCrashDumps(bool checked);
+
             QScopedPointer<Ui::CLegalInfoComponent> ui;
+            BlackMisc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
         };
 
         /**

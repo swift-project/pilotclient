@@ -22,6 +22,9 @@ namespace BlackGui
             ui(new Ui::CLegalInfoComponent)
         {
             ui->setupUi(this);
+            const bool cd = m_crashDumpUploadEnabled.get();
+            ui->cb_CrashDumps->setChecked(cd);
+            connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
         }
 
         CLegalInfoComponent::~CLegalInfoComponent()
@@ -38,6 +41,11 @@ namespace BlackGui
             static const CStatusMessage m = CStatusMessage(this).validationError("You need to agree with the swift license");
             this->showOverlayMessage(m);
             return false;
+        }
+
+        void CLegalInfoComponent::onAllowCrashDumps(bool checked)
+        {
+            m_crashDumpUploadEnabled.setAndSave(checked);
         }
 
         bool CLegalInfoWizardPage::validatePage()
