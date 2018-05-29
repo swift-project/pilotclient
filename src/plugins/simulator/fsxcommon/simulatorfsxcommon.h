@@ -268,13 +268,14 @@ namespace BlackSimPlugin
             HRESULT initDataDefinitionsWhenConnected();
 
             //! Update remote aircraft
-            //! \remark this is where the interpolated data are set
+            //! \remark this is where the interpolated data are send
             void updateRemoteAircraft();
 
             //! Update remote aircraft parts (send to FSX)
             bool updateRemoteAircraftParts(const CSimConnectObject &simObject, const BlackMisc::Simulation::CInterpolationResult &result);
 
             //! Send parts to simulator
+            //! \remark does not send if there is no change
             bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
 
             //! Send lights to simulator (those which have to be toggled)
@@ -390,7 +391,7 @@ namespace BlackSimPlugin
             bool m_simConnected  = false;           //!< Is simulator connected?
             bool m_simSimulating = false;           //!< Simulator running?
             bool m_useSbOffsets  = true;            //!< with SB offsets
-            bool m_traceSendId   = false;           //!< trace the send ids, meant for dedugging
+            bool m_traceSendId   = false;           //!< trace the send ids, meant for debugging
             qint64 m_simulatingChangedTs = -1;      //!< timestamp, when simulating changed (used to avoid jitter)
             int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
             int  m_skipCockpitUpdateCycles = 0;     //!< skip some update cycles to allow changes in simulator cockpit to be set

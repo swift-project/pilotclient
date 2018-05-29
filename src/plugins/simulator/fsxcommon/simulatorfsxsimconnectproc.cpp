@@ -294,7 +294,7 @@ namespace BlackSimPlugin
                         }
                         break;
                     }
-                    break;
+                    break; // SIMCONNECT_RECV_ID_SIMOBJECT_DATA
                 }
             case SIMCONNECT_RECV_ID_AIRPORT_LIST:
                 {
@@ -322,7 +322,7 @@ namespace BlackSimPlugin
                         simulatorFsxP3D->m_airportsInRangeFromSimulator.sortByDistanceToOwnAircraft();
                         simulatorFsxP3D->m_airportsInRangeFromSimulator.truncate(simulatorFsxP3D->maxAirportsInRange());
                     }
-                    break;
+                    break; // SIMCONNECT_RECV_ID_AIRPORT_LIST
                 }
             case SIMCONNECT_RECV_ID_CLIENT_DATA:
                 {
@@ -334,7 +334,7 @@ namespace BlackSimPlugin
                         DataDefinitionClientAreaSb *sbData = (DataDefinitionClientAreaSb *) &clientData->dwData;
                         simulatorFsxP3D->updateOwnAircraftFromSimulator(*sbData);
                     }
-                    break;
+                    break; // SIMCONNECT_RECV_ID_CLIENT_DATA
                 }
             case SIMCONNECT_RECV_ID_EVENT_FILENAME:
                 {
@@ -344,7 +344,7 @@ namespace BlackSimPlugin
                     case SystemEventFlightLoaded: break;
                     default: break;
                     }
-                    break;
+                    break; // SIMCONNECT_RECV_ID_EVENT_FILENAME
                 }
             default:
                 break;

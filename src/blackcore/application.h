@@ -28,13 +28,13 @@
 #include <QByteArray>
 #include <QCommandLineOption>
 #include <QCommandLineParser>
-#include <QList>
 #include <QNetworkAccessManager>
-#include <QObject>
 #include <QReadWriteLock>
-#include <QScopedPointer>
-#include <QString>
 #include <QStringList>
+#include <QString>
+#include <QList>
+#include <QObject>
+#include <QScopedPointer>
 #include <atomic>
 #include <functional>
 
