@@ -315,19 +315,19 @@ namespace BlackMisc
 
         signals:
             //! A new aircraft appeared
-            void addedAircraft(const CSimulatedAircraft &remoteAircraft);
+            void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
             //! Parts added
-            void addedAircraftParts(const Aviation::CCallsign &callsign, const Aviation::CAircraftParts &parts);
+            void addedAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! Situation added
-            void addedAircraftSituation(const Aviation::CAircraftSituation &situation);
+            void addedAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! Aircraft were changed
             void changedAircraftInRange();
 
             //! An aircraft disappeared
-            void removedAircraft(const Aviation::CCallsign &callsign);
+            void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! \copydoc BlackCore::CAirspaceAnalyzer::airspaceAircraftSnapshot
             void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
