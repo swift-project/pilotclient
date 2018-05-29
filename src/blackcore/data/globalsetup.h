@@ -229,7 +229,7 @@ namespace BlackCore
             BlackMisc::Network::CUrlList    m_newsUrls;              //!< where we can obtain latest news
             BlackMisc::Network::CUrlList    m_onlineHelpUrls;        //!< online help URLs
             BlackMisc::Network::CUrlList    m_mapUrls;               //!< swift map URLs
-            BlackMisc::Network::CServerList m_fsdTestServers;        //!< FSD test servers
+            BlackMisc::Network::CServerList m_fsdTestServers;        //!< FSD test servers loaded from setup file
             BlackMisc::Network::CUrl        m_ncepGlobalForecastSystemUrl; //!< NCEP GFS url
 
             // transient members, to be switched on/off via GUI or set from reader
