@@ -13,7 +13,7 @@
 #define BLACKGUI_LOGINCOMPONENT_H
 
 #include "blackcore/vatsim/vatsimsettings.h"
-#include "blackcore/data/vatsimsetup.h"
+#include "blackcore/data/networksetup.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
@@ -60,6 +60,14 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! The tabs
+            enum Tab
+            {
+                LoginVATSIM,
+                LoginOthers,
+                LoginFSD
+            };
+
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
@@ -154,7 +162,7 @@ namespace BlackGui
             void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
             //! Settings have been changed
-            void reloadSettings();
+            void reloadSetup();
 
             //! Logoff countdown
             void logoffCountdown();
@@ -215,10 +223,8 @@ namespace BlackGui
             const QIcon m_iconPause {":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png"};
             const int LogoffIntervalSeconds = 20; //!< time before logoff
             QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::reloadSettings };
             BlackMisc::CData<BlackMisc::Simulation::Data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
-            BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
-            BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this }; //!< recently used VATSIM server
+            BlackCore::Data::CNetworkSetup m_networkSetup; //!< servers last used
         };
     } // namespace
 } // namespace

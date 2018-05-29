@@ -88,11 +88,11 @@ namespace BlackGui
             connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CLoginComponent::onSelectedServerChanged);
             connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CLoginComponent::onServerTabWidgetChanged);
-
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled);
             connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection);
             connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
             connect(ui->tb_MappingWizard, &QToolButton::clicked, this, &CLoginComponent::mappingWizard);
+            connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CLoginComponent::reloadSetup, Qt::QueuedConnection);
 
             ui->comp_FsdDetails->showEnableInfo(true);
             ui->comp_FsdDetails->setFsdSetupEnabled(false);
@@ -144,19 +144,15 @@ namespace BlackGui
             this->validateAircraftValues();
             ui->editor_Pilot->validate();
             this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
-            CServerList otherServers(m_otherTrafficNetworkServers.getThreadLocal());
-
-            // add a testserver when no servers can be loaded
-            if (otherServers.isEmpty() && CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                otherServers.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
-                CLogMessage(this).info("Added servers for testing");
-            }
+            const CServerList otherServers(m_networkSetup.getOtherServersPlusTestServers());
             ui->comp_OtherServers->setServers(otherServers);
 
             connect(ui->pb_OverrideCredentialsVatsim, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
             connect(ui->pb_OverrideCredentialsOtherServers, &QPushButton::clicked, this, &CLoginComponent::overrideCredentialsToPilot);
             this->setUiLoginState(false);
+
+            const int tab = m_networkSetup.wasLastUsedWithOtherServer() ? LoginOthers : LoginVATSIM;
+            ui->tw_Network->setCurrentIndex(tab);
         }
 
         CLoginComponent::~CLoginComponent()
@@ -243,12 +239,8 @@ namespace BlackGui
                 const INetwork::LoginMode mode = ui->frp_LoginMode->getLoginMode();
                 switch (mode)
                 {
-                case INetwork::LoginStealth:
-                    CLogMessage(this).info("login in stealth mode");
-                    break;
-                case INetwork::LoginAsObserver:
-                    CLogMessage(this).info("login in observer mode");
-                    break;
+                case INetwork::LoginStealth: CLogMessage(this).info("login in stealth mode"); break;
+                case INetwork::LoginAsObserver: CLogMessage(this).info("login in observer mode"); break;
                 case INetwork::LoginNormal:
                 default:
                     break;
@@ -279,10 +271,10 @@ namespace BlackGui
                 if (msg.isSuccess())
                 {
                     Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
-                    m_lastServer.set(currentServer);
+                    m_networkSetup.setLastServer(currentServer);
                     m_lastAircraftModel.set(ownAircraft.getModel());
                     ui->le_HomeBase->setText(currentServer.getUser().getHomeBase().asString());
-                    if (vatsimLogin) { m_lastVatsimServer.set(currentServer); }
+                    if (vatsimLogin) { m_networkSetup.setLastVatsimServer(currentServer); }
                 }
             }
             else
@@ -320,7 +312,7 @@ namespace BlackGui
                 CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
                 if (vatsimFsdServers.isEmpty()) { return; }
                 vatsimFsdServers.sortBy(&CServer::getName);
-                const CServer currentServer = m_lastVatsimServer.get();
+                const CServer currentServer = m_networkSetup.getLastVatsimServer();
                 ui->comp_VatsimServers->setServers(vatsimFsdServers, true);
                 ui->comp_VatsimServers->preSelect(currentServer.getName());
             }
@@ -328,7 +320,7 @@ namespace BlackGui
 
         void CLoginComponent::loadRememberedUserData()
         {
-            const CServer lastServer = m_lastServer.get();
+            const CServer lastServer = m_networkSetup.getLastServer();
             if (!lastServer.isNull())
             {
 
@@ -360,12 +352,9 @@ namespace BlackGui
             else if (s == ui->pb_OverrideCredentialsVatsim)
             {
                 // the VATSIM server selected has no valid user credentials
-                server = m_lastVatsimServer.get();
+                server = m_networkSetup.getLastVatsimServer();
             }
-            else
-            {
-                return;
-            }
+            else { return; }
             ui->editor_Pilot->setUser(server.getUser(), true);
         }
 
@@ -388,10 +377,11 @@ namespace BlackGui
 
         bool CLoginComponent::hasContexts()
         {
-            if (!sApp || !sApp->supportsContexts()) { return false; }
-            if (!sApp->getIContextSimulator()) { return false; }
-            if (!sApp->getIContextNetwork()) { return false; }
-            if (!sApp->getIContextOwnAircraft()) { return false; }
+            if (!sGui || !sGui->supportsContexts()) { return false; }
+            if (sGui->isShuttingDown()) { return false; }
+            if (!sGui->getIContextSimulator()) { return false; }
+            if (!sGui->getIContextNetwork()) { return false; }
+            if (!sGui->getIContextOwnAircraft()) { return false; }
             return true;
         }
 
@@ -425,7 +415,7 @@ namespace BlackGui
             if (!server.getUser().hasValidVatsimId())
             {
                 // normally VATSIM server have no valid user associated
-                const CUser user = m_lastVatsimServer.get().getUser();
+                const CUser user = m_networkSetup.getLastVatsimServer().getUser();
                 server.setUser(user);
             }
             return server;
@@ -547,10 +537,9 @@ namespace BlackGui
             this->validateAircraftValues();
         }
 
-        void CLoginComponent::reloadSettings()
+        void CLoginComponent::reloadSetup()
         {
-            CServerList otherServers(m_otherTrafficNetworkServers.getThreadLocal());
-            ui->comp_OtherServers->setServers(otherServers);
+            ui->comp_OtherServers->setServers(m_networkSetup.getOtherServers());
         }
 
         void CLoginComponent::logoffCountdown()
