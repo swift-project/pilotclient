@@ -20,7 +20,6 @@
 
 namespace XSwiftBus
 {
-
     std::string g_xplanePath;
     std::string g_sep;
 
@@ -106,6 +105,7 @@ namespace XSwiftBus
     {
         (void) line;
         (void) type;
+        (void) filePath;
 
         assert(!filePath.empty());
         std::ostringstream ss;
@@ -127,6 +127,7 @@ namespace XSwiftBus
             break;
         case FatalMsg:
             ss << "Fatal";
+            break;
         }
         ss << ' ';
 
