@@ -58,6 +58,8 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_INTERFACES(BlackCore::ISimulator)
+        Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
+        Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
 
     public:
         //! Log categories
@@ -74,6 +76,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
         virtual void setWeatherActivated(bool activated) override;
         virtual void unload() override;
+        virtual bool disconnectFrom() override;
         virtual bool isShuttingDown() const override;
         virtual bool logicallyReAddRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual BlackMisc::Aviation::CCallsignSet unrenderedEnabledAircraft() const override;
@@ -115,7 +118,7 @@ namespace BlackCore
         int getStatisticsPhysicallyRemovedAircraft() const { return m_statsPhysicallyRemovedAircraft; }
 
         //! Average update time in ms
-        qint64 getStatisticsAverageUpdateTimeMs() const { return m_statsUpdateAircraftTimeAvgMs; }
+        double getStatisticsAverageUpdateTimeMs() const { return m_statsUpdateAircraftTimeAvgMs; }
 
         //! Total update time in ms
         qint64 getStatisticsTotalUpdateTimeMs() const { return m_statsUpdateAircraftTimeTotalMs; }
@@ -225,15 +228,19 @@ namespace BlackCore
         //! \remark use this function when there is a risk that a lot of log. messages will be generated in a short time
         void removedClampedLog(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Update stats and flags
+        void setStatsRemoteAircraftUpdate(qint64 startTime);
+
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
         bool   m_pausedSimFreezesInterpolation = false;                     //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         bool   m_autoCalcAirportDistance = true;                            //!< automatically calculate airport distance and bearing
+        bool   m_updateRemoteAircraftInProgress = false;                    //!< currently updating remote aircraft
         int    m_timerId = -1;                                              //!< dispatch timer id
-        int    m_statsUpdateAircraftCountMs = 0;                            //!< statistics update count
-        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                        //!< statistics update time
-        qint64 m_statsUpdateAircraftTimeAvgMs = 0;                          //!< statistics update time
+        int    m_statsUpdateAircraftRuns = 0;                               //!< statistics update count
+        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                        //!< statistics total update time
+        double m_statsUpdateAircraftTimeAvgMs = 0;                          //!< statistics average update time
         BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log.interpolation
         QMap<BlackMisc::Aviation::CCallsign, qint64> m_clampedLogMsg;       //!< when logged last so there, can be used so there is no log message overflow

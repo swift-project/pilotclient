@@ -19,9 +19,12 @@ namespace BlackSimPlugin
     namespace P3D
     {
         //! P3D Simulator Implementation
-        class CSimulatorP3D : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommon
+        class CSimulatorP3D : public FsxCommon::CSimulatorFsxCommon
         {
             Q_OBJECT
+            Q_INTERFACES(BlackCore::ISimulator)
+            Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
+            Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
 
         public:
             //! Constructor, parameters as in \sa BlackCore::ISimulatorFactory::create
@@ -41,7 +44,7 @@ namespace BlackSimPlugin
         };
 
         //! Listener for P3D
-        class CSimulatorP3DListener : public BlackSimPlugin::FsxCommon::CSimulatorFsxCommonListener
+        class CSimulatorP3DListener : public FsxCommon::CSimulatorFsxCommonListener
         {
             Q_OBJECT
 

@@ -80,6 +80,8 @@ namespace BlackCore
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, &CSimulatorCommon::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
         }
 
+        connect(sApp, &CApplication::aboutToShutdown, this, &CSimulatorCommon::unload, Qt::QueuedConnection);
+
         // info
         CLogMessage(this).info("Initialized simulator driver: '%1'") << this->getSimulatorInfo().toQString();
     }
@@ -297,6 +299,12 @@ namespace BlackCore
     {
         this->disconnectFrom(); // disconnect from simulator
         m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
+    }
+
+    bool CSimulatorCommon::disconnectFrom()
+    {
+        // supposed to be overridden
+        return true;
     }
 
     bool CSimulatorCommon::isShuttingDown() const
@@ -574,7 +582,7 @@ namespace BlackCore
 
     void CSimulatorCommon::resetAircraftStatistics()
     {
-        m_statsUpdateAircraftCountMs = 0;
+        m_statsUpdateAircraftRuns = 0;
         m_statsUpdateAircraftTimeAvgMs = 0;
         m_statsUpdateAircraftTimeTotalMs = 0;
         m_statsPhysicallyAddedAircraft = 0;
@@ -626,6 +634,15 @@ namespace BlackCore
     void CSimulatorCommon::removedClampedLog(const CCallsign &callsign)
     {
         m_clampedLogMsg.remove(callsign);
+    }
+
+    void CSimulatorCommon::setStatsRemoteAircraftUpdate(qint64 startTime)
+    {
+        const qint64 dt = QDateTime::currentMSecsSinceEpoch() - startTime;
+        m_statsUpdateAircraftTimeTotalMs += dt;
+        m_statsUpdateAircraftRuns++;
+        m_statsUpdateAircraftTimeAvgMs = static_cast<double>(m_statsUpdateAircraftTimeTotalMs) / static_cast<double>(m_statsUpdateAircraftRuns);
+        m_updateRemoteAircraftInProgress = false;
     }
 
     void CSimulatorCommon::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
@@ -710,6 +727,7 @@ namespace BlackCore
         m_addAgainAircraftWhenRemoved.clear();
         m_callsignsToBeRendered.clear();
         m_clampedLogMsg.clear();
+        m_updateRemoteAircraftInProgress = false;
 
         this->resetHighlighting();
         this->resetAircraftStatistics();

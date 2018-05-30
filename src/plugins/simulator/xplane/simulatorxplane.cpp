@@ -702,6 +702,7 @@ namespace BlackSimPlugin
             if (remoteAircraftNo < 1) { return; }
 
             // values used for position and parts
+            m_updateRemoteAircraftInProgress = true;
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
 
             // interpolation for all remote aircraft
@@ -776,10 +777,8 @@ namespace BlackSimPlugin
                 m_trafficProxy->setPlanesSurfaces(planesSurfaces);
             }
 
-            const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;
-            m_statsUpdateAircraftTimeTotalMs += dt;
-            m_statsUpdateAircraftCountMs++;
-            m_statsUpdateAircraftTimeAvgMs = m_statsUpdateAircraftTimeTotalMs / m_statsUpdateAircraftCountMs;
+            // stats
+            this->setStatsRemoteAircraftUpdate(currentTimestamp);
         }
 
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()

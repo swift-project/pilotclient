@@ -24,9 +24,18 @@ namespace BlackSimPlugin
         //! Common base class for simulator plugins
         class CSimulatorPluginCommon : public BlackCore::CSimulatorCommon
         {
+            Q_OBJECT
+            Q_INTERFACES(BlackCore::ISimulator)
+            Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
+            Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
+
         public:
             //! Destructor
             virtual ~CSimulatorPluginCommon();
+
+            // --------- ISimulator implementations ------------
+            virtual void unload() override;
+            virtual bool disconnectFrom() override;
 
         protected:
             //! Constructor
@@ -45,9 +54,6 @@ namespace BlackSimPlugin
             //! @}
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
-            // interface implementations
-            virtual void unload() override;
-
             //! Register help
             static void registerHelp();
 
@@ -55,7 +61,10 @@ namespace BlackSimPlugin
             //! Show the interpolator display
             void showInterpolationDisplay();
 
-            QPointer<BlackGui::Components::CInterpolationLogDisplayDialog> m_interpolationDisplay; //!< can be owned by main window after setting a parent
+            //! Clean up the interpolation log.display if any
+            void deleteInterpolationDisplay();
+
+            QPointer<BlackGui::Components::CInterpolationLogDisplayDialog> m_interpolationDisplayDialog; //!< can be owned by main window after setting a parent
         };
     } // namespace
 } // namespace

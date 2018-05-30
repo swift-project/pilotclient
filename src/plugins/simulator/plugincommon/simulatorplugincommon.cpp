@@ -12,6 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackmisc/simplecommandparser.h"
 
+using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -37,21 +38,33 @@ namespace BlackSimPlugin
 
         CSimulatorPluginCommon::~CSimulatorPluginCommon()
         {
-            if (m_interpolationDisplay)
+            this->deleteInterpolationDisplay();
+        }
+
+        void CSimulatorPluginCommon::deleteInterpolationDisplay()
+        {
+            if (m_interpolationDisplayDialog)
             {
-                m_interpolationDisplay->deleteLater();
+                // if there is no parent widget, we clean dialog up
+                // otherwise the parent is supposed to clean up
+                CInterpolationLogDisplayDialog *dialog = m_interpolationDisplayDialog;
+                m_interpolationDisplayDialog = nullptr;
+                dialog->close();
+                delete dialog;
             }
         }
 
         void CSimulatorPluginCommon::showInterpolationDisplay()
         {
-            if (!m_interpolationDisplay)
+            if (!m_interpolationDisplayDialog)
             {
                 QWidget *parentWidget = sGui ? sGui->mainApplicationWidget() : nullptr;
                 CInterpolationLogDisplayDialog *dialog = new CInterpolationLogDisplayDialog(this, nullptr, parentWidget);
-                m_interpolationDisplay = dialog;
+                m_interpolationDisplayDialog = dialog;
+                m_interpolationDisplayDialog->setModal(false);
             }
-            m_interpolationDisplay->show();
+
+            if (m_interpolationDisplayDialog) { m_interpolationDisplayDialog->show(); }
         }
 
         bool CSimulatorPluginCommon::parseDetails(const CSimpleCommandParser &parser)
@@ -67,12 +80,14 @@ namespace BlackSimPlugin
 
         void CSimulatorPluginCommon::unload()
         {
-            if (m_interpolationDisplay)
-            {
-                m_interpolationDisplay->hide();
-                m_interpolationDisplay->deleteLater();
-            }
+            this->deleteInterpolationDisplay();
             CSimulatorCommon::unload();
+        }
+
+        bool CSimulatorPluginCommon::disconnectFrom()
+        {
+            this->deleteInterpolationDisplay();
+            return CSimulatorCommon::disconnectFrom();
         }
 
         void CSimulatorPluginCommon::registerHelp()

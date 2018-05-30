@@ -34,6 +34,10 @@ namespace BlackSimPlugin
         class CSimulatorEmulated : public Common::CSimulatorPluginCommon
         {
             Q_OBJECT
+            Q_INTERFACES(BlackCore::ISimulator)
+            Q_INTERFACES(BlackMisc::Simulation::ISimulationEnvironmentProvider)
+            Q_INTERFACES(BlackMisc::Simulation::IInterpolationSetupProvider)
+
             friend class CSimulatorEmulatedMonitorDialog; //!< the monitor widget represents the simulator and needs access to internals (i.e. private/protected)
 
         public:
@@ -50,6 +54,7 @@ namespace BlackSimPlugin
             virtual bool isTimeSynchronized() const override;
             virtual bool connectTo() override;
             virtual bool disconnectFrom() override;
+            virtual void unload() override;
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;

@@ -61,10 +61,10 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::connectTo()
         {
-            const QPointer<CSimulatorEmulated> guard(this);
+            const QPointer<CSimulatorEmulated> myself(this);
             QTimer::singleShot(1000, this, [ = ]
             {
-                if (guard.isNull()) { return; }
+                if (myself.isNull()) { return; }
                 this->emitSimulatorCombinedStatus();
                 m_monitorWidget->show();
             });
@@ -75,9 +75,15 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::disconnectFrom()
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
             m_renderedAircraft.clear();
-            return true;
+            return CSimulatorPluginCommon::disconnectFrom();
+        }
+
+        void CSimulatorEmulated::unload()
+        {
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+            return CSimulatorPluginCommon::unload();
         }
 
         bool CSimulatorEmulated::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)

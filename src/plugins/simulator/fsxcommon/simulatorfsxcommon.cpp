@@ -114,8 +114,7 @@ namespace BlackSimPlugin
             this->reset(); // mark as disconnected and reset all values
 
             // emit status and disconnect FSUIPC
-            CSimulatorFsCommon::disconnectFrom();
-            return true;
+            return CSimulatorFsCommon::disconnectFrom();
         }
 
         bool CSimulatorFsxCommon::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
@@ -367,7 +366,17 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::onSimFrame()
         {
-            this->updateRemoteAircraft();
+            QPointer<CSimulatorFsxCommon> myself(this);
+            if (m_updateRemoteAircraftInProgress)
+            {
+                return;
+            }
+            QTimer::singleShot(0, this, [ = ]
+            {
+                // run decoupled from simconnect event queue
+                if (!myself) { return; }
+                myself->updateRemoteAircraft();
+            });
         }
 
         void CSimulatorFsxCommon::onSimExit()
@@ -1236,13 +1245,11 @@ namespace BlackSimPlugin
 
             // nothing to do, reset request id and exit
             const int remoteAircraftNo = this->getAircraftInRangeCount();
-            if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
-
-            // interpolate and send to simulator
-            m_interpolationRequest++;
+            if (remoteAircraftNo < 1) { m_statsUpdateAircraftRuns = 0;  return; }
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
+            m_updateRemoteAircraftInProgress = true;
 
             // interpolation for all remote aircraft
             const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
@@ -1298,10 +1305,8 @@ namespace BlackSimPlugin
 
             } // all callsigns
 
-            const qint64 dt = QDateTime::currentMSecsSinceEpoch() - currentTimestamp;
-            m_statsUpdateAircraftTimeTotalMs += dt;
-            m_statsUpdateAircraftCountMs++;
-            m_statsUpdateAircraftTimeAvgMs = m_statsUpdateAircraftTimeTotalMs / m_statsUpdateAircraftCountMs;
+            // stats
+            this->setStatsRemoteAircraftUpdate(currentTimestamp);
         }
 
         bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject, const CInterpolationResult &result)
@@ -1608,7 +1613,6 @@ namespace BlackSimPlugin
             m_simSimulating = false;
             m_syncDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
-            m_interpolationRequest  = 0;
             m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
@@ -1618,6 +1622,7 @@ namespace BlackSimPlugin
             // m_simConnectObjects
             // m_simConnectObjectsPositionAndPartsTraces
             // m_addPendingAircraft
+            // m_updateRemoteAircraftInProgress
             CSimulatorFsCommon::reset(); // clears all pending aircraft etc
         }
 

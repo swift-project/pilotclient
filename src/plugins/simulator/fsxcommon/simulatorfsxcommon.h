@@ -249,7 +249,7 @@ namespace BlackSimPlugin
             //! Deferred version of onSimRunning to avoid jitter
             void onSimRunningDefered(qint64 referenceTs);
 
-            //! Slot called every visual frame
+            //! Called every visual frame
             void onSimFrame();
 
             //! Called when simulator has stopped, e.g. by selecting the "select aircraft screen"
@@ -393,11 +393,10 @@ namespace BlackSimPlugin
             bool m_useSbOffsets  = true;            //!< with SB offsets
             bool m_traceSendId   = false;           //!< trace the send ids, meant for debugging
             qint64 m_simulatingChangedTs = -1;      //!< timestamp, when simulating changed (used to avoid jitter)
-            int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
-            int  m_skipCockpitUpdateCycles = 0;     //!< skip some update cycles to allow changes in simulator cockpit to be set
-            int  m_interpolationRequest = 0;        //!< current interpolation request
-            int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa dispatch
-            int  m_receiveExceptionCount = 0;       //!< exceptions
+            int m_syncDeferredCounter =  0;         //!< Set when synchronized, used to wait some time
+            int m_skipCockpitUpdateCycles = 0;      //!< skip some update cycles to allow changes in simulator cockpit to be set
+            int m_dispatchErrors = 0;               //!< number of dispatched failed, \sa dispatch
+            int m_receiveExceptionCount = 0;        //!< exceptions
             QList<TraceFsxSendId> m_sendIdTraces;   //!< Send id traces for debugging
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             CSimConnectObjects m_simConnectProbes;  //!< AI terrain probes

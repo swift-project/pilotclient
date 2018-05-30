@@ -85,7 +85,7 @@ namespace BlackSimPlugin
             // reset flags
             m_simPaused = false;
             this->emitSimulatorCombinedStatus();
-            return true;
+            return CSimulatorPluginCommon::disconnectFrom();
         }
 
         bool CSimulatorFsCommon::isFsuipcConnected() const
