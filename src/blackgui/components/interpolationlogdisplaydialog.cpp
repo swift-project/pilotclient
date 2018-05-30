@@ -36,7 +36,10 @@ namespace BlackGui
         }
 
         CInterpolationLogDisplayDialog::~CInterpolationLogDisplayDialog()
-        { }
+        {
+            //! \todo KB 2018-05 this is a hack, I have no idea why I need to invalidate the parent. But without doing it, the dtor of comp_InterpolationLogDisplay is called tywice
+            ui->comp_InterpolationLogDisplay->setParent(nullptr);
+        }
 
         void CInterpolationLogDisplayDialog::setSimulator(CSimulatorCommon *simulatorCommon)
         {
