@@ -29,7 +29,7 @@
    <item>
     <widget class="QGroupBox" name="gb_LogCallsign">
      <property name="title">
-      <string>Log.callsign</string>
+      <string>Log. callsign</string>
      </property>
      <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,1">
       <property name="leftMargin">
@@ -280,7 +280,7 @@
              <item>
               <widget class="QLabel" name="lbl_AverageUpdateTime">
                <property name="text">
-                <string>Avg.time:</string>
+                <string>Avg.update time:</string>
                </property>
               </widget>
              </item>

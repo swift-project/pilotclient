@@ -52,7 +52,9 @@ namespace BlackGui
         }
 
         CInterpolationLogDisplay::~CInterpolationLogDisplay()
-        { }
+        {
+            // void
+        }
 
         void CInterpolationLogDisplay::setSimulator(CSimulatorCommon *simulatorCommon)
         {
@@ -105,7 +107,8 @@ namespace BlackGui
                 ui->le_Parts->setText(boolToYesNo(m_airspaceMonitor->isRemoteAircraftSupportingParts(m_callsign)));
 
                 static const QString avgUpdateTime("%1ms");
-                ui->le_AvgUpdateTimeMs->setText(avgUpdateTime.arg(m_simulatorCommon->getStatisticsAverageUpdateTimeMs()));
+                const QString avgUpdateTimeRounded = QString::number(m_simulatorCommon->getStatisticsAverageUpdateTimeMs(), 'f', 2);
+                ui->le_AvgUpdateTimeMs->setText(avgUpdateTime.arg(avgUpdateTimeRounded));
 
                 const CClient client = m_airspaceMonitor->getClientOrDefaultForCallsign(m_callsign);
                 ui->le_GndFlag->setText(boolToYesNo(client.hasGndFlagCapability()));
