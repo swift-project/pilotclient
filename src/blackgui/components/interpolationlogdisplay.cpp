@@ -32,15 +32,13 @@ namespace BlackGui
             QFrame(parent),
             ui(new Ui::CInterpolationLogDisplay)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
+
             ui->setupUi(this);
             ui->tw_LogTabs->setCurrentIndex(TabFlow);
             constexpr int timeSecs = 5;
             ui->hs_UpdateTime->setValue(timeSecs);
             this->onSliderChanged(timeSecs);
-            connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
-            connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
-            connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
-            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CInterpolationLogDisplay::onCallsignEntered);
 
             CLedWidget::LedShape shape = CLedWidget::Rounded;
             ui->led_Parts->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Parts received", "", 14);
@@ -49,6 +47,13 @@ namespace BlackGui
             ui->led_Running->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Running", "Stopped", 14);
 
             m_callsign = ui->comp_CallsignCompleter->getCallsign();
+
+            connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
+            connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEntered, this, &CInterpolationLogDisplay::onCallsignEntered);
+            connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
+            connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
+            connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
+            connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
         }
 
         CInterpolationLogDisplay::~CInterpolationLogDisplay()
@@ -65,8 +70,11 @@ namespace BlackGui
                 m_simulatorCommon->disconnect(this);
             }
             m_simulatorCommon = simulatorCommon;
+            if (!simulatorCommon) { return; }
             connect(m_simulatorCommon, &CSimulatorCommon::receivedRequestedElevation, this, &CInterpolationLogDisplay::onElevationReceived);
             connect(m_simulatorCommon, &CSimulatorCommon::requestedElevation, this, &CInterpolationLogDisplay::onElevationRequested);
+            connect(m_simulatorCommon, &CSimulatorCommon::destroyed, this, &CInterpolationLogDisplay::onSimulatorUnloaded);
+            connect(m_simulatorCommon, &CSimulatorCommon::simulatorStatusChanged, this, &CInterpolationLogDisplay::onSimulatorStatusChanged);
         }
 
         void CInterpolationLogDisplay::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
@@ -86,7 +94,7 @@ namespace BlackGui
         void CInterpolationLogDisplay::updateLog()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
-            const bool hasLogger = m_simulatorCommon && m_airspaceMonitor;
+            const bool hasLogger = m_airspaceMonitor && m_simulatorCommon && m_simulatorCommon->isConnected() && !m_simulatorCommon->isShuttingDown();
             if (!hasLogger || m_callsign.isEmpty())
             {
                 ui->te_TextLog->setText("No logger attached or no callsign");
@@ -106,9 +114,10 @@ namespace BlackGui
                 ui->le_CG->home(false);
                 ui->le_Parts->setText(boolToYesNo(m_airspaceMonitor->isRemoteAircraftSupportingParts(m_callsign)));
 
-                static const QString avgUpdateTime("%1ms");
+                static const QString msTimeStr("%1ms");
                 const QString avgUpdateTimeRounded = QString::number(m_simulatorCommon->getStatisticsAverageUpdateTimeMs(), 'f', 2);
-                ui->le_AvgUpdateTimeMs->setText(avgUpdateTime.arg(avgUpdateTimeRounded));
+                ui->le_AvgUpdateTimeMs->setText(msTimeStr.arg(avgUpdateTimeRounded));
+                ui->le_UpdateAircraftReqTimeMs->setText(msTimeStr.arg(m_simulatorCommon->getStatisticsAircraftUpdatedRequestedDeltaMs()));
 
                 const CClient client = m_airspaceMonitor->getClientOrDefaultForCallsign(m_callsign);
                 ui->le_GndFlag->setText(boolToYesNo(client.hasGndFlagCapability()));
@@ -149,6 +158,7 @@ namespace BlackGui
 
             m_callsign = cs;
             m_simulatorCommon->setLogInterpolation(true, cs);
+            this->start();
         }
 
         void CInterpolationLogDisplay::toggleStartStop()
@@ -181,6 +191,26 @@ namespace BlackGui
             return true;
         }
 
+        void CInterpolationLogDisplay::onAboutToShutdown()
+        {
+            m_updateTimer.stop();
+            m_simulatorCommon = nullptr;
+        }
+
+        void CInterpolationLogDisplay::onSimulatorUnloaded()
+        {
+            m_updateTimer.stop();
+            m_simulatorCommon = nullptr;
+            this->resetStatistics();
+        }
+
+        void CInterpolationLogDisplay::onSimulatorStatusChanged(ISimulator::SimulatorStatus status)
+        {
+            Q_UNUSED(status);
+            m_updateTimer.stop();
+            this->resetStatistics();
+        }
+
         void CInterpolationLogDisplay::onSituationAdded(const CAircraftSituation &situation)
         {
             const CCallsign cs = situation.getCallsign();
@@ -204,16 +234,21 @@ namespace BlackGui
             if (!this->logCallsign(callsign)) { return; }
             m_elvReceived++;
             ui->le_Elevation->setText(plane.toQString());
-            ui->led_Elevation->blink();
             ui->le_ElevationRec->setText(QString::number(m_elvReceived));
+            ui->led_Elevation->blink();
         }
 
         void CInterpolationLogDisplay::onElevationRequested(const CCallsign &callsign)
         {
             if (!this->logCallsign(callsign)) { return; }
             m_elvRequested++;
-            ui->led_Elevation->blink();
             ui->le_ElevationReq->setText(QString::number(m_elvRequested));
+            ui->led_Elevation->blink();
+        }
+
+        void CInterpolationLogDisplay::resetStatistics()
+        {
+            if (m_simulatorCommon) { m_simulatorCommon->resetAircraftStatistics(); }
         }
 
         void CInterpolationLogDisplay::clear()
@@ -227,6 +262,7 @@ namespace BlackGui
             ui->le_ElevationReq->clear();
             ui->le_Parts->clear();
             ui->le_AvgUpdateTimeMs->clear();
+            ui->le_UpdateAircraftReqTimeMs->clear();
             m_elvReceived = m_elvRequested = 0;
         }
 

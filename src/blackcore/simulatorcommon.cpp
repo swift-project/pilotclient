@@ -587,6 +587,8 @@ namespace BlackCore
         m_statsUpdateAircraftTimeTotalMs = 0;
         m_statsPhysicallyAddedAircraft = 0;
         m_statsPhysicallyRemovedAircraft = 0;
+        m_statsLastUpdateAircraftRequested = 0;
+        m_statsUpdateAircraftRequestedDeltaMs = 0;
     }
 
     CStatusMessageList CSimulatorCommon::debugVerifyStateAfterAllAircraftRemoved() const
@@ -638,11 +640,14 @@ namespace BlackCore
 
     void CSimulatorCommon::setStatsRemoteAircraftUpdate(qint64 startTime)
     {
-        const qint64 dt = QDateTime::currentMSecsSinceEpoch() - startTime;
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        const qint64 dt = now - startTime;
         m_statsUpdateAircraftTimeTotalMs += dt;
         m_statsUpdateAircraftRuns++;
         m_statsUpdateAircraftTimeAvgMs = static_cast<double>(m_statsUpdateAircraftTimeTotalMs) / static_cast<double>(m_statsUpdateAircraftRuns);
         m_updateRemoteAircraftInProgress = false;
+        if (m_statsLastUpdateAircraftRequested > 0) { m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequested; }
+        m_statsLastUpdateAircraftRequested = startTime;
     }
 
     void CSimulatorCommon::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)

@@ -31,7 +31,7 @@
      <property name="title">
       <string>Log. callsign</string>
      </property>
-     <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,1">
+     <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,0,1">
       <property name="leftMargin">
        <number>3</number>
       </property>
@@ -74,6 +74,13 @@
         </property>
         <property name="tickInterval">
          <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_ResetStats">
+        <property name="text">
+         <string>reset stats.</string>
         </property>
        </widget>
       </item>
@@ -227,23 +234,6 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QLabel" name="lbl_CG">
-               <property name="text">
-                <string>CG:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_CG">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string>CG</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QLabel" name="lbl_Parts">
                <property name="text">
                 <string>Parts:</string>
@@ -274,6 +264,23 @@
                </property>
                <property name="placeholderText">
                 <string>gnd.flag?</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lbl_UpdateAircraftReqTime">
+               <property name="toolTip">
+                <string>update aircraft req.time</string>
+               </property>
+               <property name="text">
+                <string>Update req.</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="le_UpdateAircraftReqTimeMs">
+               <property name="readOnly">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -336,7 +343,7 @@
           </item>
           <item>
            <widget class="QFrame" name="fr_Misc2">
-            <layout class="QHBoxLayout" name="hl_Misc2">
+            <layout class="QHBoxLayout" name="hl_Misc2" stretch="0,1,0,4">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -349,6 +356,23 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
+             <item>
+              <widget class="QLabel" name="lbl_CG">
+               <property name="text">
+                <string>CG:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="le_CG">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="placeholderText">
+                <string>CG</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QLabel" name="lbl_Elevation">
                <property name="text">
@@ -442,7 +466,6 @@
   <tabstop>comp_CallsignCompleter</tabstop>
   <tabstop>le_UpdateTime</tabstop>
   <tabstop>hs_UpdateTime</tabstop>
-  <tabstop>le_CG</tabstop>
   <tabstop>le_Parts</tabstop>
   <tabstop>le_GndFlag</tabstop>
   <tabstop>le_ElevationReq</tabstop>

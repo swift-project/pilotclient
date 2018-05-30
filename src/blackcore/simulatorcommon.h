@@ -123,6 +123,9 @@ namespace BlackCore
         //! Total update time in ms
         qint64 getStatisticsTotalUpdateTimeMs() const { return m_statsUpdateAircraftTimeTotalMs; }
 
+        //! Time between two update requests
+        qint64 getStatisticsAircraftUpdatedRequestedDeltaMs() const { return m_statsUpdateAircraftRequestedDeltaMs; }
+
         //! Access to logger
         const BlackMisc::Simulation::CInterpolationLogger &interpolationLogger() const { return m_interpolationLogger; }
 
@@ -239,8 +242,11 @@ namespace BlackCore
         bool   m_updateRemoteAircraftInProgress = false;                    //!< currently updating remote aircraft
         int    m_timerId = -1;                                              //!< dispatch timer id
         int    m_statsUpdateAircraftRuns = 0;                               //!< statistics update count
-        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                        //!< statistics total update time
         double m_statsUpdateAircraftTimeAvgMs = 0;                          //!< statistics average update time
+        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                        //!< statistics total update time
+        qint64 m_statsLastUpdateAircraftRequested = 0;                      //!< when was the last aircraft update requested
+        qint64 m_statsUpdateAircraftRequestedDeltaMs = 0;                   //!< delta time between 2 aircrat updates
+
         BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log.interpolation
         QMap<BlackMisc::Aviation::CCallsign, qint64> m_clampedLogMsg;       //!< when logged last so there, can be used so there is no log message overflow

@@ -173,6 +173,15 @@ namespace BlackCore
         //! Driver will be unloaded
         virtual void unload() = 0;
 
+        //! Are we connected to the simulator?
+        virtual bool isConnected() const = 0;
+
+        //! Simulator paused?
+        virtual bool isPaused() const = 0;
+
+        //! Simulator running?
+        virtual bool isSimulating() const = 0;
+
         //! Clear all aircraft related data
         virtual void clearAllRemoteAircraftData() = 0;
 
@@ -251,15 +260,6 @@ namespace BlackCore
                    BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                    BlackMisc::Network::IClientProvider *clientProvider,
                    QObject *parent = nullptr);
-
-        //! Are we connected to the simulator?
-        virtual bool isConnected() const = 0;
-
-        //! Simulator paused?
-        virtual bool isPaused() const = 0;
-
-        //! Simulator running?
-        virtual bool isSimulating() const = 0;
 
         //! Add new remote aircraft physically to the simulator
         //! \sa changeRemoteAircraftEnabled to hide a remote aircraft

@@ -78,17 +78,29 @@ namespace BlackGui
             //! Log the current callsign
             bool logCallsign(const BlackMisc::Aviation::CCallsign &cs) const;
 
+            //! About to shutdown
+            void onAboutToShutdown();
+
+            //! Simulator unloaded
+            void onSimulatorUnloaded();
+
             //! \copydoc BlackCore::CAirspaceMonitor::addedAircraftSituation
             void onSituationAdded(const BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! \copydoc BlackCore::CAirspaceMonitor::addedAircraftSituation
             void onPartsAdded(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
 
+            //! \copydoc BlackCore::CSimulatorCommon::simulatorStatusChanged
+            void onSimulatorStatusChanged(BlackCore::ISimulator::SimulatorStatus status);
+
             //! \copydoc BlackCore::CSimulatorCommon::receivedRequestedElevation
             void onElevationReceived(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
 
             //! \copydoc BlackCore::CSimulatorCommon::requestedElevation
             void onElevationRequested(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! \copydoc BlackCore::CSimulatorCommon::resetAircraftStatistics
+            void resetStatistics();
 
             //! Clear
             void clear();
