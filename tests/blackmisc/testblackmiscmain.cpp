@@ -25,6 +25,7 @@
 #include "testinput.h"
 #include "testinterpolatorlinear.h"
 #include "testinterpolatorparts.h"
+#include "testinterpolatormisc.h"
 #include "testlibrarypath.h"
 #include "testmath.h"
 #include "testmisc.h"
@@ -130,6 +131,10 @@ namespace BlackMiscTest
         {
             CTestInterpolatorParts interpolatorParts;
             status |= test.exec(&interpolatorParts, "blackmisc_interpolatorparts");
+        }
+        {
+            CTestInterpolatorMisc interpolatorMisc;
+            status |= test.exec(&interpolatorMisc, "blackmisc_interpolatormisc");
         }
         {
             CTestLibraryPath libraryPathTests;
