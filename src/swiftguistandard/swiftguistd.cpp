@@ -144,7 +144,12 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
         {
             // we do not just logoff, but give the user a chance to respond
             event->ignore();
-            QTimer::singleShot(500, this, &SwiftGuiStd::loginRequested);
+            QPointer<SwiftGuiStd> myself(this);
+            QTimer::singleShot(500, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->loginRequested();
+            });
             return;
         }
 
@@ -251,9 +256,7 @@ void SwiftGuiStd::displayStatusMessageInGui(const CStatusMessage &statusMessage)
 void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
 {
     this->updateGuiStatusInformation();
-    this->displayInOverlayWindow(CStatusMessage(
-                                     this, CStatusMessage::SeverityError,
-                                     kickMessage.isEmpty() ? "You have been kicked from the network" : kickMessage));
+    this->displayInOverlayWindow(CStatusMessage(this, CStatusMessage::SeverityError, kickMessage.isEmpty() ? "You have been kicked from the network" : kickMessage));
 }
 
 void SwiftGuiStd::onConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
