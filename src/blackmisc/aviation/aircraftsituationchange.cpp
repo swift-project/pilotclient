@@ -103,7 +103,7 @@ namespace BlackMisc
                    QStringLiteral(" | accelerating.: ") % boolToYesNo(this->isConstAccelerating()) % QStringLiteral(" decelarating: ") % boolToYesNo(this->isConstDecelarating()) %
                    QStringLiteral(" | rotate up: ") % boolToYesNo(this->isRotatingUp()) %
                    QStringLiteral(" | push back: ") % boolToYesNo(this->containsPushBack()) %
-                   QStringLiteral(" | scenery delta: ") % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % QStringLiteral(" [") % this->getGuessedSceneryDeviationAsString() %
+                   QStringLiteral(" | scenery delta: ") % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % QStringLiteral(" [") % this->getSceneryDeviationHintAsString() %
                    QStringLiteral("] | AGL delta: ") % m_gndDistMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_gndDistStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" | std.dev/mean: pitch ") %  m_pitchMean.valueRoundedWithUnit(1) % QStringLiteral("/") %  m_pitchStdDev.valueRoundedWithUnit(1) %
                    QStringLiteral(" gs ") % m_gsMean.valueRoundedWithUnit(1) % QStringLiteral("/") % m_gsStdDev.valueRoundedWithUnit(1) %

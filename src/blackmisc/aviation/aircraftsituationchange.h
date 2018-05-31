@@ -134,7 +134,7 @@ namespace BlackMisc
 
             //! Scnenery deviation (if it can be calculated, otherwise PhysicalQuantities::CLength::null)
             //! This is without CG, so substract CG to get deviation
-            const PhysicalQuantities::CLength &guessedSceneryDeviation() const { return m_guessedSceneryDeviation; }
+            const PhysicalQuantities::CLength &getGuessedSceneryDeviation() const { return m_guessedSceneryDeviation; }
 
             //! Get scenery deviation under consideration of CG
             PhysicalQuantities::CLength getGuessedSceneryDeviationCG() const { return m_guessedSceneryDeviationCG; }
@@ -143,7 +143,7 @@ namespace BlackMisc
             GuessedSceneryDeviation getSceneryDeviationHint() const { return static_cast<GuessedSceneryDeviation>(m_guessedSceneryDeviationHint); }
 
             //! Scenery deviation hint hint as string
-            const QString &getGuessedSceneryDeviationAsString() const { return guessedSceneryDeviationToString(this->getSceneryDeviationHint()); }
+            const QString &getSceneryDeviationHintAsString() const { return guessedSceneryDeviationToString(this->getSceneryDeviationHint()); }
 
             //! Scenery deviation available?
             bool hasSceneryDeviation() const;

@@ -77,6 +77,8 @@ namespace BlackMisc
         CAircraftParts CAircraftParts::guessedParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
         {
             CAircraftParts parts;
+            parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
+            parts.setTimeOffsetMs(situation.getTimeOffsetMs());
             parts.setPartsDetails(GuessedParts);
             parts.setLights(CAircraftLights::guessedLights(situation));
 
