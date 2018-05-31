@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_INTERPOLATIONLOGDISPLAY_H
 #define BLACKGUI_COMPONENTS_INTERPOLATIONLOGDISPLAY_H
 
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
 #include "blackcore/simulatorcommon.h"
 #include "blackmisc/aviation/callsign.h"
@@ -29,7 +30,7 @@ namespace BlackGui
         /**
          * Display live data of interpolation
          */
-        class BLACKGUI_EXPORT CInterpolationLogDisplay : public QFrame
+        class BLACKGUI_EXPORT CInterpolationLogDisplay : public COverlayMessagesFrame
         {
             Q_OBJECT
 
@@ -38,6 +39,7 @@ namespace BlackGui
             enum Tab
             {
                 TabFlow,
+                TabInterpolation,
                 TabTextLog
             };
 
@@ -59,6 +61,9 @@ namespace BlackGui
         private:
             //! Update log.
             void updateLog();
+
+            //! Get last interpolation
+            void displayLastInterpolation();
 
             //! Slider interval
             void onSliderChanged(int timeSecs);

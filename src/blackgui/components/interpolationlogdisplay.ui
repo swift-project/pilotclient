@@ -205,7 +205,7 @@
          <property name="title">
           <string>Misc.</string>
          </property>
-         <layout class="QVBoxLayout" name="vl_Misc" stretch="0,0">
+         <layout class="QGridLayout" name="gl_Misc">
           <property name="leftMargin">
            <number>3</number>
           </property>
@@ -218,179 +218,166 @@
           <property name="bottomMargin">
            <number>3</number>
           </property>
-          <item>
-           <widget class="QFrame" name="fr_Misc1">
-            <layout class="QHBoxLayout" name="hl_Misc1">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="lbl_Parts">
-               <property name="text">
-                <string>Parts:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_Parts">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string>parts?</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_GndFlag">
-               <property name="text">
-                <string>Gnd.flag:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_GndFlag">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string>gnd.flag?</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_UpdateAircraftReqTime">
-               <property name="toolTip">
-                <string>update aircraft req.time</string>
-               </property>
-               <property name="text">
-                <string>Update req.</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_UpdateAircraftReqTimeMs">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_AverageUpdateTime">
-               <property name="text">
-                <string>Avg.update time:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_AvgUpdateTimeMs">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_ElevationRequested">
-               <property name="text">
-                <string>req.:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_ElevationReq">
-               <property name="toolTip">
-                <string>elevation requested</string>
-               </property>
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string>req.</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_ElevationReceived">
-               <property name="text">
-                <string>Rec.:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_ElevationRec">
-               <property name="toolTip">
-                <string>elevation received</string>
-               </property>
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string>rec.</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+          <item row="0" column="7">
+           <widget class="QLineEdit" name="le_UpdateAircraftReqTimeMs">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>time</string>
+            </property>
            </widget>
           </item>
-          <item>
-           <widget class="QFrame" name="fr_Misc2">
-            <layout class="QHBoxLayout" name="hl_Misc2" stretch="0,1,0,4">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="lbl_CG">
-               <property name="text">
-                <string>CG:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_CG">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string>CG</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbl_Elevation">
-               <property name="text">
-                <string>Elevation:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="le_Elevation">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="placeholderText">
-                <string>elevation</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+          <item row="0" column="6">
+           <widget class="QLabel" name="lbl_UpdateAircraftReqTime">
+            <property name="toolTip">
+             <string>update aircraft req.time</string>
+            </property>
+            <property name="text">
+             <string>Update req.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_ElevationReq">
+            <property name="toolTip">
+             <string>elevation requested</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>req.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="lbl_Parts">
+            <property name="text">
+             <string>Parts:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="le_Parts">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>parts?</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_CG">
+            <property name="text">
+             <string>CG:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLineEdit" name="le_GndFlag">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>gnd.flag?</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="lbl_GndFlag">
+            <property name="text">
+             <string>Gnd.flag:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_ElevationRequested">
+            <property name="text">
+             <string>Req.:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="le_ElevationRec">
+            <property name="toolTip">
+             <string>elevation received</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>rec.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="9">
+           <widget class="QLineEdit" name="le_AvgUpdateTimeMs">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>time</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8">
+           <widget class="QLabel" name="lbl_AverageUpdateTime">
+            <property name="text">
+             <string>Avg.upd.time:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="le_CG">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>CG</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="lbl_ElevationReceived">
+            <property name="text">
+             <string>Rec.:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="7" colspan="3">
+           <widget class="QLineEdit" name="le_Elevation">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>elevation</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6">
+           <widget class="QLabel" name="lbl_Elevation">
+            <property name="text">
+             <string>Elevation:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="QLineEdit" name="le_SceneryOffset">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>offset</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Offset:</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -414,6 +401,104 @@
              <bool>false</bool>
             </attribute>
            </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_Interpolation">
+      <attribute name="title">
+       <string>Interpolation</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_Interpolation" stretch="0,2,1,1">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item alignment="Qt::AlignRight">
+        <widget class="QPushButton" name="pb_GetLastInterpolation">
+         <property name="text">
+          <string> last interpolation </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_LastSituation">
+         <property name="title">
+          <string>Situation</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_LastSituation">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QTextEdit" name="te_LastInterpolatedSituation"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_Changes">
+         <property name="title">
+          <string>Changes</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_Changes">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QTextEdit" name="te_SituationChange"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gb_Parts">
+         <property name="title">
+          <string>Parts</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_Parts">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QTextEdit" name="te_LastInterpolatedParts"/>
           </item>
          </layout>
         </widget>
@@ -463,18 +548,27 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>comp_CallsignCompleter</tabstop>
-  <tabstop>le_UpdateTime</tabstop>
-  <tabstop>hs_UpdateTime</tabstop>
+  <tabstop>tw_LogTabs</tabstop>
+  <tabstop>le_CG</tabstop>
   <tabstop>le_Parts</tabstop>
   <tabstop>le_GndFlag</tabstop>
+  <tabstop>le_UpdateAircraftReqTimeMs</tabstop>
+  <tabstop>le_AvgUpdateTimeMs</tabstop>
   <tabstop>le_ElevationReq</tabstop>
+  <tabstop>le_ElevationRec</tabstop>
+  <tabstop>le_SceneryOffset</tabstop>
   <tabstop>le_Elevation</tabstop>
   <tabstop>tvp_AircraftSituations</tabstop>
   <tabstop>tvp_AircraftParts</tabstop>
-  <tabstop>tw_LogTabs</tabstop>
+  <tabstop>te_LastInterpolatedSituation</tabstop>
+  <tabstop>te_SituationChange</tabstop>
+  <tabstop>te_LastInterpolatedParts</tabstop>
   <tabstop>te_TextLog</tabstop>
-  <tabstop>le_ElevationRec</tabstop>
+  <tabstop>hs_UpdateTime</tabstop>
+  <tabstop>comp_CallsignCompleter</tabstop>
+  <tabstop>pb_GetLastInterpolation</tabstop>
+  <tabstop>le_UpdateTime</tabstop>
+  <tabstop>pb_ResetStats</tabstop>
   <tabstop>pb_StartStop</tabstop>
  </tabstops>
  <resources/>

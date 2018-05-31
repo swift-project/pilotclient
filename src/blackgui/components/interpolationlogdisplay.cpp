@@ -29,7 +29,7 @@ namespace BlackGui
     namespace Components
     {
         CInterpolationLogDisplay::CInterpolationLogDisplay(QWidget *parent) :
-            QFrame(parent),
+            COverlayMessagesFrame(parent),
             ui(new Ui::CInterpolationLogDisplay)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
@@ -53,6 +53,7 @@ namespace BlackGui
             connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
             connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
             connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
+            connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::displayLastInterpolation);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
         }
 
@@ -94,6 +95,7 @@ namespace BlackGui
         void CInterpolationLogDisplay::updateLog()
         {
             if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!this->isVisible()) { return; }
             const bool hasLogger = m_airspaceMonitor && m_simulatorCommon && m_simulatorCommon->isConnected() && !m_simulatorCommon->isShuttingDown();
             if (!hasLogger || m_callsign.isEmpty())
             {
@@ -121,12 +123,40 @@ namespace BlackGui
 
                 const CClient client = m_airspaceMonitor->getClientOrDefaultForCallsign(m_callsign);
                 ui->le_GndFlag->setText(boolToYesNo(client.hasGndFlagCapability()));
+
+                this->displayLastInterpolation();
             }
+        }
+
+        void CInterpolationLogDisplay::displayLastInterpolation()
+        {
+            if (!sApp || sApp->isShuttingDown() || !m_airspaceMonitor || !m_simulatorCommon) { return; }
+            if (m_callsign.isEmpty())
+            {
+                static const CStatusMessage m = CStatusMessage(this).validationError("No callsign");
+                this->showOverlayMessage(m);
+                return;
+            }
+            if (!m_simulatorCommon->getLogCallsigns().contains(m_callsign))
+            {
+                static const CStatusMessage m = CStatusMessage(this).validationError("No logger attached, start logging");
+                this->showOverlayMessage(m);
+                return;
+            }
+
+            const SituationLog sLog = m_simulatorCommon->interpolationLogger().getLastSituationLog();
+            // ui->te_LastInterpolatedSituation->setText(sLog.toQString(false, true, true, false, "<br>"));
+            ui->te_LastInterpolatedSituation->setText(sLog.situationCurrent.toQString(true));
+            ui->te_SituationChange->setText(sLog.change.toQString(true));
+            ui->le_SceneryOffset->setText(sLog.change.getGuessedSceneryDeviation().valueRoundedWithUnit(CLengthUnit::ft(), 1));
+
+            const PartsLog pLog = m_simulatorCommon->interpolationLogger().getLastPartsLog();
+            ui->te_LastInterpolatedParts->setText(pLog.parts.toQString(true));
         }
 
         void CInterpolationLogDisplay::onSliderChanged(int timeSecs)
         {
-            static const QString time("%1 secs");
+            static const QString time("%1secs");
             m_updateTimer.setInterval(timeSecs * 1000);
             ui->le_UpdateTime->setText(time.arg(timeSecs));
         }
