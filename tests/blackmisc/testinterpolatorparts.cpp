@@ -30,7 +30,10 @@ namespace BlackMiscTest
 {
     void CTestInterpolatorParts::groundFlagInterpolation()
     {
-        CCallsign cs("SWIFT");
+        const CCallsign cs("SWIFT");
+        const CInterpolationAndRenderingSetupGlobal gSetup;
+        const CInterpolationAndRenderingSetupPerCallsign setup(cs, gSetup);
+
         CRemoteAircraftProviderDummy provider;
         CInterpolatorSpline interpolator(cs, nullptr, nullptr, &provider);
         interpolator.markAsUnitTest();
@@ -52,13 +55,13 @@ namespace BlackMiscTest
         QVERIFY2(parts.size() == number, "Wrong parts size of list");
 
         // interpolation functional check
-        const CInterpolationAndRenderingSetupPerCallsign setup;
         const qint64 oldestTs = parts.oldestTimestampMsecsSinceEpoch();
 
         // Testing for a time >> last time
         // all on ground flags true
         provider.insertNewAircraftParts(cs, parts, false); // we work with 0 offsets here
         QVERIFY2(provider.remoteAircraftPartsCount(cs) == parts.size(), "Wrong parts size");
+
         CInterpolationResult result = interpolator.getInterpolation(farFuture, setup);
         CAircraftParts p = result;
         qint64 pTs = p.getAdjustedMSecsSinceEpoch();
