@@ -35,7 +35,7 @@ namespace BlackCore
                 QStringLiteral(" ") %
                 CEntityFlags::flagToString(this->getEntities()) %
                 QStringLiteral(" ") %
-                this->m_cacheLifetime.toFormattedQString(i18n);
+                this->m_cacheLifetime.toQString(i18n);
         }
 
         CEntityFlags::Entity CDatabaseReaderConfig::getEntities() const

@@ -134,22 +134,22 @@ namespace BlackGui
             static const CIcon iconRadio(CIcon::iconByIndex(CIcons::StandardIconRadio16));
             static const CIcon iconAttitude(CIcon::iconByIndex(CIcons::AviationAttitudeIndicator));
 
-            this->addOrUpdateLiveDataByName("latitude", s.latitude().toFormattedQString(), iconLatLng);
-            this->addOrUpdateLiveDataByName("longitude", s.longitude().toFormattedQString(), iconLatLng);
+            this->addOrUpdateLiveDataByName("latitude", s.latitude().toQString(), iconLatLng);
+            this->addOrUpdateLiveDataByName("longitude", s.longitude().toQString(), iconLatLng);
             this->addOrUpdateLiveDataByName("altitude", s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 2), iconAlt);
             if (s.hasGroundElevation())
             {
                 this->addOrUpdateLiveDataByName("elevation", s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::ft(), 2), iconAlt);
             }
-            this->addOrUpdateLiveDataByName("pitch", s.getPitch().toFormattedQString(), iconAttitude);
-            this->addOrUpdateLiveDataByName("bank", s.getBank().toFormattedQString(), iconAttitude);
-            this->addOrUpdateLiveDataByName("heading", s.getHeading().toFormattedQString(), s.getHeading().toIcon());
-            this->addOrUpdateLiveDataByName("ground speed", s.getGroundSpeed().toFormattedQString(), s.getGroundSpeed().toIcon());
+            this->addOrUpdateLiveDataByName("pitch", s.getPitch().toQString(), iconAttitude);
+            this->addOrUpdateLiveDataByName("bank", s.getBank().toQString(), iconAttitude);
+            this->addOrUpdateLiveDataByName("heading", s.getHeading().toQString(), s.getHeading().toIcon());
+            this->addOrUpdateLiveDataByName("ground speed", s.getGroundSpeed().toQString(), s.getGroundSpeed().toIcon());
 
-            this->addOrUpdateLiveDataByName("COM1 active", c1.getFrequencyActive().toFormattedQString(), iconRadio);
-            this->addOrUpdateLiveDataByName("COM2 active", c2.getFrequencyActive().toFormattedQString(), iconRadio);
-            this->addOrUpdateLiveDataByName("COM1 standby", c1.getFrequencyStandby().toFormattedQString(), iconRadio);
-            this->addOrUpdateLiveDataByName("COM2 standby", c2.getFrequencyStandby().toFormattedQString(), iconRadio);
+            this->addOrUpdateLiveDataByName("COM1 active", c1.getFrequencyActive().toQString(), iconRadio);
+            this->addOrUpdateLiveDataByName("COM2 active", c2.getFrequencyActive().toQString(), iconRadio);
+            this->addOrUpdateLiveDataByName("COM1 standby", c1.getFrequencyStandby().toQString(), iconRadio);
+            this->addOrUpdateLiveDataByName("COM2 standby", c2.getFrequencyStandby().toQString(), iconRadio);
             this->addOrUpdateLiveDataByName("Transponder", ownAircraft.getTransponderCodeFormatted(), iconRadio);
         }
 

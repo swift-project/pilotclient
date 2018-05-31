@@ -160,7 +160,7 @@ namespace BlackGui
 
         void CHotkeyDialog::combinationSelectionChanged(const CHotkeyCombination &combination)
         {
-            ui->pb_SelectedHotkey->setText(combination.toFormattedQString());
+            ui->pb_SelectedHotkey->setText(combination.toQString());
         }
 
         void CHotkeyDialog::combinationSelectionFinished(const CHotkeyCombination &combination)
@@ -216,7 +216,7 @@ namespace BlackGui
 
         void CHotkeyDialog::synchronizeSimpleSelection()
         {
-            ui->pb_SelectedHotkey->setText(m_actionHotkey.getCombination().toFormattedQString());
+            ui->pb_SelectedHotkey->setText(m_actionHotkey.getCombination().toQString());
         }
 
         void CHotkeyDialog::synchronizeAdvancedSelection()

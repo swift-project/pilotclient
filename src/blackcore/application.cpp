@@ -1282,7 +1282,7 @@ namespace BlackCore
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages())  { return false; }
         CApplication::cmdLineErrorMessage(
-            msgs.toFormattedQString(true)
+            msgs.toQString(true)
         );
         return false;
     }

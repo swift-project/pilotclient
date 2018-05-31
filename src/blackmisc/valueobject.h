@@ -89,6 +89,7 @@ namespace BlackMisc
         using Mixin::String<Derived>::toQString;
 
         //! \copydoc BlackMisc::Mixin::String::toFormattedQString
+        //! \deprecated not really used and just using toQString
         using Mixin::String<Derived>::toFormattedQString;
 
         //! \copydoc BlackMisc::Mixin::String::toStdString
