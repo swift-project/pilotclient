@@ -8,7 +8,6 @@
  */
 
 #include "interpolationlogger.h"
-#include "blackconfig/buildconfig.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/pq/angle.h"
@@ -18,6 +17,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/directoryutils.h"
+#include "blackconfig/buildconfig.h"
 #include <QDateTime>
 #include <QStringBuilder>
 

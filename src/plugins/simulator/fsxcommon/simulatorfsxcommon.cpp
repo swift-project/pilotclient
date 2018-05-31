@@ -1712,6 +1712,7 @@ namespace BlackSimPlugin
             CSimConnectObject simObject;
             if (m_simConnectObjectsPositionAndPartsTraces.contains(aircraft.getCallsign()))
             {
+                // if in traces, get the object and reuse it
                 simObject = m_simConnectObjectsPositionAndPartsTraces[aircraft.getCallsign()];
                 m_simConnectObjectsPositionAndPartsTraces.remove(aircraft.getCallsign());
                 simObject.resetState();
