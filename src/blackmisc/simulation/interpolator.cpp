@@ -147,12 +147,11 @@ namespace BlackMisc
             CInterpolationResult result;
             do
             {
-                if (!this->initIniterpolationStepData(currentTimeSinceEpoc, setup))
-                {
-                    // make sure we can also interpolate parts only (needed in unit tests)
-                    if (!m_unitTest)  { break; }
-                }
+                // make sure we can also interpolate parts only (needed in unit tests)
+                const bool init = this->initIniterpolationStepData(currentTimeSinceEpoc, setup);
+                if (!m_unitTest && !init) { break; } // failure in real scenarios, unit tests move on
 
+                Q_ASSERT_X(m_currentTimeMsSinceEpoch > 0, Q_FUNC_INFO, "No valid timestamp, interpolator initialized?");
                 const CAircraftSituation interpolatedSituation = this->getInterpolatedSituation();
                 const CAircraftParts interpolatedParts = this->getInterpolatedOrGuessedParts();
 
@@ -290,13 +289,20 @@ namespace BlackMisc
         CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts()
         {
             CAircraftParts parts;
-            if (m_currentSetup.isAircraftPartsEnabled()) { parts = this->getInterpolatedParts(); }
+            if (m_currentSetup.isAircraftPartsEnabled())
+            {
+                // this already logs
+                parts = this->getInterpolatedParts();
+            }
+
+            // if we have supported parts, we skip this step, but it can happen
+            // the parts are still empty
             if (!m_currentPartsStatus.isSupportingParts())
             {
                 // check if model has been thru model matching
                 parts.guessParts(m_lastInterpolation, m_currentSituationChange, m_model);
+                this->logParts(parts, 0, false);
             }
-            this->logParts(parts, 0, false);
             return parts;
         }
 
@@ -359,15 +365,23 @@ namespace BlackMisc
         {
             Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
-            const bool slowUpdates = ((m_interpolatedSituationsCounter % 25) == 0);
+            const qint64 lastModifed = this->situationsLastModified(m_callsign);
+            const bool slowUpdateStep = ((m_interpolatedSituationsCounter % 25) == 0); // flag when parts are updated, which need not to be updated every time
+            const bool changedSetup = m_currentSetup != setup;
+            const bool changedSituations = lastModifed > m_situationsLastModified;
+
             m_currentTimeMsSinceEpoch = currentTimeSinceEpoc;
-            m_situationsLastModified = this->situationsLastModified(m_callsign);
-            m_currentSetup = setup;
-            m_currentSituations = this->remoteAircraftSituationsAndChange(setup);
             m_currentInterpolationStatus.reset();
             m_currentPartsStatus.reset();
 
-            if (!m_model.hasCG() || slowUpdates)
+            if (changedSetup || changedSituations)
+            {
+                m_currentSetup = setup;
+                m_situationsLastModified = lastModifed;
+                m_currentSituations = this->remoteAircraftSituationsAndChange(setup); // only update when needed
+            }
+
+            if (!m_model.hasCG() || slowUpdateStep)
             {
                 this->getAndFetchModelCG(); // update CG
             }
