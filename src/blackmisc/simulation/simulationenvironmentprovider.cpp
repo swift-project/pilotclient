@@ -20,6 +20,7 @@ namespace BlackMisc
         bool ISimulationEnvironmentProvider::rememberGroundElevation(const ICoordinateGeodetic &elevationCoordinate, const CLength &epsilon)
         {
             {
+                // no 2nd elevation nearby
                 QReadLocker l(&m_lockElvCoordinates);
                 if (m_elvCoordinates.containsObjectInRange(elevationCoordinate, minRange(epsilon))) { return false; }
             }
@@ -28,7 +29,7 @@ namespace BlackMisc
                 // * we assume we find them faster
                 // * and need the more frequently (the recent ones)
                 QWriteLocker l(&m_lockElvCoordinates);
-                if (m_elvCoordinates.size() > MaxElevations) { m_elvCoordinates.pop_back(); }
+                if (m_elvCoordinates.size() > m_maxElevations) { m_elvCoordinates.pop_back(); }
                 m_elvCoordinates.push_front(elevationCoordinate);
             }
             return true;
@@ -76,9 +77,18 @@ namespace BlackMisc
             return m_elvCoordinates;
         }
 
+        CCoordinateGeodeticList ISimulationEnvironmentProvider::getElevationCoordinates(int &maxRemembered) const
+        {
+            QReadLocker l(&m_lockElvCoordinates);
+            maxRemembered = m_maxElevations;
+            return m_elvCoordinates;
+        }
+
         int ISimulationEnvironmentProvider::cleanUpElevations(const ICoordinateGeodetic &referenceCoordinate, int maxNumber)
         {
-            CCoordinateGeodeticList coordinates(this->getElevationCoordinates());
+            int currentMax;
+            CCoordinateGeodeticList coordinates(this->getElevationCoordinates(currentMax));
+            if (maxNumber < 0) { maxNumber = currentMax; }
             const int size = coordinates.size();
             if (size <= maxNumber) { return 0; }
             coordinates.sortByEuclideanDistanceSquared(referenceCoordinate);
@@ -166,6 +176,19 @@ namespace BlackMisc
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
             return m_cgs[callsign] == cg;
+        }
+
+        int ISimulationEnvironmentProvider::setRememberMaxElevations(int max)
+        {
+            QWriteLocker l(&m_lockElvCoordinates);
+            m_maxElevations = qMax(max, 50);
+            return m_maxElevations;
+        }
+
+        int ISimulationEnvironmentProvider::getRememberMaxElevations() const
+        {
+            QReadLocker l(&m_lockElvCoordinates);
+            return m_maxElevations;
         }
 
         ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) : m_simulatorPluginInfo(pluginInfo)

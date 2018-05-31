@@ -33,7 +33,6 @@ namespace BlackMisc
         {
         public:
             //! All remembered coordiantes
-            //! \remark might be a relatively large list
             //! \threadsafe
             Geo::CCoordinateGeodeticList getElevationCoordinates() const;
 
@@ -77,9 +76,21 @@ namespace BlackMisc
             //! \threadsafe
             bool hasSameCG(const PhysicalQuantities::CLength &cg, const Aviation::CCallsign &callsign) const;
 
+            //! Set number of elevations kept
+            //! \threadsafe
+            int setRememberMaxElevations(int max);
+
+            //! Get number of max. number of elevations
+            //! \threadsafe
+            int getRememberMaxElevations() const;
+
         protected:
             //! Ctor
             ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo);
+
+            //! All remembered coordiantes plus max remembered situations
+            //! \threadsafe
+            Geo::CCoordinateGeodeticList getElevationCoordinates(int &maxRemembered) const;
 
             //! New plugin info and default model
             //! \remark normally only used by emulated driver
@@ -107,7 +118,7 @@ namespace BlackMisc
 
             //! Only keep closest ones
             //! \threadsafe
-            int cleanUpElevations(const Geo::ICoordinateGeodetic &referenceCoordinate, int maxNumber = MaxElevations);
+            int cleanUpElevations(const Geo::ICoordinateGeodetic &referenceCoordinate, int maxNumber = -1);
 
             //! Remember a given elevation
             //! \threadsafe
@@ -129,9 +140,8 @@ namespace BlackMisc
             //! Min.range considered as single point
             static PhysicalQuantities::CLength minRange(const PhysicalQuantities::CLength &range);
 
-            static constexpr int MaxElevations = 1000;  //!< How many elevations we keep
-
         private:
+            int m_maxElevations = 100; //!< How many elevations we keep
             CAircraftModel m_defaultModel; //!< default model
             CSimulatorPluginInfo m_simulatorPluginInfo; //!< info object
             Geo::CCoordinateGeodeticList m_elvCoordinates;
