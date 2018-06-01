@@ -55,6 +55,9 @@ namespace BlackSimPlugin
             virtual bool connectTo() override;
             virtual bool disconnectFrom() override;
             virtual void unload() override;
+            virtual bool isConnected() const override;
+            virtual bool isPaused() const override;
+            virtual bool isSimulating() const override;
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
@@ -120,9 +123,6 @@ namespace BlackSimPlugin
             void internalAircraftChanged();
 
         protected:
-            virtual bool isConnected() const override;
-            virtual bool isPaused() const override;
-            virtual bool isSimulating() const override;
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 

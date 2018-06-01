@@ -436,6 +436,8 @@ namespace BlackSimPlugin
                 Q_UNUSED(s);
                 Q_UNUSED(p);
             }
+
+            this->setStatsRemoteAircraftUpdate(now);
         }
 
         CSimulatorEmulatedListener::CSimulatorEmulatedListener(const CSimulatorPluginInfo &info)
