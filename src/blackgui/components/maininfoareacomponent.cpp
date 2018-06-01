@@ -159,6 +159,12 @@ namespace BlackGui
             ui->comp_Settings->setSettingsTab(static_cast<CSettingsComponent::SettingTab>(index));
         }
 
+        void CMainInfoAreaComponent::selectAudioTab()
+        {
+            this->getCockpitComponent()->showAudio();
+            this->selectArea(CMainInfoAreaComponent::InfoAreaCockpit);
+        }
+
         const QPixmap &CMainInfoAreaComponent::indexToPixmap(int areaIndex) const
         {
             const InfoArea area = static_cast<InfoArea>(areaIndex);

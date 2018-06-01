@@ -126,6 +126,9 @@ namespace BlackGui
             //! Select settings with given area
             void selectSettingsTab(int index);
 
+            //! Select the audio tab
+            void selectAudioTab();
+
         protected:
             // CInfoArea overrides
             virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;

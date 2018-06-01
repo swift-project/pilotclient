@@ -50,7 +50,7 @@ namespace BlackGui
             //! \copydoc BlackGui::Components::CTransponderModeSelector::setSelectedTransponderModeStateIdent
             void setSelectedTransponderModeStateIdent();
 
-            //! Show the audio ui
+            //! Show the audio UI
             void showAudio();
 
         private:

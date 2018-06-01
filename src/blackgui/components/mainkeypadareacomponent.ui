@@ -62,6 +62,105 @@
       <property name="spacing">
        <number>2</number>
       </property>
+      <item row="0" column="0" colspan="5">
+       <widget class="BlackGui::Components::CCommandInput" name="lep_CommandLineInput">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
+        </property>
+        <property name="placeholderText">
+         <string>.dot commands or text message</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QPushButton" name="pb_MainSettings">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Use &quot;SHIFT&quot; for overview</string>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>Settings</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QPushButton" name="pb_Opacity100">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>100%</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QPushButton" name="pb_MainInterpolation">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Interpolation</string>
+        </property>
+        <property name="text">
+         <string>Interpol.</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="pb_MainWeather">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Weather</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="pb_Audio">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Audio</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="4">
        <widget class="QPushButton" name="pb_CockpitIdent">
         <property name="sizePolicy">
@@ -75,52 +174,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="pb_Empty">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QPushButton" name="pb_Audio">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Audio</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="2">
-       <widget class="QPushButton" name="pb_MainLog">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Log</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
        <widget class="QPushButton" name="pb_MainFlightplan">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -152,7 +206,23 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="2">
+       <widget class="QPushButton" name="pb_MainLog">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Log</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
        <widget class="QPushButton" name="pb_MainMappings">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -165,38 +235,6 @@
         </property>
         <property name="text">
          <string>Models</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="pb_MainAircrafts">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Aircraft</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="pb_MainTextMessages">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Text/Chat</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -219,7 +257,23 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="0">
+       <widget class="QPushButton" name="pb_MainAircrafts">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Aircraft</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
        <widget class="QPushButton" name="pb_MainSimulator">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -235,7 +289,23 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pb_MainTextMessages">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Text/Chat</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
        <widget class="QPushButton" name="pb_MainAtc">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -252,70 +322,6 @@
        </widget>
       </item>
       <item row="4" column="3">
-       <widget class="QPushButton" name="pb_Opacity100">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>100%</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="pb_MainUsers">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Users</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4">
-       <widget class="QPushButton" name="pb_SoundMute">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Mute</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QPushButton" name="pb_MainSettings">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>Use &quot;SHIFT&quot; for overview</string>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Settings</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="4">
        <widget class="QPushButton" name="pb_Opacity050">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -328,7 +334,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="3">
+      <item row="5" column="4">
        <widget class="QPushButton" name="pb_SoundMaxVolume">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -344,8 +350,8 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="pb_MainWeather">
+      <item row="4" column="4">
+       <widget class="QPushButton" name="pb_SoundMute">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -353,45 +359,39 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Weather</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
+         <string>Mute</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QPushButton" name="pb_MainInterpolation">
+      <item row="3" column="4">
+       <widget class="QPushButton" name="pb_Empty">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="toolTip">
-         <string>Interpolation</string>
-        </property>
         <property name="text">
-         <string>Interpol.</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
+         <string/>
         </property>
        </widget>
       </item>
-      <item row="0" column="0" colspan="5">
-       <widget class="BlackGui::Components::CCommandInput" name="lep_CommandLineInput">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>24</height>
-         </size>
+      <item row="3" column="3">
+       <widget class="QPushButton" name="pb_MainUsers">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <property name="toolTip">
-         <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
+        <property name="text">
+         <string>Users</string>
         </property>
-        <property name="placeholderText">
-         <string>.dot commands or text message</string>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -413,7 +413,7 @@
   <tabstop>pb_Connect</tabstop>
   <tabstop>pb_MainAircrafts</tabstop>
   <tabstop>pb_MainAtc</tabstop>
-  <tabstop>pb_MainUsers</tabstop>
+  <tabstop>pb_Audio</tabstop>
   <tabstop>pb_MainCockpit</tabstop>
   <tabstop>pb_MainSimulator</tabstop>
   <tabstop>pb_MainMappings</tabstop>
@@ -423,13 +423,13 @@
   <tabstop>pb_MainLog</tabstop>
   <tabstop>pb_MainSettings</tabstop>
   <tabstop>pb_MainWeather</tabstop>
-  <tabstop>pb_Empty</tabstop>
-  <tabstop>pb_SoundMaxVolume</tabstop>
+  <tabstop>pb_MainUsers</tabstop>
+  <tabstop>pb_Opacity050</tabstop>
   <tabstop>pb_Opacity100</tabstop>
   <tabstop>pb_CockpitIdent</tabstop>
-  <tabstop>pb_Audio</tabstop>
+  <tabstop>pb_Empty</tabstop>
   <tabstop>pb_SoundMute</tabstop>
-  <tabstop>pb_Opacity050</tabstop>
+  <tabstop>pb_SoundMaxVolume</tabstop>
  </tabstops>
  <resources/>
  <connections/>

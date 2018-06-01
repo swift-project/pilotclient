@@ -95,20 +95,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="5">
-        <widget class="BlackGui::Components::CSettingsAtcStationsInlineComponent" name="comp_AtcStationsSettings">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="focusPolicy">
-          <enum>Qt::StrongFocus</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
+       <item row="0" column="6">
         <spacer name="hs_buttons">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -150,6 +137,26 @@
          </property>
          <property name="text">
           <string>METAR</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="8">
+        <widget class="BlackGui::Components::CSettingsAtcStationsInlineComponent" name="comp_AtcStationsSettings">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QPushButton" name="pb_Audio">
+         <property name="text">
+          <string>audio</string>
          </property>
         </widget>
        </item>
@@ -290,10 +297,11 @@
   <tabstop>le_AtcStationsOnlineMetar</tabstop>
   <tabstop>tb_AtcStationsLoadMetar</tabstop>
   <tabstop>tb_AtcStationsAtisReload</tabstop>
+  <tabstop>pb_Audio</tabstop>
   <tabstop>comp_AtcStationsSettings</tabstop>
   <tabstop>te_AtcStationsOnlineInfo</tabstop>
-  <tabstop>tvp_AtcStationsBooked</tabstop>
   <tabstop>tvp_AtcStationsOnlineTree</tabstop>
+  <tabstop>tvp_AtcStationsBooked</tabstop>
  </tabstops>
  <resources/>
  <connections/>

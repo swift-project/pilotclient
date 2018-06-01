@@ -47,9 +47,9 @@ namespace BlackGui
             this->setEnabled(audio);
             ui->lbl_ExtraInfo->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
 
-            bool c = connect(ui->tb_ExpandNotificationSounds, &QToolButton::toggled, this, &CAudioSetupComponent::ps_onToggleNotificationSoundsVisibility);
+            bool c = connect(ui->tb_ExpandNotificationSounds, &QToolButton::toggled, this, &CAudioSetupComponent::onToggleNotificationSoundsVisibility);
             Q_ASSERT(c);
-            c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioSetupComponent::ps_onLoopbackToggled);
+            c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioSetupComponent::onLoopbackToggled);
             Q_ASSERT(c);
 
             if (audio)
@@ -60,18 +60,18 @@ namespace BlackGui
                 ui->cb_SetupAudioLoopback->setChecked(sGui->getIContextAudio()->isAudioLoopbackEnabled());
 
                 // the connects depend on initAudioDeviceLists
-                c = connect(ui->cb_SetupAudioInputDevice,  static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
+                c = connect(ui->cb_SetupAudioInputDevice,  static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::onAudioDeviceSelected);
                 Q_ASSERT(c);
-                c = connect(ui->cb_SetupAudioOutputDevice, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
+                c = connect(ui->cb_SetupAudioOutputDevice, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::onAudioDeviceSelected);
                 Q_ASSERT(c);
 
                 // context
-                c = connect(sGui->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
+                c = connect(sGui->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::onAudioDevicesChanged);
                 Q_ASSERT(c);
-                c = connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
+                c = connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::onCurrentAudioDevicesChanged);
                 Q_ASSERT(c);
             }
-            this->ps_reloadSettings();
+            this->reloadSettings();
             ui->tb_ExpandNotificationSounds->setChecked(false); // collapse
             Q_UNUSED(c);
         }
@@ -79,7 +79,7 @@ namespace BlackGui
         CAudioSetupComponent::~CAudioSetupComponent()
         { }
 
-        void CAudioSetupComponent::ps_reloadSettings()
+        void CAudioSetupComponent::reloadSettings()
         {
             CSettings as(m_audioSettings.getThreadLocal());
             ui->cb_SetupAudioPlayNotificationSounds->setChecked(true);
@@ -87,7 +87,7 @@ namespace BlackGui
             ui->cb_SetupAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationVoiceRoomJoined));
         }
 
-        void CAudioSetupComponent::ps_onToggleNotificationSoundsVisibility(bool checked)
+        void CAudioSetupComponent::onToggleNotificationSoundsVisibility(bool checked)
         {
             ui->fr_NotificationSoundsInner->setVisible(checked);
         }
@@ -95,8 +95,8 @@ namespace BlackGui
         void CAudioSetupComponent::initAudioDeviceLists()
         {
             if (!this->hasAudio()) { return; }
-            this->ps_onAudioDevicesChanged(sGui->getIContextAudio()->getAudioDevices());
-            this->ps_onCurrentAudioDevicesChanged(sGui->getIContextAudio()->getCurrentAudioDevices());
+            this->onAudioDevicesChanged(sGui->getIContextAudio()->getAudioDevices());
+            this->onCurrentAudioDevicesChanged(sGui->getIContextAudio()->getCurrentAudioDevices());
         }
 
         bool CAudioSetupComponent::hasAudio() const
@@ -109,7 +109,7 @@ namespace BlackGui
             return ui->cb_SetupAudioPlayNotificationSounds->isChecked();
         }
 
-        void CAudioSetupComponent::ps_audioDeviceSelected(int index)
+        void CAudioSetupComponent::onAudioDeviceSelected(int index)
         {
             if (!sGui->getIContextAudio()) return;
             if (index < 0) { return; }
@@ -134,7 +134,7 @@ namespace BlackGui
             }
         }
 
-        void CAudioSetupComponent::ps_onCurrentAudioDevicesChanged(const CAudioDeviceInfoList &devices)
+        void CAudioSetupComponent::onCurrentAudioDevicesChanged(const CAudioDeviceInfoList &devices)
         {
             for (auto &device : devices)
             {
@@ -149,7 +149,7 @@ namespace BlackGui
             }
         }
 
-        void CAudioSetupComponent::ps_onAudioDevicesChanged(const CAudioDeviceInfoList &devices)
+        void CAudioSetupComponent::onAudioDevicesChanged(const CAudioDeviceInfoList &devices)
         {
             ui->cb_SetupAudioOutputDevice->clear();
             ui->cb_SetupAudioInputDevice->clear();
@@ -167,7 +167,7 @@ namespace BlackGui
             }
         }
 
-        void CAudioSetupComponent::ps_onLoopbackToggled(bool loopback)
+        void CAudioSetupComponent::onLoopbackToggled(bool loopback)
         {
             Q_ASSERT(sGui->getIContextAudio());
             if (sGui->getIContextAudio()->isAudioLoopbackEnabled() == loopback) { return; }

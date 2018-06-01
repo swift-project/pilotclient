@@ -74,6 +74,9 @@ namespace BlackGui
             //! Request a text message
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Request audio widget
+            void requestAudioWidget();
+
         private:
             //! \copydoc Models::CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);

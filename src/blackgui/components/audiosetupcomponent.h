@@ -43,27 +43,26 @@ namespace BlackGui
             //! Play notification sounds (at all)
             bool playNotificationSounds() const;
 
-        private slots:
+        private:
             //! Reload settings
-            void ps_reloadSettings();
+            void reloadSettings();
 
             //! Audio device selected
             //! \param index audio device index (COM1, COM2)
-            void ps_audioDeviceSelected(int index);
+            void onAudioDeviceSelected(int index);
 
             //! Current audio devices changed
-            void ps_onCurrentAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+            void onCurrentAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
             //! Audio devices changed
-            void ps_onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
+            void onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceInfoList &devices);
 
             //! Loopback toggled
-            void ps_onLoopbackToggled(bool loopback);
+            void onLoopbackToggled(bool loopback);
 
             //! Visibilty (show/hide buttons)
-            void ps_onToggleNotificationSoundsVisibility(bool checked);
+            void onToggleNotificationSoundsVisibility(bool checked);
 
-        private:
             //! Audio device lists from settings
             void initAudioDeviceLists();
 
@@ -71,7 +70,7 @@ namespace BlackGui
             bool hasAudio() const;
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
-            BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this, &CAudioSetupComponent::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this, &CAudioSetupComponent::reloadSettings };
         };
     } // namespace
 } // namespace
