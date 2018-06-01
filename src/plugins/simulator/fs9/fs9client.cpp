@@ -174,7 +174,7 @@ namespace BlackSimPlugin
 
             if (m_clientStatus == Disconnected) { return; }
             const CInterpolationAndRenderingSetupPerCallsign setup = this->simulator()->getInterpolationSetupConsolidated(m_callsign);
-            const CInterpolationResult result = m_interpolator.getInterpolation(QDateTime::currentMSecsSinceEpoch(), setup);
+            const CInterpolationResult result = m_interpolator.getInterpolation(QDateTime::currentMSecsSinceEpoch(), setup, 0);
 
             // Test only for successful position. FS9 requires constant positions
             if (!result.getInterpolationStatus().hasValidSituation()) { return; }

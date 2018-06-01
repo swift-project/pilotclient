@@ -421,6 +421,7 @@ namespace BlackSimPlugin
         void CSimulatorEmulated::fetchFromInterpolator()
         {
             const qint64 now = QDateTime::currentMSecsSinceEpoch();
+            int aircraftNumber = 0;
             for (const CSimulatedAircraft &aircraft : m_renderedAircraft)
             {
                 const CCallsign cs = aircraft.getCallsign();
@@ -428,7 +429,7 @@ namespace BlackSimPlugin
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(cs); // threadsafe copy
                 CInterpolatorMulti *im = m_interpolators[cs];
                 Q_ASSERT_X(im, Q_FUNC_INFO, "interpolator missing");
-                CInterpolationResult result = im->getInterpolation(now, setup);
+                const CInterpolationResult result = im->getInterpolation(now, setup, aircraftNumber++);
                 const CAircraftSituation s = result;
                 const CAircraftParts p = result;
                 m_countInterpolatedParts++;

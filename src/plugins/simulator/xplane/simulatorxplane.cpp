@@ -711,6 +711,7 @@ namespace BlackSimPlugin
             PlanesPositions planesPositions;
             PlanesSurfaces planesSurfaces;
 
+            int aircraftNumber = 0;
             for (const CXPlaneMPAircraft &xplaneAircraft : xplaneAircraftList)
             {
                 const CCallsign callsign(xplaneAircraft.getCallsign());
@@ -720,7 +721,7 @@ namespace BlackSimPlugin
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
 
                 // interpolated situation/parts
-                const CInterpolationResult result = xplaneAircraft.getInterpolation(currentTimestamp, setup);
+                const CInterpolationResult result = xplaneAircraft.getInterpolation(currentTimestamp, setup, aircraftNumber++);
                 if (result.getInterpolationStatus().hasValidSituation())
                 {
                     const CAircraftSituation interpolatedSituation(result);
@@ -767,7 +768,7 @@ namespace BlackSimPlugin
 
             } // all callsigns
 
-            if (! planesPositions.isEmpty())
+            if (!planesPositions.isEmpty())
             {
                 m_trafficProxy->setPlanesPositions(planesPositions);
             }

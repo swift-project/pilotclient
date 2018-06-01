@@ -29,7 +29,7 @@ namespace BlackMisc
                                CInterpolationLogger *logger = nullptr);
 
             //! \copydoc CInterpolator::getInterpolation
-            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup);
+            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
 
             //! \copydoc CInterpolator::getLastInterpolatedSituation
             const Aviation::CAircraftSituation &getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;

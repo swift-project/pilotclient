@@ -103,7 +103,7 @@ namespace BlackMisc
             // m_s[0] .. oldest -> m_[2] .. latest
             // general idea, we interpolate from current situation -> latest situation
 
-            if (m_lastInterpolation.isNull())
+            if (m_lastSituation.isNull())
             {
                 if (!m_currentSituations.isEmpty())
                 {
@@ -117,7 +117,7 @@ namespace BlackMisc
             }
             else
             {
-                m_s[0] = m_s[1] = m_s[2] = m_lastInterpolation; // current
+                m_s[0] = m_s[1] = m_s[2] = m_lastSituation; // current
                 m_s[0].addMsecs(-CFsdSetup::c_positionTimeOffsetMsec); //  oldest
                 m_s[2].addMsecs(CFsdSetup::c_positionTimeOffsetMsec);  // latest
                 if (m_currentSituations.isEmpty()) { return true; }

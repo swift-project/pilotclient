@@ -1254,6 +1254,7 @@ namespace BlackSimPlugin
             // interpolation for all remote aircraft
             const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
 
+            int simObjectNumber = 0;
             for (const CSimConnectObject &simObject : simObjects)
             {
                 // happening if aircraft is not yet added to simulator or to be deleted
@@ -1270,7 +1271,7 @@ namespace BlackSimPlugin
                 const bool sendGround = setup.isSendingGndFlagToSimulator();
 
                 // Interpolated situation
-                const CInterpolationResult result = simObject.getInterpolation(currentTimestamp, setup);
+                const CInterpolationResult result = simObject.getInterpolation(currentTimestamp, setup, simObjectNumber++);
                 if (result.getInterpolationStatus().hasValidSituation())
                 {
                     // update situation

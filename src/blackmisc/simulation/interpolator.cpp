@@ -142,18 +142,19 @@ namespace BlackMisc
         }
 
         template<typename Derived>
-        CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup)
+        CInterpolationResult CInterpolator<Derived>::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
         {
             CInterpolationResult result;
             do
             {
                 // make sure we can also interpolate parts only (needed in unit tests)
-                const bool init = this->initIniterpolationStepData(currentTimeSinceEpoc, setup);
+                if (aircraftNumber < 0) { aircraftNumber = 0; }
+                const bool init = this->initIniterpolationStepData(currentTimeSinceEpoc, setup, aircraftNumber);
                 if (!m_unitTest && !init) { break; } // failure in real scenarios, unit tests move on
 
                 Q_ASSERT_X(m_currentTimeMsSinceEpoch > 0, Q_FUNC_INFO, "No valid timestamp, interpolator initialized?");
                 const CAircraftSituation interpolatedSituation = this->getInterpolatedSituation();
-                const CAircraftParts interpolatedParts = this->getInterpolatedOrGuessedParts();
+                const CAircraftParts interpolatedParts = this->getInterpolatedOrGuessedParts(aircraftNumber);
 
                 result.setValues(interpolatedSituation, interpolatedParts);
             }
@@ -168,12 +169,12 @@ namespace BlackMisc
         {
             if (m_currentSituations.isEmpty())
             {
-                m_lastInterpolation = CAircraftSituation::null();
+                m_lastSituation = CAircraftSituation::null();
                 return CAircraftSituation::null();
             }
 
             const CAircraftSituation latest = m_currentSituations.front();
-            CAircraftSituation currentSituation = m_lastInterpolation.isNull() ? latest : m_lastInterpolation;
+            CAircraftSituation currentSituation = m_lastSituation.isNull() ? latest : m_lastSituation;
             if (currentSituation.getCallsign() != m_callsign)
             {
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
@@ -246,7 +247,7 @@ namespace BlackMisc
             }
 
             // bye
-            m_lastInterpolation = currentSituation;
+            m_lastSituation = currentSituation;
             return currentSituation;
         }
 
@@ -286,8 +287,14 @@ namespace BlackMisc
         }
 
         template<typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts()
+        CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts(int aircraftNumber)
         {
+            Q_ASSERT_X(m_partsToSituationInterpolationRatio >= 1 && m_partsToSituationInterpolationRatio < 11, Q_FUNC_INFO, "Wrong ratio");
+            if (!m_unitTest && !m_lastParts.isNull() && ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationInterpolationRatio) == 0)
+            {
+                return m_lastParts;
+            }
+
             CAircraftParts parts;
             if (m_currentSetup.isAircraftPartsEnabled())
             {
@@ -300,9 +307,11 @@ namespace BlackMisc
             if (!m_currentPartsStatus.isSupportingParts())
             {
                 // check if model has been thru model matching
-                parts.guessParts(m_lastInterpolation, m_currentSituationChange, m_model);
+                parts.guessParts(m_lastSituation, m_currentSituationChange, m_model);
                 this->logParts(parts, 0, false);
             }
+
+            m_lastParts = parts;
             return parts;
         }
 
@@ -335,13 +344,13 @@ namespace BlackMisc
                    QStringLiteral(" parts: ") %
                    QString::number(this->remoteAircraftPartsCount(m_callsign)) %
                    QStringLiteral(" 1st interpolation: ") %
-                   boolToYesNo(m_lastInterpolation.isNull());
+                   boolToYesNo(m_lastSituation.isNull());
         }
 
         template<typename Derived>
         void CInterpolator<Derived>::resetLastInterpolation()
         {
-            m_lastInterpolation.setNull();
+            m_lastSituation.setNull();
         }
 
         template<typename Derived>
@@ -361,12 +370,12 @@ namespace BlackMisc
         }
 
         template<typename Derived>
-        bool CInterpolator<Derived>::initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup)
+        bool CInterpolator<Derived>::initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
         {
             Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
             const qint64 lastModifed = this->situationsLastModified(m_callsign);
-            const bool slowUpdateStep = ((m_interpolatedSituationsCounter % 25) == 0); // flag when parts are updated, which need not to be updated every time
+            const bool slowUpdateStep = (((m_interpolatedSituationsCounter + aircraftNumber) % 25) == 0); // flag when parts are updated, which need not to be updated every time
             const bool changedSetup = m_currentSetup != setup;
             const bool changedSituations = lastModifed > m_situationsLastModified;
 
@@ -392,7 +401,7 @@ namespace BlackMisc
             if (m_currentSituations.isEmpty())
             {
                 const bool inRange = this->isAircraftInRange(m_callsign);
-                m_lastInterpolation = CAircraftSituation::null(); // no interpolation possible for that step
+                m_lastSituation = CAircraftSituation::null(); // no interpolation possible for that step
                 m_currentInterpolationStatus.setExtraInfo(inRange ?
                         QString("No situations, but remote aircraft '%1'").arg(m_callsign.asString()) :
                         QString("Unknown remote aircraft: '%1'").arg(m_callsign.asString()));
@@ -400,7 +409,7 @@ namespace BlackMisc
             else
             {
                 success = true;
-                m_interpolatedSituationsCounter++;
+                m_interpolatedSituationsCounter++; // counter updated in initIniterpolationStepData
 
                 // with the latest updates of T243 the order and the offsets are supposed to be correct
                 // so even mixing fast/slow updates shall work

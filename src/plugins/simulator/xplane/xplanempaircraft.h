@@ -62,6 +62,7 @@ namespace BlackSimPlugin
             void setSituationAsSent(const BlackMisc::Aviation::CAircraftSituation &position) { m_situationAsSent = position; }
 
             //! Same as sent
+            //! \deprecated KB T273
             bool isSameAsSent(const BlackMisc::Aviation::CAircraftSituation &position) const;
 
             //! VTOL?
@@ -77,7 +78,7 @@ namespace BlackSimPlugin
             void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger) const;
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
-            BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup) const;
+            BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const;
 
             //! Interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }

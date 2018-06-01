@@ -22,12 +22,12 @@ namespace BlackMisc
             m_linear(callsign, p1, p2, p3, logger)
         {}
 
-        CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup)
+        CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
         {
             switch (setup.getInterpolatorMode())
             {
-            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolation(currentTimeSinceEpoc, setup);
-            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolation(currentTimeSinceEpoc, setup);
+            case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
+            case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
             default: break;
             }
 

@@ -167,10 +167,10 @@ namespace BlackMisc
             static const CLogCategoryList &getLogCategories();
 
             //! Latest interpolation result
-            const Aviation::CAircraftSituation &getLastInterpolatedSituation() const { return m_lastInterpolation; }
+            const Aviation::CAircraftSituation &getLastInterpolatedSituation() const { return m_lastSituation; }
 
             //! Parts and situation interpolated
-            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup);
+            CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber = -1);
 
             //! Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
             //!
@@ -214,7 +214,10 @@ namespace BlackMisc
                           CInterpolationLogger *logger);
 
             //! Inits all data for this current interpolation step
-            bool initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup);
+            //! \param currentTimeSinceEpoc
+            //! \param setup
+            //! \param aircraftNumber passing the aircraft number allows to equally distribute among the steps and not to do it always together for all aircraft
+            bool initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
 
             //! Current interpolated situation
             Aviation::CAircraftSituation getInterpolatedSituation();
@@ -223,7 +226,7 @@ namespace BlackMisc
             Aviation::CAircraftParts getInterpolatedParts();
 
             //! Interpolated parts, if not available guessed parts
-            Aviation::CAircraftParts getInterpolatedOrGuessedParts();
+            Aviation::CAircraftParts getInterpolatedOrGuessedParts(int aircraftNumber);
 
             //! Center of gravity
             const PhysicalQuantities::CLength &getModelCG() const { return m_model.getCG(); }
@@ -245,12 +248,14 @@ namespace BlackMisc
             CInterpolationAndRenderingSetupPerCallsign m_currentSetup;   //!< used setup
             CInterpolationStatus m_currentInterpolationStatus;           //!< this step's status
             CPartsStatus m_currentPartsStatus;                           //!< this step's status
-            Aviation::CAircraftSituation m_lastInterpolation { Aviation::CAircraftSituation::null() };  //!< latest interpolation
+            int m_partsToSituationInterpolationRatio = 2;                //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
+            Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() };      //!< latest interpolation
+            Aviation::CAircraftParts m_lastParts { Aviation::CAircraftParts::null() };                  //!< latest parts
             PhysicalQuantities::CLength m_currentSceneryOffset { PhysicalQuantities::CLength::null() }; //!< calculated scenery offset if any
 
             qint64 m_situationsLastModified     { -1 }; //!< when situations were last modified
             qint64 m_situationsLastModifiedUsed { -1 }; //!< interpolant based on situations last updated
-            int m_interpolatedSituationsCounter {  0 }; //!< counter for each interpolated situations: statistics, every n-th interpolation ....
+            int m_interpolatedSituationsCounter {  0 }; //!< counter for each interpolated situations: used for statistics, every n-th interpolation ....
 
             bool m_unitTest = false; //!< mark as unit test
 

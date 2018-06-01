@@ -118,10 +118,10 @@ namespace BlackSimPlugin
             return m_interpolator->attachLogger(logger);
         }
 
-        CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup) const
+        CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const
         {
             if (!m_interpolator) { CInterpolationResult result; result.reset(); return result; }
-            return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup);
+            return m_interpolator->getInterpolation(currentTimeSinceEpoc, setup, aircraftNumber);
         }
 
         const CAircraftSituation &CSimConnectObject::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const

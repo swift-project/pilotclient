@@ -167,7 +167,7 @@ namespace BlackSimPlugin
             void attachInterpolatorLogger(BlackMisc::Simulation::CInterpolationLogger *logger) const;
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolation
-            BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup) const;
+            BlackMisc::Simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber) const;
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::getLastInterpolatedSituation
             const BlackMisc::Aviation::CAircraftSituation &getLastInterpolatedSituation(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
