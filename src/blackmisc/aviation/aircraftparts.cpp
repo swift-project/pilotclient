@@ -223,10 +223,12 @@ namespace BlackMisc
             switch (i)
             {
             case IndexEngines: return CVariant::fromValue(m_engines);
+            case IndexEnginesAsString: return CVariant::fromValue(m_engines.toQString(true));
             case IndexFlapsPercentage: return CVariant::fromValue(m_flapsPercentage);
             case IndexGearDown: return CVariant::fromValue(m_gearDown);
             case IndexLights: return m_lights.propertyByIndex(index.copyFrontRemoved());
             case IndexSpoilersOut: return CVariant::fromValue(m_spoilersOut);
+            case IndexIsOnGround: return CVariant::fromValue(m_isOnGround);
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -239,11 +241,12 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexEngines: m_engines = variant.to < decltype(m_engines) > (); break;
+            case IndexEngines: m_engines = variant.to<decltype(m_engines)> (); break;
             case IndexFlapsPercentage: m_flapsPercentage = variant.toInt(); break;
             case IndexGearDown: m_gearDown = variant.toBool(); break;
             case IndexLights: m_lights.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexSpoilersOut: m_spoilersOut = variant.toBool(); break;
+            case IndexIsOnGround: m_isOnGround = variant.toBool(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
@@ -260,7 +263,8 @@ namespace BlackMisc
             case IndexFlapsPercentage: return Compare::compare(m_flapsPercentage, compareValue.getFlapsPercent());
             case IndexGearDown: return Compare::compare(m_gearDown, compareValue.isGearDown());
             case IndexSpoilersOut: return Compare::compare(m_spoilersOut, compareValue.isSpoilersOut());
-            case IndexLights:
+            case IndexIsOnGround: return Compare::compare(m_isOnGround, compareValue.isOnGround());
+            case IndexLights: return m_lights.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLights());
             default: break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");

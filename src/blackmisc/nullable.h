@@ -25,7 +25,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexIsNull = BlackMisc::CPropertyIndex::GlobalIndexINullable,
+            IndexIsNull = CPropertyIndex::GlobalIndexINullable,
         };
 
         //! Constructor, init to null

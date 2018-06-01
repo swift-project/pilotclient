@@ -46,7 +46,8 @@ namespace BlackMisc
                 IndexFlapsPercentage,
                 IndexSpoilersOut,
                 IndexEngines,
-                IndexOnGround
+                IndexEnginesAsString,
+                IndexIsOnGround
             };
 
             //! Parts Details

@@ -10,6 +10,7 @@
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/variant.h"
 #include <QStringBuilder>
 
@@ -135,6 +136,24 @@ namespace BlackMisc
             case IndexRecognition: m_recognition = variant.toBool(); break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
+        }
+
+        int CAircraftLights::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftLights &compareValue) const
+        {
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexBeacon: return Compare::compare(m_beaconOn, compareValue.isBeaconOn());
+            case IndexLanding: return Compare::compare(m_landingOn, compareValue.isLandingOn());
+            case IndexLogo: return Compare::compare(m_logoOn, compareValue.isLogoOn());
+            case IndexNav: return Compare::compare(m_navOn, compareValue.isNavOn());
+            case IndexStrobe: return Compare::compare(m_strobeOn, compareValue.isStrobeOn());
+            case IndexTaxi: return Compare::compare(m_taxiOn, compareValue.isTaxiOn());
+            case IndexCabin: return Compare::compare(m_cabin, compareValue.isCabinOn());
+            case IndexRecognition: return Compare::compare(m_recognition, compareValue.isRecognitionOn());
+            default: break;
+            }
+            return INullable::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
         }
 
         void CAircraftLights::setAllOn()

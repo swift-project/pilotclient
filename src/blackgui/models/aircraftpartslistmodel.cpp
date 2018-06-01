@@ -28,12 +28,12 @@ namespace BlackGui
         {
             this->addTimestampOffsetColumns();
 
-            m_columns.addColumn(CColumn("gnd.", CAircraftParts::IndexOnGround, new CBoolIconFormatter("on gnd.", "not on gnd.")));
+            m_columns.addColumn(CColumn("gnd.", CAircraftParts::IndexIsOnGround, new CBoolIconFormatter("on gnd.", "not on gnd.")));
             m_columns.addColumn(CColumn("gear", CAircraftParts::IndexGearDown, new CBoolIconFormatter("gear down", "gear up")));
             m_columns.addColumn(CColumn("spoilers", CAircraftParts::IndexSpoilersOut, new CBoolIconFormatter("spoilers", "no spoilers")));
             m_columns.addColumn(CColumn("flaps", CAircraftParts::IndexFlapsPercentage, new CIntegerFormatter()));
 
-            m_columns.addColumn(CColumn::standardString("engines", { CAircraftParts::IndexEngines, CAircraftParts::IndexString }));
+            m_columns.addColumn(CColumn::standardString("engines", CAircraftParts::IndexEnginesAsString));
             m_columns.addColumn(CColumn::standardString("lights", { CAircraftParts::IndexLights, CAircraftParts::IndexString }));
         }
     } // namespace
