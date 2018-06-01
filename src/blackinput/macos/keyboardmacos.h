@@ -38,12 +38,10 @@ namespace BlackInput
         virtual void processKeyEvent(CGEventType type, CGEventRef event);
 
     protected:
-
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
 
     private:
-
         friend class IKeyboard;
 
         //! Constructor
@@ -55,9 +53,9 @@ namespace BlackInput
                                      CGEventRef event,
                                      void *refcon);
 
-        BlackMisc::Input::CHotkeyCombination m_keyCombination;    //!< Current status of pressed keys;
+        BlackMisc::Input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
         CFMachPortRef m_eventTap;
     };
-}
+} // ns
 
-#endif // BLACKINPUT_KEYBOARDMACOS_H
+#endif // guard

@@ -41,15 +41,12 @@ namespace BlackInput
         void keyCombinationChanged(const BlackMisc::Input::CHotkeyCombination &);
 
     protected:
-
-        /*!
-         * Initializes the platform keyboard device
-         */
+        //! Initializes the platform keyboard device
         virtual bool init() = 0;
 
     private:
         static IKeyboard *m_instance;
     };
-}
+} // ns
 
 #endif // guard
