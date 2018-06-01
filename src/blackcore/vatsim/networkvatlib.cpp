@@ -62,7 +62,7 @@
 #include <type_traits>
 
 static_assert(! std::is_abstract<BlackCore::Vatsim::CNetworkVatlib>::value, "Must implement all pure virtuals");
-static_assert(VAT_LIBVATLIB_VERSION == 907, "Wrong vatlib header installed");
+static_assert(VAT_LIBVATLIB_VERSION == 908, "Wrong vatlib header installed");
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -858,13 +858,13 @@ namespace BlackCore
             cbvar_cast(cbvar)->consolidateTextMessage(tm);
         }
 
-        void CNetworkVatlib::onRadioMessageReceived(VatFsdClient *, const char *from, int numFreq, int *freqList, const char *msg, void *cbvar)
+        void CNetworkVatlib::onRadioMessageReceived(VatFsdClient *, const char *from, unsigned int numFreq, int *freqList, const char *msg, void *cbvar)
         {
             auto *self = cbvar_cast(cbvar);
             const int com1 = self->getOwnAircraft().getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
             const int com2 = self->getOwnAircraft().getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
             QList<CFrequency> frequencies;
-            for (int i = 0; i < numFreq; ++i)
+            for (unsigned int i = 0; i < numFreq; ++i)
             {
                 if (freqList[i] == com1 || freqList[i] == com2)
                 {
@@ -1281,7 +1281,7 @@ namespace BlackCore
 
             CInformationMessage atisMessage;
             atisMessage.setType(CInformationMessage::ATIS);
-            for (int i = 0; i < atis->textLineCount; ++i)
+            for (unsigned int i = 0; i < atis->textLineCount; ++i)
             {
                 const QString fixed = cbvar_cast(cbvar)->fromFSD(atis->textLines[i]).trimmed();
                 if (! fixed.isEmpty())

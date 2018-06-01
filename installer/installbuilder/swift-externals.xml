@@ -6,7 +6,6 @@
 - vatlib
 - speex
 - speexdsp
-- opus
 - portaudio</detailedDescription>
     <selected>1</selected>
     <show>1</show>
@@ -32,10 +31,6 @@
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/*speexdsp*.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*opus*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
@@ -65,10 +60,6 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libopus.so.*</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libportaudio.so.*</origin>
                 </distributionFile>
                 <distributionFile>
@@ -83,9 +74,6 @@
             <name>lib_osx</name>
             <platforms>osx</platforms>
             <distributionFileList>
-                <distributionFile>
-                    <origin>../../dist/lib/libopus.0.dylib</origin>
-                </distributionFile>
                 <distributionFile>
                     <origin>../../dist/lib/libportaudio.dylib</origin>
                 </distributionFile>
