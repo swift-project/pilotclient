@@ -297,7 +297,7 @@ namespace BlackCore
         static const QString launcher = CApplication::getExecutableForApplication(CApplicationInfo::Application::Laucher);
         if (launcher.isEmpty() || CApplication::isApplicationRunning(CApplicationInfo::Laucher)) { return false; }
 
-        const QStringList args = this->argumentsJoined({}, { "--dbus" });
+        const QStringList args = this->argumentsJoined({}, { "--dbus", "--core", "--coreaudio" });
         return QProcess::startDetached(launcher, args);
     }
 
