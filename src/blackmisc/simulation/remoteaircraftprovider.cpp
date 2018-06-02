@@ -194,10 +194,6 @@ namespace BlackMisc
         {
             const CCallsign cs = situation.getCallsign();
             if (cs.isEmpty()) { return; }
-            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
-
-            // for testing only
-            const CAircraftSituation situationOffset(this->testAddAltitudeOffsetToSituation(situation));
 
             // verify
             if (CBuildConfig::isLocalDeveloperDebugBuild())
@@ -205,35 +201,42 @@ namespace BlackMisc
                 BLACK_VERIFY_X(situation.getTimeOffsetMs() > 0, Q_FUNC_INFO, "Missing offset");
             }
 
+            // add offset (for testing only)
+            CAircraftSituation situationCorrected(this->testAddAltitudeOffsetToSituation(situation));
+
             // list from new to old
-            QWriteLocker lock(&m_lockSituations);
-            m_situationsAdded++;
-            m_situationsLastModified[cs] = ts;
-            CAircraftSituationList &situationList = m_situationsByCallsign[cs];
-            const int situations = situationList.size();
-            if (situations < 1)
+            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
             {
-                situationList.prefillLatestAdjustedFirst(situationOffset, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-            }
-            else
-            {
-                situationList.push_frontKeepLatestFirstAdjustOffset(situationOffset, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-            }
+                QWriteLocker lock(&m_lockSituations);
+                m_situationsAdded++;
+                m_situationsLastModified[cs] = ts;
+                CAircraftSituationList &situationList = m_situationsByCallsign[cs];
+                const int situations = situationList.size();
+                if (situations < 1)
+                {
+                    situationList.prefillLatestAdjustedFirst(situationCorrected, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                }
+                else
+                {
+                    situationList.front().transferGroundElevation(situationCorrected); // transfer last situation if possible
+                    situationList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, IRemoteAircraftProvider::MaxSituationsPerCallsign);
 
-            // unify all inbound ground information
-            if (situation.hasInboundGroundDetails())
-            {
-                situationList.setOnGroundDetails(situation.getOnGroundDetails());
-            }
+                    // unify all inbound ground information
+                    if (situation.hasInboundGroundDetails())
+                    {
+                        situationList.setOnGroundDetails(situation.getOnGroundDetails());
+                    }
+                }
 
-            // check sort order
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                BLACK_VERIFY_X(situationList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong sort order");
-                BLACK_VERIFY_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
-            }
+                // check sort order
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    BLACK_VERIFY_X(situationList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong sort order");
+                    BLACK_VERIFY_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+                }
+            } // lock
 
-            emit this->addedAircraftSituation(situation);
+            emit this->addedAircraftSituation(situationCorrected);
         }
 
         void CRemoteAircraftProvider::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool removeOutdated)
@@ -258,7 +261,7 @@ namespace BlackMisc
                 // check sort order
                 Q_ASSERT_X(partsList.isSortedAdjustedLatestFirst(), Q_FUNC_INFO, "wrong sort order");
                 Q_ASSERT_X(partsList.size() <= IRemoteAircraftProvider::MaxPartsPerCallsign, Q_FUNC_INFO, "Wrong size");
-            }
+            } // lock
 
             // adjust gnd.flag from parts
             if (!correctiveParts.isEmpty())
