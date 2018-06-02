@@ -113,6 +113,9 @@ namespace BlackGui
             //! Standard conversion
             virtual BlackMisc::CVariant keepStandardTypesConvertToStringOtherwise(const BlackMisc::CVariant &inputData) const;
 
+            //! Empty string CVariant
+            static const BlackMisc::CVariant &emptyStringVariant();
+
             QList<int>  m_supportedRoles = roleDisplay();  //!< supports decoration roles
             int  m_alignment      = -1;     //!< alignment horizontal/vertically / Qt::Alignment
             bool m_useI18n        = true;   //!< i18n?
@@ -170,8 +173,8 @@ namespace BlackGui
             virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
 
         protected:
-            QString m_trueName  = "true";  //!< displayed when true
-            QString m_falseName = "false"; //!< displayed when false
+            const QString m_trueName  = "true";  //!< displayed when true
+            const QString m_falseName = "false"; //!< displayed when false
         };
 
         //! Format as bool LED value

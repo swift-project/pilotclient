@@ -64,14 +64,14 @@ namespace BlackGui
             // convert to pixmap
             if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QImage)
             {
-                QImage img = dataCVariant.value<QImage>();
+                const QImage img = dataCVariant.value<QImage>();
                 return CVariant::from(QPixmap::fromImage(img));
             }
 
             // Our CIcon class
             if (dataCVariant.canConvert<BlackMisc::CIcon>())
             {
-                BlackMisc::CIcon i = dataCVariant.value<BlackMisc::CIcon>();
+                const CIcon i = dataCVariant.value<BlackMisc::CIcon>();
                 return CVariant::from(i.toPixmap());
             }
 
@@ -81,14 +81,11 @@ namespace BlackGui
 
         CVariant CDefaultFormatter::alignmentRole() const
         {
-            if (!this->hasAlignment())
-            {
-                return CVariant::from(alignDefault()); // default
-            }
-            else
+            if (this->hasAlignment())
             {
                 return CVariant::from(m_alignment);
             }
+            return CVariant::from(alignDefault()); // default
         }
 
         CVariant CDefaultFormatter::checkStateRole(const CVariant &value) const
@@ -104,7 +101,7 @@ namespace BlackGui
             if (role == Qt::TextAlignmentRole || role == Qt::UserRole) { return true; }
 
             // specific?
-            return this->m_supportedRoles.contains(role);
+            return m_supportedRoles.contains(role);
         }
 
         CVariant CDefaultFormatter::data(int role, const CVariant &inputData) const
@@ -119,23 +116,12 @@ namespace BlackGui
             if (role == Qt::UserRole) { return CDefaultFormatter::displayRole(inputData); } // just as data provider
             switch (roleEnum)
             {
-            case Qt::DisplayRole:
-                // formatted to standard types or string
-                return displayRole(inputData);
-            case Qt::EditRole:
-                // formatted to standard types or string
-                return editRole(inputData);
-            case Qt::ToolTipRole:
-                // formatted to string
-                return tooltipRole(inputData);
-            case Qt::DecorationRole:
-                // formatted as pixmap, icon, or color
-                return decorationRole(inputData);
-            case Qt::CheckStateRole:
-                // as Qt check state
-                return checkStateRole(inputData);
-            default:
-                break;
+            case Qt::DisplayRole: return displayRole(inputData); // formatted to standard types or string
+            case Qt::EditRole: return editRole(inputData); // formatted to standard types or string
+            case Qt::ToolTipRole: return tooltipRole(inputData); // formatted to string
+            case Qt::DecorationRole: return decorationRole(inputData); // formatted as pixmap, icon, or color
+            case Qt::CheckStateRole: return checkStateRole(inputData); // as Qt check state
+            default: break;
             }
             return CVariant();
         }
@@ -153,6 +139,12 @@ namespace BlackGui
             return inputData.toQString(m_useI18n);
         }
 
+        const CVariant &CDefaultFormatter::emptyStringVariant()
+        {
+            static const CVariant e = CVariant::from(QStringLiteral(""));
+            return e;
+        }
+
         CVariant CPixmapFormatter::displayRole(const CVariant &dataCVariant) const
         {
             Q_UNUSED(dataCVariant);
@@ -168,7 +160,7 @@ namespace BlackGui
                 BlackMisc::CIcon icon = dataCVariant.value<BlackMisc::CIcon>();
                 return icon.getDescriptiveText();
             }
-            return "";
+            return emptyStringVariant();
         }
 
         CVariant CValueObjectFormatter::displayRole(const CVariant &valueObject) const
@@ -243,15 +235,12 @@ namespace BlackGui
                 {
                     return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
                 }
-                else
-                {
-                    return "";
-                }
+                return emptyStringVariant();
             }
             else
             {
                 Q_ASSERT_X(false, "CAviationComFrequencyFormatter::formatQVariant", "No CFrequency class");
-                return "";
+                return emptyStringVariant();
             }
         }
 
@@ -263,17 +252,15 @@ namespace BlackGui
             {
                 return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
             }
-            else
-            {
-                return "";
-            }
+            return emptyStringVariant();
         }
 
         CVariant CStringFormatter::displayRole(const CVariant &dataCVariant) const
         {
             if (dataCVariant.canConvert<QString>()) { return dataCVariant; }
-            Q_ASSERT_X(false, "CStringFormatter", "no string value");
-            return CVariant();
+            if (!dataCVariant.isValid()) { static const CVariant iv("invalid"); return iv; }
+            const QString s("Invalid type '%1'");
+            return CVariant::from(s.arg(dataCVariant.typeName()));
         }
 
         Qt::ItemFlags CDelegateFormatter::flags(Qt::ItemFlags flags, bool editable) const
@@ -304,11 +291,12 @@ namespace BlackGui
         CBoolLedFormatter::CBoolLedFormatter(const QString &onName, const QString &offName, int alignment) :
             CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip())
         {
+            // one time pixmap creation
             CLedWidget *led = ledDefault();
             led->setOn(true);
-            this->m_pixmapOnLed = led->asPixmap();
+            m_pixmapOnLed = led->asPixmap();
             led->setOn(false);
-            this->m_pixmapOffLed = led->asPixmap();
+            m_pixmapOffLed = led->asPixmap();
             delete led;
         }
 
@@ -345,8 +333,8 @@ namespace BlackGui
         CBoolIconFormatter::CBoolIconFormatter(const CIcon &onIcon, const CIcon &offIcon, const QString &onName, const QString &offName, int alignment) :
             CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip()), m_iconOn(onIcon), m_iconOff(offIcon)
         {
-            this->m_iconOn.setDescriptiveText(onName);
-            this->m_iconOff.setDescriptiveText(offName);
+            m_iconOn.setDescriptiveText(onName);
+            m_iconOff.setDescriptiveText(offName);
         }
 
         CVariant CBoolIconFormatter::displayRole(const CVariant &dataCVariant) const
@@ -376,7 +364,7 @@ namespace BlackGui
         {
             CAltitude alt(altitude.to<CAltitude>());
             if (m_flightLevel) { alt.toFlightLevel(); }
-            return alt.toQString(this->m_useI18n);
+            return alt.toQString(m_useI18n);
         }
 
         CColorFormatter::CColorFormatter(int alignment, bool i18n) : CDefaultFormatter(alignment, i18n, rolesDecorationAndToolTip())
