@@ -45,11 +45,9 @@ namespace BlackGui
             // audio is optional
             const bool audio = this->hasAudio();
             this->setEnabled(audio);
-            ui->lbl_ExtraInfo->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
+            ui->le_ExtraInfo->setText(audio ? sGui->getIContextAudio()->audioRunsWhereInfo() : "No audio, cannot change.");
 
-            bool c = connect(ui->tb_ExpandNotificationSounds, &QToolButton::toggled, this, &CAudioSetupComponent::onToggleNotificationSoundsVisibility);
-            Q_ASSERT(c);
-            c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioSetupComponent::onLoopbackToggled);
+            bool c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioSetupComponent::onLoopbackToggled);
             Q_ASSERT(c);
 
             if (audio)
@@ -72,7 +70,6 @@ namespace BlackGui
                 Q_ASSERT(c);
             }
             this->reloadSettings();
-            ui->tb_ExpandNotificationSounds->setChecked(false); // collapse
             Q_UNUSED(c);
         }
 
@@ -85,11 +82,6 @@ namespace BlackGui
             ui->cb_SetupAudioPlayNotificationSounds->setChecked(true);
             ui->cb_SetupAudioNotificationTextMessage->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate));
             ui->cb_SetupAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationVoiceRoomJoined));
-        }
-
-        void CAudioSetupComponent::onToggleNotificationSoundsVisibility(bool checked)
-        {
-            ui->fr_NotificationSoundsInner->setVisible(checked);
         }
 
         void CAudioSetupComponent::initAudioDeviceLists()

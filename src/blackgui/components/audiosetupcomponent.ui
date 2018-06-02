@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>264</width>
-    <height>359</height>
+    <width>200</width>
+    <height>322</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,6 +55,23 @@
      <property name="bottomMargin">
       <number>2</number>
      </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="lbl_Info">
+       <property name="text">
+        <string>Info</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="le_ExtraInfo">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>extra info goes here</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="lbl_SetupAudioInputDevice">
        <property name="text">
@@ -100,100 +117,38 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="lbl_ExtraInfo">
-       <property name="text">
-        <string>Extra info goes here</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QGridLayout" name="gl_NotificationSounds">
-     <property name="leftMargin">
-      <number>3</number>
-     </property>
-     <property name="topMargin">
-      <number>3</number>
-     </property>
-     <property name="rightMargin">
-      <number>3</number>
-     </property>
-     <property name="bottomMargin">
-      <number>3</number>
-     </property>
-     <item row="0" column="1">
-      <widget class="QLabel" name="lbl_NotificationSounds">
-       <property name="text">
-        <string>Notification sounds</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QToolButton" name="tb_ExpandNotificationSounds">
-       <property name="maximumSize">
-        <size>
-         <width>18</width>
-         <height>18</height>
-        </size>
-       </property>
+     <item row="4" column="0">
+      <widget class="QLabel" name="lbl_Notifications">
        <property name="toolTip">
-        <string>Toggle visibility</string>
+        <string>Notifications</string>
        </property>
        <property name="text">
-        <string>...</string>
+        <string>Not.:</string>
        </property>
-       <property name="icon">
-        <iconset resource="../../blackmisc/blackmisc.qrc">
-         <normaloff>:/diagona/icons/diagona/icons/toggle-expand.png</normaloff>
-         <normalon>:/diagona/icons/diagona/icons/toggle.png</normalon>:/diagona/icons/diagona/icons/toggle-expand.png</iconset>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioPlayNotificationSounds">
+       <property name="text">
+        <string>play notification sounds</string>
        </property>
        <property name="checked">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QFrame" name="fr_NotificationSoundsInner">
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+     <item row="5" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessage">
+       <property name="text">
+        <string>notification for text messages</string>
        </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoom">
+       <property name="text">
+        <string>notification for join/leave voice room</string>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QCheckBox" name="cb_SetupAudioNotificationVoiceRoom">
-          <property name="text">
-           <string>notification for join/leave voice room</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cb_SetupAudioPlayNotificationSounds">
-          <property name="text">
-           <string>play notification sounds</string>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cb_SetupAudioNotificationTextMessage">
-          <property name="text">
-           <string>notification for text messages</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
      </item>
     </layout>
@@ -213,8 +168,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

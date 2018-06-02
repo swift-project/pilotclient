@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CAudioVolumeComponent</class>
  <widget class="QFrame" name="CAudioVolumeComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>193</width>
+    <height>50</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Frame</string>
   </property>
@@ -106,12 +114,6 @@
       </property>
       <item>
        <widget class="QToolButton" name="pb_ShowWinMixer">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="toolTip">
          <string>Windows sound mixer</string>
         </property>
@@ -126,12 +128,6 @@
       </item>
       <item>
        <widget class="QToolButton" name="pb_Mute">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="toolTip">
          <string>Toggle mute</string>
         </property>
@@ -153,12 +149,6 @@
       </item>
       <item>
        <widget class="QToolButton" name="pb_Volume100">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="maximumSize">
          <size>
           <width>40</width>

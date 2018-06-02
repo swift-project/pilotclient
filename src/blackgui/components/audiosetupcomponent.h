@@ -60,9 +60,6 @@ namespace BlackGui
             //! Loopback toggled
             void onLoopbackToggled(bool loopback);
 
-            //! Visibilty (show/hide buttons)
-            void onToggleNotificationSoundsVisibility(bool checked);
-
             //! Audio device lists from settings
             void initAudioDeviceLists();
 

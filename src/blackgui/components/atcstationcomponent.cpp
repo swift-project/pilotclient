@@ -72,6 +72,8 @@ namespace BlackGui
             ui->tb_AtcStationsAtisReload->setText("");
             ui->tb_AtcStationsLoadMetar->setIcon(CIcons::metar());
             ui->tb_AtcStationsLoadMetar->setText("");
+            ui->tb_Audio->setIcon(CIcons::appAudio16());
+            ui->tb_Audio->setText("");
 
             // set station mode
             ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
@@ -83,7 +85,7 @@ namespace BlackGui
             // Signal / Slots
             connect(ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this, &CAtcStationComponent::getMetarAsEntered);
             connect(ui->tb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::getMetarAsEntered);
-            connect(ui->pb_Audio, &QPushButton::clicked, this, &CAtcStationComponent::requestAudioWidget);
+            connect(ui->tb_Audio, &QPushButton::clicked, this, &CAtcStationComponent::requestAudioWidget);
             connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged); // "local" tab changed (booked, online)
             connect(ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::onlineAtcStationSelected);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);

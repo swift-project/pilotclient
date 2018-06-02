@@ -154,7 +154,10 @@
         </widget>
        </item>
        <item row="0" column="4">
-        <widget class="QPushButton" name="pb_Audio">
+        <widget class="QToolButton" name="tb_Audio">
+         <property name="toolTip">
+          <string>goto audio panel</string>
+         </property>
          <property name="text">
           <string>audio</string>
          </property>
@@ -297,7 +300,7 @@
   <tabstop>le_AtcStationsOnlineMetar</tabstop>
   <tabstop>tb_AtcStationsLoadMetar</tabstop>
   <tabstop>tb_AtcStationsAtisReload</tabstop>
-  <tabstop>pb_Audio</tabstop>
+  <tabstop>tb_Audio</tabstop>
   <tabstop>comp_AtcStationsSettings</tabstop>
   <tabstop>te_AtcStationsOnlineInfo</tabstop>
   <tabstop>tvp_AtcStationsOnlineTree</tabstop>
