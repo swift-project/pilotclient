@@ -11,6 +11,7 @@
 #include "ui_interpolationlogdisplay.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextnetworkimpl.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/airspacemonitor.h"
 #include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/stringutils.h"
@@ -30,6 +31,7 @@ namespace BlackGui
     {
         CInterpolationLogDisplay::CInterpolationLogDisplay(QWidget *parent) :
             COverlayMessagesFrame(parent),
+            CIdentifiable(this),
             ui(new Ui::CInterpolationLogDisplay)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
@@ -53,6 +55,7 @@ namespace BlackGui
             connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
             connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
             connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
+            connect(ui->pb_ShowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::displayLastInterpolation);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
         }
@@ -94,15 +97,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::updateLog()
         {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            if (!this->isVisible()) { return; }
-            const bool hasLogger = m_airspaceMonitor && m_simulatorCommon && m_simulatorCommon->isConnected() && !m_simulatorCommon->isShuttingDown();
-            if (!hasLogger || m_callsign.isEmpty())
-            {
-                ui->te_TextLog->setText("No logger attached or no callsign");
-                this->stop();
-                this->clear();
-            }
+            if (!this->checkLogPrerequisites()) { return; }
 
             // only display visible tab
             if (ui->tw_LogTabs->currentWidget() == ui->tb_TextLog)
@@ -130,19 +125,7 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::displayLastInterpolation()
         {
-            if (!sApp || sApp->isShuttingDown() || !m_airspaceMonitor || !m_simulatorCommon) { return; }
-            if (m_callsign.isEmpty())
-            {
-                static const CStatusMessage m = CStatusMessage(this).validationError("No callsign");
-                this->showOverlayMessage(m);
-                return;
-            }
-            if (!m_simulatorCommon->getLogCallsigns().contains(m_callsign))
-            {
-                static const CStatusMessage m = CStatusMessage(this).validationError("No logger attached, start logging");
-                this->showOverlayMessage(m);
-                return;
-            }
+            if (!this->checkLogPrerequisites()) { return; }
 
             const SituationLog sLog = m_simulatorCommon->interpolationLogger().getLastSituationLog();
             // ui->te_LastInterpolatedSituation->setText(sLog.toQString(false, true, true, false, "<br>"));
@@ -198,12 +181,31 @@ namespace BlackGui
             else { this->start(); }
         }
 
+        void CInterpolationLogDisplay::showLogInSimulator()
+        {
+            if (m_callsign.isEmpty()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+
+            const QString cmd = QStringLiteral(".drv pos ") + m_callsign.asString();
+            sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
+        }
+
         void CInterpolationLogDisplay::start()
         {
-            const int interval = ui->hs_UpdateTime->value() * 1000;
+            if (m_updateTimer.isActive()) { return; }
+            const int interval = 1000 * ui->hs_UpdateTime->value();
             m_updateTimer.start(interval);
             ui->pb_StartStop->setText(stopText());
             ui->led_Running->setOn(true);
+
+            // it can take a while until we receive parts, so we init
+            QPointer<CInterpolationLogDisplay> myself(this);
+            QTimer::singleShot(250, this, [ = ]
+            {
+                if (!myself) { return; }
+                if (m_callsign.isEmpty()) { return; }
+                myself->onPartsAdded(m_callsign, CAircraftParts());
+            });
         }
 
         void CInterpolationLogDisplay::stop()
@@ -294,6 +296,43 @@ namespace BlackGui
             ui->le_AvgUpdateTimeMs->clear();
             ui->le_UpdateAircraftReqTimeMs->clear();
             m_elvReceived = m_elvRequested = 0;
+        }
+
+        bool CInterpolationLogDisplay::checkLogPrerequisites()
+        {
+            CStatusMessage m;
+            do
+            {
+                if (!this->isVisible()) { return false; } // silently return
+                if (!sApp || sApp->isShuttingDown()) { break; } // stop and return
+                if (m_callsign.isEmpty())
+                {
+                    static const CStatusMessage ms = CStatusMessage(this).validationError("No callsign");
+                    m = ms;
+                    break;
+                }
+
+                const bool canUpdateLog = m_airspaceMonitor && m_simulatorCommon && m_simulatorCommon->isConnected() && !m_simulatorCommon->isShuttingDown();
+                if (!canUpdateLog)
+                {
+                    static const CStatusMessage ms = CStatusMessage(this).validationError("No airspace monitor or simulator or shutting down");
+                    m = ms;
+                    break;
+                }
+
+                if (!m_simulatorCommon->getLogCallsigns().contains(m_callsign))
+                {
+                    static const CStatusMessage ms = CStatusMessage(this).validationError("No longer logging callsign");
+                    m = ms;
+                    break;
+                }
+                return true;
+            }
+            while (false);
+
+            this->stop();
+            if (!m.isEmpty()) { this->showOverlayMessage(m); }
+            return false;
         }
 
         void CInterpolationLogDisplay::linkWithAirspaceMonitor()

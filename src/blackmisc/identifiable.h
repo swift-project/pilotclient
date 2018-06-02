@@ -45,7 +45,7 @@ namespace BlackMisc
         //! Use literal based object name
         CIdentifiable(const QString &objectName) : m_identifier(objectName) {}
 
-        //! Connect with QObject providing then name
+        //! Connect with QObject providing the name
         CIdentifiable(QObject *nameProvider);
 
         //! Destructor

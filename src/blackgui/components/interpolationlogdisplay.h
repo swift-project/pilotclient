@@ -16,6 +16,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackcore/simulatorcommon.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/identifiable.h"
 #include <QFrame>
 #include <QTimer>
 #include <QScopedPointer>
@@ -30,7 +31,9 @@ namespace BlackGui
         /**
          * Display live data of interpolation
          */
-        class BLACKGUI_EXPORT CInterpolationLogDisplay : public COverlayMessagesFrame
+        class BLACKGUI_EXPORT CInterpolationLogDisplay :
+            public COverlayMessagesFrame,
+            public BlackMisc::CIdentifiable
         {
             Q_OBJECT
 
@@ -74,6 +77,9 @@ namespace BlackGui
             //! Toggle start/stop
             void toggleStartStop();
 
+            //! Display log in simulator
+            void showLogInSimulator();
+
             //! Start displaying
             void start();
 
@@ -109,6 +115,9 @@ namespace BlackGui
 
             //! Clear
             void clear();
+
+            //! Check if can do logging, otherwise stop and display message
+            bool checkLogPrerequisites();
 
             QScopedPointer<Ui::CInterpolationLogDisplay> ui;
             QTimer m_updateTimer;

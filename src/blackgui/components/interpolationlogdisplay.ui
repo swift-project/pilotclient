@@ -31,7 +31,7 @@
      <property name="title">
       <string>Log. callsign</string>
      </property>
-     <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,0,1">
+     <layout class="QHBoxLayout" name="hl_LogCallsign" stretch="2,1,4,0,0,1">
       <property name="leftMargin">
        <number>3</number>
       </property>
@@ -85,9 +85,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pb_ShowInSimulator">
+        <property name="text">
+         <string>show in sim.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pb_StartStop">
         <property name="text">
-         <string>Start</string>
+         <string>start</string>
         </property>
        </widget>
       </item>
