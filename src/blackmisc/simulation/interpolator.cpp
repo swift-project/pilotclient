@@ -292,6 +292,8 @@ namespace BlackMisc
             Q_ASSERT_X(m_partsToSituationInterpolationRatio >= 1 && m_partsToSituationInterpolationRatio < 11, Q_FUNC_INFO, "Wrong ratio");
             if (!m_unitTest && !m_lastParts.isNull() && ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationInterpolationRatio) == 0)
             {
+                m_currentPartsStatus = m_lastPartsStatus;
+                m_currentPartsStatus.setReusedParts(true);
                 return m_lastParts;
             }
 
@@ -312,6 +314,7 @@ namespace BlackMisc
             }
 
             m_lastParts = parts;
+            m_lastPartsStatus = m_currentPartsStatus;
             return parts;
         }
 
@@ -513,6 +516,7 @@ namespace BlackMisc
         void CPartsStatus::reset()
         {
             m_supportsParts = false;
+            m_resusedParts = false;
         }
 
         // see here for the reason of thess forward instantiations

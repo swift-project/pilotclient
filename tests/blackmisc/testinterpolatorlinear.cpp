@@ -54,10 +54,10 @@ namespace BlackMiscTest
 {
     void CTestInterpolatorLinear::basicInterpolatorTests()
     {
-        CCallsign cs("SWIFT");
+        const CCallsign cs("SWIFT");
         CRemoteAircraftProviderDummy provider;
         CInterpolatorLinear interpolator(cs, nullptr, nullptr, &provider);
-        // interpolator.markAsUnitTest();
+        interpolator.markAsUnitTest();
 
         // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
@@ -115,6 +115,7 @@ namespace BlackMiscTest
         // With one callsign in the lists (of dummy provider) it is somehow expected to be roughly the same performance
 
         interpolator.resetLastInterpolation();
+        interpolator.markAsUnitTest();
         for (int loops = 0; loops < 20; loops++)
         {
             for (qint64 currentTime = startTimeMsSinceEpoch + offset; currentTime < ts + offset; currentTime += (deltaT / 20))

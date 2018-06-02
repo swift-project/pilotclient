@@ -96,11 +96,18 @@ namespace BlackMisc
             //! Set support flag
             void setSupportsParts(bool supports) { m_supportsParts = supports; }
 
+            //! Is a reused parts, means using last value again
+            bool isReusedPArts() const { return m_resusedParts; }
+
+            //! Mark as reused
+            void setReusedParts(bool reused) { m_resusedParts = reused; }
+
             //! Reset to default values
             void reset();
 
         private:
             bool m_supportsParts = false; //!< supports parts for given callsign
+            bool m_resusedParts = false;  //!< reusing from last step
         };
 
         //! Combined results
@@ -248,6 +255,7 @@ namespace BlackMisc
             CInterpolationAndRenderingSetupPerCallsign m_currentSetup;   //!< used setup
             CInterpolationStatus m_currentInterpolationStatus;           //!< this step's status
             CPartsStatus m_currentPartsStatus;                           //!< this step's status
+            CPartsStatus m_lastPartsStatus;                              //!< status for last parts, used when last parts are re-used because of m_partsToSituationInterpolationRatio
             int m_partsToSituationInterpolationRatio = 2;                //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
             Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() };      //!< latest interpolation
             Aviation::CAircraftParts m_lastParts { Aviation::CAircraftParts::null() };                  //!< latest parts
