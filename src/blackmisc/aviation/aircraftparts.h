@@ -169,6 +169,9 @@ namespace BlackMisc
             //! NULL parts object?
             bool isNull() const;
 
+            //! Equal values, but not comparing timestamp etc.
+            bool equalValues(const CAircraftParts &other) const;
+
             //! NULL parts object
             static const CAircraftParts &null();
 

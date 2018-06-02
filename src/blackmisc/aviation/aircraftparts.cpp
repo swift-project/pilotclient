@@ -68,6 +68,13 @@ namespace BlackMisc
             return this->getPartsDetails() == NotSet && m_flapsPercentage < 0;
         }
 
+        bool CAircraftParts::equalValues(const CAircraftParts &other) const
+        {
+            // currently same as some values are diabled for comparison
+            // but that could change in future
+            return other == *this;
+        }
+
         const CAircraftParts &CAircraftParts::null()
         {
             static const CAircraftParts null(-1);

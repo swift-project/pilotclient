@@ -234,6 +234,16 @@ namespace BlackMisc
             return this->isPositionNull();
         }
 
+        bool CAircraftSituation::equalPbh(const CAircraftSituation &other) const
+        {
+            return this->getPitch() == other.getPitch() && this->getBank() == other.getBank() && this->getHeading() == other.getHeading();
+        }
+
+        bool CAircraftSituation::equalPbhAndVector(const CAircraftSituation &other) const
+        {
+            return this->equalNormalVectorDouble(other.normalVectorDouble()) && this->equalPbh(other);
+        }
+
         void CAircraftSituation::setNull()
         {
             m_position.setNull();
@@ -482,6 +492,21 @@ namespace BlackMisc
             return this->onGroundAsString() % QLatin1Char(' ') % this->getOnDetailsAsString();
         }
 
+        bool CAircraftSituation::canTransferGroundElevation(const CAircraftSituation &otherSituation, const CLength &radius) const
+        {
+            if (!this->hasGroundElevation()) { return false; }
+            const CLength distance = this->getGroundElevationPlane().calculateGreatCircleDistance(otherSituation);
+            const bool transferable =  distance <= radius;
+            return transferable;
+        }
+
+        bool CAircraftSituation::transferGroundElevation(CAircraftSituation &otherSituation, const CLength &radius) const
+        {
+            if (!this->canTransferGroundElevation(otherSituation, radius)) { return false; }
+            otherSituation.setGroundElevation(this->getGroundElevationPlane());
+            return true;
+        }
+
         CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation() const
         {
             return this->isOnGroundByElevation(m_cg);
@@ -546,6 +571,11 @@ namespace BlackMisc
                 return true;
             }
             return false;
+        }
+
+        void CAircraftSituation::resetGroundElevation()
+        {
+            m_groundElevationPlane = CElevationPlane::null();
         }
 
         const CLength &CAircraftSituation::getGroundElevationRadius() const

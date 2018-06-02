@@ -81,6 +81,11 @@ namespace BlackMisc
             return true;
         }
 
+        bool ICoordinateGeodetic::equalNormalVectorDouble(const ICoordinateGeodetic &otherCoordinate) const
+        {
+            return this->equalNormalVectorDouble(otherCoordinate.normalVectorDouble());
+        }
+
         CLength ICoordinateGeodetic::calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const
         {
             return Geo::calculateGreatCircleDistance((*this), otherCoordinate);

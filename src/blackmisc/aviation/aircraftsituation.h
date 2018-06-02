@@ -154,6 +154,14 @@ namespace BlackMisc
             //! Null situation
             virtual bool isNull() const override;
 
+            //! Equal pitch, bank heading
+            //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
+            bool equalPbh(const CAircraftSituation &other) const;
+
+            //! Equal PBH and vector
+            //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble
+            bool equalPbhAndVector(const CAircraftSituation &other) const;
+
             //! Set to null
             void setNull();
 
@@ -244,6 +252,12 @@ namespace BlackMisc
             //! Elevation of the ground directly beneath
             const Geo::CElevationPlane &getGroundElevationPlane() const { return m_groundElevationPlane; }
 
+            //! Can the elevation be transferred to another situation?
+            bool canTransferGroundElevation(const CAircraftSituation &otherSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
+
+            //! Transfer from "this" situation to \c otherSituation
+            bool transferGroundElevation(CAircraftSituation &otherSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
+
             //! Is on ground by elevation data, requires elevation and CG
             //! @{
             IsOnGround isOnGroundByElevation() const;
@@ -265,6 +279,9 @@ namespace BlackMisc
             //! Set elevation of the ground directly beneath, but checked
             //! \remark override if better
             bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane);
+
+            //! Reset ground elevation
+            void resetGroundElevation();
 
             //! Distance of ground elevation
             const PhysicalQuantities::CLength &getGroundElevationRadius() const;
@@ -345,6 +362,9 @@ namespace BlackMisc
             //! Corresponding callsign
             const CCallsign &getCallsign() const { return m_correspondingCallsign; }
 
+            //! Has corresponding callsign
+            bool hasCallsign() const { return !this->getCallsign().isEmpty(); }
+
             //! Corresponding callsign
             void setCallsign(const CCallsign &callsign);
 
@@ -408,13 +428,13 @@ namespace BlackMisc
                 return isDoubleEpsilonEqual(0.0, oldGroundFactor) && isDoubleEpsilonEqual(0.0, newGroundFactor);
             }
 
-            //! Plane is starting
+            //! Aircraft is starting
             static bool isGfStarting(double oldGroundFactor, double newGroundFactor)
             {
                 return isDoubleEpsilonEqual(0.0, oldGroundFactor) && isDoubleEpsilonEqual(1.0, newGroundFactor);
             }
 
-            //! Plane is landing
+            //! Aircraft is landing
             static bool isGfLanding(double oldGroundFactor, double newGroundFactor)
             {
                 return isDoubleEpsilonEqual(1.0, oldGroundFactor) && isDoubleEpsilonEqual(0.0, newGroundFactor);
