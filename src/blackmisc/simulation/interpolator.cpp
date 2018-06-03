@@ -76,16 +76,16 @@ namespace BlackMisc
         {
             const bool vtol = setup.isForcingVtolInterpolation() || m_model.isVtol();
             CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
-            m_currentSituationChange = CAircraftSituationChange(validSituations, m_model.getCG(), vtol, true, true);
-            if (setup.isFixingSceneryOffset() && m_currentSituationChange.hasSceneryDeviation() && m_model.hasCG())
+            m_situationsChange = CAircraftSituationChange(validSituations, m_model.getCG(), vtol, true, true);
+            if (setup.isFixingSceneryOffset() && m_situationsChange.hasSceneryDeviation() && m_model.hasCG())
             {
-                const CLength os = m_currentSituationChange.getGuessedSceneryDeviationCG();
+                const CLength os = m_situationsChange.getGuessedSceneryDeviationCG();
                 m_currentSceneryOffset = os;
                 if (!os.isNull())
                 {
                     const CLength addValue = os * -1.0; // positive values means too high, negative values too low
                     int changed = validSituations.addAltitudeOffset(addValue);
-                    m_currentSituationChange = CAircraftSituationChange(validSituations, m_model.getCG(), vtol, true, true); // recalculate
+                    m_situationsChange = CAircraftSituationChange(validSituations, m_model.getCG(), vtol, true, true); // recalculate
                     Q_UNUSED(changed);
                 }
             }
@@ -173,40 +173,16 @@ namespace BlackMisc
                 return CAircraftSituation::null();
             }
 
-            const CAircraftSituation latest = m_currentSituations.front();
-            CAircraftSituation currentSituation = m_lastSituation.isNull() ? latest : m_lastSituation;
-            if (currentSituation.getCallsign() != m_callsign)
-            {
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
-                currentSituation.setCallsign(m_callsign);
-            }
-
-            // set elevation if available
-            if (!currentSituation.hasGroundElevation())
-            {
-                const CElevationPlane currentGroundElevation = this->findClosestElevationWithinRange(currentSituation, currentSituation.getDistancePerTime(1000));
-                currentSituation.setGroundElevationChecked(currentGroundElevation); // set as default
-            }
-
-            // fetch CG once
-            const CLength cg(this->getModelCG());
-            currentSituation.setCG(cg);
-
-            // interpolant function from derived class
+            // interpolant as function of derived class
             // CInterpolatorLinear::Interpolant or CInterpolatorSpline::Interpolant
             SituationLog log;
             const auto interpolant = derived()->getInterpolant(log);
-
-            // succeeded so far?
-            if (!m_currentInterpolationStatus.isInterpolated())
-            {
-                m_currentInterpolationStatus.checkIfValidSituation(currentSituation);
-                return currentSituation;
-            }
-
-            // Pitch bank heading
-            // first, so follow up steps could use those values
             const CInterpolatorPbh pbh = interpolant.pbh();
+
+            // init interpolated situation
+            CAircraftSituation currentSituation = this->initInterpolatedSituation(pbh.getOldSituation(), pbh.getNewSituation());
+
+            // Pitch bank heading first, so follow up steps could use those values
             currentSituation.setHeading(pbh.getHeading());
             currentSituation.setPitch(pbh.getPitch());
             currentSituation.setBank(pbh.getBank());
@@ -217,12 +193,23 @@ namespace BlackMisc
             currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
             if (!interpolateGndFlag) { currentSituation.guessOnGround(CAircraftSituationChange::null(), m_model); }
 
-            // correct itself
+            // if we do not have a ground elevation from preset, then we try to transfer here
+            if (!currentSituation.hasGroundElevation())
+            {
+                const CLength radius = currentSituation.getDistancePerTime(250);
+                if (!m_lastSituation.transferGroundElevation(currentSituation, radius))
+                {
+                    const CElevationPlane groundElevation = this->findClosestElevationWithinRange(currentSituation, radius);
+                    m_lastSituation.setGroundElevationChecked(groundElevation, CAircraftSituation::FromCache);
+                }
+            }
+
+            // correct altitude itself
             CAircraftSituation::AltitudeCorrection altCorrection = CAircraftSituation::NoCorrection;
             if (!interpolateGndFlag && currentSituation.getOnGroundDetails() != CAircraftSituation::OnGroundByGuessing)
             {
                 // just in case
-                altCorrection = currentSituation.correctAltitude(cg, true);
+                altCorrection = currentSituation.correctAltitude(true); // we have CG set
             }
 
             // status
@@ -238,10 +225,10 @@ namespace BlackMisc
                 log.groundFactor = currentSituation.getOnGroundFactor();
                 log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
                 log.situationCurrent = currentSituation;
-                log.change = m_currentSituationChange;
+                log.change = m_situationsChange;
                 log.usedSetup = m_currentSetup;
                 log.elevationInfo = elv.arg(elvStats.first).arg(elvStats.second);
-                log.cgAboveGround = cg;
+                log.cgAboveGround = currentSituation.getCG();
                 log.sceneryOffset = m_currentSceneryOffset;
                 m_logger->logInterpolation(log);
             }
@@ -309,7 +296,7 @@ namespace BlackMisc
             if (!m_currentPartsStatus.isSupportingParts())
             {
                 // check if model has been thru model matching
-                parts.guessParts(m_lastSituation, m_currentSituationChange, m_model);
+                parts.guessParts(m_lastSituation, m_situationsChange, m_model);
                 this->logParts(parts, 0, false);
             }
 
@@ -362,7 +349,7 @@ namespace BlackMisc
             this->resetLastInterpolation();
             m_model = CAircraftModel();
             m_currentSceneryOffset = CLength::null();
-            m_currentSituationChange = CAircraftSituationChange::null();
+            m_situationsChange = CAircraftSituationChange::null();
             m_currentSituations.clear();
             m_currentTimeMsSinceEpoch = -1;
             m_situationsLastModified = -1;
@@ -405,9 +392,9 @@ namespace BlackMisc
             {
                 const bool inRange = this->isAircraftInRange(m_callsign);
                 m_lastSituation = CAircraftSituation::null(); // no interpolation possible for that step
-                m_currentInterpolationStatus.setExtraInfo(inRange ?
-                        QString("No situations, but remote aircraft '%1'").arg(m_callsign.asString()) :
-                        QString("Unknown remote aircraft: '%1'").arg(m_callsign.asString()));
+                static const QString extraNoSituations("No situations, but remote aircraft '%1'");
+                static const QString extraNoRemoteAircraft("Unknown remote aircraft: '%1'");
+                m_currentInterpolationStatus.setExtraInfo((inRange ? extraNoSituations : extraNoRemoteAircraft).arg(m_callsign.asString()));
             }
             else
             {
@@ -424,6 +411,68 @@ namespace BlackMisc
             }
 
             return success;
+        }
+
+        template<typename Derived>
+        CAircraftSituation CInterpolator<Derived>::initInterpolatedSituation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation) const
+        {
+            if (m_currentSituations.isEmpty()) { return CAircraftSituation::null(); }
+            CAircraftSituation currentSituation = m_lastSituation.isNull() ? m_currentSituations.front() : m_lastSituation;
+            if (currentSituation.getCallsign() != m_callsign)
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong callsign");
+                currentSituation.setCallsign(m_callsign);
+            }
+
+            // do not set elevation here, as we do not know where the situation will be
+            // after the interpolation step!
+            this->presetGroundElevation(currentSituation, oldSituation, newSituation);
+
+            // fetch CG once
+            const CLength cg(this->getModelCG());
+            currentSituation.setCG(cg);
+            return currentSituation;
+        }
+
+        template<typename Derived>
+        bool CInterpolator<Derived>::presetGroundElevation(CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation) const
+        {
+            // IMPORTANT: we do not know what the situation will be interpolated to, so we cannot transfer
+            situation.resetGroundElevation();
+            do
+            {
+                if (oldSituation.equalNormalVectorDouble(newSituation))
+                {
+                    if (oldSituation.hasGroundElevation())
+                    {
+                        // same positions, we can use existing elevation
+                        situation.setGroundElevation(oldSituation.getGroundElevationPlane(), CAircraftSituation::TransferredElevation);
+                        break;
+                    }
+                }
+
+                const CLength distance = newSituation.calculateGreatCircleDistance(oldSituation);
+                if (distance < newSituation.getDistancePerTime(250))
+                {
+                    if (oldSituation.hasGroundElevation())
+                    {
+                        // almost same positions, we can use existing elevation
+                        situation.setGroundElevation(oldSituation.getGroundElevationPlane(), CAircraftSituation::TransferredElevation);
+                        break;
+                    }
+                }
+
+                static const CLength allowedStdDev(3, CLengthUnit::ft());
+                QPair<CAltitude, CAltitude> elvDevMean = m_situationsChange.getElevationStdDevAndMean();
+                if (!elvDevMean.first.isNull() && elvDevMean.first < allowedStdDev)
+                {
+                    // not much change in known elevations
+                    situation.setGroundElevation(elvDevMean.second, CAircraftSituation::SituationChange);
+                    break;
+                }
+            }
+            while (false);
+            return situation.hasGroundElevation();
         }
 
         template<typename Derived>
@@ -495,6 +544,7 @@ namespace BlackMisc
             m_extraInfo.clear();
             m_isValidSituation = false;
             m_isInterpolated = false;
+            m_isSameSituation = false;
             m_situations = -1;
         }
 
@@ -503,20 +553,24 @@ namespace BlackMisc
             return QStringLiteral("Interpolated: ") % boolToYesNo(m_isInterpolated) %
                    QStringLiteral(" | situations: ") % QString::number(m_situations) %
                    QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation) %
+                   QStringLiteral(" | same: ") % boolToYesNo(m_isSameSituation) %
                    (
                        m_extraInfo.isEmpty() ? QStringLiteral("") : QStringLiteral(" info: ") % m_extraInfo
                    );
-        }
-
-        bool CPartsStatus::allTrue() const
-        {
-            return m_supportsParts;
         }
 
         void CPartsStatus::reset()
         {
             m_supportsParts = false;
             m_resusedParts = false;
+            m_isSameParts = false;
+        }
+
+        QString CPartsStatus::toQString() const
+        {
+            return QStringLiteral("Supported parts: ") % boolToYesNo(m_supportsParts) %
+                   QStringLiteral(" | reused: ") % boolToYesNo(m_resusedParts) %
+                   QStringLiteral(" | same: ") % boolToYesNo(m_isSameParts);
         }
 
         // see here for the reason of thess forward instantiations

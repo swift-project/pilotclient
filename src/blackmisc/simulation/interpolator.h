@@ -46,6 +46,12 @@ namespace BlackMisc
             //! Set succeeded
             void setInterpolated(bool interpolated) { m_isInterpolated = interpolated; }
 
+            //! Interpolating between 2 same situations?
+            bool isSameSituation() const { return m_isSameSituation; }
+
+            //! Interpolating between 2 same situations?
+            void setSameSituation(bool same) { m_isSameSituation = same; }
+
             //! Set situations count
             void setSituationsCount(int count) { m_situations = count; }
 
@@ -73,8 +79,9 @@ namespace BlackMisc
         private:
             bool m_isInterpolated = false;   //!< position is interpolated (means enough values, etc.)
             bool m_isValidSituation = false; //!< is valid situation
+            bool m_isSameSituation = false;  //!< interpolation between 2 same situations
             int  m_situations = -1;          //!< number of situations used for interpolation
-            QString m_extraInfo; //!< optional details
+            QString m_extraInfo;             //!< optional details
         };
 
         //! Status regarding parts
@@ -87,27 +94,35 @@ namespace BlackMisc
             //! Ctor
             CPartsStatus(bool supportsParts) : m_supportsParts(supportsParts) {}
 
-            //! all OK
-            bool allTrue() const;
-
             //! Supporting parts
             bool isSupportingParts() const { return m_supportsParts; }
 
             //! Set support flag
             void setSupportsParts(bool supports) { m_supportsParts = supports; }
 
-            //! Is a reused parts, means using last value again
-            bool isReusedPArts() const { return m_resusedParts; }
+            //! Is a reused parts object?
+            //! \remark means using last value again
+            bool isReusedParts() const { return m_resusedParts; }
 
             //! Mark as reused
             void setReusedParts(bool reused) { m_resusedParts = reused; }
 
+            //! Same parts as last parts?
+            bool isSameParts() const { return m_isSameParts; }
+
+            //! Same parts as last parts?
+            void setSameParts(bool same) { m_isSameParts = same; }
+
             //! Reset to default values
             void reset();
 
+            //! Info string
+            QString toQString() const;
+
         private:
             bool m_supportsParts = false; //!< supports parts for given callsign
-            bool m_resusedParts = false;  //!< reusing from last step
+            bool m_resusedParts  = false; //!< reusing from last step
+            bool m_isSameParts   = false; //!< same as last parts?
         };
 
         //! Combined results
@@ -226,8 +241,15 @@ namespace BlackMisc
             //! \param aircraftNumber passing the aircraft number allows to equally distribute among the steps and not to do it always together for all aircraft
             bool initIniterpolationStepData(qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
 
+            //! Init the interpolated situation
+            Aviation::CAircraftSituation initInterpolatedSituation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation) const;
+
             //! Current interpolated situation
             Aviation::CAircraftSituation getInterpolatedSituation();
+
+            //! Preset the ground elevation based on info we already have
+            //! \remark either sets a gnd.elevation or sets it to null
+            bool presetGroundElevation(Aviation::CAircraftSituation &situation, const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation) const;
 
             //! Parts before given offset time
             Aviation::CAircraftParts getInterpolatedParts();
@@ -251,10 +273,10 @@ namespace BlackMisc
             // values for current interpolation step
             qint64 m_currentTimeMsSinceEpoch = -1;                       //!< current time
             Aviation::CAircraftSituationList m_currentSituations;        //!< current situations
-            Aviation::CAircraftSituationChange m_currentSituationChange; //!< situations change
+            Aviation::CAircraftSituationChange m_situationsChange;       //!< situations change of provider (i.e. network) situations
             CInterpolationAndRenderingSetupPerCallsign m_currentSetup;   //!< used setup
-            CInterpolationStatus m_currentInterpolationStatus;           //!< this step's status
-            CPartsStatus m_currentPartsStatus;                           //!< this step's status
+            CInterpolationStatus m_currentInterpolationStatus;           //!< this step's situation status
+            CPartsStatus m_currentPartsStatus;                           //!< this step's parts status
             CPartsStatus m_lastPartsStatus;                              //!< status for last parts, used when last parts are re-used because of m_partsToSituationInterpolationRatio
             int m_partsToSituationInterpolationRatio = 2;                //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
             Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() };      //!< latest interpolation

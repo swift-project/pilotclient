@@ -43,7 +43,7 @@ namespace BlackMisc
 
             qint64 m_interpolatedTime = -1; //!< "Real time "of interpolated situation
             int m_situationsAvailable = 0;  //!< used situations
-            CInterpolatorPbh m_pbh; //!< the used PBH interpolator
+            CInterpolatorPbh m_pbh;         //!< the used PBH interpolator
         };
     } // namespace
 } // namespace
