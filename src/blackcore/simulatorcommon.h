@@ -130,6 +130,7 @@ namespace BlackCore
         const BlackMisc::Simulation::CInterpolationLogger &interpolationLogger() const { return m_interpolationLogger; }
 
         //! The latest logged data formatted
+        //! \remark public only for log. displays
         QString latestLoggedDataFormatted(const BlackMisc::Aviation::CCallsign &cs) const;
 
     protected:
@@ -269,7 +270,7 @@ namespace BlackCore
         void callPhysicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &remoteCallsign);
 
         //! Display a logged situation in simulator
-        void displayLoggedSituationInSimulator(const BlackMisc::Aviation::CCallsign &cs, bool stopLogging, int times = 25);
+        void displayLoggedSituationInSimulator(const BlackMisc::Aviation::CCallsign &cs, bool stopLogging, int times = 40);
 
         bool m_blinkCycle = false;            //!< used for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting

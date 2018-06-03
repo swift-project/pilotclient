@@ -823,7 +823,7 @@ namespace BlackCore
         const QPointer<CSimulatorCommon> myself(this);
         QTimer::singleShot(t, this, [ = ]
         {
-            if (myself.isNull()) { return; }
+            if (myself.isNull() || myself->isShuttingDown()) { return; }
             this->displayLoggedSituationInSimulator(cs, stopLogging, times - 1);
         });
     }
