@@ -62,7 +62,7 @@
    <item>
     <widget class="QTabWidget" name="tw_SwiftMonitorDialog">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tb_AircraftSituation">
       <attribute name="title">
@@ -251,41 +251,42 @@
        <item>
         <widget class="QGroupBox" name="gb_Messages">
          <property name="title">
-          <string>Messages</string>
+          <string>Messages (Text/Status messages)</string>
          </property>
-         <layout class="QGridLayout" name="gl_Messages">
-          <item row="1" column="1">
-           <widget class="QPlainTextEdit" name="pte_StatusMessages">
-            <property name="documentTitle">
-             <string>Received status messages</string>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QSplitter" name="splitter_Messages">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPlainTextEdit" name="pte_TextMessages">
-            <property name="documentTitle">
-             <string>Received text messages</string>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="lbl_TextMessages">
-            <property name="text">
-             <string>Text messages</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="lbl_StatusMessages">
-            <property name="text">
-             <string>Status messages</string>
-            </property>
+            <widget class="QPlainTextEdit" name="pte_TextMessages">
+             <property name="whatsThis">
+              <string>text messages</string>
+             </property>
+             <property name="documentTitle">
+              <string>Received text messages</string>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="placeholderText">
+              <string>text messages</string>
+             </property>
+            </widget>
+            <widget class="QPlainTextEdit" name="pte_StatusMessages">
+             <property name="whatsThis">
+              <string>status messages</string>
+             </property>
+             <property name="documentTitle">
+              <string>Received status messages</string>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="placeholderText">
+              <string>status messages</string>
+             </property>
+            </widget>
            </widget>
           </item>
          </layout>
@@ -572,6 +573,30 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tw_SwiftMonitorDialog</tabstop>
+  <tabstop>le_SimulatorPlugin</tabstop>
+  <tabstop>le_Simulator</tabstop>
+  <tabstop>cb_Connected</tabstop>
+  <tabstop>cb_Simulating</tabstop>
+  <tabstop>cb_Paused</tabstop>
+  <tabstop>pte_TextMessages</tabstop>
+  <tabstop>pte_StatusMessages</tabstop>
+  <tabstop>le_PhysicallyAddedAircraft</tabstop>
+  <tabstop>le_PhysicallyRemovedAircraft</tabstop>
+  <tabstop>le_AircraftRendered</tabstop>
+  <tabstop>pb_ResetStatistics</tabstop>
+  <tabstop>le_SituationAdded</tabstop>
+  <tabstop>le_PartsAdded</tabstop>
+  <tabstop>le_PartsEnabledAircraft</tabstop>
+  <tabstop>le_InterpolatorTimeMs</tabstop>
+  <tabstop>pb_InterpolatorFetch</tabstop>
+  <tabstop>pb_InterpolatorClearLog</tabstop>
+  <tabstop>pb_InterpolatorWriteLog</tabstop>
+  <tabstop>pb_InterpolatorStopLog</tabstop>
+  <tabstop>pb_InterpolatorShowLogs</tabstop>
+  <tabstop>pb_InterpolatorStartLog</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
