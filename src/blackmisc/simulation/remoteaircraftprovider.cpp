@@ -190,7 +190,7 @@ namespace BlackMisc
             return c;
         }
 
-        void CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation)
+        void CRemoteAircraftProvider::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestOffset)
         {
             const CCallsign cs = situation.getCallsign();
             if (cs.isEmpty()) { return; }
@@ -202,7 +202,7 @@ namespace BlackMisc
             }
 
             // add offset (for testing only)
-            CAircraftSituation situationCorrected(this->testAddAltitudeOffsetToSituation(situation));
+            CAircraftSituation situationCorrected(allowTestOffset ? this->testAddAltitudeOffsetToSituation(situation) : situation);
 
             // list from new to old
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
@@ -385,7 +385,7 @@ namespace BlackMisc
             return c > 0;
         }
 
-        int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
         {
             if (!this->isAircraftInRange(callsign)) { return 0; }
 
@@ -396,14 +396,14 @@ namespace BlackMisc
             {
                 QWriteLocker l(&m_lockSituations);
                 CAircraftSituationList &situations = m_situationsByCallsign[callsign];
-                updated = situations.setGroundElevationCheckedAndGuessGround(elevation, model);
+                updated = situations.setGroundElevationCheckedAndGuessGround(elevation, info, model);
                 if (updated < 1) { return 0; }
                 m_situationsLastModified[callsign] = ts;
             }
 
             // aircraft updates
             QWriteLocker l(&m_lockAircraft);
-            const int c = m_aircraftInRange.setGroundElevationChecked(callsign, elevation);
+            const int c = m_aircraftInRange.setGroundElevationChecked(callsign, elevation, info);
             Q_UNUSED(c); // just for info, expect 1
 
             return updated; // updated situations
@@ -716,10 +716,10 @@ namespace BlackMisc
             return this->provider()->updateAircraftRendered(callsign, rendered);
         }
 
-        int CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        int CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
-            return this->provider()->updateAircraftGroundElevation(callsign, elevation);
+            return this->provider()->updateAircraftGroundElevation(callsign, elevation, info);
         }
 
         void CRemoteAircraftAware::updateMarkAllAsNotRendered()

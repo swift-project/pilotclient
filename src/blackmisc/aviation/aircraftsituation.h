@@ -67,8 +67,12 @@ namespace BlackMisc
                 IndexPitch,
                 IndexGroundSpeed,
                 IndexGroundElevationPlane,
+                IndexGroundElevationInfo,
+                IndexGroundElevationInfoString,
+                IndexGroundElevationPlusInfo,
                 IndexCallsign,
-                IndexCG
+                IndexCG,
+                IndexCanLikelySkipNearGroundInterpolation
             };
 
             //! Is on ground?
@@ -96,15 +100,26 @@ namespace BlackMisc
                 OutOnGroundOwnAircraft    //!< sending on ground
             };
 
-            //! How was altitude corrected
+            //! How was altitude corrected?
             enum AltitudeCorrection
             {
                 NoCorrection,
-                Underflow,
-                DraggedToGround,
+                Underflow,       //!< aircraft too low
+                DraggedToGround, //!< other scenery too high, but on ground
                 AGL,
-                NoElevation,
+                NoElevation,     //!< no correction as there is no elevation
                 UnknownCorrection
+            };
+
+            //! Where did we get elevation from?
+            enum GndElevationInfo
+            {
+                NoElevationInfo,
+                TransferredElevation, //!< transferred from nearby situation
+                FromProvider,         //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
+                FromCache,            //!< from cache
+                SituationChange,      //!< from BlackMisc::Aviation::CAircraftSituationChange
+                Test                  //!< unit test
             };
 
             //! Default constructor.
@@ -252,6 +267,18 @@ namespace BlackMisc
             //! Elevation of the ground directly beneath
             const Geo::CElevationPlane &getGroundElevationPlane() const { return m_groundElevationPlane; }
 
+            //! How did we get gnd.elevation?
+            GndElevationInfo getGroundElevationInfo() const;
+
+            //! How did we get gnd.elevation?
+            const QString &getGroundElevationInfoAsString() const { return gndElevationInfoToString(this->getGroundElevationInfo()); }
+
+            //! Ground elevation plus info
+            QString getGroundElevationAndInfo() const;
+
+            //! How we did get gnd.elevation
+            void setGroundElevationInfo(GndElevationInfo details) { m_elvInfo = static_cast<int>(details); }
+
             //! Can the elevation be transferred to another situation?
             bool canTransferGroundElevation(const CAircraftSituation &otherSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
 
@@ -271,14 +298,14 @@ namespace BlackMisc
             bool hasInboundGroundDetails() const;
 
             //! Elevation of the ground directly beneath at the given situation
-            void setGroundElevation(const Aviation::CAltitude &altitude);
+            void setGroundElevation(const Aviation::CAltitude &altitude, GndElevationInfo info);
 
             //! Elevation of the ground directly beneath
-            void setGroundElevation(const Geo::CElevationPlane &elevationPlane);
+            void setGroundElevation(const Geo::CElevationPlane &elevationPlane, GndElevationInfo info);
 
             //! Set elevation of the ground directly beneath, but checked
             //! \remark override if better
-            bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane);
+            bool setGroundElevationChecked(const Geo::CElevationPlane &elevationPlane, GndElevationInfo info);
 
             //! Reset ground elevation
             void resetGroundElevation();
@@ -406,6 +433,9 @@ namespace BlackMisc
             //! Enum to string
             static const QString &altitudeCorrectionToString(AltitudeCorrection correction);
 
+            //! Enum to string
+            static const QString &gndElevationInfoToString(GndElevationInfo details);
+
             //! Delta distance, near to ground
             static const PhysicalQuantities::CLength &deltaNearGround();
 
@@ -454,6 +484,7 @@ namespace BlackMisc
             bool m_isInterim = false;
             int m_onGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundDetails = static_cast<int>(CAircraftSituation::NotSetGroundDetails);
+            int m_elvInfo = static_cast<int>(CAircraftSituation::NoElevationInfo); //!< where did we gnd.elevation from?
             double m_onGroundFactor = -1; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
             QString m_onGroundGuessingDetails; //!< only for debugging, not transferred via DBus etc.
 
@@ -476,6 +507,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(groundElevationPlane),
                 BLACK_METAMEMBER(onGround),
                 BLACK_METAMEMBER(onGroundDetails),
+                BLACK_METAMEMBER(elvInfo),
                 BLACK_METAMEMBER(onGroundFactor),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(timeOffsetMs),
@@ -489,5 +521,6 @@ Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::IsOnGround)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::OnGroundDetails)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::AltitudeCorrection)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::GndElevationInfo)
 
 #endif // guard

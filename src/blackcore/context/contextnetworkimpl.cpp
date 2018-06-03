@@ -384,8 +384,8 @@ namespace BlackCore
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CCallsignSet callsigns;
             callsigns.push_back(callsign);
-            CUserList users = this->getUsersForCallsigns(callsigns);
-            if (users.size() < 1) return CUser();
+            const CUserList users = this->getUsersForCallsigns(callsigns);
+            if (users.size() < 1) { return CUser(); }
             return users[0];
         }
 
@@ -786,9 +786,9 @@ namespace BlackCore
             return c;
         }
 
-        int CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        int CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
         {
-            return m_airspace->updateAircraftGroundElevation(callsign, elevation);
+            return m_airspace->updateAircraftGroundElevation(callsign, elevation, info);
         }
 
         void CContextNetwork::updateMarkAllAsNotRendered()

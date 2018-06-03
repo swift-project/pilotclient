@@ -428,7 +428,7 @@ namespace BlackSimPlugin
             aircraftSituation.setBank(CAngle(-simulatorOwnAircraft.bank, CAngleUnit::deg()));
             aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
             aircraftSituation.setGroundSpeed(CSpeed(simulatorOwnAircraft.velocity, CSpeedUnit::kts()));
-            aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevation, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+            aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevation, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CAircraftSituation::FromProvider);
             aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
             aircraftSituation.setPressureAltitude(CAltitude(simulatorOwnAircraft.pressureAltitude, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
             // set on ground also in situation for consistency and future usage

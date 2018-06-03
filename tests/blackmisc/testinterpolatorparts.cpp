@@ -160,7 +160,7 @@ namespace BlackMiscTest
         const CAltitude gndElev({ 0, CLengthUnit::m() }, CAltitude::MeanSeaLevel);
         const CCoordinateGeodetic c(lat, lng, alt);
         CAircraftSituation s(callsign, c, heading, pitch, bank, gs);
-        s.setGroundElevation(gndElev);
+        s.setGroundElevation(gndElev, CAircraftSituation::Test);
         s.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         s.setTimeOffsetMs(offset);
         return s;

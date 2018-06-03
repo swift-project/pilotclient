@@ -186,13 +186,13 @@ namespace BlackMisc
             return c;
         }
 
-        int CSimulatedAircraftList::setGroundElevationChecked(const CCallsign &callsign, const CElevationPlane &elevation, bool onlyFirst)
+        int CSimulatedAircraftList::setGroundElevationChecked(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info, bool onlyFirst)
         {
             int c = 0;
             for (CSimulatedAircraft &aircraft : (*this))
             {
                 if (aircraft.getCallsign() != callsign) { continue; }
-                aircraft.setGroundElevationChecked(elevation);
+                aircraft.setGroundElevationChecked(elevation, info);
                 c++;
                 if (onlyFirst) break;
             }

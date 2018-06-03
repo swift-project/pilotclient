@@ -28,13 +28,13 @@ namespace BlackMisc
     {
         CSimulatedAircraft::CSimulatedAircraft()
         {
-            init();
+            this->init();
         }
 
         CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_models({model, model})
         {
             this->setCallsign(model.getCallsign());
-            init();
+            this->init();
         }
 
         CSimulatedAircraft::CSimulatedAircraft(const CCallsign &callsign, const CUser &user, const CAircraftSituation &situation) :
@@ -47,7 +47,7 @@ namespace BlackMisc
             m_callsign(callsign), m_pilot(user), m_situation(situation)
         {
             this->setModel(model);
-            init();
+            this->init();
         }
 
         void CSimulatedAircraft::init()

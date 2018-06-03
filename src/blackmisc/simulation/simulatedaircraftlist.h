@@ -97,7 +97,7 @@ namespace BlackMisc
             int setAircraftSituation(const Aviation::CCallsign &callsign, const Aviation::CAircraftSituation &situation, bool onlyFirst = true);
 
             //! Set ground elevation
-            int setGroundElevationChecked(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, bool onlyFirst = true);
+            int setGroundElevationChecked(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info, bool onlyFirst = true);
 
             //! Enabled?
             bool isEnabled(const Aviation::CCallsign &callsign) const;

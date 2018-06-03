@@ -214,10 +214,10 @@ namespace BlackMisc
             const Aviation::CAltitude &getGroundElevation() const { return m_situation.getGroundElevation(); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituation::setGroundElevation
-            void setGroundElevation(const Geo::CElevationPlane &elevation) { m_situation.setGroundElevation(elevation); }
+            void setGroundElevation(const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) { m_situation.setGroundElevation(elevation, info); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituation::setGroundElevation
-            void setGroundElevationChecked(const Geo::CElevationPlane &elevation) { m_situation.setGroundElevationChecked(elevation); }
+            void setGroundElevationChecked(const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) { m_situation.setGroundElevationChecked(elevation, info); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituation::getHeading
             const Aviation::CHeading &getHeading() const { return m_situation.getHeading(); }

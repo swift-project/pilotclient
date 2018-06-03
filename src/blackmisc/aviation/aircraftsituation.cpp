@@ -64,12 +64,13 @@ namespace BlackMisc
                    QStringLiteral(" | cg: ") %
                    (m_cg.isNull() ? QStringLiteral("null") : m_cg.valueRoundedWithUnit(CLengthUnit::m(), 1) % QStringLiteral(" ") % m_cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)) %
                    QStringLiteral(" | factor [0..1]: ") % QString::number(m_onGroundFactor, 'f', 2) %
+                   QStringLiteral(" | skip ng: ") % boolToYesNo(this->canLikelySkipNearGroundInterpolation()) %
                    QStringLiteral(" | bank: ") % m_bank.toQString(i18n) %
                    QStringLiteral(" | pitch: ") % m_pitch.toQString(i18n) %
                    QStringLiteral(" | heading: ") % m_heading.toQString(i18n) %
                    QStringLiteral(" | gs: ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1, true) %
                    QStringLiteral(" ") % m_groundSpeed.valueRoundedWithUnit(CSpeedUnit::m_s(), 1, true) %
-                   QStringLiteral(" | elevation: ") % (m_groundElevationPlane.toQString(i18n));
+                   QStringLiteral(" | elevation [") % this->getGroundElevationInfoAsString() % QStringLiteral("]: ") % (m_groundElevationPlane.toQString(i18n));
         }
 
         const QString &CAircraftSituation::isOnGroundToString(CAircraftSituation::IsOnGround onGround)
@@ -134,6 +135,29 @@ namespace BlackMisc
             return unknown;
         }
 
+        const QString &CAircraftSituation::gndElevationInfoToString(GndElevationInfo details)
+        {
+            static const QString no("no details");
+            static const QString unknown("unknown");
+            static const QString transferred("transferred");
+            static const QString provider("provider");
+            static const QString change("situation change");
+            static const QString cache("cached");
+            static const QString test("test");
+
+            switch (details)
+            {
+            case NoElevationInfo: return no;
+            case TransferredElevation: return transferred;
+            case FromProvider: return provider;
+            case SituationChange: return change;
+            case FromCache: return cache;
+            case Test: return test;
+            default: break;
+            }
+            return unknown;
+        }
+
         const CLength &CAircraftSituation::deltaNearGround()
         {
             static const CLength small(0.5, CLengthUnit::m());
@@ -176,6 +200,10 @@ namespace BlackMisc
             case IndexIsOnGroundString: return CVariant::fromValue(this->onGroundAsString());
             case IndexOnGroundReliability: return CVariant::fromValue(m_onGroundDetails);
             case IndexOnGroundReliabilityString: return CVariant::fromValue(this->getOnDetailsAsString());
+            case IndexGroundElevationInfo: return CVariant::fromValue(this->getGroundElevationInfo());
+            case IndexGroundElevationInfoString: return CVariant::fromValue(this->getGroundElevationInfoAsString());
+            case IndexGroundElevationPlusInfo: return CVariant::fromValue(this->getGroundElevationAndInfo());
+            case IndexCanLikelySkipNearGroundInterpolation: return CVariant::fromValue(this->canLikelySkipNearGroundInterpolation());
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -197,6 +225,9 @@ namespace BlackMisc
             case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
             case IndexIsOnGround: m_onGround = variant.toInt(); break;
             case IndexOnGroundReliability: m_onGroundDetails = variant.toInt(); break;
+            case IndexGroundElevationInfo: m_elvInfo = variant.toInt(); break;
+            case IndexGroundElevationPlusInfo: break;
+            case IndexCanLikelySkipNearGroundInterpolation: break;
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
@@ -214,7 +245,13 @@ namespace BlackMisc
             case IndexBank: return m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
             case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
             case IndexGroundSpeed: return m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
-            case IndexGroundElevationPlane: return m_groundElevationPlane.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundElevationPlane());
+            case IndexGroundElevationPlane:
+            case IndexGroundElevationPlusInfo:
+                {
+                    const int c = m_groundElevationPlane.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundElevationPlane());
+                    if (c != 0 || i == IndexGroundElevationPlane) { return c; }
+                    return Compare::compare(this->getGroundElevationInfo(), compareValue.getGroundElevationInfo());
+                }
             case IndexCallsign: return m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexIsOnGround:
             case IndexIsOnGroundString:
@@ -222,6 +259,10 @@ namespace BlackMisc
             case IndexOnGroundReliability:
             case IndexOnGroundReliabilityString:
                 return Compare::compare(m_onGroundDetails, compareValue.m_onGroundDetails);
+            case IndexGroundElevationInfo:
+            case IndexGroundElevationInfoString:
+                return Compare::compare(this->getGroundElevationInfo(), compareValue.getGroundElevationInfo());
+            case IndexCanLikelySkipNearGroundInterpolation: return Compare::compare(this->canLikelySkipNearGroundInterpolation(), compareValue.canLikelySkipNearGroundInterpolation());
             default: break;
             }
             const QString assertMsg("No comparison for index " + index.toQString());
@@ -254,6 +295,7 @@ namespace BlackMisc
             m_groundElevationPlane.setNull();
             m_groundSpeed.setNull();
             m_onGroundDetails = CAircraftSituation::NotSetGroundDetails;
+            m_elvInfo = NoElevationInfo;
         }
 
         bool CAircraftSituation::isOnGroundFromParts() const
@@ -321,7 +363,6 @@ namespace BlackMisc
         {
             return !this->hasInboundGroundDetails();
         }
-
 
         bool CAircraftSituation::guessOnGround(const CAircraftSituationChange &change, const CAircraftModel &model)
         {
@@ -492,18 +533,33 @@ namespace BlackMisc
             return this->onGroundAsString() % QLatin1Char(' ') % this->getOnDetailsAsString();
         }
 
+        CAircraftSituation::GndElevationInfo CAircraftSituation::getGroundElevationInfo() const
+        {
+            if (!this->hasGroundElevation()) { return NoElevationInfo; }
+            return static_cast<GndElevationInfo>(m_elvInfo);
+        }
+
+        QString CAircraftSituation::getGroundElevationAndInfo() const
+        {
+            static const QString n("null");
+            if (m_groundElevationPlane.isNull()) { return n; };
+
+            return m_groundElevationPlane.getAltitude().toQString(true) %
+                   QStringLiteral(" [") % this->getGroundElevationInfoAsString() % QStringLiteral("]");
+        }
+
         bool CAircraftSituation::canTransferGroundElevation(const CAircraftSituation &otherSituation, const CLength &radius) const
         {
             if (!this->hasGroundElevation()) { return false; }
             const CLength distance = this->getGroundElevationPlane().calculateGreatCircleDistance(otherSituation);
-            const bool transferable =  distance <= radius;
+            const bool transferable = (distance <= radius);
             return transferable;
         }
 
         bool CAircraftSituation::transferGroundElevation(CAircraftSituation &otherSituation, const CLength &radius) const
         {
             if (!this->canTransferGroundElevation(otherSituation, radius)) { return false; }
-            otherSituation.setGroundElevation(this->getGroundElevationPlane());
+            otherSituation.setGroundElevation(this->getGroundElevationPlane(), TransferredElevation);
             return true;
         }
 
@@ -538,27 +594,37 @@ namespace BlackMisc
             return this->getOnGroundDetails() == CAircraftSituation::InFromParts || this->getOnGroundDetails() == CAircraftSituation::InFromNetwork;
         }
 
-        void CAircraftSituation::setGroundElevation(const CAltitude &altitude)
+        void CAircraftSituation::setGroundElevation(const CAltitude &altitude, GndElevationInfo info)
         {
             if (altitude.isNull())
             {
                 m_groundElevationPlane = CElevationPlane::null();
+                this->setGroundElevationInfo(NoElevationInfo);
             }
             else
             {
                 m_groundElevationPlane = CElevationPlane(*this);
                 m_groundElevationPlane.setSinglePointRadius();
                 m_groundElevationPlane.setGeodeticHeight(altitude.switchedUnit(this->getAltitudeUnit()));
+                this->setGroundElevationInfo(info);
             }
         }
 
-        void CAircraftSituation::setGroundElevation(const CElevationPlane &elevationPlane)
+        void CAircraftSituation::setGroundElevation(const CElevationPlane &elevationPlane, GndElevationInfo info)
         {
             m_groundElevationPlane = elevationPlane;
-            m_groundElevationPlane.switchUnit(this->getAltitudeOrDefaultUnit()); // we use ft as internal unit, no "must" but simplification
+            if (elevationPlane.isNull())
+            {
+                this->setGroundElevationInfo(NoElevationInfo);
+            }
+            else
+            {
+                this->setGroundElevationInfo(info);
+                m_groundElevationPlane.switchUnit(this->getAltitudeOrDefaultUnit()); // we use ft as internal unit, no "must" but simplification
+            }
         }
 
-        bool CAircraftSituation::setGroundElevationChecked(const CElevationPlane &elevationPlane)
+        bool CAircraftSituation::setGroundElevationChecked(const CElevationPlane &elevationPlane, GndElevationInfo info)
         {
             if (elevationPlane.isNull()) { return false; }
             const CLength distance =  this->calculateGreatCircleDistance(elevationPlane);
@@ -566,7 +632,7 @@ namespace BlackMisc
             if (m_groundElevationPlane.isNull() || distance < m_groundElevationPlane.getRadius())
             {
                 // better values
-                this->setGroundElevation(elevationPlane);
+                this->setGroundElevation(elevationPlane, info);
                 m_groundElevationPlane.setRadius(distance);
                 return true;
             }
@@ -576,6 +642,7 @@ namespace BlackMisc
         void CAircraftSituation::resetGroundElevation()
         {
             m_groundElevationPlane = CElevationPlane::null();
+            this->setGroundElevationInfo(NoElevationInfo);
         }
 
         const CLength &CAircraftSituation::getGroundElevationRadius() const

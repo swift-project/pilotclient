@@ -135,7 +135,7 @@ namespace BlackMiscTest
         QVERIFY2(corAlt == alt, "Expect same altitude");
 
         CElevationPlane ep(situation, CElevationPlane::singlePointRadius());
-        situation.setGroundElevation(ep);
+        situation.setGroundElevation(ep, CAircraftSituation::Test);
 
         // now we have same alt and elevation values
         // no elevation, expect same values
@@ -162,7 +162,7 @@ namespace BlackMiscTest
         alt = CAltitude(-1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
         ep.setGeodeticHeight(alt);
         situation.setAltitude(alt);
-        situation.setGroundElevation(ep);
+        situation.setGroundElevation(ep, CAircraftSituation::Test);
         corAlt = situation.getCorrectedAltitude(true, &correction);
         QVERIFY2(correction == CAircraftSituation::Underflow, "Expect underflow correction");
         QVERIFY2(corAlt > alt, "Expect corrected altitude");
@@ -173,7 +173,7 @@ namespace BlackMiscTest
         situation.setAltitude(alt);
         ep.setGeodeticHeight(alt);
         ep.addAltitudeOffset(CLength(-100, CLengthUnit::ft()));
-        situation.setGroundElevation(ep);
+        situation.setGroundElevation(ep, CAircraftSituation::Test);
         corAlt = situation.getCorrectedAltitude(true, &correction);
         QVERIFY2(corAlt == alt, "Expect same altitude, no overflow since not on gnd.");
 

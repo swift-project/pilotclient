@@ -38,20 +38,20 @@ namespace BlackMisc
             CSequence<CAircraftSituation>(il)
         { }
 
-        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, qint64 newerThanAdjustedMs)
+        int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, qint64 newerThanAdjustedMs)
         {
             if (elevationPlane.isNull()) { return 0; }
             int c = 0;
             for (CAircraftSituation &s : *this)
             {
                 if (newerThanAdjustedMs >= 0 && s.getAdjustedMSecsSinceEpoch() <= newerThanAdjustedMs) { continue; }
-                const bool set = s.setGroundElevationChecked(elevationPlane);
+                const bool set = s.setGroundElevationChecked(elevationPlane, info);
                 if (set) { c++; }
             }
             return c;
         }
 
-        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(const CElevationPlane &elevationPlane, const CAircraftModel &model)
+        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const CAircraftModel &model)
         {
             if (elevationPlane.isNull()) { return 0; }
             if (this->isEmpty()) { return 0; }
@@ -67,7 +67,7 @@ namespace BlackMisc
 
             for (CAircraftSituation &s : *this)
             {
-                const bool set = s.setGroundElevationChecked(elevationPlane);
+                const bool set = s.setGroundElevationChecked(elevationPlane, info);
                 if (set)
                 {
                     // change is only valid for the latest situation

@@ -37,7 +37,8 @@ namespace BlackGui
             m_columns.addColumn(CColumn("gs.", CAircraftSituation::IndexGroundSpeed, new CSpeedKtsFormatter()));
             m_columns.addColumn(CColumn("on gnd.", "is on gnd.", CAircraftSituation::IndexIsOnGround, new CBoolIconFormatter("yes", "no"), true));
             m_columns.addColumn(CColumn::standardString("reliability", CAircraftSituation::IndexOnGroundReliabilityString));
-            m_columns.addColumn(CColumn::standardString("gnd.elv.", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexGeodeticHeightAsString }));
+            m_columns.addColumn(CColumn::standardString("gnd.elv.", CAircraftSituation::IndexGroundElevationPlusInfo));
+            m_columns.addColumn(CColumn::standardString("gnd.elv.alt.", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexGeodeticHeightAsString }));
             m_columns.addColumn(CColumn("elv.radius", { CAircraftSituation::IndexGroundElevationPlane, CElevationPlane::IndexRadius }, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::m(), 1)));
 
             // default sort order

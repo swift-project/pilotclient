@@ -158,12 +158,12 @@ namespace BlackMisc
                 if (!oldSituation.canLikelySkipNearGroundInterpolation() && !oldSituation.hasGroundElevation())
                 {
                     const CElevationPlane planeOld = this->findClosestElevationWithinRange(oldSituation, CElevationPlane::singlePointRadius());
-                    oldSituation.setGroundElevationChecked(planeOld);
+                    oldSituation.setGroundElevationChecked(planeOld, CAircraftSituation::FromCache);
                 }
                 if (!newSituation.canLikelySkipNearGroundInterpolation() && !newSituation.hasGroundElevation())
                 {
                     const CElevationPlane planeNew = this->findClosestElevationWithinRange(newSituation, CElevationPlane::singlePointRadius());
-                    newSituation.setGroundElevationChecked(planeNew);
+                    newSituation.setGroundElevationChecked(planeNew, CAircraftSituation::FromCache);
                 }
             } // modified situations
 

@@ -238,7 +238,7 @@ namespace BlackMisc
             {
                 if (m_s[i].hasGroundElevation()) { continue; } // do not override existing values
                 const CElevationPlane plane = this->findClosestElevationWithinRange(m_s[i], CElevationPlane::singlePointRadius());
-                const bool u = m_s[i].setGroundElevationChecked(plane);
+                const bool u = m_s[i].setGroundElevationChecked(plane, CAircraftSituation::FromCache);
                 updated |= u;
             }
             return updated;

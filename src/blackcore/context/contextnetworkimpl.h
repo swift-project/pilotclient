@@ -105,7 +105,7 @@ namespace BlackCore
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
-            virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) override;
+            virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, BlackMisc::Aviation::CAircraftSituation::GndElevationInfo info) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
             //! @}

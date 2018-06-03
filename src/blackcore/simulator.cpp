@@ -56,7 +56,7 @@ namespace BlackCore
 
         // CLogMessage(this).info("'%1' Received req. elevation") << callsign.asString();
         this->rememberGroundElevation(plane);
-        const int updated = this->updateAircraftGroundElevation(callsign, plane);
+        const int updated = this->updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider);
         if (updated < 1) { return; }
         emit this->receivedRequestedElevation(plane, callsign);
     }

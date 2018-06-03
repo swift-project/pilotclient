@@ -932,12 +932,12 @@ namespace BlackCore
         BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return; }
 
-        CAircraftSituation correctedSituation(situation);
+        CAircraftSituation correctedSituation(this->testAddAltitudeOffsetToSituation(situation));
         if (!correctedSituation.hasGroundElevation() && !correctedSituation.canLikelySkipNearGroundInterpolation())
         {
-            const CLength distance(correctedSituation.getDistancePerTime(1000));
+            const CLength distance(correctedSituation.getDistancePerTime(250));
             const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
-            correctedSituation.setGroundElevation(ep);
+            correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
         }
 
         // do we already have ground details?
@@ -957,7 +957,7 @@ namespace BlackCore
         }
 
         this->guessOnGroundAndUpdateModelCG(correctedSituation); // does nothing if situation is not appropriate for guessing
-        CRemoteAircraftProvider::storeAircraftSituation(correctedSituation);
+        CRemoteAircraftProvider::storeAircraftSituation(correctedSituation, false); // we already added offset if any
     }
 
     bool CAirspaceMonitor::guessOnGroundAndUpdateModelCG(CAircraftSituation &situation)

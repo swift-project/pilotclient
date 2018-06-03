@@ -152,7 +152,7 @@ namespace BlackMisc
 
             //! Update the ground elevation
             //! \threadsafe
-            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) = 0;
+            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) = 0;
 
             //! Update the CG
             //! \threadsafe
@@ -261,7 +261,7 @@ namespace BlackMisc
             virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
-            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation) override;
+            virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) override;
             virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual CStatusMessageList getAircraftPartsHistory(const Aviation::CCallsign &callsign) const override;
@@ -364,7 +364,7 @@ namespace BlackMisc
             //! Store an aircraft situation
             //! \remark latest situations are kept first
             //! \threadsafe
-            void storeAircraftSituation(const Aviation::CAircraftSituation &situation);
+            void storeAircraftSituation(const Aviation::CAircraftSituation &situation, bool allowTestOffset = true);
 
             //! Store an aircraft part
             //! \remark latest parts are kept first
@@ -468,7 +468,7 @@ namespace BlackMisc
             bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftGroundElevation
-            int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation);
+            int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info);
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
             void updateMarkAllAsNotRendered();

@@ -28,6 +28,7 @@ namespace BlackMisc
             qRegisterMetaType<CAircraftSituation::IsOnGround>();
             qRegisterMetaType<CAircraftSituation::OnGroundDetails>();
             qRegisterMetaType<CAircraftSituation::AltitudeCorrection>();
+            qRegisterMetaType<CAircraftSituation::GndElevationInfo>();
             CAircraftSituationChange::registerMetadata();
             qRegisterMetaType<CAircraftSituationChange::GuessedSceneryDeviation>();
             CAircraftSituationList::registerMetadata();
