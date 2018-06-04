@@ -16,8 +16,15 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item alignment="Qt::AlignTop">
     <widget class="QFrame" name="fr_Info">
-     <layout class="QGridLayout" name="gl_Info" columnstretch="1,5">
-      <item row="0" column="1">
+     <layout class="QHBoxLayout" name="hl_Info" stretch="0,1">
+      <item>
+       <widget class="QLabel" name="lbl_SwiftIcon">
+        <property name="text">
+         <string>&lt;html&gt;&lt;img src=&quot;:/own/icons/own/swift3D/sw3DOrange-32.png&quot;&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="lbl_Explaination">
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; font-weight:600; color:#ff0000;&quot;&gt;WORK IN PROGRESS (experimental) &lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;The model set defines which aircraft you will use in the simulator. From all models you have installed on your disk you can select a subset actually being used.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -27,13 +34,6 @@
         </property>
         <property name="wordWrap">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_SwiftIcon">
-        <property name="text">
-         <string>&lt;html&gt;&lt;img src=&quot;:/own/icons/own/swift3D/sw3DOrange-32.png&quot;&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>

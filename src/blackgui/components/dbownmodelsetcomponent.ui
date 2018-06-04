@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>796</width>
-    <height>224</height>
+    <width>1019</width>
+    <height>223</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -133,6 +133,20 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pb_FirstSet">
+        <property name="text">
+         <string>first set</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_CopyFromAnotherSwift">
+        <property name="text">
+         <string>copy</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pb_LoadExistingSet">
         <property name="minimumSize">
          <size>
@@ -171,15 +185,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Views::CAircraftModelView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/aircraftmodelview.h</header>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CSimulatorSelector</class>
    <extends>QFrame</extends>
    <header>blackgui/components/simulatorselector.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CAircraftModelView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/aircraftmodelview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

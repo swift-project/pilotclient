@@ -11,19 +11,21 @@
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbownmodelsetcomponent.h"
 #include "blackgui/components/dbownmodelsetformdialog.h"
+#include "blackgui/components/firstmodelsetdialog.h"
+#include "blackgui/components/copymodelsfromotherswiftversionsdialog.h"
 #include "blackgui/menus/aircraftmodelmenus.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackgui/views/viewbase.h"
-#include "blackmisc/compare.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/orderable.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/distributorlistpreferences.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/orderable.h"
 #include "ui_dbownmodelsetcomponent.h"
 
 #include <QAction>
@@ -76,6 +78,8 @@ namespace BlackGui
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->pb_ShowMatrix, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
+            connect(ui->pb_CopyFromAnotherSwift, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
+            connect(ui->pb_FirstSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::buttonClicked);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::setSimulator, Qt::QueuedConnection);
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::changeSimulator, Qt::QueuedConnection);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::onRowCountChanged);
@@ -216,12 +220,16 @@ namespace BlackGui
             if (sender == ui->pb_CreateNewSet)
             {
                 this->createNewSet();
+                return;
             }
-            else if (sender == ui->pb_LoadExistingSet)
+
+            if (sender == ui->pb_LoadExistingSet)
             {
                 ui->tvp_OwnModelSet->showFileLoadDialog();
+                return;
             }
-            else if (sender == ui->pb_SaveAsSetForSimulator)
+
+            if (sender == ui->pb_SaveAsSetForSimulator)
             {
                 const CAircraftModelList ml(ui->tvp_OwnModelSet->container());
                 if (!ml.isEmpty())
@@ -229,10 +237,25 @@ namespace BlackGui
                     const CStatusMessage m = m_modelSetLoader.setCachedModels(ml);
                     CLogMessage::preformatted(m);
                 }
+                return;
             }
-            else if (sender == ui->pb_ShowMatrix)
+
+            if (sender == ui->pb_ShowMatrix)
             {
                 this->showAirlineAircraftMatrix();
+                return;
+            }
+
+            if (sender == ui->pb_FirstSet)
+            {
+                this->firstSet();
+                return;
+            }
+
+            if (sender == ui->pb_CopyFromAnotherSwift)
+            {
+                this->copyFromAnotherSwift();
+                return;
             }
         }
 
@@ -317,9 +340,27 @@ namespace BlackGui
             }
             else
             {
-                static const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << simulator.toQString(true);
+                const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << simulator.toQString(true);
                 if (mc) { mc->showOverlayMessage(m); }
             }
+        }
+
+        void CDbOwnModelSetComponent::firstSet()
+        {
+            if (!m_firstModelSet)
+            {
+                m_firstModelSet.reset(new CFirstModelSetDialog(this));
+            }
+            m_firstModelSet->show();
+        }
+
+        void CDbOwnModelSetComponent::copyFromAnotherSwift()
+        {
+            if (!m_copyFromAnotherSwift)
+            {
+                m_copyFromAnotherSwift.reset(new CCopyModelsFromOtherSwiftVersionsDialog(this));
+            }
+            m_copyFromAnotherSwift->show();
         }
 
         void CDbOwnModelSetComponent::changeSimulator(const CSimulatorInfo &simulator)

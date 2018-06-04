@@ -39,6 +39,8 @@ namespace BlackGui
     {
         class CDbMappingComponent;
         class CDbOwnModelSetFormDialog;
+        class CCopyModelsFromOtherSwiftVersionsDialog;
+        class CFirstModelSetDialog;
 
         /*!
          * Handling of the own model set
@@ -143,6 +145,12 @@ namespace BlackGui
             //! Create new set
             void createNewSet();
 
+            //! First set wizard
+            void firstSet();
+
+            //! Copy from another swift version
+            void copyFromAnotherSwift();
+
             //! Unchecked version of setSimulator
             void changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
@@ -152,8 +160,10 @@ namespace BlackGui
             //! Update distributor order
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            QScopedPointer<Ui::CDbOwnModelSetComponent>    ui;
-            QScopedPointer<CDbOwnModelSetFormDialog>       m_modelSetFormDialog;
+            QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
+            QScopedPointer<CDbOwnModelSetFormDialog>    m_modelSetFormDialog;
+            QScopedPointer<CFirstModelSetDialog>        m_firstModelSet;
+            QScopedPointer<CCopyModelsFromOtherSwiftVersionsDialog> m_copyFromAnotherSwift;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::distributorPreferencesChanged }; //!< distributor preferences
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::Settings::TModel> m_modelSettings { this }; //!< settings for models
