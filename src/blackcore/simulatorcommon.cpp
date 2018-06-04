@@ -650,6 +650,33 @@ namespace BlackCore
         m_statsLastUpdateAircraftRequested = startTime;
     }
 
+    bool CSimulatorCommon::isEqualLastSent(const CAircraftSituation &compare) const
+    {
+        Q_ASSERT_X(compare.hasCallsign(), Q_FUNC_INFO, "Need callsign");
+        if (!m_lastSentSituation.contains(compare.getCallsign())) { return false; }
+        if (compare.isNull()) { return false; }
+        return compare.equalPbhAndVector(m_lastSentSituation.value(compare.getCallsign()));
+    }
+
+    bool CSimulatorCommon::isEqualLastSent(const CAircraftParts &compare, const CCallsign &callsign) const
+    {
+        if (callsign.isEmpty()) { return false; }
+        if (!m_lastSentParts.contains(callsign)) { return false; }
+        return compare.equalValues(m_lastSentParts.value(callsign));
+    }
+
+    void CSimulatorCommon::rememberLastSent(const CAircraftSituation &sent)
+    {
+        Q_ASSERT_X(sent.hasCallsign(), Q_FUNC_INFO, "Need callsign");
+        m_lastSentSituation.insert(sent.getCallsign(), sent);
+    }
+
+    void CSimulatorCommon::rememberLastSent(const CAircraftParts &sent, const CCallsign &callsign)
+    {
+        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
+        m_lastSentParts.insert(callsign, sent);
+    }
+
     void CSimulatorCommon::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
         if (!snapshot.isValidSnapshot()) { return;}
@@ -732,6 +759,8 @@ namespace BlackCore
         m_addAgainAircraftWhenRemoved.clear();
         m_callsignsToBeRendered.clear();
         m_clampedLogMsg.clear();
+        m_lastSentParts.clear();
+        m_lastSentSituation.clear();
         m_updateRemoteAircraftInProgress = false;
 
         this->resetHighlighting();
@@ -772,6 +801,9 @@ namespace BlackCore
     {
         m_statsPhysicallyRemovedAircraft++;
         m_clampedLogMsg.clear();
+        m_lastSentParts.remove(remoteCallsign);
+        m_lastSentSituation.remove(remoteCallsign);
+        m_clampedLogMsg.remove(remoteCallsign);
         this->physicallyRemoveRemoteAircraft(remoteCallsign);
     }
 

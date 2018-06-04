@@ -16,6 +16,7 @@
 #include <QTimer>
 #include <QReadWriteLock>
 #include <QtGlobal>
+#include <QMap>
 
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
@@ -103,6 +104,13 @@ namespace BlackCore
         //! @}
         //! \copydoc ISimulator::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
+        //! \name Interface implementations, called from context
+        //! @{
+        virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
+        virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+        //! @}
+
         // --------- ISimulator implementations ------------
 
         //! Register help
@@ -141,12 +149,6 @@ namespace BlackCore
                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                          BlackMisc::Network::IClientProvider *clientProvider,
                          QObject *parent);
-
-        //! \name Interface implementations, called from context
-        //! @{
-        virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
-        virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-        //! @}
 
         //! \name When swift DB data are read
         //! @{
@@ -235,6 +237,18 @@ namespace BlackCore
         //! Update stats and flags
         void setStatsRemoteAircraftUpdate(qint64 startTime);
 
+        //! Equal to last sent situation
+        bool isEqualLastSent(const BlackMisc::Aviation::CAircraftSituation &compare) const;
+
+        //! Equal to last sent situation
+        bool isEqualLastSent(const BlackMisc::Aviation::CAircraftParts &compare, const BlackMisc::Aviation::CCallsign &callsign) const;
+
+        //! Remember as last sent
+        void rememberLastSent(const BlackMisc::Aviation::CAircraftSituation &sent);
+
+        //! Remember as last sent
+        void rememberLastSent(const BlackMisc::Aviation::CAircraftParts &sent, const BlackMisc::Aviation::CCallsign &callsign);
+
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
@@ -250,7 +264,9 @@ namespace BlackCore
 
         BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log.interpolation
-        QMap<BlackMisc::Aviation::CCallsign, qint64> m_clampedLogMsg;       //!< when logged last so there, can be used so there is no log message overflow
+        QMap<BlackMisc::Aviation::CCallsign, qint64> m_clampedLogMsg;       //!< when logged last for this callsign, can be used so there is no log message overflow
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> m_lastSentSituation;  //!< last situation sent to simulator
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftParts>     m_lastSentParts;      //!< last parts sent to simulator
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
