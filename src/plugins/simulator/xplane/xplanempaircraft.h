@@ -59,10 +59,11 @@ namespace BlackSimPlugin
             const BlackMisc::Aviation::CAircraftSituation &getSituationAsSent() const { return m_situationAsSent; }
 
             //! Position as sent
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             void setSituationAsSent(const BlackMisc::Aviation::CAircraftSituation &position) { m_situationAsSent = position; }
 
             //! Same as sent
-            //! \deprecated KB T273
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             bool isSameAsSent(const BlackMisc::Aviation::CAircraftSituation &position) const;
 
             //! VTOL?

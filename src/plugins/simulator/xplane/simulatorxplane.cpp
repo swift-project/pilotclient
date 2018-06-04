@@ -727,9 +727,9 @@ namespace BlackSimPlugin
                     const CAircraftSituation interpolatedSituation(result);
 
                     // update situation
-                    if (!xplaneAircraft.isSameAsSent(interpolatedSituation))
+                    if (!this->isEqualLastSent(interpolatedSituation))
                     {
-                        m_xplaneAircraftObjects[xplaneAircraft.getCallsign()].setSituationAsSent(interpolatedSituation);
+                        this->rememberLastSent(interpolatedSituation);
                         planesPositions.callsigns.push_back(interpolatedSituation.getCallsign().asString());
                         planesPositions.latitudes.push_back(interpolatedSituation.latitude().value(CAngleUnit::deg()));
                         planesPositions.longitudes.push_back(interpolatedSituation.longitude().value(CAngleUnit::deg()));
@@ -747,23 +747,27 @@ namespace BlackSimPlugin
                 const CAircraftParts parts(result);
                 if (result.getPartsStatus().isSupportingParts() || parts.getPartsDetails() == CAircraftParts::GuessedParts)
                 {
-                    planesSurfaces.callsigns.push_back(xplaneAircraft.getCallsign().asString());
-                    planesSurfaces.gears.push_back(parts.isGearDown() ? 1 : 0);
-                    planesSurfaces.flaps.push_back(parts.getFlapsPercent() / 100.0);
-                    planesSurfaces.spoilers.push_back(parts.isSpoilersOut() ? 1 : 0);
-                    planesSurfaces.speedBrakes.push_back(parts.isSpoilersOut() ? 1 : 0);
-                    planesSurfaces.slats.push_back(parts.getFlapsPercent() / 100.0);
-                    planesSurfaces.wingSweeps.push_back(0.0);
-                    planesSurfaces.thrusts.push_back(parts.isAnyEngineOn() ? 0 : 0.75);
-                    planesSurfaces.elevators.push_back(0.0);
-                    planesSurfaces.rudders.push_back(0.0);
-                    planesSurfaces.ailerons.push_back(0.0);
-                    planesSurfaces.landLights.push_back(parts.getLights().isLandingOn());
-                    planesSurfaces.beaconLights.push_back(parts.getLights().isBeaconOn());
-                    planesSurfaces.strobeLights.push_back(parts.getLights().isStrobeOn());
-                    planesSurfaces.navLights.push_back(parts.getLights().isNavOn());
-                    planesSurfaces.lightPatterns.push_back(0);
-                    planesSurfaces.onGrounds.push_back(parts.isOnGround());
+                    if (!this->isEqualLastSent(parts, callsign))
+                    {
+                        this->rememberLastSent(parts, callsign);
+                        planesSurfaces.callsigns.push_back(xplaneAircraft.getCallsign().asString());
+                        planesSurfaces.gears.push_back(parts.isGearDown() ? 1 : 0);
+                        planesSurfaces.flaps.push_back(parts.getFlapsPercent() / 100.0);
+                        planesSurfaces.spoilers.push_back(parts.isSpoilersOut() ? 1 : 0);
+                        planesSurfaces.speedBrakes.push_back(parts.isSpoilersOut() ? 1 : 0);
+                        planesSurfaces.slats.push_back(parts.getFlapsPercent() / 100.0);
+                        planesSurfaces.wingSweeps.push_back(0.0);
+                        planesSurfaces.thrusts.push_back(parts.isAnyEngineOn() ? 0 : 0.75);
+                        planesSurfaces.elevators.push_back(0.0);
+                        planesSurfaces.rudders.push_back(0.0);
+                        planesSurfaces.ailerons.push_back(0.0);
+                        planesSurfaces.landLights.push_back(parts.getLights().isLandingOn());
+                        planesSurfaces.beaconLights.push_back(parts.getLights().isBeaconOn());
+                        planesSurfaces.strobeLights.push_back(parts.getLights().isStrobeOn());
+                        planesSurfaces.navLights.push_back(parts.getLights().isNavOn());
+                        planesSurfaces.lightPatterns.push_back(0);
+                        planesSurfaces.onGrounds.push_back(parts.isOnGround());
+                    }
                 }
 
             } // all callsigns
