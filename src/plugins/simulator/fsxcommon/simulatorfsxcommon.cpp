@@ -1275,15 +1275,16 @@ namespace BlackSimPlugin
                 if (result.getInterpolationStatus().hasValidSituation())
                 {
                     // update situation
-                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
-                    if (!simObject.isSameAsSent(position))
+                    if (!this->isEqualLastSent(result))
                     {
+                        SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
                         m_simConnectObjects[simObject.getCallsign()].setPositionAsSent(position);
                         const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                            static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
                                            sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
                         if (hr == S_OK)
                         {
+                            this->rememberLastSent(result); // remember
                             if (m_traceSendId) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO); }
                             this->removedClampedLog(callsign);
                         }
@@ -1316,6 +1317,7 @@ namespace BlackSimPlugin
 
             const CAircraftParts parts = result;
             if (parts.getPartsDetails() != CAircraftParts::GuessedParts && !result.getPartsStatus().isSupportingParts()) { return false; }
+            if (this->isEqualLastSent(parts, simObject.getCallsign())) { return true; }
 
             DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // no init, all values will be set
             return this->sendRemoteAircraftPartsToSimulator(simObject, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
@@ -1325,13 +1327,6 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(m_hSimConnect);
             const DWORD objectId = simObject.getObjectId();
-
-            // same as in simulator or same as already send to simulator?
-            const CAircraftLights sentLights(simObject.getLightsAsSent());
-            if (simObject.getPartsAsSent() == ddRemoteAircraftPartsWithoutLights && sentLights == lights)
-            {
-                return true;
-            }
 
             // in case we sent, we sent everything
             const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,

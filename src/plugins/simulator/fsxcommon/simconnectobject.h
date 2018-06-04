@@ -80,24 +80,31 @@ namespace BlackSimPlugin
             void fakeCurrentLightsInSimulator() { m_currentLightsInSim.setNull(false); }
 
             //! Parts as sent to simulator
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             const DataDefinitionRemoteAircraftPartsWithoutLights &getPartsAsSent() const { return m_partsAsSent; }
 
             //! Parts as sent to simulator
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             void setPartsAsSent(const DataDefinitionRemoteAircraftPartsWithoutLights &parts) { m_partsAsSent = parts; }
 
             //! Invalidate parts as sent
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             void invalidatePartsAsSent();
 
             //! Parts as sent to simulator
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             const SIMCONNECT_DATA_INITPOSITION &getPositionAsSent() const { return m_positionAsSent; }
 
             //! Position as sent
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             void setPositionAsSent(const SIMCONNECT_DATA_INITPOSITION &position) { m_positionAsSent = position; }
 
             //! Same as sent
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             bool isSameAsSent(const SIMCONNECT_DATA_INITPOSITION &position) const;
 
-            //! Invalidate position as sent;
+            //! Invalidate position as sent
+            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
             void invalidatePositionAsSent();
 
             //! Lights as sent to simulator
