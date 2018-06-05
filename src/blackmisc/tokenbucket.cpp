@@ -17,14 +17,19 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackMisc
 {
     CTokenBucket::CTokenBucket(int capacity, const CTime &interval, int numTokensToRefill)
-        : m_capacity(capacity), m_intervalSecs(interval.value(CTimeUnit::s())), m_numTokensToRefill(numTokensToRefill) {}
+        : m_capacity(capacity), m_numTokensToRefill(numTokensToRefill), m_intervalMs(interval.value(CTimeUnit::ms()))
+    {}
+
+    CTokenBucket::CTokenBucket(int capacity, qint64 intervalMs, int numTokensToRefill)
+        : m_capacity(capacity), m_numTokensToRefill(numTokensToRefill), m_intervalMs(intervalMs)
+    {}
 
     bool CTokenBucket::tryConsume(int numTokens)
     {
         Q_ASSERT(numTokens > 0 && numTokens < m_capacity);
 
         // Replenish maximal up to capacity
-        int replenishedTokens = qMin(m_capacity, getTokens());
+        int replenishedTokens = qMin(m_capacity, this->getTokens());
 
         // Take care of overflows
         m_availableTokens = qMin(m_availableTokens + replenishedTokens, m_capacity);
@@ -34,7 +39,6 @@ namespace BlackMisc
             m_availableTokens -= numTokens;
             return true;
         }
-
         return false;
     }
 
@@ -50,9 +54,9 @@ namespace BlackMisc
 
     int CTokenBucket::getTokens()
     {
-        const auto now = QDateTime::currentDateTime();
-        const auto deltaSeconds = m_lastReplenishmentTime.secsTo(now);
-        const int numberOfTokens = static_cast<int>(m_numTokensToRefill * deltaSeconds / m_intervalSecs);
+        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        const qint64 deltaMs = now - m_lastReplenishmentTime;
+        const int numberOfTokens = static_cast<int>(m_numTokensToRefill * deltaMs / m_intervalMs);
 
         // Update the time only when replenishment actually took place. We will end up in a infinite loop otherwise.
         if (numberOfTokens > 0) { m_lastReplenishmentTime = now; }

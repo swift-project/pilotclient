@@ -29,6 +29,9 @@ namespace BlackMisc
         //! Constructor for given replenishment policy
         CTokenBucket(int capacity, const PhysicalQuantities::CTime &interval, int numTokensToRefill);
 
+        //! Constructor for given replenishment policy
+        CTokenBucket(int capacity, qint64 intervalMs, int numTokensToRefill);
+
         //! Try to consume a number of tokens
         bool tryConsume(int numTokens = 1);
 
@@ -47,9 +50,9 @@ namespace BlackMisc
 
         int m_capacity = 10;        //!< Maximum capacity of tokens
         int m_availableTokens = 10; //!< Currently available tokens. The initial value is 10
-        double m_intervalSecs = 5;  //!< Refill interval, e.g. every 5 secs
         int m_numTokensToRefill;    //!< Number of tokens to be refilled each interval
-        QDateTime m_lastReplenishmentTime = QDateTime::currentDateTime(); //!< Last time
+        qint64 m_intervalMs = 5000; //!< Refill interval, e.g. every 5 secs
+        qint64 m_lastReplenishmentTime = QDateTime::currentMSecsSinceEpoch(); //!< Last time
     };
 } // ns
 
