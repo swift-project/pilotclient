@@ -44,7 +44,8 @@ namespace XSwiftBus
     }
 
     CTraffic::CTraffic(CDBusConnection *dbusConnection) :
-        CDBusObject(dbusConnection)
+        CDBusObject(dbusConnection),
+        m_planeViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); })
     {
         registerDBusObjectPath(XSWIFTBUS_TRAFFIC_INTERFACENAME, XSWIFTBUS_TRAFFIC_OBJECTPATH);
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
@@ -146,6 +147,19 @@ namespace XSwiftBus
         XPLMControlCamera(xplm_ControlCameraUntilViewChanges, orbitPlaneFunc, this);
     }
 
+    void CTraffic::followNextPlane()
+    {
+        if (m_planesByCallsign.empty() || m_planeViewCallsign.empty()) { return; }
+        auto callsignIt = std::find(m_followPlaneViewSequence.begin(), m_followPlaneViewSequence.end(), m_planeViewCallsign);
+
+        // If we are not at the end, increase by one
+        if (callsignIt != m_followPlaneViewSequence.end()) { callsignIt++; }
+        // If we were already at the end or reached it now, start from the beginning
+        if (callsignIt == m_followPlaneViewSequence.end()) { callsignIt = m_followPlaneViewSequence.begin(); }
+
+        m_planeViewCallsign = *callsignIt;
+    }
+
     int g_maxPlanes = 100;
     float g_drawDistance = 50.0f;
 
@@ -239,6 +253,7 @@ namespace XSwiftBus
             // Create view menu item
             CMenuItem planeViewMenuItem = m_planeViewSubMenu.item(callsign, [this, callsign] { switchToPlaneView(callsign); });
             m_planeViewMenuItems[callsign] = planeViewMenuItem;
+            m_followPlaneViewSequence.push_back(callsign);
         }
     }
 
@@ -253,6 +268,9 @@ namespace XSwiftBus
 
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt == m_planesByCallsign.end()) { return; }
+
+        m_followPlaneViewSequence.erase(std::remove(m_followPlaneViewSequence.begin(), m_followPlaneViewSequence.end(), callsign),
+                                        m_followPlaneViewSequence.end());
 
         Plane *plane = planeIt->second;
         m_planesByCallsign.erase(callsign);
@@ -280,6 +298,7 @@ namespace XSwiftBus
         m_planesByCallsign.clear();
         m_planesById.clear();
         m_planeViewMenuItems.clear();
+        m_followPlaneViewSequence.clear();
     }
 
     void CTraffic::setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudes, std::vector<double> longitudes, std::vector<double> altitudes,

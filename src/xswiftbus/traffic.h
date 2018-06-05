@@ -13,6 +13,7 @@
 //! \file
 
 #include "dbusobject.h"
+#include "command.h"
 #include "datarefs.h"
 #include "terrainprobe.h"
 #include "menus.h"
@@ -132,6 +133,7 @@ namespace XSwiftBus
         void emitPlaneAdded(const std::string &callsign);
         void emitPlaneAddingFailed(const std::string &callsign);
         void switchToPlaneView(const std::string &callsign);
+        void followNextPlane();
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
@@ -161,6 +163,7 @@ namespace XSwiftBus
 
         std::unordered_map<std::string, Plane *> m_planesByCallsign;
         std::unordered_map<void *, Plane *> m_planesById;
+        std::vector<std::string> m_followPlaneViewSequence;
         std::chrono::system_clock::time_point m_timestampLastSimFrame = std::chrono::system_clock::now();
 
         CMenu m_planeViewSubMenu;
@@ -169,6 +172,8 @@ namespace XSwiftBus
 
         DataRef<xplane::data::sim::graphics::view::world_render_type> m_worldRenderType;
         bool m_emitSimFrame = true;
+
+        CCommand m_planeViewNextCommand;
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)
