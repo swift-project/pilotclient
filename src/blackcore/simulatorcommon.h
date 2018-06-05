@@ -125,11 +125,20 @@ namespace BlackCore
         //!  Counter removed aircraft
         int getStatisticsPhysicallyRemovedAircraft() const { return m_statsPhysicallyRemovedAircraft; }
 
+        //! Current update time in ms
+        double getStatisticsCurrentUpdateTimeMs() const { return m_statsCurrentUpdateTimeMs; }
+
         //! Average update time in ms
         double getStatisticsAverageUpdateTimeMs() const { return m_statsUpdateAircraftTimeAvgMs; }
 
         //! Total update time in ms
         qint64 getStatisticsTotalUpdateTimeMs() const { return m_statsUpdateAircraftTimeTotalMs; }
+
+        //! Max.update time in ms
+        qint64 getStatisticsMaxUpdateTimeMs() const { return m_statsMaxUpdateTimeMs; }
+
+        //! Number of update runs
+        int getStatisticsUpdateRuns() const { return m_statsUpdateAircraftRuns; }
 
         //! Time between two update requests
         qint64 getStatisticsAircraftUpdatedRequestedDeltaMs() const { return m_statsUpdateAircraftRequestedDeltaMs; }
@@ -252,15 +261,17 @@ namespace BlackCore
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
-        bool   m_pausedSimFreezesInterpolation = false;                     //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        bool   m_autoCalcAirportDistance = true;                            //!< automatically calculate airport distance and bearing
-        bool   m_updateRemoteAircraftInProgress = false;                    //!< currently updating remote aircraft
-        int    m_timerId = -1;                                              //!< dispatch timer id
-        int    m_statsUpdateAircraftRuns = 0;                               //!< statistics update count
-        double m_statsUpdateAircraftTimeAvgMs = 0;                          //!< statistics average update time
-        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                        //!< statistics total update time
-        qint64 m_statsLastUpdateAircraftRequested = 0;                      //!< when was the last aircraft update requested
-        qint64 m_statsUpdateAircraftRequestedDeltaMs = 0;                   //!< delta time between 2 aircrat updates
+        bool   m_pausedSimFreezesInterpolation = false;   //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        bool   m_autoCalcAirportDistance = true;          //!< automatically calculate airport distance and bearing
+        bool   m_updateRemoteAircraftInProgress = false;  //!< currently updating remote aircraft
+        int    m_timerId = -1;                            //!< dispatch timer id
+        int    m_statsUpdateAircraftRuns = 0;             //!< statistics update count
+        double m_statsUpdateAircraftTimeAvgMs = 0;        //!< statistics average update time
+        qint64 m_statsUpdateAircraftTimeTotalMs = 0;      //!< statistics total update time
+        qint64 m_statsCurrentUpdateTimeMs = 0;            //!< statistics current update time
+        qint64 m_statsMaxUpdateTimeMs = 0;                //!< statistics max.update time
+        qint64 m_statsLastUpdateAircraftRequestedMs = 0;  //!< when was the last aircraft update requested
+        qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircrat updates
 
         BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log.interpolation

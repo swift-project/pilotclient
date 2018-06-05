@@ -585,9 +585,11 @@ namespace BlackCore
         m_statsUpdateAircraftRuns = 0;
         m_statsUpdateAircraftTimeAvgMs = 0;
         m_statsUpdateAircraftTimeTotalMs = 0;
+        m_statsMaxUpdateTimeMs = 0;
+        m_statsCurrentUpdateTimeMs = 0;
         m_statsPhysicallyAddedAircraft = 0;
         m_statsPhysicallyRemovedAircraft = 0;
-        m_statsLastUpdateAircraftRequested = 0;
+        m_statsLastUpdateAircraftRequestedMs = 0;
         m_statsUpdateAircraftRequestedDeltaMs = 0;
     }
 
@@ -642,12 +644,14 @@ namespace BlackCore
     {
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
         const qint64 dt = now - startTime;
+        m_statsCurrentUpdateTimeMs = dt;
         m_statsUpdateAircraftTimeTotalMs += dt;
         m_statsUpdateAircraftRuns++;
         m_statsUpdateAircraftTimeAvgMs = static_cast<double>(m_statsUpdateAircraftTimeTotalMs) / static_cast<double>(m_statsUpdateAircraftRuns);
         m_updateRemoteAircraftInProgress = false;
-        if (m_statsLastUpdateAircraftRequested > 0) { m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequested; }
-        m_statsLastUpdateAircraftRequested = startTime;
+        if (m_statsMaxUpdateTimeMs < dt) { m_statsMaxUpdateTimeMs = dt; }
+        if (m_statsLastUpdateAircraftRequestedMs > 0) { m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs; }
+        m_statsLastUpdateAircraftRequestedMs = startTime;
     }
 
     bool CSimulatorCommon::isEqualLastSent(const CAircraftSituation &compare) const

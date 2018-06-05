@@ -112,9 +112,16 @@ namespace BlackGui
                 ui->le_Parts->setText(boolToYesNo(m_airspaceMonitor->isRemoteAircraftSupportingParts(m_callsign)));
 
                 static const QString msTimeStr("%1ms");
+                static const QString updateTimes("%1ms avg: %2ms max: %3ms");
                 const QString avgUpdateTimeRounded = QString::number(m_simulatorCommon->getStatisticsAverageUpdateTimeMs(), 'f', 2);
-                ui->le_AvgUpdateTimeMs->setText(msTimeStr.arg(avgUpdateTimeRounded));
-                ui->le_UpdateAircraftReqTimeMs->setText(msTimeStr.arg(m_simulatorCommon->getStatisticsAircraftUpdatedRequestedDeltaMs()));
+
+                ui->le_UpdateTimes->setText(updateTimes.
+                                            arg(m_simulatorCommon->getStatisticsCurrentUpdateTimeMs()).
+                                            arg(avgUpdateTimeRounded).
+                                            arg(m_simulatorCommon->getStatisticsMaxUpdateTimeMs()));
+                ui->le_UpdateTimes->home(false);
+                ui->le_UpdateCount->setText(QString::number(m_simulatorCommon->getStatisticsUpdateRuns()));
+                ui->le_UpdateReqTime->setText(msTimeStr.arg(m_simulatorCommon->getStatisticsAircraftUpdatedRequestedDeltaMs()));
 
                 const CClient client = m_airspaceMonitor->getClientOrDefaultForCallsign(m_callsign);
                 ui->le_GndFlag->setText(boolToYesNo(client.hasGndFlagCapability()));
@@ -293,8 +300,8 @@ namespace BlackGui
             ui->le_ElevationRec->clear();
             ui->le_ElevationReq->clear();
             ui->le_Parts->clear();
-            ui->le_AvgUpdateTimeMs->clear();
-            ui->le_UpdateAircraftReqTimeMs->clear();
+            ui->le_UpdateTimes->clear();
+            ui->le_UpdateTimes->clear();
             m_elvReceived = m_elvRequested = 0;
         }
 
