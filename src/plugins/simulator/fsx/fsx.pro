@@ -13,6 +13,10 @@ CONFIG += blackconfig blackmisc blackcore blackgui
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src
 INCLUDEPATH *= $$EXTERNALSROOT/common/include/simconnect/FSX-XPack
+SOURCES += *.cpp
+HEADERS += *.h
+DISTFILES += simulatorfsx.json
+DESTDIR = $$DestRoot/bin/plugins/simulator
 
 LIBS *= -L$$EXTERNALS_LIB_DIR/FSX-XPack
 LIBS *= -lsimulatorfscommon -lsimulatorfsxcommon -lfsuipc -lSimConnect -lsimulatorplugincommon
@@ -21,12 +25,6 @@ addStaticLibraryDependency(simulatorfscommon)
 addStaticLibraryDependency(simulatorfsxcommon)
 addStaticLibraryDependency(fsuipc)
 addStaticLibraryDependency(simulatorplugincommon)
-
-SOURCES += *.cpp
-HEADERS += *.h
-DISTFILES += simulatorfsx.json
-
-DESTDIR = $$DestRoot/bin/plugins/simulator
 
 win32 {
     dlltarget.path = $$PREFIX/bin/plugins/simulator
