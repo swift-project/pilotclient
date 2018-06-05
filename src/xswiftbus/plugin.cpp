@@ -33,7 +33,7 @@ namespace XSwiftBus
         m_toggleMessageWindowMenuItem = m_menu.item("Toggle Message Window", [this] { if(m_service) { m_service->toggleMessageBoxVisibility(); } });
         // m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackMisc::CDBusServer::systemBusAddress()); }));
         // m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackMisc::CDBusServer::p2pAddress("localhost")); }));
-        m_planeViewSubMenu = m_menu.subMenu("Plane View");
+        m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
         planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this] { switchToOwnAircraftView(); });
 
         m_dbusThread = std::thread([this]()

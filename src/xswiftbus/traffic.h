@@ -132,7 +132,7 @@ namespace XSwiftBus
         void emitSimFrame();
         void emitPlaneAdded(const std::string &callsign);
         void emitPlaneAddingFailed(const std::string &callsign);
-        void switchToPlaneView(const std::string &callsign);
+        void enableFollowPlaneView(const std::string &callsign);
         void followNextPlane();
 
         static int preferences(const char *section, const char *name, int def);
@@ -166,14 +166,14 @@ namespace XSwiftBus
         std::vector<std::string> m_followPlaneViewSequence;
         std::chrono::system_clock::time_point m_timestampLastSimFrame = std::chrono::system_clock::now();
 
-        CMenu m_planeViewSubMenu;
-        std::unordered_map<std::string, CMenuItem> m_planeViewMenuItems;
-        std::string m_planeViewCallsign;
+        CMenu m_followPlaneViewSubMenu;
+        std::unordered_map<std::string, CMenuItem> m_followPlaneViewMenuItems;
+        std::string m_followPlaneViewCallsign;
 
         DataRef<xplane::data::sim::graphics::view::world_render_type> m_worldRenderType;
         bool m_emitSimFrame = true;
 
-        CCommand m_planeViewNextCommand;
+        CCommand m_followPlaneViewNextCommand;
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)

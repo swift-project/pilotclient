@@ -45,7 +45,7 @@ namespace XSwiftBus
 
     CTraffic::CTraffic(CDBusConnection *dbusConnection) :
         CDBusObject(dbusConnection),
-        m_planeViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); })
+        m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); })
     {
         registerDBusObjectPath(XSWIFTBUS_TRAFFIC_INTERFACENAME, XSWIFTBUS_TRAFFIC_OBJECTPATH);
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
@@ -61,7 +61,7 @@ namespace XSwiftBus
 
     void CTraffic::setPlaneViewMenu(const CMenu &planeViewSubMenu)
     {
-        m_planeViewSubMenu = planeViewSubMenu;
+        m_followPlaneViewSubMenu = planeViewSubMenu;
     }
 
     void CTraffic::initLegacyData()
@@ -133,9 +133,9 @@ namespace XSwiftBus
         sendDBusMessage(signalPlaneAddingFailed);
     }
 
-    void CTraffic::switchToPlaneView(const std::string &callsign)
+    void CTraffic::enableFollowPlaneView(const std::string &callsign)
     {
-        m_planeViewCallsign = callsign;
+        m_followPlaneViewCallsign = callsign;
 
         /* This is the hotkey callback.  First we simulate a joystick press and
          * release to put us in 'free view 1'.  This guarantees that no panels
@@ -149,15 +149,15 @@ namespace XSwiftBus
 
     void CTraffic::followNextPlane()
     {
-        if (m_planesByCallsign.empty() || m_planeViewCallsign.empty()) { return; }
-        auto callsignIt = std::find(m_followPlaneViewSequence.begin(), m_followPlaneViewSequence.end(), m_planeViewCallsign);
+        if (m_planesByCallsign.empty() || m_followPlaneViewCallsign.empty()) { return; }
+        auto callsignIt = std::find(m_followPlaneViewSequence.begin(), m_followPlaneViewSequence.end(), m_followPlaneViewCallsign);
 
         // If we are not at the end, increase by one
         if (callsignIt != m_followPlaneViewSequence.end()) { callsignIt++; }
         // If we were already at the end or reached it now, start from the beginning
         if (callsignIt == m_followPlaneViewSequence.end()) { callsignIt = m_followPlaneViewSequence.begin(); }
 
-        m_planeViewCallsign = *callsignIt;
+        m_followPlaneViewCallsign = *callsignIt;
     }
 
     int g_maxPlanes = 100;
@@ -251,19 +251,19 @@ namespace XSwiftBus
             m_planesById[id] = plane;
 
             // Create view menu item
-            CMenuItem planeViewMenuItem = m_planeViewSubMenu.item(callsign, [this, callsign] { switchToPlaneView(callsign); });
-            m_planeViewMenuItems[callsign] = planeViewMenuItem;
+            CMenuItem planeViewMenuItem = m_followPlaneViewSubMenu.item(callsign, [this, callsign] { enableFollowPlaneView(callsign); });
+            m_followPlaneViewMenuItems[callsign] = planeViewMenuItem;
             m_followPlaneViewSequence.push_back(callsign);
         }
     }
 
     void CTraffic::removePlane(const std::string &callsign)
     {
-        auto menuItemIt = m_planeViewMenuItems.find(callsign);
-        if (menuItemIt != m_planeViewMenuItems.end())
+        auto menuItemIt = m_followPlaneViewMenuItems.find(callsign);
+        if (menuItemIt != m_followPlaneViewMenuItems.end())
         {
-            m_planeViewSubMenu.removeItem(menuItemIt->second);
-            m_planeViewMenuItems.erase(menuItemIt);
+            m_followPlaneViewSubMenu.removeItem(menuItemIt->second);
+            m_followPlaneViewMenuItems.erase(menuItemIt);
         }
 
         auto planeIt = m_planesByCallsign.find(callsign);
@@ -289,15 +289,15 @@ namespace XSwiftBus
             delete plane;
         }
 
-        for (const auto &kv : m_planeViewMenuItems)
+        for (const auto &kv : m_followPlaneViewMenuItems)
         {
             CMenuItem item = kv.second;
-            m_planeViewSubMenu.removeItem(item);
+            m_followPlaneViewSubMenu.removeItem(item);
         }
 
         m_planesByCallsign.clear();
         m_planesById.clear();
-        m_planeViewMenuItems.clear();
+        m_followPlaneViewMenuItems.clear();
         m_followPlaneViewSequence.clear();
     }
 
@@ -423,7 +423,7 @@ namespace XSwiftBus
         auto planeIt = m_planesByCallsign.find(callsign);
         if (planeIt == m_planesByCallsign.end()) { return; }
 
-        switchToPlaneView(callsign);
+        enableFollowPlaneView(callsign);
     }
 
     const char *introspection_traffic =
@@ -819,7 +819,7 @@ namespace XSwiftBus
             double dz = 50.0 * cos(heading * PI / 180.0);
             double dy = -50.0 * tan(pitch * PI / 180.0);
 
-            auto planeIt = traffic->m_planesByCallsign.find(traffic->m_planeViewCallsign);
+            auto planeIt = traffic->m_planesByCallsign.find(traffic->m_followPlaneViewCallsign);
             if (planeIt == traffic->m_planesByCallsign.end()) { return 0; }
             Plane *plane = planeIt->second;
 
