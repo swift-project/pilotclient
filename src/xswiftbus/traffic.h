@@ -134,6 +134,7 @@ namespace XSwiftBus
         void emitPlaneAddingFailed(const std::string &callsign);
         void enableFollowPlaneView(const std::string &callsign);
         void followNextPlane();
+        void followPreviousPlane();
 
         static int preferences(const char *section, const char *name, int def);
         static float preferences(const char *section, const char *name, float def);
@@ -169,11 +170,11 @@ namespace XSwiftBus
         CMenu m_followPlaneViewSubMenu;
         std::unordered_map<std::string, CMenuItem> m_followPlaneViewMenuItems;
         std::string m_followPlaneViewCallsign;
+        CCommand m_followPlaneViewNextCommand;
+        CCommand m_followPlaneViewPreviousCommand;
 
         DataRef<xplane::data::sim::graphics::view::world_render_type> m_worldRenderType;
         bool m_emitSimFrame = true;
-
-        CCommand m_followPlaneViewNextCommand;
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)

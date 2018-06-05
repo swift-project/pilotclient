@@ -45,7 +45,8 @@ namespace XSwiftBus
 
     CTraffic::CTraffic(CDBusConnection *dbusConnection) :
         CDBusObject(dbusConnection),
-        m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); })
+        m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane", "Changes plane view to follow next plane in sequence", [this] { followNextPlane(); }),
+        m_followPlaneViewPreviousCommand("org/swift-project/xswiftbus/follow_previous_plane", "Changes plane view to follow previous plane in sequence", [this] { followPreviousPlane(); })
     {
         registerDBusObjectPath(XSWIFTBUS_TRAFFIC_INTERFACENAME, XSWIFTBUS_TRAFFIC_OBJECTPATH);
         XPLMRegisterDrawCallback(drawCallback, xplm_Phase_Airplanes, 1, this);
@@ -156,6 +157,19 @@ namespace XSwiftBus
         if (callsignIt != m_followPlaneViewSequence.end()) { callsignIt++; }
         // If we were already at the end or reached it now, start from the beginning
         if (callsignIt == m_followPlaneViewSequence.end()) { callsignIt = m_followPlaneViewSequence.begin(); }
+
+        m_followPlaneViewCallsign = *callsignIt;
+    }
+
+    void CTraffic::followPreviousPlane()
+    {
+        if (m_planesByCallsign.empty() || m_followPlaneViewCallsign.empty()) { return; }
+        auto callsignIt = std::find(m_followPlaneViewSequence.rbegin(), m_followPlaneViewSequence.rend(), m_followPlaneViewCallsign);
+
+        // If we are not at the end, increase by one
+        if (callsignIt != m_followPlaneViewSequence.rend()) { callsignIt++; }
+        // If we were already at the end or reached it now, start from the beginning
+        if (callsignIt == m_followPlaneViewSequence.rend()) { callsignIt = m_followPlaneViewSequence.rbegin(); }
 
         m_followPlaneViewCallsign = *callsignIt;
     }
