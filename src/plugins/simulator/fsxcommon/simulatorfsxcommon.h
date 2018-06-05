@@ -135,10 +135,10 @@ namespace BlackSimPlugin
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! Tracing?
-            bool isTracingSendId() const { return m_traceSendId; }
+            bool isTracingSendId() const;
 
             //! Set tracing on/off
-            void setTractingSendId(bool trace) { m_traceSendId = trace; }
+            void setTractingSendId(bool trace);
 
         protected:
             //! SimConnect Callback
@@ -176,6 +176,9 @@ namespace BlackSimPlugin
             //! Get new request id, overflow safe
             SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForProbe();
 
+            //! Trigger tracing ids for some while
+            bool triggerAutoTraceSendId();
+
             //! Request for sim data (request in range of sim data)?
             static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestIdSimDataStart + RequestSimDataOffset) && requestId < (RequestIdSimDataStart + RequestSimDataOffset + MaxSimObjects); }
 
@@ -191,7 +194,8 @@ namespace BlackSimPlugin
             //! Callsign for pending request
             BlackMisc::Aviation::CCallsign getCallsignForPendingProbeRequests(DWORD requestId, bool remove);
 
-            HANDLE m_hSimConnect = nullptr; //!< handle to SimConnect object
+            static constexpr qint64 AutoTraceOffsetMs = 10 * 1000;              //!< how long do we trace?
+            HANDLE m_hSimConnect = nullptr;                                     //!< handle to SimConnect object
             DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be overriden by specialized P3D function
             QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests
 
@@ -247,7 +251,7 @@ namespace BlackSimPlugin
             void onSimRunning();
 
             //! Deferred version of onSimRunning to avoid jitter
-            void onSimRunningDefered(qint64 referenceTs);
+            void onSimRunningDeferred(qint64 referenceTs);
 
             //! Called every visual frame
             void onSimFrame();
@@ -392,6 +396,7 @@ namespace BlackSimPlugin
             bool m_simSimulating = false;           //!< Simulator running?
             bool m_useSbOffsets  = true;            //!< with SB offsets
             bool m_traceSendId   = false;           //!< trace the send ids, meant for debugging
+            qint64 m_traceAutoTs = -1;              //!< allows to automatically trace for some time
             qint64 m_simulatingChangedTs = -1;      //!< timestamp, when simulating changed (used to avoid jitter)
             int m_syncDeferredCounter =  0;         //!< Set when synchronized, used to wait some time
             int m_skipCockpitUpdateCycles = 0;      //!< skip some update cycles to allow changes in simulator cockpit to be set

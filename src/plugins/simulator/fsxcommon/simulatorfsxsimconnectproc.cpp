@@ -69,6 +69,7 @@ namespace BlackSimPlugin
                     CLogMessage(simulatorFsxP3D).warning("Caught simConnect exception: '%1' '%2' | send details: '%3'")
                             << exceptionString << ex
                             << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
+                    simulatorFsxP3D->triggerAutoTraceSendId();
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:
