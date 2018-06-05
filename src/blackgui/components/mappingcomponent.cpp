@@ -152,6 +152,7 @@ namespace BlackGui
             QPointer<CMappingComponent> myself(this);
             QTimer::singleShot(2500, this, [ = ]
             {
+                if (!myself) { return; }
                 const CSimulatorInfo simulator(myself->getConnectedOrSelectedSimulator());
                 myself->onModelSetSimulatorChanged(simulator);
                 myself->onModelSetChanged(simulator);
@@ -512,6 +513,7 @@ namespace BlackGui
 
         void CMappingComponent::updateRenderedAircraftView(bool forceUpdate)
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             m_updateTimer.start(); // restart
             if (!forceUpdate && !this->isVisibleWidget())
             {
@@ -524,7 +526,7 @@ namespace BlackGui
             if (sGui->getIContextSimulator()->getSimulatorStatus() > 0)
             {
                 const CSimulatedAircraftList aircraft(sGui->getIContextNetwork()->getAircraftInRange());
-                ui->tvp_RenderedAircraft->updateContainer(aircraft);
+                ui->tvp_RenderedAircraft->updateContainerMaybeAsync(aircraft);
             }
             else
             {

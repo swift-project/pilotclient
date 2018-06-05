@@ -100,7 +100,7 @@ namespace BlackGui
                 const bool visible = (this->isVisibleWidget() && this->currentWidget() == ui->tb_AircraftInRange);
                 if (this->countAircraftInView() < 1 || visible)
                 {
-                    ui->tvp_AircraftInRange->updateContainer(sGui->getIContextNetwork()->getAircraftInRange());
+                    ui->tvp_AircraftInRange->updateContainerMaybeAsync(sGui->getIContextNetwork()->getAircraftInRange());
                 }
             }
             if (sGui->getIContextSimulator()->getSimulatorStatus() > 0)
@@ -108,7 +108,7 @@ namespace BlackGui
                 const bool visible = (this->isVisibleWidget() && this->currentWidget() == ui->tb_AirportsInRange);
                 if (this->countAirportsInRangeInView() < 1 || visible)
                 {
-                    ui->tvp_AirportsInRange->updateContainer(sGui->getIContextSimulator()->getAirportsInRange());
+                    ui->tvp_AirportsInRange->updateContainerMaybeAsync(sGui->getIContextSimulator()->getAirportsInRange());
                 }
             }
         }

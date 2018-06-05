@@ -45,7 +45,6 @@ namespace BlackGui
             //! Destructor
             virtual ~CModelMatcherComponent();
 
-        public slots:
             //! Tab (where this component is embedded) has been changed
             void tabIndexChanged(int index);
 

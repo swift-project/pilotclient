@@ -32,7 +32,7 @@
    <layout class="QVBoxLayout" name="vl_IntroPage">
     <item>
      <widget class="QFrame" name="fr_Introduction">
-      <layout class="QHBoxLayout" name="hl_Introduction">
+      <layout class="QHBoxLayout" name="hl_Introduction" stretch="0,1">
        <property name="spacing">
         <number>20</number>
        </property>
@@ -52,25 +52,15 @@
        <item>
         <widget class="QLabel" name="lbl_IntroText">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You are about to write a new mapping for your current model to the swift DB. Hereby you agree&lt;br/&gt;with the swift CLA and license terms. For details please consult the swift about and legal page.&lt;br/&gt;Thank you for supporting swift&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You are about to write a new mapping for your current model to the swift DB. Hereby you agree with the swift CLA and license terms. For details please consult the swift about and legal page. &lt;/p&gt;&lt;p&gt;Thank you for supporting swift&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">
           <enum>Qt::RichText</enum>
          </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="hs_Introduction">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -520,6 +510,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Components::CDbDistributorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbdistributorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::Components::CDbAircraftIcaoSelectorComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dbaircrafticaoselectorcomponent.h</header>
@@ -565,12 +561,6 @@
    <class>BlackGui::Editors::CAircraftModelForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/aircraftmodelform.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CDbDistributorComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbdistributorcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
