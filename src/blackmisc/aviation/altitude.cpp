@@ -62,6 +62,9 @@ namespace BlackMisc
 
         QString CAltitude::convertToQString(bool i18n) const
         {
+            static const QString n("null");
+            if (this->isNull()) { return n; }
+
             if (this->m_datum == FlightLevel)
             {
                 static const QString fls("FL%1");
