@@ -126,22 +126,6 @@ namespace BlackSimPlugin
             return CSimulatorCommon::getAirportsInRange();
         }
 
-        bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
-        {
-            // remove upfront, and then enable / disable again
-            const CCallsign callsign = aircraft.getCallsign();
-            if (!this->isPhysicallyRenderedAircraft(callsign)) { return false; }
-            this->physicallyRemoveRemoteAircraft(callsign);
-            return this->changeRemoteAircraftEnabled(aircraft);
-        }
-
-        bool CSimulatorFsCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
-        {
-            return aircraft.isEnabled() ?
-                   this->physicallyAddRemoteAircraft(aircraft) :
-                   this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
-        }
-
         void CSimulatorFsCommon::onSwiftDbAirportsRead()
         {
             const CAirportList webServiceAirports = this->getWebServiceAirports();

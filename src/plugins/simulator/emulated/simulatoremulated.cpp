@@ -106,19 +106,14 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString());
-            return true;
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString()); }
+            return CSimulatorCommon::changeRemoteAircraftEnabled(aircraft);
         }
 
         bool CSimulatorEmulated::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString());
-            const int c = m_renderedAircraft.setEnabled(aircraft.getCallsign(), aircraft.isEnabled(), true); // my own simulator list
-            const CCallsign cs = aircraft.getCallsign();
-            const bool rendered = aircraft.isEnabled();
-            this->updateAircraftRendered(cs, rendered); // in provider
-            emit this->aircraftRenderingChanged(m_renderedAircraft.findFirstByCallsign(aircraft.getCallsign(), aircraft));
-            return c > 0;
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString()); }
+            return CSimulatorCommon::changeRemoteAircraftEnabled(aircraft);
         }
 
         bool CSimulatorEmulated::updateOwnSimulatorCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)

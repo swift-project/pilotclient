@@ -135,6 +135,7 @@ namespace BlackCore
     void CSimulatorCommon::blinkHighlightedAircraft()
     {
         if (m_highlightedAircraft.isEmpty() || m_highlightEndTimeMsEpoch < 1) { return; }
+        if (this->isShuttingDown()) { return; }
         m_blinkCycle = !m_blinkCycle;
 
         if (QDateTime::currentMSecsSinceEpoch() > m_highlightEndTimeMsEpoch)
@@ -404,9 +405,30 @@ namespace BlackCore
         return r;
     }
 
+    bool CSimulatorCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
+    {
+        if (this->isShuttingDown()) { return false; }
+        return aircraft.isEnabled() ?
+               this->physicallyAddRemoteAircraft(aircraft) :
+               this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
+    }
+
+    bool CSimulatorCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
+    {
+        // we expect the new model "in aircraft"
+        // remove upfront, and then enable / disable again
+        if (this->isShuttingDown()) { return false; }
+        const CCallsign callsign = aircraft.getCallsign();
+        if (!this->isPhysicallyRenderedAircraft(callsign)) { return false; }
+        this->physicallyRemoveRemoteAircraft(callsign);
+        return this->changeRemoteAircraftEnabled(aircraft);
+    }
+
     bool CSimulatorCommon::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         if (this->isMyIdentifier(originator)) { return false; }
+        if (this->isShuttingDown()) { return false; }
+
         if (commandLine.isEmpty()) { return false; }
         CSimpleCommandParser parser({ ".plugin", ".drv", ".driver" });
         parser.parse(commandLine);

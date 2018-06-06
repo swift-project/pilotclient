@@ -44,8 +44,6 @@ namespace BlackSimPlugin
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
-            virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
-            virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             // ---------------------- ISimulator ------------------
 
         protected:

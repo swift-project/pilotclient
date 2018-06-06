@@ -577,28 +577,6 @@ namespace BlackSimPlugin
             return this->getAircraftInRange().findByRendered(true).getCallsigns(); // just a poor workaround
         }
 
-        bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
-        {
-            // remove upfront, and then enable / disable again
-            auto callsign = aircraft.getCallsign();
-            if (!this->isPhysicallyRenderedAircraft(callsign)) { return false; }
-            this->physicallyRemoveRemoteAircraft(callsign);
-            return this->changeRemoteAircraftEnabled(aircraft);
-        }
-
-        bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
-        {
-            if (aircraft.isEnabled())
-            {
-                this->physicallyAddRemoteAircraft(aircraft);
-            }
-            else
-            {
-                this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
-            }
-            return true;
-        }
-
         bool CSimulatorXPlane::followAircraft(const CCallsign &callsign)
         {
             if (! m_trafficProxy || ! m_trafficProxy->isValid()) { return false; }

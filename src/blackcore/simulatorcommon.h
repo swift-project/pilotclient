@@ -84,6 +84,8 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CCallsignSet renderedDisabledAircraft() const override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
+        virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
+        virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
         virtual void clearAllRemoteAircraftData() override;
         virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
 
