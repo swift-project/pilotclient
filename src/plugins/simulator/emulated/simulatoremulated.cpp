@@ -69,7 +69,7 @@ namespace BlackSimPlugin
                 m_monitorWidget->show();
             });
 
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
             return true;
         }
 
@@ -88,13 +88,13 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString()); }
             return CSimulatorCommon::logicallyAddRemoteAircraft(remoteAircraft);
         }
 
         bool CSimulatorEmulated::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString()); }
             return CSimulatorCommon::logicallyRemoveRemoteAircraft(callsign);
         }
 
@@ -123,7 +123,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::updateOwnSimulatorCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString(), originator.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString(), originator.toQString()); }
             if (originator == identifier()) { return false; } // myself
             m_myAircraft.setCockpit(aircraft);
             emit this->internalAircraftChanged();
@@ -132,7 +132,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, selcal.toQString(), originator.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, selcal.toQString(), originator.toQString()); }
             if (originator == identifier()) { return false; } // myself
             if (m_myAircraft.getSelcal() == selcal) { return false; }
             m_myAircraft.setSelcal(selcal);
@@ -142,7 +142,7 @@ namespace BlackSimPlugin
 
         void CSimulatorEmulated::displayStatusMessage(const CStatusMessage &message) const
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, message.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, message.toQString()); }
             m_monitorWidget->displayStatusMessage(message);
         }
 
@@ -154,7 +154,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::setTimeSynchronization(bool enable, const CTime &offset)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, boolToTrueFalse(enable), offset.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, boolToTrueFalse(enable), offset.toQString()); }
             m_timeSyncronized = enable;
             m_offsetTime = offset;
             return enable;
@@ -162,7 +162,7 @@ namespace BlackSimPlugin
 
         CTime CSimulatorEmulated::getTimeSynchronizationOffset() const
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
             return m_offsetTime;
         }
 
@@ -174,19 +174,19 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorEmulated::physicallyRenderedAircraft() const
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
             return m_renderedAircraft.getCallsigns();
         }
 
         void CSimulatorEmulated::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraftToHighlight.toQString(), boolToTrueFalse(enableHighlight), displayTime.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraftToHighlight.toQString(), boolToTrueFalse(enableHighlight), displayTime.toQString()); }
             CSimulatorCommon::highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
         }
 
         bool CSimulatorEmulated::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, commandLine, originator.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, commandLine, originator.toQString()); }
             return CSimulatorPluginCommon::parseCommandLine(commandLine, originator);
         }
 
@@ -279,19 +279,19 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::isPaused() const
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
             return m_paused;
         }
 
         bool CSimulatorEmulated::isSimulating() const
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
             return m_simulating;
         }
 
         bool CSimulatorEmulated::physicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString()); }
             CSimulatedAircraft aircraft(remoteAircraft);
             aircraft.setRendered(true);
             const CCallsign cs = aircraft.getCallsign();
@@ -304,7 +304,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorEmulated::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString());
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString()); }
             m_interpolators.remove(callsign);
             const int c = m_renderedAircraft.removeByCallsign(callsign);
             return c > 0;
@@ -312,7 +312,7 @@ namespace BlackSimPlugin
 
         int CSimulatorEmulated::physicallyRemoveAllRemoteAircraft()
         {
-            if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+            if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
             return CSimulatorCommon::physicallyRemoveAllRemoteAircraft();
         }
 

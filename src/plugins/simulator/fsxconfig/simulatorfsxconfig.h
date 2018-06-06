@@ -38,7 +38,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
             BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard
