@@ -24,16 +24,25 @@ namespace BlackMisc
         : m_capacity(capacity), m_numTokensToRefill(numTokensToRefill), m_intervalMs(intervalMs)
     {}
 
-    bool CTokenBucket::tryConsume(int numTokens)
+    bool CTokenBucket::tryConsume(int numTokens, qint64 msSinceEpoch)
     {
         Q_ASSERT(numTokens > 0 && numTokens < m_capacity);
 
+        // enough tokens in stock?
+        if (numTokens <= m_availableTokens)
+        {
+            m_availableTokens -= numTokens;
+            return true;
+        }
+
         // Replenish maximal up to capacity
-        int replenishedTokens = qMin(m_capacity, this->getTokens());
+        const int tokens = this->getTokens(msSinceEpoch);
+        const int replenishedTokens = qMin(m_capacity, tokens);
 
         // Take care of overflows
         m_availableTokens = qMin(m_availableTokens + replenishedTokens, m_capacity);
 
+        // check again after replenishment
         if (numTokens <= m_availableTokens)
         {
             m_availableTokens -= numTokens;
@@ -42,9 +51,9 @@ namespace BlackMisc
         return false;
     }
 
-    void CTokenBucket::setNumberOfTokensToRefill(int noTokens)
+    void CTokenBucket::setNumberOfTokensToRefill(int numTokens)
     {
-        m_numTokensToRefill = noTokens;
+        m_numTokensToRefill = numTokens;
     }
 
     void CTokenBucket::setCapacity(int capacity)
@@ -52,9 +61,21 @@ namespace BlackMisc
         m_capacity = capacity;
     }
 
-    int CTokenBucket::getTokens()
+    void CTokenBucket::setCapacityAndTokensToRefill(int numTokens)
     {
-        const qint64 now = QDateTime::currentMSecsSinceEpoch();
+        this->setCapacity(numTokens);
+        this->setNumberOfTokensToRefill(numTokens);
+    }
+
+    int CTokenBucket::getTokensPerSecond() const
+    {
+        if (m_intervalMs < 1) { return 0; }
+        return m_numTokensToRefill * 1000 / m_intervalMs;
+    }
+
+    int CTokenBucket::getTokens(qint64 msSinceEpoch)
+    {
+        const qint64 now = msSinceEpoch > 0 ? msSinceEpoch : QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaMs = now - m_lastReplenishmentTime;
         const int numberOfTokens = static_cast<int>(m_numTokensToRefill * deltaMs / m_intervalMs);
 

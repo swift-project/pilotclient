@@ -33,25 +33,36 @@ namespace BlackMisc
         CTokenBucket(int capacity, qint64 intervalMs, int numTokensToRefill);
 
         //! Try to consume a number of tokens
-        bool tryConsume(int numTokens = 1);
+        //! \remark if a current timestamp is already available, it can be passed
+        bool tryConsume(int numTokens = 1, qint64 msSinceEpoch = -1);
 
         //! Number of tokens to refill
-        void setNumberOfTokensToRefill(int noTokens);
+        void setNumberOfTokensToRefill(int numTokens);
 
         //! Set the capacity
         void setCapacity(int capacity);
+
+        //! Tokens/capacity if both are same
+        void setCapacityAndTokensToRefill(int numTokens);
+
+        //! Set the interval
+        void setInterval(qint64 intervalMs) { m_intervalMs = intervalMs; }
+
+        //! Tokens per second
+        int getTokensPerSecond() const;
 
     private:
         //! Get available tokens since last replenishment.
         //! \note Note that replenishment is implemented lazy.
         //!    This means, tokens will not replenished on regular basis via a running timer,
         //!    but they will be replenished while trying to consume them.
-        int getTokens();
+        //! \remark a timestamp can be passed, or "now" is taken
+        int getTokens(qint64 msSinceEpoch);
 
-        int m_capacity = 10;        //!< Maximum capacity of tokens
-        int m_availableTokens = 10; //!< Currently available tokens. The initial value is 10
-        int m_numTokensToRefill;    //!< Number of tokens to be refilled each interval
-        qint64 m_intervalMs = 5000; //!< Refill interval, e.g. every 5 secs
+        int m_capacity = 10;         //!< Maximum capacity of tokens
+        int m_availableTokens = 10;  //!< Currently available tokens. The initial value is 10
+        int m_numTokensToRefill = 1; //!< Number of tokens to be refilled each interval
+        qint64 m_intervalMs = 5000;  //!< Refill interval, e.g. every 5 secs
         qint64 m_lastReplenishmentTime = QDateTime::currentMSecsSinceEpoch(); //!< Last time
     };
 } // ns
