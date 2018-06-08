@@ -85,6 +85,7 @@ namespace BlackGui
             QScopedPointer<Ui::CAircraftComponent> ui;
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::onSettingsChanged }; //!< settings changed
             QTimer m_updateTimer;
+            int m_updateCounter = 0;
         };
     } // ns
 } // ns

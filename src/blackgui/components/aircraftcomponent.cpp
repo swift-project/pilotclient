@@ -106,11 +106,14 @@ namespace BlackGui
             if (sGui->getIContextSimulator()->getSimulatorStatus() > 0)
             {
                 const bool visible = (this->isVisibleWidget() && this->currentWidget() == ui->tb_AirportsInRange);
-                if (this->countAirportsInRangeInView() < 1 || visible)
+                const bool counter = ((m_updateCounter % 5) == 0); // less frequent than aircraft
+                if (this->countAirportsInRangeInView() < 1 || (visible && counter))
                 {
                     ui->tvp_AirportsInRange->updateContainerMaybeAsync(sGui->getIContextSimulator()->getAirportsInRange());
                 }
             }
+
+            m_updateCounter++;
         }
 
         void CAircraftComponent::onInfoAreaTabBarChanged(int index)
