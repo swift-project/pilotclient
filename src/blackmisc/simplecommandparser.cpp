@@ -30,20 +30,20 @@ namespace BlackMisc
 
     void CSimpleCommandParser::parse(const QString &commandLine)
     {
-        this->m_knownCommand = false;
-        this->m_originalLine = commandLine;
-        this->m_cleanedLine = commandLine.trimmed().simplified();
-        if (!this->m_cleanedLine.isEmpty())
+        m_knownCommand = false;
+        m_originalLine = commandLine;
+        m_cleanedLine = commandLine.trimmed().simplified();
+        if (!m_cleanedLine.isEmpty())
         {
-            this->m_splitParts = m_cleanedLine.split(' ');
-            if (!this->m_splitParts.isEmpty())
+            m_splitParts = m_cleanedLine.split(' ');
+            if (!m_splitParts.isEmpty())
             {
-                const QString &first = this->m_splitParts.constFirst();
+                const QString &first = m_splitParts.constFirst();
                 const QString formatted = formatCommand(first);
                 if (isCommand(first))
                 {
-                    this->m_commandPart = formatted;
-                    this->m_knownCommand = this->m_knownCommands.contains(formatted);
+                    m_commandPart = formatted;
+                    m_knownCommand = m_knownCommands.contains(formatted);
                 }
             }
         }
@@ -52,22 +52,22 @@ namespace BlackMisc
     const QString &CSimpleCommandParser::part(int index) const
     {
         static const QString empty("");
-        if (index < 0 || index >= this->m_splitParts.size()) return empty;
-        return this->m_splitParts.at(index);
+        if (index < 0 || index >= m_splitParts.size()) return empty;
+        return m_splitParts.at(index);
     }
 
     QString CSimpleCommandParser::remainingStringAfter(int index) const
     {
-        if (index < 0) { return this->m_originalLine.trimmed(); }
+        if (index < 0) { return m_originalLine.trimmed(); }
         const QString p = this->part(index);
-        int fi = this->m_originalLine.indexOf(p, 0, Qt::CaseInsensitive);
+        int fi = m_originalLine.indexOf(p, 0, Qt::CaseInsensitive);
         if (fi < 0) { return ""; }
-        return this->m_originalLine.mid(fi).trimmed();
+        return m_originalLine.mid(fi).trimmed();
     }
 
     int CSimpleCommandParser::countParts() const
     {
-        return this->m_splitParts.count();
+        return m_splitParts.count();
     }
 
     bool CSimpleCommandParser::hasPart(int index) const
@@ -206,30 +206,30 @@ namespace BlackMisc
 
     bool CSimpleCommandParser::matchesCommand(const QString &checkCommand, const QString &alias1, const QString &alias2)
     {
-        if (this->m_commandPart.isEmpty()) { return false; }
-        if (!checkCommand.isEmpty() && formatCommand(checkCommand) == this->m_commandPart) { return true; }
-        if (!alias1.isEmpty() && formatCommand(alias1) == this->m_commandPart) { return true; }
-        if (!alias2.isEmpty() && formatCommand(alias2) == this->m_commandPart) { return true; }
+        if (m_commandPart.isEmpty()) { return false; }
+        if (!checkCommand.isEmpty() && formatCommand(checkCommand) == m_commandPart) { return true; }
+        if (!alias1.isEmpty() && formatCommand(alias1) == m_commandPart) { return true; }
+        if (!alias2.isEmpty() && formatCommand(alias2) == m_commandPart) { return true; }
         return false;
     }
 
     bool CSimpleCommandParser::commandStartsWith(const QString &startPattern) const
     {
-        if (this->m_commandPart.isEmpty()) { return false; }
-        return this->m_commandPart.startsWith(formatCommand(startPattern));
+        if (m_commandPart.isEmpty()) { return false; }
+        return m_commandPart.startsWith(formatCommand(startPattern));
     }
 
     bool CSimpleCommandParser::commandEndsWith(const QString &endPattern) const
     {
-        if (this->m_commandPart.isEmpty()) { return false; }
-        return this->m_commandPart.endsWith(endPattern);
+        if (m_commandPart.isEmpty()) { return false; }
+        return m_commandPart.endsWith(endPattern);
     }
 
     void CSimpleCommandParser::setCheckedCommandList(const QStringList &commands)
     {
         for (const QString &c : commands)
         {
-            this->m_knownCommands.append(formatCommand(c));
+            m_knownCommands.append(formatCommand(c));
         }
     }
 } // namespace

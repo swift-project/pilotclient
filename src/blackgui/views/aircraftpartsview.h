@@ -32,4 +32,5 @@ namespace BlackGui
         };
     } // ns
 } // ns
+
 #endif // guard

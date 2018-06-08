@@ -71,8 +71,12 @@ namespace BlackSimPlugin
             //! \@{
             virtual bool isConnected() const override;
             virtual bool isSimulating() const override { return isConnected(); }
-            virtual void timerEvent(QTimerEvent *event) override;
             //! \@}
+
+            //! Timer event dispatching
+            //! \sa m_timerId
+            //! \sa CSimulatorFsxCommon::dispatch
+            virtual void timerEvent(QTimerEvent *event) override;
 
             //! \name Base class overrides
             //! @{

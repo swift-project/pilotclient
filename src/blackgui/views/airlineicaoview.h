@@ -41,4 +41,5 @@ namespace BlackGui
         };
     }
 }
+
 #endif // guard

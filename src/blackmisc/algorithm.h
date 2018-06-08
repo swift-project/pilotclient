@@ -63,7 +63,7 @@ namespace BlackMisc
      * Split the range [in,end) into n equal chunks and use the random number generator rng to choose one element from each.
      */
     template <typename ForwardIt, typename OutputIt, typename Generator>
-    void copySampleElements(ForwardIt in, ForwardIt end, OutputIt out, const int n, Generator &&rng)
+    void copySampleElements(ForwardIt in, ForwardIt end, OutputIt out, int n, Generator &&rng)
     {
         const auto size = static_cast<int>(std::distance(in, end));
         for (int i = 0; i < std::min(n, size); ++i)

@@ -305,7 +305,7 @@ namespace BlackSimPlugin
             void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData);
 
             //! Probe data sent from simulator
-            void updatProbeFromSimulator(const BlackMisc::Aviation::CCallsign &callsign, const DataDefinitionRemoteAircraftSimData &remoteAircraftData);
+            void updateProbeFromSimulator(const BlackMisc::Aviation::CCallsign &callsign, const DataDefinitionRemoteAircraftSimData &remoteAircraftData);
 
             //! Update from SB client area
             void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);

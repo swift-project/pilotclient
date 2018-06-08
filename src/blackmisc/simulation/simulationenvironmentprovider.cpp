@@ -20,10 +20,11 @@ namespace BlackMisc
         bool ISimulationEnvironmentProvider::rememberGroundElevation(const ICoordinateGeodetic &elevationCoordinate, const CLength &epsilon)
         {
             {
-                // no 2nd elevation nearby
+                // no 2nd elevation nearby?
                 QReadLocker l(&m_lockElvCoordinates);
                 if (m_elvCoordinates.containsObjectInRange(elevationCoordinate, minRange(epsilon))) { return false; }
             }
+
             {
                 // we keep latest at front
                 // * we assume we find them faster

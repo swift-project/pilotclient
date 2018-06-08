@@ -50,7 +50,7 @@ namespace BlackSimPlugin
                     simulatorFsxP3D->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simulatorFsxP3D->m_simulatorName, simulatorFsxP3D->m_simulatorVersion, simulatorFsxP3D->m_simConnectVersion);
                     CLogMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).info("Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << simulatorFsxP3D->m_simulatorDetails;
                     simulatorFsxP3D->setSimConnected();
-                    break;
+                    break; // SIMCONNECT_RECV_ID_OPEN
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
@@ -75,7 +75,7 @@ namespace BlackSimPlugin
                             << exceptionString << ex
                             << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
                     simulatorFsxP3D->triggerAutoTraceSendId();
-                    break;
+                    break; // SIMCONNECT_RECV_ID_EXCEPTION
                 }
             case SIMCONNECT_RECV_ID_QUIT:
                 {
@@ -113,7 +113,7 @@ namespace BlackSimPlugin
                     default:
                         break;
                     }
-                    break;
+                    break; // SIMCONNECT_RECV_ID_EVENT
                 }
             case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
                 {
@@ -122,7 +122,7 @@ namespace BlackSimPlugin
                     const SIMCONNECT_SIMOBJECT_TYPE objectType = event->eObjType;
                     if (objectType != SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT && objectType != SIMCONNECT_SIMOBJECT_TYPE_HELICOPTER)
                     {
-                        break;
+                        break; // SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE
                     }
 
                     // such an object is not necessarily one of ours
@@ -152,7 +152,7 @@ namespace BlackSimPlugin
                             break;
                         }
                     }
-                    break;
+                    break; // SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE
                 }
             case SIMCONNECT_RECV_ID_EVENT_FRAME:
                 {
@@ -166,7 +166,7 @@ namespace BlackSimPlugin
                     default:
                         break;
                     }
-                    break;
+                    break; // SIMCONNECT_RECV_ID_EVENT_FRAME
                 }
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
@@ -204,7 +204,7 @@ namespace BlackSimPlugin
                             emit simulatorFsxP3D->physicallyAddingRemoteModelFailed(remoteAircraft, msg);
                         }
                     }
-                    break;
+                    break; // SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
                 }
             case SIMCONNECT_RECV_ID_SIMOBJECT_DATA_BYTYPE:
                 {
@@ -257,11 +257,11 @@ namespace BlackSimPlugin
                             {
                                 static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
                                 simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestRangeForSimData;
-                                const CSimConnectObject simObj = simulatorFsxP3D->getSimObjectForObjectId(objectId);
-                                if (!simObj.hasValidRequestAndObjectId()) { break; }
+                                const CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForObjectId(objectId);
+                                if (!simObject.hasValidRequestAndObjectId()) { break; }
                                 const DataDefinitionRemoteAircraftSimData *remoteAircraftSimData = (DataDefinitionRemoteAircraftSimData *)&pObjData->dwData;
                                 // extra check, but ids should be the same
-                                if (objectId == simObj.getObjectId())
+                                if (objectId == simObject.getObjectId())
                                 {
                                     simulatorFsxP3D->updateRemoteAircraftFromSimulator(simObj, *remoteAircraftSimData);
                                 }
@@ -278,7 +278,7 @@ namespace BlackSimPlugin
                                 {
                                     const CCallsign cs = simulatorFsxP3D->m_pendingProbeRequests.value(requestId);
                                     if (cs.isEmpty()) { break; }
-                                    simulatorFsxP3D->updatProbeFromSimulator(cs, *probeSimData);
+                                    simulatorFsxP3D->updateProbeFromSimulator(cs, *probeSimData);
                                 }
                             }
                             else if (CSimulatorFsxCommon::isRequestForLights(requestId))
