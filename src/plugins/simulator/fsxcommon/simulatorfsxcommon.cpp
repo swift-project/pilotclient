@@ -255,6 +255,16 @@ namespace BlackSimPlugin
             return msgs;
         }
 
+        QString CSimulatorFsxCommon::getStatisticsSimulatorSpecific() const
+        {
+            static const QString specificInfo("dispatch (cur/max): %1ms %2ms %3 %4 simData#: %5");
+            return specificInfo.
+                   arg(m_dispatchTimeMs).arg(m_dispatchMaxTimeMs).
+                   arg(CSimConnectUtilities::simConnectReceiveIdToString(m_dispatchMaxTimeReceiveId),
+                       CSimConnectDefinitions::requestToString(m_dispatchMaxTimeRequest)).
+                   arg(m_requestSimObjectDataCount);
+        }
+
         bool CSimulatorFsxCommon::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
             Q_UNUSED(callsign);
@@ -304,10 +314,27 @@ namespace BlackSimPlugin
             m_traceAutoTs = -1;
         }
 
+        void CSimulatorFsxCommon::resetAircraftStatistics()
+        {
+            m_dispatchMaxTimeMs = -1;
+            m_dispatchTimeMs = -1;
+            m_requestSimObjectDataCount = 0;
+            m_dispatchLastReceiveId = SIMCONNECT_RECV_ID_NULL;
+            m_dispatchMaxTimeReceiveId = SIMCONNECT_RECV_ID_NULL;
+            m_dispatchLastRequest = CSimConnectDefinitions::RequestEndMarker;
+            m_dispatchMaxTimeRequest = CSimConnectDefinitions::RequestEndMarker;
+            CSimulatorPluginCommon::resetAircraftStatistics();
+        }
+
         bool CSimulatorFsxCommon::stillDisplayReceiveExceptions()
         {
             m_receiveExceptionCount++;
             return m_receiveExceptionCount < IgnoreReceiveExceptions;
+        }
+
+        CSimConnectObject CSimulatorFsxCommon::getSimObjectForObjectId(DWORD objectId) const
+        {
+            return this->getSimConnectObjects().getSimObjectForObjectId(objectId);
         }
 
         void CSimulatorFsxCommon::setSimConnected()
@@ -387,11 +414,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::onSimFrame()
         {
-            if (m_updateRemoteAircraftInProgress)
-            {
-                return;
-            }
-
+            if (m_updateRemoteAircraftInProgress) { return; }
             QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {
@@ -551,7 +574,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData)
         {
             // Near ground we use faster updates
-            if (remoteAircraftData.aboveGround() <= 100.0)
+            if (remoteAircraftData.aboveGroundFt() <= 100.0)
             {
                 // switch to fast updates
                 if (simObject.getSimDataPeriod() != SIMCONNECT_PERIOD_VISUAL_FRAME)
@@ -570,12 +593,12 @@ namespace BlackSimPlugin
 
             // CElevationPlane: deg, deg, feet
             // we only remember near ground
-            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(simObject.getCallsign());
-            if (simObject.getLastInterpolatedSituation(setup.getInterpolatorMode()).canLikelySkipNearGroundInterpolation()) { return; }
-
-            CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt);
-            elevation.setSinglePointRadius();
-            this->rememberElevationAndCG(simObject.getCallsign(), elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));
+            if (remoteAircraftData.aboveGroundFt() < 250)
+            {
+                CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt);
+                elevation.setSinglePointRadius();
+                this->rememberElevationAndCG(simObject.getCallsign(), elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));
+            }
         }
 
         void CSimulatorFsxCommon::updatProbeFromSimulator(const CCallsign &callsign, const DataDefinitionRemoteAircraftSimData &remoteAircraftData)
@@ -769,6 +792,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::simulatorReportedObjectRemoved(DWORD objectID)
         {
+            if (this->isShuttingDown()) { return false; }
             const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectID);
             if (!simObject.hasValidRequestAndObjectId()) { return false; } // object id from somewhere else
             const CCallsign callsign(simObject.getCallsign());
@@ -908,10 +932,29 @@ namespace BlackSimPlugin
         {
             // call CSimulatorFsxCommon::SimConnectProc or specialized P3D version
             Q_ASSERT_X(m_dispatchProc, Q_FUNC_INFO, "Missing DispatchProc");
+
+            // statistics
+            const qint64 start = QDateTime::currentMSecsSinceEpoch();
+            m_dispatchLastReceiveId = SIMCONNECT_RECV_ID_NULL;
+            m_dispatchLastRequest = CSimConnectDefinitions::RequestEndMarker;
+
+            // process
             const HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, m_dispatchProc, this);
+
+            // statistics
+            m_dispatchTimeMs = QDateTime::currentMSecsSinceEpoch() - start;
+            if (m_dispatchMaxTimeMs < m_dispatchTimeMs)
+            {
+                m_dispatchMaxTimeMs = m_dispatchTimeMs;
+                m_dispatchMaxTimeReceiveId = m_dispatchLastReceiveId;
+                m_dispatchMaxTimeRequest = m_dispatchLastRequest;
+            }
+
+            // error handling
             if (hr != S_OK)
             {
                 m_dispatchErrors++;
+                this->triggerAutoTraceSendId();
                 if (m_dispatchErrors == 2)
                 {
                     // 2nd time, an error / avoid multiple messages
@@ -1290,6 +1333,7 @@ namespace BlackSimPlugin
 
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
+            if (this->isUpdateAircraftLimitedWithStats(currentTimestamp)) { return; }
             m_updateRemoteAircraftInProgress = true;
 
             // interpolation for all remote aircraft
@@ -1362,6 +1406,40 @@ namespace BlackSimPlugin
 
             DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // no init, all values will be set
             return this->sendRemoteAircraftPartsToSimulator(simObject, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
+        }
+
+        void CSimulatorFsxCommon::triggerUpdateAirports(const CAirportList &airports)
+        {
+            if (this->isShuttingDown()) { return; }
+            if (airports.isEmpty()) { return; }
+            QPointer<CSimulatorFsxCommon> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                this->updateAirports(airports);
+            });
+        }
+
+        void CSimulatorFsxCommon::updateAirports(const CAirportList &airports)
+        {
+            if (airports.isEmpty()) { return; }
+
+            static const CLength maxDistance(200.0, CLengthUnit::NM());
+            const CCoordinateGeodetic posAircraft(this->getOwnAircraftPosition());
+
+            for (const CAirport &airport : airports)
+            {
+                CAirport consolidatedAirport(airport);
+                const CLength d = consolidatedAirport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);
+                if (d > maxDistance) { continue; }
+                consolidatedAirport.updateMissingParts(this->getWebServiceAirport(airport.getIcao()));
+                m_airportsInRangeFromSimulator.replaceOrAddByIcao(consolidatedAirport);
+                if (m_airportsInRangeFromSimulator.size() > this->maxAirportsInRange())
+                {
+                    m_airportsInRangeFromSimulator.sortByDistanceToOwnAircraft();
+                    m_airportsInRangeFromSimulator.truncate(this->maxAirportsInRange());
+                }
+            }
         }
 
         bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftPartsWithoutLights, const CAircraftLights &lights)
@@ -1563,10 +1641,13 @@ namespace BlackSimPlugin
 
             if (result == S_OK && m_simConnectObjects.contains(simObject.getCallsign()))
             {
+                m_requestSimObjectDataCount++;
                 if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
                 m_simConnectObjects[simObject.getCallsign()].setSimDataPeriod(period);
                 return true;
             }
+
+            // failure
             CLogMessage(this).error("Cannot request simulator data on object '%1'") << simObject.getObjectId();
             return false;
         }

@@ -33,8 +33,13 @@ namespace BlackSimPlugin
     {
         void CALLBACK CSimulatorFsxCommon::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
         {
+            // IMPORTANT:
+            // all tasks called in this function (ie all called functions) must perform fast or shall be called asynchronously
+
             CSimulatorFsxCommon *simulatorFsxP3D = static_cast<CSimulatorFsxCommon *>(pContext);
-            switch (pData->dwID)
+            const SIMCONNECT_RECV_ID recvId = static_cast<SIMCONNECT_RECV_ID>(pData->dwID);
+            simulatorFsxP3D->m_dispatchLastReceiveId = recvId;
+            switch (recvId)
             {
             case SIMCONNECT_RECV_ID_OPEN:
                 {
@@ -210,11 +215,13 @@ namespace BlackSimPlugin
                 {
                     const SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA *) pData;
                     const DWORD requestId = pObjData->dwRequestID;
+
                     switch (requestId)
                     {
                     case CSimConnectDefinitions::RequestOwnAircraft:
                         {
                             static_assert(sizeof(DataDefinitionOwnAircraft) == 31 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
+                            simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestOwnAircraft;
                             const DataDefinitionOwnAircraft *ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
                             simulatorFsxP3D->updateOwnAircraftFromSimulator(*ownAircaft);
                             break;
@@ -222,14 +229,14 @@ namespace BlackSimPlugin
                     case CSimConnectDefinitions::RequestOwnAircraftTitle:
                         {
                             const DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
-                            CAircraftModel model;
-                            model.setModelString(dataDefinitionModel->title);
-                            model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+                            simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestOwnAircraftTitle;
+                            const CAircraftModel model(dataDefinitionModel->title, CAircraftModel::TypeOwnSimulatorModel);
                             simulatorFsxP3D->reverseLookupAndUpdateOwnAircraftModel(model);
                             break;
                         }
                     case CSimConnectDefinitions::RequestSimEnvironment:
                         {
+                            simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestSimEnvironment;
                             const DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
                             if (simulatorFsxP3D->isTimeSynchronized())
                             {
@@ -249,7 +256,8 @@ namespace BlackSimPlugin
                             if (CSimulatorFsxCommon::isRequestForSimData(requestId))
                             {
                                 static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
-                                const CSimConnectObject simObj = simulatorFsxP3D->getSimConnectObjects().getSimObjectForObjectId(objectId);
+                                simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestRangeForSimData;
+                                const CSimConnectObject simObj = simulatorFsxP3D->getSimObjectForObjectId(objectId);
                                 if (!simObj.hasValidRequestAndObjectId()) { break; }
                                 const DataDefinitionRemoteAircraftSimData *remoteAircraftSimData = (DataDefinitionRemoteAircraftSimData *)&pObjData->dwData;
                                 // extra check, but ids should be the same
@@ -261,6 +269,7 @@ namespace BlackSimPlugin
                             else if (CSimulatorFsxCommon::isRequestForProbe(requestId))
                             {
                                 static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
+                                simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestRangeForProbe;
                                 const CSimConnectObject probeObj = simulatorFsxP3D->getSimConnectProbes().getSimObjectForObjectId(objectId);
                                 if (!probeObj.hasValidRequestAndObjectId()) { break; }
                                 const DataDefinitionRemoteAircraftSimData *probeSimData = (DataDefinitionRemoteAircraftSimData *)&pObjData->dwData;
@@ -275,6 +284,7 @@ namespace BlackSimPlugin
                             else if (CSimulatorFsxCommon::isRequestForLights(requestId))
                             {
                                 static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
+                                simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestRangeForLights;
                                 const CSimConnectObject simObj = simulatorFsxP3D->getSimConnectObjects().getSimObjectForObjectId(objectId);
                                 if (!simObj.hasValidRequestAndObjectId()) break;
                                 const DataDefinitionRemoteAircraftLights *remoteAircraftLights = (DataDefinitionRemoteAircraftLights *)&pObjData->dwData;
@@ -299,9 +309,8 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_AIRPORT_LIST:
                 {
-                    static const CLength maxDistance(200.0, CLengthUnit::NM());
-                    const CCoordinateGeodetic posAircraft(simulatorFsxP3D->getOwnAircraftPosition());
                     const SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
+                    CAirportList simAirports;
                     for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
                     {
                         const SIMCONNECT_DATA_FACILITY_AIRPORT *pFacilityAirport = pAirportList->rgData + i;
@@ -311,17 +320,12 @@ namespace BlackSimPlugin
                         if (!CAirportIcaoCode::isValidIcaoDesignator(icao)) { continue; } // tiny airfields/strips in simulator
                         if (CAirportIcaoCode::containsNumbers(icao)) { continue; } // tiny airfields/strips in simulator
                         const CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
-                        CAirport airport(CAirportIcaoCode(icao), pos);
-                        const CLength d = airport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);
-                        if (d > maxDistance) { continue; }
-                        airport.updateMissingParts(simulatorFsxP3D->getWebServiceAirport(icao));
-                        simulatorFsxP3D->m_airportsInRangeFromSimulator.replaceOrAddByIcao(airport);
+                        const CAirport airport(CAirportIcaoCode(icao), pos);
+                        simAirports.push_back(airport);
                     }
-
-                    if (simulatorFsxP3D->m_airportsInRangeFromSimulator.size() > simulatorFsxP3D->maxAirportsInRange())
+                    if (!simAirports.isEmpty())
                     {
-                        simulatorFsxP3D->m_airportsInRangeFromSimulator.sortByDistanceToOwnAircraft();
-                        simulatorFsxP3D->m_airportsInRangeFromSimulator.truncate(simulatorFsxP3D->maxAirportsInRange());
+                        simulatorFsxP3D->triggerUpdateAirports(simAirports); // real "work" outside SimConnectProc
                     }
                     break; // SIMCONNECT_RECV_ID_AIRPORT_LIST
                 }

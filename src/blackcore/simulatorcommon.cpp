@@ -244,15 +244,15 @@ namespace BlackCore
     CAirportList CSimulatorCommon::getAirportsInRange() const
     {
         // default implementation
+        if (this->isShuttingDown()) { return CAirportList(); }
         if (!sApp || !sApp->hasWebDataServices()) { return CAirportList(); }
-        if (sApp->isShuttingDown()) { return CAirportList(); }
 
-        CAirportList airports = sApp->getWebDataServices()->getAirports();
+        const CAirportList airports = sApp->getWebDataServices()->getAirports();
         if (airports.isEmpty()) { return airports; }
         const CCoordinateGeodetic ownPosition = this->getOwnAircraftPosition();
-        airports = airports.findClosest(maxAirportsInRange(), ownPosition);
-        if (m_autoCalcAirportDistance) { airports.calculcateAndUpdateRelativeDistanceAndBearing(ownPosition); }
-        return airports;
+        CAirportList airportInRange = airports.findClosest(maxAirportsInRange(), ownPosition);
+        if (m_autoCalcAirportDistance) { airportInRange.calculcateAndUpdateRelativeDistanceAndBearing(ownPosition); }
+        return airportInRange;
     }
 
     void CSimulatorCommon::setWeatherActivated(bool activated)
@@ -274,6 +274,53 @@ namespace BlackCore
         bool modified = false;
         const CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
         return reverseModel;
+    }
+
+    bool CSimulatorCommon::isUpdateAircraftLimited(qint64 timestamp)
+    {
+        if (!m_limitUpdateAircraft) { return false; }
+        const bool hasToken = m_limitUpdateAircraftBucket.tryConsume(1, timestamp);
+        return !hasToken;
+    }
+
+    bool CSimulatorCommon::isUpdateAircraftLimitedWithStats(qint64 startTime)
+    {
+        const bool limited = this->isUpdateAircraftLimited(startTime);
+        this->setStatsRemoteAircraftUpdate(startTime, limited);
+        return limited;
+    }
+
+    bool CSimulatorCommon::limitToUpdatesPerSecond(int numberPerSecond)
+    {
+        if (numberPerSecond < 1)
+        {
+            m_limitUpdateAircraft = false;
+            return false;
+        }
+
+        int tokens = 0.1 * numberPerSecond; // 100ms
+        do
+        {
+            if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(100); break; }
+            tokens = 0.25 * numberPerSecond; // 250ms
+            if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(250); break; }
+            tokens = 0.5 * numberPerSecond; // 500ms
+            if (tokens >= 3) { m_limitUpdateAircraftBucket.setInterval(500); break; }
+            tokens = numberPerSecond;
+            m_limitUpdateAircraftBucket.setInterval(1000);
+        }
+        while (false);
+
+        m_limitUpdateAircraftBucket.setCapacityAndTokensToRefill(tokens);
+        m_limitUpdateAircraft = true;
+        return true;
+    }
+
+    QString CSimulatorCommon::updateAircraftLimitationInfo() const
+    {
+        if (!m_limitUpdateAircraft) { return QStringLiteral("not limited"); }
+        static const QString limInfo("Limited %1 times with %2/secs.");
+        return limInfo.arg(m_statsUpdateAircraftLimited).arg(m_limitUpdateAircraftBucket.getTokensPerSecond());
     }
 
     void CSimulatorCommon::onSwiftDbAllDataRead()
@@ -579,7 +626,16 @@ namespace BlackCore
                     this->logicallyRemoveRemoteAircraft(cs);
                 }
             }
+
             return false;
+        }
+
+        if (part1.startsWith("limit"))
+        {
+            const int perSecond = parser.toInt(2, -1);
+            this->limitToUpdatesPerSecond(perSecond);
+            CLogMessage(this).info("Remote aircraft updates limitations: %1") << this->updateAircraftLimitationInfo();
+            return true;
         }
 
         // driver specific cmd line arguments
@@ -590,6 +646,7 @@ namespace BlackCore
     {
         if (CSimpleCommandParser::registered("BlackCore::CSimulatorCommon")) { return; }
         CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+        CSimpleCommandParser::registerCommand({".drv limit number/secs.", "limit updates to number per second (0..off)"});
         CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
         CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
         CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
@@ -613,6 +670,7 @@ namespace BlackCore
         m_statsPhysicallyRemovedAircraft = 0;
         m_statsLastUpdateAircraftRequestedMs = 0;
         m_statsUpdateAircraftRequestedDeltaMs = 0;
+        m_statsUpdateAircraftLimited = 0;
     }
 
     CStatusMessageList CSimulatorCommon::debugVerifyStateAfterAllAircraftRemoved() const
@@ -662,7 +720,7 @@ namespace BlackCore
         m_clampedLogMsg.remove(callsign);
     }
 
-    void CSimulatorCommon::setStatsRemoteAircraftUpdate(qint64 startTime)
+    void CSimulatorCommon::setStatsRemoteAircraftUpdate(qint64 startTime, bool limited)
     {
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
         const qint64 dt = now - startTime;
@@ -671,9 +729,11 @@ namespace BlackCore
         m_statsUpdateAircraftRuns++;
         m_statsUpdateAircraftTimeAvgMs = static_cast<double>(m_statsUpdateAircraftTimeTotalMs) / static_cast<double>(m_statsUpdateAircraftRuns);
         m_updateRemoteAircraftInProgress = false;
+        m_statsLastUpdateAircraftRequestedMs = startTime;
+
         if (m_statsMaxUpdateTimeMs < dt) { m_statsMaxUpdateTimeMs = dt; }
         if (m_statsLastUpdateAircraftRequestedMs > 0) { m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs; }
-        m_statsLastUpdateAircraftRequestedMs = startTime;
+        if (limited) { m_statsUpdateAircraftLimited++; }
     }
 
     bool CSimulatorCommon::isEqualLastSent(const CAircraftSituation &compare) const
@@ -795,19 +855,22 @@ namespace BlackCore
 
     CAirportList CSimulatorCommon::getWebServiceAirports() const
     {
+        if (this->isShuttingDown()) { return CAirportList(); }
         if (!sApp->hasWebDataServices()) { return CAirportList(); }
         return sApp->getWebDataServices()->getAirports();
     }
 
     CAirport CSimulatorCommon::getWebServiceAirport(const CAirportIcaoCode &icao) const
     {
+        if (this->isShuttingDown()) { return CAirport(); }
         if (!sApp->hasWebDataServices()) { return CAirport(); }
         return sApp->getWebDataServices()->getAirports().findFirstByIcao(icao);
     }
 
     void CSimulatorCommon::rapOnRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
     {
-        if (!this->isConnected()) return;
+        if (!this->isConnected()) { return; }
+        if (this->isShuttingDown()) { return; }
         this->onRecalculatedRenderedAircraft(snapshot);
     }
 

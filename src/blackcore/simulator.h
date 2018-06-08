@@ -196,6 +196,9 @@ namespace BlackCore
         //! \remark needs to be overridden if the concrete driver supports such an option
         virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
+        //! Allows to print out simulator specific statistics
+        virtual QString getStatisticsSimulatorSpecific() const { return QString(); }
+
         //! \copydoc BlackMisc::IProvider::asQObject
         virtual QObject *asQObject() override { return this; }
 

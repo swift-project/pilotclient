@@ -129,6 +129,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
             virtual void clearAllRemoteAircraftData() override;
             virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const override;
+            virtual QString getStatisticsSimulatorSpecific() const override;
             //! @}
 
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
@@ -140,8 +141,12 @@ namespace BlackSimPlugin
             //! Set tracing on/off
             void setTractingSendId(bool trace);
 
+            //! \copydoc BlackCore::CSimulatorCommon::resetAircraftStatistics
+            virtual void resetAircraftStatistics() override;
+
         protected:
-            //! SimConnect Callback
+            //! SimConnect callback
+            //! \note all tasks called in this function (i.e, all called functions) must perform fast or shall be called asynchronously
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
             //! \name Interface implementations
@@ -278,6 +283,12 @@ namespace BlackSimPlugin
             //! Update remote aircraft parts (send to FSX)
             bool updateRemoteAircraftParts(const CSimConnectObject &simObject, const BlackMisc::Simulation::CInterpolationResult &result);
 
+            //! Calling CSimulatorFsxCommon::updateAirports
+            void triggerUpdateAirports(const BlackMisc::Aviation::CAirportList &airports);
+
+            //! Update airports from simulator
+            void updateAirports(const BlackMisc::Aviation::CAirportList &airports);
+
             //! Send parts to simulator
             //! \remark does not send if there is no change
             bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
@@ -323,8 +334,11 @@ namespace BlackSimPlugin
             //! Display receive exceptions?
             bool stillDisplayReceiveExceptions();
 
-            //! The simconnect related objects
+            //! The SimConnect related objects
             const CSimConnectObjects &getSimConnectObjects() const { return m_simConnectObjects; }
+
+            //! The SimConnect object for idxs
+            CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
 
             //! The simconnect related probes
             const CSimConnectObjects &getSimConnectProbes() const { return m_simConnectProbes; }
@@ -400,16 +414,29 @@ namespace BlackSimPlugin
             qint64 m_simulatingChangedTs = -1;      //!< timestamp, when simulating changed (used to avoid jitter)
             int m_syncDeferredCounter =  0;         //!< Set when synchronized, used to wait some time
             int m_skipCockpitUpdateCycles = 0;      //!< skip some update cycles to allow changes in simulator cockpit to be set
+
+            // tracing dispatch performance
             int m_dispatchErrors = 0;               //!< number of dispatched failed, \sa dispatch
-            int m_receiveExceptionCount = 0;        //!< exceptions
-            QList<TraceFsxSendId> m_sendIdTraces;   //!< Send id traces for debugging
+            qint64 m_dispatchTimeMs = -1;
+            qint64 m_dispatchMaxTimeMs = -1;
+            SIMCONNECT_RECV_ID m_dispatchLastReceiveId    = SIMCONNECT_RECV_ID_NULL; //!< last receive id from dispatching
+            SIMCONNECT_RECV_ID m_dispatchMaxTimeReceiveId = SIMCONNECT_RECV_ID_NULL; //!< receive id corresponding to max.time
+            CSimConnectDefinitions::Request m_dispatchLastRequest    = CSimConnectDefinitions::RequestEndMarker; //!< request id if any
+            CSimConnectDefinitions::Request m_dispatchMaxTimeRequest = CSimConnectDefinitions::RequestEndMarker; //!< request id corresponding to max.time
+
+            // sending via SimConnect
+            QList<TraceFsxSendId> m_sendIdTraces; //!< Send id traces for debugging
+            int m_receiveExceptionCount = 0;      //!< exceptions
+            int m_requestSimObjectDataCount  = 0; //!< requested SimObjects
+
+            // objects
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             CSimConnectObjects m_simConnectProbes;  //!< AI terrain probes
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);    //!< request id, use obtainRequestIdForSimData() to get id
-            SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForSimData() to get id
+            SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForProbe() to get id
             BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
-            QTimer m_addPendingSimObjTimer; //!< updating of sim objects awaiting to be added
+            QTimer m_addPendingSimObjTimer; //!< updating of SimObjects awaiting to be added
         };
 
         //! Listener for FSX

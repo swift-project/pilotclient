@@ -35,6 +35,7 @@ namespace BlackSimPlugin
                                      QObject *parent) :
             CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, clientProvider, parent)
         {
+            // set build/sim specific SimConnectProc, which is the FSX SimConnectProc on WIN32 systems
             if (CBuildConfig::isCompiledWithP3DSupport() && CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::buildWordSize() == 64)
             {
                 m_dispatchProc = &CSimulatorP3D::SimConnectProc;

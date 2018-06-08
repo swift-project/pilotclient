@@ -33,6 +33,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/tokenbucket.h"
 #include "blackmisc/connectionguard.h"
 
 namespace BlackMisc
@@ -93,6 +94,7 @@ namespace BlackCore
         //! @{
         //! <pre>
         //! .drv unload                    unload plugin                           BlackCore::CSimulatorCommon
+        //! .drv limit number              limit the number of updates             BlackCore::CSimulatorCommon
         //! .drv logint callsign           log interpolator for callsign           BlackCore::CSimulatorCommon
         //! .drv logint off                no log information for interpolator     BlackCore::CSimulatorCommon
         //! .drv logint write              write interpolator log to file          BlackCore::CSimulatorCommon
@@ -119,7 +121,7 @@ namespace BlackCore
         static void registerHelp();
 
         //! Reset the statistics counters
-        void resetAircraftStatistics();
+        virtual void resetAircraftStatistics();
 
         //!  Counter added aircraft
         int getStatisticsPhysicallyAddedAircraft() const { return m_statsPhysicallyAddedAircraft; }
@@ -151,6 +153,9 @@ namespace BlackCore
         //! The latest logged data formatted
         //! \remark public only for log. displays
         QString latestLoggedDataFormatted(const BlackMisc::Aviation::CCallsign &cs) const;
+
+        //! Info about update aircraft limitations
+        QString updateAircraftLimitationInfo() const;
 
     protected:
         //! Constructor
@@ -246,7 +251,7 @@ namespace BlackCore
         void removedClampedLog(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Update stats and flags
-        void setStatsRemoteAircraftUpdate(qint64 startTime);
+        void setStatsRemoteAircraftUpdate(qint64 startTime, bool limited = false);
 
         //! Equal to last sent situation
         bool isEqualLastSent(const BlackMisc::Aviation::CAircraftSituation &compare) const;
@@ -268,6 +273,7 @@ namespace BlackCore
         bool   m_updateRemoteAircraftInProgress = false;  //!< currently updating remote aircraft
         int    m_timerId = -1;                            //!< dispatch timer id
         int    m_statsUpdateAircraftRuns = 0;             //!< statistics update count
+        int    m_statsUpdateAircraftLimited = 0;          //!< skipped because of max.update limitations
         double m_statsUpdateAircraftTimeAvgMs = 0;        //!< statistics average update time
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;      //!< statistics total update time
         qint64 m_statsCurrentUpdateTimeMs = 0;            //!< statistics current update time
@@ -283,6 +289,19 @@ namespace BlackCore
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
+
+        // limit the update aircraft to a maximum per second
+        BlackMisc::CTokenBucket m_limitUpdateAircraftBucket { 5, 100, 5 }; //!< means 50 per second
+        bool m_limitUpdateAircraft = false; //!< limit the update frequency by using BlackMisc::CTokenBucket
+
+        //! Limit reached (max number of updates by token bucket if enabled)
+        bool isUpdateAircraftLimited(qint64 timestamp = -1);
+
+        //! Limited as CSimulatorCommon::isUpdateAircraftLimited plus updating statistics
+        bool isUpdateAircraftLimitedWithStats(qint64 startTime = -1);
+
+        //! Limit to updates per seconds
+        bool limitToUpdatesPerSecond(int numberPerSecond);
 
         // weather
         bool m_isWeatherActivated = false;                         //!< Is simulator weather activated?
