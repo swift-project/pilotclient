@@ -200,7 +200,6 @@ namespace BlackCore
         if (msg.isEmpty()) { return; }
         CStatusMessage logMsg(msg);
         logMsg.addCategory(CLogCategory::dataInconsistency());
-        logMsg.setSeverity(CStatusMessage::SeverityWarning);
         if (funcInfo)
         {
             const QByteArray m(logMsg.getMessage().toLatin1());
