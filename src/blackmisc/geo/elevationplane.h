@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Radius
             void setRadius(const PhysicalQuantities::CLength &radius) { m_radius = radius; }
 
+            //! Radius or minimum CElevationPlane::singlePointRadius
+            void setRadiusOrMinimum(const PhysicalQuantities::CLength &radius);
+
             //! Add offset to altitude
             void addAltitudeOffset(const PhysicalQuantities::CLength &offset);
 

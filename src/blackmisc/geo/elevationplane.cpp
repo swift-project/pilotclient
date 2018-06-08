@@ -31,12 +31,17 @@ namespace BlackMisc
         CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate) :
             CCoordinateGeodetic(coordinate)
         {
-            m_radius = this->calculateGreatCircleDistance(rangeCoordinate);
+            this->setRadiusOrMinimum(this->calculateGreatCircleDistance(rangeCoordinate));
         }
 
         CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CLength &radius) :
             CCoordinateGeodetic(coordinate), m_radius(radius)
         { }
+
+        void CElevationPlane::setRadiusOrMinimum(const CLength &radius)
+        {
+            m_radius = ((radius.isNull() || radius < CElevationPlane::singlePointRadius())) ? CElevationPlane::singlePointRadius() : radius;
+        }
 
         void CElevationPlane::addAltitudeOffset(const CLength &offset)
         {

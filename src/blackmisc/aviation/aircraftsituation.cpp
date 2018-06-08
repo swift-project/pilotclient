@@ -560,6 +560,7 @@ namespace BlackMisc
         {
             if (!this->canTransferGroundElevation(otherSituation, radius)) { return false; }
             otherSituation.setGroundElevation(this->getGroundElevationPlane(), TransferredElevation);
+            Q_ASSERT_X(!otherSituation.getGroundElevationRadius().isNull(), Q_FUNC_INFO, "null radius");
             return true;
         }
 
@@ -620,6 +621,7 @@ namespace BlackMisc
             else
             {
                 this->setGroundElevationInfo(info);
+                Q_ASSERT_X(!m_groundElevationPlane.getRadius().isNull(), Q_FUNC_INFO, "Null radius");
                 m_groundElevationPlane.switchUnit(this->getAltitudeOrDefaultUnit()); // we use ft as internal unit, no "must" but simplification
             }
         }
@@ -633,7 +635,7 @@ namespace BlackMisc
             {
                 // better values
                 this->setGroundElevation(elevationPlane, info);
-                m_groundElevationPlane.setRadius(distance);
+                m_groundElevationPlane.setRadiusOrMinimum(distance);
                 return true;
             }
             return false;

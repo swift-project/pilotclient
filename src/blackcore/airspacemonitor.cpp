@@ -937,6 +937,7 @@ namespace BlackCore
         {
             const CLength distance(correctedSituation.getDistancePerTime(250));
             const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
+            Q_ASSERT_X(ep.isNull() || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
             correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
         }
 
