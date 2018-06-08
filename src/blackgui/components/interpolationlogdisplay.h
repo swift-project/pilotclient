@@ -81,7 +81,7 @@ namespace BlackGui
             void showLogInSimulator();
 
             //! Start displaying
-            void start();
+            bool start();
 
             //! Stop displaying
             void stop();
@@ -118,6 +118,9 @@ namespace BlackGui
 
             //! Check if can do logging, otherwise stop and display message
             bool checkLogPrerequisites();
+
+            //! Init the parts view
+            void initPartsView();
 
             QScopedPointer<Ui::CInterpolationLogDisplay> ui;
             QTimer m_updateTimer;

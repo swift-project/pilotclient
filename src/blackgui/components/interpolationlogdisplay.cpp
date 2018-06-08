@@ -58,6 +58,9 @@ namespace BlackGui
             connect(ui->pb_ShowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::displayLastInterpolation);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
+
+            // ui->le_Foo->setVisible(false);
+            // ui->lbl_Foo->setVisible(false);
         }
 
         CInterpolationLogDisplay::~CInterpolationLogDisplay()
@@ -122,6 +125,10 @@ namespace BlackGui
                 ui->le_UpdateTimes->home(false);
                 ui->le_UpdateCount->setText(QString::number(m_simulatorCommon->getStatisticsUpdateRuns()));
                 ui->le_UpdateReqTime->setText(msTimeStr.arg(m_simulatorCommon->getStatisticsAircraftUpdatedRequestedDeltaMs()));
+                ui->le_Limited->setText(m_simulatorCommon->updateAircraftLimitationInfo());
+
+                ui->le_SimulatorSpecific->setText(m_simulatorCommon->getStatisticsSimulatorSpecific());
+                ui->le_SimulatorSpecific->home(false);
 
                 const CClient client = m_airspaceMonitor->getClientOrDefaultForCallsign(m_callsign);
                 ui->le_GndFlag->setText(boolToYesNo(client.hasGndFlagCapability()));
@@ -139,6 +146,7 @@ namespace BlackGui
             ui->te_LastInterpolatedSituation->setText(sLog.situationCurrent.toQString(true));
             ui->te_SituationChange->setText(sLog.change.toQString(true));
             ui->le_SceneryOffset->setText(sLog.change.getGuessedSceneryDeviation().valueRoundedWithUnit(CLengthUnit::ft(), 1));
+            ui->le_SceneryOffsetCG->setText(sLog.change.getGuessedSceneryDeviationCG().valueRoundedWithUnit(CLengthUnit::ft(), 1));
 
             const PartsLog pLog = m_simulatorCommon->interpolationLogger().getLastPartsLog();
             ui->te_LastInterpolatedParts->setText(pLog.parts.toQString(true));
@@ -178,7 +186,10 @@ namespace BlackGui
 
             m_callsign = cs;
             m_simulatorCommon->setLogInterpolation(true, cs);
-            this->start();
+            if (!this->start())
+            {
+                this->initPartsView();
+            }
         }
 
         void CInterpolationLogDisplay::toggleStartStop()
@@ -197,22 +208,17 @@ namespace BlackGui
             sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
         }
 
-        void CInterpolationLogDisplay::start()
+        bool CInterpolationLogDisplay::start()
         {
-            if (m_updateTimer.isActive()) { return; }
+            if (m_updateTimer.isActive()) { return false; }
+
             const int interval = 1000 * ui->hs_UpdateTime->value();
             m_updateTimer.start(interval);
             ui->pb_StartStop->setText(stopText());
             ui->led_Running->setOn(true);
 
-            // it can take a while until we receive parts, so we init
-            QPointer<CInterpolationLogDisplay> myself(this);
-            QTimer::singleShot(250, this, [ = ]
-            {
-                if (!myself) { return; }
-                if (m_callsign.isEmpty()) { return; }
-                myself->onPartsAdded(m_callsign, CAircraftParts());
-            });
+            this->initPartsView();
+            return true;
         }
 
         void CInterpolationLogDisplay::stop()
@@ -302,6 +308,7 @@ namespace BlackGui
             ui->le_Parts->clear();
             ui->le_UpdateTimes->clear();
             ui->le_UpdateTimes->clear();
+            ui->le_Limited->clear();
             m_elvReceived = m_elvRequested = 0;
         }
 
@@ -340,6 +347,18 @@ namespace BlackGui
             this->stop();
             if (!m.isEmpty()) { this->showOverlayMessage(m); }
             return false;
+        }
+
+        void CInterpolationLogDisplay::initPartsView()
+        {
+            // it can take a while until we receive parts, so we init
+            QPointer<CInterpolationLogDisplay> myself(this);
+            QTimer::singleShot(250, this, [ = ]
+            {
+                if (!myself) { return; }
+                if (m_callsign.isEmpty()) { return; }
+                myself->onPartsAdded(m_callsign, CAircraftParts());
+            });
         }
 
         void CInterpolationLogDisplay::linkWithAirspaceMonitor()
