@@ -60,7 +60,13 @@ namespace BlackGui
             void onCheckboxChanged(int state);
 
             //! Interpolator mode
-            void onInterpolatorModeChanged(const QString &mode);
+            void onInterpolatorModeChanged(bool checked);
+
+            //! Mode from UI
+            BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode getInterpolatorMode() const;
+
+            //! Set mode
+            void setInterpolatorMode(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode);
         };
     } // ns
 } // ns

@@ -29,7 +29,8 @@ namespace BlackGui
                 connect(cb, &QCheckBox::stateChanged, this, &CInterpolationSetupForm::onCheckboxChanged);
             }
 
-            connect(ui->co_InterpolatorMode, &QComboBox::currentTextChanged, this, &CInterpolationSetupForm::onInterpolatorModeChanged);
+            // one conect is enough, otherwise 2 change signals
+            connect(ui->rb_Linear, &QRadioButton::toggled, this, &CInterpolationSetupForm::onInterpolatorModeChanged);
         }
 
         CInterpolationSetupForm::~CInterpolationSetupForm()
@@ -43,10 +44,7 @@ namespace BlackGui
             ui->cb_ForceVtolInterpolation->setChecked(setup.isForcingVtolInterpolation());
             ui->cb_SendGndFlagToSim->setChecked(setup.isSendingGndFlagToSimulator());
             ui->cb_FixSceneryOffset->setChecked(setup.isFixingSceneryOffset());
-
-            const QString im = setup.getInterpolatorModeAsString();
-            if (im.contains("linear", Qt::CaseInsensitive)) { ui->co_InterpolatorMode->setCurrentIndex(1); }
-            else { ui->co_InterpolatorMode->setCurrentIndex(0); }
+            this->setInterpolatorMode(setup.getInterpolatorMode());
         }
 
         CInterpolationAndRenderingSetupPerCallsign CInterpolationSetupForm::getValue() const
@@ -58,7 +56,7 @@ namespace BlackGui
             setup.setSendingGndFlagToSimulator(ui->cb_SendGndFlagToSim->isChecked());
             setup.setSimulatorDebuggingMessages(ui->cb_DebugDriver->isChecked());
             setup.setFixingSceneryOffset(ui->cb_FixSceneryOffset->isChecked());
-            setup.setInterpolatorMode(ui->co_InterpolatorMode->currentText());
+            setup.setInterpolatorMode(this->getInterpolatorMode());
             return setup;
         }
 
@@ -70,7 +68,8 @@ namespace BlackGui
             CGuiUtility::checkBoxReadOnly(ui->cb_ForceVtolInterpolation, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_SendGndFlagToSim, readonly);
             CGuiUtility::checkBoxReadOnly(ui->cb_FixSceneryOffset, readonly);
-            ui->co_InterpolatorMode->setEnabled(!readonly);
+            ui->rb_Linear->setEnabled(!readonly);
+            ui->rb_Spline->setEnabled(!readonly);
         }
 
         CStatusMessageList CInterpolationSetupForm::validate(bool nested) const
@@ -85,9 +84,27 @@ namespace BlackGui
             emit this->valueChanged();
         }
 
-        void CInterpolationSetupForm::onInterpolatorModeChanged(const QString &mode)
+        CInterpolationAndRenderingSetupBase::InterpolatorMode CInterpolationSetupForm::getInterpolatorMode() const
         {
-            Q_UNUSED(mode);
+            if (ui->rb_Linear->isChecked()) { return CInterpolationAndRenderingSetupBase::Linear; }
+            return CInterpolationAndRenderingSetupBase::Spline;
+        }
+
+        void CInterpolationSetupForm::setInterpolatorMode(CInterpolationAndRenderingSetupBase::InterpolatorMode mode)
+        {
+            switch (mode)
+            {
+            case CInterpolationAndRenderingSetupBase::Linear : ui->rb_Linear->setChecked(true); break;
+            case CInterpolationAndRenderingSetupBase::Spline:
+            default:
+                ui->rb_Spline->setChecked(true);
+                break;
+            }
+        }
+
+        void CInterpolationSetupForm::onInterpolatorModeChanged(bool checked)
+        {
+            Q_UNUSED(checked);
             emit this->valueChanged();
         }
     } // ns

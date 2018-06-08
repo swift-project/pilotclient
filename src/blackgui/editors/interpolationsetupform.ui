@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>231</width>
-    <height>96</height>
+    <width>223</width>
+    <height>91</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,24 +40,10 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QComboBox" name="co_InterpolatorMode">
-     <item>
-      <property name="text">
-       <string>Spline interpolator</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Linear interpolator</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QCheckBox" name="cb_SendGndFlagToSim">
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="cb_EnableParts">
      <property name="text">
-      <string>send gnd.to simulator</string>
+      <string>enable parts</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -81,18 +67,75 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QCheckBox" name="cb_EnableParts">
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="cb_SendGndFlagToSim">
      <property name="text">
-      <string>enable parts</string>
+      <string>send gnd.to simulator</string>
      </property>
      <property name="checked">
       <bool>true</bool>
      </property>
     </widget>
    </item>
+   <item row="0" column="0">
+    <widget class="QWidget" name="wi_InterpolatorType" native="true">
+     <layout class="QHBoxLayout" name="hl_InterpolatorType">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QRadioButton" name="rb_Spline">
+        <property name="text">
+         <string>spline</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rb_Linear">
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="hs_InterpolatorType">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>rb_Spline</tabstop>
+  <tabstop>cb_EnableParts</tabstop>
+  <tabstop>cb_SendGndFlagToSim</tabstop>
+  <tabstop>cb_FixSceneryOffset</tabstop>
+  <tabstop>cb_ForceVtolInterpolation</tabstop>
+  <tabstop>cb_DebugDriver</tabstop>
+  <tabstop>cb_LogInterpolation</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
