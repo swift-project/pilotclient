@@ -263,7 +263,7 @@ namespace BlackSimPlugin
                                 // extra check, but ids should be the same
                                 if (objectId == simObject.getObjectId())
                                 {
-                                    simulatorFsxP3D->updateRemoteAircraftFromSimulator(simObj, *remoteAircraftSimData);
+                                    simulatorFsxP3D->triggerUpdateRemoteAircraftFromSimulator(simObject, *remoteAircraftSimData);
                                 }
                             }
                             else if (CSimulatorFsxCommon::isRequestForProbe(requestId))

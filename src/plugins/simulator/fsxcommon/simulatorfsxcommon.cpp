@@ -571,10 +571,26 @@ namespace BlackSimPlugin
             }
         }
 
+        void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData)
+        {
+            if (this->isShuttingDown()) { return; }
+            QPointer<CSimulatorFsxCommon> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->updateRemoteAircraftFromSimulator(simObject, remoteAircraftData);
+            });
+        }
+
         void CSimulatorFsxCommon::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData)
         {
+            if (this->isShuttingDown()) { return; }
+
             // Near ground we use faster updates
-            if (remoteAircraftData.aboveGroundFt() <= 100.0)
+            const CCallsign cs(simObject.getCallsign());
+            const CAircraftSituation lastSituation = m_lastSentSituation[cs];
+            const bool moving = lastSituation.isMoving();
+            if (moving && remoteAircraftData.aboveGroundFt() <= 100.0)
             {
                 // switch to fast updates
                 if (simObject.getSimDataPeriod() != SIMCONNECT_PERIOD_VISUAL_FRAME)
@@ -597,7 +613,7 @@ namespace BlackSimPlugin
             {
                 CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt);
                 elevation.setSinglePointRadius();
-                this->rememberElevationAndCG(simObject.getCallsign(), elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));
+                this->rememberElevationAndCG(cs, elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));
             }
         }
 
@@ -934,9 +950,9 @@ namespace BlackSimPlugin
             Q_ASSERT_X(m_dispatchProc, Q_FUNC_INFO, "Missing DispatchProc");
 
             // statistics
-            const qint64 start = QDateTime::currentMSecsSinceEpoch();
             m_dispatchLastReceiveId = SIMCONNECT_RECV_ID_NULL;
             m_dispatchLastRequest = CSimConnectDefinitions::RequestEndMarker;
+            const qint64 start = QDateTime::currentMSecsSinceEpoch();
 
             // process
             const HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, m_dispatchProc, this);
@@ -1628,6 +1644,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)
         {
+            if (this->isShuttingDown()) { return false; }
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
             if (simObject.isPendingRemoved()) { return false; }
             if (!m_hSimConnect) { return false; }
