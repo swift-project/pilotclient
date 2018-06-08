@@ -352,7 +352,11 @@ namespace BlackGui
             //! Version if value is already available as PQ
             BlackMisc::CVariant displayRole(const PQ &pq) const
             {
-                if (m_unit.isNull()) { return pq.valueRoundedWithUnit(m_digits, m_useI18n); }
+                if (pq.isNull())
+                {
+                    static const BlackMisc::CVariant null("null");
+                    return null;
+                }
                 return pq.valueRoundedWithUnit(m_unit, m_digits, m_useI18n);
             }
 
