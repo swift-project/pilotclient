@@ -354,6 +354,8 @@ namespace BlackMisc
             switch (i)
             {
             case IndexOffsetMs: { m_timeOffsetMs = variant.value<qint64>(); return; }
+            case IndexAdjustedMsWithOffset: return; // read only
+            case IndexOffsetWithUnit: return; // read only
             default: break;
             }
         }
@@ -369,7 +371,9 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexOffsetWithUnit:
             case IndexOffsetMs: { return Compare::compare(m_timeOffsetMs, compareValue.m_timeOffsetMs); }
+            case IndexAdjustedMsWithOffset: { return Compare::compare(this->getAdjustedMSecsSinceEpoch(), compareValue.getAdjustedMSecsSinceEpoch()); }
             default: break;
             }
         }
