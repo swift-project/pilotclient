@@ -185,6 +185,18 @@ namespace BlackMisc
             }
         }
 
+        int CCoordinateGeodetic::comparePropertyByIndex(const CPropertyIndex &index, const CCoordinateGeodetic &compareValue) const
+        {
+            if (ICoordinateGeodetic::canHandleIndex(index))
+            {
+                return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue);
+            }
+            else
+            {
+                return CValueObject::comparePropertyByIndex(index, compareValue);
+            }
+        }
+
         CCoordinateGeodetic::CCoordinateGeodetic(const std::array<double, 3> &normalVector)
         {
             this->setNormalVector(normalVector);

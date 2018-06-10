@@ -58,16 +58,19 @@ namespace BlackMisc
 
             //! Update by variant map
             //! \return number of values changed, with skipEqualValues equal values will not be changed
-            CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false);
+            CPropertyIndexList apply(const CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false);
 
             //! Set property by index
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Property by index
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! Property by index as String
             QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
+
+            //! Compare for index
+            int comparePropertyByIndex(const CPropertyIndex &index, const Derived &compareValue) const;
 
             //! Is given variant equal to value of property index?
             bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
@@ -106,12 +109,15 @@ namespace BlackMisc
          * When a derived class and a base class both inherit from Mixin::Index,
          * the derived class uses this macro to disambiguate the inherited members.
          */
+        // *INDENT-OFF*
 #       define BLACKMISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                     \
             using ::BlackMisc::Mixin::Index<DERIVED>::apply;                    \
             using ::BlackMisc::Mixin::Index<DERIVED>::setPropertyByIndex;       \
             using ::BlackMisc::Mixin::Index<DERIVED>::propertyByIndex;          \
             using ::BlackMisc::Mixin::Index<DERIVED>::propertyByIndexAsString;  \
+            using ::BlackMisc::Mixin::Index<DERIVED>::comparePropertyByIndex;   \
             using ::BlackMisc::Mixin::Index<DERIVED>::equalsPropertyByIndex;
+        // *INDENT-ON*
 
     } // Mixin
 
@@ -142,37 +148,37 @@ namespace BlackMisc
         void addValue(const CPropertyIndex &index, const char *str);
 
         //! Add a value as non CVariant
-        template<class T> void addValue(const CPropertyIndex &index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
+        template<class T> void addValue(const CPropertyIndex &index, const T &value) { m_values.insert(index, CVariant::fromValue(value)); }
 
         //! Prepend index to all property indexes
         void prependIndex(int index);
 
         //! Is empty?
-        bool isEmpty() const { return this->m_values.isEmpty(); }
+        bool isEmpty() const { return m_values.isEmpty(); }
 
         //! Value
-        CVariant value(const CPropertyIndex &index) const { return this->m_values.value(index); }
+        CVariant value(const CPropertyIndex &index) const { return m_values.value(index); }
 
         //! Set value
-        void value(const CPropertyIndex &index, const CVariant &value) { this->m_values.value(index, value); }
+        void value(const CPropertyIndex &index, const CVariant &value) { m_values.value(index, value); }
 
         //! Indexes
         CPropertyIndexList indexes() const;
 
         //! Contains index?
-        bool contains(const CPropertyIndex &index) const { return this->m_values.contains(index); }
+        bool contains(const CPropertyIndex &index) const { return m_values.contains(index); }
 
         //! values
-        QList<CVariant> values() const { return this->m_values.values(); }
+        QList<CVariant> values() const { return m_values.values(); }
 
         //! Wildcard, only relevant when used in search
-        bool isWildcard() const { return this->m_wildcard; }
+        bool isWildcard() const { return m_wildcard; }
 
         //! Wildcard, only relevant when used in search
-        void setWildcard(bool wildcard) { this->m_wildcard = wildcard; }
+        void setWildcard(bool wildcard) { m_wildcard = wildcard; }
 
         //! clear
-        void clear() { this->m_values.clear(); }
+        void clear() { m_values.clear(); }
 
         //! Number of elements
         int size() const;
@@ -190,7 +196,7 @@ namespace BlackMisc
         template <typename T> bool matches(const T &value) const { return matchesVariant(CVariant::from(value)); }
 
         //! Map
-        const QMap<CPropertyIndex, CVariant> &map() const { return this->m_values; }
+        const QMap<CPropertyIndex, CVariant> &map() const { return m_values; }
 
         //! Hash value
         uint getValueHash() const;
@@ -211,7 +217,6 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
-
     };
 
     namespace Mixin
@@ -229,7 +234,7 @@ namespace BlackMisc
                 const CPropertyIndex index = it.key();
                 if (skipEqualValues)
                 {
-                    bool equal = derived()->equalsPropertyByIndex(value, index);
+                    const bool equal = derived()->equalsPropertyByIndex(value, index);
                     if (equal) { continue; }
                 }
                 derived()->setPropertyByIndex(index, value);
@@ -237,6 +242,7 @@ namespace BlackMisc
             }
             return changed;
         }
+
         template <class Derived>
         void Index<Derived>::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
@@ -249,13 +255,11 @@ namespace BlackMisc
                 baseSetPropertyByIndex(static_cast<TIndexBaseOfT<Derived> *>(derived()), variant, index);
             }
         }
+
         template <class Derived>
         CVariant Index<Derived>::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself())
-            {
-                return myself<Derived>();
-            }
+            if (index.isMyself()) { return myself<Derived>(); }
             const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -265,15 +269,33 @@ namespace BlackMisc
             default: return basePropertyByIndex(static_cast<const TIndexBaseOfT<Derived> *>(derived()), index);
             }
         }
+
         template <class Derived>
         QString Index<Derived>::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
         {
             return derived()->propertyByIndex(index).toQString(i18n);
         }
+
         template <class Derived>
         bool Index<Derived>::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
         {
             return derived()->propertyByIndex(index) == compareValue;
+        }
+
+        template<class Derived>
+        int Index<Derived>::comparePropertyByIndex(const CPropertyIndex &index, const Derived &compareValue) const
+        {
+            if (this == &compareValue) { return 0; }
+            const auto i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexIcon:
+            case IndexPixmap:
+            case IndexString:
+            default:
+                break;
+            }
+            return derived()->toQString().compare(compareValue.toQString());
         }
     } // Mixin
 
@@ -282,8 +304,7 @@ namespace BlackMisc
     {
         return m_map.matches(value);
     }
-
-}
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::CPropertyIndexVariantMap)
 

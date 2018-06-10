@@ -37,7 +37,6 @@
 
 namespace BlackMisc
 {
-
     /*!
      * Default base class for CValueObject.
      */
@@ -112,6 +111,9 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         using Mixin::Index<Derived>::propertyByIndex;
+
+        //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
+        using Mixin::Index<Derived>::comparePropertyByIndex;
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndexAsString
         using Mixin::Index<Derived>::propertyByIndexAsString;

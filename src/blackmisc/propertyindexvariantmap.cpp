@@ -37,13 +37,13 @@ namespace BlackMisc
 
     bool CPropertyIndexVariantMap::matchesVariant(const CVariant &variant) const
     {
-        if (this->isEmpty()) return this->isWildcard();
+        if (this->isEmpty()) { return this->isWildcard(); }
         const auto &map = this->map();
         for (auto it = map.begin(); it != map.end(); ++it)
         {
             // QVariant cannot be compared directly
-            CVariant p = variant.propertyByIndex(it.key()); // from value object
-            CVariant v = it.value(); // from map
+            const CVariant p = variant.propertyByIndex(it.key()); // from value object
+            const CVariant v = it.value(); // from map
             if (p != v) return false;
         }
         return true;
@@ -51,14 +51,14 @@ namespace BlackMisc
 
     QString CPropertyIndexVariantMap::convertToQString(bool i18n) const
     {
-        if (this->isEmpty()) return QString("{wildcard: %1}").arg(this->m_wildcard ? "true" : "false");
+        if (this->isEmpty()) return QString("{wildcard: %1}").arg(m_wildcard ? "true" : "false");
         QString s;
-        for (const CPropertyIndex &index : makeKeysRange(this->m_values))
+        for (const CPropertyIndex &index : makeKeysRange(m_values))
         {
-            CVariant v = this->m_values.value(index);
+            CVariant v = m_values.value(index);
 
             s.isEmpty() ?
-            s.append("{wildcard: ").append(this->m_wildcard ? "true" : "false").append(" ") :
+            s.append("{wildcard: ").append(m_wildcard ? "true" : "false").append(" ") :
             s.append(", ");
 
             s.append('{').append(index.toQString(i18n)).append(": ");
@@ -73,8 +73,8 @@ namespace BlackMisc
 
     void CPropertyIndexVariantMap::marshallToDbus(QDBusArgument &argument) const
     {
-        argument << this->m_values.keys();
-        argument << this->m_values.values();
+        argument << m_values.keys();
+        argument << m_values.values();
     }
 
     void CPropertyIndexVariantMap::unmarshallFromDbus(const QDBusArgument &argument)
@@ -90,12 +90,12 @@ namespace BlackMisc
             newMap.insert(indexes[i], values[i]);
         }
         // replace values in one step
-        this->m_values.swap(newMap);
+        m_values.swap(newMap);
     }
 
     void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const CVariant &value)
     {
-        this->m_values.insert(index, value);
+        m_values.insert(index, value);
     }
 
     void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const char *str)
@@ -110,19 +110,19 @@ namespace BlackMisc
         {
             CPropertyIndex newPi(pi);
             newPi.prepend(index);
-            newMap.insert(newPi, this->m_values[pi]);
+            newMap.insert(newPi, m_values[pi]);
         }
-        this->m_values = newMap;
+        m_values = newMap;
     }
 
     CPropertyIndexList CPropertyIndexVariantMap::indexes() const
     {
-        return CSequence<CPropertyIndex>(this->m_values.keys());
+        return CSequence<CPropertyIndex>(m_values.keys());
     }
 
     int CPropertyIndexVariantMap::size() const
     {
-        return this->m_values.size();
+        return m_values.size();
     }
 
     uint CPropertyIndexVariantMap::getValueHash() const

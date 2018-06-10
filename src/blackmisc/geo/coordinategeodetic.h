@@ -244,6 +244,9 @@ namespace BlackMisc
             //! \copydoc Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
+            //! \copydoc Mixin::Index::setPropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const CCoordinateGeodetic &compareValue) const;
+
             //! Switch unit of height
             CCoordinateGeodetic &switchUnit(const PhysicalQuantities::CLengthUnit &unit);
 
