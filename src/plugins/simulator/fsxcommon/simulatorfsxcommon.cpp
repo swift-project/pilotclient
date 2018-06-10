@@ -268,7 +268,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
             Q_UNUSED(callsign);
-            if (this->isShuttingDown()) { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
             if (reference.isNull()) { return false; }
 
             static const CAltitude alt(50000, CLengthUnit::ft());
@@ -458,7 +458,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::triggerAutoTraceSendId()
         {
             if (m_traceSendId) { return false; } // no need
-            if (this->isShuttingDown()) { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
             m_traceAutoTs = ts; // auto trace on
             const QPointer<CSimulatorFsxCommon> myself(this);
@@ -573,7 +573,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData)
         {
-            if (this->isShuttingDown()) { return; }
+            if (this->isShuttingDownOrDisconnected()) { return; }
             QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(0, this, [ = ]
             {
@@ -584,7 +584,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData)
         {
-            if (this->isShuttingDown()) { return; }
+            if (this->isShuttingDownOrDisconnected()) { return; }
 
             // Near ground we use faster updates
             const CCallsign cs(simObject.getCallsign());
@@ -641,7 +641,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
         {
-            if (this->isShuttingDown()) { return true; } // pretend everything is fine
+            if (this->isShuttingDownOrDisconnected()) { return true; } // pretend everything is fine
             const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectId);
             const CCallsign callsign(simObject.getCallsign());
             if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty()) { return false; }
@@ -660,7 +660,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::simulatorReportedProbeAdded(DWORD objectId)
         {
-            if (this->isShuttingDown()) { return true; } // pretend everything is fine
+            if (this->isShuttingDownOrDisconnected()) { return true; } // pretend everything is fine
             const CSimConnectObject simObject = m_simConnectProbes.markObjectAsAdded(objectId);
             const bool valid(simObject.hasValidRequestAndObjectId() && simObject.isConfirmedAdded());
             return valid;
@@ -668,7 +668,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::verifyAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraftIn)
         {
-            if (this->isShuttingDown()) { return; }
+            if (this->isShuttingDownOrDisconnected()) { return; }
 
             CStatusMessage msg;
             CSimulatedAircraft remoteAircraft = remoteAircraftIn;
@@ -808,7 +808,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::simulatorReportedObjectRemoved(DWORD objectID)
         {
-            if (this->isShuttingDown()) { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
             const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectID);
             if (!simObject.hasValidRequestAndObjectId()) { return false; } // object id from somewhere else
             const CCallsign callsign(simObject.getCallsign());
@@ -819,7 +819,7 @@ namespace BlackSimPlugin
                 // good case, object has been removed
                 // we can remove the sim object
             }
-            else if (!this->isShuttingDown())
+            else
             {
                 // object was removed, but removal was not requested by us
                 // this means we are out of the reality bubble or something else went wrong
@@ -1426,7 +1426,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::triggerUpdateAirports(const CAirportList &airports)
         {
-            if (this->isShuttingDown()) { return; }
+            if (this->isShuttingDownOrDisconnected()) { return; }
             if (airports.isEmpty()) { return; }
             QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(0, this, [ = ]
@@ -1644,7 +1644,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)
         {
-            if (this->isShuttingDown()) { return false; }
+            if (this->isShuttingDownOrDisconnected()) { return false; }
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
             if (simObject.isPendingRemoved()) { return false; }
             if (!m_hSimConnect) { return false; }
