@@ -145,6 +145,8 @@ namespace BlackGui
             // ui->te_LastInterpolatedSituation->setText(sLog.toQString(false, true, true, false, "<br>"));
             ui->te_LastInterpolatedSituation->setText(sLog.situationCurrent.toQString(true));
             ui->te_SituationChange->setText(sLog.change.toQString(true));
+            ui->tvp_Changes->push_frontKeepLatestAdjustedFirst(sLog.change, 5);
+
             ui->le_SceneryOffset->setText(sLog.change.getGuessedSceneryDeviation().valueRoundedWithUnit(CLengthUnit::ft(), 1));
             ui->le_SceneryOffsetCG->setText(sLog.change.getGuessedSceneryDeviationCG().valueRoundedWithUnit(CLengthUnit::ft(), 1));
 

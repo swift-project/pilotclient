@@ -200,7 +200,7 @@
      </property>
      <widget class="QWidget" name="tb_DataFlow">
       <attribute name="title">
-       <string>Data flow</string>
+       <string>Data flow I</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -503,7 +503,7 @@
               <item>
                <widget class="BlackGui::Views::CAircraftSituationView" name="tvp_AircraftSituations">
                 <property name="selectionMode">
-                 <enum>QAbstractItemView::SingleSelection</enum>
+                 <enum>QAbstractItemView::NoSelection</enum>
                 </property>
                 <property name="selectionBehavior">
                  <enum>QAbstractItemView::SelectRows</enum>
@@ -523,7 +523,7 @@
               <item>
                <widget class="BlackGui::Views::CAircraftPartsView" name="tvp_AircraftParts">
                 <property name="selectionMode">
-                 <enum>QAbstractItemView::SingleSelection</enum>
+                 <enum>QAbstractItemView::NoSelection</enum>
                 </property>
                 <property name="selectionBehavior">
                  <enum>QAbstractItemView::SelectRows</enum>
@@ -535,6 +535,32 @@
               </item>
              </layout>
             </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tb_DataFlow2">
+      <attribute name="title">
+       <string>Data flow II</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vl_DataFlow2">
+       <item>
+        <widget class="QGroupBox" name="gb_CalculatedChanges">
+         <property name="title">
+          <string>Calculated aircraft situation changes</string>
+         </property>
+         <layout class="QVBoxLayout" name="vl_CalculatedChanges">
+          <item>
+           <widget class="BlackGui::Views::CAircraftSituationChangeView" name="tvp_Changes">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::NoSelection</enum>
+            </property>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
            </widget>
           </item>
          </layout>
@@ -585,7 +611,11 @@
            <number>3</number>
           </property>
           <item>
-           <widget class="QTextEdit" name="te_LastInterpolatedSituation"/>
+           <widget class="QTextEdit" name="te_LastInterpolatedSituation">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -609,7 +639,11 @@
            <number>3</number>
           </property>
           <item>
-           <widget class="QTextEdit" name="te_SituationChange"/>
+           <widget class="QTextEdit" name="te_SituationChange">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -633,7 +667,11 @@
            <number>3</number>
           </property>
           <item>
-           <widget class="QTextEdit" name="te_LastInterpolatedParts"/>
+           <widget class="QTextEdit" name="te_LastInterpolatedParts">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -680,6 +718,11 @@
    <extends>QWidget</extends>
    <header>blackgui/led.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CAircraftSituationChangeView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/aircraftsituationchangeview.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
