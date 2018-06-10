@@ -9,12 +9,12 @@
 
 //! \file
 
-#ifndef BLACKGUI_MODELS_AIRCRAFTPARTSLISTMODEL_H
-#define BLACKGUI_MODELS_AIRCRAFTPARTSLISTMODEL_H
+#ifndef BLACKGUI_MODELS_AIRCRAFTSITUATIONCHANGELISTMODEL_H
+#define BLACKGUI_MODELS_AIRCRAFTSITUATIONCHANGELISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeltimestampobjects.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftsituationchangelist.h"
 
 #include <QVariant>
 
@@ -25,15 +25,15 @@ namespace BlackGui
 {
     namespace Models
     {
-        //! Aircraft parts list model
-        class BLACKGUI_EXPORT CAircraftPartsListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>
+        //! Aircraft situation changes list model
+        class BLACKGUI_EXPORT CAircraftSituationChangeListModel : public CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList, true>
         {
         public:
             //! Constructor
-            explicit CAircraftPartsListModel(QObject *parent = nullptr);
+            explicit CAircraftSituationChangeListModel(QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftPartsListModel() {}
+            virtual ~CAircraftSituationChangeListModel() {}
         };
     } // namespace
 } // namespace

@@ -50,7 +50,11 @@ namespace BlackMisc
                 IndexJustTakingOff,
                 IndexJustTouchingDown,
                 IndexRotatingUp,
-                IndexContainsPushBack
+                IndexContainsPushBack,
+                IndexAltitudeMean,
+                IndexAltitudeStdDev,
+                IndexElevationMean,
+                IndexElevationStdDev,
             };
 
             //! Hint about the guessed scenery deviation
@@ -156,6 +160,9 @@ namespace BlackMisc
 
             //! \copydoc Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            //! \copydoc Mixin::Index::comparePropertyByIndex
+            int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituationChange &compareValue) const;
 
             //! Calculate the standard deviiations
             bool calculateStdDeviations(const CAircraftSituationList &situations, const PhysicalQuantities::CLength &cg);

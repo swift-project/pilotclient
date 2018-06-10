@@ -15,6 +15,7 @@
 #include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/models/aircraftpartslistmodel.h"
 #include "blackgui/models/aircraftsituationlistmodel.h"
+#include "blackgui/models/aircraftsituationchangelistmodel.h"
 #include "blackgui/models/airlineicaolistmodel.h"
 #include "blackgui/models/airportlistmodel.h"
 #include "blackgui/models/applicationinfolistmodel.h"

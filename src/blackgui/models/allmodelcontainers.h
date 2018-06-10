@@ -21,6 +21,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftsituationchangelist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/serverlist.h"

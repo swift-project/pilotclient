@@ -10,6 +10,7 @@
 #include "blackgui/views/viewtimestampobjects.h"
 #include "blackgui/models/aircraftpartslistmodel.h"
 #include "blackgui/models/aircraftsituationlistmodel.h"
+#include "blackgui/models/aircraftsituationchangelistmodel.h"
 #include <QAction>
 
 using namespace BlackMisc;
@@ -36,6 +37,7 @@ namespace BlackGui
 
         template class CViewWithTimestampWithOffsetObjects<BlackGui::Models::CAircraftPartsListModel, BlackMisc::Aviation::CAircraftPartsList, BlackMisc::Aviation::CAircraftParts>;
         template class CViewWithTimestampWithOffsetObjects<BlackGui::Models::CAircraftSituationListModel, BlackMisc::Aviation::CAircraftSituationList, BlackMisc::Aviation::CAircraftSituation>;
+        template class CViewWithTimestampWithOffsetObjects<BlackGui::Models::CAircraftSituationChangeListModel, BlackMisc::Aviation::CAircraftSituationChangeList, BlackMisc::Aviation::CAircraftSituationChange>;
 
     } // namespace
 } // namespace

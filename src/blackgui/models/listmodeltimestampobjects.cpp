@@ -35,6 +35,7 @@ namespace BlackGui
         template class CListModelTimestampObjects<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>;
         template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>;
         template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList, true>;
+        template class CListModelTimestampObjects<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList, true>;
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         CListModelTimestampWithOffsetObjects<ObjectType, ContainerType, UseCompare>::CListModelTimestampWithOffsetObjects(const QString &translationContext, QObject *parent) :
@@ -59,5 +60,6 @@ namespace BlackGui
 
         template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>;
         template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList, true>;
+        template class CListModelTimestampWithOffsetObjects<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList, true>;
     } // namespace
 } // namespace

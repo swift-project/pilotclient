@@ -213,6 +213,8 @@ namespace BlackMisc
     {
         class CAircraftSituation;
         class CAircraftSituationList;
+        class CAircraftSituationChange;
+        class CAircraftSituationChangeList;
         class CAircraftParts;
         class CAircraftPartsList;
         class CAirport;
@@ -277,10 +279,12 @@ namespace BlackMisc
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::CCountry, BlackMisc::CCountryList>;
 
     // for the derived version both templates are required
-    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
-    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList>;
     extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList>;
     //! \endcond
 
 } //namespace

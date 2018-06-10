@@ -9,6 +9,7 @@
 
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftsituationchangelist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
@@ -574,8 +575,10 @@ namespace BlackMisc
 
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList>;
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampWithOffsetObjectList<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList>;
     //! \endcond
 
 } // namespace

@@ -14,6 +14,7 @@
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
@@ -113,22 +114,27 @@ namespace BlackMisc
 
         CVariant CAircraftSituationChange::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return CVariant::from(*this); }
+            if (index.isMyself()) { return CVariant::fromValue(*this); }
             if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::propertyByIndex(index); }
 
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexConstAscending: return CVariant::from(m_constAscending);
-            case IndexConstDescending: return CVariant::from(m_constDescending);
-            case IndexConstNotOnGround: return CVariant::from(m_constNotOnGround);
-            case IndexConstOnGround: return CVariant::from(m_constOnGround);
-            case IndexIsNull: return CVariant::from(this->isNull());
-            case IndexJustTakingOff: return CVariant::from(m_justTakeoff);
-            case IndexJustTouchingDown: return CVariant::from(m_justTouchdown);
-            case IndexRotatingUp: return CVariant::from(m_rotateUp);
-            case IndexContainsPushBack: return CVariant::from(m_containsPushBack);
+            case IndexSituationsCount: return CVariant::fromValue(m_situationsCount);
+            case IndexConstAscending: return CVariant::fromValue(m_constAscending);
+            case IndexConstDescending: return CVariant::fromValue(m_constDescending);
+            case IndexConstNotOnGround: return CVariant::fromValue(m_constNotOnGround);
+            case IndexConstOnGround: return CVariant::fromValue(m_constOnGround);
+            case IndexIsNull: return CVariant::fromValue(this->isNull());
+            case IndexJustTakingOff: return CVariant::fromValue(m_justTakeoff);
+            case IndexJustTouchingDown: return CVariant::fromValue(m_justTouchdown);
+            case IndexRotatingUp: return CVariant::fromValue(m_rotateUp);
+            case IndexContainsPushBack: return CVariant::fromValue(m_containsPushBack);
+            case IndexAltitudeMean: return CVariant::fromValue(m_altMean);
+            case IndexAltitudeStdDev: return CVariant::fromValue(m_altStdDev);
+            case IndexElevationMean: return CVariant::fromValue(m_elvMean);
+            case IndexElevationStdDev: return CVariant::fromValue(m_elvStdDev);
             default: return CValueObject::propertyByIndex(index);
             }
         }
@@ -142,6 +148,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+            case IndexSituationsCount: m_situationsCount = variant.toInt(); break;
             case IndexConstAscending: m_constAscending = variant.toBool(); break;
             case IndexConstDescending: m_constDescending = variant.toBool(); break;
             case IndexConstNotOnGround: m_constNotOnGround = variant.toBool(); break;
@@ -150,9 +157,43 @@ namespace BlackMisc
             case IndexJustTouchingDown: m_justTouchdown = variant.toBool(); break;
             case IndexRotatingUp: m_rotateUp = variant.toBool(); break;
             case IndexContainsPushBack: m_containsPushBack = variant.toBool(); break;
-            case IndexIsNull: break;
+            case IndexIsNull:
+            case IndexAltitudeMean:
+            case IndexAltitudeStdDev:
+            case IndexElevationMean:
+            case IndexElevationStdDev:
+                break; // read only
             default: CValueObject::setPropertyByIndex(index, variant); break;
             }
+        }
+
+        int CAircraftSituationChange::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituationChange &compareValue) const
+        {
+            if (index.isMyself()) { return ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndex(), compareValue); }
+            if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue); }
+
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexCallsign: return m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+            case IndexSituationsCount: return Compare::compare(this->getSituationsCount(), compareValue.getSituationsCount());
+            case IndexConstAscending: return Compare::compare(this->isConstAscending(), compareValue.isConstAscending());
+            case IndexConstDescending: return Compare::compare(this->isConstDescending(), compareValue.isConstDescending());
+            case IndexConstNotOnGround: return Compare::compare(this->isConstNotOnGround(), compareValue.isConstNotOnGround());
+            case IndexConstOnGround: return Compare::compare(this->isConstOnGround(), compareValue.isConstOnGround());
+            case IndexJustTakingOff: return Compare::compare(this->isJustTakingOff(), compareValue.isJustTakingOff());
+            case IndexJustTouchingDown: return Compare::compare(this->isJustTouchingDown(), compareValue.isJustTouchingDown());
+            case IndexRotatingUp: return Compare::compare(this->isRotatingUp(), compareValue.isRotatingUp());
+            case IndexContainsPushBack: return Compare::compare(this->containsPushBack(), compareValue.containsPushBack());
+            case IndexIsNull: return Compare::compare(this->isNull(), compareValue.isNull());
+            case IndexAltitudeMean: return m_altMean.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_altMean);
+            case IndexAltitudeStdDev: return m_altStdDev.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_altStdDev);
+            case IndexElevationMean: return m_elvMean.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_elvMean);
+            case IndexElevationStdDev: return m_elvStdDev.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_elvStdDev);
+            default: return CValueObject::comparePropertyByIndex(index, *this);
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
+            return 0;
         }
 
         bool CAircraftSituationChange::calculateStdDeviations(const CAircraftSituationList &situations, const CLength &cg)

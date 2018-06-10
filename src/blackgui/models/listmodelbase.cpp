@@ -770,6 +770,7 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAircraftParts, BlackMisc::Aviation::CAircraftPartsList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CAircraftSituationList, true>;
+        template class CListModelBase<BlackMisc::Aviation::CAircraftSituationChange, BlackMisc::Aviation::CAircraftSituationChangeList, true>;
         template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList, true>;
         template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList, true>;
         template class CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList, false>;
