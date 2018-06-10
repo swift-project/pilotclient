@@ -251,7 +251,7 @@ namespace XSwiftBus
         XPMPPlaneID id = nullptr;
         if (modelName.empty())
         {
-            id = XPMPCreatePlane(aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, static_cast<void *>(this));
+            id = XPMPCreatePlane(aircraftIcao.c_str(), airlineIcao.c_str(), livery.c_str(), getPlaneData, planeLoaded, static_cast<void *>(this));
         }
         else
         {
