@@ -29,6 +29,7 @@
 #include <QReadWriteLock>
 #include <QTimer>
 #include <QtGlobal>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -67,6 +68,9 @@ namespace BlackCore
                           INetwork *network,
                           CAirspaceMonitor *airspaceMonitorParent);
 
+        //! Destructor
+        virtual ~CAirspaceAnalyzer();
+
         //! Get the latest snapshot
         //! \threadsafe
         BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
@@ -74,10 +78,10 @@ namespace BlackCore
         //! Render restrictions in simulator
         void setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
 
-        //! Destructor
-        virtual ~CAirspaceAnalyzer();
+        //! Enable/disable watchdog
+        //! \remark primarily for debugging, where stopping at a breakpoint can cause multiple timeouts
+        void setEnabledWatchdog(bool enabled) { m_enabledWatchdog = enabled; }
 
-    public slots:
         //! Clear
         void clear();
 
@@ -126,6 +130,7 @@ namespace BlackCore
         BlackMisc::PhysicalQuantities::CTime m_timeoutAircraft = { 15, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
         BlackMisc::PhysicalQuantities::CTime m_timeoutAtc = { 50, BlackMisc::PhysicalQuantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
         qint64 m_lastWatchdogCallMsSinceEpoch; //!< when last called
+        std::atomic_bool m_enabledWatchdog { true }; //!< watchdog enabled
 
         // snapshot
         BlackMisc::Simulation::CAirspaceAircraftSnapshot m_latestAircraftSnapshot;

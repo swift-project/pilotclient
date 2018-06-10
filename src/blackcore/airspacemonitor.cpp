@@ -303,6 +303,14 @@ namespace BlackCore
         m_bookingsRequested = true;
     }
 
+    void CAirspaceMonitor::enableWatchdog(bool enable)
+    {
+        if (this->analyzer())
+        {
+            this->analyzer()->setEnabled(enable);
+        }
+    }
+
     void CAirspaceMonitor::testCreateDummyOnlineAtcStations(int number)
     {
         if (number < 1) { return; }

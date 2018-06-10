@@ -201,9 +201,10 @@ namespace BlackCore
             {
                 if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CContextNetwork")) { return; }
                 BlackMisc::CSimpleCommandParser::registerCommand({".m", "alias: .msg"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".m message <text>", "send text message"});
-                BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message <text>", "send text message"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".m message text", "send text message"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message text", "send text message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".altos callsign offsetvalue", "set altitude offset value (testing)"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".watchdog on|off", "enable/disable network watchdog (testing)"});
             }
 
             //! \publicsection

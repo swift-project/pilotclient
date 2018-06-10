@@ -118,6 +118,9 @@ namespace BlackCore
         //! Analyzer
         CAirspaceAnalyzer *analyzer() const { return m_analyzer; }
 
+        //! \copydoc CAirspaceAnalyzer::setEnabled
+        void enableWatchdog(bool enable);
+
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
 

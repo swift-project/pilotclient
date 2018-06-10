@@ -235,7 +235,7 @@ namespace BlackCore
         {
             Q_UNUSED(originator;)
             if (commandLine.isEmpty()) { return false; }
-            static const QStringList cmds({ ".msg", ".m", ".altos", ".altoffset" });
+            static const QStringList cmds({ ".msg", ".m", ".altos", ".altoffset", ".watchdog" });
             CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
@@ -316,10 +316,11 @@ namespace BlackCore
                 this->sendTextMessages(tml);
                 return true;
             }
-            else if (parser.matchesCommand(".altos", ".altoffet"))
+            else if (parser.matchesCommand(".altos", ".altoffset"))
             {
                 if (!m_airspace) { return false; }
                 if (parser.countParts() < 2) { return false; }
+
                 const CCallsign cs(parser.part(1));
                 if (!m_airspace->isAircraftInRange(cs))
                 {
@@ -332,17 +333,23 @@ namespace BlackCore
                 {
                     os.parseFromString(parser.part(2));
                 }
+
                 const bool added = this->testAddAltitudeOffset(cs, os);
-                if (added)
-                {
-                    CLogMessage(this).info("Added altitude offset %1 for %2") << os.valueRoundedWithUnit(2) << cs.asString();
-                }
-                else
-                {
-                    CLogMessage(this).info("Removed altitude offset %1") << cs.asString();
-                }
+                if (added) { CLogMessage(this).info("Added altitude offset %1 for %2") << os.valueRoundedWithUnit(2) << cs.asString(); }
+                else { CLogMessage(this).info("Removed altitude offset %1") << cs.asString(); }
+
                 return true;
             }
+            else if (parser.matchesCommand(".watchdog"))
+            {
+                if (!m_airspace) { return false; }
+                if (parser.countParts() < 2) { return false; }
+
+                const bool watchdog = parser.toBool(1, true);
+                m_airspace->enableWatchdog(watchdog);
+                CLogMessage(this).info("Enabled watchdog: %1") << boolToYesNo(watchdog);
+            }
+
             return false;
         }
 

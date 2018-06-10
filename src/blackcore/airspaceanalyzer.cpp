@@ -160,10 +160,12 @@ namespace BlackCore
         const qint64 atcTimeoutMs = m_timeoutAtc.valueInteger(CTimeUnit::ms());
         const qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
         const qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs;
+        const bool enabled = m_enabledWatchdog;
 
         const QList<CCallsign> callsignsAircraft = m_aircraftCallsignTimestamps.keys();
         for (const CCallsign &callsign : callsignsAircraft) // clazy:exclude=container-anti-pattern,range-loop
         {
+            if (!enabled) { m_aircraftCallsignTimestamps[callsign] = timeoutAircraftEpochMs + 1000; } // fake value so it can be re-enabled
             const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
             if (tsv > timeoutAircraftEpochMs) { continue; }
             CLogMessage(this).debug() << "Aircraft " << callsign.toQString() << "timed out! " << (currentTimeMsEpoch - tsv) << "ms";
@@ -174,6 +176,7 @@ namespace BlackCore
         const QList<CCallsign> callsignsAtc = m_atcCallsignTimestamps.keys();
         for (const CCallsign &callsign : callsignsAtc) // clazy:exclude=container-anti-pattern,range-loop
         {
+            if (!enabled) { m_aircraftCallsignTimestamps[callsign] = timeoutAtcEpochMs + 1000; } // fake value so it can be re-enabled
             const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
             if (m_atcCallsignTimestamps.value(callsign) > timeoutAtcEpochMs) { continue; }
             CLogMessage(this).debug() << "ATC " << callsign.toQString() << "timed out! " << (currentTimeMsEpoch - tsv) << "ms";
