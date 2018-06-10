@@ -579,40 +579,23 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAircraftDesignator:
-                return CVariant::fromValue(m_designator);
-            case IndexIataCode:
-                return CVariant::fromValue(m_iataCode);
-            case IndexFamily:
-                return CVariant::fromValue(m_family);
-            case IndexCombinedAircraftType:
-                return CVariant::fromValue(m_combinedType);
-            case IndexModelDescription:
-                return CVariant::fromValue(m_modelDescription);
-            case IndexModelIataDescription:
-                return CVariant::fromValue(m_modelIataDescription);
-            case IndexModelSwiftDescription:
-                return CVariant::fromValue(m_modelSwiftDescription);
-            case IndexCombinedDescription:
-                return CVariant::fromValue(this->getCombinedModelDescription());
-            case IndexManufacturer:
-                return CVariant::fromValue(m_manufacturer);
-            case IndexWtc:
-                return CVariant::fromValue(m_wtc);
-            case IndexIsVtol:
-                return CVariant::fromValue(this->isVtol());
-            case IndexIsLegacy:
-                return CVariant::fromValue(m_legacy);
-            case IndexIsMilitary:
-                return CVariant::fromValue(m_military);
-            case IndexIsRealworld:
-                return CVariant::fromValue(m_realWorld);
-            case IndexRank:
-                return CVariant::fromValue(m_rank);
-            case IndexDesignatorManufacturer:
-                return CVariant::fromValue(this->getDesignatorManufacturer());
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexAircraftDesignator: return CVariant::fromValue(m_designator);
+            case IndexIataCode: return CVariant::fromValue(m_iataCode);
+            case IndexFamily: return CVariant::fromValue(m_family);
+            case IndexCombinedAircraftType: return CVariant::fromValue(m_combinedType);
+            case IndexModelDescription: return CVariant::fromValue(m_modelDescription);
+            case IndexModelIataDescription: return CVariant::fromValue(m_modelIataDescription);
+            case IndexModelSwiftDescription: return CVariant::fromValue(m_modelSwiftDescription);
+            case IndexCombinedDescription: return CVariant::fromValue(this->getCombinedModelDescription());
+            case IndexManufacturer: return CVariant::fromValue(m_manufacturer);
+            case IndexWtc: return CVariant::fromValue(m_wtc);
+            case IndexIsVtol: return CVariant::fromValue(this->isVtol());
+            case IndexIsLegacy: return CVariant::fromValue(m_legacy);
+            case IndexIsMilitary: return CVariant::fromValue(m_military);
+            case IndexIsRealworld: return CVariant::fromValue(m_realWorld);
+            case IndexRank: return CVariant::fromValue(m_rank);
+            case IndexDesignatorManufacturer: return CVariant::fromValue(this->getDesignatorManufacturer());
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -623,45 +606,19 @@ namespace BlackMisc
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAircraftDesignator:
-                this->setDesignator(variant.value<QString>());
-                break;
-            case IndexIataCode:
-                this->setIataCode(variant.value<QString>());
-                break;
-            case IndexFamily:
-                this->setFamily(variant.value<QString>());
-                break;
-            case IndexCombinedAircraftType:
-                this->setCombinedType(variant.value<QString>());
-                break;
-            case IndexModelDescription:
-                this->setModelDescription(variant.value<QString>());
-                break;
-            case IndexModelIataDescription:
-                this->setModelIataDescription(variant.value<QString>());
-                break;
-            case IndexModelSwiftDescription:
-                this->setModelSwiftDescription(variant.value<QString>());
-                break;
-            case IndexManufacturer:
-                this->setManufacturer(variant.value<QString>());
-                break;
-            case IndexWtc:
-                this->setWtc(variant.value<QString>());
-                break;
-            case IndexIsLegacy:
-                m_legacy = variant.toBool();
-                break;
-            case IndexIsMilitary:
-                m_military = variant.toBool();
-                break;
-            case IndexRank:
-                m_rank = variant.toInt();
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexAircraftDesignator: this->setDesignator(variant.value<QString>()); break;
+            case IndexIataCode: this->setIataCode(variant.value<QString>()); break;
+            case IndexFamily: this->setFamily(variant.value<QString>()); break;
+            case IndexCombinedAircraftType: this->setCombinedType(variant.value<QString>()); break;
+            case IndexModelDescription: this->setModelDescription(variant.value<QString>()); break;
+            case IndexModelIataDescription: this->setModelIataDescription(variant.value<QString>()); break;
+            case IndexModelSwiftDescription: this->setModelSwiftDescription(variant.value<QString>()); break;
+            case IndexManufacturer: this->setManufacturer(variant.value<QString>()); break;
+            case IndexWtc: this->setWtc(variant.value<QString>()); break;
+            case IndexIsLegacy: m_legacy = variant.toBool(); break;
+            case IndexIsMilitary: m_military = variant.toBool(); break;
+            case IndexRank: m_rank = variant.toInt(); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -669,23 +626,16 @@ namespace BlackMisc
         {
             if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAircraftDesignator:
-                return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);
-            case IndexIataCode:
-                return m_iataCode.compare(compareValue.getIataCode(), Qt::CaseInsensitive);
-            case IndexFamily:
-                return m_family.compare(compareValue.getFamily(), Qt::CaseInsensitive);
-            case IndexCombinedAircraftType:
-                return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
-            case IndexModelDescription:
-                return m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
-            case IndexModelIataDescription:
-                return m_modelIataDescription.compare(compareValue.getModelIataDescription(), Qt::CaseInsensitive);
-            case IndexModelSwiftDescription:
-                return m_modelSwiftDescription.compare(compareValue.getModelSwiftDescription(), Qt::CaseInsensitive);
+            case IndexAircraftDesignator: return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);
+            case IndexIataCode: return m_iataCode.compare(compareValue.getIataCode(), Qt::CaseInsensitive);
+            case IndexFamily: return m_family.compare(compareValue.getFamily(), Qt::CaseInsensitive);
+            case IndexCombinedAircraftType: return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
+            case IndexModelDescription: return m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
+            case IndexModelIataDescription: return m_modelIataDescription.compare(compareValue.getModelIataDescription(), Qt::CaseInsensitive);
+            case IndexModelSwiftDescription: return m_modelSwiftDescription.compare(compareValue.getModelSwiftDescription(), Qt::CaseInsensitive);
             case IndexCombinedDescription:
                 {
                     // compare without generating new strings
@@ -700,24 +650,15 @@ namespace BlackMisc
                     }
                     return c;
                 }
-            case IndexManufacturer:
-                return m_manufacturer.compare(compareValue.getManufacturer(), Qt::CaseInsensitive);
-            case IndexWtc:
-                return m_wtc.compare(compareValue.getWtc(), Qt::CaseInsensitive);
-            case IndexIsLegacy:
-                return Compare::compare(m_legacy, compareValue.isLegacyAircraft());
-            case IndexIsMilitary:
-                return Compare::compare(m_military, compareValue.isMilitary());
-            case IndexIsVtol:
-                return Compare::compare(isVtol(), compareValue.isVtol());
-            case IndexIsRealworld:
-                return Compare::compare(m_realWorld, compareValue.isRealWorld());
-            case IndexRank:
-                return Compare::compare(m_rank, compareValue.getRank());
-            case IndexDesignatorManufacturer:
-                return getDesignatorManufacturer().compare(compareValue.getDesignatorManufacturer(), Qt::CaseInsensitive);
-            default:
-                break;
+            case IndexManufacturer: return m_manufacturer.compare(compareValue.getManufacturer(), Qt::CaseInsensitive);
+            case IndexWtc: return m_wtc.compare(compareValue.getWtc(), Qt::CaseInsensitive);
+            case IndexIsLegacy: return Compare::compare(m_legacy, compareValue.isLegacyAircraft());
+            case IndexIsMilitary: return Compare::compare(m_military, compareValue.isMilitary());
+            case IndexIsVtol: return Compare::compare(isVtol(), compareValue.isVtol());
+            case IndexIsRealworld: return Compare::compare(m_realWorld, compareValue.isRealWorld());
+            case IndexRank: return Compare::compare(m_rank, compareValue.getRank());
+            case IndexDesignatorManufacturer: return getDesignatorManufacturer().compare(compareValue.getDesignatorManufacturer(), Qt::CaseInsensitive);
+            default: return CValueObject::comparePropertyByIndex(index, *this);
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
             return 0;

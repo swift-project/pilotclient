@@ -154,7 +154,7 @@ namespace BlackMisc
             //! \copydoc Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare by index
+            //! \copydoc Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituation &compareValue) const;
 
             //! Get position

@@ -276,7 +276,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare for index
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftIcaoCode &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString

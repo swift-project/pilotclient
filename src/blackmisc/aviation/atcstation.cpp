@@ -314,37 +314,23 @@ namespace BlackMisc
         CVariant CAtcStation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexBookedFrom:
-                return CVariant::from(m_bookedFromUtc);
-            case IndexBookedUntil:
-                return CVariant::from(m_bookedUntilUtc);
-            case IndexCallsign:
-                return m_callsign.propertyByIndex(index.copyFrontRemoved());
-            case IndexController:
-                return m_controller.propertyByIndex(index.copyFrontRemoved());
-            case IndexFrequency:
-                return m_frequency.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsOnline:
-                return CVariant::from(m_isOnline);
-            case IndexLatitude:
-                return this->latitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexLongitude:
-                return this->longitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexPosition:
-                return m_position.propertyByIndex(index.copyFrontRemoved());
-            case IndexRange:
-                return m_range.propertyByIndex(index.copyFrontRemoved());
-            case IndexIsInRange:
-                return CVariant::fromValue(isInRange());
-            case IndexAtis:
-                return m_atis.propertyByIndex(index.copyFrontRemoved());
-            case IndexMetar:
-                return m_metar.propertyByIndex(index.copyFrontRemoved());
-            case IndexVoiceRoom:
-                return m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
+            case IndexBookedFrom: return CVariant::from(m_bookedFromUtc);
+            case IndexBookedUntil: return CVariant::from(m_bookedUntilUtc);
+            case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexController: return m_controller.propertyByIndex(index.copyFrontRemoved());
+            case IndexFrequency: return m_frequency.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsOnline: return CVariant::from(m_isOnline);
+            case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
+            case IndexRange: return m_range.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsInRange: return CVariant::fromValue(isInRange());
+            case IndexAtis: return m_atis.propertyByIndex(index.copyFrontRemoved());
+            case IndexMetar: return m_metar.propertyByIndex(index.copyFrontRemoved());
+            case IndexVoiceRoom: return m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -355,7 +341,7 @@ namespace BlackMisc
         void CAtcStation::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAtcStation>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexBookedFrom:
@@ -407,43 +393,29 @@ namespace BlackMisc
         int CAtcStation::comparePropertyByIndex(const CPropertyIndex &index, const CAtcStation &compareValue) const
         {
             if (index.isMyself()) { return this->getCallsign().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign()); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexBookedFrom:
-                return Compare::compare(this->getBookedFromUtc(), compareValue.getBookedFromUtc());
-            case IndexBookedUntil:
-                return Compare::compare(this->getBookedUntilUtc(), compareValue.getBookedUntilUtc());
-            case IndexCallsign:
-                return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-            case IndexController:
-                return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
-            case IndexFrequency:
-                return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
-            case IndexIsOnline:
-                return Compare::compare(this->isOnline(), compareValue.isOnline());
-            case IndexLatitude:
-                return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
-            case IndexLongitude:
-                return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
-            case IndexPosition:
-                return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
-            case IndexRange:
-                return m_range.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRange());
-            case IndexIsInRange:
-                return Compare::compare(this->isInRange(), compareValue.isInRange());
-            case IndexAtis:
-                return m_atis.getMessage().compare(compareValue.getAtis().getMessage());
-            case IndexMetar:
-                return m_metar.getMessage().compare(compareValue.getMetar().getMessage());
-            case IndexVoiceRoom:
-                return this->getVoiceRoom().getVoiceRoomUrl().compare(compareValue.getVoiceRoom().getVoiceRoomUrl());
+            case IndexBookedFrom: return Compare::compare(this->getBookedFromUtc(), compareValue.getBookedFromUtc());
+            case IndexBookedUntil: return Compare::compare(this->getBookedUntilUtc(), compareValue.getBookedUntilUtc());
+            case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+            case IndexController: return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
+            case IndexFrequency: return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
+            case IndexIsOnline: return Compare::compare(this->isOnline(), compareValue.isOnline());
+            case IndexLatitude: return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+            case IndexLongitude: return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
+            case IndexPosition: return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
+            case IndexRange: return m_range.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRange());
+            case IndexIsInRange: return Compare::compare(this->isInRange(), compareValue.isInRange());
+            case IndexAtis: return m_atis.getMessage().compare(compareValue.getAtis().getMessage());
+            case IndexMetar: return m_metar.getMessage().compare(compareValue.getMetar().getMessage());
+            case IndexVoiceRoom: return this->getVoiceRoom().getVoiceRoomUrl().compare(compareValue.getVoiceRoom().getVoiceRoomUrl());
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
                 {
                     return ICoordinateWithRelativePosition::comparePropertyByIndex(index, compareValue);
                 }
-                break;
+                return CValueObject::comparePropertyByIndex(index, *this);
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
             return 0;
