@@ -155,6 +155,9 @@ namespace BlackSimPlugin
             //! Marked as pending for removal
             void setPendingRemoved(bool pending);
 
+            //! Pending added or removed?
+            bool isPending() const { return this->isPendingAdded() || this->isPendingRemoved(); }
+
             //! Reset the state (like it was a new onject) without affecting interpolator and aircraft
             void resetState();
 

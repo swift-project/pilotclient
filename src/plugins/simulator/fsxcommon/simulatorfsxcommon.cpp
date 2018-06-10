@@ -72,7 +72,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::isConnected() const
         {
-            return m_simConnected;
+            return m_simConnected && m_hSimConnect;
         }
 
         bool CSimulatorFsxCommon::isSimulating() const
@@ -1646,8 +1646,7 @@ namespace BlackSimPlugin
         {
             if (this->isShuttingDownOrDisconnected()) { return false; }
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
-            if (simObject.isPendingRemoved()) { return false; }
-            if (!m_hSimConnect) { return false; }
+            if (simObject.isPending()) { return false; } // wait until confirmed
             if (simObject.getSimDataPeriod() == period) { return true; } // already queried like this
 
             // always request, not only when something has changed
