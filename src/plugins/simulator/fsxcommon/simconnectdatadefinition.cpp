@@ -20,6 +20,35 @@ namespace BlackSimPlugin
 {
     namespace FsxCommon
     {
+        const QString &CSimConnectDefinitions::requestToString(Request request)
+        {
+            static const QString ownAircraft("RequestOwnAircraft");
+            static const QString removeAircraft("RequestRemoveAircraft");
+            static const QString title("RequestOwnAircraftTitle");
+            static const QString simEnv("RequestSimEnvironment");
+            static const QString sbData("RequestSbData");
+            static const QString unknown("unknown");
+            static const QString end("<end>");
+            static const QString simdata("range simdata");
+            static const QString probe("range probe");
+            static const QString lights("range lights");
+
+            switch (request)
+            {
+            case RequestOwnAircraft: return ownAircraft;
+            case RequestRemoveAircraft: return removeAircraft;
+            case RequestOwnAircraftTitle: return title;
+            case RequestSimEnvironment: return simEnv;
+            case RequestSbData: return sbData;
+            case RequestRangeForLights: return lights;
+            case RequestRangeForProbe: return probe;
+            case RequestRangeForSimData: return simdata;
+            case RequestEndMarker: return end;
+            default: break;
+            }
+            return unknown;
+        }
+
         CSimConnectDefinitions::CSimConnectDefinitions() { }
 
         HRESULT CSimConnectDefinitions::initDataDefinitionsWhenConnected(const HANDLE hSimConnect)

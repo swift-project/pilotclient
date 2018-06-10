@@ -119,12 +119,12 @@ namespace BlackMisc
                 return n;
             }
 
-            const QString CSimConnectUtilities::simConnectExceptionToString(const DWORD id)
+            QString CSimConnectUtilities::simConnectExceptionToString(const DWORD id)
             {
                 return CSimConnectUtilities::resolveEnumToString(id, "SIMCONNECT_EXCEPTION");
             }
 
-            const QString CSimConnectUtilities::simConnectSurfaceTypeToString(const DWORD type, bool beautify)
+            QString CSimConnectUtilities::simConnectSurfaceTypeToString(const DWORD type, bool beautify)
             {
                 QString sf = CSimConnectUtilities::resolveEnumToString(type, "SIMCONNECT_SURFACE");
                 return beautify ? sf.replace('_', ' ') : sf;
@@ -186,6 +186,12 @@ namespace BlackMisc
                 }
 
                 return iniDir;
+            }
+
+            QString CSimConnectUtilities::simConnectReceiveIdToString(DWORD type)
+            {
+                const QString ri = CSimConnectUtilities::resolveEnumToString(type, "SIMCONNECT_RECV_ID");
+                return ri;
             }
 
             int CSimConnectUtilities::lightsToLightStates(const CAircraftLights &lights)

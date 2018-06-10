@@ -90,13 +90,12 @@ namespace BlackMisc
                 //! Resolve SimConnect exception (based on Qt metadata).
                 //! \param id enum element
                 //! \return enum element's name
-                static const QString simConnectExceptionToString(const DWORD id);
+                static QString simConnectExceptionToString(const DWORD id);
 
                 //! Resolve SimConnect surface (based on Qt metadata).
                 //! \param type enum element
                 //! \param beautify remove "_"
-                //! \return
-                static const QString simConnectSurfaceTypeToString(const DWORD type, bool beautify = true);
+                static QString simConnectSurfaceTypeToString(const DWORD type, bool beautify = true);
 
                 //! For all P3D and FSX simulators
                 //! \remark reevaluating directories every time
@@ -200,11 +199,47 @@ namespace BlackMisc
                     Cabin       = 0x0200
                 };
 
+                //! Receive IDs for SimConnect
+                enum SIMCONNECT_RECV_ID
+                {
+                    SIMCONNECT_RECV_ID_NULL,
+                    SIMCONNECT_RECV_ID_EXCEPTION,
+                    SIMCONNECT_RECV_ID_OPEN,
+                    SIMCONNECT_RECV_ID_QUIT,
+                    SIMCONNECT_RECV_ID_EVENT,
+                    SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE,
+                    SIMCONNECT_RECV_ID_EVENT_FILENAME,
+                    SIMCONNECT_RECV_ID_EVENT_FRAME,
+                    SIMCONNECT_RECV_ID_SIMOBJECT_DATA,
+                    SIMCONNECT_RECV_ID_SIMOBJECT_DATA_BYTYPE,
+                    SIMCONNECT_RECV_ID_WEATHER_OBSERVATION,
+                    SIMCONNECT_RECV_ID_CLOUD_STATE,
+                    SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID,
+                    SIMCONNECT_RECV_ID_RESERVED_KEY,
+                    SIMCONNECT_RECV_ID_CUSTOM_ACTION,
+                    SIMCONNECT_RECV_ID_SYSTEM_STATE,
+                    SIMCONNECT_RECV_ID_CLIENT_DATA,
+                    SIMCONNECT_RECV_ID_EVENT_WEATHER_MODE,
+                    SIMCONNECT_RECV_ID_AIRPORT_LIST,
+                    SIMCONNECT_RECV_ID_VOR_LIST,
+                    SIMCONNECT_RECV_ID_NDB_LIST,
+                    SIMCONNECT_RECV_ID_WAYPOINT_LIST,
+                    SIMCONNECT_RECV_ID_EVENT_MULTIPLAYER_SERVER_STARTED,
+                    SIMCONNECT_RECV_ID_EVENT_MULTIPLAYER_CLIENT_STARTED,
+                    SIMCONNECT_RECV_ID_EVENT_MULTIPLAYER_SESSION_ENDED,
+                    SIMCONNECT_RECV_ID_EVENT_RACE_END,
+                    SIMCONNECT_RECV_ID_EVENT_RACE_LAP,
+                };
+                Q_ENUM(SIMCONNECT_RECV_ID)
+
+                //! Receive id to string
+                static QString simConnectReceiveIdToString(DWORD type);
+
                 //! Lights to states
-                static int lightsToLightStates(const BlackMisc::Aviation::CAircraftLights &lights);
+                static int lightsToLightStates(const Aviation::CAircraftLights &lights);
 
                 //! Converts the weather at gridPoint to a SimConnect METAR string
-                static QString convertToSimConnectMetar(const BlackMisc::Weather::CGridPoint &gridPoint);
+                static QString convertToSimConnectMetar(const Weather::CGridPoint &gridPoint);
 
                 //! Get info about SimConnect DLL
                 static BlackMisc::CWinDllUtils::DLLInfo simConnectDllInfo();
@@ -237,5 +272,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Fsx::CSimConnectUtilities::SIMCONNECT_EXCEPTION)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Fsx::CSimConnectUtilities::SIMCONNECT_SURFACE)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::Fsx::CSimConnectUtilities::SIMCONNECT_RECV_ID)
 
 #endif // guard

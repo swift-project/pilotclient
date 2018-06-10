@@ -140,7 +140,7 @@ namespace BlackSimPlugin
             double cgToGroundFt; //!< Static CG to ground (ft)
 
             //! Above ground ft
-            double aboveGround() const { return altitudeFt - elevationFt; }
+            double aboveGroundFt() const { return altitudeFt - elevationFt; }
         };
 
         //! Data struct simulator environment
@@ -208,9 +208,15 @@ namespace BlackSimPlugin
                 RequestRemoveAircraft,
                 RequestOwnAircraftTitle,
                 RequestSimEnvironment,
-                RequestSbData,   //!< SB client area / XPDR mode
-                RequestEndMarker //!< free request ids can start here
+                RequestSbData,           //!< SB client area / XPDR mode
+                RequestRangeForSimData,  //!< range for sim data
+                RequestRangeForProbe,    //!< range for probe
+                RequestRangeForLights,   //!< range for lights
+                RequestEndMarker         //!< free request ids can start here
             };
+
+            //! Request to string
+            static const QString &requestToString(Request request);
 
             //! Constructor
             CSimConnectDefinitions();
