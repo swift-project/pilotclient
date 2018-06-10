@@ -18,6 +18,7 @@
 #include <QMetaObject>
 #include <QTextStream>
 #include <QStandardPaths>
+#include <QStringBuilder>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -238,8 +239,9 @@ namespace BlackMisc
                 // Q = specifier for altimeter in millibars
                 simconnectMetar += QLatin1String(" Q");
                 // NNNN = altimeter in millibars
+                static const QString arg1s("%1");
                 const auto altimeter = gridPoint.getSurfacePressure().valueInteger(CPressureUnit::mbar());
-                simconnectMetar += QStringLiteral("%1").arg(altimeter, 4, 10, QLatin1Char('0'));
+                simconnectMetar += arg1s.arg(altimeter, 4, 10, QLatin1Char('0'));
 
                 return simconnectMetar;
             }
@@ -252,9 +254,10 @@ namespace BlackMisc
 
             QString CSimConnectUtilities::windsToSimConnectMetar(const CWindLayerList &windLayers)
             {
+                static const QString arg1s("%1");
                 QString simconnectWinds;
                 bool surface = true;
-                for (const auto &windLayer : windLayers)
+                for (const CWindLayer &windLayer : windLayers)
                 {
                     simconnectWinds += QLatin1Char(' ');
 
@@ -268,17 +271,15 @@ namespace BlackMisc
                     }
                     else
                     {
-                        // DDD = Direction (0-360 degrees)
-                        const auto direction = windLayer.getDirection().valueInteger(CAngleUnit::deg());
-                        simconnectWinds += QStringLiteral("%1").arg(direction, 3, 10, QLatin1Char('0'));
+                        const int speed = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
+                        const int direction = windLayer.getDirection().valueInteger(CAngleUnit::deg());
 
-                        // SSS = Speed
-                        const auto speed = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
-                        simconnectWinds += QStringLiteral("%1").arg(speed, 3, 10, QLatin1Char('0'));
+                        simconnectWinds += arg1s.arg(direction, 3, 10, QLatin1Char('0')) % // DDD = Direction (0-360 degrees)
+                                           arg1s.arg(speed, 3, 10, QLatin1Char('0')); // SSS = Speed
                     }
                     // XX = Gust speed
-                    const auto gustSpeed = windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts());
-                    if (gustSpeed) { simconnectWinds += QStringLiteral("G%1").arg(gustSpeed, 2, 10, QLatin1Char('0')); }
+                    const int gustSpeed = windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts());
+                    if (gustSpeed > 0) { simconnectWinds += QStringLiteral("G") % arg1s.arg(gustSpeed, 2, 10, QLatin1Char('0')); }
 
                     // UUU = Speed units
                     simconnectWinds += QLatin1String("KT");
@@ -287,27 +288,25 @@ namespace BlackMisc
                     {
                         // Surface extension:
                         // &DNNNNTS
-                        // D = specifier for surface layer
-                        simconnectWinds += QLatin1String("&D");
-                        // Surface default depth is 1000 feet or 305m
-                        simconnectWinds += QLatin1String("305");
-                        // We don't have turbulence or wind shear information, hence we use the defaults
-                        simconnectWinds += QLatin1String("NG");
+                        static const QString surfaceWinds =
+                            QLatin1String("&D") % // D = specifier for surface layer
+                            QLatin1String("305") % // Surface default depth is 1000 feet or 305m
+                            QLatin1String("NG"); // We don't have turbulence or wind shear information, hence we use the defaults
+                        simconnectWinds += surfaceWinds;
                         surface = false;
                     }
                     else
                     {
-                        // Winds aloft extension:
-                        // &ANNNNTS
-                        // A = specifier for altitude above mean sea-level (MSL)
-                        simconnectWinds += QLatin1String("&A");
-                        // NNNN = depth (height) in meters.
                         auto altitude = windLayer.getLevel();
                         altitude.toMeanSeaLevel();
                         int altitudeValue = altitude.valueInteger(CLengthUnit::m());
-                        simconnectWinds += QStringLiteral("%1").arg(altitudeValue, 4, 10, QLatin1Char('0'));
-                        // We don't have turbulence or wind shear information, hence we use the defaults
-                        simconnectWinds += QLatin1String("NG");
+
+                        // Winds aloft extension:
+                        // &ANNNNTS
+                        simconnectWinds +=
+                            QLatin1String("&A") % // A = specifier for altitude above mean sea-level (MSL)
+                            arg1s.arg(altitudeValue, 4, 10, QLatin1Char('0')) % // NNNN = depth (height) in meters.
+                            QLatin1String("NG"); // We don't have turbulence or wind shear information, hence we use the defaults
                     }
                 }
                 return simconnectWinds;
@@ -347,7 +346,8 @@ namespace BlackMisc
                 // Format:
                 // CCCNNN&BXXXX&DYYYY
                 QString simconnectClouds;
-                for (const auto &cloudLayer : cloudLayers)
+                static const QString arg1s("%1");
+                for (const CCloudLayer &cloudLayer : cloudLayers)
                 {
                     simconnectClouds += QLatin1Char(' ');
 
@@ -368,9 +368,8 @@ namespace BlackMisc
                     auto level = cloudLayer.getTop().valueInteger(CLengthUnit::ft()) / 100;
                     // Ignore clouds higher than 99900 feet
                     if (level > 999) { continue; }
-                    simconnectClouds += QStringLiteral("%1").arg(level, 3, 10, QLatin1Char('0'));
-
-                    simconnectClouds += QLatin1Char('&');
+                    simconnectClouds += arg1s.arg(level, 3, 10, QLatin1Char('0')) %
+                                        QLatin1Char('&');
 
                     // TT = Cloud type
                     switch (cloudLayer.getClouds())
@@ -431,22 +430,21 @@ namespace BlackMisc
                 // Format:
                 // TT/DD&ANNNNN
                 QString simconnectTemperatures;
-                for (const auto &temperatureLayer : temperatureLayers)
+                static const QString arg1s("%1");
+
+                for (const CTemperatureLayer &temperatureLayer : temperatureLayers)
                 {
                     simconnectTemperatures += QLatin1Char(' ');
 
-                    // TT = temperature in Celsius
-                    auto temperature = temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C());
-                    simconnectTemperatures += QStringLiteral("%1/").arg(temperature, 2, 10, QLatin1Char('0'));
-                    // DD = dewpoint in Celsius
-                    auto dewPoint = temperatureLayer.getDewPoint().valueInteger(CTemperatureUnit::C());
-                    simconnectTemperatures += QStringLiteral("%1").arg(dewPoint, 2, 10, QLatin1Char('0'));
+                    const int temperature = temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C());
+                    const int dewPoint = temperatureLayer.getDewPoint().valueInteger(CTemperatureUnit::C());
+                    const int altitude = temperatureLayer.getLevel().valueInteger(CLengthUnit::m());
 
-                    simconnectTemperatures += QLatin1String("&A");
-
-                    // NNNNN = altitude of the temperatures in meters.
-                    auto altitude = temperatureLayer.getLevel().valueInteger(CLengthUnit::m());
-                    simconnectTemperatures += QStringLiteral("%1").arg(altitude, 5, 10, QLatin1Char('0'));
+                    simconnectTemperatures += arg1s.arg(temperature, 2, 10, QLatin1Char('0')) % // TT = temperature in Celsius
+                                              QLatin1String("/") %
+                                              arg1s.arg(dewPoint, 2, 10, QLatin1Char('0')) % // DD = dewpoint in Celsius
+                                              QLatin1String("&A") %
+                                              arg1s.arg(altitude, 5, 10, QLatin1Char('0')); // NNNNN = altitude of the temperatures in meters.
                 }
                 return simconnectTemperatures;
             }
