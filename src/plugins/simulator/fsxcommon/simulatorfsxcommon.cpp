@@ -337,6 +337,11 @@ namespace BlackSimPlugin
             return this->getSimConnectObjects().getSimObjectForObjectId(objectId);
         }
 
+        CSimConnectObject CSimulatorFsxCommon::getProbeForObjectId(DWORD objectId) const
+        {
+            return this->getSimConnectProbes().getSimObjectForObjectId(objectId);
+        }
+
         void CSimulatorFsxCommon::setSimConnected()
         {
             m_simConnected = true;
@@ -1046,7 +1051,7 @@ namespace BlackSimPlugin
             CAircraftSituation situation(newRemoteAircraft.getSituation());
             if (canAdd && situation.isPositionOrAltitudeNull())
             {
-                // invalid position
+                // invalid position because position or altitude is null
                 const CAircraftSituationList situations(this->remoteAircraftSituations(callsign));
                 if (situations.isEmpty())
                 {
@@ -1055,16 +1060,17 @@ namespace BlackSimPlugin
                 }
                 else
                 {
-                    CLogMessage(this).warning("Invalid aircraft situation for new aircraft '%1', use situation") << callsign.asString();
+                    CLogMessage(this).warning("Invalid aircraft situation for new aircraft '%1', use closest situation") << callsign.asString();
                     situation = situations.findClosestTimeDistanceAdjusted(QDateTime::currentMSecsSinceEpoch());
                     Q_ASSERT_X(!situation.isPositionOrAltitudeNull(), Q_FUNC_INFO, "Invalid situation for new aircraft");
                 }
 
-                const bool validSituation = situation.isPositionOrAltitudeNull();
-                canAdd = validSituation;
+                // still invalid?
+                const bool invalidSituation = situation.isPositionOrAltitudeNull();
+                canAdd = invalidSituation;
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    BLACK_VERIFY_X(validSituation, Q_FUNC_INFO, "Expect valid situation");
+                    BLACK_VERIFY_X(invalidSituation, Q_FUNC_INFO, "Expect valid situation");
                     const CStatusMessage sm = CStatusMessage(this).warning("Invalid situation for '%1'") << callsign;
                     this->clampedLog(callsign, sm);
                 }

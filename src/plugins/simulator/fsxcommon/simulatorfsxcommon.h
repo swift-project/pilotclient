@@ -347,6 +347,9 @@ namespace BlackSimPlugin
             //! The simconnect related probes
             const CSimConnectObjects &getSimConnectProbes() const { return m_simConnectProbes; }
 
+            //! Get probe for id
+            CSimConnectObject getProbeForObjectId(DWORD objectId) const;
+
             //! Format conversion
             //! \note must be valid situation
             SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, bool sendGnd = true);
@@ -435,7 +438,7 @@ namespace BlackSimPlugin
 
             // objects
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
-            CSimConnectObjects m_simConnectProbes;  //!< AI terrain probes
+            CSimConnectObjects m_simConnectProbes;  //!< AI terrain probes and their object / request ids
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
             SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);    //!< request id, use obtainRequestIdForSimData() to get id
             SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForProbe() to get id
