@@ -30,15 +30,5 @@ namespace BlackMisc
             if (this->isEmpty()) { return static_cast<CClient::Capabilities>(CClient::None); }
             return this->findFirstByCallsign(callsign).getCapabilities();
         }
-
-        QMap<CCallsign, CClient> CClientList::asMap() const
-        {
-            QMap<CCallsign, CClient> map;
-            for (const CClient &client : *this)
-            {
-                map.insert(client.getCallsign(), client);
-            }
-            return map;
-        }
     } // namespace
 } // namespace

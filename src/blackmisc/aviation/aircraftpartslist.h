@@ -12,13 +12,14 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTPARTSLIST_H
 #define BLACKMISC_AVIATION_AIRCRAFTPARTSLIST_H
 
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/variant.h"
-
+#include <QHash>
 #include <QMetaType>
 
 namespace BlackMisc
@@ -46,11 +47,20 @@ namespace BlackMisc
             //! Set on ground for all entries
             int setOnGround(bool onGround);
         };
+
+        //! Parts per callsign
+        using CAircraftPartsPerCallsign = QHash<CCallsign, CAircraftParts>;
+
+        //! Parts (list) per callsign
+        using CAircraftPartsListPerCallsign = QHash<CCallsign, CAircraftPartsList>;
+
     } //namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftPartsList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAircraftParts>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAircraftParts>)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftPartsPerCallsign)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftPartsListPerCallsign)
 
 #endif //guard

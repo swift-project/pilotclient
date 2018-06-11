@@ -216,6 +216,28 @@ namespace BlackMisc
         }
 
         template<class OBJ, class CONTAINER>
+        QMap<CCallsign, OBJ> ICallsignObjectList<OBJ, CONTAINER>::asCallsignMap() const
+        {
+            QMap<CCallsign, OBJ> map;
+            for (const OBJ &obj : this->container())
+            {
+                map.insert(obj.getCallsign(), obj);
+            }
+            return map;
+        }
+
+        template<class OBJ, class CONTAINER>
+        QHash<CCallsign, OBJ> ICallsignObjectList<OBJ, CONTAINER>::asCallsignHash() const
+        {
+            QHash<CCallsign, OBJ> hash;
+            for (const OBJ &obj : this->container())
+            {
+                hash.insert(obj.getCallsign(), obj);
+            }
+            return hash;
+        }
+
+        template<class OBJ, class CONTAINER>
         CONTAINER ICallsignObjectList<OBJ, CONTAINER>::sortedByCallsign() const
         {
             CONTAINER copy(this->container());

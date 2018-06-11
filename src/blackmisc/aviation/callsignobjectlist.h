@@ -16,6 +16,7 @@
 #include "blackmisc/propertyindexvariantmap.h"
 
 #include <QHash>
+#include <QMap>
 
 namespace BlackMisc
 {
@@ -78,7 +79,7 @@ namespace BlackMisc
             CONTAINER findBySuffix(const QString &suffix) const;
 
             //! First found index of callsign, otherwise -1
-            int firstIndexOfCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+            int firstIndexOfCallsign(const CCallsign &callsign);
 
             //! Remove all objects with callsign
             int removeByCallsign(const CCallsign &callsign);
@@ -90,7 +91,7 @@ namespace BlackMisc
             QMap<QString, int> getSuffixes() const;
 
             //! Split into 0..n containers as per callsign
-            QHash<BlackMisc::Aviation::CCallsign, CONTAINER> splitPerCallsign() const;
+            QHash<CCallsign, CONTAINER> splitPerCallsign() const;
 
             //! Replace or add objects by callsign
             int replaceOrAddObjectByCallsign(const OBJ &otherObject);
@@ -103,6 +104,12 @@ namespace BlackMisc
 
             //! Sort by callsign
             void sortByCallsign();
+
+            //! Turn into callsign map
+            QMap<CCallsign, OBJ> asCallsignMap() const;
+
+            //! Turn into callsign hash
+            QHash<CCallsign, OBJ> asCallsignHash() const;
 
             //! Copy of list sorted by callsign
             CONTAINER sortedByCallsign() const;

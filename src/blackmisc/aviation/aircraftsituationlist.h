@@ -25,6 +25,7 @@
 #include <QMetaType>
 #include <QList>
 #include <QPair>
+#include <QHash>
 
 namespace BlackMisc
 {
@@ -34,7 +35,7 @@ namespace BlackMisc
     {
         class CAircraftParts;
 
-        //! Value object encapsulating a list of aircraft situations
+        //! List of aircraft situations
         class BLACKMISC_EXPORT CAircraftSituationList :
             public CSequence<CAircraftSituation>,
             public Geo::IGeoObjectList<CAircraftSituation, CAircraftSituationList>,
@@ -181,11 +182,20 @@ namespace BlackMisc
             //! \note distance is without CG, so on ground it can also be used to calculate
             QPair<CAltitude, CAltitude> altitudeAglStandardDeviationAndMean() const;
         };
+
+        //! Situation per callsign
+        using CAircraftSituationPerCallsign = QHash<CCallsign, CAircraftSituation>;
+
+        //! Situations (list) per callsign
+        using CAircraftSituationListPerCallsign = QHash<CCallsign, CAircraftSituationList>;
+
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAircraftSituation>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAircraftSituation>)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationPerCallsign)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationListPerCallsign)
 
 #endif // guard

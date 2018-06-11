@@ -13,11 +13,11 @@
 #define BLACKMISC_NETWORK_CLIENTLIST_H
 
 #include "blackmisc/aviation/callsignobjectlist.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 #include <QMap>
 #include <QMetaType>
 
@@ -45,15 +45,16 @@ namespace BlackMisc
 
             //! Capabilities of client for callsign
             CClient::Capabilities getCapabilities(const Aviation::CCallsign &callsign) const;
-
-            //! As map
-            QMap<Aviation::CCallsign, CClient> asMap() const;
         };
+
+        //! Client per callsign
+        using CClientPerCallsign = QHash<Aviation::CCallsign, CClient>;
     } //namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CClientList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CClient>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CClient>)
+Q_DECLARE_METATYPE(BlackMisc::Network::CClientPerCallsign)
 
 #endif //guard
