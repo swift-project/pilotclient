@@ -283,9 +283,9 @@ namespace BlackCore
 
         BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log.interpolation
-        QMap<BlackMisc::Aviation::CCallsign, qint64> m_clampedLogMsg;       //!< when logged last for this callsign, can be used so there is no log message overflow
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> m_lastSentSituation;  //!< last situation sent to simulator
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftParts>     m_lastSentParts;      //!< last parts sent to simulator
+        BlackMisc::Aviation::CTimestampPerCallsign   m_clampedLogMsg;       //!< when logged last for this callsign, can be used so there is no log message overflow
+        BlackMisc::Aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situation sent to simulator
+        BlackMisc::Aviation::CAircraftPartsPerCallsign     m_lastSentParts;      //!< last parts sent to simulator
 
         // some optional functionality which can be used by the simulators as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model

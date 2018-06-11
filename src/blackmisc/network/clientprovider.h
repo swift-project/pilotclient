@@ -102,7 +102,7 @@ namespace BlackMisc
             //! @}
 
         private:
-            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CClient> m_clients;
+            CClientPerCallsign m_clients;
             mutable QReadWriteLock m_lockClient; //!< lock clients: m_clients
         };
 

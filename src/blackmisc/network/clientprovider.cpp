@@ -28,9 +28,9 @@ namespace BlackMisc
 
         void CClientProvider::setClients(const CClientList &clients)
         {
-            const QMap<CCallsign, CClient> map = clients.asMap();
+            const CClientPerCallsign perCallsign(clients.asCallsignHash());
             QWriteLocker l(&m_lockClient);
-            m_clients = map;
+            m_clients = perCallsign;
         }
 
         void CClientProvider::clearClients()

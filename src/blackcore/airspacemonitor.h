@@ -37,7 +37,7 @@
 
 #include <QJsonObject>
 #include <QList>
-#include <QMap>
+#include <QHash>
 #include <QMetaObject>
 #include <QObject>
 #include <QReadWriteLock>
@@ -167,9 +167,8 @@ namespace BlackCore
 
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked; //!< booked ATC stations
-        QMap<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
-
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
+        QHash<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
+        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
 
         INetwork          *m_network  = nullptr;  //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer

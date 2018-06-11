@@ -739,9 +739,9 @@ namespace BlackCore
     bool CSimulatorCommon::isEqualLastSent(const CAircraftSituation &compare) const
     {
         Q_ASSERT_X(compare.hasCallsign(), Q_FUNC_INFO, "Need callsign");
-        if (!m_lastSentSituation.contains(compare.getCallsign())) { return false; }
+        if (!m_lastSentSituations.contains(compare.getCallsign())) { return false; }
         if (compare.isNull()) { return false; }
-        return compare.equalPbhAndVector(m_lastSentSituation.value(compare.getCallsign()));
+        return compare.equalPbhAndVector(m_lastSentSituations.value(compare.getCallsign()));
     }
 
     bool CSimulatorCommon::isEqualLastSent(const CAircraftParts &compare, const CCallsign &callsign) const
@@ -754,7 +754,7 @@ namespace BlackCore
     void CSimulatorCommon::rememberLastSent(const CAircraftSituation &sent)
     {
         Q_ASSERT_X(sent.hasCallsign(), Q_FUNC_INFO, "Need callsign");
-        m_lastSentSituation.insert(sent.getCallsign(), sent);
+        m_lastSentSituations.insert(sent.getCallsign(), sent);
     }
 
     void CSimulatorCommon::rememberLastSent(const CAircraftParts &sent, const CCallsign &callsign)
@@ -846,7 +846,7 @@ namespace BlackCore
         m_callsignsToBeRendered.clear();
         m_clampedLogMsg.clear();
         m_lastSentParts.clear();
-        m_lastSentSituation.clear();
+        m_lastSentSituations.clear();
         m_updateRemoteAircraftInProgress = false;
 
         this->resetHighlighting();
@@ -891,7 +891,7 @@ namespace BlackCore
         m_statsPhysicallyRemovedAircraft++;
         m_clampedLogMsg.clear();
         m_lastSentParts.remove(remoteCallsign);
-        m_lastSentSituation.remove(remoteCallsign);
+        m_lastSentSituations.remove(remoteCallsign);
         m_clampedLogMsg.remove(remoteCallsign);
         this->physicallyRemoveRemoteAircraft(remoteCallsign);
     }

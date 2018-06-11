@@ -19,6 +19,7 @@
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftsituationchange.h"
+#include "blackmisc/aviation/percallsign.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/provider.h"
 #include "blackmisc/blackmiscexport.h"
@@ -49,12 +50,6 @@ namespace BlackMisc
             static constexpr int MaxPartsPerCallsign = 20;        //!< How many parts we keep per callsign (we keep more parts than situations as parts can just come in)
             static constexpr int MaxPartsAgePerCallsignSecs = 60; //!< How many seconds to keep parts for interpolation
             static constexpr int DefaultOffsetTimeMs = 6000;      //!< \fixme copied from CNetworkVatlib::c_positionTimeOffsetMsec
-
-            //! Situations per callsign
-            using CSituationsPerCallsign = QHash<Aviation::CCallsign, Aviation::CAircraftSituationList>;
-
-            //! Parts per callsign
-            using CPartsPerCallsign = QHash<Aviation::CCallsign, Aviation::CAircraftPartsList>;
 
             //! All remote aircraft
             //! \threadsafe
@@ -378,19 +373,18 @@ namespace BlackMisc
             Aviation::CAircraftSituation testAddAltitudeOffsetToSituation(const Aviation::CAircraftSituation &situation) const;
 
         private:
-            // hashs, because not sorted by key but keeping order
-            CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
-            CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
-            Aviation::CCallsignSet m_aircraftWithParts;    //!< aircraft supporting parts, thread safe access required
+            Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftPartsListPerCallsign     m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
+            Aviation::CCallsignSet m_aircraftWithParts;  //!< aircraft supporting parts, thread safe access required
             int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
             int m_partsAdded = 0;      //!< total number of parts added, thread safe access required
 
             CSimulatedAircraftList m_aircraftInRange; //!< aircraft, thread safe access required
-            QMap<Aviation::CCallsign, CStatusMessageList> m_reverseLookupMessages;
-            QMap<Aviation::CCallsign, CStatusMessageList> m_aircraftPartsHistory; //!< JSON aircraft parts history
-            QMap<Aviation::CCallsign, qint64> m_situationsLastModified;
-            QMap<Aviation::CCallsign, qint64> m_partsLastModified;
-            QMap<Aviation::CCallsign, PhysicalQuantities::CLength> m_testOffset;
+            Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages; //!< reverse lookup messages
+            Aviation::CStatusMessageListPerCallsign m_aircraftPartsHistory;  //!< status messages for parts history
+            Aviation::CTimestampPerCallsign m_situationsLastModified; //!< when situations last modified
+            Aviation::CTimestampPerCallsign m_partsLastModified;      //!< when parts last modified
+            QHash<Aviation::CCallsign, PhysicalQuantities::CLength> m_testOffset;
 
             bool m_enableReverseLookupMsgs = false;   //!< shall we log. information about the matching process
             bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts

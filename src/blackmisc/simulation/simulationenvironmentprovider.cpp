@@ -105,7 +105,7 @@ namespace BlackMisc
         CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const CLength &range) const
         {
             // for single point we use a slightly optimized version
-            const bool singlePoint = (range <= CElevationPlane::singlePointRadius());
+            const bool singlePoint = (&range == &CElevationPlane::singlePointRadius() || range <= CElevationPlane::singlePointRadius());
             const CCoordinateGeodetic coordinate = singlePoint ?
                                                    this->getElevationCoordinates().findFirstWithinRangeOrDefault(reference, CElevationPlane::singlePointRadius()) :
                                                    this->getElevationCoordinates().findClosestWithinRange(reference, range);

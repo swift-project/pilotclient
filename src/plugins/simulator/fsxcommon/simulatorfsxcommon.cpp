@@ -593,7 +593,7 @@ namespace BlackSimPlugin
 
             // Near ground we use faster updates
             const CCallsign cs(simObject.getCallsign());
-            const CAircraftSituation lastSituation = m_lastSentSituation[cs];
+            const CAircraftSituation lastSituation = m_lastSentSituations[cs];
             const bool moving = lastSituation.isMoving();
             if (moving && remoteAircraftData.aboveGroundFt() <= 100.0)
             {
