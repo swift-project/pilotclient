@@ -79,6 +79,7 @@ ipch
 *.exp
 *.idb
 *.sdf
+*.vspx
 *.vcxproj
 *.vcxproj.filters
 */.vs/*
