@@ -18,14 +18,19 @@ namespace BlackMisc
     {
         CClientList CClientProvider::getClients() const
         {
-            QReadLocker l(&m_lockClient);
-            return m_clients;
+            QList<CClient> clients;
+            {
+                QReadLocker l(&m_lockClient);
+                clients = m_clients.values();
+            }
+            return CClientList(clients);
         }
 
         void CClientProvider::setClients(const CClientList &clients)
         {
+            const QMap<CCallsign, CClient> map = clients.asMap();
             QWriteLocker l(&m_lockClient);
-            m_clients = clients;
+            m_clients = map;
         }
 
         void CClientProvider::clearClients()
@@ -41,20 +46,21 @@ namespace BlackMisc
 
         CClient CClientProvider::getClientOrDefaultForCallsign(const CCallsign &callsign) const
         {
-            const CClientList clients(this->getClients());
-            return clients.findFirstByCallsign(callsign);
+            QReadLocker l(&m_lockClient);
+            return m_clients.value(callsign);
         }
 
         bool CClientProvider::setOtherClient(const CClient &client)
         {
             QWriteLocker l(&m_lockClient);
-            m_clients.replaceOrAddObjectByCallsign(client);
+            m_clients[client.getCallsign()] = client;
             return true;
         }
 
         bool CClientProvider::hasClientInfo(const CCallsign &callsign) const
         {
-            return this->getClients().containsCallsign(callsign);
+            QReadLocker l(&m_lockClient);
+            return m_clients.contains(callsign);
         }
 
         bool CClientProvider::addNewClient(const CClient &client)
@@ -63,7 +69,7 @@ namespace BlackMisc
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "invalid callsign");
             if (this->hasClientInfo(callsign)) { return false; }
             QWriteLocker l(&m_lockClient);
-            m_clients.push_back(client);
+            m_clients[callsign] = client;
             return true;
         }
 
@@ -71,16 +77,18 @@ namespace BlackMisc
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
             int c = 0;
-            if (!this->hasClientInfo(callsign))
+            if (this->hasClientInfo(callsign))
             {
-                CClient client(callsign);
-                c = client.apply(vm).size();
-                this->addNewClient(client);
+                QWriteLocker l(&m_lockClient);
+                CClient &client = m_clients[callsign];
+                c = client.apply(vm, skipEqualValues).size();
             }
             else
             {
+                CClient client(callsign);
+                c = client.apply(vm).size();
                 QWriteLocker l(&m_lockClient);
-                c = m_clients.applyIfCallsign(callsign, vm, skipEqualValues);
+                m_clients[callsign] = client;
             }
             return c;
         }
@@ -88,7 +96,7 @@ namespace BlackMisc
         int CClientProvider::removeClient(const CCallsign &callsign)
         {
             QWriteLocker l(&m_lockClient);
-            return m_clients.removeByCallsign(callsign);
+            return m_clients.remove(callsign);
         }
 
         bool CClientProvider::autoAdjustCientGndCapability(const CAircraftSituation &situation)
@@ -120,7 +128,7 @@ namespace BlackMisc
                 client.removeCapability(CClient::FsdWithGroundFlag);
             }
             QWriteLocker l(&m_lockClient);
-            m_clients.replaceOrAddObjectByCallsign(client);
+            m_clients[callsign] = client;
             return true;
         }
 

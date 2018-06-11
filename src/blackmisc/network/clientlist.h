@@ -18,6 +18,7 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
+#include <QMap>
 #include <QMetaType>
 
 namespace BlackMisc
@@ -44,6 +45,9 @@ namespace BlackMisc
 
             //! Capabilities of client for callsign
             CClient::Capabilities getCapabilities(const Aviation::CCallsign &callsign) const;
+
+            //! As map
+            QMap<Aviation::CCallsign, CClient> asMap() const;
         };
     } //namespace
 } // namespace

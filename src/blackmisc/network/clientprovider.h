@@ -16,6 +16,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/provider.h"
 #include <QReadWriteLock>
+#include <QMap>
 
 namespace BlackMisc
 {
@@ -101,7 +102,7 @@ namespace BlackMisc
             //! @}
 
         private:
-            CClientList m_clients;
+            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CClient> m_clients;
             mutable QReadWriteLock m_lockClient; //!< lock clients: m_clients
         };
 
