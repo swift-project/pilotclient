@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
         qtout << endl;
         qtout << "1 .. JSON" << endl;
         qtout << "2 .. Change object" << endl;
-        qtout << "3 .. Containers" << endl;
+        qtout << "3a .. Containers" << endl;
+        qtout << "3b .. Callsign QMap vs QHash" << endl;
         qtout << "4 .. Metadata" << endl;
         qtout << "6a .. Performance create / copy / ..." << endl;
         qtout << "6b .. 40/20 Interpolator scenario" << endl;
@@ -61,7 +62,8 @@ int main(int argc, char *argv[])
 
         if (s.startsWith("1")) { CSamplesJson::samples(); }
         else if (s.startsWith("2")) { CSamplesChangeObject::samples(); }
-        else if (s.startsWith("3")) { CSamplesContainer::samples(); }
+        else if (s.startsWith("3a")) { CSamplesContainer::samples(); }
+        else if (s.startsWith("3b")) { CSamplesPerformance::sampleQMapVsQHashByCallsign(qtout); }
         else if (s.startsWith("4")) { CSamplesMetadata::samples(); }
         else if (s.startsWith("6a")) { CSamplesPerformance::samplesMisc(qtout); }
         else if (s.startsWith("6b")) { CSamplesPerformance::interpolatorScenario(qtout, 40, 20); }

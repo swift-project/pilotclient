@@ -13,10 +13,13 @@
 #ifndef BLACKSAMPLE_SAMPLESPERFORMANCE_H
 #define BLACKSAMPLE_SAMPLESPERFORMANCE_H
 
-#include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include <QTextStream>
 #include <QtGlobal>
+#include <QMap>
+#include <QHash>
 
 class QTextStream;
 
@@ -46,6 +49,9 @@ namespace BlackSample
 
         //! const QString vs. QStringLiteral
         static int samplesStringLiteralVsConstQString(QTextStream &out);
+
+        //! Callsign based hash/map comparison
+        static int sampleQMapVsQHashByCallsign(QTextStream &out);
 
     private:
         static const qint64 DeltaTime = 10;
@@ -85,6 +91,18 @@ namespace BlackSample
 
         //! String list generated
         static QStringList replacedList();
+
+        //! Get n callsigns
+        static BlackMisc::Aviation::CCallsignSet callsigns(int number);
+
+        //! Situations
+        static const BlackMisc::Aviation::CAircraftSituationList situations(const BlackMisc::Aviation::CCallsignSet &callsigns);
+
+        //! Situations map
+        static const QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> situationsMap(const BlackMisc::Aviation::CCallsignSet &callsigns);
+
+        //! Situations hash
+        static const QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation> situationsHash(const BlackMisc::Aviation::CCallsignSet &callsigns);
     };
 } // namespace
 

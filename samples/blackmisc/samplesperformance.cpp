@@ -529,6 +529,110 @@ namespace BlackSample
         return EXIT_SUCCESS;
     }
 
+    int CSamplesPerformance::sampleQMapVsQHashByCallsign(QTextStream &out)
+    {
+        const CCallsignSet cs10 = CSamplesPerformance::callsigns(10);
+        const CCallsignSet cs25 = CSamplesPerformance::callsigns(25);
+        const CCallsignSet cs50 = CSamplesPerformance::callsigns(50);
+
+        const QMap<CCallsign, CAircraftSituation> m10 = CSamplesPerformance::situationsMap(cs10);
+        const QMap<CCallsign, CAircraftSituation> m25 = CSamplesPerformance::situationsMap(cs25);
+        const QMap<CCallsign, CAircraftSituation> m50 = CSamplesPerformance::situationsMap(cs50);
+
+        const QHash<CCallsign, CAircraftSituation> h10 = CSamplesPerformance::situationsHash(cs10);
+        const QHash<CCallsign, CAircraftSituation> h25 = CSamplesPerformance::situationsHash(cs25);
+        const QHash<CCallsign, CAircraftSituation> h50 = CSamplesPerformance::situationsHash(cs50);
+
+        Q_ASSERT(m10.size() == 10 && h10.size() == 10);
+        Q_ASSERT(m25.size() == 25 && h25.size() == 25);
+        Q_ASSERT(m50.size() == 50 && h50.size() == 50);
+
+        // QList since we have to add callsigns multiple times, set does not allow that
+        QList<CCallsign> cs_10_100_rnd;
+        QList<CCallsign> cs_25_100_rnd;
+        QList<CCallsign> cs_50_100_rnd;
+
+        for (int i = 0; i < 20; ++i)
+        {
+            cs_10_100_rnd.append(cs10.randomElements(5).toQList());
+            cs_25_100_rnd.append(cs25.randomElements(5).toQList());
+            cs_50_100_rnd.append(cs50.randomElements(5).toQList());
+        }
+
+        Q_ASSERT(cs_10_100_rnd.size() == 100);
+        Q_ASSERT(cs_25_100_rnd.size() == 100);
+        Q_ASSERT(cs_50_100_rnd.size() == 100);
+
+        QTime time;
+        time.start();
+        for (int i = 1; i < 10000; ++i)
+        {
+            for (const CCallsign &cs : cs_10_100_rnd)
+            {
+                CAircraftSituation s = m10[cs];
+                Q_ASSERT_X(s.getCallsign() == cs, Q_FUNC_INFO, "Wromg callsign");
+            }
+        }
+        out << "map 100 out of 10: " << time.elapsed() << "ms" << endl;
+
+        time.start();
+        for (int i = 1; i < 10000; ++i)
+        {
+            for (const CCallsign &cs : cs_10_100_rnd)
+            {
+                CAircraftSituation s = h10[cs];
+                Q_ASSERT_X(s.getCallsign() == cs, Q_FUNC_INFO, "Wromg callsign");
+            }
+        }
+        out << "hash 100 out of 10: " << time.elapsed() << "ms" << endl;
+
+        time.start();
+        for (int i = 1; i < 10000; ++i)
+        {
+            for (const CCallsign &cs : cs_25_100_rnd)
+            {
+                CAircraftSituation s = m25[cs];
+                Q_ASSERT_X(s.getCallsign() == cs, Q_FUNC_INFO, "Wromg callsign");
+            }
+        }
+        out << "map 100 out of 25: " << time.elapsed() << "ms" << endl;
+
+        time.start();
+        for (int i = 1; i < 10000; ++i)
+        {
+            for (const CCallsign &cs : cs_25_100_rnd)
+            {
+                CAircraftSituation s = h25[cs];
+                Q_ASSERT_X(s.getCallsign() == cs, Q_FUNC_INFO, "Wromg callsign");
+            }
+        }
+        out << "hash 100 out of 25: " << time.elapsed() << "ms" << endl;
+
+        time.start();
+        for (int i = 1; i < 10000; ++i)
+        {
+            for (const CCallsign &cs : cs_50_100_rnd)
+            {
+                CAircraftSituation s = m50[cs];
+                Q_ASSERT_X(s.getCallsign() == cs, Q_FUNC_INFO, "Wromg callsign");
+            }
+        }
+        out << "map 100 out of 50: " << time.elapsed() << "ms" << endl;
+
+        time.start();
+        for (int i = 1; i < 10000; ++i)
+        {
+            for (const CCallsign &cs : cs_50_100_rnd)
+            {
+                CAircraftSituation s = h50[cs];
+                Q_ASSERT_X(s.getCallsign() == cs, Q_FUNC_INFO, "Wromg callsign");
+            }
+        }
+        out << "hash 100 out of 50: " << time.elapsed() << "ms" << endl;
+
+        return EXIT_SUCCESS;
+    }
+
     CAircraftSituationList CSamplesPerformance::createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes)
     {
         CAircraftSituationList situations;
@@ -572,7 +676,7 @@ namespace BlackSample
 
     void CSamplesPerformance::calculateDistance(int n)
     {
-        if (n < 1) return;
+        if (n < 1) { return; }
         CAtcStation atc = CTesting::createStation(1);
         const QList<CCoordinateGeodetic> pos(
         {
@@ -646,6 +750,50 @@ namespace BlackSample
         lc[1] = QStringLiteral("6");
         lc[3] = QStringLiteral("7");
         return lc;
+    }
+
+    CCallsignSet CSamplesPerformance::callsigns(int number)
+    {
+        CCallsignSet set;
+        static const QString cs("FOO%1");
+        for (int i = 0; i < number; i++)
+        {
+            set.insert(CCallsign(cs.arg(i)));
+        }
+        return set;
+    }
+
+    const CAircraftSituationList CSamplesPerformance::situations(const CCallsignSet &callsigns)
+    {
+        CAircraftSituationList situations;
+        for (const CCallsign &cs : callsigns)
+        {
+            const CAircraftSituation s(cs);
+            situations.push_back(s);
+        }
+        return situations;
+    }
+
+    const QMap<CCallsign, CAircraftSituation> CSamplesPerformance::situationsMap(const CCallsignSet &callsigns)
+    {
+        QMap<CCallsign, CAircraftSituation> situations;
+        for (const CCallsign &cs : callsigns)
+        {
+            const CAircraftSituation s(cs);
+            situations.insert(cs, s);
+        }
+        return situations;
+    }
+
+    const QHash<CCallsign, CAircraftSituation> CSamplesPerformance::situationsHash(const CCallsignSet &callsigns)
+    {
+        QHash<CCallsign, CAircraftSituation> situations;
+        for (const CCallsign &cs : callsigns)
+        {
+            const CAircraftSituation s(cs);
+            situations.insert(cs, s);
+        }
+        return situations;
     }
 
     const CAtcStationList &CSamplesPerformance::stations10k()
