@@ -1654,6 +1654,7 @@ namespace BlackSimPlugin
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
             if (simObject.isPending()) { return false; } // wait until confirmed
             if (simObject.getSimDataPeriod() == period) { return true; } // already queried like this
+            if (!m_simConnectObjects.contains(simObject.getCallsign())) { return false; } // removed in meantime
 
             // always request, not only when something has changed
             const HRESULT result = SimConnect_RequestDataOnSimObject(
@@ -1661,7 +1662,7 @@ namespace BlackSimPlugin
                                        CSimConnectDefinitions::DataRemoteAircraftGetPosition,
                                        simObject.getObjectId(), period);
 
-            if (result == S_OK && m_simConnectObjects.contains(simObject.getCallsign()))
+            if (result == S_OK)
             {
                 m_requestSimObjectDataCount++;
                 if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
@@ -1677,16 +1678,18 @@ namespace BlackSimPlugin
         bool CSimulatorFsxCommon::requestTerrainProbeData(const CCallsign &callsign)
         {
             if (m_simConnectProbes.countConfirmedAdded() < 1) { return false; }
+            if (!m_simConnectObjects.contains(callsign)) { return false; } // removed in meantime
+
             const DWORD id = this->obtainRequestIdForProbe();
             const DWORD objectId = m_simConnectProbes.values().front().getObjectId();
             const HRESULT result = SimConnect_RequestDataOnSimObject(
                                        m_hSimConnect, id,
                                        CSimConnectDefinitions::DataRemoteAircraftGetPosition,
                                        objectId, SIMCONNECT_PERIOD_ONCE);
-            if (this->isTracingSendId()) { this->traceSendId(id, Q_FUNC_INFO); }
 
             if (result == S_OK)
             {
+                if (this->isTracingSendId()) { this->traceSendId(id, Q_FUNC_INFO); }
                 m_pendingProbeRequests.insert(id, callsign);
                 return true;
             }
@@ -1698,6 +1701,7 @@ namespace BlackSimPlugin
         {
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
             if (simObject.isPendingRemoved()) { return false; }
+            if (!m_simConnectObjects.contains(simObject.getCallsign())) { return false; } // removed in meantime
             if (!m_hSimConnect) { return false; }
 
             // always request, not only when something has changed
