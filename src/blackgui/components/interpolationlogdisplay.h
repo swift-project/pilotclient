@@ -42,6 +42,7 @@ namespace BlackGui
             enum Tab
             {
                 TabFlow,
+                TabFlow2,
                 TabInterpolation,
                 TabTextLog
             };
@@ -121,6 +122,9 @@ namespace BlackGui
 
             //! Init the parts view
             void initPartsView();
+
+            //! Display elevation requested/receive
+            void displayElevationRequestReceive();
 
             QScopedPointer<Ui::CInterpolationLogDisplay> ui;
             QTimer m_updateTimer;

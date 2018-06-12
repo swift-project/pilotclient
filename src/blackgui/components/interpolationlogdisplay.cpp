@@ -133,6 +133,10 @@ namespace BlackGui
                 const CClient client = m_airspaceMonitor->getClientOrDefaultForCallsign(m_callsign);
                 ui->le_GndFlag->setText(boolToYesNo(client.hasGndFlagCapability()));
 
+                static const QString hits("%1/%2");
+                const QPair<int, int> foundMissed = m_airspaceMonitor->getElevationsFoundMissed();
+                ui->le_ElevationHits->setText(hits.arg(foundMissed.first).arg(foundMissed.second));
+
                 this->displayLastInterpolation();
             }
         }
@@ -281,7 +285,7 @@ namespace BlackGui
             if (!this->logCallsign(callsign)) { return; }
             m_elvReceived++;
             ui->le_Elevation->setText(plane.toQString());
-            ui->le_ElevationRec->setText(QString::number(m_elvReceived));
+            this->displayElevationRequestReceive();
             ui->led_Elevation->blink();
         }
 
@@ -289,7 +293,7 @@ namespace BlackGui
         {
             if (!this->logCallsign(callsign)) { return; }
             m_elvRequested++;
-            ui->le_ElevationReq->setText(QString::number(m_elvRequested));
+            this->displayElevationRequestReceive();
             ui->led_Elevation->blink();
         }
 
@@ -305,8 +309,8 @@ namespace BlackGui
             ui->te_TextLog->clear();
             ui->le_CG->clear();
             ui->le_Elevation->clear();
-            ui->le_ElevationRec->clear();
-            ui->le_ElevationReq->clear();
+            ui->le_ElevationReqRec->clear();
+            ui->le_ElevationHits->clear();
             ui->le_Parts->clear();
             ui->le_UpdateTimes->clear();
             ui->le_UpdateTimes->clear();
@@ -361,6 +365,12 @@ namespace BlackGui
                 if (m_callsign.isEmpty()) { return; }
                 myself->onPartsAdded(m_callsign, CAircraftParts());
             });
+        }
+
+        void CInterpolationLogDisplay::displayElevationRequestReceive()
+        {
+            static const QString rr("%1/%2");
+            ui->le_ElevationReqRec->setText(rr.arg(m_elvRequested).arg(m_elvReceived));
         }
 
         void CInterpolationLogDisplay::linkWithAirspaceMonitor()

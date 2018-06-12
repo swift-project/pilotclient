@@ -290,7 +290,7 @@
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QLineEdit" name="le_ElevationRec">
+           <widget class="QLineEdit" name="le_ElevationHits">
             <property name="toolTip">
              <string>elevation received</string>
             </property>
@@ -298,7 +298,7 @@
              <bool>true</bool>
             </property>
             <property name="placeholderText">
-             <string>rec.</string>
+             <string>hits/missed</string>
             </property>
            </widget>
           </item>
@@ -334,16 +334,16 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="lbl_ElevationRequested">
+           <widget class="QLabel" name="lbl_ElevationReqRec">
             <property name="text">
-             <string>Req.:</string>
+             <string>Req/rec:</string>
             </property>
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QLabel" name="lbl_ElevationReceived">
+           <widget class="QLabel" name="lbl_ElevationHits">
             <property name="text">
-             <string>Rec.:</string>
+             <string>Hits:</string>
             </property>
            </widget>
           </item>
@@ -426,7 +426,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="le_ElevationReq">
+           <widget class="QLineEdit" name="le_ElevationReqRec">
             <property name="toolTip">
              <string>elevation requested</string>
             </property>
@@ -434,7 +434,7 @@
              <bool>true</bool>
             </property>
             <property name="placeholderText">
-             <string>req.</string>
+             <string>req./rec.</string>
             </property>
            </widget>
           </item>
@@ -743,8 +743,8 @@
   <tabstop>le_UpdateCount</tabstop>
   <tabstop>le_UpdateTimes</tabstop>
   <tabstop>le_Limited</tabstop>
-  <tabstop>le_ElevationReq</tabstop>
-  <tabstop>le_ElevationRec</tabstop>
+  <tabstop>le_ElevationReqRec</tabstop>
+  <tabstop>le_ElevationHits</tabstop>
   <tabstop>le_Elevation</tabstop>
   <tabstop>le_SimulatorSpecific</tabstop>
   <tabstop>tvp_AircraftSituations</tabstop>
