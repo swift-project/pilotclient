@@ -55,6 +55,9 @@ namespace BlackMiscTest
         //! Altitude correction
         void altitudeCorrection();
 
+        //! Using sort hint
+        void sortHint();
+
     private:
         //! Test situations (ascending)
         static BlackMisc::Aviation::CAircraftSituationList testSituations();

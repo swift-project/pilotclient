@@ -20,7 +20,9 @@
 #include "blackmisc/math/mathutils.h"
 
 #include <QTest>
+#include <QTimer>
 #include <QDateTime>
+#include <QDebug>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -182,6 +184,36 @@ namespace BlackMiscTest
         QVERIFY2(correction == CAircraftSituation::DraggedToGround, "Expect dragged to gnd.");
         QVERIFY2(corAlt < alt, "Expect corrected altitude dragged to gnd.");
         QVERIFY2(corAlt == (ep.getAltitude() + cg), "Expect correction by CG");
+    }
+
+    void CTestAircraftSituation::sortHint()
+    {
+        CAircraftSituationList situations = testSituations();
+        situations.sortAdjustedLatestFirst();
+
+        constexpr int Max = 500000;
+        QTime time;
+        time.start();
+        for (int i = 0; i < Max; ++i)
+        {
+            CAircraftSituation s1 = situations.oldestAdjustedObject();
+            CAircraftSituation s2 = situations.latestAdjustedObject();
+            QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
+        }
+        const int noHint = time.elapsed();
+        situations.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
+
+        time.start();
+        for (int i = 0; i < Max; ++i)
+        {
+            CAircraftSituation s1 = situations.oldestAdjustedObject();
+            CAircraftSituation s2 = situations.latestAdjustedObject();
+            QVERIFY(s1.getAdjustedMSecsSinceEpoch() < s2.getAdjustedMSecsSinceEpoch());
+        }
+        const int hint = time.elapsed();
+        qDebug() << "Access without hint" << noHint << "ms";
+        qDebug() << "Access with hint" << hint << "ms";
+        QVERIFY2(hint < noHint, "Expected hinted sort being faster");
     }
 
     CAircraftSituationList CTestAircraftSituation::testSituations()

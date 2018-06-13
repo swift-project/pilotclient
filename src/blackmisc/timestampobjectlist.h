@@ -26,6 +26,13 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER> class ITimestampObjectList
     {
     public:
+        //! Hint if the list is sorted
+        enum HintTimestampSort
+        {
+            NoTimestampSortHint,
+            TimestampLatestFirst
+        };
+
         //! List of objects before dateTime (older)
         CONTAINER findBefore(const QDateTime &dateTime) const;
 
@@ -102,7 +109,10 @@ namespace BlackMisc
         void sortOldestFirst();
 
         //! Insert as first element by keeping maxElements and the latest first
-        void push_frontKeepLatestFirst(const OBJ &value, int maxElements = -1);
+        void push_frontKeepLatestFirst(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1);
+
+        //! Replace if an object has the same timestamp
+        int replaceIfSameTimestamp(const OBJ &newObject);
 
         //! Is completely sorted: latest last
         //! \remark all object must have a valid timestamp
@@ -115,6 +125,9 @@ namespace BlackMisc
         //! Adds a time to all values
         void addMsecs(qint64 msToAdd);
 
+        //! Set the hint
+        void setSortHint(HintTimestampSort hint) { m_tsSortHint = hint; }
+
     protected:
         //! Constructor
         ITimestampObjectList();
@@ -124,6 +137,8 @@ namespace BlackMisc
 
         //! Container
         CONTAINER &container();
+
+        HintTimestampSort m_tsSortHint = NoTimestampSortHint; //!< sort hint
     };
 
     //! List of objects with timestamp and offset.
@@ -131,6 +146,13 @@ namespace BlackMisc
     template<class OBJ, class CONTAINER> class ITimestampWithOffsetObjectList : public ITimestampObjectList<OBJ, CONTAINER>
     {
     public:
+        //! Hint if the list is sorted
+        enum HintAdjustedTimestampSort
+        {
+            NoAdjustedTimestampSortHint,
+            AdjustedTimestampLatestFirst
+        };
+
         //! Sort by adjusted timestamp
         void sortAdjustedLatestFirst();
 
@@ -153,11 +175,11 @@ namespace BlackMisc
         void addMsecsToOffset(qint64 msToAdd);
 
         //! Insert as first element by keeping maxElements and the latest first
-        void push_frontKeepLatestAdjustedFirst(const OBJ &value, int maxElements = -1);
+        void push_frontKeepLatestAdjustedFirst(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1);
 
         //! Insert as first element by keeping maxElements and the latest first
         //! \remark adjust offset to average offset of two adjacent elements so adjusted values are sorted
-        void push_frontKeepLatestFirstAdjustOffset(const OBJ &value, int maxElements = -1);
+        void push_frontKeepLatestFirstAdjustOffset(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1);
 
         //! Prefill with elements
         void prefillLatestAdjustedFirst(const OBJ &value, int elements, qint64 deltaTimeMs = -1);
@@ -203,9 +225,14 @@ namespace BlackMisc
         //! Oldest adjusted timestamp
         qint64 oldestAdjustedTimestampMsecsSinceEpoch() const;
 
+        //! Set the hint
+        void setAdjustedSortHint(HintAdjustedTimestampSort hint) { m_tsAdjustedSortHint = hint; }
+
     protected:
         //! Constructor
         ITimestampWithOffsetObjectList();
+
+        HintAdjustedTimestampSort m_tsAdjustedSortHint = NoAdjustedTimestampSortHint; //!< sort hint
     };
 
     //! \cond PRIVATE

@@ -329,7 +329,7 @@ namespace BlackMiscTest
             }
 
             ts += dt;
-            situations.push_frontKeepLatestFirstAdjustOffset(s, max);
+            situations.push_frontKeepLatestFirstAdjustOffset(s, true, max);
 
             QVERIFY2(situations.size() <= max, "Wrong size");
             QVERIFY2(situations.isSortedAdjustedLatestFirstWithoutNullPositions(), "Wrong sort order");

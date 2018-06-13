@@ -219,7 +219,8 @@ namespace BlackMisc
                 else
                 {
                     situationList.front().transferGroundElevation(situationCorrected); // transfer last situation if possible
-                    situationList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                    situationList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                    situationList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
 
                     // unify all inbound ground information
                     if (situation.hasInboundGroundDetails())
@@ -252,7 +253,8 @@ namespace BlackMisc
                 m_partsAdded++;
                 m_partsLastModified[callsign] = ts;
                 CAircraftPartsList &partsList = m_partsByCallsign[callsign];
-                partsList.push_frontKeepLatestFirstAdjustOffset(parts, IRemoteAircraftProvider::MaxPartsPerCallsign);
+                partsList.push_frontKeepLatestFirstAdjustOffset(parts, true, IRemoteAircraftProvider::MaxPartsPerCallsign);
+                partsList.setAdjustedSortHint(CAircraftPartsList::AdjustedTimestampLatestFirst);
 
                 // remove outdated parts (but never remove the most recent one)
                 if (removeOutdated) { IRemoteAircraftProvider::removeOutdatedParts(partsList); }
