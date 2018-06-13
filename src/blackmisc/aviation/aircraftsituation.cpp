@@ -366,7 +366,6 @@ namespace BlackMisc
 
         bool CAircraftSituation::guessOnGround(const CAircraftSituationChange &change, const CAircraftModel &model)
         {
-            Q_UNUSED(change);
             if (!this->shouldGuessOnGround()) { return false; }
 
             // for debugging purposed

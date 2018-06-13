@@ -1372,6 +1372,7 @@ namespace BlackSimPlugin
                 const CCallsign callsign(simObject.getCallsign());
                 Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
                 Q_ASSERT_X(simObject.hasValidRequestAndObjectId(), Q_FUNC_INFO, "Missing ids");
+                const DWORD objectId = simObject.getObjectId();
 
                 // setup
                 const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign);
@@ -1385,26 +1386,26 @@ namespace BlackSimPlugin
                     if (!this->isEqualLastSent(result))
                     {
                         SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
-                        m_simConnectObjects[simObject.getCallsign()].setPositionAsSent(position);
+                        m_simConnectObjects[callsign].setPositionAsSent(position);
                         const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
-                                           static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
+                                           static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0,
                                            sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
                         if (hr == S_OK)
                         {
                             this->rememberLastSent(result); // remember
-                            if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO); }
+                            if (this->isTracingSendId()) { this->traceSendId(objectId, Q_FUNC_INFO); }
                             this->removedClampedLog(callsign);
                         }
                         else
                         {
-                            CLogMessage(this).warning("Failed so set position on SimObject '%1' callsign: '%2'") << simObject.getObjectId() << callsign;
+                            CLogMessage(this).warning("Failed so set position on SimObject '%1' callsign: '%2'") << objectId << callsign;
                         }
                     }
                 }
                 else
                 {
                     static const QString so("SimObject id: %1");
-                    const QString msg = this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus(), so.arg(simObject.getObjectId()));
+                    const QString msg = this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus(), so.arg(objectId));
                     const CStatusMessage sm(this, CStatusMessage::SeverityWarning, msg);
                     this->clampedLog(callsign, sm);
                 }

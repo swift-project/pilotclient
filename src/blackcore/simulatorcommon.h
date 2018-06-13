@@ -278,7 +278,7 @@ namespace BlackCore
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;      //!< statistics total update time
         qint64 m_statsCurrentUpdateTimeMs = 0;            //!< statistics current update time
         qint64 m_statsMaxUpdateTimeMs = 0;                //!< statistics max.update time
-        qint64 m_statsLastUpdateAircraftRequestedMs = 0;  //!< when was the last aircraft update requested
+        qint64 m_statsLastUpdateAircraftRequestedMs  = 0; //!< when was the last aircraft update requested
         qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircrat updates
 
         BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
@@ -324,9 +324,9 @@ namespace BlackCore
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         int m_timerCounter = 0;               //!< allows to calculate n seconds
         QTimer m_oneSecondTimer;              //!< multi purpose timer
-        BlackMisc::Simulation::CSimulatedAircraftList  m_highlightedAircraft;               //!< all other aircraft are to be ignored
-        BlackMisc::Aviation::CCallsignSet              m_callsignsToBeRendered;             //!< callsigns which will be rendered
-        BlackMisc::CConnectionGuard                    m_remoteAircraftProviderConnections; //!< connected signal/slots
+        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;               //!< all other aircraft are to be ignored
+        BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;             //!< callsigns which will be rendered
+        BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections; //!< connected signal/slots
 
         // statistics values of how often those functions are called
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)

@@ -18,7 +18,6 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
-
 #include <QMetaType>
 #include <QString>
 #include <tuple>
@@ -157,7 +156,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare for index
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex
             int comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString()

@@ -218,7 +218,7 @@ namespace BlackCore
         // do aircraft first, this will handle most callsigns
         for (const CSimulatedAircraft &aircraft : this->getAircraftInRange())
         {
-            if (searchList.isEmpty()) break;
+            if (searchList.isEmpty()) { break; }
             const CCallsign callsign = aircraft.getCallsign();
             if (searchList.contains(callsign))
             {
@@ -230,7 +230,7 @@ namespace BlackCore
 
         for (const CAtcStation &station : m_atcStationsOnline)
         {
-            if (searchList.isEmpty()) break;
+            if (searchList.isEmpty()) { break; }
             const CCallsign callsign = station.getCallsign();
             if (searchList.contains(callsign))
             {
