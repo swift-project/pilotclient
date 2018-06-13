@@ -93,8 +93,8 @@ namespace BlackCore
             //! @{
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
-            virtual int remoteAircraftPartsCount(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
+            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual int remoteAircraftPartsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
@@ -162,7 +162,7 @@ namespace BlackCore
             virtual bool isReverseLookupMessagesEnabled() const override;
             virtual void enableReverseLookupMessages(bool enabled) override;
             virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
-            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const override;
+            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int getRemoteAircraftSupportingPartsCount() const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
             virtual void enableAircraftPartsHistory(bool enabled) override;

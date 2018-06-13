@@ -390,11 +390,10 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::getRemoteAircraftParts
-            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const override
+            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 Q_UNUSED(callsign);
-                Q_UNUSED(cutoffTimeValuesBefore);
                 return BlackMisc::Aviation::CAircraftPartsList();
             }
 

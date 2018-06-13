@@ -84,24 +84,17 @@ namespace BlackMisc
             return m_situationsByCallsign[callsign].size();
         }
 
-        CAircraftPartsList CRemoteAircraftProvider::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
+        CAircraftPartsList CRemoteAircraftProvider::remoteAircraftParts(const CCallsign &callsign) const
         {
             static const CAircraftPartsList empty;
             QReadLocker l(&m_lockParts);
             if (!m_partsByCallsign.contains(callsign)) { return empty; }
-            if (cutoffTimeValuesBefore < 0)
-            {
-                return m_partsByCallsign[callsign];
-            }
-            else
-            {
-                return m_partsByCallsign[callsign].findBefore(cutoffTimeValuesBefore);
-            }
+            return m_partsByCallsign[callsign];
         }
 
-        int CRemoteAircraftProvider::remoteAircraftPartsCount(const CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
+        int CRemoteAircraftProvider::remoteAircraftPartsCount(const CCallsign &callsign) const
         {
-            const int s = this->remoteAircraftParts(callsign, cutoffTimeValuesBefore).size();
+            const int s = this->remoteAircraftParts(callsign).size();
             return s;
         }
 
@@ -676,16 +669,16 @@ namespace BlackMisc
             return this->provider()->remoteAircraftSituationChange(callsign);
         }
 
-        CAircraftPartsList CRemoteAircraftAware::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeBefore) const
+        CAircraftPartsList CRemoteAircraftAware::remoteAircraftParts(const CCallsign &callsign) const
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
-            return this->provider()->remoteAircraftParts(callsign, cutoffTimeBefore);
+            return this->provider()->remoteAircraftParts(callsign);
         }
 
-        int CRemoteAircraftAware::remoteAircraftPartsCount(const CCallsign &callsign, qint64 cutoffTimeBefore) const
+        int CRemoteAircraftAware::remoteAircraftPartsCount(const CCallsign &callsign) const
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
-            return this->provider()->remoteAircraftPartsCount(callsign, cutoffTimeBefore);
+            return this->provider()->remoteAircraftPartsCount(callsign);
         }
 
         CCallsignSet CRemoteAircraftAware::remoteAircraftSupportingParts() const
@@ -775,7 +768,7 @@ namespace BlackMisc
         CAircraftParts IRemoteAircraftProvider::getLatestAircraftParts(const CCallsign &callsign) const
         {
             static const CAircraftParts empty;
-            const CAircraftPartsList parts = this->remoteAircraftParts(callsign, -1);
+            const CAircraftPartsList parts = this->remoteAircraftParts(callsign);
             return parts.isEmpty() ? empty : parts.latestObject();
         }
 

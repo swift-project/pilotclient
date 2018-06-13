@@ -144,7 +144,7 @@ namespace BlackGui
             const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
             if (callsign.isEmpty()) { return; }
 
-            const CAircraftPartsList partsList = sGui->getIContextNetwork()->getRemoteAircraftParts(callsign, -1);
+            const CAircraftPartsList partsList = sGui->getIContextNetwork()->getRemoteAircraftParts(callsign);
             if (partsList.isEmpty())
             {
                 CStatusMessage(this).info("No parts for '%1'") << callsign.asString();

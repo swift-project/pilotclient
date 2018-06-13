@@ -95,11 +95,11 @@ namespace BlackMisc
             //! All parts (per callsign, time history)
             //! \remark latest parts first
             //! \threadsafe
-            virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const = 0;
+            virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const = 0;
 
             //! All parts (per callsign, time history)
             //! \threadsafe
-            virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const = 0;
+            virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const = 0;
 
             //! Get the change object for callsign
             //! \threadsafe
@@ -246,8 +246,8 @@ namespace BlackMisc
             virtual bool isVtolAircraft(const Aviation::CCallsign &callsign) const override;
             virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
-            virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore = -1) const override;
-            virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore = -1) const override;
+            virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const override;
+            virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const override;
             virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
             virtual int getRemoteAircraftSupportingPartsCount() const override;
             virtual Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
@@ -381,7 +381,7 @@ namespace BlackMisc
 
             CSimulatedAircraftList m_aircraftInRange; //!< aircraft, thread safe access required
             Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages; //!< reverse lookup messages
-            Aviation::CStatusMessageListPerCallsign m_aircraftPartsHistory;  //!< status messages for parts history
+            Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages; //!< status messages for parts history
             Aviation::CTimestampPerCallsign m_situationsLastModified; //!< when situations last modified
             Aviation::CTimestampPerCallsign m_partsLastModified;      //!< when parts last modified
             QHash<Aviation::CCallsign, PhysicalQuantities::CLength> m_testOffset;
@@ -432,10 +432,10 @@ namespace BlackMisc
             int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
-            Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const;
+            Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftPartsCount
-            int remoteAircraftPartsCount(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const;
+            int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationChange
             Aviation::CAircraftSituationChange remoteAircraftSituationChange(const Aviation::CCallsign &callsign) const;

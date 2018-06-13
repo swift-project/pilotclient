@@ -115,16 +115,16 @@ namespace BlackCore
             return m_airspace->remoteAircraftSituations(callsign);
         }
 
-        CAircraftPartsList CContextNetwork::remoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeBefore) const
+        CAircraftPartsList CContextNetwork::remoteAircraftParts(const CCallsign &callsign) const
         {
             Q_ASSERT(m_airspace);
-            return m_airspace->remoteAircraftParts(callsign, cutoffTimeBefore);
+            return m_airspace->remoteAircraftParts(callsign);
         }
 
-        int CContextNetwork::remoteAircraftPartsCount(const CCallsign &callsign, qint64 cutoffTimeBefore) const
+        int CContextNetwork::remoteAircraftPartsCount(const CCallsign &callsign) const
         {
             Q_ASSERT(m_airspace);
-            return m_airspace->remoteAircraftPartsCount(callsign, cutoffTimeBefore);
+            return m_airspace->remoteAircraftPartsCount(callsign);
         }
 
         int CContextNetwork::remoteAircraftSituationsCount(const CCallsign &callsign) const
@@ -628,10 +628,10 @@ namespace BlackCore
             return m_airspace->getAircraftPartsHistory(callsign);
         }
 
-        CAircraftPartsList CContextNetwork::getRemoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
+        CAircraftPartsList CContextNetwork::getRemoteAircraftParts(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
-            return m_airspace->remoteAircraftParts(callsign, cutoffTimeValuesBefore);
+            return m_airspace->remoteAircraftParts(callsign);
         }
 
         int CContextNetwork::getRemoteAircraftSupportingPartsCount() const
