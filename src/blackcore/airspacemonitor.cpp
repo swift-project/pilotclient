@@ -943,7 +943,7 @@ namespace BlackCore
         CAircraftSituation correctedSituation(this->testAddAltitudeOffsetToSituation(situation));
         if (!correctedSituation.hasGroundElevation() && !correctedSituation.canLikelySkipNearGroundInterpolation())
         {
-            const CLength distance(correctedSituation.getDistancePerTime(250));
+            const CLength distance(correctedSituation.getDistancePerTime(250)); // distnacee per ms
             const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
             Q_ASSERT_X(ep.isNull() || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
             correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
@@ -965,26 +965,15 @@ namespace BlackCore
             }
         }
 
-        this->guessOnGroundAndUpdateModelCG(correctedSituation); // does nothing if situation is not appropriate for guessing
-        CRemoteAircraftProvider::storeAircraftSituation(correctedSituation, false); // we already added offset if any
-    }
-
-    bool CAirspaceMonitor::guessOnGroundAndUpdateModelCG(CAircraftSituation &situation)
-    {
-        const CCallsign callsign(situation.getCallsign());
-        CAircraftModel aircraftModel = this->getAircraftInRangeModelForCallsign(callsign);
+        // CG from provider
         const CLength cg = this->getCG(callsign); // always x-check against simulator to override guessed values and reflect changed CGs
-        if (!cg.isNull() && aircraftModel.getCG() != cg)
+        if (!cg.isNull())
         {
-            aircraftModel.setCG(cg);
-            this->updateCG(callsign, cg); // model's CG in remote provider
+            correctedSituation.setCG(cg);
         }
 
-        if (!cg.isNull()) { situation.setCG(cg); }
-        const CAircraftSituationChange change = this->remoteAircraftSituationChange(callsign);
-
-        if (!situation.shouldGuessOnGround()) { return false; }
-        return situation.guessOnGround(change, aircraftModel);
+        // store change object
+        CRemoteAircraftProvider::storeAircraftSituation(correctedSituation, false); // we already added offset if any
     }
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)

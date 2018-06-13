@@ -174,10 +174,6 @@ namespace BlackCore
         CAirspaceAnalyzer *m_analyzer = nullptr;  //!< owned analyzer
         bool m_bookingsRequested = false;         //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
 
-        //! Guess situation "on ground" and update model's CG if applicable
-        //! \remark updates CG and ground flag in situation
-        bool guessOnGroundAndUpdateModelCG(BlackMisc::Aviation::CAircraftSituation &situation);
-
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
 

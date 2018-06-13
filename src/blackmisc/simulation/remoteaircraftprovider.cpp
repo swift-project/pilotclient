@@ -24,19 +24,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftSituationChange IRemoteAircraftProvider::remoteAircraftSituationChange(const CCallsign &callsign) const
-        {
-            const CAircraftSituationList situations(this->remoteAircraftSituations(callsign));
-            if (situations.isEmpty()) { return CAircraftSituationChange::null(); }
-            if (CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                Q_ASSERT_X(situations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Expect latest first");
-            }
-            const CAircraftModel model = this->getAircraftInRangeModelForCallsign(callsign);
-            const CAircraftSituationChange change = CAircraftSituationChange(situations, model.getCG(), model.isVtol(), true, true);
-            return change;
-        }
-
         const CLogCategoryList &CRemoteAircraftProvider::getLogCategories()
         {
             static const CLogCategoryList cats { CLogCategory::matching(), CLogCategory::network() };
@@ -48,13 +35,20 @@ namespace BlackMisc
 
         CSimulatedAircraftList CRemoteAircraftProvider::getAircraftInRange() const
         {
-            QReadLocker l(&m_lockAircraft);
-            return m_aircraftInRange;
+            QList<CSimulatedAircraft> aircraft;
+            {
+                QReadLocker l(&m_lockAircraft);
+                aircraft = m_aircraftInRange.values();
+            }
+            return aircraft;
         }
 
         CCallsignSet CRemoteAircraftProvider::getAircraftInRangeCallsigns() const
         {
-            return this->getAircraftInRange().getCallsigns();
+            QReadLocker l(&m_lockAircraft);
+            const QList<CCallsign> callsigns = m_aircraftInRange.keys();
+            l.unlock();
+            return CCallsignSet(callsigns);
         }
 
         CSimulatedAircraft CRemoteAircraftProvider::getAircraftInRangeForCallsign(const CCallsign &callsign) const
@@ -65,14 +59,14 @@ namespace BlackMisc
 
         CAircraftModel CRemoteAircraftProvider::getAircraftInRangeModelForCallsign(const CCallsign &callsign) const
         {
-            const CSimulatedAircraft aircraft(getAircraftInRangeForCallsign(callsign)); // threadsafe
+            const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign)); // threadsafe
             return aircraft.getModel();
         }
 
         CAircraftSituationList CRemoteAircraftProvider::remoteAircraftSituations(const CCallsign &callsign) const
         {
-            QReadLocker l(&m_lockSituations);
             static const CAircraftSituationList empty;
+            QReadLocker l(&m_lockSituations);
             if (!m_situationsByCallsign.contains(callsign)) { return empty; }
             return m_situationsByCallsign[callsign];
         }
@@ -94,8 +88,9 @@ namespace BlackMisc
 
         int CRemoteAircraftProvider::remoteAircraftPartsCount(const CCallsign &callsign) const
         {
-            const int s = this->remoteAircraftParts(callsign).size();
-            return s;
+            QReadLocker l(&m_lockParts);
+            if (!m_partsByCallsign.contains(callsign)) { return -1; }
+            return m_partsByCallsign[callsign].size();
         }
 
         bool CRemoteAircraftProvider::isRemoteAircraftSupportingParts(const CCallsign &callsign) const
@@ -116,16 +111,28 @@ namespace BlackMisc
             return m_aircraftWithParts;
         }
 
+        CAircraftSituationChangeList CRemoteAircraftProvider::remoteAircraftSituationChanges(const CCallsign &callsign) const
+        {
+            QReadLocker l(&m_lockChanges);
+            return m_changesByCallsign[callsign];
+        }
+
+        int CRemoteAircraftProvider::remoteAircraftSituationChangesCount(const CCallsign &callsign) const
+        {
+            QReadLocker l(&m_lockChanges);
+            return m_changesByCallsign[callsign].size();
+        }
+
         int CRemoteAircraftProvider::getAircraftInRangeCount() const
         {
-            return this->getAircraftInRange().size();
+            QReadLocker l(&m_lockAircraft);
+            return m_aircraftInRange.size();
         }
 
         void CRemoteAircraftProvider::removeAllAircraft()
         {
-            for (const CSimulatedAircraft &aircraft : getAircraftInRange())
+            for (const CCallsign &cs : this->getAircraftInRangeCallsigns())
             {
-                const CCallsign cs(aircraft.getCallsign());
                 emit this->removedAircraft(cs);
             }
 
@@ -144,7 +151,12 @@ namespace BlackMisc
                 m_situationsLastModified.clear();
                 m_testOffset.clear();
             }
-            { QWriteLocker l(&m_lockPartsHistory); m_aircraftPartsHistory.clear(); }
+            {
+                QWriteLocker l(&m_lockChanges);
+                m_changesByCallsign.clear();
+            }
+
+            { QWriteLocker l(&m_lockPartsHistory); m_aircraftPartsMessages.clear(); }
             { QWriteLocker l(&m_lockMessages); m_reverseLookupMessages.clear(); }
             { QWriteLocker l(&m_lockAircraft); m_aircraftInRange.clear(); }
         }
@@ -158,10 +170,11 @@ namespace BlackMisc
         bool CRemoteAircraftProvider::addNewAircraftInRange(const CSimulatedAircraft &aircraft)
         {
             if (this->isAircraftInRange(aircraft.getCallsign())) { return false; }
+
             // store
             {
                 QWriteLocker l(&m_lockAircraft);
-                m_aircraftInRange.push_back(aircraft);
+                m_aircraftInRange.insert(aircraft.getCallsign(), aircraft);
             }
             emit this->addedAircraft(aircraft);
             emit this->changedAircraftInRange();
@@ -174,7 +187,8 @@ namespace BlackMisc
             int c = 0;
             {
                 QWriteLocker l(&m_lockAircraft);
-                c = m_aircraftInRange.applyIfCallsign(callsign, vm, skipEqualValues);
+                if (!m_aircraftInRange.contains(callsign)) { return 0; }
+                c = m_aircraftInRange[callsign].apply(vm, skipEqualValues).size();
             }
             if (c > 0)
             {
@@ -197,38 +211,68 @@ namespace BlackMisc
             // add offset (for testing only)
             CAircraftSituation situationCorrected(allowTestOffset ? this->testAddAltitudeOffsetToSituation(situation) : situation);
 
-            // list from new to old
-            const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+            // CG, model
+            const CAircraftModel aircraftModel = this->getAircraftInRangeModelForCallsign(cs);
+            if (situation.hasCG() && aircraftModel.getCG() != situation.getCG())
             {
+                this->updateCG(cs, situation.getCG());
+            }
+
+            // list from new to old
+            {
+                const qint64 ts = QDateTime::currentMSecsSinceEpoch();
                 QWriteLocker lock(&m_lockSituations);
                 m_situationsAdded++;
                 m_situationsLastModified[cs] = ts;
-                CAircraftSituationList &situationList = m_situationsByCallsign[cs];
-                const int situations = situationList.size();
+                CAircraftSituationList &newSituationsList = m_situationsByCallsign[cs];
+                const int situations = newSituationsList.size();
                 if (situations < 1)
                 {
-                    situationList.prefillLatestAdjustedFirst(situationCorrected, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                    newSituationsList.prefillLatestAdjustedFirst(situationCorrected, IRemoteAircraftProvider::MaxSituationsPerCallsign);
                 }
                 else
                 {
-                    situationList.front().transferGroundElevation(situationCorrected); // transfer last situation if possible
-                    situationList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
-                    situationList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
+                    newSituationsList.front().transferGroundElevation(situationCorrected); // transfer last situation elevation if possible
+                    newSituationsList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+                    newSituationsList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
 
                     // unify all inbound ground information
                     if (situation.hasInboundGroundDetails())
                     {
-                        situationList.setOnGroundDetails(situation.getOnGroundDetails());
+                        newSituationsList.setOnGroundDetails(situation.getOnGroundDetails());
                     }
                 }
 
                 // check sort order
                 if (CBuildConfig::isLocalDeveloperDebugBuild())
                 {
-                    BLACK_VERIFY_X(situationList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong sort order");
-                    BLACK_VERIFY_X(situationList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+                    BLACK_VERIFY_X(newSituationsList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong sort order");
+                    BLACK_VERIFY_X(newSituationsList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
                 }
             } // lock
+
+            CAircraftSituationList updatedSituations; // copy of updated situations
+            if (situation.hasInboundGroundDetails())
+            {
+                QReadLocker lock(&m_lockSituations);
+                updatedSituations = m_situationsByCallsign[cs];
+            }
+            else
+            {
+                // first use a version without standard deviations to guess "on ground
+                const CAircraftSituationChange simpleChange(updatedSituations, situationCorrected.getCG(), aircraftModel.isVtol(), true, false);
+
+                // guess GND
+                QWriteLocker lock(&m_lockSituations);
+                CAircraftSituationList &fixedSituationList = m_situationsByCallsign[cs];
+                fixedSituationList.front().guessOnGround(simpleChange, aircraftModel);
+                updatedSituations = fixedSituationList;
+            }
+
+            // calculate change AFTER gnd. was guessed
+            Q_ASSERT_X(!updatedSituations.isEmpty(), Q_FUNC_INFO, "Missing situations");
+            const CAircraftSituationChange change(updatedSituations, situationCorrected.getCG(), aircraftModel.isVtol(), true, true);
+            this->storeChange(change);
 
             emit this->addedAircraftSituation(situationCorrected);
         }
@@ -270,8 +314,12 @@ namespace BlackMisc
             // update aircraft
             {
                 QWriteLocker l(&m_lockAircraft);
-                const int c = m_aircraftInRange.setAircraftPartsSynchronized(callsign, parts);
-                Q_UNUSED(c);
+                if (m_aircraftInRange.contains(callsign))
+                {
+                    CSimulatedAircraft &aircraft = m_aircraftInRange[callsign];
+                    aircraft.setParts(parts);
+                    aircraft.setPartsSynchronized(true);
+                }
             }
 
             // update parts
@@ -331,16 +379,31 @@ namespace BlackMisc
                 const CStatusMessage message(getLogCategories(), CStatusMessage::SeverityInfo, callsign.isEmpty() ? callsign.toQString() + ": " + partsAsString.trimmed() : partsAsString.trimmed());
 
                 QReadLocker l(&m_lockPartsHistory);
-                if (m_aircraftPartsHistory.contains(callsign))
+                if (m_aircraftPartsMessages.contains(callsign))
                 {
-                    CStatusMessageList &msgs = m_aircraftPartsHistory[callsign];
+                    CStatusMessageList &msgs = m_aircraftPartsMessages[callsign];
                     msgs.push_back(message);
                 }
                 else
                 {
-                    m_aircraftPartsHistory.insert(callsign, message);
+                    m_aircraftPartsMessages.insert(callsign, message);
                 }
             }
+        }
+
+        void CRemoteAircraftProvider::storeChange(const CAircraftSituationChange &change)
+        {
+            QWriteLocker lock(&m_lockChanges);
+            const CCallsign cs(change.getCallsign());
+            CAircraftSituationChangeList &changeList = m_changesByCallsign[cs];
+            changeList.push_frontKeepLatestAdjustedFirst(change, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+        }
+
+        bool CRemoteAircraftProvider::guessOnGroundAndUpdateModelCG(CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &aircraftModel)
+        {
+            if (aircraftModel.hasCG() && !situation.hasCG()) { situation.setCG(aircraftModel.getCG()); }
+            if (!situation.shouldGuessOnGround()) { return false; }
+            return situation.guessOnGround(change, aircraftModel);
         }
 
         bool CRemoteAircraftProvider::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
@@ -369,15 +432,15 @@ namespace BlackMisc
         bool CRemoteAircraftProvider::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
         {
             QWriteLocker l(&m_lockAircraft);
-            const int c = m_aircraftInRange.setFastPositionUpdates(callsign, enableFastPositonUpdates);
-            return c > 0;
+            if (!m_aircraftInRange.contains(callsign)) { return false; }
+            return m_aircraftInRange[callsign].setFastPositionUpdates(enableFastPositonUpdates);
         }
 
         bool CRemoteAircraftProvider::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
             QWriteLocker l(&m_lockAircraft);
-            const int c = m_aircraftInRange.setRendered(callsign, rendered);
-            return c > 0;
+            if (!m_aircraftInRange.contains(callsign)) { return false; }
+            return m_aircraftInRange[callsign].setRendered(rendered);
         }
 
         int CRemoteAircraftProvider::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info)
@@ -387,19 +450,28 @@ namespace BlackMisc
             // update aircraft situation
             const qint64 ts = QDateTime::currentMSecsSinceEpoch();
             const CAircraftModel model = this->getAircraftInRangeModelForCallsign(callsign);
+            CAircraftSituationChange change;
             int updated = 0;
             {
                 QWriteLocker l(&m_lockSituations);
                 CAircraftSituationList &situations = m_situationsByCallsign[callsign];
-                updated = situations.setGroundElevationCheckedAndGuessGround(elevation, info, model);
+                updated = situations.setGroundElevationCheckedAndGuessGround(elevation, info, model, &change);
                 if (updated < 1) { return 0; }
                 m_situationsLastModified[callsign] = ts;
             }
 
+            // update change
+            if (!change.isNull())
+            {
+                this->storeChange(change);
+            }
+
             // aircraft updates
             QWriteLocker l(&m_lockAircraft);
-            const int c = m_aircraftInRange.setGroundElevationChecked(callsign, elevation, info);
-            Q_UNUSED(c); // just for info, expect 1
+            if (m_aircraftInRange.contains(callsign))
+            {
+                m_aircraftInRange[callsign].setGroundElevationChecked(elevation, info);
+            }
 
             return updated; // updated situations
         }
@@ -407,14 +479,19 @@ namespace BlackMisc
         bool CRemoteAircraftProvider::updateCG(const CCallsign &callsign, const CLength &cg)
         {
             QWriteLocker l(&m_lockAircraft);
-            const int c = m_aircraftInRange.setCG(callsign, cg);
-            return c > 0;
+            if (!m_aircraftInRange.contains(callsign)) { return false; }
+            m_aircraftInRange[callsign].setCG(cg);
+            return true;
         }
 
         void CRemoteAircraftProvider::updateMarkAllAsNotRendered()
         {
+            const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
             QWriteLocker l(&m_lockAircraft);
-            m_aircraftInRange.markAllAsNotRendered();
+            for (const CCallsign &cs : callsigns)
+            {
+                m_aircraftInRange[cs].setRendered(false);
+            }
         }
 
         void CRemoteAircraftProvider::enableReverseLookupMessages(bool enabled)
@@ -506,7 +583,7 @@ namespace BlackMisc
         CStatusMessageList CRemoteAircraftProvider::getAircraftPartsHistory(const CCallsign &callsign) const
         {
             QReadLocker l(&m_lockPartsHistory);
-            return m_aircraftPartsHistory.value(callsign);
+            return m_aircraftPartsMessages.value(callsign);
         }
 
         bool CRemoteAircraftProvider::isAircraftPartsHistoryEnabled() const
@@ -563,7 +640,7 @@ namespace BlackMisc
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockAircraft);
-            return m_aircraftInRange.containsCallsign(callsign);
+            return m_aircraftInRange.contains(callsign);
         }
 
         bool CRemoteAircraftProvider::isVtolAircraft(const CCallsign &callsign) const
@@ -599,11 +676,11 @@ namespace BlackMisc
         {
             { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftWithParts.remove(callsign); m_partsLastModified.remove(callsign); }
             { QWriteLocker l2(&m_lockSituations); m_situationsByCallsign.remove(callsign); m_situationsLastModified.remove(callsign); }
-            { QWriteLocker l4(&m_lockPartsHistory); m_aircraftPartsHistory.remove(callsign); }
+            { QWriteLocker l4(&m_lockPartsHistory); m_aircraftPartsMessages.remove(callsign); }
             bool removedCallsign = false;
             {
                 QWriteLocker l(&m_lockAircraft);
-                const int c = m_aircraftInRange.removeByCallsign(callsign);
+                const int c = m_aircraftInRange.remove(callsign);
                 removedCallsign = c > 0;
             }
             return removedCallsign;
@@ -663,10 +740,10 @@ namespace BlackMisc
             return this->provider()->remoteAircraftSituations(callsign);
         }
 
-        CAircraftSituationChange CRemoteAircraftAware::remoteAircraftSituationChange(const CCallsign &callsign) const
+        CAircraftSituationChangeList CRemoteAircraftAware::remoteAircraftSituationChanges(const CCallsign &callsign) const
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
-            return this->provider()->remoteAircraftSituationChange(callsign);
+            return this->provider()->remoteAircraftSituationChanges(callsign);
         }
 
         CAircraftPartsList CRemoteAircraftAware::remoteAircraftParts(const CCallsign &callsign) const

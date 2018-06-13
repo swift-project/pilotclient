@@ -145,12 +145,24 @@ namespace BlackCore
             return m_airspace->remoteAircraftSupportingParts();
         }
 
+        Aviation::CAircraftSituationChangeList CContextNetwork::remoteAircraftSituationChanges(const CCallsign &callsign) const
+        {
+            Q_ASSERT(m_airspace);
+            return m_airspace->remoteAircraftSituationChanges(callsign);
+        }
+
+        int CContextNetwork::remoteAircraftSituationChangesCount(const CCallsign &callsign) const
+        {
+            Q_ASSERT(m_airspace);
+            return m_airspace->remoteAircraftSituationChangesCount(callsign);
+        }
+
         QList<QMetaObject::Connection> CContextNetwork::connectRemoteAircraftProviderSignals(
             QObject *receiver,
             std::function<void (const CAircraftSituation &)> situationSlot,
             std::function<void (const CCallsign &, const CAircraftParts &)> partsSlot,
             std::function<void (const CCallsign &)> removedAircraftSlot,
-            std::function<void (const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
+            std::function<void (const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
         {
             Q_ASSERT_X(m_airspace, Q_FUNC_INFO, "Missing airspace");
             return m_airspace->connectRemoteAircraftProviderSignals(receiver, situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
@@ -166,7 +178,7 @@ namespace BlackCore
 
         CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, INetwork::LoginMode mode)
         {
-            if (this->isDebugEnabled()) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             QString msg;
             if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid user credentials"); }
             if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid ICAO data for own aircraft"); }

@@ -97,6 +97,8 @@ namespace BlackCore
             virtual int remoteAircraftPartsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
+            virtual BlackMisc::Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual int remoteAircraftSituationChangesCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,

@@ -51,19 +51,16 @@ namespace BlackMisc
             return c;
         }
 
-        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const CAircraftModel &model)
+        int CAircraftSituationList::setGroundElevationCheckedAndGuessGround(const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, const CAircraftModel &model, CAircraftSituationChange *changeOut)
         {
             if (elevationPlane.isNull()) { return 0; }
             if (this->isEmpty()) { return 0; }
 
-            Q_ASSERT_X(this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
+            Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst || this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
             const CAircraftSituationChange change(*this, model.getCG(), model.isVtol(), true, true);
+            if (changeOut) { *changeOut = change; } // copy over
             int c = 0;
-            bool first = true;
-            if (this->front().getCallsign().equalsString("AFL2353"))
-            {
-                c = 0;
-            }
+            bool latest = true;
 
             for (CAircraftSituation &s : *this)
             {
@@ -71,10 +68,11 @@ namespace BlackMisc
                 if (set)
                 {
                     // change is only valid for the latest situation
-                    s.guessOnGround(first ? change : CAircraftSituationChange::null(), model);
+                    // this will do nothing if not appropriate
+                    s.guessOnGround(latest ? change : CAircraftSituationChange::null(), model);
                     c++;
                 }
-                first = false;
+                latest = false;
             }
             return c;
         }

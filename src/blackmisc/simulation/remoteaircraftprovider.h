@@ -18,7 +18,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/aviation/aircraftsituationchange.h"
+#include "blackmisc/aviation/aircraftsituationchangelist.h"
 #include "blackmisc/aviation/percallsign.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/provider.h"
@@ -101,10 +101,6 @@ namespace BlackMisc
             //! \threadsafe
             virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const = 0;
 
-            //! Get the change object for callsign
-            //! \threadsafe
-            Aviation::CAircraftSituationChange remoteAircraftSituationChange(const Aviation::CCallsign &callsign) const;
-
             //! Is remote aircraft supporting parts?
             //! \threadsafe
             virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const = 0;
@@ -120,6 +116,14 @@ namespace BlackMisc
             //! Remote aircraft supporting parts.
             //! \threadsafe
             virtual Aviation::CCallsignSet remoteAircraftSupportingParts() const = 0;
+
+            //! Aircraft changes.
+            //! \threadsafe
+            virtual Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const = 0;
+
+            //! Aircraft changes count.
+            //! \threadsafe
+            virtual int remoteAircraftSituationChangesCount(const Aviation::CCallsign &callsign) const = 0;
 
             //! Enable/disable enabled aircraft
             //! \threadsafe
@@ -251,6 +255,8 @@ namespace BlackMisc
             virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
             virtual int getRemoteAircraftSupportingPartsCount() const override;
             virtual Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
+            virtual Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const override;
+            virtual int remoteAircraftSituationChangesCount(const Aviation::CCallsign &callsign) const override;
             virtual bool updateAircraftEnabled(const Aviation::CCallsign &callsign, bool enabledForRendering) override;
             virtual bool updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
             virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator) override;
@@ -369,22 +375,32 @@ namespace BlackMisc
             void storeAircraftParts(const Aviation::CCallsign &callsign, const QJsonObject &jsonObject, int currentOffset);
             //! @}
 
+            //! Guess situation "on ground" and update model's CG if applicable
+            //! \remark updates CG and ground flag in situation
+            bool guessOnGroundAndUpdateModelCG(Aviation::CAircraftSituation &situation, const Aviation::CAircraftSituationChange &change, const CAircraftModel &aircraftModel);
+
             //! Add an offset for testing
             Aviation::CAircraftSituation testAddAltitudeOffsetToSituation(const Aviation::CAircraftSituation &situation) const;
 
         private:
-            Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftPartsListPerCallsign     m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
-            Aviation::CCallsignSet m_aircraftWithParts;  //!< aircraft supporting parts, thread safe access required
+            //! Store the latest changes
+            //! \remark latest first
+            //! \threadsafe
+            void storeChange(const Aviation::CAircraftSituationChange &change);
+
+            Aviation::CAircraftSituationListPerCallsign       m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftPartsListPerCallsign           m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;    //!< changes, for performance reasons per callsign, thread safe access required
+            Aviation::CCallsignSet m_aircraftWithParts;                               //!< aircraft supporting parts, thread safe access required
             int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
             int m_partsAdded = 0;      //!< total number of parts added, thread safe access required
 
-            CSimulatedAircraftList m_aircraftInRange; //!< aircraft, thread safe access required
+            Simulation::CSimulatedAircraftPerCallsign m_aircraftInRange;     //!< aircraft, thread safe access required
             Aviation::CStatusMessageListPerCallsign m_reverseLookupMessages; //!< reverse lookup messages
             Aviation::CStatusMessageListPerCallsign m_aircraftPartsMessages; //!< status messages for parts history
-            Aviation::CTimestampPerCallsign m_situationsLastModified; //!< when situations last modified
-            Aviation::CTimestampPerCallsign m_partsLastModified;      //!< when parts last modified
-            QHash<Aviation::CCallsign, PhysicalQuantities::CLength> m_testOffset;
+            Aviation::CTimestampPerCallsign m_situationsLastModified;        //!< when situations last modified
+            Aviation::CTimestampPerCallsign m_partsLastModified;             //!< when parts last modified
+            Aviation::CLengthPerCallsign    m_testOffset;                    //!< offsets
 
             bool m_enableReverseLookupMsgs = false;   //!< shall we log. information about the matching process
             bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts
@@ -392,6 +408,7 @@ namespace BlackMisc
             // locks
             mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign
             mutable QReadWriteLock m_lockParts;        //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
+            mutable QReadWriteLock m_lockChanges;      //!< lock for changes: m_changesByCallsign
             mutable QReadWriteLock m_lockAircraft;     //!< lock aircraft: m_aircraftInRange
             mutable QReadWriteLock m_lockMessages;     //!< lock for messages
             mutable QReadWriteLock m_lockPartsHistory; //!< lock for aircraft parts
@@ -437,8 +454,8 @@ namespace BlackMisc
             //! \copydoc IRemoteAircraftProvider::remoteAircraftPartsCount
             int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const;
 
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationChange
-            Aviation::CAircraftSituationChange remoteAircraftSituationChange(const Aviation::CCallsign &callsign) const;
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationChanges
+            Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
             Aviation::CCallsignSet remoteAircraftSupportingParts() const;
