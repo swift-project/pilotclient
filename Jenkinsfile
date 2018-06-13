@@ -1,6 +1,7 @@
 abortPreviousRunningBuilds()
 
 def builders = [:]
+def buildResults = [:]
 
 // Create a map to pass in to the 'parallel' step so we can fire all the builds at once
 builders['Build swift Linux'] = {
@@ -13,12 +14,12 @@ builders['Build swift Linux'] = {
             stage('Linux Build') {
                 withEnv(['BITROCK_BUILDER=/opt/installbuilder/bin/builder', 'BITROCK_CUSTOMIZE=/opt/installbuilder/autoupdate/bin/customize.run']) {
                     sh '''
-                        cp /var/lib/jenkins/vatsim.pri.official mkspecs/features/vatsim.pri
+                        cp ~/vatsim.pri.official mkspecs/features/vatsim.pri
                         python3 -u scripts/jenkins.py -w 64 -t gcc -d -j 2
                     '''
                 }
 
-                warnings consoleParsers: [[parserName: 'GNU C Compiler 4 (gcc)']]
+                warnings consoleParsers: [[parserName: 'GNU C Compiler 4 (gcc)']], unstableTotalAll: '0'
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()], tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml', skipNoTestFiles: true, stopProcessingIfError: false)]
             }
@@ -38,14 +39,14 @@ builders['Build swift Linux'] = {
         } catch (error) {
             if (manager.build.getAction(InterruptedBuildAction.class) ||
                     (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
-                println("User abort. No error!")
-                currentBuild.result = "ABORTED"
+                echo 'User abort. No error!'
+                buildResults['swift-linux'] = 'ABORTED'
             } else {
-                currentBuild.result = "FAILURE"
+                buildResults['swift-linux'] = 'FAILURE'
                 throw error
             }
         } finally {
-            notifySlack('Linux', currentBuild.result)
+            notifySlack('Linux', buildResults['swift-linux'])
             cleanWs deleteDirs: true, notFailBuild: true
         }
     }
@@ -59,7 +60,6 @@ builders['Build swift MacOS'] = {
             }
 
             stage('MacOS Build') {
-                echo 'Building'
                 withEnv(['PATH+LOCAL=/usr/local/bin', 'BITROCK_BUILDER=/Applications/BitRockInstallBuilderQt/bin/builder', 'BITROCK_CUSTOMIZE=/Applications/BitRockInstallBuilderQt/autoupdate/bin/customize.sh']) {
                     sh '''
                         cp ~/vatsim.pri.official mkspecs/features/vatsim.pri
@@ -67,7 +67,7 @@ builders['Build swift MacOS'] = {
                     '''
                 }
 
-                warnings consoleParsers: [[parserName: 'Clang (LLVM based)']]
+                warnings consoleParsers: [[parserName: 'Clang (LLVM based)']], unstableTotalAll: '0'
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()], tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml', skipNoTestFiles: true, stopProcessingIfError: false)]
             }
@@ -79,14 +79,14 @@ builders['Build swift MacOS'] = {
         } catch (error) {
             if (manager.build.getAction(InterruptedBuildAction.class) ||
                     (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
-                println("User abort. No error!")
-                currentBuild.result = "ABORTED"
+                echo 'User abort. No error!'
+                buildResults['swift-macos'] = 'ABORTED'
             } else {
-                currentBuild.result = "FAILURE"
+                buildResults['swift-macos'] = 'FAILURE'
                 throw error
             }
         } finally {
-            notifySlack('MacOS', currentBuild.result)
+            notifySlack('MacOS', buildResults['swift-macos'])
             cleanWs deleteDirs: true, notFailBuild: true
         }
     }
@@ -100,13 +100,12 @@ builders['Build swift Win32'] = {
             }
 
             stage('Win32 Build') {
-                echo 'Building'
                 bat '''
                     copy /Y c:\\var\\vatsim.pri.official mkspecs\\features\\vatsim.pri
                     python -u scripts/jenkins.py -w 32 -t msvc -d
                 '''
 
-                warnings consoleParsers: [[parserName: 'MSBuild']]
+                warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()], tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml', skipNoTestFiles: true, stopProcessingIfError: false)]
             }
@@ -118,14 +117,14 @@ builders['Build swift Win32'] = {
         } catch (error) {
             if (manager.build.getAction(InterruptedBuildAction.class) ||
                     (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
-                println("User abort. No error!")
-                currentBuild.result = "ABORTED"
+                echo 'User abort. No error!'
+                buildResults['swift-win32'] = 'ABORTED'
             } else {
-                currentBuild.result = "FAILURE"
+                buildResults['swift-win32'] = 'FAILURE'
                 throw error
             }
         } finally {
-            notifySlack('Win32', currentBuild.result)
+            notifySlack('Win32', buildResults['swift-win32'])
             killDBusDaemon()
             cleanWs deleteDirs: true, notFailBuild: true
         }
@@ -140,13 +139,12 @@ builders['Build swift Win64'] = {
             }
 
             stage('Win64 Build') {
-                echo 'Building'
                 bat '''
                     copy /Y c:\\var\\vatsim.pri.official mkspecs\\features\\vatsim.pri
                     python -u scripts/jenkins.py -w 64 -t msvc -d
                 '''
 
-                warnings consoleParsers: [[parserName: 'MSBuild']]
+                warnings consoleParsers: [[parserName: 'MSBuild']], unstableTotalAll: '0'
 
                 xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [failed(), skipped()], tools: [QtTest(deleteOutputFiles: true, failIfNotNew: false, pattern: 'build/out/release/bin/*_testresults.xml', skipNoTestFiles: true, stopProcessingIfError: false)]
             }
@@ -158,14 +156,14 @@ builders['Build swift Win64'] = {
         } catch (error) {
             if (manager.build.getAction(InterruptedBuildAction.class) ||
                     (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
-                println("User abort. No error!")
-                currentBuild.result = "ABORTED"
+                echo 'User abort. No error!'
+                buildResults['swift-win64'] = 'ABORTED'
             } else {
-                currentBuild.result = "FAILURE"
+                buildResults['swift-win64'] = 'FAILURE'
                 throw error
             }
         } finally {
-            notifySlack('Win64', currentBuild.result)
+            notifySlack('Win64', buildResults['swift-win64'])
             killDBusDaemon()
             cleanWs deleteDirs: true, notFailBuild: true
         }
@@ -195,12 +193,10 @@ node('linux') {
     } catch (error) {
         if (manager.build.getAction(InterruptedBuildAction.class) ||
                 (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
-            println("User abort. No error!")
-            currentBuild.result = "ABORTED"
+            echo 'User abort. No error!'
         }
         else
         {
-            currentBuild.result = "FAILURE"
             throw error
         }
     } finally {
@@ -243,19 +239,16 @@ node('linux') {
     } catch (error) {
         if (manager.build.getAction(InterruptedBuildAction.class) ||
                 (error instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException && error.causes.size() == 0)) {
-            println("User abort. No error!")
-            currentBuild.result = "ABORTED"
+            echo 'User abort. No error!'
         }
         else
         {
-            currentBuild.result = "FAILURE"
             throw error
         }
     } finally {
         cleanWs deleteDirs: true, notFailBuild: true
     }
 }
-
 
 def abortPreviousRunningBuilds() {
     def pname = env.JOB_NAME.split('/')[0]
