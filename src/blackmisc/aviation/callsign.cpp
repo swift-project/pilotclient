@@ -191,7 +191,8 @@ namespace BlackMisc
             case IndexCallsignStringAsSet: return m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
             case IndexTelephonyDesignator: return m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
             case IndexSuffix: return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
-            default: break;
+            default:
+                return CValueObject::comparePropertyByIndex(index, compareValue);
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
             return 0;

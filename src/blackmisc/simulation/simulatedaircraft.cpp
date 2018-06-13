@@ -117,6 +117,20 @@ namespace BlackMisc
             return m_enabled;
         }
 
+        bool CSimulatedAircraft::setFastPositionUpdates(bool useFastPositions)
+        {
+            if (m_fastPositionUpdates == useFastPositions) { return false; }
+            m_fastPositionUpdates = useFastPositions;
+            return true;
+        }
+
+        bool CSimulatedAircraft::setRendered(bool rendered)
+        {
+            if (m_rendered == rendered) { return false; }
+            m_rendered = rendered;
+            return true;
+        }
+
         const QString &CSimulatedAircraft::getAircraftIcaoCodeDesignator() const
         {
             return getAircraftIcaoCode().getDesignator();

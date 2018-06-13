@@ -30,6 +30,7 @@
 #include <QString>
 #include <QStringList>
 #include <Qt>
+#include <QHash>
 
 namespace BlackMisc
 {
@@ -353,10 +354,15 @@ namespace BlackMisc
             //! \remark checking for some criteria in the given model
             QString extCoverageSummary(const CAircraftModel &checkModel, const QString &separator = "\n") const;
         };
+
+        //! Model per callsign
+        using CAircraftModelPerCallsign = QHash<Aviation::CCallsign, CAircraftModel>;
+
     } // ns
 } // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModelList)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModelPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CAircraftModel>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CAircraftModel>)
 

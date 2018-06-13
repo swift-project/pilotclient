@@ -409,10 +409,10 @@ namespace BlackMisc
             bool fastPositionUpdates() const {return m_fastPositionUpdates;}
 
             //! Support fast position updates
-            void setFastPositionUpdates(bool useFastPositions) { m_fastPositionUpdates = useFastPositions; }
+            bool setFastPositionUpdates(bool useFastPositions);
 
             //! Rendered?
-            void setRendered(bool rendered) { m_rendered = rendered; }
+            bool setRendered(bool rendered);
 
             //! Have parts been synchronized with a remote client?
             bool isPartsSynchronized() const { return m_partsSynchronized; }

@@ -117,10 +117,15 @@ namespace BlackMisc
             //! Number of aircraft with parts
             int countAircraftPartsSynchronized() const;
         };
+
+        //! Aircraft per callsign
+        using CSimulatedAircraftPerCallsign = QHash<Aviation::CCallsign, CSimulatedAircraft>;
+
     } //namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraftList)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraftPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CSimulatedAircraft>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CSimulatedAircraft>)
 

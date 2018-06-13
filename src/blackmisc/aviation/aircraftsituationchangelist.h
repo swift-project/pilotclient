@@ -43,10 +43,19 @@ namespace BlackMisc
             //! Construct from initializer list.
             CAircraftSituationChangeList(std::initializer_list<CAircraftSituationChange> il);
         };
+
+        //! Change per callsign
+        using CAircraftSituationChangePerCallsign = QHash<CCallsign, CAircraftSituationChange>;
+
+        //! Changes per callsign
+        using CAircraftSituationChangeListPerCallsign = QHash<CCallsign, CAircraftSituationChangeList>;
+
     } //namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationChangeList)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationChangePerCallsign)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituationChangeListPerCallsign)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Aviation::CAircraftSituationChange>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Aviation::CAircraftSituationChange>)
 
