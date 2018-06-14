@@ -133,10 +133,7 @@ namespace BlackGui
                 const CClient client = m_airspaceMonitor->getClientOrDefaultForCallsign(m_callsign);
                 ui->le_GndFlag->setText(boolToYesNo(client.hasGndFlagCapability()));
 
-                static const QString hits("%1/%2");
-                const QPair<int, int> foundMissed = m_airspaceMonitor->getElevationsFoundMissed();
-                ui->le_ElevationHits->setText(hits.arg(foundMissed.first).arg(foundMissed.second));
-
+                this->displayElevationRequestReceive();
                 this->displayLastInterpolation();
             }
         }
@@ -146,10 +143,8 @@ namespace BlackGui
             if (!this->checkLogPrerequisites()) { return; }
 
             const SituationLog sLog = m_simulatorCommon->interpolationLogger().getLastSituationLog();
-            // ui->te_LastInterpolatedSituation->setText(sLog.toQString(false, true, true, false, "<br>"));
             ui->te_LastInterpolatedSituation->setText(sLog.situationCurrent.toQString(true));
             ui->te_SituationChange->setText(sLog.change.toQString(true));
-            ui->tvp_Changes->push_frontKeepLatestAdjustedFirst(sLog.change, 5);
 
             ui->le_SceneryOffset->setText(sLog.change.getGuessedSceneryDeviation().valueRoundedWithUnit(CLengthUnit::ft(), 1));
             ui->le_SceneryOffsetCG->setText(sLog.change.getGuessedSceneryDeviationCG().valueRoundedWithUnit(CLengthUnit::ft(), 1));
@@ -267,7 +262,9 @@ namespace BlackGui
             const CCallsign cs = situation.getCallsign();
             if (!this->logCallsign(cs)) { return; }
             const CAircraftSituationList situations = m_airspaceMonitor->remoteAircraftSituations(cs);
+            const CAircraftSituationChangeList changes = m_airspaceMonitor->remoteAircraftSituationChanges(cs);
             ui->tvp_AircraftSituations->updateContainerAsync(situations);
+            ui->tvp_Changes->updateContainerMaybeAsync(changes);
             ui->led_Situation->blink();
         }
 
@@ -310,7 +307,6 @@ namespace BlackGui
             ui->le_CG->clear();
             ui->le_Elevation->clear();
             ui->le_ElevationReqRec->clear();
-            ui->le_ElevationHits->clear();
             ui->le_Parts->clear();
             ui->le_UpdateTimes->clear();
             ui->le_UpdateTimes->clear();
@@ -369,8 +365,13 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::displayElevationRequestReceive()
         {
-            static const QString rr("%1/%2");
-            ui->le_ElevationReqRec->setText(rr.arg(m_elvRequested).arg(m_elvReceived));
+            if (!m_airspaceMonitor) { return; }
+            static const QString rr("%1 / %2 hits %3 / %4 %5%");
+            const QPair<int, int> foundMissed = m_airspaceMonitor->getElevationsFoundMissed();
+            const int f = foundMissed.first;
+            const int m = foundMissed.second;
+            const double hitRatioPercent = 100.0 * static_cast<double>(f) / static_cast<double>(f + m);
+            ui->le_ElevationReqRec->setText(rr.arg(m_elvRequested).arg(m_elvReceived).arg(f).arg(m).arg(QString::number(hitRatioPercent, 'f', 1)));
         }
 
         void CInterpolationLogDisplay::linkWithAirspaceMonitor()

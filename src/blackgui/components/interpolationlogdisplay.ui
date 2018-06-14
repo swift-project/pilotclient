@@ -289,19 +289,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="3">
-           <widget class="QLineEdit" name="le_ElevationHits">
-            <property name="toolTip">
-             <string>elevation received</string>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>hits/missed</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="1">
            <widget class="QLineEdit" name="le_CG">
             <property name="readOnly">
@@ -337,13 +324,6 @@
            <widget class="QLabel" name="lbl_ElevationReqRec">
             <property name="text">
              <string>Req/rec:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="lbl_ElevationHits">
-            <property name="text">
-             <string>Hits:</string>
             </property>
            </widget>
           </item>
@@ -425,19 +405,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="le_ElevationReqRec">
-            <property name="toolTip">
-             <string>elevation requested</string>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>req./rec.</string>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="4">
            <widget class="QLabel" name="lbl_Elevation">
             <property name="text">
@@ -469,6 +436,19 @@
             </property>
             <property name="placeholderText">
              <string>parts?</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="3">
+           <widget class="QLineEdit" name="le_ElevationReqRec">
+            <property name="toolTip">
+             <string>elevation requested</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>req./rec.</string>
             </property>
            </widget>
           </item>
@@ -744,7 +724,6 @@
   <tabstop>le_UpdateTimes</tabstop>
   <tabstop>le_Limited</tabstop>
   <tabstop>le_ElevationReqRec</tabstop>
-  <tabstop>le_ElevationHits</tabstop>
   <tabstop>le_Elevation</tabstop>
   <tabstop>le_SimulatorSpecific</tabstop>
   <tabstop>tvp_AircraftSituations</tabstop>
