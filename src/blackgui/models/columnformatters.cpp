@@ -21,6 +21,7 @@
 #include <QMetaType>
 #include <QTime>
 #include <QVariant>
+#include <QScopedPointer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -145,6 +146,12 @@ namespace BlackGui
             return e;
         }
 
+        const CVariant &CDefaultFormatter::emptyPixmapVariant()
+        {
+            static const CVariant e = CVariant::from(QPixmap());
+            return e;
+        }
+
         CVariant CPixmapFormatter::displayRole(const CVariant &dataCVariant) const
         {
             Q_UNUSED(dataCVariant);
@@ -216,12 +223,12 @@ namespace BlackGui
                 // special treatment for some cases
                 const CLength l = dataCVariant.value<CLength>();
                 const bool valid = !l.isNull() && (l.isPositiveWithEpsilonConsidered() || l.isZeroEpsilonConsidered());
-                return valid ? CPhysiqalQuantiyFormatter::displayRole(dataCVariant) : QStringLiteral("");
+                return valid ? CPhysiqalQuantiyFormatter::displayRole(dataCVariant) : emptyStringVariant();
             }
             else
             {
                 Q_ASSERT_X(false, "CAirspaceDistanceFormatter::formatQVariant", "No CLength class");
-                return QStringLiteral("");
+                return emptyStringVariant();
             }
         }
 
@@ -229,7 +236,7 @@ namespace BlackGui
         {
             if (dataCVariant.canConvert<CFrequency>())
             {
-                // speical treatment for some cases
+                // special treatment for some cases
                 const CFrequency f = dataCVariant.value<CFrequency>();
                 if (CComSystem::isValidComFrequency(f))
                 {
@@ -259,7 +266,7 @@ namespace BlackGui
         {
             if (dataCVariant.canConvert<QString>()) { return dataCVariant; }
             if (!dataCVariant.isValid()) { static const CVariant iv("invalid"); return iv; }
-            const QString s("Invalid type '%1'");
+            static const QString s("Invalid type: '%1'");
             return CVariant::from(s.arg(dataCVariant.typeName()));
         }
 
@@ -273,8 +280,8 @@ namespace BlackGui
         {
             if (dataCVariant.canConvert<bool>())
             {
-                bool v = dataCVariant.toBool();
-                return v ? CVariant(m_trueName) : CVariant(m_falseName);
+                const bool v = dataCVariant.toBool();
+                return v ? CVariant(m_trueNameVariant) : CVariant(m_falseNameVariant);
             }
             Q_ASSERT_X(false, "CBoolTextFormatter", "no boolean value");
             return CVariant();
@@ -292,12 +299,11 @@ namespace BlackGui
             CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip())
         {
             // one time pixmap creation
-            CLedWidget *led = ledDefault();
+            QScopedPointer<CLedWidget> led(createLedDefault());
             led->setOn(true);
-            m_pixmapOnLed = led->asPixmap();
+            m_pixmapOnLedVariant = CVariant::fromValue(led->asPixmap());
             led->setOn(false);
-            m_pixmapOffLed = led->asPixmap();
-            delete led;
+            m_pixmapOffLedVariant = CVariant::fromValue(led->asPixmap());
         }
 
         CVariant CBoolLedFormatter::displayRole(const CVariant &dataCVariant) const
@@ -311,8 +317,8 @@ namespace BlackGui
         {
             if (dataCVariant.canConvert<bool>())
             {
-                bool v = dataCVariant.toBool();
-                return CVariant::from(v ? m_pixmapOnLed : m_pixmapOffLed);
+                const bool v = dataCVariant.toBool();
+                return v ? m_pixmapOnLedVariant : m_pixmapOffLedVariant;
             }
             Q_ASSERT_X(false, "CBoolLedFormatter", "no boolean value");
             return CVariant();
@@ -331,11 +337,9 @@ namespace BlackGui
         { }
 
         CBoolIconFormatter::CBoolIconFormatter(const CIcon &onIcon, const CIcon &offIcon, const QString &onName, const QString &offName, int alignment) :
-            CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip()), m_iconOn(onIcon), m_iconOff(offIcon)
-        {
-            m_iconOn.setDescriptiveText(onName);
-            m_iconOff.setDescriptiveText(offName);
-        }
+            CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip()),
+            m_iconOnVariant(CVariant::fromValue(onIcon.toPixmap())), m_iconOffVariant(CVariant::fromValue(offIcon.toPixmap()))
+        { }
 
         CVariant CBoolIconFormatter::displayRole(const CVariant &dataCVariant) const
         {
@@ -348,8 +352,8 @@ namespace BlackGui
         {
             if (dataCVariant.canConvert<bool>())
             {
-                bool v = dataCVariant.toBool();
-                return CVariant::from(v ? m_iconOn.toPixmap() : m_iconOff.toPixmap());
+                const bool v = dataCVariant.toBool();
+                return v ? m_iconOnVariant : m_iconOffVariant;
             }
             Q_ASSERT_X(false, "CBoolIconFormatter", "no boolean value");
             return CVariant();
@@ -379,16 +383,16 @@ namespace BlackGui
 
         CVariant CColorFormatter::decorationRole(const CVariant &dataCVariant) const
         {
-            static const CVariant empty(CVariant::fromValue(QPixmap()));
-            CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
-            if (!rgbColor.isValid())  { return empty; }
+            const CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
+            if (!rgbColor.isValid())  { return emptyPixmapVariant(); }
             return CVariant::fromValue(rgbColor.toPixmap());
         }
 
         CVariant CColorFormatter::tooltipRole(const CVariant &dataCVariant) const
         {
-            CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
-            if (!rgbColor.isValid())  { return ""; }
+            static const CVariant empty(CVariant::fromValue(QPixmap()));
+            const CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
+            if (!rgbColor.isValid())  { return emptyStringVariant(); }
             return rgbColor.hex(true);
         }
 

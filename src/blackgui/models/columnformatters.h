@@ -116,9 +116,12 @@ namespace BlackGui
             //! Empty string CVariant
             static const BlackMisc::CVariant &emptyStringVariant();
 
+            //! Empty pixmap CVariant
+            static const BlackMisc::CVariant &emptyPixmapVariant();
+
             QList<int>  m_supportedRoles = roleDisplay();  //!< supports decoration roles
-            int  m_alignment      = -1;     //!< alignment horizontal/vertically / Qt::Alignment
-            bool m_useI18n        = true;   //!< i18n?
+            int  m_alignment = -1;     //!< alignment horizontal/vertically / Qt::Alignment
+            bool m_useI18n   = true;   //!< i18n?
         };
 
         //! Pixmap formatter
@@ -164,7 +167,9 @@ namespace BlackGui
         public:
             //! Constructor
             CBoolTextFormatter(int alignment = alignDefault(), const QString &trueName = "true", const QString &falseName = "false", const QList<int> &supportedRoles = roleDisplay()) :
-                CDefaultFormatter(alignment, false, supportedRoles), m_trueName(trueName), m_falseName(falseName) {}
+                CDefaultFormatter(alignment, false, supportedRoles),
+                m_trueNameVariant(BlackMisc::CVariant::from(trueName)),
+                m_falseNameVariant(BlackMisc::CVariant::from(falseName)) {}
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
@@ -173,8 +178,8 @@ namespace BlackGui
             virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
 
         protected:
-            const QString m_trueName  = "true";  //!< displayed when true
-            const QString m_falseName = "false"; //!< displayed when false
+            const BlackMisc::CVariant m_trueNameVariant  = "true";  //!< displayed when true
+            const BlackMisc::CVariant m_falseNameVariant = "false"; //!< displayed when false
         };
 
         //! Format as bool LED value
@@ -200,15 +205,16 @@ namespace BlackGui
                 return CBoolTextFormatter::displayRole(dataCVariant);
             }
 
-            //! Default LED
-            static BlackGui::CLedWidget *ledDefault()
-            {
-                return new BlackGui::CLedWidget(false, BlackGui::CLedWidget::Yellow, BlackGui::CLedWidget::Black, BlackGui::CLedWidget::Rounded);
-            }
-
         protected:
-            QPixmap m_pixmapOnLed;  //!< Pixmap used when on
-            QPixmap m_pixmapOffLed; //!< Pixmap used when off
+            BlackMisc::CVariant m_pixmapOnLedVariant;  //!< Pixmap used when on
+            BlackMisc::CVariant m_pixmapOffLedVariant; //!< Pixmap used when off
+
+        private:
+            //! Default LED
+            static CLedWidget *createLedDefault()
+            {
+                return new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded);
+            }
         };
 
         //! Format as bool pixmap
@@ -238,8 +244,8 @@ namespace BlackGui
             virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
 
         protected:
-            BlackMisc::CIcon m_iconOn;  //!< Used when on
-            BlackMisc::CIcon m_iconOff; //!< Used when off
+            const BlackMisc::CVariant m_iconOnVariant;  //!< Used when on
+            const BlackMisc::CVariant m_iconOffVariant; //!< Used when off
         };
 
         //! Default formatter when column contains CValueObject
@@ -282,7 +288,7 @@ namespace BlackGui
             static const QString &formatHmsz() { static const QString f = "HH:mm:ss.zzz"; return f; }
 
         private:
-            QString m_formatString = "yyyy-MM-dd HH:mm"; //!< how the value is displayed
+            const QString m_formatString = "yyyy-MM-dd HH:mm"; //!< how the value is displayed
         };
 
         //! Formatter when column contains an integer
@@ -307,7 +313,7 @@ namespace BlackGui
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &altitude) const override;
 
         private:
-            bool m_flightLevel = false;
+            const bool m_flightLevel = false;
         };
 
         //! Formatter when column contains a color
@@ -320,11 +326,11 @@ namespace BlackGui
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
 
-            //! Display the icon
-            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
-
             //! \copydoc CDefaultFormatter::tooltipRole
             virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
+
+            //! Display the icon
+            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
         //! Formatter for physical quantities
@@ -345,7 +351,7 @@ namespace BlackGui
                 else
                 {
                     Q_ASSERT_X(false, "CPhysiqalQuantiyFormatter::displayRole", "No CPhysicalQuantity class");
-                    return "";
+                    return emptyStringVariant();
                 }
             }
 
