@@ -128,7 +128,7 @@ namespace BlackMisc
     QString CRgbColor::hex(bool withHash) const
     {
         if (!isValid()) { return ""; }
-        QString h(redHex() + greenHex() + blueHex());
+        const QString h(redHex() + greenHex() + blueHex());
         return withHash ? "#" + h : h;
     }
 
@@ -137,14 +137,14 @@ namespace BlackMisc
         if (color.isEmpty()) { return; }
         else if (isName)
         {
-            QColor q(color);
+            const QColor q(color);
             m_r = q.red();
             m_g = q.green();
             m_b = q.blue();
         }
         else
         {
-            QString c(color.trimmed());
+            const QString c(color.trimmed());
             QColor q(c);
             if (setQColor(q)) { return; }
             if (c.startsWith("#")) { this->setInvalid(); return; }
@@ -165,9 +165,9 @@ namespace BlackMisc
         if (*this == color) { return 0.0; } // avoid rounding
 
         // all values 0-1
-        double rd = (normalizedRed() - color.normalizedRed());
-        double bd = (normalizedBlue() - color.normalizedBlue());
-        double gd = (normalizedGreen() - color.normalizedGreen());
+        const double rd = (normalizedRed() - color.normalizedRed());
+        const double bd = (normalizedBlue() - color.normalizedBlue());
+        const double gd = (normalizedGreen() - color.normalizedGreen());
         return (rd * rd + bd * bd + gd * gd) / 3.0;
     }
 
@@ -181,72 +181,61 @@ namespace BlackMisc
     QString CRgbColor::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        return hex();
+        return this->hex();
     }
 
     CVariant CRgbColor::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
         if (index.isMyself()) { return CVariant::from(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBlue:
-            return CVariant::fromValue(blue());
-        case IndexRed:
-            return CVariant::fromValue(red());
-        case IndexGreen:
-            return CVariant::fromValue(green());
-        case IndexWebHex:
-            return CVariant::fromValue(hex());
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexBlue: return CVariant::fromValue(blue());
+        case IndexRed: return CVariant::fromValue(red());
+        case IndexGreen: return CVariant::fromValue(green());
+        case IndexWebHex: return CVariant::fromValue(hex());
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
     void CRgbColor::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (index.isMyself()) { (*this) = variant.to<CRgbColor>(); return; }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBlue:
-            this->m_b = variant.toInt();
-            break;
-        case IndexRed:
-            this->m_r = variant.toInt();
-            break;
-        case IndexGreen:
-            this->m_g = variant.toInt();
-            break;
-        case IndexWebHex:
-            this->setByString(variant.toQString());
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexBlue: m_b = variant.toInt(); break;
+        case IndexRed: m_r = variant.toInt(); break;
+        case IndexGreen: m_g = variant.toInt(); break;
+        case IndexWebHex: this->setByString(variant.toQString()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
     int CRgbColor::comparePropertyByIndex(const CPropertyIndex &index, const CRgbColor &compareValue) const
     {
-        if (index.isMyself()) { return this->hex().compare(compareValue.hex(), Qt::CaseInsensitive); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        if (index.isMyself()) { return this->compare(compareValue); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexBlue:
-            return Compare::compare(this->m_b, compareValue.m_b);
-        case IndexRed:
-            return Compare::compare(this->m_r, compareValue.m_r);
-        case IndexGreen:
-            return Compare::compare(this->m_g, compareValue.m_g);
-        case IndexWebHex:
-            this->hex().compare(compareValue.hex(), Qt::CaseInsensitive);
-            break;
+        case IndexBlue: return Compare::compare(m_b, compareValue.m_b);
+        case IndexRed: return Compare::compare(m_r, compareValue.m_r);
+        case IndexGreen: return Compare::compare(m_g, compareValue.m_g);
+        case IndexWebHex: return this->compare(compareValue);
         default:
             Q_ASSERT_X(false, Q_FUNC_INFO, "Missing compare");
             break;
         }
         return 0;
+    }
+
+    int CRgbColor::compare(const CRgbColor &color) const
+    {
+        int c = Compare::compare(m_r, color.m_r);
+        if (c != 0) { return c; }
+        c = Compare::compare(m_g, color.m_g);
+        if (c != 0) { return c; }
+        return Compare::compare(m_b, color.m_b);
     }
 
     double CRgbColor::colorRange() const

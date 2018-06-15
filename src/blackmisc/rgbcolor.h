@@ -117,6 +117,9 @@ namespace BlackMisc
         //! Compare for index
         int comparePropertyByIndex(const CPropertyIndex &index, const CRgbColor &compareValue) const;
 
+        //! Compare with other color
+        int compare(const CRgbColor &color) const;
+
     private:
         int m_r = -1;
         int m_g = -1;
