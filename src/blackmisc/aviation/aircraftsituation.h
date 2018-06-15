@@ -116,6 +116,7 @@ namespace BlackMisc
             {
                 NoElevationInfo,
                 TransferredElevation, //!< transferred from nearby situation
+                Interpolated,         //!< interpolated between 2 elevations
                 FromProvider,         //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
                 FromCache,            //!< from cache
                 SituationChange,      //!< from BlackMisc::Aviation::CAircraftSituationChange
@@ -283,7 +284,15 @@ namespace BlackMisc
             bool canTransferGroundElevation(const CAircraftSituation &otherSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
 
             //! Transfer from "this" situation to \c otherSituation
+            //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
+            //! \sa CAircraftSituation::interpolateGroundElevation
             bool transferGroundElevation(CAircraftSituation &otherSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
+
+            //! Preset "this" elevation from the two adjacent positions
+            //! \remark it is not required that the position of "this" is already known
+            //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
+            //! \sa CAircraftSituation::transferGroundElevation
+            bool presetGroundElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, const CAircraftSituationChange &change);
 
             //! Is on ground by elevation data, requires elevation and CG
             //! @{
@@ -470,6 +479,17 @@ namespace BlackMisc
                 return isDoubleEpsilonEqual(1.0, oldGroundFactor) && isDoubleEpsilonEqual(0.0, newGroundFactor);
             }
             //! @}
+
+            //! Preset the ground elevation based on info we already have
+            //! \remark either sets a gnd. elevation or sets it to null
+            //! \remark situationToPreset position is unknown
+            //! \remark situationToPreset needs to be between oldSituation and newSituation
+            //! \sa CAircraftSituation::transferGroundElevation
+            static bool presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change);
+
+            //! Interpolate between the 2 situations for situation
+            //! \remark NULL if there are no two elevations
+            static Geo::CElevationPlane interpolateElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const PhysicalQuantities::CLength &distance = PhysicalQuantities::CLength::null());
 
         private:
             CCallsign m_correspondingCallsign;

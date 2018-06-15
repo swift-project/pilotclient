@@ -247,10 +247,6 @@ namespace BlackMisc
             //! Current interpolated situation
             Aviation::CAircraftSituation getInterpolatedSituation();
 
-            //! Preset the ground elevation based on info we already have
-            //! \remark either sets a gnd.elevation or sets it to null
-            bool presetGroundElevation(Aviation::CAircraftSituation &situation, const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation) const;
-
             //! Parts before given offset time
             Aviation::CAircraftParts getInterpolatedParts();
 

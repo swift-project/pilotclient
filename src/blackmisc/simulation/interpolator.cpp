@@ -424,55 +424,14 @@ namespace BlackMisc
                 currentSituation.setCallsign(m_callsign);
             }
 
-            // do not set elevation here, as we do not know where the situation will be
-            // after the interpolation step!
-            this->presetGroundElevation(currentSituation, oldSituation, newSituation);
+            // preset elevation here, as we do not know where the situation will be after the interpolation step!
+            const bool preset = currentSituation.presetGroundElevation(oldSituation, newSituation, m_situationsChange);
+            Q_UNUSED(preset);
 
             // fetch CG once
             const CLength cg(this->getModelCG());
             currentSituation.setCG(cg);
             return currentSituation;
-        }
-
-        template<typename Derived>
-        bool CInterpolator<Derived>::presetGroundElevation(CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation) const
-        {
-            // IMPORTANT: we do not know what the situation will be interpolated to, so we cannot transfer
-            situation.resetGroundElevation();
-            do
-            {
-                if (oldSituation.equalNormalVectorDouble(newSituation))
-                {
-                    if (oldSituation.hasGroundElevation())
-                    {
-                        // same positions, we can use existing elevation
-                        situation.setGroundElevation(oldSituation.getGroundElevationPlane(), CAircraftSituation::TransferredElevation);
-                        break;
-                    }
-                }
-
-                const CLength distance = newSituation.calculateGreatCircleDistance(oldSituation);
-                if (distance < newSituation.getDistancePerTime(250))
-                {
-                    if (oldSituation.hasGroundElevation())
-                    {
-                        // almost same positions, we can use existing elevation
-                        situation.setGroundElevation(oldSituation.getGroundElevationPlane(), CAircraftSituation::TransferredElevation);
-                        break;
-                    }
-                }
-
-                static const CLength allowedStdDev(3, CLengthUnit::ft());
-                QPair<CAltitude, CAltitude> elvDevMean = m_situationsChange.getElevationStdDevAndMean();
-                if (!elvDevMean.first.isNull() && elvDevMean.first < allowedStdDev)
-                {
-                    // not much change in known elevations
-                    situation.setGroundElevation(elvDevMean.second, CAircraftSituation::SituationChange);
-                    break;
-                }
-            }
-            while (false);
-            return situation.hasGroundElevation();
         }
 
         template<typename Derived>

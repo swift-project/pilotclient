@@ -38,6 +38,18 @@ namespace BlackMisc
             CCoordinateGeodetic(coordinate), m_radius(radius)
         { }
 
+        CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CAltitude &altitude, const CLength &radius) :
+            CCoordinateGeodetic(coordinate), m_radius(radius)
+        {
+            this->setGeodeticHeight(altitude);
+        }
+
+        CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, double altitudeMSLft, const CLength &radius) :
+            CCoordinateGeodetic(coordinate), m_radius(radius)
+        {
+            this->setGeodeticHeight(CAltitude(altitudeMSLft, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+        }
+
         void CElevationPlane::setRadiusOrMinimum(const CLength &radius)
         {
             m_radius = ((radius.isNull() || radius < CElevationPlane::singlePointRadius())) ? CElevationPlane::singlePointRadius() : radius;
