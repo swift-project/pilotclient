@@ -99,8 +99,14 @@ namespace BlackGui
             //! Enable all disabled aircraft
             void enableAllDisabledAircraft();
 
+            //! Disable all enabled aircraft
+            void disableAllEnabledAircraft();
+
             //! Enable all unrendered aircraft
             void reEnableAllUnrenderedAircraft();
+
+            //! Enable or disable aircraft
+            void enableOrDisableAircraft(const BlackMisc::Simulation::CSimulatedAircraftList &aircraft, bool newEnabled);
 
             bool m_withMenuHighlightAndFollow = true;
             bool m_withMenuEnableAircraft = true;

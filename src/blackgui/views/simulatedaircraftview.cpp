@@ -57,6 +57,7 @@ namespace BlackGui
             if (m_withMenuEnableAircraft)
             {
                 menuActions.addAction(CIcons::appAircraft16(), "Enable all aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::enableAllDisabledAircraft });
+                menuActions.addAction(CIcons::appAircraft16(), "Disable all aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::disableAllEnabledAircraft });
                 menuActions.addAction(CIcons::appAircraft16(), "Re-enable unrendered aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::reEnableAllUnrenderedAircraft });
             }
 
@@ -152,26 +153,25 @@ namespace BlackGui
         {
             if (!sGui || sGui->isShuttingDown())  { return; }
             const CSimulatedAircraftList aircraft = this->container().findByEnabled(false);
-            if (aircraft.isEmpty())  { return; }
+            this->enableOrDisableAircraft(aircraft, true);
+        }
 
-            const QPointer<CSimulatedAircraftView> myself(this);
-            for (const CSimulatedAircraft &sa : aircraft)
-            {
-                QTimer::singleShot(10, this, [ = ]
-                {
-                    if (!myself) { return; }
-                    if (!sGui || sGui->isShuttingDown()) { return; }
-                    CSimulatedAircraft enabledAircraft(sa);
-                    enabledAircraft.setEnabled(true);
-                    emit this->requestEnableAircraft(enabledAircraft);
-                });
-            }
+        void CSimulatedAircraftView::disableAllEnabledAircraft()
+        {
+            if (!sGui || sGui->isShuttingDown())  { return; }
+            const CSimulatedAircraftList aircraft = this->container().findByEnabled(true);
+            this->enableOrDisableAircraft(aircraft, false);
         }
 
         void CSimulatedAircraftView::reEnableAllUnrenderedAircraft()
         {
             if (!sGui || sGui->isShuttingDown())  { return; }
             const CSimulatedAircraftList aircraft = this->container().findByRendered(false);
+            this->enableOrDisableAircraft(aircraft, true);
+        }
+
+        void CSimulatedAircraftView::enableOrDisableAircraft(const CSimulatedAircraftList &aircraft, bool newEnabled)
+        {
             if (aircraft.isEmpty())  { return; }
 
             const QPointer<CSimulatedAircraftView> myself(this);
@@ -182,7 +182,7 @@ namespace BlackGui
                     if (!myself) { return; }
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     CSimulatedAircraft enabledAircraft(sa);
-                    enabledAircraft.setEnabled(true);
+                    enabledAircraft.setEnabled(newEnabled);
                     emit this->requestEnableAircraft(enabledAircraft);
                 });
             }

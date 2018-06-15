@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeltimestampobjects.h"
 #include "blackmisc/aviation/aircraftsituationchangelist.h"
-
 #include <QVariant>
 
 class QModelIndex;

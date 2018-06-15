@@ -73,6 +73,16 @@
           <widget class="BlackGui::CLedWidget" name="led_Running" native="true"/>
          </item>
          <item>
+          <widget class="QLabel" name="lbl_Updating">
+           <property name="text">
+            <string>Updating</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="BlackGui::CLedWidget" name="led_Updating" native="true"/>
+         </item>
+         <item>
           <spacer name="hs_LedBar">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -235,13 +245,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="lbl_UpdateNumber">
-            <property name="text">
-             <string>Upd.#:</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="4">
            <widget class="QLabel" name="lbl_UpdateAircraftReqTime">
             <property name="toolTip">
@@ -252,30 +255,10 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1" colspan="11">
-           <widget class="QLineEdit" name="le_SimulatorSpecific">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="9" colspan="3">
-           <widget class="QLineEdit" name="le_Limited">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>limited?</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="5" colspan="7">
-           <widget class="QLineEdit" name="le_Elevation">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>elevation</string>
+          <item row="1" column="2">
+           <widget class="QLabel" name="lbl_UpdateNumber">
+            <property name="text">
+             <string>Upd.#:</string>
             </property>
            </widget>
           </item>
@@ -289,6 +272,26 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="5" colspan="7">
+           <widget class="QLineEdit" name="le_Elevation">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>elevation</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="9" colspan="3">
+           <widget class="QLineEdit" name="le_Limited">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>limited?</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="1">
            <widget class="QLineEdit" name="le_CG">
             <property name="readOnly">
@@ -296,6 +299,13 @@
             </property>
             <property name="placeholderText">
              <string>CG</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="11">
+           <widget class="QLineEdit" name="le_SimulatorSpecific">
+            <property name="readOnly">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -320,23 +330,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="lbl_ElevationReqRec">
-            <property name="text">
-             <string>Req/rec:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="7">
-           <widget class="QLineEdit" name="le_SceneryOffset">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>offset from changes</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="9">
            <widget class="QLineEdit" name="le_SceneryOffsetCG">
             <property name="readOnly">
@@ -344,13 +337,6 @@
             </property>
             <property name="placeholderText">
              <string>offset-CG</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="8">
-           <widget class="QLabel" name="lbl_SceneryOffsetCG">
-            <property name="text">
-             <string>Off-CG:</string>
             </property>
            </widget>
           </item>
@@ -364,13 +350,34 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="5" colspan="3">
-           <widget class="QLineEdit" name="le_UpdateTimes">
+          <item row="0" column="7">
+           <widget class="QLineEdit" name="le_SceneryOffset">
             <property name="readOnly">
              <bool>true</bool>
             </property>
             <property name="placeholderText">
-             <string>time min, max, ..</string>
+             <string>offset from changes</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbl_ElevationReqRec">
+            <property name="text">
+             <string>Req/rec:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8">
+           <widget class="QLabel" name="lbl_SceneryOffsetCG">
+            <property name="text">
+             <string>Off-CG:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_ReqTime">
+            <property name="text">
+             <string>Req. time:</string>
             </property>
            </widget>
           </item>
@@ -384,13 +391,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="6">
-           <widget class="QLabel" name="lbl_Offset">
-            <property name="text">
-             <string>Offset:</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="8">
            <widget class="QLabel" name="lbl_Limitited">
             <property name="text">
@@ -398,27 +398,20 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="lbl_ReqTime">
-            <property name="text">
-             <string>Req. time:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="4">
-           <widget class="QLabel" name="lbl_Elevation">
-            <property name="text">
-             <string>Elevation:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <widget class="QLineEdit" name="le_GndFlag">
+          <item row="1" column="5" colspan="3">
+           <widget class="QLineEdit" name="le_UpdateTimes">
             <property name="readOnly">
              <bool>true</bool>
             </property>
             <property name="placeholderText">
-             <string>gnd.flag?</string>
+             <string>time min, max, ..</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QLabel" name="lbl_Offset">
+            <property name="text">
+             <string>Offset:</string>
             </property>
            </widget>
           </item>
@@ -426,16 +419,6 @@
            <widget class="QLabel" name="lbl_GndFlag">
             <property name="text">
              <string>Gnd.flag:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLineEdit" name="le_Parts">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>parts?</string>
             </property>
            </widget>
           </item>
@@ -449,6 +432,33 @@
             </property>
             <property name="placeholderText">
              <string>req./rec.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLineEdit" name="le_GndFlag">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>gnd.flag?</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QLabel" name="lbl_Elevation">
+            <property name="text">
+             <string>Elevation:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="le_Parts">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>parts?</string>
             </property>
            </widget>
           </item>

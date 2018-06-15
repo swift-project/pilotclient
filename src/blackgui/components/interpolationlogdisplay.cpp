@@ -47,6 +47,7 @@ namespace BlackGui
             ui->led_Situation->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Situation received", "", 14);
             ui->led_Elevation->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Elevation received", "", 14);
             ui->led_Running->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Running", "Stopped", 14);
+            ui->led_Updating->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Just updating", "Idle", 14);
 
             m_callsign = ui->comp_CallsignCompleter->getCallsign();
 
@@ -100,7 +101,12 @@ namespace BlackGui
 
         void CInterpolationLogDisplay::updateLog()
         {
-            if (!this->checkLogPrerequisites()) { return; }
+            ui->led_Updating->blink(250);
+            if (!this->checkLogPrerequisites())
+            {
+                ui->le_SimulatorSpecific->setText(m_simulatorCommon->getStatisticsSimulatorSpecific());
+                return;
+            }
 
             // only display visible tab
             if (ui->tw_LogTabs->currentWidget() == ui->tb_TextLog)
