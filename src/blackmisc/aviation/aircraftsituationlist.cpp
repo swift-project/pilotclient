@@ -57,8 +57,7 @@ namespace BlackMisc
             if (this->isEmpty()) { return 0; }
 
             Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst || this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
-            const CAircraftSituationChange change(*this, model.getCG(), model.isVtol(), true, true);
-            if (changeOut) { *changeOut = change; } // copy over
+            const CAircraftSituationChange simpleChange(*this, model.getCG(), model.isVtol(), true, false);
             int c = 0;
             bool latest = true;
 
@@ -69,11 +68,18 @@ namespace BlackMisc
                 {
                     // change is only valid for the latest situation
                     // this will do nothing if not appropriate
-                    s.guessOnGround(latest ? change : CAircraftSituationChange::null(), model);
+                    s.guessOnGround(latest ? simpleChange : CAircraftSituationChange::null(), model);
                     c++;
                 }
                 latest = false;
             }
+
+            if (changeOut)
+            {
+                const CAircraftSituationChange change(*this, model.getCG(), model.isVtol(), true, true);
+                *changeOut = change;
+            }
+
             return c;
         }
 
