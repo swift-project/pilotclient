@@ -88,6 +88,18 @@ namespace BlackMisc
             return !m_guessedSceneryDeviation.isNull();
         }
 
+        bool CAircraftSituationChange::hasElevationDevWithinAllowedRange() const
+        {
+            if (m_elvStdDev.isNull()) { return false; }
+            return m_elvStdDev < allowedAltitudeDeviation();
+        }
+
+        bool CAircraftSituationChange::hasAltitudeDevWithinAllowedRange() const
+        {
+            if (m_altStdDev.isNull()) { return false; }
+            return m_altStdDev < allowedAltitudeDeviation();
+        }
+
         QString CAircraftSituationChange::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
@@ -268,6 +280,12 @@ namespace BlackMisc
             default: break;
             }
             return noInfo;
+        }
+
+        const CLength &CAircraftSituationChange::allowedAltitudeDeviation()
+        {
+            static const CLength allowedStdDev(3, CLengthUnit::ft());
+            return allowedStdDev;
         }
 
         void CAircraftSituationChange::setSceneryDeviation(const CLength &deviation, const CLength &cg, CAircraftSituationChange::GuessedSceneryDeviation hint)

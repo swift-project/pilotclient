@@ -452,36 +452,36 @@ namespace BlackMisc
             return values;
         }
 
-        QPair<CSpeed, CSpeed> CAircraftSituationList::groundSpeedStandardDeviationAndMean() const
+        CSpeedPair CAircraftSituationList::groundSpeedStandardDeviationAndMean() const
         {
             const QList<double> gsValues = this->groundSpeedValues(CSpeedUnit::kts());
             if (gsValues.size() != this->size()) { return QPair<CSpeed, CSpeed>(CSpeed::null(), CSpeed::null()); }
             const QPair<double, double> gsKts = CMathUtils::standardDeviationAndMean(gsValues);
-            return QPair<CSpeed, CSpeed>(CSpeed(gsKts.first, CSpeedUnit::kts()), CSpeed(gsKts.second, CSpeedUnit::kts()));
+            return CSpeedPair(CSpeed(gsKts.first, CSpeedUnit::kts()), CSpeed(gsKts.second, CSpeedUnit::kts()));
         }
 
-        QPair<CAngle, CAngle> CAircraftSituationList::pitchStandardDeviationAndMean() const
+        CAnglePair CAircraftSituationList::pitchStandardDeviationAndMean() const
         {
             const QList<double> pitchValues = this->pitchValues(CAngleUnit::deg());
             if (pitchValues.size() != this->size()) { return QPair<CAngle, CAngle>(CAngle::null(), CAngle::null()); }
             const QPair<double, double> pitchDeg = CMathUtils::standardDeviationAndMean(pitchValues);
-            return QPair<CAngle, CAngle>(CAngle(pitchDeg.first, CAngleUnit::deg()), CAngle(pitchDeg.second, CAngleUnit::deg()));
+            return CAnglePair(CAngle(pitchDeg.first, CAngleUnit::deg()), CAngle(pitchDeg.second, CAngleUnit::deg()));
         }
 
-        QPair<CAltitude, CAltitude> CAircraftSituationList::elevationStandardDeviationAndMean() const
+        CAltitudePair CAircraftSituationList::elevationStandardDeviationAndMean() const
         {
             const QList<double> elvValues = this->elevationValues(CAltitude::defaultUnit());
-            if (elvValues.size() != this->size()) { return QPair<CAltitude, CAltitude>(CAltitude::null(), CAltitude::null()); }
+            if (elvValues.size() != this->size()) { return CAltitudePair(CAltitude::null(), CAltitude::null()); }
             const QPair<double, double> elvFt = CMathUtils::standardDeviationAndMean(elvValues);
-            return QPair<CAltitude, CAltitude>(CAltitude(elvFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(elvFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
+            return CAltitudePair(CAltitude(elvFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(elvFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
         }
 
-        QPair<CAltitude, CAltitude> CAircraftSituationList::altitudeStandardDeviationAndMean() const
+        CAltitudePair CAircraftSituationList::altitudeStandardDeviationAndMean() const
         {
             const QList<double> altValues = this->altitudeValues(CAltitude::defaultUnit());
-            if (altValues.size() != this->size()) { return QPair<CAltitude, CAltitude>(CAltitude::null(), CAltitude::null()); }
+            if (altValues.size() != this->size()) { return CAltitudePair(CAltitude::null(), CAltitude::null()); }
             const QPair<double, double> altFt = CMathUtils::standardDeviationAndMean(altValues);
-            return QPair<CAltitude, CAltitude>(CAltitude(altFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(altFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
+            return CAltitudePair(CAltitude(altFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(altFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
         }
 
         QPair<CLength, CLength> CAircraftSituationList::minMaxGroundDistance(const CLength &cg) const
@@ -494,13 +494,13 @@ namespace BlackMisc
             return QPair<CLength, CLength>(CLength(gndDistMin, CAltitude::defaultUnit()), CLength(gndDistMax, CAltitude::defaultUnit()));
         }
 
-        QPair<CAltitude, CAltitude> CAircraftSituationList::altitudeAglStandardDeviationAndMean() const
+        CAltitudePair CAircraftSituationList::altitudeAglStandardDeviationAndMean() const
         {
             const QList<double> altValues = this->altitudeValues(CLengthUnit::ft());
-            if (altValues.size() != this->size()) { return QPair<CAltitude, CAltitude>(CAltitude::null(), CAltitude::null()); }
+            if (altValues.size() != this->size()) { return CAltitudePair(CAltitude::null(), CAltitude::null()); }
 
             const QList<double> elvValues = this->elevationValues(CLengthUnit::ft());
-            if (elvValues.size() != this->size()) { return QPair<CAltitude, CAltitude>(CAltitude::null(), CAltitude::null()); }
+            if (elvValues.size() != this->size()) { return CAltitudePair(CAltitude::null(), CAltitude::null()); }
 
             QList<double> altElvDeltas;
             for (int i = 0; i < altValues.size(); i++)
@@ -509,7 +509,8 @@ namespace BlackMisc
                 altElvDeltas.push_back(delta);
             }
             const QPair<double, double> deltaFt = CMathUtils::standardDeviationAndMean(altElvDeltas);
-            return QPair<CAltitude, CAltitude>(CAltitude(deltaFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(deltaFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
+            return CAltitudePair(CAltitude(deltaFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(deltaFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
+        }
         }
     } // namespace
 } // namespace

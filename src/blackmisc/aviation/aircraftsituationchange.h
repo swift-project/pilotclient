@@ -16,13 +16,13 @@
 #include "altitude.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
+#include "blackmisc/pair.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
-#include <QPair>
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {
@@ -119,22 +119,22 @@ namespace BlackMisc
 
             //! Ground distance (AGL) if it can be calculated, otherwise NULL
             //! \note distance is without CG, so on ground it can also be used to calculate
-            QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength> getGroundDistanceStdDevAndMean() const { return QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength>(m_gndDistStdDev, m_gndDistMean); }
+            PhysicalQuantities::CLengthPair getGroundDistanceStdDevAndMean() const { return PhysicalQuantities::CLengthPair(m_gndDistStdDev, m_gndDistMean); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::altitudeStandardDeviationAndMean
-            QPair<CAltitude, CAltitude> getAltitudeStdDevAndMean() const { return QPair<CAltitude, CAltitude>(m_altStdDev, m_altMean); }
+            CAltitudePair getAltitudeStdDevAndMean() const { return CAltitudePair(m_altStdDev, m_altMean); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::elevationStandardDeviationAndMean
-            QPair<CAltitude, CAltitude> getElevationStdDevAndMean() const { return QPair<CAltitude, CAltitude>(m_elvStdDev, m_elvMean); }
+            CAltitudePair getElevationStdDevAndMean() const { return CAltitudePair(m_elvStdDev, m_elvMean); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::groundSpeedStandardDeviationAndMean
-            QPair<PhysicalQuantities::CSpeed, PhysicalQuantities::CSpeed> getGroundSpeedStdDevAndMean() const { return QPair<PhysicalQuantities::CSpeed, PhysicalQuantities::CSpeed>(m_gsStdDev, m_gsMean); }
+            PhysicalQuantities::CSpeedPair getGroundSpeedStdDevAndMean() const { return PhysicalQuantities::CSpeedPair(m_gsStdDev, m_gsMean); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::pitchStandardDeviationAndMean
-            QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle> getPitchStdDevAndMean() const { return QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle>(m_pitchStdDev, m_pitchMean); }
+            PhysicalQuantities::CAnglePair getPitchStdDevAndMean() const { return PhysicalQuantities::CAnglePair(m_pitchStdDev, m_pitchMean); }
 
             //! \copydoc BlackMisc::Aviation::CAircraftSituationList::minMaxGroundDistance
-            QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength> getMinMaxGroundDistance() const { return QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength>(m_minGroundDistance, m_maxGroundDistance); }
+            PhysicalQuantities::CLengthPair getMinMaxGroundDistance() const { return PhysicalQuantities::CLengthPair(m_minGroundDistance, m_maxGroundDistance); }
 
             //! Scnenery deviation (if it can be calculated, otherwise PhysicalQuantities::CLength::null)
             //! This is without CG, so substract CG to get deviation
@@ -151,6 +151,12 @@ namespace BlackMisc
 
             //! Scenery deviation available?
             bool hasSceneryDeviation() const;
+
+            //! Elevation within CAircraftSituation::allowedAltitudeDeviation range
+            bool hasElevationDevWithinAllowedRange() const;
+
+            //! Altitude within CAircraftSituation::allowedAltitudeDeviation range
+            bool hasAltitudeDevWithinAllowedRange() const;
 
             //! \copydoc Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -172,6 +178,9 @@ namespace BlackMisc
 
             //! The enum as string
             static const QString &guessedSceneryDeviationToString(GuessedSceneryDeviation hint);
+
+            //! Within this range deviation is so small we consider values "almost constant"
+            static const PhysicalQuantities::CLength &allowedAltitudeDeviation();
 
         private:
             //! Scenery deviation hint

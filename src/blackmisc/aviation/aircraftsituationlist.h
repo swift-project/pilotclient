@@ -20,6 +20,7 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/pair.h"
 #include "blackmisc/variant.h"
 
 #include <QMetaType>
@@ -164,23 +165,23 @@ namespace BlackMisc
             QList<double> groundDistanceValues(const PhysicalQuantities::CLengthUnit &unit, const PhysicalQuantities::CLength &cg) const;
 
             //! Pitch angles standard deviation and mean
-            QPair<PhysicalQuantities::CAngle, PhysicalQuantities::CAngle> pitchStandardDeviationAndMean() const;
+            PhysicalQuantities::CAnglePair pitchStandardDeviationAndMean() const;
 
             //! Ground speed standard deviation and mean
-            QPair<PhysicalQuantities::CSpeed, PhysicalQuantities::CSpeed> groundSpeedStandardDeviationAndMean() const;
+            PhysicalQuantities::CSpeedPair groundSpeedStandardDeviationAndMean() const;
 
             //! Elevation standard deviation and mean
-            QPair<CAltitude, CAltitude> elevationStandardDeviationAndMean() const;
+            CAltitudePair elevationStandardDeviationAndMean() const;
 
             //! Elevation standard deviation and mean
-            QPair<CAltitude, CAltitude> altitudeStandardDeviationAndMean() const;
-
-            //! Min. and max. ground distance
-            QPair<PhysicalQuantities::CLength, PhysicalQuantities::CLength> minMaxGroundDistance(const PhysicalQuantities::CLength &cg) const;
+            CAltitudePair altitudeStandardDeviationAndMean() const;
 
             //! Elevation standard deviation and mean
             //! \note distance is without CG, so on ground it can also be used to calculate
-            QPair<CAltitude, CAltitude> altitudeAglStandardDeviationAndMean() const;
+            CAltitudePair altitudeAglStandardDeviationAndMean() const;
+
+            //! Min. and max. ground distance
+            PhysicalQuantities::CLengthPair minMaxGroundDistance(const PhysicalQuantities::CLength &cg) const;
         };
 
         //! Situation per callsign
