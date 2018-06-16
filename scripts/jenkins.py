@@ -330,15 +330,6 @@ class LinuxBuilder(Builder):
         os.environ['LD_LIBRARY_PATH'] = path.abspath(path.join(self._get_swift_build_path(), 'build', 'out', 'release', 'lib'))
         os.environ['LD_LIBRARY_PATH'] += os.pathsep + path.abspath(path.join(self._get_swift_source_path(), 'lib'))
         os.environ['LD_LIBRARY_PATH'] += os.pathsep + self._get_externals_path()
-        lib_path = path.abspath(path.join(self._get_swift_source_path(), 'lib'))
-        libssl = path.abspath(path.join(lib_path, 'libssl.so'))
-        libcrypto = path.abspath(path.join(lib_path, 'libcrypto.so'))
-        if not os.path.isdir(lib_path):
-            os.makedirs(lib_path)
-        if not os.path.exists(libssl):
-            os.symlink('/usr/lib/x86_64-linux-gnu/libssl.so.1.0.2', libssl)
-        if not os.path.exists(libcrypto):
-            os.symlink('/usr/lib/x86_64-linux-gnu/libcrypto.so.1.0.2', libcrypto)
 
     def _get_qmake_spec(self):
         return 'linux-g++'
