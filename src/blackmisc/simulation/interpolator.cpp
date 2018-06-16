@@ -74,18 +74,22 @@ namespace BlackMisc
         template<typename Derived>
         CAircraftSituationList CInterpolator<Derived>::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
         {
-            const bool vtol = setup.isForcingVtolInterpolation() || m_model.isVtol();
+            // const bool vtol = setup.isForcingVtolInterpolation() || m_model.isVtol();
             CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
-            m_situationsChange = CAircraftSituationChange(validSituations, m_model.getCG(), vtol, true, true);
-            if (setup.isFixingSceneryOffset() && m_situationsChange.hasSceneryDeviation() && m_model.hasCG())
+
+            // get the changes, we need the second value as we want to look in the past
+            // the first value is already based on the latest situation
+            const CAircraftSituationChangeList changes = this->remoteAircraftSituationChanges(m_callsign);
+            m_pastSituationsChange = (changes.size() > 1) ? changes[1] : CAircraftSituationChange::null();
+
+            if (setup.isFixingSceneryOffset() && m_pastSituationsChange.hasSceneryDeviation() && m_model.hasCG())
             {
-                const CLength os = m_situationsChange.getGuessedSceneryDeviationCG();
+                const CLength os = m_pastSituationsChange.getGuessedSceneryDeviationCG();
                 m_currentSceneryOffset = os;
                 if (!os.isNull())
                 {
                     const CLength addValue = os * -1.0; // positive values means too high, negative values too low
                     int changed = validSituations.addAltitudeOffset(addValue);
-                    m_situationsChange = CAircraftSituationChange(validSituations, m_model.getCG(), vtol, true, true); // recalculate
                     Q_UNUSED(changed);
                 }
             }
@@ -193,10 +197,12 @@ namespace BlackMisc
             currentSituation = interpolant.interpolatePositionAndAltitude(currentSituation, interpolateGndFlag);
             if (!interpolateGndFlag) { currentSituation.guessOnGround(CAircraftSituationChange::null(), m_model); }
 
-            // if we do not have a ground elevation from preset, then we try to transfer here
+            // as we now have the position and can interpolate elevation
+            currentSituation.interpolateElevation(pbh.getOldSituation(), pbh.getNewSituation());
             if (!currentSituation.hasGroundElevation())
             {
-                const CLength radius = currentSituation.getDistancePerTime(250);
+                // we still have no elevation
+                const CLength radius = currentSituation.getDistancePerTime250ms();
                 if (!m_lastSituation.transferGroundElevation(currentSituation, radius))
                 {
                     const CElevationPlane groundElevation = this->findClosestElevationWithinRange(currentSituation, radius);
@@ -225,7 +231,7 @@ namespace BlackMisc
                 log.groundFactor = currentSituation.getOnGroundFactor();
                 log.altCorrection = CAircraftSituation::altitudeCorrectionToString(altCorrection);
                 log.situationCurrent = currentSituation;
-                log.change = m_situationsChange;
+                log.change = m_pastSituationsChange;
                 log.usedSetup = m_currentSetup;
                 log.elevationInfo = elv.arg(elvStats.first).arg(elvStats.second);
                 log.cgAboveGround = currentSituation.getCG();
@@ -296,7 +302,7 @@ namespace BlackMisc
             if (!m_currentPartsStatus.isSupportingParts())
             {
                 // check if model has been thru model matching
-                parts.guessParts(m_lastSituation, m_situationsChange, m_model);
+                parts.guessParts(m_lastSituation, m_pastSituationsChange, m_model);
                 this->logParts(parts, 0, false);
             }
 
@@ -349,7 +355,7 @@ namespace BlackMisc
             this->resetLastInterpolation();
             m_model = CAircraftModel();
             m_currentSceneryOffset = CLength::null();
-            m_situationsChange = CAircraftSituationChange::null();
+            m_pastSituationsChange = CAircraftSituationChange::null();
             m_currentSituations.clear();
             m_currentTimeMsSinceEpoch = -1;
             m_situationsLastModified = -1;
@@ -425,7 +431,7 @@ namespace BlackMisc
             }
 
             // preset elevation here, as we do not know where the situation will be after the interpolation step!
-            const bool preset = currentSituation.presetGroundElevation(oldSituation, newSituation, m_situationsChange);
+            const bool preset = currentSituation.presetGroundElevation(oldSituation, newSituation, m_pastSituationsChange);
             Q_UNUSED(preset);
 
             // fetch CG once
