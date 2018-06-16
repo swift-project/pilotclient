@@ -219,12 +219,14 @@ namespace BlackMisc
             }
 
             // list from new to old
+            CAircraftSituationList updatedSituations; // copy of updated situations
             {
                 const qint64 ts = QDateTime::currentMSecsSinceEpoch();
                 QWriteLocker lock(&m_lockSituations);
                 m_situationsAdded++;
                 m_situationsLastModified[cs] = ts;
                 CAircraftSituationList &newSituationsList = m_situationsByCallsign[cs];
+                newSituationsList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
                 const int situations = newSituationsList.size();
                 if (situations < 1)
                 {
@@ -232,9 +234,9 @@ namespace BlackMisc
                 }
                 else
                 {
-                    newSituationsList.front().transferGroundElevation(situationCorrected); // transfer last situation elevation if possible
                     newSituationsList.push_frontKeepLatestFirstAdjustOffset(situationCorrected, true, IRemoteAircraftProvider::MaxSituationsPerCallsign);
                     newSituationsList.setAdjustedSortHint(CAircraftSituationList::AdjustedTimestampLatestFirst);
+                    newSituationsList.transferElevationForward(); // transfer elevations
 
                     // unify all inbound ground information
                     if (situation.hasInboundGroundDetails())
@@ -249,25 +251,18 @@ namespace BlackMisc
                     BLACK_VERIFY_X(newSituationsList.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "wrong sort order");
                     BLACK_VERIFY_X(newSituationsList.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
                 }
-            } // lock
 
-            CAircraftSituationList updatedSituations; // copy of updated situations
-            if (situation.hasInboundGroundDetails())
-            {
-                QReadLocker lock(&m_lockSituations);
+                if (!situation.hasInboundGroundDetails())
+                {
+                    // first use a version without standard deviations to guess "on ground
+                    const CAircraftSituationChange simpleChange(updatedSituations, situationCorrected.getCG(), aircraftModel.isVtol(), true, false);
+
+                    // guess GND
+                    newSituationsList.front().guessOnGround(simpleChange, aircraftModel);
+                }
                 updatedSituations = m_situationsByCallsign[cs];
-            }
-            else
-            {
-                // first use a version without standard deviations to guess "on ground
-                const CAircraftSituationChange simpleChange(updatedSituations, situationCorrected.getCG(), aircraftModel.isVtol(), true, false);
 
-                // guess GND
-                QWriteLocker lock(&m_lockSituations);
-                CAircraftSituationList &fixedSituationList = m_situationsByCallsign[cs];
-                fixedSituationList.front().guessOnGround(simpleChange, aircraftModel);
-                updatedSituations = fixedSituationList;
-            }
+            } // lock
 
             // calculate change AFTER gnd. was guessed
             Q_ASSERT_X(!updatedSituations.isEmpty(), Q_FUNC_INFO, "Missing situations");

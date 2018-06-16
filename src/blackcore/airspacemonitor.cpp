@@ -943,10 +943,22 @@ namespace BlackCore
         CAircraftSituation correctedSituation(this->testAddAltitudeOffsetToSituation(situation));
         if (!correctedSituation.hasGroundElevation() && !correctedSituation.canLikelySkipNearGroundInterpolation())
         {
-            const CLength distance(correctedSituation.getDistancePerTime(250)); // distnacee per ms
+            // fetch from cache or request
+            const CLength distance(correctedSituation.getDistancePerTime250ms()); // distnacee per ms
             const CElevationPlane ep = this->findClosestElevationWithinRangeOrRequest(correctedSituation, distance, callsign);
             Q_ASSERT_X(ep.isNull() || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
             correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
+            if (!correctedSituation.hasGroundElevation())
+            {
+                // values before updating
+                const CAircraftSituationList oldSituations = this->remoteAircraftSituations(callsign);
+                const CAircraftSituationChangeList oldChanges = this->remoteAircraftSituationChanges(callsign);
+                if (oldSituations.size() > 1)
+                {
+                    const bool extrapolated = correctedSituation.extrapolateElevation(oldSituations[0], oldSituations[1], oldChanges.frontOrDefault());
+                    Q_UNUSED(extrapolated);
+                }
+            }
         }
 
         // do we already have ground details?
