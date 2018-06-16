@@ -69,6 +69,11 @@ namespace BlackMisc
             //! Extrapolate ground flag into the future
             int extrapolateGroundFlag();
 
+            //! Extrapolates elevation into front element from 2nd and 3rd element
+            //! \sa CAircraftSituation::extrapolateElevation
+            //! \pre the list must be sorted latest first and containt at least 3 elements
+            bool extrapolateElevation(const CAircraftSituationChange &change);
+
             //! Find if having inbound information
             CAircraftSituationList findByInboundGroundInformation(bool hasGroundInfo) const;
 
@@ -182,6 +187,10 @@ namespace BlackMisc
 
             //! Min. and max. ground distance
             PhysicalQuantities::CLengthPair minMaxGroundDistance(const PhysicalQuantities::CLength &cg) const;
+
+            //! Transfer elevations forward from older to newer
+            //! \pre requires a list which is sorted "latest first"
+            int transferElevationForward(const PhysicalQuantities::CLength radius = Geo::CElevationPlane::singlePointRadius());
         };
 
         //! Situation per callsign

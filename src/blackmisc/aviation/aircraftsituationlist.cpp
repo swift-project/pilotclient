@@ -114,6 +114,14 @@ namespace BlackMisc
             return c;
         }
 
+        bool CAircraftSituationList::extrapolateElevation(const CAircraftSituationChange &change)
+        {
+            if (this->size() < 3) { return false; }
+            const CAircraftSituation old = (*this)[1];
+            const CAircraftSituation older = (*this)[2];
+            return this->front().extrapolateElevation(old, older, change);
+        }
+
         CAircraftSituationList CAircraftSituationList::findByInboundGroundInformation(bool hasGroundInfo) const
         {
             return this->findBy(&CAircraftSituation::hasInboundGroundDetails, hasGroundInfo);
@@ -511,6 +519,19 @@ namespace BlackMisc
             const QPair<double, double> deltaFt = CMathUtils::standardDeviationAndMean(altElvDeltas);
             return CAltitudePair(CAltitude(deltaFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(deltaFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
         }
+
+        int CAircraftSituationList::transferElevationForward(const CLength radius)
+        {
+            if (this->size() < 2) { return 0; }
+            Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "need latest first");
+            int c = 0;
+            for (int i = 1; i < this->size(); ++i)
+            {
+                const CAircraftSituation &oldSituation = (*this)[i];
+                CAircraftSituation &newSituation = (*this)[i - 1];
+                if (oldSituation.transferGroundElevation(newSituation, radius)) { c++; }
+            }
+            return c;
         }
     } // namespace
 } // namespace

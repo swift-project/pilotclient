@@ -95,7 +95,7 @@ namespace BlackMisc
                 // received situation
                 InFromNetwork,            //!< received from network
                 InFromParts,              //!< set from aircraft parts
-                InNoGroundInfo,           //!< not know
+                InNoGroundInfo,           //!< not known
                 // send information
                 OutOnGroundOwnAircraft    //!< sending on ground
             };
@@ -117,6 +117,7 @@ namespace BlackMisc
                 NoElevationInfo,
                 TransferredElevation, //!< transferred from nearby situation
                 Interpolated,         //!< interpolated between 2 elevations
+                Extrapolated,         //!< extrapolated ("guessing")
                 FromProvider,         //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
                 FromCache,            //!< from cache
                 SituationChange,      //!< from BlackMisc::Aviation::CAircraftSituationChange
@@ -286,13 +287,27 @@ namespace BlackMisc
             //! Transfer from "this" situation to \c otherSituation
             //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
             //! \sa CAircraftSituation::interpolateGroundElevation
-            bool transferGroundElevation(CAircraftSituation &otherSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
+            //! \sa CAircraftSituation::interpolateElevation
+            bool transferGroundElevation(CAircraftSituation &transferToSituation, const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius()) const;
 
             //! Preset "this" elevation from the two adjacent positions
             //! \remark it is not required that the position of "this" is already known
             //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
             //! \sa CAircraftSituation::transferGroundElevation
+            //! \sa CAircraftSituation::interpolateElevation
             bool presetGroundElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation, const CAircraftSituationChange &change);
+
+            //! Set "this" elevation from older situations.
+            //! \remark this is a future value
+            //! \sa CAircraftSituation::transferGroundElevation
+            //! \sa CAircraftSituation::interpolateElevation
+            bool extrapolateElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &olderSituation, const CAircraftSituationChange &change);
+
+            //! Interpolate "this" elevation from the two adjacent positions
+            //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
+            //! \sa CAircraftSituation::transferGroundElevation
+            //! \sa CAircraftSituation::presetGroundElevation
+            bool interpolateElevation(const Aviation::CAircraftSituation &oldSituation, const Aviation::CAircraftSituation &newSituation);
 
             //! Is on ground by elevation data, requires elevation and CG
             //! @{
@@ -395,6 +410,9 @@ namespace BlackMisc
             //! Distance per milliseconds
             PhysicalQuantities::CLength getDistancePerTime(int milliseconds) const;
 
+            //! Distance per milliseconds (250ms)
+            PhysicalQuantities::CLength getDistancePerTime250ms() const;
+
             //! Corresponding callsign
             const CCallsign &getCallsign() const { return m_correspondingCallsign; }
 
@@ -487,9 +505,14 @@ namespace BlackMisc
             //! \sa CAircraftSituation::transferGroundElevation
             static bool presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change);
 
+            //! Extrapolated between the 2 situations for situation
+            //! \remark situation is not between oldSituation and olderSituation
+            //! \remark NULL if there are no two elevations
+            static bool extrapolateElevation(CAircraftSituation &newSituation, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange);
+
             //! Interpolate between the 2 situations for situation
             //! \remark NULL if there are no two elevations
-            static Geo::CElevationPlane interpolateElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const PhysicalQuantities::CLength &distance = PhysicalQuantities::CLength::null());
+            static Geo::CElevationPlane interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const PhysicalQuantities::CLength &distance = PhysicalQuantities::CLength::null());
 
         private:
             CCallsign m_correspondingCallsign;

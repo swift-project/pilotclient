@@ -90,26 +90,26 @@ namespace BlackMisc
 
         const QString &CAircraftSituation::onGroundDetailsToString(CAircraftSituation::OnGroundDetails reliability)
         {
-            static const QString intElv("elevation");
-            static const QString intElvCg("elevation/CG");
-            static const QString intInter("interpolation");
-            static const QString intGuess("guessing");
+            static const QString elv("elevation");
+            static const QString elvCg("elevation/CG");
+            static const QString interpolation("interpolation");
+            static const QString guess("guessing");
             static const QString unknown("unknown");
             static const QString outOwnAircraft("own aircraft");
             static const QString inNetwork("from network");
             static const QString inFromParts("from parts");
-            static const QString InNoGroundInfo("no gnd.info");
+            static const QString inNoGndInfo("no gnd.info");
 
             switch (reliability)
             {
-            case CAircraftSituation::OnGroundByElevation: return intElv;
-            case CAircraftSituation::OnGroundByElevationAndCG: return intElvCg;
-            case CAircraftSituation::OnGroundByGuessing: return intGuess;
-            case CAircraftSituation::OnGroundByInterpolation: return intInter;
+            case CAircraftSituation::OnGroundByElevation: return elv;
+            case CAircraftSituation::OnGroundByElevationAndCG: return elvCg;
+            case CAircraftSituation::OnGroundByGuessing: return guess;
+            case CAircraftSituation::OnGroundByInterpolation: return interpolation;
             case CAircraftSituation::OutOnGroundOwnAircraft: return outOwnAircraft;
             case CAircraftSituation::InFromNetwork: return inNetwork;
             case CAircraftSituation::InFromParts: return inFromParts;
-            case CAircraftSituation::InNoGroundInfo: return InNoGroundInfo;
+            case CAircraftSituation::InNoGroundInfo: return inNoGndInfo;
             case CAircraftSituation::NotSetGroundDetails:
             default: return unknown;
             }
@@ -145,6 +145,7 @@ namespace BlackMisc
             static const QString cache("cached");
             static const QString test("test");
             static const QString interpolated("interpolated");
+            static const QString extrapolated("extrapolated");
 
             switch (details)
             {
@@ -155,6 +156,7 @@ namespace BlackMisc
             case FromCache: return cache;
             case Test: return test;
             case Interpolated: return interpolated;
+            case Extrapolated: return extrapolated;
             default: break;
             }
             return unknown;
@@ -196,7 +198,7 @@ namespace BlackMisc
                 }
 
                 const CLength distance = newSituation.calculateGreatCircleDistance(oldSituation);
-                if (distance < newSituation.getDistancePerTime(250))
+                if (distance < newSituation.getDistancePerTime250ms())
                 {
                     if (oldSituation.hasGroundElevation())
                     {
@@ -206,16 +208,15 @@ namespace BlackMisc
                     }
                 }
 
-                static const CLength allowedStdDev(3, CLengthUnit::ft());
-                QPair<CAltitude, CAltitude> elvDevMean = change.getElevationStdDevAndMean();
-                if (!elvDevMean.first.isNull() && elvDevMean.first < allowedStdDev)
+                if (change.hasElevationDevWithinAllowedRange())
                 {
                     // not much change in known elevations
+                    const CAltitudePair elvDevMean = change.getElevationStdDevAndMean();
                     situationToPreset.setGroundElevation(elvDevMean.second, CAircraftSituation::SituationChange);
                     break;
                 }
 
-                const CElevationPlane epInterpolated = CAircraftSituation::interpolateElevation(CAircraftSituation::null(), oldSituation, newSituation, distance);
+                const CElevationPlane epInterpolated = CAircraftSituation::interpolatedElevation(CAircraftSituation::null(), oldSituation, newSituation, distance);
                 if (!epInterpolated.isNull())
                 {
                     situationToPreset.setGroundElevation(epInterpolated, CAircraftSituation::Interpolated);
@@ -226,7 +227,7 @@ namespace BlackMisc
             return situationToPreset.hasGroundElevation();
         }
 
-        CElevationPlane CAircraftSituation::interpolateElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CLength &distance)
+        CElevationPlane CAircraftSituation::interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CLength &distance)
         {
             if (oldSituation.isNull() || newSituation.isNull()) { return CAircraftSituation::null(); }
             if (oldSituation.equalNormalVectorDouble(newSituation)) { return newSituation.getGroundElevationPlane(); }
@@ -255,6 +256,28 @@ namespace BlackMisc
                 const double elvFt = 0.5 * elvSumFt;
                 return CElevationPlane(newSituation, elvFt, CElevationPlane::singlePointRadius());
             }
+        }
+
+        bool CAircraftSituation::extrapolateElevation(CAircraftSituation &newSituation, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange)
+        {
+            if (newSituation.hasGroundElevation()) { return false; }
+            if (oldSituation.transferGroundElevation(newSituation)) { return true; }
+            if (oldSituation.isNull() || olderSituation.isNull()) { return false; }
+
+            if (oldChange.isNull()) { return false; }
+            if (oldChange.isConstOnGround() && oldChange.hasAltitudeDevWithinAllowedRange() && oldChange.hasElevationDevWithinAllowedRange())
+            {
+                // we have almost const altitudes and elevations
+                const double deltaAltFt = qAbs(newSituation.getAltitude().value(CLengthUnit::ft()) - olderSituation.getAltitude().value(CLengthUnit::ft()));
+                if (deltaAltFt <= CAircraftSituationChange::allowedAltitudeDeviation().value(CLengthUnit::ft()))
+                {
+                    // the ccurrent alt is also not much different
+                    newSituation.setGroundElevation(oldSituation.getGroundElevation(), Extrapolated);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -636,17 +659,30 @@ namespace BlackMisc
             return transferable;
         }
 
-        bool CAircraftSituation::transferGroundElevation(CAircraftSituation &otherSituation, const CLength &radius) const
+        bool CAircraftSituation::transferGroundElevation(CAircraftSituation &transferToSituation, const CLength &radius) const
         {
-            if (!this->canTransferGroundElevation(otherSituation, radius)) { return false; }
-            otherSituation.setGroundElevation(this->getGroundElevationPlane(), TransferredElevation);
-            Q_ASSERT_X(!otherSituation.getGroundElevationRadius().isNull(), Q_FUNC_INFO, "null radius");
+            if (!this->canTransferGroundElevation(transferToSituation, radius)) { return false; }
+            transferToSituation.setGroundElevation(this->getGroundElevationPlane(), TransferredElevation);
+            Q_ASSERT_X(!transferToSituation.getGroundElevationRadius().isNull(), Q_FUNC_INFO, "null radius");
             return true;
         }
 
         bool CAircraftSituation::presetGroundElevation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
         {
             return CAircraftSituation::presetGroundElevation(*this, oldSituation, newSituation, change);
+        }
+
+        bool CAircraftSituation::extrapolateElevation(const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &change)
+        {
+            return CAircraftSituation::extrapolateElevation(*this, oldSituation, olderSituation, change);
+        }
+
+        bool CAircraftSituation::interpolateElevation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation)
+        {
+            const CElevationPlane ep = CAircraftSituation::interpolatedElevation(*this, oldSituation, newSituation);
+            if (ep.isNull()) { return false; }
+            this->setGroundElevation(ep, Interpolated);
+            return true;
         }
 
         CAircraftSituation::IsOnGround CAircraftSituation::isOnGroundByElevation() const
@@ -881,6 +917,11 @@ namespace BlackMisc
             const double gsMeterSecond = this->getGroundSpeed().value(CSpeedUnit::m_s());
             const CLength d(seconds * gsMeterSecond, CLengthUnit::m());
             return d;
+        }
+
+        CLength CAircraftSituation::getDistancePerTime250ms() const
+        {
+            return this->getDistancePerTime(250);
         }
 
         void CAircraftSituation::setCallsign(const CCallsign &callsign)
