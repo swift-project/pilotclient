@@ -37,9 +37,9 @@ namespace BlackGui
             ui(new Ui::CRemoteAircraftSelector)
         {
             ui->setupUi(this);
-            bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CRemoteAircraftSelector::onRemovedAircraft);
+            bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CRemoteAircraftSelector::onRemovedAircraft, Qt::QueuedConnection);
             Q_ASSERT(s);
-            s = connect(sGui->getIContextNetwork(), &IContextNetwork::addedAircraft, this, &CRemoteAircraftSelector::onAddedAircraft);
+            s = connect(sGui->getIContextNetwork(), &IContextNetwork::addedAircraft, this, &CRemoteAircraftSelector::onAddedAircraft, Qt::QueuedConnection);
             Q_ASSERT(s);
             s = connect(ui->cb_RemoteAircraftSelector, &QComboBox::currentTextChanged, this, &CRemoteAircraftSelector::comboBoxChanged);
             Q_UNUSED(s);
