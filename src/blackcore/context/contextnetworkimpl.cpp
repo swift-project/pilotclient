@@ -127,6 +127,12 @@ namespace BlackCore
             return m_airspace->latestRemoteAircraftSituations();
         }
 
+        CAircraftSituationList CContextNetwork::latestOnGroundProviderElevations() const
+        {
+            Q_ASSERT(m_airspace);
+            return m_airspace->latestOnGroundProviderElevations();
+        }
+
         CAircraftPartsList CContextNetwork::remoteAircraftParts(const CCallsign &callsign) const
         {
             Q_ASSERT(m_airspace);

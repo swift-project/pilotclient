@@ -101,6 +101,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual Aviation::CAircraftSituationList latestRemoteAircraftSituations() const = 0;
 
+            //! Latest aircraft situation "on ground" having a provider elevation
+            //! \threadsafe
+            virtual Aviation::CAircraftSituationList latestOnGroundProviderElevations() const = 0;
+
             //! Number of remote aircraft situations for callsign
             //! \remark latest situations first
             //! \threadsafe
@@ -266,6 +270,7 @@ namespace BlackMisc
             virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
             virtual Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const override;
             virtual Aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
+            virtual Aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
             virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
             virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const override;
@@ -406,11 +411,12 @@ namespace BlackMisc
             //! \threadsafe
             void storeChange(const Aviation::CAircraftSituationChange &change);
 
-            Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign;       //!< situations, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftSituationPerCallsign     m_latestSituationByCallsign;  //!< latest situations, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftPartsListPerCallsign     m_partsByCallsign;            //!< parts, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;    //!< changes, for performance reasons per callsign, thread safe access required
-            Aviation::CCallsignSet m_aircraftWithParts;                               //!< aircraft supporting parts, thread safe access required
+            Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign;        //!< situations, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftSituationPerCallsign m_latestSituationByCallsign;       //!< latest situations, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftSituationPerCallsign m_latestOnGroundProviderElevation; //!< situation on ground with elevation from provider
+            Aviation::CAircraftPartsListPerCallsign m_partsByCallsign;                 //!< parts, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;     //!< changes, for performance reasons per callsign, thread safe access required
+            Aviation::CCallsignSet m_aircraftWithParts;                                //!< aircraft supporting parts, thread safe access required
             int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
             int m_partsAdded = 0;      //!< total number of parts added, thread safe access required
 
@@ -469,6 +475,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::latestRemoteAircraftSituations
             Aviation::CAircraftSituationList latestRemoteAircraftSituations() const;
+
+            //! \copydoc IRemoteAircraftProvider::latestOnGroundProviderElevations
+            Aviation::CAircraftSituationList latestOnGroundProviderElevations() const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
             int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const;

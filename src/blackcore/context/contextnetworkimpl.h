@@ -94,6 +94,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftSituation remoteAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, int index) const override;
             virtual BlackMisc::Aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
+            virtual BlackMisc::Aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
             virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftPartsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;

@@ -954,7 +954,7 @@ namespace BlackCore
                 // so far we have requested it, but we set it upfront either by
                 // a) average value from other plane in the vicinity or
                 // b) by extrapolating
-                const CElevationPlane averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::minorAirportRadius());
+                const CElevationPlane averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::majorAirportRadius(), 2);
                 if (!averagePlane.isNull())
                 {
                     correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);

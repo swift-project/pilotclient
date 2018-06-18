@@ -85,6 +85,14 @@ namespace BlackMisc
             return CAircraftSituationList(situations);
         }
 
+        CAircraftSituationList CRemoteAircraftProvider::latestOnGroundProviderElevations() const
+        {
+            QReadLocker l(&m_lockSituations);
+            const QList<CAircraftSituation> situations(m_latestOnGroundProviderElevation.values());
+            l.unlock();
+            return CAircraftSituationList(situations);
+        }
+
         int CRemoteAircraftProvider::remoteAircraftSituationsCount(const CCallsign &callsign) const
         {
             QReadLocker l(&m_lockSituations);
@@ -162,6 +170,7 @@ namespace BlackMisc
                 QWriteLocker l(&m_lockSituations);
                 m_situationsByCallsign.clear();
                 m_latestSituationByCallsign.clear();
+                m_latestOnGroundProviderElevation.clear();
                 m_situationsAdded = 0;
                 m_situationsLastModified.clear();
                 m_testOffset.clear();
@@ -466,9 +475,15 @@ namespace BlackMisc
             {
                 QWriteLocker l(&m_lockSituations);
                 CAircraftSituationList &situations = m_situationsByCallsign[callsign];
+                if (situations.isEmpty()) { return 0; }
                 updated = situations.setGroundElevationCheckedAndGuessGround(elevation, info, model, &change);
                 if (updated < 1) { return 0; }
                 m_situationsLastModified[callsign] = ts;
+                const CAircraftSituation latest = situations.front();
+                if (info == CAircraftSituation::FromProvider && latest.isOnGround())
+                {
+                    m_latestOnGroundProviderElevation[callsign] = latest;
+                }
             }
 
             // update change
@@ -629,7 +644,7 @@ namespace BlackMisc
 
         CElevationPlane CRemoteAircraftProvider::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
         {
-            const CAircraftSituationList situations = this->latestRemoteAircraftSituations();
+            const CAircraftSituationList situations = this->latestOnGroundProviderElevations();
             return situations.averageElevationOfNonMovingAircraft(reference, range, minValues);
         }
 
@@ -691,8 +706,19 @@ namespace BlackMisc
 
         bool CRemoteAircraftProvider::removeAircraft(const CCallsign &callsign)
         {
-            { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftWithParts.remove(callsign); m_partsLastModified.remove(callsign); }
-            { QWriteLocker l2(&m_lockSituations); m_situationsByCallsign.remove(callsign); m_latestSituationByCallsign.remove(callsign);  m_situationsLastModified.remove(callsign); }
+            {
+                QWriteLocker l1(&m_lockParts);
+                m_partsByCallsign.remove(callsign);
+                m_aircraftWithParts.remove(callsign);
+                m_partsLastModified.remove(callsign);
+            }
+            {
+                QWriteLocker l2(&m_lockSituations);
+                m_situationsByCallsign.remove(callsign);
+                m_latestSituationByCallsign.remove(callsign);
+                m_latestOnGroundProviderElevation.remove(callsign);
+                m_situationsLastModified.remove(callsign);
+            }
             { QWriteLocker l4(&m_lockPartsHistory); m_aircraftPartsMessages.remove(callsign); }
             bool removedCallsign = false;
             {
@@ -767,6 +793,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
             return this->provider()->latestRemoteAircraftSituations();
+        }
+
+        CAircraftSituationList CRemoteAircraftAware::latestOnGroundProviderElevations() const
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->latestOnGroundProviderElevations();
         }
 
         CAircraftSituationChangeList CRemoteAircraftAware::remoteAircraftSituationChanges(const CCallsign &callsign) const
