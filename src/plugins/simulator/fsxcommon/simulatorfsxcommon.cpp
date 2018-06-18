@@ -257,9 +257,9 @@ namespace BlackSimPlugin
 
         QString CSimulatorFsxCommon::getStatisticsSimulatorSpecific() const
         {
-            static const QString specificInfo("dispatch (cur/max): %1ms %2ms %3 %4 simData#: %5");
+            static const QString specificInfo("dispatch (cur/max): %1ms (%2ms) %3ms (%4ms) %5 %6 simData#: %7");
             return specificInfo.
-                   arg(m_dispatchTimeMs).arg(m_dispatchMaxTimeMs).
+                   arg(m_dispatchTimeMs).arg(m_dispatchProcTimeMs).arg(m_dispatchMaxTimeMs).arg(m_dispatchProcMaxTimeMs).
                    arg(CSimConnectUtilities::simConnectReceiveIdToString(m_dispatchMaxTimeReceiveId),
                        CSimConnectDefinitions::requestToString(m_dispatchMaxTimeRequest)).
                    arg(m_requestSimObjectDataCount);
@@ -267,7 +267,6 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
         {
-            Q_UNUSED(callsign);
             if (this->isShuttingDownOrDisconnected()) { return false; }
             if (reference.isNull()) { return false; }
 
@@ -317,7 +316,9 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::resetAircraftStatistics()
         {
             m_dispatchMaxTimeMs = -1;
+            m_dispatchProcMaxTimeMs = -1;
             m_dispatchTimeMs = -1;
+            m_dispatchProcTimeMs = -1;
             m_requestSimObjectDataCount = 0;
             m_dispatchLastReceiveId = SIMCONNECT_RECV_ID_NULL;
             m_dispatchMaxTimeReceiveId = SIMCONNECT_RECV_ID_NULL;
@@ -963,7 +964,8 @@ namespace BlackSimPlugin
             const HRESULT hr = SimConnect_CallDispatch(m_hSimConnect, m_dispatchProc, this);
 
             // statistics
-            m_dispatchTimeMs = QDateTime::currentMSecsSinceEpoch() - start;
+            const qint64 end = QDateTime::currentMSecsSinceEpoch();
+            m_dispatchTimeMs = end - start;
             if (m_dispatchMaxTimeMs < m_dispatchTimeMs)
             {
                 m_dispatchMaxTimeMs = m_dispatchTimeMs;

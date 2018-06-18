@@ -426,6 +426,8 @@ namespace BlackSimPlugin
             int m_dispatchErrors = 0;               //!< number of dispatched failed, \sa dispatch
             qint64 m_dispatchTimeMs = -1;
             qint64 m_dispatchMaxTimeMs = -1;
+            qint64 m_dispatchProcTimeMs = -1;
+            qint64 m_dispatchProcMaxTimeMs = -1;
             SIMCONNECT_RECV_ID m_dispatchLastReceiveId    = SIMCONNECT_RECV_ID_NULL; //!< last receive id from dispatching
             SIMCONNECT_RECV_ID m_dispatchMaxTimeReceiveId = SIMCONNECT_RECV_ID_NULL; //!< receive id corresponding to max.time
             CSimConnectDefinitions::Request m_dispatchLastRequest    = CSimConnectDefinitions::RequestEndMarker; //!< request id if any

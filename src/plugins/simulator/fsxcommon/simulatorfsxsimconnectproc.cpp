@@ -36,6 +36,7 @@ namespace BlackSimPlugin
             // IMPORTANT:
             // all tasks called in this function (ie all called functions) must perform fast or shall be called asynchronously
 
+            const qint64 procTimeStart = QDateTime::currentMSecsSinceEpoch();
             CSimulatorFsxCommon *simulatorFsxP3D = static_cast<CSimulatorFsxCommon *>(pContext);
             const SIMCONNECT_RECV_ID recvId = static_cast<SIMCONNECT_RECV_ID>(pData->dwID);
             simulatorFsxP3D->m_dispatchLastReceiveId = recvId;
@@ -102,10 +103,10 @@ namespace BlackSimPlugin
                         }
                     case SystemEventPause:
                         {
-                            const bool p = event->dwData ? true : false;
-                            if (simulatorFsxP3D->m_simPaused != p)
+                            const bool paused = event->dwData ? true : false;
+                            if (simulatorFsxP3D->m_simPaused != paused)
                             {
-                                simulatorFsxP3D->m_simPaused = p;
+                                simulatorFsxP3D->m_simPaused = paused;
                                 simulatorFsxP3D->emitSimulatorCombinedStatus();
                             }
                             break;
@@ -354,6 +355,14 @@ namespace BlackSimPlugin
             default:
                 break;
             } // main switch
+
+            // performance stats
+            const qint64 procTimeEnd = QDateTime::currentMSecsSinceEpoch();
+            simulatorFsxP3D->m_dispatchProcTimeMs = procTimeEnd - procTimeStart;
+            if (simulatorFsxP3D->m_dispatchProcTimeMs > simulatorFsxP3D->m_dispatchProcMaxTimeMs)
+            {
+                simulatorFsxP3D->m_dispatchProcMaxTimeMs = simulatorFsxP3D->m_dispatchProcTimeMs;
+            }
         } // method
     } // namespace
 } // namespace
