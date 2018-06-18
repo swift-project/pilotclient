@@ -38,16 +38,17 @@ namespace BlackMisc
             return CCoordinateGeodetic(lat, lon, geodeticHeight);
         }
 
-        PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
+            if (coordinate1.isNull() || coordinate2.isNull()) { return CLength::null(); }
             static const float earthRadiusMeters = 6371000.8f;
             const QVector3D v1 = coordinate1.normalVector();
             const QVector3D v2 = coordinate2.normalVector();
             const float d = earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
-            return { d, PhysicalQuantities::CLengthUnit::m() };
+            return { d, CLengthUnit::m() };
         }
 
-        PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
         {
             static const QVector3D northPole { 0, 0, 1 };
             const QVector3D c1 = QVector3D::crossProduct(coordinate1.normalVector(), coordinate2.normalVector());
@@ -56,7 +57,7 @@ namespace BlackMisc
             const float sinTheta = std::copysign(cross.length(), QVector3D::dotProduct(cross, coordinate1.normalVector()));
             const float cosTheta = QVector3D::dotProduct(c1, c2);
             const float theta = std::atan2(sinTheta, cosTheta);
-            return { theta, PhysicalQuantities::CAngleUnit::rad() };
+            return { theta, CAngleUnit::rad() };
         }
 
         double calculateEuclideanDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
@@ -89,6 +90,14 @@ namespace BlackMisc
         CLength ICoordinateGeodetic::calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const
         {
             return Geo::calculateGreatCircleDistance((*this), otherCoordinate);
+        }
+
+        bool ICoordinateGeodetic::isWithinRange(const ICoordinateGeodetic &otherCoordinate, const CLength &range) const
+        {
+            if (range.isNull()) { return false; }
+            const CLength distance = calculateGreatCircleDistance(otherCoordinate);
+            if (distance.isNull()) { return false; }
+            return distance <= range;
         }
 
         CAngle ICoordinateGeodetic::calculateBearing(const ICoordinateGeodetic &otherCoordinate) const
@@ -210,10 +219,10 @@ namespace BlackMisc
         {}
 
         CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees) :
-            CCoordinateGeodetic({ latitudeDegrees, PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, PhysicalQuantities::CAngleUnit::deg() }, { 0, nullptr }) {}
+            CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() }, { 0, nullptr }) {}
 
         CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightFeet) :
-            CCoordinateGeodetic({ latitudeDegrees, PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, PhysicalQuantities::CAngleUnit::deg() }, { heightFeet, PhysicalQuantities::CLengthUnit::ft() }) {}
+            CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() }, { heightFeet, CLengthUnit::ft() }) {}
 
         CCoordinateGeodetic::CCoordinateGeodetic(const ICoordinateGeodetic &coordinate) :
             m_geodeticHeight(coordinate.geodeticHeight())
@@ -223,13 +232,13 @@ namespace BlackMisc
 
         CLatitude CCoordinateGeodetic::latitude() const
         {
-            return { std::atan2(m_z, std::hypot(m_x, m_y)), PhysicalQuantities::CAngleUnit::rad() };
+            return { std::atan2(m_z, std::hypot(m_x, m_y)), CAngleUnit::rad() };
         }
 
         CLongitude CCoordinateGeodetic::longitude() const
         {
             // in mathematics atan2 of 0,0 is undefined, with IEEE floating-point atan2(0,0) is either 0 or ±180°
-            return { std::atan2(m_y, m_x), PhysicalQuantities::CAngleUnit::rad() };
+            return { std::atan2(m_y, m_x), CAngleUnit::rad() };
         }
 
         QVector3D CCoordinateGeodetic::normalVector() const

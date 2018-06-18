@@ -115,6 +115,18 @@ namespace BlackCore
             return m_airspace->remoteAircraftSituations(callsign);
         }
 
+        CAircraftSituation CContextNetwork::remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const
+        {
+            Q_ASSERT(m_airspace);
+            return m_airspace->remoteAircraftSituation(callsign, index);
+        }
+
+        CAircraftSituationList CContextNetwork::latestRemoteAircraftSituations() const
+        {
+            Q_ASSERT(m_airspace);
+            return m_airspace->latestRemoteAircraftSituations();
+        }
+
         CAircraftPartsList CContextNetwork::remoteAircraftParts(const CCallsign &callsign) const
         {
             Q_ASSERT(m_airspace);
@@ -818,6 +830,11 @@ namespace BlackCore
         CAirspaceAircraftSnapshot CContextNetwork::getLatestAirspaceAircraftSnapshot() const
         {
             return m_airspace->getLatestAirspaceAircraftSnapshot();
+        }
+
+        CElevationPlane CContextNetwork::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        {
+            return m_airspace->averageElevationOfNonMovingAircraft(reference, range, minValues);
         }
 
         void CContextNetwork::setClients(const CClientList &clients)

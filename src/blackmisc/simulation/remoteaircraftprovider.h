@@ -51,6 +51,9 @@ namespace BlackMisc
             static constexpr int MaxPartsAgePerCallsignSecs = 60; //!< How many seconds to keep parts for interpolation
             static constexpr int DefaultOffsetTimeMs = 6000;      //!< \fixme copied from CNetworkVatlib::c_positionTimeOffsetMsec
 
+            //! Destructor
+            virtual ~IRemoteAircraftProvider() {}
+
             //! All remote aircraft
             //! \threadsafe
             virtual CSimulatedAircraftList getAircraftInRange() const = 0;
@@ -86,6 +89,17 @@ namespace BlackMisc
             //! Rendered aircraft situations (per callsign, time history)
             //! \threadsafe
             virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const = 0;
+
+            //! Rendered aircraft situations (per callsign and index)
+            //! \remark if situation does not exist, an NULL situation is returned
+            //! \param callsign
+            //! \param index 0..latest, 1..next older, ...
+            //! \threadsafe
+            virtual Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const = 0;
+
+            //! Latest aircraft situation for all callsigns
+            //! \threadsafe
+            virtual Aviation::CAircraftSituationList latestRemoteAircraftSituations() const = 0;
 
             //! Number of remote aircraft situations for callsign
             //! \remark latest situations first
@@ -197,8 +211,9 @@ namespace BlackMisc
             //! \threadsafe
             virtual qint64 partsLastModified(const Aviation::CCallsign &callsign) const = 0;
 
-            //! Destructor
-            virtual ~IRemoteAircraftProvider() {}
+            //! \copydoc BlackMisc::Aviation::CAircraftSituationList::averageElevationOfNonMovingAircraft
+            //! \threadsafe
+            virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const = 0;
 
             //! Connect signals to slot receiver. As the interface is no QObject, slots can not be connected directly.
             //! In order to disconnect a list of connections is provided, which have to be disconnected manually.
@@ -249,6 +264,8 @@ namespace BlackMisc
             virtual bool isAircraftInRange(const Aviation::CCallsign &callsign) const override;
             virtual bool isVtolAircraft(const Aviation::CCallsign &callsign) const override;
             virtual Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
+            virtual Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const override;
+            virtual Aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
             virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
             virtual Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftPartsCount(const Aviation::CCallsign &callsign) const override;
@@ -272,6 +289,7 @@ namespace BlackMisc
             virtual int aircraftPartsAdded() const override;
             virtual qint64 situationsLastModified(const Aviation::CCallsign &callsign) const override;
             virtual qint64 partsLastModified(const Aviation::CCallsign &callsign) const override;
+            virtual Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const Aviation::CAircraftSituation &)> addedSituationSlot,
@@ -388,8 +406,9 @@ namespace BlackMisc
             //! \threadsafe
             void storeChange(const Aviation::CAircraftSituationChange &change);
 
-            Aviation::CAircraftSituationListPerCallsign       m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
-            Aviation::CAircraftPartsListPerCallsign           m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftSituationListPerCallsign m_situationsByCallsign;       //!< situations, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftSituationPerCallsign     m_latestSituationByCallsign;  //!< latest situations, for performance reasons per callsign, thread safe access required
+            Aviation::CAircraftPartsListPerCallsign     m_partsByCallsign;            //!< parts, for performance reasons per callsign, thread safe access required
             Aviation::CAircraftSituationChangeListPerCallsign m_changesByCallsign;    //!< changes, for performance reasons per callsign, thread safe access required
             Aviation::CCallsignSet m_aircraftWithParts;                               //!< aircraft supporting parts, thread safe access required
             int m_situationsAdded = 0; //!< total number of situations added, thread safe access required
@@ -445,6 +464,12 @@ namespace BlackMisc
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
             Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const;
 
+            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituation
+            Aviation::CAircraftSituation remoteAircraftSituation(const Aviation::CCallsign &callsign, int index) const;
+
+            //! \copydoc IRemoteAircraftProvider::latestRemoteAircraftSituations
+            Aviation::CAircraftSituationList latestRemoteAircraftSituations() const;
+
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
             int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const;
 
@@ -495,6 +520,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::partsLastModified
             qint64 partsLastModified(const Aviation::CCallsign &callsign) const;
+
+            //! \copydoc IRemoteAircraftProvider::averageElevationOfNonMovingAircraft
+            Geo::CElevationPlane averageElevationOfNonMovingAircraft(const Aviation::CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const;
 
             //! Set remote aircraft provider
             void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { this->setProvider(remoteAircraftProvider); }

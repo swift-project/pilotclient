@@ -117,6 +117,7 @@ namespace BlackMisc
         bool CAircraftSituationList::extrapolateElevation(const CAircraftSituationChange &change)
         {
             if (this->size() < 3) { return false; }
+            Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "Need latest first");
             const CAircraftSituation old = (*this)[1];
             const CAircraftSituation older = (*this)[2];
             return this->front().extrapolateElevation(old, older, change);
@@ -520,7 +521,7 @@ namespace BlackMisc
             return CAltitudePair(CAltitude(deltaFt.first, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()), CAltitude(deltaFt.second, CAltitude::MeanSeaLevel, CAltitude::defaultUnit()));
         }
 
-        int CAircraftSituationList::transferElevationForward(const CLength radius)
+        int CAircraftSituationList::transferElevationForward(const CLength &radius)
         {
             if (this->size() < 2) { return 0; }
             Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "need latest first");
@@ -532,6 +533,28 @@ namespace BlackMisc
                 if (oldSituation.transferGroundElevation(newSituation, radius)) { c++; }
             }
             return c;
+        }
+
+        CElevationPlane CAircraftSituationList::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues) const
+        {
+            if (this->size() < minValues) { return CElevationPlane::null(); } // no change to succeed
+
+            QList<double> valuesInFt;
+            for (const CAircraftSituation &situation : *this)
+            {
+                if (situation.getGroundElevationInfo() != CAircraftSituation::FromProvider) { continue; }
+                const bool canUse = !situation.isMoving() || (situation.isOnGroundFromNetwork() || situation.isOnGroundFromParts());
+                if (!canUse) { continue; }
+                if (!situation.isWithinRange(reference, range)) { continue; }
+                const double elvFt = situation.getGroundElevationPlane().getAltitude().value(CLengthUnit::ft());
+                valuesInFt.push_back(elvFt);
+            }
+            if (valuesInFt.size() < minValues) { return CElevationPlane::null(); }
+
+            static const double MaxDevFt = CAircraftSituationChange::allowedAltitudeDeviation().value(CLengthUnit::ft());
+            const QPair<double, double> elvStdDevMean = CMathUtils::standardDeviationAndMean(valuesInFt);
+            if (elvStdDevMean.first > MaxDevFt) { return CElevationPlane::null(); }
+            return CElevationPlane(reference, elvStdDevMean.second, CElevationPlane::singlePointRadius());
         }
     } // namespace
 } // namespace

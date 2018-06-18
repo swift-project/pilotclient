@@ -24,6 +24,13 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/network.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/weather/metar.h"
+#include "blackmisc/weather/metarlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/airporticaocode.h"
@@ -38,13 +45,6 @@
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/weather/metar.h"
-#include "blackmisc/weather/metarlist.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/digestsignal.h"
@@ -92,6 +92,8 @@ namespace BlackCore
             //! \ingroup remoteaircraftprovider
             //! @{
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual BlackMisc::Aviation::CAircraftSituation remoteAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, int index) const override;
+            virtual BlackMisc::Aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
             virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftPartsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -99,6 +101,11 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
             virtual BlackMisc::Aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftSituationChangesCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
+            virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, BlackMisc::Aviation::CAircraftSituation::GndElevationInfo info) override;
+            virtual void updateMarkAllAsNotRendered() override;
+            virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+            virtual BlackMisc::Geo::CElevationPlane averageElevationOfNonMovingAircraft(const BlackMisc::Aviation::CAircraftSituation &reference, const BlackMisc::PhysicalQuantities::CLength &range, int minValues = 1) const override;
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)> addedSituationSlot,
@@ -106,10 +113,6 @@ namespace BlackCore
                 std::function<void(const BlackMisc::Aviation::CCallsign &)> removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
-            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
-            virtual int updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, BlackMisc::Aviation::CAircraftSituation::GndElevationInfo info) override;
-            virtual void updateMarkAllAsNotRendered() override;
-            virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
             //! @}
 
             //! \ingroup clientprovider

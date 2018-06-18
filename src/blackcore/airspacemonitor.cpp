@@ -950,15 +950,27 @@ namespace BlackCore
             correctedSituation.setGroundElevation(ep, CAircraftSituation::FromCache);
             if (!correctedSituation.hasGroundElevation())
             {
-                // values before updating
-                const CAircraftSituationList oldSituations = this->remoteAircraftSituations(callsign);
-                const CAircraftSituationChangeList oldChanges = this->remoteAircraftSituationChanges(callsign);
-                if (oldSituations.size() > 1)
+                // we have a new situation, so we try to get the elevation
+                // so far we have requested it, but we set it upfront either by
+                // a) average value from other plane in the vicinity or
+                // b) by extrapolating
+                const CElevationPlane averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::minorAirportRadius());
+                if (!averagePlane.isNull())
                 {
-                    const bool extrapolated = correctedSituation.extrapolateElevation(oldSituations[0], oldSituations[1], oldChanges.frontOrDefault());
-                    Q_UNUSED(extrapolated);
+                    correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);
                 }
-            }
+                else
+                {
+                    // values before updating
+                    const CAircraftSituationList oldSituations = this->remoteAircraftSituations(callsign);
+                    const CAircraftSituationChangeList oldChanges = this->remoteAircraftSituationChanges(callsign);
+                    if (oldSituations.size() > 1)
+                    {
+                        const bool extrapolated = correctedSituation.extrapolateElevation(oldSituations[0], oldSituations[1], oldChanges.frontOrDefault());
+                        Q_UNUSED(extrapolated);
+                    }
+                }
+            } // gnd. elevation
         }
 
         // do we already have ground details?

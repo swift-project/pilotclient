@@ -69,7 +69,7 @@ namespace BlackMisc
             //! Extrapolate ground flag into the future
             int extrapolateGroundFlag();
 
-            //! Extrapolates elevation into front element from 2nd and 3rd element
+            //! Extrapolates elevation into front (first) element from 2nd and 3rd element
             //! \sa CAircraftSituation::extrapolateElevation
             //! \pre the list must be sorted latest first and containt at least 3 elements
             bool extrapolateElevation(const CAircraftSituationChange &change);
@@ -190,7 +190,10 @@ namespace BlackMisc
 
             //! Transfer elevations forward from older to newer
             //! \pre requires a list which is sorted "latest first"
-            int transferElevationForward(const PhysicalQuantities::CLength radius = Geo::CElevationPlane::singlePointRadius());
+            int transferElevationForward(const PhysicalQuantities::CLength &radius = Geo::CElevationPlane::singlePointRadius());
+
+            //! Average elevation for "nearby" aircraft "not moving" and having an elevation
+            Geo::CElevationPlane averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const PhysicalQuantities::CLength &range, int minValues = 1) const;
         };
 
         //! Situation per callsign

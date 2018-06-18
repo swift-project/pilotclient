@@ -137,7 +137,7 @@ namespace BlackMisc
 
         const QString &CAircraftSituation::gndElevationInfoToString(GndElevationInfo details)
         {
-            static const QString no("no details");
+            static const QString noDetails("no details");
             static const QString unknown("unknown");
             static const QString transferred("transferred");
             static const QString provider("provider");
@@ -146,10 +146,11 @@ namespace BlackMisc
             static const QString test("test");
             static const QString interpolated("interpolated");
             static const QString extrapolated("extrapolated");
+            static const QString avg("average");
 
             switch (details)
             {
-            case NoElevationInfo: return no;
+            case NoElevationInfo: return noDetails;
             case TransferredElevation: return transferred;
             case FromProvider: return provider;
             case SituationChange: return change;
@@ -157,6 +158,7 @@ namespace BlackMisc
             case Test: return test;
             case Interpolated: return interpolated;
             case Extrapolated: return extrapolated;
+            case Average: return avg;
             default: break;
             }
             return unknown;

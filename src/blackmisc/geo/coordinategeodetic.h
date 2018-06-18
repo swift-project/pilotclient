@@ -111,6 +111,9 @@ namespace BlackMisc
             //! Great circle distance
             PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
 
+            //! Object within range?
+            bool isWithinRange(const ICoordinateGeodetic &otherCoordinate, const PhysicalQuantities::CLength &range) const;
+
             //! Initial bearing
             PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &otherCoordinate) const;
 

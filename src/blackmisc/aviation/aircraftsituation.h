@@ -118,6 +118,7 @@ namespace BlackMisc
                 TransferredElevation, //!< transferred from nearby situation
                 Interpolated,         //!< interpolated between 2 elevations
                 Extrapolated,         //!< extrapolated ("guessing")
+                Average,              //!< average value of "nearby" situation CAircraftSituationList::averageElevationOfNonMovingAircraft
                 FromProvider,         //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
                 FromCache,            //!< from cache
                 SituationChange,      //!< from BlackMisc::Aviation::CAircraftSituationChange
