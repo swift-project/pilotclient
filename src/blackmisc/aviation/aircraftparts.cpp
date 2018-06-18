@@ -100,36 +100,40 @@ namespace BlackMisc
 
             if (situation.getOnGroundDetails() != CAircraftSituation::NotSetGroundDetails)
             {
-                // set some reasonable values
-                const bool isOnGround = situation.isOnGround();
-                engines.initEngines(engineCount, !isOnGround || situation.isMoving());
-                parts.setGearDown(isOnGround);
-                parts.setSpoilersOut(false);
-                parts.setEngines(engines);
-
-                if (!change.isNull())
+                do
                 {
-                    if (change.isConstDecelarating())
+                    // set some reasonable values
+                    const bool isOnGround = situation.isOnGround();
+                    engines.initEngines(engineCount, !isOnGround || situation.isMoving());
+                    parts.setGearDown(isOnGround);
+                    parts.setSpoilersOut(false);
+                    parts.setEngines(engines);
+
+                    if (!change.isNull())
                     {
-                        parts.setSpoilersOut(true);
-                        parts.setFlapsPercent(10);
-                        return parts;
+                        if (change.isConstDecelarating())
+                        {
+                            parts.setSpoilersOut(true);
+                            parts.setFlapsPercent(10);
+                            break;
+                        }
+                    }
+
+                    const CSpeed slowSpeed = guessedVRotate * 0.30;
+                    if (situation.getGroundSpeed() < slowSpeed)
+                    {
+                        if (details) { *details += QStringLiteral("slow speed <") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
+                        parts.setFlapsPercent(0);
+                        break;
+                    }
+                    else
+                    {
+                        if (details) { *details += QStringLiteral("faster speed >") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
+                        parts.setFlapsPercent(0);
+                        break;
                     }
                 }
-
-                const CSpeed slowSpeed = guessedVRotate * 0.30;
-                if (situation.getGroundSpeed() < slowSpeed)
-                {
-                    if (details) { *details += QStringLiteral("slow speed <") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
-                    parts.setFlapsPercent(0);
-                    return parts;
-                }
-                else
-                {
-                    if (details) { *details += QStringLiteral("faster speed >") % slowSpeed.valueRoundedWithUnit(1) % QStringLiteral(" on ground"); }
-                    parts.setFlapsPercent(0);
-                    return parts;
-                }
+                while (false);
             }
             else
             {
