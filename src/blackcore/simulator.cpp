@@ -18,6 +18,7 @@
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
@@ -55,7 +56,7 @@ namespace BlackCore
         return false;
     }
 
-    void ISimulator::callbackReceivedRequestedElevation(const Geo::CElevationPlane &plane, const CCallsign &callsign)
+    void ISimulator::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign)
     {
         if (this->isShuttingDown()) { return; }
 

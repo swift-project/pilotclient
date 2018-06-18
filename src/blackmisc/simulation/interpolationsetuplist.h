@@ -23,7 +23,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        //! Value object encapsulating a list of distributors.
+        //! Value object encapsulating a list of setups.
         class BLACKMISC_EXPORT CInterpolationSetupList :
             public CSequence<CInterpolationAndRenderingSetupPerCallsign>,
             public Aviation::ICallsignObjectList<CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList>,

@@ -58,7 +58,7 @@ namespace BlackMisc
 
             Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst || this->isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Need sorted situations without NULL positions");
             const CAircraftSituationChange simpleChange(*this, model.getCG(), model.isVtol(), true, false);
-            int c = 0;
+            int c = 0; // changed elevations
             bool latest = true;
 
             for (CAircraftSituation &s : *this)
@@ -66,8 +66,8 @@ namespace BlackMisc
                 const bool set = s.setGroundElevationChecked(elevationPlane, info);
                 if (set)
                 {
-                    // change is only valid for the latest situation
-                    // this will do nothing if not appropriate
+                    // simpleChange is only valid for the latest situation
+                    // this will do nothing if not appropriate!
                     s.guessOnGround(latest ? simpleChange : CAircraftSituationChange::null(), model);
                     c++;
                 }

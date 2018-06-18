@@ -961,7 +961,7 @@ namespace BlackCore
                 }
                 else
                 {
-                    // values before updating
+                    // values before updating (i.e. "storing") so the new situation is noty yet considered
                     const CAircraftSituationList oldSituations = this->remoteAircraftSituations(callsign);
                     const CAircraftSituationChangeList oldChanges = this->remoteAircraftSituationChanges(callsign);
                     if (oldSituations.size() > 1)
