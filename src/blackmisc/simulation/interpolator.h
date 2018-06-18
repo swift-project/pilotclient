@@ -267,14 +267,15 @@ namespace BlackMisc
             CAircraftModel m_model; //!< corresponding model
 
             // values for current interpolation step
-            qint64 m_currentTimeMsSinceEpoch = -1;                       //!< current time
-            Aviation::CAircraftSituationList m_currentSituations;        //!< current situations
-            Aviation::CAircraftSituationChange m_pastSituationsChange;   //!< situations change of provider (i.e. network) situations
-            CInterpolationAndRenderingSetupPerCallsign m_currentSetup;   //!< used setup
-            CInterpolationStatus m_currentInterpolationStatus;           //!< this step's situation status
-            CPartsStatus m_currentPartsStatus;                           //!< this step's parts status
-            CPartsStatus m_lastPartsStatus;                              //!< status for last parts, used when last parts are re-used because of m_partsToSituationInterpolationRatio
-            int m_partsToSituationInterpolationRatio = 2;                //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
+            qint64 m_currentTimeMsSinceEpoch = -1;                      //!< current time
+            Aviation::CAircraftSituationList m_currentSituations;       //!< current situations
+            Aviation::CAircraftSituationChange m_pastSituationsChange;  //!< situations change of provider (i.e. network) situations
+            CInterpolationAndRenderingSetupPerCallsign m_currentSetup;  //!< used setup
+            CInterpolationStatus m_currentInterpolationStatus;          //!< this step's situation status
+            CPartsStatus m_currentPartsStatus;                          //!< this step's parts status
+            CPartsStatus m_lastPartsStatus;                             //!< status for last parts, used when last parts are re-used because of m_partsToSituationInterpolationRatio
+            int m_partsToSituationInterpolationRatio = 2;               //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
+            int m_partsToSituationGuessingRatio = 5;                    //!< ratio between parts guessing and situation interpolation
             Aviation::CAircraftSituation m_lastSituation { Aviation::CAircraftSituation::null() };      //!< latest interpolation
             Aviation::CAircraftParts m_lastParts { Aviation::CAircraftParts::null() };                  //!< latest parts
             PhysicalQuantities::CLength m_currentSceneryOffset { PhysicalQuantities::CLength::null() }; //!< calculated scenery offset if any

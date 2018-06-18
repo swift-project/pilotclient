@@ -283,7 +283,11 @@ namespace BlackMisc
         CAircraftParts CInterpolator<Derived>::getInterpolatedOrGuessedParts(int aircraftNumber)
         {
             Q_ASSERT_X(m_partsToSituationInterpolationRatio >= 1 && m_partsToSituationInterpolationRatio < 11, Q_FUNC_INFO, "Wrong ratio");
-            if (!m_unitTest && !m_lastParts.isNull() && ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationInterpolationRatio) == 0)
+            const bool needParts = m_unitTest || m_lastParts.isNull();
+            const bool doInterpolation = needParts || ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationInterpolationRatio == 0);
+            const bool doGuess = needParts || ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationGuessingRatio == 0);
+
+            if (!doGuess && !doInterpolation)
             {
                 m_currentPartsStatus = m_lastPartsStatus;
                 m_currentPartsStatus.setReusedParts(true);
@@ -301,6 +305,13 @@ namespace BlackMisc
             // the parts are still empty
             if (!m_currentPartsStatus.isSupportingParts())
             {
+                if (!doGuess)
+                {
+                    m_currentPartsStatus = m_lastPartsStatus;
+                    m_currentPartsStatus.setReusedParts(true);
+                    return m_lastParts;
+                }
+
                 // check if model has been thru model matching
                 parts.guessParts(m_lastSituation, m_pastSituationsChange, m_model);
                 this->logParts(parts, 0, false);
