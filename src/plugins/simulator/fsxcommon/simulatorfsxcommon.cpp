@@ -1426,7 +1426,7 @@ namespace BlackSimPlugin
 
             const CAircraftParts parts = result;
             if (parts.getPartsDetails() != CAircraftParts::GuessedParts && !result.getPartsStatus().isSupportingParts()) { return false; }
-            if (this->isEqualLastSent(parts, simObject.getCallsign())) { return true; }
+            if (result.getPartsStatus().isReusedParts() || this->isEqualLastSent(parts, simObject.getCallsign())) { return true; }
 
             DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights(parts); // no init, all values will be set
             return this->sendRemoteAircraftPartsToSimulator(simObject, ddRemoteAircraftPartsWithoutLights, parts.getAdjustedLights());
