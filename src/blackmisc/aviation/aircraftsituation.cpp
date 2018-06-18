@@ -381,6 +381,13 @@ namespace BlackMisc
             return this->isPositionNull();
         }
 
+        bool CAircraftSituation::isBetterInfo(CAircraftSituation::GndElevationInfo info) const
+        {
+            if (info == NoElevationInfo || info == Test) { return false; }
+            const int i = static_cast<int>(info);
+            return i > m_onGroundDetails;
+        }
+
         bool CAircraftSituation::equalPbh(const CAircraftSituation &other) const
         {
             return this->getPitch() == other.getPitch() && this->getBank() == other.getBank() && this->getHeading() == other.getHeading();
@@ -754,7 +761,7 @@ namespace BlackMisc
             if (elevationPlane.isNull()) { return false; }
             const CLength distance =  this->calculateGreatCircleDistance(elevationPlane);
             if (distance > elevationPlane.getRadius()) { return false; }
-            if (m_groundElevationPlane.isNull() || distance < m_groundElevationPlane.getRadius())
+            if (m_groundElevationPlane.isNull() || this->isBetterInfo(info))
             {
                 // better values
                 this->setGroundElevation(elevationPlane, info);

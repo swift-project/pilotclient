@@ -114,15 +114,16 @@ namespace BlackMisc
             //! Where did we get elevation from?
             enum GndElevationInfo
             {
+                // best info (most accurate) last
                 NoElevationInfo,
-                TransferredElevation, //!< transferred from nearby situation
-                Interpolated,         //!< interpolated between 2 elevations
+                Test,                 //!< unit test
+                SituationChange,      //!< from BlackMisc::Aviation::CAircraftSituationChange
                 Extrapolated,         //!< extrapolated ("guessing")
                 Average,              //!< average value of "nearby" situation CAircraftSituationList::averageElevationOfNonMovingAircraft
-                FromProvider,         //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
+                Interpolated,         //!< interpolated between 2 elevations
+                TransferredElevation, //!< transferred from nearby situation
                 FromCache,            //!< from cache
-                SituationChange,      //!< from BlackMisc::Aviation::CAircraftSituationChange
-                Test                  //!< unit test
+                FromProvider          //!< from BlackMisc::Simulation::ISimulationEnvironmentProvider
             };
 
             //! Default constructor.
@@ -171,6 +172,9 @@ namespace BlackMisc
 
             //! Null situation
             virtual bool isNull() const override;
+
+            //! Is better info (more accurate)?
+            bool isBetterInfo(GndElevationInfo info) const;
 
             //! Equal pitch, bank heading
             //! \sa Geo::ICoordinateGeodetic::equalNormalVectorDouble

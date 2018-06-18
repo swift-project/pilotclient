@@ -50,6 +50,10 @@ namespace BlackMisc
             this->setGeodeticHeight(CAltitude(altitudeMSLft, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
         }
 
+        CElevationPlane::CElevationPlane(double latDeg, double lngDeg, double altitudeMSLft, const CLength &radius) :
+            CCoordinateGeodetic(latDeg, lngDeg, altitudeMSLft), m_radius(radius)
+        { }
+
         void CElevationPlane::setRadiusOrMinimum(const CLength &radius)
         {
             m_radius = ((radius.isNull() || radius < CElevationPlane::singlePointRadius())) ? CElevationPlane::singlePointRadius() : radius;
