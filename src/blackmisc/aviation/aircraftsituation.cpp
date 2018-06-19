@@ -241,8 +241,12 @@ namespace BlackMisc
 
             if (!situation.isNull())
             {
-                const double distanceOldNewM = (distance.isNull() ? oldSituation.calculateGreatCircleDistance(newSituation) : distance).value(CLengthUnit::m());
                 const double distanceSituationNewM = situation.calculateGreatCircleDistance(newSituation).value(CLengthUnit::m());
+                if (distanceSituationNewM < 5.0) { return newSituation.getGroundElevationPlane(); }
+
+                const double distanceOldNewM = (distance.isNull() ? oldSituation.calculateGreatCircleDistance(newSituation) : distance).value(CLengthUnit::m());
+                if (distanceOldNewM < 5.0) { return oldSituation.getGroundElevationPlane(); }
+
                 const double distRatio = distanceSituationNewM / distanceOldNewM;
 
                 // very close to the situations we return tehir elevation
@@ -785,15 +789,30 @@ namespace BlackMisc
 
         CLength CAircraftSituation::getHeightAboveGround() const
         {
-            if (this->getAltitude().isNull()) { return { 0, nullptr }; }
+            if (this->getAltitude().isNull()) { return CLength::null(); }
             if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
             {
                 // we have a sure value explicitly set
                 return this->getAltitude();
             }
+
             const CLength gh(this->getGroundElevation());
-            if (gh.isNull()) { return { 0, nullptr }; }
-            return this->getAltitude() - gh;
+            if (gh.isNull()) { return CLength::null(); }
+
+            // sanity checks
+            if (std::isnan(gh.value()))
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "nan ground");
+                return CLength::null();
+            }
+            if (std::isnan(this->getAltitude().value()))
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "nan altitude");
+                return CLength::null();
+            }
+
+            const CLength ag = this->getAltitude() - gh;
+            return ag;
         }
 
         const CLengthUnit &CAircraftSituation::getAltitudeOrDefaultUnit() const

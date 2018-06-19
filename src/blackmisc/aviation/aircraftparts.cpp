@@ -14,6 +14,7 @@
 #include "aircraftsituationchange.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/verify.h"
 #include "blackconfig/buildconfig.h"
 
 #include "QStringBuilder"
@@ -152,9 +153,16 @@ namespace BlackMisc
 
             if (situation.hasGroundElevation())
             {
+                const CLength aboveGnd = situation.getHeightAboveGround();
+                if (aboveGnd.isNull() || std::isnan(aboveGnd.value()))
+                {
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, "above gnd.is null");
+                    return parts;
+                }
+
                 const double nearGround1Ft = 300;
                 const double nearGround2Ft = isLikelyTakeOffOrClimbing ? 500 : 1000;
-                const double aGroundFt = situation.getHeightAboveGround().value(CLengthUnit::ft());
+                const double aGroundFt = aboveGnd.value(CLengthUnit::ft());
                 static const QString detailsInfo("above ground: %1ft near grounds: %2ft %3ft likely takeoff: %4 likely landing: %5");
 
                 if (details) { *details = detailsInfo.arg(aGroundFt).arg(nearGround1Ft).arg(nearGround2Ft).arg(boolToYesNo(isLikelyTakeOffOrClimbing), boolToYesNo(isLikelyLanding));  }
@@ -325,7 +333,7 @@ namespace BlackMisc
 
         void CAircraftParts::guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
         {
-            *this = guessedParts(situation, change, model);
+            *this = CAircraftParts::guessedParts(situation, change, model);
         }
     } // namespace
 } // namespace

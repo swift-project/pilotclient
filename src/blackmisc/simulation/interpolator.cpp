@@ -311,6 +311,7 @@ namespace BlackMisc
                 }
 
                 // check if model has been thru model matching
+                Q_ASSERT_X(!m_lastSituation.isNull(), Q_FUNC_INFO, "null situations");
                 parts.guessParts(m_lastSituation, m_pastSituationsChange, m_model);
                 this->logParts(parts, 0, false);
             }

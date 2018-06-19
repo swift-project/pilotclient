@@ -53,7 +53,9 @@ namespace BlackMisc
         template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, MU unit) :
             m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
-        { }
+        {
+            Q_ASSERT_X(!std::isnan(value), Q_FUNC_INFO, "nan value");
+        }
 
         template <class MU, class PQ>
         CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const QString &unitString) :

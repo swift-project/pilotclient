@@ -52,7 +52,9 @@ namespace BlackMisc
 
         CElevationPlane::CElevationPlane(double latDeg, double lngDeg, double altitudeMSLft, const CLength &radius) :
             CCoordinateGeodetic(latDeg, lngDeg, altitudeMSLft), m_radius(radius)
-        { }
+        {
+            Q_ASSERT_X(!std::isnan(altitudeMSLft), Q_FUNC_INFO, "elv.nan");
+        }
 
         void CElevationPlane::setRadiusOrMinimum(const CLength &radius)
         {
@@ -93,7 +95,7 @@ namespace BlackMisc
         bool CElevationPlane::isWithinRange(const ICoordinateGeodetic &coordinate) const
         {
             if (coordinate.isNull()) { return false; }
-            if (isNull()) { return false; }
+            if (this->isNull()) { return false; }
             const CLength d = this->calculateGreatCircleDistance(coordinate);
             const bool inRange = (m_radius >= d);
             return inRange;
