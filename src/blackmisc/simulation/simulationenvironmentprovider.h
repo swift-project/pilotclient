@@ -52,6 +52,10 @@ namespace BlackMisc
             //! \threadsafe
             QPair<int, int> getElevationsFoundMissed() const;
 
+            //! Elevations found/missed statistics info as string
+            //! \threadsafe
+            QString getElevationsFoundMissedInfo() const;
+
             //! Get the represented plugin
             //! \threadsafe
             CSimulatorPluginInfo getSimulatorPluginInfo() const;
@@ -88,7 +92,7 @@ namespace BlackMisc
             //! Ctor
             ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo);
 
-            //! All remembered coordiantes plus max remembered situations
+            //! All remembered coordiantes plus max.remembered situations
             //! \threadsafe
             Geo::CCoordinateGeodeticList getElevationCoordinates(int &maxRemembered) const;
 
@@ -146,10 +150,10 @@ namespace BlackMisc
             CSimulatorPluginInfo m_simulatorPluginInfo; //!< info object
             Geo::CCoordinateGeodeticList m_elvCoordinates;
             QMap<Aviation::CCallsign, PhysicalQuantities::CLength> m_cgs; //! CGs
-            mutable int m_elvFound = 0;   //!< statistics only
-            mutable int m_elvMissed = 0;  //!< statistics only
+            mutable int m_elvFound  = 0; //!< statistics only
+            mutable int m_elvMissed = 0; //!< statistics only
             mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates
-            mutable QReadWriteLock m_lockCG; //!< lock CGs
+            mutable QReadWriteLock m_lockCG;    //!< lock CGs
             mutable QReadWriteLock m_lockModel; //!< lock models
         };
 
@@ -171,6 +175,9 @@ namespace BlackMisc
 
             //! \copydoc ISimulationEnvironmentProvider::getElevationsFoundMissed
             QPair<int, int> getElevationsFoundMissed() const;
+
+            //! \copydoc ISimulationEnvironmentProvider::getElevationsFoundMissedInfo
+            QString getElevationsFoundMissedInfo() const;
 
             //! \copydoc ISimulationEnvironmentProvider::getSimulatorPluginInfo
             CSimulatorPluginInfo getSimulatorPluginInfo() const;

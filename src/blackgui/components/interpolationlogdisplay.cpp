@@ -372,12 +372,9 @@ namespace BlackGui
         void CInterpolationLogDisplay::displayElevationRequestReceive()
         {
             if (!m_airspaceMonitor) { return; }
-            static const QString rr("%1 / %2 hits %3 / %4 %5%");
-            const QPair<int, int> foundMissed = m_airspaceMonitor->getElevationsFoundMissed();
-            const int f = foundMissed.first;
-            const int m = foundMissed.second;
-            const double hitRatioPercent = 100.0 * static_cast<double>(f) / static_cast<double>(f + m);
-            ui->le_ElevationReqRec->setText(rr.arg(m_elvRequested).arg(m_elvReceived).arg(f).arg(m).arg(QString::number(hitRatioPercent, 'f', 1)));
+            static const QString info("%1/%2 hits %3");
+            const QString foundMissed = m_airspaceMonitor->getElevationsFoundMissedInfo();
+            ui->le_ElevationReqRec->setText(info.arg(m_elvRequested).arg(m_elvReceived).arg(foundMissed));
         }
 
         void CInterpolationLogDisplay::linkWithAirspaceMonitor()

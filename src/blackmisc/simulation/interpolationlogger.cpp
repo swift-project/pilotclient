@@ -415,7 +415,7 @@ namespace BlackMisc
                    ) %
                    (
                        withElevation ?
-                       QStringLiteral("Elev info.: ") % elevationInfo %
+                       QStringLiteral("Elev.info: ") % elevationInfo %
                        QStringLiteral(" scenery os: ") % sceneryOffset.valueRoundedWithUnit(1) % separator :
                        QStringLiteral("")
                    ) %

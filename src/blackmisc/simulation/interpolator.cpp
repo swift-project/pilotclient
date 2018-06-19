@@ -224,8 +224,6 @@ namespace BlackMisc
             // logging
             if (this->doLogging())
             {
-                static const QString elv("found %1 missed %2");
-                const QPair<int, int> elvStats = this->getElevationsFoundMissed();
                 log.tsCurrent = m_currentTimeMsSinceEpoch;
                 log.callsign = m_callsign;
                 log.groundFactor = currentSituation.getOnGroundFactor();
@@ -233,7 +231,7 @@ namespace BlackMisc
                 log.situationCurrent = currentSituation;
                 log.change = m_pastSituationsChange;
                 log.usedSetup = m_currentSetup;
-                log.elevationInfo = elv.arg(elvStats.first).arg(elvStats.second);
+                log.elevationInfo = this->getElevationsFoundMissedInfo();
                 log.cgAboveGround = currentSituation.getCG();
                 log.sceneryOffset = m_currentSceneryOffset;
                 m_logger->logInterpolation(log);
