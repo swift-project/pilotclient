@@ -61,11 +61,11 @@ namespace BlackMisc
         protected:
             //! Set the global setup
             //! \threadsafe
-            bool setInterpolationSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup);
+            virtual bool setInterpolationSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup);
 
             //! Insert specialized setup
             //! \threadsafe
-            bool setInterpolationSetupPerCallsign(const CInterpolationAndRenderingSetupPerCallsign &setup, const Aviation::CCallsign &callsign, bool removeGlobalSetup = true);
+            virtual bool setInterpolationSetupPerCallsign(const CInterpolationAndRenderingSetupPerCallsign &setup, const Aviation::CCallsign &callsign, bool removeGlobalSetup = true);
 
             //! Log/un-log given callsign
             //! \threadsafe

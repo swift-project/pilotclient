@@ -145,14 +145,6 @@ namespace BlackCore
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
-        //! Consolidate setup with other data like from BlackMisc::Simulation::IRemoteAircraftProvider
-        //! \threadsafe
-        BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupConsolidated(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-        //! Enable debugging messages etc.
-        //! \threadsafe
-        virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) = 0;
-
         //! Is the aircraft rendered (displayed in simulator)?
         //! This shall only return true if the aircraft is really visible in the simulator
         virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
@@ -215,6 +207,16 @@ namespace BlackCore
         //! @}
         //! Parse command line
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
+
+        //! Consolidate setup with other data like from BlackMisc::Simulation::IRemoteAircraftProvider
+        //! \threadsafe
+        BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupConsolidated(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
+        virtual bool setInterpolationSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
+
+        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
+        virtual bool setInterpolationSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal = true) override;
 
         //! Register help
         static void registerHelp();
@@ -286,6 +288,9 @@ namespace BlackCore
 
         //! A requested elevation has been received
         virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupPerCallsign
+        virtual bool setInterpolationSetupPerCallsign(const BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign &setup, const BlackMisc::Aviation::CCallsign &callsign, bool removeGlobalSetup) override;
 
         //! Emit the combined status
         //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal status values no signal will be sent

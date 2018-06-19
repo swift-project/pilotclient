@@ -401,16 +401,6 @@ namespace BlackCore
         return renderedOnes.intersection(disabledOnes);
     }
 
-    void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetupGlobal &setup)
-    {
-        if (!this->setInterpolationSetupGlobal(setup)) { return; }
-        const bool r = setup.isRenderingRestricted();
-        const bool e = setup.isRenderingEnabled();
-
-        emit this->interpolationAndRenderingSetupChanged();
-        emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
-    }
-
     void CSimulatorCommon::highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime)
     {
         const CCallsign cs(aircraftToHighlight.getCallsign());
@@ -558,10 +548,6 @@ namespace BlackCore
             {
                 const CCallsign cs(parser.part(2));
                 const bool changed = this->setInterpolationMode(part1, cs);
-                if (changed)
-                {
-                    emit this->interpolationAndRenderingSetupChanged();
-                }
                 CLogMessage(this).info(changed ? "Changed interpolation mode for '%1'" : "Unchanged interpolation mode for '%1'") << cs.asString();
                 return true;
             }
@@ -569,7 +555,7 @@ namespace BlackCore
             {
                 CInterpolationAndRenderingSetupGlobal setup = this->getInterpolationSetupGlobal();
                 const bool changed = setup.setInterpolatorMode(part1);
-                if (changed) { this->setInterpolationAndRenderingSetup(setup); }
+                if (changed) { this->setInterpolationSetupGlobal(setup); }
                 CLogMessage(this).info(changed ? "Changed interpolation mode globally" : "Unchanged interpolation mode");
                 return true;
             }

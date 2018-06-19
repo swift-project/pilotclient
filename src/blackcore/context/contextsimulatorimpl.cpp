@@ -317,7 +317,7 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << setup; }
             if (m_simulatorPlugin.first.isUnspecified()) { return; }
             Q_ASSERT(m_simulatorPlugin.second);
-            m_simulatorPlugin.second->setInterpolationAndRenderingSetup(setup);
+            m_simulatorPlugin.second->setInterpolationSetupGlobal(setup);
         }
 
         CTime CContextSimulator::getTimeSynchronizationOffset() const

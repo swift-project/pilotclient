@@ -140,6 +140,31 @@ namespace BlackCore
         }
     }
 
+    bool ISimulator::setInterpolationSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
+    {
+        if (!IInterpolationSetupProvider::setInterpolationSetupGlobal(setup)) { return false; }
+        const bool r = setup.isRenderingRestricted();
+        const bool e = setup.isRenderingEnabled();
+
+        emit this->interpolationAndRenderingSetupChanged();
+        emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
+        return true;
+    }
+
+    bool ISimulator::setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
+    {
+        if (!IInterpolationSetupProvider::setInterpolationSetupsPerCallsign(setups, ignoreSameAsGlobal)) { return false; }
+        emit this->interpolationAndRenderingSetupChanged();
+        return true;
+    }
+
+    bool ISimulator::setInterpolationSetupPerCallsign(const CInterpolationAndRenderingSetupPerCallsign &setup, const CCallsign &callsign, bool removeGlobalSetup)
+    {
+        if (!IInterpolationSetupProvider::setInterpolationSetupPerCallsign(setup, callsign, removeGlobalSetup)) { return false; }
+        emit this->interpolationAndRenderingSetupChanged();
+        return true;
+    }
+
     ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info) :
         QObject(), m_info(info)
     {
