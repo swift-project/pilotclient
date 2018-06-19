@@ -319,13 +319,15 @@ namespace BlackMisc
             if (this->isForcingVtolInterpolation() != globalSetup.isForcingVtolInterpolation()) { diff.push_back(IndexForceVtolInterpolation); }
             if (this->isAircraftPartsEnabled() != globalSetup.isAircraftPartsEnabled()) { diff.push_back(IndexEnabledAircraftParts); }
             if (this->isSendingGndFlagToSimulator() != globalSetup.isSendingGndFlagToSimulator()) { diff.push_back(IndexSendGndFlagToSimulator); }
-            if (this->isFixingSceneryOffset() != globalSetup.isForcingVtolInterpolation()) { diff.push_back(IndexFixSceneryOffset); }
+            if (this->isFixingSceneryOffset() != globalSetup.isFixingSceneryOffset()) { diff.push_back(IndexFixSceneryOffset); }
             return diff;
         }
 
         bool CInterpolationAndRenderingSetupPerCallsign::isEqualToGlobal(const CInterpolationAndRenderingSetupGlobal &globalSetup) const
         {
-            return this->unequalToGlobal(globalSetup).isEmpty();
+            const CPropertyIndexList il = this->unequalToGlobal(globalSetup);
+            const bool equal = il.isEmpty();
+            return equal;
         }
 
         CVariant CInterpolationAndRenderingSetupPerCallsign::propertyByIndex(const CPropertyIndex &index) const
