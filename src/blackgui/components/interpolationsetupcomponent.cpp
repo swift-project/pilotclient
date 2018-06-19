@@ -39,6 +39,8 @@ namespace BlackGui
             connect(ui->pb_Reload, &QPushButton::clicked, this, &CInterpolationSetupComponent::reloadSetup);
             connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked, this, &CInterpolationSetupComponent::onRowDoubleClicked);
             connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged, this, &CInterpolationSetupComponent::onModelChanged);
+            connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelDataChanged, this, &CInterpolationSetupComponent::onModelChanged);
+            connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::objectsDeleted, this, &CInterpolationSetupComponent::onObjectsDeleted);
             connect(ui->rb_Callsign, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
             connect(ui->rb_Global, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
             if (sGui &&  sGui->getIContextSimulator())
@@ -227,6 +229,22 @@ namespace BlackGui
         void CInterpolationSetupComponent::onSetupChanged()
         {
             this->displaySetupsPerCallsign();
+        }
+
+        void CInterpolationSetupComponent::onObjectsDeleted(const CVariant &deletedObjects)
+        {
+            if (deletedObjects.canConvert<CInterpolationSetupList>())
+            {
+                const CInterpolationSetupList deletedSetups = deletedObjects.value<CInterpolationSetupList>();
+                if (deletedSetups.isEmpty()) { return; }
+
+                // make sure the setups are really deleted
+                // it can be they are already in the container, but there is no guarantee
+                CInterpolationSetupList setups = ui->tvp_InterpolationSetup->container();
+                setups.removeByCallsigns(deletedSetups.getCallsigns());
+                const bool set = this->setSetupsToContext(setups);
+                Q_UNUSED(set);
+            }
         }
     } // ns
 } // ns

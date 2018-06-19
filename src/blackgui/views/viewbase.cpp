@@ -1164,21 +1164,27 @@ namespace BlackGui
             if (this->isEmpty()) { return 0; }
 
             const int currentRows = this->rowCount();
+            const ContainerType selected(selectedObjects());
+            const CVariant deletedObjsVariant = CVariant::from(selected);
+            int delta = 0;
+
             if (!this->hasFilter() && currentRows == this->selectedRowCount())
             {
                 // shortcut if all are selected
                 this->clear(); // clear all
-                return currentRows;
+                delta = currentRows;
             }
-
-            const ContainerType selected(selectedObjects());
-            ContainerType unselectedObjects(container());
-            for (const ObjectType &obj : selected)
+            else
             {
-                unselectedObjects.remove(obj);
+                ContainerType unselectedObjects(container());
+                for (const ObjectType &obj : selected)
+                {
+                    unselectedObjects.remove(obj);
+                }
+                this->updateContainerMaybeAsync(unselectedObjects);
+                delta = currentRows - unselectedObjects.size();
             }
-            const int delta = currentRows - unselectedObjects.size();
-            this->updateContainerMaybeAsync(unselectedObjects);
+            emit this->objectsDeleted(deletedObjsVariant);
             return delta;
         }
 

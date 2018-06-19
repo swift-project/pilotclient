@@ -321,6 +321,9 @@ namespace BlackGui
             //! Object has been double clicked
             void objectSelected(const BlackMisc::CVariant &object);
 
+            //! Objects deleted from model
+            void objectsDeleted(const BlackMisc::CVariant &objectContainer);
+
             //! JSON data load from disk completed, the BlackMisc::CStatusMessage represents the success
             void jsonLoadCompleted(const BlackMisc::CStatusMessage &msg);
 

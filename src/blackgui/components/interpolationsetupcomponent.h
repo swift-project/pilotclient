@@ -85,6 +85,9 @@ namespace BlackGui
             //! Setup chaged
             void onSetupChanged();
 
+            //! Objects have been deleted
+            void onObjectsDeleted(const BlackMisc::CVariant &deletedObjects);
+
             BlackMisc::Simulation::CInterpolationSetupList m_lastSetSetups; //!< last setups set to context
         };
     } // ns
