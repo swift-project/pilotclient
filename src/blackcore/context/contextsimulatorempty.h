@@ -191,10 +191,12 @@ namespace BlackCore
             }
 
             //! \copydoc ISimulator::setInterpolationSetupPerCallsign
-            virtual void setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups) override
+            virtual bool setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) override
             {
                 Q_UNUSED(setups);
+                Q_UNUSED(ignoreSameAsGlobal);
                 logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
             }
 
             //! \copydoc IContextSimulator::getTimeSynchronizationOffset

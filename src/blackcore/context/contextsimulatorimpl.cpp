@@ -304,12 +304,12 @@ namespace BlackCore
             return m_simulatorPlugin.second->getInterpolationSetupPerCallsignOrDefault(callsign);
         }
 
-        void CContextSimulator::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups)
+        bool CContextSimulator::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return; }
+            if (m_simulatorPlugin.first.isUnspecified()) { return false; }
             Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->setInterpolationSetupsPerCallsign(setups);
+            return m_simulatorPlugin.second->setInterpolationSetupsPerCallsign(setups, ignoreSameAsGlobal);
         }
 
         void CContextSimulator::setInterpolationAndRenderingSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)

@@ -143,7 +143,7 @@ namespace BlackMisc
 
         QString ISimulationEnvironmentProvider::getElevationsFoundMissedInfo() const
         {
-            static const QString info("%1/%2 %3");
+            static const QString info("%1/%2 %3%");
             const QPair<int, int> foundMissed = this->getElevationsFoundMissed();
             const int f = foundMissed.first;
             const int m = foundMissed.second;

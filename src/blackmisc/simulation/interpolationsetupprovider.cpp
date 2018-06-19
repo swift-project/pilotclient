@@ -28,16 +28,22 @@ namespace BlackMisc
             return CInterpolationSetupList(setups.values());
         }
 
-        void IInterpolationSetupProvider::setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups)
+        bool IInterpolationSetupProvider::setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
         {
+            const CInterpolationAndRenderingSetupGlobal gs = this->getInterpolationSetupGlobal();
             SetupsPerCallsign setupsPerCs;
             for (const CInterpolationAndRenderingSetupPerCallsign &setup : setups)
             {
+                if (ignoreSameAsGlobal && setup.isEqualToGlobal(gs)) { continue; }
                 setupsPerCs.insert(setup.getCallsign(), setup);
             }
 
-            QWriteLocker l(&m_lockSetup);
-            m_setups = setupsPerCs;
+            {
+                QWriteLocker l(&m_lockSetup);
+                if (m_setups.isEmpty() && setupsPerCs.isEmpty()) { return false; }
+                m_setups = setupsPerCs;
+            }
+            return true;
         }
 
         CInterpolationAndRenderingSetupGlobal IInterpolationSetupProvider::getInterpolationSetupGlobal() const
@@ -91,7 +97,8 @@ namespace BlackMisc
         {
             if (removeGlobalSetup)
             {
-                if (setup.isEqualToGlobal(this->getInterpolationSetupGlobal()))
+                const CInterpolationAndRenderingSetupGlobal gs = this->getInterpolationSetupGlobal();
+                if (setup.isEqualToGlobal(gs))
                 {
                     QWriteLocker l(&m_lockSetup);
                     m_setups.remove(callsign);

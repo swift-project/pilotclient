@@ -40,7 +40,7 @@ namespace BlackMisc
 
             //! Set all setups per callsign
             //! \threadsafe
-            virtual void setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups);
+            virtual bool setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal = true);
 
             //! The global setup
             //! \threadsafe

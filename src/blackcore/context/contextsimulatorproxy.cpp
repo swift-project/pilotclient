@@ -184,9 +184,9 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetupPerCallsign>(QLatin1String("getInterpolationAndRenderingSetupsPerCallsign"), callsign);
         }
 
-        void CContextSimulatorProxy::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups)
+        bool CContextSimulatorProxy::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
         {
-            m_dBusInterface->callDBus(QLatin1String("setInterpolationAndRenderingSetupsPerCallsign"), setups);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setInterpolationAndRenderingSetupsPerCallsign"), setups, ignoreSameAsGlobal);
         }
 
         void CContextSimulatorProxy::setInterpolationAndRenderingSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
