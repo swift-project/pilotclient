@@ -148,14 +148,21 @@ namespace BlackCore
 
     void CAirspaceAnalyzer::watchdogCheckTimeouts()
     {
+        // this is a trick to not remove everything while debugging
         const qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
         const qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
         const qint64 callThresholdMs = static_cast<qint64>(m_updateTimer.interval() * 1.5);
         m_lastWatchdogCallMsSinceEpoch = currentTimeMsEpoch;
+        if (callDiffMs > callThresholdMs)
+        {
+            // allow some time to normalize before checking again
+            m_doNotRunAgainBefore = currentTimeMsEpoch + 2 * callThresholdMs;
+            return;
+        }
+        if (m_doNotRunAgainBefore > currentTimeMsEpoch) { return; }
+        m_doNotRunAgainBefore = -1;
 
-        // this is a trick to not remove everything while debugging
-        if (callDiffMs > callThresholdMs) { return; }
-
+        // checks
         const qint64 aircraftTimeoutMs = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
         const qint64 atcTimeoutMs = m_timeoutAtc.valueInteger(CTimeUnit::ms());
         const qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
