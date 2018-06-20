@@ -80,7 +80,7 @@ namespace BlackGui
             bool checkPrerequisites(bool showOverlay);
 
             //! Send to context
-            bool setSetupsToContext(const BlackMisc::Simulation::CInterpolationSetupList &setups);
+            bool setSetupsToContext(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool force = false);
 
             //! Setup chaged
             void onSetupChanged();
