@@ -17,6 +17,7 @@
 #include "simconnectdatadefinition.h"
 #include <QSharedPointer>
 #include <QStringList>
+#include <QByteArray>
 
 namespace BlackSimPlugin
 {
@@ -37,7 +38,7 @@ namespace BlackSimPlugin
             CSimConnectObject();
 
             //! Constructor
-            CSimConnectObject(SimObjectType type) : m_type(type) {}
+            CSimConnectObject(SimObjectType type);
 
             //! Constructor providing initial situation/parts
             CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
@@ -65,7 +66,7 @@ namespace BlackSimPlugin
             void setType(SimObjectType type) { m_type = type; }
 
             //! Set the aircraft
-            void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) { m_aircraft = aircraft; }
+            void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Get current lights (requested from simulator)
             const BlackMisc::Aviation::CAircraftLights &getCurrentLightsInSimulator() const { return m_currentLightsInSim; }
@@ -78,34 +79,6 @@ namespace BlackSimPlugin
 
             //! Pretend to have received lights from simulator
             void fakeCurrentLightsInSimulator() { m_currentLightsInSim.setNull(false); }
-
-            //! Parts as sent to simulator
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            const DataDefinitionRemoteAircraftPartsWithoutLights &getPartsAsSent() const { return m_partsAsSent; }
-
-            //! Parts as sent to simulator
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            void setPartsAsSent(const DataDefinitionRemoteAircraftPartsWithoutLights &parts) { m_partsAsSent = parts; }
-
-            //! Invalidate parts as sent
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            void invalidatePartsAsSent();
-
-            //! Parts as sent to simulator
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            const SIMCONNECT_DATA_INITPOSITION &getPositionAsSent() const { return m_positionAsSent; }
-
-            //! Position as sent
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            void setPositionAsSent(const SIMCONNECT_DATA_INITPOSITION &position) { m_positionAsSent = position; }
-
-            //! Same as sent
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            bool isSameAsSent(const SIMCONNECT_DATA_INITPOSITION &position) const;
-
-            //! Invalidate position as sent
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            void invalidatePositionAsSent();
 
             //! Lights as sent to simulator
             const BlackMisc::Aviation::CAircraftLights &getLightsAsSent() const { return m_lightsAsSent; }
@@ -158,6 +131,24 @@ namespace BlackSimPlugin
             //! Pending added or removed?
             bool isPending() const { return this->isPendingAdded() || this->isPendingRemoved(); }
 
+            //! Has camera?
+            bool hasCamera() const { return m_camera; }
+
+            //! Reset camera positions
+            void resetCameraPositions();
+
+            //! Camera position
+            const SIMCONNECT_DATA_XYZ &cameraPosition() const { return m_cameraPosition; }
+
+            //! Camera rotation;
+            const SIMCONNECT_DATA_PBH &cameraRotation() const { return m_cameraRotation; }
+
+            //! Camera GUID
+            GUID getCameraGUID() const { return m_cameraGuid; }
+
+            //! Set camera GUID
+            void setCameraGUID(GUID guid) { m_cameraGuid = guid; m_camera = true; }
+
             //! Reset the state (like it was a new onject) without affecting interpolator and aircraft
             void resetState();
 
@@ -169,6 +160,9 @@ namespace BlackSimPlugin
 
             //! Was the object really added to simulator
             bool hasValidRequestAndObjectId() const;
+
+            //! Callsign as LATIN1
+            const QByteArray &getCallsignByteArray() const { return m_callsignByteArray; }
 
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
             QString getInterpolatorInfo(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
@@ -194,9 +188,12 @@ namespace BlackSimPlugin
             bool m_validObjectId  = false;
             bool m_confirmedAdded = false;
             bool m_pendingRemoved = false;
+            bool m_camera         = false;
             int m_lightsRequestedAt = -1;
-            DataDefinitionRemoteAircraftPartsWithoutLights m_partsAsSent {};          //!< parts as sent
-            SIMCONNECT_DATA_INITPOSITION m_positionAsSent {};                         //!< position as sent
+            GUID m_cameraGuid;
+            SIMCONNECT_DATA_XYZ m_cameraPosition;
+            SIMCONNECT_DATA_PBH m_cameraRotation;
+            QByteArray m_callsignByteArray;
             BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr };    //!< current lights to know state for toggling
             BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };          //!< lights as sent to simulator
             SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;       //!< how often do we query ground elevation
@@ -208,7 +205,7 @@ namespace BlackSimPlugin
         {
         public:
             //! Set ID of a SimConnect object, so far we only have an request id in the object
-            bool setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts = false);
+            bool setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId);
 
             //! Find which callsign belongs to the object id
             BlackMisc::Aviation::CCallsign getCallsignForObjectId(DWORD objectId) const;

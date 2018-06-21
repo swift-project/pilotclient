@@ -79,7 +79,8 @@ namespace BlackSimPlugin
             EventToggleNavLights,
             EventToggleRecognitionLights,
             EventToggleTaxiLights,
-            EventToggleWingLights
+            EventToggleWingLights,
+            EventFSXEndMarker
         };
 
         //! Struct to trace send ids
@@ -167,6 +168,9 @@ namespace BlackSimPlugin
             //! \sa CSimulatorFsxCommon::dispatch
             virtual void timerEvent(QTimerEvent *event) override;
 
+            //! Specific P3D events
+            virtual HRESULT initEventsP3D() { return S_OK; }
+
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
@@ -202,6 +206,8 @@ namespace BlackSimPlugin
             static constexpr qint64 AutoTraceOffsetMs = 10 * 1000;              //!< how long do we trace?
             HANDLE m_hSimConnect = nullptr;                                     //!< handle to SimConnect object
             DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be overriden by specialized P3D function
+            CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
+            CSimConnectObjects m_simConnectProbes;  //!< AI terrain probes and their object / request ids
             QMap<DWORD, BlackMisc::Aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests
 
         private:
@@ -441,11 +447,9 @@ namespace BlackSimPlugin
             int m_requestSimObjectDataCount  = 0; //!< requested SimObjects
 
             // objects
-            CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
-            CSimConnectObjects m_simConnectProbes;  //!< AI terrain probes and their object / request ids
             CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
-            SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);    //!< request id, use obtainRequestIdForSimData() to get id
-            SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForProbe() to get id
+            SIMCONNECT_DATA_REQUEST_ID m_requestIdSimData = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdSimDataStart);      //!< request id, use obtainRequestIdForSimData() to get id
+            SIMCONNECT_DATA_REQUEST_ID m_requestIdProbe   = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestIdTerrainProbeStart); //!< request id, use obtainRequestIdForProbe() to get id
             BlackMisc::Simulation::CSimulatedAircraftList m_addPendingAircraft; //!< aircraft awaiting to be added
             QTimer m_addPendingSimObjTimer; //!< updating of SimObjects awaiting to be added
         };
@@ -489,7 +493,7 @@ namespace BlackSimPlugin
             //! \sa CSimConnectObjects::SimConnectProc
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
         };
-    }
+    } // namespace
 } // namespace
 
 #endif // guard

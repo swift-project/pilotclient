@@ -18,6 +18,12 @@ namespace BlackSimPlugin
 {
     namespace P3D
     {
+        //! P3D specific events
+        enum EventsIdsP3D
+        {
+            EventP3dFoo = FsxCommon::EventFSXEndMarker + 1
+        };
+
         //! P3D Simulator Implementation
         class CSimulatorP3D : public FsxCommon::CSimulatorFsxCommon
         {
@@ -38,7 +44,13 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
+            //! \copydoc ISimulator::followAircraft
+            virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+
         protected:
+            //! \copydoc FsxCommon::CSimulatorFsxCommon::initEventsP3D
+            virtual HRESULT initEventsP3D() override;
+
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
         };

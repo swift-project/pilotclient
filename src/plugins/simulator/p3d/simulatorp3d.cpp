@@ -20,6 +20,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackSimPlugin::FsxCommon;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
@@ -52,6 +53,12 @@ namespace BlackSimPlugin
 
             switch (pData->dwID)
             {
+            // case SIMCONNECT_RECV_ID_CAMERA_6DOF: break;
+            // case SIMCONNECT_RECV_ID_CAMERA_FOV: break;
+            // case SIMCONNECT_RECV_ID_CAMERA_SENSOR_MODE: break;
+            // case SIMCONNECT_RECV_ID_CAMERA_WINDOW_POSITION: break;
+            // case SIMCONNECT_RECV_ID_CAMERA_WINDOW_SIZE: break;
+
             case SIMCONNECT_RECV_ID_GROUND_INFO:
                 {
                     // https://www.prepar3d.com/SDKv4/sdk/simconnect_api/references/structures_and_enumerations.html#SIMCONNECT_RECV_GROUND_INFO
@@ -116,6 +123,65 @@ namespace BlackSimPlugin
             }
 
             return ok;
+        }
+
+        bool CSimulatorP3D::followAircraft(const CCallsign &callsign)
+        {
+            if (this->isShuttingDownOrDisconnected()) { return false; }
+            if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return false; }
+
+            // Experimental code, suffering from bugs and also requiring
+            // P3D v4.2 (bugs in V4.1
+            CSimConnectObject &simObject = m_simConnectObjects[callsign];
+
+            const CAircraftModel model = simObject.getAircraft().getModel();
+            const QString viewName = "Commercial Jet-" + callsign.asString();
+            const char *view = viewName.toLatin1().constData();
+            CLogMessage(this).warning("Modelview %1") << viewName;
+            Q_UNUSED(model);
+
+            HRESULT hr = SimConnect_ChangeView(m_hSimConnect, view);
+            return hr == S_OK;
+
+            /**
+            if (!simObject.hasValidRequestAndObjectId()) { return false; }
+            if (simObject.getCallsignByteArray().isEmpty()) { return false; }
+            const char *cs = simObject.getCallsignByteArray().constData();
+
+            HRESULT hr = S_FALSE;
+            if (!simObject.hasCamera())
+            {
+                GUID guid;
+                CoCreateGuid(&guid);
+                const SIMCONNECT_CAMERA_TYPE cameraType = SIMCONNECT_CAMERA_TYPE_OBJECT_CENTER;
+                hr = SimConnect_CreateCameraDefinition(m_hSimConnect, guid, cameraType, cs, simObject.cameraPosition(), simObject.cameraRotation());
+                if (hr == S_OK)
+                {
+                    const SIMCONNECT_OBJECT_ID objectId = static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId());
+                    const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimData();
+                    hr = SimConnect_CreateCameraInstance(m_hSimConnect, guid, cs, objectId, requestId);
+                    if (hr == S_OK)
+                    {
+                        simObject.setCameraGUID(guid);
+                    }
+                }
+            }
+
+            if (!simObject.hasCamera()) { return false; }
+            hr = SimConnect_OpenView(m_hSimConnect, cs);
+            return hr == S_OK;
+            **/
+        }
+
+        HRESULT CSimulatorP3D::initEventsP3D()
+        {
+            HRESULT hr = S_OK;
+            if (hr != S_OK)
+            {
+                CLogMessage(this).error("P3D plugin error: %1") << "initEventsP3D failed";
+                return hr;
+            }
+            return hr;
         }
 #else
         void CSimulatorP3D::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)

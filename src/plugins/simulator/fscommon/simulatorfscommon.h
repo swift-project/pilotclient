@@ -20,6 +20,8 @@
 #include <QObject>
 #include <memory>
 
+#include <blackcore/simulatorcommon.h>
+
 namespace BlackSimPlugin
 {
     namespace FsCommon

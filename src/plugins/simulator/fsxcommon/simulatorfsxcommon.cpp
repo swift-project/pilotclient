@@ -93,7 +93,9 @@ namespace BlackSimPlugin
 
             // set structures and move on
             this->initEvents();
+            this->initEventsP3D();
             this->initDataDefinitionsWhenConnected();
+
             m_timerId = this->startTimer(DispatchIntervalMs);
             // do not start m_addPendingAircraftTimer here, it will be started when object was added
             return true;
@@ -275,7 +277,7 @@ namespace BlackSimPlugin
 
             if (m_simConnectProbes.isEmpty()) { return this->physicallyAddAITerrainProbe(pos); }
             if (m_simConnectProbes.countConfirmedAdded() < 1) { return false; } // pending probes
-            CSimConnectObject simObject = m_simConnectProbes.values().front();
+            const CSimConnectObject simObject = m_simConnectProbes.values().front();
 
             SIMCONNECT_DATA_INITPOSITION position = this->coordinateToFsxPosition(pos);
             const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
@@ -873,12 +875,12 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::setSimConnectObjectId(DWORD requestId, DWORD objectId)
         {
-            return m_simConnectObjects.setSimConnectObjectIdForRequestId(requestId, objectId, true);
+            return m_simConnectObjects.setSimConnectObjectIdForRequestId(requestId, objectId);
         }
 
         bool CSimulatorFsxCommon::setSimConnectProbeId(DWORD requestId, DWORD objectId)
         {
-            return m_simConnectProbes.setSimConnectObjectIdForRequestId(requestId, objectId, true);
+            return m_simConnectProbes.setSimConnectObjectIdForRequestId(requestId, objectId);
         }
 
         bool CSimulatorFsxCommon::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
@@ -1386,7 +1388,6 @@ namespace BlackSimPlugin
                     if (!this->isEqualLastSent(result))
                     {
                         SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(result, sendGround);
-                        m_simConnectObjects[callsign].setPositionAsSent(position);
                         const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                            static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0,
                                            sizeof(SIMCONNECT_DATA_INITPOSITION), &position);
@@ -1478,10 +1479,6 @@ namespace BlackSimPlugin
             if (hr == S_OK && m_simConnectObjects.contains(simObject.getCallsign()))
             {
                 if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
-
-                // Update data
-                CSimConnectObject &objUdpate = m_simConnectObjects[simObject.getCallsign()];
-                objUdpate.setPartsAsSent(ddRemoteAircraftPartsWithoutLights);
             }
             else
             {
