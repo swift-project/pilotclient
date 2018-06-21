@@ -36,7 +36,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexScheme = BlackMisc::CPropertyIndex::GlobalIndexCUrl,
+                IndexScheme = CPropertyIndex::GlobalIndexCUrl,
                 IndexHost,
                 IndexPort,
                 IndexPath,

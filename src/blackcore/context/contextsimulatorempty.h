@@ -183,14 +183,14 @@ namespace BlackCore
                 return BlackMisc::Simulation::CInterpolationAndRenderingSetupPerCallsign();
             }
 
-            //! \copydoc ISimulator::setInterpolationAndRenderingSetup
+            //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
             virtual void setInterpolationAndRenderingSetupGlobal(const BlackMisc::Simulation::CInterpolationAndRenderingSetupGlobal &setup) override
             {
                 Q_UNUSED(setup);
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
-            //! \copydoc ISimulator::setInterpolationSetupPerCallsign
+            //! \copydoc BlackMisc::Simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
             virtual bool setInterpolationAndRenderingSetupsPerCallsign(const BlackMisc::Simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) override
             {
                 Q_UNUSED(setups);

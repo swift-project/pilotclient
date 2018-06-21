@@ -322,7 +322,7 @@ namespace BlackCore
         bool m_blinkCycle = false;            //!< used for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0; //!< end highlighting
         int m_timerCounter = 0;               //!< allows to calculate n seconds
-        QTimer m_oneSecondTimer;              //!< multi purpose timer
+        QTimer m_oneSecondTimer;              //!< multi purpose timer with 1 sec. interval
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;               //!< all other aircraft are to be ignored
         BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;             //!< callsigns which will be rendered
         BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections; //!< connected signal/slots

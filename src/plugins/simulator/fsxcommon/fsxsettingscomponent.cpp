@@ -48,7 +48,7 @@ namespace BlackSimPlugin
             if (!sGui || !sGui->getISimulator()) { return nullptr; }
             ISimulator *sim = sGui->getISimulator();
             if (!sim->getSimulatorInfo().isFsxP3DFamily()) { return nullptr; }
-            if (sim->getSimulatorInfo() != m_simulator)  { return nullptr; }
+            if (sim->getSimulatorInfo() != m_simulator) { return nullptr; }
             CSimulatorFsxCommon *fsx = static_cast<CSimulatorFsxCommon *>(sim); // wonder why qobject_cast does not work here
             return fsx;
         }

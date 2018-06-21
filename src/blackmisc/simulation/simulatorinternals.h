@@ -38,7 +38,7 @@ namespace BlackMisc
             //! Specific values
             enum ColumnIndex
             {
-                IndexData = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorInternals
+                IndexData = CPropertyIndex::GlobalIndexCSimulatorInternals
             };
 
             //! Default constructor
@@ -81,10 +81,10 @@ namespace BlackMisc
             void setSimulatorInstallationDirectory(const QString &fullFilePath);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Register metadata
             static void registerMetadata();

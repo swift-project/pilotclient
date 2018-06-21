@@ -20,12 +20,11 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-
             quint32 CBcdConversions::comFrequencyToBcdHz(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency)
             {
                 // FSX documentation is wrong, we need to use kHz + 2 digits, not Hz
-                double f = comFrequency.valueRounded(CFrequencyUnit::kHz(), 0) / 10;
-                quint32 fInt = dec2Bcd(static_cast<quint32>(f));
+                const double f = comFrequency.valueRounded(CFrequencyUnit::kHz(), 0) / 10;
+                const quint32 fInt = dec2Bcd(static_cast<quint32>(f));
                 return fInt;
             }
 
@@ -48,7 +47,6 @@ namespace BlackMisc
                 }
                 return result;
             }
-
         } // namespace
     } // namespace
 } // namespacee

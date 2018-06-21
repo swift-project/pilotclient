@@ -14,18 +14,15 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/frequency.h"
-
 #include <QtGlobal>
 
 namespace BlackMisc
 {
     namespace Aviation { class CTransponder; }
-
     namespace Simulation
     {
         namespace FsCommon
         {
-
             //! BCD conversions for FS
             class BLACKMISC_EXPORT CBcdConversions
             {
@@ -49,7 +46,6 @@ namespace BlackMisc
                 //! Horner scheme
                 static quint32 hornerScheme(quint32 num, quint32 divider, quint32 factor);
             };
-
         } // ns
     } // ns
 } // ns

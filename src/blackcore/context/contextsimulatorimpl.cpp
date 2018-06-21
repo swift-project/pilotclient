@@ -133,13 +133,13 @@ namespace BlackCore
             return m_simulatorPlugin.second->getSimulatorStatus();
         }
 
-        BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulator::getSimulatorPluginInfo() const
+        CSimulatorPluginInfo CContextSimulator::getSimulatorPluginInfo() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return BlackMisc::Simulation::CSimulatorPluginInfo(); }
+            if (m_simulatorPlugin.first.isUnspecified()) { return CSimulatorPluginInfo(); }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            if (m_simulatorPlugin.first.getSimulator() == "emulated") { return m_simulatorPlugin.second->getSimulatorPluginInfo(); }
+            if (m_simulatorPlugin.first.getSimulator().contains("emulated", Qt::CaseInsensitive)) { return m_simulatorPlugin.second->getSimulatorPluginInfo(); }
             return m_simulatorPlugin.first;
         }
 

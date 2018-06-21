@@ -312,6 +312,7 @@ namespace BlackSimPlugin
             void updateProbeFromSimulator(const BlackMisc::Aviation::CCallsign &callsign, const DataDefinitionRemoteAircraftSimData &remoteAircraftData);
 
             //! Update from SB client area
+            //! \threadsafe
             void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
 
             //! An AI aircraft was added in the simulator
@@ -412,15 +413,15 @@ namespace BlackSimPlugin
             static constexpr int DeferSimulatingFlagMs = 1500; //!< simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we defer detection
             static constexpr int DeferResendingLights = 2500;  //!< Resend light state when aircraft light state was not yet available
 
-            QString m_simConnectVersion;            //!< SimConnect version
-            bool m_simConnected  = false;           //!< Is simulator connected?
-            bool m_simSimulating = false;           //!< Simulator running?
-            bool m_useSbOffsets  = true;            //!< with SB offsets
-            bool m_traceSendId   = false;           //!< trace the send ids, meant for debugging
-            qint64 m_traceAutoTs = -1;              //!< allows to automatically trace for some time
-            qint64 m_simulatingChangedTs = -1;      //!< timestamp, when simulating changed (used to avoid jitter)
-            int m_syncDeferredCounter =  0;         //!< Set when synchronized, used to wait some time
-            int m_skipCockpitUpdateCycles = 0;      //!< skip some update cycles to allow changes in simulator cockpit to be set
+            QString m_simConnectVersion;         //!< SimConnect version
+            bool m_simConnected  = false;        //!< Is simulator connected?
+            bool m_simSimulating = false;        //!< Simulator running?
+            bool m_useSbOffsets  = true;         //!< with SB offsets
+            bool m_traceSendId   = false;        //!< trace the send ids, meant for debugging
+            qint64 m_traceAutoTs = -1;           //!< allows to automatically trace for some time
+            qint64 m_simulatingChangedTs = -1;   //!< timestamp, when simulating changed (used to avoid jitter)
+            int m_syncDeferredCounter =  0;      //!< Set when synchronized, used to wait some time
+            int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
 
             // tracing dispatch performance
             int m_dispatchErrors = 0;               //!< number of dispatched failed, \sa dispatch
@@ -428,6 +429,7 @@ namespace BlackSimPlugin
             qint64 m_dispatchMaxTimeMs = -1;
             qint64 m_dispatchProcTimeMs = -1;
             qint64 m_dispatchProcMaxTimeMs = -1;
+
             SIMCONNECT_RECV_ID m_dispatchLastReceiveId    = SIMCONNECT_RECV_ID_NULL; //!< last receive id from dispatching
             SIMCONNECT_RECV_ID m_dispatchMaxTimeReceiveId = SIMCONNECT_RECV_ID_NULL; //!< receive id corresponding to max.time
             CSimConnectDefinitions::Request m_dispatchLastRequest    = CSimConnectDefinitions::RequestEndMarker; //!< request id if any
