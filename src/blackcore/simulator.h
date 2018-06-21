@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_SIMULATOR_H
 #define BLACKCORE_SIMULATOR_H
 
+#include "blackcore/application.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -157,7 +158,11 @@ namespace BlackCore
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
 
         //! Follow aircraft
-        virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign)
+        {
+            Q_UNUSED(callsign);
+            return false;
+        }
 
         //! Activates or deactivates simulator weather
         virtual void setWeatherActivated(bool activated) = 0;
@@ -172,7 +177,7 @@ namespace BlackCore
         virtual bool isPaused() const = 0;
 
         //! Simulator running?
-        virtual bool isSimulating() const = 0;
+        virtual bool isSimulating() const { return this->isConnected(); }
 
         //! Clear all aircraft related data
         virtual void clearAllRemoteAircraftData() = 0;
@@ -182,10 +187,11 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessageList debugVerifyStateAfterAllAircraftRemoved() const = 0;
 
         //! Is overall (swift) application shutting down
-        virtual bool isShuttingDown() const = 0;
+        //! \threadsafe
+        virtual bool isShuttingDown() const { return (!sApp || sApp->isShuttingDown()); }
 
         //! Shutting down or disconnected?
-        virtual bool isShuttingDownOrDisconnected() const;
+        virtual bool isShuttingDownOrDisconnected() const { return (this->isShuttingDown() || !this->isConnected()); }
 
         //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
         //! \remark needs to be overridden if the concrete driver supports such an option

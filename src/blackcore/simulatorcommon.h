@@ -72,13 +72,11 @@ namespace BlackCore
 
         // --------- ISimulator implementations ------------
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
-        virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const override;
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
         virtual void setWeatherActivated(bool activated) override;
         virtual void unload() override;
         virtual bool disconnectFrom() override;
-        virtual bool isShuttingDown() const override;
         virtual bool logicallyReAddRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual BlackMisc::Aviation::CCallsignSet unrenderedEnabledAircraft() const override;
         virtual BlackMisc::Aviation::CCallsignSet renderedDisabledAircraft() const override;

@@ -44,11 +44,6 @@ namespace BlackCore
         return setup;
     }
 
-    bool ISimulator::isShuttingDownOrDisconnected() const
-    {
-        return (this->isShuttingDown() || !this->isConnected());
-    }
-
     bool ISimulator::requestElevation(const Geo::ICoordinateGeodetic &reference, const CCallsign &callsign)
     {
         Q_UNUSED(reference);

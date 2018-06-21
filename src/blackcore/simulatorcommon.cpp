@@ -355,11 +355,6 @@ namespace BlackCore
         return true;
     }
 
-    bool CSimulatorCommon::isShuttingDown() const
-    {
-        return (!sApp || sApp->isShuttingDown());
-    }
-
     bool CSimulatorCommon::logicallyReAddRemoteAircraft(const CCallsign &callsign)
     {
         if (this->isShuttingDown()) { return false; }
@@ -411,12 +406,6 @@ namespace BlackCore
             m_highlightEndTimeMsEpoch = QDateTime::currentMSecsSinceEpoch() + deltaT;
             m_highlightedAircraft.push_back(aircraftToHighlight);
         }
-    }
-
-    bool CSimulatorCommon::followAircraft(const CCallsign &callsign)
-    {
-        Q_UNUSED(callsign);
-        return false;
     }
 
     int CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)

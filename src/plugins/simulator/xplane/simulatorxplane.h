@@ -152,9 +152,6 @@ namespace BlackSimPlugin
                 return false;
             }
 
-            //! \copydoc BlackCore::ISimulator::isSimulating
-            virtual bool isSimulating() const override { return isConnected(); }
-
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual int physicallyRemoveAllRemoteAircraft() override;
