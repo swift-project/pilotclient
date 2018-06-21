@@ -430,7 +430,9 @@ namespace BlackSimPlugin
             int m_skipCockpitUpdateCycles = 0;   //!< skip some update cycles to allow changes in simulator cockpit to be set
 
             // tracing dispatch performance
-            int m_dispatchErrors = 0;               //!< number of dispatched failed, \sa dispatch
+            int m_dispatchErrors = 0;            //!< number of dispatched failed, \sa dispatch
+            int m_dispatchProcCount = 0;         //!< number of dispatchProc counts
+            int m_dispatchProcEmpty = 0;         //!< number dispatchProc doing nothing
             qint64 m_dispatchTimeMs = -1;
             qint64 m_dispatchMaxTimeMs = -1;
             qint64 m_dispatchProcTimeMs = -1;

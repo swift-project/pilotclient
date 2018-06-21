@@ -258,8 +258,9 @@ namespace BlackSimPlugin
 
         QString CSimulatorFsxCommon::getStatisticsSimulatorSpecific() const
         {
-            static const QString specificInfo("dispatch (cur/max): %1ms (%2ms) %3ms (%4ms) %5 %6 simData#: %7");
+            static const QString specificInfo("dispatch #: %1 %2 times (cur/max): %3ms (%4ms) %5ms (%6ms) %7 %8 simData#: %9");
             return specificInfo.
+                   arg(DispatchProc).arg(m_dispatchProcEmpty).
                    arg(m_dispatchTimeMs).arg(m_dispatchProcTimeMs).arg(m_dispatchMaxTimeMs).arg(m_dispatchProcMaxTimeMs).
                    arg(CSimConnectUtilities::simConnectReceiveIdToString(m_dispatchMaxTimeReceiveId),
                        CSimConnectDefinitions::requestToString(m_dispatchMaxTimeRequest)).
@@ -316,6 +317,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::resetAircraftStatistics()
         {
+            m_dispatchProcCount = 0;
+            m_dispatchProcEmpty = 0;
             m_dispatchMaxTimeMs = -1;
             m_dispatchProcMaxTimeMs = -1;
             m_dispatchTimeMs = -1;

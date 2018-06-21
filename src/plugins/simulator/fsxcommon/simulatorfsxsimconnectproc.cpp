@@ -40,6 +40,7 @@ namespace BlackSimPlugin
             CSimulatorFsxCommon *simulatorFsxP3D = static_cast<CSimulatorFsxCommon *>(pContext);
             const SIMCONNECT_RECV_ID recvId = static_cast<SIMCONNECT_RECV_ID>(pData->dwID);
             simulatorFsxP3D->m_dispatchLastReceiveId = recvId;
+            simulatorFsxP3D->m_dispatchProcCount++;
             switch (recvId)
             {
             case SIMCONNECT_RECV_ID_OPEN:
@@ -355,6 +356,7 @@ namespace BlackSimPlugin
                     break; // SIMCONNECT_RECV_ID_EVENT_FILENAME
                 }
             default:
+                simulatorFsxP3D->m_dispatchProcEmpty++;
                 break;
             } // main switch
 
