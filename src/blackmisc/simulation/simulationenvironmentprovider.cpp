@@ -153,7 +153,7 @@ namespace BlackMisc
 
         CSimulatorPluginInfo ISimulationEnvironmentProvider::getSimulatorPluginInfo() const
         {
-            QReadLocker l(&m_lockModel);
+            QReadLocker l(&m_lockSimInfo);
             return m_simulatorPluginInfo;
         }
 
@@ -207,9 +207,37 @@ namespace BlackMisc
 
         void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel)
         {
-            QWriteLocker l(&m_lockModel);
-            m_simulatorPluginInfo = info;
-            m_defaultModel = defaultModel;
+            {
+                QWriteLocker l1(&m_lockSimInfo);
+                m_simulatorPluginInfo = info;
+            }
+            this->setDefaultModel(defaultModel);
+        }
+
+        void ISimulationEnvironmentProvider::setSimulatorDetails(const QString &name, const QString &details, const QString &version)
+        {
+            QWriteLocker l(&m_lockSimInfo);
+            m_simulatorName = name;
+            m_simulatorDetails = details;
+            m_simulatorVersion = version;
+        }
+
+        QString ISimulationEnvironmentProvider::getSimulatorName() const
+        {
+            QReadLocker l(&m_lockSimInfo);
+            return m_simulatorName;
+        }
+
+        QString ISimulationEnvironmentProvider::getSimulatorVersion() const
+        {
+            QReadLocker l(&m_lockSimInfo);
+            return m_simulatorVersion;
+        }
+
+        QString ISimulationEnvironmentProvider::getSimulatorDetails() const
+        {
+            QReadLocker l(&m_lockSimInfo);
+            return m_simulatorDetails;
         }
 
         void ISimulationEnvironmentProvider::setDefaultModel(const CAircraftModel &defaultModel)

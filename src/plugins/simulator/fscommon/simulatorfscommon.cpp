@@ -46,8 +46,8 @@ namespace BlackSimPlugin
         void CSimulatorFsCommon::initSimulatorInternals()
         {
             CSimulatorInternals s;
-            s.setSimulatorName(m_simulatorName);
-            s.setSimulatorVersion(m_simulatorVersion);
+            s.setSimulatorName(this->getSimulatorName());
+            s.setSimulatorVersion(this->getSimulatorVersion());
             s.setValue("fscommon/fsuipc", boolToOnOff(m_useFsuipc));
             if (m_fsuipc)
             {

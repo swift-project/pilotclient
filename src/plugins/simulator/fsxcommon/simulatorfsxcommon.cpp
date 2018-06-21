@@ -412,7 +412,7 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::onSimStopped()
         {
             // stopping events in FSX: Load menu, weather and season
-            CLogMessage(this).info("Simulator stopped: %1") << m_simulatorDetails;
+            CLogMessage(this).info("Simulator stopped: %1") << this->getSimulatorDetails();
             const SimulatorStatus oldStatus = this->getSimulatorStatus();
             m_simSimulating = false;
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
@@ -433,7 +433,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::onSimExit()
         {
-            CLogMessage(this).info("Simulator exit: %1") << m_simulatorDetails;
+            CLogMessage(this).info("Simulator exit: %1") << this->getSimulatorDetails();
 
             // reset complete state, we are going down
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();

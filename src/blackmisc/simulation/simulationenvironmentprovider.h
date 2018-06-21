@@ -28,7 +28,7 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Direct in memory access to elevation data
-        //! \remark we are interested in elevations of airports
+        //! \remark we are interested in elevations at airports mostly
         class BLACKMISC_EXPORT ISimulationEnvironmentProvider : public IProvider
         {
         public:
@@ -101,6 +101,22 @@ namespace BlackMisc
             //! \threadsafe
             void setNewPluginInfo(const CSimulatorPluginInfo &info, const CAircraftModel &defaultModel);
 
+            //! Set version and simulator details from running simulator
+            //! \threadsafe
+            void setSimulatorDetails(const QString &name, const QString &details, const QString &version);
+
+            //! Simulator name as set from the running simulator
+            //! \threadsafe
+            QString getSimulatorName() const;
+
+            //! Simulator version as set from the running simulator
+            //! \threadsafe
+            QString getSimulatorVersion() const;
+
+            //! Simulator details as set from the running simulator
+            //! \threadsafe
+            QString getSimulatorDetails() const;
+
             //! Default model
             //! \threadsafe
             void setDefaultModel(const CAircraftModel &defaultModel);
@@ -145,16 +161,20 @@ namespace BlackMisc
             static PhysicalQuantities::CLength minRange(const PhysicalQuantities::CLength &range);
 
         private:
-            int m_maxElevations = 100; //!< How many elevations we keep
-            CAircraftModel m_defaultModel; //!< default model
             CSimulatorPluginInfo m_simulatorPluginInfo; //!< info object
+            QString m_simulatorName;    //!< name of simulator
+            QString m_simulatorDetails; //!< describes version etc.
+            QString m_simulatorVersion; //!< Simulator version
+            CAircraftModel m_defaultModel; //!< default model
+            int m_maxElevations = 100;  //!< How many elevations we keep
             Geo::CCoordinateGeodeticList m_elvCoordinates;
             QMap<Aviation::CCallsign, PhysicalQuantities::CLength> m_cgs; //! CGs
             mutable int m_elvFound  = 0; //!< statistics only
             mutable int m_elvMissed = 0; //!< statistics only
             mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates
-            mutable QReadWriteLock m_lockCG;    //!< lock CGs
-            mutable QReadWriteLock m_lockModel; //!< lock models
+            mutable QReadWriteLock m_lockCG;      //!< lock CGs
+            mutable QReadWriteLock m_lockModel;   //!< lock models
+            mutable QReadWriteLock m_lockSimInfo; //!< lock plugin info
         };
 
         //! Class which can be directly used to access an \sa ISimulationEnvironmentProvider object

@@ -45,11 +45,13 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_OPEN:
                 {
                     SIMCONNECT_RECV_OPEN *event = (SIMCONNECT_RECV_OPEN *)pData;
-                    simulatorFsxP3D->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
-                    simulatorFsxP3D->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
-                    simulatorFsxP3D->m_simulatorName = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
-                    simulatorFsxP3D->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simulatorFsxP3D->m_simulatorName, simulatorFsxP3D->m_simulatorVersion, simulatorFsxP3D->m_simConnectVersion);
-                    CLogMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).info("Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << simulatorFsxP3D->m_simulatorDetails;
+                    const QString simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
+                    const QString version = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
+                    const QString name = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
+                    const QString details = QString("Name: '%1' Version: %2 SimConnect: %3").arg(name, version, simConnectVersion);
+                    simulatorFsxP3D->setSimulatorDetails(name, details, version);
+                    simulatorFsxP3D->m_simConnectVersion = simConnectVersion;
+                    CLogMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).info("Connected to %1: '%2'") << simulatorFsxP3D->getSimulatorPluginInfo().getIdentifier() << details;
                     simulatorFsxP3D->setSimConnected();
                     break; // SIMCONNECT_RECV_ID_OPEN
                 }

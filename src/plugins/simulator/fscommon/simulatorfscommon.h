@@ -76,9 +76,6 @@ namespace BlackSimPlugin
             //! Register help
             static void registerHelp();
 
-            QString m_simulatorName;                                //!< name of simulator
-            QString m_simulatorDetails;                             //!< describes version etc.
-            QString m_simulatorVersion;                             //!< Simulator version
             std::unique_ptr<CFsuipc> m_fsuipc;                      //!< FSUIPC
             bool m_useFsuipc = true;                                //!< use FSUIPC
             bool m_simPaused = false;                               //!< Simulator paused?
