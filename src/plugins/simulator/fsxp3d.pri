@@ -1,4 +1,4 @@
-QT += core dbus widgets
+QT += core dbus widgets network
 
 TEMPLATE = lib
 

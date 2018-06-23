@@ -1,6 +1,6 @@
 load(common_pre)
 
-QT += core dbus widgets
+QT += core dbus widgets network
 
 TARGET = simulatorxplane
 TEMPLATE = lib
