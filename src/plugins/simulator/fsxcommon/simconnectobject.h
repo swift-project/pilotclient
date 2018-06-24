@@ -31,7 +31,7 @@ namespace BlackSimPlugin
             enum SimObjectType
             {
                 Aircraft,
-                Probe
+                TerrainProbe
             };
 
             //! Constructor
@@ -93,18 +93,21 @@ namespace BlackSimPlugin
             void setSimDataPeriod(SIMCONNECT_PERIOD period) { m_requestSimDataPeriod = period; }
 
             //! Set Simconnect request id
-            void setRequestId(DWORD id) { m_requestId = id; m_validRequestId = true; }
+            void setRequestId(DWORD id);
 
-            //! Get Simconnect request id
+            //! Get SimConnect request id
             DWORD getRequestId() const { return m_requestId; }
+
+            //! Get SimConnect with offset
+            DWORD getRequestId(CSimConnectDefinitions::SimObjectRequest offset) const;
 
             //! Set Simconnect object id
             void setObjectId(DWORD id);
 
-            //! Get Simconnect object id
+            //! Get SimConnect object id
             DWORD getObjectId() const { return m_objectId; }
 
-            //! Get Simconnect object id
+            //! Get SimConnect object id
             QString getObjectIdAsString() const { return QString::number(this->getObjectId()); }
 
             //! Valid request id?
@@ -178,6 +181,15 @@ namespace BlackSimPlugin
 
             //! Interpolator
             BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
+
+            //! SimObject as string
+            QString toQString() const;
+
+            //! Type of id
+            static SimObjectType requestIdToType(DWORD requestId);
+
+            //! Type to string
+            static const QString &typeToString(SimObjectType type);
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft

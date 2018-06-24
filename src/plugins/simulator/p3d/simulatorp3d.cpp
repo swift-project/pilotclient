@@ -64,7 +64,7 @@ namespace BlackSimPlugin
                     // https://www.prepar3d.com/SDKv4/sdk/simconnect_api/references/structures_and_enumerations.html#SIMCONNECT_RECV_GROUND_INFO
                     const SIMCONNECT_RECV_GROUND_INFO *pObjData = (SIMCONNECT_RECV_GROUND_INFO *) pData;
                     const DWORD requestId = pObjData->dwRequestID;
-                    if (!CSimulatorFsxCommon::isRequestForProbe(requestId)) { break; }
+                    if (!CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId)) { break; }
                     // valid elevation request
                     // https://www.prepar3d.com/SDKv4/sdk/simconnect_api/references/structures_and_enumerations.html#SIMCONNECT_DATA_GROUND_INFO
                     if (pObjData->dwArraySize != 1) { break; }
@@ -100,7 +100,7 @@ namespace BlackSimPlugin
             const DWORD dwGridWidth = 1.0;
             const DWORD dwGridHeight = 1.0;
 
-            const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForProbe();
+            const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe(); // P3D we use new request id each time (no simobject)
 
             // returns SIMCONNECT_RECV_GROUND_INFO -> SIMCONNECT_DATA_GROUND_INFO
             const HRESULT hr = SimConnect_RequestGroundInfo(

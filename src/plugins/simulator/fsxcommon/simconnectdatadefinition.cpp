@@ -23,27 +23,48 @@ namespace BlackSimPlugin
         const QString &CSimConnectDefinitions::requestToString(Request request)
         {
             static const QString ownAircraft("RequestOwnAircraft");
-            static const QString removeAircraft("RequestRemoveAircraft");
             static const QString title("RequestOwnAircraftTitle");
             static const QString simEnv("RequestSimEnvironment");
             static const QString sbData("RequestSbData");
-            static const QString unknown("unknown");
+            static const QString facility("RequestFacility");
             static const QString end("<end>");
-            static const QString simdata("range simdata");
-            static const QString probe("range probe");
-            static const QString lights("range lights");
+            static const QString unknown("unknown");
 
             switch (request)
             {
             case RequestOwnAircraft: return ownAircraft;
-            case RequestRemoveAircraft: return removeAircraft;
             case RequestOwnAircraftTitle: return title;
             case RequestSimEnvironment: return simEnv;
             case RequestSbData: return sbData;
-            case RequestRangeForLights: return lights;
-            case RequestRangeForProbe: return probe;
-            case RequestRangeForSimData: return simdata;
+            case RequestFacility: return facility;
             case RequestEndMarker: return end;
+            default: break;
+            }
+            return unknown;
+        }
+
+        const QString &CSimConnectDefinitions::simObjectRequestToString(SimObjectRequest simObjectRequest)
+        {
+            static const QString baseId("base id");
+            static const QString add("add");
+            static const QString remove("remove");
+            static const QString lights("lights");
+            static const QString pos("position");
+            static const QString model("model");
+            static const QString misc("misc");
+            static const QString end("<end>");
+            static const QString unknown("unknown");
+
+            switch (simObjectRequest)
+            {
+            case SimObjectBaseId: return baseId;
+            case SimObjectAdd: return add;
+            case SimObjectRemove: return remove;
+            case SimObjectLights: return lights;
+            case SimObjectPositionData: return pos;
+            case SimObjectModel: return model;
+            case SimObjectMisc: return misc;
+            case SimObjectEndMarker: return end;
             default: break;
             }
             return unknown;
@@ -132,6 +153,8 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:4", "Bool");
 
             // Lights (other definition)
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE", NULL, SIMCONNECT_DATATYPE_STRING256);
+
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT STROBE", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT LANDING", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT TAXI", "Bool");
@@ -157,11 +180,22 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "PLANE ALTITUDE", "Feet");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "GROUND ALTITUDE", "Feet");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftGetPosition, "STATIC CG TO GROUND", "Feet");
-
             if (hr != S_OK)
             {
-                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData %1") << hr;
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData DataRemoteAircraftGetPosition %1") << hr;
             }
+
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC TYPE", NULL, SIMCONNECT_DATATYPE_STRING32);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC MODEL", NULL, SIMCONNECT_DATATYPE_STRING32);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC ID", NULL, SIMCONNECT_DATATYPE_STRING32);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC AIRLINE", NULL, SIMCONNECT_DATATYPE_STRING64);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC FLIGHT NUMBER", NULL, SIMCONNECT_DATATYPE_STRING8);
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "TITLE", NULL, SIMCONNECT_DATATYPE_STRING256);
+            if (hr != S_OK)
+            {
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData DataRemoteAircraftModelData %1") << hr;
+            }
+
             return hr;
         }
 
@@ -180,7 +214,7 @@ namespace BlackSimPlugin
         HRESULT CSimConnectDefinitions::initSbDataArea(const HANDLE hSimConnect)
         {
             HRESULT hr = S_OK;
-            DWORD sbSize = sizeof(DataDefinitionClientAreaSb);
+            const DWORD sbSize = sizeof(DataDefinitionClientAreaSb);
 
             // We need to know the client area 'name' and map it to a client ID
             hr += SimConnect_MapClientDataNameToID(hSimConnect, "SquawkBox Data", ClientAreaSquawkBox);

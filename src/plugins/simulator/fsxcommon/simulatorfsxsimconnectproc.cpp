@@ -8,15 +8,17 @@
  */
 
 #include "simulatorfsxcommon.h"
-#include "blackcore/application.h"
 #include "simconnectdatadefinition.h"
+#include "blackcore/application.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 
 using namespace BlackCore;
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
@@ -39,7 +41,7 @@ namespace BlackSimPlugin
             const qint64 procTimeStart = QDateTime::currentMSecsSinceEpoch();
             CSimulatorFsxCommon *simulatorFsxP3D = static_cast<CSimulatorFsxCommon *>(pContext);
             const SIMCONNECT_RECV_ID recvId = static_cast<SIMCONNECT_RECV_ID>(pData->dwID);
-            simulatorFsxP3D->m_dispatchLastReceiveId = recvId;
+            simulatorFsxP3D->m_dispatchReceiveIdLast = recvId;
             simulatorFsxP3D->m_dispatchProcCount++;
             switch (recvId)
             {
@@ -67,7 +69,7 @@ namespace BlackSimPlugin
                     switch (exceptionId)
                     {
                     case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE: break;
-                    case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID: break;
+                    case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID: break; // Specifies that the client event, request ID, data definition ID, or object ID was not recognized
                     case SIMCONNECT_EXCEPTION_CREATE_OBJECT_FAILED: break;
                     default: break;
                     }
@@ -176,10 +178,11 @@ namespace BlackSimPlugin
                 {
                     const SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
                     const DWORD requestId = event->dwRequestID;
-                    const DWORD objectId = event->dwObjectID;
-
+                    const DWORD objectId  = event->dwObjectID;
                     bool success = false;
-                    if (CSimulatorFsxCommon::isRequestForProbe(requestId))
+                    simulatorFsxP3D->m_dispatchRequestIdLast = requestId;
+
+                    if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId))
                     {
                         success = simulatorFsxP3D->setSimConnectProbeId(requestId, objectId);
                         if (!success) { break; } // not an request ID of ours
@@ -194,7 +197,7 @@ namespace BlackSimPlugin
                             CLogMessage(simulatorFsxP3D).error("Cannot add probe '%1' id: %2") << simObject.getCallsign() << objectId;
                         }
                     }
-                    else if (CSimulatorFsxCommon::isRequestForSimData(requestId))
+                    else if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId))
                     {
                         success = simulatorFsxP3D->setSimConnectObjectId(requestId, objectId);
                         if (!success) { break; } // not an request ID of ours
@@ -219,13 +222,13 @@ namespace BlackSimPlugin
                 {
                     const SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA *) pData;
                     const DWORD requestId = pObjData->dwRequestID;
+                    simulatorFsxP3D->m_dispatchRequestIdLast = requestId;
 
                     switch (requestId)
                     {
                     case CSimConnectDefinitions::RequestOwnAircraft:
                         {
                             static_assert(sizeof(DataDefinitionOwnAircraft) == 31 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
-                            simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestOwnAircraft;
                             const DataDefinitionOwnAircraft *ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
                             simulatorFsxP3D->updateOwnAircraftFromSimulator(*ownAircaft);
                             break;
@@ -233,14 +236,12 @@ namespace BlackSimPlugin
                     case CSimConnectDefinitions::RequestOwnAircraftTitle:
                         {
                             const DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
-                            simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestOwnAircraftTitle;
                             const CAircraftModel model(dataDefinitionModel->title, CAircraftModel::TypeOwnSimulatorModel);
                             simulatorFsxP3D->reverseLookupAndUpdateOwnAircraftModel(model);
                             break;
                         }
                     case CSimConnectDefinitions::RequestSimEnvironment:
                         {
-                            simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestSimEnvironment;
                             const DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
                             if (simulatorFsxP3D->isTimeSynchronized())
                             {
@@ -257,57 +258,82 @@ namespace BlackSimPlugin
                     default:
                         {
                             const DWORD objectId = pObjData->dwObjectID;
-                            if (CSimulatorFsxCommon::isRequestForSimData(requestId))
+
+                            if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId))
                             {
-                                static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
-                                simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestRangeForSimData;
                                 const CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForObjectId(objectId);
                                 if (!simObject.hasValidRequestAndObjectId()) { break; }
-                                const DataDefinitionRemoteAircraftSimData *remoteAircraftSimData = (DataDefinitionRemoteAircraftSimData *)&pObjData->dwData;
-                                // extra check, but ids should be the same
-                                if (objectId == simObject.getObjectId())
+                                const CSimConnectDefinitions::SimObjectRequest subRequest = CSimulatorFsxCommon::requestToSimObjectRequest(requestId);
+
+                                if (subRequest == CSimConnectDefinitions::SimObjectPositionData)
                                 {
-                                    simulatorFsxP3D->triggerUpdateRemoteAircraftFromSimulator(simObject, *remoteAircraftSimData);
-                                }
-                            }
-                            else if (CSimulatorFsxCommon::isRequestForProbe(requestId))
-                            {
-                                static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
-                                simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestRangeForProbe;
-                                const CSimConnectObject probeObj = simulatorFsxP3D->getProbeForObjectId(objectId);
-                                if (!probeObj.hasValidRequestAndObjectId()) { break; }
-                                const DataDefinitionRemoteAircraftSimData *probeSimData = (DataDefinitionRemoteAircraftSimData *)&pObjData->dwData;
-                                // extra check, but ids should be the same
-                                if (objectId == probeObj.getObjectId())
-                                {
-                                    const CCallsign cs = simulatorFsxP3D->m_pendingProbeRequests.value(requestId);
-                                    if (cs.isEmpty()) { break; }
-                                    simulatorFsxP3D->updateProbeFromSimulator(cs, *probeSimData);
-                                }
-                            }
-                            else if (CSimulatorFsxCommon::isRequestForLights(requestId))
-                            {
-                                static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
-                                simulatorFsxP3D->m_dispatchLastRequest = CSimConnectDefinitions::RequestRangeForLights;
-                                const CSimConnectObject simObj = simulatorFsxP3D->getSimObjectForObjectId(objectId);
-                                if (!simObj.hasValidRequestAndObjectId()) { break; }
-                                const DataDefinitionRemoteAircraftLights *remoteAircraftLights = (DataDefinitionRemoteAircraftLights *)&pObjData->dwData;
-                                // extra check, but ids should be the same
-                                if (objectId == simObj.getObjectId())
-                                {
-                                    const CCallsign callsign(simObj.getCallsign());
-                                    const CAircraftLights lights(remoteAircraftLights->toLights()); // as in simulator
-                                    simulatorFsxP3D->setCurrentLights(callsign, lights);
-                                    if (simObj.getLightsAsSent().isNull())
+                                    static_assert(sizeof(DataDefinitionPosData) == 5 * sizeof(double), "DataDefinitionPosData has an incorrect size.");
+                                    const DataDefinitionPosData *remoteAircraftSimData = reinterpret_cast<const DataDefinitionPosData *>(&pObjData->dwData);
+                                    // extra check, but ids should be the same
+                                    if (objectId == simObject.getObjectId())
                                     {
-                                        // allows to compare for toggle
-                                        simulatorFsxP3D->setLightsAsSent(callsign, lights);
+                                        simulatorFsxP3D->triggerUpdateRemoteAircraftFromSimulator(simObject, *remoteAircraftSimData);
+                                    }
+                                } // position
+                                else if (subRequest == CSimConnectDefinitions::SimObjectLights)
+                                {
+                                    static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
+                                    const DataDefinitionRemoteAircraftLights *remoteAircraftLights = reinterpret_cast<const DataDefinitionRemoteAircraftLights *>(&pObjData->dwData);
+                                    // extra check, but ids should be the same
+                                    if (objectId == simObject.getObjectId())
+                                    {
+                                        const CCallsign callsign(simObject.getCallsign());
+                                        const CAircraftLights lights(remoteAircraftLights->toLights()); // as in simulator
+                                        simulatorFsxP3D->setCurrentLights(callsign, lights);
+                                        if (simObject.getLightsAsSent().isNull())
+                                        {
+                                            // allows to compare for toggle
+                                            simulatorFsxP3D->setLightsAsSent(callsign, lights);
+                                        }
+                                    }
+                                    break;
+                                } // lights
+                                else
+                                {
+                                    if (CBuildConfig::isLocalDeveloperDebugBuild())
+                                    {
+                                        CLogMessage(simulatorFsxP3D).error("Unknown subrequest (aircraft): '%1' %2")
+                                                << CSimConnectDefinitions::simObjectRequestToString(subRequest)
+                                                << simObject.toQString();
                                     }
                                 }
                             }
+                            else if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId))
+                            {
+                                const CSimConnectObject probeObj = simulatorFsxP3D->getProbeForObjectId(objectId);
+                                if (!probeObj.hasValidRequestAndObjectId()) { break; }
+                                const CSimConnectDefinitions::SimObjectRequest subRequest = CSimulatorFsxCommon::requestToSimObjectRequest(requestId);
+
+                                if (subRequest == CSimConnectDefinitions::SimObjectPositionData)
+                                {
+                                    static_assert(sizeof(DataDefinitionPosData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
+                                    const DataDefinitionPosData *probeSimData = (DataDefinitionPosData *)&pObjData->dwData;
+                                    // extra check, but ids should be the same
+                                    if (objectId == probeObj.getObjectId())
+                                    {
+                                        const CCallsign cs = simulatorFsxP3D->m_pendingProbeRequests.value(requestId);
+                                        if (cs.isEmpty()) { break; }
+                                        simulatorFsxP3D->updateProbeFromSimulator(cs, *probeSimData);
+                                    }
+                                }
+                                else
+                                {
+                                    if (CBuildConfig::isLocalDeveloperDebugBuild())
+                                    {
+                                        CLogMessage(simulatorFsxP3D).error("Unknown subrequest (probe): '%1' %2")
+                                                << CSimConnectDefinitions::simObjectRequestToString(subRequest)
+                                                << probeObj.toQString();
+                                    }
+                                }
+                            } // probe
                             break;
                         }
-                        break;
+                        break; // default (SIMCONNECT_RECV_ID_SIMOBJECT_DATA)
                     }
                     break; // SIMCONNECT_RECV_ID_SIMOBJECT_DATA
                 }
@@ -356,7 +382,7 @@ namespace BlackSimPlugin
                     break; // SIMCONNECT_RECV_ID_EVENT_FILENAME
                 }
             default:
-                simulatorFsxP3D->m_dispatchProcEmpty++;
+                simulatorFsxP3D->m_dispatchProcEmptyCount++;
                 break;
             } // main switch
 

@@ -8,9 +8,15 @@
  */
 
 #include "simconnectobject.h"
+#include "blackmisc/stringutils.h"
+#include "simulatorfsxcommon.h"
+#include "blackcore/simulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/simulation/interpolatormulti.h"
+#include "blackconfig/buildconfig.h"
 
+using namespace BlackConfig;
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
@@ -45,6 +51,36 @@ namespace BlackSimPlugin
         {
             m_aircraft = aircraft;
             m_callsignByteArray = aircraft.getCallsignAsString().toLatin1();
+        }
+
+        void CSimConnectObject::setRequestId(DWORD id)
+        {
+            m_requestId = id;
+            m_validRequestId = true;
+            const SimObjectType type = requestIdToType(id);
+            this->setType(type);
+        }
+
+        DWORD CSimConnectObject::getRequestId(CSimConnectDefinitions::SimObjectRequest offset) const
+        {
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                const SimObjectType type = requestIdToType(m_requestId);
+                Q_ASSERT_X(type == this->getType(), Q_FUNC_INFO, "Type mismatch");
+            }
+
+            DWORD os = 0;
+            switch (this->getType())
+            {
+            case TerrainProbe:
+                os = static_cast<DWORD>(CSimulatorFsxCommon::offsetSimObjTerrainProbe(offset));
+                break;
+            case Aircraft:
+            default:
+                os = static_cast<DWORD>(CSimulatorFsxCommon::offsetSimObjAircraft(offset));
+                break;
+            }
+            return os + m_requestId;
         }
 
         void CSimConnectObject::setObjectId(DWORD id)
@@ -128,6 +164,34 @@ namespace BlackSimPlugin
         {
             if (!m_interpolator) { return CAircraftSituation::null(); }
             return m_interpolator->getLastInterpolatedSituation(mode);
+        }
+
+        QString CSimConnectObject::toQString() const
+        {
+            static const QString s("CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5");
+            return s.arg(this->getCallsign().asString()).arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved));
+        }
+
+        CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
+        {
+            if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId)) { return TerrainProbe; }
+            if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId)) { return Aircraft; }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong range");
+            return Aircraft;
+        }
+
+        const QString &CSimConnectObject::typeToString(CSimConnectObject::SimObjectType type)
+        {
+            static const QString a("aircraft");
+            static const QString p("probe");
+            static const QString u("unknown");
+            switch (type)
+            {
+            case Aircraft: return a;
+            case TerrainProbe: return p;
+            default: break;
+            }
+            return u;
         }
 
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId)

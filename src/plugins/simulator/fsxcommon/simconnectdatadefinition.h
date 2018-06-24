@@ -130,8 +130,8 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAircraftLights toLights() const;
         };
 
-        //! Data for AI object sent back from simulator
-        struct DataDefinitionRemoteAircraftSimData
+        //! Data for AI object and probe sent back from simulator
+        struct DataDefinitionPosData
         {
             double latitudeDeg;  //!< Latitude (deg)
             double longitudeDeg; //!< Longitude (deg)
@@ -195,6 +195,7 @@ namespace BlackSimPlugin
                 DataRemoteAircraftParts,
                 DataRemoteAircraftSetPosition, //!< the position which will be set
                 DataRemoteAircraftGetPosition, //!< get position to evaluate altitude / AGL
+                DataRemoteAircraftModelData,   //!< model data eventually used and reported back from simulator
                 DataSimEnvironment,
                 DataClientAreaSb,       //!< whole SB area
                 DataClientAreaSbIdent,  //!< ident single value
@@ -205,18 +206,31 @@ namespace BlackSimPlugin
             enum Request
             {
                 RequestOwnAircraft,
-                RequestRemoveAircraft,
                 RequestOwnAircraftTitle,
                 RequestSimEnvironment,
-                RequestSbData,           //!< SB client area / XPDR mode
-                RequestRangeForSimData,  //!< range for sim data
-                RequestRangeForProbe,    //!< range for probe
-                RequestRangeForLights,   //!< range for lights
-                RequestEndMarker         //!< free request ids can start here
+                RequestSbData,                //!< SB client area / XPDR mode
+                RequestFacility,
+                RequestEndMarker              //!< free request ids can start here
+            };
+
+            //! SimObject requests used for AI aircraft and probes
+            enum SimObjectRequest
+            {
+                SimObjectBaseId, //!< base id without specific request
+                SimObjectAdd,
+                SimObjectRemove,
+                SimObjectPositionData,
+                SimObjectLights,
+                SimObjectModel,
+                SimObjectMisc,
+                SimObjectEndMarker //!< end marker, do NOT remove, also means invalid
             };
 
             //! Request to string
             static const QString &requestToString(Request request);
+
+            //! Request to string
+            static const QString &simObjectRequestToString(SimObjectRequest simObjectRequest);
 
             //! Constructor
             CSimConnectDefinitions();

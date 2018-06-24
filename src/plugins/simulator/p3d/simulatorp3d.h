@@ -44,7 +44,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackMisc::Simulation::ISimulationEnvironmentProvider::requestElevation
             virtual bool requestElevation(const BlackMisc::Geo::ICoordinateGeodetic &reference, const BlackMisc::Aviation::CCallsign &callsign) override;
 
-            //! \copydoc ISimulator::followAircraft
+            //! \copydoc BlackCore::ISimulator::followAircraft
             virtual bool followAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         protected:
