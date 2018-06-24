@@ -102,7 +102,6 @@ namespace BlackMisc
             static QThreadStorage<uint> seeds;
             Q_ASSERT_X(high < INT_MAX, Q_FUNC_INFO, "Cannot add 1");
             Q_ASSERT_X(low >= 0 && high >= 0, Q_FUNC_INFO, "Only valid for positive values");
-            Q_ASSERT_X(high <= RAND_MAX, Q_FUNC_INFO, "RAND_MAX exceeded");
             if (!seeds.hasLocalData())
             {
                 // seed is per thread!
@@ -112,13 +111,14 @@ namespace BlackMisc
             }
             const int r(qrand());
             const int mod = (high + 1) - low;
+            Q_ASSERT_X(mod <= RAND_MAX, Q_FUNC_INFO, "RAND_MAX exceeded");
             return (r % mod) + low;
         }
 
         double CMathUtils::randomDouble(double max)
         {
             // on Win system, RAND_MAX is only 16bit, on other systems higher
-            static const int MAX(RAND_MAX < INT_MAX ? RAND_MAX : INT_MAX - 1);
+            static const int MAX(RAND_MAX < INT_MAX ? RAND_MAX - 1 : INT_MAX - 1);
             const double r = randomInteger(0, MAX);
             return (r / MAX) * max;
         }
