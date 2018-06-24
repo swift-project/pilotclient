@@ -56,8 +56,11 @@ namespace BlackGui
             bool c = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
             ui->cb_LogReverseLookup->setChecked(c);
 
-            c = sGui->getIContextSimulator()->isMatchingMessagesEnabled();
-            ui->cb_LogMatchingMessages->setChecked(c);
+            if (sGui)
+            {
+                c = sGui->getIContextSimulator()->isMatchingMessagesEnabled();
+                ui->cb_LogMatchingMessages->setChecked(c);
+            }
         }
 
         bool CModelMatcherLogComponent::hasContexts() const

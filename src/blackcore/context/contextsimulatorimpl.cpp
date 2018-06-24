@@ -65,7 +65,8 @@ namespace BlackCore
             CContextSimulator::registerHelp();
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
-            m_enableMatchingMessages = CBuildConfig::isLocalDeveloperDebugBuild() ||  sApp->isDeveloperFlagSet();
+            // m_enableMatchingMessages = CBuildConfig::isLocalDeveloperDebugBuild() ||  sApp->isDeveloperFlagSet();
+            m_enableMatchingMessages = true; // there seems to be no big disadavantage in always enabling it
             m_plugins->collectPlugins();
             this->restoreSimulatorPlugins();
 
