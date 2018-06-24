@@ -919,6 +919,7 @@ namespace BlackGui
         if (!m_updateSetting.get()) { return; }
         QTimer::singleShot(delayedMs, this, [ = ]
         {
+            if (!sGui || sGui->isShuttingDown()) { return; }
             if (m_updateDialog) { return; }
             this->checkNewVersion(true);
         });

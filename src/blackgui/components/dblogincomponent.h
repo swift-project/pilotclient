@@ -62,15 +62,14 @@ namespace BlackGui
             //! Set the user fields
             void setUserInfo(const BlackMisc::Network::CAuthenticatedUser &user);
 
-        private slots:
             //! Login
-            void ps_onLoginClicked();
+            void onLoginClicked();
 
             //! Logoff
-            void ps_onLogoffClicked();
+            void onLogoffClicked();
 
             //! User authentication completed
-            void ps_authenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &statusMsgs);
+            void onAuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &statusMsgs);
         };
     } // ns
 } // ns

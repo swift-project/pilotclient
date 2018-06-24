@@ -63,10 +63,10 @@ namespace BlackGui
             ui->lbl_DatabaseName->setTextInteractionFlags(Qt::TextBrowserInteraction);
             ui->lbl_DatabaseName->setOpenExternalLinks(true);
 
-            connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
-            connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);
-            connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::ps_authenticationFinished);
-            connect(ui->le_Password, &QLineEdit::returnPressed, this, &CDbLoginComponent::ps_onLoginClicked);
+            connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::onLoginClicked);
+            connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::onLogoffClicked);
+            connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::onAuthenticationFinished);
+            connect(ui->le_Password, &QLineEdit::returnPressed, this, &CDbLoginComponent::onLoginClicked);
 
             // init GUI
             this->setUserInfo(this->getDbUser());
@@ -77,12 +77,12 @@ namespace BlackGui
 
         CAuthenticatedUser CDbLoginComponent::getDbUser() const
         {
-            return this->m_loginService.getDbUser();
+            return m_loginService.getDbUser();
         }
 
         bool CDbLoginComponent::isUserAuthenticated() const
         {
-            return this->m_loginService.isUserAuthenticated();
+            return m_loginService.isUserAuthenticated();
         }
 
         void CDbLoginComponent::displayOverlayMessages(const CStatusMessageList &msgs)
@@ -94,7 +94,7 @@ namespace BlackGui
             mf->showOverlayMessages(msgs);
         }
 
-        void CDbLoginComponent::ps_onLoginClicked()
+        void CDbLoginComponent::onLoginClicked()
         {
             const QString un(ui->le_Username->text().trimmed());
             const QString pw(ui->le_Password->text().trimmed());
@@ -113,13 +113,13 @@ namespace BlackGui
             this->showLoading(5000);
         }
 
-        void CDbLoginComponent::ps_onLogoffClicked()
+        void CDbLoginComponent::onLogoffClicked()
         {
-            this->m_loginService.logoff();
+            m_loginService.logoff();
             this->setModeLogin(true);
         }
 
-        void CDbLoginComponent::ps_authenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &statusMsgs)
+        void CDbLoginComponent::onAuthenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &statusMsgs)
         {
             this->hideLoading();
             this->setUserInfo(user);

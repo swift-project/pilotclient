@@ -45,14 +45,14 @@ namespace BlackCore
 
         void CDatabaseAuthenticationService::gracefulShutdown()
         {
-            if (this->m_shutdown) { return; }
-            this->m_shutdown = true;
+            if (m_shutdown) { return; }
+            m_shutdown = true;
             this->logoff();
         }
 
         CAuthenticatedUser CDatabaseAuthenticationService::getDbUser() const
         {
-            return this->m_swiftDbUser.get();
+            return m_swiftDbUser.get();
         }
 
         bool CDatabaseAuthenticationService::isUserAuthenticated() const
@@ -66,7 +66,7 @@ namespace BlackCore
             CStatusMessageList msgs;
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
 
-            if (this->m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Shutdown in progress")); return msgs; }
+            if (m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Shutdown in progress")); return msgs; }
 
             const QString un(username.trimmed());
             const QString pw(password.trimmed());
@@ -87,7 +87,7 @@ namespace BlackCore
             params.addQueryItem("password", pw);
             if (sApp->getGlobalSetup().dbDebugFlag()) { CNetworkUtils::addDebugFlag(params); }
 
-            QString query = params.toString();
+            const QString query = params.toString();
             const QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url, CNetworkUtils::PostUrlEncoded, sApp->getApplicationNameAndVersion()));
             sApp->postToNetwork(request, CApplication::NoLogRequestId, query.toUtf8(), { this, &CDatabaseAuthenticationService::parseServerResponse});
             static const QString rm("Sent request to authentication server '%1'");
@@ -101,7 +101,7 @@ namespace BlackCore
             url.setQuery("logoff=true");
             QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url));
             sApp->getFromNetwork(request, { this, &CDatabaseAuthenticationService::parseServerResponse });
-            this->m_swiftDbUser.set(CAuthenticatedUser());
+            m_swiftDbUser.set(CAuthenticatedUser());
         }
 
         void CDatabaseAuthenticationService::parseServerResponse(QNetworkReply *nwReplyPtr)
@@ -109,12 +109,12 @@ namespace BlackCore
             // always cleanup reply
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
 
-            if (this->m_shutdown) { return; }
+            if (m_shutdown) { return; }
             QString urlString(nwReply->url().toString());
             if (urlString.contains("logoff", Qt::CaseInsensitive))
             {
                 sApp->deleteAllCookies();
-                emit logoffFinished();
+                emit this->logoffFinished();
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace BlackCore
                 const QString json(nwReply->readAll().trimmed());
                 if (json.isEmpty())
                 {
-                    CLogMessage(this).error("Authentication failed, no response from %1") << urlString;
+                    CLogMessage(this).error("Authentication failed, no response from '%1'") << urlString;
                     return;
                 }
                 if (!Json::looksLikeJson(json))
@@ -133,8 +133,8 @@ namespace BlackCore
                 }
 
                 static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
-                QJsonObject jsonObj(Json::jsonObjectFromString(json));
-                CAuthenticatedUser user = CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
+                const QJsonObject jsonObj(Json::jsonObjectFromString(json));
+                const CAuthenticatedUser user = CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
                 CStatusMessageList msgs;
                 if (jsonObj.contains("messages"))
                 {
@@ -160,7 +160,7 @@ namespace BlackCore
                         msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "User has no roles"));
                     }
                 }
-                this->m_swiftDbUser.set(user);
+                m_swiftDbUser.set(user);
                 emit userAuthenticationFinished(user, msgs);
             }
             else

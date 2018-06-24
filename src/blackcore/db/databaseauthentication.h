@@ -45,7 +45,6 @@ namespace BlackCore
             //! User authenticated
             bool isUserAuthenticated() const;
 
-        public slots:
             //! Try to login to authentication web service
             BlackMisc::CStatusMessageList login(const QString &id, const QString &password);
 
