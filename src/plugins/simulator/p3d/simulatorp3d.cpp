@@ -184,6 +184,17 @@ namespace BlackSimPlugin
             return hr;
         }
 #else
+        bool CSimulatorP3D::followAircraft(const CCallsign &callsign)
+        {
+            Q_UNUSED(callsign);
+            return false;
+        }
+
+        HRESULT CSimulatorP3D::initEventsP3D()
+        {
+            return S_OK;
+        }
+
         void CSimulatorP3D::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
         {
             CSimulatorFsxCommon::SimConnectProc(pData, cbData, pContext);

@@ -10,4 +10,14 @@
 #include <windows.h>
 #include <SimConnect.h>
 
+#ifndef Q_OS_WIN64
+//! adding struct SIMCONNECT_DATA_PBH not existing in SimConnect FSX
+struct SIMCONNECT_DATA_PBH
+{
+    double  Pitch;    //!< pitch
+    double  Bank;     //!< bank
+    double  Heading;  //!< heading
+};
+#endif
+
 #endif // guard
