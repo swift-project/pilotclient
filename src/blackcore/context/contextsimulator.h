@@ -29,11 +29,7 @@
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/time.h"
+#include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -41,7 +37,11 @@
 #include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
-#include "blackmisc/weather/weathergrid.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/pixmap.h"
 
 #include <QObject>
 #include <QString>

@@ -8,13 +8,12 @@
  */
 
 #include "SimConnectsettingscomponent.h"
-#include "SimConnectsettingscomponent.h"
 #include "ui_SimConnectsettingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextsimulator.h"
-#include "blackmisc/network/networkutils.h"
 #include "blackmisc/simulation/fsx/SimConnectutilities.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackconfig/buildconfig.h"
 #include <QFileInfo>
@@ -138,8 +137,8 @@ namespace BlackSimPlugin
 
         void CSimConnectSettingsComponent::saveSimConnectCfgFile()
         {
-            QString address = ui->le_Address->text().trimmed();
-            QString port = ui->le_Port->text().trimmed();
+            const QString address = ui->le_Address->text().trimmed();
+            const QString port = ui->le_Port->text().trimmed();
 
             if (address.isEmpty() || port.isEmpty())
             {

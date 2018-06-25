@@ -12,9 +12,9 @@
 #ifndef BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
 
+#include "simconnectdatadefinition.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/interpolatormulti.h"
-#include "simconnectdatadefinition.h"
 #include <QSharedPointer>
 #include <QStringList>
 #include <QByteArray>
