@@ -45,18 +45,18 @@ namespace BlackGui
             ui->editor_AircraftModel->allowDrop(false);
             ui->editor_AircraftModel->setReadOnly(true);
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CDbQuickMappingWizard::ps_webDataRead);
-            connect(sGui->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbQuickMappingWizard::ps_publishedModels);
+            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CDbQuickMappingWizard::onWebDataRead, Qt::QueuedConnection);
+            connect(sGui->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbQuickMappingWizard::onPublishedModels, Qt::QueuedConnection);
 
-            connect(this, &CDbQuickMappingWizard::currentIdChanged, this, &CDbQuickMappingWizard::ps_currentWizardPageChanged);
-            connect(ui->selector_AircraftIcaoCode, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CDbQuickMappingWizard::ps_aircraftSelected);
-            connect(ui->selector_AirlineIcaoCode, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::ps_airlineSelected);
-            connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::ps_airlineSelected);
+            connect(this, &CDbQuickMappingWizard::currentIdChanged, this, &CDbQuickMappingWizard::currentWizardPageChanged);
+            connect(ui->selector_AircraftIcaoCode, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CDbQuickMappingWizard::onAircraftSelected);
+            connect(ui->selector_AirlineIcaoCode, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected);
+            connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected);
 
             ui->comp_Log->showFilterDialog(); // filter for log normally not needed, so dialog (not bar)
 
             // init if data already available
-            this->ps_webDataRead();
+            this->onWebDataRead();
 
             // \fixme setting per stylesheet does NOT work, this hardcoded stuff should be removed
             const QString style("background-image: url(:/textures/icons/textures/texture-inner.jpg)");
@@ -176,12 +176,12 @@ namespace BlackGui
             return ui->comp_Distributor->view()->firstSelectedOrDefaultObject();
         }
 
-        void CDbQuickMappingWizard::ps_webDataRead()
+        void CDbQuickMappingWizard::onWebDataRead()
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
         }
 
-        void CDbQuickMappingWizard::ps_publishedModels(const CAircraftModelList &modelsPublished, const CAircraftModelList &modelsSkipped, const CStatusMessageList &messages, bool requestSuccessful, bool directWrite)
+        void CDbQuickMappingWizard::onPublishedModels(const CAircraftModelList &modelsPublished, const CAircraftModelList &modelsSkipped, const CStatusMessageList &messages, bool requestSuccessful, bool directWrite)
         {
             Q_UNUSED(modelsPublished);
             Q_UNUSED(modelsSkipped);
@@ -199,7 +199,7 @@ namespace BlackGui
             ui->comp_Log->appendStatusMessagesToList(msgs);
         }
 
-        void CDbQuickMappingWizard::ps_currentWizardPageChanged(int id)
+        void CDbQuickMappingWizard::currentWizardPageChanged(int id)
         {
             const bool forward = id > this->m_lastId;
             const bool colorMode = ui->rb_ColorLivery->isChecked();
@@ -315,7 +315,7 @@ namespace BlackGui
             ui->comp_Log->appendStatusMessagesToList(msgs);
         }
 
-        void CDbQuickMappingWizard::ps_airlineSelected(const CAirlineIcaoCode &icao)
+        void CDbQuickMappingWizard::onAirlineSelected(const CAirlineIcaoCode &icao)
         {
             if (icao.isLoadedFromDb())
             {
@@ -329,7 +329,7 @@ namespace BlackGui
             }
         }
 
-        void CDbQuickMappingWizard::ps_aircraftSelected(const CAircraftIcaoCode &icao)
+        void CDbQuickMappingWizard::onAircraftSelected(const CAircraftIcaoCode &icao)
         {
             if (icao.isLoadedFromDb())
             {

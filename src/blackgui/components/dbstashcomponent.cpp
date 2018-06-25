@@ -61,27 +61,27 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->setAcceptedMetaTypeIds();
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuLoadAndSave);
 
-            connect(ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::ps_onUnstashPressed);
-            connect(ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::ps_onValidatePressed);
-            connect(ui->pb_RemoveInvalid, &QPushButton::pressed, this, &CDbStashComponent::ps_onRemoveInvalidPressed);
-            connect(ui->pb_Publish, &QPushButton::pressed, this, &CDbStashComponent::ps_onPublishPressed);
+            connect(ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::onUnstashPressed);
+            connect(ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::onValidatePressed);
+            connect(ui->pb_RemoveInvalid, &QPushButton::pressed, this, &CDbStashComponent::onRemoveInvalidPressed);
+            connect(ui->pb_Publish, &QPushButton::pressed, this, &CDbStashComponent::onPublishPressed);
             connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
-            connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::ps_onRowCountChanged);
+            connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::onRowCountChanged);
 
             // copy over buttons
-            connect(ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValuesToSelectedModels);
-            connect(ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValuesToSelectedModels);
-            connect(ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValuesToSelectedModels);
-            connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverValuesToSelectedModels);
-            connect(ui->pb_Model, &QPushButton::pressed, this, &CDbStashComponent::ps_modifyModelDialog);
+            connect(ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+            connect(ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+            connect(ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+            connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
+            connect(ui->pb_Model, &QPushButton::pressed, this, &CDbStashComponent::modifyModelDialog);
 
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
             ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
             ui->tvp_StashAircraftModels->setHighlightModelStringsColor(Qt::red);
             this->enableButtonRow();
 
-            connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbStashComponent::ps_publishedModelsResponse);
-            this->ps_userChanged();
+            connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbStashComponent::onPublishedModelsResponse, Qt::QueuedConnection);
+            this->onUserChanged();
         }
 
         CDbStashComponent::~CDbStashComponent()
@@ -243,12 +243,12 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->applyToSelected(vm);
         }
 
-        void CDbStashComponent::ps_onUnstashPressed()
+        void CDbStashComponent::onUnstashPressed()
         {
             ui->tvp_StashAircraftModels->removeSelectedRows();
         }
 
-        void CDbStashComponent::ps_onValidatePressed()
+        void CDbStashComponent::onValidatePressed()
         {
             if (ui->tvp_StashAircraftModels->isEmpty()) {return; }
             CAircraftModelList validModels;
@@ -256,7 +256,7 @@ namespace BlackGui
             this->validateAndDisplay(validModels, invalidModels, true);
         }
 
-        void CDbStashComponent::ps_onRemoveInvalidPressed()
+        void CDbStashComponent::onRemoveInvalidPressed()
         {
             if (ui->tvp_StashAircraftModels->isEmpty()) {return; }
             CAircraftModelList validModels;
@@ -265,7 +265,7 @@ namespace BlackGui
             this->unstashModels(invalidModels);
         }
 
-        void CDbStashComponent::ps_onPublishPressed()
+        void CDbStashComponent::onPublishPressed()
         {
             if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
             if (ui->tvp_StashAircraftModels->isEmpty()) { return; }
@@ -296,7 +296,7 @@ namespace BlackGui
             }
         }
 
-        void CDbStashComponent::ps_publishedModelsResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite)
+        void CDbStashComponent::onPublishedModelsResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite)
         {
             Q_UNUSED(skippedModels);
             ui->tvp_StashAircraftModels->hideLoadIndicator();
@@ -313,10 +313,12 @@ namespace BlackGui
                 }
                 else
                 {
+                    QPointer<CDbStashComponent> myself(this);
                     const QString confirm("Remove %1 published models from stash?");
-                    auto lambda = [this, publishedModels]()
+                    auto lambda = [ = ]()
                     {
-                        this->unstashModels(publishedModels.getModelStringList(false));
+                        if (!myself) { return; }
+                        myself->unstashModels(publishedModels.getModelStringList(false));
                     };
                     this->showOverlayMessagesWithConfirmation(msgs, false, confirm.arg(publishedModels.size()), lambda, QMessageBox::Ok);
                 }
@@ -379,7 +381,7 @@ namespace BlackGui
             ui->pb_Validate->setEnabled(e);
             ui->pb_RemoveInvalid->setEnabled(e);
             ui->pb_Model->setEnabled(e);
-            this->ps_userChanged();
+            this->onUserChanged();
         }
 
         const CLogCategoryList &CDbStashComponent::validationCategories() const
@@ -463,7 +465,7 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->clearHighlighting();
         }
 
-        void CDbStashComponent::ps_copyOverValuesToSelectedModels()
+        void CDbStashComponent::copyOverValuesToSelectedModels()
         {
             const QObject *sender = QObject::sender();
             BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
@@ -489,7 +491,7 @@ namespace BlackGui
             }
         }
 
-        void CDbStashComponent::ps_modifyModelDialog()
+        void CDbStashComponent::modifyModelDialog()
         {
             if (this->getMappingComponent())
             {
@@ -497,14 +499,14 @@ namespace BlackGui
             }
         }
 
-        void CDbStashComponent::ps_onRowCountChanged(int number, bool filter)
+        void CDbStashComponent::onRowCountChanged(int number, bool filter)
         {
             Q_UNUSED(number);
             Q_UNUSED(filter);
             this->enableButtonRow();
         }
 
-        void CDbStashComponent::ps_userChanged()
+        void CDbStashComponent::onUserChanged()
         {
             const CAuthenticatedUser user(this->getSwiftDbUser());
             if (!user.isAuthenticated())

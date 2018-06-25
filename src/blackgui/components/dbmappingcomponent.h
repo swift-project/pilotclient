@@ -225,9 +225,6 @@ namespace BlackGui
             void ps_digestStashedModelsChanged();
 
         private slots:
-            //! Tab index changed
-            void ps_tabIndexChanged(int index);
-
             //! Load the vPilot rules
             void ps_loadVPilotData();
 
@@ -243,71 +240,75 @@ namespace BlackGui
             //! Request update of vPilot data
             void ps_requestVPilotDataUpdate();
 
-            //! Stashed models changed
-            void ps_onStashedModelsChanged();
-
-            //! Stashed models changed
-            void ps_onStashedModelsChangedDigest();
-
-            //! Stash has been changed
-            void ps_onStashedModelsDataChanged(int count, bool withFilter);
-
-            //! Models have been published successfully
-            void ps_onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models, bool directWrite);
-
-            //! Stash drop request
-            void ps_handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
-
-            //! Model set has been changed
-            void ps_onModelSetChanged(int count, bool withFilter);
-
-            //! Own models have been changed
-            void ps_onOwnModelsChanged(int count, bool withFilter);
-
-            //! Row has been selected
-            void ps_onModelRowSelected(const QModelIndex &index);
-
-            //! User object changed
-            void ps_userChanged();
-
-            //! Stash current model
-            void ps_stashCurrentModel();
-
-            //! Display auto stashing dialog
-            void ps_displayAutoStashingDialog();
-
-            //! Display auto simulator stashing dialog
-            void ps_displayAutoSimulatorStashingDialog();
-
-            //! Remove DB models from current view
-            void ps_removeDbModelsFromView();
-
-            //! Show changed attributes of stashed
-            void ps_showChangedAttributes();
-
-            //! Toggle auto filtering
-            void ps_toggleAutoFiltering();
-
-            //! Apply current DB data from form
-            void ps_applyFormLiveryData();
-
-            //! Apply current DB data from form
-            void ps_applyFormAircraftIcaoData();
-
-            //! Apply current DB data from form
-            void ps_applyFormDistributorData();
-
-            //! Add to own model set
-            void ps_addToOwnModelSet();
-
             //! Merge with vPilot models
             void ps_mergeWithVPilotModels();
 
             //! Merge selected with vPilot models
             void ps_mergeSelectedWithVPilotModels();
 
+            //! Add to own model set
+            void ps_addToOwnModelSet();
+
+        private:
+            //! Tab index changed
+            void onTabIndexChanged(int index);
+
+            //! Stashed models changed
+            void onStashedModelsChanged();
+
+            //! Stashed models changed
+            void onStashedModelsChangedDigest();
+
+            //! Stash has been changed
+            void onStashedModelsDataChanged(int count, bool withFilter);
+
+            //! Models have been published successfully
+            void onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models, bool directWrite);
+
+            //! Stash drop request
+            void handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
+
+            //! Model set has been changed
+            void onModelSetChanged(int count, bool withFilter);
+
+            //! Own models have been changed
+            void onOwnModelsChanged(int count, bool withFilter);
+
+            //! Row has been selected
+            void onModelRowSelected(const QModelIndex &index);
+
+            //! User object changed
+            void onUserChanged();
+
+            //! Stash current model
+            void stashCurrentModel();
+
+            //! Display auto stashing dialog
+            void displayAutoStashingDialog();
+
+            //! Display auto simulator stashing dialog
+            void displayAutoSimulatorStashingDialog();
+
+            //! Remove DB models from current view
+            void removeDbModelsFromView();
+
+            //! Show changed attributes of stashed
+            void showChangedAttributes();
+
+            //! Toggle auto filtering
+            void toggleAutoFiltering();
+
+            //! Apply current DB data from form
+            void applyFormLiveryData();
+
+            //! Apply current DB data from form
+            void applyFormAircraftIcaoData();
+
+            //! Apply current DB data from form
+            void applyFormDistributorData();
+
             //! Custom menu
-            void ps_onCustomContextMenu(const QPoint &point);
+            void onCustomContextMenu(const QPoint &point);
 
         private:
             QScopedPointer<Ui::CDbMappingComponent>             ui;
@@ -315,8 +316,8 @@ namespace BlackGui
             QScopedPointer<CDbAutoSimulatorStashingComponent>   m_autoSimulatorDialog; //!< dialog auto simulator update
             QScopedPointer<CDbModelMappingModifyComponent>      m_modelModifyDialog;   //!< dialog when modifying models
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader m_vPilotReader;        //!< read vPilot rules
-            BlackMisc::CDigestSignal                            m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
-            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::ps_userChanged };
+            BlackMisc::CDigestSignal                            m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
+            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };
             const bool vPilotSupport   = true;   //!< vPilot support (will be removed in future)
             bool m_vPilot1stInit       = true;   //!< vPilot extensions initalized?
             bool m_vPilotEnabled       = false;  //!< use vPilot extensions

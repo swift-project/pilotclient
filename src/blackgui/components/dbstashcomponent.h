@@ -144,39 +144,38 @@ namespace BlackGui
             //! Models succesfully published
             void modelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &publishedModels, bool directWrite);
 
-        private slots:
+        private:
+            QScopedPointer<Ui::CDbStashComponent> ui;
+            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDbStashComponent::onUserChanged}; //!< authenticated user
+
             //! Unstash pressed
-            void ps_onUnstashPressed();
+            void onUnstashPressed();
 
             //! Validate pressed
-            void ps_onValidatePressed();
+            void onValidatePressed();
 
             //! Remove invalid (validates and removes invalid models)
-            void ps_onRemoveInvalidPressed();
+            void onRemoveInvalidPressed();
 
             //! Publish pressed
-            void ps_onPublishPressed();
+            void onPublishPressed();
 
             //! Publish response received
-            void ps_publishedModelsResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
+            void onPublishedModelsResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
                                             const BlackMisc::Simulation::CAircraftModelList &skippedModels,
                                             const BlackMisc::CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite);
 
             //! Copy over values
-            void ps_copyOverValuesToSelectedModels();
+            void copyOverValuesToSelectedModels();
 
             //! Display model dialog
-            void ps_modifyModelDialog();
+            void modifyModelDialog();
 
             //! Row count changed
-            void ps_onRowCountChanged(int number, bool filter);
+            void onRowCountChanged(int number, bool filter);
 
             //! User has been changed
-            void ps_userChanged();
-
-        private:
-            QScopedPointer<Ui::CDbStashComponent> ui;
-            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDbStashComponent::ps_userChanged}; //!< authenticated user
+            void onUserChanged();
 
             //! Display messages
             bool showOverlayMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false, bool appendOldMessages = false, int timeoutMs = -1);

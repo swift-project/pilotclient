@@ -100,24 +100,23 @@ namespace BlackGui
             //! Write the model to DB
             void writeModelToDb();
 
-        private slots:
-            //! Web data have been read
-            void ps_webDataRead();
-
             //! Models published
-            void ps_publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
+            void onPublishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
                                     const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
                                     const BlackMisc::CStatusMessageList &messages,
                                     bool requestSuccessful, bool directWrite);
 
+            //! Web data have been read
+            void onWebDataRead();
+
             //! Current page has been changed
-            void ps_currentWizardPageChanged(int id);
+            void currentWizardPageChanged(int id);
 
             //! Airline selected
-            void ps_airlineSelected(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+            void onAirlineSelected(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
             //! Aircraft selected
-            void ps_aircraftSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            void onAircraftSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
         };
     } // ns
 } // ns
