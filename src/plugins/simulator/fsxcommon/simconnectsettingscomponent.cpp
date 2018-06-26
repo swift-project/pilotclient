@@ -132,7 +132,7 @@ namespace BlackSimPlugin
                 return;
             }
 
-            QMessageBox::information(qApp->activeWindow(), tr("Connection successful"), tr("Connected to %1:%2.").arg(address, port));
+            QMessageBox::information(qApp->activeWindow(), tr("Connection successful"), tr("Connected to '%1:%2'.").arg(address, port));
         }
 
         void CSimConnectSettingsComponent::saveSimConnectCfgFile()

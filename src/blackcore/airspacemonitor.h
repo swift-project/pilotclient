@@ -125,9 +125,11 @@ namespace BlackCore
         void gracefulShutdown();
 
         //! Create dummy entries for performance tests
+        //! \private for testing purposes
         void testCreateDummyOnlineAtcStations(int number);
 
         //! Test injected aircraft parts
+        //! \private for testing purposes
         void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental);
 
     signals:
@@ -141,6 +143,8 @@ namespace BlackCore
         void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool isConnected);
 
         //! Raw data as received from network
+        //! \remark used for statistics
+        //! \private
         void requestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &livery);
 
         //! Ready for model matching

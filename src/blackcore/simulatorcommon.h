@@ -276,7 +276,7 @@ namespace BlackCore
         qint64 m_statsCurrentUpdateTimeMs = 0;            //!< statistics current update time
         qint64 m_statsMaxUpdateTimeMs = 0;                //!< statistics max.update time
         qint64 m_statsLastUpdateAircraftRequestedMs  = 0; //!< when was the last aircraft update requested
-        qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircrat updates
+        qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircraft updates
 
         BlackMisc::Simulation::CSimulatorInternals   m_simulatorInternals;  //!< setup object
         BlackMisc::Simulation::CInterpolationLogger  m_interpolationLogger; //!< log.interpolation
@@ -297,7 +297,7 @@ namespace BlackCore
         //! Limited as CSimulatorCommon::isUpdateAircraftLimited plus updating statistics
         bool isUpdateAircraftLimitedWithStats(qint64 startTime = -1);
 
-        //! Limit to updates per seconds
+        //! Limit to updates per second
         bool limitToUpdatesPerSecond(int numberPerSecond);
 
         // weather

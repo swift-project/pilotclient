@@ -258,7 +258,6 @@ namespace BlackSimPlugin
                     default:
                         {
                             const DWORD objectId = pObjData->dwObjectID;
-
                             if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId))
                             {
                                 const CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForObjectId(objectId);

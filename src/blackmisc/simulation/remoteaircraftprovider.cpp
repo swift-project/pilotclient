@@ -35,7 +35,6 @@ namespace BlackMisc
 
         CSimulatedAircraftList CRemoteAircraftProvider::getAircraftInRange() const
         {
-
             QReadLocker l(&m_lockAircraft);
             const QList<CSimulatedAircraft> aircraft = m_aircraftInRange.values();
             l.unlock();

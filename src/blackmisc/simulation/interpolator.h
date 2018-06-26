@@ -268,7 +268,7 @@ namespace BlackMisc
 
             // values for current interpolation step
             qint64 m_currentTimeMsSinceEpoch = -1;                      //!< current time
-            Aviation::CAircraftSituationList m_currentSituations;       //!< current situations
+            Aviation::CAircraftSituationList m_currentSituations;       //!< current situations obtained by remoteAircraftSituationsAndChange
             Aviation::CAircraftSituationChange m_pastSituationsChange;  //!< situations change of provider (i.e. network) situations
             CInterpolationAndRenderingSetupPerCallsign m_currentSetup;  //!< used setup
             CInterpolationStatus m_currentInterpolationStatus;          //!< this step's situation status

@@ -59,9 +59,6 @@ namespace BlackGui
             connect(ui->pb_ShowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::showLogInSimulator);
             connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::displayLastInterpolation);
             connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown);
-
-            // ui->le_Foo->setVisible(false);
-            // ui->lbl_Foo->setVisible(false);
         }
 
         CInterpolationLogDisplay::~CInterpolationLogDisplay()

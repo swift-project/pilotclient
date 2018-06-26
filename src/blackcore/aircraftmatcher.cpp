@@ -497,13 +497,13 @@ namespace BlackCore
         const int r2 = modelsCleaned.removeIfExcluded();
         if ((r1 + r2) > 0)
         {
-            CLogMessage(this).warning("Removed models for matcher, without string '%1', excluded '%2'") << r1 << r2;
+            CLogMessage(this).warning("Removed models for matcher, without string #: %1, excluded #: %2") << r1 << r2;
             if (r1 > 0) { CLogMessage(this).warning("Without string: %1") << models.findEmptyModelStrings().getModelStringList().join(", "); }
             if (r2 > 0) { CLogMessage(this).warning("Excluded: %1") << models.findByModelMode(CAircraftModel::Exclude).getModelStringList().join(", "); }
         }
         if (modelsCleaned.isEmpty())
         {
-            CLogMessage(this).error("No models for matching, swift without a model set will not work");
+            CLogMessage(this).error("No models for matching, swift without a model set will not work!");
         }
         else
         {
@@ -921,25 +921,25 @@ namespace BlackCore
         reduced = false;
         if (inList.isEmpty())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " " + "Empty input list, cannot reduce", getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info + " " + "Empty input list, cannot reduce", getLogCategories()); }
             return inList;
         }
 
         const QString m = remoteAircraft.getAircraftIcaoCode().getManufacturer();
         if (m.isEmpty())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " No manufacturer, cannot reduce " + QString::number(inList.size()) +  " entries", getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info + " No manufacturer, cannot reduce " + QString::number(inList.size()) +  " entries", getLogCategories()); }
             return inList;
         }
 
         const CAircraftModelList outList(inList.findByManufacturer(m));
         if (outList.isEmpty())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " Not found " + m + ", cannot reduce", getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info + " Not found " + m + ", cannot reduce", getLogCategories()); }
             return inList;
         }
 
-        if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " Reduced by " + m + " results: " + QString::number(outList.size()), getLogCategories()); }
+        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info + " Reduced by " + m + " results: " + QString::number(outList.size()), getLogCategories()); }
         reduced = true;
         return outList;
     }
@@ -977,24 +977,24 @@ namespace BlackCore
         reduced = false;
         if (inList.isEmpty())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " " + "Empty input list, cannot reduce", getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info + " " + "Empty input list, cannot reduce", getLogCategories()); }
             return inList;
         }
 
         if (!remoteAircraft.hasAirlineDesignator())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " " + "No airline, cannot reduce " + QString::number(inList.size()) +  " entries", getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info + " " + "No airline, cannot reduce " + QString::number(inList.size()) +  " entries", getLogCategories()); }
             return inList;
         }
 
         const CAircraftModelList outList(inList.findByIcaoDesignators(CAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
         if (outList.isEmpty())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " Cannot reduce by " + remoteAircraft.getAirlineIcaoCodeDesignator() + " results: " + QString::number(outList.size()), getLogCategories()); }
+            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info + " Cannot reduce by " + remoteAircraft.getAirlineIcaoCodeDesignator() + " results: " + QString::number(outList.size()), getLogCategories()); }
             return inList;
         }
 
-        if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " Reduced reduce by " + remoteAircraft.getAirlineIcaoCodeDesignator() + " to " + QString::number(outList.size()), getLogCategories()); }
+        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, info + " Reduced reduce by " + remoteAircraft.getAirlineIcaoCodeDesignator() + " to " + QString::number(outList.size()), getLogCategories()); }
         reduced = true;
         return outList;
     }

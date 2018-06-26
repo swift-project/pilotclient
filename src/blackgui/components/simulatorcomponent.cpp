@@ -54,9 +54,10 @@ namespace BlackGui
             this->setCurrentIndex(0);
             ui->comp_StatusMessages->showFilterDialog();
 
-            // live data
+            // live data and internals
             ui->tvp_LiveData->setIconMode(true);
             ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
+            ui->tvp_Internals->setIconMode(false);
             this->addOrUpdateLiveDataByName("info", "no data yet", CIcons::StandardIconWarning16);
 
             // connects
@@ -183,7 +184,7 @@ namespace BlackGui
 
         void CSimulatorComponent::refreshInternals()
         {
-            if (!sGui->getIContextSimulator()) { return; }
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
             const CSimulatorInternals internals = sGui->getIContextSimulator()->getSimulatorInternals();
             const QStringList names(internals.getSortedNames());
             if (names.isEmpty())
