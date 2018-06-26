@@ -52,14 +52,20 @@ namespace BlackGui
 
         void CModelMatcherLogComponent::initGui()
         {
-            // avoid signal roundtrip
-            bool c = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
-            ui->cb_LogReverseLookup->setChecked(c);
-
             if (sGui)
             {
+                // avoid signal roundtrips
+                bool c = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
+                if (c != ui->cb_LogReverseLookup->isChecked())
+                {
+                    ui->cb_LogReverseLookup->setChecked(c);
+                }
+
                 c = sGui->getIContextSimulator()->isMatchingMessagesEnabled();
-                ui->cb_LogMatchingMessages->setChecked(c);
+                if (c != ui->cb_LogMatchingMessages->isChecked())
+                {
+                    ui->cb_LogMatchingMessages->setChecked(c);
+                }
             }
         }
 

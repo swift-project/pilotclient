@@ -152,10 +152,7 @@ namespace BlackMisc
 
         void CRemoteAircraftProvider::removeAllAircraft()
         {
-            for (const CCallsign &cs : this->getAircraftInRangeCallsigns())
-            {
-                emit this->removedAircraft(cs);
-            }
+            const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
 
             // locked members
             {
@@ -182,6 +179,11 @@ namespace BlackMisc
             { QWriteLocker l(&m_lockPartsHistory); m_aircraftPartsMessages.clear(); }
             { QWriteLocker l(&m_lockMessages); m_reverseLookupMessages.clear(); }
             { QWriteLocker l(&m_lockAircraft); m_aircraftInRange.clear(); }
+
+            for (const CCallsign &cs : callsigns)
+            {
+                emit this->removedAircraft(cs);
+            }
         }
 
         void CRemoteAircraftProvider::removeReverseLookupMessages(const CCallsign &callsign)
