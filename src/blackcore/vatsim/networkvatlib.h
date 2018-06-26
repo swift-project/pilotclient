@@ -79,7 +79,7 @@ namespace BlackCore
             //! \name Network functions
             //! @{
             virtual bool isConnected() const override { return m_status == vatStatusConnected; }
-            virtual BlackMisc::Network::CServer getPresetServer() const override { return m_server; }
+            virtual const BlackMisc::Network::CServer &getPresetServer() const override { return m_server; }
             virtual bool isPendingConnection() const override { return m_status == vatStatusConnecting; }
             virtual void presetLoginMode(LoginMode mode) override;
             virtual void presetServer(const BlackMisc::Network::CServer &server) override;

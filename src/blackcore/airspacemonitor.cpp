@@ -1027,10 +1027,16 @@ namespace BlackCore
         return m_network && m_network->isConnected();
     }
 
-    const CServer CAirspaceMonitor::getConnectedServer() const
+    const CServer &CAirspaceMonitor::getConnectedServer() const
     {
-        if (!this->isConnected()) { return CServer(); }
+        static const CServer empty;
+        if (!this->isConnected()) { return empty; }
         return m_network->getPresetServer();
+    }
+
+    const CEcosystem &CAirspaceMonitor::getCurrentEcosystem() const
+    {
+        return this->getConnectedServer().getEcosystem();
     }
 
     bool CAirspaceMonitor::supportsVatsimDataFile() const

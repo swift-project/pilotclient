@@ -160,7 +160,7 @@ namespace BlackCore
         /*!
          * Get preset server.
          */
-        virtual BlackMisc::Network::CServer getPresetServer() const = 0;
+        virtual const BlackMisc::Network::CServer &getPresetServer() const = 0;
 
         /*!
          * Returns true if the current ConnectionStatus is in transition, e.g. connecting.

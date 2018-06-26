@@ -195,7 +195,10 @@ namespace BlackCore
         bool isConnected() const;
 
         //! Get the currently connected server
-        const BlackMisc::Network::CServer getConnectedServer() const;
+        const BlackMisc::Network::CServer &getConnectedServer() const;
+
+        //! Current ECO system of connected server
+        const BlackMisc::Network::CEcosystem &getCurrentEcosystem() const;
 
         //! Supports VATSIM data file
         //! \remark depends on currently connected Ecosystem
