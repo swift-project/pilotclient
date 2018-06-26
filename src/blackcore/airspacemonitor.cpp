@@ -472,18 +472,20 @@ namespace BlackCore
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
         if (!this->isConnected()) { return; }
 
+        // checking for min. situations ensures the aircraft is stable, can be interpolated ...
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
         const bool validCs = remoteAircraft.hasValidCallsign();
-        const bool complete = validCs && (
+        const bool minSituations = validCs && this->remoteAircraftSituationsCount(callsign) > 1;
+        const bool complete = minSituations && (
                                   (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here we know we have all data
                                   (remoteAircraft.hasModelString()) // we cannot expect more info
                               );
 
-        if (trial < 2 && !complete)
+        if (trial < 5 && !complete)
         {
             this->addReverseLookupMessage(callsign, "Wait for further data");
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(1500 * trial, this, [ = ]()
+            QTimer::singleShot(1500, this, [ = ]()
             {
                 if (myself.isNull() || !sApp || sApp->isShuttingDown()) { return; }
                 if (!this->isAircraftInRange(callsign))
@@ -756,11 +758,14 @@ namespace BlackCore
         if (!sApp || sApp->isShuttingDown()) { return false; }
 
         CSimulatedAircraft newAircraft(aircraft);
+        newAircraft.setRendered(false); // reset rendering
         newAircraft.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition()); // distance from myself
 
         Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
-        sApp->getWebDataServices()->updateWithVatsimDataFileData(newAircraft);
-
+        if (this->getConnectedServer().getEcosystem() == CEcosystem::vatsim())
+        {
+            sApp->getWebDataServices()->updateWithVatsimDataFileData(newAircraft);
+        }
         return CRemoteAircraftProvider::addNewAircraftInRange(newAircraft);
     }
 
