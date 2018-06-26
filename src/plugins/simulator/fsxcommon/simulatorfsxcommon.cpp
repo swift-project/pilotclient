@@ -481,6 +481,14 @@ namespace BlackSimPlugin
             return id;
         }
 
+        bool CSimulatorFsxCommon::isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const
+        {
+            if (!simObject.hasValidRequestAndObjectId()) { return false; }
+            if (simObject.isPendingRemoved()) { return false; }
+            if (!m_simConnectObjects.contains(simObject.getCallsign())) { return false; } // removed in meantime
+            return true;
+        }
+
         bool CSimulatorFsxCommon::triggerAutoTraceSendId()
         {
             if (m_traceSendId) { return false; } // no need
@@ -755,13 +763,20 @@ namespace BlackSimPlugin
                 // request data on object
                 this->requestPositionDataForSimObject(simObject);
                 this->requestLightsForSimObject(simObject);
+                this->requestModelInfoForSimObject(simObject);
 
                 this->removeFromAddPendingAndAddAgainAircraft(callsign); // no longer try to add
                 const bool updated = this->updateAircraftRendered(callsign, true);
                 if (updated)
                 {
                     emit aircraftRenderingChanged(simObject.getAircraft());
-                    if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' model: '%2' verified, request/object id: %3 %4").arg(callsign.toQString(), remoteAircraft.getModelString()).arg(requestId).arg(objectId)); }
+                    static const QString debugMsg("CS: '%1' model: '%2' verified, request/object id: %3 %4");
+                    if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, debugMsg.arg(callsign.toQString(), remoteAircraft.getModelString()).arg(requestId).arg(objectId)); }
+                }
+                else
+                {
+                    CLogMessage(this).warning("Verified aircraft '%1' model '%2', request/object id: %3 %4 already rendered") <<
+                            callsign.asString() << remoteAircraft.getModelString() << objectId;
                 }
             }
             while (false);
@@ -773,7 +788,7 @@ namespace BlackSimPlugin
                 emit this->physicallyAddingRemoteModelFailed(CSimulatedAircraft(), msg);
             }
 
-            // trigger new adding
+            // trigger new adding from pending if any
             if (!m_addPendingAircraft.isEmpty())
             {
                 this->addPendingAircraftAfterAdded();
@@ -1049,7 +1064,7 @@ namespace BlackSimPlugin
                 this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' pending callsigns: '%2', pending objects: '%3'").arg(newRemoteAircraft.getCallsignAsString(), m_addPendingAircraft.getCallsignStrings().join(", "), m_simConnectObjects.getPendingAddedCallsigns().getCallsignStrings().join(", ")));
             }
 
-            // do we need to remove/add again because something has changed
+            // do we need to remove/add again because something has changed?
             if (m_simConnectObjects.contains(callsign))
             {
                 const CSimConnectObject simObject = m_simConnectObjects[callsign];
@@ -1194,12 +1209,16 @@ namespace BlackSimPlugin
             CSimConnectObject &simObject = m_simConnectObjects[callsign];
             if (simObject.isPendingRemoved()) { return true; }
 
-            const bool pendingAdded = simObject.isPendingAdded();
+            // check for pending objects
+            m_addPendingAircraft.removeByCallsign(callsign); // just in case still in list of pending aircraft
+            const bool pendingAdded = simObject.isPendingAdded(); // already added in simulator, but not yet confirmed
             const bool stillWaitingForLights = !simObject.hasCurrentLightsInSimulator();
             if (pendingAdded || stillWaitingForLights)
             {
                 // problem: we try to delete an aircraft just requested to be added
                 // best solution so far, call remove again with a delay
+                CLogMessage(this).warning("Object: %1 pending added: %2 / lights: %3 about to be removed")
+                        << simObject.toQString() << boolToYesNo(pendingAdded) << boolToYesNo(stillWaitingForLights);
                 simObject.fakeCurrentLightsInSimulator(); // next time looks like we have lights
                 QPointer<CSimulatorFsxCommon> myself(this);
                 QTimer::singleShot(2000, this, [ = ]
@@ -1210,8 +1229,10 @@ namespace BlackSimPlugin
                 return false; // not yet deleted
             }
 
-            // avoid further data from simulator
+            // no more data from simulator
             this->stopRequestingDataForSimObject(simObject);
+
+            // mark as removed
             simObject.setPendingRemoved(true);
             if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1' request/object id: %2/%3").arg(callsign.toQString()).arg(simObject.getRequestId()).arg(simObject.getObjectId())); }
 
@@ -1720,9 +1741,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::requestLightsForSimObject(const CSimConnectObject &simObject)
         {
-            if (!simObject.hasValidRequestAndObjectId()) { return false; }
-            if (simObject.isPendingRemoved()) { return false; }
-            if (!m_simConnectObjects.contains(simObject.getCallsign())) { return false; } // removed in meantime
+            if (!this->isValidSimObjectNotPendingRemoved(simObject)) { return false; }
             if (!m_hSimConnect) { return false; }
 
             // always request, not only when something has changed
@@ -1737,6 +1756,26 @@ namespace BlackSimPlugin
                 return true;
             }
             CLogMessage(this).error("Cannot request lights data on object '%1'") << simObject.getObjectId();
+            return false;
+        }
+
+        bool CSimulatorFsxCommon::requestModelInfoForSimObject(const CSimConnectObject &simObject)
+        {
+            if (!this->isValidSimObjectNotPendingRemoved(simObject)) { return false; }
+            if (!m_hSimConnect) { return false; }
+
+            // always request, not only when something has changed
+            const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectModel);
+            const HRESULT result = SimConnect_RequestDataOnSimObject(
+                                       m_hSimConnect, requestId,
+                                       CSimConnectDefinitions::DataRemoteAircraftModelData, simObject.getObjectId(),
+                                       SIMCONNECT_PERIOD_ONCE);
+            if (result == S_OK)
+            {
+                if (this->isTracingSendId()) { this->traceSendId(simObject.getObjectId(), Q_FUNC_INFO);}
+                return true;
+            }
+            CLogMessage(this).error("Cannot request model info on object '%1'") << simObject.getObjectId();
             return false;
         }
 
@@ -1938,15 +1977,15 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider()
         {
-            const CCallsignSet toBeRemoved(getCallsignsMissingInProvider());
-            if (toBeRemoved.isEmpty()) { return toBeRemoved; }
-            for (const CCallsign &callsign : toBeRemoved)
+            const CCallsignSet callsignsToBeRemoved(getCallsignsMissingInProvider());
+            if (callsignsToBeRemoved.isEmpty()) { return callsignsToBeRemoved; }
+            for (const CCallsign &callsign : callsignsToBeRemoved)
             {
                 this->physicallyRemoveRemoteAircraft(callsign);
             }
 
-            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1'").arg(toBeRemoved.toStringList().join(", "))); }
-            return toBeRemoved;
+            if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QString("CS: '%1'").arg(callsignsToBeRemoved.toStringList().join(", "))); }
+            return callsignsToBeRemoved;
         }
 
         CSimulatorFsxCommonListener::CSimulatorFsxCommonListener(const CSimulatorPluginInfo &info) :

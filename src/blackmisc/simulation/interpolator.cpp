@@ -154,12 +154,11 @@ namespace BlackMisc
                 // make sure we can also interpolate parts only (needed in unit tests)
                 if (aircraftNumber < 0) { aircraftNumber = 0; }
                 const bool init = this->initIniterpolationStepData(currentTimeSinceEpoc, setup, aircraftNumber);
+                Q_ASSERT_X(!m_currentInterpolationStatus.isInterpolated(), Q_FUNC_INFO, "Expect reset status");
                 if (!m_unitTest && !init) { break; } // failure in real scenarios, unit tests move on
-
                 Q_ASSERT_X(m_currentTimeMsSinceEpoch > 0, Q_FUNC_INFO, "No valid timestamp, interpolator initialized?");
                 const CAircraftSituation interpolatedSituation = this->getInterpolatedSituation();
                 const CAircraftParts interpolatedParts = this->getInterpolatedOrGuessedParts(aircraftNumber);
-
                 result.setValues(interpolatedSituation, interpolatedParts);
             }
             while (false);
@@ -171,6 +170,7 @@ namespace BlackMisc
         template <typename Derived>
         CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation()
         {
+            Q_ASSERT_X(!m_currentInterpolationStatus.isInterpolated(), Q_FUNC_INFO, "Expect reset status");
             if (m_currentSituations.isEmpty())
             {
                 m_lastSituation = CAircraftSituation::null();
@@ -219,7 +219,10 @@ namespace BlackMisc
             }
 
             // status
+            Q_ASSERT_X(currentSituation.hasMSLGeodeticHeight(), Q_FUNC_INFO, "No MSL altitude");
             m_currentInterpolationStatus.setInterpolatedAndCheckSituation(true, currentSituation);
+            m_lastSituation = currentSituation;
+            Q_ASSERT_X(m_currentInterpolationStatus.hasValidInterpolatedSituation(), Q_FUNC_INFO, "Expect valid situation");
 
             // logging
             if (this->doLogging())
@@ -238,7 +241,6 @@ namespace BlackMisc
             }
 
             // bye
-            m_lastSituation = currentSituation;
             return currentSituation;
         }
 

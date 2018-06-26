@@ -194,23 +194,26 @@ namespace BlackCore
         return false;
     }
 
-    void CSimulatorCommon::debugLogMessage(const QString &msg) const
+    void CSimulatorCommon::debugLogMessage(const QString &msg)
     {
         if (!this->showDebugLogMessage()) { return; }
         if (msg.isEmpty()) { return; }
-        CLogMessage(this).info(msg);
+        const CStatusMessage m = CStatusMessage(this).info("%1") << msg;
+        emit this->driverMessages(m);
     }
 
-    void CSimulatorCommon::debugLogMessage(const QString &funcInfo, const QString &msg) const
+    void CSimulatorCommon::debugLogMessage(const QString &funcInfo, const QString &msg)
     {
         if (!this->showDebugLogMessage()) { return; }
         if (msg.isEmpty()) { return; }
-        CLogMessage(this).info("%1 %2") << msg << funcInfo;
+        const CStatusMessage m = CStatusMessage(this).info("%1 %2") << msg << funcInfo;
+        emit this->driverMessages(m);
     }
 
     bool CSimulatorCommon::showDebugLogMessage() const
     {
-        return this->getInterpolationSetupGlobal().showSimulatorDebugMessages();
+        const bool show = this->getInterpolationSetupGlobal().showSimulatorDebugMessages();
+        return show;
     }
 
     void CSimulatorCommon::reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)

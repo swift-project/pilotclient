@@ -219,11 +219,11 @@ namespace BlackCore
 
         //! Display a debug log message based on BlackMisc::Simulation::CInterpolationAndRenderingSetup
         //! remark shows log messages of functions calls
-        void debugLogMessage(const QString &msg) const;
+        void debugLogMessage(const QString &msg);
 
         //! Display a debug log message based on BlackMisc::Simulation::CInterpolationAndRenderingSetup
         //! remark shows log messages of functions calls
-        void debugLogMessage(const QString &funcInfo, const QString &msg) const;
+        void debugLogMessage(const QString &funcInfo, const QString &msg);
 
         //! Show log messages?
         bool showDebugLogMessage() const;

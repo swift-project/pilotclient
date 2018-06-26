@@ -204,6 +204,9 @@ namespace BlackSimPlugin
             //! Get new request id, overflow safe
             SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimObjTerrainProbe();
 
+            //! Valid CSimConnectObject which is NOT pendig removed
+            bool isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const;
+
             //! Register help
             static void registerHelp();
 
@@ -379,6 +382,9 @@ namespace BlackSimPlugin
 
             //! Request lights for a CSimConnectObject
             bool requestLightsForSimObject(const CSimConnectObject &simObject);
+
+            //! Model info for a CSimConnectObject
+            bool requestModelInfoForSimObject(const CSimConnectObject &simObject);
 
             //! Stop requesting data for CSimConnectObject
             bool stopRequestingDataForSimObject(const CSimConnectObject &simObject);

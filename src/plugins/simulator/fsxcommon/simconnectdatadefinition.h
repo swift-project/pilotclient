@@ -72,6 +72,17 @@ namespace BlackSimPlugin
             char title[256]; //!< Aircraft model string
         };
 
+        //! Data struct of aircraft model data
+        struct DataDefinitionRemoteAircraftModel
+        {
+            char atcType[32];          //!< type
+            char atcModel[32];         //!< model
+            char atcId[32];            //!< id
+            char atcAirlineNumber[64]; //!< airline number
+            char atcFlightNumber[8];   //!< flight number (168)
+            char title[256];           //!< Aircraft model string
+        };
+
         //! Data struct of remote aircraft parts
         struct DataDefinitionRemoteAircraftPartsWithoutLights
         {

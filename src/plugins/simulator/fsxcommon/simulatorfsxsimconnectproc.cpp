@@ -274,6 +274,16 @@ namespace BlackSimPlugin
                                         simulatorFsxP3D->triggerUpdateRemoteAircraftFromSimulator(simObject, *remoteAircraftSimData);
                                     }
                                 } // position
+                                else if (subRequest == CSimConnectDefinitions::SimObjectModel)
+                                {
+                                    static_assert(sizeof(DataDefinitionRemoteAircraftModel) == 168 + 256, "DataDefinitionRemoteAircraftModel has an incorrect size.");
+                                    const DataDefinitionRemoteAircraftModel *remoteAircraftModel = reinterpret_cast<const DataDefinitionRemoteAircraftModel *>(&pObjData->dwData);
+                                    // extra check, but ids should be the same
+                                    if (objectId == simObject.getObjectId())
+                                    {
+                                        Q_UNUSED(remoteAircraftModel);
+                                    }
+                                } // model
                                 else if (subRequest == CSimConnectDefinitions::SimObjectLights)
                                 {
                                     static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
