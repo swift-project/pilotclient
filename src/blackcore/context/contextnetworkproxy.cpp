@@ -233,6 +233,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateAircraftSupportingGndFLag"), callsign, supportGndFlag);
         }
 
+        int CContextNetworkProxy::reInitializeAllAircraft()
+        {
+            return m_dBusInterface->callDBusRet<int>(QLatin1String("reInitializeAllAircraft"));
+        }
+
         void CContextNetworkProxy::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
         {
             m_dBusInterface->callDBus(QLatin1String("setFastPositionEnabledCallsigns"), callsigns);

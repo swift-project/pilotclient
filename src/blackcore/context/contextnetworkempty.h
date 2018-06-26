@@ -345,6 +345,12 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextNetwork::reInitializeAllAircraft
+            virtual int reInitializeAllAircraft() override
+            {
+                return 0;
+            }
+
             //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
             virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override
             {

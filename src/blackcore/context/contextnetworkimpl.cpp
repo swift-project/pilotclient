@@ -265,7 +265,7 @@ namespace BlackCore
         {
             Q_UNUSED(originator;)
             if (commandLine.isEmpty()) { return false; }
-            static const QStringList cmds({ ".msg", ".m", ".altos", ".altoffset", ".watchdog" });
+            static const QStringList cmds({ ".msg", ".m", ".altos", ".altoffset", ".watchdog", ".reinit", ".reinitialize" });
             CSimpleCommandParser parser(cmds);
             parser.parse(commandLine);
             if (!parser.isKnownCommand()) { return false; }
@@ -335,7 +335,7 @@ namespace BlackCore
                     }
                 }
 
-                QString msg(parser.remainingStringAfter(2));
+                const QString msg(parser.remainingStringAfter(2));
                 tm.setMessage(msg);
                 if (tm.isEmpty())
                 {
@@ -378,6 +378,15 @@ namespace BlackCore
                 const bool watchdog = parser.toBool(1, true);
                 m_airspace->enableWatchdog(watchdog);
                 CLogMessage(this).info("Enabled watchdog: %1") << boolToYesNo(watchdog);
+            }
+            else if (parser.matchesCommand(".reinit", ".reinitialize"))
+            {
+                if (!m_airspace) { return false; }
+                const int count = m_airspace->reInitializeAllAircraft();
+                if (count > 0)
+                {
+                    CLogMessage(this).info("Re-init %1 aircraft") << count;
+                }
             }
 
             return false;
@@ -831,6 +840,11 @@ namespace BlackCore
         void CContextNetwork::updateMarkAllAsNotRendered()
         {
             m_airspace->updateMarkAllAsNotRendered();
+        }
+
+        int CContextNetwork::reInitializeAllAircraft()
+        {
+            return m_airspace->reInitializeAllAircraft();
         }
 
         CAirspaceAircraftSnapshot CContextNetwork::getLatestAirspaceAircraftSnapshot() const

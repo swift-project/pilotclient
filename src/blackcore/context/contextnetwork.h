@@ -278,6 +278,9 @@ namespace BlackCore
             //! Change fast position updates
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) = 0;
 
+            //! Re-initialize all aircraft
+            virtual int reInitializeAllAircraft() = 0;
+
             //! Get reverse lookup messages
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 

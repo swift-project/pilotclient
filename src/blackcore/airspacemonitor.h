@@ -124,6 +124,9 @@ namespace BlackCore
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
 
+        //! Re-init all aircrft
+        int reInitializeAllAircraft();
+
         //! Create dummy entries for performance tests
         //! \private for testing purposes
         void testCreateDummyOnlineAtcStations(int number);
@@ -227,6 +230,11 @@ namespace BlackCore
         //! \remark position to own aircraft set, VATSIM data file data considered
         //! \threadsafe
         bool addNewAircraftInRange(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+        //! Asynchronously add aircraft
+        //! \threadsafe
+        //! \sa addNewAircraftInRange
+        void asyncAddNewAircraftInRange(const BlackMisc::Simulation::CSimulatedAircraftList &aircraft, bool readyForModelMatching);
 
         //! Update online stations by callsign
         int updateOnlineStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);

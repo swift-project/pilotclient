@@ -155,6 +155,7 @@ namespace BlackCore
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+            virtual int reInitializeAllAircraft() override;
             virtual bool updateAircraftSupportingGndFLag(const BlackMisc::Aviation::CCallsign &callsign, bool supportGndFlag) override;
             virtual bool updateCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CLength &cg) override;
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
@@ -195,8 +196,10 @@ namespace BlackCore
             //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
-            //! .m .msg           message text
-            //! .altos .altoffset altitude offset for testing
+            //! .m .msg                 message text
+            //! .altos .altoffset       altitude offset for testing
+            //! .reinit .reinitialize   re-initialize all aircraft
+            //! .watchdog on|off        watchdog on/off
             //! </pre>
             //! @}
             //! \copydoc IContextNetwork::parseCommandLine
@@ -211,6 +214,7 @@ namespace BlackCore
                 BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message text", "send text message"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".altos callsign offsetvalue", "set altitude offset value (testing)"});
                 BlackMisc::CSimpleCommandParser::registerCommand({".watchdog on|off", "enable/disable network watchdog (testing)"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".reinit", "re-initialize all aircraft"});
             }
 
             //! \publicsection

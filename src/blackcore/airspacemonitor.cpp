@@ -340,6 +340,14 @@ namespace BlackCore
         QObject::disconnect(this);
     }
 
+    int CAirspaceMonitor::reInitializeAllAircraft()
+    {
+        const CSimulatedAircraftList aircraft = this->getAircraftInRange();
+        CRemoteAircraftProvider::removeAllAircraft();
+        this->asyncAddNewAircraftInRange(aircraft, true);
+        return aircraft.size();
+    }
+
     void CAirspaceMonitor::onRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
         if (!this->isConnected() || realname.isEmpty()) { return; }
@@ -754,6 +762,25 @@ namespace BlackCore
         sApp->getWebDataServices()->updateWithVatsimDataFileData(newAircraft);
 
         return CRemoteAircraftProvider::addNewAircraftInRange(newAircraft);
+    }
+
+    void CAirspaceMonitor::asyncAddNewAircraftInRange(const CSimulatedAircraftList &aircraft, bool readyForModelMatching)
+    {
+        if (aircraft.isEmpty()) { return; }
+        if (!sApp || sApp->isShuttingDown()) { return; }
+
+        int c = 1;
+        QPointer<CAirspaceMonitor> myself(this);
+        for (const CSimulatedAircraft &ac : aircraft)
+        {
+            QTimer::singleShot(c * 25, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->addNewAircraftInRange(ac);
+                if (!readyForModelMatching) { return; }
+                myself->sendReadyForModelMatching(ac.getCallsign());
+            });
+        }
     }
 
     int CAirspaceMonitor::updateOnlineStation(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues, bool sendSignal)
