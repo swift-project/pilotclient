@@ -24,10 +24,10 @@ namespace BlackMisc
             //! Trait for last (most recently) used server and user
             struct TLastServer : public TDataTrait<CServer>
             {
-                //! Key in data cache
+                //! \copydoc BlackCore::TDataTrait::key
                 static const char *key() { return "lastserver"; }
 
-                //! First load is synchronous
+                //! \copydoc BlackCore::TDataTrait::isPinned
                 static constexpr bool isPinned() { return true; }
             };
         } // ns

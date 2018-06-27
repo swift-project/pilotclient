@@ -85,7 +85,7 @@ namespace BlackMisc
                 //! \copydoc BlackMisc::Mixin::String::toQString
                 QString convertToQString(bool i18n = false) const;
 
-                //! To string
+                //! \copydoc BlackMisc::Mixin::String::toQString
                 QString convertToQString(const QString &separator, bool i18n = false) const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
@@ -196,7 +196,7 @@ namespace BlackMisc
                 static const char *key() { return "settingssimulatorfsx"; }
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("FSX"); return name; }
+                static const QString &humanReadable() { static const QString name("FSX settings"); return name; }
             };
 
             //! Trait for simulator settings
@@ -206,7 +206,7 @@ namespace BlackMisc
                 static const char *key() { return "settingssimulatorfs9"; }
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("FS9"); return name; }
+                static const QString &humanReadable() { static const QString name("FS9 settings"); return name; }
             };
 
             //! Trait for simulator settings
@@ -216,7 +216,7 @@ namespace BlackMisc
                 static const char *key() { return "settingssimulatorp3d"; }
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("P3D"); return name; }
+                static const QString &humanReadable() { static const QString name("P3D settings"); return name; }
             };
 
             //! Trait for simulator settings
@@ -226,7 +226,7 @@ namespace BlackMisc
                 static const char *key() { return "settingssimulatorxplane"; }
 
                 //! \copydoc BlackCore::TSettingTrait::humanReadable
-                static const QString &humanReadable() { static const QString name("XPlane"); return name; }
+                static const QString &humanReadable() { static const QString name("XPlane settings"); return name; }
             };
 
             //! Bundle of settings for all simulators

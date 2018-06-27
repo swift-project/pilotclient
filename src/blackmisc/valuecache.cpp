@@ -732,7 +732,7 @@ namespace BlackMisc
                 emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
             // All good info
-            status = CStatusMessage(this).info("Set value %1") << element.m_nameWithKey;
+            status = CStatusMessage(this).info("Set value '%1'") << element.m_nameWithKey;
         }
         return status;
     }

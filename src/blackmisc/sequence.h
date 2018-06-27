@@ -555,4 +555,4 @@ Q_DECLARE_METATYPE(BlackMisc::CSequence<qlonglong>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<qulonglong>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<double>)
 
-#endif //BLACKMISC_SEQUENCE_H
+#endif // guard

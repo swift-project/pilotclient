@@ -318,7 +318,7 @@ namespace BlackGui
             //! Object has been double clicked
             void objectDoubleClicked(const BlackMisc::CVariant &object);
 
-            //! Object has been double clicked
+            //! Object has been selected
             void objectSelected(const BlackMisc::CVariant &object);
 
             //! Objects deleted from model

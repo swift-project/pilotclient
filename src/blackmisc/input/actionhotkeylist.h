@@ -30,7 +30,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of hotkeys
         class BLACKMISC_EXPORT CActionHotkeyList :
             public CSequence<CActionHotkey>,
-            public BlackMisc::Mixin::MetaType<CActionHotkeyList>
+            public Mixin::MetaType<CActionHotkeyList>
         {
         public:
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CActionHotkeyList)

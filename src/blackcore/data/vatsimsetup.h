@@ -121,20 +121,20 @@ namespace BlackCore
         //! Trait for global setup data
         struct TVatsimSetup : public BlackMisc::TDataTrait<CVatsimSetup>
         {
-            //! Key in data cache
+            //! \copydoc BlackCore::TDataTrait::key
             static const char *key() { return "vatsimsetup"; }
 
-            //! First load is synchronous
+            //! \copydoc BlackCore::TDataTrait::isPinned
             static constexpr bool isPinned() { return true; }
         };
 
         //! Trait for last (most recently) used VATSIM server and user
         struct TVatsimLastServer : public BlackMisc::TDataTrait<BlackMisc::Network::CServer>
         {
-            //! Key in data cache
+            //! \copydoc BlackCore::TDataTrait::isPinned
             static const char *key() { return "vatsimserver"; }
 
-            //! First load is synchronous
+            //! \copydoc BlackCore::TDataTrait::isPinned
             static constexpr bool isPinned() { return true; }
         };
     } // ns
