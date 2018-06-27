@@ -185,6 +185,7 @@ namespace BlackSimPlugin
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData DataRemoteAircraftGetPosition %1") << hr;
             }
 
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "STATIC CG TO GROUND", "Feet");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC TYPE", NULL, SIMCONNECT_DATATYPE_STRING32);
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC MODEL", NULL, SIMCONNECT_DATATYPE_STRING32);
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "ATC ID", NULL, SIMCONNECT_DATATYPE_STRING32);

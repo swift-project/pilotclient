@@ -618,6 +618,17 @@ namespace BlackSimPlugin
             });
         }
 
+        void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftModel &remoteAircraftModel)
+        {
+            if (this->isShuttingDownOrDisconnected()) { return; }
+            QPointer<CSimulatorFsxCommon> myself(this);
+            QTimer::singleShot(0, this, [ = ]
+            {
+                if (!myself) { return; }
+                myself->updateRemoteAircraftFromSimulator(simObject, remoteAircraftModel);
+            });
+        }
+
         void CSimulatorFsxCommon::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData)
         {
             if (this->isShuttingDownOrDisconnected()) { return; }
@@ -649,8 +660,23 @@ namespace BlackSimPlugin
             {
                 CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg, remoteAircraftData.elevationFt);
                 elevation.setSinglePointRadius();
-                this->rememberElevationAndCG(cs, elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));
+                this->rememberElevationAndCG(cs, simObject.getAircraftModelString(), elevation, CLength(remoteAircraftData.cgToGroundFt, CLengthUnit::ft()));
             }
+        }
+
+        void CSimulatorFsxCommon::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftModel &remoteAircraftModel)
+        {
+            const CCallsign cs(simObject.getCallsign());
+            if (!m_simConnectObjects.contains(cs)) { return; } // no longer existing
+            CSimConnectObject &so = m_simConnectObjects[cs];
+            if (so.isPendingRemoved()) { return; }
+
+            const QString modelString(remoteAircraftModel.title);
+            const CLength cg(remoteAircraftModel.cgToGroundFt, CLengthUnit::ft());
+            so.setAircraftCG(cg);
+            so.setAircraftModelString(modelString);
+            this->insertCG(cg, modelString, cs); // env. provider
+            this->updateCGAndModelString(cs, cg, modelString); // remote aircraft provider
         }
 
         void CSimulatorFsxCommon::updateProbeFromSimulator(const CCallsign &callsign, const DataDefinitionPosData &remoteAircraftData)

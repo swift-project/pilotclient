@@ -75,6 +75,7 @@ namespace BlackSimPlugin
         //! Data struct of aircraft model data
         struct DataDefinitionRemoteAircraftModel
         {
+            double cgToGroundFt;       //!< Static CG to ground (ft)
             char atcType[32];          //!< type
             char atcModel[32];         //!< model
             char atcId[32];            //!< id

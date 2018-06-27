@@ -204,8 +204,8 @@ namespace BlackSimPlugin
                         success = simulatorFsxP3D->simulatorReportedObjectAdded(objectId); // trigger follow up actions
                         if (!success)
                         {
-                            const CSimConnectObject simObj = simulatorFsxP3D->getSimObjectForObjectId(objectId);
-                            const CSimulatedAircraft remoteAircraft(simObj.getAircraft());
+                            const CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForObjectId(objectId);
+                            const CSimulatedAircraft remoteAircraft(simObject.getAircraft());
                             const CStatusMessage msg = CStatusMessage(simulatorFsxP3D).error("Cannot add object %1, cs: '%2' model: '%3'") << objectId << remoteAircraft.getCallsignAsString() << remoteAircraft.getModelString();
                             CLogMessage::preformatted(msg);
                             emit simulatorFsxP3D->physicallyAddingRemoteModelFailed(remoteAircraft, msg);
@@ -276,12 +276,12 @@ namespace BlackSimPlugin
                                 } // position
                                 else if (subRequest == CSimConnectDefinitions::SimObjectModel)
                                 {
-                                    static_assert(sizeof(DataDefinitionRemoteAircraftModel) == 168 + 256, "DataDefinitionRemoteAircraftModel has an incorrect size.");
+                                    static_assert(sizeof(DataDefinitionRemoteAircraftModel) == sizeof(double) + 168 + 256, "DataDefinitionRemoteAircraftModel has an incorrect size.");
                                     const DataDefinitionRemoteAircraftModel *remoteAircraftModel = reinterpret_cast<const DataDefinitionRemoteAircraftModel *>(&pObjData->dwData);
                                     // extra check, but ids should be the same
                                     if (objectId == simObject.getObjectId())
                                     {
-                                        Q_UNUSED(remoteAircraftModel);
+                                        simulatorFsxP3D->triggerUpdateRemoteAircraftFromSimulator(simObject, *remoteAircraftModel);
                                     }
                                 } // model
                                 else if (subRequest == CSimConnectDefinitions::SimObjectLights)

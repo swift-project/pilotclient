@@ -315,11 +315,18 @@ namespace BlackSimPlugin
             void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
             //! Call CSimulatorFsxCommon::updateRemoteAircraftFromSimulator asynchronously
-            //! \remark can help not to send SimConnect data in event loop
+            //! \remark do not to send SimConnect data in event loop
             void triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData);
+
+            //! Call CSimulatorFsxCommon::updateRemoteAircraftFromSimulator asynchronously
+            //! \remark do not to send SimConnect data in event loop
+            void triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftModel &remoteAircraftModel);
 
             //! Remote aircraft data sent from simulator
             void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData);
+
+            //! Remote aircraft data sent from simulator
+            void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftModel &remoteAircraftModel);
 
             //! Probe data sent from simulator
             void updateProbeFromSimulator(const BlackMisc::Aviation::CCallsign &callsign, const DataDefinitionPosData &remoteAircraftData);
