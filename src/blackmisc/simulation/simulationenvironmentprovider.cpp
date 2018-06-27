@@ -49,20 +49,37 @@ namespace BlackMisc
             if (remove)
             {
                 QWriteLocker l(&m_lockCG);
-                m_cgs.remove(cs);
+                m_cgsPerCallsign.remove(cs);
             }
             else
             {
                 QWriteLocker l(&m_lockCG);
-                m_cgs[cs] = cg;
+                m_cgsPerCallsign[cs] = cg;
             }
+            return true;
+        }
+
+        bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const QString &modelString, const CCallsign &cs)
+        {
+            bool ok = false;
+            QWriteLocker l(&m_lockCG);
+            if (!cs.isEmpty()) { m_cgsPerCallsign[cs] = cg; ok = true; }
+            if (!modelString.isEmpty()) { m_cgsPerModel[modelString.toLower()] = cg; ok = true; }
+            return ok;
+        }
+
+        bool ISimulationEnvironmentProvider::insertCGForModelString(const CLength &cg, const QString &modelString)
+        {
+            if (modelString.isEmpty()) { return false; }
+            QWriteLocker l(&m_lockCG);
+            m_cgsPerModel[modelString.toLower()] = cg;
             return true;
         }
 
         int ISimulationEnvironmentProvider::removeCG(const CCallsign &cs)
         {
             QWriteLocker l(&m_lockCG);
-            return m_cgs.remove(cs);
+            return m_cgsPerCallsign.remove(cs);
         }
 
         CLength ISimulationEnvironmentProvider::minRange(const CLength &range)
@@ -170,23 +187,33 @@ namespace BlackMisc
 
         CLength ISimulationEnvironmentProvider::getCG(const Aviation::CCallsign &callsign) const
         {
+            if (callsign.isEmpty()) { return CLength::null(); }
             QReadLocker l(&m_lockCG);
-            if (!m_cgs.contains(callsign)) { return CLength::null(); }
-            return m_cgs.value(callsign);
+            if (!m_cgsPerCallsign.contains(callsign)) { return CLength::null(); }
+            return m_cgsPerCallsign.value(callsign);
+        }
+
+        CLength ISimulationEnvironmentProvider::getCGPerModelString(const QString &modelString) const
+        {
+            if (modelString.isEmpty()) { return CLength::null(); }
+            const QString ms = modelString.toLower();
+            QReadLocker l(&m_lockCG);
+            if (!m_cgsPerModel.contains(ms)) { return CLength::null(); }
+            return m_cgsPerModel.value(ms);
         }
 
         bool ISimulationEnvironmentProvider::hasCG(const Aviation::CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
-            return m_cgs.contains(callsign);
+            return m_cgsPerCallsign.contains(callsign);
         }
 
         bool ISimulationEnvironmentProvider::hasSameCG(const CLength &cg, const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return false; }
             QReadLocker l(&m_lockCG);
-            return m_cgs[callsign] == cg;
+            return m_cgsPerCallsign[callsign] == cg;
         }
 
         int ISimulationEnvironmentProvider::setRememberMaxElevations(int max)
@@ -262,7 +289,8 @@ namespace BlackMisc
         void ISimulationEnvironmentProvider::clearCGs()
         {
             QWriteLocker l(&m_lockCG);
-            m_cgs.clear();
+            m_cgsPerCallsign.clear();
+            // intentionally not cleaning CGs per model, as models will not change, callsign do!
         }
 
         void ISimulationEnvironmentProvider::clearSimulationEnvironmentData()

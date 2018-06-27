@@ -175,6 +175,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) = 0;
 
+            //! Update the CG and model string
+            //! \threadsafe
+            virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) = 0;
+
             //! Get reverse lookup meesages
             //! \threadsafe
             virtual CStatusMessageList getReverseLookupMessages(const Aviation::CCallsign &callsign) const = 0;
@@ -286,6 +290,7 @@ namespace BlackMisc
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
             virtual int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info) override;
             virtual bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg) override;
+            virtual bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual CStatusMessageList getAircraftPartsHistory(const Aviation::CCallsign &callsign) const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
@@ -514,6 +519,12 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftGroundElevation
             int updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const Geo::CElevationPlane &elevation, Aviation::CAircraftSituation::GndElevationInfo info);
+
+            //! \copydoc IRemoteAircraftProvider::updateCG
+            bool updateCG(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg);
+
+            //! \copydoc IRemoteAircraftProvider::updateCGAndModelString
+            bool updateCGAndModelString(const Aviation::CCallsign &callsign, const PhysicalQuantities::CLength &cg, const QString &modelString);
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
             void updateMarkAllAsNotRendered();

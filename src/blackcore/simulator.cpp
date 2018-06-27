@@ -107,7 +107,7 @@ namespace BlackCore
         ISimulator::registerHelp();
     }
 
-    void ISimulator::rememberElevationAndCG(const CCallsign &callsign, const Geo::CElevationPlane &elevation, const CLength &cg)
+    void ISimulator::rememberElevationAndCG(const CCallsign &callsign, const QString &modelString, const Geo::CElevationPlane &elevation, const CLength &cg)
     {
         if (callsign.isEmpty()) { return; }
         if (!elevation.isNull())
@@ -116,7 +116,7 @@ namespace BlackCore
             this->setRememberMaxElevations(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
             this->rememberGroundElevation(elevation);
         }
-        if (!cg.isNull() && !this->hasSameCG(cg, callsign)) { this->insertCG(cg, callsign); }
+        if (!cg.isNull() && !this->hasSameCG(cg, callsign)) { this->insertCG(cg, modelString, callsign); }
     }
 
     void ISimulator::emitSimulatorCombinedStatus(SimulatorStatus oldStatus)

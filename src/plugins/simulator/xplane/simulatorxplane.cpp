@@ -782,15 +782,13 @@ namespace BlackSimPlugin
                 if (!m_xplaneAircraftObjects.contains(cs)) { continue; }
 
                 // we skip if we are not near ground
-                if (m_xplaneAircraftObjects[cs].getSituationAsSent().canLikelySkipNearGroundInterpolation()) { continue; }
+                const CXPlaneMPAircraft xpAircraft = m_xplaneAircraftObjects[cs];
+                if (xpAircraft.getSituationAsSent().canLikelySkipNearGroundInterpolation()) { continue; }
 
-                CAltitude elevationAlt(elevationsM[i], CLengthUnit::m());
-                elevationAlt.switchUnit(CLengthUnit::ft());
-                CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt);
-                elevation.setSinglePointRadius();
-                CLength cg(verticalOffsets[i], CLengthUnit::m());
-                cg.switchUnit(CLengthUnit::ft());
-                this->rememberElevationAndCG(callsigns[i], elevation, cg);
+                const CAltitude elevationAlt(elevationsM[i], CLengthUnit::m(), CLengthUnit::ft());
+                const CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
+                const CLength cg(verticalOffsets[i], CLengthUnit::m(), CLengthUnit::ft());
+                this->rememberElevationAndCG(cs, xpAircraft.getAircraftModelString(), elevation, cg);
             }
         }
 

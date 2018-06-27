@@ -511,8 +511,10 @@ namespace BlackCore
             // coming from CAirspaceMonitor::sendReadyForModelMatching
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
-            const CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
+            CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
+            const CLength cg = m_simulatorPlugin.second->getCGPerModelString(aircraftModel.getModelString());
+            if (!cg.isNull()) { aircraftModel.setCG(cg); }
             this->updateAircraftModel(callsign, aircraftModel, this->identifier());
             const CSimulatedAircraft aircraftAfterModelApplied = this->getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
             if (!aircraftAfterModelApplied.hasModelString())
@@ -520,7 +522,7 @@ namespace BlackCore
                 if (!aircraftAfterModelApplied.hasCallsign()) { return; } // removed
                 if (this->isAircraftInRange(aircraftAfterModelApplied.getCallsign())) { return; } // removed, but callsig, we did crosscheck
 
-                // callsign but not string
+                // callsign, but no model string
                 CLogMessage(this).error("Matching error for '%1', no model string") << aircraftAfterModelApplied.getCallsign().asString();
 
                 CSimulatedAircraft brokenAircraft(aircraftAfterModelApplied);

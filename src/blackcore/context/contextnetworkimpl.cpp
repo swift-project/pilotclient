@@ -820,6 +820,13 @@ namespace BlackCore
             return c;
         }
 
+        bool CContextNetwork::updateCGAndModelString(const CCallsign &callsign, const CLength &cg, const QString &modelString)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1) << modelString; }
+            const bool c = m_airspace->updateCGAndModelString(callsign, cg, modelString);
+            return c;
+        }
+
         void CContextNetwork::requestAtcBookingsUpdate() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }

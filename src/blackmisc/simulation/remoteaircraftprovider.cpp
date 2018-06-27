@@ -511,6 +511,16 @@ namespace BlackMisc
             return true;
         }
 
+        bool CRemoteAircraftProvider::updateCGAndModelString(const CCallsign &callsign, const CLength &cg, const QString &modelString)
+        {
+            QWriteLocker l(&m_lockAircraft);
+            if (!m_aircraftInRange.contains(callsign)) { return false; }
+            CSimulatedAircraft &aircraft = m_aircraftInRange[callsign];
+            if (!cg.isNull()) { aircraft.setCG(cg); }
+            if (!modelString.isEmpty()) { aircraft.setModelString(modelString); }
+            return true;
+        }
+
         void CRemoteAircraftProvider::updateMarkAllAsNotRendered()
         {
             const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
@@ -854,6 +864,18 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
             return this->provider()->updateAircraftGroundElevation(callsign, elevation, info);
+        }
+
+        bool CRemoteAircraftAware::updateCG(const CCallsign &callsign, const CLength &cg)
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->updateCG(callsign, cg);
+        }
+
+        bool CRemoteAircraftAware::updateCGAndModelString(const CCallsign &callsign, const CLength &cg, const QString &modelString)
+        {
+            Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+            return this->provider()->updateCGAndModelString(callsign, cg, modelString);
         }
 
         void CRemoteAircraftAware::updateMarkAllAsNotRendered()

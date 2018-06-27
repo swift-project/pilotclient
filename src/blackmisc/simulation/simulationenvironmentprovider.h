@@ -18,8 +18,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/geo/coordinategeodeticlist.h"
 #include "blackmisc/geo/elevationplane.h"
-
-#include <QMap>
+#include <QHash>
 #include <QObject>
 #include <QPair>
 
@@ -71,6 +70,10 @@ namespace BlackMisc
             //! Get CG per callsign, NULL if not found
             //! \threadsafe
             PhysicalQuantities::CLength getCG(const Aviation::CCallsign &callsign) const;
+
+            //! Get CG per model string, NULL if not found
+            //! \threadsafe
+            PhysicalQuantities::CLength getCGPerModelString(const QString &modelString) const;
 
             //! Has a CG?
             //! \threadsafe
@@ -153,6 +156,16 @@ namespace BlackMisc
             //! \threadsafe
             bool insertCG(const PhysicalQuantities::CLength &cg, const Aviation::CCallsign &cs);
 
+            //! Insert or replace a CG
+            //! \remark passing a NULL value will remove the CG
+            //! \threadsafe
+            bool insertCG(const PhysicalQuantities::CLength &cg, const QString &modelString, const Aviation::CCallsign &cs);
+
+            //! Insert or replace a CG
+            //! \remark passing a NULL value will remove the CG
+            //! \threadsafe
+            bool insertCGForModelString(const PhysicalQuantities::CLength &cg, const QString &modelString);
+
             //! Remove a CG
             //! \threadsafe
             int removeCG(const Aviation::CCallsign &cs);
@@ -162,15 +175,16 @@ namespace BlackMisc
 
         private:
             CSimulatorPluginInfo m_simulatorPluginInfo; //!< info object
-            QString m_simulatorName;    //!< name of simulator
-            QString m_simulatorDetails; //!< describes version etc.
-            QString m_simulatorVersion; //!< Simulator version
+            QString m_simulatorName;       //!< name of simulator
+            QString m_simulatorDetails;    //!< describes version etc.
+            QString m_simulatorVersion;    //!< Simulator version
             CAircraftModel m_defaultModel; //!< default model
-            int m_maxElevations = 100;  //!< How many elevations we keep
+            int m_maxElevations = 100;     //!< How many elevations we keep
             Geo::CCoordinateGeodeticList m_elvCoordinates;
-            QMap<Aviation::CCallsign, PhysicalQuantities::CLength> m_cgs; //! CGs
-            mutable int m_elvFound  = 0; //!< statistics only
-            mutable int m_elvMissed = 0; //!< statistics only
+            QHash<Aviation::CCallsign, PhysicalQuantities::CLength> m_cgsPerCallsign; //! CGs per callsign
+            QHash<QString, PhysicalQuantities::CLength> m_cgsPerModel; //!< CGs per model string
+            mutable int m_elvFound  = 0;   //!< statistics only
+            mutable int m_elvMissed = 0;   //!< statistics only
             mutable QReadWriteLock m_lockElvCoordinates; //!< lock m_coordinates
             mutable QReadWriteLock m_lockCG;      //!< lock CGs
             mutable QReadWriteLock m_lockModel;   //!< lock models

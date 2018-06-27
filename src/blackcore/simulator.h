@@ -290,7 +290,7 @@ namespace BlackCore
         virtual int physicallyRemoveAllRemoteAircraft() = 0;
 
         //! Set elevation and CG in the providers
-        void rememberElevationAndCG(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &cg);
+        void rememberElevationAndCG(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelString, const BlackMisc::Geo::CElevationPlane &elevation, const BlackMisc::PhysicalQuantities::CLength &cg);
 
         //! A requested elevation has been received
         virtual void callbackReceivedRequestedElevation(const BlackMisc::Geo::CElevationPlane &plane, const BlackMisc::Aviation::CCallsign &callsign);
