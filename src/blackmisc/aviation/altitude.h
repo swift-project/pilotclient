@@ -94,6 +94,12 @@ namespace BlackMisc
             //! Constructor, value as CAltitude::MeanSeaLevel
             CAltitude(double value, const PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_datum(MeanSeaLevel) {}
 
+            //! Constructor, value as CAltitude::MeanSeaLevel
+            CAltitude(double value, const PhysicalQuantities::CLengthUnit &unit, const PhysicalQuantities::CLengthUnit &switchUnit) : CLength(value, unit), m_datum(MeanSeaLevel)
+            {
+                this->switchUnit(switchUnit);
+            }
+
             //! Altitude as string
             CAltitude(const QString &altitudeAsString, PhysicalQuantities::CPqString::SeparatorMode mode = PhysicalQuantities::CPqString::SeparatorsLocale);
 

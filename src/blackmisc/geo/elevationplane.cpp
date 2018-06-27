@@ -56,6 +56,12 @@ namespace BlackMisc
             Q_ASSERT_X(!std::isnan(altitudeMSLft), Q_FUNC_INFO, "elv.nan");
         }
 
+        CElevationPlane::CElevationPlane(const CLatitude &lat, const CLongitude &lng, const CAltitude &altitude, const CLength &radius) :
+            CCoordinateGeodetic(lat, lng, altitude), m_radius(radius)
+        {
+            Q_ASSERT_X(altitude.isMeanSeaLevel(), Q_FUNC_INFO, "Need MSL");
+        }
+
         void CElevationPlane::setRadiusOrMinimum(const CLength &radius)
         {
             m_radius = ((radius.isNull() || radius < CElevationPlane::singlePointRadius())) ? CElevationPlane::singlePointRadius() : radius;

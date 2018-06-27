@@ -68,6 +68,12 @@ namespace BlackSimPlugin
             //! Set the aircraft
             void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Set model string
+            void setAircraftModelString(const QString &modelString);
+
+            //! Set CG
+            void setAircraftCG(const BlackMisc::PhysicalQuantities::CLength &cg);
+
             //! Get current lights (requested from simulator)
             const BlackMisc::Aviation::CAircraftLights &getCurrentLightsInSimulator() const { return m_currentLightsInSim; }
 

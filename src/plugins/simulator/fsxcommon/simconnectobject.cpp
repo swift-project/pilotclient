@@ -53,6 +53,18 @@ namespace BlackSimPlugin
             m_callsignByteArray = aircraft.getCallsignAsString().toLatin1();
         }
 
+        void CSimConnectObject::setAircraftModelString(const QString &modelString)
+        {
+            if (modelString.isEmpty()) { return; }
+            m_aircraft.setModelString(modelString);
+        }
+
+        void CSimConnectObject::setAircraftCG(const PhysicalQuantities::CLength &cg)
+        {
+            if (cg.isNull()) { return; }
+            m_aircraft.setCG(cg);
+        }
+
         void CSimConnectObject::setRequestId(DWORD id)
         {
             m_requestId = id;

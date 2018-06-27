@@ -29,6 +29,12 @@ namespace BlackMisc
             //! Init by double value
             CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
 
+            //! Init by double value and switch unit
+            CLength(double value, const CLengthUnit &unit, const CLengthUnit &switchUnit) : CPhysicalQuantity(value, unit)
+            {
+                this->switchUnit(switchUnit);
+            }
+
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CLength(const QString &unitString) : CPhysicalQuantity(unitString) {}
         };

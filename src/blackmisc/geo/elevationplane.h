@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Plane at given coordinates with radius and altitude
             CElevationPlane(double latDeg, double lngDeg, double altitudeMSLft, const PhysicalQuantities::CLength &radius);
 
+            //! Plane at given coordinates with radius and altitude
+            CElevationPlane(const CLatitude &lat, const CLongitude &lng, const Aviation::CAltitude &altitude, const PhysicalQuantities::CLength &radius);
+
             //! Constructors from CCoordinateGeodetic
             using CCoordinateGeodetic::CCoordinateGeodetic;
 

@@ -479,9 +479,11 @@ namespace BlackMisc
             m_models[NetworkModel] = model;
         }
 
-        void CSimulatedAircraft::setCG(const CLength &cg)
+        bool CSimulatedAircraft::setCG(const CLength &cg)
         {
-            m_models.setCG(cg);
+            if (cg.isNull()) { return false; }
+            const int c = m_models.setCG(cg);
+            return c > 0;
         }
 
         void CSimulatedAircraft::setModelString(const QString &modelString)
