@@ -25,38 +25,6 @@ namespace BlackCore
     namespace Vatsim
     {
         /*!
-         * Virtual air traffic servers
-         */
-        struct TTrafficServers : public BlackMisc::TSettingTrait<BlackMisc::Network::CServerList>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "network/trafficservers"; }
-
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("Traffic servers"); return name; }
-        };
-
-        /*!
-         * Currently selected virtual air traffic server
-         */
-        struct TCurrentTrafficServer : public BlackMisc::TSettingTrait<BlackMisc::Network::CServer>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "network/currenttrafficserver"; }
-
-            //! \copydoc BlackCore::TSettingTrait::humanReadable
-            static const QString &humanReadable() { static const QString name("Current traffic servers"); return name; }
-
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static const BlackMisc::Network::CServer &defaultValue()
-            {
-                using namespace BlackMisc::Network;
-                static const CServer dv = CServer::swiftFsdTestServer();
-                return dv;
-            }
-        };
-
-        /*!
          * Settings used with readers
          */
         class BLACKCORE_EXPORT CReaderSettings : public BlackMisc::CValueObject<BlackCore::Vatsim::CReaderSettings>
@@ -104,7 +72,7 @@ namespace BlackCore
             static const CReaderSettings &neverUpdateSettings();
 
         private:
-            BlackMisc::PhysicalQuantities::CTime m_initialTime { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
+            BlackMisc::PhysicalQuantities::CTime m_initialTime  { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
             BlackMisc::PhysicalQuantities::CTime m_periodicTime { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
             bool m_neverUpdate = false;
 

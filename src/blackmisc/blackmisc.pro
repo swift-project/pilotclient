@@ -33,6 +33,7 @@ HEADERS +=  *.h \
             $$PWD/math/*.h \
             $$PWD/network/*.h \
             $$PWD/network/data/*.h \
+            $$PWD/network/settings/*.h \
             $$PWD/pq/*.h \
             $$PWD/simulation/*.h \
             $$PWD/simulation/data/*.h \

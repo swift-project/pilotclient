@@ -16,6 +16,7 @@
 #include "blackcore/data/vatsimsetup.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/network/data/lastserver.h"
+#include "blackmisc/network/settings/servers.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/metaclass.h"
@@ -75,7 +76,7 @@ namespace BlackCore
             //! Settings have been changed
             void onSettingsChanged();
 
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CNetworkSetup::onSettingsChanged };
+            BlackMisc::CSettingReadOnly<BlackMisc::Network::Settings::TTrafficServers> m_otherTrafficNetworkServers { this, &CNetworkSetup::onSettingsChanged };
             BlackMisc::CData<BlackMisc::Network::Data::TLastServer> m_lastServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used server (VATSIM, other)
             BlackMisc::CData<BlackCore::Data::TVatsimLastServer> m_lastVatsimServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used VATSIM server
         };
