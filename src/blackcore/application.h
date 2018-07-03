@@ -561,7 +561,7 @@ namespace BlackCore
         QCommandLineParser m_parser;                           //!< cmd parser
         QCommandLineOption m_cmdHelp {"help"};                 //!< help option
         QCommandLineOption m_cmdVersion {"version"};           //!< version option
-        QCommandLineOption m_cmdDBusAddress {"empty"};         //!< DBus address
+        QCommandLineOption m_cmdDBusAddress {"emptyDBus"};     //!< DBus address
         QCommandLineOption m_cmdDevelopment {"dev"};           //!< Development flag
         QCommandLineOption m_cmdSharedDir {"shared"};          //!< Shared directory
         QCommandLineOption m_cmdClearCache {"clearcache"};     //!< Clear cache

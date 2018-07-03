@@ -281,10 +281,10 @@ namespace BlackGui
         int m_fontPointSize;       //!< current font size
         int m_minWidthChars  = -1; //!< min. width characters (based on current font metrics)
         int m_minHeightChars = -1; //!< min. height characters (based on current font metrics)
-        QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
-        QCommandLineOption m_cmdWindowMode      { "empty" };      //!< window mode (flags: frameless ...)
-        QCommandLineOption m_cmdWindowSizeReset { "empty" };      //!< window size reset
-        QCommandLineOption m_cmdWindowScaleSize { "empty" };      //!< window scale size
+        QCommandLineOption m_cmdWindowStateMinimized { "emptyMinimized" }; //!< window state (minimized)
+        QCommandLineOption m_cmdWindowMode      { "emptyWindowMode" };     //!< window mode (flags: frameless ...)
+        QCommandLineOption m_cmdWindowSizeReset { "emptySizeReset" };      //!< window size reset
+        QCommandLineOption m_cmdWindowScaleSize { "emptyScale" };          //!< window scale size
         CStyleSheetUtility m_styleSheetUtility {{}, this};        //!< style sheet utility
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
         bool m_saveMainWidgetState = true;                        //!< save/restore main widget's state
