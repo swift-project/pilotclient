@@ -15,6 +15,7 @@
 #include <QDesktopServices>
 
 using namespace BlackMisc;
+using namespace BlackGui::Views;
 
 namespace BlackGui
 {
@@ -25,10 +26,11 @@ namespace BlackGui
             ui(new Ui::COtherSwiftVersionsComponent)
         {
             ui->setupUi(this);
-            connect(ui->tb_DataDir, &QToolButton::clicked, this, &COtherSwiftVersionsComponent::openDataDirectory);
             ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDirectories();
             ui->le_ThisVersion->setText(sGui->getApplicationInfo().asOtherSwiftVersionString());
             ui->le_ThisVersion->home(false);
+            connect(ui->tb_DataDir, &QToolButton::clicked, this, &COtherSwiftVersionsComponent::openDataDirectory);
+            connect(ui->tvp_ApplicationInfo, &CApplicationInfoView::objectSelected, this, &COtherSwiftVersionsComponent::onObjectSelected);
         }
 
         COtherSwiftVersionsComponent::~COtherSwiftVersionsComponent()
@@ -50,6 +52,13 @@ namespace BlackGui
             const QString dir = CDirectoryUtils::applicationDataDirectory();
             const QUrl url = QUrl::fromLocalFile(dir);
             QDesktopServices::openUrl(url);
+        }
+
+        void COtherSwiftVersionsComponent::onObjectSelected(const CVariant &object)
+        {
+            if (!object.canConvert<CApplicationInfo>()) { return; }
+            const CApplicationInfo info(object.value<CApplicationInfo>());
+            emit this->versionChanged(info);
         }
     } // ns
 } // ns

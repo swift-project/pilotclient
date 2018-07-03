@@ -41,11 +41,18 @@ namespace BlackGui
             //! Get the selected other version
             BlackMisc::CApplicationInfo selectedOtherVersion() const;
 
+        signals:
+            //! Selection changed
+            void versionChanged(const BlackMisc::CApplicationInfo &info);
+
         private:
             QScopedPointer<Ui::COtherSwiftVersionsComponent> ui;
 
             //! Data directory
             void openDataDirectory();
+
+            //! Object has been selected
+            void onObjectSelected(const BlackMisc::CVariant &object);
         };
     } // ns
 } // ns

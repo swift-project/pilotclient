@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>362</width>
-    <height>238</height>
+    <width>305</width>
+    <height>233</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="lbl_ThisVersion">
      <property name="text">
-      <string>This version:</string>
+      <string>This:</string>
      </property>
     </widget>
    </item>
@@ -46,7 +46,7 @@
       <item>
        <widget class="QLabel" name="lbl_OtherVersions">
         <property name="text">
-         <string>Other versions:</string>
+         <string>Others:</string>
         </property>
        </widget>
       </item>
