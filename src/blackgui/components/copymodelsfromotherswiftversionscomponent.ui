@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>508</width>
-    <height>420</height>
+    <height>495</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Copy models from other swift versions</string>
   </property>
-  <layout class="QVBoxLayout" name="vl_CopyModelsFromOtherSwiftVersions" stretch="2,1,4">
+  <layout class="QVBoxLayout" name="vl_CopyModelsFromOtherSwiftVersions" stretch="2,1,5">
    <item>
     <widget class="QGroupBox" name="gb_OtherSwiftVersions">
      <property name="title">
@@ -25,7 +25,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>50</height>
+          <height>125</height>
          </size>
         </property>
        </widget>

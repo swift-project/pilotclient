@@ -48,6 +48,9 @@ namespace BlackGui
             //! Confirm override
             bool confirmOverride(const QString &msg);
 
+            //! Init the simulators which can be copied
+            void onVersionChanged(const BlackMisc::CApplicationInfo &otherVersion);
+
             QScopedPointer<Ui::CCopyModelsFromOtherSwiftVersionsComponent> ui;
 
             // caches will be explicitly initialized in copy

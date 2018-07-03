@@ -34,8 +34,10 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::CheckBoxes);
+            ui->comp_SimulatorSelector->clear();
             ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnModelSet);
             connect(ui->pb_StartCopying, &QPushButton::clicked, this, &CCopyModelsFromOtherSwiftVersionsComponent::copy);
+            connect(ui->comp_OtherSwiftVersions, &COtherSwiftVersionsComponent::versionChanged, this, &CCopyModelsFromOtherSwiftVersionsComponent::onVersionChanged);
         }
 
         CCopyModelsFromOtherSwiftVersionsComponent::~CCopyModelsFromOtherSwiftVersionsComponent()
@@ -157,6 +159,16 @@ namespace BlackGui
             if (ui->cb_Silent->isChecked()) { return true; }
             const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Confirm override"), withQUestionMark(msg), QMessageBox::Yes | QMessageBox::No);
             return reply == QMessageBox::Yes;
+        }
+
+        void CCopyModelsFromOtherSwiftVersionsComponent::onVersionChanged(const CApplicationInfo &otherVersion)
+        {
+            const CSimulatorInfo cacheSims = m_modelCaches.otherVersionSimulatorsWithFile(otherVersion);
+            const CSimulatorInfo setSims = m_modelSetCaches.otherVersionSimulatorsWithFile(otherVersion);
+
+            ui->cb_ModelCache->setChecked(cacheSims.isAnySimulator());
+            ui->cb_ModelSet->setChecked(setSims.isAnySimulator());
+            ui->comp_SimulatorSelector->setValue(setSims);
         }
 
         bool CCopyModelsFromOtherSwiftVersionsWizardPage::validatePage()
