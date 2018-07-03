@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/cachesettingsutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
-#include "blackmisc/simulation/data/modelcaches.h"
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -51,6 +52,22 @@ namespace BlackMisc
             int IMultiSimulatorModelCaches::getCachedModelsCount(const CSimulatorInfo &simulator) const
             {
                 return this->getCachedModels(simulator).size();
+            }
+
+            bool IMultiSimulatorModelCaches::hasOtherVersionFile(const CApplicationInfo &info, const CSimulatorInfo &simulator) const
+            {
+                const QString fn = this->getFilename(simulator);
+                return CCacheSettingsUtils::hasOtherVersionCacheFile(info, fn);
+            }
+
+            CSimulatorInfo IMultiSimulatorModelCaches::otherVersionSimulatorsWithFile(const CApplicationInfo &info) const
+            {
+                CSimulatorInfo sim = CSimulatorInfo(CSimulatorInfo::None);
+                if (this->hasOtherVersionFile(info, CSimulatorInfo::fsx())) { sim.addSimulator(CSimulatorInfo::fsx()); }
+                if (this->hasOtherVersionFile(info, CSimulatorInfo::p3d())) { sim.addSimulator(CSimulatorInfo::p3d()); }
+                if (this->hasOtherVersionFile(info, CSimulatorInfo::fs9())) { sim.addSimulator(CSimulatorInfo::fs9()); }
+                if (this->hasOtherVersionFile(info, CSimulatorInfo::xplane())) { sim.addSimulator(CSimulatorInfo::xplane()); }
+                return sim;
             }
 
             QStringList IMultiSimulatorModelCaches::getAllFilenames() const

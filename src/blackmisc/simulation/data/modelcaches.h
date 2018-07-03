@@ -12,12 +12,13 @@
 #ifndef BLACKMISC_SIMULATION_DATA_MODELCACHES
 #define BLACKMISC_SIMULATION_DATA_MODELCACHES
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/applicationinfo.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/datacache.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QDateTime>
 #include <QObject>
@@ -169,6 +170,12 @@ namespace BlackMisc
 
                 //! Get filename for simulator cache file
                 virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
+
+                //! Has the other version the file?
+                bool hasOtherVersionFile(const BlackMisc::CApplicationInfo &info, const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+
+                //! Simulators of given other versionwhich have a cache file
+                BlackMisc::Simulation::CSimulatorInfo otherVersionSimulatorsWithFile(const BlackMisc::CApplicationInfo &info) const;
 
                 //! All file names
                 virtual QStringList getAllFilenames() const;
