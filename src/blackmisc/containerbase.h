@@ -142,9 +142,29 @@ namespace BlackMisc
         }
 
         //! Assign from JSON object string
-        void convertFromJson(const QString &jsonString)
+        void convertFromJson(const QString &jsonString, bool acceptCacheFormat = false)
         {
-            this->convertFromJson(Json::jsonObjectFromString(jsonString));
+            if (jsonString.isEmpty()) { return; }
+            const QJsonObject jsonObject = Json::jsonObjectFromString(jsonString, acceptCacheFormat);
+            this->convertFromJson(jsonObject);
+        }
+
+        //! Static version of convertFromJson
+        static Derived fromJson(const QJsonObject &json)
+        {
+            Derived derived;
+            derived.convertFromJson(json);
+            return derived;
+        }
+
+        //! Static version of convertFromJson
+        static Derived fromJson(const QString &jsonString, bool acceptCacheJson = false)
+        {
+            Derived obj;
+            if (jsonString.isEmpty()) { return obj; }
+            const QJsonObject jsonObj = acceptCacheJson ? Json::swiftDataObjectValue(jsonString) : Json::jsonObjectFromString(jsonString);
+            obj.convertFromJson(jsonObj);
+            return obj;
         }
 
         //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
