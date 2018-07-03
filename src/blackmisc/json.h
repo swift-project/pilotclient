@@ -24,7 +24,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonValueRef>
-#include <QString>
+#include <QStringList>
 #include <QtGlobal>
 #include <type_traits>
 #include <utility>
@@ -246,6 +246,27 @@ namespace BlackMisc
         //! JSON Array from string
         //! \ingroup JSON
         BLACKMISC_EXPORT QJsonArray jsonArrayFromString(const QString &json);
+
+        //! First JSON string object marked as "value"
+        BLACKMISC_EXPORT QString firstJsonValueAsString(const QString &json);
+
+        //! First JSON string object marked as "value"
+        BLACKMISC_EXPORT QString firstJsonValueAsString(const QJsonObject &json);
+
+        //! First JSON string object marked as "value"
+        BLACKMISC_EXPORT int firstJsonValueAsInt(const QString &json, int defaultValue = -1, bool *ok = nullptr);
+
+        //! First JSON string object marked as "value"
+        BLACKMISC_EXPORT int firstJsonValueAsInt(const QJsonObject &json, int defaultValue = -1, bool *ok = nullptr);
+
+        //! First JSON string list object marked as "value"
+        BLACKMISC_EXPORT QStringList firstJsonValueAsStringList(const QString &json);
+
+        //! First JSON string list object marked as "value"
+        BLACKMISC_EXPORT QStringList firstJsonValueAsStringList(const QJsonObject &json);
+
+        //! JSON array to QStringList
+        BLACKMISC_EXPORT QStringList arrayToQStringList(const QJsonArray &array);
 
         //! Creates an incremental json object from two existing objects
         BLACKMISC_EXPORT QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
