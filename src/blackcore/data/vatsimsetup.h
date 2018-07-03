@@ -126,6 +126,9 @@ namespace BlackCore
 
             //! \copydoc BlackCore::TDataTrait::isPinned
             static constexpr bool isPinned() { return true; }
+
+            //! \copydoc BlackCore::TDataTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("VATSIM setup"); return name; }
         };
 
         //! Trait for last (most recently) used VATSIM server and user
@@ -136,6 +139,9 @@ namespace BlackCore
 
             //! \copydoc BlackCore::TDataTrait::isPinned
             static constexpr bool isPinned() { return true; }
+
+            //! \copydoc BlackCore::TDataTrait::humanReadable
+            static const QString &humanReadable() { static const QString name("Last VATSIM server"); return name; }
         };
     } // ns
 } // ns

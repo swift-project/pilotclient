@@ -29,6 +29,9 @@ namespace BlackMisc
 
                 //! \copydoc BlackCore::TDataTrait::isPinned
                 static constexpr bool isPinned() { return true; }
+
+                //! \copydoc BlackCore::TDataTrait::humanReadable
+                static const QString &humanReadable() { static const QString name("Last used server"); return name; }
             };
         } // ns
     } // ns
