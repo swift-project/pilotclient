@@ -78,22 +78,22 @@ namespace BlackMisc
             CSimulatorInfo(int flagsAsInt);
 
             //! Constructor
-            CSimulatorInfo(bool fsx, bool fs9, bool xp, bool p3d);
+            CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D);
 
             //! Unspecified simulator
             bool isUnspecified() const;
 
             //! FSX?
-            bool fsx() const;
+            bool isFSX() const;
 
             //! FS9?
-            bool fs9() const;
+            bool isFS9() const;
 
             //! XPlane
-            bool xplane() const;
+            bool isXPlane() const;
 
             //! P3D?
-            bool p3d() const;
+            bool isP3D() const;
 
             //! Any simulator?
             bool isAnySimulator() const;
@@ -138,7 +138,7 @@ namespace BlackMisc
             void addSimulator(Simulator s) { m_simulator |= static_cast<int>(s); }
 
             //! Add simulator
-            void addSimulator(CSimulatorInfo simulatorInfo) { this->addSimulator(simulatorInfo.getSimulator()); }
+            void addSimulator(const CSimulatorInfo &simulatorInfo) { this->addSimulator(simulatorInfo.getSimulator()); }
 
             //! All simulators
             void setAllSimulators() { setSimulator(All); }
@@ -162,7 +162,7 @@ namespace BlackMisc
             const QString &toPluginIdentifier() const;
 
             //! Bool flags to enum
-            static Simulator boolToFlag(bool fsx, bool fs9, bool xp, bool p3d);
+            static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D);
 
             //! Identifer, as provided by plugin
             static Simulator identifierToSimulator(const QString &identifier);
@@ -184,6 +184,13 @@ namespace BlackMisc
 
             //! From database JSON
             static CSimulatorInfo fromDatabaseJson(const QJsonObject &json, const QString &prefix);
+
+            //! Const simulator info objects @{
+            static const CSimulatorInfo &fsx() { static const CSimulatorInfo s(FSX); return s; }
+            static const CSimulatorInfo &p3d() { static const CSimulatorInfo s(P3D); return s; }
+            static const CSimulatorInfo &fs9() { static const CSimulatorInfo s(FS9); return s; }
+            static const CSimulatorInfo &xplane() { static const CSimulatorInfo s(XPLANE); return s; }
+            //! @}
 
         private:
             int m_simulator = static_cast<int>(None);

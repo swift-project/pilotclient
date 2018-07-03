@@ -35,7 +35,7 @@ namespace BlackGui
             if (sGui->getIContextSimulator()->isSimulatorAvailable())
             {
                 // do not show if already connected with another simulator
-                if (!sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo().xplane()) { return 0; }
+                if (!sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo().isXPlane()) { return 0; }
             }
         }
 

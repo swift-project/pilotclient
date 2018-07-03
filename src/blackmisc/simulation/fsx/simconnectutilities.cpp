@@ -170,16 +170,16 @@ namespace BlackMisc
                 if (docDir.isEmpty()) { return ""; }
                 if (!simulator.isSingleSimulator() || !simulator.isFsxP3DFamily()) return "";
 
-                const QString iniDir = CFileUtils::appendFilePaths(docDir, simulator.p3d() ? "Prepar3D v4 Files" : "Flight Simulator X Files");
+                const QString iniDir = CFileUtils::appendFilePaths(docDir, simulator.isP3D() ? "Prepar3D v4 Files" : "Flight Simulator X Files");
                 if (getSimConnectIniFileDirectories().isEmpty()) { return iniDir; }
 
                 for (const QString &dir : getSimConnectIniFileDirectories())
                 {
-                    if (simulator.p3d())
+                    if (simulator.isP3D())
                     {
                         if (dir.contains("Prepar3D", Qt::CaseInsensitive)) { return dir; }
                     }
-                    else if (simulator.fsx())
+                    else if (simulator.isFSX())
                     {
                         if (dir.contains("Flight Simulator", Qt::CaseInsensitive)) { return dir; }
                     }

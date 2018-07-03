@@ -274,7 +274,7 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
             std::unique_ptr<IAircraftModelLoader> loader;
-            if (simulator.xplane())
+            if (simulator.isXPlane())
             {
                 loader = std::make_unique<CAircraftModelLoaderXPlane>();
             }

@@ -58,29 +58,29 @@ namespace BlackMisc
             return m_simulator < 1;
         }
 
-        bool CSimulatorInfo::fsx() const
+        bool CSimulatorInfo::isFSX() const
         {
             return getSimulator().testFlag(FSX);
         }
 
-        bool CSimulatorInfo::fs9() const
+        bool CSimulatorInfo::isFS9() const
         {
             return getSimulator().testFlag(FS9);
         }
 
-        bool CSimulatorInfo::xplane() const
+        bool CSimulatorInfo::isXPlane() const
         {
             return getSimulator().testFlag(XPLANE);
         }
 
-        bool CSimulatorInfo::p3d() const
+        bool CSimulatorInfo::isP3D() const
         {
             return getSimulator().testFlag(P3D);
         }
 
         bool CSimulatorInfo::isAnySimulator() const
         {
-            return fsx() || fs9() || xplane() || p3d();
+            return isFSX() || isFS9() || isXPlane() || isP3D();
         }
 
         bool CSimulatorInfo::isSingleSimulator() const
@@ -100,30 +100,30 @@ namespace BlackMisc
 
         bool CSimulatorInfo::isAllSimulators() const
         {
-            return fsx() && fs9() && xplane() && p3d();
+            return isFSX() && isFS9() && isXPlane() && isP3D();
         }
 
         bool CSimulatorInfo::isMicrosoftSimulator() const
         {
-            return fsx() || fs9();
+            return isFSX() || isFS9();
         }
 
         bool CSimulatorInfo::isMicrosoftOrPrepare3DSimulator() const
         {
-            return isMicrosoftSimulator() || p3d();
+            return isMicrosoftSimulator() || isP3D();
         }
 
         bool CSimulatorInfo::isFsxP3DFamily() const
         {
-            return fsx() || p3d();
+            return isFSX() || isP3D();
         }
 
         int CSimulatorInfo::numberSimulators() const
         {
-            int c = fs9() ? 1 : 0;
-            if (fsx()) { c++; }
-            if (xplane()) { c++; }
-            if (p3d()) { c++; }
+            int c = isFS9() ? 1 : 0;
+            if (isFSX()) { c++; }
+            if (isXPlane()) { c++; }
+            if (isP3D()) { c++; }
             return c;
         }
 
@@ -265,9 +265,9 @@ namespace BlackMisc
             {
                 return CSimulatorInfo("XPLANE");
             }
-            if (locallyInstalled.p3d()) { return CSimulatorInfo("P3D"); }
-            if (locallyInstalled.fsx()) { return CSimulatorInfo("FSX"); }
-            if (locallyInstalled.fs9()) { return CSimulatorInfo("FS9"); }
+            if (locallyInstalled.isP3D()) { return CSimulatorInfo("P3D"); }
+            if (locallyInstalled.isFSX()) { return CSimulatorInfo("FSX"); }
+            if (locallyInstalled.isFS9()) { return CSimulatorInfo("FS9"); }
 
             // fallback
             return CSimulatorInfo("P3D");
@@ -367,10 +367,10 @@ namespace BlackMisc
                 m_counts[4] = m_counts[4] + 1;
                 return;
             }
-            if (simulator.fsx())    { m_counts[0]++; }
-            if (simulator.p3d())    { m_counts[1]++; }
-            if (simulator.fs9())    { m_counts[2]++; }
-            if (simulator.xplane()) { m_counts[3]++;  }
+            if (simulator.isFSX())    { m_counts[0]++; }
+            if (simulator.isP3D())    { m_counts[1]++; }
+            if (simulator.isFS9())    { m_counts[2]++; }
+            if (simulator.isXPlane()) { m_counts[3]++;  }
         }
 
         int CCountPerSimulator::internalIndex(const CSimulatorInfo &simulator)

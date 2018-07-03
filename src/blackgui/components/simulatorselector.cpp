@@ -87,16 +87,16 @@ namespace BlackGui
             if (simulator == current) { return; } // avoid unnecessary signals
 
             // checkboxes
-            ui->cb_FSX->setChecked(simulator.fsx());
-            ui->cb_FS9->setChecked(simulator.fs9());
-            ui->cb_XPlane->setChecked(simulator.xplane());
-            ui->cb_P3D->setChecked(simulator.p3d());
+            ui->cb_FSX->setChecked(simulator.isFSX());
+            ui->cb_FS9->setChecked(simulator.isFS9());
+            ui->cb_XPlane->setChecked(simulator.isXPlane());
+            ui->cb_P3D->setChecked(simulator.isP3D());
 
             // radio buttons
-            if (simulator.fsx())    { ui->rb_FSX->setChecked(simulator.fsx()); return; }
-            if (simulator.fs9())    { ui->rb_FS9->setChecked(simulator.fs9()); return; }
-            if (simulator.xplane()) { ui->rb_XPlane->setChecked(simulator.xplane()); return; }
-            if (simulator.p3d())    { ui->rb_P3D->setChecked(simulator.p3d()); return; }
+            if (simulator.isFSX())    { ui->rb_FSX->setChecked(simulator.isFSX()); return; }
+            if (simulator.isFS9())    { ui->rb_FS9->setChecked(simulator.isFS9()); return; }
+            if (simulator.isXPlane()) { ui->rb_XPlane->setChecked(simulator.isXPlane()); return; }
+            if (simulator.isP3D())    { ui->rb_P3D->setChecked(simulator.isP3D()); return; }
         }
 
         void CSimulatorSelector::setToLastSelection()

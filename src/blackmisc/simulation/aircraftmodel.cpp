@@ -81,13 +81,13 @@ namespace BlackMisc
 
             // sims
             const CSimulatorInfo sim(getSimulator());
-            QString flag = CDatastoreUtility::boolToDbYN(sim.fsx());
+            QString flag = CDatastoreUtility::boolToDbYN(sim.isFSX());
             obj.insert("simfsx", QJsonValue(flag));
-            flag = CDatastoreUtility::boolToDbYN(sim.p3d());
+            flag = CDatastoreUtility::boolToDbYN(sim.isP3D());
             obj.insert("simp3d", QJsonValue(flag));
-            flag = CDatastoreUtility::boolToDbYN(sim.fs9());
+            flag = CDatastoreUtility::boolToDbYN(sim.isFS9());
             obj.insert("simfs9", QJsonValue(flag));
-            flag = CDatastoreUtility::boolToDbYN(sim.xplane());
+            flag = CDatastoreUtility::boolToDbYN(sim.isXPlane());
             obj.insert("simxplane", QJsonValue(flag));
 
             // foreign keys

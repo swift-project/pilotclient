@@ -54,10 +54,10 @@ namespace BlackGui
                 sims = m_modelSets.simulatorsWithInitializedCache();
             }
 
-            const bool p3d = (sims.p3d() || !CFsCommonUtil::p3dDir().isEmpty()) && CBuildConfig::isCompiledWithP3DSupport();
-            const bool fsx = (sims.fsx() || !CFsCommonUtil::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
-            const bool fs9 = (sims.fs9() || !CFsCommonUtil::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
-            const bool xp = sims.xplane() && CBuildConfig::isCompiledWithXPlaneSupport();
+            const bool p3d = (sims.isP3D() || !CFsCommonUtil::p3dDir().isEmpty()) && CBuildConfig::isCompiledWithP3DSupport();
+            const bool fsx = (sims.isFSX() || !CFsCommonUtil::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
+            const bool fs9 = (sims.isFS9() || !CFsCommonUtil::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
+            const bool xp = sims.isXPlane() && CBuildConfig::isCompiledWithXPlaneSupport();
 
             ui->cb_P3D->setChecked(p3d);
             ui->cb_FSX->setChecked(fsx);

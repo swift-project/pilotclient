@@ -417,7 +417,7 @@ namespace BlackGui
                 Q_ASSERT_X(ownModelSetComp, Q_FUNC_INFO, "Cannot access parent");
                 if (m_setActions.isEmpty())
                 {
-                    if (sims.fsx())
+                    if (sims.isFSX())
                     {
                         QAction *a = new QAction(CIcons::appModels16(), "FSX models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
@@ -435,7 +435,7 @@ namespace BlackGui
                         });
                         m_setNewActions.append(a);
                     }
-                    if (sims.p3d())
+                    if (sims.isP3D())
                     {
                         QAction *a = new QAction(CIcons::appModels16(), "P3D models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
@@ -453,7 +453,7 @@ namespace BlackGui
                         });
                         m_setNewActions.append(a);
                     }
-                    if (sims.fs9())
+                    if (sims.isFS9())
                     {
                         QAction *a = new QAction(CIcons::appModels16(), "FS9 models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
@@ -471,7 +471,7 @@ namespace BlackGui
                         });
                         m_setNewActions.append(a);
                     }
-                    if (sims.xplane())
+                    if (sims.isXPlane())
                     {
                         QAction *a = new QAction(CIcons::appModels16(), "XPlane models", this);
                         connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)

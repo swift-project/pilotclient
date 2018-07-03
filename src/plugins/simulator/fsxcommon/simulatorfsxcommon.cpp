@@ -2075,12 +2075,12 @@ namespace BlackSimPlugin
             const QString connectedSimName = m_simulatorName.toLower().trimmed();
 
             if (connectedSimName.isEmpty()) { return false; }
-            if (pluginSim.p3d())
+            if (pluginSim.isP3D())
             {
                 // P3D drivers only works with P3D
                 return connectedSimName.contains("lockheed") || connectedSimName.contains("martin") || connectedSimName.contains("p3d") || connectedSimName.contains("prepar");
             }
-            else if (pluginSim.fsx())
+            else if (pluginSim.isFSX())
             {
                 // FSX drivers only works with FSX
                 return connectedSimName.contains("fsx") || connectedSimName.contains("microsoft") || connectedSimName.contains("simulator x");

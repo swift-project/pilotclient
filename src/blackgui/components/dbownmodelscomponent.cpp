@@ -256,7 +256,7 @@ namespace BlackGui
 
                 if (m_loadActions.isEmpty()) { m_loadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
                 menuActions.addMenuSimulator();
-                if (sims.fsx())
+                if (sims.isFSX())
                 {
                     if (!m_loadActions[0])
                     {
@@ -269,7 +269,7 @@ namespace BlackGui
                     }
                     menuActions.addAction(m_loadActions[0], CMenuAction::pathSimulator());
                 }
-                if (sims.p3d())
+                if (sims.isP3D())
                 {
                     if (!m_loadActions[1])
                     {
@@ -282,7 +282,7 @@ namespace BlackGui
                     }
                     menuActions.addAction(m_loadActions[1], CMenuAction::pathSimulator());
                 }
-                if (sims.fs9())
+                if (sims.isFS9())
                 {
                     if (!m_loadActions[2])
                     {
@@ -295,7 +295,7 @@ namespace BlackGui
                     }
                     menuActions.addAction(m_loadActions[2], CMenuAction::pathSimulator());
                 }
-                if (sims.xplane())
+                if (sims.isXPlane())
                 {
                     if (!m_loadActions[3])
                     {
@@ -315,7 +315,7 @@ namespace BlackGui
                 {
                     if (m_reloadActions.isEmpty()) { m_reloadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}); }
                     menuActions.addMenu(CIcons::refresh16(), "Force model reload", CMenuAction::pathSimulatorModelsReload());
-                    if (sims.fsx())
+                    if (sims.isFSX())
                     {
                         if (!m_reloadActions[0])
                         {
@@ -341,7 +341,7 @@ namespace BlackGui
                         menuActions.addAction(m_reloadActions[0], CMenuAction::pathSimulatorModelsReload());
                         menuActions.addAction(m_reloadActions[1], CMenuAction::pathSimulatorModelsReload());
                     }
-                    if (sims.p3d())
+                    if (sims.isP3D())
                     {
                         if (!m_reloadActions[2])
                         {
@@ -367,7 +367,7 @@ namespace BlackGui
                         menuActions.addAction(m_reloadActions[2], CMenuAction::pathSimulatorModelsReload());
                         menuActions.addAction(m_reloadActions[3], CMenuAction::pathSimulatorModelsReload());
                     }
-                    if (sims.fs9())
+                    if (sims.isFS9())
                     {
                         if (!m_reloadActions[4])
                         {
@@ -393,7 +393,7 @@ namespace BlackGui
                         menuActions.addAction(m_reloadActions[4], CMenuAction::pathSimulatorModelsReload());
                         menuActions.addAction(m_reloadActions[5], CMenuAction::pathSimulatorModelsReload());
                     }
-                    if (sims.xplane())
+                    if (sims.isXPlane())
                     {
                         if (!m_reloadActions[6])
                         {

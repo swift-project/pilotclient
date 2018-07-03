@@ -59,10 +59,10 @@ namespace BlackMisc
         CSimulatorInfoList CSimulatorInfoList::splitIntoSingleSimulators(const CSimulatorInfo &sim)
         {
             CSimulatorInfoList sims;
-            if (sim.fs9()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FS9)); }
-            if (sim.fsx()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FSX)); }
-            if (sim.p3d()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::P3D)); }
-            if (sim.xplane()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
+            if (sim.isFS9()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FS9)); }
+            if (sim.isFSX()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FSX)); }
+            if (sim.isP3D()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::P3D)); }
+            if (sim.isXPlane()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
             return sims;
         }
     } // namespace
