@@ -33,6 +33,7 @@ namespace BlackGui
             enum Pages
             {
                 Legal,
+                CopySettingsAndCaches,
                 CopyModels,
                 CopySettings,
                 CopyCaches,

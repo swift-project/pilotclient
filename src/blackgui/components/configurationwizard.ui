@@ -78,6 +78,31 @@
     </item>
    </layout>
   </widget>
+  <widget class="BlackGui::Components::CCopySettingsAndCachesWizardPage" name="wp_CopySettingsAndCaches">
+   <property name="title">
+    <string>Copy settings and caches</string>
+   </property>
+   <property name="subTitle">
+    <string>Copy settings and caches from other swift versions</string>
+   </property>
+   <layout class="QVBoxLayout" name="vl_CopySettingsAndCaches">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CCopySettingsAndCachesComponent" name="comp_CopySettingsAndCachesComponen"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="BlackGui::Components::CCopyConfigurationWizardPage" name="wp_CopySettings">
    <property name="title">
     <string>Copy configuration from another installation</string>
@@ -411,6 +436,18 @@
    <class>BlackGui::Components::CLegalInfoWizardPage</class>
    <extends>QWizardPage</extends>
    <header>blackgui/components/legalinfocomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCopySettingsAndCachesComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/copysettingsandcachescomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCopySettingsAndCachesWizardPage</class>
+   <extends>QWizardPage</extends>
+   <header>blackgui/components/copysettingsandcachescomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
