@@ -158,6 +158,9 @@ namespace BlackSimPlugin
             //! \private
             static DWORD unitTestRequestId(CSimConnectObject::SimObjectType type);
 
+            //! Encapsulates creating QString from FSX string data
+            static QString fsxCharToQString(const char *fsxChar, int size = -1);
+
         protected:
             //! SimConnect callback
             //! \note all tasks called in this function (i.e, all called functions) must perform fast or shall be called asynchronously
@@ -416,9 +419,6 @@ namespace BlackSimPlugin
 
             //! Insert an new SimConnect object
             CSimConnectObject insertNewSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId);
-
-            //! Encapsulates creating QString from FSX string data
-            static QString fsxCharToQString(const char *fsxChar, int size = -1);
 
             static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
             static constexpr int SkipUpdateCyclesForCockpit    = 10; //!< skip x cycles before updating cockpit again
