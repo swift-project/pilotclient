@@ -31,11 +31,6 @@ namespace BlackSimPlugin
             m_interpolator->initCorrespondingModel(aircraft.getModel());
         }
 
-        bool CXPlaneMPAircraft::isSameAsSent(const CAircraftSituation &position) const
-        {
-            return m_situationAsSent == position;
-        }
-
         QString CXPlaneMPAircraft::getInterpolatorInfo(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
         {
             Q_ASSERT(m_interpolator);

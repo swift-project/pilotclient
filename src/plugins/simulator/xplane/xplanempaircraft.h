@@ -46,32 +46,6 @@ namespace BlackSimPlugin
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
 
-            //! Set the aircraft
-            void setAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) { m_aircraft = aircraft; }
-
-            //! Parts as sent to simulator
-            const BlackMisc::Aviation::CAircraftParts &getPartsAsSent() const { return m_partsAsSent; }
-
-            //! Parts as sent to simulator
-            void setPartsAsSent(const BlackMisc::Aviation::CAircraftParts &parts) { m_partsAsSent = parts; }
-
-            //! Situation as sent to simulator
-            const BlackMisc::Aviation::CAircraftSituation &getSituationAsSent() const { return m_situationAsSent; }
-
-            //! Position as sent
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            void setSituationAsSent(const BlackMisc::Aviation::CAircraftSituation &position) { m_situationAsSent = position; }
-
-            //! Same as sent
-            //! \deprecated KB T273 use BlackCore::CSimulatorCommon isEqual / remember functions
-            bool isSameAsSent(const BlackMisc::Aviation::CAircraftSituation &position) const;
-
-            //! VTOL?
-            bool isVtol() const { return m_aircraft.isVtol(); }
-
-            //! Engine count
-            int getEngineCount() const { return m_aircraft.getEnginesCount(); }
-
             //! \copydoc BlackMisc::Simulation::CInterpolator::getInterpolatorInfo
             QString getInterpolatorInfo(BlackMisc::Simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
@@ -87,8 +61,6 @@ namespace BlackSimPlugin
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
             QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
-            BlackMisc::Aviation::CAircraftSituation m_situationAsSent;
-            BlackMisc::Aviation::CAircraftParts m_partsAsSent;
         };
 
         //! Simulator objects (aka AI aircraft)
