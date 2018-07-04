@@ -1197,8 +1197,8 @@ namespace BlackSimPlugin
             const CCallsign cs(pseudoCallsign.arg(index));
             const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe(); // add
             const SIMCONNECT_DATA_INITPOSITION initialPosition = CSimulatorFsxCommon::coordinateToFsxPosition(coordinate);
-            // const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(cs.asString().right(12)), initialPosition, requestId);
-            const HRESULT hr = SimConnect_AICreateSimulatedObject(m_hSimConnect, qPrintable(modelString), initialPosition, requestId);
+            const HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, qPrintable(modelString), qPrintable(cs.asString().right(12)), initialPosition, requestId);
+            // const HRESULT hr = SimConnect_AICreateSimulatedObject(m_hSimConnect, qPrintable(modelString), initialPosition, requestId);
             if (this->isTracingSendId()) { this->traceSendId(0, Q_FUNC_INFO, QString("Adding probe, req.id: %1").arg(requestId));}
 
             bool ok = false;
