@@ -766,15 +766,25 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()
         {
+            //! \todo KB 2018-07 It is not required to request all elevations and CGs, but only for aircraft "near ground relevant"
+            // - we could use the elevation cache and CG cache to decide if we need to request
+            // - if an aircraft is on ground but not moving, we do not need to request elevation if we already have it (it will not change
             if (!isConnected()) { return; }
-            m_trafficProxy->getRemoteAircraftsData(m_xplaneAircraftObjects.getAllCallsignStrings(), [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsM, const QDoubleList & verticalOffsets)
+            CCallsignSet callsigns = m_xplaneAircraftObjects.getAllCallsigns();
+            const CCallsignSet remove = this->getLastSentCanLikelySkipNearGroundInterpolation().getCallsigns();
+            callsigns.remove(remove);
+            if (callsigns.isEmpty()) { return; }
+            const QStringList csStrings = callsigns.getCallsignStrings();
+
+            m_trafficProxy->getRemoteAircraftsData(csStrings, [ = ](const QStringList & callsigns, const QDoubleList & latitudesDeg, const QDoubleList & longitudesDeg, const QDoubleList & elevationsM, const QDoubleList & verticalOffsets)
             {
-                updateRemoteAircraftsFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
+                updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsM, verticalOffsets);
             });
         }
 
-        void CSimulatorXPlane::updateRemoteAircraftsFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-                const QDoubleList &elevationsM, const QDoubleList &verticalOffsets)
+        void CSimulatorXPlane::updateRemoteAircraftFromSimulator(
+            const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
+            const QDoubleList &elevationsM, const QDoubleList &verticalOffsets)
         {
             for (int i = 0; i < callsigns.size(); i++)
             {
@@ -783,8 +793,6 @@ namespace BlackSimPlugin
 
                 // we skip if we are not near ground
                 const CXPlaneMPAircraft xpAircraft = m_xplaneAircraftObjects[cs];
-                if (xpAircraft.getSituationAsSent().canLikelySkipNearGroundInterpolation()) { continue; }
-
                 const CAltitude elevationAlt(elevationsM[i], CLengthUnit::m(), CLengthUnit::ft());
                 const CElevationPlane elevation(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
                 const CLength cg(verticalOffsets[i], CLengthUnit::m(), CLengthUnit::ft());
@@ -936,8 +944,8 @@ namespace BlackSimPlugin
             // user changed settings, restart the listener
             if (m_watcher)
             {
-                stop();
-                start();
+                this->stop();
+                this->start();
             }
         }
     } // namespace

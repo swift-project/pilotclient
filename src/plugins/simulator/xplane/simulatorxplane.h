@@ -179,8 +179,8 @@ namespace BlackSimPlugin
             void updateRemoteAircraft();
 
             void requestRemoteAircraftDataFromXPlane();
-            void updateRemoteAircraftsFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-                                                    const QDoubleList &elevationsM, const QDoubleList &verticalOffsets);
+            void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
+                                                   const QDoubleList &elevationsM, const QDoubleList &verticalOffsets);
             void updateAirportsInRange();
             void remoteAircraftAdded(const QString &callsign);
             void remoteAircraftAddingFailed(const QString &callsign);
